@@ -21476,105 +21476,77 @@ int menu_save_binary_file(char *filename,int valor_leido_direccion,int valor_lei
 void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 {
 
-     char *filtros[2];
+	char *filtros[2];
 
-                filtros[0]="";
-                filtros[1]=0;
+	filtros[0]="";
+	filtros[1]=0;
 
 
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
+	//guardamos directorio actual
+	char directorio_actual[PATH_MAX];
+	getcwd(directorio_actual,PATH_MAX);
 
 	int ret;
 
-        //Obtenemos ultimo directorio visitado
-        if (binary_file_save[0]!=0) {
-                char directorio[PATH_MAX];
-                util_get_dir(binary_file_save,directorio);
-                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+	//Obtenemos ultimo directorio visitado
+	if (binary_file_save[0]!=0) {
+		char directorio[PATH_MAX];
+		util_get_dir(binary_file_save,directorio);
+		//printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
 
-                //cambiamos a ese directorio, siempre que no sea nulo
-                if (directorio[0]!=0) {
-                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
-                }
-        }
+		//cambiamos a ese directorio, siempre que no sea nulo
+		if (directorio[0]!=0) {
+				debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+				menu_filesel_chdir(directorio);
+		}
+	}
 
-        ret=menu_filesel("Select File to Save",filtros,binary_file_save);
+	ret=menu_filesel("Select File to Save",filtros,binary_file_save);
 
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+	//volvemos a directorio inicial
+	menu_filesel_chdir(directorio_actual);
 
 
     if (ret==1) {
 
 		//Ver si archivo existe y preguntar
-	        struct stat buf_stat;
+		struct stat buf_stat;
 
-      if (stat(binary_file_save, &buf_stat)==0) {
+      	if (stat(binary_file_save, &buf_stat)==0) {
 
-				if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
 
-			}
+		}
 
-                cls_menu_overlay();
+		cls_menu_overlay();
 
-                menu_debug_set_memory_zone_attr();
+		menu_debug_change_memory_zone();
 
+		char string_direccion[10];
+		sprintf (string_direccion,"%XH",save_binary_last_address);
 
-				menu_debug_change_memory_zone();
-
-
-
-                char string_direccion[10];
-
-                sprintf (string_direccion,"%XH",save_binary_last_address);
-
-                menu_ventana_scanf("Address: ",string_direccion,10);
-
-                int valor_leido_direccion=parse_string_to_number(string_direccion);
-
-                /*if (MACHINE_IS_SPECTRUM && valor_leido_direccion>65535) {
-                        debug_printf (VERBOSE_ERR,"Invalid address %d",valor_leido_direccion);
-			//menu_generic_message ("Error","Invalid address");
-                        return;
-                }*/
-
+		menu_ventana_scanf("Address: ",string_direccion,10);
+		int valor_leido_direccion=parse_string_to_number(string_direccion);
 		save_binary_last_address=valor_leido_direccion;
 
-                cls_menu_overlay();
-
-                char string_longitud[8];
-
-                sprintf (string_longitud,"%d",save_binary_last_length);
-
-                menu_ventana_scanf("Length: 0 - all",string_longitud,8);
-
-                int valor_leido_longitud=parse_string_to_number(string_longitud);
-
+		cls_menu_overlay();
+		char string_longitud[8];
+		sprintf (string_longitud,"%d",save_binary_last_length);
+		menu_ventana_scanf("Length: 0 - all",string_longitud,8);
+		int valor_leido_longitud=parse_string_to_number(string_longitud);
 		save_binary_last_length=valor_leido_longitud;						
 
 
-			menu_debug_set_memory_zone_attr();
-
-			
-
+		menu_debug_set_memory_zone_attr();
 		if (valor_leido_longitud==0) valor_leido_longitud=menu_debug_memory_zone_size;			
 
- 
 		menu_save_binary_file(binary_file_save,valor_leido_direccion,valor_leido_longitud);
 		
-
-
-
-
+		
 		//Y salimos de todos los menus
         salir_todos_menus=1;
 
-        }
-
-
+    }
 
 
 }
