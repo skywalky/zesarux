@@ -626,6 +626,8 @@ extern int si_menu_mouse_activado(void);
 
 extern int util_parse_commands_argvc(char *texto, char *parm_argv[], int maximo);
 
+extern int util_parse_commands_argvc_comillas(char *texto, char *parm_argv[], int maximo);
+
 extern int get_machine_id_by_name(char *machine_name);
 
 extern void util_truncate_file(char *filename);

@@ -7,6 +7,10 @@ Esxdos handler:
 -add f_mkdir function 
 -add configuration setting to save local work directory
 
+ZRCP:
+-Allow to write commands between "". Not all commands support this
+-Fix possible crash when disconnecting socket
+
 Fixed rom loading: no more cpu panic when the rom is not found 
 
 

@@ -1092,9 +1092,9 @@ long alsa_mid_percent_to_alsa(int val, long pmin, long pmax)
 void alsa_mid_set_volume_master(int percent)
 {
 	snd_mixer_t *mixer;
-	snd_mixer_elem_t *elem;    //utilitzat pel master volume
+	//snd_mixer_elem_t *elem;    //utilitzat pel master volume
 	snd_mixer_selem_id_t *id;
-	long pmin,pmax;
+	//long pmin,pmax;
 
 	snd_mixer_selem_id_alloca(&id);
 
@@ -1105,7 +1105,7 @@ void alsa_mid_set_volume_master(int percent)
 
 	snd_mixer_selem_id_set_name(id, "Master");
 
-	elem = snd_mixer_find_selem(mixer, id);
+	//elem = snd_mixer_find_selem(mixer, id);
 
 	//Parece que da error al ejecutar esto
 	//snd_mixer_selem_get_playback_volume_range(elem,&pmin,&pmax);

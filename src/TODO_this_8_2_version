@@ -385,3 +385,5 @@ Puede servir para versión online simple. Salida pnm y entrada de texto
 
 
 -Incluir playmid y algunos mid de ejemplo en la imagen de zxuno mmc: moonlight shadow, ....
+
+-algun tipo de build que no sea ni linux ni mac ni windows, sino simplemente UNIX_GENERIC o algo similar

@@ -10806,6 +10806,87 @@ int util_parse_commands_argvc(char *texto, char *parm_argv[], int maximo)
         return args;
 }
 
+
+//Separar comando con codigos 0 y rellenar array de parametros, parecido a 
+//util_parse_commands_argvc pero tienendo en cuenta si hay comillas
+int util_parse_commands_argvc_comillas(char *texto, char *parm_argv[], int maximo)
+{
+
+        int args=0;
+
+        //Si se han leido en algun momento al parsear un parametro
+        int comillas_algun_momento=0;
+
+
+        while (*texto) {
+                //Inicio parametro
+                parm_argv[args++]=texto;
+                if (args==maximo) {
+                        debug_printf(VERBOSE_DEBUG,"Max parameters reached (%d)",maximo);
+                        return args;
+                }
+
+                //Ir hasta espacio o final
+
+                comillas_algun_momento=0;
+
+                //Variable que va conmutando segun se lee
+                int comillas_leidas=0;
+
+                int antes_escape=0;
+
+                //TODO: al escapar comillas , incluye el caracter de escape tambien
+                //esto sucede porque estamos escribiendo en el mismo sitio que leemos
+                //deberia tener una cadena origen y una destino distintas
+
+                //TODO: controlar parametros como : 123"456 -> en este caso resulta: 23"45
+
+                while (*texto && (*texto!=' ' || comillas_leidas)  ) {
+                        //Si son comillas y no escapadas
+                        if ((*texto)=='"' && !antes_escape) {
+                                //printf ("Leemos comillas\n");
+                                comillas_leidas ^=1;
+
+                                comillas_algun_momento=1;
+                        }
+
+                        if ( (*texto)=='\\') antes_escape=1;
+                        else antes_escape=0;
+
+                        texto++;
+                }
+
+                if (comillas_algun_momento) {
+                        //Se ha leido en algun momento. Quitar comillas iniciales y finales
+                        //Lo que hacemos es cambiar el inicio de parametro a +1
+                        
+                        //printf ("Ajustar parametro porque esta entre comillas\n");
+
+                        char *inicio_parametro;
+                        inicio_parametro=parm_argv[args-1];
+
+                        inicio_parametro++;
+
+                        parm_argv[args-1]=inicio_parametro;
+
+                        //Y quitar comillas del final
+                        *(texto-1)=0;
+
+                        //printf ("Parametro ajustado sin comillas: [%s]\n",parm_argv[args-1]);
+
+                }                
+
+                if ( (*texto)==0) return args;
+ 
+
+
+                *texto=0; //Separar cadena
+                texto++;
+        }
+
+        return args;
+}
+
 //Retorna 0 si ok. No 0 si error. Ancho expresado en pixeles. Alto expresado en pixeles
 //Source es en crudo bytes monocromos. ppb sera 8 siempre
 int util_write_pbm_file(char *archivo, int ancho, int alto, int ppb, z80_byte *source)
