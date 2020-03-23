@@ -9,6 +9,7 @@ Improved Esxdos handler:
 
 Improved ZRCP:
 -Allow to write commands between "". Not all commands support this
+-Added save-binary command
 
 
 Fixed ZRCP bugs:

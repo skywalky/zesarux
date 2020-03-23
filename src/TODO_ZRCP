@@ -20,8 +20,6 @@ Ver si la simulación de pulsado de escape desde smartload de remote protocol no
 
 -opcion ZRCP que indique que memoria divmmc/divide esta mapeada: de momento dice divmmc sin mas
 
--opcion ZRCP para grabar binary
-
 -Comandos ZRCP obtener datos sprites tsconf
 
 

@@ -9168,60 +9168,7 @@ int load_binary_file(char *filename,int valor_leido_direccion,int valor_leido_lo
 
 
 
-//Retorna 0 si ok
-//1 si archivo no encontrado 
-//2 si error leyendo
-int old_load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
-{
-        int returncode=0;
 
-        if (!si_existe_archivo(binary_file_load)) return 1;
-
-        if (MACHINE_IS_SPECTRUM) {
-        if (valor_leido_longitud==0 || valor_leido_longitud>65536) valor_leido_longitud=65536;
-
-        //maximo hasta direccion 65535
-        if (valor_leido_direccion+valor_leido_longitud > 65535) valor_leido_longitud=65536-valor_leido_direccion;
-        }
-
-else { //MOTOROLA
-        if (valor_leido_longitud==0) valor_leido_longitud=QL_MEM_LIMIT+1;
-}
-
-                debug_printf(VERBOSE_INFO,"Loading %s file at %d address with maximum %d bytes",binary_file_load,valor_leido_direccion,valor_leido_longitud);
-
-
-
-                                FILE *ptr_binaryfile_load;
-                                  ptr_binaryfile_load=fopen(binary_file_load,"rb");
-                                  if (!ptr_binaryfile_load)
-                                {
-                                      debug_printf (VERBOSE_ERR,"Unable to open Binary file %s",binary_file_load);
-                                      returncode=2;
-
-                                  }
-                                else {
-
-                                                int leidos=1;
-                                                z80_byte byte_leido;
-                                                while (valor_leido_longitud>0 && leidos>0) {
-                                                        leidos=fread(&byte_leido,1,1,ptr_binaryfile_load);
-                                                        if (leidos>0) {
-                                                                //poke_byte_no_time(valor_leido_direccion,byte_leido);
-                                                                poke_byte_z80_moto(valor_leido_direccion,byte_leido);
-                                                                valor_leido_direccion++;
-                                                                valor_leido_longitud--;
-                                                        }
-                                                }
-
-
-                                  fclose(ptr_binaryfile_load);
-
-                                }
-
-    return returncode;
-
-}
 
 
 //extern char *mostrar_footer_game_name;

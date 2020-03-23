@@ -21274,62 +21274,6 @@ menu_z80_moto_int save_binary_last_length=1;
 
 
 
-//Retorna 0 si ok
-//1 si archivo no encontrado
-//2 si error leyendo
-//Tiene en cuenta zonas de memoria
-int old_delete_menu_load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
-{
-	int returncode=0;
-
-	if (!si_existe_archivo(binary_file_load)) return 1;
-
-	if (valor_leido_longitud==0) valor_leido_longitud=4194304; //4 MB max
-
-    
-
-	menu_debug_set_memory_zone_attr();
-
-
-	char zone_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
-	menu_get_current_memory_zone_name_number(zone_name);
-
-	debug_printf(VERBOSE_INFO,"Loading %s file at %d address at zone %s with maximum %d bytes",binary_file_load,valor_leido_direccion,zone_name,valor_leido_longitud);
-
-
-	FILE *ptr_binaryfile_load;
-	ptr_binaryfile_load=fopen(binary_file_load,"rb");
-	if (!ptr_binaryfile_load) {
-                                
-		debug_printf (VERBOSE_ERR,"Unable to open Binary file %s",binary_file_load);
-		returncode=2;
-
-	}
-
-	else {
-
-		int leidos=1;
-		z80_byte byte_leido;
-		while (valor_leido_longitud>0 && leidos>0) {
-			leidos=fread(&byte_leido,1,1,ptr_binaryfile_load);
-			if (leidos>0) {
-
-					menu_debug_write_mapped_byte(valor_leido_direccion,byte_leido);
-
-					valor_leido_direccion++;
-					valor_leido_longitud--;
-			}
-		}
-
-
-		fclose(ptr_binaryfile_load);
-
-	}
-
-    return returncode;
-
-}
-
 
 void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 {
@@ -21340,80 +21284,58 @@ void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 	filtros[1]=0;
 
 
-        //guardamos directorio actual
-        char directorio_actual[PATH_MAX];
-        getcwd(directorio_actual,PATH_MAX);
+	//guardamos directorio actual
+	char directorio_actual[PATH_MAX];
+	getcwd(directorio_actual,PATH_MAX);
 
 	int ret;
 
-        //Obtenemos ultimo directorio visitado
-        if (binary_file_load[0]!=0) {
-                char directorio[PATH_MAX];
-                util_get_dir(binary_file_load,directorio);
-                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+	//Obtenemos ultimo directorio visitado
+	if (binary_file_load[0]!=0) {
+		char directorio[PATH_MAX];
+		util_get_dir(binary_file_load,directorio);
+		//printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
 
-                //cambiamos a ese directorio, siempre que no sea nulo
-                if (directorio[0]!=0) {
-                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
-                }
-        }
+		//cambiamos a ese directorio, siempre que no sea nulo
+		if (directorio[0]!=0) {
+				debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+				menu_filesel_chdir(directorio);
+		}
+	}
 
-        ret=menu_filesel("Select File to Load",filtros,binary_file_load);
+	ret=menu_filesel("Select File to Load",filtros,binary_file_load);
 
-        //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+	//volvemos a directorio inicial
+	menu_filesel_chdir(directorio_actual);
 
-        if (ret==1) {
+	if (ret==1) {
 
 		cls_menu_overlay();
 
-		menu_debug_set_memory_zone_attr();
-
-
 		menu_debug_change_memory_zone();
 
-  		
 
-        	char string_direccion[10];
-
+		char string_direccion[10];
 		sprintf (string_direccion,"%XH",load_binary_last_address);
-
-	        menu_ventana_scanf("Address: ",string_direccion,10);
-
-	        int valor_leido_direccion=parse_string_to_number(string_direccion);
-
-					//printf ("valor: %d\n",valor_leido_direccion);
-
-		/*if (valor_leido_direccion>65535 && MACHINE_IS_SPECTRUM) {
-			debug_printf (VERBOSE_ERR,"Invalid address %d",valor_leido_direccion);
-			//menu_generic_message ("Error","Invalid address");
-			return;
-		}*/
-
+		menu_ventana_scanf("Address: ",string_direccion,10);
+		int valor_leido_direccion=parse_string_to_number(string_direccion);
 		load_binary_last_address=valor_leido_direccion;
 
 		cls_menu_overlay();
 
-                char string_longitud[8];
-
+		char string_longitud[8];
 		sprintf (string_longitud,"%d",load_binary_last_length);
-
-                menu_ventana_scanf("Length: 0 - all",string_longitud,8);
-
-                int valor_leido_longitud=parse_string_to_number(string_longitud);
-
+		menu_ventana_scanf("Length: 0 - all",string_longitud,8);
+		int valor_leido_longitud=parse_string_to_number(string_longitud);
 		load_binary_last_length=valor_leido_longitud;
 
 		load_binary_file(binary_file_load,valor_leido_direccion,valor_leido_longitud);
-
 
 		//Y salimos de todos los menus
 		salir_todos_menus=1;
 
 
-        }
-
+    }
 
 
 
@@ -21472,7 +21394,6 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 
 		char string_direccion[10];
 		sprintf (string_direccion,"%XH",save_binary_last_address);
-
 		menu_ventana_scanf("Address: ",string_direccion,10);
 		int valor_leido_direccion=parse_string_to_number(string_direccion);
 		save_binary_last_address=valor_leido_direccion;

@@ -363,7 +363,6 @@ Quiza mismo menu filesel, que solo muestre autosnap (o el que sea el prefijo)*.z
 --faltara poder poner un filtro tipo prefijo *. Para eso hay que cambiar, minimo, menu_file_filter y menu_file_filter_dir
 
 
-
 -chdir en esxdos handler acaba cambiando directorio realmente para emulador??
 
 -impresion seikosha gp-100a
