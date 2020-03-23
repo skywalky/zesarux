@@ -21430,6 +21430,49 @@ void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 
 }
 
+
+//Retorna 0 si ok
+//1 si error al abrir archivo 
+//Tiene en cuenta zonas de memoria
+int menu_save_binary_file(char *filename,int valor_leido_direccion,int valor_leido_longitud)
+{
+	char zone_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
+	menu_get_current_memory_zone_name_number(zone_name);
+
+
+	debug_printf(VERBOSE_INFO,"Saving %s file at %d address at zone %s with %d bytes",binary_file_save,valor_leido_direccion,zone_name,valor_leido_longitud);
+
+	FILE *ptr_binaryfile_save;
+	ptr_binaryfile_save=fopen(filename,"wb");
+	if (!ptr_binaryfile_save) {
+		
+		debug_printf (VERBOSE_ERR,"Unable to open Binary file %s",binary_file_save);
+		return 1;
+	}
+
+	else {
+
+
+
+		int escritos=1;
+		z80_byte byte_leido;
+		while (valor_leido_longitud>0 && escritos>0) {
+
+			byte_leido=menu_debug_get_mapped_byte(valor_leido_direccion);
+
+			escritos=fwrite(&byte_leido,1,1,ptr_binaryfile_save);
+			valor_leido_direccion++;
+			valor_leido_longitud--;
+		}
+
+
+		fclose(ptr_binaryfile_save);
+	}
+
+	return 0;
+
+}
+
 void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 {
 
@@ -21520,10 +21563,10 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 		if (valor_leido_longitud==0) valor_leido_longitud=menu_debug_memory_zone_size;			
 
  
-
+		menu_save_binary_file(binary_file_save,valor_leido_direccion,valor_leido_longitud);
 		
 
-
+/*
 		char zone_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
         	menu_get_current_memory_zone_name_number(zone_name);
 
@@ -21555,15 +21598,16 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
                                                 }
 
 
-                                  fclose(ptr_binaryfile_save);
+                                  fclose(ptr_binaryfile_save); 
 
 		                //Y salimos de todos los menus
                 		salir_todos_menus=1;
 
-                                }
+                                }*/
 
 
-
+		//Y salimos de todos los menus
+        salir_todos_menus=1;
 
         }
 

@@ -2,16 +2,20 @@ Version 8.2 - xxx edition. 16 March 2020
 
 Added F key to toggle top cpu speed
 Added emulation of AY chip MIDI registers 14 & 15 and route them to an external MIDI device
-Fixed esxdos handler segfaults when using a file handler that was a directory
-Esxdos handler: 
+
+Improved Esxdos handler: 
 -add f_mkdir function 
 -add configuration setting to save local work directory
 
-ZRCP:
+Improved ZRCP:
 -Allow to write commands between "". Not all commands support this
+
+
+Fixed ZRCP bugs:
 -Fix possible crash when disconnecting socket
 
 Fixed rom loading: no more cpu panic when the rom is not found 
+Fixed esxdos handler segfaults when using a file handler that was a directory
 
 
 Version 8.1.1 - The Great Escape edition. 2 March 2020
