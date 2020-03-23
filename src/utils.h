@@ -422,6 +422,7 @@ extern int convert_hdf_to_raw(char *origen, char *destino);
 extern z80_bit quickload_guessing_tzx_type;
 
 extern int load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud);
+extern int save_binary_file(char *filename,int valor_leido_direccion,int valor_leido_longitud);
 extern void parse_customfile_options(void);
 extern void parse_custom_file_config(char *archivo);
 

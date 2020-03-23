@@ -21278,64 +21278,53 @@ menu_z80_moto_int save_binary_last_length=1;
 //1 si archivo no encontrado
 //2 si error leyendo
 //Tiene en cuenta zonas de memoria
-int menu_load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
+int old_delete_menu_load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
 {
-  int returncode=0;
+	int returncode=0;
 
-  if (!si_existe_archivo(binary_file_load)) return 1;
+	if (!si_existe_archivo(binary_file_load)) return 1;
 
-  if (valor_leido_longitud==0) valor_leido_longitud=4194304; //4 MB max
+	if (valor_leido_longitud==0) valor_leido_longitud=4194304; //4 MB max
 
-                /*if (MACHINE_IS_SPECTRUM) {
-                  if (valor_leido_longitud==0 || valor_leido_longitud>65536) valor_leido_longitud=65536;
+    
 
-                  //maximo hasta direccion 65535
-                  if (valor_leido_direccion+valor_leido_longitud > 65535) valor_leido_longitud=65536-valor_leido_direccion;
-                }
-
-                else { //MOTOROLA
-                  if (valor_leido_longitud==0) valor_leido_longitud=QL_MEM_LIMIT+1;
-                }*/
-
-  		menu_debug_set_memory_zone_attr();
+	menu_debug_set_memory_zone_attr();
 
 
-  		char zone_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
-        	menu_get_current_memory_zone_name_number(zone_name);
+	char zone_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
+	menu_get_current_memory_zone_name_number(zone_name);
 
-                debug_printf(VERBOSE_INFO,"Loading %s file at %d address at zone %s with maximum %d bytes",binary_file_load,valor_leido_direccion,zone_name,valor_leido_longitud);
-
-
-
-                                FILE *ptr_binaryfile_load;
-                                  ptr_binaryfile_load=fopen(binary_file_load,"rb");
-                                  if (!ptr_binaryfile_load)
-                                {
-                                      debug_printf (VERBOSE_ERR,"Unable to open Binary file %s",binary_file_load);
-                                      returncode=2;
-
-                                  }
-                                else {
-
-                                                int leidos=1;
-                                                z80_byte byte_leido;
-                                                while (valor_leido_longitud>0 && leidos>0) {
-                                                        leidos=fread(&byte_leido,1,1,ptr_binaryfile_load);
-                                                        if (leidos>0) {
-                                                                //poke_byte_no_time(valor_leido_direccion,byte_leido);
-                                                                //poke_byte_z80_moto(valor_leido_direccion,byte_leido);
-                                                                menu_debug_write_mapped_byte(valor_leido_direccion,byte_leido);
+	debug_printf(VERBOSE_INFO,"Loading %s file at %d address at zone %s with maximum %d bytes",binary_file_load,valor_leido_direccion,zone_name,valor_leido_longitud);
 
 
-                                                                valor_leido_direccion++;
-                                                                valor_leido_longitud--;
-                                                        }
-                                                }
+	FILE *ptr_binaryfile_load;
+	ptr_binaryfile_load=fopen(binary_file_load,"rb");
+	if (!ptr_binaryfile_load) {
+                                
+		debug_printf (VERBOSE_ERR,"Unable to open Binary file %s",binary_file_load);
+		returncode=2;
+
+	}
+
+	else {
+
+		int leidos=1;
+		z80_byte byte_leido;
+		while (valor_leido_longitud>0 && leidos>0) {
+			leidos=fread(&byte_leido,1,1,ptr_binaryfile_load);
+			if (leidos>0) {
+
+					menu_debug_write_mapped_byte(valor_leido_direccion,byte_leido);
+
+					valor_leido_direccion++;
+					valor_leido_longitud--;
+			}
+		}
 
 
-                                  fclose(ptr_binaryfile_load);
+		fclose(ptr_binaryfile_load);
 
-                                }
+	}
 
     return returncode;
 
@@ -21416,7 +21405,7 @@ void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 
 		load_binary_last_length=valor_leido_longitud;
 
-		menu_load_binary_file(binary_file_load,valor_leido_direccion,valor_leido_longitud);
+		load_binary_file(binary_file_load,valor_leido_direccion,valor_leido_longitud);
 
 
 		//Y salimos de todos los menus
@@ -21431,47 +21420,7 @@ void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 }
 
 
-//Retorna 0 si ok
-//1 si error al abrir archivo 
-//Tiene en cuenta zonas de memoria
-int menu_save_binary_file(char *filename,int valor_leido_direccion,int valor_leido_longitud)
-{
-	char zone_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
-	menu_get_current_memory_zone_name_number(zone_name);
 
-
-	debug_printf(VERBOSE_INFO,"Saving %s file at %d address at zone %s with %d bytes",binary_file_save,valor_leido_direccion,zone_name,valor_leido_longitud);
-
-	FILE *ptr_binaryfile_save;
-	ptr_binaryfile_save=fopen(filename,"wb");
-	if (!ptr_binaryfile_save) {
-		
-		debug_printf (VERBOSE_ERR,"Unable to open Binary file %s",binary_file_save);
-		return 1;
-	}
-
-	else {
-
-
-
-		int escritos=1;
-		z80_byte byte_leido;
-		while (valor_leido_longitud>0 && escritos>0) {
-
-			byte_leido=menu_debug_get_mapped_byte(valor_leido_direccion);
-
-			escritos=fwrite(&byte_leido,1,1,ptr_binaryfile_save);
-			valor_leido_direccion++;
-			valor_leido_longitud--;
-		}
-
-
-		fclose(ptr_binaryfile_save);
-	}
-
-	return 0;
-
-}
 
 void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 {
@@ -21510,9 +21459,8 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
     if (ret==1) {
 
 		//Ver si archivo existe y preguntar
-		struct stat buf_stat;
 
-      	if (stat(binary_file_save, &buf_stat)==0) {
+      	if (si_existe_archivo(binary_file_save)) {
 
 			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
 
@@ -21537,10 +21485,7 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 		save_binary_last_length=valor_leido_longitud;						
 
 
-		menu_debug_set_memory_zone_attr();
-		if (valor_leido_longitud==0) valor_leido_longitud=menu_debug_memory_zone_size;			
-
-		menu_save_binary_file(binary_file_save,valor_leido_direccion,valor_leido_longitud);
+		save_binary_file(binary_file_save,valor_leido_direccion,valor_leido_longitud);
 		
 		
 		//Y salimos de todos los menus

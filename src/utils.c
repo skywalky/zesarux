@@ -9064,25 +9064,129 @@ int convert_p_to_rwa_tmpdir(char *origen, char *destino)
 }
 
 
+
+//Retorna 0 si ok
+//1 si error al abrir archivo 
+//Tiene en cuenta zonas de memoria
+int save_binary_file(char *filename,int valor_leido_direccion,int valor_leido_longitud)
+{
+	
+
+	menu_debug_set_memory_zone_attr();
+
+        char zone_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
+	menu_get_current_memory_zone_name_number(zone_name);
+
+        if (valor_leido_longitud==0) valor_leido_longitud=menu_debug_memory_zone_size;		
+
+
+	debug_printf(VERBOSE_INFO,"Saving %s file at %d address at zone %s with %d bytes",filename,valor_leido_direccion,zone_name,valor_leido_longitud);
+
+	FILE *ptr_binaryfile_save;
+	ptr_binaryfile_save=fopen(filename,"wb");
+	if (!ptr_binaryfile_save) {
+		
+		debug_printf (VERBOSE_ERR,"Unable to open Binary file %s",filename);
+		return 1;
+	}
+
+	else {
+
+		int escritos=1;
+		z80_byte byte_leido;
+		while (valor_leido_longitud>0 && escritos>0) {
+
+			byte_leido=menu_debug_get_mapped_byte(valor_leido_direccion);
+
+			escritos=fwrite(&byte_leido,1,1,ptr_binaryfile_save);
+			valor_leido_direccion++;
+			valor_leido_longitud--;
+		}
+
+
+		fclose(ptr_binaryfile_save);
+	}
+
+	return 0;
+
+}
+
 //Retorna 0 si ok
 //1 si archivo no encontrado
 //2 si error leyendo
-int load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
+//Tiene en cuenta zonas de memoria
+int load_binary_file(char *filename,int valor_leido_direccion,int valor_leido_longitud)
 {
-  int returncode=0;
+	int returncode=0;
 
-  if (!si_existe_archivo(binary_file_load)) return 1;
+	if (!si_existe_archivo(filename)) return 1;
 
-                if (MACHINE_IS_SPECTRUM) {
-                  if (valor_leido_longitud==0 || valor_leido_longitud>65536) valor_leido_longitud=65536;
+	if (valor_leido_longitud==0) valor_leido_longitud=4194304; //4 MB max
 
-                  //maximo hasta direccion 65535
-                  if (valor_leido_direccion+valor_leido_longitud > 65535) valor_leido_longitud=65536-valor_leido_direccion;
-                }
+    
+	menu_debug_set_memory_zone_attr();
 
-                else { //MOTOROLA
-                  if (valor_leido_longitud==0) valor_leido_longitud=QL_MEM_LIMIT+1;
-                }
+
+	char zone_name[MACHINE_MAX_MEMORY_ZONE_NAME_LENGHT+1];
+	menu_get_current_memory_zone_name_number(zone_name);
+
+	debug_printf(VERBOSE_INFO,"Loading %s file at %d address at zone %s with maximum %d bytes",filename,valor_leido_direccion,zone_name,valor_leido_longitud);
+
+
+	FILE *ptr_binaryfile_load;
+	ptr_binaryfile_load=fopen(filename,"rb");
+	if (!ptr_binaryfile_load) {
+                                
+		debug_printf (VERBOSE_ERR,"Unable to open Binary file %s",filename);
+		returncode=2;
+
+	}
+
+	else {
+
+		int leidos=1;
+		z80_byte byte_leido;
+		while (valor_leido_longitud>0 && leidos>0) {
+			leidos=fread(&byte_leido,1,1,ptr_binaryfile_load);
+			if (leidos>0) {
+
+					menu_debug_write_mapped_byte(valor_leido_direccion,byte_leido);
+
+					valor_leido_direccion++;
+					valor_leido_longitud--;
+			}
+		}
+
+
+		fclose(ptr_binaryfile_load);
+
+	}
+
+    return returncode;
+
+}
+
+
+
+//Retorna 0 si ok
+//1 si archivo no encontrado 
+//2 si error leyendo
+int old_load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
+{
+        int returncode=0;
+
+        if (!si_existe_archivo(binary_file_load)) return 1;
+
+        if (MACHINE_IS_SPECTRUM) {
+        if (valor_leido_longitud==0 || valor_leido_longitud>65536) valor_leido_longitud=65536;
+
+        //maximo hasta direccion 65535
+        if (valor_leido_direccion+valor_leido_longitud > 65535) valor_leido_longitud=65536-valor_leido_direccion;
+        }
+
+else { //MOTOROLA
+        if (valor_leido_longitud==0) valor_leido_longitud=QL_MEM_LIMIT+1;
+}
 
                 debug_printf(VERBOSE_INFO,"Loading %s file at %d address with maximum %d bytes",binary_file_load,valor_leido_direccion,valor_leido_longitud);
 

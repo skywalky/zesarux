@@ -764,6 +764,7 @@ struct s_items_ayuda items_ayuda[]={
 	"The parameters can be written in different order, for example:\nrun verbose\nor\nrun 100\nor\nrun verbose 100\n"
    "Notice this command does not run the usual cpu loop, instead it is controlled from ZRCP. If you close the connection, the run loop will die\n"
 	 },
+	{"save-binary",NULL,"file addr len","Save binary file \"file\" from address \"addr\" with length \"len\". Set ln to 0 to save the entire current memory zone"},
 	{"save-binary-internal",NULL,"pointer length file [offset]","Dumps internal memory to file for a given memory pointer. "
 				"Pointer can be any of the hexdump-internal command\n"
 				"Use with care, pointer address is a memory address on the emulator program (not the emulated memory)"},
@@ -4746,7 +4747,7 @@ void interpreta_comando(char *comando,int misocket)
 	}	
 
 
-        else if (!strcmp(comando_sin_parametros,"load-binary")) {
+	else if (!strcmp(comando_sin_parametros,"load-binary")) {
                 remote_parse_commands_argvc(parametros);
 
 
@@ -4929,6 +4930,31 @@ void interpreta_comando(char *comando,int misocket)
     else escribir_socket_format(misocket,"Running until a breakpoint, %smenu opening, %d opcodes run, or other event\n",texto_evento_data,limit);
     remote_cpu_run(misocket,verbose,limit,datosvuelve,update_immediately);
   }
+
+
+	else if (!strcmp(comando_sin_parametros,"save-binary")) {
+		remote_parse_commands_argvc(parametros);
+
+
+		if (remote_command_argc<3) {
+				escribir_socket(misocket,"ERROR. Needs three parameters");
+				return;
+		}
+
+
+		char *archivo;
+		archivo=remote_command_argv[0];
+
+		int valor_leido_direccion=parse_string_to_number(remote_command_argv[1]);
+
+		int valor_leido_longitud=parse_string_to_number(remote_command_argv[2]);
+
+		int retorno=save_binary_file(archivo,valor_leido_direccion,valor_leido_longitud);
+
+		if (retorno) escribir_socket(misocket,"ERROR loading file");
+
+
+	}
 
 
 	else if (!strcmp(comando_sin_parametros,"save-binary-internal")) {
