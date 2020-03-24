@@ -340,9 +340,13 @@ The machine type is coming from nextreg 3
 
 The machine type does affect a few things like which ports are used for the multiface (multiface 1, multiface 128, multiface +3), whether certain configuration bits in the nextreg can be changed and some port decoding on ports 7ffd, eg, (although that is going to be changed to depend on video timing instead soon).
 
+"but this locking always need bit 7 set, right?":
+A: No it applies all the time if the two locking bits are not 00.  The difference is the locking is applied to the alt rom if bit 7 is set and to the regular roms if bit 7 is reset.
 -Quizá falte alguna instrucción de z80n para lo del altrom?
 
 -Soft reset can be the button or via nextreg 2: que cuando haga ese reset, copie bits bajos a altos de registro 8c
+
+-Quizá modos 48 y 128 de next fallan porque intentan cambiar tipo máquina (y eso solo se permite en el boot)
 
 --Fin ALTROM
 
@@ -386,3 +390,115 @@ Puede servir para versión online simple. Salida pnm y entrada de texto
 -algun tipo de build que no sea ni linux ni mac ni windows, sino simplemente UNIX_GENERIC o algo similar
 
 -revisar warnings de codigo sin uso que sale en linux
+
+-compilar windows con O2. Quiza que haya una version "legacy" sin ello. Y siempre con pthreads
+
+
+-Snapshot de tbblue tiene que guardar tantas páginas de ram como se tenga definido de memoria. No guardar siempre el maximo
+
+-Idea de compresión de texto en sped:
+Si línea empieza con comentario, los espacios de indican cómo el bit 7 del siguiente carácter alzado
+Entiendo que esto no se hace así ya, solo se hace para los dos tabuladores de una línea con opcodes 
+Aunque esto comprime muy poco, solo se ahorra 1 byte por cada espacio, pero algo es algo...
+
+-Hilo ccf/scf
+https://www.worldofspectrum.org/forums/discussion/comment/669314
+
+-Build Mac:
+
+esto es una comodidad, pero si se cambia la línea 1626 del archivo configure:
+
+gzip macos/zesarux.dmg
+por algo como:
+
+hdiutil convert macos/zesarux.dmg -format UDZO -o macos/zesarux-macos.dmg
+ya se crea el archivo DMG comprimido en ZLIB.
+
+-Pentagon:
+
+I've found one bug in Zesarux. In Pentagon mode you shouldn't have timex video modes
+
+
+When you enable TR-DOS emulation it uses #ff port as system port
+
+
+Cause pentagon haven't it (timex modes)
+
+
+
+-Page cashe pentagon:
+
+
+Try use D3(counting from zero) bit for EFF7  - zero page will be displayed to #0000 address. 
+
+There also other schematics that uses ports(Like LPRINT 3):
+ * IN 251 - Enable cache
+ * IN 123 - Disable cache
+
+IN #FB - enable cache/ IN #7B disable.
+
+Zero page is ram0 from 128kb ram
+On pentagon 
+
+
+EFF7 - just memory managment
+This strange thing "CASHE MEMORY" 
+
+-Al igual que habilita real vídeo en tbblue, activar timex 
+
+
+-Quizá versión legacy de Mac ya no tiene sentido. Requiere Mac OS reciente y los cflags O2 estarán soportados en todos los recientes 
+
+-Descompresión zip para esxdos. Luego browser wos/zx info/spec computing para esxdos. 
+
+-Meter en development que cuando hay nueva versión hay que actualizar archivo txt del servidor
+
+Si es estable, actualizar ambos archivos
+Si es beta, actualizar solo el archivo de snapshot 
+
+-Actualizar archivo development que diga que la salida esperada del configure incluye ssl
+
+-En included tapes, no decir carpeta extras. Decir que hay repo aparte . Ya esta?
+
+-ROM zx85 de Daniel incluir   Y zx82?
+
+-Que sentido tiene conservar EPROMs de esxmmc086 de zxuno y tbblue?
+
+-Zx99 interface para zx81
+
+-Mensajes enviados entre usuarios por ZENG que vayan a speech también 
+
+-Probar ZENG con aventura conversacional y speech a ver si se corta el speech o no 
+
+-Agregar a extended stack: fecha y hora de entrada en stack. También puede testado y milisegundos de la hora 
+Extended stack visible en menu. Consultable
+Poder consultar stack normal también en menú 
+
+-Tema solarized para ZEsarUX
+
+-Cinta de juegos y programas zx81 pasar a digital
+
+-En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
+
+-Smartload de un tap en +3 deja activado top speed (abadía del crimen)
+
+-quiza archivos de updates deban tener algo asi como major version, minor version
+Esto podria corregir el problema de que avise de updates que realmente son versiones anteriores.
+Ejemplo:
+*uso version snapshot 8.1-SN
+*me actualizo a la estable 8.2
+*al arrancar la primera 8.2-SN, verá que hay 8.2-SN ok no pasa nada
+
+*pero:
+*uso version snapshot 8.1-SN
+*paso a usar 8.0. Ultima estable leida: 8.0
+*paso a usar snapshot 8.1-SN, verá que hay 8.2-SN ok no pasa nada
+
+En que casos puede dar problema? Si cambio a mano version snapshot a estable en cpu.h
+Pero esto no deberia suceder: pues al hacer ese cambio se supone que habrá ya un update,
+entonces en el servidor, en el archivo de update de la estable, ya habré actualizado el archivo y dirá la nueva versión
+
+
+Documentación zesarux.odt cambiar nombre. Dejar como especificación archivos .zx, y listado de utilidades y poco más 
+
+-Tema gui configurable todos sus elementos: fuentes, colores etc 
