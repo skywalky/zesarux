@@ -271,6 +271,12 @@ como descubrir rutinas de pintado de sprites
 TODO: si puntero tokens es 0, no hay tokens
 TODO: algunos valores de xor 255 no son realmente xor 255. Quizá son letras con acentos?
 
+-unpaws con quill:
+*compression tokens existen?
+
+-unpaws: 
+*compression tokens no siempre estan hasta el 255
+
 
 -Text keyboard editable desde menu?
 
