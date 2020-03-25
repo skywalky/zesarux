@@ -93,6 +93,11 @@ Ideas para background windows:
 
 -Tema gui configurable todos sus elementos: fuentes, colores etc 
 
+-Idea de animación para logo: ZEsarUX con letras de colores rojo amarillo verde azul. Se comprime el texto y la Z va pillando los colores de las letras 
+
+-Función que usando misma rutina de imprimir Unicode diga la longitud en bytes que ocupa el carácter. 
+Así sabremos la longitud de aquellos caracteres que si que imprimimos. Los que no, será 1 y interrogante 
+
 -Osd keyboard sin multitarea en ZX81 no va fino
 
 -Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?

@@ -186,25 +186,14 @@ Es mas complicado pues luego va a buscar librerias de /usr/local/Cellar/openssl
 ----Fin Mac SSL
 
 
--Habilitar modos timex al seleccionar next. Importante para player nextdaw por ejemplo 
 
 -Funciones deprecated mac corregir 
 
 -4 puertos Dac de Next
 
 
--Setting de guardado tamanyo memoria RAM de divmmc/divide (probablemente variable diviface_current_ram_memory_bits)
 
--Soporte Z88 en snapshots zsf
 
--Función que usando misma rutina de imprimir Unicode diga la longitud en bytes que ocupa el carácter. 
-Así sabremos la longitud de aquellos caracteres que si que imprimimos
-
-Los que no, será 1 y interrogante 
-
--Idea de animación para logo
-
-ZEsarUX con letras de colores rojo amarillo verde azul. Se comprime el texto y la Z va pillando los colores de las letras 
 
 -cambiar de maquina no tbblue a tbblue provoca que no funcione divmmc
 
@@ -214,8 +203,15 @@ porque?
 
 * estado dma (esto no solo afecta a tbblue sino a todos. tener en cuenta grabar tambien valor datagear_dma_tbblue_prescaler)
 
+--zsock_http:
+-no tiene que tener un maximo de bloques la descarga, esto solo cuando el bloque es de 0 bytes, entonces si que aumentar
+En ese caso no hacer mas alla de 500 por ejemplo
+
+-Texto de “connecting” en ventana de progreso que se pueda cambiar
+En ZENG queda bien pero en descargas no 
 
 
+-----ALTROM TBBLUE-----
 
 -Tbblue: al cargar juegos .tap de 48k por ejemplo, cuando pide en que modo cargar, usa un nuevo registro en que cambia la rom:
 
@@ -237,16 +233,10 @@ The locking mechanism also applies if the alt rom is not enabled. For the +3 and
 zero, then the corresponding rom page is locked in place. Other models use the bits to preferentially lock the corresponding
 48K rom or the 128K rom.
 
---zsock_http:
--no tiene que tener un maximo de bloques la descarga, esto solo cuando el bloque es de 0 bytes, entonces si que aumentar
-En ese caso no hacer mas alla de 500 por ejemplo
-
--Texto de “connecting” en ventana de progreso que se pueda cambiar
-En ZENG queda bien pero en descargas no 
 
 
 
---ALTROM
+
 Registro nuevo bloqueo rom
 
 nr_8c_altrom_lock
@@ -348,7 +338,7 @@ A: No it applies all the time if the two locking bits are not 00.  The differenc
 
 -Quizá modos 48 y 128 de next fallan porque intentan cambiar tipo máquina (y eso solo se permite en el boot)
 
---Fin ALTROM
+-----FIN ALTROM TBBLUE-----
 
 -Windows no es capaz de usar imagen mmc de 2 GB. Quiza porque es un compilado para 32 bits?
 
@@ -368,8 +358,6 @@ Quiza mismo menu filesel, que solo muestre autosnap (o el que sea el prefijo)*.z
 
 
 -chdir en esxdos handler acaba cambiando directorio realmente para emulador??
-
--impresion seikosha gp-100a
 
 
 -Con carga top speed salen dos footer ? El nuevo de rojo también...  
