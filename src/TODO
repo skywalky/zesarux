@@ -267,6 +267,11 @@ como descubrir rutinas de pintado de sprites
 
 -mapa localidades daad/paws/quill
 
+-De extractor paws o similar:
+TODO: si puntero tokens es 0, no hay tokens
+TODO: algunos valores de xor 255 no son realmente xor 255. Quizá son letras con acentos?
+
+
 -Text keyboard editable desde menu?
 
 -Joystick en Mac,Win

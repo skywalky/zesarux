@@ -23,7 +23,7 @@ cp editionnamegame.tap editionnamegame.tap.config $INSTALLPREFIX/share/zesarux/
 cp -r speech_filters $INSTALLPREFIX/share/zesarux/
 cp -r my_soft $INSTALLPREFIX/share/zesarux/
 
-cp ACKNOWLEDGEMENTS Changelog HISTORY README FEATURES LICENSE LICENSES_info INSTALL INSTALLWINDOWS ALTERNATEROMS INCLUDEDTAPES DONATE FAQ $INSTALLPREFIX/share/zesarux/
+cp ACKNOWLEDGEMENTS Changelog HISTORY README FEATURES LICENSE LICENSES_info INSTALL INSTALLWINDOWS ALTERNATEROMS INCLUDEDTAPES DONATE FAQ *.odt $INSTALLPREFIX/share/zesarux/
 cp licenses/* $INSTALLPREFIX/share/zesarux/licenses/
 find $INSTALLPREFIX/share/zesarux/ -type f -print0| xargs -0 chmod 444
 
