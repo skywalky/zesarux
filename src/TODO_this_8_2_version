@@ -394,8 +394,6 @@ Puede servir para versión online simple. Salida pnm y entrada de texto
 -compilar windows con O2. Quiza que haya una version "legacy" sin ello. Y siempre con pthreads
 
 
--Snapshot de tbblue tiene que guardar tantas páginas de ram como se tenga definido de memoria. No guardar siempre el maximo
-
 -Idea de compresión de texto en sped:
 Si línea empieza con comentario, los espacios de indican cómo el bit 7 del siguiente carácter alzado
 Entiendo que esto no se hace así ya, solo se hace para los dos tabuladores de una línea con opcodes 
