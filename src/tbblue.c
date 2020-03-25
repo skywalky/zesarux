@@ -73,6 +73,8 @@ int tbblue_get_current_ram(void)
 	return 256+8*tbblue_return_max_extra_blocks();
 }
 
+
+
 //Punteros a los 8 bloques de 8kb de rom de spectrum
 z80_byte *tbblue_rom_memory_pages[8];
 

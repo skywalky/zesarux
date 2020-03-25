@@ -2213,7 +2213,7 @@ Byte Fields:
 6 and next bytes: data bytes
   */
 
-  int paginas=(TBBLUE_TOTAL_RAM_SIZE/16); //paginas de 16kb
+  int paginas=tbblue_get_current_ram()/16; //paginas de 16kb 
   z80_byte ram_page;
 
   for (ram_page=0;ram_page<paginas;ram_page++) {

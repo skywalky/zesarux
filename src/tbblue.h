@@ -80,12 +80,11 @@ extern z80_bit tbblue_bootrom;
 
 extern void tbblue_set_timing_48k(void);
 
-//extern void tbblue_set_emulator_setting_timing(void);
 
-/*
-243B - Set register #
-253B - Set/read value
-*/
+
+extern void tbblue_set_emulator_setting_timing(void);
+extern void tbblue_set_emulator_setting_reg_8(void);
+extern void tbblue_set_emulator_setting_divmmc(void);
 
 #define TBBLUE_REGISTER_PORT 0x243b
 #define TBBLUE_VALUE_PORT 0x253b

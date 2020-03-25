@@ -11,6 +11,9 @@ Improved ZRCP:
 -Allow to write commands between "". Not all commands support this
 -Added save-binary command
 
+Improve TBBlue emulation:
+-Enable Timex video by default
+
 
 Fixed ZRCP bugs:
 -Fix possible crash when disconnecting socket
