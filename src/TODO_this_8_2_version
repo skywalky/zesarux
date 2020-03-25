@@ -416,16 +416,6 @@ ya se crea el archivo DMG comprimido en ZLIB.
 
 -Pentagon:
 
-I've found one bug in Zesarux. In Pentagon mode you shouldn't have timex video modes
-
-
-When you enable TR-DOS emulation it uses #ff port as system port
-
-
-Cause pentagon haven't it (timex modes)
-
-
-
 -Page cashe pentagon:
 
 
@@ -502,3 +492,21 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 Documentación zesarux.odt cambiar nombre. Dejar como especificación archivos .zx, y listado de utilidades y poco más 
 
 -Tema gui configurable todos sus elementos: fuentes, colores etc 
+
+
+-De extractor paws o similar:
+TODO: si puntero tokens es 0, no hay tokens
+TODO: algunos valores de xor 255 no son realmente xor 255. Quizá son letras con acentos?
+
+-ql:Convertir nombre ql a nombre disco. Solo cambiar la última _ por ., para poder cargar juegos que tengan una _ en su nombre  
+Esta ya?
+
+-Mdv dos formatos
+
+http://qlforum.co.uk/viewtopic.php?t=749&start=20
+
+You know that q-emulator supports two different types of mdv image files Both with ".mdv" file extensions?
+
+QLay style, and Q-emulator style made with the mdump_exe program.
+
+QLay image files are 174,930 bytes long, and q-emulater image files are of a varying length due to only storing the good sectors of the Microdrive.

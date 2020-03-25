@@ -9109,6 +9109,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_SPECTRUM) {
 
+
+			if (!MACHINE_IS_PENTAGON) {
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_video,NULL,"[%c] ~~Timex video support",(timex_video_emulation.v ? 'X' : ' '));
                         menu_add_item_menu_shortcut(array_menu_settings_display,'t');
                         menu_add_item_menu_tooltip(array_menu_settings_display,"Enables Timex Video modes");
@@ -9140,6 +9142,10 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				}
 
 			}
+			}
+
+
+			
 
 
 

@@ -3033,6 +3033,11 @@ void set_machine_params(void)
 		if (MACHINE_IS_TBBLUE) datagear_dma_enable();
 		//else datagear_dma_disable();
 
+		//Pentagon no tiene modo Timex
+		if (MACHINE_IS_PENTAGON) {
+			if (timex_video_emulation.v) disable_timex_video();
+		}
+
 		//Quitar mensajes de footer establecidos con autoselectoptions.c
 		//Desactivado. Esto provoca:
 		//Al cambiar de maquina, si hay un mensaje pendiente, seguira desplazandose hasta que acabe
