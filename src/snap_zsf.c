@@ -700,6 +700,13 @@ void load_zsf_tbblue_snapshot_block_data(z80_byte *block_data,int longitud_origi
 
   load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[offset_memoria],block_lenght,longitud_original,block_flags&1);
 
+
+  //Y ajustar memoria total
+  //Esto se hace estableciendo el numero de bloques segun la direccion donde se carga el ultimo bloque
+  //Dado que se cargan los bloques ordenados, al final se tendrá el valor mas alto siempre para la memoria total
+  //Si se cargasen en otro orden, esto fallaria
+  tbblue_set_ram_blocks(offset_memoria/1024);
+
 }
 
 void load_zsf_cpc_snapshot_block_data(z80_byte *block_data,int longitud_original)

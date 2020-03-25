@@ -86,6 +86,8 @@ extern void tbblue_set_emulator_setting_timing(void);
 extern void tbblue_set_emulator_setting_reg_8(void);
 extern void tbblue_set_emulator_setting_divmmc(void);
 
+extern void tbblue_set_ram_blocks(int memoria_kb);
+
 #define TBBLUE_REGISTER_PORT 0x243b
 #define TBBLUE_VALUE_PORT 0x253b
 #define TBBLUE_LAYER2_PORT 0x123B

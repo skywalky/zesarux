@@ -58,6 +58,16 @@ z80_byte tbblue_extra_512kb_blocks=3;
 
 int tbblue_use_rtc_traps=1;
 
+//Establece numero de bloques extra de 512kb en base a memoria indicada en KB
+void tbblue_set_ram_blocks(int memoria_kb)
+{
+	if (memoria_kb>=1536) tbblue_extra_512kb_blocks=3;
+	else if (memoria_kb>=1024) tbblue_extra_512kb_blocks=2;
+	else if (memoria_kb>=512) tbblue_extra_512kb_blocks=1;
+	else tbblue_extra_512kb_blocks=0;
+
+	//printf ("tbblue_extra_512kb_blocks: %d\n",tbblue_extra_512kb_blocks);
+}
 
 //Autoactivar real video solo la primera vez que se entra en set_machine con maquina tbblue
 int tbblue_already_autoenabled_rainbow=0;

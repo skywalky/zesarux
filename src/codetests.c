@@ -1341,6 +1341,19 @@ void codetests_open_sockets_infinite(void)
 
 #endif
 
+
+void codetests_tbblue_set_ram_blocks(void)
+{
+
+	int i;
+
+	for (i=0;i<3000;i++) {
+		tbblue_set_ram_blocks(i);
+		printf ("ram: %04dKB blocks: %d\n",i,tbblue_extra_512kb_blocks);
+	}
+
+}
+
 void codetests_main(int main_argc,char *main_argv[])
 {
 
@@ -1417,6 +1430,10 @@ void codetests_main(int main_argc,char *main_argv[])
 
 	printf ("\nRunning get raster tbblue horizontal\n");
 	codetests_tbblue_get_horizontal_raster();
+
+
+	printf ("\nRunning code tests tbblue_set_ram_blocks\n");
+	codetests_tbblue_set_ram_blocks();
 
 	exit(0);
 }
