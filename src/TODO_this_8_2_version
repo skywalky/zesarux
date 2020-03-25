@@ -434,15 +434,13 @@ On pentagon
 EFF7 - just memory managment
 This strange thing "CASHE MEMORY" 
 
--Al igual que habilita real vídeo en tbblue, activar timex 
 
 
 -Quizá versión legacy de Mac ya no tiene sentido. Requiere Mac OS reciente y los cflags O2 estarán soportados en todos los recientes 
 
--Descompresión zip para esxdos. Luego browser wos/zx info/spec computing para esxdos. 
+-Programa de descompresión zip para esxdos. Luego browser wos/zx info/spec computing para esxdos. 
 
 -Meter en development que cuando hay nueva versión hay que actualizar archivo txt del servidor
-
 Si es estable, actualizar ambos archivos
 Si es beta, actualizar solo el archivo de snapshot 
 
@@ -456,15 +454,13 @@ Si es beta, actualizar solo el archivo de snapshot
 
 -Zx99 interface para zx81
 
--Mensajes enviados entre usuarios por ZENG que vayan a speech también 
 
--Probar ZENG con aventura conversacional y speech a ver si se corta el speech o no 
 
 -Agregar a extended stack: fecha y hora de entrada en stack. También puede testado y milisegundos de la hora 
 Extended stack visible en menu. Consultable
 Poder consultar stack normal también en menú 
 
--Tema solarized para ZEsarUX
+
 
 -Cinta de juegos y programas zx81 pasar a digital
 

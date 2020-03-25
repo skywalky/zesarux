@@ -3530,7 +3530,12 @@ You don't need timings for H/V sync =)
 				//Solo forzar real video una vez al entrar aquí. Para poder dejar real video desactivado si el usuario lo quiere,
 				//pues aqui se entra siempre al cambiar velocidad cpu (y eso pasa en la rom cada vez que te mueves por el menu del 128k por ejemplo)
 				//TODO: siempre que el usuario entre al emulador se activara la primera vez
-				if (!tbblue_already_autoenabled_rainbow) enable_rainbow();
+				if (!tbblue_already_autoenabled_rainbow) {
+					enable_rainbow();
+					//lo mismo para timex video
+					enable_timex_video();
+				}
+
 				tbblue_already_autoenabled_rainbow=1;
 
 				multiface_type=MULTIFACE_TYPE_THREE;
