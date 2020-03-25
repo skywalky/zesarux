@@ -8847,74 +8847,70 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
 	do {
 
-		//char string_aux[50],string_aux2[50],emulate_zx8081_disp[50],string_arttext[50],string_aaslow[50],emulate_zx8081_thres[50],string_arttext_threshold[50];
-		//char buffer_string[50];
-
 		//hotkeys usadas: ricglwmptez
 
 
-                char string_vofile_shown[10];
-                menu_tape_settings_trunc_name(vofilename,string_vofile_shown,10);
+		char string_vofile_shown[10];
+		menu_tape_settings_trunc_name(vofilename,string_vofile_shown,10);
 
 
-	                menu_add_item_menu_inicial_format(&array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile,NULL,"Video out to file: %s",string_vofile_shown);
-        	        menu_add_item_menu_tooltip(array_menu_settings_display,"Saves the video output to a file");
-                	menu_add_item_menu_ayuda(array_menu_settings_display,"The generated file have raw format. You can see the file parameters "
-					"on the console enabling verbose debug level to 2 minimum.\n"
-					"A watermark is added to the final video, as you may see when you activate it\n"
-					"Note: Gigascreen, Interlaced effects or menu windows are not saved to file."
+		menu_add_item_menu_inicial_format(&array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile,NULL,"Video out to file: %s",string_vofile_shown);
+		menu_add_item_menu_tooltip(array_menu_settings_display,"Saves the video output to a file");
+		menu_add_item_menu_ayuda(array_menu_settings_display,"The generated file have raw format. You can see the file parameters "
+			"on the console enabling verbose debug level to 2 minimum.\n"
+			"A watermark is added to the final video, as you may see when you activate it\n"
+			"Note: Gigascreen, Interlaced effects or menu windows are not saved to file."
+		);
 
-					);
+		if (menu_vofile_cond() ) {
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_fps,menu_vofile_cond,"[%d] FPS Video file",50/vofile_fps);
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_insert,menu_vofile_cond,"[%c] Video file enabled",(vofile_inserted.v ? 'X' : ' ' ));
+		}
 
-			if (menu_vofile_cond() ) {
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_fps,menu_vofile_cond,"[%d] FPS Video file",50/vofile_fps);
-	        	menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_vofile_insert,menu_vofile_cond,"[%c] Video file enabled",(vofile_inserted.v ? 'X' : ' ' ));
-			}
-
-			else {
-                	  menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-			}
-
-
-
-                if (!MACHINE_IS_Z88) {
-
-
-                        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_autodetect_rainbow,NULL,"[%c] Autodetect Real Video",(autodetect_rainbow.v==1 ? 'X' : ' '));
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Autodetect the need to enable Real Video");
-                        menu_add_item_menu_ayuda(array_menu_settings_display,"This option detects whenever is needed to enable Real Video. "
-                                        "On Spectrum, it detects the reading of idle bus or repeated border changes. "
-                                        "On ZX80/81, it detects the I register on a non-normal value when executing video display. "
-					"On all machines, it also detects when loading a real tape. "
-                                        );
-                }
+		else {
+					menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		}
 
 
 
+		if (!MACHINE_IS_Z88) {
 
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_rainbow,menu_display_rainbow_cond,"[%c] ~~Real Video",(rainbow_enabled.v==1 ? 'X' : ' '));
-			menu_add_item_menu_shortcut(array_menu_settings_display,'r');
 
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Enable Real Video. Enabling it makes display as a real machine");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Real Video makes display works as in the real machine. It uses a bit more CPU than disabling it.\n\n"
-					"On Spectrum, display is drawn every scanline. "
-					"It enables hi-res colour (rainbow) on the screen and on the border, Gigascreen, Interlaced, ULAplus, Spectra, Timex Video, snow effect, idle bus reading and some other advanced features. "
-					"Also enables all the Inves effects.\n"
-					"Disabling it, the screen is drawn once per frame (1/50) and the previous effects "
-					"are not supported.\n\n"
-					"On ZX80/ZX81, enables hi-res display and loading/saving stripes on the screen, and the screen is drawn every scanline.\n"
-					"By disabling it, the screen is drawn once per frame, no hi-res display, and only text mode is supported.\n\n"
-					"On Z88, display is drawn the same way as disabling it; it is only used when enabling Video out to file.\n\n"
-					"Real Video can be enabled on all the video drivers, but on curses, stdout and simpletext (in Spectrum and Z88 machines), the display drawn is the same "
-					"as on non-Real Video, but you can have idle bus support on these drivers. "
-					"Curses, stdout and simpletext drivers on ZX80/81 machines do have Real Video display."
-					);
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_autodetect_rainbow,NULL,"[%c] Autodetect Real Video",(autodetect_rainbow.v==1 ? 'X' : ' '));
+				menu_add_item_menu_tooltip(array_menu_settings_display,"Autodetect the need to enable Real Video");
+				menu_add_item_menu_ayuda(array_menu_settings_display,"This option detects whenever is needed to enable Real Video. "
+								"On Spectrum, it detects the reading of idle bus or repeated border changes. "
+								"On ZX80/81, it detects the I register on a non-normal value when executing video display. "
+			"On all machines, it also detects when loading a real tape. "
+								);
+		}
 
-                if (MACHINE_IS_TSCONF) {
-                        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_vdac,NULL,"[%c] TSConf VDAC PWM",
-                        (tsconf_vdac_with_pwm.v ? 'X' : ' ')     );
 
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Enables full vdac colour palette or PWM style");
+
+
+		menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_rainbow,menu_display_rainbow_cond,"[%c] ~~Real Video",(rainbow_enabled.v==1 ? 'X' : ' '));
+		menu_add_item_menu_shortcut(array_menu_settings_display,'r');
+
+		menu_add_item_menu_tooltip(array_menu_settings_display,"Enable Real Video. Enabling it makes display as a real machine");
+		menu_add_item_menu_ayuda(array_menu_settings_display,"Real Video makes display works as in the real machine. It uses a bit more CPU than disabling it.\n\n"
+				"On Spectrum, display is drawn every scanline. "
+				"It enables hi-res colour (rainbow) on the screen and on the border, Gigascreen, Interlaced, ULAplus, Spectra, Timex Video, snow effect, idle bus reading and some other advanced features. "
+				"Also enables all the Inves effects.\n"
+				"Disabling it, the screen is drawn once per frame (1/50) and the previous effects "
+				"are not supported.\n\n"
+				"On ZX80/ZX81, enables hi-res display and loading/saving stripes on the screen, and the screen is drawn every scanline.\n"
+				"By disabling it, the screen is drawn once per frame, no hi-res display, and only text mode is supported.\n\n"
+				"On Z88, display is drawn the same way as disabling it; it is only used when enabling Video out to file.\n\n"
+				"Real Video can be enabled on all the video drivers, but on curses, stdout and simpletext (in Spectrum and Z88 machines), the display drawn is the same "
+				"as on non-Real Video, but you can have idle bus support on these drivers. "
+				"Curses, stdout and simpletext drivers on ZX80/81 machines do have Real Video display."
+				);
+
+		if (MACHINE_IS_TSCONF) {
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_vdac,NULL,"[%c] TSConf VDAC PWM",
+				(tsconf_vdac_with_pwm.v ? 'X' : ' ')     );
+
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Enables full vdac colour palette or PWM style");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Full vdac colour palette gives you different colour levels for every 5 bit colour component.\n"
 					"With PWM mode it gives you 5 bit values different from 0..23, but from 24 to 31 are all set to value 255");
 
@@ -8925,7 +8921,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 
-                }
+        }
 
 
 		if (MACHINE_IS_CPC) {
@@ -9023,8 +9019,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 		//z80_bit video_zx8081_estabilizador_imagen;
 
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_estabilizador_imagen,menu_cond_zx8081_realvideo,"[%c] Horizontal stabilization", (video_zx8081_estabilizador_imagen.v==1 ? 'X' : ' '));
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Horizontal image stabilization");
-                        menu_add_item_menu_ayuda(array_menu_settings_display,"Horizontal image stabilization. Usually enabled.");
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Horizontal image stabilization");
+			menu_add_item_menu_ayuda(array_menu_settings_display,"Horizontal image stabilization. Usually enabled.");
 
 
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_slow_adjust,menu_cond_zx8081_realvideo,"[%c] ~~LNCTR video adjust", (video_zx8081_lnctr_adjust.v==1 ? 'X' : ' '));
@@ -9037,7 +9033,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 
-        	        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_x_offset,menu_cond_zx8081_realvideo,"[%d] Video x_offset",offset_zx8081_t_coordx);
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_x_offset,menu_cond_zx8081_realvideo,"[%d] Video x_offset",offset_zx8081_t_coordx);
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Video horizontal image offset");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Video horizontal image offset, usually you don't need to change this");
 
@@ -9047,14 +9043,14 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Video minimum vsync length in t-states");
 
 
-                        menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_autodetect_wrx,NULL,"[%c] Autodetect WRX",(autodetect_wrx.v==1 ? 'X' : ' '));
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Autodetect the need to enable WRX mode on ZX80/81");
-                        menu_add_item_menu_ayuda(array_menu_settings_display,"This option detects whenever is needed to enable WRX. "
-                                                "On ZX80/81, it detects the I register on a non-normal value when executing video display. "
-						"In some cases, chr$128 and udg modes are detected incorrectly as WRX");
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_autodetect_wrx,NULL,"[%c] Autodetect WRX",(autodetect_wrx.v==1 ? 'X' : ' '));
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Autodetect the need to enable WRX mode on ZX80/81");
+			menu_add_item_menu_ayuda(array_menu_settings_display,"This option detects whenever is needed to enable WRX. "
+									"On ZX80/81, it detects the I register on a non-normal value when executing video display. "
+			"In some cases, chr$128 and udg modes are detected incorrectly as WRX");
 
 
-	                menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_zx8081_wrx,menu_cond_zx8081_realvideo,"[%c] ~~WRX", (wrx_present.v ? 'X' : ' '));
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_zx8081_wrx,menu_cond_zx8081_realvideo,"[%c] ~~WRX", (wrx_present.v ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_settings_display,'w');
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Enables WRX hi-res mode");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Enables WRX hi-res mode");
