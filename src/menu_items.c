@@ -9111,42 +9111,38 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 			if (!MACHINE_IS_PENTAGON) {
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_video,NULL,"[%c] ~~Timex video support",(timex_video_emulation.v ? 'X' : ' '));
-                        menu_add_item_menu_shortcut(array_menu_settings_display,'t');
-                        menu_add_item_menu_tooltip(array_menu_settings_display,"Enables Timex Video modes");
-                        menu_add_item_menu_ayuda(array_menu_settings_display,"The following Timex Video modes are emulated:\n"
-						"Mode 0: Video data at address 16384 and 8x8 color attributes at address 22528 (like on ordinary Spectrum)\n"
-						"Mode 1: Video data at address 24576 and 8x8 color attributes at address 30720\n"
-						"Mode 2: Multicolor mode: video data at address 16384 and 8x1 color attributes at address 24576\n"
-						"Mode 6: Hi-res mode 512x192, monochrome.");
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_video,NULL,"[%c] ~~Timex video support",(timex_video_emulation.v ? 'X' : ' '));
+				menu_add_item_menu_shortcut(array_menu_settings_display,'t');
+				menu_add_item_menu_tooltip(array_menu_settings_display,"Enables Timex Video modes");
+				menu_add_item_menu_ayuda(array_menu_settings_display,"The following Timex Video modes are emulated:\n"
+				"Mode 0: Video data at address 16384 and 8x8 color attributes at address 22528 (like on ordinary Spectrum)\n"
+				"Mode 1: Video data at address 24576 and 8x8 color attributes at address 30720\n"
+				"Mode 2: Multicolor mode: video data at address 16384 and 8x1 color attributes at address 24576\n"
+				"Mode 6: Hi-res mode 512x192, monochrome.");
 
-			if (timex_video_emulation.v && !MACHINE_IS_TBBLUE) {
-				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_video_512192,NULL,"[%c] Timex Real 512x192",(timex_mode_512192_real.v ? 'X' : ' '));
-				menu_add_item_menu_tooltip(array_menu_settings_display,"Selects between real 512x192 or scaled 256x192");
-				menu_add_item_menu_ayuda(array_menu_settings_display,"Real 512x192 does not support scanline effects (it draws the display at once). "
-							"If not enabled real, it draws scaled 256x192 but does support scanline effects");
+				if (timex_video_emulation.v && !MACHINE_IS_TBBLUE) {
+					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_video_512192,NULL,"[%c] Timex Real 512x192",(timex_mode_512192_real.v ? 'X' : ' '));
+					menu_add_item_menu_tooltip(array_menu_settings_display,"Selects between real 512x192 or scaled 256x192");
+					menu_add_item_menu_ayuda(array_menu_settings_display,"Real 512x192 does not support scanline effects (it draws the display at once). "
+								"If not enabled real, it draws scaled 256x192 but does support scanline effects");
 
 
 
-				if (timex_mode_512192_real.v==0) {
+					if (timex_mode_512192_real.v==0) {
 
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_ugly_hack,NULL,"[%c] Ugly hack",(timex_ugly_hack_enabled ? 'X' : ' ') );
-					menu_add_item_menu_tooltip(array_menu_settings_display,"EXPERIMENTAL feature");
-					menu_add_item_menu_ayuda(array_menu_settings_display,"EXPERIMENTAL feature");
+						menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_ugly_hack,NULL,"[%c] Ugly hack",(timex_ugly_hack_enabled ? 'X' : ' ') );
+						menu_add_item_menu_tooltip(array_menu_settings_display,"EXPERIMENTAL feature");
+						menu_add_item_menu_ayuda(array_menu_settings_display,"EXPERIMENTAL feature");
 
-					if (timex_ugly_hack_enabled) {
-					menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_force_line_512192,NULL,"[%d] Force 512x192 at",timex_ugly_hack_last_hires);
-					menu_add_item_menu_tooltip(array_menu_settings_display,"EXPERIMENTAL feature");
-					menu_add_item_menu_ayuda(array_menu_settings_display,"EXPERIMENTAL feature");
+						if (timex_ugly_hack_enabled) {
+						menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_timex_force_line_512192,NULL,"[%d] Force 512x192 at",timex_ugly_hack_last_hires);
+						menu_add_item_menu_tooltip(array_menu_settings_display,"EXPERIMENTAL feature");
+						menu_add_item_menu_ayuda(array_menu_settings_display,"EXPERIMENTAL feature");
+						}
 					}
+
 				}
-
 			}
-			}
-
-
-			
-
 
 
 			if (!MACHINE_IS_ZXEVO) {
@@ -9170,7 +9166,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_SPECTRUM && rainbow_enabled.v==0) {
-	                menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_emulate_zx8081display_spec,menu_display_settings_disp_zx8081_spectrum,"[%c] ZX80/81 Display on Speccy", (simulate_screen_zx8081.v==1 ? 'X' : ' '));
@@ -9180,11 +9176,11 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 			if (menu_display_emulate_zx8081_cond() ){
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_emulate_zx8081_thres,menu_display_emulate_zx8081_cond,"[%d] Pixel threshold",umbral_simulate_screen_zx8081);
-			menu_add_item_menu_tooltip(array_menu_settings_display,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
-					   "when ZX80/81 Display on Speccy enabled");
-			menu_add_item_menu_ayuda(array_menu_settings_display,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
-					   "when ZX80/81 Display on Speccy enabled");
+				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_emulate_zx8081_thres,menu_display_emulate_zx8081_cond,"[%d] Pixel threshold",umbral_simulate_screen_zx8081);
+				menu_add_item_menu_tooltip(array_menu_settings_display,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
+						"when ZX80/81 Display on Speccy enabled");
+				menu_add_item_menu_ayuda(array_menu_settings_display,"Pixel Threshold to draw black or white in a 4x4 rectangle, "
+						"when ZX80/81 Display on Speccy enabled");
 			}
 
 
@@ -9228,11 +9224,11 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 		
 
 
-                menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_settings_display,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		//menu_add_item_menu(array_menu_settings_display,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_settings_display);
 
-                retorno_menu=menu_dibuja_menu(&settings_display_opcion_seleccionada,&item_seleccionado,array_menu_settings_display,"Display Settings" );
+		retorno_menu=menu_dibuja_menu(&settings_display_opcion_seleccionada,&item_seleccionado,array_menu_settings_display,"Display Settings" );
 
                 
 
