@@ -210,7 +210,9 @@ En ZENG queda bien pero en descargas no
 -Tbblue: al cargar juegos .tap de 48k por ejemplo, cuando pide en que modo cargar, usa un nuevo registro en que cambia la rom:
 
 
--There was a major change in the hardware to support better compatibility with the 48k and 128k. Now when you load 48k or 128k programs, the original roms are put in place as well. This is done using a new hardware feature the alternate rom:
+-There was a major change in the hardware to support better compatibility with the 48k and 128k.
+ Now when you load 48k or 128k programs, the original roms are put in place as well. 
+ This is done using a new hardware feature the alternate rom:
 0x8C (140) => Alternate ROM 
 (R/W) (hard reset = 0)
 IMMEDIATE
@@ -226,8 +228,6 @@ bit 0 = 1 to lock ROM0 (128K rom)
 The locking mechanism also applies if the alt rom is not enabled. For the +3 and zx next, if the two lock bits are not
 zero, then the corresponding rom page is locked in place. Other models use the bits to preferentially lock the corresponding
 48K rom or the 128K rom.
-
-
 
 
 
@@ -325,7 +325,8 @@ The machine type is coming from nextreg 3
 The machine type does affect a few things like which ports are used for the multiface (multiface 1, multiface 128, multiface +3), whether certain configuration bits in the nextreg can be changed and some port decoding on ports 7ffd, eg, (although that is going to be changed to depend on video timing instead soon).
 
 "but this locking always need bit 7 set, right?":
-A: No it applies all the time if the two locking bits are not 00.  The difference is the locking is applied to the alt rom if bit 7 is set and to the regular roms if bit 7 is reset.
+A: No it applies all the time if the two locking bits are not 00.  
+The difference is the locking is applied to the alt rom if bit 7 is set and to the regular roms if bit 7 is reset.
 -Quizá falte alguna instrucción de z80n para lo del altrom?
 
 -Soft reset can be the button or via nextreg 2: que cuando haga ese reset, copie bits bajos a altos de registro 8c

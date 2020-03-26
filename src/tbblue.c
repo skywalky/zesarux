@@ -2217,6 +2217,155 @@ void tbblue_set_rom_page_no_255(z80_byte segment)
 	debug_paginas_memoria_mapeadas[segment]=reg_value;
 }
 
+int tbblue_get_altrom(void)
+{
+/*
+0x8C (140) => Alternate ROM 
+(R/W) (hard reset = 0)
+IMMEDIATE
+bit 7 = 1 to enable alt rom
+bit 6 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+bit 5 = 1 to lock ROM1 (48K rom)
+bit 4 = 1 to lock ROM0 (128K rom)
+AFTER SOFT RESET (copied into bits 7-4)
+bit 3 = 1 to enable alt rom
+bit 2 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+bit 1 = 1 to lock ROM1 (48K rom)
+bit 0 = 1 to lock ROM0 (128K rom)
+*/
+
+/*
+   -- 0x018000 - 0x01BFFF (16K)  => Alt ROM0 128k           A20:A16 = 00001,10
+   -- 0x01c000 - 0x01FFFF (16K)  => Alt ROM1 48k            A20:A16 = 00001,11
+   */
+
+/*
+
+
+   nr_8c_altrom_lock_rom1 <= nr_8c_altrom(5);
+   nr_8c_altrom_lock_rom0 <= nr_8c_altrom(4);
+   ....
+
+   port_1ffd_rom <= port_1ffd_reg(2) & port_7ffd_reg(4);
+
+   ....
+
+      signal machine_type_config    : std_logic;
+   signal machine_type_48        : std_logic;
+   signal machine_type_128       : std_logic;
+   signal machine_type_p3        : std_logic;
+
+
+   machine_type_config <= '1' when nr_03_machine_type = "000" else '0';   -- 48k config
+   machine_type_48 <= '1' when nr_03_machine_type(2 downto 1) = "00" else '0';   -- 48k
+   machine_type_128 <= '1' when nr_03_machine_type = "010" or nr_03_machine_type = "100" else '0';  -- 128k or pentagon
+   machine_type_p3 <= '1' when nr_03_machine_type = "011" else '0';   -- +3
+
+(R/W) 0x03 (03) => Set machine type
+...
+bits 2-0 = Machine type (writable in config mode only):
+000 = Config mode
+001 = ZX 48K
+010 = ZX 128K/+2 (Grey)
+011 = ZX +2A-B/+3e/Next Native
+100 = Pentagon 128K      
+
+...
+   process (machine_type_48, machine_type_p3, nr_8c_altrom_lock_rom1, nr_8c_altrom_lock_rom0, port_1ffd_rom)
+   begin
+      if machine_type_48 = '1' then
+         sram_active_rom <= "00";
+         sram_alt_128 <= (not nr_8c_altrom_lock_rom1) and nr_8c_altrom_lock_rom0;
+
+
+      elsif machine_type_p3 = '1' then
+         if nr_8c_altrom_lock_rom1 = '1' or nr_8c_altrom_lock_rom0 = '1' then
+            sram_active_rom <= nr_8c_altrom_lock_rom1 & nr_8c_altrom_lock_rom0;
+            sram_alt_128 <= not nr_8c_altrom_lock_rom1;
+         else
+            sram_active_rom <= port_1ffd_rom;
+            sram_alt_128 <= not port_1ffd_rom(0);   -- behave like a 128k machine
+         end if;
+
+
+      else
+         if nr_8c_altrom_lock_rom1 = '1' or nr_8c_altrom_lock_rom0 = '1' then
+            sram_active_rom <= '0' & nr_8c_altrom_lock_rom1;
+            sram_alt_128 <= not nr_8c_altrom_lock_rom1;
+         else
+            sram_active_rom <= '0' & port_1ffd_rom(0);
+            sram_alt_128 <= not port_1ffd_rom(0);
+         end if;
+      end if;
+
+
+   end process;   
+
+   Acerca de sram_alt_128:
+Allen Albright Oh yeah -- the next is beginning with a +3 port implementation but it can still 
+behave as a 48k, 128k, pentagon and it does that by disabling port 0x1ffd when running that code. 
+So the hardware still internally operates as a +3 but when behaving as a 48k, 128k, pentagon it's not 
+possible to write to port 0x1ffd and the machine behaves like a 48k, 128k, pentagon.
+This enabling or disabling of hardware is done by nextzxos (or the user) when running legacy 
+programs through nextreg 0x85 - 0x82 and through nextreg 0x89 - 0x86. The latter "expansion bus decodes" 
+only come into force when the expansion bus is enabled, in which case the internal port decode and 
+the expansion bus decodes are ANDed together. For a 48k load, you'd turn off most things and change the 
+video timing in nextreg 0x03 to generate the 48k video frame.   
+
+-> O sea que quien lo entienda que me lo explique :(
+
+*/
+
+	int altrom;
+
+	/*
+bit 5 = 1 to lock ROM1 (48K rom)
+bit 4 = 1 to lock ROM0 (128K rom)
+
+altrom=0 -> ROM0
+altrom=1 -> ROM01
+*/
+
+			if ( (tbblue_registers[0x8c] & 32) == 32) {
+				//printf ("ROM1\n");
+				altrom=1;
+			}
+			//128k rom
+			else if ( (tbblue_registers[0x8c] & 16) == 16) {
+				altrom=0;
+				//printf ("ROM0\n");
+			}
+
+			//a 0 los dos . paginado +3.
+			else {
+				
+				z80_byte rom_entra=((puerto_32765>>4)&1);
+				altrom=rom_entra;	
+				//printf ("alt rom segun 7ffd (%d)\n",altrom);
+			}
+
+	return altrom;
+}
+
+
+int tbblue_get_altrom_offset_dir(int altrom,z80_int dir)
+{
+	int offset;
+	/*
+	   -- 0x018000 - 0x01BFFF (16K)  => Alt ROM0 128k           A20:A16 = 00001,10
+   -- 0x01c000 - 0x01FFFF (16K)  => Alt ROM1 48k            A20:A16 = 00001,11
+   */
+
+			if (altrom==1) {
+				offset=0x01c000+dir;
+			}
+			else {
+				offset=0x018000+dir;
+			}
+
+	return offset;
+}
+
 void tbblue_set_rom_page(z80_byte segment,z80_byte page)
 {
 	z80_byte tbblue_register=80+segment;
@@ -2224,7 +2373,28 @@ void tbblue_set_rom_page(z80_byte segment,z80_byte page)
 
 	if (reg_value==255) {
 		page=tbblue_get_limit_sram_page(page);
-		tbblue_memory_paged[segment]=tbblue_rom_memory_pages[page];
+
+		//Si esta altrom en read
+		//Altrom.
+		//bit 6 =0 , only for read. bit 6=1, only for write
+		if (  (tbblue_registers[0x8c] & 192) ==128)    {
+			
+			int altrom;
+
+			altrom=tbblue_get_altrom();
+
+			printf ("Enabling alt rom on read. altrom=%d\n",altrom);
+
+
+			int offset=tbblue_get_altrom_offset_dir(altrom,8192*segment);
+
+			tbblue_memory_paged[segment]=&memoria_spectrum[offset];
+
+		}
+
+		else tbblue_memory_paged[segment]=tbblue_rom_memory_pages[page];
+
+
 		debug_paginas_memoria_mapeadas[segment]=DEBUG_PAGINA_MAP_ES_ROM+page;
 	}
 	else {
@@ -2955,6 +3125,41 @@ void tbblue_reset(void)
   bit 0 = (R/W) Reading 1 indicates a Soft-reset. If written 1 causes a Soft Reset.
 	*/
 	tbblue_registers[2]=1;
+
+
+
+
+ /*
+ 0x8C (140) => Alternate ROM
+ (R/W) (hard reset = 0)
+ IMMEDIATE
+   bit 7 = 1 to enable alt rom
+   bit 6 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+   bit 5 = 1 to lock ROM1 (48K rom)
+   bit 4 = 1 to lock ROM0 (128K rom)
+ AFTER SOFT RESET (copied into bits 7-4)
+   bit 3 = 1 to enable alt rom
+   bit 2 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+   bit 1 = 1 to lock ROM1 (48K rom)
+   bit 0 = 1 to lock ROM0 (128K rom)
+ The locking mechanism also applies if the alt rom is not enabled. For the +3 and zx next, if the two lock bits are not
+ zero, then the corresponding rom page is locked in place. Other models use the bits to preferentially lock the corresponding
+ 48K rom or the 128K rom.
+
+ */
+
+       z80_byte reg8c_low=tbblue_registers[0x8c];
+
+       //Moverlo a bits altos
+       reg8c_low = reg8c_low << 4;
+
+       //Quitar de origen los bits altos
+
+       tbblue_registers[0x8c] &=0xF;
+
+       //Y meterle los altos
+
+       tbblue_registers[0x8c] |=reg8c_low;	
  
 
 	tbblue_reset_common();
@@ -2985,6 +3190,9 @@ void tbblue_hard_reset(void)
 	tbblue_registers[7]=0;
 	tbblue_registers[8]=16;
 	tbblue_registers[9]=0;
+
+
+	tbblue_registers[0x8c]=0;
 
 	tbblue_reset_common();
 
@@ -3328,6 +3536,9 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 	z80_byte last_register_99=tbblue_registers[99];
 
 	if (index_position==3) {
+
+			printf ("Cambiando registro tipo maquina 3: valor: %02XH\n",value);
+
             //Controlar caso especial
             //(W) 0x03 (03) => Set machine type, only in IPL or config mode
             //   		bits 2-0 = Machine type:
@@ -3336,6 +3547,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
             if (!(machine_type==0 || tbblue_bootrom.v)) {
                 debug_printf(VERBOSE_DEBUG,"Can not change machine type (to %02XH) while in non config mode or non IPL mode",value);
+				printf("Can not change machine type (to %02XH) while in non config mode or non IPL mode\n",value);
                 return;
             }
         }
@@ -3724,6 +3936,12 @@ Bit	Function
 		tbblue_sync_display1_reg_to_others(value);
 
 		break;	
+
+
+		case 140:
+			printf ("Write to 140 (8c) register value: %02XH PC=%X\n",value,reg_pc);
+			tbblue_set_memory_pages();
+		break;
 
 
 		default:

@@ -1914,6 +1914,87 @@ z80_byte *tbblue_return_segment_memory(z80_int dir)
 
 }
 
+z80_byte *old_tbblue_get_altrom_dir(z80_int dir)
+{
+	/*
+	   -- 0x018000 - 0x01BFFF (16K)  => Alt ROM0 128k           A20:A16 = 00001,10
+   -- 0x01c000 - 0x01FFFF (16K)  => Alt ROM1 48k            A20:A16 = 00001,11
+	*/
+
+/*
+0x8C (140) => Alternate ROM
+(R/W) (hard reset = 0)
+IMMEDIATE
+  bit 7 = 1 to enable alt rom
+  bit 6 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+  bit 5 = 1 to lock ROM1 (48K rom)
+  bit 4 = 1 to lock ROM0 (128K rom)
+*/
+
+	int puntero=0;
+
+	//48k rom
+	if ( (tbblue_registers[0x8c] & 32) == 32) {
+		puntero=0x01c000+(dir&16383);
+		if (dir<2048) printf("tbblue_get_altrom_dir. segun 48k rom\n");
+		//return &memoria_spectrum[0x01c000+(dir&16383)];
+	}
+	//128k rom
+	else if ( (tbblue_registers[0x8c] & 16) == 16) {
+		puntero=0x018000+(dir&16383);
+		if (dir<2048) printf("tbblue_get_altrom_dir. segun 128k rom\n");
+		//return &memoria_spectrum[0x018000+(dir&16383)];
+	}
+
+	//a 0 los dos . paginado +3.
+	else {
+		z80_byte rom_entra=((puerto_32765>>4)&1) + ((puerto_8189>>1)&2);
+		puntero=rom_entra*16384+(dir&16383);
+
+		//temp rom 48k
+		puntero=0x01c000+(dir&16383);
+
+		if (dir<2048) printf("tbblue_get_altrom_dir. segun +3 rom (rom_entra=%d)\n",rom_entra);
+		//return &memoria_spectrum[rom_entra*16384+(dir&16383)];
+	}
+
+	if (dir<2048) printf("tbblue_get_altrom_dir. dir=%04XH puntero=%X\n",dir,puntero);
+	return &memoria_spectrum[puntero];
+
+}
+
+
+z80_byte *tbblue_get_altrom_dir(z80_int dir)
+{
+	/*
+	   -- 0x018000 - 0x01BFFF (16K)  => Alt ROM0 128k           A20:A16 = 00001,10
+   -- 0x01c000 - 0x01FFFF (16K)  => Alt ROM1 48k            A20:A16 = 00001,11
+	*/
+
+/*
+0x8C (140) => Alternate ROM
+(R/W) (hard reset = 0)
+IMMEDIATE
+  bit 7 = 1 to enable alt rom
+  bit 6 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+  bit 5 = 1 to lock ROM1 (48K rom)
+  bit 4 = 1 to lock ROM0 (128K rom)
+*/
+
+	int puntero;
+
+	//Ver si es rom 0 o rom 1
+	int altrom;
+
+	altrom=tbblue_get_altrom();
+
+	if (dir<2048) printf("tbblue_get_altrom_dir. altrom=%d\n",altrom);
+
+	puntero=tbblue_get_altrom_offset_dir(altrom,dir&16383);
+
+	return &memoria_spectrum[puntero];
+
+}
 
 void poke_byte_no_time_tbblue(z80_int dir,z80_byte valor)
 {
@@ -1923,6 +2004,31 @@ void poke_byte_no_time_tbblue(z80_int dir,z80_byte valor)
 set_visualmembuffer(dir);
 
 #endif
+
+	//Altrom. Si escribe en espacio de memoria de rom 0-3fffh
+	if (dir<16384 && (  (tbblue_registers[0x8c] & 192) ==192)   ) {
+		/*
+		0x8C (140) => Alternate ROM
+(R/W) (hard reset = 0)
+IMMEDIATE
+  bit 7 = 1 to enable alt rom
+  bit 6 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
+
+  //bit 6 =0 , only for read. bit 6=1, only for write
+  */
+
+ 		//solo un poco de debug
+		if (dir<2048) printf ("Escribiendo en altrom dir: %04XH valor : %02XH\n",dir,valor);
+
+		//Y escribimos
+		z80_byte *altrompointer;
+
+		altrompointer=tbblue_get_altrom_dir(dir);
+		*altrompointer=valor;
+	}
+
+
+
 
 		//Si se escribe en memoria layer2
 		if (dir<16384 && tbblue_write_on_layer2() ) {

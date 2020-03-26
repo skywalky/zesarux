@@ -80,7 +80,8 @@ extern z80_bit tbblue_bootrom;
 
 extern void tbblue_set_timing_48k(void);
 
-
+extern int tbblue_get_altrom_offset_dir(int altrom,z80_int dir);
+extern int tbblue_get_altrom(void);
 
 extern void tbblue_set_emulator_setting_timing(void);
 extern void tbblue_set_emulator_setting_reg_8(void);
