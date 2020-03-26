@@ -2018,7 +2018,9 @@ IMMEDIATE
   */
 
  		//solo un poco de debug
-		if (dir<2048) printf ("Escribiendo en altrom dir: %04XH valor : %02XH\n",dir,valor);
+		//if (dir<2048 || (dir>0x2400 && dir<0x2700) ) printf ("Escribiendo en altrom dir: %04XH valor : %02XH\n",dir,valor);
+
+		if (dir==0x2553) printf ("Escribiendo en 2553 valor: %02XH PC=%X\n",valor,reg_pc);
 
 		//Y escribimos
 		z80_byte *altrompointer;
