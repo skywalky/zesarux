@@ -2381,6 +2381,8 @@ void tbblue_set_rom_page(z80_byte segment,z80_byte page)
 			
 			int altrom;
 
+			//TODO: tener en cuenta altrom si maquina es distinta de machine_type_p3,
+			//que es como en teoria lo estoy haciendo. Ver codigo vhdl para salir de dudas
 			altrom=tbblue_get_altrom();
 
 			printf ("Enabling alt rom on read. altrom=%d\n",altrom);
