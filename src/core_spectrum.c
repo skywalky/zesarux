@@ -778,9 +778,19 @@ void core_spectrum_ciclo_fetch(void)
 
 				rzx_in_fetch_counter_til_next_int_counter++;
 
-						
+
+#ifdef EMULATE_SCF_CCF_UNDOC_FLAGS	
+				//Guardar antes F
+				scf_ccf_undoc_flags_before=Z80_FLAGS;
+#endif
+
 	            codsinpr[byte_leido_core_spectrum]  () ;
-				
+
+
+#ifdef EMULATE_SCF_CCF_UNDOC_FLAGS	
+				//Para saber si se ha modificado
+				scf_ccf_undoc_flags_after_changed=(Z80_FLAGS  == scf_ccf_undoc_flags_before ? 0 : 1);
+#endif				
 
 				//Ultima duracion, si es que ultimo opcode no genera fetch de nuevo del opcode
 				if (!core_refetch) duracion_ultimo_opcode=t_estados-t_estados_antes_opcode;

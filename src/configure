@@ -53,6 +53,7 @@ show_help()
 	echo "--disable-cocoa              Disable Cocoa Mac OS X native GUI"
 	echo "--disable-linuxrealjoystick  Disable linux real joystick support"
 	echo "--enable-memptr              Enable MEMPTR emulation"
+	echo "--enable-undoc-scfccf        Enable SCF/CCF undocumented flags emulation"
 	echo "--enable-visualmem           Enable visual memory option on menu"
 	echo "--enable-cpustats            Enable CPU statistics option on menu"
 	echo "--enable-raspberry           Enable Raspberry extensions"
@@ -122,6 +123,7 @@ OPTIONXEXT="enabled"
 OPTIONXVIDMODE="enabled"
 INSTALLPREFIX="/usr/local"
 OPTIONEMULATE_MEMPTR=""
+OPTIONEMULATE_UNDOC_SCF_CCF=""
 OPTIONEMULATE_VISUALMEM=""
 OPTIONEMULATE_CPU_STATS=""
 OPTIONEMULATE_RASPBERRY=""
@@ -276,6 +278,10 @@ while [ $# -gt 0 ]; do
 
 	--enable-memptr)
 	OPTIONEMULATE_MEMPTR="yes"
+	;;
+
+	--enable-undoc-scfccf)
+	OPTIONEMULATE_UNDOC_SCF_CCF="yes"
 	;;
 
 	--enable-visualmem)
@@ -2082,6 +2088,15 @@ cat >> compileoptions.h << _EOF
 _EOF
 COMPILE_VARIABLES="$COMPILE_VARIABLES EMULATE_MEMPTR"
 fi
+
+
+if [ "$OPTIONEMULATE_UNDOC_SCF_CCF" != "" ]; then
+cat >> compileoptions.h << _EOF
+#define EMULATE_SCF_CCF_UNDOC_FLAGS
+_EOF
+COMPILE_VARIABLES="$COMPILE_VARIABLES EMULATE_SCF_CCF_UNDOC_FLAGS"
+fi
+
 
 if [ "$OPTIONEMULATE_VISUALMEM" != "" ]; then
 cat >> compileoptions.h << _EOF

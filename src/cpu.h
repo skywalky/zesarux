@@ -148,6 +148,9 @@ extern z80_byte Z80_FLAGS_SHADOW;
 
 extern z80_int memptr;
 
+extern z80_byte scf_ccf_undoc_flags_before;
+extern int scf_ccf_undoc_flags_after_changed;
+
 extern z80_bit iff1,iff2;
 
 extern z80_bit interrupcion_pendiente;

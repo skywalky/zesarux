@@ -395,6 +395,17 @@ Finally, I also explicitly tested how an interrupt might affect the Q register. 
 
 
 
+As I have reported before, the pre-CCF variant indicates that no other instruction except CCF and SCF is affected 
+by the Q register, which is good. It means that single bit is enough to keep track of its state, which simplifies things.
+
+The post-CCF variant proved what I have stated before - if an instruction modifies the flags, 
+the immediately following SCF/CCF does move of bits 5+3 from A to F, whereas if an instruction doesn't modify 
+the flags, the SCF/CCF does OR of bits 5+3 from A to F.
+
+But it leaks the info through in case of the the SCF/CCF instructions,
+ which seem to set the content of the 5+3 flags of F to ((Q^F)|A).
+
+
 
 -Build Mac:
 

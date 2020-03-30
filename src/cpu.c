@@ -469,6 +469,10 @@ z80_byte Z80_FLAGS_SHADOW;
 //MEMPTR. Solo se usara si se ha activado en el configure
 z80_int memptr;
 
+//Solo se usa si se habilita EMULATE_SCF_CCF_UNDOC_FLAGS
+z80_byte scf_ccf_undoc_flags_before;
+int scf_ccf_undoc_flags_after_changed;
+
 
 //Emulacion de refresco de memoria.
 int machine_emulate_memory_refresh=0;
