@@ -344,6 +344,24 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 -tbblue: considerar mejor prioridades de capas de memoria, por ejemplo al escribir altrom esta comprobando aparte si esta diviface habilitdo
 esto por ejemplo fallaria si alguien le da por escribir en altrom pero habilitando layer2, creo que layer2 tiene mas prioridad por tanto altrom no se deberia escribir 
 Hay una lista de capas de prioridades en el codigo fuente de la fpga. Segun src/zxnext.vhd:
-TODO...
+
+   -- memory decode order
+   --
+   -- 0-16k:
+   --   1. bootrom
+   --   2. machine config mapping
+   --   3. multiface
+   --   4. divmmc
+   --   5. layer 2 mapping
+   --   6. mmu
+   --   7. romcs expansion bus
+   --   8. rom
+   --
+   -- 16k-48k:
+   --   1. layer 2 mapping
+   --   2. mmu
+   --
+   -- 48k-64k:
+   --   1. mmu
 
 
