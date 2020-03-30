@@ -473,7 +473,6 @@ De momento estoy haciendo 64 patterns-> por tanto, 256 bytes por pattern
 -Sincronizar bits de joystick de puerto config2
 -no dejar aumentar memoria divmmc mas de 128kb, pues tbblue no tiene mas que eso. sino, se accederia a memoria mas alla del divmmc
 
--a veces al arrancar la maquina no encuentra archivos de la sd. Quiza por algun registro de la mmc que no se inicializa correctamente?
 -para emulacion de +3e, la sd se utiliza la sd secundaria. emular segunda SD????
 -considerar algunas escrituras de puertos que dicen:
 only in bootrom or config mode:
