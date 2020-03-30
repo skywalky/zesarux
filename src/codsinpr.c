@@ -717,6 +717,8 @@ void aux_scf_ccf_undoc_flags(void)
 https://www.worldofspectrum.org/forums/discussion/comment/669314
 In other words, the content of A is copied to flags 5+3 after SCF/CCF if the previous operation did set the flags, 
 whereas it is ORed in there if it didn't set the flags. 
+
+Try it with z80flags.tap
 */
 #ifdef EMULATE_SCF_CCF_UNDOC_FLAGS	
         //printf ("Flags changed before: %d\n",scf_ccf_undoc_flags_after_changed);
