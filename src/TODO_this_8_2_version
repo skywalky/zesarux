@@ -254,29 +254,6 @@ Si línea empieza con comentario, los espacios de indican cómo el bit 7 del sig
 Entiendo que esto no se hace así ya, solo se hace para los dos tabuladores de una línea con opcodes 
 Aunque esto comprime muy poco, solo se ahorra 1 byte por cada espacio, pero algo es algo...
 
--Hilo ccf/scf
-https://www.worldofspectrum.org/forums/discussion/comment/669314
-z80flags.tap
-The tests made so far make me believe that the Z80 CPU has an internal register, which I called Q for now, where it assembles the new content of the F register, before moving it back to F. When the instruction doesn't modify the flags, this register is reset instead (or in case of NEC CPU's set to some partially undefined values, as Woody experienced before).
-
-Normally, you never see the content of this register. But it leaks the info through in case of the the SCF/CCF instructions, which seem to set the content of the 5+3 flags of F to ((Q^F)|A).
-
-The post-CCF variant proved what I have stated before - if an instruction modifies the flags, the immediately following SCF/CCF does move of bits 5+3 from A to F, whereas if an instruction doesn't modify the flags, the SCF/CCF does OR of bits 5+3 from A to F.
-
-Finally, I also explicitly tested how an interrupt might affect the Q register. And it turns out that an interrupt clears the Q register as well, so regardless of the instruction interrupted, the SCF/CCF executed as first instruction of the interrupt handler always does OR, rather than move. (At least for IM 2 mode. I believe that IM 0 does the same thing, as does standard IM 1 case, but I can only speculate what happens if weird instruction is on the bus in case of IM 1.)
-
-
-
-As I have reported before, the pre-CCF variant indicates that no other instruction except CCF and SCF is affected 
-by the Q register, which is good. It means that single bit is enough to keep track of its state, which simplifies things.
-
-The post-CCF variant proved what I have stated before - if an instruction modifies the flags, 
-the immediately following SCF/CCF does move of bits 5+3 from A to F, whereas if an instruction doesn't modify 
-the flags, the SCF/CCF does OR of bits 5+3 from A to F.
-
-But it leaks the info through in case of the the SCF/CCF instructions,
- which seem to set the content of the 5+3 flags of F to ((Q^F)|A).
-
 
 
 -Build Mac:

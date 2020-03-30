@@ -3941,7 +3941,7 @@ Bit	Function
 
 
 		case 140:
-			printf ("Write to 140 (8c) register value: %02XH PC=%X\n",value,reg_pc);
+			//printf ("Write to 140 (8c) register value: %02XH PC=%X\n",value,reg_pc);
 			tbblue_set_memory_pages();
 		break;
 
