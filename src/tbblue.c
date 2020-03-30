@@ -2385,7 +2385,7 @@ void tbblue_set_rom_page(z80_byte segment,z80_byte page)
 			//que es como en teoria lo estoy haciendo. Ver codigo vhdl para salir de dudas
 			altrom=tbblue_get_altrom();
 
-			printf ("Enabling alt rom on read. altrom=%d\n",altrom);
+			//printf ("Enabling alt rom on read. altrom=%d\n",altrom);
 
 
 			int offset=tbblue_get_altrom_offset_dir(altrom,8192*segment);
@@ -3539,7 +3539,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 	if (index_position==3) {
 
-			printf ("Cambiando registro tipo maquina 3: valor: %02XH\n",value);
+			//printf ("Cambiando registro tipo maquina 3: valor: %02XH\n",value);
 
             //Controlar caso especial
             //(W) 0x03 (03) => Set machine type, only in IPL or config mode
@@ -3549,7 +3549,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
             if (!(machine_type==0 || tbblue_bootrom.v)) {
                 debug_printf(VERBOSE_DEBUG,"Can not change machine type (to %02XH) while in non config mode or non IPL mode",value);
-				printf("Can not change machine type (to %02XH) while in non config mode or non IPL mode\n",value);
+				//printf("Can not change machine type (to %02XH) while in non config mode or non IPL mode\n",value);
                 return;
             }
         }

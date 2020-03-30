@@ -1914,54 +1914,6 @@ z80_byte *tbblue_return_segment_memory(z80_int dir)
 
 }
 
-z80_byte *old_tbblue_get_altrom_dir(z80_int dir)
-{
-	/*
-	   -- 0x018000 - 0x01BFFF (16K)  => Alt ROM0 128k           A20:A16 = 00001,10
-   -- 0x01c000 - 0x01FFFF (16K)  => Alt ROM1 48k            A20:A16 = 00001,11
-	*/
-
-/*
-0x8C (140) => Alternate ROM
-(R/W) (hard reset = 0)
-IMMEDIATE
-  bit 7 = 1 to enable alt rom
-  bit 6 = 1 to make alt rom visible only during writes, otherwise replaces rom during reads
-  bit 5 = 1 to lock ROM1 (48K rom)
-  bit 4 = 1 to lock ROM0 (128K rom)
-*/
-
-	int puntero=0;
-
-	//48k rom
-	if ( (tbblue_registers[0x8c] & 32) == 32) {
-		puntero=0x01c000+(dir&16383);
-		if (dir<2048) printf("tbblue_get_altrom_dir. segun 48k rom\n");
-		//return &memoria_spectrum[0x01c000+(dir&16383)];
-	}
-	//128k rom
-	else if ( (tbblue_registers[0x8c] & 16) == 16) {
-		puntero=0x018000+(dir&16383);
-		if (dir<2048) printf("tbblue_get_altrom_dir. segun 128k rom\n");
-		//return &memoria_spectrum[0x018000+(dir&16383)];
-	}
-
-	//a 0 los dos . paginado +3.
-	else {
-		z80_byte rom_entra=((puerto_32765>>4)&1) + ((puerto_8189>>1)&2);
-		puntero=rom_entra*16384+(dir&16383);
-
-		//temp rom 48k
-		puntero=0x01c000+(dir&16383);
-
-		if (dir<2048) printf("tbblue_get_altrom_dir. segun +3 rom (rom_entra=%d)\n",rom_entra);
-		//return &memoria_spectrum[rom_entra*16384+(dir&16383)];
-	}
-
-	if (dir<2048) printf("tbblue_get_altrom_dir. dir=%04XH puntero=%X\n",dir,puntero);
-	return &memoria_spectrum[puntero];
-
-}
 
 
 z80_byte *tbblue_get_altrom_dir(z80_int dir)
@@ -1988,7 +1940,7 @@ IMMEDIATE
 
 	altrom=tbblue_get_altrom();
 
-	if (dir<2048) printf("tbblue_get_altrom_dir. altrom=%d\n",altrom);
+	//if (dir<2048) printf("tbblue_get_altrom_dir. altrom=%d\n",altrom);
 
 	puntero=tbblue_get_altrom_offset_dir(altrom,dir&16383);
 
@@ -2017,13 +1969,8 @@ IMMEDIATE
   //bit 6 =0 , only for read. bit 6=1, only for write
   */
 
- 		//solo un poco de debug
-		//if (dir<2048 || (dir>0x2400 && dir<0x2700) ) printf ("Escribiendo en altrom dir: %04XH valor : %02XH\n",dir,valor);
-
-		//if (dir>=0x2550 && dir<0x2560) printf ("Escribiendo en %XH valor: %02XH PC=%X\n",dir,valor,reg_pc);
-		//if (dir>=0x26e0 && dir<0x26f0) printf ("Escribiendo en %XH valor: %02XH PC=%X\n",dir,valor,reg_pc);
-		printf ("Escribiendo en altrom dir: %04XH valor : %02XH  PC=%04XH diviface control: %d active: %d\n",dir,valor,reg_pc,
-				        diviface_control_register&128, diviface_paginacion_automatica_activa.v);
+		//printf ("Escribiendo en altrom dir: %04XH valor : %02XH  PC=%04XH diviface control: %d active: %d\n",dir,valor,reg_pc,
+		//		        diviface_control_register&128, diviface_paginacion_automatica_activa.v);
 
 
 		int escribir=1;
@@ -2033,115 +1980,9 @@ IMMEDIATE
 		      )
 		{
 			escribir=0;
-			printf ("No escribimos pues esta diviface ram conmutada\n");
-                }
+			//printf ("No escribimos pues esta diviface ram conmutada\n");
+        }
 
-
-		//Feo parche. Hay escrituras en la 2550h y 26e0h que dejan la rom inconsistente
-		//No se ciertamente de donde salen. Permito de momento solo las escrituras normales y punto
-		//Me suena que el problema es del propio nextos, ya que la rom que deja en altrom (sin contar estas direcciones
-		//inconsistentes) es una rom que no es ni la 48.rom ni la rom que tiene en la sram offset c000h
-		/*
-bien 00002550  d5 e5 1a ** ae 28 ** 04 3c 20  1a 3d 4f 06 07 14 23 1a  |....(.< .=O...#.|
-mal  00002550  d5 e5 1a ** d7 5b ** 04 3c 20  1a 3d 4f 06 07 14 23 1a  |....[.< .=O...#.|
-
-bien 000026e0  db 09 fe ** 2d 28 27 01 18  10 fe ae 28 20 ** d6 af da  |...-('.....( ...|
-mal  000026e0  db 09 fe ** 1c 23 49 20 3a  5c a9 3b 1a 00 ** d6 af da  |....#I :\.;.....|
-
-		
-		*/
-		/*
-
-		switch (dir) {
-			case 0x2553:
-				if (valor!=0xae) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			case 0x2554:
-				if (valor!=0x28) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-
-			//2d 28 27 01 18  10 fe ae 28 20
-			case 0x26e3:
-				if (valor!=0x2d) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			case 0x26e4:
-				if (valor!=0x28) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			case 0x26e5:
-				if (valor!=0x27) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			case 0x26e6:
-				if (valor!=0x01) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			//2d 28 27 01 18  10 fe ae 28 20
-			case 0x26e7:
-				if (valor!=0x18) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			case 0x26e8:
-				if (valor!=0x10) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			case 0x26e9:
-				if (valor!=0xfe) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			case 0x26ea:
-				if (valor!=0xae) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			case 0x26eb:
-				if (valor!=0x28) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-			case 0x26ec:
-				if (valor!=0x20) {
-					printf ("Unauthorized value\n");
-					escribir=0;
-				}
-			break;
-
-		}
-		*/
 
 		//Y escribimos
 		if (escribir) {
