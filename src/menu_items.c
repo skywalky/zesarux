@@ -17446,12 +17446,11 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 						//debug_printf(VERBOSE_ERR,"Error downloading game. Return code: %d",ret);
 
 						if (ret<0) {	
-							//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
 							//printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
 							menu_network_error(ret);
 						}
 						else {
-							debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",ret);
+							debug_printf(VERBOSE_ERR,"Error downloading. Return code: %d",ret);
 						}
 
 					}	
@@ -17461,12 +17460,11 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		//Fin resultado http correcto
 		else {	
 			if (retorno<0) {	
-				//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
 				debug_printf (VERBOSE_DEBUG,"Error: %d %s",retorno,z_sock_get_error(retorno));
 				menu_network_error(retorno);
 			}
 			else {
-				debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+				debug_printf(VERBOSE_ERR,"Error downloading. Return code: %d",http_code);
 			}
 		}			
 		
@@ -17960,13 +17958,12 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 			//Fin resultado http correcto
 		else {	
 			if (retorno<0) {	
-				//debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
-				printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
+				//printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
 				menu_network_error(retorno);
 				return;
 			}
 			else {
-				debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+				debug_printf(VERBOSE_ERR,"Error downloading. Return code: %d",http_code);
 				return;
 			}
 		}	
@@ -18166,7 +18163,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 					menu_network_error(ret);
 				}
 				else {
-					debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",ret);
+					debug_printf(VERBOSE_ERR,"Error downloading. Return code: %d",ret);
 				}
 
 			}
