@@ -2020,13 +2020,136 @@ IMMEDIATE
  		//solo un poco de debug
 		//if (dir<2048 || (dir>0x2400 && dir<0x2700) ) printf ("Escribiendo en altrom dir: %04XH valor : %02XH\n",dir,valor);
 
-		if (dir==0x2553) printf ("Escribiendo en 2553 valor: %02XH PC=%X\n",valor,reg_pc);
+		//if (dir>=0x2550 && dir<0x2560) printf ("Escribiendo en %XH valor: %02XH PC=%X\n",dir,valor,reg_pc);
+		//if (dir>=0x26e0 && dir<0x26f0) printf ("Escribiendo en %XH valor: %02XH PC=%X\n",dir,valor,reg_pc);
+		printf ("Escribiendo en altrom dir: %04XH valor : %02XH  PC=%04XH diviface control: %d active: %d\n",dir,valor,reg_pc,
+				        diviface_control_register&128, diviface_paginacion_automatica_activa.v);
+
+
+		int escribir=1;
+
+		if (! (
+				(diviface_control_register&128)==0 && diviface_paginacion_automatica_activa.v==0) 
+		      )
+		{
+			escribir=0;
+			printf ("No escribimos pues esta diviface ram conmutada\n");
+                }
+
+
+		//Feo parche. Hay escrituras en la 2550h y 26e0h que dejan la rom inconsistente
+		//No se ciertamente de donde salen. Permito de momento solo las escrituras normales y punto
+		//Me suena que el problema es del propio nextos, ya que la rom que deja en altrom (sin contar estas direcciones
+		//inconsistentes) es una rom que no es ni la 48.rom ni la rom que tiene en la sram offset c000h
+		/*
+bien 00002550  d5 e5 1a ** ae 28 ** 04 3c 20  1a 3d 4f 06 07 14 23 1a  |....(.< .=O...#.|
+mal  00002550  d5 e5 1a ** d7 5b ** 04 3c 20  1a 3d 4f 06 07 14 23 1a  |....[.< .=O...#.|
+
+bien 000026e0  db 09 fe ** 2d 28 27 01 18  10 fe ae 28 20 ** d6 af da  |...-('.....( ...|
+mal  000026e0  db 09 fe ** 1c 23 49 20 3a  5c a9 3b 1a 00 ** d6 af da  |....#I :\.;.....|
+
+		
+		*/
+		/*
+
+		switch (dir) {
+			case 0x2553:
+				if (valor!=0xae) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			case 0x2554:
+				if (valor!=0x28) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+
+			//2d 28 27 01 18  10 fe ae 28 20
+			case 0x26e3:
+				if (valor!=0x2d) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			case 0x26e4:
+				if (valor!=0x28) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			case 0x26e5:
+				if (valor!=0x27) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			case 0x26e6:
+				if (valor!=0x01) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			//2d 28 27 01 18  10 fe ae 28 20
+			case 0x26e7:
+				if (valor!=0x18) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			case 0x26e8:
+				if (valor!=0x10) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			case 0x26e9:
+				if (valor!=0xfe) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			case 0x26ea:
+				if (valor!=0xae) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			case 0x26eb:
+				if (valor!=0x28) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+			case 0x26ec:
+				if (valor!=0x20) {
+					printf ("Unauthorized value\n");
+					escribir=0;
+				}
+			break;
+
+		}
+		*/
 
 		//Y escribimos
-		z80_byte *altrompointer;
-
-		altrompointer=tbblue_get_altrom_dir(dir);
-		*altrompointer=valor;
+		if (escribir) {
+			z80_byte *altrompointer;
+	
+			altrompointer=tbblue_get_altrom_dir(dir);
+			*altrompointer=valor;
+		}
 	}
 
 
