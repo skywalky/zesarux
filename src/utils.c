@@ -16995,12 +16995,11 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int es
         //Fin resultado http correcto
         else {	
                 if (retorno<0) {	
-                        //debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
                         //printf ("Error: %d %s\n",retorno,z_sock_get_error(retorno));
                         return retorno;
                 }
                 else {
-                        debug_printf(VERBOSE_ERR,"Error downloading game list. Return code: %d",http_code);
+                        debug_printf(VERBOSE_ERR,"Error downloading file. Return code: %d",http_code);
                 }
         }	        
 
