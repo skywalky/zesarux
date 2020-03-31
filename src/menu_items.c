@@ -4381,6 +4381,47 @@ void menu_visualmem_get_start_end(int *inicio,int *final)
 	*final=final_puntero_membuffer;
 }
 
+void menu_visualmem_get_accumulated_value(int inicio_puntero_membuffer,int *acumulado,int *acumulado_written,int *acumulado_read,int *acumulado_opcode)
+{
+
+	//0: written, 1: read, 2: opcode, 3: read+write+opcode, 4: read mmc, 5: write mmc
+	if (menu_visualmem_donde==0) {
+		*acumulado +=visualmem_buffer[inicio_puntero_membuffer];
+		clear_visualmembuffer(inicio_puntero_membuffer);
+	}
+
+	else if (menu_visualmem_donde==1) {
+		*acumulado +=visualmem_read_buffer[inicio_puntero_membuffer];
+		clear_visualmemreadbuffer(inicio_puntero_membuffer);
+	}
+
+	else if (menu_visualmem_donde==2) {
+		*acumulado +=visualmem_opcode_buffer[inicio_puntero_membuffer];
+		clear_visualmemopcodebuffer(inicio_puntero_membuffer);
+	}
+
+	else if (menu_visualmem_donde==3) {
+		*acumulado_written +=visualmem_buffer[inicio_puntero_membuffer];
+		*acumulado_read +=visualmem_read_buffer[inicio_puntero_membuffer];
+		*acumulado_opcode +=visualmem_opcode_buffer[inicio_puntero_membuffer];
+		clear_visualmembuffer(inicio_puntero_membuffer);
+		clear_visualmemreadbuffer(inicio_puntero_membuffer);
+		clear_visualmemopcodebuffer(inicio_puntero_membuffer);
+	}				
+
+	else if (menu_visualmem_donde==4) {
+		*acumulado +=visualmem_mmc_read_buffer[inicio_puntero_membuffer];
+		clear_visualmemmmc_read_buffer(inicio_puntero_membuffer);
+	}
+
+	else if (menu_visualmem_donde==5) {
+		*acumulado +=visualmem_mmc_write_buffer[inicio_puntero_membuffer];
+		clear_visualmemmmc_write_buffer(inicio_puntero_membuffer);
+	}
+
+
+}
+
 void menu_debug_draw_visualmem(void)
 {
 
@@ -4450,44 +4491,9 @@ void menu_debug_draw_visualmem(void)
 				}
 				else {
 					//Es en memoria direccionable. Sumar valor de visualmem y luego haremos valor medio
-					//0: written, 1: read, 2: opcode
-					if (menu_visualmem_donde==0) {
-						acumulado +=visualmem_buffer[inicio_puntero_membuffer];
-						clear_visualmembuffer(inicio_puntero_membuffer);
-					}
-
-					else if (menu_visualmem_donde==1) {
-						acumulado +=visualmem_read_buffer[inicio_puntero_membuffer];
-						clear_visualmemreadbuffer(inicio_puntero_membuffer);
-					}
-
-					else if (menu_visualmem_donde==2) {
-						acumulado +=visualmem_opcode_buffer[inicio_puntero_membuffer];
-						clear_visualmemopcodebuffer(inicio_puntero_membuffer);
-					}
-
-					else if (menu_visualmem_donde==3) {
-						acumulado_written +=visualmem_buffer[inicio_puntero_membuffer];
-						acumulado_read +=visualmem_read_buffer[inicio_puntero_membuffer];
-						acumulado_opcode +=visualmem_opcode_buffer[inicio_puntero_membuffer];
-						clear_visualmembuffer(inicio_puntero_membuffer);
-						clear_visualmemreadbuffer(inicio_puntero_membuffer);
-						clear_visualmemopcodebuffer(inicio_puntero_membuffer);
-					}				
-
-					else if (menu_visualmem_donde==4) {
-						acumulado +=visualmem_mmc_read_buffer[inicio_puntero_membuffer];
-						clear_visualmemmmc_read_buffer(inicio_puntero_membuffer);
-					}
-
-					else if (menu_visualmem_donde==5) {
-						acumulado +=visualmem_mmc_write_buffer[inicio_puntero_membuffer];
-						clear_visualmemmmc_write_buffer(inicio_puntero_membuffer);
-					}
-
+					menu_visualmem_get_accumulated_value(inicio_puntero_membuffer,&acumulado,&acumulado_written,&acumulado_read,&acumulado_opcode);	
 				}
        		}
-			//if (acumulado>0) printf ("final pixel %d %d (divisor: %d)\n",inicio_puntero_membuffer,acumulado,max_valores);
 
 			//dibujamos valor medio
 			if (acumulado>0 || acumulado_written>0 || acumulado_read>0 || acumulado_opcode>0) {
@@ -4570,11 +4576,6 @@ void menu_debug_draw_visualmem(void)
 
 
 
-
-
-
-
-
 void menu_debug_new_visualmem_looking(MENU_ITEM_PARAMETERS)
 {
 	menu_visualmem_donde++;
@@ -4584,9 +4585,9 @@ void menu_debug_new_visualmem_looking(MENU_ITEM_PARAMETERS)
 
 void menu_debug_new_visualmem_bright(MENU_ITEM_PARAMETERS)
 {
-                        if (visualmem_bright_multiplier>=200) visualmem_bright_multiplier=1;
-                        else if (visualmem_bright_multiplier==1) visualmem_bright_multiplier=10;
-                        else visualmem_bright_multiplier +=10;
+	if (visualmem_bright_multiplier>=200) visualmem_bright_multiplier=1;
+	else if (visualmem_bright_multiplier==1) visualmem_bright_multiplier=10;
+	else visualmem_bright_multiplier +=10;
 }
 
 
