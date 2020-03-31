@@ -4427,6 +4427,20 @@ void menu_visualmem_get_accumulated_value(int puntero,int *acumulado,int *acumul
 
 }
 
+void menu_visualmem_putpixel(zxvision_window *ventana,int x,int y,int color_pixel,int color_tinta,int color_papel,z80_byte caracter)
+{
+
+				
+				if (si_complete_video_driver() ) {
+					zxvision_putpixel(ventana,x,y,color_pixel);
+				}
+				else {
+					zxvision_print_char_simple(ventana,x,y,color_tinta,color_papel,0,caracter);
+				}
+
+			
+}
+
 void menu_debug_draw_visualmem(void)
 {
 
@@ -4440,6 +4454,7 @@ void menu_debug_draw_visualmem(void)
 
 	int xorigen=1;
 	int yorigen=3;
+
 
 
 	if (si_complete_video_driver() ) {
@@ -4550,7 +4565,6 @@ void menu_debug_draw_visualmem(void)
 						color_final +=HEATMAP_INDEX_FIRST_COLOR;
 					}
 
-					//else zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
 					zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,color_final);
 				}
 
