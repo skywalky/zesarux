@@ -4268,7 +4268,7 @@ int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
 //0=vemos visualmem write
 //1=vemos visualmem read
 //2=vemos visualmem opcode
-//3=vemos todos a la vez
+//3=vemos visualmem write+read+opcode todos a la vez
 //4=vemos mmc read
 //5=vemos mmc write
 int menu_visualmem_donde=0;
@@ -4276,38 +4276,10 @@ int menu_visualmem_donde=0;
 
 int visualmem_bright_multiplier=10;
 
-
-void menu_debug_draw_visualmem(void)
+//Dice inicio y final de visualmem
+void menu_visualmem_get_start_end(int *inicio,int *final)
 {
-
-        normal_overlay_texto_menu();
-
-		//workaround_pentagon_clear_putpixel_cache();
-
-
-        int ancho=(VISUALMEM_ANCHO-2);
-        int alto=(VISUALMEM_ALTO-5);
-
-		if (ancho<1 || alto<1) return;
-
-        int xorigen=1;
-        int yorigen=3;
-
-
-        if (si_complete_video_driver() ) {
-                ancho *=menu_char_width;
-                alto *=8;
-                xorigen *=menu_char_width;
-                yorigen *=8;
-        }
-
-
-	int tamanyo_total=ancho*alto;
-
-        int x,y;
-
-
-        int inicio_puntero_membuffer,final_puntero_membuffer;
+    int inicio_puntero_membuffer,final_puntero_membuffer;
 
 	//Por defecto
 	inicio_puntero_membuffer=16384;
@@ -4404,12 +4376,50 @@ void menu_debug_draw_visualmem(void)
 		final_puntero_membuffer=VISUALMEM_MMC_BUFFER_SIZE;
 	}
 
+
+	*inicio=inicio_puntero_membuffer;
+	*final=final_puntero_membuffer;
+}
+
+void menu_debug_draw_visualmem(void)
+{
+
+        normal_overlay_texto_menu();
+
+		//workaround_pentagon_clear_putpixel_cache();
+
+
+        int ancho=(VISUALMEM_ANCHO-2);
+        int alto=(VISUALMEM_ALTO-5);
+
+		if (ancho<1 || alto<1) return;
+
+        int xorigen=1;
+        int yorigen=3;
+
+
+        if (si_complete_video_driver() ) {
+                ancho *=menu_char_width;
+                alto *=8;
+                xorigen *=menu_char_width;
+                yorigen *=8;
+        }
+
+
+	int tamanyo_total=ancho*alto;
+
+        int x,y;
+
+
+	int inicio_puntero_membuffer,final_puntero_membuffer;
+	menu_visualmem_get_start_end(&inicio_puntero_membuffer,&final_puntero_membuffer);
+
 	//Valores entre 0 y 255: numero de veces byte modificado
 	//Valor 65535 especial
         //int si_modificado;
 
 
-             //Calcular cuantos bytes modificados representa un pixel, teniendo en cuenta maximo buffer
+    //Calcular cuantos bytes modificados representa un pixel, teniendo en cuenta maximo buffer
 	int max_valores=(final_puntero_membuffer-inicio_puntero_membuffer)/tamanyo_total;
 
 	//printf ("max_valores: %d\n",max_valores);
@@ -4643,16 +4653,14 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 
-	if (menu_visualmem_donde == 0) sprintf (texto_linea,"~~Looking: Written Mem");
-	else if (menu_visualmem_donde == 1) sprintf (texto_linea,"~~Looking: Read Mem");
+	if (menu_visualmem_donde == 0) sprintf (texto_linea,"~~Looking: RAM Write");
+	else if (menu_visualmem_donde == 1) sprintf (texto_linea,"~~Looking: RAM Read");
 	else if (menu_visualmem_donde == 2) sprintf (texto_linea,"~~Looking: Opcode");
-	else if (menu_visualmem_donde == 3) sprintf (texto_linea,"~~Looking: All");
+	else if (menu_visualmem_donde == 3) sprintf (texto_linea,"~~Looking: RAM W+R+Opcode");
 	else if (menu_visualmem_donde == 4) sprintf (texto_linea,"~~Looking: MMC Read");
 	else sprintf (texto_linea,"~~Looking: MMC Write");
 
 
-	//sprintf (texto_linea,"~~Looking: %s",(menu_visualmem_donde == 0 ? "Written Mem" : "Opcode") );
-	//menu_escribe_linea_opcion(1,-1,1,texto_linea);
 	zxvision_print_string_defaults_fillspc(&ventana,1,1,texto_linea);
 
 
@@ -4677,16 +4685,16 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 			char texto_looking[32];
-	        	if (menu_visualmem_donde == 0) sprintf (texto_looking,"Written Mem");
-        		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"Read Mem");
+	        	if (menu_visualmem_donde == 0) sprintf (texto_looking,"RAM Write");
+        		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"RAM Read");
 		        else if (menu_visualmem_donde == 2) sprintf (texto_looking,"Opcode");
-		        else if (menu_visualmem_donde == 3) sprintf (texto_looking,"All");
+		        else if (menu_visualmem_donde == 3) sprintf (texto_looking,"RAM W+R+Opcode");
 		        else if (menu_visualmem_donde == 4) sprintf (texto_looking,"MMC Read");
 				else sprintf (texto_looking,"MMC Write");
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
-                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Which visualmem to look at");
+
                         menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at. If you select all, the final color will be a RGB color result of:\n"
 									"Blue component por Written Mem\nGreen component for Read mem\nRed component for Opcode.\n"
 									"Yellow for example is red+green, so opcode fetch+read memory. As an opcode fetch implies a read access,"

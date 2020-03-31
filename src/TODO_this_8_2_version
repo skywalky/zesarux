@@ -365,3 +365,10 @@ Hay una lista de capas de prioridades en el codigo fuente de la fpga. Segun src/
    --   1. mmu
 
 
+
+-Info ZENG en FAQ
+
+-Una especie de visual memory pero para MMC, que se vean las operaciones de lectura y escritura
+Quiza tener una zona generica de 1 MB (o menos) que indique si se ha escrito o leido y hacer lo mismo que visualmem
+O tambien quiza usar mismo menu de visual memory pero una opcion diferente de read,etc memory pero para mmc y otros (ide, trd, +3 , etc)
+El tema es que ese buffer de memoria tiene que ser menor o igual que el tamaño de lo que se monitoriza. Si es mayor, habran espacios vacios
