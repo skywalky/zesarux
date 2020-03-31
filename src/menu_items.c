@@ -4519,10 +4519,15 @@ void menu_debug_draw_visualmem(void)
 			//dibujamos valor medio
 			if (acumulado>0 || acumulado_written>0 || acumulado_read>0 || acumulado_opcode>0) {
 
+				//Sacar valor medio
+				int color_final=acumulado/max_valores;
+
 				if (si_complete_video_driver() ) {
 
-					//Sacar valor medio
-					int color_final=acumulado/max_valores;
+					//Solo calcular esto si tenemos driver grafico completo
+
+					
+					//int color_final=acumulado/max_valores;
 
 					//printf ("color final: %d\n",color_final);
 
@@ -4565,12 +4570,15 @@ void menu_debug_draw_visualmem(void)
 						color_final +=HEATMAP_INDEX_FIRST_COLOR;
 					}
 
-					zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,color_final);
+					//zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,color_final);
 				}
 
 				else {
-					zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
+					//zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
 				}
+
+
+				menu_visualmem_putpixel(menu_debug_draw_visualmem_window,x,y,color_final,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,'#');
 			}
 
 			
