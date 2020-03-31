@@ -4586,23 +4586,28 @@ void menu_debug_draw_visualmem(void)
 			//color ficticio para indicar fuera de memoria y por tanto final de ventana... para saber donde acaba
 			else if (acumulado<0) {
 				
-				if (si_complete_video_driver() ) {
-					zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM);
-				}
-				else {
-					zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'-');
-				}
+				//if (si_complete_video_driver() ) {
+				//	zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM);
+				//}
+				//else {
+				//	zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'-');
+				//}
+
+
+				menu_visualmem_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,'-');
 
 			}
 
 			//Valor 0
 			else {
-				if (si_complete_video_driver() ) {
-					zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL);
-				}
-				else {
-					zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,' ');
-				}
+				//if (si_complete_video_driver() ) {
+				//	zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL);
+				//}
+				//else {
+				//	zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,' ');
+				//}
+
+				menu_visualmem_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,' ');
 			}
 
 	    }
