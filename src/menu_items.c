@@ -4269,8 +4269,8 @@ int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
 //1=vemos visualmem read
 //2=vemos visualmem opcode
 //3=vemos visualmem write+read+opcode todos a la vez
-//4=vemos mmc read
-//5=vemos mmc write
+//4=vemos mmc write
+//5=vemos mmc read
 int menu_visualmem_donde=0;
 
 int menu_visualmem_modo_defrag=1;
@@ -4413,17 +4413,19 @@ void menu_visualmem_get_accumulated_value(int puntero,int *acumulado,int *acumul
 			clear_visualmembuffer(puntero);
 			clear_visualmemreadbuffer(puntero);
 			clear_visualmemopcodebuffer(puntero);
-		break;				
+		break;	
 
 		case 4:
+			*acumulado +=visualmem_mmc_write_buffer[puntero];
+			clear_visualmemmmc_write_buffer(puntero);
+		break;					
+
+		case 5:
 			*acumulado +=visualmem_mmc_read_buffer[puntero];
 			clear_visualmemmmc_read_buffer(puntero);
 		break;
 
-		case 5:
-			*acumulado +=visualmem_mmc_write_buffer[puntero];
-			clear_visualmemmmc_write_buffer(puntero);
-		break;
+
 	}
 
 
@@ -4719,8 +4721,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"RAM Read");
 		else if (menu_visualmem_donde == 2) sprintf (texto_looking,"Opcode");
 		else if (menu_visualmem_donde == 3) sprintf (texto_looking,"RAM W+R+Opcode");
-		else if (menu_visualmem_donde == 4) sprintf (texto_looking,"MMC Read");
-		else sprintf (texto_looking,"MMC Write");
+		else if (menu_visualmem_donde == 4) sprintf (texto_looking,"MMC Write");
+		else sprintf (texto_looking,"MMC Read");
 
 		menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
 		menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
