@@ -4381,42 +4381,47 @@ void menu_visualmem_get_start_end(int *inicio,int *final)
 	*final=final_puntero_membuffer;
 }
 
-void menu_visualmem_get_accumulated_value(int inicio_puntero_membuffer,int *acumulado,int *acumulado_written,int *acumulado_read,int *acumulado_opcode)
+void menu_visualmem_get_accumulated_value(int puntero,int *acumulado,int *acumulado_written,int *acumulado_read,int *acumulado_opcode)
 {
 
+	//printf ("puntero: %d\n",inicio_puntero_membuffer);
+
 	//0: written, 1: read, 2: opcode, 3: read+write+opcode, 4: read mmc, 5: write mmc
-	if (menu_visualmem_donde==0) {
-		*acumulado +=visualmem_buffer[inicio_puntero_membuffer];
-		clear_visualmembuffer(inicio_puntero_membuffer);
-	}
 
-	else if (menu_visualmem_donde==1) {
-		*acumulado +=visualmem_read_buffer[inicio_puntero_membuffer];
-		clear_visualmemreadbuffer(inicio_puntero_membuffer);
-	}
+	switch(menu_visualmem_donde) {
+		case 0:
+			*acumulado +=visualmem_buffer[puntero];
+			clear_visualmembuffer(puntero);
+		break;
 
-	else if (menu_visualmem_donde==2) {
-		*acumulado +=visualmem_opcode_buffer[inicio_puntero_membuffer];
-		clear_visualmemopcodebuffer(inicio_puntero_membuffer);
-	}
+		case 1:
+			*acumulado +=visualmem_read_buffer[puntero];
+			clear_visualmemreadbuffer(puntero);
+		break;
 
-	else if (menu_visualmem_donde==3) {
-		*acumulado_written +=visualmem_buffer[inicio_puntero_membuffer];
-		*acumulado_read +=visualmem_read_buffer[inicio_puntero_membuffer];
-		*acumulado_opcode +=visualmem_opcode_buffer[inicio_puntero_membuffer];
-		clear_visualmembuffer(inicio_puntero_membuffer);
-		clear_visualmemreadbuffer(inicio_puntero_membuffer);
-		clear_visualmemopcodebuffer(inicio_puntero_membuffer);
-	}				
+		case 2:
+			*acumulado +=visualmem_opcode_buffer[puntero];
+			clear_visualmemopcodebuffer(puntero);
+		break;
 
-	else if (menu_visualmem_donde==4) {
-		*acumulado +=visualmem_mmc_read_buffer[inicio_puntero_membuffer];
-		clear_visualmemmmc_read_buffer(inicio_puntero_membuffer);
-	}
+		case 3:
+			*acumulado_written +=visualmem_buffer[puntero];
+			*acumulado_read +=visualmem_read_buffer[puntero];
+			*acumulado_opcode +=visualmem_opcode_buffer[puntero];
+			clear_visualmembuffer(puntero);
+			clear_visualmemreadbuffer(puntero);
+			clear_visualmemopcodebuffer(puntero);
+		break;				
 
-	else if (menu_visualmem_donde==5) {
-		*acumulado +=visualmem_mmc_write_buffer[inicio_puntero_membuffer];
-		clear_visualmemmmc_write_buffer(inicio_puntero_membuffer);
+		case 4:
+			*acumulado +=visualmem_mmc_read_buffer[puntero];
+			clear_visualmemmmc_read_buffer(puntero);
+		break;
+
+		case 5:
+			*acumulado +=visualmem_mmc_write_buffer[puntero];
+			clear_visualmemmmc_write_buffer(puntero);
+		break;
 	}
 
 
