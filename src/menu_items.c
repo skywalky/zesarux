@@ -4384,42 +4384,40 @@ void menu_visualmem_get_start_end(int *inicio,int *final)
 void menu_debug_draw_visualmem(void)
 {
 
-        normal_overlay_texto_menu();
-
-		//workaround_pentagon_clear_putpixel_cache();
+	normal_overlay_texto_menu();
 
 
-        int ancho=(VISUALMEM_ANCHO-2);
-        int alto=(VISUALMEM_ALTO-5);
+	int ancho=(VISUALMEM_ANCHO-2);
+	int alto=(VISUALMEM_ALTO-5);
 
-		if (ancho<1 || alto<1) return;
+	if (ancho<1 || alto<1) return;
 
-        int xorigen=1;
-        int yorigen=3;
+	int xorigen=1;
+	int yorigen=3;
 
 
-        if (si_complete_video_driver() ) {
-                ancho *=menu_char_width;
-                alto *=8;
-                xorigen *=menu_char_width;
-                yorigen *=8;
-        }
+	if (si_complete_video_driver() ) {
+		ancho *=menu_char_width;
+		alto *=8;
+		xorigen *=menu_char_width;
+		yorigen *=8;
+	}
 
 
 	int tamanyo_total=ancho*alto;
 
-        int x,y;
+	int x,y;
 
 
 	int inicio_puntero_membuffer,final_puntero_membuffer;
+
 	menu_visualmem_get_start_end(&inicio_puntero_membuffer,&final_puntero_membuffer);
 
 	//Valores entre 0 y 255: numero de veces byte modificado
 	//Valor 65535 especial
-        //int si_modificado;
 
 
-    //Calcular cuantos bytes modificados representa un pixel, teniendo en cuenta maximo buffer
+	//Calcular cuantos bytes modificados representa un pixel, teniendo en cuenta maximo buffer
 	int max_valores=(final_puntero_membuffer-inicio_puntero_membuffer)/tamanyo_total;
 
 	//printf ("max_valores: %d\n",max_valores);
@@ -4431,141 +4429,138 @@ void menu_debug_draw_visualmem(void)
 	for (y=yorigen;y<yorigen+alto;y++) {
         for (x=xorigen;x<xorigen+ancho;x++) {
 
-                //Obtenemos conjunto de bytes modificados
+			//Obtenemos conjunto de bytes modificados
 
-                int valores=max_valores;
+			int valores=max_valores;
 
-		int acumulado=0;
+			int acumulado=0;
 
-		int acumulado_written,acumulado_read,acumulado_opcode;
-		acumulado_written=acumulado_read=acumulado_opcode=0; //Estos usados al visualizar los 3 a la vez
+			int acumulado_written,acumulado_read,acumulado_opcode;
+			acumulado_written=acumulado_read=acumulado_opcode=0; //Estos usados al visualizar los 3 a la vez
 
-		//si_modificado=0;
-                for (;valores>0;valores--,inicio_puntero_membuffer++) {
-                        if (inicio_puntero_membuffer>=final_puntero_membuffer) {
-				//printf ("llegado a final con x: %d y: %d ",x,y);
-				//Fuera de memoria direccionable. Zona gris. Decrementamos valor
-				//Como se lee a trozos de "max_valores" tamanyo, cuando este trozo empieza ya fuera de memoria
-				//acumulado acabara siendo <0 y saldra gris. Si es a medias, si acaba restando mucho, saldra gris tambien
-				//(eso solo pasara en el ultimo pixel de la zona direccionable)
-				acumulado--;
-                        }
+			//si_modificado=0;
+			for (;valores>0;valores--,inicio_puntero_membuffer++) {
+				if (inicio_puntero_membuffer>=final_puntero_membuffer) {
+					//printf ("llegado a final con x: %d y: %d ",x,y);
+					//Fuera de memoria direccionable. Zona gris. Decrementamos valor
+					//Como se lee a trozos de "max_valores" tamanyo, cuando este trozo empieza ya fuera de memoria
+					//acumulado acabara siendo <0 y saldra gris. Si es a medias, si acaba restando mucho, saldra gris tambien
+					//(eso solo pasara en el ultimo pixel de la zona direccionable)
+					acumulado--;
+				}
+				else {
+					//Es en memoria direccionable. Sumar valor de visualmem y luego haremos valor medio
+					//0: written, 1: read, 2: opcode
+					if (menu_visualmem_donde==0) {
+						acumulado +=visualmem_buffer[inicio_puntero_membuffer];
+						clear_visualmembuffer(inicio_puntero_membuffer);
+					}
+
+					else if (menu_visualmem_donde==1) {
+						acumulado +=visualmem_read_buffer[inicio_puntero_membuffer];
+						clear_visualmemreadbuffer(inicio_puntero_membuffer);
+					}
+
+					else if (menu_visualmem_donde==2) {
+						acumulado +=visualmem_opcode_buffer[inicio_puntero_membuffer];
+						clear_visualmemopcodebuffer(inicio_puntero_membuffer);
+					}
+
+					else if (menu_visualmem_donde==3) {
+						acumulado_written +=visualmem_buffer[inicio_puntero_membuffer];
+						acumulado_read +=visualmem_read_buffer[inicio_puntero_membuffer];
+						acumulado_opcode +=visualmem_opcode_buffer[inicio_puntero_membuffer];
+						clear_visualmembuffer(inicio_puntero_membuffer);
+						clear_visualmemreadbuffer(inicio_puntero_membuffer);
+						clear_visualmemopcodebuffer(inicio_puntero_membuffer);
+					}				
+
+					else if (menu_visualmem_donde==4) {
+						acumulado +=visualmem_mmc_read_buffer[inicio_puntero_membuffer];
+						clear_visualmemmmc_read_buffer(inicio_puntero_membuffer);
+					}
+
+					else if (menu_visualmem_donde==5) {
+						acumulado +=visualmem_mmc_write_buffer[inicio_puntero_membuffer];
+						clear_visualmemmmc_write_buffer(inicio_puntero_membuffer);
+					}
+
+				}
+       		}
+			//if (acumulado>0) printf ("final pixel %d %d (divisor: %d)\n",inicio_puntero_membuffer,acumulado,max_valores);
+
+			//dibujamos valor medio
+			if (acumulado>0 || acumulado_written>0 || acumulado_read>0 || acumulado_opcode>0) {
+
+				if (si_complete_video_driver() ) {
+
+					//Sacar valor medio
+					int color_final=acumulado/max_valores;
+
+					//printf ("color final: %d\n",color_final);
+
+					//Aumentar el brillo del color
+					color_final=color_final*visualmem_bright_multiplier;
+					if (color_final>255) color_final=255;
+
+
+					if (menu_visualmem_donde==3) {
+						//Los 3 a la vez. Combinamos color RGB sacando color de paleta tsconf (15 bits)
+						//Paleta es RGB R: 5 bits altos, G: 5 bits medios, B:5 bits bajos
+
+
+						//Sacar valor medio de los 3 componentes
+						int color_final_written=acumulado_written/max_valores;
+						color_final_written=color_final_written*visualmem_bright_multiplier;
+						if (color_final_written>31) color_final_written=31;
+
+						int color_final_read=acumulado_read/max_valores;
+						color_final_read=color_final_read*visualmem_bright_multiplier;
+						if (color_final_read>31) color_final_read=31;		
+
+						int color_final_opcode=acumulado_opcode/max_valores;
+						color_final_opcode=color_final_opcode*visualmem_bright_multiplier;
+						if (color_final_opcode>31) color_final_opcode=31;	
+
+						//Blue sera para los written
+						//Green sera para los read
+						//Red sera para los opcode
+						int color_final_rgb=(color_final_opcode<<10)|(color_final_read<<5)|color_final_written;
+						zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,TSCONF_INDEX_FIRST_COLOR+color_final_rgb);
+
+					}
+					else zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
+				}
+
+				else {
+					//putchar_menu_overlay(x,y,'#',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+					zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
+				}
+			}
+
+			//color ficticio para indicar fuera de memoria y por tanto final de ventana... para saber donde acaba
+			else if (acumulado<0) {
+				
+				if (si_complete_video_driver() ) {
+					zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM);
+				}
+				else {
+					zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'-');
+				}
+
+			}
+
+			//Valor 0
 			else {
-				//Es en memoria direccionable. Sumar valor de visualmem y luego haremos valor medio
-				//0: written, 1: read, 2: opcode
-				if (menu_visualmem_donde==0) {
-					acumulado +=visualmem_buffer[inicio_puntero_membuffer];
-					clear_visualmembuffer(inicio_puntero_membuffer);
+				if (si_complete_video_driver() ) {
+					zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL);
 				}
-
-				else if (menu_visualmem_donde==1) {
-					acumulado +=visualmem_read_buffer[inicio_puntero_membuffer];
-					clear_visualmemreadbuffer(inicio_puntero_membuffer);
+				else {
+					zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,' ');
 				}
-
-				else if (menu_visualmem_donde==2) {
-					acumulado +=visualmem_opcode_buffer[inicio_puntero_membuffer];
-					clear_visualmemopcodebuffer(inicio_puntero_membuffer);
-				}
-
-				else if (menu_visualmem_donde==3) {
-					acumulado_written +=visualmem_buffer[inicio_puntero_membuffer];
-					acumulado_read +=visualmem_read_buffer[inicio_puntero_membuffer];
-					acumulado_opcode +=visualmem_opcode_buffer[inicio_puntero_membuffer];
-					clear_visualmembuffer(inicio_puntero_membuffer);
-					clear_visualmemreadbuffer(inicio_puntero_membuffer);
-					clear_visualmemopcodebuffer(inicio_puntero_membuffer);
-				}				
-
-				else if (menu_visualmem_donde==4) {
-					acumulado +=visualmem_mmc_read_buffer[inicio_puntero_membuffer];
-					clear_visualmemmmc_read_buffer(inicio_puntero_membuffer);
-				}
-
-				else if (menu_visualmem_donde==5) {
-					acumulado +=visualmem_mmc_write_buffer[inicio_puntero_membuffer];
-					clear_visualmemmmc_write_buffer(inicio_puntero_membuffer);
-				}
-
-			}
-                }
-		//if (acumulado>0) printf ("final pixel %d %d (divisor: %d)\n",inicio_puntero_membuffer,acumulado,max_valores);
-
-            //dibujamos valor medio
-            if (acumulado>0 || acumulado_written>0 || acumulado_read>0 || acumulado_opcode>0) {
-
-			if (si_complete_video_driver() ) {
-
-				//Sacar valor medio
-				int color_final=acumulado/max_valores;
-
-				//printf ("color final: %d\n",color_final);
-
-				//Aumentar el brillo del color
-				color_final=color_final*visualmem_bright_multiplier;
-				if (color_final>255) color_final=255;
-
-
-
-
-				if (menu_visualmem_donde==3) {
-					//Los 3 a la vez. Combinamos color RGB sacando color de paleta tsconf (15 bits)
-					//Paleta es RGB R: 5 bits altos, G: 5 bits medios, B:5 bits bajos
-
-
-					//Sacar valor medio de los 3 componentes
-					int color_final_written=acumulado_written/max_valores;
-					color_final_written=color_final_written*visualmem_bright_multiplier;
-					if (color_final_written>31) color_final_written=31;
-
-					int color_final_read=acumulado_read/max_valores;
-					color_final_read=color_final_read*visualmem_bright_multiplier;
-					if (color_final_read>31) color_final_read=31;		
-
-					int color_final_opcode=acumulado_opcode/max_valores;
-					color_final_opcode=color_final_opcode*visualmem_bright_multiplier;
-					if (color_final_opcode>31) color_final_opcode=31;	
-
-					//Blue sera para los written
-					//Green sera para los read
-					//Red sera para los opcode
-					int color_final_rgb=(color_final_opcode<<10)|(color_final_read<<5)|color_final_written;
-					zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,TSCONF_INDEX_FIRST_COLOR+color_final_rgb);
-
-				}
-				else zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
 			}
 
-			else {
-				//putchar_menu_overlay(x,y,'#',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-				zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
-			}
-		}
-
-		//color ficticio para indicar fuera de memoria y por tanto final de ventana... para saber donde acaba
-		else if (acumulado<0) {
-			if (si_complete_video_driver() ) {
-				zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM);
-			}
-			else {
-				//putchar_menu_overlay(x,y,'-',ESTILO_GUI_COLOR_UNUSED_VISUALMEM,ESTILO_GUI_PAPEL_NORMAL);
-				zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'-');
-            }
-
-		}
-
-		//Valor 0
-		else {
-			if (si_complete_video_driver() ) {
-				zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL);
-			}
-			else {
-				//putchar_menu_overlay(x,y,' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-				zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,' ');
-			}
-		}
-
-        }
+	    }
 	}
 
 	zxvision_draw_window_contents(menu_debug_draw_visualmem_window); 
