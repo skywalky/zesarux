@@ -4273,7 +4273,7 @@ int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
 //5=vemos mmc write
 int menu_visualmem_donde=0;
 
-int menu_visualmem_temp_modo_cuadrado=1;
+int menu_visualmem_modo_defrag=1;
 
 
 int visualmem_bright_multiplier=10;
@@ -4434,7 +4434,7 @@ void menu_visualmem_putpixel(zxvision_window *ventana,int x,int y,int color_pixe
 
 				
 				if (si_complete_video_driver() ) {
-					if (menu_visualmem_temp_modo_cuadrado) {
+					if (menu_visualmem_modo_defrag) {
 						//Cuadradito de color
 						int x2,y2;
 						for (y2=0;y2<4;y2++) {
@@ -4476,7 +4476,7 @@ void menu_debug_draw_visualmem(void)
 		int multiplicar_ancho=menu_char_width;
 		int multiplicar_alto=8;
 
-		if (menu_visualmem_temp_modo_cuadrado) {
+		if (menu_visualmem_modo_defrag) {
 			multiplicar_ancho /=4;
 			multiplicar_alto /=4;
 		}
@@ -4624,6 +4624,10 @@ void menu_debug_new_visualmem_looking(MENU_ITEM_PARAMETERS)
 	if (menu_visualmem_donde==6) menu_visualmem_donde=0;
 }
 
+void menu_debug_new_visualmem_defrag_mode(MENU_ITEM_PARAMETERS)
+{
+	menu_visualmem_modo_defrag ^=1;
+}
 
 void menu_debug_new_visualmem_bright(MENU_ITEM_PARAMETERS)
 {
@@ -4684,6 +4688,14 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
 		menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Change bright value");
 		menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,0);
+
+
+		//menu_debug_new_visualmem_defrag_mode
+		menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_defrag_mode,NULL,"[%c] ~~Defrag style",
+		    (menu_visualmem_modo_defrag ? 'X' : ' ' ));
+		menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'d');
+		menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Defrag mode");
+		menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,14,0);		
 
 
 		char texto_looking[32];
