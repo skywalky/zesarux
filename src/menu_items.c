@@ -4600,12 +4600,26 @@ void menu_debug_draw_visualmem(void)
 
 			//color ficticio para indicar fuera de memoria y por tanto final de ventana... para saber donde acaba
 			else if (acumulado<0) {
-				menu_visualmem_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,'-');
+				if (menu_visualmem_modo_defrag) {
+					//blancos
+					menu_visualmem_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,'-');
+				}
+				else {
+					menu_visualmem_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,'-');
+				}
 			}
 
 			//Valor 0
 			else {
-				menu_visualmem_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,' ');
+				if (menu_visualmem_modo_defrag) {
+					//En este caso los cuadraditos de fondo se ven tambien
+					menu_visualmem_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,' ');
+				}
+
+				else {
+					menu_visualmem_putpixel(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,' ');
+				}
+				
 			}
 
 	    }
@@ -4691,11 +4705,13 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 		//menu_debug_new_visualmem_defrag_mode
-		menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_defrag_mode,NULL,"[%c] ~~Defrag style",
-		    (menu_visualmem_modo_defrag ? 'X' : ' ' ));
-		menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'d');
-		menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Defrag mode");
-		menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,14,0);		
+		if (si_complete_video_driver() ) {
+			menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_defrag_mode,NULL,"[%c] ~~Defrag style",
+		    							(menu_visualmem_modo_defrag ? 'X' : ' ' ));
+			menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'d');
+			menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Defrag mode");
+			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,14,0);		
+		}
 
 
 		char texto_looking[32];
