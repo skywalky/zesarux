@@ -4619,9 +4619,9 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	zxvision_draw_window(&ventana);				
 
 
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de visualmem + texto
-        set_menu_overlay_function(menu_debug_draw_visualmem);
+	//Cambiamos funcion overlay de texto de menu
+	//Se establece a la de funcion de visualmem + texto
+	set_menu_overlay_function(menu_debug_draw_visualmem);
 
 
 	menu_debug_draw_visualmem_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
@@ -4631,98 +4631,63 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 	menu_item *array_menu_debug_new_visualmem;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
-
-
-	
-
-
-	//Forzar a mostrar atajos
-	z80_bit antes_menu_writing_inverse_color;
-	antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-	menu_writing_inverse_color.v=1;
-
-
-	char texto_linea[33];
-	//sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
-	sprintf (texto_linea,"~~Bright: %d",visualmem_bright_multiplier);
-	//menu_escribe_linea_opcion(0,-1,1,texto_linea);
-	zxvision_print_string_defaults_fillspc(&ventana,1,0,texto_linea);
+	menu_item item_seleccionado;
+	int retorno_menu;
+	do {
 
 
 
-	if (menu_visualmem_donde == 0) sprintf (texto_linea,"~~Looking: RAM Write");
-	else if (menu_visualmem_donde == 1) sprintf (texto_linea,"~~Looking: RAM Read");
-	else if (menu_visualmem_donde == 2) sprintf (texto_linea,"~~Looking: Opcode");
-	else if (menu_visualmem_donde == 3) sprintf (texto_linea,"~~Looking: RAM W+R+Opcode");
-	else if (menu_visualmem_donde == 4) sprintf (texto_linea,"~~Looking: MMC Read");
-	else sprintf (texto_linea,"~~Looking: MMC Write");
+		//Borrar las dos lineas donde van las opciones, por si hay "rastro" anterior
+		zxvision_print_string_defaults_fillspc(&ventana,1,0,"");
+		zxvision_print_string_defaults_fillspc(&ventana,1,1,"");
 
 
-	zxvision_print_string_defaults_fillspc(&ventana,1,1,texto_linea);
+		menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
+		menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
+		menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Change bright value");
+		menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,0);
 
 
-	//Restaurar comportamiento atajos
-	menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+		char texto_looking[32];
+		if (menu_visualmem_donde == 0) sprintf (texto_looking,"RAM Write");
+		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"RAM Read");
+		else if (menu_visualmem_donde == 2) sprintf (texto_looking,"Opcode");
+		else if (menu_visualmem_donde == 3) sprintf (texto_looking,"RAM W+R+Opcode");
+		else if (menu_visualmem_donde == 4) sprintf (texto_looking,"MMC Read");
+		else sprintf (texto_looking,"MMC Write");
 
+		menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
+		menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
 
-	//Que sentido tiene el texto de antes? Si vamos a abrir menu con las mismas lineas....
-
-//        char texto_linea[33];
-//        sprintf (texto_linea,"Size: ~~O~~P~~Q~~A ~~Bright: %d",visualmem_bright_multiplier);
-//        menu_escribe_linea_opcion(VISUALMEM_Y,-1,1,texto_linea);
-
-
-
-						menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
-                        //menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
-                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'b');
-                        //menu_add_item_menu_tooltip(array_menu_debug_new_visualmem,"Change bright value");
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Change bright value");
-			menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,0);
-
-
-			char texto_looking[32];
-	        	if (menu_visualmem_donde == 0) sprintf (texto_looking,"RAM Write");
-        		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"RAM Read");
-		        else if (menu_visualmem_donde == 2) sprintf (texto_looking,"Opcode");
-		        else if (menu_visualmem_donde == 3) sprintf (texto_looking,"RAM W+R+Opcode");
-		        else if (menu_visualmem_donde == 4) sprintf (texto_looking,"MMC Read");
-				else sprintf (texto_looking,"MMC Write");
-
-                        menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
-                        menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
-
-                        menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at. If you select all, the final color will be a RGB color result of:\n"
-									"Blue component por Written Mem\nGreen component for Read mem\nRed component for Opcode.\n"
-									"Yellow for example is red+green, so opcode fetch+read memory. As an opcode fetch implies a read access,"
-									" you won't ever see a red pixel (only opcode fetch) but all opcode fetch will always be yellow.\n"
-									"Cyan is green+blue, so read+write\n"
-									
-									);
-                        menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
+		menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at. If you select all, the final color will be a RGB color result of:\n"
+					"Blue component por Written Mem\nGreen component for Read mem\nRed component for Opcode.\n"
+					"Yellow for example is red+green, so opcode fetch+read memory. As an opcode fetch implies a read access,"
+					" you won't ever see a red pixel (only opcode fetch) but all opcode fetch will always be yellow.\n"
+					"Cyan is green+blue, so read+write\n"
+					
+					);
+		menu_add_item_menu_tabulado(array_menu_debug_new_visualmem,1,1);
 
 
 
 		//Nombre de ventana solo aparece en el caso de stdout
-                retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Visual memory" );
+		retorno_menu=menu_dibuja_menu(&debug_new_visualmem_opcion_seleccionada,&item_seleccionado,array_menu_debug_new_visualmem,"Visual memory" );
 
 
-	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
-	cls_menu_overlay();
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
-                                
-                        }
-                }
+		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+		cls_menu_overlay();
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+				//llamamos por valor de funcion
+				if (item_seleccionado.menu_funcion!=NULL) {
+						//printf ("actuamos por funcion\n");
+						item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+						
+				}
+		}
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 
@@ -4730,8 +4695,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 
-       //restauramos modo normal de texto de menu
-       set_menu_overlay_function(normal_overlay_texto_menu);
+	//restauramos modo normal de texto de menu
+	set_menu_overlay_function(normal_overlay_texto_menu);
 
 
     cls_menu_overlay();
