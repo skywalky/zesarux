@@ -4445,6 +4445,7 @@ void menu_debug_draw_visualmem(void)
 	if (si_complete_video_driver() ) {
 		ancho *=menu_char_width;
 		alto *=8;
+
 		xorigen *=menu_char_width;
 		yorigen *=8;
 	}
@@ -4536,18 +4537,29 @@ void menu_debug_draw_visualmem(void)
 						//Blue sera para los written
 						//Green sera para los read
 						//Red sera para los opcode
-						int color_final_rgb=(color_final_opcode<<10)|(color_final_read<<5)|color_final_written;
-						zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,TSCONF_INDEX_FIRST_COLOR+color_final_rgb);
+						//int color_final_rgb=(color_final_opcode<<10)|(color_final_read<<5)|color_final_written;
+						//zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,TSCONF_INDEX_FIRST_COLOR+color_final_rgb);
+
+						color_final=(color_final_opcode<<10)|(color_final_read<<5)|color_final_written;		
+
+						color_final +=TSCONF_INDEX_FIRST_COLOR;
 
 					}
-					else zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
+
+					else {
+						color_final +=HEATMAP_INDEX_FIRST_COLOR;
+					}
+
+					//else zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,HEATMAP_INDEX_FIRST_COLOR+color_final);
+					zxvision_putpixel(menu_debug_draw_visualmem_window,x,y,color_final);
 				}
 
 				else {
-					//putchar_menu_overlay(x,y,'#',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 					zxvision_print_char_simple(menu_debug_draw_visualmem_window,x,y,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,'#');
 				}
 			}
+
+			
 
 			//color ficticio para indicar fuera de memoria y por tanto final de ventana... para saber donde acaba
 			else if (acumulado<0) {
