@@ -4273,6 +4273,8 @@ int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
 //5=vemos mmc write
 int menu_visualmem_donde=0;
 
+int menu_visualmem_temp_modo_cuadrado=1;
+
 
 int visualmem_bright_multiplier=10;
 
@@ -4432,7 +4434,19 @@ void menu_visualmem_putpixel(zxvision_window *ventana,int x,int y,int color_pixe
 
 				
 				if (si_complete_video_driver() ) {
-					zxvision_putpixel(ventana,x,y,color_pixel);
+					if (menu_visualmem_temp_modo_cuadrado) {
+						//Cuadradito de color
+						int x2,y2;
+						for (y2=0;y2<4;y2++) {
+							for (x2=0;x2<4;x2++) {
+								int color_final=color_pixel;
+								if (x2==3 || y2==3) color_final=ESTILO_GUI_PAPEL_NORMAL;
+								zxvision_putpixel(ventana,x*4+x2,y*4+y2,color_final);
+							}
+						}
+
+					}
+					else zxvision_putpixel(ventana,x,y,color_pixel);
 				}
 				else {
 					zxvision_print_char_simple(ventana,x,y,color_tinta,color_papel,0,caracter);
@@ -4458,11 +4472,20 @@ void menu_debug_draw_visualmem(void)
 
 
 	if (si_complete_video_driver() ) {
-		ancho *=menu_char_width;
-		alto *=8;
 
-		xorigen *=menu_char_width;
-		yorigen *=8;
+		int multiplicar_ancho=menu_char_width;
+		int multiplicar_alto=8;
+
+		if (menu_visualmem_temp_modo_cuadrado) {
+			multiplicar_ancho /=4;
+			multiplicar_alto /=4;
+		}
+
+		ancho *=multiplicar_ancho;
+		alto *=multiplicar_alto;
+
+		xorigen *=multiplicar_ancho;
+		yorigen *=multiplicar_alto;
 	}
 
 
