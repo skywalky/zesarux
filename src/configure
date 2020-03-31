@@ -1474,7 +1474,7 @@ joystick.o: joystick.c joystick.h cpu.h debug.h screen.h menu.h zeng.h
 ula.o: ula.c ula.h cpu.h debug.h screen.h contend.h menu.h multiface.h betadisk.h settings.h divmmc.c hilow.h
 	\$(CC) \$(CFLAGS) -c ula.c
 
-mmc.o: mmc.c mmc.h cpu.h debug.h utils.h menu.h screen.h divmmc.h
+mmc.o: mmc.c mmc.h cpu.h debug.h utils.h menu.h screen.h divmmc.h compileoptions.h operaciones.h
 	\$(CC) \$(CFLAGS) -c mmc.c
 
 ide.o: ide.c ide.h cpu.h debug.h utils.h menu.h screen.h divide.h

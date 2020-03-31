@@ -126,6 +126,11 @@ z80_byte *visualmem_read_buffer=NULL;
 //lo mismo pero para ejecucion de opcodes
 z80_byte *visualmem_opcode_buffer=NULL;
 
+//lo mismo pero para mmc lectura
+z80_byte *visualmem_mmc_read_buffer=NULL;
+
+//lo mismo pero para mmc escritura
+z80_byte *visualmem_mmc_write_buffer=NULL;
 
 
 
@@ -159,6 +164,23 @@ void init_visualmembuffer(void)
 		cpu_panic("Can not allocate visualmem opcode buffer");
 	}
 
+	debug_printf(VERBOSE_INFO,"Allocating %d bytes for visualmem mmc read buffer",VISUALMEM_MMC_BUFFER_SIZE);
+
+	visualmem_mmc_read_buffer=malloc(VISUALMEM_MMC_BUFFER_SIZE);
+	if (visualmem_mmc_read_buffer==NULL) {
+		cpu_panic("Can not allocate visualmem mmc read buffer");
+	}
+
+
+	debug_printf(VERBOSE_INFO,"Allocating %d bytes for visualmem mmc write buffer",VISUALMEM_MMC_BUFFER_SIZE);
+
+	visualmem_mmc_write_buffer=malloc(VISUALMEM_MMC_BUFFER_SIZE);
+	if (visualmem_mmc_write_buffer==NULL) {
+		cpu_panic("Can not allocate visualmem mmc write buffer");
+	}
+
+
+
 }
 
 void set_visualmembuffer(int dir)
@@ -189,6 +211,19 @@ void set_visualmemopcodebuffer(int dir)
 
 }
 
+void set_visualmemmmc_read_buffer(int dir)
+{
+        z80_byte valor=visualmem_mmc_read_buffer[dir];
+        if (valor<255) visualmem_mmc_read_buffer[dir]=valor+1;
+}
+
+void set_visualmemmmc_write_buffer(int dir)
+{
+        z80_byte valor=visualmem_mmc_write_buffer[dir];
+        if (valor<255) visualmem_mmc_write_buffer[dir]=valor+1;
+}
+
+
 void clear_visualmembuffer(int dir)
 {
         visualmem_buffer[dir]=0;
@@ -202,6 +237,16 @@ void clear_visualmemreadbuffer(int dir)
 void clear_visualmemopcodebuffer(int dir)
 {
         visualmem_opcode_buffer[dir]=0;
+}
+
+void clear_visualmemmmc_read_buffer(int dir)
+{
+        visualmem_mmc_read_buffer[dir]=0;
+}
+
+void clear_visualmemmmc_write_buffer(int dir)
+{
+        visualmem_mmc_write_buffer[dir]=0;
 }
 
 

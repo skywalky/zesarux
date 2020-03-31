@@ -4269,6 +4269,8 @@ int visualmem_y_variable=VISUALMEM_DEFAULT_Y;
 //1=vemos visualmem read
 //2=vemos visualmem opcode
 //3=vemos todos a la vez
+//4=vemos mmc read
+//5=vemos mmc write
 int menu_visualmem_donde=0;
 
 
@@ -4398,6 +4400,10 @@ void menu_debug_draw_visualmem(void)
 		inicio_puntero_membuffer=0;
 	}
 
+	if (menu_visualmem_donde==4 || menu_visualmem_donde==5) {
+		final_puntero_membuffer=VISUALMEM_MMC_BUFFER_SIZE;
+	}
+
 	//Valores entre 0 y 255: numero de veces byte modificado
 	//Valor 65535 especial
         //int si_modificado;
@@ -4461,6 +4467,15 @@ void menu_debug_draw_visualmem(void)
 					clear_visualmemopcodebuffer(inicio_puntero_membuffer);
 				}				
 
+				else if (menu_visualmem_donde==4) {
+					acumulado +=visualmem_mmc_read_buffer[inicio_puntero_membuffer];
+					clear_visualmemmmc_read_buffer(inicio_puntero_membuffer);
+				}
+
+				else if (menu_visualmem_donde==5) {
+					acumulado +=visualmem_mmc_write_buffer[inicio_puntero_membuffer];
+					clear_visualmemmmc_write_buffer(inicio_puntero_membuffer);
+				}
 
 			}
                 }
@@ -4558,7 +4573,7 @@ void menu_debug_draw_visualmem(void)
 void menu_debug_new_visualmem_looking(MENU_ITEM_PARAMETERS)
 {
 	menu_visualmem_donde++;
-	if (menu_visualmem_donde==4) menu_visualmem_donde=0;
+	if (menu_visualmem_donde==6) menu_visualmem_donde=0;
 }
 
 
@@ -4631,7 +4646,9 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	if (menu_visualmem_donde == 0) sprintf (texto_linea,"~~Looking: Written Mem");
 	else if (menu_visualmem_donde == 1) sprintf (texto_linea,"~~Looking: Read Mem");
 	else if (menu_visualmem_donde == 2) sprintf (texto_linea,"~~Looking: Opcode");
-	else sprintf (texto_linea,"~~Looking: All");
+	else if (menu_visualmem_donde == 3) sprintf (texto_linea,"~~Looking: All");
+	else if (menu_visualmem_donde == 4) sprintf (texto_linea,"~~Looking: MMC Read");
+	else sprintf (texto_linea,"~~Looking: MMC Write");
 
 
 	//sprintf (texto_linea,"~~Looking: %s",(menu_visualmem_donde == 0 ? "Written Mem" : "Opcode") );
@@ -4663,7 +4680,9 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	        	if (menu_visualmem_donde == 0) sprintf (texto_looking,"Written Mem");
         		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"Read Mem");
 		        else if (menu_visualmem_donde == 2) sprintf (texto_looking,"Opcode");
-				else sprintf (texto_looking,"All");
+		        else if (menu_visualmem_donde == 3) sprintf (texto_looking,"All");
+		        else if (menu_visualmem_donde == 4) sprintf (texto_looking,"MMC Read");
+				else sprintf (texto_looking,"MMC Write");
 
                         menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
                         menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
