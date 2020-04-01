@@ -114,17 +114,6 @@ rpi2 no? quizá es porque no he usado parámetro fullscreen y por tanto no ha re
 -Make utils al construir binario
 Incluir bmp a sprite y bmp a prism en utils
 
--formato .zx:
-Agregar:
--divmmc
--zxmmc
--zxpand
-
-Formato .zx en máquinas bigendian los enteros 16 bits se guardan big endian
-
-
-
--Implementar flag Q? Ver docs/flagq.txt
 
 
 -Mas archivos auto config pues versión Windows no tiene ssl

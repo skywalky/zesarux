@@ -328,7 +328,8 @@ opcion tambien para bajar bit 7 final
 -menu_ventana_scanf deberia retornar un codigo de retorno en caso de pulsado ESC
 
 -visualmem podria tener en cuenta toda la ram de una maquina: 128kb en +2, Z88 etc.... aunque dificil para +2 y Z88.... y necesario?
--visualmem que siga memory zone
+-visualmem que siga memory zone 
+
 
 -lectura de nombre de archivo en fileselector para stdout no admite espacios
 

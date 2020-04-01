@@ -231,7 +231,7 @@ Quiza mismo menu filesel, que solo muestre autosnap (o el que sea el prefijo)*.z
 Quizá el Rojo debería ser el Tspeed que ya sale en la carga...
 Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el footer
 
--En sped poder agregar texto changelog en cada fuente al grabar. Quizá bloque adicional de bytes para ello
+
 
 -En tape output, aparte de truncate etc, poder usar rotate-truncate para rotar los .tap viejos
 
@@ -249,10 +249,6 @@ Puede servir para versión online simple. Salida pnm y entrada de texto
 -compilar windows con O2. Quiza que haya una version "legacy" sin ello. Y siempre con pthreads
 
 
--Idea de compresión de texto en sped:
-Si línea empieza con comentario, los espacios de indican cómo el bit 7 del siguiente carácter alzado
-Entiendo que esto no se hace así ya, solo se hace para los dos tabuladores de una línea con opcodes 
-Aunque esto comprime muy poco, solo se ahorra 1 byte por cada espacio, pero algo es algo...
 
 
 
@@ -336,7 +332,7 @@ Pero esto no deberia suceder: pues al hacer ese cambio se supone que habrá ya u
 entonces en el servidor, en el archivo de update de la estable, ya habré actualizado el archivo y dirá la nueva versión
 
 
--Licencia gpl para toda mi carpeta de software propio de spectrum: sped, realdebug etc 
+
 
 -sistema altrom esta reemplazado en siguientes versiones del core fpga por otro metodo!
 
@@ -368,5 +364,3 @@ Hay una lista de capas de prioridades en el codigo fuente de la fpga. Segun src/
 
 -Info ZENG en FAQ
 
--Visual memory para toda la ram de un 128kb por ejemplo
-O de los 2 mb de ZX evo

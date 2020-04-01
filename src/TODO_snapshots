@@ -104,12 +104,5 @@ Pero el "--enable-dsk", al iniciar el emulador, se parsea antes de cargar el sna
 dskplusthree_emulation.v=0 , con lo que arranca con dsk desactivado. Hay varios parametros como ese
 
 
-*asignacion de eventos a botones de realjoystick ->no, porque depende del tipo de joystick
-*asignacion de teclas a botones de realjoystick ->en teoria no, porque tambien depende del tipo de joystick,
-pero se podria intentar hacer que se guardase de alguna manera... como intentando asociar, por ejemplo,
-"boton arriba" -> tecla "w"
-...
-pero con esto solo podriamos tener facilmente las teclas de direcciones (son los ejes normales) (-0/+0 izq-der, -1/+1 arr-aba),
-pero no otras teclas alternativas: enter, espacio, etc
 
 
