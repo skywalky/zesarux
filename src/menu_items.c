@@ -4748,10 +4748,10 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 		char texto_looking[32];
-		if (menu_visualmem_donde == 0) sprintf (texto_looking,"RAM Write");
-		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"RAM Read");
+		if (menu_visualmem_donde == 0) sprintf (texto_looking,"MEM Write");
+		else if (menu_visualmem_donde == 1) sprintf (texto_looking,"MEM Read");
 		else if (menu_visualmem_donde == 2) sprintf (texto_looking,"Opcode");
-		else if (menu_visualmem_donde == 3) sprintf (texto_looking,"RAM W+R+Opcode");
+		else if (menu_visualmem_donde == 3) sprintf (texto_looking,"MEM W+R+Opcode");
 		else if (menu_visualmem_donde == 4) sprintf (texto_looking,"MMC Write");
 		else if (menu_visualmem_donde == 5) sprintf (texto_looking,"MMC Read");
 		else sprintf (texto_looking,"MMC Write+Read");
@@ -4759,8 +4759,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
 		menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
 
-		menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at.\nIf you select all RAM, the final color will be a RGB color result of:\n"
-					"Blue component por Written Mem\nGreen component for Read mem\nRed component for Opcode.\n"
+		menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at.\n\nIf you select all MEM, the final color will be a RGB color result of:\n"
+					"Blue component por Written Mem\nGreen component for Read Mem\nRed component for Opcode.\n"
 					"Yellow for example is red+green, so opcode fetch+read memory. As an opcode fetch implies a read access,"
 					" you won't ever see a red pixel (only opcode fetch) but all opcode fetch will always be yellow.\n"
 					"Cyan is green+blue, so read+write\n\n"
