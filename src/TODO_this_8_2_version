@@ -14,12 +14,6 @@ Thread 8 Crashed:
 
 -Probar malloc en 32 bit de 2 gb
 
--En snapshot poder guardar notas. Visibles desde menú snapshot. Se pierden al cargar otro snapshot
-Esto es un nuevo tipo de campo en ZSF
-
-Como se pide? Al guardar un snapshot o desde menú snapshot? Quizá desde menú y con un first aid que lo explique
-
-
 
 -Mostrar info en menu network de descargas, commits etc
 
@@ -111,6 +105,7 @@ o bien que al principio se diga la longitud de lo que se envia-> util para get-s
 Por alguna razón, en /dev no llega a leerlos ni entrando antes del filtro. Quiza algun parametro especial del directorio
 o algo que no hago bien al leer directorio. La solución pasa por escribir el nombre directamente en el file selector (pulsando TAB o click de raton
 arriba)
+-no se ven enlaces simbólicos en navegador de archivos. Como mínimo de Mac no se ven. Y en Linux?
 
 -condiciones breakpoint para paginas memoria Next (SEG0, SEG1, .... SEG7)
 
@@ -151,7 +146,6 @@ habria que hacer que leyera el primer prompt correcto
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
--no se ven enlaces simbólicos en navegador de archivos. Como mínimo de Mac no se ven. Y en Linux?
 
 
 
@@ -180,12 +174,9 @@ Es mas complicado pues luego va a buscar librerias de /usr/local/Cellar/openssl
 ----Fin Mac SSL
 
 
-
 -Funciones deprecated mac corregir 
 
 -4 puertos Dac de Next
-
-
 
 
 
@@ -193,9 +184,6 @@ Es mas complicado pues luego va a buscar librerias de /usr/local/Cellar/openssl
 
 porque?
 
---ZSF tbblue:
-
-* estado dma (esto no solo afecta a tbblue sino a todos. tener en cuenta grabar tambien valor datagear_dma_tbblue_prescaler)
 
 --zsock_http:
 -no tiene que tener un maximo de bloques la descarga, esto solo cuando el bloque es de 0 bytes, entonces si que aumentar
@@ -219,9 +207,6 @@ En ZENG queda bien pero en descargas no
 
 
 
--browser para autosnapshots. poder consultar los automaticos de manera facil
-Quiza mismo menu filesel, que solo muestre autosnap (o el que sea el prefijo)*.zsf
---faltara poder poner un filtro tipo prefijo *. Para eso hay que cambiar, minimo, menu_file_filter y menu_file_filter_dir
 
 
 -chdir en esxdos handler acaba cambiando directorio realmente para emulador??

@@ -111,7 +111,7 @@ typedef struct s_zxvision_window zxvision_window;
 //Usado en ver sprites y ver colores mapeados
 #define MENU_TOTAL_MAPPED_PALETTES 16
 
-
+#define MENU_LAST_DIR_FILE_NAME "zesarux_last_dir.txt"
 
 extern int menu_overlay_activo;
 extern void (*menu_overlay_function)(void);
@@ -296,7 +296,7 @@ extern void menu_first_aid_init(void);
 extern void menu_first_aid_random_startup(void);
 extern int menu_first_aid_title(char *key_setting,char *title);
 
-#define MAX_F_FUNCTIONS 22
+#define MAX_F_FUNCTIONS 23
 
 enum defined_f_function_ids {
 	//reset, hard-reset, nmi, open menu, ocr, smartload, osd keyboard, exitemulator.
@@ -308,20 +308,21 @@ enum defined_f_function_ids {
 	F_FUNCION_OPENMENU,
 	F_FUNCION_OCR,
 	F_FUNCION_SMARTLOAD,
+	F_FUNCION_QUICKLOAD,
 	F_FUNCION_QUICKSAVE,
-	F_FUNCION_LOADBINARY, //10
+	F_FUNCION_LOADBINARY, //11
 	F_FUNCION_SAVEBINARY,
 	F_FUNCION_ZENG_SENDMESSAGE,
 	F_FUNCION_OSDKEYBOARD,
 	F_FUNCION_OSDTEXTKEYBOARD,
     F_FUNCION_SWITCHBORDER,
-	F_FUNCION_SWITCHFULLSCREEN, //16
+	F_FUNCION_SWITCHFULLSCREEN, //17
 	F_FUNCION_RELOADMMC, 
 	F_FUNCION_REINSERTTAPE, 
 	F_FUNCION_DEBUGCPU,   
-	F_FUNCION_PAUSE,    //20
+	F_FUNCION_PAUSE,    //21
 	F_FUNCION_TOPSPEED,  
- 	F_FUNCION_EXITEMULATOR //22
+ 	F_FUNCION_EXITEMULATOR //23
 };
 
 //Define teclas F que se pueden mapear a acciones
@@ -624,7 +625,7 @@ extern z80_bit mouse_menu_disabled;
 extern char *quickfile;
 extern char quickload_file[];
 
-extern z80_bit menu_button_quickload;
+extern z80_bit menu_button_smartload;
 extern z80_bit menu_button_osdkeyboard;
 extern z80_bit menu_button_osdkeyboard_return;
 extern z80_bit menu_button_osd_adv_keyboard_return;
@@ -855,7 +856,7 @@ extern int menu_escribe_linea_startx;
 extern z80_bit menu_disable_special_chars;
 
 extern void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS);
-extern void menu_quickload(MENU_ITEM_PARAMETERS);
+extern void menu_smartload(MENU_ITEM_PARAMETERS);
 
 extern int timer_osd_keyboard_menu;
 

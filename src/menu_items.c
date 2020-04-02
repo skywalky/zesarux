@@ -18249,7 +18249,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 				strcpy(quickload_file,archivo_temp);
 	
 				quickfile=quickload_file;
-				menu_quickload(0);
+				menu_smartload(0);
 		
 				return;
 			}

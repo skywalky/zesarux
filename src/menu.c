@@ -177,6 +177,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"OpenMenu",F_FUNCION_OPENMENU},
 	{"OCR",F_FUNCION_OCR},
 	{"SmartLoad",F_FUNCION_SMARTLOAD},
+	{"Quickload",F_FUNCION_QUICKLOAD},
 	{"Quicksave",F_FUNCION_QUICKSAVE},
 	{"LoadBinary",F_FUNCION_LOADBINARY},
 	{"SaveBinary",F_FUNCION_SAVEBINARY},
@@ -341,7 +342,7 @@ char *openmenu_key_message="F5/Button";
 
 //Gestionar pulsaciones directas de teclado o joystick
 //para quickload
-z80_bit menu_button_quickload={0};
+z80_bit menu_button_smartload={0};
 //para on screen keyboard
 z80_bit menu_button_osdkeyboard={0};
 z80_bit menu_button_osdkeyboard_return={0};
@@ -17218,7 +17219,7 @@ int menu_file_filter_dir(const char *name,char *filtros[])
 }
 
 
-#define MENU_LAST_DIR_FILE_NAME "zesarux_last_dir.txt"
+
 
 
 //devuelve 1 si el archivo cumple el filtro
@@ -17256,7 +17257,24 @@ int menu_file_filter(const char *name,char *filtros[])
 	//Si filtro[0]=="nofiles" no muestra ningun archivo
 	if (!strcasecmp(filtros[0],"nofiles")) return 0;
 
-	//Bucle por cada filtro
+
+	//Filtro para tipos autosnap "autosnap(o el que sea el prefijo)*.zsf"
+	if (!strcasecmp(filtros[0],"autosnap")) {
+		if (!strcasecmp(extension,"zsf")) {
+			//prefijo snapshot_autosave_interval_quicksave_name
+			char *existe;
+			existe=strstr(name,snapshot_autosave_interval_quicksave_name);
+			if (existe!=NULL) {
+				//Y tiene que ser al inicio
+				if (existe==name) return 1;
+			}
+		}
+
+		//en caso contrario, no cumple el filtro
+		return 0;
+	}
+
+	//Bucle por cada filtro 
 	for (i=0;filtros[i];i++) {
 		//si filtro es "", significa todo (*)
 		//supuestamente si hay filtro "" no habrian mas filtros pasados en el array...
@@ -17467,6 +17485,12 @@ int menu_avisa_si_extension_no_habitual(char *filtros[],char *archivo)
 
 	int i;
 
+	//Si es filtro "autosnap" es en teoria zsf
+	if (!strcmp(filtros[0],"autosnap")) {
+		if (!util_compare_file_extension(archivo,"zsf")) return 1;
+	}
+
+
 	for (i=0;filtros[i];i++) {
 		if (!util_compare_file_extension(archivo,filtros[i])) return 1;
 
@@ -17476,12 +17500,13 @@ int menu_avisa_si_extension_no_habitual(char *filtros[],char *archivo)
 	}
 
 
+
 	//no es extension habitual. Avisar
 	return menu_confirm_yesno_texto("Unusual file extension","Do you want to use this file?");
 }
 
 
-void menu_quickload(MENU_ITEM_PARAMETERS)
+void menu_smartload(MENU_ITEM_PARAMETERS)
 {
 
 	menu_first_aid("smartload");
@@ -20869,6 +20894,52 @@ void menu_snapshot_quicksave(MENU_ITEM_PARAMETERS)
 
 }
 
+
+void menu_snapshot_quickload(MENU_ITEM_PARAMETERS)
+{
+
+	char *filtros[2];
+
+	filtros[0]="autosnap";
+	filtros[1]=0;
+
+
+
+	//guardamos directorio actual
+	char directorio_actual[PATH_MAX];
+	getcwd(directorio_actual,PATH_MAX);
+
+	//Vamos a directorio de autosnap
+	menu_filesel_chdir(snapshot_autosave_interval_quicksave_directory);
+
+
+	int ret;
+
+	ret=menu_filesel("Select Snapshot",filtros,snapshot_load_file);
+	//volvemos a directorio inicial
+	menu_filesel_chdir(directorio_actual);
+
+
+	if (ret==1) {
+		snapfile=snapshot_load_file;
+
+		//sin overlay de texto, que queremos ver las franjas de carga con el color normal (no apagado)
+		//reset_menu_overlay_function();
+
+
+		snapshot_load();
+
+		//restauramos modo normal de texto de menu
+		//set_menu_overlay_function(normal_overlay_texto_menu);
+
+		//Y salimos de todos los menus
+		salir_todos_menus=1;
+	}
+
+
+}
+
+
 void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 {
 
@@ -21049,10 +21120,15 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 					}
 
 
-					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_quicksave,NULL,"~~Quicksave");
-					menu_add_item_menu_shortcut(array_menu_snapshot,'q');
+					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_quicksave,NULL,"Quicks~~ave");
+					menu_add_item_menu_shortcut(array_menu_snapshot,'a');
 					menu_add_item_menu_tooltip(array_menu_snapshot,"Save a snapshot quickly");
 					menu_add_item_menu_ayuda(array_menu_snapshot,"Save a snapshot quickly. Name prefix and directory to save are configured on settings->Snapshot");
+
+					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_quickload,NULL,"~~Quickl~~oad");
+					menu_add_item_menu_shortcut(array_menu_snapshot,'o');
+					menu_add_item_menu_tooltip(array_menu_snapshot,"Load a snapshot quickly");
+					menu_add_item_menu_ayuda(array_menu_snapshot,"Browses on the quicksave directory");
 
 
 				menu_add_item_menu(array_menu_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -28200,7 +28276,7 @@ void menu_inicio_bucle(void)
 		else f_functions=0;
 
 
-		menu_add_item_menu_inicial(&array_menu_principal,"~~Smart load",MENU_OPCION_NORMAL,menu_quickload,NULL);
+		menu_add_item_menu_inicial(&array_menu_principal,"~~Smart load",MENU_OPCION_NORMAL,menu_smartload,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'s');
                 menu_add_item_menu_tooltip(array_menu_principal,"Smart load tape, snapshot, Z88 memory card or Timex Cartridge");
                 menu_add_item_menu_ayuda(array_menu_principal,"This option loads the file depending on its type: \n"
@@ -28326,7 +28402,7 @@ void menu_inicio_bucle(void)
 void menu_inicio_pre_retorno_reset_flags(void)
 {
     //desactivar botones de acceso directo
-    menu_button_quickload.v=0;
+    menu_button_smartload.v=0;
     menu_button_osdkeyboard.v=0;
     menu_button_osd_adv_keyboard_return.v=0;
     menu_button_osd_adv_keyboard_openmenu.v=0;
@@ -28432,8 +28508,12 @@ void menu_process_f_functions_by_action(int accion)
 		break;
 
 		case F_FUNCION_SMARTLOAD:
-			menu_quickload(0);
+			menu_smartload(0);
 		break;
+
+		case F_FUNCION_QUICKLOAD:
+			menu_snapshot_quickload(0);
+		break;		
 
 		case F_FUNCION_QUICKSAVE:
 
@@ -28702,16 +28782,16 @@ void menu_inicio(void)
 
 
 	//Gestionar pulsaciones directas de teclado o joystick
-	if (menu_button_quickload.v) {
+	if (menu_button_smartload.v) {
 		//Pulsado smartload
-		//menu_button_quickload.v=0;
+		//menu_button_smartload.v=0;
 
 		//para evitar que entre con la pulsacion de teclas activa
 		//menu_espera_no_tecla_con_repeticion();
 		//menu_espera_no_tecla();
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 
-		menu_quickload(0);
+		menu_smartload(0);
 		cls_menu_overlay();
 	}
 

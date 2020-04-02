@@ -7034,7 +7034,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
                                 if (pressrelease) {
                                         menu_abierto=1;
-                                        menu_button_quickload.v=1;
+                                        menu_button_smartload.v=1;
                                 }
                                 else {
                                 }
