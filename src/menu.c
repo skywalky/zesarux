@@ -4965,8 +4965,8 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 		if (tecla>31 && tecla<128) {
 			if (strlen(string)<max_length) {
 			
-				int i;
-				i=strlen(string);
+				//int i;
+				//i=strlen(string);
 
 				int pos_agregar=pos_cursor_x+offset_string;
 				//printf ("agregar letra en %d\n",pos_agregar);
@@ -20365,7 +20365,7 @@ void menu_file_pzx_browser_show(char *filename)
 		else if (!strcmp(tag_name,"PAUS")) {
 				//convert_pzx_to_rwa_tag_paus(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
 
-			int initial_pulse;
+			//int initial_pulse;
 
 			z80_long_int count;   
 
@@ -20380,7 +20380,7 @@ void menu_file_pzx_browser_show(char *filename)
 					(memoria[2]*65536)+
 					((memoria[3]&127)*16777216);
 
-			initial_pulse=(memoria[3]&128)>>7;
+			//initial_pulse=(memoria[3]&128)>>7;
 
 			memoria +=4;
 
