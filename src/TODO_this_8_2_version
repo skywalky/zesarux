@@ -226,7 +226,6 @@ Puede servir para versión online simple. Salida pnm y entrada de texto
 
 -algun tipo de build que no sea ni linux ni mac ni windows, sino simplemente UNIX_GENERIC o algo similar
 
--revisar warnings de codigo sin uso que sale en linux
 
 -compilar windows con O2. Quiza que haya una version "legacy" sin ello. Y siempre con pthreads
 
@@ -314,34 +313,7 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 
 
 
-
--sistema altrom esta reemplazado en siguientes versiones del core fpga por otro metodo!
-
-
--tbblue: considerar mejor prioridades de capas de memoria, por ejemplo al escribir altrom esta comprobando aparte si esta diviface habilitdo
-esto por ejemplo fallaria si alguien le da por escribir en altrom pero habilitando layer2, creo que layer2 tiene mas prioridad por tanto altrom no se deberia escribir 
-Hay una lista de capas de prioridades en el codigo fuente de la fpga. Segun src/zxnext.vhd:
-
-   -- memory decode order
-   --
-   -- 0-16k:
-   --   1. bootrom
-   --   2. machine config mapping
-   --   3. multiface
-   --   4. divmmc
-   --   5. layer 2 mapping
-   --   6. mmu
-   --   7. romcs expansion bus
-   --   8. rom
-   --
-   -- 16k-48k:
-   --   1. layer 2 mapping
-   --   2. mmu
-   --
-   -- 48k-64k:
-   --   1. mmu
-
-
-
 -Info ZENG en FAQ
 
+-Visualmem mmc read/write en Windows no muestra bien posicion (siempre a 0). Probablemente porque es 32 bits y no gestiona bien
+valores long int
