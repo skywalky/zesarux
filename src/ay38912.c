@@ -1116,8 +1116,10 @@ switch (aymidi_rs232_midi_state)
       aymidi_rs232_midi_state = LEE_BIT;
       aymidi_rs232_dato_midi = 0;
       aymidi_rs232_bits = 0;
-      break;
+      //break;
     }  // en otro caso, seguimos esperando una seÒal v·lida...
+    break;
+
   case LEE_BIT:
     if (100<=aymidi_rs232_diftime && aymidi_rs232_diftime<=120)  // si llegÛ a tiempo...
     {
@@ -1143,7 +1145,10 @@ switch (aymidi_rs232_midi_state)
 		debug_printf (VERBOSE_PARANOID,"aymidi_rs232: Consider is as a START signal");
       }
     }
+
     break;
+
+
   case ESPERA_STOP:
     if (100<=aymidi_rs232_diftime && aymidi_rs232_diftime<=120)  // si llegÛ a tiempo...
     {
@@ -1173,7 +1178,10 @@ switch (aymidi_rs232_midi_state)
         aymidi_rs232_bits = 0;
       }
     }
+
     break;
+
+
   default:
     aymidi_rs232_midi_state = ESPERA_START;
     break;

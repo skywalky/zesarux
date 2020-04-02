@@ -1089,7 +1089,7 @@ long alsa_mid_percent_to_alsa(int val, long pmin, long pmax)
 
 
 //Establecer el volumen del master
-void alsa_mid_set_volume_master(int percent)
+void alsa_mid_set_volume_master(int percent GCC_UNUSED)
 {
 	snd_mixer_t *mixer;
 	//snd_mixer_elem_t *elem;    //utilitzat pel master volume

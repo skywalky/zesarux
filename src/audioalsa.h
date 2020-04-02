@@ -46,6 +46,9 @@ extern void alsa_mid_initialize_volume(void);
 //extern char *alsa_mid_device_out;
 extern char alsa_mid_device_out[];
 
+extern int alsa_midi_raw(z80_byte value);
+extern void alsa_midi_output_reset(void);
+
 //extern int alsa_midi_initialized;
 
 //extern void alsa_midi_output_frame_event(void);

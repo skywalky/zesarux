@@ -2365,11 +2365,11 @@ void scr_clear_layer_menu(void)
 		//printf ("Clearing layer size %d. buffer_layer_menu %p realloc layers %d\n",size,buffer_layer_menu,sem_screen_refresh_reallocate_layers);
 		//size/=16;
 
-		z80_int *initial_p;
+		//z80_int *initial_p;
 
 
 
-		initial_p=buffer_layer_menu;
+		//initial_p=buffer_layer_menu;
 		for (i=0;i<size;i++) {
 			//if (initial_p!=buffer_layer_menu) {
 			//if (buffer_layer_menu==NULL) {
@@ -5435,10 +5435,10 @@ void screen_store_scanline_rainbow_solo_display_16c(void)
         z80_int direccion;
         
 
-        z80_byte *screen;
+        //z80_byte *screen;
 
 
-		screen=get_base_mem_pantalla();
+		//screen=get_base_mem_pantalla();
 
 		direccion=screen_addr_table[(scanline_copia<<5)];
 
@@ -12199,12 +12199,12 @@ void screen_text_repinta_pantalla_chloe(void)
 
         z80_byte caracter;
         int x,y;
-        unsigned char inv;
+        //unsigned char inv;
 
         //int valor_get_pixel;
 
         //int parpadeo;
-				int brillo;
+				//int brillo;
 
         //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
@@ -12220,8 +12220,8 @@ void screen_text_repinta_pantalla_chloe(void)
 
                         caracter=*chloe_screen;
 
-                        brillo=0;
-                        inv=0;
+                        //brillo=0;
+                        //inv=0;
 
                         /*
 

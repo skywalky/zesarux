@@ -2274,8 +2274,10 @@ Byte fields:
   for (i=0;i<16;i++)  cpcconfblock[4+i]=cpc_palette_table[i];
   for (i=0;i<4;i++)   cpcconfblock[20+i]=cpc_ppi_ports[i];
   for (i=0;i<32;i++)  cpcconfblock[24+i]=cpc_crtc_registers[i];
-                      cpcconfblock[56]=cpc_border_color;
-                      cpcconfblock[57]=cpc_crtc_last_selected_register;
+
+
+  cpcconfblock[56]=cpc_border_color;
+  cpcconfblock[57]=cpc_crtc_last_selected_register;
 
 
   zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, cpcconfblock,ZSF_CPC_CONF, 58);
@@ -2533,8 +2535,8 @@ Byte Fields:
 
 void save_zsf_snapshot(char *filename)
 {
-  z80_byte *puntero;
-  puntero=NULL;
+  //z80_byte *puntero;
+  //puntero=NULL;
   int longitud;
   //Realmente el NULL del puntero a memoria no seria necesario, ya que como el filename no es NULL, se usa el archivo y no se usa el puntero a memoria
   //Y la longitud no la usamos
