@@ -206,9 +206,6 @@ En ZENG queda bien pero en descargas no
 -compilar raspberry tambien con ssl?
 
 
-
-
-
 -chdir en esxdos handler acaba cambiando directorio realmente para emulador??
 
 
@@ -232,7 +229,6 @@ Puede servir para versión online simple. Salida pnm y entrada de texto
 -revisar warnings de codigo sin uso que sale en linux
 
 -compilar windows con O2. Quiza que haya una version "legacy" sin ello. Y siempre con pthreads
-
 
 
 
