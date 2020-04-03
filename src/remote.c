@@ -87,6 +87,10 @@ z80_bit remote_calling_end_emulator={0};
 	#include <arpa/inet.h>
 #endif
 
+#ifdef __FreeBSD__
+#include <netinet/in.h>
+#endif
+
 #include <stdarg.h>
 
 struct sockaddr_in adr;

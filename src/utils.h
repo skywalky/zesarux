@@ -22,6 +22,10 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#ifdef __FreeBSD__
+#include <limits.h>
+#endif
+
 #include "cpu.h"
 #include "compileoptions.h"
 #include "menu.h"
