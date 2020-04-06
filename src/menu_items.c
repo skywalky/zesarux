@@ -186,6 +186,8 @@ int settings_statistics_opcion_seleccionada=0;
 int mmc_divmmc_opcion_seleccionada=0;
 int ide_divide_opcion_seleccionada=0;
 
+int display_settings_opcion_seleccionada=0;
+
 
 //Fin opciones seleccionadas para cada menu
 
@@ -19435,6 +19437,237 @@ void menu_ide_divide(MENU_ITEM_PARAMETERS)
 
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
+
+
+
+}
+
+void menu_view_screen(MENU_ITEM_PARAMETERS)
+{
+        menu_espera_no_tecla();
+
+	//para que no se vea oscuro
+	menu_set_menu_abierto(0);
+	//modificado_border.v=1;
+
+	menu_cls_refresh_emulated_screen();
+
+	//menu_refresca_pantalla();
+        menu_espera_tecla();
+	menu_set_menu_abierto(1);
+	menu_espera_no_tecla();
+	modificado_border.v=1;
+}
+
+void menu_display_load_screen(MENU_ITEM_PARAMETERS)
+{
+
+char screen_load_file[PATH_MAX];
+
+  char *filtros[2];
+
+        filtros[0]="scr";
+        filtros[1]=0;
+
+
+        if (menu_filesel("Select Screen File",filtros,screen_load_file)==1) {
+		load_screen(screen_load_file);
+                //Y salimos de todos los menus
+                salir_todos_menus=1;
+
+        }
+
+}
+
+void menu_display_save_screen(MENU_ITEM_PARAMETERS)
+{
+
+	char screen_save_file[PATH_MAX];
+
+	char *filtros[4];
+
+
+	if (MACHINE_IS_SPECTRUM) {
+		filtros[0]="scr";
+		filtros[1]="pbm";
+		filtros[2]="bmp";
+		filtros[3]=0;
+	}
+
+	else {
+		filtros[0]="bmp";
+		filtros[1]=0;			
+	}
+
+
+	if (menu_filesel("Select Screen File",filtros,screen_save_file)==1) {
+
+		//Ver si archivo existe y preguntar
+		struct stat buf_stat;
+
+		if (stat(screen_save_file, &buf_stat)==0) {
+
+			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+
+		}
+
+
+		if (!util_compare_file_extension(screen_save_file,"scr")) {
+					save_screen(screen_save_file);
+		}
+
+		else if (!util_compare_file_extension(screen_save_file,"pbm")) {
+
+			//Asignar buffer temporal
+			int longitud=6144;
+			z80_byte *buf_temp=malloc(longitud);
+			if (buf_temp==NULL) {
+					debug_printf(VERBOSE_ERR,"Error allocating temporary buffer");
+			}
+
+			//Convertir pantalla a sprite ahi
+			z80_byte *origen;
+			origen=get_base_mem_pantalla();
+			util_convert_scr_sprite(origen,buf_temp);
+
+			util_write_pbm_file(screen_save_file,256,192,8,buf_temp);
+
+			free(buf_temp);
+
+
+		}
+
+		else if (!util_compare_file_extension(screen_save_file,"bmp")) {
+
+			util_write_screen_bmp(screen_save_file);
+
+		}		
+
+		else {
+			debug_printf(VERBOSE_ERR,"Unsuported file type");
+			return;
+		} 
+
+
+		//Y salimos de todos los menus
+		salir_todos_menus=1;
+
+	}
+
+}
+
+
+void menu_unpaws_ungac(MENU_ITEM_PARAMETERS)
+{
+
+	char mensaje[1024];
+
+	int retorno=util_unpawsetc_dump_words(mensaje);
+
+	if (retorno>=0) {
+		menu_generic_message_format("Extract Words",mensaje);
+	}
+
+	else {
+		debug_printf (VERBOSE_ERR,mensaje);
+	}
+
+
+}
+
+
+//menu display settings
+void menu_display_settings(MENU_ITEM_PARAMETERS)
+{
+
+	menu_item *array_menu_display_settings;
+	menu_item item_seleccionado;
+	int retorno_menu;
+	do {
+
+
+
+        //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
+		menu_add_item_menu_inicial(&array_menu_display_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+		if (MACHINE_IS_SPECTRUM) {
+			menu_add_item_menu(array_menu_display_settings,"~~Load Screen",MENU_OPCION_NORMAL,menu_display_load_screen,NULL);
+			menu_add_item_menu_shortcut(array_menu_display_settings,'l');
+		}
+
+		menu_add_item_menu(array_menu_display_settings,"~~Save Screen",MENU_OPCION_NORMAL,menu_display_save_screen,NULL);
+		menu_add_item_menu_shortcut(array_menu_display_settings,'s');
+		menu_add_item_menu_tooltip(array_menu_display_settings,"Save screen to disk. BMP format requires to enable real video first");
+		menu_add_item_menu_ayuda(array_menu_display_settings,"Save screen to disk. BMP format requires to enable real video first");
+
+
+		menu_add_item_menu(array_menu_display_settings,"~~View Screen",MENU_OPCION_NORMAL,menu_view_screen,NULL);
+		menu_add_item_menu_shortcut(array_menu_display_settings,'v');
+
+
+			menu_add_item_menu(array_menu_display_settings,"View ~~Colour Palettes",MENU_OPCION_NORMAL,menu_display_total_palette,NULL);
+			menu_add_item_menu_shortcut(array_menu_display_settings,'c');
+			menu_add_item_menu_tooltip(array_menu_display_settings,"View full palettes or mapped palettes");
+			menu_add_item_menu_ayuda(array_menu_display_settings,"You can see in this menu full colour palettes or mapped colour palettes. \n"
+			 									"Full colour palettes means all the colours available for a mode, for example 256 colours on ULAPlus.\n"
+												"Mapped colour palettes means the active palette for a mode, for example 64 colours on ULAPlus."
+
+				);
+
+
+       //Teclados en pantalla
+                if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
+	                menu_add_item_menu(array_menu_display_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                        menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_onscreen_keyboard,NULL,"On Screen ~~Keyboard");
+                        menu_add_item_menu_shortcut(array_menu_display_settings,'k');
+                        menu_add_item_menu_tooltip(array_menu_display_settings,"Open on screen keyboard");
+                        menu_add_item_menu_ayuda(array_menu_display_settings,"You can also get this pressing F8, only for Spectrum and ZX80/81 machines");
+				}
+
+				if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_CPC) {
+
+			menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen ~~Adventure KB");
+                        menu_add_item_menu_shortcut(array_menu_display_settings,'a');
+                        menu_add_item_menu_tooltip(array_menu_display_settings,"Open On Screen Adventure Keyboard");
+                        menu_add_item_menu_ayuda(array_menu_display_settings,"Here you have an on screen keyboard but uses words instead of just letters. "
+				"It's useful to play Text Adventures, you can redefine your own words");
+
+				}
+
+
+			if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
+				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_unpaws_ungac,NULL," ~~Extract words to Adv. Keyb.");
+				menu_add_item_menu_shortcut(array_menu_display_settings,'e');
+				menu_add_item_menu_tooltip(array_menu_display_settings,"Runs the word extractor tool for adventure text games");
+				menu_add_item_menu_ayuda(array_menu_display_settings,"It runs the word extractor tool and insert these words on the On Screen Adventure Keyboard. "
+					"It can detect words on games written with Quill, Paws, DAAD, and GAC");
+			}
+
+   
+ 
+
+                menu_add_item_menu(array_menu_display_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_display_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_display_settings);
+
+                retorno_menu=menu_dibuja_menu(&display_settings_opcion_seleccionada,&item_seleccionado,array_menu_display_settings,"Display" );
+
+                
+
+		//NOTA: no llamar por numero de opcion dado que hay opciones que ocultamos (relacionadas con real video)
+
+		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+
+			//llamamos por valor de funcion
+        	        if (item_seleccionado.menu_funcion!=NULL) {
+                	        //printf ("actuamos por funcion\n");
+	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+				
+        	        }
+		}
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 
