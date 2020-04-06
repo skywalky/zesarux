@@ -17290,15 +17290,15 @@ z80_byte *util_bmp_new(int ancho,int alto)
         //Image size. If compression -> 0
         puntero[34]=puntero[35]=puntero[36]=puntero[37]=0;
         
-        //horizontal resolution: Pixels/meter
-        puntero[38]=value_16_to_8l(ancho);
-        puntero[39]=value_16_to_8h(ancho);
+        //horizontal resolution: Pixels/meter. 2835. valor de referencia de otro bmp
+        puntero[38]=value_16_to_8l(2835);
+        puntero[39]=value_16_to_8h(2835);
         puntero[41]=puntero[41]=0;        
 
         
         //vertical resolution: Pixels/meter
-        puntero[42]=value_16_to_8l(alto);
-        puntero[43]=value_16_to_8h(alto);
+        puntero[42]=value_16_to_8l(2835);
+        puntero[43]=value_16_to_8h(2835);
         puntero[44]=puntero[45]=0;   
 
         //Number of actually used colors. For a 8-bit / pixel bitmap this will be 100h or 256.
