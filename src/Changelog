@@ -6,6 +6,7 @@ Added emulation of AY chip MIDI registers 14 & 15 and route them to an external 
 Added Visualmem for MMC Read/Write
 Added Visualmem "Defrag style"
 Added browser for quicksave snapshots
+Added save screen to bmp feature
 
 Improved Esxdos handler: 
 -add f_mkdir function 

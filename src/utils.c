@@ -17318,7 +17318,7 @@ void util_bmp_putpixel(z80_byte *puntero,int x,int y,int r,int g,int b)
         int alto=value_8_to_16(puntero[23],puntero[22]);
 
         //Se dibuja de abajo a arriba
-        int yfinal=alto-y;
+        int yfinal=(alto-1)-y;
 
         int tamanyo_linea=ancho*3;
         int offset_x=x*3;
