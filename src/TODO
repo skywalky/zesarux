@@ -330,6 +330,8 @@ pero evitar cualquier otro boton diferente de los ejes
 -Grabar pantalla bmp no funciona bien con modo gigascreen y interlace. Probablemente tampoco bien video formato rwv
 Esto seguramente es porque leo de rainbow buffer
 
+-Grabar pantalla requiere de real video y por tanto maquinas sin esto no funcionaran: QL, ...?
+
 -Inves. Ver que juegos se corrompe la memoria debido a interrupción. Quizá ver aquellos que no usan tabla entera de 257
 
 -Mejorar emulación teclado issue 2,3. Etc. Inves

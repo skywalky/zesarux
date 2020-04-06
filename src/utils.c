@@ -17402,6 +17402,11 @@ void util_write_screen_bmp(char *archivo)
 
 
                 fclose(ptr_scrfile);
+
+                free(puntero_bitmap);
         }
+
+
+        
 
 }

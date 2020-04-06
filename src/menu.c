@@ -24692,10 +24692,18 @@ char screen_save_file[PATH_MAX];
 
   char *filtros[4];
 
-        filtros[0]="scr";
-        filtros[1]="pbm";
-        filtros[2]="bmp";
+
+	if (MACHINE_IS_SPECTRUM) {
+		filtros[0]="scr";
+		filtros[1]="pbm";
+		filtros[2]="bmp";
 		filtros[3]=0;
+	}
+
+	else {
+		filtros[0]="bmp";
+		filtros[1]=0;			
+	}
 
 
         if (menu_filesel("Select Screen File",filtros,screen_save_file)==1) {
@@ -24832,22 +24840,21 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
 	do {
 
-		//char string_aux[50],string_aux2[50],emulate_zx8081_disp[50],string_arttext[50],string_aaslow[50],emulate_zx8081_thres[50],string_arttext_threshold[50];
-		//char buffer_string[50];
 
 
-                //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
-                menu_add_item_menu_inicial(&array_menu_display_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+        //Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
+		menu_add_item_menu_inicial(&array_menu_display_settings,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
 		if (MACHINE_IS_SPECTRUM) {
-
 			menu_add_item_menu(array_menu_display_settings,"~~Load Screen",MENU_OPCION_NORMAL,menu_display_load_screen,NULL);
 			menu_add_item_menu_shortcut(array_menu_display_settings,'l');
-
-			menu_add_item_menu(array_menu_display_settings,"~~Save Screen",MENU_OPCION_NORMAL,menu_display_save_screen,NULL);
-			menu_add_item_menu_shortcut(array_menu_display_settings,'s');
-
 		}
+
+		menu_add_item_menu(array_menu_display_settings,"~~Save Screen",MENU_OPCION_NORMAL,menu_display_save_screen,NULL);
+		menu_add_item_menu_shortcut(array_menu_display_settings,'s');
+		menu_add_item_menu_tooltip(array_menu_display_settings,"Save screen to disk. BMP format requires to enable real video first");
+		menu_add_item_menu_ayuda(array_menu_display_settings,"Save screen to disk. BMP format requires to enable real video first");
+
 
 		menu_add_item_menu(array_menu_display_settings,"~~View Screen",MENU_OPCION_NORMAL,menu_view_screen,NULL);
 		menu_add_item_menu_shortcut(array_menu_display_settings,'v');

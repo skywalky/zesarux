@@ -884,4 +884,6 @@ extern z80_int util_get_value_little_endian(z80_byte *origin);
 
 extern void util_get_home_dir(char *homedir);
 
+extern void util_write_screen_bmp(char *archivo);
+
 #endif
