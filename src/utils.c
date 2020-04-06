@@ -17339,7 +17339,7 @@ void util_bmp_putpixel(z80_byte *puntero,int x,int y,int r,int g,int b)
 void util_write_screen_bmp(char *archivo)
 {
 
- 
+        enable_rainbow();
 
         int ancho,alto;
 

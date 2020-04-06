@@ -327,6 +327,8 @@ pero evitar cualquier otro boton diferente de los ejes
 
 -Emular chips de memoria con fallos
 
+-Grabar pantalla bmp no funciona bien con modo gigascreen y interlace. Probablemente tampoco bien video formato rwv
+Esto seguramente es porque leo de rainbow buffer
 
 -Inves. Ver que juegos se corrompe la memoria debido a interrupción. Quizá ver aquellos que no usan tabla entera de 257
 
