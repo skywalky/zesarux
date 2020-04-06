@@ -17210,12 +17210,23 @@ void util_get_home_dir(char *homedir)
 
 }
 
+ #define UTIL_BMP_HEADER_SIZE (14+40)
+
+int util_bmp_get_file_size(int ancho,int alto)
+{
+        //File size
+        //cabecera + ancho*alto*3 (*3 porque es 24 bit de color)
+        int file_size=(ancho*alto*3)+UTIL_BMP_HEADER_SIZE;
+
+        return file_size;
+}
+
 //Asignar memoria para un archivo bmp de 24 bits y meter algunos valores en cabecera
 z80_byte *util_bmp_new(int ancho,int alto)
 {
 
         //http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm
-        #define UTIL_BMP_HEADER_SIZE (14+40)
+       
 
         int memoria_necesaria=(ancho*alto*3)+UTIL_BMP_HEADER_SIZE;
 
@@ -17230,7 +17241,7 @@ z80_byte *util_bmp_new(int ancho,int alto)
 
         //File size
         //cabecera + ancho*alto*3 (*3 porque es 24 bit de color)
-        int file_size=(ancho*alto*3)+UTIL_BMP_HEADER_SIZE;
+        int file_size=util_bmp_get_file_size(ancho,alto);
         puntero[2]=file_size & 0xFF;
         file_size >>=8;
 
@@ -17321,3 +17332,46 @@ void util_bmp_putpixel(z80_byte *puntero,int x,int y,int r,int g,int b)
 
 }
 
+
+
+
+
+void util_write_screen_bmp(char *archivo)
+{
+
+        //prueba
+
+        int ancho,alto;
+
+         ancho=200;
+         alto=100;
+
+
+        FILE *ptr_scrfile;
+        ptr_scrfile=fopen(archivo,"wb");
+        if (!ptr_scrfile) {
+                debug_printf (VERBOSE_ERR,"Unable to open Screen file");
+        }
+                               
+        else {
+
+
+                z80_byte *puntero_bitmap;
+
+                puntero_bitmap=util_bmp_new(ancho,alto);
+				
+
+//pixeles...
+
+
+                int file_size=util_bmp_get_file_size(ancho,alto);
+					
+                fwrite(puntero_bitmap,1,file_size,ptr_scrfile);
+		              
+
+
+
+                fclose(ptr_scrfile);
+        }
+
+}

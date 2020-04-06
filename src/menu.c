@@ -24690,11 +24690,12 @@ void menu_display_save_screen(MENU_ITEM_PARAMETERS)
 
 char screen_save_file[PATH_MAX];
 
-  char *filtros[3];
+  char *filtros[4];
 
         filtros[0]="scr";
         filtros[1]="pbm";
-        filtros[2]=0;
+        filtros[2]="bmp";
+		filtros[3]=0;
 
 
         if (menu_filesel("Select Screen File",filtros,screen_save_file)==1) {
@@ -24737,6 +24738,17 @@ char screen_save_file[PATH_MAX];
 
 
 		}
+
+		else if (!util_compare_file_extension(screen_save_file,"bmp")) {
+
+
+
+			util_write_screen_bmp(screen_save_file);
+
+                        
+
+
+		}		
 
 		else {
 	                debug_printf(VERBOSE_ERR,"Unsuported file type");
