@@ -115,6 +115,8 @@ extern int scr_get_4pixel_rainbow(int x,int y);
 
 extern int if_store_scanline_interlace(int y);
 
+extern void convertir_color_spectrum_paleta_to_rgb(z80_int valor,int *r,int *g,int *b);
+
 extern z80_byte compare_char(unsigned char *origen,unsigned char *inverse);
 extern z80_byte compare_char_step(z80_byte *origen,z80_byte *inverse,int step);
 extern z80_byte compare_char_tabla_step(z80_byte *origen,z80_byte *inverse,z80_byte *tabla_leemos,int step);

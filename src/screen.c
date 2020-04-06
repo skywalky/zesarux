@@ -7873,6 +7873,24 @@ void convertir_paleta(z80_int valor)
 
 }
 
+
+void convertir_color_spectrum_paleta_to_rgb(z80_int valor,int *r,int *g,int *b)
+{
+
+	//unsigned char valor_r,valor_g,valor_b;
+
+	//colores de tabla activa
+	int color=spectrum_colortable[valor];
+
+
+	*r=(color & 0xFF0000) >> 16;
+	*g=(color & 0x00FF00) >> 8;
+	*b= color & 0x0000FF;
+
+
+
+}
+
 /*
 	convertir_paleta(valor);
    fwrite( &buffer_rgb, 1, 3, fichero_out);

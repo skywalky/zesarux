@@ -17339,12 +17339,13 @@ void util_bmp_putpixel(z80_byte *puntero,int x,int y,int r,int g,int b)
 void util_write_screen_bmp(char *archivo)
 {
 
-        //prueba
+ 
 
         int ancho,alto;
 
-         ancho=200;
-         alto=100;
+
+        ancho=screen_get_emulated_display_width_no_zoom_border_en();
+        alto=screen_get_emulated_display_height_no_zoom_border_en();         
 
 
         FILE *ptr_scrfile;
@@ -17362,6 +17363,35 @@ void util_write_screen_bmp(char *archivo)
 				
 
 //pixeles...
+
+
+
+                //Derivado de vofile_send_frame
+
+
+                z80_int *original_buffer;
+
+                original_buffer=rainbow_buffer;
+
+
+                z80_int color_leido;
+
+                int r,g,b;
+
+                int x,y; 
+
+
+                for (y=0;y<alto;y++) {
+                        for (x=0;x<ancho;x++) {
+                                color_leido=*original_buffer;
+                                convertir_color_spectrum_paleta_to_rgb(color_leido,&r,&g,&b);
+
+                                util_bmp_putpixel(puntero_bitmap,x,y,r,g,b);
+
+                                original_buffer++;
+                        }
+                }
+
 
 
                 int file_size=util_bmp_get_file_size(ancho,alto);
