@@ -19595,10 +19595,12 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_display_settings,'l');
 		}
 
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
 		menu_add_item_menu(array_menu_display_settings,"~~Save Screen",MENU_OPCION_NORMAL,menu_display_save_screen,NULL);
 		menu_add_item_menu_shortcut(array_menu_display_settings,'s');
 		menu_add_item_menu_tooltip(array_menu_display_settings,"Save screen to disk. BMP format requires to enable real video first");
 		menu_add_item_menu_ayuda(array_menu_display_settings,"Save screen to disk. BMP format requires to enable real video first");
+		}
 
 
 		menu_add_item_menu(array_menu_display_settings,"~~View Screen",MENU_OPCION_NORMAL,menu_view_screen,NULL);
