@@ -17209,3 +17209,115 @@ void util_get_home_dir(char *homedir)
 
 
 }
+
+//Asignar memoria para un archivo bmp de 24 bits y meter algunos valores en cabecera
+z80_byte *util_bmp_new(int ancho,int alto)
+{
+
+        //http://www.ece.ualberta.ca/~elliott/ee552/studentAppNotes/2003_w/misc/bmp_file_format/bmp_file_format.htm
+        #define UTIL_BMP_HEADER_SIZE (14+40)
+
+        int memoria_necesaria=(ancho*alto*3)+UTIL_BMP_HEADER_SIZE;
+
+        z80_byte *puntero;
+
+        puntero=malloc(memoria_necesaria);
+
+        if (puntero==NULL) cpu_panic("Can not allocate memory for bmp file");
+
+        puntero[0]='B';
+        puntero[1]='M';
+
+        //File size
+        //cabecera + ancho*alto*3 (*3 porque es 24 bit de color)
+        int file_size=(ancho*alto*3)+UTIL_BMP_HEADER_SIZE;
+        puntero[2]=file_size & 0xFF;
+        file_size >>=8;
+
+        puntero[3]=file_size & 0xFF;
+        file_size >>=8;
+
+        puntero[4]=file_size & 0xFF;
+        file_size >>=8;
+
+        puntero[5]=file_size & 0xFF;
+        file_size >>=8;                
+
+        //Unused
+        puntero[6]=puntero[7]=puntero[8]=puntero[9];
+
+        //Data offset
+        puntero[10]=value_16_to_8l(UTIL_BMP_HEADER_SIZE);
+        puntero[11]=value_16_to_8h(UTIL_BMP_HEADER_SIZE);
+        puntero[12]=puntero[13]=0;
+
+        //Size of info header = 40
+        puntero[14]=40;
+        puntero[15]=puntero[16]=puntero[17]=0;
+
+        //Ancho
+        puntero[18]=value_16_to_8l(ancho);
+        puntero[19]=value_16_to_8h(ancho);
+        puntero[20]=puntero[21]=0;
+
+        //Alto
+        puntero[22]=value_16_to_8l(alto);
+        puntero[23]=value_16_to_8h(alto);
+        puntero[24]=puntero[25]=0;    
+
+        //Planes = 1   
+        puntero[26]=1; 
+        puntero[27]=0;
+
+        //Bits per pixel -> 24 
+        puntero[28]=24; 
+        puntero[29]=0;
+
+        //Compression -> 0 no compression
+        puntero[30]=puntero[31]=puntero[32]=puntero[33]=0;
+
+        //Image size. If compression -> 0
+        puntero[34]=puntero[35]=puntero[36]=puntero[37]=0;
+        
+        //horizontal resolution: Pixels/meter
+        puntero[38]=value_16_to_8l(ancho);
+        puntero[39]=value_16_to_8h(ancho);
+        puntero[41]=puntero[41]=0;        
+
+        
+        //vertical resolution: Pixels/meter
+        puntero[42]=value_16_to_8l(alto);
+        puntero[43]=value_16_to_8h(ancho);
+        puntero[44]=puntero[45]=0;   
+
+        //Number of actually used colors. For a 8-bit / pixel bitmap this will be 100h or 256.
+        //-> 1 ^24
+        puntero[46]=puntero[47]=puntero[48]=0;        
+        puntero[49]=1;
+
+        //Number of important colors  0 = all
+        puntero[50]=puntero[51]=puntero[52]=puntero[53]=0;
+
+        return puntero;
+}
+
+void util_bmp_putpixel(z80_byte *puntero,int x,int y,int r,int g,int b)
+{
+        int ancho=value_8_to_16(puntero[19],puntero[18]);
+        int alto=value_8_to_16(puntero[23],puntero[22]);
+
+        //Se dibuja de abajo a arriba
+        int yfinal=alto-y;
+
+        int tamanyo_linea=ancho*3;
+        int offset_x=x*3;
+        int offset=(yfinal*tamanyo_linea)+offset_x+UTIL_BMP_HEADER_SIZE;
+
+        //Each 3-byte triplet in the bitmap array represents the relative intensities of blue, green, and red, respectively, for a pixel.
+
+        puntero[offset++]=b;
+        puntero[offset++]=g;
+        puntero[offset++]=r;
+
+}
+
