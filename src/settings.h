@@ -50,6 +50,7 @@ extern int remote_protocol_port;
 extern z80_bit hardware_debug_port;
 
 extern char zesarux_zxi_hardware_debug_file[];
+extern z80_bit setting_mostrar_visualmem_grafico;
 
 
 extern z80_bit autosave_snapshot_on_exit;

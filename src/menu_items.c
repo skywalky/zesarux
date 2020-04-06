@@ -748,6 +748,11 @@ void menu_debug_verbose_always_console(MENU_ITEM_PARAMETERS)
 	debug_always_show_messages_in_console.v ^=1;
 }
 
+void menu_debug_settings_visualmem_grafico(MENU_ITEM_PARAMETERS)
+{
+	setting_mostrar_visualmem_grafico.v ^=1;
+}
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -795,6 +800,16 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 			( menu_debug_registers_if_showscan.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
+
+
+		if (si_complete_video_driver() ) {
+			menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_settings_visualmem_grafico,NULL,"    Show Visualmem: %s",
+					(setting_mostrar_visualmem_grafico.v ? "Graphic" : "Text") );
+
+			menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows Visualmem menu with graphic or with text");
+			menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows Visualmem menu with graphic or with text");
+
+		}
 
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose,NULL,"[%d] Verbose ~~level",verbose_level);
@@ -4279,6 +4294,21 @@ int menu_visualmem_modo_defrag=1;
 
 int visualmem_bright_multiplier=10;
 
+
+//Dice si se muestra visualmem grafico o de texto.
+//Si es un driver de solo texto, mostrar texto
+//Si es un driver grafico y setting dice que lo mostremos en texto, mostrar texto
+//Si nada de lo demas, mostrar grafico
+int si_mostrar_visualmem_grafico(void)
+{
+	if (!si_complete_video_driver()) return 0;
+
+	if (!setting_mostrar_visualmem_grafico.v) return 0;
+
+	return 1;
+
+}
+
 //Dice inicio y final de visualmem
 void menu_visualmem_get_start_end(int *inicio,int *final)
 {
@@ -4443,7 +4473,7 @@ void menu_visualmem_putpixel(zxvision_window *ventana,int x,int y,int color_pixe
 {
 
 				
-				if (si_complete_video_driver() ) {
+				if (si_mostrar_visualmem_grafico() ) {
 					if (menu_visualmem_modo_defrag) {
 						//Cuadradito de color
 						int x2,y2;
@@ -4481,7 +4511,7 @@ void menu_debug_draw_visualmem(void)
 
 
 
-	if (si_complete_video_driver() ) {
+	if (si_mostrar_visualmem_grafico() ) {
 
 		int multiplicar_ancho=menu_char_width;
 		int multiplicar_alto=8;
@@ -4555,7 +4585,7 @@ void menu_debug_draw_visualmem(void)
 				//Sacar valor medio
 				int color_final=acumulado/max_valores;
 
-				if (si_complete_video_driver() ) {
+				if (si_mostrar_visualmem_grafico() ) {
 
 					//Solo calcular esto si tenemos driver grafico completo
 
@@ -4738,7 +4768,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 		//menu_debug_new_visualmem_defrag_mode
-		if (si_complete_video_driver() ) {
+		if (si_mostrar_visualmem_grafico() ) {
 			menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_defrag_mode,NULL,"[%c] ~~Defrag style",
 		    							(menu_visualmem_modo_defrag ? 'X' : ' ' ));
 			menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'d');

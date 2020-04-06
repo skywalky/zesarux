@@ -156,6 +156,10 @@ z80_bit hardware_debug_port={0};
 char zesarux_zxi_hardware_debug_file[PATH_MAX]="";
 
 
+//Si se muestra visualmem grafico en drivers grafico. Si no, muestra visualmem de texto en drivers graficos
+z80_bit setting_mostrar_visualmem_grafico={1}; 
+
+
 //
 // Snapshot Settings
 //
@@ -185,7 +189,7 @@ z80_bit fast_autoload={0};
 //
 
 //Si se muestra piano grafico en drivers grafico. Si no, muestra piano de texto en drivers graficos
-z80_bit setting_mostrar_ay_piano_grafico={1};
+z80_bit setting_mostrar_ay_piano_grafico={1}; 
 
 
 
