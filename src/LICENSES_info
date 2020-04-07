@@ -24,6 +24,10 @@ https://github.com/nihirash/esxdos-scl2trd
 Copyright 2017 Miodrag Milanovic. Distributed under BSD-3 License, you may read it on the LICENSE_SCMP_CORE
 https://github.com/mamedev/mame/tree/master/src/mame/drivers/mk14.cpp
 
+-Qemu Mac OS video driver
+Copyright Fabrice Bellard and the QEMU team. Distributed under the GNU General Public License version 2.
+https://github.com/aliguori/qemu
+
 -spg loader. Extracted from UnrealSpeccy emulator
 Copyright various authors. Distributed under freeware, you may read it on the LICENSE_unrealspeccy file
 https://github.com/tslabs/zx-evo/tree/master/pentevo/unreal
@@ -43,3 +47,4 @@ https://github.com/Utodev/unPAWs
 -zip
 Copyright Kuba Podgorski. Distributed under The Unlicense License, you may read it on the LICENSE_zip file
 https://github.com/kuba--/zip 
+

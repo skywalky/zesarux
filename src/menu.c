@@ -26886,6 +26886,11 @@ void menu_about_license_grackle(MENU_ITEM_PARAMETERS)
         menu_about_read_file("grackle License","licenses/LICENSE_grackle");
 }
 
+void menu_about_license_qemu(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("Qemu License","licenses/LICENSE_qemu");
+}
+
 
 void menu_about_statistics(MENU_ITEM_PARAMETERS)
 {
@@ -27183,6 +27188,9 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu(array_menu_common,"~~Motorola Core",MENU_OPCION_NORMAL,menu_about_license_motorola_core,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'m');
+
+			menu_add_item_menu(array_menu_common,"~~Qemu Mac OS video driver",MENU_OPCION_NORMAL,menu_about_license_qemu,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'q');				
 
 			menu_add_item_menu(array_menu_common,"s~~cl2trd",MENU_OPCION_NORMAL,menu_about_license_scl2trd,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'c');			
