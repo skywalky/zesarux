@@ -986,9 +986,7 @@ _EOF
 			echo
 
 			MAINSOURCE="scrcocoa"
-        	        LDFLAGS="$LDFLAGS -framework Foundation -framework AppKit"
-
-				LDFLAGS="$LDFLAGS -framework OpenGL"
+        	        LDFLAGS="$LDFLAGS -framework Foundation -framework AppKit -framework OpenGL"
 
 		fi
         fi
@@ -2147,12 +2145,7 @@ fi
 
 
 if [ "$OPTIONCOCOA" != "" ]; then
-        echo -n "cocoa"
-
-		echo -n "(GL)"
-
-	echo -n " "
-
+        echo -n "cocoa "
 fi
 
 if [ "$OPTIONOBJXWINDOWS" != "" ]; then
