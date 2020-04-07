@@ -128,7 +128,6 @@ OPTIONEMULATE_CONTEND="yes"
 OPTIONPUTPIXELCACHE="yes"
 OPTION_WORDS_BIGENDIAN=""
 OPTIONCOCOA="enabled"
-OPTIONCOCOA_OPENGL="enabled"
 OPTIONREDUCED_CORE_SPECTRUM=""
 
 
@@ -989,9 +988,7 @@ _EOF
 			MAINSOURCE="scrcocoa"
         	        LDFLAGS="$LDFLAGS -framework Foundation -framework AppKit"
 
-			if [ "$OPTIONCOCOA_OPENGL" == "enabled" ]; then
 				LDFLAGS="$LDFLAGS -framework OpenGL"
-			fi
 
 		fi
         fi
@@ -1970,12 +1967,6 @@ _EOF
 COMPILE_VARIABLES="$COMPILE_VARIABLES USE_COCOA"
 fi
 
-if [ "$OPTIONCOCOA_OPENGL" != "" ]; then
-cat >> compileoptions.h << _EOF
-#define COCOA_OPENGL
-_EOF
-COMPILE_VARIABLES="$COMPILE_VARIABLES COCOA_OPENGL"
-fi
 
 
 
@@ -2158,9 +2149,7 @@ fi
 if [ "$OPTIONCOCOA" != "" ]; then
         echo -n "cocoa"
 
-	if [ "$OPTIONCOCOA_OPENGL" != "" ]; then
 		echo -n "(GL)"
-	fi
 
 	echo -n " "
 
