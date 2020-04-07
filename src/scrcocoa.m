@@ -724,6 +724,12 @@ You can cause your context to be double-buffered by including NSOpenGLPFADoubleB
 [self registerForDraggedTypes:
       [NSArray arrayWithObjects:NSTIFFPboardType,NSFilenamesPboardType,nil]];
 
+//[self registerForDraggedTypes: 
+  //    [NSArray arrayWithObjects:NSPasteboardTypeTIFF,NSFilenamesPboardType,nil]];
+
+      //[self registerForDraggedTypes([NSFilenamesPboardType]) ];
+
+
     return self;
 }
 
