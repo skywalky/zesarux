@@ -1605,8 +1605,8 @@ bintargz: all
 	echo "Generated file is : ZEsarUX-\$(EMULATOR_VERSION)-bin.tar.gz"
 
 extra_files:
-	zip -r ZEsarUX-\$(EMULATOR_VERSION)-extras.zip ../../zesarux-extras/extras/
-	echo "Generated file is: \$(CURDIR)/ZEsarUX-\$(EMULATOR_VERSION)-extras.zip"
+	echo "Run the following: cd ../../zesarux-extras/ && zip -r /tmp/ZEsarUX-\$(EMULATOR_VERSION)-extras.zip *"
+	echo "Generated file will be: /tmp/ZEsarUX-\$(EMULATOR_VERSION)-extras.zip"
 
 windows:
 	mkdir -p ZEsarUX-\$(EMULATOR_VERSION)-windows
