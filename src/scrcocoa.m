@@ -76,7 +76,9 @@ char **gArgv;
 
 
 
-
+//Silenciar avisos de OpenGL tipo: scrcocoa.m:638:3: warning: 'glEnable' is deprecated: first deprecated in macOS 10.14 - OpenGL API deprecated. (Define GL_SILENCE_DEPRECATION to silence these warnings) [-Wdeprecated-declarations]
+//En algun momento del futuro tocará migrar a Metal...
+#define GL_SILENCE_DEPRECATION  
 
 #import <Cocoa/Cocoa.h>
 
