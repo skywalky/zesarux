@@ -232,16 +232,6 @@ Puede servir para versión online simple. Salida pnm y entrada de texto
 
 
 
--Build Mac:
-
-esto es una comodidad, pero si se cambia la línea 1626 del archivo configure:
-
-gzip macos/zesarux.dmg
-por algo como:
-
-hdiutil convert macos/zesarux.dmg -format UDZO -o macos/zesarux-macos.dmg
-ya se crea el archivo DMG comprimido en ZLIB.
-
 -Pentagon:
 
 -Page cashe pentagon:

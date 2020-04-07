@@ -1572,8 +1572,9 @@ clean:
 	rm -f *.o zesarux zesarux.exe smpatap sp_z80 tapabin bin_sprite_to_c leezx81 file_to_eprom bmp_to_prism_4_planar bmp_to_sprite spedtotxt install.sh 
 	rm -fR bintargztemp/ sourcetargztemp/ ZEsarUX-\$(EMULATOR_VERSION)-windows/
 	rm -fR macos/zesarux.app
+	rm -fR macos/zesarux-noncompressed.dmg
+	rm -fR macos/zesarux-noncompressed.dmg.gz
 	rm -fR macos/zesarux.dmg
-	rm -fR macos/zesarux.dmg.gz
 	rm -f ZEsarUX-\$(EMULATOR_VERSION)-bin.tar.gz
 	rm -f ZEsarUX-\$(EMULATOR_VERSION)-src.tar.gz
 	rm -f ZEsarUX-\$(EMULATOR_VERSION)-windows.zip
@@ -1620,15 +1621,19 @@ macapp: all
 	cp -r macos/apptemplate/* macos/zesarux.app/
 	cp zesarux macos/zesarux.app/Contents/MacOS/zesarux
 	cp -a \$(COMMONFILES) macos/zesarux.app/Contents/Resources/
+	rm -f macos/zesarux-noncompressed.dmg
+	rm -f macos/zesarux-noncompressed.dmg.gz
 	rm -f macos/zesarux.dmg
-	rm -f macos/zesarux.dmg.gz
-	hdiutil create -megabytes 100 -fs HFS+ -volname ZEsarUX macos/zesarux.dmg
-	hdiutil attach -mountpoint macos/tempmount macos/zesarux.dmg
+	hdiutil create -megabytes 128 -fs HFS+ -volname ZEsarUX macos/zesarux-noncompressed.dmg
+	hdiutil attach -mountpoint macos/tempmount macos/zesarux-noncompressed.dmg
 	cp -R macos/zesarux.app macos/tempmount
 	ln -s /Applications/ macos/tempmount/Applications
 	sleep 5
 	hdiutil detach macos/tempmount
-	gzip macos/zesarux.dmg
+	#gzip macos/zesarux-noncompressed.dmg
+	#UDBZ - UDIF bzip2-compressed image (Mac OS X 10.4+ only)
+	hdiutil convert macos/zesarux-noncompressed.dmg -format UDBZ -o macos/zesarux.dmg
+	rm -f macos/zesarux-noncompressed.dmg
 
 
 #CC32=gcc \$(CFLAGS) -m32
