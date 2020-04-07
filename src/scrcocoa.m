@@ -82,9 +82,9 @@ char **gArgv;
 
 #import <Cocoa/Cocoa.h>
 
-#ifdef COCOA_OPENGL
+
 	#import <OpenGL/gl.h>
-#endif
+
 
 
 #ifndef MAC_OS_X_VERSION_10_4
@@ -96,15 +96,7 @@ char **gArgv;
 
 
 
-//#define DEBUG
 
-/*
-#ifdef DEBUG
-#define COCOA_DEBUG(...)  { (void) fprintf (stdout, __VA_ARGS__); }
-#else
-#define COCOA_DEBUG(...)  ((void) 0)
-#endif
-*/
 
 //caps lock en mac no envia keyup y keydown
 //hacemos que cuando se envia evento de caps, activar caps durante un rato
@@ -435,11 +427,9 @@ int pendiente_z88_draw_lower=0;
  ------------------------------------------------------
 */
 
-#ifdef COCOA_OPENGL
+
 @interface ZesaruxCocoaView : NSOpenGLView
-#else
-@interface ZesaruxCocoaView : NSView
-#endif
+
 
 
 {
@@ -604,7 +594,7 @@ int pendiente_z88_draw_lower=0;
 
 @implementation ZesaruxCocoaView
 
-#ifdef COCOA_OPENGL
+
 
 -(void)prepareOpenGL
 {
@@ -705,7 +695,7 @@ You can cause your context to be double-buffered by including NSOpenGLPFADoubleB
 // CGLUnlockContext([[self openGLContext] CGLContextObj]);
 }
 
-#endif
+
 
 - (id)initWithFrame:(NSRect)frameRect
 {
@@ -1009,17 +999,7 @@ CGImageRef imageRef;
 
 
 
-//Redibujar ventana. No usado en OpenGL
-- (void) drawRect:(NSRect) rect
-{
 
-#ifdef COCOA_OPENGL
-	return;
-#endif
-
-
-
-}
 
 
 - (void) setContentDimensions
@@ -1141,9 +1121,9 @@ CGImageRef imageRef;
 	//indique cuando hay que llamar a screen_z88_draw_lower_screen
 	pendiente_z88_draw_lower=1;
 
-#ifdef COCOA_OPENGL
+
 	[self createTexture];
-#endif
+
 
 
 
@@ -2410,22 +2390,10 @@ void scrcocoa_refresca_pantalla_solo_driver(void)
 {
 // Prueba para cuando se redimensiona ventana desde el easter egg
 //if (pendingresize) scrcocoa_refresca_pantalla();
-#ifdef COCOA_OPENGL
+
         //Con OpenGL
 	[cocoaView render];
-#else
 
-        //Sin OpenGL
-
-        /*
-             //Esto tiene que llamarlo desde el thread principal:
-        dispatch_async(dispatch_get_main_queue(), ^{
-   [cocoaView display ];
-        });
-        */
-
-	[cocoaView display];
-#endif
 
 }
 
@@ -2686,11 +2654,9 @@ int scrcocoa_driver_can_ext_desktop (void)
 
 int scrcocoa_init (void) {
 
-#ifdef COCOA_OPENGL
+
 	debug_printf (VERBOSE_INFO,"Init COCOA(OpenGL) Video Driver");
-#else
-	debug_printf (VERBOSE_INFO,"Init COCOA Video Driver");
-#endif
+
 
         //printf ("scrcocoa_init\n");
 
