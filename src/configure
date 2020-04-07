@@ -49,7 +49,6 @@ show_help()
 	echo "--disable-coreaudio          Disable Coreaudio Mac OS X audio"
 	echo "--disable-sndfile            Disable sndfile functions"
         echo "--disable-pthreads           Disable using posix threads"
-	echo "--disable-realtime           Disable realtime priority"
 	echo "--disable-cocoa              Disable Cocoa Mac OS X native GUI"
 	echo "--disable-linuxrealjoystick  Disable linux real joystick support"
 	echo "--enable-memptr              Enable MEMPTR emulation"
@@ -118,7 +117,6 @@ OPTIONLINUXREALJOYSTICK="realjoystick_linux.o"
 OPTIONOBJSSL=""
 OPTIONPTHREADS="enabled"
 OPTIONSNDFILE="enabled"
-OPTIONREALTIME="enabled"
 OPTIONXEXT="enabled"
 OPTIONXVIDMODE="enabled"
 INSTALLPREFIX="/usr/local"
@@ -254,11 +252,6 @@ while [ $# -gt 0 ]; do
 	--disable-sndfile)
 	OPTIONSNDFILE=""
 	;;
-
-        --disable-realtime)
-        OPTIONREALTIME=""
-        ;;
-
 
 	--disable-xext)
         OPTIONXEXT=""
@@ -853,48 +846,6 @@ _EOF
 else
         echo "disabled"
 fi
-
-
-
-
-
-
-
-
-
-echo -n "Checking for realtime schedulling ... "
-if [ "$OPTIONREALTIME" != "" ]; then
-#en principio activo, probemos a compilar
-
-        TEMPFILE="configure.compile.c"
-
-        cat > $TEMPFILE << _EOF
-#include <sched.h>
-int main () {
-struct sched_param sparam;
-
-        sparam.sched_priority = sched_get_priority_max(SCHED_RR);
-        sched_setscheduler(0, SCHED_RR, &sparam);
-
-return 0;
-}
-_EOF
-
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
-        RESULTCODE=$?
-        if [ $RESULTCODE != 0 ]; then
-                echo "not found"
-                OPTIONREALTIME=""
-        else
-                echo "found"
-        fi
-        rm -f $TEMPFILE $TEMPFILE.o
-
-
-else
-        echo "disabled"
-fi
-
 
 
 
@@ -2044,14 +1995,6 @@ cat >> compileoptions.h << _EOF
 #define USE_SNDFILE
 _EOF
 COMPILE_VARIABLES="$COMPILE_VARIABLES USE_SNDFILE"
-fi
-
-
-if [ "$OPTIONREALTIME" != "" ]; then
-cat >> compileoptions.h << _EOF
-#define USE_REALTIME
-_EOF
-COMPILE_VARIABLES="$COMPILE_VARIABLES USE_REALTIME"
 fi
 
 

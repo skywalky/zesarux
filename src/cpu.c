@@ -188,9 +188,6 @@
 #include "audiocoreaudio.h"
 #endif
 
-#ifdef USE_REALTIME
-#include <sched.h>
-#endif
 
 #include "audionull.h"
 
@@ -7903,21 +7900,6 @@ init_randomize_noise_value();
 
 
 	scr_refresca_pantalla();
-
-#ifdef USE_REALTIME
-	//Establecemos prioridad realtime
-struct sched_param sparam;
-
-        if ((sparam.sched_priority = sched_get_priority_max(SCHED_RR))==-1) {
-                debug_printf (VERBOSE_WARN,"Error setting realtime priority : %s",strerror(errno));
-        }
-
-        else if (sched_setscheduler(0, SCHED_RR, &sparam)) {
-                debug_printf (VERBOSE_WARN,"Error setting realtime priority : %s",strerror(errno));
-        }
-
-	else debug_printf (VERBOSE_INFO,"Using realtime priority");
-#endif
 
 
 
