@@ -72,7 +72,7 @@ menu_generic_message("Rename file","OK. File renamed");
 
 * source a generar
 
-ZEsarUX_src-version.tar.gz
+ZEsarUX-version-src.tar.gz
 
 con comandos:
 make sourcetargz
@@ -98,8 +98,8 @@ con contenido numero de version, ejemplo:
 
 ** Linux 
 Generar estos dos binarios de Linux:
-ZEsarUX_linux-version-debian10_x32.tar.gz 
-ZEsarUX_linux-version-debian10_x64.tar.gz 
+ZEsarUX-version-linux-debian10-x32.tar.gz 
+ZEsarUX-version-linux-debian10-x64.tar.gz 
 con comandos:
 export CFLAGS=-O2
 export LDFLAGS=-O2
@@ -109,9 +109,23 @@ make clean
 make
 make bintargz
 
+
+** FreeBSD 
+Generar este binarios de FreeBSD:
+ZEsarUX-version-freebsd-12.1-x64.tar.gz 
+con comandos:
+export CFLAGS=-O2
+export LDFLAGS=-O2
+./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-caca --disable-aa --prefix /usr
+(Habilita drivers video: xwindows, sdl, fbdev, curses, stdout, simpletext y drivers audio: pulse, alsa, sdl, dsp. )
+make clean
+make
+make bintargz
+
+
 ** Raspbian
 Generar este binario de Raspbian:
-ZEsarUX_rpi-version-raspbian9.tar.gz 
+ZEsarUX-version-raspbian9.tar.gz 
 (Habilita extensiones raspberry, drivers video: fbdev, curses, y drivers audio: alsa, sdl, dsp. )
 con comandos:
 export CFLAGS=-O2
@@ -149,7 +163,7 @@ make bintargz
 
 Generar versión opengl por defecto con optimización
 Generar dos binarios de Mac:
-ZEsarUX_macos_legacy-version.dmg.gz 
+ZEsarUX-version-macos-legacy.dmg.gz 
 con comandos:
 Versión sin optimizaciones, sin SSL:
 
@@ -164,7 +178,7 @@ make macapp
 
 Y
 
-ZEsarUX_macos_version.dmg.gz
+ZEsarUX-version-macos.dmg.gz 
 con comandos:
 Versión con optimizaciones, sin SSL:
 
@@ -203,7 +217,7 @@ make macapp
 
 #make extra_files
 desde carpeta de zesarux-extras
-zip -r ZEsarUX_extras-\$(EMULATOR_VERSION).zip extras/
+zip -r ZEsarUX-\$(EMULATOR_VERSION)-extras.zip extras/
 Y subir el zip a github, al repo de zesarux, en releases
 #Nota: Los extra_files generarlos despues de las versiones de Mac pues se incluyen los extras para zesarux con SSL
 #Nota2: Tener en cuenta que la carpeta extras este visible, sea como enlace o como submodulo
@@ -212,13 +226,12 @@ Y subir el zip a github, al repo de zesarux, en releases
 
 **Windows
 Generar este binario de Windows, mingw:
-ZEsarUX_win-version.zip  (version no pthreads)
-y
-ZEsarUX_win-debug-ZRCP-version.zip (version con pthreads)
+ZEsarUX-version-windows.zip  
+
 
 Ver documento INSTALLWINDOWS, Native Windows (with mingw)
 
-Generar dos binarios, uno con pthreads y otro sin, con:
+Generar binario con:
 
 
 export CFLAGS="-I/c/openssl-1.1.1d-win32-mingw/include"
@@ -227,9 +240,6 @@ export LDFLAGS="-L/c/openssl-1.1.1d-win32-mingw/lib"
 
 ./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl
 
-y
-
-./configure --enable-memptr --enable-visualmem --enable-cpustats --disable-pthreads
 
 Esto compilara con SDL1
 
@@ -248,7 +258,7 @@ copy c:\mingw\sdl\bin\SDL.dll .
 o SDL2
 copy c:\mingw\sdl2\bin\SDL2.dll .
 
-En el caso de la version con pthreads, tambien copiar:
+tambien copiar:
 pthreadGC2.dll libgcc_s_dw2-1.dll
 
 y probar a ejecutar:

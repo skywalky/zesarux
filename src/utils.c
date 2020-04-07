@@ -17293,7 +17293,7 @@ z80_byte *util_bmp_new(int ancho,int alto)
         //horizontal resolution: Pixels/meter. 2835. valor de referencia de otro bmp
         puntero[38]=value_16_to_8l(2835);
         puntero[39]=value_16_to_8h(2835);
-        puntero[41]=puntero[41]=0;        
+        puntero[40]=puntero[41]=0;        
 
         
         //vertical resolution: Pixels/meter

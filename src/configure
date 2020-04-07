@@ -1570,15 +1570,14 @@ textspeech.o: textspeech.c textspeech.h cpu.h operaciones.h debug.h screen.h cha
 
 clean:
 	rm -f *.o zesarux zesarux.exe smpatap sp_z80 tapabin bin_sprite_to_c leezx81 file_to_eprom bmp_to_prism_4_planar bmp_to_sprite spedtotxt install.sh 
-	rm -fR bintargztemp/ sourcetargztemp/ ZEsarUX_win-\$(EMULATOR_VERSION)/
+	rm -fR bintargztemp/ sourcetargztemp/ ZEsarUX-\$(EMULATOR_VERSION)-windows/
 	rm -fR macos/zesarux.app
 	rm -fR macos/zesarux.dmg
 	rm -fR macos/zesarux.dmg.gz
-	rm -fR macos/ZEsarUX_macos*gz
-	rm -f ZEsarUX_bin-*tar.gz
-	rm -f ZEsarUX_src-*tar.gz
-	rm -f ZEsarUX_win-*.zip
-	rm -f ZEsarUX_extras-*.zip
+	rm -f ZEsarUX-\$(EMULATOR_VERSION)-bin.tar.gz
+	rm -f ZEsarUX-\$(EMULATOR_VERSION)-src.tar.gz
+	rm -f ZEsarUX-\$(EMULATOR_VERSION)-windows.zip
+	rm -f ZEsarUX-\$(EMULATOR_VERSION)-extras.zip
 
 COMMONFILES=ACKNOWLEDGEMENTS LICENSE LICENSES_info licenses Changelog TODO* README HISTORY FEATURES INSTALL INSTALLWINDOWS ALTERNATEROMS INCLUDEDTAPES DONATE FAQ *.odt mantransfev3.bin *.rom zxuno.flash tbblue.mmc speech_filters my_soft zesarux.mp3 zesarux.xcf editionnamegame.tap editionnamegame.tap.config bin_sprite_to_c.sh
 
@@ -1592,29 +1591,29 @@ sourcetargz:
 	rm -fR sourcetargztemp
 	mkdir -p sourcetargztemp/ZEsarUX-\$(EMULATOR_VERSION)
 	cp -a \$(COMMONFILES) \$(ONLYSOURCEFILES) sourcetargztemp/ZEsarUX-\$(EMULATOR_VERSION)/
-	tar -C sourcetargztemp -cvzf ZEsarUX_src-\$(EMULATOR_VERSION).tar.gz ZEsarUX-\$(EMULATOR_VERSION)
+	tar -C sourcetargztemp -cvzf ZEsarUX-\$(EMULATOR_VERSION)-src.tar.gz ZEsarUX-\$(EMULATOR_VERSION)
 	echo
-	echo "Generated file is : ZEsarUX_src-\$(EMULATOR_VERSION).tar.gz"
+	echo "Generated file is : ZEsarUX-\$(EMULATOR_VERSION)-src.tar.gz"
 
 bintargz: all
 	./generate_install_sh.sh
 	rm -fR bintargztemp
 	mkdir -p bintargztemp/ZEsarUX-\$(EMULATOR_VERSION)
 	cp -a \$(COMMONFILES) \$(ONLYUNIXBINARIES) bintargztemp/ZEsarUX-\$(EMULATOR_VERSION)/
-	tar -C bintargztemp -cvzf ZEsarUX_bin-\$(EMULATOR_VERSION).tar.gz ZEsarUX-\$(EMULATOR_VERSION)
+	tar -C bintargztemp -cvzf ZEsarUX-\$(EMULATOR_VERSION)-bin.tar.gz ZEsarUX-\$(EMULATOR_VERSION)
 	echo
-	echo "Generated file is : ZEsarUX_bin-\$(EMULATOR_VERSION).tar.gz"
+	echo "Generated file is : ZEsarUX-\$(EMULATOR_VERSION)-bin.tar.gz"
 
 extra_files:
-	zip -r ZEsarUX_extras-\$(EMULATOR_VERSION).zip ../../zesarux-extras/extras/
-	echo "Generated file is: \$(CURDIR)/ZEsarUX_extras-\$(EMULATOR_VERSION).zip"
+	zip -r ZEsarUX-\$(EMULATOR_VERSION)-extras.zip ../../zesarux-extras/extras/
+	echo "Generated file is: \$(CURDIR)/ZEsarUX-\$(EMULATOR_VERSION)-extras.zip"
 
 windows:
-	mkdir -p ZEsarUX_win-\$(EMULATOR_VERSION)
-	cp -a \$(COMMONFILES) \$(ONLYWINBINARIES) ZEsarUX_win-\$(EMULATOR_VERSION)/
-	zip -r ZEsarUX_win-\$(EMULATOR_VERSION).zip ZEsarUX_win-\$(EMULATOR_VERSION)/
+	mkdir -p ZEsarUX-\$(EMULATOR_VERSION)-windows
+	cp -a \$(COMMONFILES) \$(ONLYWINBINARIES) ZEsarUX-\$(EMULATOR_VERSION)-windows/
+	zip -r ZEsarUX-\$(EMULATOR_VERSION)-windows.zip ZEsarUX-\$(EMULATOR_VERSION)-windows/
 	echo
-	echo "Generated file is: ZEsarUX_win-\$(EMULATOR_VERSION).zip"
+	echo "Generated file is: ZEsarUX-\$(EMULATOR_VERSION)-windows.zip"
 
 macapp: all
 	mkdir -p macos/zesarux.app
