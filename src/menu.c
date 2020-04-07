@@ -26896,7 +26896,7 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 		"Source code lines: %d\n"
 		"Total time used on coding ZEsarUX: ^^%d^^ hours (and growing)\n\n"
 		"Edited with VSCode, Working Copy and vim\n"
-		"Developed on macOS Catalina, Debian 10, Raspbian, and MinGW environment on Windows\n"
+		"Developed on macOS Catalina, Debian 10, Raspbian, FreeBSD 12, and MinGW environment on Windows\n"
 		,LINES_SOURCE,tiempo_trabajado_en_zesarux);
 
 }

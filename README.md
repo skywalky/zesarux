@@ -84,7 +84,7 @@ Thanks!
 
 __FEATURES__
 
-* Runs on any Unix system and Windows: tested on GNU/Linux x86, GNU/Linux x86_64, GNU/Linux Raspbian, GNU/Linux RetroPie, Mac OS X, Windows native, Windows + Cygwin
+* Runs on any Unix system and Windows: tested on GNU/Linux x86, GNU/Linux x86_64, GNU/Linux Raspbian, GNU/Linux RetroPie, FreeBSD x86_64, Mac OS X, Windows native, Windows + Cygwin
 
 * Emulates:
 * Science of Cambridge MK14
