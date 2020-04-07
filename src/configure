@@ -218,6 +218,8 @@ while [ $# -gt 0 ]; do
 	;;
 
 	--disable-cocoa-opengl)
+	echo "Deprecated setting --disable-cocoa-opengl. Do not use it"
+	exit 0
 	OPTIONCOCOA_OPENGL=""
 	;;
 
