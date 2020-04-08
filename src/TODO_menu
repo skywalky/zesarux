@@ -50,7 +50,7 @@ O esta considerando mal el mostrar barras desplazamiento: quizá deberían salir
 
 -Ventana scanf con texto descriptivo dentro
 
--Background windows
+----Background windows
 -activarlas con: int menu_allow_background_windows=1;
 -Si ventana en background, no dejar volverla a llamar desde menu normal
 -Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
@@ -85,7 +85,7 @@ Ideas para background windows:
 -como se ponen en primer plano ventanas que estaban en background? Quizá cuando se ponen en background deben registrarse indicando la función principal que las inicia. Esto se deberá leer desde el handle de zxvision para cuando se pulsa ahí, cambiar y arrancar ahí 
 
 
--Fin Background windows
+----Fin Background windows
 
 -pantalla view sprites que adapte el texto leyenda al alto ventana
 

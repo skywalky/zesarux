@@ -518,6 +518,9 @@ Hay una lista de capas de prioridades en el codigo fuente de la fpga. Segun src/
    -- 48k-64k:
    --   1. mmu
 
+
+-4 puertos Dac de Next
+
 -------------
 
 
