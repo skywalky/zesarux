@@ -472,8 +472,10 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		5+8,0, 		//Colores para opcion seleccionada
 		7+8,2,7,2, 	//Colores para opcion no disponible
+
 		0,7+8,        	//Colores para el titulo y linea recuadro ventana
 		7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
@@ -618,10 +620,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		SOLARIZED_COLOUR_base02,SOLARIZED_COLOUR_base0, 		//Colores para opcion seleccionada
 		SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_red,SOLARIZED_COLOUR_base02,SOLARIZED_COLOUR_red, 	//Colores para opcion no disponible
-		0,7+8,        	//Colores para el titulo y linea recuadro ventana
-		7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
 
-		1,		//Color waveform
+		SOLARIZED_COLOUR_base0,SOLARIZED_COLOUR_base03,        	//Colores para el titulo y linea recuadro ventana
+		SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+		SOLARIZED_COLOUR_blue,		//Color waveform
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
@@ -634,10 +637,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		SOLARIZED_COLOUR_base2,SOLARIZED_COLOUR_base00, 		//Colores para opcion seleccionada
 		SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_red,SOLARIZED_COLOUR_base2,SOLARIZED_COLOUR_red, 	//Colores para opcion no disponible
-		0,7+8,        	//Colores para el titulo y linea recuadro ventana
-		7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
 
-		1,		//Color waveform
+		SOLARIZED_COLOUR_base00,SOLARIZED_COLOUR_base3,        	//Colores para el titulo y linea recuadro ventana
+		SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_base00,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+		SOLARIZED_COLOUR_blue,		//Color waveform
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
