@@ -614,6 +614,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
+	// https://ethanschoonover.com/solarized/
 	{"Solarized Dark",SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,
 
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
