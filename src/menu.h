@@ -41,7 +41,7 @@
 
 
 struct s_overlay_screen {
-	z80_byte tinta,papel,parpadeo;
+	int tinta,papel,parpadeo;
 	z80_byte caracter;
 };
 
@@ -128,7 +128,7 @@ extern void reset_menu_overlay_function(void);
 extern void pruebas_texto_menu(void);
 extern void cls_menu_overlay(void);
 extern void menu_cls_refresh_emulated_screen();
-extern void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char *texto);
+extern void menu_escribe_texto(int x,int y,int tinta,int papel,char *texto);
 extern void normal_overlay_texto_menu(void);
 extern int si_menu_mouse_en_ventana(void);
 extern void menu_calculate_mouse_xy(void);
@@ -565,11 +565,11 @@ extern void menu_debug_registers_show_scan_position(void);
 
 
 
-extern void putchar_menu_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel);
-extern void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel,z80_byte parpadeo);
-//extern void putchar_menu_second_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel);
-extern void new_menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel);
-extern void menu_putstring_footer(int x,int y,char *texto,z80_byte tinta,z80_byte papel);
+extern void putchar_menu_overlay(int x,int y,z80_byte caracter,int tinta,int papel);
+extern void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,int tinta,int papel,int parpadeo);
+
+extern void new_menu_putchar_footer(int x,int y,z80_byte caracter,int tinta,int papel);
+extern void menu_putstring_footer(int x,int y,char *texto,int tinta,int papel);
 extern void menu_footer_clear_bottom_line(void);
 extern void cls_menu_overlay(void);
 extern int menu_multitarea;
@@ -670,8 +670,8 @@ extern void menu_textspeech_send_text(char *texto);
 
 extern void menu_textspeech_filter_corchetes(char *texto_orig,char *texto);
 
-extern void screen_print_splash_text(int y,z80_byte tinta,z80_byte papel,char *texto);
-extern void screen_print_splash_text_center(z80_byte tinta,z80_byte papel,char *texto);
+extern void screen_print_splash_text(int y,int tinta,int papel,char *texto);
+extern void screen_print_splash_text_center(int tinta,int papel,char *texto);
 
 extern char menu_realtape_name[];
 
@@ -737,7 +737,7 @@ struct s_estilos_gui {
 typedef struct s_estilos_gui estilos_gui;
 
 
-#define ESTILOS_GUI 12
+#define ESTILOS_GUI 14
 
 
 #define ESTILO_GUI_RETROMAC 8
@@ -929,7 +929,7 @@ extern void menu_debug_daad_init_flagobject(void);
 extern void menu_draw_last_fps(void);
 extern void menu_draw_cpu_use_last(void);
 
-extern void putchar_footer_array(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel,z80_byte parpadeo);
+extern void putchar_footer_array(int x,int y,z80_byte caracter,int tinta,int papel,int parpadeo);
 extern void redraw_footer(void);
 extern void cls_footer(void);
 

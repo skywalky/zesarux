@@ -1994,10 +1994,7 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 	overlay_screen caracter;
 
-/*	struct s_overlay_screen {
-	z80_byte tinta,papel,parpadeo;
-	z80_byte caracter;
-};*/
+
 
 	caracter.tinta=ESTILO_GUI_TINTA_NORMAL;
 	caracter.papel=ESTILO_GUI_PAPEL_NORMAL;
@@ -5506,12 +5503,11 @@ int menu_debug_hexdump_cursor_en_zona_ascii=0;
 
 void menu_debug_hexdump_print_editcursor(zxvision_window *ventana,int x,int y,char caracter)
 {
-	//z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
-    //z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
+
 
 	//Inverso
-	z80_byte papel=ESTILO_GUI_PAPEL_SELECCIONADO;
-    z80_byte tinta=ESTILO_GUI_TINTA_SELECCIONADO;	
+	int papel=ESTILO_GUI_PAPEL_SELECCIONADO;
+    int tinta=ESTILO_GUI_TINTA_SELECCIONADO;	
 
 	//Si multitarea esta off, no se vera el parpadeo. Entonces cambiar el caracter por cursor '_'
 	if (!menu_multitarea) caracter='_';
@@ -5523,12 +5519,11 @@ void menu_debug_hexdump_print_editcursor(zxvision_window *ventana,int x,int y,ch
 
 void menu_debug_hexdump_print_editcursor_nibble(zxvision_window *ventana,int x,int y,char caracter)
 {
-	//z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
-    //z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
+
 
 	//Inverso
-	z80_byte papel=ESTILO_GUI_PAPEL_SELECCIONADO;
-    z80_byte tinta=ESTILO_GUI_TINTA_SELECCIONADO;	
+	int papel=ESTILO_GUI_PAPEL_SELECCIONADO;
+    int tinta=ESTILO_GUI_TINTA_SELECCIONADO;	
 
 	//putchar_menu_overlay_parpadeo(x,y,caracter,tinta,papel,0);
 	zxvision_print_char_simple(ventana,x,y,tinta,papel,0,caracter);

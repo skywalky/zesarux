@@ -612,6 +612,39 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
+	{"Solarized Dark",SOLARIZED_COLOUR_base03,0,
+
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+
+		5+8,0, 		//Colores para opcion seleccionada
+		7+8,2,7,2, 	//Colores para opcion no disponible
+		0,7+8,        	//Colores para el titulo y linea recuadro ventana
+		7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		2,7+8,		//Color para opcion marcada
+		'*',
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		},
+
+	{"Solarized Light",SOLARIZED_COLOUR_base3,0,
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+
+		5+8,0, 		//Colores para opcion seleccionada
+		7+8,2,7,2, 	//Colores para opcion no disponible
+		0,7+8,        	//Colores para el titulo y linea recuadro ventana
+		7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		2,7+8,		//Color para opcion marcada
+		'*',
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		},
+
 
         {"Clean",7,0,
                 0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
@@ -1619,8 +1652,8 @@ z80_byte menu_get_pressed_key(void)
 //escribe la cadena de texto
 void menu_scanf_print_string(char *string,int offset_string,int max_length_shown,int x,int y)
 {
-	z80_byte papel=ESTILO_GUI_PAPEL_NORMAL;
-	z80_byte tinta=ESTILO_GUI_TINTA_NORMAL;
+	int papel=ESTILO_GUI_PAPEL_NORMAL;
+	int tinta=ESTILO_GUI_TINTA_NORMAL;
 	char cadena_buf[2];
 
 	string=&string[offset_string];
@@ -1938,7 +1971,7 @@ void reset_menu_overlay_function(void)
 
 //funcion para escribir un caracter en el buffer de overlay
 //tinta y/o papel pueden tener brillo (color+8)
-void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel,z80_byte parpadeo)
+void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,int tinta,int papel,int parpadeo)
 {
 
 	int xusado=x;
@@ -1972,7 +2005,7 @@ void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,z80_byte tinta,
 
 //funcion para escribir un caracter en el buffer de overlay
 //tinta y/o papel pueden tener brillo (color+8)
-void putchar_menu_overlay(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel)
+void putchar_menu_overlay(int x,int y,z80_byte caracter,int tinta,int papel)
 {
 	putchar_menu_overlay_parpadeo(x,y,caracter,tinta,papel,0); //sin parpadeo
 }
@@ -2017,7 +2050,7 @@ void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
 }
 */
 
-void new_menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel)
+void new_menu_putchar_footer(int x,int y,z80_byte caracter,int tinta,int papel)
 {
 
 	putchar_footer_array(x,y,caracter,tinta,papel,0);
@@ -2026,41 +2059,9 @@ void new_menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_by
 }
 
 
-void old_menu_putchar_footer(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel)
-{
-	if (!menu_footer) return;
-
-	//Sin interlaced
-	if (video_interlaced_mode.v==0) {
-		scr_putchar_footer(x,y,caracter,tinta,papel);
-		return;
-	}
 
 
-	//Con interlaced
-	//Queremos que el footer se vea bien, no haga interlaced y no haga scanlines
-	//Cuando se activa interlaced se cambia la funcion de putpixel, por tanto,
-	//desactivando aqui interlaced no seria suficiente para que el putpixel saliese bien
-
-
-	//No queremos que le afecte el scanlines
-	z80_bit antes_scanlines;
-	antes_scanlines.v=video_interlaced_scanlines.v;
-	video_interlaced_scanlines.v=0;
-
-	//Escribe texto pero como hay interlaced, lo hará en una linea de cada 2
-	scr_putchar_footer(x,y,caracter,tinta,papel);
-
-	//Dado que hay interlaced, simulamos que estamos en siguiente frame de pantalla para que dibuje la linea par/impar siguiente
-	interlaced_numero_frame++;
-	scr_putchar_footer(x,y,caracter,tinta,papel);
-	interlaced_numero_frame--;
-
-	//restaurar scanlines
-	video_interlaced_scanlines.v=antes_scanlines.v;
-}
-
-void menu_putstring_footer(int x,int y,char *texto,z80_byte tinta,z80_byte papel)
+void menu_putstring_footer(int x,int y,char *texto,int tinta,int papel)
 {
 	while ( (*texto)!=0) {
 		new_menu_putchar_footer(x++,y,*texto,tinta,papel);
@@ -2313,7 +2314,7 @@ void cls_menu_overlay(void)
 
 //funcion para escribir un caracter en el buffer de footer
 //tinta y/o papel pueden tener brillo (color+8)
-void putchar_footer_array(int x,int y,z80_byte caracter,z80_byte tinta,z80_byte papel,z80_byte parpadeo)
+void putchar_footer_array(int x,int y,z80_byte caracter,int tinta,int papel,int parpadeo)
 {
 
 	if (!menu_footer) return;
@@ -2358,7 +2359,7 @@ void redraw_footer_continue(void)
 	//printf ("redraw footer\n");
 
 	int x,y;
-	z80_byte tinta,papel,caracter,parpadeo;
+	int tinta,papel,caracter,parpadeo;
 	int pos_array=0;	
 	for (y=0;y<WINDOW_FOOTER_LINES;y++) {
 		for (x=0;x<WINDOW_FOOTER_COLUMNS;x++,pos_array++) {
@@ -3067,7 +3068,9 @@ void normal_overlay_texto_menu(void)
 {
 
 	int x,y;
-	z80_byte tinta,papel,caracter,parpadeo;
+	int tinta,papel,parpadeo;
+
+	z80_byte caracter;
 	int pos_array=0;
 
 
@@ -3346,7 +3349,7 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
 
 //Si codigo de color inverso, invertir una letra
 //Codigo de color inverso: dos ~ seguidas
-void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char *texto)
+void menu_escribe_texto(int x,int y,int tinta,int papel,char *texto)
 {
         unsigned int i;
 	z80_byte letra;
@@ -3429,7 +3432,7 @@ void menu_escribe_texto(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char
 
 //escribe una linea de texto
 //coordenadas relativas al interior de la ventana (0,0=inicio zona "blanca")
-void menu_escribe_texto_ventana(z80_byte x,z80_byte y,z80_byte tinta,z80_byte papel,char *texto)
+void menu_escribe_texto_ventana(int x,int y,int tinta,int papel,char *texto)
 {
 
 	menu_escribe_texto(current_win_x+x,current_win_y+y+1,tinta,papel,texto);
@@ -3684,9 +3687,9 @@ void menu_textspeech_send_text(char *texto_orig)
 
 }
 
-void menu_retorna_colores_linea_opcion(int indice,int opcion_actual,int opcion_activada,z80_byte *papel_orig,z80_byte *tinta_orig)
+void menu_retorna_colores_linea_opcion(int indice,int opcion_actual,int opcion_activada,int *papel_orig,int *tinta_orig)
 {
-	z80_byte papel,tinta;
+	int papel,tinta;
 
 	/*
 	4 combinaciones:
@@ -3742,7 +3745,7 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,int indice,int 
 	}
 
 
-	z80_byte papel,tinta;
+	int papel,tinta;
 	int i;
 
 	//tinta=0;
@@ -3752,7 +3755,7 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,int indice,int 
 
 
 	//Obtenemos colores de una opcion sin seleccion y activada, para poder tener texto en ventana con linea en dos colores
-	z80_byte papel_normal,tinta_normal;
+	int papel_normal,tinta_normal;
 	menu_retorna_colores_linea_opcion(0,-1,1,&papel_normal,&tinta_normal);
 
 	//Buscamos a ver si en el texto hay el caracter "||" y en ese caso lo eliminamos del texto final
@@ -3829,7 +3832,7 @@ void menu_escribe_linea_opcion(int indice,int opcion_actual,int opcion_activada,
 	}
 
 
-	z80_byte papel,tinta;
+	int papel,tinta;
 	int i;
 
 	//tinta=0;
@@ -3839,7 +3842,7 @@ void menu_escribe_linea_opcion(int indice,int opcion_actual,int opcion_activada,
 
 
 	//Obtenemos colores de una opcion sin seleccion y activada, para poder tener texto en ventana con linea en dos colores
-	z80_byte papel_normal,tinta_normal;
+	int papel_normal,tinta_normal;
 	menu_retorna_colores_linea_opcion(0,-1,1,&papel_normal,&tinta_normal);
 
 	//Buscamos a ver si en el texto hay el caracter "||" y en ese caso lo eliminamos del texto final
@@ -3898,7 +3901,7 @@ void menu_escribe_linea_opcion_tabulado_zxvision(zxvision_window *ventana,int in
         }
 
 
-        z80_byte papel,tinta;
+        int papel,tinta;
 
 
         menu_retorna_colores_linea_opcion(indice,opcion_actual,opcion_activada,&papel,&tinta);
@@ -6528,10 +6531,7 @@ void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter
 	//Sacamos offset
 	int offset=(y*w->total_width)+x;
 
-	/*struct s_overlay_screen {
-	z80_byte tinta,papel,parpadeo;
-	z80_byte caracter;
-};	*/
+
 
 	//Puntero
 	overlay_screen *p;
@@ -26157,7 +26157,7 @@ void reset_splash_zesarux_logo(void)
 
 
 //Esta rutina estaba originalmente en screen.c pero dado que se ha modificado para usar rutinas auxiliares de aqui, mejor que este aqui
-void screen_print_splash_text(int y,z80_byte tinta,z80_byte papel,char *texto)
+void screen_print_splash_text(int y,int tinta,int papel,char *texto)
 {
 
         //Si no hay driver video
@@ -26247,7 +26247,7 @@ void screen_print_splash_text(int y,z80_byte tinta,z80_byte papel,char *texto)
 
 
 //Esta rutina estaba originalmente en screen.c pero dado que se ha modificado para usar rutinas auxiliares de aqui, mejor que este aqui
-void screen_print_splash_text_center(z80_byte tinta,z80_byte papel,char *texto)
+void screen_print_splash_text_center(int tinta,int papel,char *texto)
 {
 	screen_print_splash_text(menu_center_y(),tinta,papel,texto);
 }
