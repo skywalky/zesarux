@@ -4801,6 +4801,12 @@ int i;
       }
     }	
 
+    else if (!strcmp(comando_sin_parametros,"reset-tstatp")) {
+      debug_printf (VERBOSE_DEBUG,"Running reset-tstatp command");
+      debug_t_estados_parcial=0;
+    }
+
+
     else {
       debug_printf (VERBOSE_DEBUG,"Unknown command %s",comando_sin_parametros);
     }

@@ -1043,6 +1043,7 @@ extern void menu_uncompress_zip_progress(char *zip_file,char *dest_dir);
 "prints string: Prints string to console\n" \
 "putv expression: Adds expression result value in the Debug Memory Zone. Result is always treated as a 8-bit value. Zone is cleared when running Reset\n" \
 "quicksave: Saves a quick snapshot\n" \
+"reset-tstatp: Resets t-states partial counter\n" \
 "set-register string: Sets register indicated on string. Example: set-register PC=32768\n" \
 "write address value: Write memory address with indicated value\n" \
 

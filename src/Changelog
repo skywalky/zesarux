@@ -20,6 +20,9 @@ Improve TBBlue emulation:
 -Enable Timex video by default
 -Added altrom feature: now 48k and 128k mode works again
 
+Improve debugging:
+-Added breakpoint action "reset-tstatp"
+
 
 Fixed ZRCP bugs:
 -Fix possible crash when disconnecting socket
