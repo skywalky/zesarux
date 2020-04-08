@@ -7,6 +7,7 @@ Added Visualmem for MMC Read/Write
 Added Visualmem "Defrag style"
 Added browser for quicksave snapshots
 Added save screen to bmp feature
+Added Solarized Dark & Light Gui Style
 
 Improved Esxdos handler: 
 -add f_mkdir function 

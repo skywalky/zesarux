@@ -612,12 +612,12 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
-	{"Solarized Dark",SOLARIZED_COLOUR_base03,0,
+	{"Solarized Dark",SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,
 
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 
-		5+8,0, 		//Colores para opcion seleccionada
-		7+8,2,7,2, 	//Colores para opcion no disponible
+		SOLARIZED_COLOUR_base02,SOLARIZED_COLOUR_base0, 		//Colores para opcion seleccionada
+		SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_red,SOLARIZED_COLOUR_base02,SOLARIZED_COLOUR_red, 	//Colores para opcion no disponible
 		0,7+8,        	//Colores para el titulo y linea recuadro ventana
 		7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
 
@@ -625,15 +625,15 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
-		2, //color de aviso
+		SOLARIZED_COLOUR_red, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
-	{"Solarized Light",SOLARIZED_COLOUR_base3,0,
+	{"Solarized Light",SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_base00,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 
-		5+8,0, 		//Colores para opcion seleccionada
-		7+8,2,7,2, 	//Colores para opcion no disponible
+		SOLARIZED_COLOUR_base2,SOLARIZED_COLOUR_base00, 		//Colores para opcion seleccionada
+		SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_red,SOLARIZED_COLOUR_base2,SOLARIZED_COLOUR_red, 	//Colores para opcion no disponible
 		0,7+8,        	//Colores para el titulo y linea recuadro ventana
 		7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
 
@@ -641,7 +641,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
-		2, //color de aviso
+		SOLARIZED_COLOUR_red, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 

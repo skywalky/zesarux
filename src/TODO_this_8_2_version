@@ -17,7 +17,6 @@ Thread 8 Crashed:
 
 -Mostrar info en menu network de descargas, commits etc
 
--Modo de colores solarized
 
 
 -utils.c: In function ‘util_extract_hdf’:
