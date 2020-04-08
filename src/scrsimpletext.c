@@ -78,7 +78,7 @@ void scrsimpletext_putpixel_final(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int
 
 
 //Rutina de putchar para menu
-void scrsimpletext_putchar_menu(int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel)
+void scrsimpletext_putchar_menu(int x,int y, z80_byte caracter,int tinta,int papel)
 {
 	
 	//No escribimos nada. Este driver no soporta menu
@@ -90,7 +90,7 @@ void scrsimpletext_putchar_menu(int x,int y, z80_byte caracter,z80_byte tinta,z8
 	
 }
 
-void scrsimpletext_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel)
+void scrsimpletext_putchar_footer(int x,int y, z80_byte caracter,int tinta,int papel)
 {
 	
 	//Para evitar warnings al compilar de "unused parameter"

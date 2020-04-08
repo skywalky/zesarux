@@ -132,7 +132,7 @@ void scrstdout_putpixel_final(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int col
 
 
 //Rutina de putchar para menu
-void scrstdout_putchar_menu(int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel)
+void scrstdout_putchar_menu(int x,int y, z80_byte caracter,int tinta,int papel)
 {
 	
 	//Para evitar warnings al compilar de "unused parameter"
@@ -143,7 +143,7 @@ void scrstdout_putchar_menu(int x,int y, z80_byte caracter,z80_byte tinta,z80_by
 	
 }
 
-void scrstdout_putchar_footer(int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel)
+void scrstdout_putchar_footer(int x,int y, z80_byte caracter,int tinta,int papel)
 {
 	
 	//Para evitar warnings al compilar de "unused parameter"

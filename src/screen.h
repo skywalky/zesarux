@@ -124,12 +124,12 @@ extern z80_byte compare_char_tabla_step(z80_byte *origen,z80_byte *inverse,z80_b
 extern z80_byte compare_char_tabla_rainbow(z80_byte *origen,z80_byte *inverse,z80_byte *tabla_leemos);
 extern int calcula_offset_screen (int x,int y);
 
-extern void (*scr_putchar_menu) (int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel);
-extern void (*scr_putchar_footer) (int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel);
-extern void scr_putsprite_comun(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_bit fast_mode);
-extern void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_bit fast_mode,int zoom_level);
-extern void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,int zoom_level);
-extern void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel);
+extern void (*scr_putchar_menu) (int x,int y, z80_byte caracter,int tinta,int papel);
+extern void (*scr_putchar_footer) (int x,int y, z80_byte caracter,int tinta,int papel);
+extern void scr_putsprite_comun(z80_byte *puntero,int x,int y,z80_bit inverse,int tinta,int papel,z80_bit fast_mode);
+extern void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,int tinta,int papel,z80_bit fast_mode,int zoom_level);
+extern void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,int tinta,int papel,int zoom_level);
+extern void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,int tinta,int papel);
 
 extern void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level);
 
@@ -387,7 +387,7 @@ extern void cpu_loop_refresca_pantalla(void);
 extern int si_complete_video_driver(void);
 extern int si_normal_menu_video_driver(void);
 
-extern void screen_print(int x,int y,z80_byte tinta,z80_byte papel,char *mensaje);
+extern void screen_print(int x,int y,int tinta,int papel,char *mensaje);
 
 extern int screen_print_y;
 
@@ -598,7 +598,7 @@ extern void screen_set_colour_normal(int index, int colour);
 extern void screen_reset_putpixel_maxmin_y(void);
 extern int putpixel_max_y, putpixel_min_y;
 
-//extern void screen_print_splash_text(z80_byte y,z80_byte tinta,z80_byte papel,char *texto);
+
 extern z80_bit screen_show_splash_texts;
 extern z80_bit screen_show_cpu_usage;
 extern void screen_set_parameters_slow_machines(void);

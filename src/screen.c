@@ -136,10 +136,10 @@ void (*scr_debug_registers)(void);
 void (*scr_messages_debug)(char *mensaje);
 
 //Rutina para imprimir un caracter del menu
-void (*scr_putchar_menu) (int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel);
+void (*scr_putchar_menu) (int x,int y, z80_byte caracter,int tinta,int papel);
 
 //Rutina para imprimir un caracter en el pie de la pantalla
-void (*scr_putchar_footer) (int x,int y, z80_byte caracter,z80_byte tinta,z80_byte papel);
+void (*scr_putchar_footer) (int x,int y, z80_byte caracter,int tinta,int papel);
 
 void (*scr_putchar_zx8081) (int x,int y, z80_byte caracter);
 
@@ -2525,10 +2525,10 @@ if (MACHINE_IS_Z88) {
 //inverse si o no
 //ink, paper
 //y valor de zoom
-void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,int zoom_level)
+void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,int tinta,int papel,int zoom_level)
 {
 
-	z80_byte color;
+	int color;
   z80_byte bit;
   z80_byte line;
   z80_byte byte_leido;
@@ -2626,9 +2626,9 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z
 }
 
 
-void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel)
+void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,int tinta,int papel)
 {
-	        z80_byte color;
+	        int color;
         z80_byte bit;
         z80_byte line;
         z80_byte byte_leido;
@@ -2732,10 +2732,10 @@ void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse
 //ink, paper
 //si emula fast mode o no
 //y valor de zoom
-void old_scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel)
+void old_scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,int tinta,int papel)
 {
 
-        z80_byte color;
+        int color;
         z80_byte bit;
         z80_byte line;
         z80_byte byte_leido;
@@ -2806,10 +2806,10 @@ void old_scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inv
 //ink, paper
 //si emula fast mode o no
 //y valor de zoom
-void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_bit fast_mode,int zoom_level)
+void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,int tinta,int papel,z80_bit fast_mode,int zoom_level)
 {
 
-        z80_byte color;
+        int color;
         z80_byte bit;
         z80_byte line;
         z80_byte byte_leido;
@@ -2878,7 +2878,7 @@ void scr_putsprite_comun_zoom(z80_byte *puntero,int x,int y,z80_bit inverse,z80_
 
 
 //putsprite pero sin zoom
-void scr_putsprite_comun(z80_byte *puntero,int x,int y,z80_bit inverse,z80_byte tinta,z80_byte papel,z80_bit fast_mode)
+void scr_putsprite_comun(z80_byte *puntero,int x,int y,z80_bit inverse,int tinta,int papel,z80_bit fast_mode)
 {
 	scr_putsprite_comun_zoom(puntero,x,y,inverse,tinta,papel,fast_mode,1);
 }
@@ -8905,7 +8905,7 @@ void cpu_loop_refresca_pantalla(void)
 //Escribe texto en pantalla empezando por en x,y, gestionando salto de linea
 //de momento solo se usa en panic para xwindows y fbdev
 //ultima posicion y queda guardada en screen_print_y
-void screen_print(int x,int y,z80_byte tinta,z80_byte papel,char *mensaje)
+void screen_print(int x,int y,int tinta,int papel,char *mensaje)
 {
 	while (*mensaje) {
 		scr_putchar_menu(x++,y,*mensaje++,tinta,papel);
@@ -13360,7 +13360,7 @@ void sam_convert_mode3_char_to_bw(z80_byte *origen,z80_byte *buffer_letra,z80_by
 	//Si solo ha habido un color
 	//TODO. considerar colores de paleta, y no indexados como si fuesen siempre de spectrum
 	//TODO. no se considera brillo
-	z80_byte tinta,papel;
+	z80_byte papel,tinta;
 	if (inicial_1==-1) {
 		papel=tinta=inicial_0&7;
 	}
@@ -13467,7 +13467,7 @@ void sam_convert_mode2_char_to_bw(z80_byte *origen,z80_byte *buffer_letra,z80_by
         //Si solo ha habido un color
         //TODO. considerar colores de paleta, y no indexados como si fuesen siempre de spectrum
         //TODO. no se considera brillo
-        z80_byte tinta,papel;
+        z80_byte papel,tinta;
         if (color_tinta==-1) {
                 papel=tinta=color_papel&7;
         }
@@ -14431,7 +14431,7 @@ void scr_refresca_pantalla_tsconf_text_textmode (void (*fun_color) (z80_byte col
 
         //z80_int offset_caracter;
 
-        z80_byte tinta,papel;
+        z80_byte papel,tinta;
 
         z80_byte atributo;
 
