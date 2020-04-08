@@ -625,7 +625,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
-		SOLARIZED_COLOUR_red, //color de aviso
+		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
@@ -641,7 +641,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
-		SOLARIZED_COLOUR_red, //color de aviso
+		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
