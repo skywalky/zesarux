@@ -390,9 +390,9 @@ z80_bit mouse_menu_disabled={0};
 z80_bit no_close_menu_after_smartload={0};
 
 
-void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,z80_byte color);
+void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,int color);
 void menu_desactiva_cuadrado(void);
-void menu_establece_cuadrado(int x1,int y1,int x2,int y2,z80_byte color);
+void menu_establece_cuadrado(int x1,int y1,int x2,int y2,int color);
 
 
 void menu_util_cut_line_at_spaces(int posicion_corte, char *texto,char *linea1, char *linea2);
@@ -2189,7 +2189,7 @@ void menu_clear_footer(void)
 
                 yinicial *=zoom_y;
 
-                z80_byte color=WINDOW_FOOTER_PAPER;
+                int color=WINDOW_FOOTER_PAPER;
 
                 for (y=yinicial;y<yinicial+alto;y++) {
                         //printf ("%d ",y);
@@ -3122,7 +3122,7 @@ void normal_overlay_texto_menu(void)
 
 
 //establece cuadrado activo usado en los menus para xwindows y fbdev
-void menu_establece_cuadrado(int x1,int y1,int x2,int y2,z80_byte color)
+void menu_establece_cuadrado(int x1,int y1,int x2,int y2,int color)
 {
 
 	cuadrado_x1=x1;
@@ -3969,7 +3969,7 @@ margenx_izq=TBBLUE_LEFT_BORDER_NO_ZOOM*border_enabled.v;
 //dibuja cuadrado (4 lineas) usado en los menus para xwindows y fbdev
 //Entrada: x1,y1 punto superior izquierda,x2,y2 punto inferior derecha en resolucion de zx spectrum. Color
 //nota: realmente no es un cuadrado porque el titulo ya hace de franja superior
-void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,z80_byte color)
+void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,int color)
 {
 
 	if (!ESTILO_GUI_MUESTRA_RECUADRO) return;
