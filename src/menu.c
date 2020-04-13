@@ -468,7 +468,7 @@ int colores_franja_cpc_oscuro[]={2,4,1,6+8};
 int estilo_gui_activo=0;
 
 estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
-	{"ZEsarUX",7+8,0,
+	{0,"ZEsarUX",7+8,0,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		5+8,0, 		//Colores para opcion seleccionada
 		7+8,2,7,2, 	//Colores para opcion no disponible
@@ -483,7 +483,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
-	{"ZXSpectr",1,6,
+	{0,"ZXSpectr",1,6,
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
 		1+8,6,		//Colores para opcion seleccionada
 		1,6,1,6,	//Colores para opcion no disponible, iguales que para opcion disponible
@@ -497,7 +497,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
-        {"ZX80/81",7+8,0,
+        {0,"ZX80/81",7+8,0,
                 1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow
                 0,7+8,          //Colores para opcion seleccionada
                 7+8,0,0,7+8,      //Colores para opcion no disponible
@@ -514,7 +514,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 //Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
 //que no tienen esos colores en las fuentes
 //Al menos hacemos colores sin brillo
-        {"Z88",7,0,
+        {0,"Z88",7,0,
                 0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
                 4,0,          //Colores para opcion seleccionada
                 7,2,4,2,      //Colores para opcion no disponible
@@ -529,7 +529,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 },
 
 
-        {"CPC",1,6+8,
+        {0,"CPC",1,6+8,
                 0,1,1,0,          //No mostrar cursor,mostrar recuadro,mostrar rainbow
                 6+8,1,            //Colores para opcion seleccionada
                 1,2,6+8,2,        //Colores para opcion no disponible
@@ -543,7 +543,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro
                 },
 
-        {"Sam",7+8,0,
+        {0,"Sam",7+8,0,
                 0,1,1,0,                //No mostrar cursor,mostrar recuadro,mostrar rainbow
                 5+8,0,          //Colores para opcion seleccionada
                 7+8,2,7,2,      //Colores para opcion no disponible
@@ -557,7 +557,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
                 },
 
-						{"ManSoftware",7+8,0,
+						{0,"ManSoftware",7+8,0,
 							0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 							5+8,0, 		//Colores para opcion seleccionada
 							7+8,3,7,3, 	//Colores para opcion no disponible
@@ -572,7 +572,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							},
 
 
-			{"QL",7+8,0,
+			{0,"QL",7+8,0,
 					0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 					4+8,0, 		//Colores para opcion seleccionada
 					7+8,2,7,2, 	//Colores para opcion no disponible
@@ -586,7 +586,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 								},
 
-	{"RetroMac",7,0,
+	{0,"RetroMac",7,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		1+8,7+8, 		//Colores para opcion seleccionada
 		7,2,1+8,2, 	//Colores para opcion no disponible
@@ -600,7 +600,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
-{"Borland",1,7+8,
+{0,"Borland",1,7+8,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		4,1, 		//Colores para opcion seleccionada
 		1,7,7,1, 	//Colores para opcion no disponible
@@ -614,8 +614,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
-	// https://ethanschoonover.com/solarized/
-	{"Solarized Dark",SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,
+	// https://ethanschoonover.com/solarized/. Solo vale en video driver completo por los colores usados
+	{1,"Solarized Dark",SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,
 
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 
@@ -633,7 +633,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
-	{"Solarized Light",SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_base00,
+	//Solo vale en video driver completo por los colores usados
+	{1,"Solarized Light",SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_base00,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 
 		SOLARIZED_COLOUR_base2,SOLARIZED_COLOUR_base00, 		//Colores para opcion seleccionada
@@ -651,7 +652,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		},
 
 
-        {"Clean",7,0,
+        {0,"Clean",7,0,
                 0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
                 0,7,          //Colores para opcion seleccionada
 		7,2,0,2, 	//Colores para opcion no disponible
@@ -665,7 +666,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
                 },
 
-        {"CleanInverse",0,7,
+        {0,"CleanInverse",0,7,
                 0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
                 7,0,          //Colores para opcion seleccionada
 		0,2,7,2, 	//Colores para opcion no disponible
@@ -23666,8 +23667,36 @@ void menu_interface_zoom(MENU_ITEM_PARAMETERS)
 
 void menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
 {
-	estilo_gui_activo++;
-	if (estilo_gui_activo==ESTILOS_GUI) estilo_gui_activo=0;
+
+	//No poder seleccionar un estilo que requiere video driver completo si es que no tenemos un video driver completo
+	int salir=1;
+
+	//Siguiente estilo. Reintentar si no tenemos un video driver completo y el estilo requiere video driver completo
+	do {
+		//Asumimos que salimos
+		salir=1;
+
+		estilo_gui_activo++;
+		if (estilo_gui_activo==ESTILOS_GUI) {
+			estilo_gui_activo=0;
+			//Y fin
+		}
+
+		else {
+
+			//No tenemos video driver completo. El estilo lo requiere?
+			if (!si_complete_video_driver()) {
+				if (ESTILO_GUI_REQUIRE_COMPLETE_VIDEO_DRIVER) {
+					//El estilo requiere video driver completo. Siguiente
+					//printf ("no puedo seleccionar ese\n");
+					salir=0;
+				}
+			}
+		}
+
+	} while (!salir);
+
+
 	set_charset();
 
 	menu_init_footer();
@@ -24277,6 +24306,8 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					"- ManSoftware: style using my own font I created when I was a child ;)\n"
 					"- QL: Sinclair QL style\n"
 					"- RetroMac: MacOS classic style\n"
+					"- Borland: Borland MS-DOS programs style\n"
+					"- Solarized Dark/Light: Solarized styles\n"
 					"- Clean: Simple style with black & white menus\n"
 					"- CleanInverse: Same style as previous but using inverted colours\n"
 					

@@ -687,6 +687,9 @@ extern void draw_middle_footer(void);
 extern z80_int menu_mouse_frame_counter;
 
 struct s_estilos_gui {
+
+		int require_complete_video_driver;
+
         char nombre_estilo[20];
         int papel_normal;
         int tinta_normal;
@@ -798,6 +801,7 @@ extern int menu_ext_desktop_fill_solid_color;
 #define ESTILO_GUI_FRANJAS_OSCURAS (definiciones_estilos_gui[estilo_gui_activo].franjas_oscuras)
 
 
+#define ESTILO_GUI_REQUIRE_COMPLETE_VIDEO_DRIVER (definiciones_estilos_gui[estilo_gui_activo].require_complete_video_driver)
 
 
 #define MENU_ANCHO_FRANJAS_TITULO 5
