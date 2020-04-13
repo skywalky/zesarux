@@ -24310,6 +24310,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					"- Solarized Dark/Light: Solarized styles\n"
 					"- Clean: Simple style with black & white menus\n"
 					"- CleanInverse: Same style as previous but using inverted colours\n"
+					"\nNote: Solarized styles need a full video driver, can't be set on curses or aalib for example"
 					
 					);
         menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
