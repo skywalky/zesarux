@@ -10834,6 +10834,8 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 }
 
 
+zxvision_window zxvision_window_view_sprites;
+
 void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 {
 
@@ -10849,7 +10851,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
     //disable_interlace();
 
-	zxvision_window ventana;
+	zxvision_window *ventana;
+	ventana=&zxvision_window_view_sprites;
 
 
 	int x,y,ancho,alto;
@@ -10863,9 +10866,9 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
     }
 
 
-	zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,64,64+2,"Sprites");
+	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,64,64+2,"Sprites");
 
-	zxvision_draw_window(&ventana);
+	zxvision_draw_window(ventana);
 
 	z80_byte tecla;
 
@@ -10874,7 +10877,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
     //Se establece a la de funcion de ver sprites
     set_menu_overlay_function(menu_debug_draw_sprites);
 
-	menu_debug_draw_sprites_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui	
+	menu_debug_draw_sprites_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui	
 
 	int redibujar_texto=1;	
 
@@ -10887,12 +10890,12 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		//porque usa mucha cpu y por ejemplo en maquina tsconf se clava si arrastramos ventana
 		if (redibujar_texto) {
 			//printf ("redibujamos texto\n");
-			menu_debug_view_sprites_textinfo(&ventana);
+			menu_debug_view_sprites_textinfo(ventana);
 
 		
 			//Si no esta multitarea, mostrar el texto que acabamos de escribir
 	    	if (!menu_multitarea) {
-				zxvision_draw_window_contents(&ventana);
+				zxvision_draw_window_contents(ventana);
 			}			
 		}
 
@@ -10936,7 +10939,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
                     case 'm':
                         view_sprites_direccion=menu_debug_view_sprites_change_pointer(view_sprites_direccion);
-							zxvision_draw_window(&ventana);
+							zxvision_draw_window(ventana);
                     break;
 
 					case 'b':
@@ -11000,7 +11003,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 								//menu_debug_view_sprites_ventana();
 								set_menu_overlay_function(menu_debug_draw_sprites);
-								zxvision_draw_window(&ventana);
+								zxvision_draw_window(ventana);
 							}
 
 						}
@@ -11040,7 +11043,9 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		}
 
 
-    } while (tecla!=2);
+    } while (tecla!=2 && tecla!=3);
+
+
 
     //Restauramos modo interlace
     //if (copia_video_interlaced_mode.v) enable_interlace();
@@ -11050,10 +11055,22 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-    //Grabar geometria ventana
-    util_add_window_geometry("sprites",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);	
 
-	zxvision_destroy_window(&ventana);		
+	if (tecla==3) {
+		//zxvision_ay_registers_overlay
+		ventana->overlay_function=menu_debug_draw_sprites;
+		printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+		menu_generic_message("Background task","OK. Window put in background");
+	}	
+
+	else {
+
+    	//Grabar geometria ventana
+    	//util_add_window_geometry("sprites",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);	
+		util_add_window_geometry_compact("sprites",ventana);
+
+		zxvision_destroy_window(ventana);		
+	}
 
 
 

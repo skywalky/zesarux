@@ -77,7 +77,7 @@ if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 Ideas para background windows:
 -se deben llamar a todas las funciones de overlay de las ventanas en background desde la función de overlay de menú
--ventanas en background son solo aquellas que no llevan asociado un menú implícito, casos aparte son el ay player, el view waveform, Visualmem etc (tienen algunas líneas de settings)
+-ventanas en background son solo aquellas que NO llevan asociado un menú implícito, casos aparte son el ay player, el view waveform, Visualmem etc (tienen algunas líneas de settings)
 -todo lo que sale de settings no tiene sentido enviar a background-> son menús puros
 -opción para desactivar completamente el background
 -una ventana que se abre:
