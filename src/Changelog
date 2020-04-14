@@ -17,11 +17,11 @@ Improved ZRCP:
 -Allow to write commands between "". Not all commands support this
 -Added save-binary command
 
-Improve TBBlue emulation:
+Improved TBBlue emulation:
 -Enable Timex video by default
 -Added altrom feature: now 48k and 128k mode works again
 
-Improve debugging:
+Improved debugging:
 -Added breakpoint action "reset-tstatp"
 -Added SEG0, SEG1, ... SEG7 variables to match TBBlue MMU pages
 
