@@ -19508,7 +19508,7 @@ void menu_display_save_screen(MENU_ITEM_PARAMETERS)
 
 
 		if (!util_compare_file_extension(screen_save_file,"scr")) {
-					save_screen(screen_save_file);
+					save_screen_scr(screen_save_file);
 		}
 
 		else if (!util_compare_file_extension(screen_save_file,"pbm")) {

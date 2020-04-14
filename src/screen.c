@@ -4633,7 +4633,7 @@ void load_screen(char *scrfile)
 
 }
 
-void save_screen(char *scrfile)
+void save_screen_scr(char *scrfile)
 {
 
                  if (MACHINE_IS_SPECTRUM) {
@@ -4677,7 +4677,7 @@ FILE *ptr_scrfile;
                         }
 
                         else {
-                                debug_printf (VERBOSE_ERR,"Screen saving only allowed on Spectrum models");
+                                debug_printf (VERBOSE_ERR,"Screen .scr saving only allowed on Spectrum models");
                         }
 
 
