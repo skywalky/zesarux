@@ -19506,42 +19506,8 @@ void menu_display_save_screen(MENU_ITEM_PARAMETERS)
 
 		}
 
+		save_screen(screen_save_file);
 
-		if (!util_compare_file_extension(screen_save_file,"scr")) {
-					save_screen_scr(screen_save_file);
-		}
-
-		else if (!util_compare_file_extension(screen_save_file,"pbm")) {
-
-			//Asignar buffer temporal
-			int longitud=6144;
-			z80_byte *buf_temp=malloc(longitud);
-			if (buf_temp==NULL) {
-					debug_printf(VERBOSE_ERR,"Error allocating temporary buffer");
-			}
-
-			//Convertir pantalla a sprite ahi
-			z80_byte *origen;
-			origen=get_base_mem_pantalla();
-			util_convert_scr_sprite(origen,buf_temp);
-
-			util_write_pbm_file(screen_save_file,256,192,8,buf_temp);
-
-			free(buf_temp);
-
-
-		}
-
-		else if (!util_compare_file_extension(screen_save_file,"bmp")) {
-
-			util_write_screen_bmp(screen_save_file);
-
-		}		
-
-		else {
-			debug_printf(VERBOSE_ERR,"Unsuported file type");
-			return;
-		} 
 
 
 		//Y salimos de todos los menus
