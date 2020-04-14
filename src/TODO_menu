@@ -53,8 +53,8 @@ O esta considerando mal el mostrar barras desplazamiento: quizá deberían salir
 ----Background windows
 -activarlas con: int menu_allow_background_windows=1;
 -Si ventana en background, no dejar volverla a llamar desde menu normal
--Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
-Ademas los pixeles siempre van a la ultima ventana arriba
+-NO. Se permiten varias. Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
+Ademas los pixeles siempre van a la ultima ventana arriba 
 
 -ultima ventana de arriba deberia salir como activa
 -poder conmutar ventana activa
@@ -87,11 +87,11 @@ al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego
 
 Ideas para background windows:
 -se deben llamar a todas las funciones de overlay de las ventanas en background desde la función de overlay de menú
--ventanas en background son solo aquellas que NO llevan asociado un menú implícito, casos aparte son el ay player, el view waveform, Visualmem etc (tienen algunas líneas de settings)
 -todo lo que sale de settings no tiene sentido enviar a background-> son menús puros
 -opción para desactivar completamente el background
 -una ventana que se abre:
 **si hay background, entrara y saldrá poniéndose en background, y cerrando todos los menús precedentes. Lo ideal es que luego el foco conmutase aquí, entrando de nuevo a primer plano
+->ahora mismo eso no va, se cuelga si se abre una ventana que ya estaba en background
 -como se ponen en primer plano ventanas que estaban en background? Quizá cuando se ponen en background deben registrarse indicando la función principal que las inicia. Esto se deberá leer desde el handle de zxvision para cuando se pulsa ahí, cambiar y arrancar ahí 
 
 

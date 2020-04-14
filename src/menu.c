@@ -4813,14 +4813,16 @@ z80_byte zxvision_read_keyboard(void)
 	return tecla;
 }
 
-void zxvision_wait_until_esc(zxvision_window *w)
+int zxvision_wait_until_esc(zxvision_window *w)
 {
 	z80_byte tecla;
 
 	do {
 		tecla=zxvision_common_getkey_refresh();
 		zxvision_handle_cursors_pgupdn(w,tecla);
-	} while (tecla!=2);
+	} while (tecla!=2 && tecla!=3);
+
+	return tecla;
 
 }
 

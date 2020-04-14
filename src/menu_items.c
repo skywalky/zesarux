@@ -16001,7 +16001,7 @@ void menu_ay_partitura_overlay(void)
 {
 
 
-	normal_overlay_texto_menu();
+	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech, en el caso que se habilite piano de tipo texto
@@ -16244,9 +16244,18 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_ay_partitura_overlay);
 
 	
+		int retorno_menu=0; //Inicializado aqui a 0 en particular pues si solo hay 1 chip, no muestra selector de chip
+		//y por tanto esta variable tiene que tener algo diferente de MENU_RETORNO_BACKGROUND
+
 		
 		//Si solo hay 1 chip, no mostrar selector de chip
-		if (total_ay_chips==1) zxvision_wait_until_esc(ventana);
+		if (total_ay_chips==1) {
+			int tecla=zxvision_wait_until_esc(ventana);
+			if (tecla==3) {
+				//Truco para decir que nos vamos a background
+				retorno_menu=MENU_RETORNO_BACKGROUND;
+			}
+		}
 
 		else {
         
@@ -16256,7 +16265,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
         	int nonamed_opcion_seleccionada=0; //Solo 1 item de menu, no tiene sentido guardar posicion
         
-        	int retorno_menu;
+        	
         	do {
 
 			
@@ -16274,6 +16283,8 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         		retorno_menu=menu_dibuja_menu(&nonamed_opcion_seleccionada,&item_seleccionado,array_menu_nonamed,"AY Sheet (60 BPM)" );
 
 
+				if (retorno_menu!=MENU_RETORNO_BACKGROUND) {
+
             	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
             	cls_menu_overlay();
         		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -16284,8 +16295,9 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
                 		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
 	            	}
     	    	}
+				}
 
-    		} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);		
+    		} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);		
 		}
 
 
@@ -16299,8 +16311,18 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
     cls_menu_overlay();
 
 
-	util_add_window_geometry_compact("aysheet",ventana);
-	zxvision_destroy_window(ventana);			
+	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
+                //zxvision_ay_registers_overlay
+                ventana->overlay_function=menu_ay_partitura_overlay;
+                printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+				menu_generic_message("Background task","OK. Window put in background");
+	}
+
+	else {
+
+		util_add_window_geometry_compact("aysheet",ventana);
+		zxvision_destroy_window(ventana);			
+	}
 	
 
 }
