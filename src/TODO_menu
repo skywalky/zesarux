@@ -89,7 +89,7 @@ Ideas para background windows:
 
 -pantalla view sprites que adapte el texto leyenda al alto ventana
 
--Tema solarized para ZEsarUX
+-Mostrar info en menu network de descargas, commits etc
 
 -Tema gui configurable todos sus elementos: fuentes, colores etc 
 
@@ -293,6 +293,9 @@ Primer punto como si fuera extensión
 Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En menú tabular, el tab sale?
 
 -F1 ayuda extensa en debug cpu, dentro de ventana y Antes en el ítem de menú 
+
+-ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
+la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
 
 -menus tabulados:
 TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, que permita:

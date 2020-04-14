@@ -146,7 +146,7 @@ Otros TODO menos prioritarios, de aqui hasta el final del archivo:
 
 
 
-
+-cpuid ("zxid") según especificación de mcleod
 
 -Joystick simulation que se pueda lanzar por ZRCP también (y sin tener que activar —realjoystick-simulator).
  O quizá sí que necesita el setting, dado que necesita que real Joystick este activado 

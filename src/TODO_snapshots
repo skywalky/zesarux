@@ -76,6 +76,9 @@ Quiza habria que parsear algunos parametros del .config tambien despues de carga
 Otros TODO menos prioritarios, de aqui hasta el final del archivo:
 *** Snapshots ***
 
+
+-Opción para formato de grabación de autosave snap
+
 -RZX: mejorar. Falla carlos sainz. Pero por otra parte, abadia del crimen funciona en ZEsarUX y no en fuse
 Quiza los de speculator no van bien del todo?
 Los de SPIN parece que si que van. No siempre: abu simbel falla

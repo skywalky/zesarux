@@ -35,6 +35,11 @@ Mark Hutchings
 
 -exit-emulator de ZRCP no parece funcionar en Mac, pero en Linux si. Va como a medias, desactiva el sonido pero no sale
 
+-al salir emulador desde exit-emulator de ZRCP no acaba de salir del todo. Luego salgo con ctrl-c y el footer luego arranca desactivado
+
+-Agregar a extended stack: fecha y hora de entrada en stack. También puede testado y milisegundos de la hora 
+Extended stack visible en menu. Consultable
+Poder consultar stack normal también en menú 
 
 -------------
 

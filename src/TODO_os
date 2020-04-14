@@ -57,6 +57,8 @@ Quizá en OSX superiores lo han simplificado. Pero hace falta swift o funciona c
 
 -footer en fullscreen no lo ubica bien. En SDL de Linux va bien
 
+-Revisar al expulsar cinta si Windows lo libera 
+
 -probar con sdl audio y video simpletext . parece que no se oye el sonido. En Linux va bien
 
 -Icono bmp para Windows. Y meter icono dentro del exe para que se vea en la barra de tareas
