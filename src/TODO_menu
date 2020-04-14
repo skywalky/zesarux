@@ -71,8 +71,18 @@ Ademas los pixeles siempre van a la ultima ventana arriba
 		zxvision_destroy_window(ventana);		
  	}
 
+	 O alternativa para menus:
+	 if (retorno_menu==MENU_RETORNO_BACKGROUND) {
+
 -ventanas en funcion de overlay hacen al principio
 if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+de tal manera que solo llame a normal_overlay de texto cuando no estan en background
+
+
+-ventanas que usan background tienen que referenciar a la ventana activa teniendo la estructura fuera de la funcion,
+al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego usar variable "ventana" como puntero a ahí
+
+-desde menu al pulsar background se retorna MENU_RETORNO_BACKGROUND
 
 
 Ideas para background windows:

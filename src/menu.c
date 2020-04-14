@@ -9169,7 +9169,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	}
 
 
-	while (tecla!=13 && tecla!=32 && tecla!=MENU_RETORNO_ESC && tecla!=MENU_RETORNO_F1 && tecla!=MENU_RETORNO_F2 && tecla!=MENU_RETORNO_F10 && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
+	while (tecla!=13 && tecla!=32 && tecla!=MENU_RETORNO_ESC && tecla!=MENU_RETORNO_F1 && tecla!=MENU_RETORNO_F2 && tecla!=MENU_RETORNO_F10 && tecla!=MENU_RETORNO_BACKGROUND && redibuja_ventana==0 && menu_tooltip_counter<TOOLTIP_SECONDS) {
 
 		//printf ("tecla desde bucle: %d\n",tecla);
 		//Ajustar scroll
@@ -9374,6 +9374,11 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 				//tecla=2; //ESC que viene de cerrar ventana al pulsar con raton boton de cerrar en titulo
 				tecla=MENU_RETORNO_ESC;
 				//printf ("tecla final es ESC\n");
+			}
+
+			else if (tecla_leida==3) {
+				printf("Pressed background key on menu\n");
+				tecla=MENU_RETORNO_BACKGROUND;
 			}
 
 
@@ -9744,6 +9749,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	else if (tecla==MENU_RETORNO_F1) return MENU_RETORNO_F1;
 	else if (tecla==MENU_RETORNO_F2) return MENU_RETORNO_F2;
 	else if (tecla==MENU_RETORNO_F10) return MENU_RETORNO_F10;
+	else if (tecla==MENU_RETORNO_BACKGROUND) return MENU_RETORNO_BACKGROUND;
 
 	else return MENU_RETORNO_NORMAL;
 

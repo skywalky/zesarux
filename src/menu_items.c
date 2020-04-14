@@ -4172,6 +4172,7 @@ void menu_audio_new_waveform_shape(MENU_ITEM_PARAMETERS)
 }
 
 
+zxvision_window zxvision_window_audio_waveform;
 
 void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 {
@@ -4179,7 +4180,10 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
  	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
-	zxvision_window ventana;
+	//zxvision_window ventana;
+
+		zxvision_window *ventana;
+		ventana=&zxvision_window_audio_waveform;	
 
 	int x,y,ancho,alto;
 
@@ -4190,15 +4194,15 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 		alto=SOUND_WAVE_ALTO+4;
 	}
 
-	zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho-1,alto-2,"Waveform");
-	zxvision_draw_window(&ventana);		
+	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Waveform");
+	zxvision_draw_window(ventana);		
 
     
     //Cambiamos funcion overlay de texto de menu
     //Se establece a la de funcion de audio waveform
 	set_menu_overlay_function(menu_audio_draw_sound_wave);
 
-	menu_audio_draw_sound_wave_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+	menu_audio_draw_sound_wave_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 	menu_item *array_menu_audio_new_waveform;
 	menu_item item_seleccionado;
@@ -4222,20 +4226,23 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 		//Nombre de ventana solo aparece en el caso de stdout
 		retorno_menu=menu_dibuja_menu(&audio_new_waveform_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_waveform,"Waveform" );
 
+		if (retorno_menu!=MENU_RETORNO_BACKGROUND) {
 
-		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
-		cls_menu_overlay();
-		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-			//llamamos por valor de funcion
-			if (item_seleccionado.menu_funcion!=NULL) {
-				//printf ("actuamos por funcion\n");
-				item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+		
+			//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+			cls_menu_overlay();
+			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+				//llamamos por valor de funcion
+				if (item_seleccionado.menu_funcion!=NULL) {
+					//printf ("actuamos por funcion\n");
+					item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+					//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
 				
+				}
 			}
 		}
 
-	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);
 
 
 	//restauramos modo normal de texto de menu
@@ -4244,11 +4251,23 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-	//Grabar geometria ventana
-	util_add_window_geometry("waveform",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
 
-	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
-	zxvision_destroy_window(&ventana);
+	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
+                //zxvision_ay_registers_overlay
+                ventana->overlay_function=menu_audio_draw_sound_wave;
+                printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+				menu_generic_message("Background task","OK. Window put in background");
+	}
+
+	else {	
+
+		//Grabar geometria ventana
+		//util_add_window_geometry("waveform",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+		util_add_window_geometry_compact("waveform",ventana);
+
+		//En caso de menus tabulados, es responsabilidad de este de liberar ventana
+		zxvision_destroy_window(ventana);
+	}
 
 }
 
@@ -10359,7 +10378,7 @@ z80_byte menu_debug_draw_sprites_get_byte(menu_z80_moto_int puntero)
 void menu_debug_draw_sprites(void)
 {
 
-	normal_overlay_texto_menu();
+	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech	

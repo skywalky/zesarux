@@ -424,6 +424,7 @@ Como quedan los textos:
 #define MENU_RETORNO_F1 -2
 #define MENU_RETORNO_F2 -3
 #define MENU_RETORNO_F10 -4
+#define MENU_RETORNO_BACKGROUND -5
 
 extern void menu_footer_activity(char *texto);
 extern void menu_delete_footer_activity(void);
