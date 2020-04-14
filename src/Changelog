@@ -25,6 +25,8 @@ Improve debugging:
 -Added breakpoint action "reset-tstatp"
 -Added SEG0, SEG1, ... SEG7 variables to match TBBlue MMU pages
 
+Improved Chloe emulation: Support CPU speed setting via the ZX-Uno SCANDBLCTRL register
+
 
 Fixed ZRCP bugs:
 -Fix possible crash when disconnecting socket

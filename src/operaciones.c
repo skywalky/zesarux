@@ -7714,14 +7714,18 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 		//return;
 	}
 
-	//Puerto para modos extendidos ulaplus pero cuando la maquina no es zxuno
+	//Puerto para modos extendidos ulaplus o seleccion modo turbo chloe, pero cuando la maquina no es zxuno
 	if (!MACHINE_IS_ZXUNO && (puerto==0xFC3B  || puerto==0xFD3B)) {
 		if (puerto==0xFC3B) last_port_FC3B=value;
 
 		if (puerto==0xFD3B) {
 
-	                zxuno_ports[last_port_FC3B]=value;
+	        zxuno_ports[last_port_FC3B]=value;
 			if (last_port_FC3B==0x40) ulaplus_set_extended_mode(value);
+
+			if (MACHINE_IS_CHLOE && last_port_FC3B==0x0B) {
+				zxuno_set_emulator_setting_scandblctrl();
+			}
 		}
 	}
 
