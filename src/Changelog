@@ -9,6 +9,9 @@ Added browser for quicksave snapshots
 Added save screen to bmp feature
 Added Solarized Dark & Light Gui Style
 
+Added ZRCP commands:
+-save-screen: to save machine screen to file
+
 Improved Esxdos handler: 
 -add f_mkdir function 
 -add configuration setting to save local work directory

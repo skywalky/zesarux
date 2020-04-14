@@ -773,6 +773,8 @@ struct s_items_ayuda items_ayuda[]={
 				"Pointer can be any of the hexdump-internal command\n"
 				"Use with care, pointer address is a memory address on the emulator program (not the emulated memory)"},
 
+	{"save-screen",NULL,"file","Save screen to file. Currently bmp, scr and pbm file formats supported"},
+
 
 
 	{"send-keys-ascii",NULL,"time asciichar1 [asciichar2] [asciichar3] ... ","Simulates sending some ascii keys on parameters asciichar, separated by spaces. Every key is separated in time by a non-press time. Time is in miliseconds, a normal value for Basic writing is 100 miliseconds"},
@@ -5013,6 +5015,20 @@ void interpreta_comando(char *comando,int misocket)
 
 	}
 
+
+	else if (!strcmp(comando_sin_parametros,"save-screen") ) {
+
+		remote_parse_commands_argvc(parametros);
+		if (remote_command_argc<1) {
+			escribir_socket(misocket,"ERROR. No parameter set");
+			return;
+		}
+
+
+		save_screen(remote_command_argv[0]);
+
+
+  }	
 
 	else if (!strcmp(comando_sin_parametros,"send-keys-event")) {
 
