@@ -1354,7 +1354,7 @@ mayusculas + tecla ";"
 */
 
 //Si permitimos o no ventanas en background al pulsar F6
-int menu_allow_background_windows=0;
+int menu_allow_background_windows=1;
 
 z80_byte menu_get_pressed_key_no_modifier(void)
 {

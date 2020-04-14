@@ -4516,7 +4516,7 @@ void menu_visualmem_putpixel(zxvision_window *ventana,int x,int y,int color_pixe
 void menu_debug_draw_visualmem(void)
 {
 
-	normal_overlay_texto_menu();
+	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 
 	int ancho=(VISUALMEM_ANCHO-2);
@@ -4732,6 +4732,8 @@ void menu_debug_new_visualmem_bright(MENU_ITEM_PARAMETERS)
 }
 
 
+zxvision_window zxvision_window_visualmem;
+
 void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 {
 
@@ -4739,7 +4741,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
  	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
-	zxvision_window ventana;
+	zxvision_window *ventana;
+	ventana=&zxvision_window_visualmem;
 
 	int x,y,ancho,alto;
 
@@ -4752,8 +4755,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	}
 
 
-	zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho-1,alto-2,"Visual memory");
-	zxvision_draw_window(&ventana);				
+	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Visual memory");
+	zxvision_draw_window(ventana);				
 
 
 	//Cambiamos funcion overlay de texto de menu
@@ -4761,7 +4764,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	set_menu_overlay_function(menu_debug_draw_visualmem);
 
 
-	menu_debug_draw_visualmem_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
+	menu_debug_draw_visualmem_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
 
 
 	menu_dibuja_menu_permite_repeticiones_hotk=1;
@@ -4775,8 +4778,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 		//Borrar las dos lineas donde van las opciones, por si hay "rastro" anterior
-		zxvision_print_string_defaults_fillspc(&ventana,1,0,"");
-		zxvision_print_string_defaults_fillspc(&ventana,1,1,"");
+		zxvision_print_string_defaults_fillspc(ventana,1,0,"");
+		zxvision_print_string_defaults_fillspc(ventana,1,1,"");
 
 
 		menu_add_item_menu_inicial_format(&array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_bright,NULL,"~~Bright: %d",visualmem_bright_multiplier);
@@ -4852,10 +4855,10 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-	util_add_window_geometry("visualmem",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+	util_add_window_geometry_compact("visualmem",ventana);
 
 	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
-	zxvision_destroy_window(&ventana);		
+	zxvision_destroy_window(ventana);		
 
 
 }
