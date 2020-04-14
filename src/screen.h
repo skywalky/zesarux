@@ -168,6 +168,7 @@ extern int screen_simpletext_driver;
 
 extern void load_screen(char *scrfile);
 extern void save_screen_scr(char *scrfile);
+extern void save_screen(char *screen_save_file);
 
 //extern z80_bit interlaced_frame_par;
 extern z80_byte interlaced_numero_frame;
