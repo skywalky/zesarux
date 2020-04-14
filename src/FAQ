@@ -405,6 +405,10 @@ Video modes: 40 column, 80 column, Spectrum and Timex compatible modes
 Audio: 6 channel AY
 
 
+Q: I have set Chloe machine but it doesn't seem to boot, I only get a black screen
+A: Chloe needs divmmc paging to boot. Enable it on Storage->MMC menu
+
+
 ----------------------------------------------------------------------------
 
 
