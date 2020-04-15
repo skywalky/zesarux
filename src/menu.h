@@ -228,6 +228,8 @@ extern void zxvision_draw_window_contents(zxvision_window *w);
 extern void zxvision_draw_window_contents_no_speech(zxvision_window *ventana);
 extern int zxvision_wait_until_esc(zxvision_window *w);
 
+extern void zxvision_draw_overlay_if_exists(zxvision_window *w);
+
 #define MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH 128
 
 extern void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,int indice,int opcion_actual,int opcion_activada,char *texto_entrada);
