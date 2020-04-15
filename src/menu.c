@@ -6219,58 +6219,16 @@ void zxvision_draw_below_windows(zxvision_window *w)
 
 int zxvision_drawing_in_background=0;
 
-//Dibujar todas las ventanas que hay debajo de esta en cascada, desde la mas antigua hasta arriba, pero llamando solo las que tienen overlay
-void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
+
+//Llama al overlay de la ventana, si es que existe
+void zxvision_draw_overlay_if_exists(zxvision_window *w)
 {
-
-	//zxvision_draw_below_windows(w);
-	//return;
-
-        //Primero ir a buscar la de abajo del todo
-        zxvision_window *pointer_window;
-
-	//zxvision_window *actual_current_window=zxvision_current_window;
-
-        if (w!=NULL) printf ("\nDraw with overlay. original window: %p. Title: %s\n",w,w->window_title);
-
-        pointer_window=w;
-
-        while (pointer_window->previous_window!=NULL) {
-                printf ("zxvision_draw_below_windows_with_overlay below window: %p\n",pointer_window->previous_window);
-                pointer_window=pointer_window->previous_window;
-        }
-
-        int antes_ventana_tipo_activa=ventana_tipo_activa;
-        ventana_tipo_activa=0; //Redibujar las de debajo como inactivas
-
-        //Redibujar diciendo que estan por debajo
-        ventana_es_background=1;
-
-        //Y ahora de ahi hacia arriba, incluido la ultima
-
-
-	printf ("\n");
-
-		zxvision_drawing_in_background=1;
-
-        while (pointer_window!=NULL) {
-        //while (pointer_window!=w) {
-                printf ("window from bottom to top %p. next: %p nombre: %s\n",pointer_window,pointer_window->next_window,pointer_window->window_title);
-
-
 		void (*overlay_function)(void);
-		overlay_function=pointer_window->overlay_function;
+		overlay_function=w->overlay_function;
 
-		printf ("Funcion overlay: %p\n",overlay_function);
-
-
-		//zxvision_current_window=pointer_window;
+		printf ("Funcion overlay: %p\n",overlay_function);		
 
 
-                zxvision_draw_window(pointer_window);
-
-		//Dibujamos contenido anterior, ya que draw_window la borra con espacios
-		zxvision_draw_window_contents(pointer_window);
 		//Esto pasa en ventanas que por ejemplo actualizan no a cada frame, al menos refrescar aqui con ultimo valor				
 
 		if (overlay_function!=NULL) {
@@ -6278,19 +6236,78 @@ void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
 			
 			overlay_function(); //llamar a funcion overlay
 		}
+}
+
+//Dibujar todas las ventanas que hay debajo de esta en cascada, desde la mas antigua hasta arriba, pero llamando solo las que tienen overlay
+void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
+{
 
 
-		//else zxvision_draw_window_contents(pointer_window);
+	//Primero ir a buscar la de abajo del todo
+	zxvision_window *pointer_window;
 
-                pointer_window=pointer_window->next_window;
-        }
 
-	//zxvision_current_window=actual_current_window;
+	if (w!=NULL) printf ("\nDraw with overlay. original window: %p. Title: %s\n",w,w->window_title);
 
-		zxvision_drawing_in_background=0;
+	pointer_window=w;
 
-        ventana_es_background=0;
-        ventana_tipo_activa=antes_ventana_tipo_activa;
+	while (pointer_window->previous_window!=NULL) {
+			printf ("zxvision_draw_below_windows_with_overlay below window: %p\n",pointer_window->previous_window);
+			pointer_window=pointer_window->previous_window;
+	}
+
+	int antes_ventana_tipo_activa=ventana_tipo_activa;
+	ventana_tipo_activa=0; //Redibujar las de debajo como inactivas
+
+	//Redibujar diciendo que estan por debajo
+	ventana_es_background=1;
+
+	//Y ahora de ahi hacia arriba, incluido la ultima
+
+
+	printf ("\n");
+
+	zxvision_drawing_in_background=1;
+
+	while (pointer_window!=NULL) {
+		//while (pointer_window!=w) {
+				printf ("window from bottom to top %p. next: %p nombre: %s\n",pointer_window,pointer_window->next_window,pointer_window->window_title);
+
+
+
+		zxvision_draw_window(pointer_window);
+
+		//Dibujamos contenido anterior, ya que draw_window la borra con espacios
+		zxvision_draw_window_contents(pointer_window);
+
+
+		zxvision_draw_overlay_if_exists(pointer_window);
+		/*void (*overlay_function)(void);
+		overlay_function=pointer_window->overlay_function;
+
+		printf ("Funcion overlay: %p\n",overlay_function);		
+
+
+		//Esto pasa en ventanas que por ejemplo actualizan no a cada frame, al menos refrescar aqui con ultimo valor				
+
+		if (overlay_function!=NULL) {
+			printf ("llamando a funcion overlay %p\n",overlay_function);
+			
+			overlay_function(); //llamar a funcion overlay
+		}*/
+
+
+		
+
+		pointer_window=pointer_window->next_window;
+	}
+
+
+
+	zxvision_drawing_in_background=0;
+
+	ventana_es_background=0;
+	ventana_tipo_activa=antes_ventana_tipo_activa;
 
 }
 
