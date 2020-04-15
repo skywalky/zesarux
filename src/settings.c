@@ -219,3 +219,12 @@ z80_bit use_scrcursesw={0};
 
 //Si se ha preguntado ya para descargar la imagen SD al seleccionar maquina tbblue
 z80_bit tbblue_autoconfigure_sd_asked={0};
+
+
+
+//
+// Windows Settings
+//
+
+//Si permitimos o no ventanas en background al pulsar F6
+int menu_allow_background_windows=0;

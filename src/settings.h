@@ -71,5 +71,7 @@ extern z80_bit use_scrcursesw;
 
 extern z80_bit tbblue_autoconfigure_sd_asked;
 
+extern int menu_allow_background_windows;
+
 #endif
 

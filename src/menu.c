@@ -1353,8 +1353,7 @@ mayusculas + tecla ";"
 
 */
 
-//Si permitimos o no ventanas en background al pulsar F6
-int menu_allow_background_windows=0;
+
 
 z80_byte menu_get_pressed_key_no_modifier(void)
 {
@@ -23896,6 +23895,11 @@ void menu_interface_restore_windows_geometry(MENU_ITEM_PARAMETERS)
 	}
 }
 
+void menu_interface_allow_background_windows(MENU_ITEM_PARAMETERS)
+{
+	menu_allow_background_windows ^=1;
+}
+
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_window_settings;
@@ -23978,6 +23982,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_window_settings,'l');
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] I~~nvert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'n');
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] Background windows",(menu_allow_background_windows ? 'X' : ' ') );
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Restore all windows positions and sizes to their default values");
