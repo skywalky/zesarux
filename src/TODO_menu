@@ -79,14 +79,20 @@ if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 de tal manera que solo llame a normal_overlay de texto cuando no estan en background
 
 
+
 -ventanas que usan background tienen que referenciar a la ventana activa teniendo la estructura fuera de la funcion,
 al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego usar variable "ventana" como puntero a ahí
 
 -desde menu al pulsar background se retorna MENU_RETORNO_BACKGROUND
 
+-Se llaman a todas las funciones de overlay de las ventanas en background desde la función de overlay de menú normal_overlay_texto_menu
+
+-Pendiente:
+-si se abre una ventana que ya estaba en background, que hacemos? ahora mismo lo que hace es colgarse
+Tendria que haber algun flag antes que indique que esta en background y al abrirse lo detecte
 
 Ideas para background windows:
--se deben llamar a todas las funciones de overlay de las ventanas en background desde la función de overlay de menú
+
 -todo lo que sale de settings no tiene sentido enviar a background-> son menús puros
 -opción para desactivar completamente el background
 -una ventana que se abre:
