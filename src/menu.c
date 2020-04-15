@@ -3121,6 +3121,9 @@ void normal_overlay_texto_menu(void)
 	}
 
 
+	if (menu_allow_background_windows) {
+		menu_draw_background_windows_overlay_after_normal();
+	}
 
 
 }

@@ -2717,19 +2717,23 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
  	}
 }
 
-
-
-void menu_draw_background_windows_overlay(void)
+void menu_draw_background_windows_overlay_after_normal(void)
 {
-
-	//menu_ay_registers_overlay();
-	//return;
-	normal_overlay_texto_menu();
 
 	zxvision_window *ventana;
 	ventana=zxvision_current_window;
 	zxvision_draw_below_windows_with_overlay(ventana);
 	printf ("overlay funcion desde menu_draw_background_windows_overlay\n");
+}
+
+
+void menu_draw_background_windows_overlay(void)
+{
+
+	normal_overlay_texto_menu();
+
+	menu_draw_background_windows_overlay_after_normal();
+
 }
 
 void menu_draw_background_windows(MENU_ITEM_PARAMETERS)
