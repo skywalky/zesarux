@@ -6201,12 +6201,15 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	        zxvision_draw_window_contents(pointer_window);
 
 		//Redibujar overlay de las ventanas en background
+		/*
 		if (menu_allow_background_windows) {
 			printf ("Redibujar overlay ventana de debajo desde zxvision_draw_below_windows\n");
 			zxvision_drawing_in_background=1;
 			zxvision_draw_overlay_if_exists(pointer_window);
 			zxvision_drawing_in_background=0;
+
 		}
+		*/
 
 
 		pointer_window=pointer_window->next_window;
@@ -6235,7 +6238,7 @@ void zxvision_draw_overlay_if_exists(zxvision_window *w)
 		void (*overlay_function)(void);
 		overlay_function=w->overlay_function;
 
-		printf ("Funcion overlay: %p\n",overlay_function);		
+		printf ("Funcion overlay: %p. current window: %p\n",overlay_function,zxvision_current_window);		
 
 
 		//Esto pasa en ventanas que por ejemplo actualizan no a cada frame, al menos refrescar aqui con ultimo valor				

@@ -2145,8 +2145,10 @@ void scr_putpixel_layer_menu(int x,int y,int color)
 												int xdestino=xzoom+zx;
 												int ydestino=yzoom+zy;
                         //scr_putpixel(xzoom+zx,yzoom+zy,color);
-												if (buffer_layer_menu==NULL) printf ("scr_putpixel_layer_menu NULL\n");
-												buffer_layer_menu[ydestino*ancho_layer_menu_machine+xdestino]=color;
+												if (buffer_layer_menu==NULL) {
+													printf ("scr_putpixel_layer_menu NULL\n"); //?????
+												}
+												else buffer_layer_menu[ydestino*ancho_layer_menu_machine+xdestino]=color;
 
 												//Y hacer mix
 												screen_putpixel_mix_layers(xdestino,ydestino);   
