@@ -267,3 +267,4 @@ valores long int
 
 
 -AY Piano en background dibuja las teclas de piano donde este el ultimo menu
+-ventanas que se envian a background, deberian guardar la geometria antes (las que guardan geometria)
