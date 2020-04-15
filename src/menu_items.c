@@ -16231,7 +16231,8 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_ay_partitura_overlay);
 
 	
-		int retorno_menu=0; //Inicializado aqui a 0 en particular pues si solo hay 1 chip, no muestra selector de chip
+		int retorno_menu=MENU_RETORNO_NORMAL; 
+		//Inicializado aqui a MENU_RETORNO_NORMAL en particular pues si solo hay 1 chip, no muestra selector de chip
 		//y por tanto esta variable tiene que tener algo diferente de MENU_RETORNO_BACKGROUND
 
 		
