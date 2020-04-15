@@ -3067,6 +3067,25 @@ int si_valid_char(z80_byte caracter)
 	return 1;
 }
 
+void menu_draw_background_windows_overlay_after_normal(void)
+{
+
+	zxvision_window *ventana;
+	ventana=zxvision_current_window;
+	zxvision_draw_below_windows_with_overlay(ventana);
+	printf ("overlay funcion desde menu_draw_background_windows_overlay\n");
+}
+
+
+void menu_draw_background_windows_overlay(void)
+{
+
+	normal_overlay_texto_menu();
+
+	menu_draw_background_windows_overlay_after_normal();
+
+}
+
 
 //funcion normal de impresion de overlay de buffer de texto y cuadrado de lineas usado en los menus
 void normal_overlay_texto_menu(void)
@@ -6284,11 +6303,20 @@ void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
 
 	zxvision_drawing_in_background=1;
 
+
+	//Dibujar todas ventanas excepto la de mas arriba. TODO: da problemas, el raton no se mueve donde debe
+	//while (pointer_window!=w && pointer_window!=NULL) {
+
+	//Dibujar todas ventanas. La ventana de mas arriba se redibuja raro
 	while (pointer_window!=NULL) {
 		//while (pointer_window!=w) {
 				printf ("window from bottom to top %p. next: %p nombre: %s\n",pointer_window,pointer_window->next_window,pointer_window->window_title);
 
-
+		//Somos la ventana de mas arriba 
+		if (pointer_window==w) {
+			ventana_es_background=0;
+			ventana_tipo_activa=antes_ventana_tipo_activa;
+		};
 
 		zxvision_draw_window(pointer_window);
 
@@ -6298,8 +6326,6 @@ void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
 
 		zxvision_draw_overlay_if_exists(pointer_window);
 	
-
-
 		
 
 		pointer_window=pointer_window->next_window;
@@ -23918,6 +23944,10 @@ void menu_interface_restore_windows_geometry(MENU_ITEM_PARAMETERS)
 void menu_interface_allow_background_windows(MENU_ITEM_PARAMETERS)
 {
 	menu_allow_background_windows ^=1;
+
+	if (menu_allow_background_windows) {
+		menu_warn_message("DANGER! This is very EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
+	}
 }
 
 void menu_window_settings(MENU_ITEM_PARAMETERS)
@@ -24004,6 +24034,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_window_settings,'n');
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] Background windows",(menu_allow_background_windows ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_window_settings,"EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
+		menu_add_item_menu_ayuda(array_menu_window_settings,"EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Restore all windows positions and sizes to their default values");
