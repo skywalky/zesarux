@@ -4749,7 +4749,8 @@ void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visib
 
 }
 
-void zxvision_window_move_this_window_on_top(zxvision_window *ventana)
+
+void zxvision_window_delete_this_window(zxvision_window *ventana)
 {
 		//hacer esta la ventana activa
 		/*
@@ -4781,6 +4782,69 @@ void zxvision_window_move_this_window_on_top(zxvision_window *ventana)
 
 		//Si era la de arriba del todo, hacer que apunte a la anterior
 		if (zxvision_current_window==ventana) zxvision_current_window=prev_to_ventana;
+
+		//Hasta aqui lo que hemos hecho ha sido quitar nuestra ventana
+		return;
+
+
+		//Temporal
+		//volver. Se elimina. TODO: quedaria pendiente liberar memoria usada por la ventana (overlay_memory)
+		//return;
+
+		//Ahora la subimos arriba del todo
+		if (zxvision_current_window!=NULL) {
+			zxvision_current_window->next_window=ventana;
+		}
+
+		//Y mi actual ahora es la actual que habia de current
+		ventana->previous_window=zxvision_current_window;
+
+		//Y no tenemos siguiente, o sea NULL
+		ventana->next_window=NULL;
+
+		//Y la actual somos nosotros
+		if (zxvision_current_window!=NULL) {
+			zxvision_current_window=ventana;
+		}
+}
+
+void zxvision_window_move_this_window_on_top(zxvision_window *ventana)
+{
+		//hacer esta la ventana activa
+		/*
+		Ventana activa: zxvision_current_window. Si no hay ventanas, vale NULL
+		Por debajo: se enlaza con previous_window. Hacia arriba se enlaza con next_window
+
+		Para hacer esta ventana la activa
+
+		NULL *prev* <- A  *prev* <-  -> *next* ventana *prev* <-  -> *next* C <-> D <-> E <-> zxvision_current_window -> NULL
+
+
+		NULL *prev* <- A  *prev* <-  -> *next*                       *next* C <-> D <-> E <->  <-> ventana -> NULL
+		*/
+
+		zxvision_window_delete_this_window(ventana);
+
+		/*
+
+		zxvision_window *next_to_ventana=ventana->next_window;
+		zxvision_window *prev_to_ventana=ventana->previous_window;
+		//zxvision_window *prev_to_current_window=zxvision_current_window->previous_window;
+
+		//Primero cambiar la anterior a esta, diciendo que nos saltamos "ventana"
+		if (prev_to_ventana!=NULL) {
+			//La siguiente a esta, sera la siguiente a la ventana actual
+			prev_to_ventana->next_window=next_to_ventana;
+		}
+
+		//Luego la que era la siguiente a esta "ventana", decir que su anterior es la anterior a "ventana"
+		if (next_to_ventana!=NULL) {
+			next_to_ventana->previous_window=prev_to_ventana;
+		}
+
+		//Si era la de arriba del todo, hacer que apunte a la anterior
+		if (zxvision_current_window==ventana) zxvision_current_window=prev_to_ventana;
+		*/
 
 		//Hasta aqui lo que hemos hecho ha sido quitar nuestra ventana
 
