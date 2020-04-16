@@ -1842,6 +1842,21 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 		
 		ventana=&menu_debug_cpu_resumen_stats_ventana;
 
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    if (zxvision_if_window_already_exists(ventana)) {
+        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
+
+        
+        zxvision_window_move_this_window_on_top(ventana);
+
+        return;
+    }   
+
+		
+		
+
 	int originx=menu_origin_x();
 
 	zxvision_new_window(ventana,originx,1,32,18,
@@ -2639,6 +2654,22 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 			return;
 		}
 
+		zxvision_window *ventana;
+		ventana=&zxvision_ay_registers_overlay;		
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    if (zxvision_if_window_already_exists(ventana)) {
+        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
+
+        
+        zxvision_window_move_this_window_on_top(ventana);
+
+        return;
+    }   
+
+
 		int total_chips=ay_retorna_numero_chips();
 		if (total_chips>3) total_chips=3;
 
@@ -2667,8 +2698,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 				alto_ventana=24;
 		}		
 
-		zxvision_window *ventana;
-		ventana=&zxvision_ay_registers_overlay;
+
 
 
 
@@ -4177,16 +4207,11 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
 	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
 	if (zxvision_if_window_already_exists(ventana)) {
-		printf ("Window already exists! We are possibly running on background. Exiting this\n");
-		//TODO: hacer esta la ventana activa
-		/*
-		Ventana activa: zxvision_current_window. Si no hay ventanas, vale NULL
-		Por debajo: se enlaza con previous_window. Hacia arriba se enlaza con next_window
+		printf ("Window already exists! We are possibly running on background. Make this the top window\n");
+		//sleep(2);
+		
+		zxvision_window_move_this_window_on_top(ventana);
 
-		Para hacer esta ventana la activa
-
-		NULL *prev* <- A  *prev* <-  -> *next* ventana *prev* <-  -> *next* C <-> D <-> E <-> zxvision_current_window -> NULL
-		*/
 		return;
 	}
 
@@ -4751,6 +4776,19 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 	zxvision_window *ventana;
 	ventana=&zxvision_window_visualmem;
+
+
+	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+	if (zxvision_if_window_already_exists(ventana)) {
+		printf ("Window already exists! We are possibly running on background. Make this the top window\n");
+		//sleep(2);
+		
+		zxvision_window_move_this_window_on_top(ventana);
+
+		return;
+	}	
 
 	int x,y,ancho,alto;
 
@@ -10887,15 +10925,28 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();
 
-	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
 
-	if (!MACHINE_IS_ZX8081) view_sprites_zx81_pseudohires.v=0;
 
     //disable_interlace();
 
 	zxvision_window *ventana;
 	ventana=&zxvision_window_view_sprites;
 
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    if (zxvision_if_window_already_exists(ventana)) {
+        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
+
+        
+        zxvision_window_move_this_window_on_top(ventana);
+
+        return;
+    }   
+
+	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
+
+	if (!MACHINE_IS_ZX8081) view_sprites_zx81_pseudohires.v=0;
 
 	int x,y,ancho,alto;
 
@@ -16196,6 +16247,23 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
         menu_espera_no_tecla();
 
+		zxvision_window *ventana;
+		ventana=&zxvision_window_ay_partitura;
+
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    if (zxvision_if_window_already_exists(ventana)) {
+        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
+
+        
+        zxvision_window_move_this_window_on_top(ventana);
+
+        return;
+    }   
+
+
 		int xventana,yventana,ancho_ventana,alto_ventana;
 
 		if (!menu_multitarea) {
@@ -16226,8 +16294,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 		//printf ("ancho %d\n",ancho_ventana);
 
-		zxvision_window *ventana;
-		ventana=&zxvision_window_ay_partitura;
+
 
 		zxvision_new_window_nocheck_staticsize(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
@@ -20244,6 +20311,22 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 {
         menu_espera_no_tecla();
 
+		zxvision_window *ventana;
+		ventana=&zxvision_window_ay_piano;		
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    if (zxvision_if_window_already_exists(ventana)) {
+        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
+
+        
+        zxvision_window_move_this_window_on_top(ventana);
+
+        return;
+    }   
+
+
 		int xventana,yventana,ancho_ventana,alto_ventana;
 
 		if (!menu_multitarea) {
@@ -20339,8 +20422,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 		//Para que siempre se lea el titulo de la ventana
 		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
 
-		zxvision_window *ventana;
-		ventana=&zxvision_window_ay_piano;
+
 
 		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
@@ -20519,10 +20601,30 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 {
         menu_espera_no_tecla();
 
+
+
+
 				if (!menu_multitarea) {
 					menu_warn_message("This menu item needs multitask enabled");
 					return;
 				}
+
+		zxvision_window *ventana;	
+		ventana=&zxvision_menu_beeper_pianokeyboard;
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    if (zxvision_if_window_already_exists(ventana)) {
+        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
+
+        
+        zxvision_window_move_this_window_on_top(ventana);
+
+        return;
+    }   
+
+
 
 				//Como si fuera 1 solo chip
 
@@ -20558,8 +20660,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;				
 
-		zxvision_window *ventana;	
-		ventana=&zxvision_menu_beeper_pianokeyboard;
+
 
 		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
