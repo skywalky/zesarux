@@ -4792,9 +4792,16 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 		printf ("Window already exists! We are possibly running on background. Make this the top window\n");
 		//sleep(2);
 		
-		zxvision_window_move_this_window_on_top(ventana);
+		//zxvision_window_move_this_window_on_top(ventana);
 
-		return;
+		//return;
+
+		//La quitamos de background. TODO: liberar memoria
+		//TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
+		//que no se ha borrado, pero esta nueva escribe encima y no se nota
+		menu_generic_message("Background task","OK. Window removed from background");
+		zxvision_window_delete_this_window(ventana);
+
 	}	
 
 	int x,y,ancho,alto;
@@ -4909,6 +4916,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
+	util_add_window_geometry_compact("visualmem",ventana);
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
                 //zxvision_ay_registers_overlay
@@ -4919,7 +4927,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 	else {
 
-		util_add_window_geometry_compact("visualmem",ventana);
+
 
 		//En caso de menus tabulados, es responsabilidad de este de liberar ventana
 		zxvision_destroy_window(ventana);		
