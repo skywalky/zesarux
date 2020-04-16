@@ -97,13 +97,20 @@ Ideas para background windows:
 -todo lo que sale de settings no tiene sentido enviar a background-> son menús puros
 -opción para desactivar completamente el background
 -una ventana que se abre:
-**si hay background, entrara y saldrá poniéndose en background, y cerrando todos los menús precedentes. 
-Lo ideal es que luego el foco conmutase aquí, entrando de nuevo a primer plano
-->ahora mismo eso no va, se cuelga si se abre una ventana que ya estaba en background
+**si estaba ya en background, se pone arriba del todo
+
+
+-como hacer para cerrar una ventana? se deberia poder clicar simplemente en cerrar
+-se puede volver a hacer activa una ventana? o sea quitarla del background... quiza seria cerrarla y ya luego se puede reabrir
+
+-Quiza se podria hacer que si se reabre ventana ya en background, la elimine (ver zxvision_window_move_this_window_on_top y linea temporal)
+
 
 -como se ponen en primer plano ventanas que estaban en background? 
 Quizá cuando se ponen en background deben registrarse indicando la función principal que las inicia. 
 Esto se deberá leer desde el handle de zxvision para cuando se pulsa ahí, cambiar y arrancar ahí 
+
+
 
 
 ----Fin Background windows

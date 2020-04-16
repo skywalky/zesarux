@@ -4784,8 +4784,15 @@ void zxvision_window_move_this_window_on_top(zxvision_window *ventana)
 
 		//Hasta aqui lo que hemos hecho ha sido quitar nuestra ventana
 
+
+		//Temporal
+		//volver. Se elimina. TODO: quedaria pendiente liberar memoria usada por la ventana (overlay_memory)
+		//return;
+
 		//Ahora la subimos arriba del todo
-		zxvision_current_window->next_window=ventana;
+		if (zxvision_current_window!=NULL) {
+			zxvision_current_window->next_window=ventana;
+		}
 
 		//Y mi actual ahora es la actual que habia de current
 		ventana->previous_window=zxvision_current_window;
@@ -4794,7 +4801,9 @@ void zxvision_window_move_this_window_on_top(zxvision_window *ventana)
 		ventana->next_window=NULL;
 
 		//Y la actual somos nosotros
-		zxvision_current_window=ventana;
+		if (zxvision_current_window!=NULL) {
+			zxvision_current_window=ventana;
+		}
 }
 
 
