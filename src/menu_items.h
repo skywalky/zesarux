@@ -94,5 +94,10 @@ extern int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use
 
 extern void menu_display_settings(MENU_ITEM_PARAMETERS);
 
+extern void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS);
+
+extern void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS);
+
+
 #endif
 
