@@ -10529,7 +10529,7 @@ int scale_y_chip(int y)
 
 
 
-void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int color)
+void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(zxvision_window *ventana,int x,int y,int color)
 {
 	//#define PIANO_ZOOM 3
 
@@ -10547,7 +10547,7 @@ void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int 
 		x=xorig;
 		for (zx=0;zx<PIANO_ZOOM_X;zx++) {
 			//No deberia ser null , pero por si acaso
-			if (zxvision_current_window!=NULL) zxvision_putpixel(zxvision_current_window,x,y,color);
+			if (zxvision_current_window!=NULL) zxvision_putpixel(ventana,x,y,color);
 
 			x++;
 
@@ -10560,55 +10560,55 @@ void menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(int x,int y,int 
 
 
 //Basandome en coordenadas basicas sin zoom
-void menu_ay_pianokeyboard_draw_graphical_piano_draw_line(int x, int y, int stepx, int stepy, int length, int color)
+void menu_ay_pianokeyboard_draw_graphical_piano_draw_line(zxvision_window *ventana,int x, int y, int stepx, int stepy, int length, int color)
 {
 
 	for (;length>0;length--) {
-			menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(x,y,color);
+			menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(ventana,x,y,color);
 			x +=stepx;
 			y +=stepy;
 	}
 
 }
 
-void menu_ay_piano_graph_dibujar_negra(int x, int y,int color)
+void menu_ay_piano_graph_dibujar_negra(zxvision_window *ventana,int x, int y,int color)
 {
  int alto=4;
 
 	for (alto=0;alto<4;alto++) {
-		menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x, y, +1, 0, 3, color);
+		menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x, y, +1, 0, 3, color);
 		y++;
 	}
 }
 
 
 //Como C, F
-void menu_ay_piano_graph_dibujar_blanca_izquierda(int x, int y,int color)
+void menu_ay_piano_graph_dibujar_blanca_izquierda(zxvision_window *ventana,int x, int y,int color)
 {
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x, y, 0, +1, scale_y_chip(7), color);
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x+1, y, 0, +1, scale_y_chip(7), color);
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x+2, y+4, 0, +1, scale_y_chip(3), color);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x, y, 0, +1, scale_y_chip(7), color);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x+1, y, 0, +1, scale_y_chip(7), color);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x+2, y+4, 0, +1, scale_y_chip(3), color);
 }
 
 //Como D, G, A
-void menu_ay_piano_graph_dibujar_blanca_media(int x, int y,int color)
+void menu_ay_piano_graph_dibujar_blanca_media(zxvision_window *ventana,int x, int y,int color)
 {
 
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x, y+4, 0, +1, scale_y_chip(3), color);
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x+1, y, 0, +1, scale_y_chip(7), color);
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x+2, y+4, 0, +1, scale_y_chip(3), color);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x, y+4, 0, +1, scale_y_chip(3), color);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x+1, y, 0, +1, scale_y_chip(7), color);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x+2, y+4, 0, +1, scale_y_chip(3), color);
 }
 
 
 //Como E, B
-void menu_ay_piano_graph_dibujar_blanca_derecha(int x, int y,int color)
+void menu_ay_piano_graph_dibujar_blanca_derecha(zxvision_window *ventana,int x, int y,int color)
 {
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x, y+4, 0, +1, scale_y_chip(3), color);
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x+1, y, 0, +1, scale_y_chip(7), color);
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x+2, y, 0, +1, scale_y_chip(7), color);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x, y+4, 0, +1, scale_y_chip(3), color);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x+1, y, 0, +1, scale_y_chip(7), color);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x+2, y, 0, +1, scale_y_chip(7), color);
 }
 
-void menu_ay_pianokeyboard_draw_graphical_piano(int linea GCC_UNUSED,int canal,char *note)
+void menu_ay_pianokeyboard_draw_graphical_piano(zxvision_window *ventana,int linea GCC_UNUSED,int canal,char *note)
 {
 	/*
 	Teclado:
@@ -10645,34 +10645,34 @@ Altura, para 2 chips de sonido (6 canales), tenemos maximo 192/6=32
 	int x,y;
 	for (x=0;x<29;x++) {
 		for (y=ybase;y<ybase+scale_y_chip(8);y++) {
-			menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(x,y,7);
+			menu_ay_pianokeyboard_draw_graphical_piano_draw_pixel_zoom(ventana,x,y,7);
 		}
 	}
 
 	//Linea superior
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(0, ybase+0, +1, 0, 29, 0);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,0, ybase+0, +1, 0, 29, 0);
 
 	//Linea vertical izquierda
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(0, ybase+0, 0, +1, scale_y_chip(8), 0);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,0, ybase+0, 0, +1, scale_y_chip(8), 0);
 
 	//Linea vertical derecha
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(28, ybase+0, 0, +1, scale_y_chip(8), 0);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,28, ybase+0, 0, +1, scale_y_chip(8), 0);
 
 	//6 separaciones verticales pequeñas
 	int i;
 	x=4;
 	for (i=0;i<6;i++) {
-		menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x, ybase+5, 0, +1, scale_y_chip(3), 0);
+		menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,x, ybase+5, 0, +1, scale_y_chip(3), 0);
 		x+=4;
 	}
 
 	//Linea vertical central
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(12, ybase+0, 0, +1, scale_y_chip(8), 0);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,12, ybase+0, 0, +1, scale_y_chip(8), 0);
 
 	//Y ahora las 5 negras
 	x=3;
 	for (i=0;i<5;i++) {
-		menu_ay_piano_graph_dibujar_negra(x,ybase+1,0);
+		menu_ay_piano_graph_dibujar_negra(ventana,x,ybase+1,0);
 		/*
 		for (y=1;y<=4;y++) {
 			menu_ay_pianokeyboard_draw_graphical_piano_draw_line(x, y, +1, 0, 3, 0);
@@ -10685,7 +10685,7 @@ Altura, para 2 chips de sonido (6 canales), tenemos maximo 192/6=32
 
 
 	//Dibujar la linea inferior. Realmente la linea inferior es siempre la linea superior del siguiente canal, excepto en el ultimo canal
-	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(0, ybase+scale_y_chip(8), +1, 0, 29, 0);
+	menu_ay_pianokeyboard_draw_graphical_piano_draw_line(ventana,0, ybase+scale_y_chip(8), +1, 0, 29, 0);
 
 	//Y ahora destacar la que se pulsa
 	char letra_nota=note[0];
@@ -10722,7 +10722,7 @@ Altura, para 2 chips de sonido (6 canales), tenemos maximo 192/6=32
 				x=-1;
 			break;
 		}
-		if (x!=-1) menu_ay_piano_graph_dibujar_negra(x,ybase+1,1); //Color 1 para probar
+		if (x!=-1) menu_ay_piano_graph_dibujar_negra(ventana,x,ybase+1,1); //Color 1 para probar
 	}
 
 	else {
@@ -10730,34 +10730,34 @@ Altura, para 2 chips de sonido (6 canales), tenemos maximo 192/6=32
 		switch (letra_nota)
 		{
 			case 'C':
-			 menu_ay_piano_graph_dibujar_blanca_izquierda(1, ybase+1,1);
+			 menu_ay_piano_graph_dibujar_blanca_izquierda(ventana,1, ybase+1,1);
 			break;
 
 			case 'D':
 			//Como D, G, A
-			 menu_ay_piano_graph_dibujar_blanca_media(5, ybase+1,1);
+			 menu_ay_piano_graph_dibujar_blanca_media(ventana,5, ybase+1,1);
 			break;
 
 			case 'E':
-				menu_ay_piano_graph_dibujar_blanca_derecha(9, ybase+1,1);
+				menu_ay_piano_graph_dibujar_blanca_derecha(ventana,9, ybase+1,1);
 			break;
 
 			case 'F':
-			 menu_ay_piano_graph_dibujar_blanca_izquierda(13, ybase+1,1);
+			 menu_ay_piano_graph_dibujar_blanca_izquierda(ventana,13, ybase+1,1);
 			break;
 
 			case 'G':
 			//Como D, G, A
-			 menu_ay_piano_graph_dibujar_blanca_media(17, ybase+1,1);
+			 menu_ay_piano_graph_dibujar_blanca_media(ventana,17, ybase+1,1);
 			break;
 
 			case 'A':
 			//Como D, G, A
-			 menu_ay_piano_graph_dibujar_blanca_media(21, ybase+1,1);
+			 menu_ay_piano_graph_dibujar_blanca_media(ventana,21, ybase+1,1);
 			break;
 
 			case 'B':
-				menu_ay_piano_graph_dibujar_blanca_derecha(25, ybase+1,1);
+				menu_ay_piano_graph_dibujar_blanca_derecha(ventana,25, ybase+1,1);
 			break;
 		}
 
@@ -10894,13 +10894,13 @@ int si_mostrar_ay_piano_grafico(void)
 
 }
 
-void menu_ay_pianokeyboard_draw_piano(int linea,int canal,char *note)
+void menu_ay_pianokeyboard_draw_piano(zxvision_window *w,int linea,int canal,char *note)
 {
 	if (!si_mostrar_ay_piano_grafico()) {
 		menu_ay_pianokeyboard_draw_text_piano(linea,canal,note);
 	}
 	else {
-		menu_ay_pianokeyboard_draw_graphical_piano(linea,canal,note);
+		menu_ay_pianokeyboard_draw_graphical_piano(w,linea,canal,note);
 	}
 }
 
@@ -10964,15 +10964,15 @@ void menu_ay_pianokeyboard_overlay(void)
 			}
 
 
-			menu_ay_pianokeyboard_draw_piano(linea,canal,nota_a);
+			menu_ay_pianokeyboard_draw_piano(menu_ay_pianokeyboard_overlay_window,linea,canal,nota_a);
 			linea+=incremento_linea;
 			canal++;
 
-			menu_ay_pianokeyboard_draw_piano(linea,canal,nota_b);
+			menu_ay_pianokeyboard_draw_piano(menu_ay_pianokeyboard_overlay_window,linea,canal,nota_b);
 			linea+=incremento_linea;
 			canal++;
 
-			menu_ay_pianokeyboard_draw_piano(linea,canal,nota_c);
+			menu_ay_pianokeyboard_draw_piano(menu_ay_pianokeyboard_overlay_window,linea,canal,nota_c);
 			linea+=incremento_linea;
 			canal++;
 
@@ -11232,7 +11232,7 @@ void menu_beeper_pianokeyboard_overlay(void)
 
 			//Indicar que no hay que reducir el tamaño del piano segun el numero de chips (esto va bien en ay piano, pero no aqui)
 			menu_ay_piano_drawing_wavepiano.v=1;
-			menu_ay_pianokeyboard_draw_piano(linea,canal,nota_a);
+			menu_ay_pianokeyboard_draw_piano(menu_beeper_pianokeyboard_overlay_window,linea,canal,nota_a);
 			//Restauramos comportamiento por defecto
 			menu_ay_piano_drawing_wavepiano.v=0;
 
