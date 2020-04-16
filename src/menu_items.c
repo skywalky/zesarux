@@ -4172,6 +4172,24 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 		zxvision_window *ventana;
 		ventana=&zxvision_window_audio_waveform;	
 
+
+	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+	if (zxvision_if_window_already_exists(ventana)) {
+		printf ("Window already exists! We are possibly running on background. Exiting this\n");
+		//TODO: hacer esta la ventana activa
+		/*
+		Ventana activa: zxvision_current_window. Si no hay ventanas, vale NULL
+		Por debajo: se enlaza con previous_window. Hacia arriba se enlaza con next_window
+
+		Para hacer esta ventana la activa
+
+		NULL *prev* <- A  *prev* <-  -> *next* ventana *prev* <-  -> *next* C <-> D <-> E <-> zxvision_current_window -> NULL
+		*/
+		return;
+	}
+
 	int x,y,ancho,alto;
 
 	if (!util_find_window_geometry("waveform",&x,&y,&ancho,&alto)) {
@@ -4181,7 +4199,10 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 		alto=SOUND_WAVE_ALTO+4;
 	}
 
+	printf("despues util_find_window_geometry\n");
+
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Waveform");
+	printf("despues zxvision_new_window_nocheck_staticsize\n");
 	zxvision_draw_window(ventana);		
 
     

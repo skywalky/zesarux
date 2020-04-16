@@ -4594,6 +4594,63 @@ void zxvision_new_window_check_static_size_range(int *x,int *y,int *visible_widt
 		}
 }
 
+
+//Buscar la ventana mas antigua debajo de esta en cascada
+zxvision_window *zxvision_find_first_window_below_this(zxvision_window *w)
+{
+		//Primero ir a buscar la de abajo del todo
+	zxvision_window *pointer_window;
+
+	//printf ("original window: %p\n",w);
+        //printf ("\noriginal window: %p. Title: %s\n",w,w->window_title);
+
+
+
+	pointer_window=w;
+
+	while (pointer_window->previous_window!=NULL) {
+		printf ("zxvision_find_first_window. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
+		pointer_window=pointer_window->previous_window;
+	}
+
+	return pointer_window;
+}
+
+
+
+//decir si ventana ya existe, en base a su puntero a estructura
+int zxvision_if_window_already_exists(zxvision_window *w)
+{
+	if (zxvision_current_window==NULL) return 0;
+
+	//Primero buscar la inicial
+
+	zxvision_window *pointer_window;
+
+	pointer_window=zxvision_find_first_window_below_this(zxvision_current_window);
+
+
+
+
+	//Dibujar todas ventanas. La ventana de mas arriba se redibuja raro
+	while (pointer_window!=NULL) {
+		//while (pointer_window!=w) {
+		printf ("window from bottom to top %p. next: %p nombre: %s\n",pointer_window,pointer_window->next_window,pointer_window->window_title);
+
+		if (pointer_window==w) {
+			printf ("Window already exists!!\n");
+			return 1;
+		}
+		
+
+		pointer_window=pointer_window->next_window;
+	}	
+
+	return 0;
+
+
+}
+
 void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
 
@@ -6168,7 +6225,9 @@ int zxvision_out_bonds(int x,int y,int ancho,int alto)
 	return 0;
 }
 
-//Duibujar todas las ventanas que hay debajo de esta en cascada, desde la mas antigua hasta arriba
+
+
+//Dibujar todas las ventanas que hay debajo de esta en cascada, desde la mas antigua hasta arriba
 void zxvision_draw_below_windows(zxvision_window *w)
 {
 	//Primero ir a buscar la de abajo del todo
@@ -6178,13 +6237,16 @@ void zxvision_draw_below_windows(zxvision_window *w)
         //printf ("\noriginal window: %p. Title: %s\n",w,w->window_title);
 
 
-
+	/*
 	pointer_window=w;
 
 	while (pointer_window->previous_window!=NULL) {
-		//printf ("zxvision_draw_below_windows. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
+		printf ("zxvision_draw_below_windows. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
 		pointer_window=pointer_window->previous_window;
 	}
+	*/
+
+	pointer_window=zxvision_find_first_window_below_this(w);
 
 	//printf ("after while pointer_window->previous_window!=NULL\n");
 
@@ -6216,8 +6278,8 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	no_dibuja_ventana_muestra_pending_error_message=1;
 
 	while (pointer_window!=w && pointer_window!=NULL) {
-		//printf ("window from bottom to top %p\n",pointer_window);
-		//printf ("window from bottom to top %p. name: %s\n",pointer_window,pointer_window->window_title);
+		printf ("window from bottom to top %p\n",pointer_window);
+		printf ("window from bottom to top %p. name: %s\n",pointer_window,pointer_window->window_title);
 		
 		zxvision_draw_window(pointer_window);
 	        zxvision_draw_window_contents(pointer_window);

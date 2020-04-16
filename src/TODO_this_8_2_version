@@ -262,9 +262,15 @@ valores long int
 
 -Immediatos:
 
+-Opción para mostrar o no la temperatura de cpu. Solo visible opción menú en Linux. En command line para todos. Pero que diga que solo sirve en Linux 
 
 -Soporte ulaplus en Next
 
 
--AY Piano en background dibuja las teclas de piano donde este el ultimo menu
+-Quizá para saber que una ventana se ha ido a background, en estructura de ventana inicial izarla con:
+zxvision_ventana ventana_ay_piano={0}
+Suponiendo que pueda inicializsr solo ese parámetro y que además sea el primero de todos 
+
 -ventanas que se envian a background, deberian guardar la geometria antes (las que guardan geometria)
+
+-watches que se puedan enviar a background. requerira overlay, ya tiene?
