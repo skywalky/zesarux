@@ -267,8 +267,16 @@ valores long int
 -Soporte ulaplus en Next
 
 
--splash cuando se pasa ventana a foreground, no se mueven las barras  
+-con ventanas en background, si hay alguna llamada a mensaje splash
+menu_generic_message_splash
+no se mueven las barras  (o bien se mueven pero luego se redibujan encima sin movimiento). Quiza es porque menu_window_splash_counter es una variable global?
 
 -al desactivar background, se deben cerrar todas ventanas
 
 -watches que se puedan enviar a background. requerira overlay, ya tiene?
+
+-Comentar que las ventanas en background no es más que la capa de ventanas (que ya había hasta ahora) pero además llamando a las funciones de overlay de cada una
+
+Quitar menú de ver ventanas background. O quizá uno para ver lista de ven atas y poderlas cerrar
+
+Decir que para cerrar una y/o pasar a foreground, seleccionarla de nuevo desde el menu
