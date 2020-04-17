@@ -4785,7 +4785,7 @@ void zxvision_window_delete_this_window(zxvision_window *ventana)
 			zxvision_current_window=prev_to_ventana;
 			printf ("Somos la de arriba\n");
 			printf ("Current: %p\n",zxvision_current_window);
-			sleep(5);
+			//sleep(5);
 		}
 
 		//Hasta aqui lo que hemos hecho ha sido quitar nuestra ventana
