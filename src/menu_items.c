@@ -1849,9 +1849,15 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
         printf ("Window already exists! We are possibly running on background. Make this the top window\n");
 
         
-        zxvision_window_move_this_window_on_top(ventana);
+        //zxvision_window_move_this_window_on_top(ventana);
 
-        return;
+        //return;
+
+               //La quitamos de background. TODO: liberar memoria
+               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
+               //que no se ha borrado, pero esta nueva escribe encima y no se nota
+               menu_generic_message_splash("Background task","OK. Window removed from background");
+               zxvision_window_delete_this_window(ventana);		
     }   
 
 		
@@ -2664,9 +2670,16 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
         printf ("Window already exists! We are possibly running on background. Make this the top window\n");
 
         
-        zxvision_window_move_this_window_on_top(ventana);
+        //zxvision_window_move_this_window_on_top(ventana);
 
-        return;
+        //return;
+
+               //La quitamos de background. TODO: liberar memoria
+               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
+               //que no se ha borrado, pero esta nueva escribe encima y no se nota
+               menu_generic_message_splash("Background task","OK. Window removed from background");
+               zxvision_window_delete_this_window(ventana);
+
     }   
 
 
@@ -2733,6 +2746,8 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();	
 
+	util_add_window_geometry_compact("ayregisters",ventana);	
+
 
 	if (tecla==3) {
 		//zxvision_ay_registers_overlay
@@ -2742,7 +2757,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 	}
 
 	else {
-		util_add_window_geometry_compact("ayregisters",ventana);
+		
 		zxvision_destroy_window(ventana);		
  	}
 }
@@ -4217,7 +4232,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 		//La quitamos de background. TODO: liberar memoria
 		//TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
 		//que no se ha borrado, pero esta nueva escribe encima y no se nota
-		menu_generic_message("Background task","OK. Window removed from background");
+		menu_generic_message_splash("Background task","OK. Window removed from background");
 		zxvision_window_delete_this_window(ventana);
 	}
 
@@ -4230,10 +4245,10 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 		alto=SOUND_WAVE_ALTO+4;
 	}
 
-	printf("despues util_find_window_geometry\n");
+	//printf("despues util_find_window_geometry\n");
 
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Waveform");
-	printf("despues zxvision_new_window_nocheck_staticsize\n");
+	//printf("despues zxvision_new_window_nocheck_staticsize\n");
 	zxvision_draw_window(ventana);		
 
     
@@ -4799,7 +4814,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 		//La quitamos de background. TODO: liberar memoria
 		//TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
 		//que no se ha borrado, pero esta nueva escribe encima y no se nota
-		menu_generic_message("Background task","OK. Window removed from background");
+		menu_generic_message_splash("Background task","OK. Window removed from background");
 		zxvision_window_delete_this_window(ventana);
 
 	}	
@@ -10954,9 +10969,17 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
         printf ("Window already exists! We are possibly running on background. Make this the top window\n");
 
         
-        zxvision_window_move_this_window_on_top(ventana);
+        //zxvision_window_move_this_window_on_top(ventana);
 
-        return;
+        //return;
+
+               //La quitamos de background. TODO: liberar memoria
+               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
+               //que no se ha borrado, pero esta nueva escribe encima y no se nota
+               menu_generic_message_splash("Background task","OK. Window removed from background");
+               zxvision_window_delete_this_window(ventana);		
+
+
     }   
 
 	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
@@ -11163,6 +11186,10 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
+    	//Grabar geometria ventana
+    	//util_add_window_geometry("sprites",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);	
+		util_add_window_geometry_compact("sprites",ventana);	
+
 
 	if (tecla==3) {
 		//zxvision_ay_registers_overlay
@@ -11173,9 +11200,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 	else {
 
-    	//Grabar geometria ventana
-    	//util_add_window_geometry("sprites",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);	
-		util_add_window_geometry_compact("sprites",ventana);
+
 
 		zxvision_destroy_window(ventana);		
 	}
@@ -16262,6 +16287,11 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
         menu_espera_no_tecla();
 
+		if (!menu_multitarea) {
+			menu_warn_message("This menu item needs multitask enabled");
+			return;
+		}		
+
 		zxvision_window *ventana;
 		ventana=&zxvision_window_ay_partitura;
 
@@ -16273,18 +16303,21 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         printf ("Window already exists! We are possibly running on background. Make this the top window\n");
 
         
-        zxvision_window_move_this_window_on_top(ventana);
+        //zxvision_window_move_this_window_on_top(ventana);
 
-        return;
+        //return;
+
+               //La quitamos de background. TODO: liberar memoria
+               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
+               //que no se ha borrado, pero esta nueva escribe encima y no se nota
+               menu_generic_message_splash("Background task","OK. Window removed from background");
+               zxvision_window_delete_this_window(ventana);		
     }   
 
 
 		int xventana,yventana,ancho_ventana,alto_ventana;
 
-		if (!menu_multitarea) {
-			menu_warn_message("This menu item needs multitask enabled");
-			return;
-		}
+
 
 		//Inicializar array de estado
 		menu_ay_partitura_init_state();
@@ -16401,6 +16434,8 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
+		util_add_window_geometry_compact("aysheet",ventana);	
+
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
                 //zxvision_ay_registers_overlay
@@ -16411,7 +16446,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 	else {
 
-		util_add_window_geometry_compact("aysheet",ventana);
+
 		zxvision_destroy_window(ventana);			
 	}
 	
@@ -20326,6 +20361,11 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 {
         menu_espera_no_tecla();
 
+		if (!menu_multitarea) {
+			menu_warn_message("This menu item needs multitask enabled");
+			return;
+		}		
+
 		zxvision_window *ventana;
 		ventana=&zxvision_window_ay_piano;		
 
@@ -20336,18 +20376,22 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
         printf ("Window already exists! We are possibly running on background. Make this the top window\n");
 
         
-        zxvision_window_move_this_window_on_top(ventana);
+        //zxvision_window_move_this_window_on_top(ventana);
 
-        return;
+        //return;
+
+               //La quitamos de background. TODO: liberar memoria
+               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
+               //que no se ha borrado, pero esta nueva escribe encima y no se nota
+               menu_generic_message_splash("Background task","OK. Window removed from background");
+               zxvision_window_delete_this_window(ventana);
+
     }   
 
 
 		int xventana,yventana,ancho_ventana,alto_ventana;
 
-		if (!menu_multitarea) {
-			menu_warn_message("This menu item needs multitask enabled");
-			return;
-		}
+
 
 		int  total_chips=ay_retorna_numero_chips();
 		//Max 3 ay chips
@@ -20508,6 +20552,8 @@ valor_contador_segundo_anterior=contador_segundo;
 
         cls_menu_overlay();
 
+		util_add_window_geometry_compact("aypiano",ventana);
+
 	if (tecla==3) {
                 //zxvision_ay_registers_overlay
                 ventana->overlay_function=menu_ay_pianokeyboard_overlay;
@@ -20516,7 +20562,7 @@ valor_contador_segundo_anterior=contador_segundo;
 	}
 
 	else {
-		util_add_window_geometry_compact("aypiano",ventana);
+		
 		zxvision_destroy_window(ventana);			
 	}
 
@@ -20634,9 +20680,15 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
         printf ("Window already exists! We are possibly running on background. Make this the top window\n");
 
         
-        zxvision_window_move_this_window_on_top(ventana);
+        //zxvision_window_move_this_window_on_top(ventana);
 
-        return;
+        //return;
+
+               //La quitamos de background. TODO: liberar memoria
+               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
+               //que no se ha borrado, pero esta nueva escribe encima y no se nota
+               menu_generic_message_splash("Background task","OK. Window removed from background");
+               zxvision_window_delete_this_window(ventana);		
     }   
 
 
@@ -20743,6 +20795,8 @@ z80_byte tecla=0;
 
         cls_menu_overlay();
 
+	util_add_window_geometry_compact("wavepiano",ventana);		
+
 
         if (tecla==3) {
                 //zxvision_ay_registers_overlay
@@ -20752,7 +20806,7 @@ z80_byte tecla=0;
         }
 
         else {
-		util_add_window_geometry_compact("wavepiano",ventana);
+		
 		zxvision_destroy_window(ventana);
 
 	}

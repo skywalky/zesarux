@@ -271,6 +271,6 @@ valores long int
 zxvision_ventana ventana_ay_piano={0}
 Suponiendo que pueda inicializsr solo ese parámetro y que además sea el primero de todos 
 
--ventanas que se envian a background, deberian guardar la geometria antes (las que guardan geometria)
+-al desactivar background, se deben cerrar todas ventanas
 
 -watches que se puedan enviar a background. requerira overlay, ya tiene?

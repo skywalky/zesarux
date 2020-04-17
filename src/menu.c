@@ -4780,8 +4780,13 @@ void zxvision_window_delete_this_window(zxvision_window *ventana)
 			next_to_ventana->previous_window=prev_to_ventana;
 		}
 
-		//Si era la de arriba del todo, hacer que apunte a la anterior
-		if (zxvision_current_window==ventana) zxvision_current_window=prev_to_ventana;
+		//Si era la de arriba del todo, hacer que apunte a la anterior. Esto tambien cumple el caso de ser la unica ventana
+		if (zxvision_current_window==ventana) {
+			zxvision_current_window=prev_to_ventana;
+			printf ("Somos la de arriba\n");
+			printf ("Current: %p\n",zxvision_current_window);
+			sleep(5);
+		}
 
 		//Hasta aqui lo que hemos hecho ha sido quitar nuestra ventana
 		return;
@@ -6465,6 +6470,10 @@ void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
 
 
 	if (w!=NULL) printf ("\nDraw with overlay. original window: %p. Title: %s\n",w,w->window_title);
+
+
+	//Si no hay ventanas, volver
+	if (zxvision_current_window==NULL) return;
 
 	pointer_window=w;
 
