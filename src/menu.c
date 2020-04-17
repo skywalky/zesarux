@@ -4632,7 +4632,7 @@ int zxvision_if_window_already_exists(zxvision_window *w)
 
 
 
-	//Dibujar todas ventanas. La ventana de mas arriba se redibuja raro
+	
 	while (pointer_window!=NULL) {
 		//while (pointer_window!=w) {
 		printf ("window from bottom to top %p. next: %p nombre: %s\n",pointer_window,pointer_window->next_window,pointer_window->window_title);
@@ -6499,7 +6499,7 @@ void zxvision_draw_below_windows_with_overlay(zxvision_window *w)
 	//Dibujar todas ventanas excepto la de mas arriba. TODO: da problemas, el raton no se mueve donde debe
 	//while (pointer_window!=w && pointer_window!=NULL) {
 
-	//Dibujar todas ventanas. La ventana de mas arriba se redibuja raro
+	//Dibujar todas ventanas. TODO: La ventana de mas arriba no dibuja bien las franjas de splash
 	while (pointer_window!=NULL) {
 		//while (pointer_window!=w) {
 				printf ("window from bottom to top %p. next: %p nombre: %s\n",pointer_window,pointer_window->next_window,pointer_window->window_title);
