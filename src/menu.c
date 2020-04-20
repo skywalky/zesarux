@@ -1981,6 +1981,10 @@ void reset_menu_overlay_function(void)
 
 //funcion para escribir un caracter en el buffer de overlay
 //tinta y/o papel pueden tener brillo (color+8)
+
+//Nota: funciones putchar_menu_overlay* vienen heredadas del anterior entorno sin zxvision
+//aunque ahora solo se deberian usar para escribir caracteres que van al titulo de la ventana.
+//Para escribir dentro de la ventana (no en el titulo) se deben usar funciones de zxvision_*
 void putchar_menu_overlay_parpadeo(int x,int y,z80_byte caracter,int tinta,int papel,int parpadeo)
 {
 
@@ -4366,6 +4370,31 @@ int zxvision_window_can_be_backgrounded(zxvision_window *w)
 	else return 0;
 }
 
+
+void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window *w)
+{
+
+
+			//Boton de background
+			if (zxvision_window_can_be_backgrounded(w)) {
+				if (ventana_tipo_activa) {
+					//Boton de background, con ventana activa
+					putchar_menu_overlay(x+ancho-2,y,'!',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+				}
+
+				else {
+					//ventana inactiva. Ver si tiene overlay. No consigo que esto se muestre... quiza porque la ventana esta inactiva
+					//printf ("ventana inactiva\n");
+					if (w->overlay_function!=NULL) {
+						//printf ("boton background\n");
+						//zxvision_print_char_simple(zxvision_current_window,ancho-2,0,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO,1,'!');
+						putchar_menu_overlay_parpadeo(x+ancho-2,y,'!',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO,1);
+					}
+				}
+				
+			}
+}
+
 void menu_dibuja_ventana_botones(void)
 {
 
@@ -4374,8 +4403,10 @@ void menu_dibuja_ventana_botones(void)
 	int ancho=current_win_ancho;
 	//int alto=ventana_alto;
 
-		//Boton de minimizar
+		
 		if (ventana_activa_tipo_zxvision) {
+
+			//Boton de minimizar
 			if (ventana_tipo_activa) {
 				if (cuadrado_activo_resize) {
 					z80_byte caracter_mostrar=menu_retorna_caracter_minimizar(zxvision_current_window);
@@ -4388,14 +4419,13 @@ void menu_dibuja_ventana_botones(void)
 				}
 
 
-				//Boton de background
-				if (zxvision_window_can_be_backgrounded(zxvision_current_window)) {
-					putchar_menu_overlay(x+ancho-2,y,'!',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
-				}
-			}
-		}	
 
-		
+			}
+
+			menu_dibuja_ventana_boton_background(x,y,ancho,zxvision_current_window);
+
+
+		}
 
 
 		//putchar_menu_overlay(x+ancho-1,y,'-',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
@@ -4411,7 +4441,6 @@ int no_dibuja_ventana_muestra_pending_error_message=0;
 //Entrada: x,y posicion inicial. ancho, alto. Todo coordenadas en caracteres 0..31 y 0..23
 void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 {
-
 
 	//Para draw below windows, no mostrar error pendiente cuando esta dibujando ventanas de debajo
 	if (!no_dibuja_ventana_muestra_pending_error_message) menu_muestra_pending_error_message();
@@ -6166,6 +6195,8 @@ void zxvision_draw_window(zxvision_window *w)
 	//Mostrar boton de minimizar
 	menu_dibuja_ventana_botones();
 
+	//Mostrar boton background
+	menu_dibuja_ventana_boton_background(w->x,w->y,w->visible_width,w);
 
 
 }
