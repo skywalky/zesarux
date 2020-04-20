@@ -20680,18 +20680,17 @@ zxvision_window zxvision_menu_beeper_pianokeyboard;
 
 void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 {
-        menu_espera_no_tecla();
+	menu_espera_no_tecla();
 
 
 
+	if (!menu_multitarea) {
+		menu_warn_message("This menu item needs multitask enabled");
+		return;
+	}
 
-				if (!menu_multitarea) {
-					menu_warn_message("This menu item needs multitask enabled");
-					return;
-				}
-
-		zxvision_window *ventana;	
-		ventana=&zxvision_menu_beeper_pianokeyboard;
+	zxvision_window *ventana;	
+	ventana=&zxvision_menu_beeper_pianokeyboard;
 
     //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
     //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
@@ -20700,121 +20699,117 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 
 
-				//Como si fuera 1 solo chip
+	//Como si fuera 1 solo chip
 
 
-				int xventana,yventana,ancho_ventana,alto_ventana;
-		if (!util_find_window_geometry("wavepiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
-				if (!si_mostrar_ay_piano_grafico()) {
+	int xventana,yventana,ancho_ventana,alto_ventana;
+	if (!util_find_window_geometry("wavepiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+			if (!si_mostrar_ay_piano_grafico()) {
 
-					xventana=7;
-					yventana=7;
-					ancho_ventana=19;
-					alto_ventana=11;
+				xventana=7;
+				yventana=7;
+				ancho_ventana=19;
+				alto_ventana=11;
 
-				}
+			}
 
-				else {
-					//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
-					xventana=PIANO_GRAPHIC_BASE_X-2;
-					yventana=piano_graphic_base_y;
-					ancho_ventana=AY_PIANO_ANCHO_VENTANA;
-					alto_ventana=8;
+			else {
+				//Dibujar ay piano con grafico. Ajustar segun ancho de caracter (de ahi que use AY_PIANO_ANCHO_VENTANA en vez de valor fijo 14)
+				xventana=PIANO_GRAPHIC_BASE_X-2;
+				yventana=piano_graphic_base_y;
+				ancho_ventana=AY_PIANO_ANCHO_VENTANA;
+				alto_ventana=8;
 
-				}
-		}
-
-
-		if (si_mostrar_ay_piano_grafico()) {
-			piano_graphic_base_y=8;
-		}		
-
-		char *titulo_ventana="Wave Piano";
-		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
-
-		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;				
+			}
+	}
 
 
+	if (si_mostrar_ay_piano_grafico()) {
+		piano_graphic_base_y=8;
+	}		
 
-		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							ancho_ventana-1,alto_ventana-2,titulo_ventana);
-		ventana->can_be_backgrounded=1;	
+	char *titulo_ventana="Wave Piano";
+	int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
-		zxvision_draw_window(ventana);						
-
-        //z80_byte acumulado;
-
-
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de piano + texto
-        set_menu_overlay_function(menu_beeper_pianokeyboard_overlay);
-
-		menu_beeper_pianokeyboard_overlay_window=ventana; 
+	if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;				
 
 
-				int valor_contador_segundo_anterior;
 
-valor_contador_segundo_anterior=contador_segundo;
+	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
+						ancho_ventana-1,alto_ventana-2,titulo_ventana);
+	ventana->can_be_backgrounded=1;	
 
-z80_byte tecla=0;
+	zxvision_draw_window(ventana);						
+
+
+
+	//Cambiamos funcion overlay de texto de menu
+	//Se establece a la de funcion de piano + texto
+	set_menu_overlay_function(menu_beeper_pianokeyboard_overlay);
+
+	menu_beeper_pianokeyboard_overlay_window=ventana; 
+
+
+	int valor_contador_segundo_anterior;
+
+	valor_contador_segundo_anterior=contador_segundo;
+
+	z80_byte tecla=0;
 
    do {
 
                 //esto hara ejecutar esto 2 veces por segundo
                 //if ( (contador_segundo%500) == 0 || menu_multitarea==0) {
-								if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-										valor_contador_segundo_anterior=contador_segundo;
+		if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+				valor_contador_segundo_anterior=contador_segundo;
 
 										//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
-
-
-
 			if (menu_multitarea==0) menu_refresca_pantalla();
 
-                }
+		}
 
-                menu_cpu_core_loop();
-                //acumulado=menu_da_todas_teclas();
+		menu_cpu_core_loop();
+		//acumulado=menu_da_todas_teclas();
 
-                //si no hay multitarea, esperar tecla y salir
-                if (menu_multitarea==0) {
-                        menu_espera_tecla();
+		//si no hay multitarea, esperar tecla y salir
+		if (menu_multitarea==0) {
+				menu_espera_tecla();
 
-                        //acumulado=0;
-                }
+				//acumulado=0;
+		}
 
-				//tecla=menu_get_pressed_key();
-				tecla=zxvision_read_keyboard();
+		//tecla=menu_get_pressed_key();
+		tecla=zxvision_read_keyboard();
 
-				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
-				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
-				if (tecla==13) tecla=0;
+		//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+		//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+		if (tecla==13) tecla=0;
 
         //} while (  (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && tecla==0)  ;
 
-		} while (tecla!=2 && tecla!=3);										
+	} while (tecla!=2 && tecla!=3);										
 
       
 
 
-       //restauramos modo normal de texto de menu
-       set_menu_overlay_function(normal_overlay_texto_menu);
+	//restauramos modo normal de texto de menu
+	set_menu_overlay_function(normal_overlay_texto_menu);
 
 
-        cls_menu_overlay();
+	cls_menu_overlay();
 
 	util_add_window_geometry_compact("wavepiano",ventana);		
 
 
-        if (tecla==3) {
-                //zxvision_ay_registers_overlay
-                ventana->overlay_function=menu_beeper_pianokeyboard_overlay;
-                //printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
-				menu_generic_message_splash("Background task","OK. Window put in background");
-        }
+	if (tecla==3) {
+		//zxvision_ay_registers_overlay
+		ventana->overlay_function=menu_beeper_pianokeyboard_overlay;
+		//printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+		menu_generic_message_splash("Background task","OK. Window put in background");
+	}
 
-        else {
-		
+	else {
+	
 		zxvision_destroy_window(ventana);
 
 	}

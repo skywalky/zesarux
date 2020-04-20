@@ -4860,8 +4860,8 @@ void zxvision_window_delete_this_window_no_free_mem(zxvision_window *ventana)
 		//Si era la de arriba del todo, hacer que apunte a la anterior. Esto tambien cumple el caso de ser la unica ventana
 		if (zxvision_current_window==ventana) {
 			zxvision_current_window=prev_to_ventana;
-			printf ("Somos la de arriba\n");
-			printf ("Current: %p\n",zxvision_current_window);
+			//printf ("Somos la de arriba\n");
+			//printf ("Current: %p\n",zxvision_current_window);
 			//sleep(5);
 		}
 
