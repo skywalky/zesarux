@@ -51,14 +51,8 @@ O esta considerando mal el mostrar barras desplazamiento: quizá deberían salir
 -Ventana scanf con texto descriptivo dentro
 
 ----Background windows
--activarlas con: int menu_allow_background_windows=1;
--Si ventana en background, no dejar volverla a llamar desde menu normal
--NO. Se permiten varias. Solo funciona una ventana a la vez con pixel (por ejemplo ay piano y wave piano)
-Ademas los pixeles siempre van a la ultima ventana arriba 
 
--ultima ventana de arriba deberia salir como activa
--poder conmutar ventana activa
--Ventanas que se pueden enviar a background que tengan un botón  especial ? Quizá el &? 
+-Ventanas que se pueden enviar a background tienen un botón adicional "!"
 -menu ventanas finalizan con:
 	if (tecla==3) {
 		//zxvision_ay_registers_overlay
@@ -79,7 +73,6 @@ if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 de tal manera que solo llame a normal_overlay de texto cuando no estan en background
 
 
-
 -ventanas que usan background tienen que referenciar a la ventana activa teniendo la estructura fuera de la funcion,
 al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego usar variable "ventana" como puntero a ahí
 -ventanas en background activan flag can_be_backgrounded de ventana
@@ -88,17 +81,13 @@ al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego
 
 -Se llaman a todas las funciones de overlay de las ventanas en background desde la función de overlay de menú normal_overlay_texto_menu
 
--Pendiente:
--si se abre una ventana que ya estaba en background, que hacemos? ahora mismo lo que hace es colgarse
-Tendria que haber algun flag antes que indique que esta en background y al abrirse lo detecte
 
 
 Ideas para background windows:
 
 -todo lo que sale de settings no tiene sentido enviar a background-> son menús puros
--opción para desactivar completamente el background
 -una ventana que se abre:
-**si estaba ya en background, se pone arriba del todo
+**si estaba ya en background, la cierra y aparece de nuevo en foreground
 
 -putpixel en una ventana no debe mostrarse si hay otra encima: para esto tendria que haber un buffer 
 de pixel dentro de cada ventana, y que se hiciera:
@@ -106,8 +95,6 @@ de pixel dentro de cada ventana, y que se hiciera:
 *problema del uso de memoria: una ventana pequeña de 256x192, con int (32 bit) de color, ocuparia 200 kb. El doble ya ocuparia 1 MB
 *por cada ventana podria tener una media de 1 MB de espacio ocupado, relativamente no es mucho
 *alternativa a esto? 
-
-
 
 
 

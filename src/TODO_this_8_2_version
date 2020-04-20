@@ -280,6 +280,3 @@ no se mueven las barras  (o bien se mueven pero luego se redibujan encima sin mo
 
 Decir que para cerrar una y/o pasar a foreground, seleccionarla de nuevo desde el menu
 
--menu watches, al pasarla a background, se pone encima la de debug cpu, y hace que se pierda el watches al cerrar debug cpu:
-o sea, pasar una ventana a background solo funciona si esa ventana no tenia otra detras que no fuera de foreground
-->en este caso en watches se corrige cerrando la ventana actual (debug cpu) al abrir watches, y reabriendola de nuevo al volver

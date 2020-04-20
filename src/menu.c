@@ -1353,7 +1353,11 @@ mayusculas + tecla ";"
 
 */
 
-
+int menu_pressed_background_key(void)
+{
+	if ((puerto_especial3&1)==0) return 1;
+	else return 0;	
+}
 
 z80_byte menu_get_pressed_key_no_modifier(void)
 {
@@ -1366,7 +1370,7 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 	//Por tanto si se pulsa ESC, hay que leer como tal ESC antes que el resto de teclas (Espacio o Shift)
 	if ((puerto_especial1&1)==0) return 2;
 
-	if ((puerto_especial3&1)==0 && menu_allow_background_windows) return 3; //Tecla background F6
+	if (menu_pressed_background_key() && menu_allow_background_windows) return 3; //Tecla background F6
 
 	tecla=menu_get_key_array(puerto_65022,menu_array_keys_65022);
 	if (tecla) return tecla;
@@ -23377,6 +23381,10 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] Background windows",(menu_allow_background_windows ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_window_settings,"EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
+
+		if (menu_allow_background_windows) {
+			//definir tecla
+		}
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Restore all windows positions and sizes to their default values");
