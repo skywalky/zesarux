@@ -3510,6 +3510,8 @@ int util_write_configfile(void)
 
   if (menu_invert_mouse_scroll.v)             ADD_STRING_CONFIG,"--invert-menu-mouse-scroll");
 
+  if (menu_allow_background_windows)          ADD_STRING_CONFIG,"--allow-background-windows");
+                     
 
                                               ADD_STRING_CONFIG,"--menu-mix-method \"%s\"",screen_menu_mix_methods_strings[screen_menu_mix_method]);
 
@@ -5748,6 +5750,7 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
         //printf ("reseteamos mouse_pressed_close_window desde utils ventana\n");
         //puerto_especial1 |=1;
         mouse_pressed_close_window=0;
+        mouse_pressed_background_window=0;
 
       }
     break;

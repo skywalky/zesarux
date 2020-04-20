@@ -68,6 +68,9 @@ struct s_zxvision_window {
 	int is_minimized;
 	int is_maximized;
 
+	//Si boton de background aparece en ventana. Nota: en principio F6 funciona aunque esto no se establezca
+	int can_be_backgrounded;
+
 	int height_before_max_min_imize;
 	int width_before_max_min_imize;
 	int x_before_max_min_imize;
@@ -229,11 +232,14 @@ extern void zxvision_draw_window_contents_no_speech(zxvision_window *ventana);
 extern int zxvision_wait_until_esc(zxvision_window *w);
 
 extern void zxvision_draw_overlay_if_exists(zxvision_window *w);
-extern void menu_draw_background_windows_overlay(void);
+//extern void menu_draw_background_windows_overlay(void);
 
 extern void zxvision_window_move_this_window_on_top(zxvision_window *ventana);
 extern int zxvision_if_window_already_exists(zxvision_window *w);
 extern void zxvision_window_delete_this_window(zxvision_window *ventana);
+extern zxvision_window *zxvision_return_n_window_from_top(int indice);
+extern void zxvision_redraw_all_windows(void);
+extern void zxvision_delete_window_if_exists(zxvision_window *ventana);
 
 #define MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH 128
 
@@ -258,7 +264,7 @@ extern void zxvision_send_scroll_left(zxvision_window *w);
 extern void zxvision_send_scroll_right(zxvision_window *w);
 
 extern void zxvision_draw_below_windows(zxvision_window *w);
-extern void zxvision_draw_below_windows_with_overlay(zxvision_window *w);
+extern void zxvision_draw_overlays_below_windows(zxvision_window *w);
 extern void zxvision_clear_window_contents(zxvision_window *w);
 
 extern void zxvision_set_not_resizable(zxvision_window *w);

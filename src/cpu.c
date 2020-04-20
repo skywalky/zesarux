@@ -1729,6 +1729,7 @@ printf (
 		"--hide-menu-minimize-button Hides minimize button on the title window\n"
 		"--hide-menu-close-button    Hides close button on the title window\n"
 		"--invert-menu-mouse-scroll  Inverts mouse scroll movement\n"
+		"--allow-background-windows  Allow puttin windows in background\n"
 		);
 
 	printf (
@@ -6391,6 +6392,10 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--invert-menu-mouse-scroll")) {
                                 menu_invert_mouse_scroll.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--allow-background-windows")) {
+                                menu_allow_background_windows=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--realvideo")) {

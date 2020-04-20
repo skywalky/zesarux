@@ -1845,20 +1845,7 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
     //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
     //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-    if (zxvision_if_window_already_exists(ventana)) {
-        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
-
-        
-        //zxvision_window_move_this_window_on_top(ventana);
-
-        //return;
-
-               //La quitamos de background. TODO: liberar memoria
-               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
-               //que no se ha borrado, pero esta nueva escribe encima y no se nota
-               menu_generic_message_splash("Background task","OK. Window removed from background");
-               zxvision_window_delete_this_window(ventana);		
-    }   
+    zxvision_delete_window_if_exists(ventana);
 
 		
 		
@@ -1867,6 +1854,7 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 	zxvision_new_window(ventana,originx,1,32,18,
 							31,16,"CPU Compact Statistics");
+	ventana->can_be_backgrounded=1;	
 	zxvision_draw_window(ventana);
 		
 
@@ -2666,21 +2654,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
     //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
     //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-    if (zxvision_if_window_already_exists(ventana)) {
-        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
-
-        
-        //zxvision_window_move_this_window_on_top(ventana);
-
-        //return;
-
-               //La quitamos de background. TODO: liberar memoria
-               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
-               //que no se ha borrado, pero esta nueva escribe encima y no se nota
-               menu_generic_message_splash("Background task","OK. Window removed from background");
-               zxvision_window_delete_this_window(ventana);
-
-    }   
+	zxvision_delete_window_if_exists(ventana);
 
 
 		int total_chips=ay_retorna_numero_chips();
@@ -2716,6 +2690,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 
 		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"AY Registers");
+		ventana->can_be_backgrounded=1;	
 
 		zxvision_draw_window(ventana);		
 
@@ -2763,7 +2738,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 }
 
 
-
+/*
 void menu_draw_background_windows(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
@@ -2779,7 +2754,7 @@ void menu_draw_background_windows(MENU_ITEM_PARAMETERS)
 		return;
 	}
 
-                //zxvision_window *ventana;
+                //zxvision_window *ventana; 
                 //ventana=zxvision_current_window;
 
 	//Metemos funcion de overlay que se encarga de repintar ventanas de debajo con overlay
@@ -2805,7 +2780,7 @@ void menu_draw_background_windows(MENU_ITEM_PARAMETERS)
 
 
 }
-
+*/
 
 
 void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
@@ -4221,20 +4196,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
 	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
 	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-	if (zxvision_if_window_already_exists(ventana)) {
-		printf ("Window already exists! We are possibly running on background. Make this the top window\n");
-		//sleep(2);
-		
-		//zxvision_window_move_this_window_on_top(ventana);
-
-		//return;
-
-		//La quitamos de background. TODO: liberar memoria
-		//TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
-		//que no se ha borrado, pero esta nueva escribe encima y no se nota
-		menu_generic_message_splash("Background task","OK. Window removed from background");
-		zxvision_window_delete_this_window(ventana);
-	}
+	zxvision_delete_window_if_exists(ventana);
 
 	int x,y,ancho,alto;
 
@@ -4248,6 +4210,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	//printf("despues util_find_window_geometry\n");
 
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Waveform");
+	ventana->can_be_backgrounded=1;	
 	//printf("despues zxvision_new_window_nocheck_staticsize\n");
 	zxvision_draw_window(ventana);		
 
@@ -4803,21 +4766,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
 	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
 	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-	if (zxvision_if_window_already_exists(ventana)) {
-		printf ("Window already exists! We are possibly running on background. Make this the top window\n");
-		//sleep(2);
-		
-		//zxvision_window_move_this_window_on_top(ventana);
-
-		//return;
-
-		//La quitamos de background. TODO: liberar memoria
-		//TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
-		//que no se ha borrado, pero esta nueva escribe encima y no se nota
-		menu_generic_message_splash("Background task","OK. Window removed from background");
-		zxvision_window_delete_this_window(ventana);
-
-	}	
+	zxvision_delete_window_if_exists(ventana);	
 
 	int x,y,ancho,alto;
 
@@ -4831,6 +4780,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Visual memory");
+	ventana->can_be_backgrounded=1;	
 	zxvision_draw_window(ventana);				
 
 
@@ -5399,11 +5349,14 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,"AY Player");
-	zxvision_draw_window(&ventana);			
+
+	zxvision_draw_window(&ventana);	
+
+	
 
 
         //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de audio waveform
+        //Se establece a la de funcion de audio ay player
 	set_menu_overlay_function(menu_audio_new_ayplayer_overlay);
 
 
@@ -10965,22 +10918,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
     //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
     //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-    if (zxvision_if_window_already_exists(ventana)) {
-        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
-
-        
-        //zxvision_window_move_this_window_on_top(ventana);
-
-        //return;
-
-               //La quitamos de background. TODO: liberar memoria
-               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
-               //que no se ha borrado, pero esta nueva escribe encima y no se nota
-               menu_generic_message_splash("Background task","OK. Window removed from background");
-               zxvision_window_delete_this_window(ventana);		
-
-
-    }   
+	zxvision_delete_window_if_exists(ventana);
 
 	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
 
@@ -10998,6 +10936,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,64,64+2,"Sprites");
+	ventana->can_be_backgrounded=1;	
 
 	zxvision_draw_window(ventana);
 
@@ -13164,7 +13103,7 @@ void menu_watches_overlay_mostrar_texto(void)
 void menu_watches_overlay(void)
 {
 
-    normal_overlay_texto_menu();
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
  	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
@@ -13195,6 +13134,7 @@ void menu_watches_edit(MENU_ITEM_PARAMETERS)
 
 
 
+zxvision_window zxvision_window_watches;
 
 void menu_watches(void)
 {
@@ -13213,6 +13153,15 @@ void menu_watches(void)
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
+    zxvision_window *ventana;
+    ventana=&zxvision_window_watches;
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);
+
+
     int xventana,yventana;
     int ancho_ventana,alto_ventana;	
 
@@ -13227,17 +13176,16 @@ void menu_watches(void)
 
 
 
-	zxvision_window ventana;
-
-	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Watches");
-	zxvision_draw_window(&ventana);		
+	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Watches");
+	ventana->can_be_backgrounded=1;	
+	zxvision_draw_window(ventana);		
 
 
 
     //Cambiamos funcion overlay de texto de menu
     set_menu_overlay_function(menu_watches_overlay);
 
-	menu_watches_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui	
+	menu_watches_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui	
 
     menu_item *array_menu_watches_settings;
     menu_item item_seleccionado;
@@ -13288,6 +13236,8 @@ void menu_watches(void)
 
     retorno_menu=menu_dibuja_menu(&menu_watches_opcion_seleccionada,&item_seleccionado,array_menu_watches_settings,"Watches" );
 
+	if (retorno_menu!=MENU_RETORNO_BACKGROUND) {
+
 	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
         cls_menu_overlay();
 
@@ -13308,26 +13258,38 @@ void menu_watches(void)
                                 item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
 
 								set_menu_overlay_function(menu_watches_overlay);
-								zxvision_clear_window_contents(&ventana); //limpiar de texto anterior en linea de watch
-								zxvision_draw_window(&ventana);
+								zxvision_clear_window_contents(ventana); //limpiar de texto anterior en linea de watch
+								zxvision_draw_window(ventana);
 
 
 				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
                                 
                         }
                 }
+	}
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);
 
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
 
 	   cls_menu_overlay();
 
-	util_add_window_geometry_compact("watches",&ventana);	   
+	util_add_window_geometry_compact("watches",ventana);	   
 
-	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
-	zxvision_destroy_window(&ventana);			   
+
+	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
+        ventana->overlay_function=menu_watches_overlay;
+        printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+        menu_generic_message_splash("Background task","OK. Window put in background");
+    }
+
+    else {	
+
+		//En caso de menus tabulados, es responsabilidad de este de liberar ventana
+		zxvision_destroy_window(ventana);			   
+
+	}
 
 
 }
@@ -14756,7 +14718,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }										
 
 				if (tecla=='w') {
+					//La cerramos pues el envio de watches a background no funciona bien si hay otra ventana detras
+					zxvision_destroy_window(&ventana);
                     menu_watches();
+					menu_debug_registers_zxvision_ventana(&ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                 }
@@ -15041,7 +15006,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					int antes_menu_multitarea=menu_multitarea;
 					menu_multitarea=0;
 
+					//La cerramos pues el envio de watches a background no funciona bien si hay otra ventana detras
+					zxvision_destroy_window(&ventana);
                     menu_watches();
+					menu_debug_registers_zxvision_ventana(&ventana);					
 
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -16299,20 +16267,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
     //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
     //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-    if (zxvision_if_window_already_exists(ventana)) {
-        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
-
-        
-        //zxvision_window_move_this_window_on_top(ventana);
-
-        //return;
-
-               //La quitamos de background. TODO: liberar memoria
-               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
-               //que no se ha borrado, pero esta nueva escribe encima y no se nota
-               menu_generic_message_splash("Background task","OK. Window removed from background");
-               zxvision_window_delete_this_window(ventana);		
-    }   
+	zxvision_delete_window_if_exists(ventana);
 
 
 		int xventana,yventana,ancho_ventana,alto_ventana;
@@ -16346,6 +16301,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 		zxvision_new_window_nocheck_staticsize(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
+		ventana->can_be_backgrounded=1;	
 
 		zxvision_draw_window(ventana);	
 
@@ -19735,6 +19691,78 @@ void menu_unpaws_ungac(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_display_window_list_item(MENU_ITEM_PARAMETERS)
+{
+	//en valor_opcion, numero entrada
+
+    int tipo=menu_simple_two_choices("Action","Do you want to","Move to top","Close");
+
+    if (tipo==0) return; //ESC	
+
+
+	zxvision_window *ventana;
+
+	ventana=zxvision_return_n_window_from_top(valor_opcion);
+
+	if (ventana==NULL) {
+		menu_error_message("Can not find that window");
+		return;
+	}
+
+	if (tipo==1) zxvision_window_move_this_window_on_top(ventana);
+	else zxvision_window_delete_this_window(ventana);
+}
+
+
+void menu_display_window_list(MENU_ITEM_PARAMETERS)
+{
+        //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+        menu_item *array_menu_common;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+	do {
+
+
+		menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+		zxvision_window *ventana=zxvision_current_window;
+
+		int total_ventanas=0;
+
+		while (ventana!=NULL) {
+
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_list_item,NULL,"%s",ventana->window_title);
+			menu_add_item_menu_valor_opcion(array_menu_common,total_ventanas);
+
+			total_ventanas++;
+
+			ventana=ventana->previous_window;
+			
+		}
+
+		if (!total_ventanas) menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"(Empty)");
+
+		menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		menu_add_ESC_item(array_menu_common);
+
+		retorno_menu=menu_dibuja_menu(&network_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window manage");
+
+			
+			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+					//llamamos por valor de funcion
+					if (item_seleccionado.menu_funcion!=NULL) {
+							//printf ("actuamos por funcion\n");
+							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+							
+					}
+			}
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
 
 //menu display settings
 void menu_display_settings(MENU_ITEM_PARAMETERS)
@@ -19806,7 +19834,12 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 					"It can detect words on games written with Quill, Paws, DAAD, and GAC");
 			}
 
-   
+
+			if (menu_allow_background_windows) {
+				menu_add_item_menu(array_menu_display_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_window_list,NULL,"Window manage");
+			}
+
  
 
                 menu_add_item_menu(array_menu_display_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -20372,21 +20405,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
     //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
     //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-    if (zxvision_if_window_already_exists(ventana)) {
-        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
-
-        
-        //zxvision_window_move_this_window_on_top(ventana);
-
-        //return;
-
-               //La quitamos de background. TODO: liberar memoria
-               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
-               //que no se ha borrado, pero esta nueva escribe encima y no se nota
-               menu_generic_message_splash("Background task","OK. Window removed from background");
-               zxvision_window_delete_this_window(ventana);
-
-    }   
+	zxvision_delete_window_if_exists(ventana);
 
 
 		int xventana,yventana,ancho_ventana,alto_ventana;
@@ -20485,6 +20504,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
+		ventana->can_be_backgrounded=1;	
 
 		zxvision_draw_window(ventana);						
 
@@ -20676,20 +20696,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
     //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
     //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-    if (zxvision_if_window_already_exists(ventana)) {
-        printf ("Window already exists! We are possibly running on background. Make this the top window\n");
-
-        
-        //zxvision_window_move_this_window_on_top(ventana);
-
-        //return;
-
-               //La quitamos de background. TODO: liberar memoria
-               //TODO: redibujar todas las ventanas. Dado que la nueva recupera la misma geometria que habia, se dibuja encima de la vieja,
-               //que no se ha borrado, pero esta nueva escribe encima y no se nota
-               menu_generic_message_splash("Background task","OK. Window removed from background");
-               zxvision_window_delete_this_window(ventana);		
-    }   
+	zxvision_delete_window_if_exists(ventana);
 
 
 
@@ -20731,6 +20738,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
+		ventana->can_be_backgrounded=1;	
 
 		zxvision_draw_window(ventana);						
 
