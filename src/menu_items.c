@@ -19721,6 +19721,8 @@ void menu_display_window_list(MENU_ITEM_PARAMETERS)
         menu_item item_seleccionado;
         int retorno_menu;
 
+		int comun_opcion_seleccionada=0;
+
 	do {
 
 
@@ -19747,7 +19749,7 @@ void menu_display_window_list(MENU_ITEM_PARAMETERS)
 
 		menu_add_ESC_item(array_menu_common);
 
-		retorno_menu=menu_dibuja_menu(&network_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window manage");
+		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window manage");
 
 			
 			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {

@@ -1342,6 +1342,26 @@ void codetests_open_sockets_infinite(void)
 #endif
 
 
+
+void codetests_get_background_f_key(void)
+{
+
+  
+	int i;
+
+	for (i=1;i<=10;i++) {
+		tecla_f_background=i;
+
+		z80_byte *puntero;
+		int mascara;
+
+		puntero=menu_get_port_puerto_especial(tecla_f_background);
+		mascara=menu_get_mask_puerto_especial(tecla_f_background);
+
+		printf ("puerto: %p mascara: %d\n",puntero,mascara);
+	}
+}
+
 void codetests_tbblue_set_ram_blocks(void)
 {
 
@@ -1434,6 +1454,10 @@ void codetests_main(int main_argc,char *main_argv[])
 
 	printf ("\nRunning code tests tbblue_set_ram_blocks\n");
 	codetests_tbblue_set_ram_blocks();
+
+
+	printf ("\nRunning getting background F-key\n");
+	codetests_get_background_f_key();
 
 	exit(0);
 }

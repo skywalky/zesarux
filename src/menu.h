@@ -242,6 +242,10 @@ extern void zxvision_redraw_all_windows(void);
 extern void zxvision_delete_window_if_exists(zxvision_window *ventana);
 extern int zxvision_window_can_be_backgrounded(zxvision_window *w);
 
+extern int tecla_f_background;
+extern int menu_get_mask_puerto_especial(int tecla_f);
+extern z80_byte *menu_get_port_puerto_especial(int tecla_f);
+
 #define MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH 128
 
 extern void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,int indice,int opcion_actual,int opcion_activada,char *texto_entrada);
