@@ -1895,7 +1895,24 @@ int menu_si_pulsada_tecla_osd(void)
 {
 	if (menu_button_osdkeyboard.v) {
 		//debug_printf(VERBOSE_DEBUG,"Pressed OSD default key");
-		return 1;
+
+		//Pero siempre que esa funcion no este asignada a otra cosa
+		//Esto es necesario en F8 pues dicha funcion es accesible desde menu, a diferencia de las demas,
+		//que solo actuan con menu cerrado
+		
+
+		int indice=8-1; //tecla F8
+		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+		if (accion!=F_FUNCION_OSDKEYBOARD && accion!=F_FUNCION_DEFAULT) {
+
+			//probablemente aqui solo entra cuando F8 se asigna a backgroundwindow, pues esa funcion no abre el menu
+			//printf ("Asignada F8 a otra cosa\n");
+			//sleep(5);
+			menu_button_osdkeyboard.v=0;
+			return 0;
+		}
+
+		else return 1;
 	}
 
 	if (menu_button_f_function.v==0) return 0;
