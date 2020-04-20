@@ -6099,7 +6099,8 @@ int util_set_reset_key_continue_f_functions(enum util_teclas tecla,int pressrele
 
   debug_printf (VERBOSE_DEBUG,"Key: F%d Action: %s",indice+1,defined_f_functions_array[accion].texto_funcion);
 
-  if (accion!=F_FUNCION_DEFAULT) {
+  //Abrir menu si funcion no es defecto y no es background window
+  if (accion!=F_FUNCION_DEFAULT && accion!=F_FUNCION_BACKGROUND_WINDOW) {
     if (pressrelease) {
       //Activar funcion f en menu
       menu_button_f_function.v=1;

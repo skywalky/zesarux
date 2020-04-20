@@ -191,7 +191,8 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"DebugCPU",F_FUNCION_DEBUGCPU},
 	{"Pause",F_FUNCION_PAUSE},
 	{"TopSpeed",F_FUNCION_TOPSPEED},
-	{"ExitEmulator",F_FUNCION_EXITEMULATOR}
+	{"ExitEmulator",F_FUNCION_EXITEMULATOR},
+	{"BackgroundWindow",F_FUNCION_BACKGROUND_WINDOW}
 };
 
 //Funciones de teclas F mapeadas. Desde F1 hasta F15
