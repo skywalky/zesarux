@@ -1427,7 +1427,7 @@ z80_byte menu_get_pressed_key(void)
 	}
 
 	if (mouse_pressed_background_window) {
-		printf ("pulsado background en menu_get_pressed_key\n");
+		//printf ("pulsado background en menu_get_pressed_key\n");
 		//sleep(5);		
 		return 3; //Como F6 background
 	}	
@@ -4329,7 +4329,7 @@ int menu_da_ancho_titulo(char *titulo)
 		int ancho_total=strlen(titulo)+ancho_boton_cerrar+ancho_franjas_color+margen_adicional; //+1 de margen, para que no se pegue el titulo
 
 		if (zxvision_window_can_be_backgrounded(zxvision_current_window)) {
-			printf ("Sumamos 1\n");
+			//printf ("Sumamos 1\n");
 			//sleep(5);
 			ancho_total++;
 		}
@@ -4639,7 +4639,7 @@ zxvision_window *zxvision_find_first_window_below_this(zxvision_window *w)
 	pointer_window=w;
 
 	while (pointer_window->previous_window!=NULL) {
-		printf ("zxvision_find_first_window. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
+		//printf ("zxvision_find_first_window. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
 		pointer_window=pointer_window->previous_window;
 	}
 
@@ -5048,7 +5048,7 @@ z80_byte zxvision_read_keyboard(void)
 
 	//Si pulsado boton background ventana, enviar tecla background
 	if (mouse_pressed_background_window) {
-		printf ("pulsado background en zxvision_read_keyboard\n");
+		//printf ("pulsado background en zxvision_read_keyboard\n");
 		//sleep(5);
 		return 3;
 	}	
@@ -6409,14 +6409,7 @@ void zxvision_draw_below_windows(zxvision_window *w)
         //printf ("\noriginal window: %p. Title: %s\n",w,w->window_title);
 
 
-	/*
-	pointer_window=w;
 
-	while (pointer_window->previous_window!=NULL) {
-		printf ("zxvision_draw_below_windows. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
-		pointer_window=pointer_window->previous_window;
-	}
-	*/
 
 	pointer_window=zxvision_find_first_window_below_this(w);
 
@@ -6450,22 +6443,11 @@ void zxvision_draw_below_windows(zxvision_window *w)
 	no_dibuja_ventana_muestra_pending_error_message=1;
 
 	while (pointer_window!=w && pointer_window!=NULL) {
-		printf ("window from bottom to top %p\n",pointer_window);
-		printf ("window from bottom to top %p. name: %s\n",pointer_window,pointer_window->window_title);
+		//printf ("window from bottom to top %p\n",pointer_window);
+		//printf ("window from bottom to top %p. name: %s\n",pointer_window,pointer_window->window_title);
 		
 		zxvision_draw_window(pointer_window);
-	        zxvision_draw_window_contents(pointer_window);
-
-		//Redibujar overlay de las ventanas en background
-		/*
-		if (menu_allow_background_windows) {
-			printf ("Redibujar overlay ventana de debajo desde zxvision_draw_below_windows\n");
-			zxvision_drawing_in_background=1;
-			zxvision_draw_overlay_if_exists(pointer_window);
-			zxvision_drawing_in_background=0;
-
-		}
-		*/
+	    zxvision_draw_window_contents(pointer_window);
 
 
 		pointer_window=pointer_window->next_window;
@@ -6474,11 +6456,7 @@ void zxvision_draw_below_windows(zxvision_window *w)
 
 	no_dibuja_ventana_muestra_pending_error_message=antes_no_dibuja_ventana_muestra_pending_error_message;
 
-	//printf ("Stop loop redrawing below windows\n\n");	
 
-	//if (pointer_window==NULL) {
-	//	printf ("Pointer was null redrawing below windows\n");
-	//}
 
 	ventana_es_background=0;
 	ventana_tipo_activa=antes_ventana_tipo_activa;
@@ -6494,13 +6472,13 @@ void zxvision_draw_overlay_if_exists(zxvision_window *w)
 		void (*overlay_function)(void);
 		overlay_function=w->overlay_function;
 
-		printf ("Funcion overlay: %p. current window: %p\n",overlay_function,zxvision_current_window);		
+		//printf ("Funcion overlay: %p. current window: %p\n",overlay_function,zxvision_current_window);		
 
 
 		//Esto pasa en ventanas que por ejemplo actualizan no a cada frame, al menos refrescar aqui con ultimo valor				
 
 		if (overlay_function!=NULL) {
-			printf ("llamando a funcion overlay %p\n",overlay_function);
+			//printf ("llamando a funcion overlay %p\n",overlay_function);
 			
 			overlay_function(); //llamar a funcion overlay
 		}
@@ -6537,7 +6515,7 @@ void zxvision_draw_overlays_below_windows(zxvision_window *w)
 	//Y ahora de ahi hacia arriba, incluido la ultima
 
 
-	printf ("\n");
+	//printf ("\n");
 
 	zxvision_drawing_in_background=1;
 
@@ -6548,7 +6526,7 @@ void zxvision_draw_overlays_below_windows(zxvision_window *w)
 	//Dibujar todas ventanas. 
 	while (pointer_window!=NULL) {
 		//while (pointer_window!=w) {
-				printf ("window from bottom to top %p. next: %p nombre: %s\n",pointer_window,pointer_window->next_window,pointer_window->window_title);
+				//printf ("window from bottom to top %p. next: %p nombre: %s\n",pointer_window,pointer_window->next_window,pointer_window->window_title);
 
 		//Somos la ventana de mas arriba 
 		if (pointer_window==w) {
@@ -8192,7 +8170,7 @@ z80_byte menu_da_todas_teclas(void)
 
 	//Boton background ventana
 	if (mouse_pressed_background_window) {
-		printf ("pulsado background en menu_da_todas_teclas\n");
+		//printf ("pulsado background en menu_da_todas_teclas\n");
 		//sleep(5);		
 		acumulado |=1;
 	}	
@@ -9687,7 +9665,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 			}
 
 			else if (tecla_leida==3) {
-				printf("Pressed background key on menu\n");
+				//printf("Pressed background key on menu\n");
 				tecla=MENU_RETORNO_BACKGROUND;
 			}
 

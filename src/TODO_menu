@@ -82,6 +82,7 @@ de tal manera que solo llame a normal_overlay de texto cuando no estan en backgr
 
 -ventanas que usan background tienen que referenciar a la ventana activa teniendo la estructura fuera de la funcion,
 al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego usar variable "ventana" como puntero a ahí
+-ventanas en background activan flag can_be_backgrounded de ventana
 
 -desde menu al pulsar background se retorna MENU_RETORNO_BACKGROUND
 

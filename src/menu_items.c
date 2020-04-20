@@ -1890,7 +1890,7 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 	if (tecla==3) {
 		//zxvision_ay_registers_overlay
 		ventana->overlay_function=menu_debug_cpu_resumen_stats_overlay;
-		printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+		//printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
 		menu_generic_message_splash("Background task","OK. Window put in background");
 	}
 
@@ -2727,7 +2727,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 	if (tecla==3) {
 		//zxvision_ay_registers_overlay
 		ventana->overlay_function=menu_ay_registers_overlay;
-		printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+		//printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
 		menu_generic_message_splash("Background task","OK. Window put in background");
 	}
 
@@ -4275,7 +4275,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
                 //zxvision_ay_registers_overlay
                 ventana->overlay_function=menu_audio_draw_sound_wave;
-                printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+                //printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
 				menu_generic_message_splash("Background task","OK. Window put in background");
 	}
 
@@ -4886,7 +4886,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
                 //zxvision_ay_registers_overlay
                 ventana->overlay_function=menu_debug_draw_visualmem;
-                printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+                //printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
 				menu_generic_message_splash("Background task","OK. Window put in background");
 	}
 
@@ -11133,7 +11133,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 	if (tecla==3) {
 		//zxvision_ay_registers_overlay
 		ventana->overlay_function=menu_debug_draw_sprites;
-		printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+		//printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
 		menu_generic_message_splash("Background task","OK. Window put in background");
 	}	
 
@@ -13280,7 +13280,7 @@ void menu_watches(void)
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
         ventana->overlay_function=menu_watches_overlay;
-        printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+        //printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
         menu_generic_message_splash("Background task","OK. Window put in background");
     }
 
@@ -16396,7 +16396,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
                 //zxvision_ay_registers_overlay
                 ventana->overlay_function=menu_ay_partitura_overlay;
-                printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+                //printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
 				menu_generic_message_splash("Background task","OK. Window put in background");
 	}
 
@@ -20577,7 +20577,7 @@ valor_contador_segundo_anterior=contador_segundo;
 	if (tecla==3) {
                 //zxvision_ay_registers_overlay
                 ventana->overlay_function=menu_ay_pianokeyboard_overlay;
-                printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+                //printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
 				menu_generic_message_splash("Background task","OK. Window put in background");
 	}
 
@@ -20809,7 +20809,7 @@ z80_byte tecla=0;
         if (tecla==3) {
                 //zxvision_ay_registers_overlay
                 ventana->overlay_function=menu_beeper_pianokeyboard_overlay;
-                printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
+                //printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
 				menu_generic_message_splash("Background task","OK. Window put in background");
         }
 
