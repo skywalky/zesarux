@@ -1381,24 +1381,47 @@ int menu_get_mask_puerto_especial(int tecla_f)
 }
 
 //Tecla F6 por defecto para hacer background
-z80_byte *puerto_tecla_background=&puerto_especial3;
-int mascara_tecla_background=1;
+//z80_byte *puerto_tecla_background=&puerto_especial3;
+//int mascara_tecla_background=1;
 
 
 int tecla_f_background=6; //F6 por defecto
 
+int menu_get_defined_f_key_background(void)
+{
+	int tecla_f_definida=6; //F6 por defecto
+
+
+	//Buscar en el array de defined_f_functions_keys_array a ver si encontramos alguna definida como F_FUNCION_BACKGROUND_WINDOW
+	int i;
+
+  for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {
+    enum defined_f_function_ids accion=defined_f_functions_keys_array[i];
+    if (accion==F_FUNCION_BACKGROUND_WINDOW) return i+1; //posicion 0 es F1
+  }	
+
+  return tecla_f_definida;
+	
+}
+
 z80_byte menu_get_port_value_background_key(void)
 {
 	z80_byte *puntero;
+
+
+	int tecla_f=menu_get_defined_f_key_background();
 	
-	puntero=menu_get_port_puerto_especial(tecla_f_background);
+	puntero=menu_get_port_puerto_especial(tecla_f);
 
 	return *puntero;
 }
 
 int menu_get_mask_value_background_key(void)
 {
-	return menu_get_mask_puerto_especial(tecla_f_background);
+
+	int tecla_f=menu_get_defined_f_key_background();
+
+	return menu_get_mask_puerto_especial(tecla_f);
 }
 
 int menu_pressed_background_key(void)
