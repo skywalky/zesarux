@@ -1350,13 +1350,14 @@ void codetests_get_background_f_key(void)
 	int i;
 
 	for (i=1;i<=10;i++) {
-		tecla_f_background=i;
+
 
 		z80_byte *puntero;
 		int mascara;
 
-		puntero=menu_get_port_puerto_especial(tecla_f_background);
-		mascara=menu_get_mask_puerto_especial(tecla_f_background);
+		puntero=menu_get_port_puerto_especial(i);
+		mascara=menu_get_mask_puerto_especial(i);
+
 
 		printf ("puerto: %p mascara: %d\n",puntero,mascara);
 	}

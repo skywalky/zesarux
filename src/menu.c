@@ -1380,12 +1380,7 @@ int menu_get_mask_puerto_especial(int tecla_f)
 	return mascara;
 }
 
-//Tecla F6 por defecto para hacer background
-//z80_byte *puerto_tecla_background=&puerto_especial3;
-//int mascara_tecla_background=1;
 
-
-int tecla_f_background=6; //F6 por defecto
 
 int menu_get_defined_f_key_background(void)
 {
@@ -23366,61 +23361,9 @@ void menu_interface_allow_background_windows(MENU_ITEM_PARAMETERS)
 	}
 }
 
-void menu_interface_define_background_windows_key_item(MENU_ITEM_PARAMETERS)
-{
-	tecla_f_background=valor_opcion;	
-
-	//Y asignar esa tecla a "nada" en set f-keys
-}
-
-void menu_interface_define_background_windows_key(MENU_ITEM_PARAMETERS)
-{
-
-        int comun_opcion_seleccionada=tecla_f_background-1;
-
-        //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
-        menu_item *array_menu_common;
-        menu_item item_seleccionado;
-        int retorno_menu;
-
-	//Solo pedirlo una vez
-	//do {
 
 
-		menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
-		int i;
-
-		for (i=1;i<=10;i++) {
-
-			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_interface_define_background_windows_key_item,NULL,"F%d",i);
-			menu_add_item_menu_valor_opcion(array_menu_common,i);
-
-			
-		}
-
-
-		menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-		menu_add_ESC_item(array_menu_common);
-
-		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Background F-key");
-
-			
-			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-					//llamamos por valor de funcion
-					if (item_seleccionado.menu_funcion!=NULL) {
-							//printf ("actuamos por funcion\n");
-							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-
-
-							
-					}
-			}
-	//Solo pedirlo una vez
-    //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-}
 
 
 void menu_window_settings(MENU_ITEM_PARAMETERS)
@@ -23510,10 +23453,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_window_settings,"EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
 
-		if (menu_allow_background_windows) {
-			//definir tecla
-			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_define_background_windows_key,NULL,"[F%d] Background windows key",tecla_f_background);
-		}
+
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Restore all windows positions and sizes to their default values");
