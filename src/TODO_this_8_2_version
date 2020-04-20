@@ -281,3 +281,4 @@ no se mueven las barras  (o bien se mueven pero luego se redibujan encima sin mo
 Decir que para cerrar una y/o pasar a foreground, seleccionarla de nuevo desde el menu
 
 -llamar F8 cuando redibuja background, se cuelga. Parece que tambien se cuelga si no hay activado ventanas en background
+Ok. revisar otros sitios que se use overlay_screen asignando en memoria

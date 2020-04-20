@@ -1800,7 +1800,12 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	menu_button_osdkeyboard.v=0; //Decir que no tecla osd pulsada, por si acaso
 	menu_button_f_function.v=0;
 
-	overlay_screen copia_overlay[OVERLAY_SCREEN_MAX_WIDTH*OVERLAY_SCREEN_MAX_HEIGTH];
+	//overlay_screen copia_overlay[OVERLAY_SCREEN_MAX_WIDTH*OVERLAY_SCREEN_MAX_HEIGTH];
+	overlay_screen *copia_overlay;
+
+	copia_overlay=malloc(sizeof(struct s_overlay_screen)*OVERLAY_SCREEN_MAX_WIDTH*OVERLAY_SCREEN_MAX_HEIGTH);
+
+	if (copia_overlay==NULL) cpu_panic("Can not allocate memory for OSD");
 
 	//Guardamos contenido de la pantalla
 	menu_save_overlay_text_contents(copia_overlay);
@@ -1863,6 +1868,7 @@ void menu_call_onscreen_keyboard_from_menu(void)
 
 	//Restaurar texto ventana
 	menu_restore_overlay_text_contents(copia_overlay);
+	free(copia_overlay);
 	
 	//Restaurar linea cuadrado ventana
 	cuadrado_activo=antes_cuadrado_activo;
