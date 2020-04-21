@@ -2783,7 +2783,175 @@ void menu_draw_background_windows(MENU_ITEM_PARAMETERS)
 */
 
 
-void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
+int menu_debug_tsconf_tbblue_videoregisters_valor_contador_segundo_anterior;
+
+zxvision_window *menu_debug_tsconf_tbblue_videoregisters_overlay_window;
+
+void menu_debug_tsconf_tbblue_videoregisters_overlay(void)
+{
+	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+
+	zxvision_window *ventana;
+
+	ventana=menu_debug_tsconf_tbblue_videoregisters_overlay_window;	
+
+//esto hara ejecutar esto 2 veces por segundo
+			if ( ((contador_segundo%500) == 0 && menu_debug_tsconf_tbblue_videoregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+											menu_debug_tsconf_tbblue_videoregisters_valor_contador_segundo_anterior=contador_segundo;
+				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+				int linea=0;
+				//int opcode;
+				//int sumatotal;
+
+
+	char texto_buffer[64];
+
+	char texto_buffer2[64];
+
+	//Empezar con espacio
+    texto_buffer[0]=' ';				
+
+
+				if (MACHINE_IS_TSCONF) {
+
+					int vpage_addr=tsconf_get_vram_page()*16384;
+
+					tsconf_get_current_video_mode(texto_buffer2);
+					sprintf (texto_buffer,"Video mode: %s",texto_buffer2);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+					
+					sprintf (texto_buffer,"Video addr: %06XH",vpage_addr);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Tile Map Page: %06XH",tsconf_return_tilemappage() );
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Tile 0 Graphics addr: %06XH",tsconf_return_tilegraphicspage(0) );
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Tile 1 Graphics addr: %06XH",tsconf_return_tilegraphicspage(1) );
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+
+					sprintf (texto_buffer,"Sprite Graphics addr: %06XH",tsconf_return_spritesgraphicspage() );
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+				}
+
+				if (MACHINE_IS_TBBLUE) {
+
+					//menu_escribe_linea_opcion(linea++,-1,1,"ULA Video mode:");		
+					zxvision_print_string_defaults(ventana,1,linea++,"ULA Video mode:");
+
+					//menu_escribe_linea_opcion(linea++,-1,1,get_spectrum_ula_string_video_mode() );
+					zxvision_print_string_defaults(ventana,1,linea++,get_spectrum_ula_string_video_mode() );
+
+					linea++;
+
+					//menu_escribe_linea_opcion(linea++,-1,1,"Palette format:");
+					//zxvision_print_string_defaults(&ventana,1,linea++,"Palette:");
+
+					tbblue_get_string_palette_format(texto_buffer2);
+					sprintf (texto_buffer,"Palette: %s",texto_buffer2);
+					
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					linea++;
+
+					/*
+					(R/W) 0x12 (18) => Layer 2 RAM page
+ bits 7-6 = Reserved, must be 0
+ bits 5-0 = SRAM page (point to page 8 after a Reset)
+
+(R/W) 0x13 (19) => Layer 2 RAM shadow page
+ bits 7-6 = Reserved, must be 0
+ bits 5-0 = SRAM page (point to page 11 after a Reset)
+					*/
+
+				//tbblue_get_offset_start_layer2_reg
+					sprintf (texto_buffer,"Layer 2 addr:        %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[18]) );
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Layer 2 shadow addr: %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[19]) );					
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Tilemap base addr:     %02X00H",0x40+tbblue_get_offset_start_tilemap() );					
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Tile definitions addr: %02X00H",0x40+tbblue_get_offset_start_tiledef() );					
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);					
+
+					sprintf (texto_buffer,"Tile width: %d columns",tbblue_get_tilemap_width() );					
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Tile bpp: %d", (tbblue_tiles_are_monocrome() ? 1 : 4)  );
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);							
+
+					/*
+					z80_byte clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][4];
+z80_byte clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][4];
+z80_byte clip_windows[TBBLUE_CLIP_WINDOW_ULA][4];
+z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
+					*/
+
+					linea++;
+					sprintf (texto_buffer,"Clip Windows:");
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Layer2:  X=%3d-%3d Y=%3d-%3d",
+					clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0],clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1],clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2],clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][3]);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+
+					sprintf (texto_buffer,"Sprites: X=%3d-%3d Y=%3d-%3d",
+					clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][0],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][1],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][2],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][3]);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+
+					sprintf (texto_buffer,"ULA:     X=%3d-%3d Y=%3d-%3d",
+					clip_windows[TBBLUE_CLIP_WINDOW_ULA][0],clip_windows[TBBLUE_CLIP_WINDOW_ULA][1],clip_windows[TBBLUE_CLIP_WINDOW_ULA][2],clip_windows[TBBLUE_CLIP_WINDOW_ULA][3]);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+
+					sprintf (texto_buffer,"Tilemap: X=%3d-%3d Y=%3d-%3d",
+					clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0]*2,clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1]*2+1,clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+
+
+					linea++;
+					sprintf (texto_buffer,"Offset Windows:");
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"Layer2:     X=%4d  Y=%3d",tbblue_registers[22],tbblue_registers[23]);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+
+					sprintf (texto_buffer,"ULA/LoRes:  X=%4d  Y=%3d",tbblue_registers[50],tbblue_registers[51]);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					//Offset X puede llegar hasta 1023. Por tanto 4 cifras. El resto X solo 3 cifras, pero los dejamos a 4 para que formato quede igual en pantalla
+					sprintf (texto_buffer,"Tilemap:    X=%4d  Y=%3d",tbblue_registers[48]+256*(tbblue_registers[47]&3),tbblue_registers[49]);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);					
+
+				}
+
+
+
+				zxvision_draw_window_contents(ventana);	
+			}
+}
+/*
+void old_menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 {
 
 	menu_espera_no_tecla();
@@ -2901,15 +3069,15 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 					linea++;
 
-					/*
-					(R/W) 0x12 (18) => Layer 2 RAM page
- bits 7-6 = Reserved, must be 0
- bits 5-0 = SRAM page (point to page 8 after a Reset)
-
-(R/W) 0x13 (19) => Layer 2 RAM shadow page
- bits 7-6 = Reserved, must be 0
- bits 5-0 = SRAM page (point to page 11 after a Reset)
-					*/
+					
+//					(R/W) 0x12 (18) => Layer 2 RAM page
+// bits 7-6 = Reserved, must be 0
+// bits 5-0 = SRAM page (point to page 8 after a Reset)
+//
+//(R/W) 0x13 (19) => Layer 2 RAM shadow page
+// bits 7-6 = Reserved, must be 0
+// bits 5-0 = SRAM page (point to page 11 after a Reset)
+					
 
 				//tbblue_get_offset_start_layer2_reg
 					sprintf (texto_buffer,"Layer 2 addr:        %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[18]) );
@@ -2930,12 +3098,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 					sprintf (texto_buffer,"Tile bpp: %d", (tbblue_tiles_are_monocrome() ? 1 : 4)  );
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);							
 
-					/*
-					z80_byte clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][4];
-z80_byte clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][4];
-z80_byte clip_windows[TBBLUE_CLIP_WINDOW_ULA][4];
-z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
-					*/
+
 
 					linea++;
 					sprintf (texto_buffer,"Clip Windows:");
@@ -3006,7 +3169,87 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 
 }
+*/
 
+
+zxvision_window menu_debug_tsconf_tbblue_videoregisters_ventana;
+
+
+void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
+{
+
+	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();
+
+	int xventana,yventana;
+	int ancho_ventana,alto_ventana;
+
+	if (!util_find_window_geometry("videoinfo",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {	
+
+		ancho_ventana=32;
+		xventana=menu_center_x()-ancho_ventana/2;
+
+		if (MACHINE_IS_TBBLUE) {
+			//yventana=0;
+			alto_ventana=24;
+		}
+
+		else {
+			//yventana=7;
+			alto_ventana=8;
+		}
+
+		yventana=menu_center_y()-alto_ventana/2;
+
+	}
+
+
+	//zxvision_window ventana;
+
+		zxvision_window *ventana;
+		
+		ventana=&menu_debug_tsconf_tbblue_videoregisters_ventana;	
+
+	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
+						ancho_ventana-1,alto_ventana-2,"Video Info");							
+
+	zxvision_draw_window(ventana);
+
+
+	menu_debug_tsconf_tbblue_videoregisters_overlay_window=ventana;
+
+
+
+ //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de onda + texto
+        set_menu_overlay_function(menu_debug_tsconf_tbblue_videoregisters_overlay);
+
+	z80_byte tecla;
+
+	do {
+		tecla=zxvision_common_getkey_refresh();		
+		zxvision_handle_cursors_pgupdn(ventana,tecla);
+		//printf ("tecla: %d\n",tecla);
+	} while (tecla!=2 && tecla!=3);				
+
+	//Gestionar salir con tecla background
+ 
+	menu_espera_no_tecla(); //Si no, se va al menu anterior.
+	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
+
+    //restauramos modo normal de texto de menu
+     set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+    cls_menu_overlay();	
+	util_add_window_geometry_compact("videoinfo",ventana);
+
+	
+
+
+		zxvision_destroy_window(ventana);
+
+}
 
 
 #define TSCONF_SPRITENAV_WINDOW_ANCHO 32
