@@ -284,3 +284,6 @@ Decir que para cerrar una y/o pasar a foreground, seleccionarla de nuevo desde e
 Ok. revisar otros sitios que se use overlay_screen asignando en memoria
 
 -Agregar ayuda de background windows, extraido de TODO_menu
+
+-Lo ideal seria poder grabar la lista de ventanas activas de background y que las restaure al empezar.
+No deberia ser muy dificil, tener una lista de nombres de ventanas y sus llamadas. Y una manera de entrar para que se vayan a background directamente
