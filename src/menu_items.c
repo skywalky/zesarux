@@ -2794,28 +2794,28 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 	if (!util_find_window_geometry("videoinfo",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {	
 
-	ancho_ventana=32;
-	xventana=menu_center_x()-ancho_ventana/2;
+		ancho_ventana=32;
+		xventana=menu_center_x()-ancho_ventana/2;
 
-	if (MACHINE_IS_TBBLUE) {
-		//yventana=0;
-		alto_ventana=24;
-	}
+		if (MACHINE_IS_TBBLUE) {
+			//yventana=0;
+			alto_ventana=24;
+		}
 
-	else {
-		//yventana=7;
-		alto_ventana=8;
-	}
+		else {
+			//yventana=7;
+			alto_ventana=8;
+		}
 
-	yventana=menu_center_y()-alto_ventana/2;
+		yventana=menu_center_y()-alto_ventana/2;
 
 	}
 
 
 	zxvision_window ventana;
 
-		zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							ancho_ventana-1,alto_ventana-2,"Video Info");							
+	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+						ancho_ventana-1,alto_ventana-2,"Video Info");							
 
 	zxvision_draw_window(&ventana);
 
@@ -2851,33 +2851,33 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 				if (MACHINE_IS_TSCONF) {
 
-				int vpage_addr=tsconf_get_vram_page()*16384;
+					int vpage_addr=tsconf_get_vram_page()*16384;
 
-				tsconf_get_current_video_mode(texto_buffer2);
-				sprintf (texto_buffer,"Video mode: %s",texto_buffer2);
-				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
-				
-                sprintf (texto_buffer,"Video addr: %06XH",vpage_addr);
-                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+					tsconf_get_current_video_mode(texto_buffer2);
+					sprintf (texto_buffer,"Video mode: %s",texto_buffer2);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+					
+					sprintf (texto_buffer,"Video addr: %06XH",vpage_addr);
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-				sprintf (texto_buffer,"Tile Map Page: %06XH",tsconf_return_tilemappage() );
-				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+					sprintf (texto_buffer,"Tile Map Page: %06XH",tsconf_return_tilemappage() );
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-				sprintf (texto_buffer,"Tile 0 Graphics addr: %06XH",tsconf_return_tilegraphicspage(0) );
-				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+					sprintf (texto_buffer,"Tile 0 Graphics addr: %06XH",tsconf_return_tilegraphicspage(0) );
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-				sprintf (texto_buffer,"Tile 1 Graphics addr: %06XH",tsconf_return_tilegraphicspage(1) );
-				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+					sprintf (texto_buffer,"Tile 1 Graphics addr: %06XH",tsconf_return_tilegraphicspage(1) );
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 
-				sprintf (texto_buffer,"Sprite Graphics addr: %06XH",tsconf_return_spritesgraphicspage() );
-				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+					sprintf (texto_buffer,"Sprite Graphics addr: %06XH",tsconf_return_spritesgraphicspage() );
+					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 				}
 
@@ -2946,26 +2946,9 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 
-
-//                    //overwrite currently selected clip-window index value by "selection" graphics
-//                    const static int clip_index_string_pos_x[4] = { 11, 15, 21, 25};
-//                    int clip_select_x = clip_index_string_pos_x[tbblue_get_clip_window_layer2_index()];
-//                    texto_buffer[clip_select_x+3] = 0;      // display only three digits in new colour
-//					zxvision_print_string(&ventana,1+clip_select_x,linea++,
-//                                          ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_SELECCIONADO,0,texto_buffer+clip_select_x);
-
-
 					sprintf (texto_buffer,"Sprites: X=%3d-%3d Y=%3d-%3d",
 					clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][0],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][1],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][2],clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][3]);
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
-
-
-//                    //overwrite currently selected clip-window index value by "selection" graphics
-//                    clip_select_x = clip_index_string_pos_x[tbblue_get_clip_window_sprites_index()];
-//                    texto_buffer[clip_select_x+3] = 0;      // display only three digits in new colour
-//					zxvision_print_string(&ventana,1+clip_select_x,linea++,
-//                                          ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_SELECCIONADO,0,texto_buffer+clip_select_x);
-
 
 
 					sprintf (texto_buffer,"ULA:     X=%3d-%3d Y=%3d-%3d",
@@ -2973,27 +2956,10 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 
-
-//                    //overwrite currently selected clip-window index value by "selection" graphics
-//                    clip_select_x = clip_index_string_pos_x[tbblue_get_clip_window_ula_index()];
-//                    texto_buffer[clip_select_x+3] = 0;      // display only three digits in new colour
-//					zxvision_print_string_defaults(&ventana,1+clip_select_x,linea++,
-//                                          ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_SELECCIONADO,0,texto_buffer+clip_select_x);
-
-
-
-
 					sprintf (texto_buffer,"Tilemap: X=%3d-%3d Y=%3d-%3d",
 					clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][0]*2,clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][1]*2+1,clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][2],clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][3]);
 					zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-
-
-//                    //overwrite currently selected clip-window index value by "selection" graphics
-//                    clip_select_x = clip_index_string_pos_x[tbblue_get_clip_window_tilemap_index()];
-//                    texto_buffer[clip_select_x+3] = 0;      // display only three digits in new colour
-//					zxvision_print_string(&ventana,1+clip_select_x,linea++,
-//                                          ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_SELECCIONADO,0,texto_buffer+clip_select_x);
 
 
 					linea++;
