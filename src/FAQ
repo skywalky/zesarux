@@ -409,6 +409,25 @@ Q: I have set Chloe machine but it doesn't seem to boot, I only get a black scre
 A: Chloe needs divmmc paging to boot. Enable it on Storage->MMC menu
 
 
+Q: Is there any MMC card with sample programs?
+A: Look on the extras package. On folder zesarux-extras/extras/media/spectrum/chloe/, there's a file called chloehd.mmc, you can use that.
+
+
+Q: How can I run programs from the MMC card?
+A: There are some commands to do that:
+
+- files: it's like "ls" or "dir"
+- run: runs the program from MMC
+
+For example,
+files "programs"
+will list the programs folder from the MMC card. Then:
+
+run "kayahara"
+will run the kayahara demo from the MMC
+
+
+
 ----------------------------------------------------------------------------
 
 
