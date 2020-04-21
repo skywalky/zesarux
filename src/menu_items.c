@@ -7615,8 +7615,6 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 		alto=TOTAL_PALETTE_WINDOW_ALTO;
 	}
 
-	//zxvision_new_window(&ventana,TOTAL_PALETTE_WINDOW_X,TOTAL_PALETTE_WINDOW_Y,TOTAL_PALETTE_WINDOW_ANCHO,TOTAL_PALETTE_WINDOW_ALTO,
-	//						TOTAL_PALETTE_WINDOW_ANCHO-1,TOTAL_PALETTE_WINDOW_ALTO-2,"Colour palettes");
 
     zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,"Colour palettes");
 	ventana->can_be_backgrounded=1;
@@ -7660,7 +7658,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 		}
 
 		sprintf (textoshow,"Palette %d: %s",menu_display_total_palette_current_palette,nombre_paleta);
-       	//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
+       	
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,textoshow);
 
 		if (menu_display_total_palette_show_mapped==0) {
@@ -7669,19 +7667,17 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 		else {
 			sprintf (textoshow,"Total colours in array: %d",menu_display_total_palette_get_total_colors() );
 		}
-		//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
+		
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,textoshow);
 
-   		//menu_escribe_linea_opcion(linea++,-1,1,"");
+   		
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 
-		//linea=menu_display_total_palette_lista_colores(linea,0);
+		
 		linea +=16;
 
 
-		//printf ("zone size: %x dir: %x\n",menu_display_memory_zone_size,menu_display_total_palette_direccion);
 
-        //menu_escribe_linea_opcion(linea++,-1,1,"");
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 
 		char buffer_linea[40];
@@ -7691,11 +7687,11 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 															// 01234567890123456789012345678901
 		sprintf (buffer_linea,"Move: Cursors,Q,A,PgUp,PgDn");
 
-		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+		
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
 		sprintf (buffer_linea,"[%c] ~~Mapped palette",(menu_display_total_palette_show_mapped ? 'X' : ' ') );
-		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
+		
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
         //Restaurar comportamiento atajos
@@ -7714,16 +7710,13 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 						//arriba
 						menu_display_total_palette_cursor_arriba();
 
-						//menu_display_total_palette_ventana();
-						//menu_display_total_palette_direccion -=bytes_por_linea;
-						//menu_display_total_palette_direccion=menu_display_total_palette_adjusta_en_negativo(menu_display_total_palette_direccion,bytes_por_linea);
+						
 					break;
 
 					case 10:
 						//abajo
 						menu_display_total_palette_cursor_abajo();
 
-						//menu_display_total_palette_ventana();
 
 
 					break;
@@ -7733,10 +7726,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 						for (aux_pgdnup=0;aux_pgdnup<TOTAL_PALETTE_COLORS_PER_WINDOW;aux_pgdnup++) {
 							menu_display_total_palette_cursor_arriba();
 						}
-						//menu_display_total_palette_ventana();
 
-						//menu_display_total_palette_direccion -=bytes_por_ventana;
-						//menu_display_total_palette_direccion=menu_display_total_palette_adjusta_en_negativo(menu_display_total_palette_direccion,bytes_por_ventana);
 					break;
 
 					case 25:
@@ -7744,7 +7734,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 						for (aux_pgdnup=0;aux_pgdnup<TOTAL_PALETTE_COLORS_PER_WINDOW;aux_pgdnup++) {
 							menu_display_total_palette_cursor_abajo();
 						}
-						//menu_display_total_palette_ventana();
+					
 					break;
 
 					case 'q':
@@ -7753,9 +7743,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 							menu_display_total_palette_current_colour=0;
 						}
 
-						//menu_display_total_palette_ventana();
-						//menu_display_total_palette_direccion=menu_display_total_palette_change_pointer(menu_display_total_palette_direccion);
-						//menu_display_total_palette_ventana();
+						
 					break;
 
 					case 'a':
@@ -7773,16 +7761,13 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 						}
 
 
-						//menu_display_total_palette_ventana();
-						//menu_display_total_palette_direccion=menu_display_total_palette_change_pointer(menu_display_total_palette_direccion);
-						//menu_display_total_palette_ventana();
 					break;
 
 					case 'm':
 						menu_display_total_palette_show_mapped ^=1;
 						menu_display_total_palette_current_palette=0;
 						menu_display_total_palette_current_colour=0;
-						//menu_display_total_palette_ventana();
+					
 					break;
 
 
@@ -7807,13 +7792,13 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 	cls_menu_overlay();
 	util_add_window_geometry_compact("displaypalettes",ventana);
 
-        if (tecla==3) {
+	if (tecla==3) {
 
-                ventana->overlay_function=menu_display_total_palette_draw_barras;
-                menu_generic_message_splash("Background task","OK. Window put in background");
-        }
+		ventana->overlay_function=menu_display_total_palette_draw_barras;
+		menu_generic_message_splash("Background task","OK. Window put in background");
+	}
 
-        else {
+	else {
 
 		zxvision_destroy_window(ventana);
 	}
