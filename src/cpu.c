@@ -1900,6 +1900,8 @@ printf (
 
 		"--enable-8bit-ide          Enable 8-bit simple IDE emulation. Requires --enable-ide\n"
 
+		"--diviface-ram-size n      Sets divide/divmmc ram size in kb. Allowed values: 32, 64, 128, 256 or 512\n"
+
 
 		"--enable-esxdos-handler    Enable ESXDOS traps handler. Requires divmmc or divide paging emulation\n"
 		"--esxdos-root-dir p        Set ESXDOS root directory for traps handler. Uses current directory by default.\n"
@@ -5995,6 +5997,52 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--enable-8bit-ide")) {
                                 command_line_8bitide.v=1;
 			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--diviface-ram-size")) {
+				siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+
+				/*
+				int diviface_current_ram_memory_bits=4; //Por defecto 128 KB
+
+				-using 2 bits: 32 kb
+				-using 3 bits: 64 kb
+				-using 4 bits: 128 kb (default)
+				-using 5 bits: 256 kb
+				-using 6 bits: 512 kb
+				*/
+
+				switch (valor) {
+					case 32:
+						diviface_current_ram_memory_bits=2;
+					break;
+
+					case 64:
+						diviface_current_ram_memory_bits=3;
+					break;
+
+					case 128:
+						diviface_current_ram_memory_bits=4;
+					break;
+
+					case 256:
+						diviface_current_ram_memory_bits=5;
+					break;
+
+					case 512:
+						diviface_current_ram_memory_bits=6;
+					break;
+
+					default:
+						printf ("Invalid value for diviface ram size\n");
+						exit(1);
+					break;
+				}
+
+			}
+
+
 
 			else if (!strcmp(argv[puntero_parametro],"--enable-zxpand")) {
 				command_line_zxpand.v=1;
