@@ -4478,7 +4478,7 @@ void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window 
 				}
 
 				else {
-					//ventana inactiva. Ver si tiene overlay. No consigo que esto se muestre... quiza porque la ventana esta inactiva
+					//ventana inactiva. mostrar "!" con parpadeo
 					//printf ("ventana inactiva\n");
 					if (w->overlay_function!=NULL) {
 						//printf ("boton background\n");

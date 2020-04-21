@@ -2821,7 +2821,12 @@ void menu_debug_tsconf_tbblue_videoregisters_overlay(void)
 					tsconf_get_current_video_mode(texto_buffer2);
 					sprintf (texto_buffer,"Video mode: %s",texto_buffer2);
 					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+					//zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					//Con fillspc porque interesa borrar "restos" de modos de video anterior
+					zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);
+
+					//printf ("[%s] [%s]\n",texto_buffer,texto_buffer2);
 					
 					sprintf (texto_buffer,"Video addr: %06XH",vpage_addr);
 					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
@@ -2994,9 +2999,6 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	}
 
 
-	//zxvision_window ventana;
-
-
 
 	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 						ancho_ventana-1,alto_ventana-2,"Video Info");	
@@ -3010,9 +3012,9 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 
 
- //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de onda + texto
-        set_menu_overlay_function(menu_debug_tsconf_tbblue_videoregisters_overlay);
+	//Cambiamos funcion overlay de texto de menu
+	//Se establece a la de funcion de onda + texto
+	set_menu_overlay_function(menu_debug_tsconf_tbblue_videoregisters_overlay);
 
 	z80_byte tecla;
 
@@ -3028,7 +3030,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
 
     //restauramos modo normal de texto de menu
-     set_menu_overlay_function(normal_overlay_texto_menu);
+	set_menu_overlay_function(normal_overlay_texto_menu);
 
 
     cls_menu_overlay();	
