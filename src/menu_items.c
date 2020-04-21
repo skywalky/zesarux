@@ -7560,7 +7560,7 @@ void menu_display_total_palette_draw_barras(void)
 
 				//Esto tiene que estar despues de escribir la lista de colores, para que se refresque y se vea
 				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
-				normal_overlay_texto_menu();
+				if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 				if (si_complete_video_driver()) {
 					//Mostrar colores
@@ -7586,16 +7586,42 @@ void menu_display_total_palette_cursor_abajo(void)
 
 }
 
+
+zxvision_window zxvision_window_display_palettes;
+
+
 void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
-	zxvision_window ventana;
+	//zxvision_window ventana;
 
-	zxvision_new_window(&ventana,TOTAL_PALETTE_WINDOW_X,TOTAL_PALETTE_WINDOW_Y,TOTAL_PALETTE_WINDOW_ANCHO,TOTAL_PALETTE_WINDOW_ALTO,
-							TOTAL_PALETTE_WINDOW_ANCHO-1,TOTAL_PALETTE_WINDOW_ALTO-2,"Colour palettes");
-	zxvision_draw_window(&ventana);
+    zxvision_window *ventana;
+    ventana=&zxvision_window_display_palettes;	
+
+	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+	zxvision_delete_window_if_exists(ventana);	
+
+
+	int x,y,ancho,alto;
+
+	if (!util_find_window_geometry("displaypalettes",&x,&y,&ancho,&alto)) {
+		x=TOTAL_PALETTE_WINDOW_X;
+		y=TOTAL_PALETTE_WINDOW_Y;
+		ancho=TOTAL_PALETTE_WINDOW_ANCHO;
+		alto=TOTAL_PALETTE_WINDOW_ALTO;
+	}
+
+	//zxvision_new_window(&ventana,TOTAL_PALETTE_WINDOW_X,TOTAL_PALETTE_WINDOW_Y,TOTAL_PALETTE_WINDOW_ANCHO,TOTAL_PALETTE_WINDOW_ALTO,
+	//						TOTAL_PALETTE_WINDOW_ANCHO-1,TOTAL_PALETTE_WINDOW_ALTO-2,"Colour palettes");
+
+    zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,"Colour palettes");
+	ventana->can_be_backgrounded=1;
+
+	zxvision_draw_window(ventana);
 
 	z80_byte tecla;
 
@@ -7604,7 +7630,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 
 	set_menu_overlay_function(menu_display_total_palette_draw_barras);
-	menu_display_total_palette_draw_barras_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+	menu_display_total_palette_draw_barras_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
     do {
 
@@ -7616,7 +7642,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
         menu_writing_inverse_color.v=1;		
 		
 		int i;
-		for (i=0;i<16;i++) zxvision_print_string_defaults_fillspc(&ventana,0,TOTAL_PALETTE_WINDOW_Y+3+i,"");
+		for (i=0;i<16;i++) zxvision_print_string_defaults_fillspc(ventana,0,TOTAL_PALETTE_WINDOW_Y+3+i,"");
 
         menu_speech_tecla_pulsada=0; //Que envie a speech
 
@@ -7635,7 +7661,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 		sprintf (textoshow,"Palette %d: %s",menu_display_total_palette_current_palette,nombre_paleta);
        	//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,textoshow);
 
 		if (menu_display_total_palette_show_mapped==0) {
 			sprintf (textoshow,"%s",total_palette_colours_array[menu_display_total_palette_current_palette].descripcion_paleta);
@@ -7644,10 +7670,10 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 			sprintf (textoshow,"Total colours in array: %d",menu_display_total_palette_get_total_colors() );
 		}
 		//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,textoshow);
 
    		//menu_escribe_linea_opcion(linea++,-1,1,"");
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 
 		//linea=menu_display_total_palette_lista_colores(linea,0);
 		linea +=16;
@@ -7656,7 +7682,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 		//printf ("zone size: %x dir: %x\n",menu_display_memory_zone_size,menu_display_total_palette_direccion);
 
         //menu_escribe_linea_opcion(linea++,-1,1,"");
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 
 		char buffer_linea[40];
 
@@ -7666,16 +7692,16 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 		sprintf (buffer_linea,"Move: Cursors,Q,A,PgUp,PgDn");
 
 		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
 		sprintf (buffer_linea,"[%c] ~~Mapped palette",(menu_display_total_palette_show_mapped ? 'X' : ' ') );
 		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
         //Restaurar comportamiento atajos
         menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
-		zxvision_draw_window_contents(&ventana);
+		zxvision_draw_window_contents(ventana);
 			
 		tecla=zxvision_common_getkey_refresh();		
 
@@ -7764,17 +7790,33 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 					case 2:
 						salir=1;
 					break;
+
+					//O tecla background
+					case 3:
+						salir=1;
+					break;					
 				}
 
 
         } while (salir==0);
 
 				//restauramos modo normal de texto de menu
-        set_menu_overlay_function(normal_overlay_texto_menu);
+    set_menu_overlay_function(normal_overlay_texto_menu);
 
 
 	cls_menu_overlay();
-	zxvision_destroy_window(&ventana);
+	util_add_window_geometry_compact("displaypalettes",ventana);
+
+        if (tecla==3) {
+
+                ventana->overlay_function=menu_display_total_palette_draw_barras;
+                menu_generic_message_splash("Background task","OK. Window put in background");
+        }
+
+        else {
+
+		zxvision_destroy_window(ventana);
+	}
 
 
 }

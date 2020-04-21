@@ -282,3 +282,5 @@ Decir que para cerrar una y/o pasar a foreground, seleccionarla de nuevo desde e
 
 -llamar F8 cuando redibuja background, se cuelga. Parece que tambien se cuelga si no hay activado ventanas en background
 Ok. revisar otros sitios que se use overlay_screen asignando en memoria
+
+-Agregar ayuda de background windows, extraido de TODO_menu

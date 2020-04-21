@@ -1773,18 +1773,18 @@ void menu_scanf_print_string(char *string,int offset_string,int max_length_shown
 }
 
 //funcion que guarda el contenido del texto del menu. Usado por ejemplo en scanf cuando se usa teclado en pantalla
-void menu_save_overlay_text_contents(overlay_screen *destination)
+void menu_save_overlay_text_contents(overlay_screen *destination,int size)
 {
-	int size=sizeof(overlay_screen_array);
+	//int size=sizeof(overlay_screen_array);
 	debug_printf(VERBOSE_DEBUG,"Saving overlay text contents. Size=%d bytes",size);
 
 	memcpy(destination,overlay_screen_array,size);
 }
 
 //funcion que restaura el contenido del texto del menu. Usado por ejemplo en scanf cuando se usa teclado en pantalla
-void menu_restore_overlay_text_contents(overlay_screen *origin)
+void menu_restore_overlay_text_contents(overlay_screen *origin,int size)
 {
-	int size=sizeof(overlay_screen_array);
+	//int size=sizeof(overlay_screen_array);
 	debug_printf(VERBOSE_DEBUG,"Restoring overlay text contents. Size=%d bytes",size);
 
 	memcpy(overlay_screen_array,origin,size);
@@ -1803,12 +1803,14 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	//overlay_screen copia_overlay[OVERLAY_SCREEN_MAX_WIDTH*OVERLAY_SCREEN_MAX_HEIGTH];
 	overlay_screen *copia_overlay;
 
-	copia_overlay=malloc(sizeof(struct s_overlay_screen)*OVERLAY_SCREEN_MAX_WIDTH*OVERLAY_SCREEN_MAX_HEIGTH);
+	int size=sizeof(struct s_overlay_screen)*OVERLAY_SCREEN_MAX_WIDTH*OVERLAY_SCREEN_MAX_HEIGTH;
+
+	copia_overlay=malloc(size);
 
 	if (copia_overlay==NULL) cpu_panic("Can not allocate memory for OSD");
 
 	//Guardamos contenido de la pantalla
-	menu_save_overlay_text_contents(copia_overlay);
+	menu_save_overlay_text_contents(copia_overlay,size);
 	//Guardamos linea cuadrado ventana
 	int antes_cuadrado_activo=0;
 	int antes_cuadrado_activo_resize=0;
@@ -1867,7 +1869,7 @@ void menu_call_onscreen_keyboard_from_menu(void)
 	menu_escribe_linea_startx=antes_menu_escribe_linea_startx;
 
 	//Restaurar texto ventana
-	menu_restore_overlay_text_contents(copia_overlay);
+	menu_restore_overlay_text_contents(copia_overlay,size);
 	free(copia_overlay);
 	
 	//Restaurar linea cuadrado ventana
