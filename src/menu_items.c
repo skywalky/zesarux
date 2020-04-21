@@ -2962,6 +2962,15 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();
 
+	zxvision_window *ventana;
+		
+	ventana=&menu_debug_tsconf_tbblue_videoregisters_ventana;	
+
+	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+	zxvision_delete_window_if_exists(ventana);		
+
 	int xventana,yventana;
 	int ancho_ventana,alto_ventana;
 
@@ -2987,12 +2996,12 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 	//zxvision_window ventana;
 
-		zxvision_window *ventana;
-		
-		ventana=&menu_debug_tsconf_tbblue_videoregisters_ventana;	
+
 
 	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
-						ancho_ventana-1,alto_ventana-2,"Video Info");							
+						ancho_ventana-1,alto_ventana-2,"Video Info");	
+
+	ventana->can_be_backgrounded=1;												
 
 	zxvision_draw_window(ventana);
 
@@ -3025,10 +3034,18 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
     cls_menu_overlay();	
 	util_add_window_geometry_compact("videoinfo",ventana);
 
-	
+	if (tecla==3) {
+
+		ventana->overlay_function=menu_debug_tsconf_tbblue_videoregisters_overlay;
+		menu_generic_message_splash("Background task","OK. Window put in background");
+	}
+
+	else {	
 
 
 		zxvision_destroy_window(ventana);
+
+	}
 
 }
 
