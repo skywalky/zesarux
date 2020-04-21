@@ -94,9 +94,9 @@ de pixel dentro de cada ventana, y que se hiciera:
 *al redibujar ventana: escribir primero los caracteres, y luego los pixeles de dicho buffer
 *problema del uso de memoria: una ventana pequeña de 256x192, con int (32 bit) de color, ocuparia 200 kb. El doble ya ocuparia 1 MB
 *por cada ventana podria tener una media de 1 MB de espacio ocupado, relativamente no es mucho
-*alternativa a esto? 
-
-
+*alternativa a esto? En putpixel que se meta en buffer de ventana. Inicializados los píxeles a 65535 (el color). Y un flag que indica si se ha dibujado al menos un Pixel
+Al redibujar, se mira ese flag. Y luego solo se dibujan los píxeles que no estén a 65535. Igualmente hay que recorrer un buffer grande y puede ir lento 
+Al hacer cls de ese buffer hay que poner flag a 0 de nuevo 
 
 ----Fin Background windows
 
