@@ -67,6 +67,9 @@ de pixel dentro de cada ventana, y que se hiciera:
 Al redibujar, se mira ese flag. Y luego solo se dibujan los píxeles que no estén a 65535. Igualmente hay que recorrer un buffer grande y puede ir lento 
 Al hacer cls de ese buffer hay que poner flag a 0 de nuevo 
 
+-al parecer , si hay un mensaje de splash se activan los overlay de background (los putpixel). Por ejemplo con 
+demo kayahara de chloe, en que cambia continuamente de timex video mode. En parte es normal pues estamos dibujando parte del menu (en el texto splash)
+
 ----Fin Background windows
 
 -pantalla view sprites que adapte el texto leyenda al alto ventana

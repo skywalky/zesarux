@@ -2789,12 +2789,13 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();
 
-	int ancho_ventana=32;
-	int xventana=menu_center_x()-ancho_ventana/2;
+	int xventana,yventana;
+	int ancho_ventana,alto_ventana;
 
-	int yventana;
-	int alto_ventana;
-    
+	if (!util_find_window_geometry("videoinfo",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {	
+
+	ancho_ventana=32;
+	xventana=menu_center_x()-ancho_ventana/2;
 
 	if (MACHINE_IS_TBBLUE) {
 		//yventana=0;
@@ -2807,6 +2808,9 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	}
 
 	yventana=menu_center_y()-alto_ventana/2;
+
+	}
+
 
 	zxvision_window ventana;
 
@@ -3029,6 +3033,9 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 		} while (tecla!=2);
 
         cls_menu_overlay();
+		util_add_window_geometry_compact("videoinfo",&ventana);
+
+
 		zxvision_destroy_window(&ventana);
 
 
