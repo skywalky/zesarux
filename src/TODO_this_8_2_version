@@ -272,13 +272,6 @@ menu_generic_message_splash
 no se mueven las barras  (o bien se mueven pero luego se redibujan encima sin movimiento). Quiza es porque menu_window_splash_counter es una variable global?
 
 
--Comentar que las ventanas en background no es más que la capa de ventanas (que ya había hasta ahora) pero además llamando a las funciones de overlay de cada una
-
-
-Decir que para cerrar una y/o pasar a foreground, seleccionarla de nuevo desde el menu
-
-
--Agregar ayuda de background windows, extraido de TODO_menu
 
 -Lo ideal seria poder grabar la lista de ventanas activas de background y que las restaure al empezar.
 No deberia ser muy dificil, tener una lista de nombres de ventanas y sus llamadas. Y una manera de entrar para que se vayan a background directamente
