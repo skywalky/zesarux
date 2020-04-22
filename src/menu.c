@@ -6843,6 +6843,8 @@ int zxvision_coords_in_window(zxvision_window *w,int x,int y)
 	int other_width=w->visible_width;
 	int other_height=w->visible_height;
 
+	//printf ("x %d y %d other x %d y %d w %d h %d\n",x,y,other_x,other_y,other_width,other_height); 
+
 	if (x>=other_x && x<other_x+other_width &&
 		y>=other_y && y<other_y+other_height
 		)
@@ -6936,6 +6938,10 @@ void zxvision_draw_window_contents(zxvision_window *w)
 			int xdestination=w->x+x;
 			int ydestination=(w->y)+1+y; //y +1 porque empezamos a escribir debajo del titulo
 
+			//Ver si caracter final tiene ventana por encima
+			int ventana_encima=zxvision_coords_in_superior_windows(w,xdestination,ydestination);
+
+			
 			//obtener caracter
 			int out_of_bonds=0;
 
@@ -6995,7 +7001,8 @@ void zxvision_draw_window_contents(zxvision_window *w)
 				//if (!zxvision_coords_in_front_window(w,xdestination,ydestination)) {
 
 				//Chapucilla para evitar que las ventanas en background sobreescriban a cualquiera que haya encima
-				if (!zxvision_coords_in_superior_windows(w,xdestination,ydestination)) {
+				if (!ventana_encima) {
+				//if (!zxvision_coords_in_superior_windows(w,xdestination,ydestination)) {
 
 				//printf ("antes de putchar\n");
 				putchar_menu_overlay_parpadeo(xdestination,ydestination,
@@ -7012,8 +7019,11 @@ void zxvision_draw_window_contents(zxvision_window *w)
 
 			//Fuera de rango. Metemos espacio
 			else {
+				//printf ("fuera de rango\n");
+				if (!ventana_encima) {
 				putchar_menu_overlay_parpadeo(xdestination,ydestination,
 				' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0);
+				}
 			}
 			//printf ("sonda 3\n");
 
