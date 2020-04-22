@@ -3240,7 +3240,17 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 	
 	zxvision_window ventana;
 
-	zxvision_new_window(&ventana,TSCONF_SPRITENAV_WINDOW_X,TSCONF_SPRITENAV_WINDOW_Y,TSCONF_SPRITENAV_WINDOW_ANCHO,TSCONF_SPRITENAV_WINDOW_ALTO,
+	int xventana,yventana,ancho_ventana,alto_ventana;
+
+	if (!util_find_window_geometry("tsconftbbluespritenav",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+		xventana=TSCONF_SPRITENAV_WINDOW_X;
+		yventana=TSCONF_SPRITENAV_WINDOW_Y;
+		ancho_ventana=TSCONF_SPRITENAV_WINDOW_ANCHO;
+		alto_ventana=TSCONF_SPRITENAV_WINDOW_ALTO;
+	}
+
+
+	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							TSCONF_SPRITENAV_WINDOW_ANCHO-1,menu_debug_tsconf_tbblue_spritenav_get_total_sprites()*2,"Sprite navigator");
 
 	zxvision_draw_window(&ventana);		
@@ -3271,6 +3281,11 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
     set_menu_overlay_function(normal_overlay_texto_menu);		
 
     cls_menu_overlay();
+
+	util_add_window_geometry_compact("tsconftbbluespritenav",&ventana);
+
+
+
 	zxvision_destroy_window(&ventana);
 }
 
