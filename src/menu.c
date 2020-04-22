@@ -23458,9 +23458,9 @@ void menu_interface_allow_background_windows(MENU_ITEM_PARAMETERS)
 
 	menu_allow_background_windows ^=1;
 
-	if (menu_allow_background_windows) {
+	/*if (menu_allow_background_windows) {
 		menu_warn_message("DANGER! This is very EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
-	}
+	}*/
 
 }
 
@@ -23555,16 +23555,21 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] B~~ackground windows",(menu_allow_background_windows ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'a');
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Allow some menu windows to be put on the background");
-		menu_add_item_menu_ayuda(array_menu_window_settings,"You can allow some menu windows to be put on the background. "
+		menu_add_item_menu_ayuda(array_menu_window_settings,"You can allow some menu windows to be put on the background.\n"
+
+			"When a window is on the background, its contents are updated continuosly.\n"
+
 			"Windows that can be put on background have an exclamation mark (!) "
-			"on the right of its title. Press left button on the exclamation mark or press F6 to put that window on the background. "
+			"on the right of its title. "
+
+			"Press left button mouse on the exclamation mark or press F6 to put that window on the background. "
 			"Some examples of these windows are AY Registers, Audio Waveform, or AY Sheet\n"
 			"\n"
 			"Windows on the background can not be moved, resized or closed directly using your mouse, but you can:\n"
-			"- Recover the window on the foreground: just go to the menu where the window appears, and select it again, "
+			"- Recover the window to the foreground: just go to the menu where the window appears, and select it again, "
 			"for example, go to Audio menu and select Waveform to recover an Audio Waveform window from the background\n"
 			"- Close or move to the top: go to menu Display->Window manage\n"
-			"- Close all windows: go to menu Display, or disable this Background windows setting\n"		
+			"- Close all windows: go to menu Display->Close all Windows, or disable this Background windows setting\n"		
 		);
 
 
