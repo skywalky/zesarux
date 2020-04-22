@@ -3286,8 +3286,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 
 
-//int menu_debug_tsconf_tbblue_tilenav_current_palette=0;
-//int menu_debug_tsconf_tbblue_tilenav_current_tile=0;
+
 
 int menu_debug_tsconf_tbblue_tilenav_current_tilelayer=0;
 
@@ -3727,7 +3726,18 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		//tres mas para ubicar las lineas de leyenda
 		total_height+=3;
 
-		zxvision_new_window(ventana,TSCONF_TILENAV_WINDOW_X,TSCONF_TILENAV_WINDOW_Y,TSCONF_TILENAV_WINDOW_ANCHO,TSCONF_TILENAV_WINDOW_ALTO,
+
+		int xventana,yventana,ancho_ventana,alto_ventana;
+
+		if (!util_find_window_geometry("tsconftbbluetilenav",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+			xventana=TSCONF_TILENAV_WINDOW_X;
+			yventana=TSCONF_TILENAV_WINDOW_Y;
+			ancho_ventana=TSCONF_TILENAV_WINDOW_ANCHO;
+			alto_ventana=TSCONF_TILENAV_WINDOW_ALTO;
+		}
+
+		zxvision_new_window(ventana,xventana,yventana,
+							ancho_ventana,alto_ventana,
 							total_width,total_height,titulo);
 
 
@@ -3827,6 +3837,10 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
     set_menu_overlay_function(normal_overlay_texto_menu);		
 
     cls_menu_overlay();
+
+    //Grabar geometria ventana
+    util_add_window_geometry_compact("tsconftbbluetilenav",&ventana);
+
 	zxvision_destroy_window(&ventana);		
 
 
