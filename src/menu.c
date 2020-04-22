@@ -23558,6 +23558,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_window_settings,"You can allow some menu windows to be put on the background.\n"
 
 			"When a window is on the background, its contents are updated continuosly.\n"
+			"But the menu needs to be opened for the windows to be shown\n"
 
 			"Windows that can be put on background have an exclamation mark (!) "
 			"on the right of its title. "
@@ -23568,7 +23569,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			"Windows on the background can not be moved, resized or closed directly using your mouse, but you can:\n"
 			"- Recover the window to the foreground: just go to the menu where the window appears, and select it again, "
 			"for example, go to Audio menu and select Waveform to recover an Audio Waveform window from the background\n"
-			"- Close or move to the top: go to menu Display->Window manage\n"
+			"- Close or move to the top: go to menu Display->Window management\n"
 			"- Close all windows: go to menu Display->Close all Windows, or disable this Background windows setting\n"		
 		);
 
@@ -30556,6 +30557,13 @@ int first_aid_no_realjoystick_detected=0;
 char *first_aid_string_realjoystick_detected="A real joystick has been detected\n"
 							"You can go to menu Settings->Hardware->Real joystick support and set your buttons configuration";	
 
+
+int first_aid_no_backgroundwindows=0;
+char *first_aid_string_backgroundwindows="You can enable background windows and put some windows on the background. "
+		"Go to Settings-> GUI-> Windows settings-> Background windows to enable it";
+
+
+
 void menu_first_aid_init(void)
 {
 	total_first_aid=0;
@@ -30582,6 +30590,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("fileextensions",&first_aid_no_fileextensions,first_aid_string_fileextensions,1);
 	menu_first_aid_add("zsfextension",&first_aid_no_zsfextension,first_aid_string_zsfextension,1);
 	menu_first_aid_add("spaceexpand",&first_aid_no_spaceexpand,first_aid_string_spaceexpand,1);
+	menu_first_aid_add("backgroundwindows",&first_aid_no_backgroundwindows,first_aid_string_backgroundwindows,1);
 
 }
 

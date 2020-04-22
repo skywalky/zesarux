@@ -12,6 +12,9 @@ Added Solarized Dark & Light Gui Style
 Added ZRCP commands:
 -save-screen: to save machine screen to file
 
+Improved menu:
+-Allow some windows to be put on the background
+
 Improved Esxdos handler: 
 -add f_mkdir function 
 -add configuration setting to save local work directory
@@ -33,8 +36,7 @@ Improved Chloe emulation:
 -Load unodos3.rom as the default divmmc firmware
 -Added chloehd.mmc in the extras package
 
-Improved menu:
--Allow some windows to be put in background
+
 
 
 Fixed ZRCP bugs:

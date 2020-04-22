@@ -19862,7 +19862,7 @@ void menu_display_window_list(MENU_ITEM_PARAMETERS)
 
 		menu_add_ESC_item(array_menu_common);
 
-		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window manage");
+		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window management");
 
 			
 			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -19952,7 +19952,7 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 
 			if (menu_allow_background_windows) {
 				menu_add_item_menu(array_menu_display_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_window_list,NULL,"Window manage");
+				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_window_list,NULL,"Window management");
 
 
 				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_window_close_all,NULL,"Close all windows");
