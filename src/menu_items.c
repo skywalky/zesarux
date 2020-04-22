@@ -3778,7 +3778,6 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 	menu_reset_counters_tecla_repeticion();
 
 	
-		//zxvision_window ventana;
 	zxvision_window *ventana;
 	ventana=&zxvision_window_tsconf_tbblue_tilenav;
 
@@ -3787,64 +3786,57 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
     zxvision_delete_window_if_exists(ventana);	
 
-		menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
+	menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
+
+	set_menu_overlay_function(menu_debug_tsconf_tbblue_tilenav_draw_tiles);
+
+	menu_debug_tsconf_tbblue_tilenav_lista_tiles_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
+	z80_byte tecla;
 
-        set_menu_overlay_function(menu_debug_tsconf_tbblue_tilenav_draw_tiles);
-
-
-		menu_debug_tsconf_tbblue_tilenav_lista_tiles_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
-
-
-		z80_byte tecla;
-
-		//Si no esta multitarea, hacer un refresco inicial para que aparezca el contenido de la ventana sin tener que pulsar una tecla
-		//dado que luego funciona como overlay, el overlay se aplica despues de hacer el render
-		//esto solo es necesario para ventanas que usan overlay
-	    if (!menu_multitarea) {
-			//printf ("refresca pantalla inicial\n");
-			menu_refresca_pantalla();
-		}				
+	//Si no esta multitarea, hacer un refresco inicial para que aparezca el contenido de la ventana sin tener que pulsar una tecla
+	//dado que luego funciona como overlay, el overlay se aplica despues de hacer el render
+	//esto solo es necesario para ventanas que usan overlay
+	if (!menu_multitarea) {
+		//printf ("refresca pantalla inicial\n");
+		menu_refresca_pantalla();
+	}				
 
 
 	do {
     	menu_speech_tecla_pulsada=0; //Que envie a speech
 
-
-			
-
 		tecla=zxvision_common_getkey_refresh();				
 
         
-				switch (tecla) {
+		switch (tecla) {
 
-					case 'l':
-						//En caso de tbblue, hay una sola capa
-						if (!MACHINE_IS_TBBLUE) {			
-							menu_debug_tsconf_tbblue_save_geometry(ventana);		
-							zxvision_destroy_window(ventana);	
-							menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
-							menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
-						}
-					break;
+			case 'l':
+				//En caso de tbblue, hay una sola capa
+				if (!MACHINE_IS_TBBLUE) {			
+					menu_debug_tsconf_tbblue_save_geometry(ventana);		
+					zxvision_destroy_window(ventana);	
+					menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
+					menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
+				}
+			break;
 
-					case 'm':
-						menu_debug_tsconf_tbblue_save_geometry(ventana);
-						zxvision_destroy_window(ventana);		
-						menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
-						menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
+			case 'm':
+				menu_debug_tsconf_tbblue_save_geometry(ventana);
+				zxvision_destroy_window(ventana);		
+				menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
+				menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
 
-					break;
+			break;
 
 
-					default:
-						zxvision_handle_cursors_pgupdn(ventana,tecla);
-					break;
-				}		
+			default:
+				zxvision_handle_cursors_pgupdn(ventana,tecla);
+			break;
+		}		
 
 		
-
 
 	} while (tecla!=2 && tecla!=3); 
 
@@ -3859,17 +3851,16 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
     if (tecla==3) {
 
-                ventana->overlay_function=menu_debug_tsconf_tbblue_tilenav_draw_tiles;
-                zxvision_message_put_window_background();
-        }
+		ventana->overlay_function=menu_debug_tsconf_tbblue_tilenav_draw_tiles;
+		zxvision_message_put_window_background();
+	}
 
-        else {
+	else {
 
 		zxvision_destroy_window(ventana);
 	}
 
 
-    
 
 }
 
