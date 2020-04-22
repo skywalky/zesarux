@@ -3675,7 +3675,7 @@ void menu_debug_tsconf_tbblue_tilenav_draw_tiles(void)
 
 
 				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
-				normal_overlay_texto_menu();
+				if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 				menu_debug_tsconf_tbblue_tilenav_lista_tiles();				
 
 }
@@ -3746,7 +3746,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		//Texto sera el de la primera linea
 		ventana->upper_margin=1;
 
-
+		ventana->can_be_backgrounded=1;
 		
 		//Leyenda inferior
 		//zxvision_print_string_defaults_fillspc(ventana,1,1,"-----");
@@ -3763,6 +3763,9 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 
 }
 
+
+zxvision_window zxvision_window_tsconf_tbblue_tilenav;
+
 void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 {
 
@@ -3770,17 +3773,23 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 	menu_reset_counters_tecla_repeticion();
 
 	
-		zxvision_window ventana;
+		//zxvision_window ventana;
+	zxvision_window *ventana;
+	ventana=&zxvision_window_tsconf_tbblue_tilenav;
 
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);	
 
-		menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
+		menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
 
 
 
         set_menu_overlay_function(menu_debug_tsconf_tbblue_tilenav_draw_tiles);
 
 
-		menu_debug_tsconf_tbblue_tilenav_lista_tiles_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+		menu_debug_tsconf_tbblue_tilenav_lista_tiles_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
 		z80_byte tecla;
@@ -3808,30 +3817,30 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 					case 'l':
 						//En caso de tbblue, hay una sola capa
 						if (!MACHINE_IS_TBBLUE) {					
-							zxvision_destroy_window(&ventana);	
+							zxvision_destroy_window(ventana);	
 							menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
-							menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
+							menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
 						}
 					break;
 
 					case 'm':
 
-						zxvision_destroy_window(&ventana);		
+						zxvision_destroy_window(ventana);		
 						menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
-						menu_debug_tsconf_tbblue_tilenav_new_window(&ventana);
+						menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
 
 					break;
 
 
 					default:
-						zxvision_handle_cursors_pgupdn(&ventana,tecla);
+						zxvision_handle_cursors_pgupdn(ventana,tecla);
 					break;
 				}		
 
 		
 
 
-	} while (tecla!=2); 
+	} while (tecla!=2 && tecla!=3); 
 
 	//restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);		
@@ -3839,12 +3848,20 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
     cls_menu_overlay();
 
     //Grabar geometria ventana
-    util_add_window_geometry_compact("tsconftbbluetilenav",&ventana);
+    util_add_window_geometry_compact("tsconftbbluetilenav",ventana);
 
-	zxvision_destroy_window(&ventana);		
+    if (tecla==3) {
+
+                ventana->overlay_function=menu_debug_tsconf_tbblue_tilenav_draw_tiles;
+                zxvision_message_put_window_background();
+        }
+
+        else {
+
+		zxvision_destroy_window(ventana);
+	}
 
 
-	
     
 
 }

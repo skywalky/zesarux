@@ -311,8 +311,7 @@ al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego
 	if (tecla==3) {
 		//zxvision_ay_registers_overlay
 		ventana->overlay_function=menu_debug_cpu_resumen_stats_overlay;
-		printf ("Put window %p in background. next window=%p\n",ventana,ventana->next_window);
-		menu_generic_message("Background task","OK. Window put in background");
+		zxvision_message_put_window_background();
 	}
 
 	else {
@@ -433,7 +432,7 @@ index 9e32a67e..16a8f772 100644
 +        if (tecla==3) {
 +
 +                ventana->overlay_function=menu_display_total_palette_draw_barras;
-+                menu_generic_message_splash("Background task","OK. Window put in background");
++                zxvision_message_put_window_background();
 +        }
 +
 +        else {
