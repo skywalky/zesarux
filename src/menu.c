@@ -872,7 +872,7 @@ int window_settings_opcion_seleccionada=0;
 int osd_settings_opcion_seleccionada=0;
 
 
-int debug_tsconf_opcion_seleccionada;
+
 
 int accessibility_settings_opcion_seleccionada=0;
 
@@ -6686,8 +6686,9 @@ void zxvision_draw_overlays_below_windows(zxvision_window *w)
 
 void zxvision_message_put_window_background(void)
 {
+	//Conviene esperar no tecla porque a veces esta ventana splash no aparece
 	menu_espera_no_tecla();
-	menu_generic_message_splash("Background task","OK. Window put in background");
+	menu_generic_message_splash("Background task","OK. Window put on the background");
 }
 
 
@@ -22067,57 +22068,6 @@ void menu_debug_spritefinder(MENU_ITEM_PARAMETERS)
 }
 
 
-
-void menu_debug_tsconf_tbblue(MENU_ITEM_PARAMETERS)
-{
-        menu_item *array_menu_debug_tsconf_tbblue;
-        menu_item item_seleccionado;
-	int retorno_menu;
-        do {
-
-
-
-		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_videoregisters,NULL,"Video ~~Info");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'i');
-
-		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'l');
-
-		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_spritenav,NULL,"~~Sprite navigator");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'s');
-
-		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE) {
-			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_tilenav,NULL,"~~Tile navigator");
-			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'t');
-		}
-
-                menu_add_item_menu(array_menu_debug_tsconf_tbblue,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_debug_tsconf_tbblue,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_debug_tsconf_tbblue);
-
-		char titulo_ventana[33];
-
-		//por defecto
-		strcpy(titulo_ventana,"Debug TSConf");
-
-		if (MACHINE_IS_TBBLUE) strcpy(titulo_ventana,"Debug TBBlue");
-
-                retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue,titulo_ventana);
-
-                
-
-		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				
-                        }
-                }
-
-	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-}
 
 
 

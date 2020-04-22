@@ -98,6 +98,8 @@ extern void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS);
 
 extern void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS);
 
+extern void menu_debug_tsconf_tbblue(MENU_ITEM_PARAMETERS);
+
 
 #endif
 
