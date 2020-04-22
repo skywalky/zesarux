@@ -3764,6 +3764,11 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 }
 
 
+void menu_debug_tsconf_tbblue_save_geometry(zxvision_window *ventana)
+{
+	util_add_window_geometry_compact("tsconftbbluetilenav",ventana);
+}
+
 zxvision_window zxvision_window_tsconf_tbblue_tilenav;
 
 void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
@@ -3816,7 +3821,8 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
 					case 'l':
 						//En caso de tbblue, hay una sola capa
-						if (!MACHINE_IS_TBBLUE) {					
+						if (!MACHINE_IS_TBBLUE) {			
+							menu_debug_tsconf_tbblue_save_geometry(ventana);		
 							zxvision_destroy_window(ventana);	
 							menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
 							menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
@@ -3824,7 +3830,7 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 					break;
 
 					case 'm':
-
+						menu_debug_tsconf_tbblue_save_geometry(ventana);
 						zxvision_destroy_window(ventana);		
 						menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
 						menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
@@ -3847,8 +3853,9 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-    //Grabar geometria ventana
-    util_add_window_geometry_compact("tsconftbbluetilenav",ventana);
+    //Grabar geometria ventana. Usamos funcion auxiliar pues la llamamos tambien al cambiar de modo y layer
+	menu_debug_tsconf_tbblue_save_geometry(ventana);
+    //util_add_window_geometry_compact("tsconftbbluetilenav",ventana);
 
     if (tecla==3) {
 
