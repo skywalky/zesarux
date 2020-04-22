@@ -6684,6 +6684,12 @@ void zxvision_draw_overlays_below_windows(zxvision_window *w)
 
 }
 
+void zxvision_message_put_window_background(void)
+{
+	menu_espera_no_tecla();
+	menu_generic_message_splash("Background task","OK. Window put in background");
+}
+
 
 void zxvision_redraw_window_on_move(zxvision_window *w)
 {
