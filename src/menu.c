@@ -6798,6 +6798,78 @@ void zxvision_draw_window_contents_stdout(zxvision_window *w)
 	//menu_espera_tecla();
 }
 
+
+//Dice si unas coordenadas están dentro de una ventana concreta
+int zxvision_coords_in_window(zxvision_window *w,int x,int y)
+{
+
+	int other_x=w->x;
+	int other_y=w->y;
+	int other_width=w->visible_width;
+	int other_height=w->visible_height;
+
+	if (x>=other_x && x<other_x+other_width &&
+		y>=other_y && y<other_y+other_height
+		)
+		{
+			return 1;
+		}
+
+	return 0;
+
+}
+
+//Dice si las coordenadas de ventana indicada coinciden con cualquiera de las ventanas que tenga encima
+int zxvision_coords_in_superior_windows(zxvision_window *w,int x,int y)
+{
+	if (!menu_allow_background_windows) return 0;
+
+	if (w==NULL) return 0;
+
+	if (zxvision_current_window==w) return 0;
+
+	do {
+		zxvision_window *superior_window;
+
+		superior_window=w->next_window;
+
+		if (superior_window!=NULL) {
+
+			if (zxvision_coords_in_window(superior_window,x,y)) return 1;
+
+		}
+
+
+		w=superior_window;
+
+	} while (w!=zxvision_current_window && w!=NULL);
+
+	return 0;
+
+}
+
+//Dice si las coordenadas de ventana indicada coinciden con la zona ocupada por la ventana current
+//esto se usa cuando está activado background window, para que las ventanas por detrás no tapen a la ventana actual
+//Realmente es un poco chapuza, aunque efectivo. Lo ideal seria que las ventanas en background no se redibujasen
+//desde una funcion de overlay, sino de otra manera mas limpia y ordenada
+//Esto no impide que los pixeles de los overlay puedan pasar por encima de cualquier ventana (excepto la current, pues llamamos a aqui tambien)
+//Creo ademas que esta funcion ya no se usa
+/*
+int zxvision_coords_in_front_window(zxvision_window *w,int x,int y)
+{
+
+	if (!menu_allow_background_windows) return 0;
+
+	if (zxvision_current_window==NULL) return 0;
+
+	if (zxvision_current_window==w) return 0;
+
+	return zxvision_coords_in_window(zxvision_current_window,x,y);
+
+
+}
+*/
+
 void zxvision_draw_window_contents(zxvision_window *w)
 {
 
@@ -6884,6 +6956,12 @@ void zxvision_draw_window_contents(zxvision_window *w)
 					papel=ESTILO_GUI_PAPEL_SELECCIONADO;
 				} 
 			
+				//Chapucilla para evitar que las ventanas en background sobreescriban a la current
+				//if (!zxvision_coords_in_front_window(w,xdestination,ydestination)) {
+
+				//Chapucilla para evitar que las ventanas en background sobreescriban a cualquiera que haya encima
+				if (!zxvision_coords_in_superior_windows(w,xdestination,ydestination)) {
+
 				//printf ("antes de putchar\n");
 				putchar_menu_overlay_parpadeo(xdestination,ydestination,
 					caracter_escribir,tinta,papel,caracter->parpadeo);
@@ -6892,6 +6970,8 @@ void zxvision_draw_window_contents(zxvision_window *w)
 
 				if (indice_speech<MAX_BUFFER_SPEECH) {
 					buffer_linea[indice_speech++]=caracter_escribir;
+				}
+
 				}
 			}
 
@@ -7137,7 +7217,13 @@ Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al 
 
 	//Ver si esta dentro de rango
 	if (xfinal>=window_pixel_start_x && xfinal<window_pixel_final_x && yfinal>=window_pixel_start_y && yfinal<window_pixel_final_y) {
+
+    //Chapucilla para evitar que las ventanas en background sobreescriban a las de arriba
+    //if (!zxvision_coords_in_front_window(w,xfinal/menu_char_width,yfinal/8)) {		
+	if (!zxvision_coords_in_superior_windows(w,xfinal/menu_char_width,yfinal/8)) {				
 		menu_scr_putpixel(xfinal,yfinal,color);
+	}
+
 	}
 	else {
 		//printf ("pixel out of window %d %d\n",x,y);

@@ -1819,10 +1819,15 @@ void menu_debug_cpu_resumen_stats_overlay(void)
 						zxvision_print_string_defaults(ventana,1,linea++,dumpassembler);
 
 
-						zxvision_draw_window_contents(ventana);
+						//zxvision_draw_window_contents(ventana);
 
 
                 }
+
+			//Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
+			//y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
+			//En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
+			zxvision_draw_window_contents(ventana);
 
 
 
@@ -19769,7 +19774,8 @@ void menu_display_window_list(MENU_ITEM_PARAMETERS)
 	do {
 
 
-		menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+		//menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"-Top-");
 
 		zxvision_window *ventana=zxvision_current_window;
 
@@ -19786,7 +19792,9 @@ void menu_display_window_list(MENU_ITEM_PARAMETERS)
 			
 		}
 
-		if (!total_ventanas) menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"(Empty)");
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"-Bottom-");
+
+		//if (!total_ventanas) menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"(Empty)");
 
 		menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 

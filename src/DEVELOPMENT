@@ -329,6 +329,11 @@ al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego
 
 -Se llaman a todas las funciones de overlay de las ventanas en background desde la función de overlay de menú normal_overlay_texto_menu
 
+
+-Otras cosas a considerar: una ventana cuando escribe texto comprueba si tiene ventanas encima, para escribir o no el caracter.
+Mismo se hace para putpixel
+
+
 Ejemplo de cambios realizados en una ventana para soportar background. En este caso se sale mediante lectura de teclas, no hay menus:
 
 
