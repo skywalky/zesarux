@@ -19816,6 +19816,13 @@ void menu_display_window_list_item(MENU_ITEM_PARAMETERS)
 	else zxvision_window_delete_this_window(ventana);
 }
 
+void menu_display_window_close_all(MENU_ITEM_PARAMETERS)
+{
+	if (menu_confirm_yesno("Close all windows")) {
+		zxvision_window_delete_all_windows();
+		cls_menu_overlay();
+	}
+}
 
 void menu_display_window_list(MENU_ITEM_PARAMETERS)
 {
@@ -19946,6 +19953,9 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 			if (menu_allow_background_windows) {
 				menu_add_item_menu(array_menu_display_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_window_list,NULL,"Window manage");
+
+
+				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_window_close_all,NULL,"Close all windows");
 			}
 
  

@@ -242,6 +242,7 @@ extern void zxvision_redraw_all_windows(void);
 extern void zxvision_delete_window_if_exists(zxvision_window *ventana);
 extern int zxvision_window_can_be_backgrounded(zxvision_window *w);
 extern void zxvision_message_put_window_background(void);
+extern void zxvision_window_delete_all_windows(void);
 
 extern int tecla_f_background;
 extern int menu_get_mask_puerto_especial(int tecla_f);

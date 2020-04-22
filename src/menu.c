@@ -4976,6 +4976,34 @@ void zxvision_window_delete_this_window(zxvision_window *ventana)
 
 }
 
+
+//Elimina todas las ventanas
+void zxvision_window_delete_all_windows(void)
+{
+
+	//No hacerlo si no hay ventanas
+	if (zxvision_current_window==NULL) return;
+
+	zxvision_window *ventana;
+
+	ventana=zxvision_current_window;
+
+	do {
+
+		zxvision_window *previa;
+
+		previa=ventana->previous_window;
+		zxvision_window_delete_this_window(ventana);
+
+
+		//Saltamos a la ventana anterior
+		ventana=previa;
+
+
+	} while (ventana!=NULL);
+
+}
+
 void zxvision_window_move_this_window_on_top(zxvision_window *ventana)
 {
 		//hacer esta la ventana activa
@@ -23421,11 +23449,19 @@ void menu_interface_restore_windows_geometry(MENU_ITEM_PARAMETERS)
 
 void menu_interface_allow_background_windows(MENU_ITEM_PARAMETERS)
 {
+
+	//Borrar todas si vamos a desactivarlo
+	if (menu_allow_background_windows) {
+		zxvision_window_delete_all_windows();
+		cls_menu_overlay();
+	}
+
 	menu_allow_background_windows ^=1;
 
 	if (menu_allow_background_windows) {
 		menu_warn_message("DANGER! This is very EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
 	}
+
 }
 
 
