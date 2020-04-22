@@ -3293,13 +3293,13 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 	util_add_window_geometry_compact("tsconftbbluespritenav",ventana);
 
-        if (tecla==3) {
+	if (tecla==3) {
 
-                ventana->overlay_function=menu_debug_tsconf_tbblue_spritenav_draw_sprites;
-                zxvision_message_put_window_background();
-        }
+		ventana->overlay_function=menu_debug_tsconf_tbblue_spritenav_draw_sprites;
+		zxvision_message_put_window_background();
+	}
 
-        else {
+	else {
 
 		zxvision_destroy_window(ventana);
 	}
