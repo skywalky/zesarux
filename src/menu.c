@@ -23477,7 +23477,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
         do {
 
 
-			//hotkeys usadas: fbmzropciln
+			//hotkeys usadas: fbmzropcilna
 
         	menu_add_item_menu_inicial_format(&array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_fullscreen,NULL,"[%c] ~~Full Screen",(ventana_fullscreen ? 'X' : ' ' ) );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'f');
@@ -23552,7 +23552,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] I~~nvert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'n');
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] Background windows",(menu_allow_background_windows ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] B~~ackground windows",(menu_allow_background_windows ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'a');
 		menu_add_item_menu_tooltip(array_menu_window_settings,"EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"EXPERIMENTAL! Put a windows in background (not menu window) by pressing F6");
 

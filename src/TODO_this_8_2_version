@@ -271,8 +271,6 @@ valores long int
 menu_generic_message_splash
 no se mueven las barras  (o bien se mueven pero luego se redibujan encima sin movimiento). Quiza es porque menu_window_splash_counter es una variable global?
 
--al desactivar background, se deben cerrar todas ventanas
-
 
 -Comentar que las ventanas en background no es más que la capa de ventanas (que ya había hasta ahora) pero además llamando a las funciones de overlay de cada una
 
