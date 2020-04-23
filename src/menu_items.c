@@ -5101,9 +5101,9 @@ zxvision_window *menu_audio_new_ayplayer_overlay_window;
 void menu_audio_new_ayplayer_overlay(void)
 {
 
-    normal_overlay_texto_menu();
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
-                        int linea;
+    int linea;
 
 
     linea=7;
@@ -5391,7 +5391,7 @@ void menu_audio_new_ayplayer_len_anytracks(MENU_ITEM_PARAMETERS)
 	set_menu_overlay_function(menu_audio_new_ayplayer_overlay);
 }
 
-
+zxvision_window zxvision_window_ayplayer;
 
 void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 {
@@ -5410,7 +5410,14 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
  	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
-	zxvision_window ventana;
+	//zxvision_window ventana;
+    zxvision_window *ventana;
+    ventana=&zxvision_window_ayplayer;	
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);	
 
 	int xventana,yventana,ancho_ventana,alto_ventana;
 
@@ -5426,10 +5433,12 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 
 
-	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,"AY Player");
 
-	zxvision_draw_window(&ventana);	
+	ventana->can_be_backgrounded=1;							
+
+	zxvision_draw_window(ventana);	
 
 	
 
@@ -5439,7 +5448,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 	set_menu_overlay_function(menu_audio_new_ayplayer_overlay);
 
 
-	menu_audio_new_ayplayer_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
+	menu_audio_new_ayplayer_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
 
 
 
@@ -5477,7 +5486,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 				//Si no, pasaria que mostraria "Nos" como parte de la s final de Yes
 				int i;
 				for (i=12;i<=16;i++) {
-					zxvision_fill_width_spaces(&ventana,i);
+					zxvision_fill_width_spaces(ventana,i);
 				}			
 
 			if (menu_audio_new_ayplayer_si_mostrar() ) {
@@ -5548,6 +5557,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 		//Nombre de ventana solo aparece en el caso de stdout
                 retorno_menu=menu_dibuja_menu(&audio_new_ayplayer_opcion_seleccionada,&item_seleccionado,array_menu_audio_new_ayplayer,"AY Player" );
 
+	if (retorno_menu!=MENU_RETORNO_BACKGROUND) {
 
 	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
 	cls_menu_overlay();
@@ -5560,8 +5570,9 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
                                 
                         }
                 }
+			}	
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);
 
 
 
@@ -5571,10 +5582,21 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
         cls_menu_overlay();
 
-	util_add_window_geometry_compact("ayplayer",&ventana);
+	util_add_window_geometry_compact("ayplayer",ventana);
 
-	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
-	zxvision_destroy_window(&ventana);				
+
+        if (retorno_menu==MENU_RETORNO_BACKGROUND) {
+                ventana->overlay_function=menu_audio_new_ayplayer_overlay;
+                zxvision_message_put_window_background();
+        }
+
+        else {
+
+				//En caso de menus tabulados, es responsabilidad de este de liberar ventana
+                zxvision_destroy_window(ventana);
+        }
+
+			
 
 }
 

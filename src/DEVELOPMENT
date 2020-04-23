@@ -293,7 +293,10 @@ de tal manera que solo llame a normal_overlay de texto cuando no estan en backgr
 
 
 -tienen que referenciar a la ventana activa teniendo la estructura fuera de la funcion,
-al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego usar variable "ventana" como puntero a ahí
+al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego usar variable "ventana" como puntero a ahí, ejemplo:
+
+    zxvision_window *ventana;
+    ventana=&zxvision_window_view_sprites;
 
 -justo despues de asignar ventana a la estructura, ver si ventana ya existe con:
 
@@ -322,7 +325,7 @@ al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego
 	 if (retorno_menu==MENU_RETORNO_BACKGROUND) {
 
 
--Fin Para poder enviar una ventana a background
+---Fin Para poder enviar una ventana a background
 
 -desde menu al pulsar background se retorna MENU_RETORNO_BACKGROUND
 
