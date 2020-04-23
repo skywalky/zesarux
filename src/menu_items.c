@@ -19905,7 +19905,7 @@ void menu_display_window_rearrange(MENU_ITEM_PARAMETERS)
 {
 	int origen_x=menu_origin_x();
 
-	printf ("origen_x: %d\n",origen_x);
+	//printf ("origen_x: %d\n",origen_x);
 
 	//Si abrir ventanas en zxdesktop o no, contar todo el ancho visible o bien solo el de zxdesktop
 
@@ -19918,14 +19918,14 @@ void menu_display_window_rearrange(MENU_ITEM_PARAMETERS)
 
 	else ancho=scr_get_menu_width();
 
-	printf ("ancho: %d\n",ancho);
+	//printf ("ancho: %d\n",ancho);
 
 	int xfinal=origen_x+ancho;
 
 
 	int alto=scr_get_menu_height();
 
-	printf ("alto: %d\n",alto);
+	//printf ("alto: %d\n",alto);
 
 	int yfinal=alto;
 
@@ -19949,9 +19949,11 @@ void menu_display_window_rearrange(MENU_ITEM_PARAMETERS)
 
 	int alto_maximo_en_fila=0;
 
+	int cambio_coords_origen=0;
+
 	while (ventana!=NULL) {
 
-		printf ("ventana %p x %d y %d\n",ventana,x,y);
+		debug_printf (VERBOSE_DEBUG,"Setting window %s to %d,%d",ventana->window_title,x,y);
 
 		ventana->x=x;
 		ventana->y=y;
@@ -19963,10 +19965,10 @@ void menu_display_window_rearrange(MENU_ITEM_PARAMETERS)
 		ventana=ventana->next_window;
 		if (ventana!=NULL) {
 			x +=ancho_antes;
-			printf ("%d %d %d\n",x,ventana->visible_width,ancho);
+			//printf ("%d %d %d\n",x,ventana->visible_width,ancho);
 			if (x+ventana->visible_width>xfinal) {
 
-				printf ("Next column\n");
+				//printf ("Next column\n");
 				//Siguiente fila
 				x=origen_x;
 
@@ -19974,47 +19976,20 @@ void menu_display_window_rearrange(MENU_ITEM_PARAMETERS)
 
 				alto_maximo_en_fila=0;
 
-				/*if (y>=alto) {
-					//Volver al principio. Pero la ponemos ligeramente a la derecha
-					origen_x +=4;
-					x=origen_x;
 
-					origen_y +=4;
-
-
-					y=origen_y;
-
-				}*/
 			}
 
 			//Si volver al principio
 			if (y+ventana->visible_height>yfinal) {
 
-				printf ("Restart x,y coords\n");
+				debug_printf (VERBOSE_DEBUG,"Restart x,y coordinates");
 
-				//Volver al principio. Pero la ponemos ligeramente a la derecha y abajo
-				origen_x +=4;
+				//alternamos coordenadas origen, para darles cierto "movimiento", 4 caracteres derecha y abajo
+				cambio_coords_origen ^=4;
 
-				//si origen es demasiado grande
-				//TODO: realmente habria que considerar que cada ventana al ubicarla hacia origen_x va a caber. Asimimos que si, pero...
-				if (origen_x>20) {
-					printf ("Reiniciando origen x\n");
-					origen_x=0;
-				}
-
-				x=origen_x;
-
-
-				origen_y +=4;
-
-				//si origen es demasiado grande
-				//TODO: realmente habria que considerar que cada ventana al ubicarla hacia origen_y va a caber. Asimimos que si, pero...
-				if (origen_y>16) {
-					printf ("Reiniciando origen y\n");
-					origen_y=0;				
-				}
-
-				y=origen_y;				
+				x=origen_x + cambio_coords_origen;
+				y=origen_y + cambio_coords_origen;
+						
 			}
 		}
 	}

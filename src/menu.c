@@ -23581,19 +23581,20 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_window_settings,"You can allow some menu windows to be put on the background.\n"
 
 			"When a window is on the background, its contents are updated continuosly.\n"
-			"But the menu needs to be opened for the windows to be shown\n"
 
 			"Windows that can be put on background have an exclamation mark (!) "
-			"on the right of its title. "
+			"on the right of its title. When the window is on background, the excamation mark will blink.\n"
 
 			"Press left button mouse on the exclamation mark or press F6 to put that window on the background. "
-			"Some examples of these windows are AY Registers, Audio Waveform, or AY Sheet\n"
-			"\n"
-			"Windows on the background can not be moved, resized or closed directly using your mouse, but you can:\n"
+			"Some examples of these windows are AY Registers, Audio Waveform, or AY Sheet.\n"
+
+			"Windows on the background can not be moved, resized or closed directly using your mouse, "
+			"neither you can interact with that window, but you can:\n"
 			"- Recover the window to the foreground: just go to the menu where the window appears, and select it again, "
 			"for example, go to Audio menu and select Waveform to recover an Audio Waveform window from the background\n"
 			"- Close or move to the top: go to menu Display->Window management\n"
-			"- Close all windows: go to menu Display->Close all Windows, or disable this Background windows setting\n"		
+			"- Close all windows: go to menu Display->Close all Windows, or disable this Background windows setting\n"
+			"- Rearrange and Reduce windows: go to menu Display"	
 		);
 
 
