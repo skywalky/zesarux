@@ -2446,6 +2446,8 @@ Calculando ese tiempo: 12% cpu
         cls_menu_overlay();
 		zxvision_destroy_window(&ventana);
 
+		//De los pocos casos que hay que esperar a liberar tecla
+        menu_espera_no_tecla();
 
 }
 

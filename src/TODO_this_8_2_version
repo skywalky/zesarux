@@ -267,17 +267,8 @@ valores long int
 -Soporte ulaplus en Next
 
 
--con ventanas en background, si hay alguna llamada a mensaje splash
-menu_generic_message_splash
-no se mueven las barras  (o bien se mueven pero luego se redibujan encima sin movimiento). Quiza es porque menu_window_splash_counter es una variable global?
-
-
-
 -Lo ideal seria poder grabar la lista de ventanas activas de background y que las restaure al empezar.
 No deberia ser muy dificil, tener una lista de nombres de ventanas y sus llamadas. Y una manera de entrar para que se vayan a background directamente
 
 -Poder ver ventanas en background con menú cerrado de la misma manera que salen mensajes splash?
-
--Parece que si hay ventanas en background muy grandes (como waveform) pueden llegar a ocultar parcialmente la ventana superior. Por que??
-Quiza tiene que ver con la caida de frames? Quiza solo afecta los putpixel? no estoy seguro... Tambien pasa con visualmem. Quiza las que son mas de 32 de ancho??
 
