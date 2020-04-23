@@ -19878,6 +19878,149 @@ void menu_display_window_list(MENU_ITEM_PARAMETERS)
 
 }
 
+//Reducir todas las ventanas a un tamaño pequeño "razonable" de 20x10, si es que no eran ya asi de pequeñas
+void menu_display_window_reduce_all(MENU_ITEM_PARAMETERS)
+{
+	//Podemos empezar desde la de arriba por ejemplo, da igual
+	zxvision_window *ventana;
+
+	ventana=zxvision_current_window;
+
+	int ancho_maximo=20;
+	int alto_maximo=10;
+
+
+	while (ventana!=NULL) {
+		if (ventana->visible_width>ancho_maximo) ventana->visible_width=ancho_maximo;
+		if (ventana->visible_height>alto_maximo) ventana->visible_height=alto_maximo;
+
+		ventana=ventana->previous_window;
+	}	
+
+	cls_menu_overlay();
+}
+
+
+void menu_display_window_rearrange(MENU_ITEM_PARAMETERS)
+{
+	int origen_x=menu_origin_x();
+
+	printf ("origen_x: %d\n",origen_x);
+
+	//Si abrir ventanas en zxdesktop o no, contar todo el ancho visible o bien solo el de zxdesktop
+
+	int ancho;
+
+	if (menu_ext_desktop_enabled_place_menu() ) {
+		//ancho=screen_ext_desktop_width/menu_char_width/menu_gui_zoom;
+		ancho=menu_get_width_characters_ext_desktop();
+	}
+
+	else ancho=scr_get_menu_width();
+
+	printf ("ancho: %d\n",ancho);
+
+	int xfinal=origen_x+ancho;
+
+
+	int alto=scr_get_menu_height();
+
+	printf ("alto: %d\n",alto);
+
+	int yfinal=alto;
+
+
+	//Empezamos una a una, desde la de mas abajo
+	zxvision_window *ventana;
+
+	ventana=zxvision_current_window;
+
+	if (ventana==NULL) return;
+
+	ventana=zxvision_find_first_window_below_this(ventana);
+
+	if (ventana==NULL) return;
+
+	int origen_y=0;
+
+	//Y de ahi para arriba
+	int x=origen_x;
+	int y=origen_y;
+
+	int alto_maximo_en_fila=0;
+
+	while (ventana!=NULL) {
+
+		printf ("ventana %p x %d y %d\n",ventana,x,y);
+
+		ventana->x=x;
+		ventana->y=y;
+
+		if (ventana->visible_height>alto_maximo_en_fila) alto_maximo_en_fila=ventana->visible_height;
+
+		int ancho_antes=ventana->visible_width;
+
+		ventana=ventana->next_window;
+		if (ventana!=NULL) {
+			x +=ancho_antes;
+			printf ("%d %d %d\n",x,ventana->visible_width,ancho);
+			if (x+ventana->visible_width>xfinal) {
+
+				printf ("Next column\n");
+				//Siguiente fila
+				x=origen_x;
+
+				y+=alto_maximo_en_fila;
+
+				alto_maximo_en_fila=0;
+
+				/*if (y>=alto) {
+					//Volver al principio. Pero la ponemos ligeramente a la derecha
+					origen_x +=4;
+					x=origen_x;
+
+					origen_y +=4;
+
+
+					y=origen_y;
+
+				}*/
+			}
+
+			//Si volver al principio
+			if (y+ventana->visible_height>yfinal) {
+
+				printf ("Restart x,y coords\n");
+
+				//Volver al principio. Pero la ponemos ligeramente a la derecha y abajo
+				origen_x +=4;
+
+				//si origen es demasiado grande
+				//TODO: realmente habria que considerar que cada ventana al ubicarla hacia origen_x va a caber. Asimimos que si, pero...
+				if (origen_x>20) {
+					printf ("Reiniciando origen x\n");
+					origen_x=0;
+				}
+
+				x=origen_x;
+
+
+				origen_y +=4;
+
+				//si origen es demasiado grande
+				//TODO: realmente habria que considerar que cada ventana al ubicarla hacia origen_y va a caber. Asimimos que si, pero...
+				if (origen_y>16) {
+					printf ("Reiniciando origen y\n");
+					origen_y=0;				
+				}
+
+				y=origen_y;				
+			}
+		}
+	}
+
+	cls_menu_overlay();
+}
 
 //menu display settings
 void menu_display_settings(MENU_ITEM_PARAMETERS)
@@ -19956,6 +20099,12 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 
 
 				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_window_close_all,NULL,"Close all windows");
+
+				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_window_rearrange,NULL,"Rearrange windows");
+
+				menu_add_item_menu_format(array_menu_display_settings,MENU_OPCION_NORMAL,menu_display_window_reduce_all,NULL,"Reduce windows");
+				menu_add_item_menu_tooltip(array_menu_display_settings,"Reduce windows to maximum size 20x10");
+				menu_add_item_menu_ayuda(array_menu_display_settings,"Reduce windows to maximum size 20x10");
 			}
 
  

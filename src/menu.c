@@ -5565,6 +5565,11 @@ int zxvision_generic_message_cursor_up(zxvision_window *ventana)
 
 }		
 
+//Retorna el ancho en caracteres del ext desktop
+int menu_get_width_characters_ext_desktop(void)
+{
+	return screen_ext_desktop_width/menu_char_width/menu_gui_zoom;
+}
 
 int menu_get_origin_x_zxdesktop_aux(int divisor)
 {
@@ -5573,7 +5578,8 @@ int menu_get_origin_x_zxdesktop_aux(int divisor)
 
 	//Quitamos el tamaño maximo ventana (normalmente 32), entre 2
 	//int pos_x=ancho_total-ZXVISION_MAX_ANCHO_VENTANA/2;
-	int restar=screen_ext_desktop_width/menu_char_width/menu_gui_zoom;
+	//int restar=screen_ext_desktop_width/menu_char_width/menu_gui_zoom;
+	int restar=menu_get_width_characters_ext_desktop();
 	//printf ("restar: %d\n",restar);
 	//al menos 32 de ancho para zona de menu
 	if (restar<32) restar=32;
@@ -5597,11 +5603,18 @@ int menu_origin_x(void)
 }
 
 
+//Dice si esta habilitado el ext desktop, y si los menos se deben abrir ahi por defecto
+int menu_ext_desktop_enabled_place_menu(void)
+{
+	return screen_ext_desktop_place_menu && screen_ext_desktop_enabled*scr_driver_can_ext_desktop();
+}
+
 int menu_center_x(void)
 {
 
 
-	if (screen_ext_desktop_place_menu && screen_ext_desktop_enabled*scr_driver_can_ext_desktop()) {
+	//if (screen_ext_desktop_place_menu && screen_ext_desktop_enabled*scr_driver_can_ext_desktop()) {
+	if (menu_ext_desktop_enabled_place_menu()) {
 		//Esta zxdesktop. Intentamos mantener ventanas localizadas ahi por defecto, si hay esa opcion activada
 		return menu_get_origin_x_zxdesktop_aux(2);
 	}

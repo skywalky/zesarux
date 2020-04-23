@@ -244,6 +244,8 @@ extern int zxvision_window_can_be_backgrounded(zxvision_window *w);
 extern void zxvision_message_put_window_background(void);
 extern void zxvision_window_delete_all_windows(void);
 
+extern zxvision_window *zxvision_find_first_window_below_this(zxvision_window *w);
+
 extern int tecla_f_background;
 extern int menu_get_mask_puerto_especial(int tecla_f);
 extern z80_byte *menu_get_port_puerto_especial(int tecla_f);
@@ -783,6 +785,9 @@ extern estilos_gui definiciones_estilos_gui[];
 extern void set_charset(void);
 
 extern void menu_draw_ext_desktop(void);
+
+extern int menu_ext_desktop_enabled_place_menu(void);
+extern int menu_get_width_characters_ext_desktop(void);
 
 extern int menu_ext_desktop_fill;
 extern int menu_ext_desktop_fill_solid_color;
