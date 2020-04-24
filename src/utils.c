@@ -16824,9 +16824,19 @@ int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto)
 
 }
 
-//Misma funcion que la anterior pero indicando solo nombre y puntero a ventana
-void util_add_window_geometry_compact(char *nombre,zxvision_window *ventana)
+//Misma funcion que la anterior pero indicando solo puntero a ventana
+//El nombre lo obtiene de la estructura de zxvision_window
+void util_add_window_geometry_compact(zxvision_window *ventana)
 {
+
+        char *nombre;
+
+        nombre=ventana->geometry_name;
+        if (nombre[0]==0) {
+                //printf ("Trying to save window geometry but name is blank\n");
+                return;
+        }
+
         util_add_window_geometry(nombre,ventana->x,ventana->y,ventana->visible_width,ventana->visible_height);        
 }
 

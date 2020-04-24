@@ -555,12 +555,11 @@ struct s_subzone_info
 
 typedef struct s_subzone_info subzone_info;
 
-#define MAX_CONFIG_WINDOW_GEOMETRY 100
 
 //Tabla para guardar configuracion de geometria de ventanas
 struct s_saved_config_window_geometry 
 {
-	char nombre[100];
+	char nombre[MAX_NAME_WINDOW_GEOMETRY];
 	int x,y,ancho,alto;
 };
 
@@ -571,7 +570,7 @@ extern int total_config_window_geometry;
 extern int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto);
 extern int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto);
 
-extern void util_add_window_geometry_compact(char *nombre,zxvision_window *ventana);
+extern void util_add_window_geometry_compact(zxvision_window *ventana);
 
 extern void util_clear_all_windows_geometry(void);
 

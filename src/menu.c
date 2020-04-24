@@ -4905,6 +4905,9 @@ void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visib
 	w->upper_margin=0;
 	w->lower_margin=0;
 
+	//Por defecto no tiene nombre de guardado de geometria
+	w->geometry_name[0]=0;
+
 	//Y textos margen nulos
 	//w->text_margin[0]=NULL;
 
@@ -30820,7 +30823,8 @@ void menu_filesel_save_params_window(zxvision_window *ventana)
 			last_filesel_ventana_visible_ancho=ventana->visible_width;
 			last_filesel_ventana_visible_alto=ventana->visible_height;*/
 
-	util_add_window_geometry("filesel",ventana->x,ventana->y,ventana->visible_width,ventana->visible_height);
+	//util_add_window_geometry("filesel",ventana->x,ventana->y,ventana->visible_width,ventana->visible_height);
+	util_add_window_geometry_compact(ventana);
 }
 
 
@@ -30963,6 +30967,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 	    ventana->upper_margin=4;
 	    ventana->lower_margin=4;
 		ventana->visible_cursor=1;
+		strcpy(ventana->geometry_name,"filesel");
 
 		zxvision_draw_window(ventana);
 

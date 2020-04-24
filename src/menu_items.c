@@ -2698,6 +2698,8 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"AY Registers");
 		ventana->can_be_backgrounded=1;	
+		//indicar nombre del grabado de geometria
+		strcpy(ventana->geometry_name,"ayregisters");
 
 		zxvision_draw_window(ventana);		
 
@@ -2728,7 +2730,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();	
 
-	util_add_window_geometry_compact("ayregisters",ventana);	
+	util_add_window_geometry_compact(ventana);	
 
 
 	if (tecla==3) {
@@ -3009,7 +3011,9 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 						ancho_ventana-1,alto_ventana-2,"Video Info");	
 
-	ventana->can_be_backgrounded=1;												
+	ventana->can_be_backgrounded=1;	
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"videoinfo");											
 
 	zxvision_draw_window(ventana);
 
@@ -3040,7 +3044,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 
     cls_menu_overlay();	
-	util_add_window_geometry_compact("videoinfo",ventana);
+	util_add_window_geometry_compact(ventana);
 
 	if (tecla==3) {
 
@@ -3263,6 +3267,8 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 							TSCONF_SPRITENAV_WINDOW_ANCHO-1,menu_debug_tsconf_tbblue_spritenav_get_total_sprites()*2,"Sprite navigator");
 
 	ventana->can_be_backgrounded=1;
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"tsconftbbluespritenav");
 
 	zxvision_draw_window(ventana);		
 
@@ -3293,7 +3299,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-	util_add_window_geometry_compact("tsconftbbluespritenav",ventana);
+	util_add_window_geometry_compact(ventana);
 
 	if (tecla==3) {
 
@@ -3781,6 +3787,8 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		ventana->upper_margin=1;
 
 		ventana->can_be_backgrounded=1;
+		//indicar nombre del grabado de geometria
+		strcpy(ventana->geometry_name,"tsconftbbluetilenav");
 		
 		//Leyenda inferior
 		//zxvision_print_string_defaults_fillspc(ventana,1,1,"-----");
@@ -3800,7 +3808,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 
 void menu_debug_tsconf_tbblue_save_geometry(zxvision_window *ventana)
 {
-	util_add_window_geometry_compact("tsconftbbluetilenav",ventana);
+	util_add_window_geometry_compact(ventana);
 }
 
 zxvision_window zxvision_window_tsconf_tbblue_tilenav;
@@ -3881,7 +3889,7 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
     //Grabar geometria ventana. Usamos funcion auxiliar pues la llamamos tambien al cambiar de modo y layer
 	menu_debug_tsconf_tbblue_save_geometry(ventana);
-    //util_add_window_geometry_compact("tsconftbbluetilenav",ventana);
+
 
     if (tecla==3) {
 
@@ -4294,6 +4302,9 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Waveform");
 	ventana->can_be_backgrounded=1;	
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"waveform");
+
 	//printf("despues zxvision_new_window_nocheck_staticsize\n");
 	zxvision_draw_window(ventana);		
 
@@ -4352,7 +4363,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
     cls_menu_overlay();
 
 	//Grabar geometria ventana
-	util_add_window_geometry_compact("waveform",ventana);	
+	util_add_window_geometry_compact(ventana);	
 
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
@@ -4863,6 +4874,9 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Visual memory");
 	ventana->can_be_backgrounded=1;	
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"visualmem");
+
 	zxvision_draw_window(ventana);				
 
 
@@ -4963,7 +4977,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-	util_add_window_geometry_compact("visualmem",ventana);
+	util_add_window_geometry_compact(ventana);
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
                 //zxvision_ay_registers_overlay
@@ -5438,7 +5452,9 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,"AY Player");
 
-	ventana->can_be_backgrounded=1;							
+	ventana->can_be_backgrounded=1;	
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"ayplayer");
 
 	zxvision_draw_window(ventana);	
 
@@ -5584,7 +5600,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
         cls_menu_overlay();
 
-	util_add_window_geometry_compact("ayplayer",ventana);
+	util_add_window_geometry_compact(ventana);
 
 
         if (retorno_menu==MENU_RETORNO_BACKGROUND) {
@@ -5897,6 +5913,9 @@ void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int an
 	//printf ("ancho: %d alto: %d\n",ancho,alto);
 
 	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"hexeditor");
 
 	zxvision_draw_window(ventana);
 
@@ -6458,7 +6477,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	cls_menu_overlay();
 
-	util_add_window_geometry("hexeditor",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+	//util_add_window_geometry("hexeditor",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+	util_add_window_geometry_compact(&ventana);
 
 	zxvision_destroy_window(&ventana);
 	
@@ -7721,6 +7741,8 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
     zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,"Colour palettes");
 	ventana->can_be_backgrounded=1;
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"displaypalettes");
 
 	zxvision_draw_window(ventana);
 
@@ -7893,7 +7915,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 
 	cls_menu_overlay();
-	util_add_window_geometry_compact("displaypalettes",ventana);
+	util_add_window_geometry_compact(ventana);
 
 	if (tecla==3) {
 
@@ -11066,7 +11088,9 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,64,64+2,"Sprites");
-	ventana->can_be_backgrounded=1;	
+	ventana->can_be_backgrounded=1;
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"sprites");
 
 	zxvision_draw_window(ventana);
 
@@ -11256,8 +11280,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
     cls_menu_overlay();
 
     	//Grabar geometria ventana
-    	//util_add_window_geometry("sprites",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);	
-		util_add_window_geometry_compact("sprites",ventana);	
+
+		util_add_window_geometry_compact(ventana);	
 
 
 	if (tecla==3) {
@@ -13108,7 +13132,9 @@ void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 	//menu_debug_registers_ventana_common(ventana);
 
 
-	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll	
+	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"debugcpu");
 
 
 
@@ -13307,6 +13333,9 @@ void menu_watches(void)
 
 	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Watches");
 	ventana->can_be_backgrounded=1;	
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"watches");
+
 	zxvision_draw_window(ventana);		
 
 
@@ -13404,7 +13433,7 @@ void menu_watches(void)
 
 	   cls_menu_overlay();
 
-	util_add_window_geometry_compact("watches",ventana);	   
+	util_add_window_geometry_compact(ventana);	   
 
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
@@ -14673,7 +14702,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			debug_printf (VERBOSE_DEBUG,"Debug CPU window size has changed. Recreate it again");
 
 			//Guardamos la geometria actual
-			util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+			//util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+			util_add_window_geometry_compact(&ventana);
 
 			zxvision_destroy_window(&ventana);
 
@@ -15529,7 +15559,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-	util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+	//util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
+	util_add_window_geometry_compact(&ventana);
 
 
 	zxvision_destroy_window(&ventana);
@@ -16430,6 +16461,8 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 		zxvision_new_window_nocheck_staticsize(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
 		ventana->can_be_backgrounded=1;	
+		//indicar nombre del grabado de geometria
+		strcpy(ventana->geometry_name,"aysheet");
 
 		zxvision_draw_window(ventana);	
 
@@ -16518,7 +16551,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-		util_add_window_geometry_compact("aysheet",ventana);	
+		util_add_window_geometry_compact(ventana);	
 
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
@@ -19915,8 +19948,18 @@ void menu_display_window_reduce_all(MENU_ITEM_PARAMETERS)
 
 
 	while (ventana!=NULL) {
-		if (ventana->visible_width>ancho_maximo) ventana->visible_width=ancho_maximo;
-		if (ventana->visible_height>alto_maximo) ventana->visible_height=alto_maximo;
+
+		//La hacemos mas pequeña si es que es mas grande
+		//if (ventana->visible_width>ancho_maximo) ventana->visible_width=ancho_maximo;
+		//if (ventana->visible_height>alto_maximo) ventana->visible_height=alto_maximo;
+
+		//Siempre la hacemos al tamaño indicado
+		ventana->visible_width=ancho_maximo;
+		ventana->visible_height=alto_maximo;
+
+
+		//Y guardar la geometria
+		util_add_window_geometry_compact(ventana);
 
 		ventana=ventana->previous_window;
 	}	
@@ -19981,6 +20024,9 @@ void menu_display_window_rearrange(MENU_ITEM_PARAMETERS)
 
 		ventana->x=x;
 		ventana->y=y;
+
+		//Y guardar la geometria
+		util_add_window_geometry_compact(ventana);
 
 		if (ventana->visible_height>alto_maximo_en_fila) alto_maximo_en_fila=ventana->visible_height;
 
@@ -20771,6 +20817,8 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,titulo_ventana);
 		ventana->can_be_backgrounded=1;	
+		//indicar nombre del grabado de geometria
+		strcpy(ventana->geometry_name,"aypiano");
 
 		zxvision_draw_window(ventana);						
 
@@ -20838,7 +20886,7 @@ valor_contador_segundo_anterior=contador_segundo;
 
         cls_menu_overlay();
 
-		util_add_window_geometry_compact("aypiano",ventana);
+		util_add_window_geometry_compact(ventana);
 
 	if (tecla==3) {
                 //zxvision_ay_registers_overlay
@@ -21002,7 +21050,9 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
 						ancho_ventana-1,alto_ventana-2,titulo_ventana);
-	ventana->can_be_backgrounded=1;	
+	ventana->can_be_backgrounded=1;
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"wavepiano");
 
 	zxvision_draw_window(ventana);						
 
@@ -21063,7 +21113,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 	cls_menu_overlay();
 
-	util_add_window_geometry_compact("wavepiano",ventana);		
+	util_add_window_geometry_compact(ventana);		
 
 
 	if (tecla==3) {

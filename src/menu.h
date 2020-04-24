@@ -48,6 +48,15 @@ struct s_overlay_screen {
 typedef struct s_overlay_screen overlay_screen;
 
 
+//Para el guardado de la geometria de ventanas
+
+//Maximo de ventanas que se guarda geometria
+#define MAX_CONFIG_WINDOW_GEOMETRY 100
+//Tamaño maximo del nombre para la geometria
+#define MAX_NAME_WINDOW_GEOMETRY 100
+
+
+
 //Nuevas ventanas zxvision
 struct s_zxvision_window {
 	overlay_screen *memory;
@@ -63,6 +72,9 @@ struct s_zxvision_window {
 
 	int total_width,total_height;
 	char window_title[256];
+
+	//Para el guardado de geometria
+	char geometry_name[MAX_NAME_WINDOW_GEOMETRY];
 
 	int can_be_resized;
 	int is_minimized;
