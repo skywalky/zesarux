@@ -9174,6 +9174,11 @@ void menu_display_16c_mode(MENU_ITEM_PARAMETERS)
     else enable_16c_mode();
 }
 
+void menu_display_tbblue_not_store_scanlines(MENU_ITEM_PARAMETERS)
+{
+	tbblue_not_store_scanlines.v ^=1;
+}
+
 
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
@@ -9242,6 +9247,10 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				"as on non-Real Video, but you can have idle bus support on these drivers. "
 				"Curses, stdout and simpletext drivers on ZX80/81 machines do have Real Video display."
 				);
+
+		if (MACHINE_IS_TBBLUE && rainbow_enabled.v) {
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tbblue_not_store_scanlines,NULL,"[%c] Store scanlines",(tbblue_not_store_scanlines.v==0 ? 'X' : ' '));	
+		}
 
 		if (MACHINE_IS_TSCONF) {
 				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tsconf_vdac,NULL,"[%c] TSConf VDAC PWM",

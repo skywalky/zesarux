@@ -43,6 +43,7 @@
 #include "multiface.h"
 #include "uartbridge.h"
 #include "chardevice.h"
+#include "settings.h"
 
 #define TBBLUE_MAX_SRAM_8KB_BLOCKS 224
 
@@ -5624,7 +5625,12 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 			byte_leido=puntero_buffer_atributos[indice_origen_bytes++];
 
-			attribute=puntero_buffer_atributos[indice_origen_bytes++];
+			//Pero si no tenemos scanline
+			if (tbblue_not_store_scanlines.v) attribute=screen[dir_atributo++];	
+
+			else {
+				attribute=puntero_buffer_atributos[indice_origen_bytes++];
+			}
 
 		}
 

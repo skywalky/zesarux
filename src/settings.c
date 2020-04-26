@@ -220,6 +220,9 @@ z80_bit use_scrcursesw={0};
 //Si se ha preguntado ya para descargar la imagen SD al seleccionar maquina tbblue
 z80_bit tbblue_autoconfigure_sd_asked={0};
 
+//No guardar scanlines y border, requerido para demos hi-res (de spectrum , no de next necesariamente)
+z80_bit tbblue_not_store_scanlines={0};
+
 
 
 //

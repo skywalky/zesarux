@@ -172,6 +172,9 @@ void core_spectrum_store_rainbow_current_atributes(void)
 	//En maquina tsconf, no hacer esto tampoco
 	if (MACHINE_IS_TSCONF) return;
 
+	//No hacer esto en tbblue
+	if (MACHINE_IS_TBBLUE && tbblue_not_store_scanlines.v) return;
+
 
 	//Si no vamos a refrescar pantalla, no tiene sentido almacenar nada en el buffer
 /*
