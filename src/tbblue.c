@@ -5623,16 +5623,17 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 			//Modo sin scroll vertical. Permite scroll horizontal. Es modo rainbow
 
-			byte_leido=puntero_buffer_atributos[indice_origen_bytes++];
+			
 
 			//Pero si no tenemos scanline
 			if (tbblue_not_store_scanlines.v) {
-			byte_leido=screen[direccion+pos_no_rainbow_pix_x];
+				byte_leido=screen[direccion+pos_no_rainbow_pix_x];
 				attribute=screen[dir_atributo+pos_no_rainbow_pix_x];	
-				indice_origen_bytes++;
+				indice_origen_bytes+=2;
 			}
 
 			else {
+				byte_leido=puntero_buffer_atributos[indice_origen_bytes++];
 				attribute=puntero_buffer_atributos[indice_origen_bytes++];
 			}
 

@@ -9249,7 +9249,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				);
 
 		if (MACHINE_IS_TBBLUE && rainbow_enabled.v) {
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tbblue_not_store_scanlines,NULL,"[%c] Store scanlines",(tbblue_not_store_scanlines.v==0 ? 'X' : ' '));	
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tbblue_not_store_scanlines,NULL,"[%c] Legacy scanlines effects",(tbblue_not_store_scanlines.v==0 ? 'X' : ' '));	
 		}
 
 		if (MACHINE_IS_TSCONF) {
