@@ -5627,6 +5627,7 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 
 			//Pero si no tenemos scanline
 			if (tbblue_not_store_scanlines.v) {
+			byte_leido=screen[direccion+pos_no_rainbow_pix_x];
 				attribute=screen[dir_atributo++];	
 				indice_origen_bytes++;
 			}
