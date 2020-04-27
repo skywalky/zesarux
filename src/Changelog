@@ -26,6 +26,7 @@ Improved ZRCP:
 Improved TBBlue emulation:
 -Enable Timex video by default
 -Added altrom feature: now 48k and 128k mode works again
+-Legacy hi-res and border effects disabled by default. Reduces up to 13% cpu use or gain 17 FPS on my environment
 
 Improved debugging:
 -Added breakpoint action "reset-tstatp"

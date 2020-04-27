@@ -3532,6 +3532,9 @@ int util_write_configfile(void)
 
   if (autodetect_rainbow.v==0)                ADD_STRING_CONFIG,"--no-detect-realvideo");
 
+  if (tbblue_store_scanlines.v)               ADD_STRING_CONFIG,"--tbblue-legacy-hicolor");
+  if (tbblue_store_scanlines_border.v)        ADD_STRING_CONFIG,"--tbblue-legacy-border");
+
   //if (tsconf_si_render_spritetile_rapido.v)   ADD_STRING_CONFIG,"--tsconf-fast-render");
 
 
