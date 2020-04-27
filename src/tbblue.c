@@ -98,7 +98,11 @@ z80_byte *tbblue_memory_paged[8];
 //Si arranca rapido sin pasar por el proceso de boot. Va directamente a rom 48k
 z80_bit tbblue_fast_boot_mode={0};
 
+
 z80_bit tbblue_deny_turbo_rom={0};
+
+//Maximo turbo permitido al habilitar tbblue_deny_turbo_rom
+int tbblue_deny_turbo_rom_max_allowed=1;
 
 
 //
@@ -2910,16 +2914,16 @@ void tbblue_set_emulator_setting_turbo(void)
 
 	//printf ("Setting turbo: value %d on pc %04XH\n",t,reg_pc);			
 
-	if (tbblue_deny_turbo_rom.v && reg_pc<16384) {
-		//printf ("denying cpu turbo change\n");
-		return;
-	}
-
-
 	if (t==0) cpu_turbo_speed=1;
 	else if (t==1) cpu_turbo_speed=2;
 	else if (t==2) cpu_turbo_speed=4;
 	else if (t==3) cpu_turbo_speed=8;
+
+	if (tbblue_deny_turbo_rom.v && reg_pc<16384) {
+		//Ver el maximo permitido
+		if (cpu_turbo_speed>tbblue_deny_turbo_rom_max_allowed) cpu_turbo_speed=tbblue_deny_turbo_rom_max_allowed;
+		return;
+	}
 
 
 	cpu_set_turbo_speed();

@@ -8338,6 +8338,14 @@ void menu_cpu_ldir_hack(MENU_ITEM_PARAMETERS)
 	cpu_ldir_lddr_hack_optimized.v ^=1;
 }
 
+
+void menu_tbblue_deny_turbo_rom_max_allowed(MENU_ITEM_PARAMETERS)
+{
+	tbblue_deny_turbo_rom_max_allowed *=2;
+
+	if (tbblue_deny_turbo_rom_max_allowed>8) tbblue_deny_turbo_rom_max_allowed=1;
+}
+
 //menu cpu settings
 void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 {
@@ -8391,6 +8399,10 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_shortcut(array_menu_cpu_settings,'d');
 					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
 					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
+
+					if (tbblue_deny_turbo_rom.v) {
+						menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom_max_allowed,NULL,"[%d] Max turbo allowed",tbblue_deny_turbo_rom_max_allowed);
+					}
 	  }	  
 
 		if (!MACHINE_IS_Z88) {

@@ -270,6 +270,7 @@ extern void tbblue_copper_handle_next_opcode(void);
 extern void tbblue_copper_handle_vsync(void);
 
 extern z80_bit tbblue_deny_turbo_rom;
+extern int tbblue_deny_turbo_rom_max_allowed;
 extern void tbblue_set_emulator_setting_turbo(void);
 
 
