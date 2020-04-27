@@ -1473,7 +1473,10 @@ printf (
 
 		"--cpuspeed n               Set CPU speed in percentage\n"
 		"--denyturbozxunoboot       Deny setting turbo mode on ZX-Uno boot\n"
-		"--denyturbotbbluerom       Deny setting turbo mode on TBBlue ROM\n"
+
+		"--denyturbotbbluerom       Limit setting turbo mode on TBBlue ROM\n"
+		"--tbblue-max-turbo-rom n   Max allowed turbo speed mode on TBBlue ROM when enabling --denyturbotbbluerom"
+
 		"--tbblue-fast-boot-mode    Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)\n"
 		//no uso esto de momento "--tbblue-123b-port n        Sets the initial value for port 123b on hard reset, for tbblue-fast-boot-mode\n"
 		"--random-r-register        Generate random value for R register on every cold start, instead of the normal 0 value. Useful to avoid same R register in the start of games, when they use that register as a random value\n"
@@ -5056,7 +5059,7 @@ int parse_cmdline_options(void) {
                         else if (!strcmp(argv[puntero_parametro],"--cpuspeed")) {
                                 siguiente_parametro_argumento();
                                 porcentaje_velocidad_emulador=atoi(argv[puntero_parametro]);
-                                if (porcentaje_velocidad_emulador<10 || porcentaje_velocidad_emulador>1000) {
+                                if (porcentaje_velocidad_emulador<1 || porcentaje_velocidad_emulador>9999) {
                                         printf ("Invalid CPU percentage\n");
                                         exit(1);
                                 }
@@ -5068,7 +5071,19 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--denyturbotbbluerom")) {
 					tbblue_deny_turbo_rom.v=1;
-			}			
+			}		
+
+			else if (!strcmp(argv[puntero_parametro],"--tbblue-max-turbo-rom")) {
+				
+				siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+
+				if (valor<1 || valor>8) {
+						printf ("Invalid value for tbblue-max-turbo-rom\n");
+						exit(1);
+				}
+				tbblue_deny_turbo_rom_max_allowed=valor;					
+			}					
 
 			else if (!strcmp(argv[puntero_parametro],"--tbblue-fast-boot-mode")) {
 				tbblue_fast_boot_mode.v=1;

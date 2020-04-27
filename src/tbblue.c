@@ -101,7 +101,7 @@ z80_bit tbblue_fast_boot_mode={0};
 
 z80_bit tbblue_deny_turbo_rom={0};
 
-//Maximo turbo permitido al habilitar tbblue_deny_turbo_rom
+//Maximo turbo permitido al habilitar tbblue_deny_turbo_rom. Por defecto maximo 1X
 int tbblue_deny_turbo_rom_max_allowed=1;
 
 
@@ -2922,7 +2922,6 @@ void tbblue_set_emulator_setting_turbo(void)
 	if (tbblue_deny_turbo_rom.v && reg_pc<16384) {
 		//Ver el maximo permitido
 		if (cpu_turbo_speed>tbblue_deny_turbo_rom_max_allowed) cpu_turbo_speed=tbblue_deny_turbo_rom_max_allowed;
-		return;
 	}
 
 
@@ -3555,9 +3554,11 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 	//printf ("register port %02XH value %02XH\n",tbblue_last_register,value);
 
+	z80_byte last_register_5=tbblue_registers[5];
 	z80_byte last_register_6=tbblue_registers[6];
 	z80_byte last_register_7=tbblue_registers[7];
 	z80_byte last_register_8=tbblue_registers[8];
+	z80_byte last_register_17=tbblue_registers[17];
 	z80_byte last_register_21=tbblue_registers[21];
 	z80_byte last_register_66=tbblue_registers[66];
 	z80_byte last_register_67=tbblue_registers[67];
@@ -3698,7 +3699,8 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 		break;
 
 		case 5:
-			tbblue_splash_monitor_mode();
+			if ((last_register_5&4)!=(value&4)) tbblue_splash_monitor_mode();
+		
 		break;
 
 		
@@ -3749,7 +3751,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 
 		case 17:
-			tbblue_splash_monitor_mode();
+			if ((last_register_17&7)!=(value&7)) tbblue_splash_monitor_mode();
 		break;		
 
 		case 21:

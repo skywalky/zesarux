@@ -3184,6 +3184,8 @@ int util_write_configfile(void)
 
   if (tbblue_deny_turbo_rom.v)                ADD_STRING_CONFIG,"--denyturbotbbluerom");
 
+                                              ADD_STRING_CONFIG,"--tbblue-max-turbo-rom %d",tbblue_deny_turbo_rom_max_allowed);
+
 
   if (tbblue_fast_boot_mode.v)                ADD_STRING_CONFIG,"--tbblue-fast-boot-mode");
 

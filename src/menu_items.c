@@ -8394,11 +8394,11 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 	  }
 
 		if (MACHINE_IS_TBBLUE) {
-					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom,NULL,"[%c] ~~Deny turbo on ROM",
+					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom,NULL,"[%c] Limit turbo on ROM",
 							(tbblue_deny_turbo_rom.v ? 'X' : ' ') );
-					menu_add_item_menu_shortcut(array_menu_cpu_settings,'d');
-					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
-					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Denies changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
+					//menu_add_item_menu_shortcut(array_menu_cpu_settings,'d');
+					menu_add_item_menu_tooltip(array_menu_cpu_settings,"Limit changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
+					menu_add_item_menu_ayuda(array_menu_cpu_settings,"Limit changing turbo mode on Next ROM. Useful on slow machines. Can make the boot process to fail");
 
 					if (tbblue_deny_turbo_rom.v) {
 						menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom_max_allowed,NULL,"[%d] Max turbo allowed",tbblue_deny_turbo_rom_max_allowed);
