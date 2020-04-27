@@ -9174,9 +9174,14 @@ void menu_display_16c_mode(MENU_ITEM_PARAMETERS)
     else enable_16c_mode();
 }
 
-void menu_display_tbblue_not_store_scanlines(MENU_ITEM_PARAMETERS)
+void menu_display_tbblue_store_scanlines(MENU_ITEM_PARAMETERS)
 {
-	tbblue_not_store_scanlines.v ^=1;
+	tbblue_store_scanlines.v ^=1;
+}
+
+void menu_display_tbblue_store_scanlines_border(MENU_ITEM_PARAMETERS)
+{
+	tbblue_store_scanlines_border.v ^=1;
 }
 
 
@@ -9249,7 +9254,16 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				);
 
 		if (MACHINE_IS_TBBLUE && rainbow_enabled.v) {
-			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tbblue_not_store_scanlines,NULL,"[%c] Legacy scanlines effects",(tbblue_not_store_scanlines.v==0 ? 'X' : ' '));	
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tbblue_store_scanlines,NULL,"[%c] Legacy hi-color effects",(tbblue_store_scanlines.v ? 'X' : ' '));	
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Allow legacy hi-color effects on pixel/attribute display zone");
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Allows you to make hi-res effects on pixel/attribute display zone, like overscan demo for example. "
+										"It is not needed for Spectrum Next games. Disabling it reduces cpu usage");
+
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tbblue_store_scanlines_border,NULL,"[%c] Legacy border effects",(tbblue_store_scanlines_border.v ? 'X' : ' '));	
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Allow legacy border effects");
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Allows you to make hi-res effects on border zone, like overscan demo or load/save border stripes for example. "
+										"It is not needed for Spectrum Next games. Disabling it reduces cpu usage");
+
 		}
 
 		if (MACHINE_IS_TSCONF) {

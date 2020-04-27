@@ -127,6 +127,9 @@ void t_scanline_next_fullborder(void)
 
         int i;
 
+		//No si esta desactivado en tbblue
+		if (MACHINE_IS_TBBLUE && tbblue_store_scanlines_border.v==0) return;
+
         //a 255
         for (i=0;i<CURRENT_FULLBORDER_ARRAY_LENGTH;i++) fullbuffer_border[i]=255;
 
@@ -166,14 +169,14 @@ void interrupcion_si_despues_lda_ir(void)
 void core_spectrum_store_rainbow_current_atributes(void)
 {
 
+	//No hacer esto en tbblue
+	if (MACHINE_IS_TBBLUE && tbblue_store_scanlines.v==0) return;	
+
 	//En maquina prism, no hacer esto
 	if (MACHINE_IS_PRISM) return;
 
 	//En maquina tsconf, no hacer esto tampoco
 	if (MACHINE_IS_TSCONF) return;
-
-	//No hacer esto en tbblue
-	if (MACHINE_IS_TBBLUE && tbblue_not_store_scanlines.v) return;
 
 
 	//Si no vamos a refrescar pantalla, no tiene sentido almacenar nada en el buffer

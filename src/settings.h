@@ -73,7 +73,9 @@ extern z80_bit tbblue_autoconfigure_sd_asked;
 
 extern int menu_allow_background_windows;
 
-extern z80_bit tbblue_not_store_scanlines;
+extern z80_bit tbblue_store_scanlines;
+
+extern z80_bit tbblue_store_scanlines_border;
 
 #endif
 

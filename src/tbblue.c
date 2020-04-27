@@ -3375,6 +3375,27 @@ z80_byte tbblue_get_register_port(void)
 	return tbblue_last_register;
 }
 
+void tbblue_splash_monitor_mode(void)
+{
+
+	char buffer_mensaje[100];
+
+	int refresco=50;
+
+	if (tbblue_registers[5] & 4) refresco=60;
+
+	int vga_mode=1;
+
+	if ( (tbblue_registers[17] & 7) ==7 ) vga_mode=0;
+
+	if (vga_mode) sprintf(buffer_mensaje,"Setting monitor VGA mode %d %d Hz",tbblue_registers[17] & 7,refresco);
+	else sprintf(buffer_mensaje,"Setting monitor HDMI mode %d Hz",refresco);
+
+
+
+	screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
+}
+
 void tbblue_get_string_palette_format(char *texto)
 {
 //if (value&128) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
@@ -3672,6 +3693,10 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 		break;
 
+		case 5:
+			tbblue_splash_monitor_mode();
+		break;
+
 		
 
 		case 6:
@@ -3717,6 +3742,11 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 			if ( last_register_8 != value ) tbblue_set_emulator_setting_reg_8();
 
 		break;
+
+
+		case 17:
+			tbblue_splash_monitor_mode();
+		break;		
 
 		case 21:
 			//modo lores
@@ -5626,7 +5656,7 @@ bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
 			
 
 			//Pero si no tenemos scanline
-			if (tbblue_not_store_scanlines.v) {
+			if (tbblue_store_scanlines.v==0) {
 				byte_leido=screen[direccion+pos_no_rainbow_pix_x];
 				attribute=screen[dir_atributo+pos_no_rainbow_pix_x];	
 				indice_origen_bytes+=2;
