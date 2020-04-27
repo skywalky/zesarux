@@ -6735,6 +6735,12 @@ void zxvision_message_put_window_background(void)
 	menu_generic_message_splash("Background task","OK. Window put on the background");
 }
 
+//Pone en la estructura de ventana la funcion de overlay que haya activa ahora
+void zxvision_set_window_overlay_from_current(zxvision_window *ventana)
+{
+	ventana->overlay_function=menu_overlay_function;
+}
+
 
 void zxvision_redraw_window_on_move(zxvision_window *w)
 {

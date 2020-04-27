@@ -256,6 +256,8 @@ extern int zxvision_window_can_be_backgrounded(zxvision_window *w);
 extern void zxvision_message_put_window_background(void);
 extern void zxvision_window_delete_all_windows(void);
 
+extern void zxvision_set_window_overlay_from_current(zxvision_window *ventana);
+
 extern zxvision_window *zxvision_find_first_window_below_this(zxvision_window *w);
 
 extern int tecla_f_background;

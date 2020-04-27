@@ -311,9 +311,17 @@ al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego
 -Activar para poder usar boton de background "!":  ventana->can_be_backgrounded=1;
 
 -menu ventanas finalizan con:
+
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);
+
+    //restauramos modo normal de texto de menu
+    set_menu_overlay_function(normal_overlay_texto_menu);
+
+	.....
+
 	if (tecla==3) {
 		//zxvision_ay_registers_overlay
-		ventana->overlay_function=menu_debug_cpu_resumen_stats_overlay;
 		zxvision_message_put_window_background();
 	}
 
@@ -423,8 +431,13 @@ index 9e32a67e..16a8f772 100644
 
          } while (salir==0);
 
- 				//restauramos modo normal de texto de menu
+ 				
 -        set_menu_overlay_function(normal_overlay_texto_menu);
+
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);
+
+	//restauramos modo normal de texto de menu
 +    set_menu_overlay_function(normal_overlay_texto_menu);
 
 
@@ -433,8 +446,6 @@ index 9e32a67e..16a8f772 100644
 +	util_add_window_geometry_compact("displaypalettes",ventana);
 +
 +        if (tecla==3) {
-+
-+                ventana->overlay_function=menu_display_total_palette_draw_barras;
 +                zxvision_message_put_window_background();
 +        }
 +

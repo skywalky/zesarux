@@ -1886,6 +1886,9 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla(); //Si no, se va al menu anterior.
 	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);	
+
     //restauramos modo normal de texto de menu
      set_menu_overlay_function(normal_overlay_texto_menu);
 
@@ -1894,8 +1897,6 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 
 	if (tecla==3) {
-		//zxvision_ay_registers_overlay
-		ventana->overlay_function=menu_debug_cpu_resumen_stats_overlay;
 		zxvision_message_put_window_background();
 	}
 
@@ -2724,6 +2725,9 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla(); //Si no, se va al menu anterior.
 	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);	
+
     //restauramos modo normal de texto de menu
      set_menu_overlay_function(normal_overlay_texto_menu);
 
@@ -2734,8 +2738,6 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 
 	if (tecla==3) {
-		//zxvision_ay_registers_overlay
-		ventana->overlay_function=menu_ay_registers_overlay;
 		zxvision_message_put_window_background();
 	}
 
@@ -3039,6 +3041,9 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla(); //Si no, se va al menu anterior.
 	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);	
+
     //restauramos modo normal de texto de menu
 	set_menu_overlay_function(normal_overlay_texto_menu);
 
@@ -3047,8 +3052,6 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	util_add_window_geometry_compact(ventana);
 
 	if (tecla==3) {
-
-		ventana->overlay_function=menu_debug_tsconf_tbblue_videoregisters_overlay;
 		zxvision_message_put_window_background();
 	}
 
@@ -3294,6 +3297,9 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 		zxvision_handle_cursors_pgupdn(ventana,tecla);
 	} while (tecla!=2 && tecla!=3);  
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);	
+
 	//restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);		
 
@@ -3302,8 +3308,6 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 	util_add_window_geometry_compact(ventana);
 
 	if (tecla==3) {
-
-		ventana->overlay_function=menu_debug_tsconf_tbblue_spritenav_draw_sprites;
 		zxvision_message_put_window_background();
 	}
 
@@ -3882,6 +3886,9 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
 	} while (tecla!=2 && tecla!=3); 
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);	
+
 	//restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);		
 
@@ -3892,8 +3899,6 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 
 
     if (tecla==3) {
-
-		ventana->overlay_function=menu_debug_tsconf_tbblue_tilenav_draw_tiles;
 		zxvision_message_put_window_background();
 	}
 
@@ -4355,6 +4360,8 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);
 
 	//restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);
@@ -4367,8 +4374,6 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
-                //zxvision_ay_registers_overlay
-                ventana->overlay_function=menu_audio_draw_sound_wave;
                 zxvision_message_put_window_background();
 	}
 
@@ -4970,6 +4975,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	menu_dibuja_menu_permite_repeticiones_hotk=0;
 
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);
 
 	//restauramos modo normal de texto de menu
 	set_menu_overlay_function(normal_overlay_texto_menu);
@@ -4980,8 +4987,6 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	util_add_window_geometry_compact(ventana);
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
-                //zxvision_ay_registers_overlay
-                ventana->overlay_function=menu_debug_draw_visualmem;
                 zxvision_message_put_window_background();
 	}
 
@@ -5593,6 +5598,8 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);
 
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);
 
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
@@ -5604,7 +5611,6 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 
         if (retorno_menu==MENU_RETORNO_BACKGROUND) {
-                ventana->overlay_function=menu_audio_new_ayplayer_overlay;
                 zxvision_message_put_window_background();
         }
 
@@ -7910,6 +7916,9 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
         } while (salir==0);
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);		
+
 				//restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);
 
@@ -7918,8 +7927,6 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 	util_add_window_geometry_compact(ventana);
 
 	if (tecla==3) {
-
-		ventana->overlay_function=menu_display_total_palette_draw_barras;
 		zxvision_message_put_window_background();
 	}
 
@@ -11337,6 +11344,9 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
     //Restauramos modo interlace
     //if (copia_video_interlaced_mode.v) enable_interlace();
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);
+
     //restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);
 
@@ -11348,8 +11358,6 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 
 	if (tecla==3) {
-		//zxvision_ay_registers_overlay
-		ventana->overlay_function=menu_debug_draw_sprites;
 		zxvision_message_put_window_background();
 	}	
 
@@ -13491,6 +13499,9 @@ void menu_watches(void)
 
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);
+
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
 
@@ -13500,7 +13511,6 @@ void menu_watches(void)
 
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
-        ventana->overlay_function=menu_watches_overlay;
         zxvision_message_put_window_background();
     }
 
@@ -16606,7 +16616,8 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 
 
-				
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);				
 
 	//restauramos modo normal de texto de menu
 	set_menu_overlay_function(normal_overlay_texto_menu);
@@ -16618,8 +16629,6 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
-                //zxvision_ay_registers_overlay
-                ventana->overlay_function=menu_ay_partitura_overlay;
                 zxvision_message_put_window_background();
 	}
 
@@ -20941,7 +20950,8 @@ valor_contador_segundo_anterior=contador_segundo;
 
 
 
-
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);
 
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
@@ -20952,8 +20962,6 @@ valor_contador_segundo_anterior=contador_segundo;
 		util_add_window_geometry_compact(ventana);
 
 	if (tecla==3) {
-                //zxvision_ay_registers_overlay
-                ventana->overlay_function=menu_ay_pianokeyboard_overlay;
                 zxvision_message_put_window_background();
 	}
 
@@ -21168,7 +21176,8 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 	} while (tecla!=2 && tecla!=3);										
 
       
-
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);
 
 	//restauramos modo normal de texto de menu
 	set_menu_overlay_function(normal_overlay_texto_menu);
@@ -21180,8 +21189,6 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 
 	if (tecla==3) {
-		//zxvision_ay_registers_overlay
-		ventana->overlay_function=menu_beeper_pianokeyboard_overlay;
 		zxvision_message_put_window_background();
 	}
 
