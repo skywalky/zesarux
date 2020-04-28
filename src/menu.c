@@ -4672,6 +4672,8 @@ int total_restore_window_array_elements=0;
 //La ultima siempre finaliza con funcion NULL
 zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"waveform",menu_audio_new_waveform},
+	{"ayregisters",menu_ay_registers},
+	{"aypiano",menu_ay_pianokeyboard},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };
@@ -4716,7 +4718,6 @@ void zxvision_restore_windows_on_startup(void)
 
 		if (indice==-1) {
 			debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",restore_window_array[i]);
-			return;
 		}
 
 		else {

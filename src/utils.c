@@ -3679,6 +3679,31 @@ int util_write_configfile(void)
         saved_config_window_geometry_array[i].ancho,saved_config_window_geometry_array[i].alto);
   }
 
+  if (menu_allow_background_windows) {
+        //Guardar lista de ventanas activas
+	//Empezamos una a una, desde la de mas abajo
+	zxvision_window *ventana;
+
+	ventana=zxvision_current_window;
+
+	if (ventana!=NULL) {
+
+                ventana=zxvision_find_first_window_below_this(ventana);
+
+                while (ventana!=NULL) {
+
+                        if (ventana->geometry_name[0]!=0) {
+                                ADD_STRING_CONFIG,"--restorewindow \"%s\"",ventana->geometry_name);
+                        }
+
+
+                        ventana=ventana->next_window;
+                                        
+                }
+        }
+
+  }
+
 
 
   for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {

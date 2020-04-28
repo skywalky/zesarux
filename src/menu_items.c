@@ -2712,6 +2712,14 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		menu_ay_registers_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
+	//Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+	//Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+	if (zxvision_currently_restoring_windows_on_start) {
+		printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+		return;
+	}		
+
+
 	z80_byte tecla;
 
 	do {
@@ -4320,7 +4328,8 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 	menu_audio_draw_sound_wave_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
-
+	//Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+	//Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
 	if (zxvision_currently_restoring_windows_on_start) {
 		printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
 		return;
@@ -20910,7 +20919,12 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_ay_pianokeyboard_overlay);
 
 
-
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }
 
 
 				int valor_contador_segundo_anterior;
