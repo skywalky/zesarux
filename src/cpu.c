@@ -7320,6 +7320,13 @@ int parse_cmdline_options(void) {
 				util_clear_all_windows_geometry();
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--restorewindow")) {
+				siguiente_parametro_argumento();
+
+				strcpy(restore_window_array[total_restore_window_array_elements++],argv[puntero_parametro]);
+
+			}
+
 			else if (!strcmp(argv[puntero_parametro],"--tonegenerator")) {
 				siguiente_parametro_argumento();
                                  int valor=atoi(argv[puntero_parametro]);
@@ -8008,6 +8015,9 @@ init_randomize_noise_value();
 	signal(SIGPIPE, sigpipe_signal_handler);	
 #endif
 
+
+	//Restaurar ventanas, si conviene
+	zxvision_restore_windows_on_startup();
 
 	//Inicio bucle principal
 	reg_pc=0;

@@ -4662,8 +4662,36 @@ int menu_mouse_y=0;
 
 zxvision_window *zxvision_current_window=NULL;
 
+
+//Para cargar las ventanas al inicio, las va rellenando al leer los parámetros en arranque
+char restore_window_array[MAX_RESTORE_WINDOWS_START][MAX_NAME_WINDOW_GEOMETRY];
+
+int total_restore_window_array_elements=0;
+
+//Ventanas conocidas y sus funciones que las inicializan. Usado al restaurar ventanas al inicio
+//La ultima siempre finaliza con funcion NULL
+zxvision_known_window_names zxvision_known_window_names_array[]={
+	{"waveform",menu_audio_new_waveform},
+
+	{"",NULL} //NO BORRAR ESTA!!
+};
+
+
+
 //Decir que con una ventana zxvision visible, las pulsaciones de teclas no se envian a maquina emulada
 int zxvision_keys_event_not_send_to_machine=1;
+
+void zxvision_restore_windows_on_startup(void)
+{
+	if (!menu_allow_background_windows) return;
+
+	//Iterar sobre todas
+	int i;
+
+	for (i=0;i<total_restore_window_array_elements;i++) {
+		printf ("Restoring window %s\n",restore_window_array[i]);
+	}
+}
 
 void zxvision_set_draw_window_parameters(zxvision_window *w)
 {

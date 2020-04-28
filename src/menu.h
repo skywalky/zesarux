@@ -112,7 +112,6 @@ typedef struct s_zxvision_window zxvision_window;
 
 
 
-
 //Aqui hay un problema, y es que en utils.h se esta usando zxvision_window, y hay que declarar este tipo de ventana antes
 #include "utils.h"
 
@@ -292,6 +291,24 @@ extern void zxvision_clear_window_contents(zxvision_window *w);
 
 extern void zxvision_set_not_resizable(zxvision_window *w);
 extern void zxvision_set_resizable(zxvision_window *w);
+
+
+//Maximo de ventanas que se pueden restaurar
+#define MAX_RESTORE_WINDOWS_START 50
+
+extern char restore_window_array[MAX_RESTORE_WINDOWS_START][MAX_NAME_WINDOW_GEOMETRY];
+
+
+struct s_zxvision_known_window_names {
+//Ventanas conocidas y sus funciones que las inicializan. Usado al restaurar ventanas al inicio
+	char nombre[MAX_NAME_WINDOW_GEOMETRY];
+	void (*start)(MENU_ITEM_PARAMETERS);
+};
+
+#define MAX_KNOWN_WINDOWS 100
+typedef struct s_zxvision_known_window_names zxvision_known_window_names;
+
+extern int total_restore_window_array_elements;
 
 extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 extern z80_byte zxvision_read_keyboard(void);
