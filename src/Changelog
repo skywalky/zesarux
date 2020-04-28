@@ -13,7 +13,7 @@ Added ZRCP commands:
 -save-screen: to save machine screen to file
 
 Improved menu:
--Allow some windows to be put on the background. Also geometry and active windows are saved and restored on startup
+-Allow some windows to be put on the background. Also active windows are saved and restored on startup
 
 Improved Esxdos handler: 
 -add f_mkdir function 
