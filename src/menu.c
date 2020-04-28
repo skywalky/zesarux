@@ -4674,6 +4674,10 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"waveform",menu_audio_new_waveform},
 	{"ayregisters",menu_ay_registers},
 	{"aypiano",menu_ay_pianokeyboard},
+	{"aysheet",menu_ay_partitura},
+	{"ayplayer",menu_audio_new_ayplayer},
+	{"wavepiano",menu_beeper_pianokeyboard},
+	{"visualmem",menu_debug_new_visualmem},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };
@@ -4705,6 +4709,8 @@ void zxvision_restore_windows_on_startup(void)
 {
 	if (!menu_allow_background_windows) return;
 
+	if (menu_reopen_background_windows_on_start.v==0) return;
+
 	//indicar que estamos restaurando ventanas y por tanto las funciones que las crean tienen que volver nada mas entrar
 	zxvision_currently_restoring_windows_on_start=1;
 
@@ -4712,7 +4718,7 @@ void zxvision_restore_windows_on_startup(void)
 	int i;
 
 	for (i=0;i<total_restore_window_array_elements;i++) {
-		printf ("Restoring window %s\n",restore_window_array[i]);
+		//printf ("Restoring window %s\n",restore_window_array[i]);
 
 		int indice=zxvision_find_known_window(restore_window_array[i]);
 
@@ -23569,7 +23575,10 @@ void menu_interface_allow_background_windows(MENU_ITEM_PARAMETERS)
 
 }
 
-
+void menu_interface_reopen_background_windows_on_start(MENU_ITEM_PARAMETERS)
+{
+	menu_reopen_background_windows_on_start.v ^=1;
+}
 
 
 
@@ -23679,8 +23688,9 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			"- Rearrange and Reduce windows: go to menu Display"	
 		);
 
-
-
+		if (menu_allow_background_windows) {
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_reopen_background_windows_on_start,NULL,"[%c] Reopen windows on start",(menu_reopen_background_windows_on_start.v ? 'X' : ' ') );
+		}
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Restore all windows positions and sizes to their default values");

@@ -2089,7 +2089,14 @@ printf (
 		"--no-show-changelog        Do not show changelog when updating version\n"
 		"--disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
 		"--windowgeometry s x y w h Set window geometry. Parameters: window name (s), x coord, y coord, width (w), height (h)\n"
+		"--enable-restore-windows   Allow restore windows on start\n"
+        "--restorewindow s          Restore window s on start\n"
+		
+
 		"--clear-all-windowgeometry Clear all windows geometry thay may be loaded from the configuration file\n"
+
+
+
 		"--tbblue-autoconfigure-sd-already-asked     Do not ask to autoconfigure tbblue initial SD image\n"
 		
 		//Esto no hace falta que lo vea un usuario, solo lo uso yo para probar partes del emulador 
@@ -7325,6 +7332,11 @@ int parse_cmdline_options(void) {
 
 				strcpy(restore_window_array[total_restore_window_array_elements++],argv[puntero_parametro]);
 
+			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--enable-restore-windows")) {
+				menu_reopen_background_windows_on_start.v=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--tonegenerator")) {

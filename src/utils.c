@@ -3679,7 +3679,10 @@ int util_write_configfile(void)
         saved_config_window_geometry_array[i].ancho,saved_config_window_geometry_array[i].alto);
   }
 
-  if (menu_allow_background_windows) {
+  if (menu_reopen_background_windows_on_start.v) ADD_STRING_CONFIG,"--enable-restore-windows");
+			
+
+  if (menu_allow_background_windows && menu_reopen_background_windows_on_start.v) {
         //Guardar lista de ventanas activas
 	//Empezamos una a una, desde la de mas abajo
 	zxvision_window *ventana;

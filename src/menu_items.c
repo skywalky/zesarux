@@ -2715,7 +2715,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 	//Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
 	//Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
 	if (zxvision_currently_restoring_windows_on_start) {
-		printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+		//printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
 		return;
 	}		
 
@@ -4331,7 +4331,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	//Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
 	//Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
 	if (zxvision_currently_restoring_windows_on_start) {
-		printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+		//printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
 		return;
 	}
 
@@ -4905,7 +4905,15 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	set_menu_overlay_function(menu_debug_draw_visualmem);
 
 
-	menu_debug_draw_visualmem_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
+	menu_debug_draw_visualmem_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui	
+
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }		
 
 
 	menu_dibuja_menu_permite_repeticiones_hotk=1;
@@ -5487,6 +5495,14 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 
 	menu_audio_new_ayplayer_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui		
+
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }	
 
 
 
@@ -16571,6 +16587,14 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         //Se establece a la de funcion de piano + texto
         set_menu_overlay_function(menu_ay_partitura_overlay);
 
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+              //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+              return;
+       }		
+
 	
 		int retorno_menu=MENU_RETORNO_NORMAL; 
 		//Inicializado aqui a MENU_RETORNO_NORMAL en particular pues si solo hay 1 chip, no muestra selector de chip
@@ -20919,17 +20943,22 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
         set_menu_overlay_function(menu_ay_pianokeyboard_overlay);
 
 
-       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
-       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
-       if (zxvision_currently_restoring_windows_on_start) {
-               printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
-               return;
-       }
+
 
 
 				int valor_contador_segundo_anterior;
 
 valor_contador_segundo_anterior=contador_segundo;
+
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }
+
+
 
 	z80_byte tecla=0;
 
@@ -21159,6 +21188,15 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 	int valor_contador_segundo_anterior;
 
 	valor_contador_segundo_anterior=contador_segundo;
+
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+      //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }
+
 
 	z80_byte tecla=0;
 

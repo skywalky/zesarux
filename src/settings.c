@@ -237,3 +237,6 @@ z80_bit tbblue_store_scanlines_border={0};
 
 //Si permitimos o no ventanas en background al pulsar F6
 int menu_allow_background_windows=0;
+
+//Reabrir ventanas al iniciar el emulador 
+z80_bit menu_reopen_background_windows_on_start={0};
