@@ -4320,6 +4320,12 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 	menu_audio_draw_sound_wave_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
+
+	if (zxvision_currently_restoring_windows_on_start) {
+		printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+		return;
+	}
+
 	menu_item *array_menu_audio_new_waveform;
 	menu_item item_seleccionado;
 	int retorno_menu;

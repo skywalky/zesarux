@@ -4681,16 +4681,60 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 //Decir que con una ventana zxvision visible, las pulsaciones de teclas no se envian a maquina emulada
 int zxvision_keys_event_not_send_to_machine=1;
 
+//indicar que estamos restaurando ventanas y por tanto las funciones que las crean tienen que volver nada mas entrar
+int zxvision_currently_restoring_windows_on_start=0;
+
+//Retorna posicion a indice de zxvision_known_window_names_array si se encuentra
+//-1 si no
+int zxvision_find_known_window(char *nombre)
+{
+	int i;
+
+
+	for (i=0;zxvision_known_window_names_array[i].start!=NULL;i++) {
+
+		 if (!strcmp(zxvision_known_window_names_array[i].nombre,nombre)) return i;
+
+	}
+	return -1;
+}
+
 void zxvision_restore_windows_on_startup(void)
 {
 	if (!menu_allow_background_windows) return;
+
+	//indicar que estamos restaurando ventanas y por tanto las funciones que las crean tienen que volver nada mas entrar
+	zxvision_currently_restoring_windows_on_start=1;
 
 	//Iterar sobre todas
 	int i;
 
 	for (i=0;i<total_restore_window_array_elements;i++) {
 		printf ("Restoring window %s\n",restore_window_array[i]);
+
+		int indice=zxvision_find_known_window(restore_window_array[i]);
+
+		if (indice==-1) {
+			debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",restore_window_array[i]);
+			return;
+		}
+
+		else {
+		//Lanzar funcion que la crea
+			zxvision_known_window_names_array[indice].start(0);
+
+			//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+			zxvision_set_window_overlay_from_current(zxvision_current_window);
+
+			//restauramos modo normal de texto de menu
+    		set_menu_overlay_function(normal_overlay_texto_menu);
+		}
+
 	}
+
+	zxvision_currently_restoring_windows_on_start=0;
+
+
 }
 
 void zxvision_set_draw_window_parameters(zxvision_window *w)
