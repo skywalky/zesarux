@@ -4678,6 +4678,7 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"ayplayer",menu_audio_new_ayplayer},
 	{"wavepiano",menu_beeper_pianokeyboard},
 	{"visualmem",menu_debug_new_visualmem},
+	{"sprites",menu_debug_view_sprites},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };

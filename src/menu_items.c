@@ -11204,6 +11204,14 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 	menu_debug_draw_sprites_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui	
 
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }	
+
 	int redibujar_texto=1;	
 
 
