@@ -281,3 +281,9 @@ ventana activa permita irse a background. Si la ventana activa no permite ir a b
 Luego se debe llamar a la funcion que recupera la ventana (desde zxvision_known_window_names_array), pero quien llama ahi??
 ->quiza esto puede provocar un salir_todas_ventanas y antes de que va a salir de todos los menus, ver si hay pendiente recuperar una ventana
 
+
+En linux no sale del emulador... quiza es algo de sdl? si, parece que vo sdl con ao sdl falla . con --noconfigfile y vo sdl y ao sdl tambien 
+
+-ventana ay registers si se hace mas grande tiene que recrearla para que el contenido de la ventana permita mas texto
+otras ventanas ya lo hacen, como por ejemplo ay sheet
+
