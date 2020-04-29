@@ -28095,6 +28095,11 @@ printf ("despues de dibujar menu principal\n");
 	//Aqui nos quedamos siempre que se pulse en otra ventana, digamos que esto es como el gestor de ventanas "sencillo"
 	//es un tanto mágico pero también muy simple
 	while (clicked_on_background_windows) {
+
+		//Por si hemos llegado hasta aqui cerrando todos los menus al haber pulsado en otra ventana y la actual no permite background
+		salir_todos_menus=0;
+
+		
 		clicked_on_background_windows=0;
 		printf ("Pulsado en ventana en background, leido al final de todos los menus.\n");	
 
