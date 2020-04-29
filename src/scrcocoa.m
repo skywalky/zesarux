@@ -2489,9 +2489,9 @@ void scrcocoa_refresca_pantalla(void)
         //printf ("%d\n",spectrum_colortable[1]);
 
 	if (menu_overlay_activo) {
-                printf ("antes de menu_overlay_function en cocoa\n");
+                //printf ("antes de menu_overlay_function en cocoa\n");
                 menu_overlay_function();
-                printf ("despues de menu_overlay_function en cocoa\n");
+                //printf ("despues de menu_overlay_function en cocoa\n");
         }
 
 
