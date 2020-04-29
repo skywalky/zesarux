@@ -1854,14 +1854,29 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
     zxvision_delete_window_if_exists(ventana);
 
 		
-		
+	int x,y,ancho,alto;
 
-	int originx=menu_origin_x();
+	if (!util_find_window_geometry("cpucompactstatistics",&x,&y,&ancho,&alto)) {
+		x=menu_origin_x();
+		y=1;
+		ancho=32;
+		alto=18;
+	}		
 
-	zxvision_new_window(ventana,originx,1,32,18,
-							31,16,"CPU Compact Statistics");
+	//int originx=menu_origin_x();
+
+	zxvision_new_window(ventana,x,y,ancho,alto,
+							ancho-1,alto-2,"CPU Compact Statistics");
+
+
+
+
 	ventana->can_be_backgrounded=1;	
 	zxvision_draw_window(ventana);
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"cpucompactstatistics");
+
+	
 		
 
 
@@ -1872,6 +1887,15 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
         //Cambiamos funcion overlay de texto de menu
         //Se establece a la de funcion de onda + texto
         set_menu_overlay_function(menu_debug_cpu_resumen_stats_overlay);
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }	
+
+	
 
 	z80_byte tecla;
 
@@ -1894,6 +1918,9 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 
 
     cls_menu_overlay();	
+
+	//Grabar geometria ventana
+	util_add_window_geometry_compact(ventana);		
 
 
 	if (tecla==3) {
@@ -2683,15 +2710,17 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 			xventana=menu_origin_x()+1;
 			ancho_ventana=30;
 
+			//El alto lo cambiamos segun el numero de chips
+			if (total_chips==1) {
+					alto_ventana=14;
+			}
+			else {
+					alto_ventana=24;
+			}					
+
 		}
 
-		//El alto siempre lo cambiamos segun el numero de chips
-        if (total_chips==1) {
-				alto_ventana=14;
-		}
-		else {
-				alto_ventana=24;
-		}		
+
 
 
 
@@ -3036,6 +3065,14 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	//Se establece a la de funcion de onda + texto
 	set_menu_overlay_function(menu_debug_tsconf_tbblue_videoregisters_overlay);
 
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }	
+
 	z80_byte tecla;
 
 	do {
@@ -3286,6 +3323,14 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
     set_menu_overlay_function(menu_debug_tsconf_tbblue_spritenav_draw_sprites);
 
 	menu_debug_tsconf_tbblue_spritenav_draw_sprites_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }	
 
 
 	z80_byte tecla;
@@ -3847,6 +3892,14 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 	menu_debug_tsconf_tbblue_tilenav_lista_tiles_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }	
+
+
 	z80_byte tecla;
 
 	//Si no esta multitarea, hacer un refresco inicial para que aparezca el contenido de la ventana sin tener que pulsar una tecla
@@ -4393,9 +4446,6 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	}
 
 	else {	
-
-
-
 		//En caso de menus tabulados, es responsabilidad de este de liberar ventana
 		zxvision_destroy_window(ventana);
 	}
@@ -7791,6 +7841,14 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 	set_menu_overlay_function(menu_display_total_palette_draw_barras);
 	menu_display_total_palette_draw_barras_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }	
 
     do {
 
@@ -13401,7 +13459,9 @@ void menu_watches_edit(MENU_ITEM_PARAMETERS)
 
 zxvision_window zxvision_window_watches;
 
-void menu_watches(void)
+//Esta funcion no se llama realmente desde una opcion de menu, y por tanto deberia ser con parametros (void),
+//pero dado que está en el listado de zxvision_known_window_names_array, debe ser con este parámetro
+void menu_watches(MENU_ITEM_PARAMETERS)
 {
 
 
@@ -13454,6 +13514,14 @@ void menu_watches(void)
     set_menu_overlay_function(menu_watches_overlay);
 
 	menu_watches_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui	
+
+
+	//Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+	//Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+	if (zxvision_currently_restoring_windows_on_start) {
+			//printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+			return;
+	}	
 
     menu_item *array_menu_watches_settings;
     menu_item item_seleccionado;
@@ -14990,7 +15058,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				if (tecla=='w') {
 					//La cerramos pues el envio de watches a background no funciona bien si hay otra ventana detras
 					zxvision_destroy_window(&ventana);
-                    menu_watches();
+                    menu_watches(0);
 					menu_debug_registers_zxvision_ventana(&ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -15278,7 +15346,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 					//La cerramos pues el envio de watches a background no funciona bien si hay otra ventana detras
 					zxvision_destroy_window(&ventana);
-                    menu_watches();
+                    menu_watches(0);
 					menu_debug_registers_zxvision_ventana(&ventana);					
 
                     //Decimos que no hay tecla pulsada
@@ -16561,10 +16629,11 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 
 		char *titulo_ventana="AY Sheet (60 BPM)";
-		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+		//int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
 		//Para que siempre se lea el titulo de la ventana
-		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
+		//No alteramos el ancho, que sea el que tenga por geometria
+		//if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
 
 		//printf ("ancho %d\n",ancho_ventana);
 
@@ -20889,9 +20958,9 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 					}
 				}
 
-			}
 
-		//El alto ventana siempre lo recalculamos segun el numero de chips
+
+				//El alto ventana lo calculamos segun el numero de chips
 				if (!si_mostrar_ay_piano_grafico()) {
 
 					if (total_chips==1) {			
@@ -20923,6 +20992,11 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 						alto_ventana=24;							
 					}
 				}
+
+
+			}
+
+		
 
 
 		char *titulo_ventana="AY Piano";

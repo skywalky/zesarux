@@ -345,6 +345,11 @@ Despues de crear overlay e inicializar variables necesarias para overlay:
 
 Y definirla en zxvision_known_window_names_array
 
+-para poder restaurar al inicio, despues de activar can_be_backgrounded, agregar:
++	//indicar nombre del grabado de geometria
++	strcpy(ventana->geometry_name,"displaypalettes");
+Esto permite tambien que cuando se haga rearrange/reduce, su geometria se guarde
+
 ---Fin Para poder enviar una ventana a background
 
 -desde menu al pulsar background se retorna MENU_RETORNO_BACKGROUND
@@ -415,8 +420,25 @@ index 9e32a67e..16a8f772 100644
 +
 +    zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,"Colour palettes");
 +	ventana->can_be_backgrounded=1;
++	//indicar nombre del grabado de geometria
++	strcpy(ventana->geometry_name,"displaypalettes");
 +
 +	zxvision_draw_window(ventana);
+
+
+
+	int salir=0;
+
+
+	set_menu_overlay_function(menu_display_total_palette_draw_barras);
+	menu_display_total_palette_draw_barras_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
++       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
++       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
++       if (zxvision_currently_restoring_windows_on_start) {
++               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
++               return;
++       }
 
  	z80_byte tecla;
 

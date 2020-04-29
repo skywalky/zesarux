@@ -4679,6 +4679,12 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"wavepiano",menu_beeper_pianokeyboard},
 	{"visualmem",menu_debug_new_visualmem},
 	{"sprites",menu_debug_view_sprites},
+	{"watches",menu_watches},
+	{"cpucompactstatistics",menu_debug_cpu_resumen_stats},
+	{"displaypalettes",menu_display_total_palette},
+	{"videoinfo",menu_debug_tsconf_tbblue_videoregisters},
+	{"tsconftbbluespritenav",menu_debug_tsconf_tbblue_spritenav},
+	{"tsconftbbluetilenav",menu_debug_tsconf_tbblue_tilenav},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };
@@ -6960,6 +6966,37 @@ int zxvision_coords_in_window(zxvision_window *w,int x,int y)
 
 //Dice si las coordenadas de ventana indicada coinciden con cualquiera de las ventanas que tenga encima
 int zxvision_coords_in_superior_windows(zxvision_window *w,int x,int y)
+{
+	if (!menu_allow_background_windows) return 0;
+
+	if (w==NULL) return 0;
+
+	if (zxvision_current_window==w) return 0;
+
+	do {
+		zxvision_window *superior_window;
+
+		superior_window=w->next_window;
+
+		if (superior_window!=NULL) {
+
+			if (zxvision_coords_in_window(superior_window,x,y)) return 1;
+
+		}
+
+
+		w=superior_window;
+
+	} while (w!=zxvision_current_window && w!=NULL);
+
+	return 0;
+
+}
+
+
+
+//Dice si las coordenadas indicadas coinciden con cualquiera de las ventanas que estén en las ventanas de debajo
+int zxvision_coords_in_below_windows(zxvision_window *w,int x,int y)
 {
 	if (!menu_allow_background_windows) return 0;
 

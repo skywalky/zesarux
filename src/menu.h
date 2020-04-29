@@ -305,7 +305,7 @@ struct s_zxvision_known_window_names {
 	void (*start)(MENU_ITEM_PARAMETERS);
 };
 
-#define MAX_KNOWN_WINDOWS 100
+//#define MAX_KNOWN_WINDOWS 100
 typedef struct s_zxvision_known_window_names zxvision_known_window_names;
 
 extern int total_restore_window_array_elements;

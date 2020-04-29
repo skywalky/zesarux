@@ -3695,7 +3695,7 @@ int util_write_configfile(void)
 
                 while (ventana!=NULL) {
 
-                        if (ventana->geometry_name[0]!=0) {
+                        if (ventana->geometry_name[0]!=0 && ventana->can_be_backgrounded) {
                                 ADD_STRING_CONFIG,"--restorewindow \"%s\"",ventana->geometry_name);
                         }
 

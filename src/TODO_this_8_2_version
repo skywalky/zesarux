@@ -267,7 +267,16 @@ valores long int
 -Soporte ulaplus en Next
 
 
--Completar lista de ventanas que pueden restaurarse al inicio
-
 -Poder ver ventanas en background con menú cerrado de la misma manera que salen mensajes splash?
+
+-Poder pulsar en una ventana en background y que conmute a ella. Para eso:
+* Cuando pulsas fuera de ventana y normalmente pierde el foco, realmente deberia mirar si estas pulsando en cualquier otra ventana,
+empezando desde arriba hasta abajo.
+-->crear funcion que diga a que ventana estas pulsando. Retorna *zxvision_window
+
+Si vas a otra, se deberia retornar la tecla de pulsado background (F6 por defecto/boton background en ventana) siempre que la 
+ventana activa permita irse a background. Si la ventana activa no permite ir a background, se puede enviar ESC
+
+Luego se debe llamar a la funcion que recupera la ventana (desde zxvision_known_window_names_array), pero quien llama ahi??
+->quiza esto puede provocar un salir_todas_ventanas y antes de que va a salir de todos los menus, ver si hay pendiente recuperar una ventana
 
