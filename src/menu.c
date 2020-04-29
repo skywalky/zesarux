@@ -7691,7 +7691,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				which_window_clicked_on_background=ventana_pulsada;
 
 
-				//TODO:Si vas a otra, se deberia retornar la tecla de pulsado background (F6 por defecto/boton background en ventana) siempre que la 
+				//Si vas a otra, se debe retornar la tecla de pulsado background (F6 por defecto/boton background en ventana) siempre que la 
 				//ventana activa permita irse a background. Si la ventana activa no permite ir a background, se puede enviar ESC y salir_todos_menus=1
 				if (zxvision_current_window->can_be_backgrounded) {
 					//enviarla a background. Tecla F6
@@ -28092,6 +28092,8 @@ printf ("despues de dibujar menu principal\n");
 	textspeech_print_speech("Closing emulator menu and going back to emulated machine");
 
 	//Ver si se habia pulsado en una ventana que habia en background
+	//Aqui nos quedamos siempre que se pulse en otra ventana, digamos que esto es como el gestor de ventanas "sencillo"
+	//es un tanto mágico pero también muy simple
 	while (clicked_on_background_windows) {
 		clicked_on_background_windows=0;
 		printf ("Pulsado en ventana en background, leido al final de todos los menus.\n");	
