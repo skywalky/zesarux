@@ -3195,7 +3195,7 @@ void menu_draw_background_windows_overlay_after_normal(void)
 void normal_overlay_texto_menu(void)
 {
 
-	printf ("inicio normal_overlay_texto_menu\n");
+	//printf ("inicio normal_overlay_texto_menu\n");
 
 	int x,y;
 	int tinta,papel,parpadeo;
@@ -4910,7 +4910,9 @@ void zxvision_delete_window_if_exists(zxvision_window *ventana)
     if (zxvision_if_window_already_exists(ventana)) {
         //printf ("Window already exists! We are possibly running on background. Make this the top window\n");
 
-		menu_generic_message_splash("Background task","OK. Window removed from background");	
+		//menu_generic_message_splash("Background task","OK. Window removed from background");	
+
+		printf ("Window removed from background\n");
 
         zxvision_window_delete_this_window(ventana);	
 		
@@ -6828,7 +6830,8 @@ void zxvision_message_put_window_background(void)
 {
 	//Conviene esperar no tecla porque a veces esta ventana splash no aparece
 	menu_espera_no_tecla();
-	menu_generic_message_splash("Background task","OK. Window put on the background");
+	//menu_generic_message_splash("Background task","OK. Window put on the background");
+	printf ("OK. Window put on the background\n");
 }
 
 //Pone en la estructura de ventana la funcion de overlay que haya activa ahora

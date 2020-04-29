@@ -2389,7 +2389,7 @@ void scrcocoa_refresca_pantalla_solo_driver(void)
 void scrcocoa_refresca_pantalla(void)
 {
 
-        printf ("inicio scrcocoa_refresca_pantalla\n");
+        //printf ("inicio scrcocoa_refresca_pantalla\n");
 
 	if (pendiente_z88_draw_lower) {
 		screen_z88_draw_lower_screen();
