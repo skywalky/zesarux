@@ -7662,7 +7662,11 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			//Vamos a ver en que ventana se ha pulsado, si tenemos background activado
 			zxvision_window *ventana_pulsada;
 
-			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,menu_mouse_x,menu_mouse_y);
+			int absolute_mouse_x,absolute_mouse_y;
+			
+			menu_calculate_mouse_xy_absolute_interface(&absolute_mouse_x,&absolute_mouse_y);
+
+			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);
 			if (ventana_pulsada!=NULL) {
 				printf ("Pulsado en ventana: %s\n",ventana_pulsada->window_title);
 			}

@@ -314,6 +314,7 @@ extern int total_restore_window_array_elements;
 
 extern int zxvision_currently_restoring_windows_on_start;
 extern void zxvision_restore_windows_on_startup(void);
+extern void menu_calculate_mouse_xy_absolute_interface(int *resultado_x,int *resultado_y);
 
 extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 extern z80_byte zxvision_read_keyboard(void);
