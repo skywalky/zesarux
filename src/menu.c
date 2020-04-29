@@ -7626,6 +7626,11 @@ void zxvision_send_scroll_down_and_draw(zxvision_window *w)
 						zxvision_draw_vertical_scroll_bar(w,0);	
 }
 
+//Si se habia pulsado en una ventana por debajo de la actual
+int clicked_on_background_windows=0;
+
+zxvision_window *which_window_clicked_on_background=NULL;
+
 //int zxvision_mouse_events_counter=0;
 //int tempconta;
 //Retorna 1 si pulsado boton de cerrar ventana
@@ -7669,6 +7674,12 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);
 			if (ventana_pulsada!=NULL) {
 				printf ("Pulsado en ventana: %s\n",ventana_pulsada->window_title);
+				clicked_on_background_windows=1;
+				which_window_clicked_on_background=ventana_pulsada;
+
+
+				//TODO:Si vas a otra, se deberia retornar la tecla de pulsado background (F6 por defecto/boton background en ventana) siempre que la 
+				//ventana activa permita irse a background. Si la ventana activa no permite ir a background, se puede enviar ESC y salir_todos_menus=1
 			}
 		}
 	}
@@ -28002,13 +28013,14 @@ void menu_inicio_bucle(void)
 		menu_add_item_menu_tooltip(array_menu_principal,"Exit emulator");
 		menu_add_item_menu_ayuda(array_menu_principal,"Exit emulator");
 
+printf ("antes de dibujar menu principal\n");
 
 		retorno_menu=menu_dibuja_menu(&menu_inicio_opcion_seleccionada,&item_seleccionado,array_menu_principal,"ZEsarUX v." EMULATOR_VERSION );
 
 		//printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);
 		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
 		//printf ("Retorno menu: %d\n",retorno_menu);
-
+printf ("despues de dibujar menu principal\n");
 		
 
 		//opcion 12 es F10 salir del emulador
@@ -28049,6 +28061,46 @@ void menu_inicio_bucle(void)
 	} while (!salir_menu && !salir_todos_menus);
 
 	textspeech_print_speech("Closing emulator menu and going back to emulated machine");
+
+	//Ver si se habia pulsado en una ventana que habia en background
+	if (clicked_on_background_windows) {
+		clicked_on_background_windows=0;
+		printf ("Pulsado en ventana en background, leido al final de todos los menus.\n");	
+
+		if (which_window_clicked_on_background!=NULL) {
+			printf ("Ventana: %s\n",which_window_clicked_on_background->window_title);
+			printf ("Geometry name ventana: %s\n",which_window_clicked_on_background->geometry_name);
+
+			char *geometry_name;
+
+			geometry_name=which_window_clicked_on_background->geometry_name;
+
+			if (geometry_name[0]!=0) {
+			
+				int indice=zxvision_find_known_window(geometry_name);
+
+                if (indice==-1) {
+                        //debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",geometry_name);
+                }
+
+                else {
+                //Lanzar funcion que la crea
+				
+						printf ("Iniciar ventana %s\n",geometry_name);
+                        zxvision_known_window_names_array[indice].start(0);
+
+                        //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+                        zxvision_set_window_overlay_from_current(zxvision_current_window);
+
+                        //restauramos modo normal de texto de menu
+                		set_menu_overlay_function(normal_overlay_texto_menu);
+				
+		 
+		       }
+			}
+			which_window_clicked_on_background=NULL;			
+		}
+	}
 
 
 	        //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
@@ -28599,7 +28651,7 @@ void menu_inicio(void)
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		
 		//Abrir menu normal
-		//printf ("Abrir menu normal\n");
+		printf ("Abrir menu normal\n");
 		menu_inicio_bucle();
 
 	}
@@ -28607,7 +28659,7 @@ void menu_inicio(void)
 	}
 
 
-	//printf ("salir menu\n");
+	printf ("salir menu\n");
 
 
 	//Volver
