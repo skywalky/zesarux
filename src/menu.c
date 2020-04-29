@@ -6995,32 +6995,33 @@ int zxvision_coords_in_superior_windows(zxvision_window *w,int x,int y)
 
 
 
-//Dice si las coordenadas indicadas coinciden con cualquiera de las ventanas que estén en las ventanas de debajo
-int zxvision_coords_in_below_windows(zxvision_window *w,int x,int y)
+//Dice si las coordenadas indicadas coinciden con cualquiera de las ventanas que estén en las ventanas de debajo de la indicada
+//Retorna la ventana implicada, o NULL si no
+zxvision_window *zxvision_coords_in_below_windows(zxvision_window *w,int x,int y)
 {
-	if (!menu_allow_background_windows) return 0;
+	if (!menu_allow_background_windows) return NULL;
 
-	if (w==NULL) return 0;
+	if (w==NULL) return NULL;
 
-	if (zxvision_current_window==w) return 0;
+	//Empezamos de arriba hacia abajo
 
 	do {
-		zxvision_window *superior_window;
+		zxvision_window *lower_window;
 
-		superior_window=w->next_window;
+		lower_window=w->previous_window;
 
-		if (superior_window!=NULL) {
+		if (lower_window!=NULL) {
 
-			if (zxvision_coords_in_window(superior_window,x,y)) return 1;
+			if (zxvision_coords_in_window(lower_window,x,y)) return lower_window;
 
 		}
 
 
-		w=superior_window;
+		w=lower_window;
 
-	} while (w!=zxvision_current_window && w!=NULL);
+	} while (w!=NULL);
 
-	return 0;
+	return NULL;
 
 }
 
@@ -7643,7 +7644,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	if (mouse_left && !mouse_is_dragging) {
 		//Si se pulsa dentro de ventana y no esta arrastrando
 	 	if (si_menu_mouse_en_ventana() && !zxvision_keys_event_not_send_to_machine) {
-			//printf ("Clicked inside window. Events are not sent to emulated machine\n");
+			printf ("Clicked inside window. Events are not sent to emulated machine\n");
 			zxvision_keys_event_not_send_to_machine=1;
 			ventana_tipo_activa=1;
 			zxvision_draw_window(w);
@@ -7652,11 +7653,19 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 		if (!si_menu_mouse_en_ventana() && zxvision_keys_event_not_send_to_machine) {
 			//Si se pulsa fuera de ventana
-			//printf ("Clicked outside window. Events are sent to emulated machine\n");
+			printf ("Clicked outside window. Events are sent to emulated machine\n");
 			zxvision_keys_event_not_send_to_machine=0;
 			ventana_tipo_activa=0;
 			zxvision_draw_window(w);
 			zxvision_draw_window_contents(w);
+
+			//Vamos a ver en que ventana se ha pulsado, si tenemos background activado
+			zxvision_window *ventana_pulsada;
+
+			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,menu_mouse_x,menu_mouse_y);
+			if (ventana_pulsada!=NULL) {
+				printf ("Pulsado en ventana: %s\n",ventana_pulsada->window_title);
+			}
 		}
 	}
 

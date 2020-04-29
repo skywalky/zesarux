@@ -273,6 +273,7 @@ valores long int
 * Cuando pulsas fuera de ventana y normalmente pierde el foco, realmente deberia mirar si estas pulsando en cualquier otra ventana,
 empezando desde arriba hasta abajo.
 -->crear funcion que diga a que ventana estas pulsando. Retorna *zxvision_window
+zxvision_coords_in_below_windows
 
 Si vas a otra, se deberia retornar la tecla de pulsado background (F6 por defecto/boton background en ventana) siempre que la 
 ventana activa permita irse a background. Si la ventana activa no permite ir a background, se puede enviar ESC
