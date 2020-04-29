@@ -2647,8 +2647,12 @@ void menu_draw_ext_desktop(void)
 void menu_refresca_pantalla(void)
 {
 
+	printf ("antes de all_interlace_scr_refresca_pantalla\n");
+
 	modificado_border.v=1;
     all_interlace_scr_refresca_pantalla();
+
+	printf ("despues de all_interlace_scr_refresca_pantalla\n");
 
 	//necesario si hay efectos de darken o grayscale
 	//menu_clear_footer();
@@ -2656,8 +2660,12 @@ void menu_refresca_pantalla(void)
 	//y redibujar todo footer
 	redraw_footer();
 
+	printf ("despues de redraw_footer\n");
+
 
 	menu_draw_ext_desktop();
+
+	printf ("despues de menu_draw_ext_desktop\n");
 
 }
 
@@ -3186,6 +3194,8 @@ void menu_draw_background_windows_overlay_after_normal(void)
 //funcion normal de impresion de overlay de buffer de texto y cuadrado de lineas usado en los menus
 void normal_overlay_texto_menu(void)
 {
+
+	printf ("inicio normal_overlay_texto_menu\n");
 
 	int x,y;
 	int tinta,papel,parpadeo;
@@ -4729,7 +4739,7 @@ void zxvision_restore_windows_on_startup(void)
 
 		int indice=zxvision_find_known_window(restore_window_array[i]);
 
-		if (indice==-1) {
+		if (indice<0) {
 			debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",restore_window_array[i]);
 		}
 
@@ -7680,6 +7690,14 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 				//TODO:Si vas a otra, se deberia retornar la tecla de pulsado background (F6 por defecto/boton background en ventana) siempre que la 
 				//ventana activa permita irse a background. Si la ventana activa no permite ir a background, se puede enviar ESC y salir_todos_menus=1
+				if (zxvision_current_window->can_be_backgrounded) {
+					//enviarla a background. Tecla F6
+				}
+
+				else {
+					//ESC y salir todos menus
+					salir_todos_menus=1;
+				}
 			}
 		}
 	}
@@ -9846,7 +9864,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 
-
+printf ("despues menu_dibuja_ventana_ret_ancho_titulo\n");
 
 
 	max_opciones=0;
@@ -9925,7 +9943,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	zxvision_draw_window(ventana);	
 
-	
+	printf ("despues de zxvision_draw_window\n");
 
 	//Entrar aqui cada vez que se dibuje otra subventana aparte, como tooltip o ayuda
 	do {
@@ -9984,7 +10002,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 		//escribir todas opciones
-		//printf ("Escribiendo de nuevo las opciones\n");
+		printf ("Escribiendo de nuevo las opciones\n");
 		menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
 
 
@@ -9994,8 +10012,12 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//menu_speech_tecla_pulsada=1;
 		zxvision_draw_window_contents_no_speech(ventana);
 
+		printf ("despues de zxvision_draw_window_contents_no_speech\n");
+
 
         menu_refresca_pantalla();
+
+		printf ("despues de menu_refresca_pantalla\n");
 
 		tecla=0;
 
@@ -28014,6 +28036,7 @@ void menu_inicio_bucle(void)
 		menu_add_item_menu_ayuda(array_menu_principal,"Exit emulator");
 
 printf ("antes de dibujar menu principal\n");
+//sleep(2);
 
 		retorno_menu=menu_dibuja_menu(&menu_inicio_opcion_seleccionada,&item_seleccionado,array_menu_principal,"ZEsarUX v." EMULATOR_VERSION );
 
@@ -28021,6 +28044,7 @@ printf ("antes de dibujar menu principal\n");
 		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
 		//printf ("Retorno menu: %d\n",retorno_menu);
 printf ("despues de dibujar menu principal\n");
+//sleep(2);
 		
 
 		//opcion 12 es F10 salir del emulador
@@ -28079,21 +28103,33 @@ printf ("despues de dibujar menu principal\n");
 			
 				int indice=zxvision_find_known_window(geometry_name);
 
-                if (indice==-1) {
+                if (indice<0) {
                         //debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",geometry_name);
                 }
 
                 else {
                 //Lanzar funcion que la crea
+
+                        //Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar  temporalmente
+                                        void (*previous_function)(void);
+
+                                        previous_function=menu_overlay_function;
+
+int antes_menu_overlay_activo=menu_overlay_activo;														
 				
 						printf ("Iniciar ventana %s\n",geometry_name);
                         zxvision_known_window_names_array[indice].start(0);
 
                         //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
-                        zxvision_set_window_overlay_from_current(zxvision_current_window);
+                        //temp zxvision_set_window_overlay_from_current(zxvision_current_window);
 
                         //restauramos modo normal de texto de menu
-                		set_menu_overlay_function(normal_overlay_texto_menu);
+                		//set_menu_overlay_function(normal_overlay_texto_menu);
+
+                        //Restauramos funcion anterior de overlay
+                        set_menu_overlay_function(previous_function);		
+
+						menu_overlay_activo=antes_menu_overlay_activo;				
 				
 		 
 		       }

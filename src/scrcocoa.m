@@ -2389,6 +2389,8 @@ void scrcocoa_refresca_pantalla_solo_driver(void)
 void scrcocoa_refresca_pantalla(void)
 {
 
+        printf ("inicio scrcocoa_refresca_pantalla\n");
+
 	if (pendiente_z88_draw_lower) {
 		screen_z88_draw_lower_screen();
 		pendiente_z88_draw_lower=0;
@@ -2487,8 +2489,11 @@ void scrcocoa_refresca_pantalla(void)
         //printf ("%d\n",spectrum_colortable[1]);
 
 	if (menu_overlay_activo) {
+                printf ("antes de menu_overlay_function en cocoa\n");
                 menu_overlay_function();
+                printf ("despues de menu_overlay_function en cocoa\n");
         }
+
 
 
         //Escribir footer
