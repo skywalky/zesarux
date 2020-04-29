@@ -7653,7 +7653,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 		if (!si_menu_mouse_en_ventana() && zxvision_keys_event_not_send_to_machine) {
 			//Si se pulsa fuera de ventana
-			printf ("Clicked outside window. Events are sent to emulated machine\n");
+			printf ("Clicked outside window. Events are sent to emulated machine. X=%d Y=%d\n",menu_mouse_x,menu_mouse_y);
 			zxvision_keys_event_not_send_to_machine=0;
 			ventana_tipo_activa=0;
 			zxvision_draw_window(w);
@@ -8447,10 +8447,11 @@ int menu_allows_mouse(void)
 	return si_complete_video_driver();
 }
 
-void menu_calculate_mouse_xy(void)
+//Retorna las coordenadas absolutas del raton (en tamaño de caracter) teniendo en cuenta todo el tamaño de la interfaz del emulador
+void menu_calculate_mouse_xy_absolute_interface(int *resultado_x,int *resultado_y)
 {
 	int x,y;
-	if (menu_allows_mouse() ) {
+
 
 		int mouse_en_emulador=0;
 		//printf ("x: %04d y: %04d\n",mouse_x,mouse_y);
@@ -8511,6 +8512,85 @@ void menu_calculate_mouse_xy(void)
 
 	x /= menu_gui_zoom;
 	y /= menu_gui_zoom;
+
+	//printf ("antes de restar: %d,%d\n",x,y);
+	*resultado_x=x;
+	*resultado_y=y;
+
+
+
+	
+}
+
+//Parecido al anterior pero considerando coordenadas relativas a la ventana actual
+void menu_calculate_mouse_xy(void)
+{
+	int x,y;
+	if (menu_allows_mouse() ) {
+		menu_calculate_mouse_xy_absolute_interface(&x,&y);
+	/*
+		int mouse_en_emulador=0;
+		//printf ("x: %04d y: %04d\n",mouse_x,mouse_y);
+
+		int ancho=screen_get_window_size_width_zoom_border_en();
+
+		ancho +=screen_get_ext_desktop_width_zoom();
+
+		if (mouse_x>=0 && mouse_y>=0
+			&& mouse_x<=ancho && mouse_y<=screen_get_window_size_height_zoom_border_en() ) {
+				//Si mouse esta dentro de la ventana del emulador
+				mouse_en_emulador=1;
+		}
+
+		if (  (mouse_x!=last_mouse_x || mouse_y !=last_mouse_y) && mouse_en_emulador) {
+			mouse_movido=1;
+		}
+		else mouse_movido=0;
+
+		last_mouse_x=mouse_x;
+		last_mouse_y=mouse_y;
+
+		//printf ("x: %04d y: %04d movido=%d\n",mouse_x,mouse_y,mouse_movido);
+
+		//Quitarle el zoom
+		x=mouse_x/zoom_x;
+		y=mouse_y/zoom_y;
+
+		//Considerar borde pantalla
+
+		//Todo lo que sea negativo o exceda border, nada.
+
+		//printf ("x: %04d y: %04d\n",x,y);
+
+
+
+        //margenes de zona interior de pantalla. para modo rainbow
+				int margenx_izq;
+				int margeny_arr;
+				menu_retorna_margenes_border(&margenx_izq,&margeny_arr);
+
+	//Ya no hace falta restar margenes
+	margenx_izq=margeny_arr=0;
+
+	x -=margenx_izq;
+	y -=margeny_arr;
+
+	//printf ("x: %04d y: %04d\n",x,y);
+
+	//Aqui puede dar negativo, en caso que cursor este en el border
+	//si esta justo en los ultimos 8 pixeles, dara entre -7 y -1. al dividir entre 8, retornaria 0, diciendo erroneamente que estamos dentro de ventana
+
+	if (x<0) x-=(menu_char_width*menu_gui_zoom); //posicion entre -7 y -1 y demas, cuenta como -1, -2 al dividir entre 8
+	if (y<0) y-=(8*menu_gui_zoom);
+
+	x /=menu_char_width;
+	y /=8;
+
+	x /= menu_gui_zoom;
+	y /= menu_gui_zoom;
+
+	//printf ("antes de restar: %d,%d\n",x,y);
+	*/
 
 	x -=current_win_x;
 	y -=current_win_y;
