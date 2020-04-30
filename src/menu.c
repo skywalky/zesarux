@@ -27949,6 +27949,12 @@ void menu_principal_salir_emulador(MENU_ITEM_PARAMETERS)
 void menu_inicio_bucle(void)
 {
 
+	//Si reabrimos menu despues de conmutar entre ventanas en background
+	int reopen_menu;
+
+	do {
+		reopen_menu=0;
+
 		menu_first_aid("initial_menu");
 
 		//Si descargar stats
@@ -28090,7 +28096,7 @@ printf ("despues de dibujar menu principal\n");
 
 	} while (!salir_menu && !salir_todos_menus);
 
-	textspeech_print_speech("Closing emulator menu and going back to emulated machine");
+	
 
 	//Ver si se habia pulsado en una ventana que habia en background
 	//Aqui nos quedamos siempre que se pulse en otra ventana, digamos que esto es como el gestor de ventanas "sencillo"
@@ -28142,8 +28148,11 @@ int antes_menu_overlay_activo=menu_overlay_activo;
                         //Restauramos funcion anterior de overlay
                         set_menu_overlay_function(previous_function);		
 
-						menu_overlay_activo=antes_menu_overlay_activo;				
-				
+						menu_overlay_activo=antes_menu_overlay_activo;		
+
+							
+						//Y reabriremos el menu cuando dejemos de conmutar entre ventanas
+						reopen_menu=1;
 		 
 		       }
 			}
@@ -28152,9 +28161,11 @@ int antes_menu_overlay_activo=menu_overlay_activo;
 	}
 
 
-	which_window_clicked_on_background=NULL;			
+	which_window_clicked_on_background=NULL;	
 
+	} while (reopen_menu);		
 
+	textspeech_print_speech("Closing emulator menu and going back to emulated machine");
 	        //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
