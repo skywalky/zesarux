@@ -3245,8 +3245,9 @@ void normal_overlay_texto_menu(void)
 		//if (cuadrado_activo_resize) menu_dibuja_cuadrado_resize(cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color);
 	}
 
-
-	if (menu_allow_background_windows) {
+	//Dibujar ventanas en background pero solo si menu está abierto, esto evita que aparezcan las ventanas cuando hay un 
+	//mensaje de splash y el menú está cerrado
+	if (menu_allow_background_windows && menu_abierto) {
 		menu_draw_background_windows_overlay_after_normal();
 	}
  
