@@ -7704,6 +7704,9 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				if (zxvision_current_window->can_be_backgrounded) {
 					//enviarla a background. Tecla F6
 					mouse_pressed_background_window=1;
+
+					//no estoy seguro de esto....
+					salir_todos_menus=1;
 				}
 
 				else {
