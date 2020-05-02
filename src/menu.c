@@ -4688,10 +4688,17 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"aysheet",menu_ay_partitura},
 	{"ayplayer",menu_audio_new_ayplayer},
 	{"wavepiano",menu_beeper_pianokeyboard},
+
+#ifdef EMULATE_VISUALMEM
 	{"visualmem",menu_debug_new_visualmem},
+#endif
+
+#ifdef EMULATE_CPU_STATS
+	{"cpucompactstatistics",menu_debug_cpu_resumen_stats},
+#endif
+
 	{"sprites",menu_debug_view_sprites},
 	{"watches",menu_watches},
-	{"cpucompactstatistics",menu_debug_cpu_resumen_stats},
 	{"displaypalettes",menu_display_total_palette},
 	{"videoinfo",menu_debug_tsconf_tbblue_videoregisters},
 	{"tsconftbbluespritenav",menu_debug_tsconf_tbblue_spritenav},
