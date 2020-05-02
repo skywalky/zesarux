@@ -9877,7 +9877,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 
 
-printf ("despues menu_dibuja_ventana_ret_ancho_titulo\n");
+//printf ("despues menu_dibuja_ventana_ret_ancho_titulo\n");
 
 
 	max_opciones=0;
@@ -9956,7 +9956,7 @@ printf ("despues menu_dibuja_ventana_ret_ancho_titulo\n");
 
 	zxvision_draw_window(ventana);	
 
-	printf ("despues de zxvision_draw_window\n");
+	//printf ("despues de zxvision_draw_window\n");
 
 	//Entrar aqui cada vez que se dibuje otra subventana aparte, como tooltip o ayuda
 	do {
@@ -10015,7 +10015,7 @@ printf ("despues menu_dibuja_ventana_ret_ancho_titulo\n");
 
 
 		//escribir todas opciones
-		printf ("Escribiendo de nuevo las opciones\n");
+		//printf ("Escribiendo de nuevo las opciones\n");
 		menu_escribe_opciones_zxvision(ventana,m,linea_seleccionada,max_opciones);
 
 
@@ -10025,12 +10025,12 @@ printf ("despues menu_dibuja_ventana_ret_ancho_titulo\n");
 		//menu_speech_tecla_pulsada=1;
 		zxvision_draw_window_contents_no_speech(ventana);
 
-		printf ("despues de zxvision_draw_window_contents_no_speech\n");
+		//printf ("despues de zxvision_draw_window_contents_no_speech\n");
 
 
         menu_refresca_pantalla();
 
-		printf ("despues de menu_refresca_pantalla\n");
+		//printf ("despues de menu_refresca_pantalla\n");
 
 		tecla=0;
 
@@ -28103,7 +28103,7 @@ printf ("despues de dibujar menu principal\n");
 
 	} while (!salir_menu && !salir_todos_menus);
 
-	
+	printf ("despues de opciones de menu\n");
 
 	//Ver si se habia pulsado en una ventana que habia en background
 	//Aqui nos quedamos siempre que se pulse en otra ventana, digamos que esto es como el gestor de ventanas "sencillo"
