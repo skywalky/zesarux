@@ -7795,6 +7795,23 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			zxvision_draw_window_contents(w);
 		}
 
+		//Si se pulsa dentro de cualquier otra ventana
+		/*
+		else {
+			int absolute_mouse_x,absolute_mouse_y;
+			
+			menu_calculate_mouse_xy_absolute_interface(&absolute_mouse_x,&absolute_mouse_y);
+
+			if (zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y)!=NULL) {
+				debug_printf (VERBOSE_DEBUG,"Clicked inside other window. Events are not sent to emulated machine");
+				zxvision_keys_event_not_send_to_machine=1;
+				ventana_tipo_activa=1;
+				zxvision_draw_window(w);
+				zxvision_draw_window_contents(w);				
+			}
+		}
+		*/
+
 		if (!si_menu_mouse_en_ventana() && zxvision_keys_event_not_send_to_machine) {
 			//Si se pulsa fuera de ventana
 			debug_printf (VERBOSE_DEBUG,"Clicked outside window. Events are sent to emulated machine. X=%d Y=%d",menu_mouse_x,menu_mouse_y);
