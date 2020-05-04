@@ -28381,10 +28381,13 @@ void menu_inicio_bucle(void)
 	printf ("inicio de menu_inicio_bucle\n");
 
 	//Si se ha pulsado el logo Z antes de abrir menu principal
+	//Si no hiciera esto, se abriria menu, y luego se reabriria al cerrarlo, 
+	//dado que tenemos menu_pressed_open_menu_while_in_menu.v activado
 	if (menu_pressed_open_menu_while_in_menu.v) {
 		printf ("Forgetting Z logo click action done before executing main menu\n");
 					menu_pressed_open_menu_while_in_menu.v=0;
 					salir_todos_menus=0;
+
 	}
 
 
