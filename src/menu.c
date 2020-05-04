@@ -8230,6 +8230,18 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	//return pulsado_boton_cerrar;
 }
 
+
+//Guardar tamanyo en variables por si cambia
+void zxvision_window_save_size(zxvision_window *ventana,int *ventana_ancho_antes,int *ventana_alto_antes)
+{
+
+	//Guardar ancho y alto anterior para recrear la ventana si cambia
+	*ventana_ancho_antes=ventana->visible_width;
+	*ventana_alto_antes=ventana->visible_height;
+}
+
+
+
 //Funcion comun que usan algunas ventanas para movimiento de cursores y pgup/dn
 void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla)
 {

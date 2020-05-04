@@ -2743,9 +2743,14 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		//Para poder controlar redimensionamientos de ventana y recrearla de nuevo
 		//No es necesario, pero es mas bonito... asi se recrea la ventana, si era muy pequeña, hacerla mas grande
 		//garantiza que se podra leer todo el texto
-		int alto_anterior=alto_ventana;
-		int ancho_anterior=ancho_ventana;
+		//int alto_anterior=alto_ventana;
+		//int ancho_anterior=ancho_ventana;
+
+		int alto_anterior;
+		int ancho_anterior;		
 		menu_ay_registers_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+
+		zxvision_window_save_size(ventana,&ancho_anterior,&alto_anterior);
 
 		zxvision_draw_window(ventana);		
 
@@ -2782,12 +2787,13 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 			//Recrear ventana
 
 			zxvision_destroy_window(ventana);
-			alto_anterior=alto_ventana;
-			ancho_anterior=ancho_ventana;
+			//alto_anterior=alto_ventana;
+			//ancho_anterior=ancho_ventana;
 			menu_ay_registers_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+			zxvision_window_save_size(ventana,&ancho_anterior,&alto_anterior);
 		}
 
-		
+
 	} while (tecla!=2 && tecla!=3);				
 
 	//Gestionar salir con tecla background
