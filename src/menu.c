@@ -4785,6 +4785,7 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"videoinfo",menu_debug_tsconf_tbblue_videoregisters},
 	{"tsconftbbluespritenav",menu_debug_tsconf_tbblue_spritenav},
 	{"tsconftbbluetilenav",menu_debug_tsconf_tbblue_tilenav},
+	{"debugcpu",menu_debug_registers},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };
@@ -4837,7 +4838,8 @@ void zxvision_restore_windows_on_startup(void)
 		//Lanzar funcion que la crea
 			zxvision_known_window_names_array[indice].start(0);
 
-			//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+			//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background,
+			//siempre que no sea la de normal overlay o null
 			zxvision_set_window_overlay_from_current(zxvision_current_window);
 
 			//restauramos modo normal de texto de menu
@@ -6830,7 +6832,7 @@ void zxvision_draw_overlay_if_exists(zxvision_window *w)
 		void (*overlay_function)(void);
 		overlay_function=w->overlay_function;
 
-		//printf ("Funcion overlay: %p. current window: %p\n",overlay_function,zxvision_current_window);		
+		//printf ("Funcion overlay: %p. ventana: %s. current window: %p\n",overlay_function,w->window_title,zxvision_current_window);		
 
 
 		//Esto pasa en ventanas que por ejemplo actualizan no a cada frame, al menos refrescar aqui con ultimo valor				
@@ -6925,9 +6927,19 @@ void zxvision_message_put_window_background(void)
 }
 
 //Pone en la estructura de ventana la funcion de overlay que haya activa ahora
+//Siempre que no sea la de normal overlay 
 void zxvision_set_window_overlay_from_current(zxvision_window *ventana)
 {
-	ventana->overlay_function=menu_overlay_function;
+
+	/*
+	realmente comparar con la de normal overlay nos sirve para evitar que ventanas que no tienen overlay
+	pero que pueden ir a background (como debug cpu) les ponga como overlay el propio de normal overlay
+	Es un poco chapucero pero funciona
+	TODO: seria mejor indicar con un flag (por defecto a 0) que la ventana tiene un overlay activo diferente de normal_overlay
+	*/
+	if (menu_overlay_function!=normal_overlay_texto_menu) {
+		ventana->overlay_function=menu_overlay_function;
+	}
 }
 
 

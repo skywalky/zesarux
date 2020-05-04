@@ -13298,6 +13298,7 @@ void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 
 
 	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+	ventana->can_be_backgrounded=1;
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"debugcpu");
 
@@ -14800,6 +14801,8 @@ void menu_debug_registers_zxvision_save_size(zxvision_window *ventana,int *venta
 }
 	
 
+zxvision_window zxvision_window_menu_debug_registers;
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -14857,17 +14860,37 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	if (menu_multitarea==0) cpu_step_mode.v=1;
 
 
-	zxvision_window ventana;
-	menu_debug_registers_zxvision_ventana(&ventana);
+	//zxvision_window ventana;
+	zxvision_window *ventana;
+	ventana=&zxvision_window_menu_debug_registers;
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);
+
+
+	menu_debug_registers_zxvision_ventana(ventana);
 
 
 	//Guardar ancho y alto anterior para recrear la ventana si cambia
 	int ventana_ancho_antes;
 	int ventana_alto_antes;
 
-	menu_debug_registers_zxvision_save_size(&ventana,&ventana_ancho_antes,&ventana_alto_antes);
+	menu_debug_registers_zxvision_save_size(ventana,&ventana_ancho_antes,&ventana_alto_antes);
 
-	menu_debug_registers_set_title(&ventana);
+	menu_debug_registers_set_title(ventana);
+
+
+        //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+        //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+        if (zxvision_currently_restoring_windows_on_start) {
+                //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+
+				//printf ("Overlay al finalizar desde inicio: %p\n",ventana->overlay_function);
+
+                return;
+        }	
 
 
 	do {
@@ -14875,21 +14898,21 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		//Ver si ha cambiado tamanyo ventana para recrearla
 		//Si no gestionamos esto, zxvision redimensiona por su cuenta el tamaño visible pero el tamaño total
 		//requiere logicamente recrearla de nuevo
-		if (ventana.visible_width!=ventana_ancho_antes || ventana.visible_height!=ventana_alto_antes) {
+		if (ventana->visible_width!=ventana_ancho_antes || ventana->visible_height!=ventana_alto_antes) {
 			debug_printf (VERBOSE_DEBUG,"Debug CPU window size has changed. Recreate it again");
 
 			//Guardamos la geometria actual
 			//util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
-			util_add_window_geometry_compact(&ventana);
+			util_add_window_geometry_compact(ventana);
 
-			zxvision_destroy_window(&ventana);
+			zxvision_destroy_window(ventana);
 
 			//Al crearla, usara la geometria guardada antes
-			menu_debug_registers_zxvision_ventana(&ventana);
-			menu_debug_registers_set_title(&ventana);
+			menu_debug_registers_zxvision_ventana(ventana);
+			menu_debug_registers_set_title(ventana);
 
 			//Guardamos valores en variables para saber si cambia
-			menu_debug_registers_zxvision_save_size(&ventana,&ventana_ancho_antes,&ventana_alto_antes);
+			menu_debug_registers_zxvision_save_size(ventana,&ventana_ancho_antes,&ventana_alto_antes);
 		}
 
 
@@ -14913,13 +14936,13 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				valor_contador_segundo_anterior=contador_segundo;
 
 
-				menu_debug_registers_set_title(&ventana);
-				zxvision_draw_window(&ventana);
+				menu_debug_registers_set_title(ventana);
+				zxvision_draw_window(ventana);
 
 				menu_debug_registers_adjust_ptr_on_follow();
 
                 linea=0;
-                linea=menu_debug_registers_show_ptr_text(&ventana,linea);
+                linea=menu_debug_registers_show_ptr_text(ventana,linea);
 
                 linea++;
 
@@ -14930,20 +14953,20 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 menu_writing_inverse_color.v=1;
 
                         
-				linea=menu_debug_registers_print_registers(&ventana,linea);
+				linea=menu_debug_registers_print_registers(ventana,linea);
 				//linea=19;
 
 
 				//En que linea aparece la leyenda
-				linea=menu_debug_registers_get_line_legend(&ventana);
-				linea=menu_debug_registers_print_legend(&ventana,linea);
+				linea=menu_debug_registers_get_line_legend(ventana);
+				linea=menu_debug_registers_print_legend(ventana,linea);
 
 
 				//Restaurar estado mostrar atajos
 				menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 
-				zxvision_draw_window_contents(&ventana);
+				zxvision_draw_window_contents(ventana);
 
                 if (menu_multitarea==0) menu_refresca_pantalla();
 
@@ -15054,9 +15077,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				if (tecla=='w') {
 					//La cerramos pues el envio de watches a background no funciona bien si hay otra ventana detras
-					zxvision_destroy_window(&ventana);
+					zxvision_destroy_window(ventana);
                     menu_watches(0);
-					menu_debug_registers_zxvision_ventana(&ventana);
+					menu_debug_registers_zxvision_ventana(ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                 }
@@ -15089,7 +15112,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				//Vista. Entre 1 y 6
 				if (tecla>='1' && tecla<='8') {
-					menu_debug_registers_set_view(&ventana,tecla-'0');
+					menu_debug_registers_set_view(ventana,tecla-'0');
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
@@ -15124,7 +15147,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				if (tecla==10) {
                     //abajo
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-					menu_debug_cursor_down(&ventana);
+					menu_debug_cursor_down(ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                 }
@@ -15132,7 +15155,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				//24 pgup
                 if (tecla==24) {
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-					menu_debug_cursor_pgup(&ventana);
+					menu_debug_cursor_pgup(ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                 }
@@ -15141,13 +15164,13 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				if (tecla==25) {
 					//PgDn
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-					menu_debug_cursor_pgdn(&ventana);
+					menu_debug_cursor_pgdn(ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
 
-				//Si tecla no es ESC, no salir
-				if (tecla!=2) acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+				//Si tecla no es ESC o background, no salir
+				if (tecla!=2 && tecla!=3) acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 
 
 
@@ -15161,25 +15184,25 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		//
 		else {
 
-			menu_debug_registers_set_title(&ventana);
-			zxvision_draw_window(&ventana);
+			menu_debug_registers_set_title(ventana);
+			zxvision_draw_window(ventana);
 
 			menu_breakpoint_exception_pending_show.v=0;
 
 			menu_debug_registers_adjust_ptr_on_follow();
 	
    	        linea=0;
-	        linea=menu_debug_registers_show_ptr_text(&ventana,linea);
+	        linea=menu_debug_registers_show_ptr_text(ventana,linea);
 
         	linea++;
 
 
 			int si_ejecuta_una_instruccion=1;
 
-            linea=menu_debug_registers_print_registers(&ventana,linea);
+            linea=menu_debug_registers_print_registers(ventana,linea);
 
 			//linea=19;
-			linea=menu_debug_registers_get_line_legend(&ventana);
+			linea=menu_debug_registers_get_line_legend(ventana);
 
         	//Forzar a mostrar atajos
 	        z80_bit antes_menu_writing_inverse_color;
@@ -15190,7 +15213,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 			if (continuous_step==0) {
 								//      01234567890123456789012345678901
-				linea=menu_debug_registers_print_legend(&ventana,linea);
+				linea=menu_debug_registers_print_legend(ventana,linea);
 																	// ~~1-~~5 View
 			}
 			else {
@@ -15200,17 +15223,17 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					char buffer_progreso[32];
 					menu_debug_cont_speed_progress(buffer_progreso);
 					sprintf (buffer_mensaje,"~~C: Speed %d %s",menu_debug_continuous_speed,buffer_progreso);
-					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_mensaje);
+					zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_mensaje);
 
-					zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Any other key: Stop cont step");
+					zxvision_print_string_defaults_fillspc(ventana,1,linea++,"Any other key: Stop cont step");
 													  //0123456789012345678901234567890
 
 					//si lento, avisar
 					if (menu_debug_continuous_speed<=1) {
-						zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Note: Make long key presses");
+						zxvision_print_string_defaults_fillspc(ventana,1,linea++,"Note: Make long key presses");
 					}
 					else {
-						zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"                         ");
+						zxvision_print_string_defaults_fillspc(ventana,1,linea++,"                         ");
 					}
 
 				}
@@ -15233,7 +15256,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 			//Actualizamos pantalla
 			//zxvision_draw_window(&ventana);
-			zxvision_draw_window_contents(&ventana);
+			zxvision_draw_window_contents(ventana);
 			menu_refresca_pantalla();
 
 
@@ -15342,9 +15365,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					menu_multitarea=0;
 
 					//La cerramos pues el envio de watches a background no funciona bien si hay otra ventana detras
-					zxvision_destroy_window(&ventana);
+					zxvision_destroy_window(ventana);
                     menu_watches(0);
-					menu_debug_registers_zxvision_ventana(&ventana);					
+					menu_debug_registers_zxvision_ventana(ventana);					
 
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
@@ -15485,7 +15508,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				//Vista. Entre 1 y 8
 				if (tecla>='1' && tecla<='8') {
-                	menu_debug_registers_set_view(&ventana,tecla-'0');
+                	menu_debug_registers_set_view(ventana,tecla-'0');
 				    //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
@@ -15569,7 +15592,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 if (tecla==10) {
                 	//abajo
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-                    menu_debug_cursor_down(&ventana);
+                    menu_debug_cursor_down(ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
@@ -15579,7 +15602,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 //24 pgup
                 if (tecla==24) {
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-                    menu_debug_cursor_pgup(&ventana);
+                    menu_debug_cursor_pgup(ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
@@ -15590,7 +15613,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 if (tecla==25) {
                     //PgDn
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
-                    menu_debug_cursor_pgdn(&ventana);
+                    menu_debug_cursor_pgdn(ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
@@ -15615,7 +15638,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					si_ejecuta_una_instruccion=0;
 
 					//Y redibujar ventana
-					zxvision_draw_window(&ventana);
+					zxvision_draw_window(ventana);
 				}
 
 				if (tecla=='s') { 
@@ -15634,6 +15657,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //Con esto saldremos
 
 				}
+
+				if (tecla==3) { //background
+					cpu_step_mode.v=0;
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                    acumulado=0; //teclas pulsadas
+                    //Con esto saldremos
+
+				}				
 
 				//Cualquier tecla no enter, no ejecuta instruccion
 				if (tecla!=13) si_ejecuta_una_instruccion=0;
@@ -15734,13 +15766,28 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		menu_debug_delete_daad_parse_breakpoint();
 	}	
 
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	//NO: dado que no tenemos overlay en esta ventana
+	//zxvision_set_window_overlay_from_current(ventana);
+
+
     cls_menu_overlay();
 
 	//util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
-	util_add_window_geometry_compact(&ventana);
+	util_add_window_geometry_compact(ventana);
 
 
-	zxvision_destroy_window(&ventana);
+
+	if (tecla==3) {
+		zxvision_message_put_window_background();
+	}
+
+	else {
+		zxvision_destroy_window(ventana);		
+ 	}	
+
+
+	//zxvision_destroy_window(ventana);
 
 }
 
