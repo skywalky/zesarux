@@ -1449,7 +1449,7 @@ int menu_if_pressed_menu_button(void)
 		if (accion==F_FUNCION_OPENMENU) {
 			//liberamos esa tecla
 			menu_button_f_function.v=0;
-			printf ("Pulsada tecla F abrir menu\n");
+			//printf ("Pulsada tecla F abrir menu\n");
 			//sleep(1);
 			return 1;
 		}
@@ -1461,7 +1461,7 @@ int menu_if_pressed_menu_button(void)
 
 	//Sera tecla F5 por defecto, ya que no se ha pulsado tecla con no default
 	if ((puerto_especial2&16)==0) {
-		printf ("Pulsada F5 por defecto\n");
+		//printf ("Pulsada F5 por defecto\n");
 		//sleep(1);
 		return 1;
 	}
@@ -2624,6 +2624,23 @@ void menu_draw_ext_desktop_logo(z80_int *destino GCC_UNUSED,int x,int y,int anch
 	scr_putpixel(x,y,color);
 }
 
+//Retorna posicion del logo de ZEsarUX en el extended desktop
+void menu_ext_desktop_get_logo_coords(int *x,int *y)
+{
+
+	int xinicio=screen_get_emulated_display_width_zoom_border_en();
+	int ancho=screen_get_ext_desktop_width_zoom();
+	int alto=screen_get_emulated_display_height_zoom_border_en();
+
+	//Agregamos logo ZEsarUX en esquina inferior derecha, con margen
+	int xfinal=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO-ZESARUX_WATERMARK_LOGO_MARGIN;
+	int yfinal=alto-ZESARUX_ASCII_LOGO_ALTO-ZESARUX_WATERMARK_LOGO_MARGIN;	
+
+
+	*x=xfinal;
+	*y=yfinal;
+}
+
 
 //Tipo de rellenado de extended desktop:
 //0=color solido
@@ -2717,8 +2734,12 @@ void menu_draw_ext_desktop(void)
 
 
 	//Agregamos logo ZEsarUX en esquina inferior derecha, con margen
-	int xfinal=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO-ZESARUX_WATERMARK_LOGO_MARGIN;
-	int yfinal=alto-ZESARUX_ASCII_LOGO_ALTO-ZESARUX_WATERMARK_LOGO_MARGIN;
+	int xfinal;
+	int yfinal;
+	//xfinal=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO-ZESARUX_WATERMARK_LOGO_MARGIN;
+	//yfinal=alto-ZESARUX_ASCII_LOGO_ALTO-ZESARUX_WATERMARK_LOGO_MARGIN;
+
+	menu_ext_desktop_get_logo_coords(&xfinal,&yfinal);
 
 	//El ancho y el puntero dan igual, no los vamos a usar
 	screen_put_watermark_generic(NULL,xfinal,yfinal,0, menu_draw_ext_desktop_logo);
