@@ -388,6 +388,10 @@ z80_bit force_confirm_yes={0};
 z80_bit mouse_menu_disabled={0};
 
 
+//Se ha pulsado tecla de menu cuando menu esta abierto
+z80_bit menu_pressed_open_menu_while_in_menu={0};
+
+
 z80_bit no_close_menu_after_smartload={0};
 
 
@@ -1425,6 +1429,47 @@ int menu_pressed_background_key(void)
 	else return 0;	
 }
 
+
+
+
+int menu_if_pressed_menu_button(void)
+{
+	//Si pulsada tecla menu
+
+	//Si se pulsa tecla F que no es default
+	if (menu_button_f_function.v && menu_button_f_function_index>=0) {
+
+		//Estas variables solo se activan cuando   //Abrir menu si funcion no es defecto y no es background window
+  		//if (accion!=F_FUNCION_DEFAULT && accion!=F_FUNCION_BACKGROUND_WINDOW) {
+
+		int indice=menu_button_f_function_index;
+
+		//Si accion es openmenu
+		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+		if (accion==F_FUNCION_OPENMENU) {
+			//liberamos esa tecla
+			menu_button_f_function.v=0;
+			printf ("Pulsada tecla F abrir menu\n");
+			//sleep(1);
+			return 1;
+		}
+
+
+		else return 0;
+
+	}
+
+	//Sera tecla F5 por defecto, ya que no se ha pulsado tecla con no default
+	if ((puerto_especial2&16)==0) {
+		printf ("Pulsada F5 por defecto\n");
+		//sleep(1);
+		return 1;
+	}
+
+
+	return 0;
+}
+
 z80_byte menu_get_pressed_key_no_modifier(void)
 {
 	z80_byte tecla;
@@ -1437,6 +1482,43 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 	if ((puerto_especial1&1)==0) return 2;
 
 	if (menu_pressed_background_key() && menu_allow_background_windows) return 3; //Tecla background F6
+
+
+	//Si menu esta abierto y pulsamos de nuevo la tecla de menu, cerrar todas ventanas y reabrir menu
+	//No acabo de tener claro que este sea el mejor sitio para comprobar esto... o si?
+	if (menu_if_pressed_menu_button()) {
+	//if ((puerto_especial2&16)==0) {
+		printf ("Pulsada tecla abrir menu\n");
+		sleep(1);
+		menu_pressed_open_menu_while_in_menu.v=1;
+		/*
+		-si no se permite background, cerrar todos menus abiertos y volver a abrir el menu principal
+-si se permite background:
+—si ventana activa se puede enviar a background, enviarla a background
+—si ventana activa no permite enviar a background, cerrarla
+y luego en cualquiera de los dos casos, abrir el menu principal
+
+las condiciones de "ventana activa se puede enviar a background o no" son comunes de cuando se pulsa en otra ventana. hacer función común??
+		*/
+	salir_todos_menus=1;
+
+		if (!menu_allow_background_windows) {
+			//Temp retornar escape
+			return 2; //Escape
+		}
+
+		else {
+			                                //Si la ventana activa permite ir a background, mandarla a background
+                                if (zxvision_current_window->can_be_backgrounded) {
+                                        return 3; //Tecla background F6
+                                }
+
+                                //Si la ventana activa no permite ir a background, cerrarla
+                                else {
+                                        return 2; //Escape
+                                }
+		}
+	}
 
 	tecla=menu_get_key_array(puerto_65022,menu_array_keys_65022);
 	if (tecla) return tecla;
@@ -2647,12 +2729,12 @@ void menu_draw_ext_desktop(void)
 void menu_refresca_pantalla(void)
 {
 
-	printf ("antes de all_interlace_scr_refresca_pantalla\n");
+	//printf ("antes de all_interlace_scr_refresca_pantalla\n");
 
 	modificado_border.v=1;
     all_interlace_scr_refresca_pantalla();
 
-	printf ("despues de all_interlace_scr_refresca_pantalla\n");
+	//printf ("despues de all_interlace_scr_refresca_pantalla\n");
 
 	//necesario si hay efectos de darken o grayscale
 	//menu_clear_footer();
@@ -2660,12 +2742,12 @@ void menu_refresca_pantalla(void)
 	//y redibujar todo footer
 	redraw_footer();
 
-	printf ("despues de redraw_footer\n");
+	//printf ("despues de redraw_footer\n");
 
 
 	menu_draw_ext_desktop();
 
-	printf ("despues de menu_draw_ext_desktop\n");
+	//printf ("despues de menu_draw_ext_desktop\n");
 
 }
 
@@ -4920,7 +5002,7 @@ void zxvision_delete_window_if_exists(zxvision_window *ventana)
 
 		//menu_generic_message_splash("Background task","OK. Window removed from background");	
 
-		printf ("Window removed from background\n");
+		debug_printf (VERBOSE_DEBUG,"Window removed from background");
 
         zxvision_window_delete_this_window(ventana);	
 		
@@ -6778,7 +6860,7 @@ void zxvision_draw_overlays_below_windows(zxvision_window *w)
 	pointer_window=w;
 
 	while (pointer_window->previous_window!=NULL) {
-			debug_printf (VERBOSE_PARANOID,"zxvision_draw_overlays_below_windows below window: %p",pointer_window->previous_window);
+			//debug_printf (VERBOSE_PARANOID,"zxvision_draw_overlays_below_windows below window: %p",pointer_window->previous_window);
 			pointer_window=pointer_window->previous_window;
 	}
 
@@ -6839,7 +6921,7 @@ void zxvision_message_put_window_background(void)
 	//Conviene esperar no tecla porque a veces esta ventana splash no aparece
 	menu_espera_no_tecla();
 	//menu_generic_message_splash("Background task","OK. Window put on the background");
-	printf ("OK. Window put on the background\n");
+	debug_printf (VERBOSE_DEBUG,"OK. Window put on the background");
 }
 
 //Pone en la estructura de ventana la funcion de overlay que haya activa ahora
@@ -7679,7 +7761,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 		if (!si_menu_mouse_en_ventana() && zxvision_keys_event_not_send_to_machine) {
 			//Si se pulsa fuera de ventana
-			printf ("Clicked outside window. Events are sent to emulated machine. X=%d Y=%d\n",menu_mouse_x,menu_mouse_y);
+			debug_printf (VERBOSE_DEBUG,"Clicked outside window. Events are sent to emulated machine. X=%d Y=%d",menu_mouse_x,menu_mouse_y);
 			zxvision_keys_event_not_send_to_machine=0;
 			ventana_tipo_activa=0;
 			zxvision_draw_window(w);
@@ -7694,25 +7776,22 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);
 			if (ventana_pulsada!=NULL) {
-				printf ("Pulsado en ventana: %s\n",ventana_pulsada->window_title);
+				debug_printf (VERBOSE_DEBUG,"Clicked on window: %s",ventana_pulsada->window_title);
 				clicked_on_background_windows=1;
 				which_window_clicked_on_background=ventana_pulsada;
 
+				//Se ha pulsado en otra ventana. Conmutar a dicha ventana. Cerramos el menu y todos los menus raíz
+				salir_todos_menus=1;
 
-				//Si vas a otra, se debe retornar la tecla de pulsado background (F6 por defecto/boton background en ventana) siempre que la 
-				//ventana activa permita irse a background. Si la ventana activa no permite ir a background, se puede enviar ESC y salir_todos_menus=1
+
+				//Si la ventana activa permite ir a background, mandarla a background
 				if (zxvision_current_window->can_be_backgrounded) {
-					//enviarla a background. Tecla F6
 					mouse_pressed_background_window=1;
-
-					//no estoy seguro de esto....
-					salir_todos_menus=1;
 				}
 
+				//Si la ventana activa no permite ir a background, cerrarla
 				else {
-					//ESC y salir todos menus
 					mouse_pressed_close_window=1;
-					salir_todos_menus=1;
 				}
 			}
 		}
@@ -27955,33 +28034,40 @@ void menu_principal_salir_emulador(MENU_ITEM_PARAMETERS)
 	menu_exit_emulator(0);	
 }
 
-
-void menu_inicio_bucle(void)
+void menu_inicio_pre_retorno_reset_flags(void)
 {
+    //desactivar botones de acceso directo
+    menu_button_smartload.v=0;
+    menu_button_osdkeyboard.v=0;
+    menu_button_osd_adv_keyboard_return.v=0;
+    menu_button_osd_adv_keyboard_openmenu.v=0;
+    menu_button_exit_emulator.v=0;
+    menu_event_drag_drop.v=0;
+    menu_breakpoint_exception.v=0;
+    menu_event_remote_protocol_enterstep.v=0;
+    menu_button_f_function.v=0;
+	menu_event_open_menu.v=0;
+}
 
-	//Si reabrimos menu despues de conmutar entre ventanas en background
-	int reopen_menu;
+void menu_inicio_bucle_main(void)
+{
+	menu_first_aid("initial_menu");
+
+	//Si descargar stats
+	//Si se pregunta si se quiere enviar estadisticas, solo si esta el grabado de configuracion, e interfaz permite menu (no stdout ni simpletext ni null)
+	if (save_configuration_file_on_exit.v && stats_asked.v==0 && si_normal_menu_video_driver()) {
+		stats_ask_if_enable();
+	}
+	
+	int retorno_menu;
+
+	menu_item *array_menu_principal;
+	menu_item item_seleccionado;
+
+	int salir_menu=0;
+
 
 	do {
-		reopen_menu=0;
-
-		menu_first_aid("initial_menu");
-
-		//Si descargar stats
-		//Si se pregunta si se quiere enviar estadisticas, solo si esta el grabado de configuracion, e interfaz permite menu (no stdout ni simpletext ni null)
-		if (save_configuration_file_on_exit.v && stats_asked.v==0 && si_normal_menu_video_driver()) {
-			stats_ask_if_enable();
-		}
-		
-		int retorno_menu;
-
-		menu_item *array_menu_principal;
-		menu_item item_seleccionado;
-
-		int salir_menu=0;
-
-
-		do {
 
 		if (strcmp(scr_driver_name,"xwindows")==0 || strcmp(scr_driver_name,"sdl")==0 || strcmp(scr_driver_name,"caca")==0 || strcmp(scr_driver_name,"fbdev")==0 || strcmp(scr_driver_name,"cocoa")==0 || strcmp(scr_driver_name,"curses")==0) f_functions=1;
 		else f_functions=0;
@@ -28057,16 +28143,12 @@ void menu_inicio_bucle(void)
 		menu_add_item_menu_tooltip(array_menu_principal,"Exit emulator");
 		menu_add_item_menu_ayuda(array_menu_principal,"Exit emulator");
 
-printf ("antes de dibujar menu principal\n");
-//sleep(2);
 
 		retorno_menu=menu_dibuja_menu(&menu_inicio_opcion_seleccionada,&item_seleccionado,array_menu_principal,"ZEsarUX v." EMULATOR_VERSION );
 
 		//printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);
 		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
 		//printf ("Retorno menu: %d\n",retorno_menu);
-printf ("despues de dibujar menu principal\n");
-//sleep(2);
 		
 
 		//opcion 12 es F10 salir del emulador
@@ -28075,27 +28157,27 @@ printf ("despues de dibujar menu principal\n");
 			//menu_exit_emulator(0);
 			menu_principal_salir_emulador(0);
 
-	        }
+		}
 
 
 		else if (retorno_menu>=0) {
 			//llamamos por valor de funcion
-        	        if (item_seleccionado.menu_funcion!=NULL) {
-                	        //printf ("actuamos por funcion\n");
-				
-                        	item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-				
+			if (item_seleccionado.menu_funcion!=NULL) {
+					//printf ("actuamos por funcion\n");
+		
+					item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+		
 
-				//si ha generado error, no salir
-				if (if_pending_error_message) salir_todos_menus=0;
-	                }
+					//si ha generado error, no salir
+					if (if_pending_error_message) salir_todos_menus=0;
+			}
 
 			
 		}
 
-                //printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);
-                //printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
-                //printf ("Retorno menu: %d\n",retorno_menu);
+		//printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);
+		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
+		//printf ("Retorno menu: %d\n",retorno_menu);
 
 		//if (retorno_menu==MENU_RETORNO_F2) salir_menu=1;
 
@@ -28106,94 +28188,103 @@ printf ("despues de dibujar menu principal\n");
 
 	} while (!salir_menu && !salir_todos_menus);
 
-	printf ("despues de opciones de menu\n");
+}
 
-	//Ver si se habia pulsado en una ventana que habia en background
-	//Aqui nos quedamos siempre que se pulse en otra ventana, digamos que esto es como el gestor de ventanas "sencillo"
-	//es un tanto mágico pero también muy simple
-	while (clicked_on_background_windows) {
 
-		//Por si hemos llegado hasta aqui cerrando todos los menus al haber pulsado en otra ventana y la actual no permite background
-		salir_todos_menus=0;
 
-		
-		clicked_on_background_windows=0;
-		printf ("Pulsado en ventana en background, leido al final de todos los menus.\n");	
+void menu_inicio_bucle(void)
+{
 
-		if (which_window_clicked_on_background!=NULL) {
-			printf ("Ventana: %s\n",which_window_clicked_on_background->window_title);
-			printf ("Geometry name ventana: %s\n",which_window_clicked_on_background->geometry_name);
+	//Si reabrimos menu despues de conmutar entre ventanas en background
+	int reopen_menu;
 
-			char *geometry_name;
+	do {
+		reopen_menu=0;
 
-			geometry_name=which_window_clicked_on_background->geometry_name;
+		menu_inicio_bucle_main();
 
-			if (geometry_name[0]!=0) {
+		//Se reabre el menu tambien si pulsada tecla F5 en cualquiera de los menus
+		if (menu_pressed_open_menu_while_in_menu.v) {
+			menu_pressed_open_menu_while_in_menu.v=0;
+			reopen_menu=1;
+		}
+
+
+
+		//Ver si se habia pulsado en una ventana que habia en background
+		//Aqui nos quedamos siempre que se pulse en otra ventana, digamos que esto es como el gestor de ventanas "sencillo"
+		//es un tanto mágico pero también muy simple
+		while (clicked_on_background_windows) {
+
+			//Por si hemos llegado hasta aqui cerrando todos los menus al haber pulsado en otra ventana y la actual no permite background
+			salir_todos_menus=0;
+
 			
-				int indice=zxvision_find_known_window(geometry_name);
+			clicked_on_background_windows=0;
+			debug_printf(VERBOSE_DEBUG,"Clicked on background window, notified at the end of menus");	
 
-                if (indice<0) {
-                        //debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",geometry_name);
-                }
+			if (which_window_clicked_on_background!=NULL) {
+				//printf ("Ventana: %s\n",which_window_clicked_on_background->window_title);
+				//printf ("Geometry name ventana: %s\n",which_window_clicked_on_background->geometry_name);
 
-                else {
-                //Lanzar funcion que la crea
+				char *geometry_name;
 
-                        //Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar  temporalmente
-                                        void (*previous_function)(void);
+				geometry_name=which_window_clicked_on_background->geometry_name;
 
-                                        previous_function=menu_overlay_function;
-
-int antes_menu_overlay_activo=menu_overlay_activo;														
+				if (geometry_name[0]!=0) {
 				
-						printf ("Iniciar ventana %s\n",geometry_name);
-                        zxvision_known_window_names_array[indice].start(0);
+					int indice=zxvision_find_known_window(geometry_name);
 
-                        //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
-                        //temp zxvision_set_window_overlay_from_current(zxvision_current_window);
+					if (indice<0) {
+							//debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",geometry_name);
+					}
 
-                        //restauramos modo normal de texto de menu
-                		//set_menu_overlay_function(normal_overlay_texto_menu);
+					else {
+					//Lanzar funcion que la crea
 
-                        //Restauramos funcion anterior de overlay
-                        set_menu_overlay_function(previous_function);		
+						//Guardar funcion de texto overlay activo, para menus como el de visual memory por ejemplo, para desactivar  temporalmente
+						void (*previous_function)(void);
+
+						previous_function=menu_overlay_function;
+
+						int antes_menu_overlay_activo=menu_overlay_activo;														
+				
+						debug_printf (VERBOSE_DEBUG,"Starting window %s",geometry_name);
+						zxvision_known_window_names_array[indice].start(0);
+
+
+						//Restauramos funcion anterior de overlay
+						set_menu_overlay_function(previous_function);		
 
 						menu_overlay_activo=antes_menu_overlay_activo;		
 
 							
 						//Y reabriremos el menu cuando dejemos de conmutar entre ventanas
 						reopen_menu=1;
-		 
-		       }
-			}
 			
+					}
+				}
+				
+			}
 		}
-	}
 
 
-	which_window_clicked_on_background=NULL;	
+		which_window_clicked_on_background=NULL;
+
+
+		//Si hay que reabrirlo, resetear estado de salida de todos
+		if (reopen_menu) salir_todos_menus=0;	
+
+
 
 	} while (reopen_menu);		
 
 	textspeech_print_speech("Closing emulator menu and going back to emulated machine");
-	        //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+	        
 
 }
 
-void menu_inicio_pre_retorno_reset_flags(void)
-{
-    //desactivar botones de acceso directo
-    menu_button_smartload.v=0;
-    menu_button_osdkeyboard.v=0;
-    menu_button_osd_adv_keyboard_return.v=0;
-    menu_button_osd_adv_keyboard_openmenu.v=0;
-    menu_button_exit_emulator.v=0;
-    menu_event_drag_drop.v=0;
-    menu_breakpoint_exception.v=0;
-    menu_event_remote_protocol_enterstep.v=0;
-    menu_button_f_function.v=0;
-	menu_event_open_menu.v=0;
-}
+
 
 void menu_inicio_pre_retorno(void)
 {
@@ -28682,6 +28773,11 @@ void menu_inicio(void)
 	}
 
 	if (menu_button_f_function.v) {
+
+		//Si se reabre menu, resetear flags de teclas pulsadas especiales
+		//Esto evita por ejemplo que al abrir menu con F5, si se entra a submenu, se crea que hemos pulsado F5 y cierre el menu y vuelva a abrir menu principal
+		menu_button_f_function.v=0;
+
 		//printf ("pulsada tecl de funcion\n");
 		//Entrada
 		//menu_espera_no_tecla();
@@ -28724,7 +28820,7 @@ void menu_inicio(void)
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		
 		//Abrir menu normal
-		printf ("Abrir menu normal\n");
+		//printf ("Abrir menu normal\n");
 		menu_inicio_bucle();
 
 	}
@@ -28732,7 +28828,7 @@ void menu_inicio(void)
 	}
 
 
-	printf ("salir menu\n");
+	//printf ("salir menu\n");
 
 
 	//Volver

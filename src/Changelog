@@ -14,6 +14,7 @@ Added ZRCP commands:
 
 Improved menu:
 -Allow some windows to be put on the background. Also active windows are saved and restored on startup
+-Pressing the menu key (F5 by default) when menu is open, it will send you back to the main menu
 
 Improved Esxdos handler: 
 -add f_mkdir function 

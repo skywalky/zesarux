@@ -287,3 +287,11 @@ En linux no sale del emulador... quiza es algo de sdl? si, parece que vo sdl con
 -ventana ay registers si se hace mas grande tiene que recrearla para que el contenido de la ventana permita mas texto
 otras ventanas ya lo hacen, como por ejemplo ay sheet
 
+
+-Error al pulsar background:
+
+*Si F6 esta en default y F7 en background, tanto F6 como F7 deberian hacer lo mismo. Pero solo va F7
+*Si F6 esta en nothing, sigue haciendo background
+
+
+-Mientras hay splash de inicio, si se pulsa F5, aparece por un momento overlays de ventanas, cuando F5 esta asignada a "Nothing"
