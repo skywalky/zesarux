@@ -1489,7 +1489,7 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 	if (menu_if_pressed_menu_button()) {
 	//if ((puerto_especial2&16)==0) {
 		printf ("Pulsada tecla abrir menu\n");
-		sleep(1);
+		//sleep(1);
 		menu_pressed_open_menu_while_in_menu.v=1;
 		/*
 		-si no se permite background, cerrar todos menus abiertos y volver a abrir el menu principal
@@ -28378,7 +28378,7 @@ void menu_inicio_bucle_main(void)
 void menu_inicio_bucle(void)
 {
 
-	printf ("inicio de menu_inicio_bucle\n");
+	//printf ("inicio de menu_inicio_bucle\n");
 
 	//Si se ha pulsado el logo Z antes de abrir menu principal
 	//Si no hiciera esto, se abriria menu, y luego se reabriria al cerrarlo, 
@@ -28700,7 +28700,7 @@ void menu_inicio_reset_emulated_keys(void)
 void menu_inicio(void)
 {
 
-	printf ("inicio menu_inicio\n");
+	//printf ("inicio menu_inicio\n");
 
 	//Pulsado boton salir del emulador, en drivers xwindows, sdl, etc, en casos con menu desactivado, sale del todo
 	if (menu_button_exit_emulator.v && (menu_desactivado.v || menu_desactivado_andexit.v)

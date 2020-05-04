@@ -269,17 +269,8 @@ valores long int
 
 -Poder ver ventanas en background con menú cerrado de la misma manera que salen mensajes splash?
 
--Poder pulsar en una ventana en background y que conmute a ella. Para eso:
-* Cuando pulsas fuera de ventana y normalmente pierde el foco, realmente deberia mirar si estas pulsando en cualquier otra ventana,
-empezando desde arriba hasta abajo.
--->crear funcion que diga a que ventana estas pulsando. Retorna *zxvision_window
-zxvision_coords_in_below_windows
-
-Si vas a otra, se deberia retornar la tecla de pulsado background (F6 por defecto/boton background en ventana) siempre que la 
-ventana activa permita irse a background. Si la ventana activa no permite ir a background, se puede enviar ESC
-
-Luego se debe llamar a la funcion que recupera la ventana (desde zxvision_known_window_names_array), pero quien llama ahi??
-->quiza esto puede provocar un salir_todas_ventanas y antes de que va a salir de todos los menus, ver si hay pendiente recuperar una ventana
+-Cuando cambia foco de una ventana a la maquina emulada, luego para volver hay que acordarse de cual estabamos
+Mejor poder pulsar en una cualquiera y conmutar a dicha ventana. O simplemente pulsar fuera de zona de maquina emulada y vuelve
 
 
 En linux no sale del emulador... quiza es algo de sdl? si, parece que vo sdl con ao sdl falla . con --noconfigfile y vo sdl y ao sdl tambien 
