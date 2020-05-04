@@ -7853,7 +7853,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				int ancho_logo=ZESARUX_ASCII_LOGO_ANCHO;
 				int alto_logo=ZESARUX_ASCII_LOGO_ALTO;
 
-				printf ("mouse: %d,%d logo: %d,%d\n",mouse_pixel_x,mouse_pixel_y,xlogo,ylogo);
+				//printf ("mouse: %d,%d logo: %d,%d\n",mouse_pixel_x,mouse_pixel_y,xlogo,ylogo);
 
 				if (mouse_pixel_x>=xlogo && mouse_pixel_x<xlogo+ancho_logo &&
 					mouse_pixel_y>=ylogo && mouse_pixel_y<xlogo+alto_logo
