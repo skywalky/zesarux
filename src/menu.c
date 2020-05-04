@@ -28390,6 +28390,7 @@ void menu_inicio_bucle(void)
 		if (menu_pressed_open_menu_while_in_menu.v) {
 			menu_pressed_open_menu_while_in_menu.v=0;
 			reopen_menu=1;
+			printf ("Reabrimos menu\n");
 		}
 
 
@@ -28444,6 +28445,14 @@ void menu_inicio_bucle(void)
 							
 						//Y reabriremos el menu cuando dejemos de conmutar entre ventanas
 						reopen_menu=1;
+
+
+		//Se reabre el menu tambien si pulsada tecla F5 en cualquiera de los menus
+		if (menu_pressed_open_menu_while_in_menu.v) {
+			menu_pressed_open_menu_while_in_menu.v=0;
+			reopen_menu=1;
+			printf ("Reabrimos menu desde conmutacion de ventanas\n");
+		}						
 			
 					}
 				}
