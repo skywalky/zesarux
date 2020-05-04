@@ -1499,6 +1499,9 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 y luego en cualquiera de los dos casos, abrir el menu principal
 
 las condiciones de "ventana activa se puede enviar a background o no" son comunes de cuando se pulsa en otra ventana. hacer función común??
+
+	Estas decisiones son parecidas en casos:
+	pulsar tecla menu cuando menu activo (menu_if_pressed_menu_button en menu_get_pressed_key_no_modifier), conmutar ventana, pulsar logo ZEsarUX en ext desktop
 		*/
 	salir_todos_menus=1;
 
@@ -7816,6 +7819,10 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				//Se ha pulsado en otra ventana. Conmutar a dicha ventana. Cerramos el menu y todos los menus raíz
 				salir_todos_menus=1;
 
+	/*
+	Estas decisiones son parecidas en casos:
+	pulsar tecla menu cuando menu activo (menu_if_pressed_menu_button en menu_get_pressed_key_no_modifier), conmutar ventana, pulsar logo ZEsarUX en ext desktop
+	*/
 
 				//Si la ventana activa permite ir a background, mandarla a background
 				if (zxvision_current_window->can_be_backgrounded) {
@@ -7825,6 +7832,62 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				//Si la ventana activa no permite ir a background, cerrarla
 				else {
 					mouse_pressed_close_window=1;
+				}
+			}
+
+			//Ver si hemos pulsado por la zona del logo en el ext desktop
+			else if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() ) {
+				int xlogo,ylogo;
+				menu_ext_desktop_get_logo_coords(&xlogo,&ylogo);
+
+				int mouse_pixel_x,mouse_pixel_y;
+
+
+				menu_calculate_mouse_xy_absolute_interface_pixel(&mouse_pixel_x,&mouse_pixel_y);
+
+				//multiplicamos por zoom
+				mouse_pixel_x *=zoom_x;
+				mouse_pixel_y *=zoom_y;
+
+				//tamaño del logo
+				int ancho_logo=ZESARUX_ASCII_LOGO_ANCHO;
+				int alto_logo=ZESARUX_ASCII_LOGO_ALTO;
+
+				printf ("mouse: %d,%d logo: %d,%d\n",mouse_pixel_x,mouse_pixel_y,xlogo,ylogo);
+
+				if (mouse_pixel_x>=xlogo && mouse_pixel_x<xlogo+ancho_logo &&
+					mouse_pixel_y>=ylogo && mouse_pixel_y<xlogo+alto_logo
+				) {
+					printf ("Pulsado en el logo del ext desktop\n");
+
+					menu_pressed_open_menu_while_in_menu.v=1;
+					salir_todos_menus=1;
+
+/*
+Estas decisiones son parecidas en casos:
+	pulsar tecla menu cuando menu activo (menu_if_pressed_menu_button en menu_get_pressed_key_no_modifier), conmutar ventana, pulsar logo ZEsarUX en ext desktop
+	*/
+
+				if (!menu_allow_background_windows) {
+                        mouse_pressed_close_window=1;
+                }
+
+                else {
+                                                        //Si la ventana activa permite ir a background, mandarla a background
+                                if (zxvision_current_window->can_be_backgrounded) {
+                                        mouse_pressed_background_window=1;
+                                }
+
+                                //Si la ventana activa no permite ir a background, cerrarla
+                                else {
+                                        mouse_pressed_close_window=1;
+                                }
+                }
+
+
+
+
+
 				}
 			}
 		}
@@ -8620,10 +8683,11 @@ int menu_allows_mouse(void)
 	return si_complete_video_driver();
 }
 
-//Retorna las coordenadas absolutas del raton (en tamaño de caracter) teniendo en cuenta todo el tamaño de la interfaz del emulador
-void menu_calculate_mouse_xy_absolute_interface(int *resultado_x,int *resultado_y)
+
+//Retorna las coordenadas absolutas del raton (en tamaño de pixel) teniendo en cuenta todo el tamaño de la interfaz del emulador
+void menu_calculate_mouse_xy_absolute_interface_pixel(int *resultado_x,int *resultado_y)
 {
-	int x,y;
+		int x,y;
 
 
 		int mouse_en_emulador=0;
@@ -8680,6 +8744,80 @@ void menu_calculate_mouse_xy_absolute_interface(int *resultado_x,int *resultado_
 	if (x<0) x-=(menu_char_width*menu_gui_zoom); //posicion entre -7 y -1 y demas, cuenta como -1, -2 al dividir entre 8
 	if (y<0) y-=(8*menu_gui_zoom);
 
+	//x /=menu_char_width;
+	//y /=8;
+
+	//x /= menu_gui_zoom;
+	//y /= menu_gui_zoom;
+
+	//printf ("antes de restar: %d,%d\n",x,y);
+	*resultado_x=x;
+	*resultado_y=y;
+}
+
+//Retorna las coordenadas absolutas del raton (en tamaño de caracter) teniendo en cuenta todo el tamaño de la interfaz del emulador
+void menu_calculate_mouse_xy_absolute_interface(int *resultado_x,int *resultado_y)
+{
+	int x,y;
+
+	menu_calculate_mouse_xy_absolute_interface_pixel(&x,&y);
+
+/*
+		int mouse_en_emulador=0;
+		//printf ("x: %04d y: %04d\n",mouse_x,mouse_y);
+
+		int ancho=screen_get_window_size_width_zoom_border_en();
+
+		ancho +=screen_get_ext_desktop_width_zoom();
+
+		if (mouse_x>=0 && mouse_y>=0
+			&& mouse_x<=ancho && mouse_y<=screen_get_window_size_height_zoom_border_en() ) {
+				//Si mouse esta dentro de la ventana del emulador
+				mouse_en_emulador=1;
+		}
+
+		if (  (mouse_x!=last_mouse_x || mouse_y !=last_mouse_y) && mouse_en_emulador) {
+			mouse_movido=1;
+		}
+		else mouse_movido=0;
+
+		last_mouse_x=mouse_x;
+		last_mouse_y=mouse_y;
+
+		//printf ("x: %04d y: %04d movido=%d\n",mouse_x,mouse_y,mouse_movido);
+
+		//Quitarle el zoom
+		x=mouse_x/zoom_x;
+		y=mouse_y/zoom_y;
+
+		//Considerar borde pantalla
+
+		//Todo lo que sea negativo o exceda border, nada.
+
+		//printf ("x: %04d y: %04d\n",x,y);
+
+
+
+        //margenes de zona interior de pantalla. para modo rainbow
+				int margenx_izq;
+				int margeny_arr;
+				menu_retorna_margenes_border(&margenx_izq,&margeny_arr);
+
+	//Ya no hace falta restar margenes
+	margenx_izq=margeny_arr=0;
+
+	x -=margenx_izq;
+	y -=margeny_arr;
+
+	//printf ("x: %04d y: %04d\n",x,y);
+
+	//Aqui puede dar negativo, en caso que cursor este en el border
+	//si esta justo en los ultimos 8 pixeles, dara entre -7 y -1. al dividir entre 8, retornaria 0, diciendo erroneamente que estamos dentro de ventana
+
+	if (x<0) x-=(menu_char_width*menu_gui_zoom); //posicion entre -7 y -1 y demas, cuenta como -1, -2 al dividir entre 8
+	if (y<0) y-=(8*menu_gui_zoom);
+
+*/
 	x /=menu_char_width;
 	y /=8;
 
