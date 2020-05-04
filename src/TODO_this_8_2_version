@@ -284,8 +284,6 @@ Luego se debe llamar a la funcion que recupera la ventana (desde zxvision_known_
 
 En linux no sale del emulador... quiza es algo de sdl? si, parece que vo sdl con ao sdl falla . con --noconfigfile y vo sdl y ao sdl tambien 
 
--ventana ay registers si se hace mas grande tiene que recrearla para que el contenido de la ventana permita mas texto
-otras ventanas ya lo hacen, como por ejemplo ay sheet
 
 
 -Error al pulsar background:

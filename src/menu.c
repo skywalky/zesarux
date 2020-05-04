@@ -7752,7 +7752,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 	if (mouse_left && !mouse_is_dragging) {
 		//Si se pulsa dentro de ventana y no esta arrastrando
 	 	if (si_menu_mouse_en_ventana() && !zxvision_keys_event_not_send_to_machine) {
-			printf ("Clicked inside window. Events are not sent to emulated machine\n");
+			debug_printf (VERBOSE_DEBUG,"Clicked inside window. Events are not sent to emulated machine");
 			zxvision_keys_event_not_send_to_machine=1;
 			ventana_tipo_activa=1;
 			zxvision_draw_window(w);

@@ -2673,6 +2673,15 @@ void menu_ay_registers_overlay(void)
 //Ventana como variable global
 zxvision_window zxvision_ay_registers_overlay;
 
+
+void menu_ay_registers_crea_ventana(zxvision_window *ventana,int xventana,int yventana,int ancho_ventana,int alto_ventana)
+{
+		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"AY Registers");
+		ventana->can_be_backgrounded=1;	
+		//indicar nombre del grabado de geometria
+		strcpy(ventana->geometry_name,"ayregisters");
+}
+
 void menu_ay_registers(MENU_ITEM_PARAMETERS)
 {
     menu_espera_no_tecla();
@@ -2726,10 +2735,17 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 
 
-		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"AY Registers");
-		ventana->can_be_backgrounded=1;	
-		//indicar nombre del grabado de geometria
-		strcpy(ventana->geometry_name,"ayregisters");
+		//zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"AY Registers");
+		//ventana->can_be_backgrounded=1;	
+		////indicar nombre del grabado de geometria
+		//strcpy(ventana->geometry_name,"ayregisters");
+
+		//Para poder controlar redimensionamientos de ventana y recrearla de nuevo
+		//No es necesario, pero es mas bonito... asi se recrea la ventana, si era muy pequeña, hacerla mas grande
+		//garantiza que se podra leer todo el texto
+		int alto_anterior=alto_ventana;
+		int ancho_anterior=ancho_ventana;
+		menu_ay_registers_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
 
 		zxvision_draw_window(ventana);		
 
@@ -2755,6 +2771,23 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		tecla=zxvision_common_getkey_refresh();		
 		zxvision_handle_cursors_pgupdn(ventana,tecla);
 		//printf ("tecla: %d\n",tecla);
+
+		//Si ha cambiado el tamaño
+		alto_ventana=ventana->visible_height;
+		ancho_ventana=ventana->visible_width;
+		xventana=ventana->x;
+		yventana=ventana->y;
+		if (alto_ventana!=alto_anterior || ancho_ventana!=ancho_anterior) {
+			//printf ("recrear ventana\n");
+			//Recrear ventana
+
+			zxvision_destroy_window(ventana);
+			alto_anterior=alto_ventana;
+			ancho_anterior=ancho_ventana;
+			menu_ay_registers_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+		}
+
+		
 	} while (tecla!=2 && tecla!=3);				
 
 	//Gestionar salir con tecla background
@@ -2785,49 +2818,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 }
 
 
-/*
-void menu_draw_background_windows(MENU_ITEM_PARAMETERS)
-{
-	menu_espera_no_tecla();
-        menu_reset_counters_tecla_repeticion();
 
-                if (!menu_multitarea) {
-                        menu_warn_message("This menu item needs multitask enabled");
-                        return;
-                }
-
-	if (zxvision_current_window==NULL) {
-		printf ("No windows in background\n");
-		return;
-	}
-
-                //zxvision_window *ventana; 
-                //ventana=zxvision_current_window;
-
-	//Metemos funcion de overlay que se encarga de repintar ventanas de debajo con overlay
-	set_menu_overlay_function(menu_draw_background_windows_overlay);
-
-
-        z80_byte tecla;
-
-        do {
-                tecla=zxvision_common_getkey_refresh();
-
-                printf ("tecla: %d\n",tecla);
-        } while (tecla!=2);
-
-
-        menu_espera_no_tecla(); //Si no, se va al menu anterior.
-
-    //restauramos modo normal de texto de menu
-     set_menu_overlay_function(normal_overlay_texto_menu);
-
-
-    cls_menu_overlay();
-
-
-}
-*/
 
 
 int menu_debug_tsconf_tbblue_videoregisters_valor_contador_segundo_anterior;
