@@ -7780,7 +7780,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (!si_menu_mouse_activado()) return; // 0;
 
-	//printf ("zxvision_handle_mouse_events %d\n",tempconta++);
+	//printf ("zxvision_handle_mouse_events\n");
 	//int pulsado_boton_cerrar=0;
 
 	menu_calculate_mouse_xy();
@@ -28378,6 +28378,16 @@ void menu_inicio_bucle_main(void)
 void menu_inicio_bucle(void)
 {
 
+	printf ("inicio de menu_inicio_bucle\n");
+
+	//Si se ha pulsado el logo Z antes de abrir menu principal
+	if (menu_pressed_open_menu_while_in_menu.v) {
+		printf ("Forgetting Z logo click action done before executing main menu\n");
+					menu_pressed_open_menu_while_in_menu.v=0;
+					salir_todos_menus=0;
+	}
+
+
 	//Si reabrimos menu despues de conmutar entre ventanas en background
 	int reopen_menu;
 
@@ -28450,9 +28460,7 @@ void menu_inicio_bucle(void)
 		//Se reabre el menu tambien si pulsada tecla F5 en cualquiera de los menus
 		if (menu_pressed_open_menu_while_in_menu.v) {
 			menu_pressed_open_menu_while_in_menu.v=0;
-			reopen_menu=1;
-			printf ("Reabrimos menu desde conmutacion de ventanas\n");
-		}						
+		}					
 			
 					}
 				}
@@ -28688,6 +28696,8 @@ void menu_inicio_reset_emulated_keys(void)
 //menu principal
 void menu_inicio(void)
 {
+
+	printf ("inicio menu_inicio\n");
 
 	//Pulsado boton salir del emulador, en drivers xwindows, sdl, etc, en casos con menu desactivado, sale del todo
 	if (menu_button_exit_emulator.v && (menu_desactivado.v || menu_desactivado_andexit.v)
