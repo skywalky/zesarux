@@ -16660,19 +16660,26 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 		//Inicializar array de estado
 		menu_ay_partitura_init_state();
 
+		char *titulo_ventana="AY Sheet (60 BPM)";
+
 
 		if (!util_find_window_geometry("aysheet",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
 						
 						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
 						yventana=PIANO_PARTITURA_GRAPHIC_BASE_Y;
 						ancho_ventana=PIANO_PARTITURA_ANCHO_VENTANA;
-						alto_ventana=PIANO_PARTITURA_ALTO_VENTANA;						
+						alto_ventana=PIANO_PARTITURA_ALTO_VENTANA;	
+
+			int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+
+			//Para que se lea el titulo de la ventana en tamaño por defecto
+			if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;											
 
 		}
 				
 
 
-		char *titulo_ventana="AY Sheet (60 BPM)";
+		
 		//int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
 		//Para que siempre se lea el titulo de la ventana
@@ -20960,6 +20967,8 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 		//Max 3 ay chips
 		if (total_chips>3) total_chips=3;
 
+		char *titulo_ventana="AY Piano";
+
 		if (!util_find_window_geometry("aypiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
 
 				if (!si_mostrar_ay_piano_grafico()) {
@@ -21038,12 +21047,19 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 				}
 
 
+			int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+
+			//Para que se lea el titulo de la ventana en tamaño por defecto
+			
+			if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
+
+
 			}
 
 		
 
 
-		char *titulo_ventana="AY Piano";
+		
 		//int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
 		//Para que siempre se lea el titulo de la ventana
@@ -21263,6 +21279,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 
 	int xventana,yventana,ancho_ventana,alto_ventana;
+	char *titulo_ventana="Wave Piano";
 	if (!util_find_window_geometry("wavepiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 			if (!si_mostrar_ay_piano_grafico()) {
 
@@ -21281,14 +21298,23 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 				alto_ventana=8;
 
 			}
+
+
+		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+		
+		//Para que se lea el titulo de la ventana cuando tamaño por defecto
+		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;					
+
+
+
 	}
 
 
-	if (si_mostrar_ay_piano_grafico()) {
-		piano_graphic_base_y=8;
-	}		
+	//if (si_mostrar_ay_piano_grafico()) {
+	//		piano_graphic_base_y=8;
+	//}		
 
-	char *titulo_ventana="Wave Piano";
+	
 	//int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 		
 	//Para que siempre se lea el titulo de la ventana
