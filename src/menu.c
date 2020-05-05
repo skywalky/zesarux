@@ -2804,16 +2804,18 @@ void menu_draw_ext_desktop(void)
 		}	
 
 
-	//Agregamos logo ZEsarUX en esquina inferior derecha, con margen
-	int xfinal;
-	int yfinal;
-	//xfinal=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO-ZESARUX_WATERMARK_LOGO_MARGIN;
-	//yfinal=alto-ZESARUX_ASCII_LOGO_ALTO-ZESARUX_WATERMARK_LOGO_MARGIN;
+	//Agregamos logo ZEsarUX en esquina inferior derecha, con margen, solo si menu esta abierto
+	if (menu_abierto) {
+		int xfinal;
+		int yfinal;
+		//xfinal=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO-ZESARUX_WATERMARK_LOGO_MARGIN;
+		//yfinal=alto-ZESARUX_ASCII_LOGO_ALTO-ZESARUX_WATERMARK_LOGO_MARGIN;
 
-	menu_ext_desktop_get_logo_coords(&xfinal,&yfinal);
+		menu_ext_desktop_get_logo_coords(&xfinal,&yfinal);
 
-	//El ancho y el puntero dan igual, no los vamos a usar
-	screen_put_watermark_generic(NULL,xfinal,yfinal,0, menu_draw_ext_desktop_logo);
+		//El ancho y el puntero dan igual, no los vamos a usar
+		screen_put_watermark_generic(NULL,xfinal,yfinal,0, menu_draw_ext_desktop_logo);
+	}
 	
 }
 
@@ -28615,6 +28617,10 @@ menu_init_footer hace falta pues el layer de menu se borra y se queda negro en l
 */
 
 	redraw_footer();
+
+
+	//Redibujar ext desktop, para que no se vea el logo (logo solo aparece si menu abierto)
+	menu_draw_ext_desktop();
 
 }
 
