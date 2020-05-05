@@ -7770,67 +7770,9 @@ int clicked_on_background_windows=0;
 
 zxvision_window *which_window_clicked_on_background=NULL;
 
-//int zxvision_mouse_events_counter=0;
-//int tempconta;
-//Retorna 1 si pulsado boton de cerrar ventana
-void zxvision_handle_mouse_events(zxvision_window *w)
+void zxvision_handle_mouse_ev_switch_back_wind(zxvision_window *ventana_pulsada)
 {
-
-	if (w==NULL) return; // 0; 
-
-	if (!si_menu_mouse_activado()) return; // 0;
-
-	//printf ("zxvision_handle_mouse_events\n");
-	//int pulsado_boton_cerrar=0;
-
-	menu_calculate_mouse_xy();
-
-	if (mouse_left && !mouse_is_dragging) {
-		//Si se pulsa dentro de ventana y no esta arrastrando
-	 	if (si_menu_mouse_en_ventana() && !zxvision_keys_event_not_send_to_machine) {
-			debug_printf (VERBOSE_DEBUG,"Clicked inside window. Events are not sent to emulated machine");
-			zxvision_keys_event_not_send_to_machine=1;
-			ventana_tipo_activa=1;
-			zxvision_draw_window(w);
-			zxvision_draw_window_contents(w);
-		}
-
-		//Si se pulsa dentro de cualquier otra ventana
-		/*
-		else {
-			int absolute_mouse_x,absolute_mouse_y;
-			
-			menu_calculate_mouse_xy_absolute_interface(&absolute_mouse_x,&absolute_mouse_y);
-
-			if (zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y)!=NULL) {
-				debug_printf (VERBOSE_DEBUG,"Clicked inside other window. Events are not sent to emulated machine");
-				zxvision_keys_event_not_send_to_machine=1;
-				ventana_tipo_activa=1;
-				zxvision_draw_window(w);
-				zxvision_draw_window_contents(w);				
-			}
-		}
-		*/
-
-		if (!si_menu_mouse_en_ventana() && zxvision_keys_event_not_send_to_machine) {
-			//Si se pulsa fuera de ventana
-			debug_printf (VERBOSE_DEBUG,"Clicked outside window. Events are sent to emulated machine. X=%d Y=%d",menu_mouse_x,menu_mouse_y);
-			zxvision_keys_event_not_send_to_machine=0;
-			ventana_tipo_activa=0;
-			zxvision_draw_window(w);
-			zxvision_draw_window_contents(w);
-
-			//Vamos a ver en que ventana se ha pulsado, si tenemos background activado
-			zxvision_window *ventana_pulsada;
-
-			int absolute_mouse_x,absolute_mouse_y;
-			
-			menu_calculate_mouse_xy_absolute_interface(&absolute_mouse_x,&absolute_mouse_y);
-
-			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);
-			if (ventana_pulsada!=NULL) {
-				debug_printf (VERBOSE_DEBUG,"Clicked on window: %s",ventana_pulsada->window_title);
-				clicked_on_background_windows=1;
+					clicked_on_background_windows=1;
 				which_window_clicked_on_background=ventana_pulsada;
 
 				//Se ha pulsado en otra ventana. Conmutar a dicha ventana. Cerramos el menu y todos los menus raíz
@@ -7850,6 +7792,60 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				else {
 					mouse_pressed_close_window=1;
 				}
+			
+}
+
+//int zxvision_mouse_events_counter=0;
+//int tempconta;
+//Retorna 1 si pulsado boton de cerrar ventana
+void zxvision_handle_mouse_events(zxvision_window *w)
+{
+
+	if (w==NULL) return; // 0; 
+
+	if (!si_menu_mouse_activado()) return; // 0;
+
+	//printf ("zxvision_handle_mouse_events\n");
+	//int pulsado_boton_cerrar=0;
+
+	menu_calculate_mouse_xy();
+
+	if (mouse_left && !mouse_is_dragging) {
+
+		//Si se pulsa dentro de ventana y no esta arrastrando
+	 	if (si_menu_mouse_en_ventana() && !zxvision_keys_event_not_send_to_machine) {
+			debug_printf (VERBOSE_DEBUG,"Clicked inside window. Events are not sent to emulated machine");
+			zxvision_keys_event_not_send_to_machine=1;
+			ventana_tipo_activa=1;
+			zxvision_draw_window(w);
+			zxvision_draw_window_contents(w);
+		}
+
+	
+
+		else if (!si_menu_mouse_en_ventana() && zxvision_keys_event_not_send_to_machine) {
+			//Si se pulsa fuera de ventana
+			debug_printf (VERBOSE_DEBUG,"Clicked outside window. Events are sent to emulated machine. X=%d Y=%d",menu_mouse_x,menu_mouse_y);
+			zxvision_keys_event_not_send_to_machine=0;
+			ventana_tipo_activa=0;
+			zxvision_draw_window(w);
+			zxvision_draw_window_contents(w);
+
+			int absolute_mouse_x,absolute_mouse_y;
+			
+			menu_calculate_mouse_xy_absolute_interface(&absolute_mouse_x,&absolute_mouse_y);
+
+			//Vamos a ver en que ventana se ha pulsado, si tenemos background activado
+			zxvision_window *ventana_pulsada;
+
+			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);			
+
+
+			if (ventana_pulsada!=NULL) {
+				debug_printf (VERBOSE_DEBUG,"Clicked on window: %s",ventana_pulsada->window_title);
+
+				zxvision_handle_mouse_ev_switch_back_wind(ventana_pulsada);
+			
 			}
 
 			//Ver si hemos pulsado por la zona del logo en el ext desktop
@@ -8088,6 +8084,31 @@ Estas decisiones son parecidas en casos:
 
 				
 			}
+
+
+
+		//Si se pulsa dentro de cualquier otra ventana. Esto solo cuando se libera boton
+
+		int absolute_mouse_x,absolute_mouse_y;
+		
+		menu_calculate_mouse_xy_absolute_interface(&absolute_mouse_x,&absolute_mouse_y);
+
+		//Vamos a ver en que ventana se ha pulsado, si tenemos background activado
+		zxvision_window *ventana_pulsada;
+
+		ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);			
+		
+		if (ventana_pulsada!=NULL && !zxvision_keys_event_not_send_to_machine) {
+			debug_printf (VERBOSE_DEBUG,"Clicked inside other window. Events are not sent to emulated machine");
+			zxvision_keys_event_not_send_to_machine=1;
+			ventana_tipo_activa=1;
+			zxvision_draw_window(w);
+			zxvision_draw_window_contents(w);		
+	
+			
+		}
+		
+
 
 			//Scroll horizontal
 			if (zxvision_if_horizontal_scroll_bar(w)) {
