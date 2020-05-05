@@ -7865,6 +7865,39 @@ void zxvision_handle_mouse_ev_switch_back_wind(zxvision_window *ventana_pulsada)
 			
 }
 
+int zxvision_if_mouse_in_zlogo_desktop(void)
+{
+	//Ver si estamos por la zona del logo en el ext desktop
+	if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() ) {
+		int xlogo,ylogo;
+		menu_ext_desktop_get_logo_coords(&xlogo,&ylogo);
+
+		int mouse_pixel_x,mouse_pixel_y;
+
+
+		menu_calculate_mouse_xy_absolute_interface_pixel(&mouse_pixel_x,&mouse_pixel_y);
+
+		//multiplicamos por zoom
+		mouse_pixel_x *=zoom_x;
+		mouse_pixel_y *=zoom_y;
+
+		//tamaño del logo
+		int ancho_logo=ZESARUX_ASCII_LOGO_ANCHO;
+		int alto_logo=ZESARUX_ASCII_LOGO_ALTO;
+
+		//printf ("mouse: %d,%d logo: %d,%d\n",mouse_pixel_x,mouse_pixel_y,xlogo,ylogo);
+
+		if (mouse_pixel_x>=xlogo && mouse_pixel_x<xlogo+ancho_logo &&
+			mouse_pixel_y>=ylogo && mouse_pixel_y<xlogo+alto_logo
+		) {
+			printf ("Pulsado en el logo del ext desktop\n");
+
+			return 1;
+		}
+	}
+	return 0;
+}
+
 //int zxvision_mouse_events_counter=0;
 //int tempconta;
 //Retorna 1 si pulsado boton de cerrar ventana
@@ -7919,6 +7952,9 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			}
 
 			//Ver si hemos pulsado por la zona del logo en el ext desktop
+			else if (zxvision_if_mouse_in_zlogo_desktop()) {
+
+				/*
 			else if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() ) {
 				int xlogo,ylogo;
 				menu_ext_desktop_get_logo_coords(&xlogo,&ylogo);
@@ -7941,7 +7977,9 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				if (mouse_pixel_x>=xlogo && mouse_pixel_x<xlogo+ancho_logo &&
 					mouse_pixel_y>=ylogo && mouse_pixel_y<xlogo+alto_logo
 				) {
+					
 					printf ("Pulsado en el logo del ext desktop\n");
+					*/
 
 					menu_pressed_open_menu_while_in_menu.v=1;
 					salir_todos_menus=1;
@@ -7951,27 +7989,27 @@ Estas decisiones son parecidas en casos:
 	pulsar tecla menu cuando menu activo (menu_if_pressed_menu_button en menu_get_pressed_key_no_modifier), conmutar ventana, pulsar logo ZEsarUX en ext desktop
 	*/
 
-				if (!menu_allow_background_windows) {
-                        mouse_pressed_close_window=1;
-                }
+					if (!menu_allow_background_windows) {
+							mouse_pressed_close_window=1;
+					}
 
-                else {
-                                                        //Si la ventana activa permite ir a background, mandarla a background
-                                if (zxvision_current_window->can_be_backgrounded) {
-                                        mouse_pressed_background_window=1;
-                                }
+					else {
+															//Si la ventana activa permite ir a background, mandarla a background
+									if (zxvision_current_window->can_be_backgrounded) {
+											mouse_pressed_background_window=1;
+									}
 
-                                //Si la ventana activa no permite ir a background, cerrarla
-                                else {
-                                        mouse_pressed_close_window=1;
-                                }
-                }
-
-
+									//Si la ventana activa no permite ir a background, cerrarla
+									else {
+											mouse_pressed_close_window=1;
+									}
+					}
 
 
 
-				}
+
+
+				//}
 			}
 		}
 	}
