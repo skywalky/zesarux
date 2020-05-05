@@ -1342,7 +1342,7 @@ void codetests_open_sockets_infinite(void)
 #endif
 
 
-
+/*
 void codetests_get_background_f_key(void)
 {
 
@@ -1362,6 +1362,7 @@ void codetests_get_background_f_key(void)
 		printf ("puerto: %p mascara: %d\n",puntero,mascara);
 	}
 }
+*/
 
 void codetests_tbblue_set_ram_blocks(void)
 {
@@ -1457,8 +1458,8 @@ void codetests_main(int main_argc,char *main_argv[])
 	codetests_tbblue_set_ram_blocks();
 
 
-	printf ("\nRunning getting background F-key\n");
-	codetests_get_background_f_key();
+	//printf ("\nRunning getting background F-key\n");
+	//codetests_get_background_f_key();
 
 	exit(0);
 }

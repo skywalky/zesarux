@@ -261,9 +261,9 @@ extern void zxvision_set_window_overlay_from_current(zxvision_window *ventana);
 
 extern zxvision_window *zxvision_find_first_window_below_this(zxvision_window *w);
 
-extern int tecla_f_background;
-extern int menu_get_mask_puerto_especial(int tecla_f);
-extern z80_byte *menu_get_port_puerto_especial(int tecla_f);
+//extern int tecla_f_background;
+//extern int menu_get_mask_puerto_especial(int tecla_f);
+//extern z80_byte *menu_get_port_puerto_especial(int tecla_f);
 
 #define MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH 128
 

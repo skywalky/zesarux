@@ -1364,6 +1364,8 @@ mayusculas + tecla ";"
 //z80_byte puerto_especial3=255; //  F10 F9 F8 F7 F6
 
 //tecla F desde 1 hasta 10
+
+/*
 z80_byte *menu_get_port_puerto_especial(int tecla_f)
 {
 	if (tecla_f>=1 && tecla_f<=5) return &puerto_especial2;
@@ -1428,8 +1430,73 @@ int menu_pressed_background_key(void)
 	if ((menu_get_port_value_background_key() & menu_get_mask_value_background_key() )==0) return 1;
 	else return 0;	
 }
+*/
+
+int menu_if_pressed_background_button(void)
+{
+	//Si pulsada tecla background
+
+	//Si se pulsa tecla F que no es default
+	if (menu_button_f_function.v && menu_button_f_function_index>=0) {
+
+		printf ("Pulsada alguna tecla de funcion\n");
+
+		//Estas variables solo se activan cuando   //Abrir menu si funcion no es defecto y no es background window
+  		//if (accion!=F_FUNCION_DEFAULT && accion!=F_FUNCION_BACKGROUND_WINDOW) {
+
+		int indice=menu_button_f_function_index;
+
+		//Si accion es backgroundwindow
+		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+		if (accion==F_FUNCION_BACKGROUND_WINDOW) {
+			//liberamos indicador de tecla de funcion
+			menu_button_f_function.v=0;
+			printf ("Pulsada tecla F background\n");
+			//sleep(1);
+			return 1;
+		}
 
 
+		else {
+
+			//Si tecla F6, es default, retornar ok si es Default
+			if (indice==6-1 && accion==F_FUNCION_DEFAULT) {
+				//liberamos indicador de tecla de funcion
+				menu_button_f_function.v=0;
+				printf ("Es F6 por defecto\n");
+				return 1;
+			}
+
+			//liberamos indicador de tecla de funcion si funcion es nothing
+			if (accion==F_FUNCION_NOTHING) menu_button_f_function.v=0;			
+
+			return 0;
+		}
+
+	}
+
+	//Si es F6 por default
+	if ((puerto_especial3&1)==0) {
+		printf ("Pulsada F6\n");
+		//sleep(1);
+
+		//Ver si funcion F6 no esta asignada 
+		int indice=6-1;
+		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+
+		if (accion==F_FUNCION_DEFAULT) {
+				//liberamos indicador de tecla de funcion
+				menu_button_f_function.v=0;
+				printf ("Es F6 por defecto\n");
+				return 1;
+		}
+
+		return 0;
+	}
+
+
+	return 0;
+}
 
 
 int menu_if_pressed_menu_button(void)
@@ -1449,7 +1516,7 @@ int menu_if_pressed_menu_button(void)
 		if (accion==F_FUNCION_OPENMENU) {
 			//liberamos esa tecla
 			menu_button_f_function.v=0;
-			//printf ("Pulsada tecla F abrir menu\n");
+			printf ("Pulsada tecla F abrir menu\n");
 			//sleep(1);
 			return 1;
 		}
@@ -1461,7 +1528,7 @@ int menu_if_pressed_menu_button(void)
 
 	//Sera tecla F5 por defecto, ya que no se ha pulsado tecla con no default
 	if ((puerto_especial2&16)==0) {
-		//printf ("Pulsada F5 por defecto\n");
+		printf ("Pulsada F5 por defecto\n");
 		//sleep(1);
 		return 1;
 	}
@@ -1481,7 +1548,8 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 	//Por tanto si se pulsa ESC, hay que leer como tal ESC antes que el resto de teclas (Espacio o Shift)
 	if ((puerto_especial1&1)==0) return 2;
 
-	if (menu_pressed_background_key() && menu_allow_background_windows) return 3; //Tecla background F6
+	//if (menu_pressed_background_key() && menu_allow_background_windows) return 3; //Tecla background F6
+	if (menu_if_pressed_background_button() && menu_allow_background_windows) return 3; //Tecla background F6
 
 
 	//Si menu esta abierto y pulsamos de nuevo la tecla de menu, cerrar todas ventanas y reabrir menu
