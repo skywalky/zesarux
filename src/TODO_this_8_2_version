@@ -286,7 +286,7 @@ En linux no sale del emulador... quiza es algo de sdl? si, parece que vo sdl con
 -Guia uso background windows:
 * pulsando en zlogo abre el menu
 * conmutando ventanas cierra la ventana activa si esta no soporta background
-* pulsando boton de background, envia ventana a background y vuelve a menu anterior
+* pulsando boton de background, envia ventana a background y vuelve a menu anterior, si es que ventana permite background
 * con menu abierto, pulsando con el raton en maquina emulada, pierde el foco del menu. Para volver el foco,
 pulsar en cualquiera de las ventanas o en el logo Z-> esto retorna el foco siempre en la ultima ventana antes de perder el foco
 
