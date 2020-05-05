@@ -21044,10 +21044,11 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 
 		char *titulo_ventana="AY Piano";
-		int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+		//int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
 		//Para que siempre se lea el titulo de la ventana
-		if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
+		//No alteramos el ancho, que sea el que tenga por geometria
+		//if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
 
 
 
@@ -21288,9 +21289,11 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 	}		
 
 	char *titulo_ventana="Wave Piano";
-	int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
-
-	if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;				
+	//int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+		
+	//Para que siempre se lea el titulo de la ventana
+	//No alteramos el ancho, que sea el que tenga por geometria
+	//if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;				
 
 
 
