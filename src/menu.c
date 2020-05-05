@@ -8164,7 +8164,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 
 
-		//Si se pulsa dentro de cualquier otra ventana. Esto solo cuando se libera boton
+		//Si se pulsa dentro de cualquier otra ventana o en logo Z. Esto solo cuando se libera boton
 		//Y si no tenemos el foco
 		if (!zxvision_keys_event_not_send_to_machine) {
 
@@ -8177,8 +8177,8 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);			
 			
-			if (ventana_pulsada!=NULL /*&& !zxvision_keys_event_not_send_to_machine*/) {
-				debug_printf (VERBOSE_DEBUG,"Clicked inside other window. Events are not sent to emulated machine");
+			if (ventana_pulsada!=NULL || zxvision_if_mouse_in_zlogo_desktop()  /*&& !zxvision_keys_event_not_send_to_machine*/) {
+				debug_printf (VERBOSE_DEBUG,"Clicked inside other window or zlogo. Events are not sent to emulated machine");
 				zxvision_keys_event_not_send_to_machine=1;
 				ventana_tipo_activa=1;
 				zxvision_draw_window(w);
