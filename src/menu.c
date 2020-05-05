@@ -7908,7 +7908,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (!si_menu_mouse_activado()) return; // 0;
 
-	//printf ("zxvision_handle_mouse_events\n");
+	//printf ("zxvision_handle_mouse_events: mouse_left: %d\n",mouse_left);
 	//int pulsado_boton_cerrar=0;
 
 	menu_calculate_mouse_xy();

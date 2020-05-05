@@ -281,3 +281,8 @@ En linux no sale del emulador... quiza es algo de sdl? si, parece que vo sdl con
 -Mientras hay splash de inicio, si se pulsa F5, aparece por un momento overlays de ventanas, cuando F5 esta asignada a "Nothing"
 
 -Desactivar ncursesw de la compilacion de debian, raspberry etc
+
+
+-Guia uso background windows:
+* pulsando en zlogo abre el menu
+* conmutando ventanas cierra la ventana activa si esta no soporta background
