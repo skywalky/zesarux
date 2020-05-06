@@ -317,3 +317,5 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 *meter en extras de docs Benchmark legacy tbblue
 
 *inicializacion bufferes border, etc hacerlo con memset para consumir menos cpu
+
+* revival survival en next. Parece que falla por algo de divmmc?

@@ -3847,6 +3847,11 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 		break;
 
 
+		//case 9:
+		//	printf ("out reg 9: %02XH\n",value);
+		//break;
+
+
 		case 17:
 			if ((last_register_17&7)!=(value&7)) tbblue_splash_monitor_mode();
 		break;		
