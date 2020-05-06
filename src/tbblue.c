@@ -3693,27 +3693,36 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 		case 2:
 		/*
-		(R/W)	02 => Reset:
-					bits 7-3 = Reserved, must be 0
-					bit 2 = (R) Power-on reset
-					bit 1 = (R/W) if 1 Hard Reset
-					bit 0 = (R/W) if 1 Soft Reset
+0x02 (02) => Reset
+(R)
+  bit 7 = Indicates the reset signal to the expansion bus and esp is asserted
+  bits 6:2 = Reserved
+  bit 1 = Indicates the last reset was a hard reset
+  bit 0 = Indicates the last reset was a soft reset
+  * Only one of bits 1:0 will be set
+(W)
+  bit 7 = Assert and hold reset to the expansion bus and the esp wifi (hard reset = 0)
+  bits 6:2 = Reserved, must be 0
+  bit 1 = Generate a hard reset (reboot)
+  bit 0 = Generate a soft reset
+  * Hard reset has precedence
+  
 					*/
-
-						//tbblue_hardsoftreset=value;
-						if (value&1) {
-							//printf ("Doing soft reset due to writing to port 24D9H\n");
-							reg_pc=0;
-						}
 						if (value&2) {
-							//printf ("Doing hard reset due to writing to port 24D9H\n");
+							
 							tbblue_bootrom.v=1;
-							//printf ("----setting bootrom to 1. when writing register 2 and bit 1\n");
+							
 							tbblue_registers[3]=0;
-							//tbblue_config1=0;
+							
 							tbblue_set_memory_pages();
 							reg_pc=0;
 						}
+
+						//Hard reset has precedence. Entonces esto es un else, si hay hard reset, no haremos soft reset
+						else if (value&1) {
+							reg_pc=0;
+						}
+
 
 					break;
 

@@ -29,6 +29,7 @@ Improved TBBlue emulation:
 -Added altrom feature: now 48k and 128k mode works again
 -Legacy hi-res and border effects disabled by default. Reduces up to 13% cpu use or gain 17 FPS on my environment
 -Emulate register 0x8E (142) => Spectrum 128K Memory Mapping
+-Allow to download a 512 MB TBBlue SD official card (allowed download sizes: 32MB, 128MB, 512MB, 2 GB)
 
 Improved debugging:
 -Added breakpoint action "reset-tstatp"
