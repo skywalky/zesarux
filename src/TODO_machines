@@ -521,6 +521,9 @@ Hay una lista de capas de prioridades en el codigo fuente de la fpga. Segun src/
 
 -4 puertos Dac de Next
 
+
+-Allow config mode banking to reach the entire 2MB memory space (nextreg 0x04)
+
 -------------
 
 

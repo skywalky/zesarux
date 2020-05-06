@@ -7648,14 +7648,8 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
                         //Puerto tipicamente 8189
                          // the hardware will respond to all port addresses with bit 1 reset, bit 12 set and bits 13, 14 and 15 reset).
                         if ( (puerto & 61442 )== 4096) {
-				//printf ("TBBLUE changing port 8189 value=0x%02XH\n",value);
-                                puerto_8189=value;
-
-				//En rom entra la pagina habitual de modo 128k, evitando lo que diga la mmu
-				tbblue_registers[80]=255;
-				tbblue_registers[81]=255;
-
-                                tbblue_set_memory_pages();
+							tbblue_out_port_8189(value);
+	
                         }
 
 		if (puerto==TBBLUE_SPRITE_INDEX_PORT)	tbblue_out_port_sprite_index(value);

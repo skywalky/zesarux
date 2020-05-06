@@ -315,6 +315,7 @@ extern struct s_tbblue_machine_id_definition tbblue_machine_id_list[];
 extern z80_byte *get_lores_pointer(int y);
 
 extern void tbblue_out_port_32765(z80_byte value);
+extern void tbblue_out_port_8189(z80_byte value);
 
 extern z80_byte tbblue_uartbridge_readdata(void);
 extern void tbblue_uartbridge_writedata(z80_byte value);

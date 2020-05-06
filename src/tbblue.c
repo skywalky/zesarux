@@ -3540,6 +3540,94 @@ Bit	Function
 	//redundante
 }
 
+
+void tbblue_paging_128k_reg_142(void)
+{
+	z80_byte value=tbblue_registers[142];
+
+	/*
+	0x8E (142) => Spectrum 128K Memory Mapping
+(R/W)
+  bit 7 = port 0xdffd bit 0         \  RAM
+  bits 6:4 = port 0x7ffd bits 2:0   /  bank 0-15
+
+R bit 3 = 1
+W bit 3 = 1 to change RAM bank, 0 = no change to mmu6 / mmu7 / RAM bank in ports 0x7ffd, 0xdffd
+
+
+  bit 2 = port 0x1ffd bit 0            paging mode
+
+If bit 2 = paging mode = 0 (normal)
+  bit 1 = port 0x1ffd bit 2         \  ROM
+  bit 0 = port 0x7ffd bit 4         /  select
+
+If bit 2 = paging mode = 1 (special allRAM)
+  bit 1 = port 0x1ffd bit 2         \  all
+  bit 0 = port 0x1ffd bit 1         /  RAM
+
+Writes can affect all ports 0x7ffd, 0xdffd, 0x1ffd (in Profi mapping mode, bit 3 of port 0xdffd is unaffected)
+Writes always change the ROM / allRAM mapping
+Writes immediately change the current mmu mapping as if by port write
+	*/
+
+	z80_byte valor_final_puerto_32765=0;
+	z80_byte valor_final_puerto_8189=0;
+
+
+	//W bit 3 = 1 to change RAM bank, 0 = no change to mmu6 / mmu7 / RAM bank in ports 0x7ffd, 0xdffd
+	if (value & 8) {
+		valor_final_puerto_32765 |=(value>>4) & 7;
+	}
+
+	else {
+		//Conservar valor anterior de pagina ram
+		valor_final_puerto_32765=puerto_32765 & 7;
+	}
+
+
+	//bit 2 = port 0x1ffd bit 0            paging mode
+
+	//If bit 2 = paging mode = 1 (special allRAM)
+	if (value & 4) {
+		//All RAM
+		//printf ("all ram\n");
+		//sleep(2);
+
+		//bit 2 = port 0x1ffd bit 0            paging mode
+		valor_final_puerto_8189 |=1;
+
+  		//bit 1 = port 0x1ffd bit 2         \  all
+  		//bit 0 = port 0x1ffd bit 1         /  RAM
+		valor_final_puerto_8189 |=(value&3)<<1;
+
+
+		  
+	}
+
+	else {
+		//If bit 2 = paging mode = 0 (normal)
+		//bit 1 = port 0x1ffd bit 2         \  ROM
+		//bit 0 = port 0x7ffd bit 4         /  select
+		valor_final_puerto_8189 |=(value & 2 ? 4 : 0);
+		valor_final_puerto_32765 |=(value & 1 ? 16 : 0);
+	}
+
+
+	//printf ("Puerto 32765: %d puerto 8189: %d\n",valor_final_puerto_32765,valor_final_puerto_8189);
+
+
+	tbblue_out_port_32765(valor_final_puerto_32765);
+	tbblue_out_port_8189(valor_final_puerto_8189);
+
+	//TODO puerto 0xdffd
+
+
+		//R bit 3 = 1
+	//En lectura siempre a uno, por tanto metemos siempre ese bit a 1 en el registro
+	//lo hacemos al final del todo por si acaso nos da por leer antes de nuevo ese registro tbblue_registers[142];
+	tbblue_registers[142] |=8;
+}
+
 	
 //tbblue_last_register
 //void tbblue_set_value_port(z80_byte value)
@@ -3980,6 +4068,11 @@ Bit	Function
 		case 140:
 			//printf ("Write to 140 (8c) register value: %02XH PC=%X\n",value,reg_pc);
 			tbblue_set_memory_pages();
+		break;
+
+
+		case 142:
+			tbblue_paging_128k_reg_142();
 		break;
 
 
@@ -6216,6 +6309,22 @@ void screen_tbblue_refresca_no_rainbow(void)
                 }
 }
 
+
+void tbblue_out_port_8189(z80_byte value)
+{
+	             //Puerto tipicamente 8189
+                         // the hardware will respond to all port addresses with bit 1 reset, bit 12 set and bits 13, 14 and 15 reset).
+                       
+				//printf ("TBBLUE changing port 8189 value=0x%02XH\n",value);
+                                puerto_8189=value;
+
+				//En rom entra la pagina habitual de modo 128k, evitando lo que diga la mmu
+				tbblue_registers[80]=255;
+				tbblue_registers[81]=255;
+
+                                tbblue_set_memory_pages();
+                        
+}
 
 void tbblue_out_port_32765(z80_byte value)
 {
