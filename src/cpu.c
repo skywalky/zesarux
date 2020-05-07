@@ -1726,7 +1726,7 @@ printf (
 		//"--disablebw-no-multitask   Disable changing to black & white colours on the emulator machine when menu open and multitask is off\n"
 		"--nosplash                 Disable all splash texts\n"
 #ifndef MINGW
-		"--cpu-usage                Show host CPU usage on footer\n"
+		"--no-cpu-usage                No not show host CPU usage on footer\n"
 #endif
 
 	
@@ -6397,9 +6397,14 @@ int parse_cmdline_options(void) {
                                 screen_show_splash_texts.v=0;
 			}
 
+			//Por defecto esta activo. Se mantiene solo por compatibilidad
 			else if (!strcmp(argv[puntero_parametro],"--cpu-usage")) {
 				screen_show_cpu_usage.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--no-cpu-usage")) {
+				screen_show_cpu_usage.v=0;
+			}			
 
 			else if (!strcmp(argv[puntero_parametro],"--nowelcomemessage")) {
                                 opcion_no_splash.v=1;

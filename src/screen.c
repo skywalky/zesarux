@@ -85,6 +85,9 @@ z80_bit screen_show_splash_texts={1};
 //mostrar uso de cpu en footer
 z80_bit screen_show_cpu_usage={1};
 
+//mostrar temperatura de cpu en footer
+z80_bit screen_show_cpu_temp={1};
+
 //Si pantalla final rainbow se reduce tamanyo a 4/3 (dividir por 4, mult por 3)
 z80_bit screen_reduce_075={0};
 

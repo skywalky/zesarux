@@ -3221,7 +3221,7 @@ void menu_draw_cpu_temp(void)
 
 
         //temp forzar
-        //cpu_temp=100;
+        //cpu_temp=10000;
 
         char buffer_temp[6];
 
@@ -3322,7 +3322,9 @@ void draw_middle_footer(void)
 //Temperatura mostrarla en raspberry y en general en Linux
 //#ifdef EMULATE_RASPBERRY
 #ifdef __linux__
-    menu_draw_cpu_temp();
+	if (screen_show_cpu_temp.v) {
+    	menu_draw_cpu_temp();
+	}
 #endif
 
 	if (screen_show_cpu_usage.v) {

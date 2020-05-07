@@ -53,6 +53,8 @@ Fixed Esxdos handler:
 
 Fixed SCF/CCF undocumented flags emulation. Not enabled by default on compilation because almost no one is using this
 
+Fixed saving "Show CPU usage" setting on footer
+
 
 
 Version 8.1.1 - The Great Escape edition. 2 March 2020
