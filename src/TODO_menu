@@ -10,7 +10,6 @@
 ---Imagen. SCR
 ---Degradado vertical usando alguna tabla de colores concreta ya existente
 ---Botones o iconos pulsables 
----Easter egg al pulsar doble click en logo Z de fondo ZX Desktop
 ---Anaglifo usando segunda pantalla o extensión Desktop 
 --Fbdev debe permitir ZX Desktop?
 --sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
