@@ -1726,10 +1726,12 @@ printf (
 		//"--disablebw-no-multitask   Disable changing to black & white colours on the emulator machine when menu open and multitask is off\n"
 		"--nosplash                 Disable all splash texts\n"
 #ifndef MINGW
-		"--no-cpu-usage                No not show host CPU usage on footer\n"
+		"--no-cpu-usage             Do not show host CPU usage on footer\n"
 #endif
 
-	
+		"--no-cpu-temp              Do not show host CPU temperature on footer\n"
+
+
 
 		"--hide-menu-percentage-bar  Hides vertical percentaje bar on the right of text windows and file selector\n"
 		"--hide-menu-minimize-button Hides minimize button on the title window\n"
@@ -6405,6 +6407,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--no-cpu-usage")) {
 				screen_show_cpu_usage.v=0;
 			}			
+
+			else if (!strcmp(argv[puntero_parametro],"--no-cpu-temp")) {
+				screen_show_cpu_temp.v=0;
+			}					
 
 			else if (!strcmp(argv[puntero_parametro],"--nowelcomemessage")) {
                                 opcion_no_splash.v=1;

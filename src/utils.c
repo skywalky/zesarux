@@ -3504,6 +3504,7 @@ int util_write_configfile(void)
   if (autoselect_snaptape_options.v==0)       ADD_STRING_CONFIG,"--noautoselectfileopt");
   if (screen_show_splash_texts.v==0)          ADD_STRING_CONFIG,"--nosplash");
   if (screen_show_cpu_usage.v==0)                ADD_STRING_CONFIG,"--no-cpu-usage");
+  if (screen_show_cpu_temp.v==0)                ADD_STRING_CONFIG,"--no-cpu-temp");
   if (opcion_no_splash.v)                     ADD_STRING_CONFIG,"--nowelcomemessage");
 
   if (menu_hide_vertical_percentaje_bar.v) ADD_STRING_CONFIG,"--hide-menu-percentage-bar");
