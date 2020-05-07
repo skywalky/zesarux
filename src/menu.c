@@ -11817,7 +11817,7 @@ int menu_z88_eprom_size(MENU_ITEM_PARAMETERS)
 			if (z88_eprom_size_opcion_seleccionada==2) return 256*1024;
                 }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 	//Salimos con ESC, devolver 0
 	return 0;
@@ -11993,7 +11993,7 @@ int menu_z88_flash_intel_size(MENU_ITEM_PARAMETERS)
                         if (z88_flash_intel_size_opcion_seleccionada==1) return 1024*1024;
                 }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
         //Salimos con ESC, devolver 0
         return 0;
@@ -12319,7 +12319,7 @@ void menu_z88_slot_insert(MENU_ITEM_PARAMETERS)
                         }
                 }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !menu_z88_slot_insert_applied_changes.v );
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && !menu_z88_slot_insert_applied_changes.v );
 
 
 }
@@ -12908,7 +12908,7 @@ void menu_z88_slots(MENU_ITEM_PARAMETERS)
                         }
                 }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 }
@@ -20907,7 +20907,7 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
         	        }
 		}
 
-	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 }
@@ -22112,7 +22112,7 @@ void menu_find_bytes(MENU_ITEM_PARAMETERS)
                         }
                 }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
 
@@ -22703,7 +22703,7 @@ void menu_find_lives(MENU_ITEM_PARAMETERS)
                         }
                 }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
 
@@ -22745,7 +22745,7 @@ void menu_find(MENU_ITEM_PARAMETERS)
                         }
                 }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
 int menu_debug_view_basic_cond(void)
@@ -25947,7 +25947,7 @@ void menu_machine_selection_for_manufacturer(int fabricante)
          
                         }
 
-                //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+                
                 } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
@@ -26036,7 +26036,7 @@ void menu_machine_selection(MENU_ITEM_PARAMETERS)
                              
                         }
 
-                //} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+              
                 } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
@@ -27802,7 +27802,7 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
         	        }
 		}
 
-	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC);
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 }

@@ -17926,7 +17926,7 @@ menu_add_item_menu_shortcut(array_menu_osd_adventure_keyboard,letra_mostrar);
                         }
                 }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir);
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && !salir);
 
 
 

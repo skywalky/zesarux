@@ -319,3 +319,7 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 *inicializacion bufferes border, etc hacerlo con memset para consumir menos cpu
 
 * revival survival en next. Parece que falla por algo de divmmc?
+
+* enter-cpu-step no parece funcionar si hay ventanas en background-> no, parece que solo sucede si menu esta abierto
+
+*easter egg acknowledgements no salen caracteres cirilicos
