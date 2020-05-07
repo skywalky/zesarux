@@ -103,7 +103,7 @@ ZEsarUX-version-linux-debian10-x64.tar.gz
 con comandos:
 export CFLAGS=-O2
 export LDFLAGS=-O2
-./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-caca --disable-aa --prefix /usr
+./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-caca --disable-aa --disable-cursesw --prefix /usr
 (Habilita drivers video: xwindows, sdl, fbdev, curses, stdout, simpletext y drivers audio: pulse, alsa, sdl, dsp. )
 make clean
 make
@@ -116,7 +116,7 @@ ZEsarUX-version-freebsd-12.1-x64.tar.gz
 con comandos:
 export CFLAGS=-O2
 export LDFLAGS=-O2
-./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-caca --disable-aa --prefix /usr
+./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-caca --disable-aa --disable-cursesw --prefix /usr
 (Habilita drivers video: xwindows, sdl, fbdev, curses, stdout, simpletext y drivers audio: pulse, alsa, sdl, dsp. )
 make clean
 make
@@ -130,7 +130,7 @@ ZEsarUX-version-raspbian9.tar.gz
 con comandos:
 export CFLAGS=-O2
 export LDFLAGS=-O2
-./configure --enable-raspberry --spectrum-reduced-core --disable-xwindows --disable-caca --disable-aa --disable-pulse --disable-simpletext --disable-stdout --prefix /usr
+./configure --enable-raspberry --spectrum-reduced-core --disable-xwindows --disable-caca --disable-aa --disable-pulse --disable-simpletext --disable-stdout --disable-cursesw --prefix /usr
 
 La salida debe ser similar a:
  Enabled Video output drivers: curses sdl fbdev null
