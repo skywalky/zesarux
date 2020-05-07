@@ -312,4 +312,4 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 
 - debug cpu permite background pero cuando está en ese estado, no deberia mostrar texto o avisar que no está refrescando
 
-- al iniciar, muestra ventanas mientras dura mensaje splash
+- al iniciar, muestra ventanas mientras dura mensaje splash: segun si esta zxvision_restore_windows_on_startup antes o despues. porque?

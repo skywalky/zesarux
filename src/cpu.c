@@ -8046,7 +8046,7 @@ init_randomize_noise_value();
 
 
 	//Restaurar ventanas, si conviene
-	//zxvision_restore_windows_on_startup();
+	zxvision_restore_windows_on_startup();
 
 	//Inicio bucle principal
 	reg_pc=0;
@@ -8245,7 +8245,7 @@ init_randomize_noise_value();
 	send_stats_server();
 
 	//Restaurar ventanas, si conviene
-	zxvision_restore_windows_on_startup();	
+	//zxvision_restore_windows_on_startup();	
 
 	//Inicio bucle de emulacion
 
