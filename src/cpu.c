@@ -4540,7 +4540,7 @@ void segint_signal_handler(int sig)
 #endif
 
 
-	end_emulator();
+	end_emulator_saveornot_config(0);
 
 
 }
@@ -4563,7 +4563,7 @@ void segterm_signal_handler(int sig)
 #endif
 
 
-        end_emulator();
+        end_emulator_saveornot_config(0);
 
 
 }
@@ -8029,7 +8029,7 @@ init_randomize_noise_value();
 
 
 	//Restaurar ventanas, si conviene
-	zxvision_restore_windows_on_startup();
+	//zxvision_restore_windows_on_startup();
 
 	//Inicio bucle principal
 	reg_pc=0;
@@ -8227,6 +8227,9 @@ init_randomize_noise_value();
 	stats_check_updates();
 	send_stats_server();
 
+	//Restaurar ventanas, si conviene
+	zxvision_restore_windows_on_startup();	
+
 	//Inicio bucle de emulacion
 
 
@@ -8325,8 +8328,10 @@ void dump_ram_file_on_exit(void)
 }
 
 
-
-void end_emulator(void)
+//Se pasa parametro que dice si guarda o no la configuración.
+//antes se guardaba siempre, pero ahora en casos de recepcion de señales de terminar, no se guarda,
+//pues generaba segfaults en las rutinas de guardar ventanas (--restorewindow)
+void end_emulator_saveornot_config(int saveconfig)
 {
 	debug_printf (VERBOSE_INFO,"End emulator");
 	
@@ -8351,7 +8356,7 @@ void end_emulator(void)
 
 	menu_abierto=0;
 
-	if (save_configuration_file_on_exit.v) {
+	if (saveconfig && save_configuration_file_on_exit.v) {
 		int uptime_seconds=timer_get_uptime_seconds();
   
   		total_minutes_use +=uptime_seconds/60;
@@ -8415,4 +8420,10 @@ void end_emulator(void)
 
   exit(0);
 
+}
+
+
+void end_emulator(void)
+{
+	end_emulator_saveornot_config(1);
 }

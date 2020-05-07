@@ -772,6 +772,9 @@ int timer_get_uptime_seconds(void)
 
 	//printf ("seconds: %ld\n",z80_uptime_total_seconds);
 
+	//Si por algo el valor es negativo (porque no haya segundos iniciales por ejemplo), retornar 0
+	if (z80_uptime_total_seconds<0) z80_uptime_total_seconds=0;
+
 	return z80_uptime_total_seconds;
 
 }

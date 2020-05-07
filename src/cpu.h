@@ -285,6 +285,7 @@ extern z80_bit autoselect_snaptape_options;
 extern z80_bit tape_loading_simulate;
 extern z80_bit tape_loading_simulate_fast;
 extern void end_emulator(void);
+extern void end_emulator_saveornot_config(int saveconfig);
 
 extern z80_bit snow_effect_enabled;
 

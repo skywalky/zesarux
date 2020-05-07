@@ -4913,6 +4913,10 @@ void zxvision_restore_windows_on_startup(void)
 
 	if (menu_reopen_background_windows_on_start.v==0) return;
 
+	//Si no hay multitask, no restaurar, porque esto puede implicar que se abran ventanas que necesitan multitask, 
+	//y se quejen con "This menu item needs multitask enabled", y ese mensaje no se ve el error, y espera una tecla
+	if (!menu_multitarea) return;
+
 	//indicar que estamos restaurando ventanas y por tanto las funciones que las crean tienen que volver nada mas entrar
 	zxvision_currently_restoring_windows_on_start=1;
 
@@ -5038,7 +5042,11 @@ zxvision_window *zxvision_find_first_window_below_this(zxvision_window *w)
 	zxvision_window *pointer_window;
 
 	//printf ("original window: %p\n",w);
-        //printf ("\noriginal window: %p. Title: %s\n",w,w->window_title);
+	//printf ("title pointer: %p\n",w->window_title);
+	//printf ("title contents: %02XH\n",w->window_title[0]);
+    //printf ("Title: %s\n",w->window_title);
+
+	//printf ("after original window\n");
 
 
 
@@ -24247,7 +24255,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			"- Rearrange and Reduce windows: go to menu Display"	
 		);
 
-		if (menu_allow_background_windows) {
+		if (menu_allow_background_windows && menu_multitarea) {
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_reopen_background_windows_on_start,NULL,"[%c] Reopen windows on start",(menu_reopen_background_windows_on_start.v ? 'X' : ' ') );
 		}
 
