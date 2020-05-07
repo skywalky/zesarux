@@ -255,9 +255,6 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 
 -Info ZENG en FAQ
 
--Visualmem mmc read/write en Windows no muestra bien posicion (siempre a 0). Probablemente porque es 32 bits y no gestiona bien
-valores long int
-
 
 
 -Immediatos:
@@ -269,31 +266,23 @@ valores long int
 
 -Poder ver ventanas en background con menú cerrado de la misma manera que salen mensajes splash?
 
--Cuando cambia foco de una ventana a la maquina emulada, luego para volver hay que acordarse de cual estabamos
-Mejor poder pulsar en una cualquiera y conmutar a dicha ventana. O simplemente pulsar fuera de zona de maquina emulada y vuelve
-
-
-En linux no sale del emulador... quiza es algo de sdl? si, parece que vo sdl con ao sdl falla . con --noconfigfile y vo sdl y ao sdl tambien 
-
 
 
 -Mientras hay splash de inicio, si se pulsa F5, aparece por un momento overlays de ventanas, cuando F5 esta asignada a "Nothing"
 
 
-
 -Guia uso background windows:
 * pulsando en zlogo abre el menu
 * conmutando ventanas cierra la ventana activa si esta no soporta background
-* pulsando boton de background, envia ventana a background y vuelve a menu anterior, si es que ventana permite background
+* pulsando boton de background (!), envia ventana a background y vuelve a menu anterior, si es que ventana permite background
+* ventana que está en background tiene el botón de background (!) parpadeando, siempre que mulitask esté activado
 si venimos de conmutar de otra ventana, se abrira menu principal
+* boton derecho en menu tiene mismo efecto que ESC: cerrar ventana activa
 
 * con menu abierto, pulsando con el raton en maquina emulada, pierde el foco del menu. Para volver el foco,
 pulsar en cualquiera de las ventanas o en el logo Z-> esto retorna el foco siempre en la ultima ventana antes de perder el foco
 * se permite tener multitask desactivado pero ventanas con background
 * logo Z solo se ve cuando capa de menu esta abierta (esto aplica aunque no haya background windows)
-
-
-
 
 
 
@@ -308,14 +297,19 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 
 
 
-* documento en extras de como instalar aplicaciones cp/m. con ejemplo de wordstar
+- documento en extras de como instalar aplicaciones cp/m. con ejemplo de wordstar
 
-*meter en extras de docs Benchmark legacy tbblue
+- meter en extras de docs Benchmark legacy tbblue
 
-*inicializacion bufferes border, etc hacerlo con memset para consumir menos cpu
+- inicializacion bufferes border, etc hacerlo con memset para consumir menos cpu
 
-* revival survival en next. Parece que falla por algo de divmmc?
+- revival survival en next. Parece que falla por algo de divmmc?
 
-* enter-cpu-step no parece funcionar si hay ventanas en background-> no, parece que solo sucede si menu esta abierto
+- enter-cpu-step no parece funcionar si hay ventanas en background-> no, parece que solo sucede si menu esta abierto
 
-*easter egg acknowledgements no salen caracteres cirilicos
+- easter egg acknowledgements no salen caracteres cirilicos
+
+
+- debug cpu permite background pero cuando está en ese estado, no deberia mostrar texto o avisar que no está refrescando
+
+- al iniciar, muestra ventanas mientras dura mensaje splash

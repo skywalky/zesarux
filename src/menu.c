@@ -4674,7 +4674,7 @@ void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window 
 					if (w->overlay_function!=NULL) {
 						//printf ("boton background\n");
 						//zxvision_print_char_simple(zxvision_current_window,ancho-2,0,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO,1,'!');
-						putchar_menu_overlay_parpadeo(x+ancho-2,y,'!',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO,1);
+						putchar_menu_overlay_parpadeo(x+ancho-2,y,'!',ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,1);
 					}
 				}
 				
