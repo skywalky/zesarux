@@ -7636,21 +7636,15 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 		if (puerto==TBBLUE_REGISTER_PORT) tbblue_set_register_port(value);
 		if (puerto==TBBLUE_VALUE_PORT) tbblue_set_value_port(value);
 
-                        //Puerto tipicamente 32765
-                        // the hardware will respond only to those port addresses with
-						//bit 1 reset, bit 14 set and bit 15 reset (as opposed to just bits 1 and 15 reset on the 128K/+2).
-        if ( (puerto & 49154) == 16384 ) {
-				tbblue_out_port_32765(value);
-				
-        }
+		//Puerto tipicamente 32765
+		// the hardware will respond only to those port addresses with
+		//bit 1 reset, bit 14 set and bit 15 reset (as opposed to just bits 1 and 15 reset on the 128K/+2).
+        if ( (puerto & 49154) == 16384 ) tbblue_out_port_32765(value);			
 
 
-                        //Puerto tipicamente 8189
-                         // the hardware will respond to all port addresses with bit 1 reset, bit 12 set and bits 13, 14 and 15 reset).
-                        if ( (puerto & 61442 )== 4096) {
-							tbblue_out_port_8189(value);
-	
-                        }
+		//Puerto tipicamente 8189
+			// the hardware will respond to all port addresses with bit 1 reset, bit 12 set and bits 13, 14 and 15 reset).
+		if ( (puerto & 61442 )== 4096) tbblue_out_port_8189(value);
 
 		if (puerto==TBBLUE_SPRITE_INDEX_PORT)	tbblue_out_port_sprite_index(value);
 		if (puerto==TBBLUE_LAYER2_PORT) tbblue_out_port_layer2_value(value);
@@ -7663,8 +7657,8 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
 		if (puerto_l==TBBLUE_SPRITE_SPRITE_PORT) tbblue_out_sprite_sprite(value);
 
-                if (puerto==DS1307_PORT_CLOCK) ds1307_write_port_clock(value);
-                if (puerto==DS1307_PORT_DATA) ds1307_write_port_data(value);
+		if (puerto==DS1307_PORT_CLOCK) ds1307_write_port_clock(value);
+		if (puerto==DS1307_PORT_DATA) ds1307_write_port_data(value);
 
 		if (puerto==TBBLUE_UART_TX_PORT) tbblue_uartbridge_writedata(value);				
 
