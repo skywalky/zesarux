@@ -287,19 +287,17 @@ En linux no sale del emulador... quiza es algo de sdl? si, parece que vo sdl con
 * pulsando en zlogo abre el menu
 * conmutando ventanas cierra la ventana activa si esta no soporta background
 * pulsando boton de background, envia ventana a background y vuelve a menu anterior, si es que ventana permite background
+si venimos de conmutar de otra ventana, se abrira menu principal
+
 * con menu abierto, pulsando con el raton en maquina emulada, pierde el foco del menu. Para volver el foco,
 pulsar en cualquiera de las ventanas o en el logo Z-> esto retorna el foco siempre en la ultima ventana antes de perder el foco
-
+* se permite tener multitask desactivado pero ventanas con background
 * logo Z solo se ve cuando capa de menu esta abierta (esto aplica aunque no haya background windows)
 
-* First aid de nuevas ventanas en background. Creo que ya está??
-
-* Imágenes next 128 y 512 mb
-
-http://www.zxspectrumnext.online/cspect/
 
 
-* Si no hay multitarea no se debería poder tener ventanas en background?
+
+
 
 
 *ventanas minimizadas no redibuja siempre, dado que solo tienen titulo sin contenido. Solventar redibujado de ventana - titulo con las que estan en background
@@ -310,7 +308,7 @@ http://www.zxspectrumnext.online/cspect/
 https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 
 
-*Solo guardar ventanas que permitan allow_background. ya se hace asi?
+
 
 * documento en extras de como instalar aplicaciones cp/m. con ejemplo de wordstar
 

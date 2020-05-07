@@ -7842,26 +7842,26 @@ zxvision_window *which_window_clicked_on_background=NULL;
 
 void zxvision_handle_mouse_ev_switch_back_wind(zxvision_window *ventana_pulsada)
 {
-					clicked_on_background_windows=1;
-				which_window_clicked_on_background=ventana_pulsada;
+	clicked_on_background_windows=1;
+	which_window_clicked_on_background=ventana_pulsada;
 
-				//Se ha pulsado en otra ventana. Conmutar a dicha ventana. Cerramos el menu y todos los menus raíz
-				salir_todos_menus=1;
+	//Se ha pulsado en otra ventana. Conmutar a dicha ventana. Cerramos el menu y todos los menus raíz
+	salir_todos_menus=1;
 
 	/*
 	Estas decisiones son parecidas en casos:
 	pulsar tecla menu cuando menu activo (menu_if_pressed_menu_button en menu_get_pressed_key_no_modifier), conmutar ventana, pulsar logo ZEsarUX en ext desktop
 	*/
 
-				//Si la ventana activa permite ir a background, mandarla a background
-				if (zxvision_current_window->can_be_backgrounded) {
-					mouse_pressed_background_window=1;
-				}
+	//Si la ventana activa permite ir a background, mandarla a background
+	if (zxvision_current_window->can_be_backgrounded) {
+		mouse_pressed_background_window=1;
+	}
 
-				//Si la ventana activa no permite ir a background, cerrarla
-				else {
-					mouse_pressed_close_window=1;
-				}
+	//Si la ventana activa no permite ir a background, cerrarla
+	else {
+		mouse_pressed_close_window=1;
+	}
 			
 }
 
@@ -7890,7 +7890,7 @@ int zxvision_if_mouse_in_zlogo_desktop(void)
 		if (mouse_pixel_x>=xlogo && mouse_pixel_x<xlogo+ancho_logo &&
 			mouse_pixel_y>=ylogo && mouse_pixel_y<xlogo+alto_logo
 		) {
-			printf ("Pulsado en el logo del ext desktop\n");
+			//printf ("Pulsado en el logo del ext desktop\n");
 
 			return 1;
 		}
@@ -26207,7 +26207,8 @@ void menu_simple_ventana(char *titulo,char *texto)
 
 	ancho_ventana +=2;
 
-	if (ancho_ventana>ZXVISION_MAX_ANCHO_VENTANA) {
+	//(unsigned int) para evitar el warning al compilar de: comparison of integers of different signs: 'unsigned int' and 'int' [-Wsign-compare]
+	if (ancho_ventana>(unsigned int)ZXVISION_MAX_ANCHO_VENTANA) {
 		cpu_panic("window width too big");
 	}
 
@@ -28629,10 +28630,10 @@ void menu_inicio_bucle(void)
 						reopen_menu=1;
 
 
-		//Se reabre el menu tambien si pulsada tecla F5 en cualquiera de los menus
-		if (menu_pressed_open_menu_while_in_menu.v) {
-			menu_pressed_open_menu_while_in_menu.v=0;
-		}					
+						//Se reabre el menu tambien si pulsada tecla F5 en cualquiera de los menus
+						if (menu_pressed_open_menu_while_in_menu.v) {
+							menu_pressed_open_menu_while_in_menu.v=0;
+						}					
 			
 					}
 				}
