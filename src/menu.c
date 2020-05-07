@@ -24227,36 +24227,39 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Show on footer some machine information, like tape loading");
 
 
+		if (menu_footer) {
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_fps,NULL,"[%c] Show FPS",(screen_show_fps.v ? 'X' : ' ') );
+			//menu_add_item_menu_shortcut(array_menu_window_settings,'c');
+			menu_add_item_menu_tooltip(array_menu_window_settings,"Show FPS on footer");
+			menu_add_item_menu_ayuda(array_menu_window_settings,"It tells the current FPS");
+												
+		}
+
+
 		//Uso cpu no se ve en windows
 #ifndef MINGW
 		if (menu_footer) {
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_usage,NULL,"[%c] Show ~~CPU usage",(screen_show_cpu_usage.v ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_window_settings,'c');
-		menu_add_item_menu_tooltip(array_menu_window_settings,"Show CPU usage on footer");
-		menu_add_item_menu_ayuda(array_menu_window_settings,"It tells you how much host cpu machine is using ZEsarUX. So it's better to have it low. "
-														"Higher values mean you need a faster host machine to use ZEsarUX");
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_usage,NULL,"[%c] Show ~~CPU usage",(screen_show_cpu_usage.v ? 'X' : ' ') );
+			menu_add_item_menu_shortcut(array_menu_window_settings,'c');
+			menu_add_item_menu_tooltip(array_menu_window_settings,"Show CPU usage on footer");
+			menu_add_item_menu_ayuda(array_menu_window_settings,"It tells you how much host cpu machine is using ZEsarUX. So it's better to have it low. "
+															"Higher values mean you need a faster host machine to use ZEsarUX");
 		}
 #endif
 
 		//temperatura cpu solo se ve en Linux
 #ifdef __linux__
 		if (menu_footer) {
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_temp,NULL,"[%c] Show CPU temperature",(screen_show_cpu_temp.v ? 'X' : ' ') );
-		//menu_add_item_menu_shortcut(array_menu_window_settings,'c');
-		menu_add_item_menu_tooltip(array_menu_window_settings,"Show CPU temperature on footer");
-		menu_add_item_menu_ayuda(array_menu_window_settings,"It tells the temperature of the main CPU");
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_cpu_temp,NULL,"[%c] Show CPU temperature",(screen_show_cpu_temp.v ? 'X' : ' ') );
+			//menu_add_item_menu_shortcut(array_menu_window_settings,'c');
+			menu_add_item_menu_tooltip(array_menu_window_settings,"Show CPU temperature on footer");
+			menu_add_item_menu_ayuda(array_menu_window_settings,"It tells the temperature of the main CPU");
 												
 		}
 #endif
 
 
-		if (menu_footer) {
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_fps,NULL,"[%c] Show FPS",(screen_show_fps.v ? 'X' : ' ') );
-		//menu_add_item_menu_shortcut(array_menu_window_settings,'c');
-		menu_add_item_menu_tooltip(array_menu_window_settings,"Show FPS on footer");
-		menu_add_item_menu_ayuda(array_menu_window_settings,"It tells the current FPS");
-												
-		}
+	
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] ~~Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'p');
