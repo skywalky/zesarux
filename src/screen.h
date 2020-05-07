@@ -603,6 +603,7 @@ extern int putpixel_max_y, putpixel_min_y;
 extern z80_bit screen_show_splash_texts;
 extern z80_bit screen_show_cpu_usage;
 extern z80_bit screen_show_cpu_temp;
+extern z80_bit screen_show_fps;
 extern void screen_set_parameters_slow_machines(void);
 
 extern z80_bit mouse_pointer_shown;

@@ -3331,7 +3331,9 @@ void draw_middle_footer(void)
 		menu_draw_cpu_use();
 	}
 
-	menu_draw_fps();
+	if (screen_show_fps.v) {
+		menu_draw_fps();
+	}
 
 
       
@@ -23965,6 +23967,12 @@ void menu_interface_show_cpu_usage(MENU_ITEM_PARAMETERS)
 	if (!screen_show_cpu_usage.v) menu_init_footer();
 }
 
+void menu_interface_show_fps(MENU_ITEM_PARAMETERS)
+{
+	screen_show_fps.v ^=1;
+	clear_putpixel_cache();
+	if (!screen_show_fps.v) menu_init_footer();
+}
 
 void menu_interface_show_cpu_temp(MENU_ITEM_PARAMETERS)
 {
@@ -24240,6 +24248,15 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 												
 		}
 #endif
+
+
+		if (menu_footer) {
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_fps,NULL,"[%c] Show FPS",(screen_show_fps.v ? 'X' : ' ') );
+		//menu_add_item_menu_shortcut(array_menu_window_settings,'c');
+		menu_add_item_menu_tooltip(array_menu_window_settings,"Show FPS on footer");
+		menu_add_item_menu_ayuda(array_menu_window_settings,"It tells the current FPS");
+												
+		}
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] ~~Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'p');

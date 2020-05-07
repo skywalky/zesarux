@@ -1730,6 +1730,7 @@ printf (
 #endif
 
 		"--no-cpu-temp              Do not show host CPU temperature on footer\n"
+		"--no-fps                   Do not show FPS on footer\n"
 
 
 
@@ -6410,7 +6411,12 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--no-cpu-temp")) {
 				screen_show_cpu_temp.v=0;
-			}					
+			}		
+
+
+			else if (!strcmp(argv[puntero_parametro],"--no-fps")) {
+				screen_show_fps.v=0;
+			}							
 
 			else if (!strcmp(argv[puntero_parametro],"--nowelcomemessage")) {
                                 opcion_no_splash.v=1;
