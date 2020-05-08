@@ -12,6 +12,8 @@ Added Solarized Dark & Light Gui Style
 Added ZRCP commands:
 -save-screen: to save machine screen to file
 
+
+
 Improved menu:
 -Allow some windows to be put on the background. Also active windows are saved and restored on startup
 -Pressing the menu key (F5 by default) when menu is open, it will send you back to the main menu. Also pressing over Z logo on ext desktop
@@ -22,7 +24,7 @@ Improved Esxdos handler:
 -add configuration setting to save local work directory
 
 Improved ZRCP:
--Allow to write commands between "". Not all commands support this
+-Allow to write commands in "". Not all commands support this
 -Added save-binary command
 
 Improved TBBlue emulation:
@@ -43,7 +45,6 @@ Improved Chloe emulation:
 
 
 
-
 Fixed ZRCP bugs:
 -Fix possible crash when disconnecting socket
 
@@ -53,7 +54,6 @@ Fixed Esxdos handler:
 -fixed segfaults when using a file handler that was a directory
 
 Fixed SCF/CCF undocumented flags emulation. Not enabled by default on compilation because almost no one is using this
-
 Fixed saving "Show CPU usage" setting on footer
 
 

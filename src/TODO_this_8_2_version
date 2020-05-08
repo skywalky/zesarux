@@ -176,9 +176,6 @@ Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el 
 
 
 
--En tape output, aparte de truncate etc, poder usar rotate-truncate para rotar los .tap viejos
-
-
 -comandos reset midi no hace nada?? Solo van en windows. Quiza enviar mejor un noteoff
 
 
@@ -227,7 +224,7 @@ Si es beta, actualizar solo el archivo de snapshot
 
 -Que sentido tiene conservar EPROMs de esxmmc086 de zxuno y tbblue?
 
--Zx99 interface para zx81
+
 
 
 -Cinta de juegos y programas zx81 pasar a digital
@@ -256,11 +253,6 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 -Info ZENG en FAQ
 
 
-
--Immediatos:
-
-
-
 -Soporte ulaplus en Next
 
 
@@ -271,7 +263,7 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 -Mientras hay splash de inicio, si se pulsa F5, aparece por un momento overlays de ventanas, cuando F5 esta asignada a "Nothing"
 
 
--Guia uso background windows:
+-Guia uso background windows, quiza en menu help tal cual:
 * pulsando en zlogo abre el menu
 * conmutando ventanas cierra la ventana activa si esta no soporta background
 * pulsando boton de background (!), envia ventana a background y vuelve a menu anterior, si es que ventana permite background
@@ -313,3 +305,7 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 - debug cpu permite background pero cuando está en ese estado, no deberia mostrar texto o avisar que no está refrescando
 
 - al iniciar, muestra ventanas mientras dura mensaje splash: segun si esta zxvision_restore_windows_on_startup antes o despues. porque?
+
+-revisar speech con ventanas en background
+
+-En tape output, aparte de truncate etc, poder usar rotate-truncate para rotar los .tap viejos
