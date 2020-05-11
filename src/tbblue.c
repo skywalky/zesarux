@@ -3087,6 +3087,9 @@ Bit	Function
 
 	tbblue_registers[107]=0;
 
+
+	tbblue_registers[112]=0;
+
 	clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0]=0;
 	clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1]=255;
 	clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2]=0;
@@ -5333,13 +5336,33 @@ void tbblue_render_layers_rainbow(int capalayer2,int capasprites)
 	z80_int fallbackcolour = RGB9_INDEX_FIRST_COLOR + tbblue_get_9bit_colour(tbblue_registers[74]);
 
 	int y;
-	int diferencia_border_tiles=screen_indice_inicio_pant-TBBLUE_TILES_BORDER;
+	int diferencia_border_tiles;
+
+	//diferencia_border_tiles=screen_indice_inicio_pant-TBBLUE_TILES_BORDER;
+	//Tamaño del border efectivo restando espacio usado por tiles/layer2 en border
+	diferencia_border_tiles=screen_borde_superior-TBBLUE_TILES_BORDER;
 
     y=t_scanline_draw-screen_invisible_borde_superior;
+
+
+	//y=t_scanline_draw-screen_indice_inicio_pant;
     if (border_enabled.v==0) y=y-screen_borde_superior;
 
-		if (y<diferencia_border_tiles || y>=(screen_indice_inicio_pant+192+TBBLUE_TILES_BORDER)) return; //Si estamos por encima o por debajo de la zona de tiles,
-		//que es la mas alta de todas las capas
+
+		//if (y<diferencia_border_tiles || y>=(screen_indice_inicio_pant+192+TBBLUE_TILES_BORDER)) {	
+
+		if (y<diferencia_border_tiles || y>=(screen_borde_superior+192+TBBLUE_TILES_BORDER)) {	
+			
+			//printf ("t_scanline_draw: %d y: %d diferencia_border_tiles: %d screen_indice_inicio_pant: %d screen_invisible_borde_superior: %d TBBLUE_TILES_BORDER: %d\n",
+			//	t_scanline_draw,y,diferencia_border_tiles,screen_indice_inicio_pant,screen_invisible_borde_superior,TBBLUE_TILES_BORDER);
+
+			//Si estamos por encima o por debajo de la zona de tiles/layer2,
+			//que es la mas alta de todas las capas
+
+			return; 
+
+		}
+		
 
 		//Calcular donde hay border
 		int final_border_superior=screen_indice_inicio_pant-screen_invisible_borde_superior;
@@ -5451,42 +5474,41 @@ void tbblue_render_layers_rainbow(int capalayer2,int capasprites)
 }
 
 
-void tbblue_do_layer2_overlay(void)
+void tbblue_do_layer2_overlay(int linea_render)
 {
 
 
-        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+		if (!tbblue_is_active_layer2() || tbblue_force_disable_layer_layer_two.v) return;
 
-        //linea que se debe leer
-        int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+		//printf ("linea_render: %d\n",linea_render);
+		//Resolucion si 256x192x8, organizacion en scanlines, o las otras resoluciones que organizan en columnas
+		//00=256x192x8. 01=320x256x8, 10=640x256x4
+		int layer2_resolution=(tbblue_registers[112]>>4) & 3; 
+
+		int palette_offset=tbblue_registers[112] & 15;
+
+		
+
+
+
+
+        //int scanline_copia=t_scanline_draw-border_no_visible;
 
         //la copiamos a buffer rainbow
-        z80_int *puntero_buf_rainbow;
+        //z80_int *puntero_buf_rainbow;
         //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
         int y;
 
         y=t_scanline_draw-screen_invisible_borde_superior;
         if (border_enabled.v==0) y=y-screen_borde_superior;
 
-        puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
+        //puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
 
-        puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
+		//screen_total_borde_izquierdo*border_enabled.v;
+		//int borde_no_escribible=screen_total_borde_izquierdo;
 
+		//if (layer2_resolution>0) borde_no_escribible-=TBBLUE_LAYER2_12_BORDER;
 
-        //int x,bit;
-
-        z80_byte byte_leido;
-
-
-
-
-        //direccion=screen_addr_table[(scanline_copia<<5)];
-
-		//Inicializar puntero a layer2 de tbblue, irlo incrementando a medida que se ponen pixeles
-		//Layer2 siempre se dibuja desde registro que indique pagina 18. Registro 19 es un backbuffer pero siempre se dibuja desde 18
-		//int tbblue_layer2_offset=tbblue_registers[18]&63;
-
-		//tbblue_layer2_offset*=16384;
 
 
 
@@ -5496,13 +5518,84 @@ void tbblue_do_layer2_overlay(void)
 		//Mantener el offset y en 0..191
 		z80_byte tbblue_reg_23=tbblue_registers[23]; 
 
-		int offset_scroll=tbblue_reg_23+scanline_copia;
-		offset_scroll %=192;
+		//int offset_scroll=tbblue_reg_23+scanline_copia;
+
+		//Scroll vertical
+		int offset_scroll=tbblue_reg_23+linea_render;
+
+		if (layer2_resolution) {
+			offset_scroll %=256;
+		}
+
+		else {
+			offset_scroll %=192;
+		}
 
 
-		tbblue_layer2_offset +=offset_scroll*256;
+		//32 lineas por cada borde superior e inferior en caso de resoluciones 1 y 2 
+		/*if (layer2_resolution) {
+			offset_scroll +=32;
+		}*/
 
-		z80_byte tbblue_reg_22=tbblue_registers[22];
+		if (layer2_resolution) {
+			tbblue_layer2_offset +=offset_scroll;
+		}
+
+		else {
+			tbblue_layer2_offset +=offset_scroll*256;
+		}
+
+		//Scroll horizontal
+		int tbblue_reg_22=tbblue_registers[22] + (tbblue_registers[113]&1)*256;
+
+/*
+0x71 (113) => Layer 2 X Scroll MSB
+(R/W)
+   bits 7:1 = Reserved, must be 0
+   bit 0 = MSB of scroll amount		
+*/
+
+		//Valores finales de scroll y acotar a valores validos
+		if (layer2_resolution==1) {
+			//tbblue_reg_22*=2;
+			tbblue_reg_22 %=320;
+		}
+		if (layer2_resolution==2) {
+			tbblue_reg_22*=2;
+			tbblue_reg_22 %=640;
+		}
+
+
+		//Para la gestión del scroll horizontal
+		
+		int pos_x_origen=tbblue_reg_22;
+
+		
+
+		int offset_origen_x;
+
+
+		if (layer2_resolution) {
+					if (layer2_resolution==2) {
+					
+						offset_origen_x=tbblue_reg_22*128;
+						
+					}
+
+					else {
+						offset_origen_x=tbblue_reg_22*256;
+						
+					}
+		
+
+		}
+
+		else {
+			offset_origen_x=tbblue_reg_22;
+			
+		}	
+
+		//int original_offset_origen_x=offset_origen_x;
 
 /*
 (R/W) 22 => Layer2 Offset X
@@ -5516,35 +5609,100 @@ void tbblue_do_layer2_overlay(void)
 
 		int posicion_array_layer=0;
 
-		posicion_array_layer +=screen_total_borde_izquierdo*border_enabled.v*2; //doble de ancho
+
+
+		//screen_total_borde_izquierdo*border_enabled.v;
+		int borde_no_escribible=screen_total_borde_izquierdo;
+
+		if (layer2_resolution>0) borde_no_escribible-=TBBLUE_LAYER2_12_BORDER;
+
+
+		//posicion_array_layer +=borde_no_escribible*border_enabled.v*2; //doble de ancho
+		posicion_array_layer +=borde_no_escribible*2; //doble de ancho
 
 		int posx;
 
-       	for (posx=0;posx<256;posx++) {
+		int total_x=256;
+
+		
+
+		int clip_min=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0];
+		int clip_max=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1];
+
+		if (layer2_resolution) {
+			total_x +=TBBLUE_LAYER2_12_BORDER*2;
+
+			clip_min *=2;
+			clip_max *=2;			
+
+
+			if (layer2_resolution==2) {
+				total_x *=2;
+				clip_min *=2;
+				clip_max *=2;
+			}
+		}
+
+
+       	for (posx=0;posx<total_x;posx++) {
 				
 
-	
+	//printf ("x: %d pos_x_origen: %d\n",posx,pos_x_origen);
 				//Capa layer2
-				if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
-					if (posx>=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0] && posx<=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1] ) {
+				//if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
+					if (posx>=clip_min && posx<=clip_max ) {
+					
+ 
+						z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+offset_origen_x];
 
-						z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+tbblue_reg_22];
-						z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2);
+						if (layer2_resolution==2) {
+							if ( (posx % 2)==0 ) {
+								
+								color_layer2=color_layer2 >> 4;
+							}
+							
+
+							color_layer2 &=0xF;
+						}
+
+						z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2+palette_offset);
 
 						//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
 						if (tbblue_si_transparent(final_color_layer2)) final_color_layer2=TBBLUE_SPRITE_TRANS_FICT;
 
 
-						tbblue_layer_layer2[posicion_array_layer]=final_color_layer2;
-						tbblue_layer_layer2[posicion_array_layer+1]=final_color_layer2; //doble de ancho
+						tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2;
+
+						if (layer2_resolution!=2) {
+							tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2; //doble de ancho
+						}
 					}
+
+							
+				if (layer2_resolution) {
+
+					if (layer2_resolution==2) {
+						if ( (posx %2)==1 ) {
+							//Siguiente byte solo cuando hemos leido los 4+4 bits
+						offset_origen_x +=256;
+						}
+					}
+
+					else offset_origen_x +=256;
 				}
 
-				posicion_array_layer+=2; //doble de ancho
+				else {
+					offset_origen_x++;
+				}
 
-           	    byte_leido=byte_leido<<1;
+				//Para cuando hay scroll
+				pos_x_origen++;
+				if (pos_x_origen>=total_x) {
+					pos_x_origen=0;
+
+					offset_origen_x=0; //original_offset_origen_x;
+				}
 				
-				tbblue_reg_22++;
 
 
 
@@ -5973,7 +6131,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
   	//En zona visible pantalla (no borde superior ni inferior)
   	if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
 
-			int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+			//int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
 
 
 			int tbblue_lores=tbblue_registers[0x15] & 128;
@@ -5986,7 +6144,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 		//Overlay de layer2
 							//Capa layer2
-				if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
+				/*if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
 					if (scanline_copia>=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2] && scanline_copia<=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][3]) {
 						capalayer2=1;
 					
@@ -5995,7 +6153,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 								tbblue_reveal_layer_draw(tbblue_layer_layer2);
 						}
 					}
-				}
+				}*/
 
 	}
 
@@ -6005,7 +6163,52 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 	//Aqui puede ser borde superior o inferior
 
-    
+
+
+
+		//Overlay de layer2
+		//Capa layer2
+				if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
+					int y_layer2=t_scanline_draw; //0..63 es border (8 no visibles);
+					int border_no_visible=screen_indice_inicio_pant-TBBLUE_LAYER2_12_BORDER;
+
+
+					int layer2_resolution=(tbblue_registers[112]>>4) & 3; 
+
+					if (layer2_resolution>0) {
+						y_layer2 -=border_no_visible;
+					}
+					else {
+						y_layer2 -=screen_indice_inicio_pant;
+					}
+
+					int dibujar=0;
+
+
+					if (layer2_resolution==0) {
+						if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
+							if (y_layer2>=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2] && y_layer2<=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][3]) {
+								dibujar=1;
+							}
+						}
+					}
+
+					else if (y_layer2>=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][2] && y_layer2<=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][3]) {
+						dibujar=1;
+					}
+
+					if (dibujar) {
+						capalayer2=1;
+					
+						tbblue_do_layer2_overlay(y_layer2);
+						if (tbblue_reveal_layer_layer2.v) {
+								tbblue_reveal_layer_draw(tbblue_layer_layer2);
+						}
+					}
+
+								
+				}
+
 		
 		//Capa de tiles. Mezclarla directamente a la capa de ula tbblue_layer_ula
 

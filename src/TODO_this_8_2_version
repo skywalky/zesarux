@@ -309,3 +309,7 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 -revisar speech con ventanas en background
 
 -En tape output, aparte de truncate etc, poder usar rotate-truncate para rotar los .tap viejos
+
+
+-mostrar bien clip window de layer2: si es modo 1 o 2 , multiplicar por 2
+-poner codigo de tbblue_do_layer2_overlay mejor

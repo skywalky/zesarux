@@ -508,6 +508,15 @@ void esxdos_handler_call_f_open_post(int handle,char *nombre_archivo,char *fullp
 		strcpy(esxdos_fopen_files[handle].debug_fullpath,fullpath);
 }
 
+void esxdos_handler_change_backslashes(char *string)
+{
+	while (*string) {
+		if (*string=='\\') *string='/';
+
+		string++;
+	}
+}
+
 
 void esxdos_handler_call_f_open(void)
 {
@@ -615,6 +624,9 @@ Esto se usa en NextDaw, es open+truncate
 	char nombre_archivo[PATH_MAX];
 	char fullpath[PATH_MAX];
 	esxdos_handler_copy_hl_to_string(nombre_archivo);
+
+	//Parece que nextos permite rutas con barras invertidas. Cambiarlas
+	if (MACHINE_IS_TBBLUE) esxdos_handler_change_backslashes(nombre_archivo);
 
 	esxdos_fopen_files[free_handle].tiene_plus3dos_header.v=0;
 

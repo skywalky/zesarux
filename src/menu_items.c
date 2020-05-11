@@ -15779,6 +15779,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
 	if (tecla==3) {
+		//En este caso, dado que no hay overlay, borramos contenido de la ventana
+		//para que el usuario no piense que se esta actualizando continuamente
+		zxvision_cls(ventana);
+
 		zxvision_message_put_window_background();
 	}
 

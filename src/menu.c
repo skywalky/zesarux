@@ -5117,6 +5117,30 @@ void zxvision_delete_window_if_exists(zxvision_window *ventana)
     }   
 }
 
+void zxvision_cls(zxvision_window *w)
+{
+
+	int total_width=w->total_width;
+	int total_height=w->total_height;
+
+	int buffer_size=total_width*total_height;
+
+
+	//Inicializarlo todo con texto blanco
+
+	int i;
+	overlay_screen *p;
+	p=w->memory;
+
+	for (i=0;i<buffer_size;i++) {
+		p->tinta=ESTILO_GUI_TINTA_NORMAL;
+		p->papel=ESTILO_GUI_PAPEL_NORMAL;
+		p->parpadeo=0;
+		p->caracter=' ';
+
+		p++;
+	}	
+}
 
 void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visible_width,int visible_height,int total_width,int total_height,char *title)
 {
@@ -5145,6 +5169,9 @@ void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visib
 	//Inicializarlo todo con texto blanco
 	//putchar_menu_overlay(x+j,y+i+1,' ',ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 
+	zxvision_cls(w);
+
+	/*
 	int i;
 	overlay_screen *p;
 	p=w->memory;
@@ -5157,6 +5184,7 @@ void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visib
 
 		p++;
 	}
+	*/
 
 	//Ventana anterior
 	w->previous_window=zxvision_current_window;

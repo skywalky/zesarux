@@ -140,6 +140,9 @@ extern void tbsprite_do_overlay(void);
 #define TBBLUE_SPRITE_BORDER 32
 #define TBBLUE_TILES_BORDER 32
 
+//Lineas de border superior e inferior ocupados por layer 2 en resoluciones 1 y 2
+#define TBBLUE_LAYER2_12_BORDER 32
+
 #define MAX_X_SPRITE_LINE (TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER)
 
 
