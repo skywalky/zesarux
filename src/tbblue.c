@@ -5474,6 +5474,71 @@ void tbblue_render_layers_rainbow(int capalayer2,int capasprites)
 }
 
 
+// variant for 320x256 and 640x256 Layer 2 modes
+void tbblue_do_layer2_256h_overlay(const int l2Y)
+{
+	// The 640 mode has identical memory layout as 320, but every byte is then two 4bpp pixels
+	const int is4bpp = (0x20 == (0x30 & tbblue_registers[112]));
+
+	// NextReg 0x12 is always on display, "shadow" 0x13 is only for write/read over ROM
+	int tbblue_layer2_offset = tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
+
+/*
+(R/W) 0x16 (22) => Layer2 Offset X
+  bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
+(R/W) 0x17 (23) => Layer2 Offset Y
+  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+(R/W) 0x71 (113) => Layer 2 X Scroll MSB
+	bits 7:1 = Reserved, must be 0
+	bit 0 = MSB of scroll amount
+*/
+
+	// adjust bottom byte of offset with correct Y coordinate ((Y_offset + l2Y) mod 256)
+	tbblue_layer2_offset += (tbblue_registers[23] + l2Y) & 255;
+
+	const int minx = clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0] * 2;
+	int maxx = (clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1]+1) * 2;
+	if (320 < maxx) maxx = 320;
+
+	int x = tbblue_registers[22] + ((tbblue_registers[113]&1)<<8);
+
+	int posicion_array_layer = (screen_total_borde_izquierdo - 32) * 2;
+		// no more support for `border_enabled` - TODO remove/disable/exit from TBBLUE completely
+		// currently it will probably just crash on invalid memory access
+
+	// start at clipped X1
+	posicion_array_layer += minx * 2;
+	x = (x + minx) % 320;
+
+	for (int posx = minx; posx < maxx; ++posx) {
+
+		int pixels_address = tbblue_layer2_offset + 256 * x;
+		pixels_address &= 0x1FFFFF;		// limit reading to 2MiB address space
+		z80_byte color_layer2 = memoria_spectrum[pixels_address];
+		z80_int pixel_left, pixel_right;
+		if (is4bpp) {	// 640x256 mode
+			pixel_left = tbblue_get_palette_active_layer2(color_layer2>>4);
+			if (tbblue_si_transparent(pixel_left)) pixel_left = TBBLUE_SPRITE_TRANS_FICT;
+			pixel_right = tbblue_get_palette_active_layer2(color_layer2&0x0F);
+			if (tbblue_si_transparent(pixel_right)) pixel_right = TBBLUE_SPRITE_TRANS_FICT;
+		} else {		// 320x256 mode
+			pixel_left = tbblue_get_palette_active_layer2(color_layer2);
+			if (tbblue_si_transparent(pixel_left)) pixel_left = TBBLUE_SPRITE_TRANS_FICT;
+			pixel_right = pixel_left;
+		}
+
+		tbblue_layer_layer2[posicion_array_layer] = pixel_left;
+		tbblue_layer_layer2[posicion_array_layer+1] = pixel_right;
+
+		posicion_array_layer += 2;
+
+		if (++x == 320) x = 0;
+
+	}
+
+}
+
+
 void tbblue_do_layer2_overlay(int linea_render)
 {
 
@@ -5545,7 +5610,7 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 		
 
-		int offset_origen_x;
+		/*int offset_origen_x;
 
 
 		if (layer2_resolution) {
@@ -5562,7 +5627,7 @@ void tbblue_do_layer2_overlay(int linea_render)
 		else {
 			offset_origen_x=tbblue_reg_22;
 			
-		}	
+		}	*/
 
 		//int original_offset_origen_x=offset_origen_x;
 
@@ -5604,9 +5669,9 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 
 			if (layer2_resolution==2) {
-				total_x *=2;
-				clip_min *=2;
-				clip_max *=2;
+				//total_x *=2;
+				//clip_min *=2;
+				//clip_max *=2;
 			}
 		}
 
@@ -5619,59 +5684,66 @@ void tbblue_do_layer2_overlay(int linea_render)
 				//if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
 				if (posx>=clip_min && posx<=clip_max ) {
 				
+					int offset_pixel;
 
-					z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+offset_origen_x];
+					z80_byte pixel_izq,pixel_der;
 
-					if (layer2_resolution==2) {
-						if ( (posx % 2)==0 ) {
-							
-							color_layer2=color_layer2 >> 4;
-						}
-						
+					//offset_pixel=tbblue_layer2_offset+offset_origen_x;
 
-						color_layer2 &=0xF;
+
+					if (layer2_resolution) {
+						offset_pixel=tbblue_layer2_offset+pos_x_origen*256;
 					}
 
-					z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2+palette_offset);
+					else {
+						offset_pixel=tbblue_layer2_offset+pos_x_origen;
+					}
+
+
+					offset_pixel &=0x1FFFFF;
+
+					z80_byte byte_leido=memoria_spectrum[offset_pixel];
+
+					if (layer2_resolution==2) {
+						pixel_izq=(byte_leido>>4) & 0xF;
+						pixel_der=(byte_leido   ) & 0xF;					
+
+					}
+
+					else {
+						pixel_izq=byte_leido;
+						pixel_der=pixel_izq;
+					}
+
+					z80_int final_color_layer2_izq=tbblue_get_palette_active_layer2(pixel_izq+palette_offset);
 
 					//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
-					if (tbblue_si_transparent(final_color_layer2)) final_color_layer2=TBBLUE_SPRITE_TRANS_FICT;
+					if (tbblue_si_transparent(final_color_layer2_izq)) final_color_layer2_izq=TBBLUE_SPRITE_TRANS_FICT;
 
 
-					tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2;
+					z80_int final_color_layer2_der=tbblue_get_palette_active_layer2(pixel_der+palette_offset);
 
-					if (layer2_resolution!=2) {
-						tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2; //doble de ancho
-					}
+					//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
+					if (tbblue_si_transparent(final_color_layer2_der)) final_color_layer2_der=TBBLUE_SPRITE_TRANS_FICT;		
+					
+
+					tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2_izq;
+					tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2_der;
+
 				}
 
-				else {
-					printf ("fuera rango\n");
-				}
+				//else {
+				//	printf ("fuera rango\n");
+				//}
 
 							
-				if (layer2_resolution) {
-
-					if (layer2_resolution==2) {
-						if ( (posx %2)==1 ) {
-							//Siguiente byte solo cuando hemos leido los 4+4 bits
-						offset_origen_x +=256;
-						}
-					}
-
-					else offset_origen_x +=256;
-				}
-
-				else {
-					offset_origen_x++;
-				}
-
+		
 				//Para cuando hay scroll
 				pos_x_origen++;
 				if (pos_x_origen>=total_x) {
 					pos_x_origen=0;
 
-					offset_origen_x=0; //original_offset_origen_x;
+					//offset_origen_x=0; //original_offset_origen_x;
 				}
 				
 
@@ -6172,6 +6244,10 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 						capalayer2=1;
 					
 						tbblue_do_layer2_overlay(y_layer2);
+
+
+						//tbblue_do_layer2_256h_overlay(y_layer2);
+
 						if (tbblue_reveal_layer_layer2.v) {
 								tbblue_reveal_layer_draw(tbblue_layer_layer2);
 						}
