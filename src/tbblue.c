@@ -5543,11 +5543,15 @@ void tbblue_do_layer2_overlay(int linea_render)
 			//tbblue_reg_22*=2;
 			tbblue_reg_22 %=320;
 		}
-		if (layer2_resolution==2) {
+		/*if (layer2_resolution==2) {
 			tbblue_reg_22*=2;
 			tbblue_reg_22 %=640;
-		}
+		}*/
 
+		if (layer2_resolution==2) {
+			//tbblue_reg_22*=2;
+			tbblue_reg_22 %=320;
+		}
 
 		//Para la gestión del scroll horizontal
 		
@@ -5595,7 +5599,7 @@ void tbblue_do_layer2_overlay(int linea_render)
        	for (posx=0;posx<total_x;posx++) {
 				
 
-	//printf ("x: %d pos_x_origen: %d\n",posx,pos_x_origen);
+	//printf ("posx: %d pos_x_origen: %d\n",posx,pos_x_origen);
 				//Capa layer2
 				//if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
 				if (posx>=clip_min && posx<=clip_max ) {
