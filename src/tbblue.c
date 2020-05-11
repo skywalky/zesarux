@@ -5480,7 +5480,6 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 		if (!tbblue_is_active_layer2() || tbblue_force_disable_layer_layer_two.v) return;
 
-		//printf ("linea_render: %d\n",linea_render);
 		//Resolucion si 256x192x8, organizacion en scanlines, o las otras resoluciones que organizan en columnas
 		//00=256x192x8. 01=320x256x8, 10=640x256x4
 		int layer2_resolution=(tbblue_registers[112]>>4) & 3; 
@@ -5489,25 +5488,10 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 		
 
-
-
-
-        //int scanline_copia=t_scanline_draw-border_no_visible;
-
-        //la copiamos a buffer rainbow
-        //z80_int *puntero_buf_rainbow;
-        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
         int y;
 
         y=t_scanline_draw-screen_invisible_borde_superior;
         if (border_enabled.v==0) y=y-screen_borde_superior;
-
-        //puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
-
-		//screen_total_borde_izquierdo*border_enabled.v;
-		//int borde_no_escribible=screen_total_borde_izquierdo;
-
-		//if (layer2_resolution>0) borde_no_escribible-=TBBLUE_LAYER2_12_BORDER;
 
 
 
@@ -5518,32 +5502,21 @@ void tbblue_do_layer2_overlay(int linea_render)
 		//Mantener el offset y en 0..191
 		z80_byte tbblue_reg_23=tbblue_registers[23]; 
 
-		//int offset_scroll=tbblue_reg_23+scanline_copia;
 
 		//Scroll vertical
 		int offset_scroll=tbblue_reg_23+linea_render;
 
 		if (layer2_resolution) {
 			offset_scroll %=256;
-		}
-
-		else {
-			offset_scroll %=192;
-		}
-
-
-		//32 lineas por cada borde superior e inferior en caso de resoluciones 1 y 2 
-		/*if (layer2_resolution) {
-			offset_scroll +=32;
-		}*/
-
-		if (layer2_resolution) {
 			tbblue_layer2_offset +=offset_scroll;
 		}
 
 		else {
+			offset_scroll %=192;
 			tbblue_layer2_offset +=offset_scroll*256;
 		}
+
+
 
 		//Scroll horizontal
 		int tbblue_reg_22=tbblue_registers[22] + (tbblue_registers[113]&1)*256;
@@ -5577,17 +5550,13 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 		if (layer2_resolution) {
 					if (layer2_resolution==2) {
-					
-						offset_origen_x=tbblue_reg_22*128;
-						
+						offset_origen_x=tbblue_reg_22*128;						
 					}
 
 					else {
-						offset_origen_x=tbblue_reg_22*256;
-						
+						offset_origen_x=tbblue_reg_22*256;						
 					}
 		
-
 		}
 
 		else {
@@ -5608,8 +5577,6 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 
 		int posicion_array_layer=0;
-
-
 
 		//screen_total_borde_izquierdo*border_enabled.v;
 		int borde_no_escribible=screen_total_borde_izquierdo;
@@ -5650,33 +5617,37 @@ void tbblue_do_layer2_overlay(int linea_render)
 	//printf ("x: %d pos_x_origen: %d\n",posx,pos_x_origen);
 				//Capa layer2
 				//if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
-					if (posx>=clip_min && posx<=clip_max ) {
-					
- 
-						z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+offset_origen_x];
+				if (posx>=clip_min && posx<=clip_max ) {
+				
 
-						if (layer2_resolution==2) {
-							if ( (posx % 2)==0 ) {
-								
-								color_layer2=color_layer2 >> 4;
-							}
+					z80_byte color_layer2=memoria_spectrum[tbblue_layer2_offset+offset_origen_x];
+
+					if (layer2_resolution==2) {
+						if ( (posx % 2)==0 ) {
 							
-
-							color_layer2 &=0xF;
+							color_layer2=color_layer2 >> 4;
 						}
+						
 
-						z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2+palette_offset);
-
-						//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
-						if (tbblue_si_transparent(final_color_layer2)) final_color_layer2=TBBLUE_SPRITE_TRANS_FICT;
-
-
-						tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2;
-
-						if (layer2_resolution!=2) {
-							tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2; //doble de ancho
-						}
+						color_layer2 &=0xF;
 					}
+
+					z80_int final_color_layer2=tbblue_get_palette_active_layer2(color_layer2+palette_offset);
+
+					//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
+					if (tbblue_si_transparent(final_color_layer2)) final_color_layer2=TBBLUE_SPRITE_TRANS_FICT;
+
+
+					tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2;
+
+					if (layer2_resolution!=2) {
+						tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2; //doble de ancho
+					}
+				}
+
+				else {
+					printf ("fuera rango\n");
+				}
 
 							
 				if (layer2_resolution) {
