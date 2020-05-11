@@ -1181,7 +1181,10 @@ int tbblue_is_active_layer2(void)
 
 int tbblue_get_offset_start_layer2_reg(z80_byte register_value)
 {
-	int offset=register_value &=63;
+	//since core3.0 the NextRegs 0x12 and 0x13 are 7bit.
+	int offset=register_value&127;
+	//due to 7bit the value can leak outside of 2MiB
+	// in HW the reads outside of SRAM module are "unspecified result", writes are ignored (!)	
 
 	offset*=16384;
 
@@ -5587,6 +5590,9 @@ void tbblue_do_layer2_overlay(int linea_render)
 		int tbblue_reg_22=tbblue_registers[22] + (tbblue_registers[113]&1)*256;
 
 /*
+
+(R/W) 22 => Layer2 Offset X
+  bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
 0x71 (113) => Layer 2 X Scroll MSB
 (R/W)
    bits 7:1 = Reserved, must be 0
@@ -5610,30 +5616,8 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 		
 
-		/*int offset_origen_x;
-
-
-		if (layer2_resolution) {
-					if (layer2_resolution==2) {
-						offset_origen_x=tbblue_reg_22*128;						
-					}
-
-					else {
-						offset_origen_x=tbblue_reg_22*256;						
-					}
-		
-		}
-
-		else {
-			offset_origen_x=tbblue_reg_22;
-			
-		}	*/
-
-		//int original_offset_origen_x=offset_origen_x;
-
 /*
-(R/W) 22 => Layer2 Offset X
-  bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
+
 
 (R/W) 0x17 (23) => Layer2 Offset Y
   bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
@@ -5643,13 +5627,12 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 		int posicion_array_layer=0;
 
-		//screen_total_borde_izquierdo*border_enabled.v;
+
 		int borde_no_escribible=screen_total_borde_izquierdo;
 
 		if (layer2_resolution>0) borde_no_escribible-=TBBLUE_LAYER2_12_BORDER;
 
 
-		//posicion_array_layer +=borde_no_escribible*border_enabled.v*2; //doble de ancho
 		posicion_array_layer +=borde_no_escribible*2; //doble de ancho
 
 		int posx;
@@ -5667,12 +5650,6 @@ void tbblue_do_layer2_overlay(int linea_render)
 			clip_min *=2;
 			clip_max *=2;			
 
-
-			if (layer2_resolution==2) {
-				//total_x *=2;
-				//clip_min *=2;
-				//clip_max *=2;
-			}
 		}
 
 
@@ -5688,9 +5665,6 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 					z80_byte pixel_izq,pixel_der;
 
-					//offset_pixel=tbblue_layer2_offset+offset_origen_x;
-
-
 					if (layer2_resolution) {
 						offset_pixel=tbblue_layer2_offset+pos_x_origen*256;
 					}
@@ -5701,6 +5675,9 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 
 					offset_pixel &=0x1FFFFF;
+
+
+					//printf ("posx: %d pos_x_origen: %d offset pixel: %XH\n",posx,pos_x_origen,offset_pixel);
 
 					z80_byte byte_leido=memoria_spectrum[offset_pixel];
 
@@ -5743,7 +5720,7 @@ void tbblue_do_layer2_overlay(int linea_render)
 				if (pos_x_origen>=total_x) {
 					pos_x_origen=0;
 
-					//offset_origen_x=0; //original_offset_origen_x;
+
 				}
 				
 
