@@ -2926,6 +2926,10 @@ void menu_debug_tsconf_tbblue_videoregisters_overlay(void)
 					*/
 
 				//tbblue_get_offset_start_layer2_reg
+
+					sprintf (texto_buffer,"Layer 2 mode:   %s",tbblue_get_layer2_mode_name() );
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
 					sprintf (texto_buffer,"Layer 2 addr:        %06XH",tbblue_get_offset_start_layer2_reg(tbblue_registers[18]) );
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
@@ -2981,7 +2985,9 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
-					sprintf (texto_buffer,"Layer2:     X=%4d  Y=%3d",tbblue_registers[22],tbblue_registers[23]);
+
+					int off_layer2_x=tbblue_registers[22] + (tbblue_registers[113]&1)*256;
+					sprintf (texto_buffer,"Layer2:     X=%4d  Y=%3d",off_layer2_x,tbblue_registers[23]);
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
 
