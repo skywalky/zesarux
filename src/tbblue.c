@@ -5491,26 +5491,26 @@ void tbblue_do_layer2_overlay(int linea_render)
 		//00=256x192x8. 01=320x256x8, 10=640x256x4
 		int layer2_resolution=(tbblue_registers[112]>>4) & 3; 
 
+
+		//Obtener offset paleta color
 		int palette_offset=tbblue_registers[112] & 15;
 
 		
 
-        int y;
-
-        y=t_scanline_draw-screen_invisible_borde_superior;
-        if (border_enabled.v==0) y=y-screen_borde_superior;
-
-
-
-
+		//Obtener inicio pantalla layer2
 		int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
 
 
+		//Scroll vertical
+
+/*
+(R/W) 0x17 (23) => Layer2 Offset Y
+  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+*/		
 		//Mantener el offset y en 0..191
 		z80_byte tbblue_reg_23=tbblue_registers[23]; 
 
 
-		//Scroll vertical
 		int offset_scroll=tbblue_reg_23+linea_render;
 
 		if (layer2_resolution) {
@@ -5526,8 +5526,6 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 
 		//Scroll horizontal
-		int tbblue_reg_22=tbblue_registers[22] + (tbblue_registers[113]&1)*256;
-
 /*
 
 (R/W) 22 => Layer2 Offset X
@@ -5538,58 +5536,43 @@ void tbblue_do_layer2_overlay(int linea_render)
    bit 0 = MSB of scroll amount		
 */
 
-		//Valores finales de scroll y acotar a valores validos
-		if (layer2_resolution==1) {
-			//tbblue_reg_22*=2;
-			tbblue_reg_22 %=320;
-		}
-		/*if (layer2_resolution==2) {
-			tbblue_reg_22*=2;
-			tbblue_reg_22 %=640;
-		}*/
+		int tbblue_reg_22=tbblue_registers[22] + (tbblue_registers[113]&1)*256;
 
-		if (layer2_resolution==2) {
-			//tbblue_reg_22*=2;
+
+
+		//Valor final de scroll x, acotar a valores validos
+		if (layer2_resolution) {
 			tbblue_reg_22 %=320;
 		}
 
-		//Para la gestión del scroll horizontal
-		
+
+		//Para la gestión de la posicion x del pixel
 		int pos_x_origen=tbblue_reg_22;
 
 		
 
-/*
-
-
-(R/W) 0x17 (23) => Layer2 Offset Y
-  bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
-*/
-
-
-
+		//Inicio de la posicion en el layer final
 		int posicion_array_layer=0;
 
 
 		int borde_no_escribible=screen_total_borde_izquierdo;
-
 		if (layer2_resolution>0) borde_no_escribible-=TBBLUE_LAYER2_12_BORDER;
-
 
 		posicion_array_layer +=borde_no_escribible*2; //doble de ancho
 
 		int posx;
 
+		//Total pixeles por defecto
 		int total_x=256;
 
 		
-
 		int clip_min=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][0];
 		int clip_max=clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][1];
 
 		if (layer2_resolution) {
 			total_x +=TBBLUE_LAYER2_12_BORDER*2;
 
+			//Se multiplica por 2 siempre en estas resoluciones de 320x256 y 640x256
 			clip_min *=2;
 			clip_max *=2;			
 
@@ -5599,75 +5582,70 @@ void tbblue_do_layer2_overlay(int linea_render)
        	for (posx=0;posx<total_x;posx++) {
 				
 
-	//printf ("posx: %d pos_x_origen: %d\n",posx,pos_x_origen);
-				//Capa layer2
-				//if (tbblue_is_active_layer2() && !tbblue_force_disable_layer_layer_two.v) {
-				if (posx>=clip_min && posx<=clip_max ) {
+			//printf ("posx: %d pos_x_origen: %d\n",posx,pos_x_origen);
 				
-					int offset_pixel;
+			if (posx>=clip_min && posx<=clip_max ) {
+			
+				int offset_pixel;
 
-					z80_byte pixel_izq,pixel_der;
+				z80_byte pixel_izq,pixel_der;
 
-					if (layer2_resolution) {
-						offset_pixel=tbblue_layer2_offset+pos_x_origen*256;
-					}
+				if (layer2_resolution) {
+					offset_pixel=tbblue_layer2_offset+pos_x_origen*256;
+				}
 
-					else {
-						offset_pixel=tbblue_layer2_offset+pos_x_origen;
-					}
-
-
-					offset_pixel &=0x1FFFFF;
-
-
-					//printf ("posx: %d pos_x_origen: %d offset pixel: %XH\n",posx,pos_x_origen,offset_pixel);
-
-					z80_byte byte_leido=memoria_spectrum[offset_pixel];
-
-					if (layer2_resolution==2) {
-						pixel_izq=(byte_leido>>4) & 0xF;
-						pixel_der=(byte_leido   ) & 0xF;					
-
-					}
-
-					else {
-						pixel_izq=byte_leido;
-						pixel_der=pixel_izq;
-					}
-
-					z80_int final_color_layer2_izq=tbblue_get_palette_active_layer2(pixel_izq+palette_offset);
-
-					//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
-					if (tbblue_si_transparent(final_color_layer2_izq)) final_color_layer2_izq=TBBLUE_SPRITE_TRANS_FICT;
+				else {
+					offset_pixel=tbblue_layer2_offset+pos_x_origen;
+				}
 
 
-					z80_int final_color_layer2_der=tbblue_get_palette_active_layer2(pixel_der+palette_offset);
+				offset_pixel &=0x1FFFFF;
 
-					//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
-					if (tbblue_si_transparent(final_color_layer2_der)) final_color_layer2_der=TBBLUE_SPRITE_TRANS_FICT;		
-					
 
-					tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2_izq;
-					tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2_der;
+				
+
+				z80_byte byte_leido=memoria_spectrum[offset_pixel];
+
+				if (layer2_resolution==2) {
+					pixel_izq=(byte_leido>>4) & 0xF;
+					pixel_der=(byte_leido   ) & 0xF;					
 
 				}
 
-				//else {
-				//	printf ("fuera rango\n");
-				//}
-
-							
-		
-				//Para cuando hay scroll
-				pos_x_origen++;
-				if (pos_x_origen>=total_x) {
-					pos_x_origen=0;
-
-
+				else {
+					pixel_izq=byte_leido;
+					pixel_der=pixel_izq;
 				}
+
+				z80_int final_color_layer2_izq=tbblue_get_palette_active_layer2(pixel_izq+palette_offset);
+
+				//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
+				if (tbblue_si_transparent(final_color_layer2_izq)) final_color_layer2_izq=TBBLUE_SPRITE_TRANS_FICT;
+
+
+				z80_int final_color_layer2_der=tbblue_get_palette_active_layer2(pixel_der+palette_offset);
+
+				//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
+				if (tbblue_si_transparent(final_color_layer2_der)) final_color_layer2_der=TBBLUE_SPRITE_TRANS_FICT;		
 				
 
+				tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2_izq;
+				tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2_der;
 
+			}
+
+			//else {
+			//	printf ("fuera rango\n");
+			//}
+
+						
+	
+			//Siguiente posicion
+			pos_x_origen++;
+			if (pos_x_origen>=total_x) {
+				pos_x_origen=0;
+			}
+				
 
 	    }
 

@@ -312,26 +312,3 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 
 -poner codigo de tbblue_do_layer2_overlay mejor
 
-
--0x123B Layer 2 control
-(R/W) If bit 4 = 0:
-  (soft reset = 0)
-  bits 7:6 = layer 2 memory map type
-    00 = first 16K of layer 2 in the bottom 16K
-    01 = second 16K of layer 2 in the bottom 16K
-    10 = third 16K of layer 2 in the bottom 16K
-    11 = first 48K of layer 2 in the bottom 48K
-  bit 5 = Reserved, must be 0
-  bit 4 = 0
-  bit 3 = 0 to map active layer 2 (nextreg 0x12), 1 to map shadow layer 2 (nextreg 0x13)
-  bit 2 = 1 to enable mapping for memory reads
-  bit 1 = 1 to enable layer 2 display
-  bit 0 = 1 to enable mapping for memory writes
-(W) If bit 4 = 1:
-  (soft reset = 0)
-  bits 7:5 = Reserved, must be 0
-  bit 4 = 1
-  bit 3 = Reserved, must be 0
-  bits 2:0 = 16K bank offset applied to layer 2 memory mapping
-
-Memory pointed at by nextreg 0x12 or nextreg 0x13 can be mapped into the lower 16K or 48K if layer 2 memory mapping is enabled in bit 2 and/or bit 0.  This mechanism is separate from MMU and will overlay the paging state set by MMU but only if the memory access type matches the enable condition (read-only, write-only). The particular 16K bank(s) mapped in begin at the pointed bank plus an optional offset written when bit 4 = 1.  For out of range banks, writes do not have an effect and reads return unspecified data.
