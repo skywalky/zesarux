@@ -288,9 +288,6 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 
 
 
-
-- documento en extras de como instalar aplicaciones cp/m. con ejemplo de wordstar
-
 - meter en extras de docs Benchmark legacy tbblue
 
 - inicializacion bufferes border, etc hacerlo con memset para consumir menos cpu
@@ -301,14 +298,10 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 
 - easter egg acknowledgements no salen caracteres cirilicos
 
-
 - debug cpu permite background pero cuando está en ese estado, no deberia mostrar texto o avisar que no está refrescando
-
-- al iniciar, muestra ventanas mientras dura mensaje splash: segun si esta zxvision_restore_windows_on_startup antes o despues. porque?
 
 -revisar speech con ventanas en background
 
 -En tape output, aparte de truncate etc, poder usar rotate-truncate para rotar los .tap viejos
 
--poner codigo de tbblue_do_layer2_overlay mejor
 

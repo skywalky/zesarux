@@ -8045,7 +8045,8 @@ init_randomize_noise_value();
 #endif
 
 
-	//Restaurar ventanas, si conviene
+	//Restaurar ventanas, si conviene. Hacerlo aqui y no mas tarde, para evitar por ejemplo que al salir el logo de splash
+	//aparezcan las ventanas en background
 	zxvision_restore_windows_on_startup();
 
 	//Inicio bucle principal

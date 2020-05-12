@@ -4946,6 +4946,13 @@ void zxvision_restore_windows_on_startup(void)
 
 			//restauramos modo normal de texto de menu
     		set_menu_overlay_function(normal_overlay_texto_menu);
+
+			/*
+			Esa ventana ya viene de background por tanto no hay que guardar nada en la ventana., 
+			es más, si estamos aquí es que se ha salido de la ventana con escape (y la current window ya no estará) 
+			o con f6. Total que no hay que guardar nada. 
+			Pero si que conviene dejar el overlay como estaba antes 
+			*/
 		}
 
 	}
