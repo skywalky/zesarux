@@ -5121,6 +5121,10 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 		//tiledef
 
+		//temp
+		//offset_tiledef &=255;
+		//offset_tiledef=0*TBBLUE_TILE_HEIGHT;  -> 0 es caracter espacio en modo texto cp/m
+
 		//printf ("tpal %d\n",tpal);		
 
 		//Renderizar los 8 pixeles del tile
