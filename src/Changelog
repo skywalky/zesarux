@@ -60,7 +60,8 @@ Fixed saving "Show CPU usage" setting on footer
 
 
 Fixed tbblue bugs:
--Fix 8 first lines of tiles on border not shown
+-Fixed 8 first lines of tiles on border not shown
+-Fixed text mode (1 bit tile)
 
 
 

@@ -4816,23 +4816,45 @@ If zero, the tilemap priority is either decided by attribute bit or in 512-tile-
 
 }
 
+/*
+int tbblue_tiles_512_mode(void)
+{
+	
+// (R/W) 0x6B (107) => Tilemap Control
+//   bit 7    = 1 to enable the tilemap
+//   bit 6    = 0 for 40x32, 1 for 80x32
+//   bit 5    = 1 to eliminate the attribute entry in the tilemap
+//   bit 4    = palette select
+//   bits 3-2 = Reserved set to 0
+//   bit 1    = 1 to activate 512 tile mode
+//   bit 0    = 1 to force tilemap on top of ULA
+// 
+// 512 tile mode is solely entered via bit 1.  Whether the ula is enabled or not makes no difference
+// 
+// when in 512 tile mode, the ULA is on top of the tilemap.  You can change this by setting bit 0	
+	
+
+	return tbblue_registers[0x6b] & 1;
+}
+*/
+
 
 //Devuelve el color del pixel dentro de un tilemap
 z80_byte tbblue_get_pixel_tile_xy_monocromo(int x,int y,z80_byte *puntero_this_tiledef)
 {
-	//4bpp
-	int offset_x=0;
-
-	//int pixel_a_derecha=x%2;
-
-	int offset_y=y; //Cada linea ocupa 1 bytes
-
-	int offset_final=offset_y+offset_x;
 
 
-	z80_byte byte_leido=puntero_this_tiledef[offset_final];
+	//Cada linea ocupa 1 bytes
 
+
+	z80_byte byte_leido=puntero_this_tiledef[y];
+
+
+
+	
 	return (byte_leido>> (7-x) ) & 0x1;
+
+
 
 }
 
@@ -4998,6 +5020,9 @@ the central 256×192 display. The X coordinates are internally doubled to cover 
 
 	int ula_over_tilemap;
 
+    // 0 when tilemap-over-ULA is enforced, 1 when attribute ULA-over-tilemap bit should be used
+    int ula_over_tilemap_mask = (tbblue_tilemap_control&1)^1;	
+
 	//tilemap_width=40;
 /*
 (R/W) 0x4C (76) => Transparency index for the tilemap
@@ -5016,6 +5041,11 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 		
 
+
+/* Antiguo bloque. Mejorado en el fork de Peter Ped Helcmanovsky mas abajo
+
+
+
 	for (x=0;x<tilemap_width;x++) {
 		//TODO stencil mode
 		byte_first=*puntero_tilemap;
@@ -5027,27 +5057,27 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
                                         
 		int tnum=byte_first;
 
-/*
-  bits 15-12 : palette offset
-  bit     11 : x mirror
-  bit     10 : y mirror
-  bit      9 : rotate
-  bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-  bits   7-0 : tile number
-  */                                      
+
+// bits 15-12 : palette offset
+//   bit     11 : x mirror
+//   bit     10 : y mirror
+//   bit      9 : rotate
+//   bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+//   bits   7-0 : tile number
+//                                       
 
 
 		if (tbblue_bytes_per_tile==1) {
                                         
-/*
-                                                (R/W) 0x6C (108) => Default Tilemap Attribute
-  bits 7-4 = Palette Offset
-  bit 3    = X mirror
-  bit 2    = Y mirror
-  bit 1    = Rotate
-  bit 0    = ULA over tilemap
-             (bit 8 of tile id if the ULA is disabled)
-  */                                              
+
+//                                                 (R/W) 0x6C (108) => Default Tilemap Attribute
+//   bits 7-4 = Palette Offset
+//   bit 3    = X mirror
+//   bit 2    = Y mirror
+//   bit 1    = Rotate
+//   bit 0    = ULA over tilemap
+//             (bit 8 of tile id if the ULA is disabled)
+//                                                 
 			tpal=(tbblue_default_tilemap_attr)&0xF0;
 
 			xmirror=(tbblue_default_tilemap_attr>>3)&1;
@@ -5056,10 +5086,10 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 			if (tbblue_if_ula_is_enabled() ) {
     
-/*                                            
-                                                108
-                                                  bit 0    = ULA over tilemap
-             (bit 8 of tile id if the ULA is disabled)*/
+                                           
+//                                                 108
+//                                                   bit 0    = ULA over tilemap
+//              (bit 8 of tile id if the ULA is disabled)
                                                 
 				ula_over_tilemap=tbblue_default_tilemap_attr &1;
 			}
@@ -5068,18 +5098,21 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 				tnum |=(tbblue_default_tilemap_attr&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
 			}
 
+			//printf ("1 bytes por tile\n");
+
 		}
 
 		else {
+			//printf ("2 bytes por tile\n");
 																				
                                                 
-/*
-                                         bits 15-12 : palette offset
-  bit     11 : x mirror
-  bit     10 : y mirror
-  bit      9 : rotate
-  bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-  */                                      
+
+//                                          bits 15-12 : palette offset
+//   bit     11 : x mirror
+//   bit     10 : y mirror
+//   bit      9 : rotate
+//   bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
+//                                       
 			tpal=(byte_second)&0xF0;
 			xmirror=(byte_second>>3)&1;
 			ymirror=(byte_second>>2)&1;
@@ -5089,9 +5122,9 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 			//printf ("Color independiente. tpal:%d byte_second: %02XH\n",tpal,byte_second);
 
 			if (tbblue_if_ula_is_enabled() ) {
-        /* 
-        bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number) */
-                                                
+        //
+        //bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number) 
+        //                                        
 				ula_over_tilemap=byte_second &1;
 			}
 
@@ -5105,27 +5138,160 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 
 		if (tbblue_tiles_are_monocrome()) {
-			offset_tiledef=tnum*TBBLUE_TILE_HEIGHT;
+			
 
-			//TODO: asumo que aqui no se usa rotacion. Pues si no, las letras en CP/M, en programa TERMINFO, salen rotadas
-			//Es esta suposicion correcta?
+			//TODO: mejorar este caso
+
+
+			//byte_second=*(puntero_tilemap-1);
+
+			xmirror=0;
+			ymirror=0;
 			rotate=0;
+
+
+			
+
+// bits 15-9: palette offset (7 bits)
+// bit 8 : ULA over tilemap (in 512 tile mode, bit 8 of the tile number)
+// bits 7-0 : tile number
+
+			if (tbblue_tiles_512_mode() ) {
+				//printf ("512 mode\n");
+
+				tnum=byte_first | ((byte_second&1)*256);
+				ula_over_tilemap=0;
+			}
+
+			else {
+				tnum=byte_first;
+				ula_over_tilemap=byte_second &1;
+			}
+
+
+			tpal=(byte_second >> 1) & 127;
+
+			//TODO: parche feo. no se porque, si no, cp/m se ven mal los colores.
+			tpal=(byte_second >> 3) & 31;
+
+			//madre mia que mal esta documentado esto.... sin rotar un bit a la derecha??? en fin
+			tpal=(byte_second)&0xFE;
+			
+			offset_tiledef=tnum*TBBLUE_TILE_HEIGHT;
+//printf ("tnum: %d off: %d\n",tnum,offset_tiledef);
+
+			
+// 			In text mode the interpretation of the tilemap entry changes.  Normally it's:
+
+// bits 15-12 : palette offset
+// bit 11 : x mirror
+// bit 10 : y mirror
+// bit 9 : rotate
+// bit 8 : ULA over tilemap (in 512 tile mode, bit 8 of the tile number)
+// bits 7-0 : tile number
+// 
+// but it changes to:
+// 
+// bits 15-9: palette offset (7 bits)
+// bit 8 : ULA over tilemap (in 512 tile mode, bit 8 of the tile number)
+// bits 7-0 : tile number
+// 
+// The tiles are defined like UDGs (1 bit per pixel) and that 1 bit is combined with 
+// the 7-bit palette offset to form the 8-bit pixel that gets looked up in the tilemap palette.
+			
 		}
 		else {
 			//4 bpp. cada tiledef ocupa 4 bytes * 8 = 32
 			offset_tiledef=tnum*(TBBLUE_TILE_WIDTH/2)*TBBLUE_TILE_HEIGHT;
 		}
 
-		//sumar posicion y
-		//offset_tiledef += linea_en_tile*4;
 
-		//tiledef
+FIN Antiguo bloque. Mejorado del fork de Peter Ped Helcmanovsky */
 
-		//temp
-		//offset_tiledef &=255;
-		//offset_tiledef=0*TBBLUE_TILE_HEIGHT;  -> 0 es caracter espacio en modo texto cp/m
 
-		//printf ("tpal %d\n",tpal);		
+// Bloque mejorado del fork de Peter Ped Helcmanovsky
+
+        for (x=0;x<tilemap_width;x++) {
+                //TODO stencil mode
+                byte_first=*puntero_tilemap;
+                puntero_tilemap++;
+                if (tbblue_bytes_per_tile==2) {
+                        byte_second=*puntero_tilemap;
+                        puntero_tilemap++;
+                } else {
+                        byte_second = tbblue_default_tilemap_attr;
+                }
+
+                int tnum=byte_first;
+
+/*
+  bits 15-12 : palette offset
+  bit     11 : x mirror
+  bit     10 : y mirror
+  bit      9 : rotate
+  bit      8 : ULA over tilemap OR bit 8 of tile number (512 tile mode)
+  bits   7-0 : tile number
+  */
+
+                if (tbblue_tiles_are_monocrome()) {
+					//En modo texto:
+// bits 15-9: palette offset (7 bits)
+// bit 8 : ULA over tilemap (in 512 tile mode, bit 8 of the tile number)
+// bits 7-0 : tile number
+// 
+// The tiles are defined like UDGs (1 bit per pixel) and that 1 bit is combined with 
+// the 7-bit palette offset to form the 8-bit pixel that gets looked up in the tilemap palette.
+
+						//Que mal documentado esta el tema de paleta... no se rota bits a la derecha
+                        tpal=(byte_second)&0xFE;
+                        xmirror=0;
+                        ymirror=0;
+                        rotate=0;
+                } else {
+						//Que mal documentado esta el tema de paleta... no se rota bits a la derecha
+                        tpal=(byte_second)&0xF0;
+                        xmirror=(byte_second>>3)&1;
+                        ymirror=(byte_second>>2)&1;
+                        rotate=(byte_second>>1)&1;
+                }
+
+
+                if (tbblue_tilemap_control&2) {
+                        // 512 tile mode
+                        tnum |= (byte_second&1)<<8;
+                        ula_over_tilemap = ula_over_tilemap_mask;
+                } else {
+                        // 256 tile mode, "ULA over tilemap" bit used from attribute (plus "force tilemap")
+                        ula_over_tilemap = byte_second & ula_over_tilemap_mask;
+                }
+
+                //printf ("Color independiente. tpal:%d byte_second: %02XH\n",tpal,byte_second);
+
+                //Sacar puntero a principio tiledef.
+                int offset_tiledef;
+
+
+                if (tbblue_tiles_are_monocrome()) {
+                        offset_tiledef=tnum*TBBLUE_TILE_HEIGHT;
+                }
+                else {
+                        //4 bpp. cada tiledef ocupa 4 bytes * 8 = 32
+                        offset_tiledef=tnum*(TBBLUE_TILE_WIDTH/2)*TBBLUE_TILE_HEIGHT;
+                }
+
+                //sumar posicion y
+                //offset_tiledef += linea_en_tile*4;
+
+                //tiledef
+
+                //printf ("tpal %d\n",tpal);
+	
+
+
+//FIN del bloque mejorado del fork de Peter Ped Helcmanovsky
+
+
+
 
 		//Renderizar los 8 pixeles del tile
 		int pixel_tile;
@@ -5564,6 +5730,10 @@ void tbblue_do_layer2_overlay(int linea_render)
 			tbblue_reg_22 %=320;
 		}
 
+		else {
+			tbblue_reg_22 %=256;
+		}
+
 
 		//Para la gestión de la posicion x del pixel
 		int pos_x_origen=tbblue_reg_22;
@@ -5646,12 +5816,16 @@ void tbblue_do_layer2_overlay(int linea_render)
 
 				//Ver si color resultante es el transparente de ula, y cambiarlo por el color transparente ficticio
 				if (tbblue_si_transparent(final_color_layer2_der)) final_color_layer2_der=TBBLUE_SPRITE_TRANS_FICT;		
-				
 
-				tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2_izq;
-				tbblue_layer_layer2[posicion_array_layer++]=final_color_layer2_der;
+				tbblue_layer_layer2[posicion_array_layer]=final_color_layer2_izq;
+				tbblue_layer_layer2[posicion_array_layer+1]=final_color_layer2_der;
 
 			}
+
+			//Este incremento se tiene que hacer siempre fuera, para que se aplique siempre, se haga o no clipping
+			posicion_array_layer+=2;
+
+
 
 			//else {
 			//	printf ("fuera rango\n");
