@@ -322,31 +322,6 @@ Al mover raton hace cosas raras. Tambien en el menu de tbblue
 Refresco de Tbblue para curses , stdout y simpletext en caso de:
 -rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
 
-Last of the incompatible changes to tilemap made.
-
-(R/W) 0x6B (107) => Tilemap Control
-  bit 7    = 1 to enable the tilemap
-  bit 6    = 0 for 40x32, 1 for 80x32
-  bit 5    = 1 to eliminate the attribute entry in the tilemap
-  bit 4    = palette select
-  bits 3-2 = Reserved set to 0
-  bit 1    = 1 to activate 512 tile mode
-  bit 0    = 1 to force tilemap on top of ULA
-
-512 tile mode is solely entered via bit 1.  Whether the ula is enabled or not makes no difference
-
-when in 512 tile mode, the ULA is on top of the tilemap.  You can change this by setting bit 0
-
-
-512 mode is its like the 256 tile mode, but with twice as many 
-
-The tile number is 9 bits instead of 8 bits.  The "ula on top" bit of the tilemap flags is take as bit 8.
-
-Before this update, 512 tile mode was automatically entered when the ula was disabled.  In this case "ula on top" was useless so was made bit 9 of the tile number.  Now we're getting rid of the requirement that the ULA be turned off to access 512 tiles
-
-"ULA over tilemap" was only bit 8 of the tile number if the ULA was disabled.  We're getting rid of that requirement by making it bit 8 when the 512 tile mode is enabled.  So no need to have the ULA disabled to get there anymore.
-
-
 
 
 TBBLUE: 
