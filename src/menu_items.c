@@ -17613,6 +17613,26 @@ void menu_zeng_connect_print(zxvision_window *w)
 
 }
 
+
+void menu_download_file_connect_print(zxvision_window *w)
+{
+	char *mensaje="|/-\\";
+
+	int max=strlen(mensaje);
+	char mensaje_dest[32];
+
+	int pos=contador_menu_zeng_connect_print % max;
+
+	sprintf(mensaje_dest,"Downloading %c",mensaje[pos]);
+	//printf ("pos: %d\n",pos);
+
+	zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);	
+	zxvision_draw_window_contents(w);
+
+	contador_menu_zeng_connect_print++;
+
+}
+
 int menu_zeng_connect_cond(zxvision_window *w GCC_UNUSED)
 {
 	return !zeng_enable_thread_running;
@@ -18370,7 +18390,7 @@ int menu_download_file(char *host,char *url,char *archivo_temp,int ssl_use,int e
 	contador_menu_zeng_connect_print=0;
 
 	//Usamos misma ventana de progreso que zeng. TODO: si se lanzan los dos a la vez (cosa poco probable) se moverian uno con el otro
-	zxvision_simple_progress_window("Downloading software", menu_download_file_cond,menu_zeng_connect_print );
+	zxvision_simple_progress_window("Downloading software", menu_download_file_cond,menu_download_file_connect_print );
 
 	//TODO Si antes de finalizar la descarga se vuelve atras y se vuelve a realizar otra busqueda, puede dar problemas
 	//ya que la variable download_wos_thread_running es global y única
