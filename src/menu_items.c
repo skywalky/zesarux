@@ -17594,7 +17594,8 @@ int menu_network_uartbridge_cond(void)
 int contador_menu_zeng_connect_print=0;
 
 
-void menu_zeng_connect_print(zxvision_window *w)
+
+void menu_common_connect_print(zxvision_window *w,char *texto)
 {
 	char *mensaje="|/-\\";
 
@@ -17603,7 +17604,7 @@ void menu_zeng_connect_print(zxvision_window *w)
 
 	int pos=contador_menu_zeng_connect_print % max;
 
-	sprintf(mensaje_dest,"Connecting %c",mensaje[pos]);
+	sprintf(mensaje_dest,"%s %c",texto,mensaje[pos]);
 	//printf ("pos: %d\n",pos);
 
 	zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);	
@@ -17613,24 +17614,15 @@ void menu_zeng_connect_print(zxvision_window *w)
 
 }
 
+void menu_zeng_connect_print(zxvision_window *w)
+{
+	menu_common_connect_print(w,"Connecting");
+}
+
 
 void menu_download_file_connect_print(zxvision_window *w)
 {
-	char *mensaje="|/-\\";
-
-	int max=strlen(mensaje);
-	char mensaje_dest[32];
-
-	int pos=contador_menu_zeng_connect_print % max;
-
-	sprintf(mensaje_dest,"Downloading %c",mensaje[pos]);
-	//printf ("pos: %d\n",pos);
-
-	zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);	
-	zxvision_draw_window_contents(w);
-
-	contador_menu_zeng_connect_print++;
-
+	menu_common_connect_print(w,"Downloading");
 }
 
 int menu_zeng_connect_cond(zxvision_window *w GCC_UNUSED)
