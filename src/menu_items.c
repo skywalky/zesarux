@@ -18107,7 +18107,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		
                 	
 					//usamos misma funcion thread de download wos
-					int ret=menu_download_wos("www.zx81.nl",url_juego,archivo_temp,0,1024*1024);  //1 MB mas que suficiente
+					int ret=menu_download_file("www.zx81.nl",url_juego,archivo_temp,0,1024*1024);  //1 MB mas que suficiente
 
 					if (ret==200) {
                                 
@@ -18311,14 +18311,14 @@ struct download_wos_struct
 
 int download_wos_thread_running=0;
 
-int menu_download_wos_cond(zxvision_window *w GCC_UNUSED)
+int menu_download_file_cond(zxvision_window *w GCC_UNUSED)
 {
 	return !download_wos_thread_running;
 }
 
 
 
-void *menu_download_wos_thread_function(void *entrada)
+void *menu_download_file_thread_function(void *entrada)
 {
 
 	//download_wos_thread_running=1; 
@@ -18352,8 +18352,8 @@ pthread_t download_wos_thread;
 
 
 
-
-int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use,int estimated_maximum_size)
+//antes llamado menu_download_wos
+int menu_download_file(char *host,char *url,char *archivo_temp,int ssl_use,int estimated_maximum_size)
 {
 	
 	
@@ -18377,7 +18377,7 @@ int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use,int es
 	//Antes de lanzarlo, decir que se ejecuta, por si el usuario le da enter rapido a la ventana de progreso y el thread aun no se ha lanzado
 	download_wos_thread_running=1;	
 	
-	if (pthread_create( &download_wos_thread, NULL, &menu_download_wos_thread_function, (void *)&parametros) ) {
+	if (pthread_create( &download_wos_thread, NULL, &menu_download_file_thread_function, (void *)&parametros) ) {
 		debug_printf(VERBOSE_ERR,"Can not create download wos thread");
 		return -1;
 	}
@@ -18388,7 +18388,7 @@ int menu_download_wos(char *host,char *url,char *archivo_temp,int ssl_use,int es
 	contador_menu_zeng_connect_print=0;
 
 	//Usamos misma ventana de progreso que zeng. TODO: si se lanzan los dos a la vez (cosa poco probable) se moverian uno con el otro
-	zxvision_simple_progress_window("Downloading software", menu_download_wos_cond,menu_zeng_connect_print );
+	zxvision_simple_progress_window("Downloading software", menu_download_file_cond,menu_zeng_connect_print );
 
 	//TODO Si antes de finalizar la descarga se vuelve atras y se vuelve a realizar otra busqueda, puede dar problemas
 	//ya que la variable download_wos_thread_running es global y única
@@ -18833,7 +18833,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 
 			debug_printf (VERBOSE_DEBUG,"Downloading file from host %s (SSL=%d) url %s",host_final,ssl_use,url_juego_final);
 
-			int ret=menu_download_wos(host_final,url_juego_final,archivo_temp,ssl_use,1024*1024);  //1 MB mas que suficiente
+			int ret=menu_download_file(host_final,url_juego_final,archivo_temp,ssl_use,1024*1024);  //1 MB mas que suficiente
 
 			if (ret==200) {                    
 				//y habrimos menu de smartload
@@ -19443,7 +19443,7 @@ void menu_storage_mmc_download_tbblue(void)
 	int ssl_use=0;
 
 
-	int ret=menu_download_wos(host_final,url,archivo_zip,ssl_use,estimated_size);  
+	int ret=menu_download_file(host_final,url,archivo_zip,ssl_use,estimated_size);  
 
 	if (ret==200) {       
 		//descomprimimos zip
