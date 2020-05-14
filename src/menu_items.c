@@ -17592,23 +17592,7 @@ int menu_network_uartbridge_cond(void)
 
 
 int contador_menu_zeng_connect_print=0;
-/*void menu_zeng_connect_print(zxvision_window *w)
-{
-	char *mensaje="Connecting...";
 
-	int max=strlen(mensaje);
-	char mensaje_dest[32];
-	strcpy(mensaje_dest,mensaje);
-
-	mensaje_dest[contador_menu_zeng_connect_print]=0;
-
-	zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);	
-	zxvision_draw_window_contents(w);
-
-	contador_menu_zeng_connect_print++;
-	if (contador_menu_zeng_connect_print>max) contador_menu_zeng_connect_print=0;
-}
-*/
 
 void menu_zeng_connect_print(zxvision_window *w)
 {
@@ -17644,9 +17628,7 @@ void menu_zeng_enable_disable(MENU_ITEM_PARAMETERS)
 		//Activamos ZRCP, que es lo logico, si es que no esta habilitado ya
 		if (remote_protocol_enabled.v==0) enable_and_init_remote_protocol();		
 
-		//menu_footer_clear_bottom_line();
-		//menu_putstring_footer(0,2,"Connecting to remote...",WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
-		//all_interlace_scr_refresca_pantalla();
+
 
 		//Lanzar el thread de activacion
 		zeng_enable();
