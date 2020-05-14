@@ -18100,7 +18100,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 					sprintf (archivo_temp,"%s/%s",get_tmpdir_base(),juego);
 		
                 	
-					//usamos misma funcion thread de download wos
+					//usamos misma funcion thread que usa download wos y otros
 					int ret=menu_download_file("www.zx81.nl",url_juego,archivo_temp,0,1024*1024);  //1 MB mas que suficiente
 
 					if (ret==200) {
@@ -18415,7 +18415,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 		menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
-		//http://www.zx81.nl/files.html
+		
 		int http_code;
 		char *mem;
 		char *orig_mem;
