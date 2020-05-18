@@ -1128,22 +1128,32 @@ Bit	Function
 
 }
 
-
-
-
-int tbsprite_pattern_get_offset_index(z80_byte sprite,z80_byte index_in_sprite)
+//XXX indica desplazamiento de 1 pattern de 4bits
+int tbsprite_pattern_get_offset_index_4bpp(z80_byte sprite,int offset_1_pattern,z80_byte index_in_sprite)
 {
-	return sprite*TBBLUE_SPRITE_SIZE+index_in_sprite;
+	return offset_1_pattern*TBBLUE_SPRITE_4BPP_SIZE + sprite*TBBLUE_SPRITE_8BPP_SIZE+index_in_sprite;
 }
 
-z80_byte tbsprite_pattern_get_value_index(z80_byte sprite,z80_byte index_in_sprite)
+z80_byte tbsprite_pattern_get_value_index_4bpp(z80_byte sprite,int offset_1_pattern,z80_byte index_in_sprite)
 {
-	return tbsprite_new_patterns[tbsprite_pattern_get_offset_index(sprite,index_in_sprite)];
+	return tbsprite_new_patterns[tbsprite_pattern_get_offset_index_4bpp(sprite,offset_1_pattern,index_in_sprite)];
 }
 
-void tbsprite_pattern_put_value_index(z80_byte sprite,z80_byte index_in_sprite,z80_byte value)
+
+
+int tbsprite_pattern_get_offset_index_8bpp(z80_byte sprite,z80_byte index_in_sprite)
 {
-	tbsprite_new_patterns[tbsprite_pattern_get_offset_index(sprite,index_in_sprite)]=value;
+	return sprite*TBBLUE_SPRITE_8BPP_SIZE+index_in_sprite;
+}
+
+z80_byte tbsprite_pattern_get_value_index_8bpp(z80_byte sprite,z80_byte index_in_sprite)
+{
+	return tbsprite_new_patterns[tbsprite_pattern_get_offset_index_8bpp(sprite,index_in_sprite)];
+}
+
+void tbsprite_pattern_put_value_index_8bpp(z80_byte sprite,z80_byte index_in_sprite,z80_byte value)
+{
+	tbsprite_new_patterns[tbsprite_pattern_get_offset_index_8bpp(sprite,index_in_sprite)]=value;
 }
 
 
@@ -1155,7 +1165,8 @@ int tbsprite_is_lockstep()
 }
 
 
-void tbsprite_increment_index_303b() {	// increment the "port" index
+void tbsprite_increment_index_303b() {	
+	// increment the "port" index
 	tbsprite_index_sprite_subindex=0;
 	tbsprite_index_sprite++;
 	tbsprite_index_sprite %= TBBLUE_MAX_SPRITES;
@@ -1268,7 +1279,7 @@ void tbblue_reset_sprites(void)
 		int j;
 		for (j=0;j<256;j++) {
 			//tbsprite_patterns[i][j]=TBBLUE_DEFAULT_TRANSPARENT;
-			tbsprite_pattern_put_value_index(i,j,TBBLUE_DEFAULT_TRANSPARENT);
+			tbsprite_pattern_put_value_index_8bpp(i,j,TBBLUE_DEFAULT_TRANSPARENT);
 		}
 	}
 
@@ -1399,10 +1410,24 @@ done < /tmp/archivo_lista.txt
 
 void tbblue_out_port_sprite_index(z80_byte value)
 {
+	/*
+Port 0x303B (W)
+X S S S S S S S
+N6 X N N N N N N
+A write to this port has two effects.
+One is it selects one of 128 sprites for writing sprite attributes via port 0x57.
+The other is it selects one of 128 4-bit patterns in pattern memory for writing 
+sprite patterns via port 0x5B. The N6 bit shown is the least significant in the 7-bit 
+pattern number and should always be zero when selecting one of 64 8-bit patterns indicated by N.	
+	*/
 	//printf ("Out tbblue_out_port_sprite_index %02XH\n",value);
-	tbsprite_index_pattern=value%TBBLUE_MAX_PATTERNS;
-	tbsprite_index_pattern_subindex=value&0x80;
-	tbsprite_index_sprite=value%TBBLUE_MAX_SPRITES;
+	tbsprite_index_pattern=value % TBBLUE_MAX_PATTERNS;
+
+	//De esta manera permitimos escrituras de 4bpp patterns en "medio" de un pattern de 8bpp (256 / 2 = 128 = 0x80)
+	//casualmente (o no) nuestro incremento es de 128 y ese bit N6 está en la posicion de bit 7 = 128
+	tbsprite_index_pattern_subindex=value & 0x80;
+
+	tbsprite_index_sprite=value % TBBLUE_MAX_SPRITES;
 	tbsprite_index_sprite_subindex=0;
 }
 
@@ -1583,7 +1608,7 @@ void tbblue_out_sprite_pattern(z80_byte value)
 
 
 
-	tbsprite_pattern_put_value_index(tbsprite_index_pattern,tbsprite_index_pattern_subindex,value);
+	tbsprite_pattern_put_value_index_8bpp(tbsprite_index_pattern,tbsprite_index_pattern_subindex,value);
 	//tbsprite_patterns[tbsprite_index_pattern][tbsprite_index_pattern_subindex]=value;
 
 
@@ -1624,14 +1649,21 @@ void tbblue_out_sprite_sprite(z80_byte value)
 
 
 
-	//Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion (0..3 en sprites o 0..255 en pattern ) apunta
+	//Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion 
+	//(0..3/4 en sprites o 0..255 en pattern ) apunta
 	//z80_byte tbsprite_index_sprite,tbsprite_index_sprite_subindex;
 
 	tbsprite_sprites[tbsprite_index_sprite][tbsprite_index_sprite_subindex]=value;
-	if (3 == tbsprite_index_sprite_subindex && 0 == (value&0x40)) {			// 4-byte type, add 0 as fifth
-		tbsprite_sprites[tbsprite_index_sprite][++tbsprite_index_sprite_subindex]=0;
+	if (tbsprite_index_sprite_subindex == 3 && (value & 0x40) == 0) {			
+		// 4-byte type, add 0 as fifth
+		tbsprite_index_sprite_subindex++;
+		tbsprite_sprites[tbsprite_index_sprite][tbsprite_index_sprite_subindex]=0;
 	}
-	if (++tbsprite_index_sprite_subindex == TBBLUE_SPRITE_ATTRIBUTE_SIZE) {
+
+	tbsprite_index_sprite_subindex++;
+
+	// Fin de ese sprite
+	if (tbsprite_index_sprite_subindex == TBBLUE_SPRITE_ATTRIBUTE_SIZE) {
 		tbsprite_increment_index_303b();
 	}
 }
@@ -1726,12 +1758,25 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 
 }
 
-z80_byte tbsprite_do_overlay_get_pattern_xy(z80_byte index_pattern,z80_byte sx,z80_byte sy)
+z80_byte tbsprite_do_overlay_get_pattern_xy_8bpp(z80_byte index_pattern,z80_byte sx,z80_byte sy)
 {
 
 	//return tbsprite_patterns[index_pattern][sy*TBBLUE_SPRITE_WIDTH+sx];
-	return tbsprite_pattern_get_value_index(index_pattern,sy*TBBLUE_SPRITE_WIDTH+sx);
+	return tbsprite_pattern_get_value_index_8bpp(index_pattern,sy*TBBLUE_SPRITE_WIDTH+sx);
 }
+
+z80_byte tbsprite_do_overlay_get_pattern_xy_4bpp(z80_byte index_pattern,int offset_1_pattern,z80_byte sx,z80_byte sy)
+{
+	z80_byte valor=tbsprite_pattern_get_value_index_4bpp(index_pattern,offset_1_pattern, (sy*TBBLUE_SPRITE_WIDTH+sx)/2  );
+
+	if ( (sx % 2) == 0) valor=valor>>4;
+
+	valor &= 0xF;
+
+	return valor;
+
+}
+
 
 z80_int tbsprite_return_color_index(z80_byte index)
 {
@@ -1980,8 +2025,29 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 							}
 
 
+							int sprite_es_4bpp=0;
+
+							int offset_4bpp_N6=0;
+
+							if (tbsprite_sprites[conta_sprites][3] & 64) {
+								//Pattern es de 5 bytes
+								if (tbsprite_sprites[conta_sprites][4] & 64) offset_4bpp_N6=1;
+
+								if (tbsprite_sprites[conta_sprites][4] & 128) sprite_es_4bpp=1;
+
+
+								//TODO: Y8
+							}
+
 							for (i=0;i<TBBLUE_SPRITE_WIDTH;i++) {
-								z80_byte index_color=tbsprite_do_overlay_get_pattern_xy(index_pattern,sx,sy);
+								z80_byte index_color;
+
+								if (sprite_es_4bpp) {
+									index_color=tbsprite_do_overlay_get_pattern_xy_4bpp(index_pattern,offset_4bpp_N6,sx,sy);
+								}
+								else {
+									index_color=tbsprite_do_overlay_get_pattern_xy_8bpp(index_pattern,sx,sy);
+								}
 
 									//Si index de color es transparente, no hacer nada
 /*

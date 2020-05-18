@@ -10685,7 +10685,7 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 		}
 
 		if (MACHINE_IS_TBBLUE) {
-			puntero=view_sprites_direccion*TBBLUE_SPRITE_SIZE;
+			puntero=view_sprites_direccion*TBBLUE_SPRITE_8BPP_SIZE;
 		}
 
 

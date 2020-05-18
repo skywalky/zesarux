@@ -11317,7 +11317,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     case 14:
       if (MACHINE_IS_TBBLUE) {
         *readwrite=3;
-        size=TBBLUE_MAX_SPRITES*TBBLUE_SPRITE_SIZE;
+        size=TBBLUE_MAX_SPRITES*TBBLUE_SPRITE_8BPP_SIZE;
       }
     break;    
 

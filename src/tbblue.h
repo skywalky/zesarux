@@ -150,9 +150,10 @@ extern void tbsprite_do_overlay(void);
 
 
 #define TBBLUE_MAX_PATTERNS 64
-#define TBBLUE_SPRITE_SIZE 256
+#define TBBLUE_SPRITE_8BPP_SIZE 256
+#define TBBLUE_SPRITE_4BPP_SIZE 128
 
-#define TBBLUE_SPRITE_ARRAY_PATTERN_SIZE (TBBLUE_MAX_PATTERNS*TBBLUE_SPRITE_SIZE)
+#define TBBLUE_SPRITE_ARRAY_PATTERN_SIZE (TBBLUE_MAX_PATTERNS*TBBLUE_SPRITE_8BPP_SIZE)
 
 #define TBBLUE_MAX_SPRITES 128
 //#define TBBLUE_TRANSPARENT_COLOR_INDEX 0xE3
@@ -221,9 +222,9 @@ extern z80_byte return_tbblue_mmu_segment(z80_int dir);
 extern int tbblue_is_writable_segment_mmu_rom_space(z80_int dir);
 
 
-extern z80_byte tbsprite_pattern_get_value_index(z80_byte sprite,z80_byte index_in_sprite);
+extern z80_byte tbsprite_pattern_get_value_index_8bpp(z80_byte sprite,z80_byte index_in_sprite);
 
-extern void tbsprite_pattern_put_value_index(z80_byte sprite,z80_byte index_in_sprite,z80_byte value);
+extern void tbsprite_pattern_put_value_index_8bpp(z80_byte sprite,z80_byte index_in_sprite,z80_byte value);
 
 
 #define TBBLUE_CLIP_WINDOW_LAYER2   0
