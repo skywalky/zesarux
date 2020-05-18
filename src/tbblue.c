@@ -2031,10 +2031,11 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 							if (tbsprite_sprites[conta_sprites][3] & 64) {
 								//Pattern es de 5 bytes
-								if (tbsprite_sprites[conta_sprites][4] & 64) offset_4bpp_N6=1;
-
 								if (tbsprite_sprites[conta_sprites][4] & 128) sprite_es_4bpp=1;
 
+								if (tbsprite_sprites[conta_sprites][4] & 64) offset_4bpp_N6=1;
+
+								
 
 								//TODO: Y8
 							}

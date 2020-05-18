@@ -3138,11 +3138,20 @@ int menu_debug_tsconf_tbblue_spritenav_get_total_sprites(void)
 	return limite;
 }
 
+
+int menu_debug_tsconf_tbblue_spritenav_get_total_height_win(void)
+{
+
+	if (MACHINE_IS_TSCONF) return menu_debug_tsconf_tbblue_spritenav_get_total_sprites()*2;
+	else return menu_debug_tsconf_tbblue_spritenav_get_total_sprites()*3;
+
+}
+
 //Muestra lista de sprites
 void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 {
 
-	char dumpmemoria[33];
+	char dumpmemoria[64];
 
 	int linea_color;
 	int limite;
@@ -3165,51 +3174,48 @@ void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 	int current_sprite;
 
 
-		/*for (linea_color=0;linea_color<TSCONF_SPRITENAV_SPRITES_PER_WINDOW &&
-				menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color<limite;
-				linea_color++) {*/
 		for (linea_color=0;linea_color<limite;linea_color++) {					
 
 			current_sprite=menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color;
 
 			if (MACHINE_IS_TSCONF) {
 
-			int offset=current_sprite*6;
-			z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
+				int offset=current_sprite*6;
+				z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
 
-			z80_byte sprite_leap=sprite_r0h&64;
+				z80_byte sprite_leap=sprite_r0h&64;
 
-			int sprite_act=sprite_r0h&32;
-        	int y=tsconf_fmaps[0x200+offset]+256*(sprite_r0h&1);
-	      	z80_byte ysize=8*(1+((sprite_r0h>>1)&7));
-	               
+				int sprite_act=sprite_r0h&32;
+				int y=tsconf_fmaps[0x200+offset]+256*(sprite_r0h&1);
+				z80_byte ysize=8*(1+((sprite_r0h>>1)&7));
+					
 
-        	z80_byte sprite_r1h=tsconf_fmaps[0x200+offset+3];
-		    int x=tsconf_fmaps[0x200+offset+2]+256*(sprite_r1h&1);
-			z80_byte xsize=8*(1+((sprite_r1h>>1)&7));
+				z80_byte sprite_r1h=tsconf_fmaps[0x200+offset+3];
+				int x=tsconf_fmaps[0x200+offset+2]+256*(sprite_r1h&1);
+				z80_byte xsize=8*(1+((sprite_r1h>>1)&7));
 
-			z80_byte sprite_r2h=tsconf_fmaps[0x200+offset+5];
-			z80_int tnum=(tsconf_fmaps[0x200+offset+4])+256*(sprite_r2h&15);
-			    	//Tile Number for upper left corner. Bits 0-5 are X Position in Graphics Bitmap, bits 6-11 - Y Position.
-			z80_int tnum_x=tnum & 63;
-    		z80_int tnum_y=(tnum>>6)&63;
+				z80_byte sprite_r2h=tsconf_fmaps[0x200+offset+5];
+				z80_int tnum=(tsconf_fmaps[0x200+offset+4])+256*(sprite_r2h&15);
+						//Tile Number for upper left corner. Bits 0-5 are X Position in Graphics Bitmap, bits 6-11 - Y Position.
+				z80_int tnum_x=tnum & 63;
+				z80_int tnum_y=(tnum>>6)&63;
 
-		    z80_byte spal=(sprite_r2h>>4)&15;
+				z80_byte spal=(sprite_r2h>>4)&15;
 
-			z80_byte sprite_xf=sprite_r1h&128;
-			z80_byte sprite_yf=sprite_r0h&128;
+				z80_byte sprite_xf=sprite_r1h&128;
+				z80_byte sprite_yf=sprite_r0h&128;
 
-			sprintf (dumpmemoria,"%02d X: %3d Y: %3d (%2dX%2d)",current_sprite,x,y,xsize,ysize);
-			//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
-			zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				sprintf (dumpmemoria,"%02d X: %3d Y: %3d (%2dX%2d)",current_sprite,x,y,xsize,ysize);
+				//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
-			sprintf (dumpmemoria,"Tile:%2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
-				(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
-				(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
-				spal );
+				sprintf (dumpmemoria,"Tile:%2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
+					(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
+					(sprite_xf ? "XF" : "  "),(sprite_yf ? "YF": "  "),
+					spal );
 
-			//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
-			zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 			}
 
 			if (MACHINE_IS_TBBLUE) {
@@ -3234,27 +3240,59 @@ void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 				x +=msb_x*256;
 
 				z80_byte byte_4=tbsprite_sprites[current_sprite][3];
+				z80_byte byte_5=tbsprite_sprites[current_sprite][4];
 				z80_byte visible=byte_4 & 128; //
 				z80_byte pattern=byte_4 & 63; //
 
-			sprintf (dumpmemoria,"%03d X: %3d Y: %3d %s %s %s",current_sprite,x,y,
-					(mirror_x ? "MIRX" : "    "),(mirror_y ? "MIRY" : "    "),(rotate ? "ROT" : "   ")
-			);
-			//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
-			zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				int sprite_es_4bpp=0;
+				int offset_4bpp_N6=0;
 
-			sprintf (dumpmemoria," Pattn: %2d Palof: %3d Vis: %s"
-				,pattern,paloff, (visible ? "Yes" : "No ") );
+				char buf_subindex_4_bit[10];
+
+				int zoom_x=1;
+				int zoom_y=1;
+
+				if (byte_4 & 64) {
+					//Pattern de 5 bytes
+					if (byte_5 & 128) sprite_es_4bpp=1;
+					if (byte_5 & 64) offset_4bpp_N6=1;
+
+					z80_byte zoom_x_value=(byte_5>>3)&3;
+					if (zoom_x_value) zoom_x <<=zoom_x_value;
+
+					z80_byte zoom_y_value=(byte_5>>1)&3;
+					if (zoom_y_value) zoom_y <<=zoom_y_value;
 
 
-				//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
+					//TODO: Y8
+
+				}	
+
+				if (sprite_es_4bpp) {
+					sprintf(buf_subindex_4_bit,":%d",offset_4bpp_N6);
+				}	
+				else {
+					strcpy(buf_subindex_4_bit,"  ");
+				}			
+								//012345678901234567890123456789012
+								//123:1 X: 123 Y: 123 MIRX MIRY ROT
+				sprintf (dumpmemoria,"%03d%s X: %3d Y: %3d %s %s %s",current_sprite,buf_subindex_4_bit,x,y,
+						(mirror_x ? "MX" : "  "),(mirror_y ? "MY" : "  "),(rotate ? "ROT" : "   ")
+				);				
 				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
-			}			
 
-			
+				sprintf (dumpmemoria," Pattn: %2d Palof: %3d Vis: %s"
+					,pattern,paloff, (visible ? "Yes" : "No ") );
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 
+				sprintf(dumpmemoria," %dbpp ZX: %d ZY: %d",(sprite_es_4bpp ? 4 : 8) ,zoom_x,zoom_y);
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);				
+
+				
+			}
+	
 					
 		}
 
@@ -3315,7 +3353,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 
 	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							TSCONF_SPRITENAV_WINDOW_ANCHO-1,menu_debug_tsconf_tbblue_spritenav_get_total_sprites()*2,"Sprite navigator");
+							TSCONF_SPRITENAV_WINDOW_ANCHO-1,menu_debug_tsconf_tbblue_spritenav_get_total_height_win(),"Sprite navigator");
 
 	ventana->can_be_backgrounded=1;
 	//indicar nombre del grabado de geometria
