@@ -10687,7 +10687,7 @@ void menu_debug_sprites_change_bpp(void)
 	}
 
 
-	//printf ("bpp: %d ppb: %d\n",view_sprites_bpp,view_sprites_ppb);
+	printf ("bpp: %d ppb: %d\n",view_sprites_bpp,view_sprites_ppb);
 }
 
 
@@ -10723,7 +10723,8 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 		}
 
 		if (MACHINE_IS_TBBLUE) {
-			puntero=view_sprites_direccion*TBBLUE_SPRITE_8BPP_SIZE;
+			if (view_sprites_bpp==4) puntero=view_sprites_direccion*TBBLUE_SPRITE_4BPP_SIZE;
+			else puntero=view_sprites_direccion*TBBLUE_SPRITE_8BPP_SIZE;
 		}
 
 
@@ -11044,16 +11045,22 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 			view_sprites_increment_cursor_vertical=1; //saltar de 1 en 1
 
-                        view_sprites_bytes_por_linea=16;
-
-			view_sprites_bytes_por_ventana=8; //saltar de 8 en 8 con pgdn/up
 
 
 
-			view_sprites_bpp=8;
-			view_sprites_ppb=1;
 
 
+			//Permitir 4 u 8 bpp
+			if (view_sprites_bpp!=8 && view_sprites_bpp!=4) {
+				view_sprites_bpp=4;
+				view_sprites_ppb=2;
+			}
+
+
+            view_sprites_bytes_por_linea=16/view_sprites_ppb;
+
+
+			view_sprites_bytes_por_ventana=8; 
 
 
 			//Cambiar a zona memoria 14. TBBlue sprites
@@ -11140,7 +11147,10 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		if (view_sprites_hardware) {
 			int max_sprites;
 			if (MACHINE_IS_TSCONF) max_sprites=TSCONF_MAX_SPRITES;
-			if (MACHINE_IS_TBBLUE) max_sprites=TBBLUE_MAX_PATTERNS;
+			if (MACHINE_IS_TBBLUE) {
+				if (view_sprites_bpp==4) max_sprites=TBBLUE_MAX_PATTERNS*2;
+				else max_sprites=TBBLUE_MAX_PATTERNS;
+			}
 			sprintf(texto_memptr,"Sprite: %2d",view_sprites_direccion%max_sprites); //dos digitos, tsconf hace 85 y tbblue hace 64. suficiente
 		}
 
