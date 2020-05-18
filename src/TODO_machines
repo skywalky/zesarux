@@ -361,7 +361,6 @@ El parchecillo va en core_spectrum.c , aqui:
 
 -volver de multiface nmi desde la rom, no retorna bien ni modo de video y ademas se cuelga
 
--terminfo de CP/M muestra algunos caracteres raros en algunas paginas
 
 -Agregar turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar 
 la velocidad de la cpu en nextos
@@ -381,18 +380,7 @@ la velocidad de la cpu en nextos
     111 = Tilemap second palette
 
 
--tbblue. registro 6b bit 1: 1	1 to activate 512 tile mode (bit 0 of tile attribute is ninth bit of tile-id)
-https://www.specnext.com/tilemap-mode/
 
--revisar si esto está correcto:
--tbblue:NEW in core 3.0:
-Bit 3 enables "text mode" where the tile-graphic is defined as 1-bit B&W bitmap 
-(same as UDG = User Defined Graphic characters on original ZX Spectrum) => 
-one tile needs only 8 bytes to define graphics. The tile-map data are also interpreted differently, 
-the associated flag byte is 7:1 split, the bottom bit 0 being still "ULA over tm" or "ninth bit of tile number", 
-but the top 7 bits are extended palette offset. The transparency is then checked against the global transparency colour
- (after the colour lookup in the palette), not against the four bit tilemap transparency colour-index.
- -menu info video tbblue cuando son inks y papers no cabe entero. probar con angry floaters por ejemplo
 
  -otros cambios registros: ejemplo 0x68 , bits 5-1
 
@@ -411,40 +399,15 @@ Así es más fácil saber cuando agregan o modifican algo nuevo
 -Puerto dffd next
 https://specnext.dev/wiki/Next_Memory_Bank_Select
 
--27 noviembre 2019:
-The tilemap and sprites can extend into the border area.  
-
-Because there can be so many sprites on screen (128 without any multiplexing), people have used sprites 
-to generate background in the border.  You need 96 to cover the 32 pixels on the left and right sides of 
-the screen.  If you multiplex, you can get away with less.
-
-The tilemap now has two modes.  One is 4-bits per pixel for 16 colours but this is further indexed by a 
-palette offset in the top four bits so you still have 8-bit colour but in a more restricted manner.  
-The other mode ia 1-bit per pixel (like UDGs) but with a 7-bit palette offset.
-
-The 320 pixel size in the x direction is reaching into the overscan area of displays.  
-hdmi cannot display all of it.  vga 60 it fill the entire space and vga 50 there may be a thin border.  Some displays may crop it further. 
 
 
+-aatributos extendidos sprites (quinto byte) zoom, composite etc
 
--mostrar electron en tbblue, con modo turbo, refresca linea un poco por debajo de posicion electron
-
--mas patterns de sprites:
-N6, despite the name, is the least significant bit.
-
-This 7-bit pattern number can identify 128 patterns in the 16k pattern memory, each of which are 128 bytes in size. The full 7-bits are therefore used for 4-bit sprites.
-
-For 8-bit sprites, N6=0 always. The remaining 6 bits can identify 64 patterns, each of which is 256 bytes in size.
-De momento estoy haciendo 64 patterns-> por tanto, 256 bytes por pattern
-
--otros tipos de patterns (4 bit etc) y atributos extendidos sprites (quinto byte)
-
--en visor de sprites, dice Sprites y zona memory tambien. Quiza deberia decir mejor patterns?
 
 	
 
 -reloj deberia salir en nextos, ya que implementa el chip de reloj. Aparece pero con valor 000
--probar que pasa cuando llega a mas de 12 sprites en linea tbblue
+-probar que pasa cuando llega a mas de MAX_SPRITES_PER_LINE (100) sprites en linea tbblue
 -Sincronizar bits de joystick de puerto config2
 -no dejar aumentar memoria divmmc mas de 128kb, pues tbblue no tiene mas que eso. sino, se accederia a memoria mas alla del divmmc
 

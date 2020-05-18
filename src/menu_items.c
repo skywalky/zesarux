@@ -10687,7 +10687,7 @@ void menu_debug_sprites_change_bpp(void)
 	}
 
 
-	printf ("bpp: %d ppb: %d\n",view_sprites_bpp,view_sprites_ppb);
+	//printf ("bpp: %d ppb: %d\n",view_sprites_bpp,view_sprites_ppb);
 }
 
 
@@ -11145,13 +11145,21 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		char texto_memptr[33];
 
 		if (view_sprites_hardware) {
+
+			char texto_sprite[32];
+			strcpy(texto_sprite,"Sprite");
 			int max_sprites;
-			if (MACHINE_IS_TSCONF) max_sprites=TSCONF_MAX_SPRITES;
+			if (MACHINE_IS_TSCONF) {
+				max_sprites=TSCONF_MAX_SPRITES;
+			}
+
 			if (MACHINE_IS_TBBLUE) {
 				if (view_sprites_bpp==4) max_sprites=TBBLUE_MAX_PATTERNS*2;
 				else max_sprites=TBBLUE_MAX_PATTERNS;
+
+				strcpy(texto_sprite,"Pattern");
 			}
-			sprintf(texto_memptr,"Sprite: %2d",view_sprites_direccion%max_sprites); //dos digitos, tsconf hace 85 y tbblue hace 64. suficiente
+			sprintf(texto_memptr,"%s: %3d",texto_sprite,view_sprites_direccion%max_sprites); //dos digitos, tsconf hace 85 y tbblue hace 64. suficiente
 		}
 
 		else {
