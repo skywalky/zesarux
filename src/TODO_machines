@@ -359,8 +359,6 @@ El parchecillo va en core_spectrum.c , aqui:
 
 -parece que no aparece correctamente el salvapantallas de NextOS
 
--volver de multiface nmi desde la rom, no retorna bien ni modo de video y ademas se cuelga
-
 
 -Agregar turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar 
 la velocidad de la cpu en nextos

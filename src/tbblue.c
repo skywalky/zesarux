@@ -1528,7 +1528,7 @@ void tbblue_write_palette_value_high8(z80_byte valor)
 
 	tbblue_set_value_palette_rw(indice,valor16);
 
-printf ("Escribir paleta\n");
+//printf ("Escribir paleta\n");
 
 
 }
@@ -3731,7 +3731,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 
 
-	printf ("register port %02XH value %02XH\n",index_position,value);
+	//printf ("register port %02XH value %02XH\n",index_position,value);
 
 	z80_byte last_register_5=tbblue_registers[5];
 	z80_byte last_register_6=tbblue_registers[6];
@@ -4324,7 +4324,7 @@ z80_byte tbblue_get_value_port_register(z80_byte registro)
 	(R) 0x01 (01) => Version (Nibble most significant = Major, Nibble less significant = Minor)
 	*/
 
-	if (registro==0x41 || registro==0x44) printf ("leer registro %02XH\n",registro);
+	//if (registro==0x41 || registro==0x44) printf ("leer registro %02XH\n",registro);
 
 	z80_int *paleta;
 	z80_byte indice_paleta;

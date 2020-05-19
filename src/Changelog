@@ -64,7 +64,7 @@ Fixed saving "Show CPU usage" setting on footer
 Fixed tbblue bugs:
 -Fixed 8 first lines of tiles on border not shown
 -Fixed text mode (1 bit tile)
--Fixed reading palette colours. Fixed multiface nmi return 
+-Fixed reading palette colours. Fixed returning from multiface nmi 
 
 
 
