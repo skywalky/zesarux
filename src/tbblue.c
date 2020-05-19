@@ -1528,7 +1528,7 @@ void tbblue_write_palette_value_high8(z80_byte valor)
 
 	tbblue_set_value_palette_rw(indice,valor16);
 
-
+printf ("Escribir paleta\n");
 
 
 }
@@ -3731,7 +3731,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 
 
-	//printf ("register port %02XH value %02XH\n",tbblue_last_register,value);
+	printf ("register port %02XH value %02XH\n",index_position,value);
 
 	z80_byte last_register_5=tbblue_registers[5];
 	z80_byte last_register_6=tbblue_registers[6];
@@ -4324,6 +4324,11 @@ z80_byte tbblue_get_value_port_register(z80_byte registro)
 	(R) 0x01 (01) => Version (Nibble most significant = Major, Nibble less significant = Minor)
 	*/
 
+	if (registro==0x41 || registro==0x44) printf ("leer registro %02XH\n",registro);
+
+	z80_int *paleta;
+	z80_byte indice_paleta;
+
 	
 
 	switch(registro)
@@ -4426,7 +4431,52 @@ Bit	Function
 		break;
 
 
+		case 65:
+		//lectura paleta 
+/*
+0x41 (65) => Palette Value (8 bit colour)
+(R/W)
+  bits 7:0 = Colour for the palette index selected by nextreg 0x40.
+    The format is RRRGGGBB -  the lower blue bit of the 9-bit colour will be the logical
+    OR of blue bits 1 and 0 of this 8-bit value.
+    After the write, the palette index is auto-incremented to the next index if the
+    auto-increment is enabled in nextreg 0x43.  Reads do not auto-increment.
+    Any other bits associated with the index will be zeroed.
+*/		
+			indice_paleta=tbblue_registers[64];
 
+			paleta=tbblue_get_palette_rw();	
+
+			return (paleta[indice_paleta]>>1) & 0xFF;
+		break;
+
+		case 68:
+		//lectura paleta
+/*
+0x44 (68) => Palette Value (9 bit colour)
+(R/W)
+  Two consecutive writes are needed to write the 9 bit colour
+  1st write:
+    bits 7:0 = RRRGGGBB
+  2nd write:
+    bits 7:1 = Reserved, must be 0
+    bit 0 = lsb B
+    If writing to an L2 palette
+    bit 7 = 1 for L2 priority colour, 0 for normal.
+      An L2 priority colour moves L2 above all layers.  If you need the same
+      colour in both priority and normal modes, you will need to have two
+      different entries with the same colour one with and one without priority.
+  After two consecutive writes the palette index is auto-incremented if
+  auto-increment is enabled in nextreg 0x43.
+  Reads only return the 2nd byte and do not auto-increment.
+*/		
+			indice_paleta=tbblue_registers[64];
+
+			paleta=tbblue_get_palette_rw();	
+
+			return paleta[indice_paleta] & 1;		
+		
+		break;		
 
 	}
 
