@@ -1138,7 +1138,7 @@ void load_zsf_tbblue_sprites(z80_byte *header)
   }
 
   int spr,attr;
-  int indice=16384;
+  int indice=i; //Leer desde donde nos hemos quedado antes
   for (spr=0;spr<TBBLUE_MAX_SPRITES;spr++) {
     for (attr=0;attr<TBBLUE_SPRITE_ATTRIBUTE_SIZE;attr++) {
       tbsprite_sprites[spr][attr]=header[indice];
@@ -2096,7 +2096,7 @@ if (MACHINE_IS_TBBLUE) {
 */
 
 
- #define TBBLUESPRITEBLOCKSIZE (16384+TBBLUE_MAX_SPRITES*TBBLUE_SPRITE_ATTRIBUTE_SIZE)
+ #define TBBLUESPRITEBLOCKSIZE (TBBLUE_SPRITE_ARRAY_PATTERN_SIZE+TBBLUE_MAX_SPRITES*TBBLUE_SPRITE_ATTRIBUTE_SIZE)
 
     z80_byte *tbbluespriteblock;
 
@@ -2118,7 +2118,7 @@ if (MACHINE_IS_TBBLUE) {
 
 
   int spr,attr;
-  int indice=16384;
+  int indice=i; //desde donde ha acabado antes
   for (spr=0;spr<TBBLUE_MAX_SPRITES;spr++) {
     for (attr=0;attr<TBBLUE_SPRITE_ATTRIBUTE_SIZE;attr++) {
       tbbluespriteblock[indice]=tbsprite_sprites[spr][attr];
