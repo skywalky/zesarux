@@ -1605,7 +1605,15 @@ void tbblue_write_palette_value_high8_low1(z80_byte valor)
 void tbblue_out_sprite_pattern(z80_byte value)
 {
 
-
+/*
+Once a pattern number is selected via port 0x303B, the 256-byte or 128-byte pattern can be written to this port. 
+The internal pattern pointer auto-increments after each write so as many sequential patterns as desired can be written. 
+The internal pattern pointer will roll over from pattern 127 to pattern 0 (4-bit patterns) or from pattern 63 to pattern 0 
+(8-bit patterns) automatically.
+->esto del rollover es automático. Siempre resetea a 64. La diferencia es que podemos escribir “en medio” de un pattern 
+de 256 (8 bit) cuando N6 es 1 (lo que indicaría un pattern de 128 - 4 bit). 
+Así también, si N6 es 0 puede ser pattern de 4 bits, aunque da igual. N6 lo tratamos siempre como “sumar 1/2 pattern”
+*/
 
 
 	tbsprite_pattern_put_value_index_8bpp(tbsprite_index_pattern,tbsprite_index_pattern_subindex,value);
@@ -1647,6 +1655,14 @@ void tbblue_out_sprite_sprite(z80_byte value)
 {
 	//printf ("Out tbblue_out_sprite_sprite. Index: %d subindex: %d %02XH\n",tbsprite_index_sprite,tbsprite_index_sprite_subindex,value);
 
+/*
+Once a sprite is selected via port 0x303B, 
+its attributes can be written to this port one byte after another. 
+Sprites can have either four or five attribute bytes and the internal attribute pointer 
+will move onto the next sprite after those four or five attribute bytes are written. 
+This means you can select a sprite via port 0x303B and write attributes for as many sequential sprites as desired. 
+The attribute pointer will roll over from sprite 127 to sprite 0.
+*/
 
 
 	//Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion 
