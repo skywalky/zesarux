@@ -2334,6 +2334,18 @@ void cpu_history_reg_pc_bin_to_string(z80_byte *p,char *destino)
   );
 }
 
+//Funcion para leer byte preservando variable MRA
+z80_byte peek_byte_no_time_no_change_mra(z80_int dir)
+{
+	unsigned int antes_debug_mmu_mra=debug_mmu_mra;
+
+	z80_byte value=peek_byte_no_time(dir);
+
+	debug_mmu_mra=antes_debug_mmu_mra;
+
+	return value;
+
+}
 
 //Guarda en puntero z80_byte en con contenido de registros en binario
 //Registros 16 bits guardados en little endian
@@ -2381,13 +2393,13 @@ void cpu_history_regs_to_bin(z80_byte *p)
   	p[26]=im_mode;
 	p[27]=iff1.v | (iff2.v<<1);
 
-    p[28]=peek_byte_no_time(reg_pc);
-    p[29]=peek_byte_no_time(reg_pc+1);
-    p[30]=peek_byte_no_time(reg_pc+2);
-    p[31]=peek_byte_no_time(reg_pc+3);
+    p[28]=peek_byte_no_time_no_change_mra(reg_pc);
+    p[29]=peek_byte_no_time_no_change_mra(reg_pc+1);
+    p[30]=peek_byte_no_time_no_change_mra(reg_pc+2);
+    p[31]=peek_byte_no_time_no_change_mra(reg_pc+3);
 
-    p[32]=peek_byte_no_time(reg_sp);
-    p[33]=peek_byte_no_time(reg_sp+1);	
+    p[32]=peek_byte_no_time_no_change_mra(reg_sp);
+    p[33]=peek_byte_no_time_no_change_mra(reg_sp+1);	
 
  
 }
