@@ -859,7 +859,7 @@ struct s_items_ayuda items_ayuda[]={
 
 
  {"tbblue-get-palette",NULL,"ula|layer2|sprite first|second index [items]","Get palette colours at index, if not specified items parameters, returns only one. You need to tell which palette. Returned values are in hexadecimal format. Only allowed on machine TBBlue"},
- {"tbblue-get-pattern",NULL,"index [items]","Get patterns at index, if not specified items parameters, returns only one. Returned values are in hexadecimal format. Only allowed on machine TBBlue"},
+ {"tbblue-get-pattern",NULL,"index 4|8 [items]","Get patterns at index, of type 4 or 8 bpp, if not specified items parameters, returns only one. Returned values are in hexadecimal format. Only allowed on machine TBBlue"},
 
 {"tbblue-get-register",NULL,"index","Get TBBlue register at index"},
 
@@ -5536,8 +5536,8 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 				remote_parse_commands_argvc(parametros);
 
-				if (remote_command_argc<1) {
-						escribir_socket(misocket,"ERROR. Needs one parameter minimum");
+				if (remote_command_argc<2) {
+						escribir_socket(misocket,"ERROR. Needs two parameters minimum");
 						return;
 				}
 
@@ -5545,16 +5545,45 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 				int totalitems=1;
 
-				if (remote_command_argc>1) totalitems=parse_string_to_number(remote_command_argv[1]);
+				int bpp=parse_string_to_number(remote_command_argv[1]);
 
-				if (index_int<0 || index_int>=TBBLUE_MAX_PATTERNS) escribir_socket(misocket,"ERROR. Out of range");
+				if (bpp!=4 && bpp!=8) {
+					escribir_socket_format(misocket,"ERROR. Invalid value for bpp: %d",bpp);
+					return;
+				}
+
+				if (remote_command_argc>2) totalitems=parse_string_to_number(remote_command_argv[2]);
+
+				int max_pattern=TBBLUE_MAX_PATTERNS;
+				int total_size=TBBLUE_SPRITE_8BPP_SIZE;
+
+				if (bpp==4) {
+					max_pattern *=2;
+					total_size=TBBLUE_SPRITE_4BPP_SIZE;
+				}
+
+
+				//Esto solo usado para 4bpp
+				int indice_4bpp=index_int/2;
+				int offset_1_pattern=index_int %2;	
+
+
+				if (index_int<0 || index_int>=max_pattern) escribir_socket(misocket,"ERROR. Out of range");
 				else {
 					for (;totalitems;totalitems--) {
 						int i;
-						for (i=0;i<256;i++) {
-		//z80_byte index_color=tbsprite_patterns[index_int][i];
-									z80_byte index_color=tbsprite_pattern_get_value_index_8bpp(index_int,i);
-		escribir_socket_format(misocket,"%02X ",index_color);
+						for (i=0;i<total_size;i++) {
+
+							z80_byte index_color;
+
+							if (bpp==8) {
+								index_color=tbsprite_pattern_get_value_index_8bpp(index_int,i);
+							}
+							else {
+								index_color=tbsprite_pattern_get_value_index_4bpp(indice_4bpp,offset_1_pattern,i);
+							}
+							
+							escribir_socket_format(misocket,"%02X ",index_color);
 						}
 						escribir_socket(misocket,"\n");
 						index_int++;
