@@ -5531,37 +5531,37 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
         else if (!strcmp(comando_sin_parametros,"tbblue-get-pattern") ) {
 
-                if (!MACHINE_IS_TBBLUE) escribir_socket(misocket,"ERROR. Machine is not TBBlue");
-                else {
+			if (!MACHINE_IS_TBBLUE) escribir_socket(misocket,"ERROR. Machine is not TBBlue");
+			else {
 
 				remote_parse_commands_argvc(parametros);
 
-		                if (remote_command_argc<1) {
-                		        escribir_socket(misocket,"ERROR. Needs one parameter minimum");
-		                        return;
-                		}
+				if (remote_command_argc<1) {
+						escribir_socket(misocket,"ERROR. Needs one parameter minimum");
+						return;
+				}
 
-                    int index_int=parse_string_to_number(remote_command_argv[0]);
+				int index_int=parse_string_to_number(remote_command_argv[0]);
 
-										int totalitems=1;
+				int totalitems=1;
 
-										if (remote_command_argc>1) totalitems=parse_string_to_number(remote_command_argv[1]);
+				if (remote_command_argc>1) totalitems=parse_string_to_number(remote_command_argv[1]);
 
-                    if (index_int<0 || index_int>=TBBLUE_MAX_PATTERNS) escribir_socket(misocket,"ERROR. Out of range");
-                    else {
-											for (;totalitems;totalitems--) {
-												int i;
-												for (i=0;i<256;i++) {
-                	         	//z80_byte index_color=tbsprite_patterns[index_int][i];
-														 z80_byte index_color=tbsprite_pattern_get_value_index_8bpp(index_int,i);
-	                	        escribir_socket_format(misocket,"%02X ",index_color);
-												}
-												escribir_socket(misocket,"\n");
-												index_int++;
-												if (index_int==TBBLUE_MAX_PATTERNS) index_int=0;
-											}
-                    }
-                }
+				if (index_int<0 || index_int>=TBBLUE_MAX_PATTERNS) escribir_socket(misocket,"ERROR. Out of range");
+				else {
+					for (;totalitems;totalitems--) {
+						int i;
+						for (i=0;i<256;i++) {
+		//z80_byte index_color=tbsprite_patterns[index_int][i];
+									z80_byte index_color=tbsprite_pattern_get_value_index_8bpp(index_int,i);
+		escribir_socket_format(misocket,"%02X ",index_color);
+						}
+						escribir_socket(misocket,"\n");
+						index_int++;
+						if (index_int==TBBLUE_MAX_PATTERNS) index_int=0;
+					}
+				}
+			}
 
         }
 
