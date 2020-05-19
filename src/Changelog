@@ -37,7 +37,6 @@ Improved TBBlue emulation:
 -Allow to download a 512 MB TBBlue SD official card (allowed download sizes: 32MB, 128MB, 512MB, 2 GB)
 -Allow paths with backslashes on esxdos handler
 
-
 Improved debugging:
 -Added breakpoint action "reset-tstatp"
 -Added SEG0, SEG1, ... SEG7 variables to match TBBlue MMU pages
@@ -49,14 +48,15 @@ Improved Chloe emulation:
 
 Improved emulation: use a slightly less cpu on every scanline
 
+
 Fixed ZRCP bugs:
 -Fix possible crash when disconnecting socket
-
-Fixed rom loading: no more cpu panic when the rom is not found 
+-Using cpu-history ZRCP command no longer fires additional MRA conditions
 
 Fixed Esxdos handler: 
--fixed segfaults when using a file handler that was a directory
+-Fixed segfaults when using a file handler that was a directory
 
+Fixed rom loading: no more cpu panic when the rom is not found
 Fixed SCF/CCF undocumented flags emulation. Not enabled by default on compilation because almost no one is using this
 Fixed saving "Show CPU usage" setting on footer
 

@@ -5520,9 +5520,9 @@ z80_byte zxvision_read_keyboard(void)
 		tecla=menu_get_pressed_key();
 
 
-		//Si ventana inactiva y se ha pulsado tecla, excepto ESC, no leer dicha tecla
-		if (tecla!=0 && tecla!=2 && zxvision_keys_event_not_send_to_machine==0) {
-			//printf ("no leemos tecla en ventana pues esta inactiva\n");
+		//Si ventana inactiva y se ha pulsado tecla, excepto ESC y excepto background, no leer dicha tecla
+		if (tecla!=0 && tecla!=2 && tecla!=3 && zxvision_keys_event_not_send_to_machine==0) {
+			printf ("no leemos tecla en ventana pues esta inactiva\n");
 			tecla=0; 
 		}
 	}
