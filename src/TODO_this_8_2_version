@@ -305,3 +305,6 @@ Con imagenes recientes tbblue sd:
 -Tbblue. Ir a 48kb basic se cuelga (pero cargando un juego y diciendo modo 48kb en principio funciona)
 -tbblue. Carga de .bas parece que tambien falla
 -tbblue carga de cinta desde menu loader tambien falla
+
+
+-tamaño minimo ventana en ancho-> las franjas se salen por la izquierda, al menos en ventana con icono de minimizar y background
