@@ -9406,7 +9406,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tbblue_store_scanlines,NULL,"[%c] Legacy hi-color effects",(tbblue_store_scanlines.v ? 'X' : ' '));	
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Allow legacy hi-color effects on pixel/attribute display zone on TBBlue");
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Allows you to make hi-res effects on pixel/attribute display zone on TBBlue, like overscan demo for example. "
-										"It is not needed for Spectrum Next games. Disabling it reduces cpu usage");
+										"It is not needed for Spectrum Next games, but needed for Timex 8x1 mode. Disabling it reduces cpu usage");
 
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tbblue_store_scanlines_border,NULL,"[%c] Legacy border effects",(tbblue_store_scanlines_border.v ? 'X' : ' '));	
 			menu_add_item_menu_tooltip(array_menu_settings_display,"Allow legacy border effects on TBBlue");

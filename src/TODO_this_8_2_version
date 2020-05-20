@@ -244,6 +244,7 @@ pulsar en cualquiera de las ventanas o en el logo Z-> esto retorna el foco siemp
 * se permite tener multitask desactivado pero ventanas con background
 * logo Z solo se ve cuando capa de menu esta abierta (esto aplica aunque no haya background windows)
 * pulsar ESC en menu principal, cierra todas ventanas
+* teclas f-solo funcionan con menu cerrado (excepto tecla de menu y de background)
 
 
 
@@ -300,6 +301,7 @@ In v2.06I it is at $0b17 in ROM0.
 
 -Ventana con layer de teclado. Carga bmp con paleta de spectrum?
 
+Con imagenes recientes tbblue sd:
 -Tbblue. Ir a 48kb basic se cuelga (pero cargando un juego y diciendo modo 48kb en principio funciona)
-
--FPS si baja de ... 10? color rojo
+-tbblue. Carga de .bas parece que tambien falla
+-tbblue carga de cinta desde menu loader tambien falla
