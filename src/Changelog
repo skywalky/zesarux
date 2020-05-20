@@ -65,6 +65,7 @@ Fixed tbblue bugs:
 -Fixed 8 first lines of tiles on border not shown
 -Fixed text mode (1 bit tile)
 -Fixed reading palette colours. Fixed returning from multiface nmi 
+-Fixed reading clipping values
 
 
 

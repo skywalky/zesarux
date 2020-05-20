@@ -165,12 +165,12 @@ z80_byte tbsprite_new_patterns[TBBLUE_SPRITE_ARRAY_PATTERN_SIZE];
 [1] 2nd: Y position (0-255).
 [2] 3rd: bits 7-4 is palette offset, bit 3 is X MSB, bit 2 is X mirror, bit 1 is Y mirror and bit 0 is visible flag.
 [3] 4th: bits 7-6 is reserved, bits 5-0 is Name (pattern index, 0-63).
-[4] 5th: TODO!!!
+[4] 5th: if 4bpp pattern, anchor, relative, etc
 */
 z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
 
 //Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion (0..3 en sprites o 0..255 en pattern ) apunta
-z80_byte tbsprite_index_palette;
+//z80_byte tbsprite_index_palette;
 z80_byte tbsprite_index_pattern,tbsprite_index_pattern_subindex;
 z80_byte tbsprite_index_sprite,tbsprite_index_sprite_subindex;
 z80_byte tbsprite_nr_index_sprite;
@@ -890,19 +890,18 @@ Clip window registers
   4rd write = Y2 position
   The values are 0,159,0,255 after a Reset, Reads do not advance the clip position, The X coords are internally doubled (in 40x32 mode, quadrupled in 80x32)
 
-(W) 0x1C (28) => Clip Window control
-  bits 7-4 = Reserved, must be 0
-  bit 3 - reset the Tilemap clip index.
-  bit 2 - reset the ULA/LoRes clip index.
-  bit 1 - reset the sprite clip index.
-  bit 0 - reset the Layer 2 clip index.
-
-(R) 0x1C (28) => Clip Window control
-  (may change)
-  bits 7-6 = Tilemap clip index
-  bits 5-4 = Layer 2 clip index
-  bits 3-2 = Sprite clip index
-  bits 1-0 = ULA clip index
+0x1C (28) => Clip Window control
+(R) (may change)
+  bits 7:6 = Tilemap clip index
+  bits 5:4 = ULA/Lores clip index
+  bits 3:2 = Sprite clip index
+  bits 1:0 = Layer 2 clip index
+(W) (may change)
+  bits 7:4 = Reserved, must be 0
+  bit 3 = Reset the tilemap clip index
+  bit 2 = Reset the ULA/LoRes clip index
+  bit 1 = Reset the sprite clip index
+  bit 0 = Reset the Layer 2 clip index
 */
 
 z80_byte clip_windows[4][4];                    // memory array to store actual clip windows
@@ -4560,6 +4559,7 @@ struct s_tbblue_priorities_names tbblue_priorities_names[8]={
 	{ { "ULA&Tiles" ,  "Sprites"  ,  "Layer 2" } },
 	{ { "ULA&Tiles" ,  "Layer 2"  ,  "Sprites" } },
 
+//TODO:
 	{ { "Invalid" ,  "Invalid"  ,  "Invalid" } },
 	{ { "Invalid" ,  "Invalid"  ,  "Invalid" } },
 };
@@ -4576,6 +4576,10 @@ char *tbblue_get_string_layer_prio(int layer,z80_byte prio)
      011 - L U S
      100 - U S L
      101 - U L S
+
+	 TODO:
+	110 - (U|T)S(T|U)(B+L) Blending layer and Layer 2 combined, colours clamped to [0,7]
+    111 - (U|T)S(T|U)(B+L-5) Blending layer and Layer 2 combined, colours clamped to [0,7]
 */
 
 	//por si acaso. capa entre 0 y 7
