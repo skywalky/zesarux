@@ -3274,7 +3274,14 @@ void menu_draw_last_fps(void)
         x=WINDOW_FOOTER_ELEMENT_X_FPS;
 
 
-	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_FPS,buffer_fps,WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
+		int color_tinta=WINDOW_FOOTER_INK;
+
+	//Color en rojo si uso fps bajo sube
+	if (fps<10) color_tinta=ESTILO_GUI_COLOR_AVISO;
+
+
+	menu_putstring_footer(x,WINDOW_FOOTER_ELEMENT_Y_FPS,buffer_fps,color_tinta,WINDOW_FOOTER_PAPER);
+
 }
 
 void menu_draw_fps(void)

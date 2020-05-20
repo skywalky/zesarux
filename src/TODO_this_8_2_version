@@ -243,6 +243,7 @@ si venimos de conmutar de otra ventana, se abrira menu principal
 pulsar en cualquiera de las ventanas o en el logo Z-> esto retorna el foco siempre en la ultima ventana antes de perder el foco
 * se permite tener multitask desactivado pero ventanas con background
 * logo Z solo se ve cuando capa de menu esta abierta (esto aplica aunque no haya background windows)
+* pulsar ESC en menu principal, cierra todas ventanas
 
 
 
@@ -301,3 +302,4 @@ In v2.06I it is at $0b17 in ROM0.
 
 -Tbblue. Ir a 48kb basic se cuelga (pero cargando un juego y diciendo modo 48kb en principio funciona)
 
+-FPS si baja de ... 10? color rojo
