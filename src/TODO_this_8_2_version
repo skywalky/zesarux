@@ -41,9 +41,8 @@ cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a
 Quizá mostrar C en caso de 127
 ->Hecho de momento en chardetect y speech
 
--stdout algunos menus que no van bien. Como display->view colour palette
 
--En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
+
 
 
 -Semáforo en debug print tiene sentido??
@@ -182,29 +181,6 @@ Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el 
 
 
 
-
--Pentagon:
-
--Page cashe pentagon:
-
-
-Try use D3(counting from zero) bit for EFF7  - zero page will be displayed to #0000 address. 
-
-There also other schematics that uses ports(Like LPRINT 3):
- * IN 251 - Enable cache
- * IN 123 - Disable cache
-
-IN #FB - enable cache/ IN #7B disable.
-
-Zero page is ram0 from 128kb ram
-On pentagon 
-
-
-EFF7 - just memory managment
-This strange thing "CASHE MEMORY" 
-
-
-
 -Quizá versión legacy de Mac ya no tiene sentido. Requiere Mac OS reciente y los cflags O2 estarán soportados en todos los recientes 
 
 -Programa de descompresión zip para esxdos. Luego browser wos/zx info/spec computing para esxdos. 
@@ -323,5 +299,5 @@ In v2.06I it is at $0b17 in ROM0.
 
 -Ventana con layer de teclado. Carga bmp con paleta de spectrum?
 
--Tbblue. Ir a 48kb basic se cuelga
+-Tbblue. Ir a 48kb basic se cuelga (pero cargando un juego y diciendo modo 48kb en principio funciona)
 

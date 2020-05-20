@@ -310,6 +310,27 @@ Modo 384 x 304 ?
 port EFF7: (adressation 1110xxxx xxxx0xxx )
 D3 = 1 - disable rom and connect ram page 0 in adress space 0-3FFF
 
+
+-Pentagon:
+
+-Page cashe pentagon:
+
+
+Try use D3(counting from zero) bit for EFF7  - zero page will be displayed to #0000 address. 
+
+There also other schematics that uses ports(Like LPRINT 3):
+ * IN 251 - Enable cache
+ * IN 123 - Disable cache
+
+IN #FB - enable cache/ IN #7B disable.
+
+Zero page is ram0 from 128kb ram
+On pentagon 
+
+
+EFF7 - just memory managment
+This strange thing "CASHE MEMORY" 
+
 -------------
 
 --- TBBlue ---

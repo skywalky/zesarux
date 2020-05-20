@@ -915,12 +915,15 @@ void tbblue_inc_clip_window_index(const z80_byte index_mask) {
 }
 
 // shifts and masks how the clip-window index is stored in tbblue_registers[28]
-#define TBBLUE_CLIP_WINDOW_LAYER2_INDEX_SHIFT   4
+#define TBBLUE_CLIP_WINDOW_LAYER2_INDEX_SHIFT   0
 #define TBBLUE_CLIP_WINDOW_LAYER2_INDEX_MASK    (3<<TBBLUE_CLIP_WINDOW_LAYER2_INDEX_SHIFT)
+
 #define TBBLUE_CLIP_WINDOW_SPRITES_INDEX_SHIFT  2
 #define TBBLUE_CLIP_WINDOW_SPRITES_INDEX_MASK   (3<<TBBLUE_CLIP_WINDOW_SPRITES_INDEX_SHIFT)
-#define TBBLUE_CLIP_WINDOW_ULA_INDEX_SHIFT      0
+
+#define TBBLUE_CLIP_WINDOW_ULA_INDEX_SHIFT      4
 #define TBBLUE_CLIP_WINDOW_ULA_INDEX_MASK       (3<<TBBLUE_CLIP_WINDOW_ULA_INDEX_SHIFT)
+
 #define TBBLUE_CLIP_WINDOW_TILEMAP_INDEX_SHIFT  6
 #define TBBLUE_CLIP_WINDOW_TILEMAP_INDEX_MASK   (3<<TBBLUE_CLIP_WINDOW_TILEMAP_INDEX_SHIFT)
 
@@ -4324,7 +4327,7 @@ z80_byte tbblue_get_value_port_register(z80_byte registro)
 	(R) 0x01 (01) => Version (Nibble most significant = Major, Nibble less significant = Minor)
 	*/
 
-	//if (registro==0x41 || registro==0x44) printf ("leer registro %02XH\n",registro);
+	//printf ("leer registro %02XH\n",registro);
 
 	z80_int *paleta;
 	z80_byte indice_paleta;
@@ -4397,18 +4400,33 @@ Bit	Function
 		case 24:
 			//(W) 0x18 (24) => Clip Window Layer 2
             return clip_windows[TBBLUE_CLIP_WINDOW_LAYER2][tbblue_get_clip_window_layer2_index()];
+		break;
 
 		case 25:
 			//((W) 0x19 (25) => Clip Window Sprites
             return clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][tbblue_get_clip_window_sprites_index()];
+		break;
 
 		case 26:
 			//(W) 0x1A (26) => Clip Window ULA/LoRes
 			return clip_windows[TBBLUE_CLIP_WINDOW_ULA][tbblue_get_clip_window_ula_index()];
+		break;
 
 		case 27:
 			//(W) 0x1B (27) => Clip Window Tilemap
 			return clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][tbblue_get_clip_window_tilemap_index()];
+		break;
+
+		case 28:
+/*
+0x1C (28) => Clip Window control
+(R) (may change)
+  bits 7:6 = Tilemap clip index
+  bits 5:4 = ULA/Lores clip index
+  bits 3:2 = Sprite clip index
+  bits 1:0 = Layer 2 clip index
+*/		
+		break;
 
 		/*
 		(R) 0x1E (30) => Active video line (MSB)
