@@ -6390,9 +6390,10 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 	if (if_store_scanline_interlace(t_scanline_draw)==0) return;
 
 	
+	//48% cpu en welcome screen. Alternativa mas lenta sin memfill
 
+	/*
 	int i;
-
 	z80_int *clear_p_ula=tbblue_layer_ula;
 	z80_int *clear_p_layer2=tbblue_layer_layer2;
 	z80_int *clear_p_sprites=tbblue_layer_sprites;
@@ -6401,7 +6402,7 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 
 		//Esto es un pelin mas rapido hacerlo asi, con punteros e incrementarlos, en vez de indices a array
 		*clear_p_ula=TBBLUE_SPRITE_TRANS_FICT;
-		//*clear_p_layer2=TBBLUE_TRANSPARENT_REGISTER_9;
+		// *clear_p_layer2=TBBLUE_TRANSPARENT_REGISTER_9;
 		*clear_p_layer2=TBBLUE_SPRITE_TRANS_FICT;
 		*clear_p_sprites=TBBLUE_SPRITE_TRANS_FICT;
 
@@ -6410,6 +6411,23 @@ void screen_store_scanline_rainbow_solo_display_tbblue(void)
 		clear_p_sprites++;
 
 	}
+	*/
+
+	//Alternativa con memfill. Esto solo se puede hacer dado que TBBLUE_SPRITE_TRANS_FICT=65535=0xFFFF y por tanto escribe
+	//dos bytes iguales
+	//46% cpu en welcome screen
+
+	//Por si acaso en un futuro cambia ese valor
+	if (TBBLUE_SPRITE_TRANS_FICT!=65535) cpu_panic("Changed transparent value. Can not do fast layer clear");
+
+	//Tenemos que escribir en array de z80_int (2 bytes)
+	int tamanyo_clear=TBBLUE_LAYERS_PIXEL_WIDTH*2;
+	memset(tbblue_layer_ula,0xFF,tamanyo_clear);
+	memset(tbblue_layer_layer2,0xFF,tamanyo_clear);
+	memset(tbblue_layer_sprites,0xFF,tamanyo_clear);
+	
+
+
 
 	//int bordesupinf=0;
 
