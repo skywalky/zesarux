@@ -247,7 +247,8 @@ pulsar en cualquiera de las ventanas o en el logo Z-> esto retorna el foco siemp
 
 
 
-*ventanas minimizadas no redibuja siempre, dado que solo tienen titulo sin contenido. Solventar redibujado de ventana - titulo con las que estan en background
+*ventanas minimizadas no redibuja siempre, dado que solo tienen titulo sin contenido. 
+Solventar redibujado de ventana - titulo con las que estan en background
 
 
 *Meter file browser zxuno en imagen zxuno mmc
@@ -259,6 +260,7 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 - meter en extras de docs Benchmark legacy tbblue
 
 - inicializacion bufferes border, etc hacerlo con memset para consumir menos cpu
+ok en algunos
 
 - revival survival en next. Parece que falla por algo de divmmc?
 
@@ -266,13 +268,11 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 
 - easter egg acknowledgements no salen caracteres cirilicos
 
-- debug cpu permite background pero cuando está en ese estado, no deberia mostrar texto o avisar que no está refrescando
 
 -revisar speech con ventanas en background
 
 -En tape output, aparte de truncate etc, poder usar rotate-truncate para rotar los .tap viejos
 
--Incluir carpeta docs con algunas cosillas
 
 -Dandanator nueva versión
 
