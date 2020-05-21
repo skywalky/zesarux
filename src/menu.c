@@ -7721,8 +7721,8 @@ void zxvision_handle_mouse_resize_aux(zxvision_window *w)
 				int ancho_final=(w->visible_width)+incremento_ancho;
 				int alto_final=(w->visible_height)+incremento_alto;
 
-				//Evitar ventana de ancho pequeño, aunque se puede hacer, pero los colores se van por la izquierda
-				if (ancho_final>5) {
+				//Evitar ventana de ancho pequeño, aunque se puede hacer, pero las franjas de colores se van por la izquierda
+				if (ancho_final>7) {
 					zxvision_set_visible_width(w,ancho_final);
 				}
 
