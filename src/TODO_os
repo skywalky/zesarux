@@ -61,8 +61,6 @@ Quizá en OSX superiores lo han simplificado. Pero hace falta swift o funciona c
 
 -probar con sdl audio y video simpletext . parece que no se oye el sonido. En Linux va bien
 
--Icono bmp para Windows. Y meter icono dentro del exe para que se vea en la barra de tareas
-http://stackoverflow.com/questions/708238/how-do-i-add-an-icon-to-a-mingw-gcc-compiled-executable
 
 -Utilidades aparte que vengan compiladas en Windows . quiza tambien para linux y mac?
 

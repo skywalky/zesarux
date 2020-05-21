@@ -62,6 +62,16 @@ Y agregar al exe con:
 vim zesarux.rc
 id ICON "zesarux.ico"
 
+---
+
+Luego
+windres zesarux.rc -O coff zesarux.res
+
+Y en el linkado incluir zesarux.res
+
+
+http://stackoverflow.com/questions/708238/how-do-i-add-an-icon-to-a-mingw-gcc-compiled-executable
+
 ---------------------
 
 

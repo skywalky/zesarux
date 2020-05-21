@@ -235,7 +235,9 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 * pulsando en zlogo abre el menu
 * conmutando ventanas cierra la ventana activa si esta no soporta background
 * pulsando boton de background (!), envia ventana a background y vuelve a menu anterior, si es que ventana permite background
-* ventana que está en background tiene el botón de background (!) parpadeando, siempre que mulitask esté activado
+* ventana que está en background tiene el botón de background (!) parpadeando, siempre que mulitask esté activado. Pero si ventana no actualiza,
+como Debug CPU, está en background pero no parpadea el (!)
+
 si venimos de conmutar de otra ventana, se abrira menu principal
 * boton derecho en menu tiene mismo efecto que ESC: cerrar ventana activa
 
