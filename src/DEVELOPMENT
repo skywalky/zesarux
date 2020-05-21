@@ -46,6 +46,22 @@ Para que el cpu_panic muestre backtrace si hay un error, compilar con -g -rdynam
 
 --------------
 
+Icono para windows:
+
+Tener los diferentes tamanyos en png
+
+Luego convertir a ico con:
+
+convert zesarux_16.png zesarux_32.png zesarux_48.png zesarux_256.png -colors 256 zesarux.ico
+
+Y agregar al exe con:
+
+rcexit zesarux.exe --set-icon zesarux.ico
+
+---------------------
+
+
+
 Diferencias en el uso del menu de:
 menu_generic_message
 y
