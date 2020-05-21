@@ -56,7 +56,11 @@ convert zesarux_16.png zesarux_32.png zesarux_48.png zesarux_256.png -colors 256
 
 Y agregar al exe con:
 
-rcexit zesarux.exe --set-icon zesarux.ico
+#rcexit zesarux.exe --set-icon zesarux.ico
+
+
+vim zesarux.rc
+id ICON "zesarux.ico"
 
 ---------------------
 
