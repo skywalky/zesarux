@@ -338,14 +338,52 @@ int diviface_poke_byte_to_internal_memory(z80_int dir,z80_byte valor)
 
   else {
 
-	//Si la mmu del tbblue esta alterando esta zona de memoria
+	
 	if (MACHINE_IS_TBBLUE && dir<16384) {
+	
+	/*
+
+Prioridades Next. Divmmc encima de mmu
+
+
+-- memory decode order
+   --
+   -- 0-16k:
+   --   1. bootrom
+   --   2. machine config mapping
+   --   3. multiface
+   --   4. divmmc
+   --   5. layer 2 mapping
+   --   6. mmu
+   --   7. romcs expansion bus
+   --   8. rom
+   --
+   -- 16k-48k:
+   --   1. layer 2 mapping
+   --   2. mmu
+   --
+   -- 48k-64k:
+   --   1. mmu
+
+
+*/
+	
+	
 		//Despues de salir de esta funcion siempre llama a escritura de memoria de la capa que haya por debajo
 		//Por tanto solo hay que determinar si la memoria divmmc se debe escribir (valor en MMU 255),
 		//Y si no se debe, simplemente hacer return de aqui
+		
+		
+		/*
 	        z80_byte reg_mmu_value=return_tbblue_mmu_segment(dir);
                 if (reg_mmu_value!=255) return 0;
+                
+                */
 	}
+	
+	
+	
+	
 
 		//Si poke a eprom o ram 3 read only.
 
@@ -433,27 +471,53 @@ z80_byte diviface_peek_byte_to_internal_memory(z80_int dir)
 {
 	//printf ("returning diviface internal memory address from diviface_peek_byte_no_time %XH\n",dir);
 	z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
+	
+	
+	
+	
 	if (MACHINE_IS_TBBLUE) {
-		//Ver si hay mapeo de MMU diferente a la de por defecto
-		/*
 		
-(R/W) 0x50 (80) => MMU slot 0
-  bits 7-0 = Set a Spectrum RAM page at position 0x0000 to 0x1fff
-  (Reset to 255 after a reset)
-  Pages can be from 0 to 223 on a full expanded Next. 
-  A 255 value remove the RAM page and map the current ROM
+		
+//
+/*
 
-(R/W) 0x51 (81) => MMU slot 1
-  bits 7-0 = Set a Spectrum RAM page at position 0x2000 to 0x3fff
-  (Reset to 255 after a reset)
-  Pages can be from 0 to 223 on a full expanded Next. 
-  A 255 value remove the RAM page and map the current ROM
-		*/
+Prioridades Next. Divmmc encima de mmu
+
+
+-- memory decode order
+   --
+   -- 0-16k:
+   --   1. bootrom
+   --   2. machine config mapping
+   --   3. multiface
+   --   4. divmmc
+   --   5. layer 2 mapping
+   --   6. mmu
+   --   7. romcs expansion bus
+   --   8. rom
+   --
+   -- 16k-48k:
+   --   1. layer 2 mapping
+   --   2. mmu
+   --
+   -- 48k-64k:
+   --   1. mmu
+
+
+*/
+		
+/*		
+		
+		
 		z80_byte reg_mmu_value=return_tbblue_mmu_segment(dir);
 		if (reg_mmu_value!=255) {
 			//Mapeo diferente
             puntero=diviface_return_tbblue_memory_pointer(dir);
 		}
+		
+*/		
+		
+		
 	}
 	return *puntero;
 }
