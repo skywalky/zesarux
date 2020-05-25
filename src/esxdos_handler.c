@@ -2121,7 +2121,7 @@ void esxdos_handler_begin_handling_commands(void)
 		break;					
 
 		case ESXDOS_RST8_F_OPENDIR:
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_OPENDIR");
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_OPENDIR. Drive: %d",reg_a);
 			esxdos_handler_call_f_opendir();
 			esxdos_handler_new_return_call();
 		break;

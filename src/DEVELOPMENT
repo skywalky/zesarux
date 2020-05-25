@@ -132,8 +132,8 @@ Generar estos dos binarios de Linux:
 ZEsarUX-version-linux-debian10-x32.tar.gz 
 ZEsarUX-version-linux-debian10-x64.tar.gz 
 con comandos:
-export CFLAGS=-O2
-export LDFLAGS=-O2
+export CFLAGS=-O3
+export LDFLAGS=-O3
 ./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-caca --disable-aa --disable-cursesw --prefix /usr
 (Habilita drivers video: xwindows, sdl, fbdev, curses, stdout, simpletext y drivers audio: pulse, alsa, sdl, dsp. )
 make clean
@@ -145,8 +145,8 @@ make bintargz
 Generar este binarios de FreeBSD:
 ZEsarUX-version-freebsd-12.1-x64.tar.gz 
 con comandos:
-export CFLAGS=-O2
-export LDFLAGS=-O2
+export CFLAGS=-O3
+export LDFLAGS=-O3
 ./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-caca --disable-aa --disable-cursesw --prefix /usr
 (Habilita drivers video: xwindows, sdl, fbdev, curses, stdout, simpletext y drivers audio: pulse, alsa, sdl, dsp. )
 make clean
@@ -159,8 +159,8 @@ Generar este binario de Raspbian:
 ZEsarUX-version-raspbian9.tar.gz 
 (Habilita extensiones raspberry, drivers video: fbdev, curses, y drivers audio: alsa, sdl, dsp. )
 con comandos:
-export CFLAGS=-O2
-export LDFLAGS=-O2
+export CFLAGS=-O3
+export LDFLAGS=-O3
 ./configure --enable-raspberry --spectrum-reduced-core --disable-xwindows --disable-caca --disable-aa --disable-pulse --disable-simpletext --disable-stdout --disable-cursesw --prefix /usr
 
 La salida debe ser similar a:
@@ -213,8 +213,7 @@ con comandos:
 Versión con optimizaciones, sin SSL:
 
 
-#export CFLAGS="-O2 -mmacosx-version-min=10.13"
-#export LDFLAGS="-O2 -mmacosx-version-min=10.13"
+
 
 export CFLAGS="-O3 -mmacosx-version-min=10.13"
 export LDFLAGS="-O3 -mmacosx-version-min=10.13"
@@ -232,8 +231,8 @@ make macapp
 
 ## NO Versión con optimizaciones, CON SSL:
 #
-#export CFLAGS=-O2
-#export LDFLAGS=-O2
+#export CFLAGS=-O3
+#export LDFLAGS=-O3
 #
 #./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-ssl --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile 
 #(Habilita SSL, drivers video: cocoa(GL), stdout, simpletext y drivers audio: coreaudio. )
