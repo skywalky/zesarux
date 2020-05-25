@@ -28551,8 +28551,8 @@ void menu_inicio_bucle_main(void)
 		menu_add_item_menu_ayuda(array_menu_principal,"Audio related actions");
 
 
-		menu_add_item_menu(array_menu_principal,"Net~~work",MENU_OPCION_NORMAL,menu_network,NULL);
-		menu_add_item_menu_shortcut(array_menu_principal,'w');
+		menu_add_item_menu(array_menu_principal,"Netw~~ork",MENU_OPCION_NORMAL,menu_network,NULL);
+		menu_add_item_menu_shortcut(array_menu_principal,'o');
 		menu_add_item_menu_tooltip(array_menu_principal,"Network related actions");
 		menu_add_item_menu_ayuda(array_menu_principal,"Network related actions");
 
@@ -28566,6 +28566,13 @@ void menu_inicio_bucle_main(void)
 		menu_add_item_menu_tooltip(array_menu_principal,"Display related actions");
 		menu_add_item_menu_ayuda(array_menu_principal,"Display related actions");
 
+
+		if (menu_allow_background_windows) {
+			menu_add_item_menu(array_menu_principal,"~~Windows",MENU_OPCION_NORMAL,menu_windows,NULL);
+			menu_add_item_menu_shortcut(array_menu_principal,'w');
+			menu_add_item_menu_tooltip(array_menu_principal,"Window management");
+			menu_add_item_menu_ayuda(array_menu_principal,"Window management");
+		}
 
 		menu_add_item_menu(array_menu_principal,"Sett~~ings",MENU_OPCION_NORMAL,menu_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'i');
