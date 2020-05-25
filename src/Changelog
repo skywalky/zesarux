@@ -69,6 +69,7 @@ Fixed tbblue bugs:
 -Fixed text mode (1 bit tile)
 -Fixed reading palette colours. Fixed returning from multiface nmi 
 -Fixed reading clipping values
+-Fixed screensaver
 
 
 

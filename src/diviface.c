@@ -329,21 +329,19 @@ reached:
 int diviface_poke_byte_to_internal_memory(z80_int dir,z80_byte valor)
 {
 
-	//Si en tbblue y escribiendo en memoria layer2, ignorar, dado que esa memoria layer2 en escritura se mapea en 0-3fffh
-	if (MACHINE_IS_TBBLUE && tbblue_write_on_layer2() ) return 0;
+	//Dado que en tbblue, divmmc tiene prioridad sobre layer2 en tbblue, no hay caso especial para layer2
+	
 
 	if ((diviface_control_register&128)==0 && diviface_paginacion_automatica_activa.v==0) {
-  	return 0;
-  }
+		return 0;
+	}	
 
-  else {
+	else {
 
-	
-	if (MACHINE_IS_TBBLUE && dir<16384) {
 	
 	/*
 
-Prioridades Next. Divmmc encima de mmu
+Prioridades Next. Divmmc encima de mmu. Por tanto no hay caso especial
 
 
 -- memory decode order
@@ -368,48 +366,32 @@ Prioridades Next. Divmmc encima de mmu
 
 */
 	
-	
-		//Despues de salir de esta funcion siempre llama a escritura de memoria de la capa que haya por debajo
-		//Por tanto solo hay que determinar si la memoria divmmc se debe escribir (valor en MMU 255),
-		//Y si no se debe, simplemente hacer return de aqui
-		
-		
-		/*
-	        z80_byte reg_mmu_value=return_tbblue_mmu_segment(dir);
-                if (reg_mmu_value!=255) return 0;
-                
-                */
-	}
-	
-	
-	
-	
-
 		//Si poke a eprom o ram 3 read only.
 
-  	if (dir<8192) {
+		if (dir<8192) {
 
-			//Si poke a eprom cuando conmem=1
-			if (diviface_control_register&128 && diviface_eprom_write_jumper.v) {
-				debug_printf (VERBOSE_DEBUG,"Diviface eprom writing address: %04XH value: %02XH",dir,valor);
-				//Escribir en eprom siempre que jumper eprom está permitiendolo
-				z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
-				*puntero=valor;
-				return 1;
+				//Si poke a eprom cuando conmem=1
+				if (diviface_control_register&128 && diviface_eprom_write_jumper.v) {
+					debug_printf (VERBOSE_DEBUG,"Diviface eprom writing address: %04XH value: %02XH",dir,valor);
+					//Escribir en eprom siempre que jumper eprom está permitiendolo
+					z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
+					*puntero=valor;
+					return 1;
+				}
+
+				//No escribir
+				return 0;
 			}
 
-			//No escribir
-			return 0;
+		if (dir<16384) {
+			z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
+				*puntero=valor;
+				return 1;
 		}
-
-    if (dir<16384) {
-    	z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
-			*puntero=valor;
-			return 1;
-    }
 		return 0;
 
-  }
+	}
+
 }
 
 z80_byte diviface_poke_byte_no_time(z80_int dir,z80_byte valor)
@@ -471,17 +453,12 @@ z80_byte diviface_peek_byte_to_internal_memory(z80_int dir)
 {
 	//printf ("returning diviface internal memory address from diviface_peek_byte_no_time %XH\n",dir);
 	z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
-	
-	
-	
-	
-	if (MACHINE_IS_TBBLUE) {
 		
 		
 //
 /*
 
-Prioridades Next. Divmmc encima de mmu
+Prioridades Next. Divmmc encima de mmu. Por tanto no hay caso especial
 
 
 -- memory decode order
@@ -506,19 +483,7 @@ Prioridades Next. Divmmc encima de mmu
 
 */
 		
-/*		
-		
-		
-		z80_byte reg_mmu_value=return_tbblue_mmu_segment(dir);
-		if (reg_mmu_value!=255) {
-			//Mapeo diferente
-            puntero=diviface_return_tbblue_memory_pointer(dir);
-		}
-		
-*/		
-		
-		
-	}
+
 	return *puntero;
 }
 
