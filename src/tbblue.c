@@ -3961,19 +3961,19 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 */		
 			
- if (value & 8) {   
-    
-    aux_divmmc=	diviface_control_register;
-    
-    aux_divmmc &=(255-64);
-    
-    diviface_write_control_register(aux_divmmc);
-    
-    
-    }
+			if (value & 8) {   
+				
+				aux_divmmc=	diviface_control_register;
+				
+				aux_divmmc &=(255-64);
+				
+				diviface_write_control_register(aux_divmmc);
+				
+				
+			}
     
    		
-			printf ("out reg 9: %02XH\n",value);
+			//printf ("out reg 9: %02XH\n",value);
 		break;
 
 

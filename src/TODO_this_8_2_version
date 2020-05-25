@@ -263,10 +263,6 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 
 - meter en extras de docs Benchmark legacy tbblue
 
-- inicializacion bufferes border, etc hacerlo con memset para consumir menos cpu
-ok en algunos
-
-- revival survival en next. Parece que falla por algo de divmmc?
 
 - enter-cpu-step no parece funcionar si hay ventanas en background-> no, parece que solo sucede si menu esta abierto
 

@@ -28590,12 +28590,11 @@ void menu_inicio_bucle_main(void)
 
 		retorno_menu=menu_dibuja_menu(&menu_inicio_opcion_seleccionada,&item_seleccionado,array_menu_principal,"ZEsarUX v." EMULATOR_VERSION );
 
-		//printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);
-		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
-		//printf ("Retorno menu: %d\n",retorno_menu);
+		printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);
+		printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
+		printf ("Retorno menu: %d\n",retorno_menu);
 		
 
-		//opcion 12 es F10 salir del emulador
 		if ( (retorno_menu!=MENU_RETORNO_ESC) &&  (retorno_menu==MENU_RETORNO_F10)  ) {
 
 			//menu_exit_emulator(0);
@@ -28623,12 +28622,21 @@ void menu_inicio_bucle_main(void)
 		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
 		//printf ("Retorno menu: %d\n",retorno_menu);
 
-		//if (retorno_menu==MENU_RETORNO_F2) salir_menu=1;
-
 		//opcion numero 11: ESC back
+		//item_seleccionado.tipo_opcion&MENU_OPCION_ESC
 
-		if (retorno_menu!=MENU_RETORNO_ESC && menu_inicio_opcion_seleccionada==11) salir_menu=1;
+		/*
+		if (retorno_menu!=MENU_RETORNO_ESC && menu_inicio_opcion_seleccionada==11) {
+			printf ("opcion 11\n");
+			salir_menu=1;
+		}
 		if (retorno_menu==MENU_RETORNO_ESC) salir_menu=1;
+		*/
+
+		if (retorno_menu==MENU_RETORNO_ESC || (item_seleccionado.tipo_opcion & MENU_OPCION_ESC) == MENU_OPCION_ESC) {
+			printf ("opcion ESC o pulsado ESC\n");
+			salir_menu=1;
+		}
 
 	} while (!salir_menu && !salir_todos_menus);
 
