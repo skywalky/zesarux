@@ -1461,6 +1461,18 @@ void codetests_main(int main_argc,char *main_argv[])
 	//printf ("\nRunning getting background F-key\n");
 	//codetests_get_background_f_key();
 
+
+	//prueba crear paleta
+	int i;
+
+	int valor_paleta=0;
+
+	for (i=0;i<256;i++) {
+		printf ("%d %d %d Untitled\n",(valor_paleta>>16 & 0xFF),(valor_paleta>>8 & 0xFF),(valor_paleta  & 0xFF)) ;
+
+		valor_paleta +=0x010101;
+	}
+
 	exit(0);
 }
 
