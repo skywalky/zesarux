@@ -21667,6 +21667,7 @@ DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the b
 						//Pillamos el offset como valor de 16 bits para simplificar
 
 						int offset_bmp=help_keyboard_bmp_file_mem[10] + 256 * help_keyboard_bmp_file_mem[11];
+						//printf ("offset pixeles: %d\n",offset_bmp);
 
 						int x,y;
 						for (y=0;y<alto;y++) {
@@ -21777,10 +21778,17 @@ reserved	1 byte	 	unused (=0)
 			
 */
 		int i;
-		int indice_paleta=0x36;
+		int indice_paleta; //=0x36+4;
+
+		indice_paleta=122;  //obtenido mediante restar el inicio de los pixeles (1146) - 1024 (1024 es lo que ocupa la tabla de colores)
+		//Orden BGR0
 		for (i=0;i<256;i++) {
-			int color=(help_keyboard_bmp_file_mem[indice_paleta]<<16) | 
-			(help_keyboard_bmp_file_mem[indice_paleta+1]<<8) | help_keyboard_bmp_file_mem[indice_paleta+2];
+			int red=help_keyboard_bmp_file_mem[indice_paleta+2];
+			int green=help_keyboard_bmp_file_mem[indice_paleta+1];
+			int blue=help_keyboard_bmp_file_mem[indice_paleta];
+
+			int color=(red<<16) | (green<<8) | blue;
+
 					
 			screen_set_colour_normal(BMP_INDEX_FIRST_COLOR+i,color);
 
