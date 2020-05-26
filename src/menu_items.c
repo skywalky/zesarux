@@ -21596,9 +21596,23 @@ int help_keyboard_valor_contador_segundo_anterior;
 
 zxvision_window *menu_help_keyboard_overlay_window;
 
+
+z80_byte *help_keyboard_bmp_file_mem=NULL;
+
 void menu_help_keyboard_overlay(void)
 {
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+
+				if (!si_complete_video_driver() ) return;
+
+
+	//Si no hay archivo bmp cargado
+	if (help_keyboard_bmp_file_mem==NULL) return;
+
+
+			//	zxvision_putpixel(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_COLOR_WAVEFORM);
+			
 
 	    char textostats[32];
 	zxvision_window *ventana;
@@ -21632,10 +21646,27 @@ void menu_help_keyboard_overlay(void)
                         sumatotal=util_stats_sum_all_counters();
                     	sprintf (textostats,"Total opcodes run: %u",sumatotal);
 						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						zxvision_print_string_defaults(ventana,1,linea++,textostats);
+						//zxvision_print_string_defaults(ventana,1,linea++,textostats);
                         
 
+						//putpixel del archivo bmp
+						int ancho=256;
+						int alto=192;
 
+						//118 bytes de cabecera ignorar
+						int offset_bmp=118;
+
+						int x,y;
+						for (y=0;y<alto;y++) {
+							for (x=0;x<ancho;x++) {
+								//lineas empiezan por la del final en un bmp
+								//1 byte por pixel, color indexado
+								int offset_final=(alto-1-y)*ancho + x + offset_bmp;
+								z80_byte byte_leido=help_keyboard_bmp_file_mem[offset_final];
+								z80_int color_final=BMP_INDEX_FIRST_COLOR+byte_leido;
+								zxvision_putpixel(ventana,x,y,color_final);
+							}
+						}
 						
 
 
@@ -21679,7 +21710,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		x=menu_origin_x();
 		y=1;
 		ancho=32;
-		alto=18;
+		alto=24;
 	}		
 
 	//int originx=menu_origin_x();
@@ -21696,7 +21727,48 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 	strcpy(ventana->geometry_name,"helpshowkeyboard");
 
 	
+		//Cargar el archivo bmp
+		//help_keyboard_bmp_file_mem
+		char *bmpfile="keyboard_speccy.bmp";
+		int tamanyo=get_file_size(bmpfile);
+		help_keyboard_bmp_file_mem=malloc(tamanyo);
+
+		if (help_keyboard_bmp_file_mem==NULL) cpu_panic("Can not allocate memory for bmp file");
+
+		//cargar archivo
+        FILE *ptr_bmpfile;
+        ptr_bmpfile=fopen(bmpfile,"rb");
+
+
+        if (!ptr_bmpfile) {
+                debug_printf(VERBOSE_ERR,"Unable to open bmp file %s\n",bmpfile);
+                return;
+        }
+
+        int leidos=fread(help_keyboard_bmp_file_mem,1,tamanyo,ptr_bmpfile);
+
+    
+
+
+        fclose(ptr_bmpfile);		
+
+
+
+
+
+
+		//Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
+		//en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
+		//Al meter caracter transparente, el normal_overlay lo ignora y no dibuja ese caracter
+		//int x,y;
 		
+		for (y=0;y<alto-2;y++) {
+			for (x=0;x<ancho-1;x++) {
+				zxvision_print_string_defaults(ventana,x,y,"\xff");
+			}
+		}
+
+
 
 
 		menu_help_keyboard_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
