@@ -26193,8 +26193,9 @@ int menu_generic_message_aux_filter(char *texto,int inicio, int final)
 			prefijo_utf=0;
 		}
 
-		else if ( !(si_valid_char(caracter)) ) {
-			//printf ("detectado caracter extranyo %d en posicion %d\n",caracter,inicio);
+		//Caracter 255 significa "transparente"
+		else if ( !(si_valid_char(caracter)) && caracter!=255 ) {
+			printf ("detectado caracter extranyo %d en posicion %d\n",caracter,inicio);
 
 			texto[inicio]='?';
 		}
@@ -27503,6 +27504,8 @@ menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabl
 	generic_message_tooltip_return retorno_ventana;
 	//menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
 	zxvision_generic_message_tooltip("About" , 0 ,0,0,0,&retorno_ventana,0,mensaje_about);
+
+	zxvision_generic_message_tooltip("About" , 0 ,0,0,0,&retorno_ventana,0,"\xff\xff\xff Espacios");
 
 	//printf ("retorno ventana: %d\n",retorno_ventana.estado_retorno);
 
