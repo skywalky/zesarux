@@ -21766,6 +21766,28 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
         fclose(ptr_bmpfile);		
 
 
+		//Cargar la paleta bmp. A partir del offset 36h
+/*
+ColorTable	4 * NumColors bytes	0036h	present only if Info.BitsPerPixel less than 8   
+colors should be ordered by importance
+ 		Red	1 byte	 	Red intensity
+Green	1 byte	 	Green intensity
+Blue	1 byte	 	Blue intensity
+reserved	1 byte	 	unused (=0)
+			
+*/
+		int i;
+		int indice_paleta=0x36;
+		for (i=0;i<256;i++) {
+			int color=(help_keyboard_bmp_file_mem[indice_paleta]<<16) | 
+			(help_keyboard_bmp_file_mem[indice_paleta+1]<<8) | help_keyboard_bmp_file_mem[indice_paleta+2];
+					
+			screen_set_colour_normal(BMP_INDEX_FIRST_COLOR+i,color);
+
+			indice_paleta +=4;
+		}
+				
+
 
 
 

@@ -564,7 +564,7 @@ extern void screen_switch_rainbow_buffer(void);
 #define SOLARIZED_COLOUR_green   (SOLARIZED_INDEX_FIRST_COLOR+15)
 
 
-
+//Paleta para carga de bmp indexado
 #define BMP_INDEX_FIRST_COLOR (SOLARIZED_INDEX_FIRST_COLOR+SOLARIZED_TOTAL_PALETTE_COLOURS)
 #define BMP_TOTAL_PALETTE_COLOURS 256
 
