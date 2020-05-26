@@ -19,6 +19,7 @@ Improved menu:
 -Allow some windows to be put on the background. Also active windows are saved and restored on startup
 -Pressing the menu key (F5 by default) when menu is open, it will send you back to the main menu. Also pressing over Z logo on ext desktop
 -Added setting to disable showing cpu temperature, or FPS on footer
+-Added keyboard help window
 -Warn in red colour when FPS low
 
 Improved Esxdos handler: 

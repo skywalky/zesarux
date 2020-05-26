@@ -21620,18 +21620,7 @@ void menu_help_keyboard_overlay(void)
 	ventana=menu_help_keyboard_overlay_window;
 
 
-        char dumpassembler[32];
-
-        //Empezar con espacio
-        dumpassembler[0]=' ';
-
-				//int valor_contador_segundo_anterior;
-
-
-
-		//z80_byte tecla;
-
-		//printf ("%d %d\n",contador_segundo,help_keyboard_valor_contador_segundo_anterior);
+     
      
 
 			//esto hara ejecutar esto 2 veces por segundo
@@ -21639,19 +21628,30 @@ void menu_help_keyboard_overlay(void)
 											help_keyboard_valor_contador_segundo_anterior=contador_segundo;
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-			int linea=0;
-                        int opcode;
-
-			unsigned int sumatotal; 
-                        sumatotal=util_stats_sum_all_counters();
-                    	sprintf (textostats,"Total opcodes run: %u",sumatotal);
-						//menu_escribe_linea_opcion(linea++,-1,1,textostats);
-						//zxvision_print_string_defaults(ventana,1,linea++,textostats);
+		
                         
 
 						//putpixel del archivo bmp
-						int ancho=256;
-						int alto=192;
+						//int ancho=256;
+						//int alto=192;
+
+/*
+Name	Size	Offset	Description
+Header	
+ 	Signature	2 bytes	0000h	'BM'
+FileSize	4 bytes	0002h	File size in bytes
+reserved	4 bytes	0006h	unused (=0)
+DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the bitmap data
+
+ 	Size	4 bytes	000Eh	Size of InfoHeader =40 
+Width	4 bytes	0012h	Horizontal width of bitmap in pixels
+Height	4 bytes	0016h	Vertical height of bitmap in pixels
+*/		
+
+						//ancho y alto de la cabecera. maximo 16 bit
+						int ancho=help_keyboard_bmp_file_mem[18] + 256 * help_keyboard_bmp_file_mem[19];
+						int alto=help_keyboard_bmp_file_mem[22] + 256 * help_keyboard_bmp_file_mem[23];
+
 
 						//118 bytes de cabecera ignorar
 						//Cuantos bytes de cabecera ignorar?
@@ -21729,7 +21729,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 	//int originx=menu_origin_x();
 
 	zxvision_new_window(ventana,x,y,ancho,alto,
-							ancho-1,alto-2,"Keyboard");
+							ancho-1,alto-2,"Keyboard Help");
 
 
 
