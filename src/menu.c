@@ -4891,6 +4891,7 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"tsconftbbluespritenav",menu_debug_tsconf_tbblue_spritenav},
 	{"tsconftbbluetilenav",menu_debug_tsconf_tbblue_tilenav},
 	{"debugcpu",menu_debug_registers},
+	{"helpshowkeyboard",menu_help_show_keyboard},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };
@@ -27505,8 +27506,6 @@ menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabl
 	//menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
 	zxvision_generic_message_tooltip("About" , 0 ,0,0,0,&retorno_ventana,0,mensaje_about);
 
-	zxvision_generic_message_tooltip("About" , 0 ,0,0,0,&retorno_ventana,0,"\xff\xff\xff Espacios");
-
 	//printf ("retorno ventana: %d\n",retorno_ventana.estado_retorno);
 
 	//Si se sale con ESC
@@ -27713,6 +27712,9 @@ void menu_about(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu(array_menu_about,"~~Help",MENU_OPCION_NORMAL,menu_about_help,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'h');
+
+			menu_add_item_menu(array_menu_about,"Help ~~Keyboard",MENU_OPCION_NORMAL,menu_help_show_keyboard,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'k');			
 
 			menu_add_item_menu(array_menu_about,"~~Readme",MENU_OPCION_NORMAL,menu_about_readme,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'r');
