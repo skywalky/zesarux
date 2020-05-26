@@ -1278,7 +1278,7 @@ if (free_handle==-1) {
 	char directorio[PATH_MAX];
 
 	esxdos_handler_copy_hl_to_string(directorio);
-	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: opening directory %s",directorio);
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: opening directory %s, drive %d, folder access mode %02XH",directorio,reg_a,reg_b);
 
 	char directorio_final[PATH_MAX];
 	//obtener directorio final
@@ -2121,7 +2121,7 @@ void esxdos_handler_begin_handling_commands(void)
 		break;					
 
 		case ESXDOS_RST8_F_OPENDIR:
-			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_OPENDIR. Drive: %d",reg_a);
+			debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_F_OPENDIR");
 			esxdos_handler_call_f_opendir();
 			esxdos_handler_new_return_call();
 		break;
