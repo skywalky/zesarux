@@ -21654,7 +21654,19 @@ void menu_help_keyboard_overlay(void)
 						int alto=192;
 
 						//118 bytes de cabecera ignorar
-						int offset_bmp=118;
+						//Cuantos bytes de cabecera ignorar?
+
+/*
+						Name	Size	Offset	Description
+Header	
+ 	Signature	2 bytes	0000h	'BM'
+FileSize	4 bytes	0002h	File size in bytes
+reserved	4 bytes	0006h	unused (=0)
+DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the bitmap data
+*/
+						//Pillamos el offset como valor de 16 bits para simplificar
+
+						int offset_bmp=help_keyboard_bmp_file_mem[10] + 256 * help_keyboard_bmp_file_mem[11];
 
 						int x,y;
 						for (y=0;y<alto;y++) {
@@ -21662,6 +21674,7 @@ void menu_help_keyboard_overlay(void)
 								//lineas empiezan por la del final en un bmp
 								//1 byte por pixel, color indexado
 								int offset_final=(alto-1-y)*ancho + x + offset_bmp;
+								//printf ("offset_final_ %d\n",offset_final);
 								z80_byte byte_leido=help_keyboard_bmp_file_mem[offset_final];
 								z80_int color_final=BMP_INDEX_FIRST_COLOR+byte_leido;
 								zxvision_putpixel(ventana,x,y,color_final);
@@ -21709,8 +21722,8 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 	if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
 		x=menu_origin_x();
 		y=1;
-		ancho=32;
-		alto=24;
+		ancho=33;
+		alto=26;
 	}		
 
 	//int originx=menu_origin_x();
