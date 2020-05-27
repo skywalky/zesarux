@@ -2138,6 +2138,29 @@ void scr_init_layers_menu(void)
 
 }
 
+void scr_putpixel_layer_menu_no_zoom(int x,int y,int color)
+{
+	        int xzoom=x;
+        int yzoom=y;
+
+			
+
+
+      
+												int xdestino=xzoom;
+												int ydestino=yzoom;
+                        //scr_putpixel(xzoom+zx,yzoom+zy,color);
+												if (buffer_layer_menu==NULL) {
+													printf ("scr_putpixel_layer_menu NULL\n"); //?????
+												}
+												else buffer_layer_menu[ydestino*ancho_layer_menu_machine+xdestino]=color;
+
+												//Y hacer mix
+												screen_putpixel_mix_layers(xdestino,ydestino);   
+                
+        
+}
+
 void scr_putpixel_layer_menu(int x,int y,int color)
 {
 	        int xzoom=x*zoom_x;
@@ -2438,6 +2461,22 @@ void scr_clear_layer_menu(void)
 
 		//printf ("End clearing layer menu\n");
 
+}
+
+
+//Hacer un putpixel en la coordenada indicada pero haciendo tan gordo el pixel como diga zoom_level
+//Y sin lanzar zoom_x ni zoom_y
+void scr_putpixel_gui_no_zoom(int x,int y,int color,int zoom_level)
+{ 
+	//Hacer zoom de ese pixel si conviene
+	int incx,incy;
+	for (incy=0;incy<zoom_level;incy++) {
+		for (incx=0;incx<zoom_level;incx++) {
+			//printf("putpixel %d,%d\n",x+incx,y+incy);
+			scr_putpixel_layer_menu_no_zoom(x+incx,y+incy,color);
+			
+		}
+	}
 }
 
 //Hacer un putpixel en la coordenada indicada pero haciendo tan gordo el pixel como diga zoom_level
@@ -14807,4 +14846,77 @@ void disable_16c_mode(void)
 {
 
 	pentagon_16c_mode_available.v ^=1;
+}
+
+
+
+void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana)
+{
+
+						//putpixel del archivo bmp
+			
+
+/*
+Name	Size	Offset	Description
+Header	
+ 	Signature	2 bytes	0000h	'BM'
+FileSize	4 bytes	0002h	File size in bytes
+reserved	4 bytes	0006h	unused (=0)
+DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the bitmap data
+
+ 	Size	4 bytes	000Eh	Size of InfoHeader =40 
+Width	4 bytes	0012h	Horizontal width of bitmap in pixels
+Height	4 bytes	0016h	Vertical height of bitmap in pixels
+*/		
+
+
+	//ancho y alto de la cabecera. maximo 16 bit
+						int ancho=mem[18] + 256 * mem[19];
+						int alto=mem[22] + 256 * mem[23];
+
+						//printf ("ancho: %d alto: %d\n",ancho,alto);
+
+
+						//118 bytes de cabecera ignorar
+						//Cuantos bytes de cabecera ignorar?
+
+/*
+						Name	Size	Offset	Description
+Header	
+ 	Signature	2 bytes	0000h	'BM'
+FileSize	4 bytes	0002h	File size in bytes
+reserved	4 bytes	0006h	unused (=0)
+DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the bitmap data
+*/
+						//Pillamos el offset como valor de 16 bits para simplificar
+
+						int offset_bmp=mem[10] + 256 * mem[11];
+						//printf ("offset pixeles: %d\n",offset_bmp);
+
+								int ancho_calculo=ancho;
+								//Nota: parece que el ancho tiene que ser par, para poder calcular el offset
+								//if ( (ancho_calculo % 2 ) !=0) ancho_calculo++;						
+
+						int x,y;
+						for (y=0;y<alto;y++) {
+							for (x=0;x<ancho;x++) {
+								//lineas empiezan por la del final en un bmp
+								//1 byte por pixel, color indexado
+			
+
+
+								int offset_final=(alto-1-y)*ancho_calculo + x + offset_bmp;
+
+								
+
+
+								//printf ("offset_final_ %d\n",offset_final);
+								z80_byte byte_leido=mem[offset_final];
+								z80_int color_final=indice_paleta_color+byte_leido;
+								//zxvision_putpixel(ventana,x,y,color_final);
+								zxvision_putpixel_no_zoom(ventana,x,y,color_final);
+							}
+						}
+						
+
 }

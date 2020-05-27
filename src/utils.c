@@ -17463,3 +17463,37 @@ void util_write_screen_bmp(char *archivo)
         
 
 }
+
+//Cargar 256 colores de paleta de un archivo bmp (de memoria) en un indice de nuestra paleta interna
+void util_bmp_load_palette(z80_byte *mem,int indice_inicio_color)
+{
+
+		//Cargar la paleta bmp. A partir del offset 36h??
+/*
+ColorTable	4 * NumColors bytes	0036h	present only if Info.BitsPerPixel less than 8   
+colors should be ordered by importance
+ 		Red	1 byte	 	Red intensity
+Green	1 byte	 	Green intensity
+Blue	1 byte	 	Blue intensity
+reserved	1 byte	 	unused (=0)
+			
+*/
+
+        		int i;
+		int indice_paleta; //=0x36+4;
+
+		indice_paleta=122;  //obtenido mediante restar el inicio de los pixeles (1146) - 1024 (1024 es lo que ocupa la tabla de colores)
+		//Orden BGR0
+		for (i=0;i<256;i++) {
+			int red=mem[indice_paleta+2];
+			int green=mem[indice_paleta+1];
+			int blue=mem[indice_paleta];
+
+			int color=(red<<16) | (green<<8) | blue;
+
+					
+			screen_set_colour_normal(indice_inicio_color+i,color);
+
+			indice_paleta +=4;
+		}
+}

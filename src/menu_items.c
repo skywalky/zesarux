@@ -21611,10 +21611,6 @@ void menu_help_keyboard_overlay(void)
 	if (help_keyboard_bmp_file_mem==NULL) return;
 
 
-			//	zxvision_putpixel(menu_audio_draw_sound_wave_window,x,y,ESTILO_GUI_COLOR_WAVEFORM);
-			
-
-	    char textostats[32];
 	zxvision_window *ventana;
 
 	ventana=menu_help_keyboard_overlay_window;
@@ -21628,61 +21624,9 @@ void menu_help_keyboard_overlay(void)
 											help_keyboard_valor_contador_segundo_anterior=contador_segundo;
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-		
+						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana);
                         
-
-						//putpixel del archivo bmp
-						//int ancho=256;
-						//int alto=192;
-
-/*
-Name	Size	Offset	Description
-Header	
- 	Signature	2 bytes	0000h	'BM'
-FileSize	4 bytes	0002h	File size in bytes
-reserved	4 bytes	0006h	unused (=0)
-DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the bitmap data
-
- 	Size	4 bytes	000Eh	Size of InfoHeader =40 
-Width	4 bytes	0012h	Horizontal width of bitmap in pixels
-Height	4 bytes	0016h	Vertical height of bitmap in pixels
-*/		
-
-						//ancho y alto de la cabecera. maximo 16 bit
-						int ancho=help_keyboard_bmp_file_mem[18] + 256 * help_keyboard_bmp_file_mem[19];
-						int alto=help_keyboard_bmp_file_mem[22] + 256 * help_keyboard_bmp_file_mem[23];
-
-
-						//118 bytes de cabecera ignorar
-						//Cuantos bytes de cabecera ignorar?
-
-/*
-						Name	Size	Offset	Description
-Header	
- 	Signature	2 bytes	0000h	'BM'
-FileSize	4 bytes	0002h	File size in bytes
-reserved	4 bytes	0006h	unused (=0)
-DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the bitmap data
-*/
-						//Pillamos el offset como valor de 16 bits para simplificar
-
-						int offset_bmp=help_keyboard_bmp_file_mem[10] + 256 * help_keyboard_bmp_file_mem[11];
-						//printf ("offset pixeles: %d\n",offset_bmp);
-
-						int x,y;
-						for (y=0;y<alto;y++) {
-							for (x=0;x<ancho;x++) {
-								//lineas empiezan por la del final en un bmp
-								//1 byte por pixel, color indexado
-								int offset_final=(alto-1-y)*ancho + x + offset_bmp;
-								//printf ("offset_final_ %d\n",offset_final);
-								z80_byte byte_leido=help_keyboard_bmp_file_mem[offset_final];
-								z80_int color_final=BMP_INDEX_FIRST_COLOR+byte_leido;
-								zxvision_putpixel(ventana,x,y,color_final);
-							}
-						}
-						
-
+	
 
                 }
 
@@ -21708,6 +21652,11 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
+	if (!menu_multitarea) {
+			menu_warn_message("This menu item needs multitask enabled");
+			return;
+	}	
+
 	zxvision_window *ventana;
 		
 	ventana=&menu_help_show_keyboard_ventana;
@@ -21722,9 +21671,14 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
 	if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
 		x=menu_origin_x();
-		y=1;
-		ancho=33;
-		alto=26;
+		y=0;
+
+		//540x201 es lo que ocupa el bmp de spectrum 48k
+
+		ancho=1+1+540/8/zoom_x;
+
+		alto=1+2+201/8/zoom_y;
+
 	}		
 
 	//int originx=menu_origin_x();
@@ -21767,35 +21721,11 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
         fclose(ptr_bmpfile);		
 
 
-		//Cargar la paleta bmp. A partir del offset 36h
-/*
-ColorTable	4 * NumColors bytes	0036h	present only if Info.BitsPerPixel less than 8   
-colors should be ordered by importance
- 		Red	1 byte	 	Red intensity
-Green	1 byte	 	Green intensity
-Blue	1 byte	 	Blue intensity
-reserved	1 byte	 	unused (=0)
-			
-*/
-		int i;
-		int indice_paleta; //=0x36+4;
+		//Cargar la paleta bmp. 
 
-		indice_paleta=122;  //obtenido mediante restar el inicio de los pixeles (1146) - 1024 (1024 es lo que ocupa la tabla de colores)
-		//Orden BGR0
-		for (i=0;i<256;i++) {
-			int red=help_keyboard_bmp_file_mem[indice_paleta+2];
-			int green=help_keyboard_bmp_file_mem[indice_paleta+1];
-			int blue=help_keyboard_bmp_file_mem[indice_paleta];
+		util_bmp_load_palette(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR);
 
-			int color=(red<<16) | (green<<8) | blue;
-
-					
-			screen_set_colour_normal(BMP_INDEX_FIRST_COLOR+i,color);
-
-			indice_paleta +=4;
-		}
-				
-
+	
 
 
 
@@ -21803,15 +21733,8 @@ reserved	1 byte	 	unused (=0)
 		//Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
 		//en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
 		//Al meter caracter transparente, el normal_overlay lo ignora y no dibuja ese caracter
-		//int x,y;
+		zxvision_fill_window_transparent(ventana);
 		
-		for (y=0;y<alto-2;y++) {
-			for (x=0;x<ancho-1;x++) {
-				zxvision_print_string_defaults(ventana,x,y,"\xff");
-			}
-		}
-
-
 
 
 		menu_help_keyboard_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
@@ -21863,7 +21786,8 @@ reserved	1 byte	 	unused (=0)
 	}
 
 	else {
-		zxvision_destroy_window(ventana);		
+		zxvision_destroy_window(ventana);	
+		free(help_keyboard_bmp_file_mem);	
  	}
 
 

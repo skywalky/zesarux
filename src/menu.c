@@ -2295,6 +2295,29 @@ void menu_scr_putpixel(int x,int y,int color)
 
 	scr_putpixel_gui_zoom(x,y,color,menu_gui_zoom);
 }
+
+
+//sin el zoom de ventana, solo el posiblle de menu
+void menu_scr_putpixel_no_zoom(int x,int y,int color)
+{
+
+	//int margenx_izq,margeny_arr;
+	//scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
+
+	x *=menu_gui_zoom;
+	y *=menu_gui_zoom;	
+
+	//Esto ya no hace falta desde el uso de dos layers de menu y maquina
+	/*if (rainbow_enabled.v) {
+		x+=margenx_izq;
+		y+=margeny_arr;
+	}*/
+
+
+
+	scr_putpixel_gui_no_zoom(x,y,color,menu_gui_zoom);
+}
+
 /*
 //Hacer un putpixel en la coordenada indicada pero haciendo tan gordo el pixel como diga zoom_level
 void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level)
@@ -5440,6 +5463,20 @@ void zxvision_clear_window_contents(zxvision_window *w)
 
 }
 
+void zxvision_fill_window_transparent(zxvision_window *w)
+{
+		//Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
+		//en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
+		//Al meter caracter transparente, el normal_overlay lo ignora y no dibuja ese caracter
+		int x,y;
+		
+		for (y=0;y<w->total_height;y++) {
+			for (x=0;x<w->total_width;x++) {
+				zxvision_print_string_defaults(w,x,y,"\xff");
+			}
+		}
+}
+
 void zxvision_destroy_window(zxvision_window *w)
 {
 	zxvision_current_window=w->previous_window;
@@ -7678,6 +7715,65 @@ Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al 
 		//printf ("pixel out of window %d %d\n",x,y);
 	}
 }
+
+
+
+void zxvision_putpixel_no_zoom(zxvision_window *w,int x,int y,int color)
+{
+
+	//int final_x,final_y;
+
+	/*
+
+-Como puede ser que al redimensionar ay sheet la ventana tenga más tamaño total... se crea de nuevo al redimensionar?
+->no, porque dibuja pixeles con overlay y eso no comprueba si sale del limite virtual de la ventana
+Creo que el putpixel en overlay no controla ancho total sino ancho visible. Exacto
+
+Efectivamente. Se usa tamaño visible
+Hacerlo constar en zxvision_putpixel como un TODO. Aunque si no hubiera este “fallo”, al redimensionar ay sheet no se vería el tamaño adicional , habría que cerrar la ventana y volverla a abrir ya con el tamaño total nuevo (ya que guarda geometría)
+Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al no recrearse la ventana , y hay que salir y volver a entrar. Ejemplos??
+
+
+*/
+	/*
+	    int offsetx=PIANO_GRAPHIC_BASE_X*menu_char_width+12;
+    int offsety=piano_graphic_base_y*scale_y_chip(8)+18;
+
+*/
+	//Obtener coordenadas en pixeles de zona ventana dibujable
+	//En este caso multiplicar por zoom_x zoom_y pues coordenadas finales no tienen en cuenta zoom
+	int window_pixel_start_x=(w->x)*menu_char_width*zoom_x;
+	int window_pixel_start_y=((w->y)+1)*8*zoom_y;
+
+	//int window_pixel_final_x=window_pixel_start_x+((w->visible_width)-zxvision_get_minus_width_byscrollvbar(w))*menu_char_width;
+	//int window_pixel_final_y=window_pixel_start_y+((w->visible_height)-2)*8;
+
+	//Obtener coordenada x,y final donde va a parar
+	int xfinal=x+window_pixel_start_x-(w->offset_x)*menu_char_width;
+	int yfinal=y+window_pixel_start_y-(w->offset_y)*8;
+
+
+	int total_width_window=((w->visible_width)-zxvision_get_minus_width_byscrollvbar(w))*menu_char_width*zoom_x;
+	int total_height_window=((w->visible_height)-2)*8*zoom_y;
+
+
+
+	//Ver si esta dentro de rango
+	if (x>=0 && x<total_width_window && y>=0 && y<=total_height_window) {
+	//if (xfinal>=window_pixel_start_x && xfinal<window_pixel_final_x && yfinal>=window_pixel_start_y && yfinal<window_pixel_final_y*/) {
+
+		//Chapucilla para evitar que las ventanas en background sobreescriban a las de arriba
+		//if (!zxvision_coords_in_front_window(w,xfinal/menu_char_width,yfinal/8)) {		
+		if (!zxvision_coords_in_superior_windows(w,(xfinal/menu_char_width)/zoom_x,(yfinal/8)/zoom_y)  ) {				
+			menu_scr_putpixel_no_zoom(xfinal,yfinal,color);
+		}
+
+	}
+	else {
+		//printf ("pixel out of window %d %d width %d height: %d\n",x,y,total_width_sin_zoom,total_height_sin_zoom);
+	}
+}
+
 
 int mouse_is_dragging=0;
 int window_is_being_moved=0;
