@@ -21696,39 +21696,42 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
 	
 		//Cargar el archivo bmp
-		//help_keyboard_bmp_file_mem
-		char *bmpfile="keyboard_speccy.bmp";
-		int tamanyo=get_file_size(bmpfile);
+
+		char *nombrebmp="keyboard_speccy.bmp";
+
+		//localizarlo
+        char buffer_nombre[PATH_MAX];
+
+		int existe=find_sharedfile(nombrebmp,buffer_nombre);
+		if (!existe)  {
+				debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp);
+                return;
+        }
+
+
+		//Asignar memoria
+		int tamanyo=get_file_size(buffer_nombre);
 		help_keyboard_bmp_file_mem=malloc(tamanyo);
 
 		if (help_keyboard_bmp_file_mem==NULL) cpu_panic("Can not allocate memory for bmp file");
 
-		//cargar archivo
+		//cargarlo en memoria
         FILE *ptr_bmpfile;
-        ptr_bmpfile=fopen(bmpfile,"rb");
-
+        ptr_bmpfile=fopen(buffer_nombre,"rb");
 
         if (!ptr_bmpfile) {
-                debug_printf(VERBOSE_ERR,"Unable to open bmp file %s\n",bmpfile);
+                debug_printf(VERBOSE_ERR,"Unable to open bmp file %s",buffer_nombre);
                 return;
         }
 
-        int leidos=fread(help_keyboard_bmp_file_mem,1,tamanyo,ptr_bmpfile);
-
-    
-
-
+        fread(help_keyboard_bmp_file_mem,1,tamanyo,ptr_bmpfile);
         fclose(ptr_bmpfile);		
 
 
 		//Cargar la paleta bmp. 
-
 		util_bmp_load_palette(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR);
 
 	
-
-
-
 
 		//Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
 		//en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
