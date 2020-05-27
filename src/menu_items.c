@@ -21670,14 +21670,17 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 	int x,y,ancho,alto;
 
 	if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
-		x=menu_origin_x();
+		//x=menu_origin_x();
+		x=0;
 		y=0;
 
 		//540x201 es lo que ocupa el bmp de spectrum 48k
 
-		ancho=1+1+540/8/zoom_x;
+		ancho=1+1+540/menu_char_width/zoom_x;
 
 		alto=1+2+201/8/zoom_y;
+
+		//printf ("ancho %d alto %d\n",ancho,alto);
 
 	}		
 
@@ -21697,7 +21700,21 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 	
 		//Cargar el archivo bmp
 
-		char *nombrebmp="keyboard_speccy.bmp";
+		char nombrebmp[PATH_MAX];
+
+
+		if (MACHINE_IS_ZX80) strcpy(nombrebmp,"keyboard_zx80.bmp");
+		else if (MACHINE_IS_ZX81) strcpy(nombrebmp,"keyboard_zx81.bmp");
+		else if (MACHINE_IS_INVES) strcpy(nombrebmp,"keyboard_inves.bmp");
+		else if (MACHINE_IS_TBBLUE) strcpy(nombrebmp,"keyboard_next.bmp");
+		else if (MACHINE_IS_ZXUNO) strcpy(nombrebmp,"keyboard_zxuno.bmp");
+		else if (MACHINE_IS_ZXEVO) strcpy(nombrebmp,"keyboard_zxevo.bmp");
+		else if (MACHINE_IS_SPECTRUM_128_SPA) strcpy(nombrebmp,"keyboard_128s.bmp");
+		else if (MACHINE_IS_SPECTRUM_P2) strcpy(nombrebmp,"keyboard_p2.bmp");
+		else if (MACHINE_IS_SPECTRUM_P2A_P3) strcpy(nombrebmp,"keyboard_p3.bmp");
+		else if (MACHINE_IS_QL) strcpy(nombrebmp,"keyboard_ql.bmp");
+		
+		else strcpy(nombrebmp,"keyboard_speccy.bmp");
 
 		//localizarlo
         char buffer_nombre[PATH_MAX];
