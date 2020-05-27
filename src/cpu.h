@@ -370,6 +370,8 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 
 #define MACHINE_IS_SPECTRUM_128_P2 ( (current_machine_type>=MACHINE_ID_SPECTRUM_128 && current_machine_type<=MACHINE_ID_SPECTRUM_P2_SPA) || MACHINE_IS_PENTAGON)
 
+
+#define MACHINE_IS_SPECTRUM_128 (current_machine_type==MACHINE_ID_SPECTRUM_128)
 #define MACHINE_IS_SPECTRUM_128_SPA (current_machine_type==MACHINE_ID_SPECTRUM_128_SPA)
 
 #define MACHINE_IS_SPECTRUM_P2 ( (current_machine_type>=MACHINE_ID_SPECTRUM_P2 && current_machine_type<=MACHINE_ID_SPECTRUM_P2_SPA))
