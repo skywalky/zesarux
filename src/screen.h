@@ -132,6 +132,7 @@ extern void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit in
 extern void scr_putchar_footer_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,int tinta,int papel);
 
 extern void scr_putpixel_gui_zoom(int x,int y,int color,int zoom_level);
+extern void scr_putpixel_gui_no_zoom(int x,int y,int color,int zoom_level);
 
 extern int scr_tiene_colores;
 
@@ -861,6 +862,7 @@ extern int sem_screen_refresh_reallocate_layers;
 
 extern void screen_end_pantalla_save_overlay(void (**previous_function)(void),int *menu_antes );
 extern void screen_restart_pantalla_restore_overlay(void (*previous_function)(void),int menu_antes);
+extern void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana);
 
 #define SCREEN_LAYER_TRANSPARENT_MENU 65535
 

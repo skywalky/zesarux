@@ -291,6 +291,7 @@ extern void zxvision_send_scroll_right(zxvision_window *w);
 extern void zxvision_draw_below_windows(zxvision_window *w);
 extern void zxvision_draw_overlays_below_windows(zxvision_window *w);
 extern void zxvision_clear_window_contents(zxvision_window *w);
+extern void zxvision_fill_window_transparent(zxvision_window *w);
 
 extern void zxvision_set_not_resizable(zxvision_window *w);
 extern void zxvision_set_resizable(zxvision_window *w);
@@ -321,6 +322,8 @@ extern void menu_calculate_mouse_xy_absolute_interface(int *resultado_x,int *res
 extern void menu_calculate_mouse_xy_absolute_interface_pixel(int *resultado_x,int *resultado_y);
 
 extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
+extern void zxvision_putpixel_no_zoom(zxvision_window *w,int x,int y,int color);
+
 extern z80_byte zxvision_read_keyboard(void);
 void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla);
 extern z80_byte zxvision_common_getkey_refresh(void);

@@ -885,4 +885,6 @@ extern void util_get_home_dir(char *homedir);
 
 extern void util_write_screen_bmp(char *archivo);
 
+extern void util_bmp_load_palette(z80_byte *mem,int indice_inicio_color);
+
 #endif

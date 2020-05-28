@@ -2466,6 +2466,7 @@ void scr_clear_layer_menu(void)
 
 //Hacer un putpixel en la coordenada indicada pero haciendo tan gordo el pixel como diga zoom_level
 //Y sin lanzar zoom_x ni zoom_y
+//Usado en help keyboard
 void scr_putpixel_gui_no_zoom(int x,int y,int color,int zoom_level)
 { 
 	//Hacer zoom de ese pixel si conviene

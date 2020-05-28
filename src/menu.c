@@ -2297,7 +2297,7 @@ void menu_scr_putpixel(int x,int y,int color)
 }
 
 
-//sin el zoom de ventana, solo el posiblle de menu
+//sin el zoom de ventana, solo el posible de menu. usado en keyboard help
 void menu_scr_putpixel_no_zoom(int x,int y,int color)
 {
 
@@ -7717,7 +7717,7 @@ Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al 
 }
 
 
-
+//Hacer putpixel sin tener en cuenta zoom_x ni y. Usado en help keyboard
 void zxvision_putpixel_no_zoom(zxvision_window *w,int x,int y,int color)
 {
 
