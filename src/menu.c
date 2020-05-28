@@ -7757,8 +7757,8 @@ Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al 
 	int window_pixel_start_x=(w->x)*menu_char_width*zoom_x;
 	int window_pixel_start_y=((w->y)+1)*8*zoom_y;
 
-	//int window_pixel_final_x=window_pixel_start_x+((w->visible_width)-zxvision_get_minus_width_byscrollvbar(w))*menu_char_width;
-	//int window_pixel_final_y=window_pixel_start_y+((w->visible_height)-2)*8;
+	int window_pixel_final_x=window_pixel_start_x+((w->visible_width)-zxvision_get_minus_width_byscrollvbar(w))*menu_char_width*zoom_x;
+	int window_pixel_final_y=window_pixel_start_y+((w->visible_height)-2)*8*zoom_y;
 
 	//Obtener coordenada x,y final donde va a parar
 	int xfinal=x+window_pixel_start_x-(w->offset_x)*menu_char_width;
@@ -7770,9 +7770,11 @@ Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al 
 
 
 
-	//Ver si esta dentro de rango
-	if (x>=0 && x<total_width_window && y>=0 && y<=total_height_window) {
-	//if (xfinal>=window_pixel_start_x && xfinal<window_pixel_final_x && yfinal>=window_pixel_start_y && yfinal<window_pixel_final_y*/) {
+	//Ver si esta dentro de rango. Metodo nuevo pero que no va bien
+	//if (x>=0 && x<total_width_window && y>=0 && y<=total_height_window) {
+	
+	//Antiguo metodo que tiene en cuenta los offsets
+	if (xfinal>=window_pixel_start_x && xfinal<window_pixel_final_x && yfinal>=window_pixel_start_y && yfinal<window_pixel_final_y) {
 
 		//Chapucilla para evitar que las ventanas en background sobreescriban a las de arriba
 		//if (!zxvision_coords_in_front_window(w,xfinal/menu_char_width,yfinal/8)) {		
