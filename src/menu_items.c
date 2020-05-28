@@ -21631,8 +21631,8 @@ void menu_help_keyboard_overlay(void)
      
      
 
-			//esto hara ejecutar esto 2 veces por segundo
-			if ( ((contador_segundo%500) == 0 && help_keyboard_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+			//esto hara ejecutar esto 5 veces por segundo (lo habitual en muchos de estos que no actualizan siempre es 2 veces por segundo)
+			if ( ((contador_segundo%200) == 0 && help_keyboard_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 											help_keyboard_valor_contador_segundo_anterior=contador_segundo;
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
