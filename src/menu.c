@@ -5369,6 +5369,18 @@ void zxvision_window_delete_all_windows(void)
 
 }
 
+
+//Elimina todas las ventanas y borra geometria ventanas
+void zxvision_window_delete_all_windows_and_clear_geometry(void) 
+{
+
+	if (menu_allow_background_windows) zxvision_window_delete_all_windows();
+
+	//Olvidar geometria ventanas
+	util_clear_all_windows_geometry();		
+
+}
+
 void zxvision_window_move_this_window_on_top(zxvision_window *ventana)
 {
 		//hacer esta la ventana activa

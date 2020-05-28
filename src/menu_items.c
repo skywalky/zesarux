@@ -9888,6 +9888,10 @@ void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS)
 	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
 
 
+	//Cerrar ventamas y olvidar geometria ventanas
+	zxvision_window_delete_all_windows_and_clear_geometry();
+
+
 }
 
 
@@ -9932,6 +9936,9 @@ void menu_ext_desk_settings_custom_width(MENU_ITEM_PARAMETERS)
 
 	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
 
+	//Cerrar ventamas y olvidar geometria ventanas
+	zxvision_window_delete_all_windows_and_clear_geometry();
+
 
 }
 
@@ -9970,6 +9977,11 @@ void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 	menu_init_footer();
 
 	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
+
+
+	//Cerrar ventamas y olvidar geometria ventanas
+	zxvision_window_delete_all_windows_and_clear_geometry();
+
 }
 
 void menu_ext_desk_settings_filltype(MENU_ITEM_PARAMETERS)
@@ -21684,12 +21696,9 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
 	}		
 
-	//int originx=menu_origin_x();
 
 	zxvision_new_window(ventana,x,y,ancho,alto,
 							ancho-1,alto-2,"Keyboard Help");
-
-
 
 
 	ventana->can_be_backgrounded=1;	
