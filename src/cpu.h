@@ -365,6 +365,13 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_IS_SPECTRUM_16 (current_machine_type==MACHINE_ID_SPECTRUM_16)
 #define MACHINE_IS_SPECTRUM_48 (current_machine_type==MACHINE_ID_SPECTRUM_48)
 #define MACHINE_IS_INVES (current_machine_type==MACHINE_ID_INVES)
+
+
+#define MACHINE_IS_MICRODIGITAL_TK90X (current_machine_type==MACHINE_ID_MICRODIGITAL_TK90X)
+#define MACHINE_IS_MICRODIGITAL_TK90X_SPA (current_machine_type==MACHINE_ID_MICRODIGITAL_TK90X_SPA)
+#define MACHINE_IS_MICRODIGITAL_TK95 (current_machine_type==MACHINE_ID_MICRODIGITAL_TK95)
+
+
 #define MACHINE_IS_SPECTRUM_48_SPA (current_machine_type==MACHINE_ID_SPECTRUM_48_SPA)
 #define MACHINE_IS_SPECTRUM_16_48 ( (current_machine_type<=MACHINE_ID_MICRODIGITAL_TK95) || MACHINE_IS_SPECTRUM_48_SPA )
 
