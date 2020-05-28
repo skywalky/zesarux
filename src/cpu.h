@@ -361,25 +361,67 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 
 
 //Condiciones de maquinas activas
-#define MACHINE_IS_SPECTRUM (current_machine_type<30)
+
+//De maquinas únicas
+
 #define MACHINE_IS_SPECTRUM_16 (current_machine_type==MACHINE_ID_SPECTRUM_16)
 #define MACHINE_IS_SPECTRUM_48 (current_machine_type==MACHINE_ID_SPECTRUM_48)
 #define MACHINE_IS_INVES (current_machine_type==MACHINE_ID_INVES)
-
-
 #define MACHINE_IS_MICRODIGITAL_TK90X (current_machine_type==MACHINE_ID_MICRODIGITAL_TK90X)
 #define MACHINE_IS_MICRODIGITAL_TK90X_SPA (current_machine_type==MACHINE_ID_MICRODIGITAL_TK90X_SPA)
 #define MACHINE_IS_MICRODIGITAL_TK95 (current_machine_type==MACHINE_ID_MICRODIGITAL_TK95)
+#define MACHINE_IS_SPECTRUM_128 (current_machine_type==MACHINE_ID_SPECTRUM_128)
+#define MACHINE_IS_SPECTRUM_128_SPA (current_machine_type==MACHINE_ID_SPECTRUM_128_SPA)
+
+#define MACHINE_IS_ZXUNO (current_machine_type==MACHINE_ID_ZXUNO)
+
+#define MACHINE_IS_CHLOE_140SE (current_machine_type==MACHINE_ID_CHLOE_140SE)
+#define MACHINE_IS_CHLOE_280SE (current_machine_type==MACHINE_ID_CHLOE_280SE)
+
+#define MACHINE_IS_TIMEX_TS2068 (current_machine_type==MACHINE_ID_TIMEX_TS2068)
+
+#define MACHINE_IS_PRISM (current_machine_type==MACHINE_ID_PRISM)
+#define MACHINE_IS_TBBLUE (current_machine_type==MACHINE_ID_TBBLUE)
+
+#define MACHINE_IS_PENTAGON (current_machine_type==MACHINE_ID_PENTAGON)
+#define MACHINE_IS_CHROME (current_machine_type==MACHINE_ID_CHROME)
+
+
+
+
+
+#define MACHINE_IS_TSCONF (current_machine_type==MACHINE_ID_TSCONF)
+#define MACHINE_IS_BASECONF (current_machine_type==MACHINE_ID_BASECONF)
+
+
+
+#define MACHINE_IS_ZX80 (current_machine_type==MACHINE_ID_ZX80)
+#define MACHINE_IS_ZX81 (current_machine_type==MACHINE_ID_ZX81)
+
+#define MACHINE_IS_ACE (current_machine_type==MACHINE_ID_ACE)
+
+#define MACHINE_IS_Z88 (current_machine_type==MACHINE_ID_Z88)
+
+#define MACHINE_IS_CPC_464 (current_machine_type==MACHINE_ID_CPC_464)
+#define MACHINE_IS_CPC_4128 (current_machine_type==MACHINE_ID_CPC_4128)
+
+#define MACHINE_IS_SAM (current_machine_type==MACHINE_ID_SAM)
+
+#define MACHINE_IS_QL_STANDARD (current_machine_type==MACHINE_ID_QL_STANDARD)
+
+#define MACHINE_IS_MK14_STANDARD (current_machine_type==MACHINE_ID_MK14_STANDARD)
+
+
+
+//Combinadas
+#define MACHINE_IS_SPECTRUM (current_machine_type<30)
+
 
 
 #define MACHINE_IS_SPECTRUM_48_SPA (current_machine_type==MACHINE_ID_SPECTRUM_48_SPA)
 #define MACHINE_IS_SPECTRUM_16_48 ( (current_machine_type<=MACHINE_ID_MICRODIGITAL_TK95) || MACHINE_IS_SPECTRUM_48_SPA )
 
 #define MACHINE_IS_SPECTRUM_128_P2 ( (current_machine_type>=MACHINE_ID_SPECTRUM_128 && current_machine_type<=MACHINE_ID_SPECTRUM_P2_SPA) || MACHINE_IS_PENTAGON)
-
-
-#define MACHINE_IS_SPECTRUM_128 (current_machine_type==MACHINE_ID_SPECTRUM_128)
-#define MACHINE_IS_SPECTRUM_128_SPA (current_machine_type==MACHINE_ID_SPECTRUM_128_SPA)
 
 #define MACHINE_IS_SPECTRUM_P2 ( (current_machine_type>=MACHINE_ID_SPECTRUM_P2 && current_machine_type<=MACHINE_ID_SPECTRUM_P2_SPA))
 
@@ -392,42 +434,23 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 //MACHINE_IS_SPECTRUM_128_P2_P2A_P3 era MACHINE_IS_SPECTRUM_128_P2_P2A antes de emular el +3
 #define MACHINE_IS_SPECTRUM_128_P2_P2A_P3 ( MACHINE_IS_SPECTRUM_128_P2 || MACHINE_IS_SPECTRUM_P2A_P3)
 
-#define MACHINE_IS_ZXUNO (current_machine_type==MACHINE_ID_ZXUNO)
 
-#define MACHINE_IS_CHLOE_140SE (current_machine_type==MACHINE_ID_CHLOE_140SE)
-#define MACHINE_IS_CHLOE_280SE (current_machine_type==MACHINE_ID_CHLOE_280SE)
 #define MACHINE_IS_CHLOE (MACHINE_IS_CHLOE_140SE || MACHINE_IS_CHLOE_280SE)
-#define MACHINE_IS_TIMEX_TS2068 (current_machine_type==MACHINE_ID_TIMEX_TS2068)
-#define MACHINE_IS_PRISM (current_machine_type==MACHINE_ID_PRISM)
-#define MACHINE_IS_TBBLUE (current_machine_type==MACHINE_ID_TBBLUE)
-#define MACHINE_IS_PENTAGON (current_machine_type==MACHINE_ID_PENTAGON)
-#define MACHINE_IS_CHROME (current_machine_type==MACHINE_ID_CHROME)
 
 
-#define MACHINE_IS_TSCONF (current_machine_type==MACHINE_ID_TSCONF)
-#define MACHINE_IS_BASECONF (current_machine_type==MACHINE_ID_BASECONF)
-
-#define MACHINE_IS_ZXEVO (MACHINE_IS_TSCONF || MACHINE_IS_BASECONF)
-
-#define MACHINE_IS_ZX80 (current_machine_type==MACHINE_ID_ZX80)
-#define MACHINE_IS_ZX81 (current_machine_type==MACHINE_ID_ZX81)
 #define MACHINE_IS_ZX8081 (MACHINE_IS_ZX80 || MACHINE_IS_ZX81)
-#define MACHINE_IS_ACE (current_machine_type==MACHINE_ID_ACE)
 #define MACHINE_IS_ZX8081ACE (MACHINE_IS_ZX8081 || MACHINE_IS_ACE)
 
-#define MACHINE_IS_Z88 (current_machine_type==MACHINE_ID_Z88)
-
-#define MACHINE_IS_CPC_464 (current_machine_type==MACHINE_ID_CPC_464)
-#define MACHINE_IS_CPC_4128 (current_machine_type==MACHINE_ID_CPC_4128)
+#define MACHINE_IS_ZXEVO (MACHINE_IS_TSCONF || MACHINE_IS_BASECONF)
 #define MACHINE_IS_CPC (current_machine_type>=MACHINE_ID_CPC_464 && current_machine_type<=149)
-#define MACHINE_IS_SAM (current_machine_type==MACHINE_ID_SAM)
+
 
 /*
 160=QL
 161-179 reservado para otros QL
 */
 
-#define MACHINE_IS_QL_STANDARD (current_machine_type==MACHINE_ID_QL_STANDARD)
+
 #define MACHINE_IS_QL (current_machine_type>=MACHINE_ID_QL_STANDARD && current_machine_type<=179)
 
 /*
@@ -435,7 +458,7 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 181-189 reservado para otros MK14
 */
 
-#define MACHINE_IS_MK14_STANDARD (current_machine_type==MACHINE_ID_MK14_STANDARD)
+
 #define MACHINE_IS_MK14 (current_machine_type>=MACHINE_ID_MK14_STANDARD && current_machine_type<=189)
 
 

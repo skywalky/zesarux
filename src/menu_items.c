@@ -21721,6 +21721,9 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		else if (MACHINE_IS_SPECTRUM_P2A_P3) strcpy(nombrebmp,"keyboard_p3.bmp");
 		else if (MACHINE_IS_CHLOE) strcpy(nombrebmp,"keyboard_chloe.bmp");
 		else if (MACHINE_IS_QL) strcpy(nombrebmp,"keyboard_ql.bmp");
+		else if (MACHINE_IS_Z88) strcpy(nombrebmp,"keyboard_z88.bmp");
+		else if (MACHINE_IS_MK14) strcpy(nombrebmp,"keyboard_mk14.bmp");
+		else if (MACHINE_IS_SAM) strcpy(nombrebmp,"keyboard_sam.bmp");
 		
 		else strcpy(nombrebmp,"keyboard_48.bmp");
 
