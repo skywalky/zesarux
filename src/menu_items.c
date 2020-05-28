@@ -21705,10 +21705,15 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_ZX80) strcpy(nombrebmp,"keyboard_zx80.bmp");
 		else if (MACHINE_IS_ZX81) strcpy(nombrebmp,"keyboard_zx81.bmp");
+		else if (MACHINE_IS_ACE) strcpy(nombrebmp,"keyboard_ace.bmp");
+		else if (MACHINE_IS_SPECTRUM_16) strcpy(nombrebmp,"keyboard_16.bmp");
 		else if (MACHINE_IS_INVES) strcpy(nombrebmp,"keyboard_inves.bmp");
+		else if (MACHINE_IS_TIMEX_TS2068) strcpy(nombrebmp,"keyboard_ts2068.bmp");
+
 		else if (MACHINE_IS_TBBLUE) strcpy(nombrebmp,"keyboard_next.bmp");
 		else if (MACHINE_IS_ZXUNO) strcpy(nombrebmp,"keyboard_zxuno.bmp");
 		else if (MACHINE_IS_ZXEVO) strcpy(nombrebmp,"keyboard_zxevo.bmp");
+		else if (MACHINE_IS_PENTAGON) strcpy(nombrebmp,"keyboard_pentagon.bmp");
 		else if (MACHINE_IS_SPECTRUM_128) strcpy(nombrebmp,"keyboard_128.bmp");
 		else if (MACHINE_IS_SPECTRUM_128_SPA) strcpy(nombrebmp,"keyboard_128s.bmp");
 		else if (MACHINE_IS_SPECTRUM_P2) strcpy(nombrebmp,"keyboard_p2.bmp");
@@ -21716,7 +21721,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		else if (MACHINE_IS_CHLOE) strcpy(nombrebmp,"keyboard_chloe.bmp");
 		else if (MACHINE_IS_QL) strcpy(nombrebmp,"keyboard_ql.bmp");
 		
-		else strcpy(nombrebmp,"keyboard_speccy.bmp");
+		else strcpy(nombrebmp,"keyboard_48.bmp");
 
 		//localizarlo
         char buffer_nombre[PATH_MAX];
