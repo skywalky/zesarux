@@ -3625,6 +3625,14 @@ You don't need timings for H/V sync =)
 								break;
 
 
+case MACHINE_ID_MSX1:
+                poke_byte=poke_byte_spectrum_48k;
+                peek_byte=peek_byte_spectrum_48k;
+		peek_byte_no_time=peek_byte_no_time_spectrum_48k;
+		poke_byte_no_time=poke_byte_no_time_spectrum_48k;
+                lee_puerto=lee_puerto_spectrum;
+                break;
+
 
 
 		case 120:
