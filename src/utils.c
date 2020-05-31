@@ -9667,6 +9667,8 @@ int get_machine_id_by_name(char *machine_name)
                                 else if (!strcasecmp(machine_name,"SAM")) return_machine=150;
                                 else if (!strcasecmp(machine_name,"QL")) return_machine=160;
                                 else if (!strcasecmp(machine_name,"MK14")) return_machine=MACHINE_ID_MK14_STANDARD;
+                                
+                                else if (!strcasecmp(machine_name,"MSX1")) return_machine=MACHINE_ID_MSX1;
                                 else {
                                         debug_printf (VERBOSE_ERR,"Unknown machine %s",machine_name);
                                         return_machine=-1;
