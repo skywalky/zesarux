@@ -2802,6 +2802,13 @@ void malloc_mem_machine(void) {
 
 
         }
+        
+        else if (MACHINE_IS_MSX1) {
+                //total 64kb
+                malloc_machine(65536);
+                random_ram(memoria_spectrum+32768,32768);
+
+        }
 
 
 	else if (MACHINE_IS_Z88) {
@@ -4432,6 +4439,14 @@ Total 20 pages=320 Kb
 
 
                 }
+                
+                else if (MACHINE_IS_MSX1) {
+			//msx 32 kb rom
+                        	leidos=fread(memoria_spectrum,1,32768,ptr_romfile);
+				if (leidos!=32768) {
+				 	cpu_panic("Error loading ROM");
+				}
+		}
 
 
 		else if (MACHINE_IS_ZX80) {
