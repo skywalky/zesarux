@@ -346,6 +346,8 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_ID_SPECTRUM_P3_41		26
 #define MACHINE_ID_SPECTRUM_P3_SPA		27
 
+#define MACHINE_ID_MSX1 110
+
 
 #define MACHINE_ID_ZX80				120
 #define MACHINE_ID_ZX81				121
@@ -393,7 +395,7 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_IS_TSCONF (current_machine_type==MACHINE_ID_TSCONF)
 #define MACHINE_IS_BASECONF (current_machine_type==MACHINE_ID_BASECONF)
 
-
+#define MACHINE_IS_MSX1 (current_machine_type==MACHINE_ID_MSX1)
 
 #define MACHINE_IS_ZX80 (current_machine_type==MACHINE_ID_ZX80)
 #define MACHINE_IS_ZX81 (current_machine_type==MACHINE_ID_ZX81)
@@ -436,6 +438,8 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 
 
 #define MACHINE_IS_CHLOE (MACHINE_IS_CHLOE_140SE || MACHINE_IS_CHLOE_280SE)
+
+#define MACHINE_IS_MSX (current_machine_type>=MACHINE_ID_MSX1 && current_machine_type<=119)
 
 
 #define MACHINE_IS_ZX8081 (MACHINE_IS_ZX80 || MACHINE_IS_ZX81)

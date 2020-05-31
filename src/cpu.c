@@ -2868,6 +2868,8 @@ void set_machine_params(void)
 27=Amstrad +3 - Espa�ol
 
 28-29 Reservado (Spectrum)
+110-119 msx:
+110 msx1
 120=zx80 (old 20)
 121=zx81 (old 21)
 122=jupiter ace (old 22)
