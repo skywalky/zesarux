@@ -1253,6 +1253,8 @@ char *string_machines_list_description=
 
 							" CPC464   Amstrad CPC 464\n"
 							" CPC4128  Amstrad CPC 4128\n"
+							
+							" MSX1     MSX1\n"
 							;
 
 
