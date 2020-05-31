@@ -4173,6 +4173,10 @@ void rom_load(char *romfilename)
                 case 21:
                 romfilename="pentagon.rom";
                 break;
+                
+                case MACHINE_ID_MSX1:
+                romfilename="msx.rom";
+                break;
 
 								case MACHINE_ID_CHROME:
 								romfilename="chrome.rom";
