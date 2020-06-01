@@ -6884,15 +6884,17 @@ void out_port_msx1_no_time(z80_int puerto,z80_byte value)
 
 
 
-
-	printf ("Out msx port: %04XH value: %02XH\n",puerto,value);
+/*
+	printf ("Out msx port: %04XH value: %02XH char: %c\n",puerto,value,
+	  (value>=32 && value<=126 ? value : '?') );
 
 	if (puerto_l==0xA8) printf ("Puerto PPI Port R/W Port A\n");
 	if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
-	if (puerto_l==0x98) printf ("VDP Command and status register\n");
+	if (puerto_l==0x98) printf ("VDP Command and status register\n");*/
 
 
-
+	if (puerto_l==0x98) printf ("%c",
+	  (value>=32 && value<=126 ? value : '?') );
 
 }
 
@@ -6915,11 +6917,12 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
+/*
 	printf ("Lee puerto msx %04XH\n",puerto);
 
 	if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
-	if (puerto_l==0x98) printf ("VDP Command and status register\n");	
-
+	if (puerto_l==0x99) printf ("VDP Command and status register\n");	
+*/
 
 	//A8. 
 	//if (puerto==0xa8) return 0x50; //temporal
