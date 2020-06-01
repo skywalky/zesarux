@@ -1664,6 +1664,84 @@ z80_byte peek_byte_zxuno(z80_int dir)
 
 
 
+void poke_byte_no_time_msx1(z80_int dir,z80_byte valor)
+{
+        if (dir>32767) {
+		memoria_spectrum[dir]=valor;
+
+#ifdef EMULATE_VISUALMEM
+
+set_visualmembuffer(dir);
+
+#endif
+	}
+}
+
+void poke_byte_msx1(z80_int dir,z80_byte valor)
+{
+/*
+#ifdef EMULATE_CONTEND
+        if ( (dir&49152)==16384) {
+                t_estados += contend_table[ t_estados ];
+        }
+#endif
+*/
+
+        //Y sumamos estados normales
+        t_estados += 3;
+
+
+        if (dir>32767) {
+#ifdef EMULATE_VISUALMEM
+
+set_visualmembuffer(dir);
+
+#endif
+		memoria_spectrum[dir]=valor;
+
+
+	}
+}
+
+z80_byte peek_byte_no_time_msx1(z80_int dir)
+{
+#ifdef EMULATE_VISUALMEM
+	set_visualmemreadbuffer(dir);
+#endif
+
+        return memoria_spectrum[dir];
+}
+
+
+z80_byte peek_byte_msx1(z80_int dir)
+{
+#ifdef EMULATE_VISUALMEM
+	set_visualmemreadbuffer(dir);
+#endif
+
+/*
+#ifdef EMULATE_CONTEND
+        if ( (dir&49152)==16384) {
+		//printf ("%d\n",t_estados);
+                t_estados += contend_table[ t_estados ];
+        }
+#endif
+*/
+
+        t_estados +=3;
+
+
+
+
+
+	return memoria_spectrum[dir];
+
+}
+
+
+
+
+
 z80_byte *chloe_return_segment_memory(z80_int dir)
 {
 	int segmento;
@@ -6514,6 +6592,61 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 
 
 
+//Devuelve valor puerto para maquinas MSX1
+z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
+{
+
+	debug_fired_in=1;
+	//extern z80_byte in_port_ay(z80_int puerto);
+	//65533 o 49149
+	//FFFDh (65533), BFFDh (49149)
+
+	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+
+
+/*
+	if (puerto_l==0xFD) {
+		if (puerto_h==0xFF) {
+			activa_ay_chip_si_conviene();
+			if (ay_chip_present.v==1) return in_port_ay(puerto_h);
+		}
+
+		//Puertos disco +3
+		if (pd765_enabled.v) {
+			if (puerto_h==0x2F) return pd765_read_status_register();
+
+			if (puerto_h==0x3F) return pd765_read_command();
+		}
+
+		else {
+			if (puerto_h==0x2F) return 255;
+			if (puerto_h==0x3F) return 255;
+		}
+
+	}
+*/
+
+ 
+	
+}
+
+z80_byte lee_puerto_msx1(z80_byte puerto_h,z80_byte puerto_l)
+{
+  z80_int port=value_8_to_16(puerto_h,puerto_l);
+  //ula_contend_port_early( port );
+  //ula_contend_port_late( port );
+  z80_byte valor = lee_puerto_msx1_no_time( puerto_h, puerto_l );
+
+  t_estados++;
+
+  return valor;
+
+}
+
+
+
+
+
 
 void cpi_cpd_common(void)
 {
@@ -6786,6 +6919,32 @@ void out_port_zx81_no_time(z80_int puerto,z80_byte value)
 
 
 }
+
+
+
+void out_port_msx1_no_time(z80_int puerto,z80_byte value)
+{
+
+	debug_fired_out=1;
+        //Los OUTS los capturan los diferentes interfaces que haya conectados, por tanto no hacer return en ninguno, para que se vayan comprobando
+        //uno despues de otro
+	z80_byte puerto_l=puerto&255;
+	z80_byte puerto_h=(puerto>>8)&0xFF;
+
+
+}
+
+void out_port_msx1(z80_int puerto,z80_byte value)
+{
+  ula_contend_port_early( puerto );
+  out_port_msx1_no_time(puerto,value);
+  ula_contend_port_late( puerto ); t_estados++;
+}
+
+
+
+
+
 
 
 //Extracted from Fuse emulator

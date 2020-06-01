@@ -3333,6 +3333,16 @@ You don't need timings for H/V sync =)
 
                 }
 
+		else if (MACHINE_IS_MSX) {
+			contend_read=contend_read_msx1;
+			contend_read_no_mreq=contend_read_no_mreq_msx1;
+			contend_write_no_mreq=contend_write_no_mreq_msx1;
+
+			ula_contend_port_early=ula_contend_port_early_msx1;
+			ula_contend_port_late=ula_contend_port_late_msx1;
+
+		}				
+
 		else if (MACHINE_IS_SAM) {
 			contend_read=contend_read_sam;
                         contend_read_no_mreq=contend_read_no_mreq_sam;
@@ -3633,13 +3643,14 @@ You don't need timings for H/V sync =)
 								break;
 
 
-case MACHINE_ID_MSX1:
-                poke_byte=poke_byte_spectrum_48k;
-                peek_byte=peek_byte_spectrum_48k;
-		peek_byte_no_time=peek_byte_no_time_spectrum_48k;
-		poke_byte_no_time=poke_byte_no_time_spectrum_48k;
-                lee_puerto=lee_puerto_spectrum;
-                break;
+		case MACHINE_ID_MSX1:
+                poke_byte=poke_byte_msx1;
+                peek_byte=peek_byte_msx1;
+				peek_byte_no_time=peek_byte_no_time_msx1;
+				poke_byte_no_time=poke_byte_no_time_msx1;
+                lee_puerto=lee_puerto_msx1;
+				out_port=out_port_msx1;
+        break;
 
 
 

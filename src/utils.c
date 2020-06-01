@@ -422,6 +422,7 @@ char *array_fabricantes[]={
   "TS Labs",
 	"VTrucco/FB Labs",
 	"Jupiter Cantab"
+        "Ascii Corp"
         
 };
 
@@ -442,14 +443,15 @@ char *array_fabricantes_hotkey[]={
         "N~~edoPC",
         "TS ~~Labs",
         "~~VTrucco/FB Labs",
-        "J~~upiter Cantab"
+        "J~~upiter Cantab",
+        "Ascii C~~orp"
         
 
 
 };
 
 //Si letra es espacio->no hay letra
-char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvu";
+char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvuo";
 
 
 

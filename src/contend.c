@@ -920,6 +920,67 @@ void ula_contend_port_late_mk14( z80_int port  GCC_UNUSED)
 }
 
 
+
+void contend_read_msx1(z80_int direccion,int time)
+{
+
+#ifdef EMULATE_CONTEND
+
+#endif
+
+	//Y sumamos estados normales
+	t_estados += time;
+
+}
+
+void contend_read_no_mreq_msx1(z80_int direccion,int time)
+{
+
+#ifdef EMULATE_CONTEND
+
+#endif
+
+        //Y sumamos estados normales
+        t_estados += time;
+
+}
+
+void contend_write_no_mreq_msx1(z80_int direccion,int time)
+{
+
+#ifdef EMULATE_CONTEND
+   
+#endif
+
+        //Y sumamos estados normales
+        t_estados += time;
+
+}
+
+
+void ula_contend_port_early_msx1( z80_int port )
+{
+#ifdef EMULATE_CONTEND
+
+
+#endif
+
+	t_estados++;
+}
+
+void ula_contend_port_late_msx1( z80_int port )
+{
+#ifdef EMULATE_CONTEND
+ 
+        t_estados += 2;
+#else
+	t_estados += 2;
+#endif
+
+}
+
+
+
 //prism. No tiene memoria contended
 void contend_read_prism(z80_int direccion GCC_UNUSED,int time)
 {
