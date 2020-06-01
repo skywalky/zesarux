@@ -4351,9 +4351,9 @@ void scr_refresca_pantalla_y_border_msx(void)
        
                 
 
+			
 
-			//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-			if (scr_ver_si_refrescar_por_menu_activo(x,y)) {
+
 
 
 
@@ -4388,9 +4388,15 @@ void scr_refresca_pantalla_y_border_msx(void)
 						   //6 de ancho
                     for (bit=0;bit<6;bit++) {
 
-						color= ( byte_leido & 128 ? ink : paper );
+						int fila=(x*6+bit)/8;
+
 						
-						scr_putpixel_zoom(x*6+bit,y*8+scanline,color);
+						
+						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+						if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
+							color= ( byte_leido & 128 ? ink : paper );
+							scr_putpixel_zoom(x*6+bit,y*8+scanline,color);
+						}
 
 						byte_leido=byte_leido<<1;
         	        }
@@ -4398,7 +4404,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 		             
 
-            }
+            
 
 
 			direccion++;
