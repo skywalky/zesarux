@@ -475,6 +475,10 @@ int array_maquinas_microdigital_electronica[]={
 	3,4,5,255
 };
 
+int array_maquinas_ascii_corp[]={
+	MACHINE_ID_MSX1,255
+};
+
 int array_maquinas_amstrad[]={
 	8,9,10,11,12,13,MACHINE_ID_SPECTRUM_P3_40,MACHINE_ID_SPECTRUM_P3_41,MACHINE_ID_SPECTRUM_P3_SPA,MACHINE_ID_CPC_464,MACHINE_ID_CPC_4128,255
 };
@@ -546,6 +550,10 @@ int *return_maquinas_fabricante(int fabricante)
 		case FABRICANTE_MICRODIGITAL_ELECTRONICA:
 			return array_maquinas_microdigital_electronica;
 		break;
+
+		case FABRICANTE_ASCII_CORP:
+			return array_maquinas_ascii_corp;
+		break;                
 
 		case FABRICANTE_AMSTRAD:
 			return array_maquinas_amstrad;
@@ -651,6 +659,10 @@ int return_fabricante_maquina(int maquina)
                 case MACHINE_ID_CPC_4128:
 			return FABRICANTE_AMSTRAD;
 		break;
+
+                case MACHINE_ID_MSX1:
+			return FABRICANTE_ASCII_CORP;
+		break;                
 
 		case 122:
 			return FABRICANTE_JUPITER_CANTAB;
