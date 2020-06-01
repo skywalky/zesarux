@@ -2808,6 +2808,10 @@ void malloc_mem_machine(void) {
                 malloc_machine(65536);
                 random_ram(memoria_spectrum+32768,32768);
 
+
+				//y 16kb para vram
+				msx_alloc_vram_memory();
+
         }
 
 

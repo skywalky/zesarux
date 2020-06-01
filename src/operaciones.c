@@ -74,6 +74,7 @@
 #include "saa_simul.h"
 #include "datagear.h"
 #include "hilow.h"
+#include "msx.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -6890,11 +6891,21 @@ void out_port_msx1_no_time(z80_int puerto,z80_byte value)
 
 	if (puerto_l==0xA8) printf ("Puerto PPI Port R/W Port A\n");
 	if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
-	if (puerto_l==0x98) printf ("VDP Command and status register\n");*/
+	if (puerto_l==0x99) printf ("VDP Command and status register\n");*/
 
 
-	if (puerto_l==0x98) printf ("%c",
-	  (value>=32 && value<=126 ? value : '?') );
+	//if (puerto_l==0x98) printf ("%c",
+	//  (value>=32 && value<=126 ? value : '?') );
+
+	if (puerto_l==0x98) {
+		//printf ("VDP Video Ram Data\n");
+		msx_out_port_vdp_data(value);
+	}
+
+	if (puerto_l==0x99) {
+		//printf ("VDP Command and status register\n");	
+		msx_out_port_vdp_command_status(value);  
+	}
 
 }
 
@@ -6928,27 +6939,7 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//if (puerto==0xa8) return 0x50; //temporal
 
 
-/*
-	if (puerto_l==0xFD) {
-		if (puerto_h==0xFF) {
-			activa_ay_chip_si_conviene();
-			if (ay_chip_present.v==1) return in_port_ay(puerto_h);
-		}
 
-		//Puertos disco +3
-		if (pd765_enabled.v) {
-			if (puerto_h==0x2F) return pd765_read_status_register();
-
-			if (puerto_h==0x3F) return pd765_read_command();
-		}
-
-		else {
-			if (puerto_h==0x2F) return 255;
-			if (puerto_h==0x3F) return 255;
-		}
-
-	}
-*/
 
 	return 255;
  
