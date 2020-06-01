@@ -106,6 +106,7 @@ __FEATURES__
 * TBBlue/ZX Spectrum Next
 * Jupiter Ace
 * Amstrad CPC 464, CPC 4128
+* MSX1 (beta)
 
 * Is the only emulator for machines: Chloe 140/280, Prism and Chrome
 
