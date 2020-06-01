@@ -4335,7 +4335,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 
 	z80_int pattern_base_address=2048; //TODO: Puesto a pelo
-	z80_int base_chars=2; //TODO: puesto a pelo
+	z80_int base_chars=0; //TODO: puesto a pelo
 
 
 	z80_byte *screen=get_base_mem_pantalla();
@@ -4347,7 +4347,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 
         for (y=0;y<24;y++) {
-			for (x=0;x<32;x++) {  //TODO 32 caracteres
+			for (x=0;x<40;x++) {  //TODO 40 caracteres
        
                 
 
@@ -4384,11 +4384,13 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 					byte_leido=screen[pattern_address++];
 	                       
-                    for (bit=0;bit<8;bit++) {
+
+						   //6 de ancho
+                    for (bit=0;bit<6;bit++) {
 
 						color= ( byte_leido & 128 ? ink : paper );
 						
-						scr_putpixel_zoom(x*8+bit,y*8+scanline,color);
+						scr_putpixel_zoom(x*6+bit,y*8+scanline,color);
 
 						byte_leido=byte_leido<<1;
         	        }
