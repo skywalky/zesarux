@@ -2486,6 +2486,10 @@ void scrcocoa_refresca_pantalla(void)
 		scr_refresca_pantalla_y_border_mk14();
 	}
 
+	else if (MACHINE_IS_MSX) {
+		scr_refresca_pantalla_y_border_msx();
+	}        
+
         //printf ("%d\n",spectrum_colortable[1]);
 
 	if (menu_overlay_activo) {

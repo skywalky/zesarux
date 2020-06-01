@@ -4321,6 +4321,96 @@ void scr_refresca_pantalla_comun(void)
 
 
 
+//Refresco pantalla sin rainbow
+void scr_refresca_pantalla_y_border_msx(void)
+{
+	int x,y,bit;
+	z80_int direccion,dir_atributo;
+	z80_byte byte_leido;
+	int color=0;
+	int fila;
+	//int zx,zy;
+
+	z80_byte attribute,ink,paper,bright,flash,aux;
+
+
+	z80_int pattern_base_address=2048; //TODO: Puesto a pelo
+	z80_int base_chars=2; //TODO: puesto a pelo
+
+
+	z80_byte *screen=get_base_mem_pantalla();
+
+
+	//printf ("dpy=%x ventana=%x gc=%x image=%x\n",dpy,ventana,gc,image);
+	z80_byte x_hi;
+
+
+
+        for (y=0;y<24;y++) {
+			for (x=0;x<32;x++) {  //TODO 32 caracteres
+       
+                
+
+
+			//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+			if (scr_ver_si_refrescar_por_menu_activo(x,y)) {
+
+
+
+
+				direccion=y*40+x + base_chars;  //TODO ancho 40
+
+				z80_byte caracter=screen[direccion];
+                
+	                        
+
+				//Prueba de un modo de video inventado en que el color de la tinta sale de los 4 bits de la zona de pixeles
+				//int ink1,ink2;
+
+				//Forzado
+				attribute=56;
+		
+
+
+				ink=7;
+				paper=1;
+
+
+				int scanline;
+
+				z80_int pattern_address=(pattern_base_address+caracter*8)&16383;
+
+				for (scanline=0;scanline<8;scanline++) {
+
+					byte_leido=screen[pattern_address++];
+	                       
+                    for (bit=0;bit<8;bit++) {
+
+						color= ( byte_leido & 128 ? ink : paper );
+						
+						scr_putpixel_zoom(x*8+bit,y*8+scanline,color);
+
+						byte_leido=byte_leido<<1;
+        	        }
+				}
+
+		             
+
+            }
+
+
+			direccion++;
+
+		}
+
+			
+
+    }
+
+}
+
+
+
 
 void scr_mk14_linea(int x,int y,int longitud,int incx,int incy,int color)
 {

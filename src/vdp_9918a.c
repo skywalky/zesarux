@@ -77,7 +77,10 @@ void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value)
             if ( (vdp_9918a_last_command_status_bytes[1] &  (128+64)) == 64 ) {
                 //printf ("Write VDP Address setup.\n");
 
-                vdp_9918a_last_vram_position=(vdp_9918a_last_command_status_bytes[1] & 63) | (vdp_9918a_last_command_status_bytes[0]<<6);
+                //vdp_9918a_last_vram_position=(vdp_9918a_last_command_status_bytes[1] & 63) | (vdp_9918a_last_command_status_bytes[0]<<6);
+
+
+                vdp_9918a_last_vram_position=(vdp_9918a_last_command_status_bytes[0]) | ((vdp_9918a_last_command_status_bytes[1] & 63)<<8);
                 printf ("Write VDP Address setup. address: %04XH\n",vdp_9918a_last_vram_position);
             }
         break;
