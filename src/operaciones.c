@@ -6592,56 +6592,7 @@ if (MACHINE_IS_SPECTRUM_128_P2)
 
 
 
-//Devuelve valor puerto para maquinas MSX1
-z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
-{
 
-	debug_fired_in=1;
-	//extern z80_byte in_port_ay(z80_int puerto);
-	//65533 o 49149
-	//FFFDh (65533), BFFDh (49149)
-
-	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
-
-
-/*
-	if (puerto_l==0xFD) {
-		if (puerto_h==0xFF) {
-			activa_ay_chip_si_conviene();
-			if (ay_chip_present.v==1) return in_port_ay(puerto_h);
-		}
-
-		//Puertos disco +3
-		if (pd765_enabled.v) {
-			if (puerto_h==0x2F) return pd765_read_status_register();
-
-			if (puerto_h==0x3F) return pd765_read_command();
-		}
-
-		else {
-			if (puerto_h==0x2F) return 255;
-			if (puerto_h==0x3F) return 255;
-		}
-
-	}
-*/
-
- 
-	
-}
-
-z80_byte lee_puerto_msx1(z80_byte puerto_h,z80_byte puerto_l)
-{
-  z80_int port=value_8_to_16(puerto_h,puerto_l);
-  //ula_contend_port_early( port );
-  //ula_contend_port_late( port );
-  z80_byte valor = lee_puerto_msx1_no_time( puerto_h, puerto_l );
-
-  t_estados++;
-
-  return valor;
-
-}
 
 
 
@@ -6932,6 +6883,17 @@ void out_port_msx1_no_time(z80_int puerto,z80_byte value)
 	z80_byte puerto_h=(puerto>>8)&0xFF;
 
 
+
+
+	printf ("Out msx port: %04XH value: %02XH\n",puerto,value);
+
+	if (puerto_l==0xA8) printf ("Puerto PPI Port R/W Port A\n");
+	if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
+	if (puerto_l==0x98) printf ("VDP Command and status register\n");
+
+
+
+
 }
 
 void out_port_msx1(z80_int puerto,z80_byte value)
@@ -6942,7 +6904,66 @@ void out_port_msx1(z80_int puerto,z80_byte value)
 }
 
 
+//Devuelve valor puerto para maquinas MSX1
+z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
+{
 
+	debug_fired_in=1;
+	//extern z80_byte in_port_ay(z80_int puerto);
+	//65533 o 49149
+	//FFFDh (65533), BFFDh (49149)
+
+	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+
+	printf ("Lee puerto msx %04XH\n",puerto);
+
+	if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
+	if (puerto_l==0x98) printf ("VDP Command and status register\n");	
+
+
+	//A8. 
+	//if (puerto==0xa8) return 0x50; //temporal
+
+
+/*
+	if (puerto_l==0xFD) {
+		if (puerto_h==0xFF) {
+			activa_ay_chip_si_conviene();
+			if (ay_chip_present.v==1) return in_port_ay(puerto_h);
+		}
+
+		//Puertos disco +3
+		if (pd765_enabled.v) {
+			if (puerto_h==0x2F) return pd765_read_status_register();
+
+			if (puerto_h==0x3F) return pd765_read_command();
+		}
+
+		else {
+			if (puerto_h==0x2F) return 255;
+			if (puerto_h==0x3F) return 255;
+		}
+
+	}
+*/
+
+	return 255;
+ 
+	
+}
+
+z80_byte lee_puerto_msx1(z80_byte puerto_h,z80_byte puerto_l)
+{
+  z80_int port=value_8_to_16(puerto_h,puerto_l);
+  //ula_contend_port_early( port );
+  //ula_contend_port_late( port );
+  z80_byte valor = lee_puerto_msx1_no_time( puerto_h, puerto_l );
+
+  t_estados++;
+
+  return valor;
+
+}
 
 
 
