@@ -6907,6 +6907,10 @@ void out_port_msx1_no_time(z80_int puerto,z80_byte value)
 		msx_out_port_vdp_command_status(value);  
 	}
 
+	if (puerto_l>=0x9A && puerto_l<0xA0) {
+		printf ("Out port possibly vdp. Port %04XH value %02XH\n",puerto,value);
+	}
+
 }
 
 void out_port_msx1(z80_int puerto,z80_byte value)

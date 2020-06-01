@@ -833,6 +833,7 @@ extern z80_int util_paws_get_pc_parser(void);
 #define MEMORY_ZONE_NUM_PAWS_CONDACTS 21
 #define MEMORY_ZONE_DEBUG 22
 #define MEMORY_ZONE_IFROM 23
+#define MEMORY_ZONE_MSX_VRAM 24
 
 #define DAAD_PARSER_BREAKPOINT_PC_SPECTRUM 0x617c
 

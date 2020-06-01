@@ -24,6 +24,6 @@
 
 #include "cpu.h"
 
-
+extern z80_byte *msx_vram_memory;
 
 #endif

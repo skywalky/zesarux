@@ -107,6 +107,7 @@
 #include "stats.h"
 #include "scl2trd.h"
 #include "zip.h"
+#include "msx.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -11416,7 +11417,15 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
           *readwrite=1;      
 	  size=IFROM_SIZE;
 	}
-    break;        
+    break;       
+
+
+    case MEMORY_ZONE_MSX_VRAM:
+        if (MACHINE_IS_MSX) {
+              *readwrite=1; 
+              size=16384;  
+        }
+    break;
 
   }
 
@@ -11721,7 +11730,14 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
         if (ifrom_enabled.v) {
 	p=&ifrom_memory_pointer[address];
       }
-    break;            
+    break;   
+
+
+    case MEMORY_ZONE_MSX_VRAM:
+        if (MACHINE_IS_MSX) {
+                p=&msx_vram_memory[address];
+        }        
+    break;
 
 
   }
@@ -12055,7 +12071,14 @@ void machine_get_memory_zone_name(int zone, char *name)
 		           //123456789012345
 		strcpy(name,"iFrom rom");
 	}
-    break;        
+    break;       
+
+
+    case MEMORY_ZONE_MSX_VRAM:
+        if (MACHINE_IS_MSX) {
+               strcpy(name,"MSX VRAM"); 
+        }
+    break;
 
 
   }
