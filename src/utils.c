@@ -6932,6 +6932,8 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                         	                blink_kbd_a14 &= (255-32);
 						                              cpc_keyboard_table[8]&= (255-16);
                                           // 2|     9      w      i    Tab      r      -      y      o     ql_keyboard_table[5]
+
+                                          msx_keyboard_table[7] &=(255-8);
                                           ql_keyboard_table[5] &=(255-8);
         	                        }
 
@@ -6942,6 +6944,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                         	                puerto_32766 |=2;
                 	                        blink_kbd_a14 |= 32;
 						                              cpc_keyboard_table[8]|= 16;
+                                        msx_keyboard_table[7] |=8;
                                           ql_keyboard_table[5] |=8;
 	                                }
 				}
@@ -6961,6 +6964,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                         	                blink_kbd_a15 &= (255-8);
 						                              cpc_keyboard_table[8] &=(255-64);
                                           // 4|     [   Caps      k      s      f      =      g      ;     ql_keyboard_table[3]
+                                          msx_keyboard_table[6] &=(255-8);
                                           ql_keyboard_table[3] &=(255-2);
 	                                }
         	                        else {
@@ -6968,6 +6972,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                         	                puerto_63486 |=2;
                                 	        blink_kbd_a15 |= 8;
 						                              cpc_keyboard_table[8] |=64;
+                                        msx_keyboard_table[6] |=8;
                                           ql_keyboard_table[3] |=2;
 	                                }
 				}
@@ -7282,6 +7287,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 					blink_kbd_a15 &= (255-32);
 					puerto_especial1 &=255-1;
 					cpc_keyboard_table[8] &=(255-4);
+                                        msx_keyboard_table[7] &=(255-4);
 					puerto_teclado_sam_f7f9 &= (255-32);
           // 6|   Ret   Left     Up    Esc  Right      \  Space   Down     ql_keyboard_table[1]
           ql_keyboard_table[1] &= (255-8);
@@ -7294,6 +7300,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 					blink_kbd_a15 |=32;
 					puerto_especial1 |=1;
 					cpc_keyboard_table[8] |=4;
+                                        msx_keyboard_table[7] |=4;
 					puerto_teclado_sam_f7f9 |= 32;
                                         ql_keyboard_table[1] |= 8;
 				}
