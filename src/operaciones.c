@@ -1091,6 +1091,14 @@ z80_byte fetch_opcode_sam(void)
 }
 
 
+z80_byte fetch_opcode_msx(void)
+{
+#ifdef EMULATE_VISUALMEM
+	set_visualmemopcodebuffer(reg_pc);
+#endif
+	return peek_byte_no_time (reg_pc);
+}
+
 
 z80_byte fetch_opcode_zx81(void)
 {

@@ -86,6 +86,7 @@
 #include "settings.h"
 #include "expression_parser.h"
 #include "atomic.h"
+#include "core_msx.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -1579,6 +1580,12 @@ void set_cpu_core_loop(void)
       cpu_core_loop=cpu_core_loop_mk14;
       cpu_core_loop_name="MK14";
     break;
+
+    case CPU_CORE_MSX:
+      debug_printf(VERBOSE_INFO,"Setting MSX CPU core");
+      cpu_core_loop=cpu_core_loop_msx;
+      cpu_core_loop_name="MSX";
+    break;	
 
 
                 default:

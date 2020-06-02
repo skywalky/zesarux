@@ -226,6 +226,7 @@ extern z80_byte fetch_opcode_zx81(void);
 extern z80_byte fetch_opcode_ace(void);
 extern z80_byte fetch_opcode_cpc(void);
 extern z80_byte fetch_opcode_sam(void);
+extern z80_byte fetch_opcode_msx(void);
 
 extern void poke_byte_spectrum_48k(z80_int dir,z80_byte valor);
 

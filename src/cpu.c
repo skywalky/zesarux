@@ -2983,6 +2983,10 @@ void set_machine_params(void)
 			cpu_core_loop_active=CPU_CORE_MK14;
 		}
 
+		else if (MACHINE_IS_MSX) {
+			cpu_core_loop_active=CPU_CORE_MSX;
+		}		
+
 
 		else {
 			cpu_core_loop_active=CPU_CORE_Z88;
@@ -3654,6 +3658,7 @@ You don't need timings for H/V sync =)
 				poke_byte_no_time=poke_byte_no_time_msx1;
                 lee_puerto=lee_puerto_msx1;
 				out_port=out_port_msx1;
+				fetch_opcode=fetch_opcode_msx;
         break;
 
 
