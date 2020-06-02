@@ -6743,6 +6743,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         joystick_set_left(1);
                                         blink_kbd_a12 &= (255-64);
 					cpc_keyboard_table[1] &=(255-1);
+                                        msx_keyboard_table[8] &=(255-16);
 
           // 1|   Ret   Left     Up    Esc  Right      \  Space   Down
                                         ql_keyboard_table[1] &= (255-2);
@@ -6753,6 +6754,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         joystick_release_left(1);
                                         blink_kbd_a12 |= 64;
 					                              cpc_keyboard_table[1] |=1;
+                                        msx_keyboard_table[8] |=16;
                                         ql_keyboard_table[1] |= 2;
                                 }
                         break;
@@ -6763,6 +6765,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         joystick_set_right(1);
                                         blink_kbd_a11 &= (255-64);
 					                              cpc_keyboard_table[0] &=(255-2);
+                                        msx_keyboard_table[8] &=(255-128);
                                         ql_keyboard_table[1] &= (255-16);
                                 }
                                 else {
@@ -6771,6 +6774,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         joystick_release_right(1);
                                         blink_kbd_a11 |= 64;
                                         cpc_keyboard_table[0] |=2;
+                                        msx_keyboard_table[8] |=128;
                                         ql_keyboard_table[1] |= 16;
                                 }
                         break;
@@ -6783,6 +6787,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
                                         blink_kbd_a10 &= (255-64);
 					cpc_keyboard_table[0] &=(255-4);
+                                        msx_keyboard_table[8] &=(255-64);
                                         ql_keyboard_table[1] &= (255-128);
 
                                 }
@@ -6793,6 +6798,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
                                         blink_kbd_a10 |= 64;
 					cpc_keyboard_table[0] |=4;
+                                        msx_keyboard_table[8] |=64;
                                         ql_keyboard_table[1] |= 128;
                                 }
                         break;
@@ -6804,6 +6810,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         joystick_set_up(1);
                                         blink_kbd_a9 &= (255-64);
 					cpc_keyboard_table[0] &=(255-1);
+                                        msx_keyboard_table[8] &=(255-32);
                                         ql_keyboard_table[1] &= (255-4);
                                 }
                                 else {
@@ -6812,6 +6819,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         joystick_release_up(1);
                                         blink_kbd_a9 |= 64;
 					cpc_keyboard_table[0] |=1;
+                                        msx_keyboard_table[8] |=32;
                                         ql_keyboard_table[1] |=4;
                                 }
                         break;
