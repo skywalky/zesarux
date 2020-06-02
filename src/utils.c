@@ -302,33 +302,49 @@ struct x_tabla_teclado cpc_tabla_teclado_letras[]={
 
 
 struct x_tabla_teclado msx_tabla_teclado_letras[]={
-	{&msx_keyboard_table[8],32}, //A
-	{&msx_keyboard_table[6],64},
-        {&msx_keyboard_table[7],64},
-        {&msx_keyboard_table[7],32}, //D
-        {&msx_keyboard_table[7],4},
-        {&msx_keyboard_table[6],32},
-        {&msx_keyboard_table[6],16},
-        {&msx_keyboard_table[5],16}, //H
-        {&msx_keyboard_table[4],8},
-        {&msx_keyboard_table[5],32},
-        {&msx_keyboard_table[4],32},
-        {&msx_keyboard_table[4],16}, //L
-        {&msx_keyboard_table[4],64},
-        {&msx_keyboard_table[5],64}, //N
+	{&msx_keyboard_table[2],64}, //A
+	{&msx_keyboard_table[2],128},
+        {&msx_keyboard_table[3],1},
+        {&msx_keyboard_table[3],2}, //D
+        {&msx_keyboard_table[3],4},
+        {&msx_keyboard_table[3],8},
+        {&msx_keyboard_table[3],16},
+        {&msx_keyboard_table[3],32}, //H
+        {&msx_keyboard_table[3],64},
+        {&msx_keyboard_table[3],128},
+        {&msx_keyboard_table[4],1},
+        {&msx_keyboard_table[4],2}, //L
         {&msx_keyboard_table[4],4},
-        {&msx_keyboard_table[3],8}, //P
-        {&msx_keyboard_table[8],8},
-        {&msx_keyboard_table[6],4},
-        {&msx_keyboard_table[7],16},
-        {&msx_keyboard_table[6],8}, //T
+        {&msx_keyboard_table[4],8}, //N
+        {&msx_keyboard_table[4],16},
+        {&msx_keyboard_table[4],32}, //P
+        {&msx_keyboard_table[4],64},
+        {&msx_keyboard_table[4],128},
+        {&msx_keyboard_table[5],1},
+        {&msx_keyboard_table[5],2}, //T
         {&msx_keyboard_table[5],4},
-        {&msx_keyboard_table[6],128},
-        {&msx_keyboard_table[7],8},
-        {&msx_keyboard_table[7],128}, //X
         {&msx_keyboard_table[5],8},
-        {&msx_keyboard_table[8],128}
+        {&msx_keyboard_table[5],16},
+        {&msx_keyboard_table[5],32}, //X
+        {&msx_keyboard_table[5],64},
+        {&msx_keyboard_table[5],128}
 };
+
+
+struct x_tabla_teclado msx_tabla_teclado_numeros[]={
+        {&msx_keyboard_table[0],1}, //0
+        {&msx_keyboard_table[0],2},
+        {&msx_keyboard_table[0],4},
+        {&msx_keyboard_table[0],8},
+        {&msx_keyboard_table[0],16},
+        {&msx_keyboard_table[0],32},     //5
+        {&msx_keyboard_table[0],64},
+        {&msx_keyboard_table[0],128},
+        {&msx_keyboard_table[1],1},
+        {&msx_keyboard_table[1],2}
+
+};
+
 
 // ================================== matrix ============================
 //        0      1      2      3      4      5      6      7
@@ -1250,6 +1266,16 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 						}
 					}
 
+                                        //mayus para MSX
+					if (MACHINE_IS_MSX) {
+						if (pressrelease) {
+							msx_keyboard_table[6] &=255-1;
+						}
+						else {
+							msx_keyboard_table[6] |=1;
+						}
+					}                                        
+
 					if (MACHINE_IS_CPC) {
 						if (pressrelease) {
 							cpc_keyboard_table[2] &=255-32;
@@ -1275,11 +1301,13 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 						puerto_32766 &=255-1;
                                         	blink_kbd_a13 &= (255-64);
 						cpc_keyboard_table[5] &= (255-128);
+                                                msx_keyboard_table[8] &= (255-1);
 					}
 	                                else {
 						puerto_32766 |=1;
                                         	blink_kbd_a13 |= 64;
 						cpc_keyboard_table[5] |= 128;
+                                                msx_keyboard_table[8] |= 1;
 					}
 
         	                break;
@@ -1292,12 +1320,14 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 						blink_kbd_a8 &= (255-64);
 						//Enter "grande" del cpc
 						cpc_keyboard_table[2] &= (255-4);
+                                                msx_keyboard_table[7] &= (255-128);
 					}
 
                 	                else {
 						puerto_49150 |=1;
 						blink_kbd_a8 |= 64;
 						cpc_keyboard_table[2] |= 4;
+                                                msx_keyboard_table[7] |= 128;
 					}
 
 
@@ -2848,6 +2878,9 @@ void reset_keyboard_ports(void)
 	int i=0;
 	for (i=0;i<16;i++) cpc_keyboard_table[i]=255;
 
+	//De MSX
+	for (i=0;i<16;i++) msx_keyboard_table[i]=255;        
+
 	//De QL
 	for (i=0;i<8;i++) ql_keyboard_table[i]=255;
 
@@ -4378,6 +4411,14 @@ void convert_numeros_letras_puerto_teclado_continue_after_recreated(z80_byte tec
                                                 if (pressrelease) *puerto &=255-mascara;
                                                 else *puerto |=mascara;
   }
+
+	if (MACHINE_IS_MSX) {
+                                                puerto=msx_tabla_teclado_numeros[indice].puerto;
+                                                mascara=msx_tabla_teclado_numeros[indice].mascara;
+
+                                                if (pressrelease) *puerto &=255-mascara;
+                                                else *puerto |=mascara;
+  }  
 
   if (MACHINE_IS_QL) {
                                           puerto=ql_tabla_teclado_numeros[indice].puerto;
@@ -6426,14 +6467,16 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         puerto_32766 &=255-1;
                                         blink_kbd_a13 &= (255-64);
-					                              cpc_keyboard_table[5] &= (255-128);
+				        cpc_keyboard_table[5] &= (255-128);
                                         ql_keyboard_table[1] &= (255-64);
+                                        msx_keyboard_table[8] &= (255-1);
                                 }
                                 else {
                                         puerto_32766 |=1;
                                         blink_kbd_a13 |= 64;
 					                              cpc_keyboard_table[5] |= 128;
                                         ql_keyboard_table[1] |= 64;
+                                        msx_keyboard_table[8] |= 1;
                                 }
                         break;
 
@@ -6443,6 +6486,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         blink_kbd_a8 &= (255-64);
 					                              cpc_keyboard_table[0] &= (255-64);
                                         ql_keyboard_table[1] &= (255-1);
+                                        msx_keyboard_table[7] &= (255-128);
 
 					//Avisar de envio enter especial para rutinas de speech, para que envien sonido
 					textspeech_send_new_line();
@@ -6454,6 +6498,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         blink_kbd_a8 |=64;
 					                              cpc_keyboard_table[0] |= 64;
                                         ql_keyboard_table[1] |= 1;
+                                        msx_keyboard_table[7] |= 128;
                                 }
 
 
@@ -6479,12 +6524,14 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         blink_kbd_a14 &= (255-64);
 					                              cpc_keyboard_table[2] &=255-32;
                                         ql_keyboard_table[7] &= (255-1);
+                                        msx_keyboard_table[6] &=(255-1);
                                 }
                                 else  {
                                         puerto_65278 |=1;
                                         blink_kbd_a14 |= 64;
                                         ql_keyboard_table[7] |= 1;
 					cpc_keyboard_table[2] |=32;
+                                        msx_keyboard_table[6] |=1;
                                 }
                         break;
 
@@ -6497,12 +6544,14 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         blink_kbd_a15 &= (255-128);
 					                              cpc_keyboard_table[2] &=255-32;
                                         ql_keyboard_table[7] &= (255-1);
+                                        msx_keyboard_table[6] &=(255-1);
                                 }
                                 else  {
                                         puerto_65278 |=1;
                                         blink_kbd_a15 |= 128;
 					                              cpc_keyboard_table[2] |=32;
                                         ql_keyboard_table[7] |= 1;
+                                        msx_keyboard_table[6] |=1;
                                 }
                         break;
 
