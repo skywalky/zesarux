@@ -38,9 +38,34 @@ void msx_out_port_vdp_data(z80_byte value)
 }
 
 
+z80_byte msx_in_port_vdp_data(void)
+{
+    return vdp_9918a_in_vram_data(msx_vram_memory);
+}
+
+
+
+z80_byte msx_in_port_vdp_status(void)
+{
+    return vdp_9918a_in_vdp_status();
+}
+
 void msx_out_port_vdp_command_status(z80_byte value)
 {
     vdp_9918a_out_command_status(msx_vram_memory,value);
+}
+
+
+void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
+{
+    printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
+}
+
+z80_byte msx_in_port_ppi(z80_byte puerto_l)
+{
+    printf ("In port ppi. Port %02XH\n",puerto_l);
+
+    return 255; //temp
 }
 
 

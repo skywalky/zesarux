@@ -6911,6 +6911,10 @@ void out_port_msx1_no_time(z80_int puerto,z80_byte value)
 		printf ("Out port possibly vdp. Port %04XH value %02XH\n",puerto,value);
 	}
 
+	if (puerto_l>=0xA8 && puerto_l<=0xAB) {
+		msx_out_port_ppi(puerto_l,value);
+	}
+
 }
 
 void out_port_msx1(z80_int puerto,z80_byte value)
@@ -6942,7 +6946,19 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//A8. 
 	//if (puerto==0xa8) return 0x50; //temporal
 
+	if (puerto_l==0x98) {
+		printf ("VDP Video Ram Data IN\n");
+		return msx_in_port_vdp_data();
+	}	
 
+	if (puerto_l==0x99) {
+		printf ("VDP Status IN\n");
+		return msx_in_port_vdp_status();
+	}		
+
+	if (puerto_l>=0xA8 && puerto_l<=0xAB) {
+		return msx_in_port_ppi(puerto_l);
+	}
 
 
 	return 255;
