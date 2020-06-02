@@ -31,6 +31,17 @@
 
 z80_byte *msx_vram_memory=NULL;
 
+z80_byte msx_ppi_register_a;
+z80_byte msx_ppi_register_b;
+z80_byte msx_ppi_register_c;
+
+
+//Aunque solo son 10 filas, metemos array de 16 pues es el maximo valor de indice seleccionable por el PPI
+z80_byte msx_keyboard_table[16]={
+255,255,255,255,255,255,255,255,
+255,255,255,255,255,255,255,255
+};
+
 
 void msx_out_port_vdp_data(z80_byte value)
 {
@@ -59,11 +70,27 @@ void msx_out_port_vdp_command_status(z80_byte value)
 void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
 {
     printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
+
+    switch (puerto_l) {
+        case 0xAA:
+            msx_ppi_register_c=value;
+        break;
+    }
 }
 
 z80_byte msx_in_port_ppi(z80_byte puerto_l)
 {
     printf ("In port ppi. Port %02XH\n",puerto_l);
+
+    switch (puerto_l) {
+ 
+        case 0xA9:
+            //Leer registro B (filas teclado)
+            //que fila? msx_ppi_register_c
+            return msx_keyboard_table[msx_ppi_register_c & 0x0F];
+
+        break;
+    }
 
     return 255; //temp
 }

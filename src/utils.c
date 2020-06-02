@@ -299,6 +299,37 @@ struct x_tabla_teclado cpc_tabla_teclado_letras[]={
         {&cpc_keyboard_table[8],128}
 };
 
+
+
+struct x_tabla_teclado msx_tabla_teclado_letras[]={
+	{&msx_keyboard_table[8],32}, //A
+	{&msx_keyboard_table[6],64},
+        {&msx_keyboard_table[7],64},
+        {&msx_keyboard_table[7],32}, //D
+        {&msx_keyboard_table[7],4},
+        {&msx_keyboard_table[6],32},
+        {&msx_keyboard_table[6],16},
+        {&msx_keyboard_table[5],16}, //H
+        {&msx_keyboard_table[4],8},
+        {&msx_keyboard_table[5],32},
+        {&msx_keyboard_table[4],32},
+        {&msx_keyboard_table[4],16}, //L
+        {&msx_keyboard_table[4],64},
+        {&msx_keyboard_table[5],64}, //N
+        {&msx_keyboard_table[4],4},
+        {&msx_keyboard_table[3],8}, //P
+        {&msx_keyboard_table[8],8},
+        {&msx_keyboard_table[6],4},
+        {&msx_keyboard_table[7],16},
+        {&msx_keyboard_table[6],8}, //T
+        {&msx_keyboard_table[5],4},
+        {&msx_keyboard_table[6],128},
+        {&msx_keyboard_table[7],8},
+        {&msx_keyboard_table[7],128}, //X
+        {&msx_keyboard_table[5],8},
+        {&msx_keyboard_table[8],128}
+};
+
 // ================================== matrix ============================
 //        0      1      2      3      4      5      6      7
 //  +-------------------------------------------------------
@@ -4199,21 +4230,29 @@ void convert_numeros_letras_puerto_teclado_continue_after_recreated(z80_byte tec
       else *puerto |=mascara;
 
 
-					if (MACHINE_IS_Z88) {
-						puerto=z88_tabla_teclado_letras[indice].puerto;
-						mascara=z88_tabla_teclado_letras[indice].mascara;
+        if (MACHINE_IS_Z88) {
+                puerto=z88_tabla_teclado_letras[indice].puerto;
+                mascara=z88_tabla_teclado_letras[indice].mascara;
 
-						if (pressrelease) *puerto &=255-mascara;
-						else *puerto |=mascara;
-					}
+                if (pressrelease) *puerto &=255-mascara;
+                else *puerto |=mascara;
+        }
 
-					if (MACHINE_IS_CPC) {
-						puerto=cpc_tabla_teclado_letras[indice].puerto;
-                                                mascara=cpc_tabla_teclado_letras[indice].mascara;
+        if (MACHINE_IS_CPC) {
+                puerto=cpc_tabla_teclado_letras[indice].puerto;
+                mascara=cpc_tabla_teclado_letras[indice].mascara;
 
-                                                if (pressrelease) *puerto &=255-mascara;
-                                                else *puerto |=mascara;
-          }
+                if (pressrelease) *puerto &=255-mascara;
+                else *puerto |=mascara;
+         }
+
+        if (MACHINE_IS_MSX) {
+                puerto=msx_tabla_teclado_letras[indice].puerto;
+                mascara=msx_tabla_teclado_letras[indice].mascara;
+
+                if (pressrelease) *puerto &=255-mascara;
+                else *puerto |=mascara;
+         }         
 
           if (MACHINE_IS_QL) {
             puerto=ql_tabla_teclado_letras[indice].puerto;
