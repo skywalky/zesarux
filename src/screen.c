@@ -4327,7 +4327,10 @@ void scr_refresca_pantalla_y_border_msx(void)
 {
 
 
-	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>6)&1;
+	//z80_byte video_mode_m3=(vdp_9918a_registers[0]>>6)&1;
+
+	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>1)&1;
+
 	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
 
 	z80_byte video_mode=video_mode_m12 | video_mode_m3;
@@ -4356,6 +4359,9 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 
 	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
+
+
+	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
 
 	z80_byte *screen=get_base_mem_pantalla();
 
@@ -4456,6 +4462,79 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 		break;
 
+
+		//Screen 2. high-res mode
+		//video_mode: 1
+		case 1:
+
+					chars_in_line=32;
+			char_width=8;
+
+       	for (y=0;y<24;y++) {
+
+		   	int tercio=y/8;
+
+			for (x=0;x<chars_in_line;x++) {  
+       
+            
+				direccion=y*chars_in_line+x + pattern_name_table;  
+				z80_byte caracter=screen[direccion];
+                
+	                        	
+				//Forzado
+				ink=7;
+				paper=1;
+
+
+				int scanline;
+
+				z80_int pattern_address=(caracter*8+2048*tercio) & 8191;
+
+
+				
+				pattern_address &=8191;
+				pattern_address +=pattern_base_address;
+
+				pattern_address &=16383;
+				printf ("pattern address: %d\n",pattern_address);
+
+				
+
+				for (scanline=0;scanline<8;scanline++) {
+
+					byte_leido=screen[pattern_address++];
+
+						  
+                    for (bit=0;bit<char_width;bit++) {
+
+						int fila=(x*char_width+bit)/8;
+
+						
+						
+						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+						//if (1) {
+						if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
+							color= ( byte_leido & 128 ? ink : paper );
+							scr_putpixel_zoom(x*char_width+bit,y*8+scanline,color);
+						}
+
+						byte_leido=byte_leido<<1;
+        	        }
+				}
+
+		             
+
+            
+
+
+				direccion++;
+
+			}
+		   }		
+		break;
+
+		//Screen 3. multicolor mode
+		//video_mode: 2
 
 
 	}
