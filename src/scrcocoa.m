@@ -1649,17 +1649,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 
 	}
 
-        //Teclas que necesitan conversion de teclado para MSX
-        /*
-	if (MACHINE_IS_MSX) {
-
-                if (teclareal==scrcocoa_keymap_z88_cpc_minus) util_set_reset_key_msx_keymap(UTIL_KEY_MSX_MINUS,pressrelease);
-
-                //else 
-
-
-	}      
-        */  
+   
 
 
         //Teclas que necesitan conversion de teclado para Z88
