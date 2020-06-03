@@ -4470,6 +4470,9 @@ void scr_refresca_pantalla_y_border_msx(void)
 					chars_in_line=32;
 			char_width=8;
 
+
+			pattern_base_address &=8192; //Cae en offset 0 o 8192
+
        	for (y=0;y<24;y++) {
 
 		   	int tercio=y/8;
@@ -4478,11 +4481,11 @@ void scr_refresca_pantalla_y_border_msx(void)
        
 					//temp
 					//pattern_name_table=0x1800;
-					printf ("pattern_name_table %04XH\n",pattern_name_table);
-					printf ("pattern_base_address %04XH\n",pattern_base_address);
+					//printf ("pattern_name_table %04XH\n",pattern_name_table);
+					//printf ("pattern_base_address %04XH\n",pattern_base_address);
 
 					//temp
-					pattern_base_address=0; //porque?? en basic esto funciona. Pilla erroneamente pattern_base_address=0x1800
+					//pattern_base_address=0; //porque?? en basic esto funciona. Pilla erroneamente pattern_base_address=0x1800
 
             
 				direccion=y*chars_in_line+x + pattern_name_table;  
