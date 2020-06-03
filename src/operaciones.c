@@ -6919,6 +6919,10 @@ void out_port_msx1_no_time(z80_int puerto,z80_byte value)
 		printf ("Out port possibly vdp. Port %04XH value %02XH\n",puerto,value);
 	}
 
+	if (puerto_l>=0xA0 && puerto_l<=0xA7) {
+		msx_out_port_psg(puerto_l,value);
+	}	
+
 	if (puerto_l>=0xA8 && puerto_l<=0xAB) {
 		msx_out_port_ppi(puerto_l,value);
 	}

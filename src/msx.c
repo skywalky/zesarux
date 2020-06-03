@@ -28,6 +28,7 @@
 #include "vdp_9918a.h"
 #include "cpu.h"
 #include "debug.h"
+#include "ay38912.h"
 
 z80_byte *msx_vram_memory=NULL;
 
@@ -87,12 +88,35 @@ z80_byte msx_in_port_ppi(z80_byte puerto_l)
         case 0xA9:
             //Leer registro B (filas teclado)
             //que fila? msx_ppi_register_c
+
+            //si estamos en el menu, no devolver tecla
+            if (zxvision_key_not_sent_emulated_mach() ) return 255;
+            
             return msx_keyboard_table[msx_ppi_register_c & 0x0F];
 
         break;
     }
 
     return 255; //temp
+}
+
+
+void msx_out_port_psg(z80_byte puerto_l,z80_byte value)
+{
+    printf ("Out port psg. Port %02XH value %02XH\n",puerto_l,value);
+
+
+        //Registro
+        if (puerto_l==0xA0) {
+                        activa_ay_chip_si_conviene();
+                        if (ay_chip_present.v==1) out_port_ay(65533,value);
+                }
+        //Datos
+        if (puerto_l==0xA1) {
+                        activa_ay_chip_si_conviene();
+                        if (ay_chip_present.v==1) out_port_ay(49149,value);
+        }    
+ 
 }
 
 

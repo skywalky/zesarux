@@ -3659,6 +3659,7 @@ You don't need timings for H/V sync =)
                 lee_puerto=lee_puerto_msx1;
 				out_port=out_port_msx1;
 				fetch_opcode=fetch_opcode_msx;
+				ay_chip_present.v=1;
         break;
 
 

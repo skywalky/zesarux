@@ -251,10 +251,7 @@ void core_msx_fin_scanline(void)
 					
 				}
 
-				if (audiodac_enabled.v) {
-					audiodac_mix();
-				}
-
+			
 
 				if (realtape_inserted.v && realtape_playing.v) {
 					realtape_get_byte();
