@@ -51,6 +51,7 @@
 #include "tsconf.h"
 #include "mk14.h"
 #include "settings.h"
+#include "vdp_9918a.h"
 
 //Incluimos estos dos para la funcion de fade out
 #ifdef COMPILE_XWINDOWS
@@ -4324,6 +4325,19 @@ void scr_refresca_pantalla_comun(void)
 //Refresco pantalla sin rainbow
 void scr_refresca_pantalla_y_border_msx(void)
 {
+
+
+	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>6)&1;
+	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
+
+	z80_byte video_mode=video_mode_m12 | video_mode_m3;
+
+	printf ("video_mode: %d\n",video_mode);
+
+
+
+
+
 	int x,y,bit;
 	z80_int direccion,dir_atributo;
 	z80_byte byte_leido;
@@ -4334,9 +4348,14 @@ void scr_refresca_pantalla_y_border_msx(void)
 	z80_byte attribute,ink,paper,bright,flash,aux;
 
 
-	z80_int pattern_base_address=2048; //TODO: Puesto a pelo
-	z80_int base_chars=0; //TODO: puesto a pelo
+	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
+	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
 
+	pattern_name_table=(vdp_9918a_registers[2]&15) * 0x400; 
+
+
+
+	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
 
 	z80_byte *screen=get_base_mem_pantalla();
 
@@ -4344,22 +4363,42 @@ void scr_refresca_pantalla_y_border_msx(void)
 	//printf ("dpy=%x ventana=%x gc=%x image=%x\n",dpy,ventana,gc,image);
 	z80_byte x_hi;
 
+		int chars_in_line;
+		int char_width;
 
+	switch(video_mode) {
+
+		case 4:
+		case 0:
+		//"screen 0": Text, characters of 6 x 8	40 x 24 characters
+	//video_mode: 4		
+
+	
+
+		//pattern_base_address=0; //TODO: Puesto a pelo		
+		//"screen 1": Text, characters of 8 x 8	32 x 24 characters
+	//video_mode: 0	
+
+
+
+		if (video_mode==4) {
+			chars_in_line=40;
+			char_width=6;
+		}
+
+		else {
+			chars_in_line=32;
+			char_width=8;
+		}
+
+		//TODO colores monocromo en 40x24
+		//TODO colores multiples en 32x24
 
         for (y=0;y<24;y++) {
-			for (x=0;x<40;x++) {  //TODO 40 caracteres
+			for (x=0;x<chars_in_line;x++) {  
        
-                
-
-			
-
-
-
-
-
-
-				direccion=y*40+x + base_chars;  //TODO ancho 40
-
+            
+				direccion=y*chars_in_line+x + pattern_name_table;  
 				z80_byte caracter=screen[direccion];
                 
 	                        
@@ -4386,16 +4425,16 @@ void scr_refresca_pantalla_y_border_msx(void)
 	                       
 
 						   //6 de ancho
-                    for (bit=0;bit<6;bit++) {
+                    for (bit=0;bit<char_width;bit++) {
 
-						int fila=(x*6+bit)/8;
+						int fila=(x*char_width+bit)/8;
 
 						
 						
 						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
 						if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
 							color= ( byte_leido & 128 ? ink : paper );
-							scr_putpixel_zoom(x*6+bit,y*8+scanline,color);
+							scr_putpixel_zoom(x*char_width+bit,y*8+scanline,color);
 						}
 
 						byte_leido=byte_leido<<1;
@@ -4407,13 +4446,21 @@ void scr_refresca_pantalla_y_border_msx(void)
             
 
 
-			direccion++;
+				direccion++;
 
-		}
+			}
 
 			
 
-    }
+   		 }
+
+		break;
+
+
+
+	}
+
+
 
 }
 

@@ -24,6 +24,6 @@
 
 #include "cpu.h"
 
-
+extern z80_byte vdp_9918a_registers[];
 
 #endif

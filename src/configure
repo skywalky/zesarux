@@ -1272,7 +1272,7 @@ msx.o: msx.c msx.h cpu.h debug.h vdp_9918a.h
 saa_simul.o: saa_simul.c saa_simul.h ay38912.h cpu.h audio.h debug.h
 	\$(CC) \$(CFLAGS) -c saa_simul.c
 
-screen.o: screen.c screen.h debug.h mem128.h chloe.h prism.h timex.h cpc.h prism.h operaciones.h zx8081.h charset.h menu.h audio.h contend.h ula.h tape_smp.h z88.h ulaplus.h zxuno.h spectra.h spritechip.h timer.h sam.h ql.h chrome.h zxevo.h tsconf.h baseconf.h mk14.h
+screen.o: screen.c screen.h debug.h mem128.h chloe.h prism.h timex.h cpc.h prism.h operaciones.h zx8081.h charset.h menu.h audio.h contend.h ula.h tape_smp.h z88.h ulaplus.h zxuno.h spectra.h spritechip.h timer.h sam.h ql.h chrome.h zxevo.h tsconf.h baseconf.h mk14.h vdp_9918a.h
 	\$(CC) \$(CFLAGS) -c screen.c
 
 mem128.o: mem128.c cpu.h mem128.h debug.h contend.h zxuno.h chloe.h prism.h timex.h sam.h ula.h tbblue.h superupgrade.h chrome.h zxevo.h tsconf.h baseconf.h msx.h
