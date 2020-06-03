@@ -5591,11 +5591,13 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                 if (pressrelease) {
 					                              puerto_teclado_sam_7ff9 &= 255-32;
                                         ql_keyboard_table[7] &=(255-128);
+                                        msx_keyboard_table[2] &= 255-4;
 
                                 }
                                 else {
 					                             puerto_teclado_sam_7ff9 |= 32;
                                        ql_keyboard_table[7] |=128;
+                                       msx_keyboard_table[2] |= 4;
                                 }
                         break;
 
@@ -5603,10 +5605,12 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                  if (pressrelease) {
 					                              puerto_teclado_sam_7ff9 &= 255-64;
                                         ql_keyboard_table[2] &=(255-4);
+                                        msx_keyboard_table[2] &= 255-8;
                                  }
                                  else {
 					                              puerto_teclado_sam_7ff9 |= 64;
                                         ql_keyboard_table[2] |=4;
+                                        msx_keyboard_table[2] |= 8;
                                  }
                         break;
 
@@ -5615,10 +5619,12 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
 					                              puerto_teclado_sam_7ff9 &= 255-128;
                                         // 0| Shift   Ctrl    Alt      x      v      /      n      ,     ql_keyboard_table[7]
                                         ql_keyboard_table[7] &=255-32;
+                                        msx_keyboard_table[2] &= 255-16;
                                  }
                                  else {
 					                              puerto_teclado_sam_7ff9 |= 128;
                                         ql_keyboard_table[7] |=32;
+                                        msx_keyboard_table[2] |= 16;
                                  }
                         break;
 
