@@ -4476,6 +4476,14 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 			for (x=0;x<chars_in_line;x++) {  
        
+					//temp
+					//pattern_name_table=0x1800;
+					printf ("pattern_name_table %04XH\n",pattern_name_table);
+					printf ("pattern_base_address %04XH\n",pattern_base_address);
+
+					//temp
+					pattern_base_address=0; //porque?? en basic esto funciona. Pilla erroneamente pattern_base_address=0x1800
+
             
 				direccion=y*chars_in_line+x + pattern_name_table;  
 				z80_byte caracter=screen[direccion];
@@ -4488,15 +4496,15 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 				int scanline;
 
-				z80_int pattern_address=(caracter*8+2048*tercio) & 8191;
+				z80_int pattern_address=(caracter*8+2048*tercio) ;
 
 
 				
-				pattern_address &=8191;
+				//pattern_address &=8191;
 				pattern_address +=pattern_base_address;
 
 				pattern_address &=16383;
-				printf ("pattern address: %d\n",pattern_address);
+				//printf ("pattern address: %d\n",pattern_address);
 
 				
 
