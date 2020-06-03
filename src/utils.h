@@ -367,6 +367,14 @@ enum util_teclas_cpc_keymap
 };
 
 
+/*
+enum util_teclas_msx_keymap
+{
+        UTIL_KEY_MSX_MINUS
+
+};
+*/
+
 enum util_teclas_chloe_keymap
 {
         UTIL_KEY_CHLOE_MINUS,

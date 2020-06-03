@@ -1293,7 +1293,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 
 
 	int tecla_gestionada_sam_ql=0;
-	if (MACHINE_IS_SAM || MACHINE_IS_QL) {
+	if (MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX) {
 		tecla_gestionada_sam_ql=1;
 
                 if (teclareal==scrcocoa_keymap_z88_cpc_minus) util_set_reset_key_common_keymap(UTIL_KEY_COMMON_KEYMAP_MINUS,pressrelease);
@@ -1648,6 +1648,18 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 
 
 	}
+
+        //Teclas que necesitan conversion de teclado para MSX
+        /*
+	if (MACHINE_IS_MSX) {
+
+                if (teclareal==scrcocoa_keymap_z88_cpc_minus) util_set_reset_key_msx_keymap(UTIL_KEY_MSX_MINUS,pressrelease);
+
+                //else 
+
+
+	}      
+        */  
 
 
         //Teclas que necesitan conversion de teclado para Z88
@@ -2533,7 +2545,7 @@ void scrcocoa_z88_cpc_load_keymap(void)
         //y los codigos raw de retorno siempre son los mismos.
         //por tanto, devolvemos lo mismo que con keymap english siempre:
 
-	if (MACHINE_IS_Z88 || MACHINE_IS_SAM || MACHINE_IS_QL) {
+	if (MACHINE_IS_Z88 || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX) {
 	                scrcocoa_keymap_z88_cpc_minus='-';
                         scrcocoa_keymap_z88_cpc_equal='=';
 			scrcocoa_keymap_z88_cpc_backslash=COCOA_SECOND_BACKSLASH;
