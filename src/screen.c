@@ -4421,8 +4421,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 		}
 
 
-				ink=7;
-				paper=1;		
+				
 
 
 		if (video_mode==4) {
@@ -4432,7 +4431,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 			paper=(vdp_9918a_registers[7])&15;
 		}
 
-		printf ("tinta: %d papel: %d\n",ink,paper);
+		//printf ("tinta: %d papel: %d\n",ink,paper);
 
 		//TODO colores monocromo en 40x24
 		//TODO colores multiples en 32x24
@@ -4444,6 +4443,15 @@ void scr_refresca_pantalla_y_border_msx(void)
 				direccion=y*chars_in_line+x + pattern_name_table;  
 				z80_byte caracter=screen[direccion];
                 
+
+				if (video_mode==0) {
+					int posicion_color=caracter/8;
+
+					z80_byte byte_color=screen[pattern_color_table+posicion_color];
+
+					ink=(byte_color >> 4) & 15;
+					paper=(byte_color ) & 15;
+				}
 
 
 				int scanline;
