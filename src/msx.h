@@ -27,5 +27,6 @@
 extern z80_byte *msx_vram_memory;
 
 extern z80_byte msx_keyboard_table[];
+extern z80_byte msx_read_vram_byte(z80_int address);
 
 #endif

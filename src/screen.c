@@ -4350,7 +4350,6 @@ void scr_refresca_pantalla_y_border_msx(void)
 {
 
 
-	//z80_byte video_mode_m3=(vdp_9918a_registers[0]>>6)&1;
 
 	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>1)&1;
 
@@ -4358,10 +4357,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 	z80_byte video_mode=video_mode_m12 | video_mode_m3;
 
-	printf ("video_mode: %d\n",video_mode);
-
-
-
+	//printf ("video_mode: %d\n",video_mode);
 
 
 	int x,y,bit; 
@@ -4386,7 +4382,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
 
-	z80_byte *screen=get_base_mem_pantalla();
+	//z80_byte *screen=get_base_mem_pantalla();
 
 
 
@@ -4411,20 +4407,16 @@ void scr_refresca_pantalla_y_border_msx(void)
 		if (video_mode==4) {
 			chars_in_line=40;
 			char_width=6;
+
+			//En modo texto 40x24, color tinta y papel fijos
+
+			ink=(vdp_9918a_registers[7]>>4)&15;
+			paper=(vdp_9918a_registers[7])&15;			
 		}
 
 		else {
 			chars_in_line=32;
 			char_width=8;
-		}
-
-			
-
-		if (video_mode==4) {
-			//En modo texto 40x24, color tinta y papel fijos
-
-			ink=(vdp_9918a_registers[7]>>4)&15;
-			paper=(vdp_9918a_registers[7])&15;
 		}
 
 
@@ -4433,15 +4425,13 @@ void scr_refresca_pantalla_y_border_msx(void)
         for (y=0;y<24;y++) {
 			for (x=0;x<chars_in_line;x++) {  
        
-            
-				
-				z80_byte caracter=screen[direccion_name_table];
+            		
+				z80_byte caracter=msx_read_vram_byte(direccion_name_table);
                 
-
 				if (video_mode==0) {
 					int posicion_color=caracter/8;
 
-					z80_byte byte_color=screen[pattern_color_table+posicion_color];
+					z80_byte byte_color=msx_read_vram_byte(pattern_color_table+posicion_color);
 
 					ink=(byte_color >> 4) & 15;
 					paper=(byte_color ) & 15;
@@ -4454,7 +4444,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 				for (scanline=0;scanline<8;scanline++) {
 
-					byte_leido=screen[pattern_address++];
+					byte_leido=msx_read_vram_byte(pattern_address++);
 	                       
 
                     for (bit=0;bit<char_width;bit++) {
@@ -4476,7 +4466,6 @@ void scr_refresca_pantalla_y_border_msx(void)
 				direccion_name_table++;
 
 			}
-
 			
 
    		 }
@@ -4505,7 +4494,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 				for (x=0;x<chars_in_line;x++) {  
 					
 					
-					z80_byte caracter=screen[direccion_name_table];
+					z80_byte caracter=msx_read_vram_byte(direccion_name_table);
 					
 
 					int scanline;
@@ -4523,10 +4512,10 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 					for (scanline=0;scanline<8;scanline++) {
 
-						byte_leido=screen[pattern_address++];
+						byte_leido=msx_read_vram_byte(pattern_address++);
 
 
-						z80_byte byte_color=screen[pattern_color_table++];
+						z80_byte byte_color=msx_read_vram_byte(pattern_color_table++);
 
 						ink=(byte_color>>4) &15;
 						paper=byte_color &15;
@@ -4567,7 +4556,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 				for (x=0;x<32;x++) {  
 		
 							
-					z80_byte caracter=screen[direccion_name_table++];
+					z80_byte caracter=msx_read_vram_byte(direccion_name_table++);
 					
 								
 					int incremento_byte=(y&3)*2;
@@ -4582,7 +4571,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 					int row;
 					for (row=0;row<2;row++) {
 
-						byte_leido=screen[pattern_address++];
+						byte_leido=msx_read_vram_byte(pattern_address++);
 						
 						int col;
 						for (col=0;col<2;col++) {

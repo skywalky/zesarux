@@ -127,3 +127,10 @@ void msx_alloc_vram_memory(void)
         if (msx_vram_memory==NULL) cpu_panic("Cannot allocate memory for msx vram");
     }
 }
+
+
+z80_byte msx_read_vram_byte(z80_int address)
+{
+    //Siempre leer limitando a 16 kb
+    return msx_vram_memory[address & 16383];
+}
