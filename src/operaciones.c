@@ -6973,6 +6973,24 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	}
 
 
+	if (puerto_l==0xA0 && ay_3_8912_registro_sel[0]==14) { 
+		printf ("read tape\n");
+		//sleep(1);
+		z80_byte valor=0;
+                if (realtape_inserted.v && realtape_playing.v) {
+                        if (realtape_last_value>=realtape_volumen) {
+                                valor=valor|128;
+                                //printf ("1 ");
+                        }
+                        else {
+                                valor=(valor & (255-128));
+                                //printf ("0 ");
+                        }
+                }	
+		return valor;
+	}
+
+
 	return 255;
  
 	
