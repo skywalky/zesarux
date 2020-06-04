@@ -4568,81 +4568,67 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 
 		case 2:
-		//Screen 3. multicolor mode. 64x48
-		//video_mode: 2
+			//Screen 3. multicolor mode. 64x48
+			//video_mode: 2
 
-		char_width=8;
+
+			direccion_name_table=pattern_name_table;  
+
+			for (y=0;y<24;y++) {
+				for (x=0;x<32;x++) {  
 		
-
-		direccion_name_table=pattern_name_table;  
-
-        for (y=0;y<24;y++) {
-			for (x=0;x<32;x++) {  
-       
-            
-				
-				z80_byte caracter=screen[direccion_name_table++];
-                
-	                        
-				int incremento_byte=(y&3)*2;
-
-
-				pattern_base_address &=(65536-1023); //Cae offsets de 1kb
-
-				//printf ("pattern_address: %d\n",pattern_base_address);
-
-				z80_int pattern_address=(pattern_base_address+caracter*8+incremento_byte)&16383;
-
-				int row;
-				for (row=0;row<2;row++) {
-
-					byte_leido=screen[pattern_address++];
-					//printf ("byte leido: %02XH\n",byte_leido);
-
-					//z80_byte color_a=(byte_leido>>4)&15;
-					//z80_byte color_b=(byte_leido   )&15;
-	                       
-
-					int col;
-                    for (col=0;col<2;col++) {
-
-										
-						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-						if (scr_ver_si_refrescar_por_menu_activo(x,y)) {
-							int xfinal=x*8+col*4;
-							int yfinal=y*8+row*4;
-
-							//if (col==0) color=color_a;
-							//else        color=color_b;
-
-
-							//Primera columna usa color en parte parte alta y luego baja
-							color=(byte_leido>>4)&15;
-
-							byte_leido=byte_leido << 4;
-
 							
-							int subpixel_x,subpixel_y;
+					z80_byte caracter=screen[direccion_name_table++];
+					
+								
+					int incremento_byte=(y&3)*2;
 
-							for (subpixel_y=0;subpixel_y<4;subpixel_y++) {
-								for (subpixel_x=0;subpixel_x<4;subpixel_x++) {
-							
-									scr_putpixel_zoom(xfinal+subpixel_x,  yfinal+subpixel_y,  VDP_9918_INDEX_FIRST_COLOR+color);
+
+					pattern_base_address &=(65536-1023); //Cae offsets de 1kb
+
+					//printf ("pattern_address: %d\n",pattern_base_address);
+
+					z80_int pattern_address=(pattern_base_address+caracter*8+incremento_byte)&16383;
+
+					int row;
+					for (row=0;row<2;row++) {
+
+						byte_leido=screen[pattern_address++];
+						
+						int col;
+						for (col=0;col<2;col++) {
+											
+							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+							if (scr_ver_si_refrescar_por_menu_activo(x,y)) {
+
+								//Primera columna usa color en parte parte alta y luego baja
+								color=(byte_leido>>4)&15;
+
+								byte_leido=byte_leido << 4;
+
+								
+								int subpixel_x,subpixel_y;
+
+								int xfinal=x*8+col*4;
+								int yfinal=y*8+row*4;							
+
+								for (subpixel_y=0;subpixel_y<4;subpixel_y++) {
+									for (subpixel_x=0;subpixel_x<4;subpixel_x++) {
+								
+										scr_putpixel_zoom(xfinal+subpixel_x,  yfinal+subpixel_y,  VDP_9918_INDEX_FIRST_COLOR+color);
+									}
+
 								}
+								
 							}
-							
+						
 						}
 
-						
-        	        }
+					}
+
 				}
 
-
 			}
-
-			
-
-   		 }
 
 		break;		
 
