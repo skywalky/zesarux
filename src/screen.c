@@ -334,6 +334,29 @@ const int z88_colortable_original[4]={
 //ver screen.h, Z88_PXCOLON, etc
 
 
+//colores para chip de msx
+const int vdp9918_colortable_original[16]={
+0x000000,
+0x010101,
+0x3eb849,
+0x74d07d,
+0x5955e0,
+0x8076f1,
+0xb95e51,
+0x65dbef,
+0xdb6559,
+0xff897d,
+0xccc35e,
+0xded087,
+0x3aa241,
+0xb766b5,
+0xcccccc,
+0xffffff
+};
+
+
+
+
 //Tabla con colores para tema de GUI Solarized. 
 /*
 SOLARIZED HEX     16/8 TERMCOL  XTERM/HEX   L*A*B      RGB         HSB
@@ -4552,10 +4575,6 @@ void scr_refresca_pantalla_y_border_msx(void)
 		char_width=8;
 		
 
-		//TODO colores monocromo en 40x24
-		//TODO colores multiples en 32x24
-
-
 		direccion=pattern_name_table;  
 
         for (y=0;y<24;y++) {
@@ -4620,7 +4639,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 							for (subpixel_y=0;subpixel_y<4;subpixel_y++) {
 								for (subpixel_x=0;subpixel_x<4;subpixel_x++) {
 							
-									scr_putpixel_zoom(xfinal+subpixel_x,  yfinal+subpixel_y,  color);
+									scr_putpixel_zoom(xfinal+subpixel_x,  yfinal+subpixel_y,  VDP_9918_INDEX_FIRST_COLOR+color);
 								}
 							}
 							
@@ -8662,7 +8681,7 @@ G  G   R   R   B   B
 #define GRAY_MODE_CONST_BRILLO 20
 
 
-	                for (i=0;i<16;i++) {
+	        for (i=0;i<16;i++) {
 				valorgris=(i&7)*GRAY_MODE_CONST;
 
 				if (i>=8) valorgris +=GRAY_MODE_CONST_BRILLO;
@@ -8671,7 +8690,7 @@ G  G   R   R   B   B
 
 				screen_set_colour_normal(i,(r<<16)|(g<<8)|b);
 
-	                }
+	        }
 
 			//El color 8 es negro, con brillo 1. Pero negro igual
 			screen_set_colour_normal(8,0);
@@ -8789,6 +8808,13 @@ G  G   R   R   B   B
 					screen_set_colour_normal(SOLARIZED_INDEX_FIRST_COLOR+i,solarized_colortable_original[i]);
 				}			
 
+
+				//Colores VDP9918
+				for (i=0;i<VDP_9918_TOTAL_PALETTE_COLOURS;i++) {
+					valorgris=i*16;
+					VALOR_GRIS_A_R_G_B
+					screen_set_colour_normal(VDP_9918_INDEX_FIRST_COLOR+i,(r<<16)|(g<<8)|b);					
+				}
 
 
 
@@ -8970,6 +8996,10 @@ Bit 6 GRN1 most  significant bit of green.
 
 					
 
+				//Colores VDP 9918
+				for (i=0;i<VDP_9918_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(VDP_9918_INDEX_FIRST_COLOR+i,vdp9918_colortable_original[i]);
+				}
 
 
 		}
@@ -9078,6 +9108,10 @@ void screen_init_colour_table(void)
 	TODO: hacerlos en gris y tambien oscuros
 	Para ello, se genera tabla con forzado a gris, lo copio a tabla de grises, y luego se genera colores normales
 	*/
+
+	debug_printf (VERBOSE_INFO,"Creating colour tables for %d colours",EMULATOR_TOTAL_PALETTE_COLOURS);
+	if (EMULATOR_TOTAL_PALETTE_COLOURS>65535) cpu_panic("More than 65536 colours to allocate. This is fatal!");
+
 	int antes_screen_gray_mode=screen_gray_mode;
 	screen_gray_mode=7;
 	screen_init_colour_table_siguiente();
