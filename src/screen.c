@@ -4405,7 +4405,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 	
 
 		//pattern_base_address=0; //TODO: Puesto a pelo		
-		//"screen 1": Text, characters of 8 x 8	32 x 24 characters
+		//"screen 1": Text, characters of 8 x 8	, 32 x 24 characters
 	//video_mode: 0	
 
 
@@ -4420,6 +4420,20 @@ void scr_refresca_pantalla_y_border_msx(void)
 			char_width=8;
 		}
 
+
+				ink=7;
+				paper=1;		
+
+
+		if (video_mode==4) {
+			//En modo texto 40x24, color tinta y papel fijos
+
+			ink=(vdp_9918a_registers[7]>>4)&15;
+			paper=(vdp_9918a_registers[7])&15;
+		}
+
+		printf ("tinta: %d papel: %d\n",ink,paper);
+
 		//TODO colores monocromo en 40x24
 		//TODO colores multiples en 32x24
 
@@ -4430,18 +4444,6 @@ void scr_refresca_pantalla_y_border_msx(void)
 				direccion=y*chars_in_line+x + pattern_name_table;  
 				z80_byte caracter=screen[direccion];
                 
-	                        
-
-				//Prueba de un modo de video inventado en que el color de la tinta sale de los 4 bits de la zona de pixeles
-				//int ink1,ink2;
-
-				//Forzado
-				attribute=56;
-		
-
-
-				ink=7;
-				paper=1;
 
 
 				int scanline;
@@ -4463,7 +4465,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
 						if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
 							color= ( byte_leido & 128 ? ink : paper );
-							scr_putpixel_zoom(x*char_width+bit,y*8+scanline,color);
+							scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
 						}
 
 						byte_leido=byte_leido<<1;
@@ -4496,6 +4498,9 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 			pattern_base_address &=8192; //Cae en offset 0 o 8192
 
+
+			pattern_color_table &=8192; //Cae en offset 0 o 8192
+
        	for (y=0;y<24;y++) {
 
 		   	int tercio=y/8;
@@ -4515,14 +4520,19 @@ void scr_refresca_pantalla_y_border_msx(void)
 				z80_byte caracter=screen[direccion];
                 
 	                        	
-				//Forzado
-				ink=7;
-				paper=1;
+
+
+
+				
 
 
 				int scanline;
 
 				z80_int pattern_address=(caracter*8+2048*tercio) ;
+
+
+
+
 
 
 				
@@ -4532,11 +4542,26 @@ void scr_refresca_pantalla_y_border_msx(void)
 				pattern_address &=16383;
 				//printf ("pattern address: %d\n",pattern_address);
 
+
+
+				z80_int color_address=(caracter*8+2048*tercio) ;
+				color_address +=pattern_color_table;
+				color_address &=16383;
+
+
+				
+
 				
 
 				for (scanline=0;scanline<8;scanline++) {
 
 					byte_leido=screen[pattern_address++];
+
+
+					z80_byte byte_color=screen[pattern_color_table++];
+
+					ink=(byte_color>>4) &15;
+					paper=byte_color &15;
 
 						  
                     for (bit=0;bit<char_width;bit++) {
@@ -4549,7 +4574,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 						//if (1) {
 						if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
 							color= ( byte_leido & 128 ? ink : paper );
-							scr_putpixel_zoom(x*char_width+bit,y*8+scanline,color);
+							scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
 						}
 
 						byte_leido=byte_leido<<1;
@@ -4607,7 +4632,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 				for (row=0;row<2;row++) {
 
 					byte_leido=screen[pattern_address++];
-					printf ("byte leido: %02XH\n",byte_leido);
+					//printf ("byte leido: %02XH\n",byte_leido);
 
 					z80_byte color_a=(byte_leido>>4)&15;
 					z80_byte color_b=(byte_leido   )&15;
@@ -4621,8 +4646,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 						
 						
 						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-						//if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
-						if (1) {
+						if (scr_ver_si_refrescar_por_menu_activo(x,y)) {
 							int xfinal=x*8+col*4;
 							int yfinal=y*8+row*4;
 
