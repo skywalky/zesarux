@@ -52,6 +52,7 @@
 #include "mk14.h"
 #include "settings.h"
 #include "vdp_9918a.h"
+#include "msx.h"
 
 //Incluimos estos dos para la funcion de fade out
 #ifdef COMPILE_XWINDOWS
@@ -4440,7 +4441,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 				int scanline;
 
-				z80_int pattern_address=(pattern_base_address+caracter*8)&16383;
+				z80_int pattern_address=pattern_base_address+caracter*8;
 
 				for (scanline=0;scanline<8;scanline++) {
 
@@ -4501,13 +4502,13 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 					z80_int pattern_address=(caracter*8+2048*tercio) ;
 					pattern_address +=pattern_base_address;
-					pattern_address &=16383;
+					
 					
 
 
 					z80_int color_address=(caracter*8+2048*tercio) ;
 					color_address +=pattern_color_table;
-					color_address &=16383;
+					
 			
 
 					for (scanline=0;scanline<8;scanline++) {
@@ -4566,7 +4567,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 					//printf ("pattern_address: %d\n",pattern_base_address);
 
-					z80_int pattern_address=(pattern_base_address+caracter*8+incremento_byte)&16383;
+					z80_int pattern_address=pattern_base_address+caracter*8+incremento_byte;
 
 					int row;
 					for (row=0;row<2;row++) {
