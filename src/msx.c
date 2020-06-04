@@ -82,7 +82,7 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
 
 z80_byte msx_in_port_ppi(z80_byte puerto_l)
 {
-    printf ("In port ppi. Port %02XH\n",puerto_l);
+    //printf ("In port ppi. Port %02XH\n",puerto_l);
 
     z80_byte valor;
 
