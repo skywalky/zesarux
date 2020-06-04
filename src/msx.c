@@ -29,6 +29,7 @@
 #include "cpu.h"
 #include "debug.h"
 #include "ay38912.h"
+#include "tape.h"
 
 z80_byte *msx_vram_memory=NULL;
 
@@ -70,7 +71,7 @@ void msx_out_port_vdp_command_status(z80_byte value)
 
 void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
 {
-    printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
+    //printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
 
     switch (puerto_l) {
         case 0xAA:
@@ -82,6 +83,8 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
 z80_byte msx_in_port_ppi(z80_byte puerto_l)
 {
     printf ("In port ppi. Port %02XH\n",puerto_l);
+
+    z80_byte valor;
 
     switch (puerto_l) {
  
@@ -95,6 +98,30 @@ z80_byte msx_in_port_ppi(z80_byte puerto_l)
             return msx_keyboard_table[msx_ppi_register_c & 0x0F];
 
         break;
+
+        case 0xAA:
+        //printf ("read tape??\n");
+
+
+		/*valor=0;
+                if (realtape_inserted.v && realtape_playing.v) {
+                        if (realtape_last_value>=realtape_volumen) {
+                                valor=valor|128;
+                                printf ("1 ");
+                        }
+                        else {
+                                valor=(valor & (255-128));
+                                printf ("0 ");
+                        }
+                }	
+		return valor;*/
+
+
+
+            //Devolver lo mismo que se ha escrito? TODO revisar esto
+            return msx_ppi_register_c;
+        break;
+
     }
 
     return 255; //temp

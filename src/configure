@@ -1266,7 +1266,7 @@ ay38912.o: ay38912.c ay38912.h cpu.h audio.h joystick.h debug.h
 vdp_9918a.o: vdp_9918a.c vdp_9918a.h cpu.h debug.h
 	\$(CC) \$(CFLAGS) -c vdp_9918a.c
 
-msx.o: msx.c msx.h cpu.h debug.h vdp_9918a.h
+msx.o: msx.c msx.h cpu.h debug.h vdp_9918a.h tape.h
 	\$(CC) \$(CFLAGS) -c msx.c
 
 saa_simul.o: saa_simul.c saa_simul.h ay38912.h cpu.h audio.h debug.h
