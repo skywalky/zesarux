@@ -4494,76 +4494,65 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 			pattern_base_address &=8192; //Cae en offset 0 o 8192
 
-
 			pattern_color_table &=8192; //Cae en offset 0 o 8192
-
 
 			direccion_name_table=pattern_name_table;  
 
-       	for (y=0;y<24;y++) {
+			for (y=0;y<24;y++) {
 
-		   	int tercio=y/8;
+				int tercio=y/8;
 
-			for (x=0;x<chars_in_line;x++) {  
-                  
-				
-				z80_byte caracter=screen[direccion_name_table];
-                
+				for (x=0;x<chars_in_line;x++) {  
+					
+					
+					z80_byte caracter=screen[direccion_name_table];
+					
 
-				int scanline;
+					int scanline;
 
-				z80_int pattern_address=(caracter*8+2048*tercio) ;
-
-
-				
-				//pattern_address &=8191;
-				pattern_address +=pattern_base_address;
-
-				pattern_address &=16383;
-				//printf ("pattern address: %d\n",pattern_address);
+					z80_int pattern_address=(caracter*8+2048*tercio) ;
+					pattern_address +=pattern_base_address;
+					pattern_address &=16383;
+					
 
 
-
-				z80_int color_address=(caracter*8+2048*tercio) ;
-				color_address +=pattern_color_table;
-				color_address &=16383;
-
+					z80_int color_address=(caracter*8+2048*tercio) ;
+					color_address +=pattern_color_table;
+					color_address &=16383;
 			
 
-				for (scanline=0;scanline<8;scanline++) {
+					for (scanline=0;scanline<8;scanline++) {
 
-					byte_leido=screen[pattern_address++];
+						byte_leido=screen[pattern_address++];
 
 
-					z80_byte byte_color=screen[pattern_color_table++];
+						z80_byte byte_color=screen[pattern_color_table++];
 
-					ink=(byte_color>>4) &15;
-					paper=byte_color &15;
+						ink=(byte_color>>4) &15;
+						paper=byte_color &15;
 
-						  
-                    for (bit=0;bit<char_width;bit++) {
+							
+						for (bit=0;bit<char_width;bit++) {
 
-						int fila=(x*char_width+bit)/8;
+							int fila=(x*char_width+bit)/8;
 
-						
-						
-						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-						//if (1) {
-						if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
-							color= ( byte_leido & 128 ? ink : paper );
-							scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
+													
+							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+							if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
+								color= ( byte_leido & 128 ? ink : paper );
+								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
+							}
+
+							byte_leido=byte_leido<<1;
 						}
+					}
 
-						byte_leido=byte_leido<<1;
-        	        }
+						
+					direccion_name_table++;
+
 				}
+		   }
 
-		             
-
-				direccion_name_table++;
-
-			}
-		   }		
 		break;
 
 
