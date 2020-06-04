@@ -4364,14 +4364,14 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 
 
-	int x,y,bit;
-	z80_int direccion,dir_atributo;
+	int x,y,bit; 
+	z80_int direccion_name_table;
 	z80_byte byte_leido;
 	int color=0;
-	int fila;
+	
 	//int zx,zy;
 
-	z80_byte attribute,ink,paper,bright,flash,aux;
+	z80_byte ink,paper;
 
 
 	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
@@ -4389,24 +4389,22 @@ void scr_refresca_pantalla_y_border_msx(void)
 	z80_byte *screen=get_base_mem_pantalla();
 
 
-	//printf ("dpy=%x ventana=%x gc=%x image=%x\n",dpy,ventana,gc,image);
-	z80_byte x_hi;
 
-		int chars_in_line;
-		int char_width;
+	int chars_in_line;
+	int char_width;
 
 	switch(video_mode) {
 
 		case 4:
 		case 0:
 		//"screen 0": Text, characters of 6 x 8	40 x 24 characters
-	//video_mode: 4		
+		//video_mode: 4		
 
 	
 
 		//pattern_base_address=0; //TODO: Puesto a pelo		
 		//"screen 1": Text, characters of 8 x 8	, 32 x 24 characters
-	//video_mode: 0	
+		//video_mode: 0	
 
 
 
@@ -4420,9 +4418,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 			char_width=8;
 		}
 
-
-				
-
+			
 
 		if (video_mode==4) {
 			//En modo texto 40x24, color tinta y papel fijos
@@ -4431,17 +4427,15 @@ void scr_refresca_pantalla_y_border_msx(void)
 			paper=(vdp_9918a_registers[7])&15;
 		}
 
-		//printf ("tinta: %d papel: %d\n",ink,paper);
 
-		//TODO colores monocromo en 40x24
-		//TODO colores multiples en 32x24
+		direccion_name_table=pattern_name_table;  
 
         for (y=0;y<24;y++) {
 			for (x=0;x<chars_in_line;x++) {  
        
             
-				direccion=y*chars_in_line+x + pattern_name_table;  
-				z80_byte caracter=screen[direccion];
+				
+				z80_byte caracter=screen[direccion_name_table];
                 
 
 				if (video_mode==0) {
@@ -4463,11 +4457,9 @@ void scr_refresca_pantalla_y_border_msx(void)
 					byte_leido=screen[pattern_address++];
 	                       
 
-						   //6 de ancho
                     for (bit=0;bit<char_width;bit++) {
 
 						int fila=(x*char_width+bit)/8;
-
 						
 						
 						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
@@ -4480,12 +4472,8 @@ void scr_refresca_pantalla_y_border_msx(void)
         	        }
 				}
 
-		             
 
-            
-
-
-				direccion++;
+				direccion_name_table++;
 
 			}
 
@@ -4496,11 +4484,11 @@ void scr_refresca_pantalla_y_border_msx(void)
 		break;
 
 
-		//Screen 2. high-res mode
+		//Screen 2. high-res mode, 256x192
 		//video_mode: 1
 		case 1:
 
-					chars_in_line=32;
+			chars_in_line=32;
 			char_width=8;
 
 
@@ -4509,38 +4497,22 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 			pattern_color_table &=8192; //Cae en offset 0 o 8192
 
+
+			direccion_name_table=pattern_name_table;  
+
        	for (y=0;y<24;y++) {
 
 		   	int tercio=y/8;
 
 			for (x=0;x<chars_in_line;x++) {  
-       
-					//temp
-					//pattern_name_table=0x1800;
-					//printf ("pattern_name_table %04XH\n",pattern_name_table);
-					//printf ("pattern_base_address %04XH\n",pattern_base_address);
-
-					//temp
-					//pattern_base_address=0; //porque?? en basic esto funciona. Pilla erroneamente pattern_base_address=0x1800
-
-            
-				direccion=y*chars_in_line+x + pattern_name_table;  
-				z80_byte caracter=screen[direccion];
-                
-	                        	
-
-
-
+                  
 				
-
+				z80_byte caracter=screen[direccion_name_table];
+                
 
 				int scanline;
 
 				z80_int pattern_address=(caracter*8+2048*tercio) ;
-
-
-
-
 
 
 				
@@ -4556,10 +4528,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 				color_address +=pattern_color_table;
 				color_address &=16383;
 
-
-				
-
-				
+			
 
 				for (scanline=0;scanline<8;scanline++) {
 
@@ -4591,10 +4560,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 		             
 
-            
-
-
-				direccion++;
+				direccion_name_table++;
 
 			}
 		   }		
@@ -4602,31 +4568,22 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 
 		case 2:
-		//Screen 3. multicolor mode
+		//Screen 3. multicolor mode. 64x48
 		//video_mode: 2
 
 		char_width=8;
 		
 
-		direccion=pattern_name_table;  
+		direccion_name_table=pattern_name_table;  
 
         for (y=0;y<24;y++) {
 			for (x=0;x<32;x++) {  
        
             
 				
-				z80_byte caracter=screen[direccion++];
+				z80_byte caracter=screen[direccion_name_table++];
                 
 	                        
-
-				//Prueba de un modo de video inventado en que el color de la tinta sale de los 4 bits de la zona de pixeles
-				//int ink1,ink2;
-
-				
-
-
-				int scanline;
-
 				int incremento_byte=(y&3)*2;
 
 
@@ -4642,30 +4599,29 @@ void scr_refresca_pantalla_y_border_msx(void)
 					byte_leido=screen[pattern_address++];
 					//printf ("byte leido: %02XH\n",byte_leido);
 
-					z80_byte color_a=(byte_leido>>4)&15;
-					z80_byte color_b=(byte_leido   )&15;
+					//z80_byte color_a=(byte_leido>>4)&15;
+					//z80_byte color_b=(byte_leido   )&15;
 	                       
 
 					int col;
                     for (col=0;col<2;col++) {
 
-						//int fila=(x*char_width+bit)/8;
-
-						
-						
+										
 						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
 						if (scr_ver_si_refrescar_por_menu_activo(x,y)) {
 							int xfinal=x*8+col*4;
 							int yfinal=y*8+row*4;
 
-							if (col==0) color=color_a;
-							else        color=color_b;
+							//if (col==0) color=color_a;
+							//else        color=color_b;
 
-							//printf ("color: %d\n",color);
 
-							//color=0;
+							//Primera columna usa color en parte parte alta y luego baja
+							color=(byte_leido>>4)&15;
 
-							//color= ( byte_leido & 128 ? ink : paper );
+							byte_leido=byte_leido << 4;
+
+							
 							int subpixel_x,subpixel_y;
 
 							for (subpixel_y=0;subpixel_y<4;subpixel_y++) {
