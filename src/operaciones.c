@@ -6977,25 +6977,26 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	if (puerto_l==0xA2) {
 		//printf ("reading from psg\n");
 		//14 o 15? cual? en teoria el 14
-		if (ay_3_8912_registro_sel[0]==15 || ay_3_8912_registro_sel[0]==14) { 		
-		//printf ("read tape\n");
-		//sleep(1);
-		z80_byte valor=0;
-                if (realtape_inserted.v && realtape_playing.v) {
-                        if (realtape_last_value>=realtape_volumen) {
-                                valor=valor|128;
-                                //printf ("1 ");
-								//valor=255;
-                        }
-                        else {
-                                valor=(valor & (255-128));
-                                //printf ("0 ");
-								//valor=0;
-                        }
-                }	
-		//printf ("%d ",valor);
-		return valor;
-	}
+		//if (ay_3_8912_registro_sel[0]==15 || ay_3_8912_registro_sel[0]==14) { 	
+		if (ay_3_8912_registro_sel[0]==14) { 				
+			//printf ("read tape\n");
+			//sleep(1);
+			z80_byte valor=0;
+			if (realtape_inserted.v && realtape_playing.v) {
+					if (realtape_last_value>=realtape_volumen) {
+							valor=valor|128;
+							//printf ("1 ");
+							//valor=255;
+					}
+					else {
+							valor=(valor & (255-128));
+							//printf ("0 ");
+							//valor=0;
+					}
+			}	
+			//printf ("%d ",valor);
+			return valor;
+		}
 	}
 
 
