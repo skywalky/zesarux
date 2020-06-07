@@ -1096,6 +1096,10 @@ z80_byte fetch_opcode_msx(void)
 #ifdef EMULATE_VISUALMEM
 	set_visualmemopcodebuffer(reg_pc);
 #endif
+
+	//sumar 1 t-estado, por wait en M1
+	t_estados ++;
+
 	return peek_byte_no_time (reg_pc);
 }
 
@@ -6978,10 +6982,10 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//printf ("reading from psg\n");
 		//14 o 15? cual? en teoria el 14
 		//if (ay_3_8912_registro_sel[0]==15 || ay_3_8912_registro_sel[0]==14) { 	
-		if (ay_3_8912_registro_sel[0]==14) { 				
+		if ( (ay_3_8912_registro_sel[0] & 15) ==14) { 				
 			//printf ("read tape\n");
 			//sleep(1);
-			z80_byte valor=0;
+			z80_byte valor=255;
 			if (realtape_inserted.v && realtape_playing.v) {
 				//printf ("%d ",realtape_last_value);
 					if (realtape_last_value>=realtape_volumen) { //-50
@@ -6997,6 +7001,10 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 			}	
 			//printf ("%d ",valor);
 			return valor;
+		}
+
+		else {
+			return in_port_ay(0xFF);
 		}
 	}
 
