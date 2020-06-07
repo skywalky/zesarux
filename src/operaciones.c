@@ -6984,7 +6984,7 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 			z80_byte valor=0;
 			if (realtape_inserted.v && realtape_playing.v) {
 				//printf ("%d ",realtape_last_value);
-					if (realtape_last_value>=realtape_volumen) {
+					if (realtape_last_value>=realtape_volumen) { //-50
 							valor=valor|128;
 							//printf ("1 ");
 							//valor=255;
