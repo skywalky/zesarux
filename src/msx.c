@@ -242,3 +242,56 @@ z80_byte msx_read_vram_byte(z80_int address)
     //Siempre leer limitando a 16 kb
     return msx_vram_memory[address & 16383];
 }
+
+
+
+void msx_insert_rom_cartridge(char *filename)
+{
+
+	debug_printf(VERBOSE_INFO,"Inserting msx rom cartridge %s",filename);
+
+        FILE *ptr_cartridge;
+        ptr_cartridge=fopen(filename,"rb");
+
+        if (!ptr_cartridge) {
+		debug_printf (VERBOSE_ERR,"Unable to open cartridge file %s",filename);
+                return;
+        }
+
+
+
+	//Leer cada bloque de 16 kb si conviene
+
+	int bloque;
+
+	for (bloque=0;bloque<4;bloque++) {
+        int offset=65536+bloque*16384;
+		int leidos=fread(&memoria_spectrum[offset],1,16384,ptr_cartridge);
+        if (leidos==16384) {
+            msx_memory_slots[1][bloque]=MSX_SLOT_MEMORY_TYPE_ROM;
+        }
+
+	}
+
+
+        fclose(ptr_cartridge);
+
+
+        if (noautoload.v==0) {
+                debug_printf (VERBOSE_INFO,"Reset cpu due to autoload");
+                reset_cpu();
+        }
+
+
+}
+
+
+void msx_empty_romcartridge_space(void)
+{
+
+    int i;
+    for (i=0;i<4;i++) {
+        msx_memory_slots[1][i]=MSX_SLOT_MEMORY_TYPE_EMPTY;
+    }
+
+}

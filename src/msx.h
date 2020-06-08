@@ -41,4 +41,6 @@ extern z80_byte *msx_return_segment_address(z80_int direccion,int *tipo);
 #define MSX_SLOT_MEMORY_TYPE_RAM 1
 #define MSX_SLOT_MEMORY_TYPE_EMPTY 2
 
+extern void msx_insert_rom_cartridge(char *filename);
+
 #endif

@@ -835,6 +835,7 @@ int external_tools_config_opcion_seleccionada=0;
 
 
 int timexcart_opcion_seleccionada=0;
+int msxcart_opcion_seleccionada=0;
 
 
 int hardware_redefine_keys_opcion_seleccionada=0;
@@ -950,6 +951,9 @@ char zxprinter_ocr_filename_buffer[PATH_MAX];
 
 
 char last_timex_cart[PATH_MAX]="";
+
+
+char last_msx_cart[PATH_MAX]="";
 
 
 void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida,int bytes_por_linea,z80_byte valor_xor);
@@ -15949,6 +15953,115 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_msxcart_load(MENU_ITEM_PARAMETERS)
+{
+
+        char *filtros[2];
+
+        filtros[0]="rom";
+
+        filtros[1]=0;
+
+
+
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+        //Obtenemos directorio de ultimo archivo
+        //si no hay directorio, vamos a rutas predefinidas
+        if (last_msx_cart[0]==0) menu_chdir_sharedfiles();
+
+        else {
+                char directorio[PATH_MAX];
+                util_get_dir(last_msx_cart,directorio);
+                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+                //cambiamos a ese directorio, siempre que no sea nulo
+                if (directorio[0]!=0) {
+                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        menu_filesel_chdir(directorio);
+                }
+        }
+
+
+        int ret;
+
+        ret=menu_filesel("Select Cartridge",filtros,last_msx_cart);
+        //volvemos a directorio inicial
+		menu_filesel_chdir(directorio_actual);
+
+
+        if (ret==1) {
+		//                sprintf (last_msx_cart,"%s",msxcart_load_file);
+
+                //sin overlay de texto, que queremos ver las franjas de carga con el color normal (no apagado)
+                reset_menu_overlay_function();
+
+
+                        msx_insert_rom_cartridge(last_msx_cart);
+
+                //restauramos modo normal de texto de menu
+                set_menu_overlay_function(normal_overlay_texto_menu);
+
+                //Y salimos de todos los menus
+                salir_todos_menus=1;
+        }
+
+
+}
+
+
+void menu_msxcart_eject(MENU_ITEM_PARAMETERS)
+{
+	msx_empty_romcartridge_space();
+	menu_generic_message("Eject Cartridge","OK. Cartridge ejected");
+}
+
+void menu_msxcart(MENU_ITEM_PARAMETERS)
+{
+
+        menu_item *array_menu_msxcart;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+        do {
+
+
+                menu_add_item_menu_inicial(&array_menu_msxcart,"~~Load Cartridge",MENU_OPCION_NORMAL,menu_msxcart_load,NULL);
+                menu_add_item_menu_shortcut(array_menu_msxcart,'l');
+                menu_add_item_menu_tooltip(array_menu_msxcart,"Load msx Cartridge");
+                menu_add_item_menu_ayuda(array_menu_msxcart,"Supported msx cartridge formats on load:\n"
+                                        "DCK");
+
+                menu_add_item_menu(array_menu_msxcart,"~~Eject Cartridge",MENU_OPCION_NORMAL,menu_msxcart_eject,NULL);
+                menu_add_item_menu_shortcut(array_menu_msxcart,'e');
+                menu_add_item_menu_tooltip(array_menu_msxcart,"Eject Cartridge");
+                menu_add_item_menu_ayuda(array_menu_msxcart,"Eject Cartridge");
+
+
+     				menu_add_item_menu(array_menu_msxcart,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                menu_add_ESC_item(array_menu_msxcart);
+
+                retorno_menu=menu_dibuja_menu(&msxcart_opcion_seleccionada,&item_seleccionado,array_menu_msxcart,"MSX Cartridge" );
+
+                
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
+
 
 //menu storage settings
 void menu_storage_settings(MENU_ITEM_PARAMETERS)
@@ -16015,6 +16128,15 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
 			menu_add_item_menu_tooltip(array_menu_storage_settings,"Timex Cartridge Settings");
 			menu_add_item_menu_ayuda(array_menu_storage_settings,"Timex Cartridge Settings");
+		}
+
+
+
+		if (MACHINE_IS_MSX) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_msxcart,NULL,"MSX ~~Cartridge");
+			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"MSX Cartridge Settings");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"MSX Cartridge Settings");
 		}
 
 
