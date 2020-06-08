@@ -61,10 +61,12 @@ z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)
 {
     int segmento=direccion/16384;
 
-    int rotar=segmento*2;
+    
     z80_byte slot=msx_ppi_register_a;
 
-    if (rotar) {
+    int rotar=segmento*2;
+
+    if (segmento>0) {
         slot=slot>>rotar;
     }
 
@@ -73,6 +75,8 @@ z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)
     *tipo=msx_memory_slots[slot][segmento];
 
     int offset=((slot*4)+segmento)*16384;
+
+    //printf ("direccion %6d segmento %d slot %d offset %d\n",direccion,segmento,slot,offset);
 
     return &memoria_spectrum[offset+(direccion&16383)];
 
