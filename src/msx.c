@@ -105,8 +105,8 @@ void msx_init_memory_tables(void)
     msx_memory_slots[0][1]=MSX_SLOT_MEMORY_TYPE_ROM;
 
 
-    //msx_memory_slots[2][0]=MSX_SLOT_MEMORY_TYPE_RAM;
-    //msx_memory_slots[2][1]=MSX_SLOT_MEMORY_TYPE_RAM;
+    msx_memory_slots[2][0]=MSX_SLOT_MEMORY_TYPE_RAM;
+    msx_memory_slots[2][1]=MSX_SLOT_MEMORY_TYPE_RAM;
     msx_memory_slots[2][2]=MSX_SLOT_MEMORY_TYPE_RAM;
     msx_memory_slots[2][3]=MSX_SLOT_MEMORY_TYPE_RAM;
 
@@ -313,9 +313,9 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 
             //prueba copiar en los 4 segmentos
 
-            memcpy(&memoria_spectrum[offset],&memoria_spectrum[offset+16384],16384);
-            memcpy(&memoria_spectrum[offset],&memoria_spectrum[offset+32768],16384);
-            memcpy(&memoria_spectrum[offset],&memoria_spectrum[offset+49152],16384);
+            memcpy(&memoria_spectrum[offset+16384],&memoria_spectrum[offset],16384);
+            memcpy(&memoria_spectrum[offset+32768],&memoria_spectrum[offset],16384);
+            memcpy(&memoria_spectrum[offset+49152],&memoria_spectrum[offset],16384);
 
             msx_memory_slots[1][1]=MSX_SLOT_MEMORY_TYPE_ROM;
             msx_memory_slots[1][2]=MSX_SLOT_MEMORY_TYPE_ROM;

@@ -1737,8 +1737,8 @@ z80_byte peek_byte_no_time_msx1(z80_int dir)
 
 		puntero_memoria=msx_return_segment_address(dir,&tipo);
 
-		//Si esta vacio, retornar 0
-		if (tipo==MSX_SLOT_MEMORY_TYPE_EMPTY) return 0;
+		//Si esta vacio, retornar 0 o 255???
+		if (tipo==MSX_SLOT_MEMORY_TYPE_EMPTY) return 255;
 
         else return *puntero_memoria;
 }
