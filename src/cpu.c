@@ -3349,6 +3349,9 @@ You don't need timings for H/V sync =)
 			ula_contend_port_early=ula_contend_port_early_msx1;
 			ula_contend_port_late=ula_contend_port_late_msx1;
 
+			//prueba
+			screen_testados_linea=229;
+
 		}				
 
 		else if (MACHINE_IS_SAM) {

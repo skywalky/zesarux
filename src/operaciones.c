@@ -6895,6 +6895,8 @@ void out_port_msx1_no_time(z80_int puerto,z80_byte value)
 	z80_byte puerto_l=puerto&255;
 	z80_byte puerto_h=(puerto>>8)&0xFF;
 
+	//printf ("Out msx port: %04XH value: %02XH char: %c PC=%04XH\n",puerto,value,
+	//  (value>=32 && value<=126 ? value : '?'),reg_pc );
 
 
 /*
@@ -6953,7 +6955,7 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
 
-	//printf ("Lee puerto msx %04XH\n",puerto);
+	//printf ("Lee puerto msx %04XH PC=%04XH\n",puerto,reg_pc);
 
 	//if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
 	//if (puerto_l==0x99) printf ("VDP Command and status register\n");	
@@ -6990,16 +6992,16 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 				//printf ("%d ",realtape_last_value);
 					if (realtape_last_value>=realtape_volumen) { //-50
 							valor=valor|128;
-							//printf ("1 ");
+							//printf ("1 \n");
 							//valor=255;
 					}
 					else {
 							valor=(valor & (255-128));
-							//printf ("0 ");
+							//printf ("0 \n");
 							//valor=0;
 					}
 			}	
-			//printf ("%d ",valor);
+			//printf ("%d \n",valor);
 			return valor;
 		}
 

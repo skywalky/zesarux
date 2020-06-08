@@ -14169,6 +14169,19 @@ void menu_debug_add_daad_special_breakpoint(void)
 	//Y salir
 }*/
 
+void menu_debug_get_legend_short_long(char *destination_string,int ancho_visible,char *short_string,char *long_string)
+{
+
+	int longitud_largo=menu_calcular_ancho_string_item(long_string);
+
+	//Texto mas largo cuando tenemos mas ancho
+
+	//+2 por contar 1 espacio a la izquierda y otro a la derecha
+	if (ancho_visible>=longitud_largo+2) strcpy(destination_string,long_string);
+
+
+	else strcpy(destination_string,short_string);	
+}
 
 
 int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
@@ -14178,6 +14191,8 @@ int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
 
 
 	char buffer_mensaje[64];
+	char buffer_mensaje_short[64];
+	char buffer_mensaje_long[64];
                 //Forzar a mostrar atajos
                 z80_bit antes_menu_writing_inverse_color;
                 antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
@@ -14197,10 +14212,21 @@ int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
 
 				if (util_daad_detect() || util_paws_detect() ) maxima_vista='8';
 
-                                //sprintf(buffer_mensaje,"P~~tr: %sH ~~FollowPC: %s",
-								sprintf(buffer_mensaje,"P~~tr:%sH ~~FlwPC:%s ~~1-~~%c:View",
-                                        string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No"),maxima_vista );
-                                //menu_escribe_linea_opcion(linea++,-1,1,buffer_mensaje);
+								sprintf(buffer_mensaje_short,"P~~tr:%sH [%c] ~~FlwPC ~~1-~~%c:View",
+                                        string_direccion,(menu_debug_follow_pc.v ? 'X' : ' '),maxima_vista );
+
+								sprintf(buffer_mensaje_long,"Poin~~ter:%sH [%c] ~~FollowPC ~~1-~~%c:View",
+                                        string_direccion,(menu_debug_follow_pc.v ? 'X' : ' '),maxima_vista );
+
+
+
+								menu_debug_get_legend_short_long(buffer_mensaje,w->visible_width,buffer_mensaje_short,buffer_mensaje_long);
+
+
+								//sprintf(buffer_mensaje,"P~~tr:%sH ~~FlwPC:%s ~~1-~~%c:View",
+                                //        string_direccion,(menu_debug_follow_pc.v ? "Yes" : "No"),maxima_vista );
+
+                                
 				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
 
 				}
@@ -14218,19 +14244,7 @@ void menu_debug_switch_follow_pc(void)
 }
 
 
-void menu_debug_get_legend_short_long(char *destination_string,int ancho_visible,char *short_string,char *long_string)
-{
 
-	int longitud_largo=menu_calcular_ancho_string_item(long_string);
-
-	//Texto mas largo cuando tenemos mas ancho
-
-	//+2 por contar 1 espacio a la izquierda y otro a la derecha
-	if (ancho_visible>=longitud_largo+2) strcpy(destination_string,long_string);
-
-
-	else strcpy(destination_string,short_string);	
-}
 
 
 
