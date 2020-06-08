@@ -89,26 +89,30 @@ z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)
 
 void msx_init_memory_tables(void)
 {
-    //De momento meter 32 kb rom, 32 kb ram
-    msx_memory_slots[0][0]=MSX_SLOT_MEMORY_TYPE_ROM;
-    msx_memory_slots[0][1]=MSX_SLOT_MEMORY_TYPE_ROM;
-    msx_memory_slots[0][2]=MSX_SLOT_MEMORY_TYPE_RAM;
-    msx_memory_slots[0][3]=MSX_SLOT_MEMORY_TYPE_RAM;
 
-    //resto de slots vacios
+    //inicio con todos los slots vacios
     int slot,segment;
-    for (slot=1;slot<4;slot++) {
+    for (slot=0;slot<4;slot++) {
         for (segment=0;segment<4;segment++) {
             msx_memory_slots[slot][segment]=MSX_SLOT_MEMORY_TYPE_EMPTY;
         }
 
     }
 
-    //prueba 64kb ram mas
-    //msx_memory_slots[1][0]=MSX_SLOT_MEMORY_TYPE_RAM;
-    //msx_memory_slots[1][1]=MSX_SLOT_MEMORY_TYPE_RAM;    
-    //msx_memory_slots[1][2]=MSX_SLOT_MEMORY_TYPE_RAM;
-    //msx_memory_slots[1][3]=MSX_SLOT_MEMORY_TYPE_RAM;    
+
+    //De momento meter 32 kb rom, 32 kb ram
+    msx_memory_slots[0][0]=MSX_SLOT_MEMORY_TYPE_ROM;
+    msx_memory_slots[0][1]=MSX_SLOT_MEMORY_TYPE_ROM;
+
+
+    //msx_memory_slots[2][0]=MSX_SLOT_MEMORY_TYPE_RAM;
+    //msx_memory_slots[2][1]=MSX_SLOT_MEMORY_TYPE_RAM;
+    msx_memory_slots[2][2]=MSX_SLOT_MEMORY_TYPE_RAM;
+    msx_memory_slots[2][3]=MSX_SLOT_MEMORY_TYPE_RAM;
+
+
+
+ 
 
 
 }
@@ -120,14 +124,7 @@ void msx_reset(void)
     msx_ppi_register_a=0;
 
 
-    //temporal mostrar mapeos
-    int slot,segment;
 
-    for (slot=0;slot<4;slot++) {
-        for (segment=0;segment<4;segment++) {
-            printf ("%d %d : %d\n",slot,segment,msx_memory_slots[slot][segment]);
-        }
-    }
 }
 
 void msx_out_port_vdp_data(z80_byte value)
@@ -158,10 +155,22 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
 {
     //printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
 
+    int slot,segment;
+
     switch (puerto_l) {
         case 0xA8:
             msx_ppi_register_a=value;
-            //printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
+            printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
+
+    //temporal mostrar mapeos
+    
+
+    for (slot=0;slot<4;slot++) {
+        for (segment=0;segment<4;segment++) {
+            printf ("%d %d : %d\n",slot,segment,msx_memory_slots[slot][segment]);
+        }
+    }
+
         break;
 
         case 0xA9:
