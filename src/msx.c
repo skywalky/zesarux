@@ -293,6 +293,8 @@ void msx_insert_rom_cartridge(char *filename)
 
     int salir=0;
 
+    int bloques_totales=0;
+
 	for (bloque=0;bloque<2 && !salir;bloque++) {
         /*
         The ROM Header
@@ -306,26 +308,42 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 
         */
         int offset=65536+bloque*16384;
-		int leidos=fread(&memoria_spectrum[offset],1,16384,ptr_cartridge);
+		int leidos=fread(&memoria_spectrum[offset+16384],1,16384,ptr_cartridge);
         if (leidos==16384) {
-            msx_memory_slots[1][bloque]=MSX_SLOT_MEMORY_TYPE_ROM;
+            msx_memory_slots[1][1+bloque]=MSX_SLOT_MEMORY_TYPE_ROM;
             printf ("loaded 16kb bytes of rom at slot 1 block %d\n",bloque);
 
-            //prueba copiar en los 4 segmentos
+            bloques_totales++;
 
-            memcpy(&memoria_spectrum[offset+16384],&memoria_spectrum[offset],16384);
-            memcpy(&memoria_spectrum[offset+32768],&memoria_spectrum[offset],16384);
-            memcpy(&memoria_spectrum[offset+49152],&memoria_spectrum[offset],16384);
 
-            msx_memory_slots[1][1]=MSX_SLOT_MEMORY_TYPE_ROM;
-            msx_memory_slots[1][2]=MSX_SLOT_MEMORY_TYPE_ROM;
-            msx_memory_slots[1][3]=MSX_SLOT_MEMORY_TYPE_ROM;
         }
         else {
             salir=1;
         }
 
 	}
+
+    if (bloques_totales==1) {
+                    //prueba copiar en los 4 segmentos
+
+            memcpy(&memoria_spectrum[65536],&memoria_spectrum[65536+16384],16384);
+            memcpy(&memoria_spectrum[65536+32768],&memoria_spectrum[65536+16384],16384);
+            memcpy(&memoria_spectrum[65536+49152],&memoria_spectrum[65536+16384],16384);
+
+            msx_memory_slots[1][0]=MSX_SLOT_MEMORY_TYPE_ROM;
+            msx_memory_slots[1][2]=MSX_SLOT_MEMORY_TYPE_ROM;
+            msx_memory_slots[1][3]=MSX_SLOT_MEMORY_TYPE_ROM;
+    }
+
+    if (bloques_totales==2) {
+                    //prueba copiar en los 4 segmentos
+
+        //memcpy(&memoria_spectrum[65536+32768],&memoria_spectrum[65536],32768);
+
+
+            //msx_memory_slots[1][2]=MSX_SLOT_MEMORY_TYPE_ROM;
+            //msx_memory_slots[1][3]=MSX_SLOT_MEMORY_TYPE_ROM;
+    }    
 
     
     int i;
