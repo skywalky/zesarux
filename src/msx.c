@@ -72,11 +72,13 @@ z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)
 
     slot &=3;
 
+     
+
     *tipo=msx_memory_slots[slot][segmento];
 
     int offset=((slot*4)+segmento)*16384;
 
-    //printf ("direccion %6d segmento %d slot %d offset %d\n",direccion,segmento,slot,offset);
+    //if (slot>0) printf ("direccion %6d segmento %d slot %d offset %d\n",direccion,segmento,slot,offset);
 
     return &memoria_spectrum[offset+(direccion&16383)];
 
@@ -159,7 +161,7 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
     switch (puerto_l) {
         case 0xA8:
             msx_ppi_register_a=value;
-            printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
+            //printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
         break;
 
         case 0xA9:
@@ -282,11 +284,22 @@ void msx_insert_rom_cartridge(char *filename)
 
     int salir=0;
 
-	for (bloque=0;bloque<4 && !salir;bloque++) {
-        int offset=65536+bloque*16384;
+	for (bloque=0;bloque<2 && !salir;bloque++) {
+        /*
+        The ROM Header
+
+A ROM needs a header to be auto-executed by the system when the MSX is initialized.
+
+After finding the RAM and initializing the system variables, the MSX looks for the ROM headers in all the slots 
+on the memory pages 4000h-7FFFh and 8000h-FFFh. The search is done in ascending order. 
+When a primary Slot is expanded, the search is done in the corresponding secondary Slots before going to the next Primary Slot.
+When the system finds a header, it selects the ROM slot only on the memory page corresponding to the address specified in INIT then, runs the program in ROM at the same address. (In short, it makes an inter-slot call.)
+
+        */
+        int offset=65536+16384+bloque*16384;
 		int leidos=fread(&memoria_spectrum[offset],1,16384,ptr_cartridge);
         if (leidos==16384) {
-            msx_memory_slots[1][bloque]=MSX_SLOT_MEMORY_TYPE_ROM;
+            msx_memory_slots[1][1+bloque]=MSX_SLOT_MEMORY_TYPE_ROM;
             printf ("loaded 16kb bytes of rom at slot 1 block %d\n",bloque);
         }
         else {

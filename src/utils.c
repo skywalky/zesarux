@@ -11901,7 +11901,7 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
 
     case MEMORY_ZONE_MSX_CARTRIDGE:
         if (MACHINE_IS_MSX) {
-                p=&memoria_spectrum[65536+address];
+                p=&memoria_spectrum[65536+16384+address];
         }        
     break;
 
