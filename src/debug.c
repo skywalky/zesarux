@@ -87,6 +87,7 @@
 #include "expression_parser.h"
 #include "atomic.h"
 #include "core_msx.h"
+#include "msx.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -4636,6 +4637,17 @@ void debug_get_ioports(char *stats_buffer)
   		sprintf (buf_linea,"ZX80/81 last out port value: %02X\n",zx8081_last_port_write_value);
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
   	}
+
+  	if (MACHINE_IS_MSX) {
+  		sprintf (buf_linea,"PPI Port A: %02X\n",msx_ppi_register_a);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+  		sprintf (buf_linea,"PPI Port B: %02X\n",msx_ppi_register_b);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+  		sprintf (buf_linea,"PPI Port C: %02X\n",msx_ppi_register_c);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);		  		  
+  	}	  
 
           stats_buffer[index_buffer]=0;
 

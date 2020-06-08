@@ -34,6 +34,12 @@
 z80_byte *msx_vram_memory=NULL;
 
 z80_byte msx_ppi_register_a;
+//bit 0-1:slot segmento 0 (0000h-3fffh)
+//bit 2-3:slot segmento 1 (4000h-7fffh)
+//bit 4-5:slot segmento 2 (8000h-bfffh)
+//bit 6-7:slot segmento 3 (C000h-ffffh)
+
+
 z80_byte msx_ppi_register_b;
 z80_byte msx_ppi_register_c;
 
@@ -44,6 +50,68 @@ z80_byte msx_keyboard_table[16]={
 255,255,255,255,255,255,255,255
 };
 
+
+//slots asignados, y sus 4 segmentos
+//tipos: rom, ram, vacio
+int msx_memory_slots[4][4];
+
+
+//Retorna direccion de memoria donde esta mapeada la ram y su tipo
+z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)
+{
+    int segmento=direccion/16384;
+
+    int rotar=segmento*2;
+    z80_byte slot=msx_ppi_register_a;
+
+    if (rotar) {
+        slot=slot>>rotar;
+    }
+
+    slot &=3;
+
+    *tipo=msx_memory_slots[slot][segmento];
+
+    int offset=((slot*4)+segmento)*16384;
+
+    return &memoria_spectrum[offset+(direccion&16383)];
+
+
+
+}
+
+
+void msx_init_memory_tables(void)
+{
+    //De momento meter 32 kb rom, 32 kb ram
+    msx_memory_slots[0][0]=MSX_SLOT_MEMORY_TYPE_ROM;
+    msx_memory_slots[0][1]=MSX_SLOT_MEMORY_TYPE_ROM;
+    msx_memory_slots[0][2]=MSX_SLOT_MEMORY_TYPE_RAM;
+    msx_memory_slots[0][3]=MSX_SLOT_MEMORY_TYPE_RAM;
+
+    //resto de slots vacios
+    int slot,segment;
+    for (slot=1;slot<4;slot++) {
+        for (segment=0;segment<4;segment++) {
+            msx_memory_slots[slot][segment]=MSX_SLOT_MEMORY_TYPE_EMPTY;
+        }
+
+    }
+
+    //prueba 64kb ram mas
+    //msx_memory_slots[1][0]=MSX_SLOT_MEMORY_TYPE_RAM;
+    //msx_memory_slots[1][1]=MSX_SLOT_MEMORY_TYPE_RAM;    
+    //msx_memory_slots[1][2]=MSX_SLOT_MEMORY_TYPE_RAM;
+    //msx_memory_slots[1][3]=MSX_SLOT_MEMORY_TYPE_RAM;    
+
+
+}
+
+void msx_reset(void)
+{
+    //Mapear inicialmente todo a slot 0
+    msx_ppi_register_a=0;
+}
 
 void msx_out_port_vdp_data(z80_byte value)
 {
@@ -74,6 +142,15 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
     //printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
 
     switch (puerto_l) {
+        case 0xA8:
+            msx_ppi_register_a=value;
+        break;
+
+        case 0xA9:
+            msx_ppi_register_b=value;
+        break;
+
+
         case 0xAA:
             msx_ppi_register_c=value;
         break;
@@ -87,6 +164,10 @@ z80_byte msx_in_port_ppi(z80_byte puerto_l)
     z80_byte valor;
 
     switch (puerto_l) {
+
+        case 0xA8:
+            return msx_ppi_register_a;
+        break;        
  
         case 0xA9:
             //Leer registro B (filas teclado)

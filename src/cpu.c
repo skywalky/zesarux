@@ -1061,6 +1061,10 @@ void reset_cpu(void)
 
 	}
 
+	if (MACHINE_IS_MSX) {
+		msx_reset();
+	}
+
 	t_estados=0;
 	t_scanline=0;
 	t_scanline_draw=0;
@@ -2804,13 +2808,16 @@ void malloc_mem_machine(void) {
         }
         
         else if (MACHINE_IS_MSX1) {
-                //total 64kb
-                malloc_machine(65536);
+                //total 64kb * 4
+                malloc_machine(65536*4);
                 random_ram(memoria_spectrum+32768,32768);
 
 
 				//y 16kb para vram
 				msx_alloc_vram_memory();
+
+
+				msx_init_memory_tables();
 
         }
 
@@ -3349,8 +3356,8 @@ You don't need timings for H/V sync =)
 			ula_contend_port_early=ula_contend_port_early_msx1;
 			ula_contend_port_late=ula_contend_port_late_msx1;
 
-			//prueba
-			screen_testados_linea=229;
+			
+			screen_testados_linea=228;
 
 		}				
 

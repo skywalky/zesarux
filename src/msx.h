@@ -26,7 +26,19 @@
 
 extern z80_byte *msx_vram_memory;
 
+extern z80_byte msx_ppi_register_a;
+extern z80_byte msx_ppi_register_b;
+extern z80_byte msx_ppi_register_c;
+
 extern z80_byte msx_keyboard_table[];
 extern z80_byte msx_read_vram_byte(z80_int address);
+
+extern int msx_memory_slots[4][4];
+
+extern z80_byte *msx_return_segment_address(z80_int direccion,int *tipo);
+
+#define MSX_SLOT_MEMORY_TYPE_ROM 0
+#define MSX_SLOT_MEMORY_TYPE_RAM 1
+#define MSX_SLOT_MEMORY_TYPE_EMPTY 2
 
 #endif

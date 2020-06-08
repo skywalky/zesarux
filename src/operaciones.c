@@ -1704,16 +1704,18 @@ void poke_byte_msx1(z80_int dir,z80_byte valor)
         t_estados += 3;
 
 
-        if (dir>32767) {
-#ifdef EMULATE_VISUALMEM
+		z80_byte *puntero_memoria;
+		int tipo;
 
-set_visualmembuffer(dir);
+		puntero_memoria=msx_return_segment_address(dir,&tipo);
 
-#endif
-		memoria_spectrum[dir]=valor;
+		//Si esta vacio o es ROM, no hacer nada. O sea, si no es RAM
+		if (tipo!=MSX_SLOT_MEMORY_TYPE_RAM) return;
+
+        else *puntero_memoria=valor;		
 
 
-	}
+	//poke_byte_no_time_msx1(dir,valor);
 }
 
 z80_byte peek_byte_no_time_msx1(z80_int dir)
@@ -1722,15 +1724,22 @@ z80_byte peek_byte_no_time_msx1(z80_int dir)
 	set_visualmemreadbuffer(dir);
 #endif
 
-        return memoria_spectrum[dir];
+		//z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)
+
+		z80_byte *puntero_memoria;
+		int tipo;
+
+		puntero_memoria=msx_return_segment_address(dir,&tipo);
+
+		//Si esta vacio, retornar 0
+		if (tipo==MSX_SLOT_MEMORY_TYPE_EMPTY) return 0;
+
+        else return *puntero_memoria;
 }
 
 
 z80_byte peek_byte_msx1(z80_int dir)
 {
-#ifdef EMULATE_VISUALMEM
-	set_visualmemreadbuffer(dir);
-#endif
 
 /*
 #ifdef EMULATE_CONTEND
@@ -1747,7 +1756,7 @@ z80_byte peek_byte_msx1(z80_int dir)
 
 
 
-	return memoria_spectrum[dir];
+	return peek_byte_no_time_msx1(dir);
 
 }
 
