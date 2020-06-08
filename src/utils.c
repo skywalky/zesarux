@@ -11580,6 +11580,13 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         }
     break;
 
+    case MEMORY_ZONE_MSX_CARTRIDGE:
+        if (MACHINE_IS_MSX) {
+              *readwrite=1; 
+              size=32768;  
+        }
+    break;    
+
   }
 
   return size;
@@ -11889,6 +11896,12 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
     case MEMORY_ZONE_MSX_VRAM:
         if (MACHINE_IS_MSX) {
                 p=&msx_vram_memory[address];
+        }        
+    break;
+
+    case MEMORY_ZONE_MSX_CARTRIDGE:
+        if (MACHINE_IS_MSX) {
+                p=&memoria_spectrum[65536+address];
         }        
     break;
 
@@ -12233,6 +12246,13 @@ void machine_get_memory_zone_name(int zone, char *name)
         }
     break;
 
+
+    case MEMORY_ZONE_MSX_CARTRIDGE:
+        if (MACHINE_IS_MSX) {
+                          //123456789012345
+               strcpy(name,"MSX Cartridge"); 
+        }
+    break;
 
   }
 

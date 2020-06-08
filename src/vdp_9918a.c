@@ -106,14 +106,14 @@ void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value)
 
 
                 vdp_9918a_last_vram_position=(vdp_9918a_last_command_status_bytes[0]) | ((vdp_9918a_last_command_status_bytes[1] & 63)<<8);
-                printf ("Write VDP Address setup to VRAM write. address: %04XH\n",vdp_9918a_last_vram_position);
+                //printf ("Write VDP Address setup to VRAM write. address: %04XH\n",vdp_9918a_last_vram_position);
             }
 
             if ( (vdp_9918a_last_command_status_bytes[1] &  (128+64)) == 0 ) {
                 
 
                 vdp_9918a_last_vram_position=(vdp_9918a_last_command_status_bytes[0]) | ((vdp_9918a_last_command_status_bytes[1] & 63)<<8);
-                printf ("Write VDP Address setup to VRAM read. address: %04XH\n",vdp_9918a_last_vram_position);
+                //printf ("Write VDP Address setup to VRAM read. address: %04XH\n",vdp_9918a_last_vram_position);
             }            
 
             if ( (vdp_9918a_last_command_status_bytes[1] &  (128+64)) == 128 ) {
@@ -125,7 +125,7 @@ void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value)
 
                 vdp_9918a_registers[vdp_register]=vdp_9918a_last_command_status_bytes[0];
 
-                printf ("Write VDP Register register: %02XH value %02XH\n",vdp_register,vdp_9918a_last_command_status_bytes[0]);
+                //printf ("Write VDP Register register: %02XH value %02XH\n",vdp_register,vdp_9918a_last_command_status_bytes[0]);
             }            
         break;
     }

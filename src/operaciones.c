@@ -6979,7 +6979,7 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	}	
 
 	if (puerto_l==0x99) {
-		printf ("VDP Status IN\n");
+		//printf ("VDP Status IN\n");
 		return msx_in_port_vdp_status();
 	}		
 

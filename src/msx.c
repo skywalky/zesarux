@@ -107,10 +107,21 @@ void msx_init_memory_tables(void)
 
 }
 
+
 void msx_reset(void)
 {
     //Mapear inicialmente todo a slot 0
     msx_ppi_register_a=0;
+
+
+    //temporal mostrar mapeos
+    int slot,segment;
+
+    for (slot=0;slot<4;slot++) {
+        for (segment=0;segment<4;segment++) {
+            printf ("%d %d : %d\n",slot,segment,msx_memory_slots[slot][segment]);
+        }
+    }
 }
 
 void msx_out_port_vdp_data(z80_byte value)
@@ -144,6 +155,7 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
     switch (puerto_l) {
         case 0xA8:
             msx_ppi_register_a=value;
+            printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
         break;
 
         case 0xA9:
@@ -211,7 +223,7 @@ z80_byte msx_in_port_ppi(z80_byte puerto_l)
 
 void msx_out_port_psg(z80_byte puerto_l,z80_byte value)
 {
-    printf ("Out port psg. Port %02XH value %02XH\n",puerto_l,value);
+    //printf ("Out port psg. Port %02XH value %02XH\n",puerto_l,value);
 
 
         //Registro
@@ -264,11 +276,17 @@ void msx_insert_rom_cartridge(char *filename)
 
 	int bloque;
 
-	for (bloque=0;bloque<4;bloque++) {
+    int salir=0;
+
+	for (bloque=0;bloque<4 && !salir;bloque++) {
         int offset=65536+bloque*16384;
 		int leidos=fread(&memoria_spectrum[offset],1,16384,ptr_cartridge);
         if (leidos==16384) {
             msx_memory_slots[1][bloque]=MSX_SLOT_MEMORY_TYPE_ROM;
+            printf ("loaded 16kb bytes of rom at slot 1 block %d\n",bloque);
+        }
+        else {
+            salir=1;
         }
 
 	}
