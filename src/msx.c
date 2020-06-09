@@ -735,13 +735,15 @@ void scr_refresca_pantalla_y_border_msx(void)
                                         pos_x_final=horiz_pos+(quad_x*8)+x;
                                         pos_y_final=vert_pos+(quad_y*8)+y;
                                         
+                                        //Si dentro de limites
+                                        if (pos_x_final<255 && pos_y_final<192) {
+                                            if (byte_leido & 128) {
+                                                //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+                                                scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                            }
 
-                                        if (byte_leido & 128) {
-                                            //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
-                                            scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                            byte_leido = byte_leido << 1;
                                         }
-
-                                        byte_leido = byte_leido << 1;
                                     }
                                 }
                             }
