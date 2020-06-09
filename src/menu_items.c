@@ -17464,7 +17464,7 @@ menu_item *array_menu_ay_mixer;
 		menu_add_item_menu_ayuda(array_menu_ay_mixer,"It handles values sent to register 14 and 15");
 
 
-		if (MACHINE_IS_SPECTRUM) {
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_MSX) {
 
 
 			char ay3_stereo_string[16];

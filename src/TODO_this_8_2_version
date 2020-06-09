@@ -308,14 +308,5 @@ Parece que no sucede en la 8.1
 -renderizado realvideo
 -snapshot zsf que grabe vram, registros vdp
 -teclas que falten por emular
-
-
-
-
--probar juegos msx:
-
-
-cat ../../aux_zesarux/msx/3D\ Water\ Driver\ \(1984\)\(Apollo\ Technica\).rom > msx.rom
-cat ../../aux_zesarux/msx/3D\ Water\ Driver\ \(1984\)\(Apollo\ Technica\).rom >> msx.rom
-
-  arrancar. salir. poner rom normal y recargar (cargara snapshot)
+-ajuste real beeper corregir para que use bit de "speaker" de msx
+-sprites que van mas alla del border
