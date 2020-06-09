@@ -4491,6 +4491,7 @@ int quickload_valid_extension(char *nombre) {
     || !util_compare_file_extension(nombre,"ay")
     || !util_compare_file_extension(nombre,"scr")
     || !util_compare_file_extension(nombre,"rzx")
+    || !util_compare_file_extension(nombre,"rom")
 	) {
 		return 1;
 	}
@@ -4899,6 +4900,28 @@ int quickload_continue(char *nombre) {
                 return 0;
 
         }
+
+	//Cartuchos de MSX
+	else if (
+                !util_compare_file_extension(nombre,"rom")
+        ) {
+		//Aqui el autoload da igual. cambiamos siempre a cpc si conviene
+                if (!MACHINE_IS_MSX) {
+			current_machine_type=MACHINE_ID_MSX1;
+                        set_machine(NULL);
+
+                                //establecer parametros por defecto. Incluido quitar slots de memoria
+                           set_machine_params();
+
+                          reset_cpu();
+                }
+
+                msx_insert_rom_cartridge(nombre);
+
+
+                return 0;
+
+        }        
 
 
 	//eprom cards de Z88
