@@ -278,6 +278,13 @@ void msx_insert_rom_cartridge(char *filename)
 
 	debug_printf(VERBOSE_INFO,"Inserting msx rom cartridge %s",filename);
 
+    long tamanyo_archivo=get_file_size(filename);
+
+    if (tamanyo_archivo!=16384 && tamanyo_archivo!=32768) {
+        debug_printf(VERBOSE_ERR,"Only 16k and 32k rom cartridge are allowed");
+        return;
+    }
+
         FILE *ptr_cartridge;
         ptr_cartridge=fopen(filename,"rb");
 
@@ -325,7 +332,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 	}
 
     if (bloques_totales==1) {
-                    //prueba copiar en los 4 segmentos
+            //Copiar en los otros 3 segmentos
 
             memcpy(&memoria_spectrum[65536],&memoria_spectrum[65536+16384],16384);
             memcpy(&memoria_spectrum[65536+32768],&memoria_spectrum[65536+16384],16384);
@@ -336,15 +343,6 @@ When the system finds a header, it selects the ROM slot only on the memory page 
             msx_memory_slots[1][3]=MSX_SLOT_MEMORY_TYPE_ROM;
     }
 
-    if (bloques_totales==2) {
-                    //prueba copiar en los 4 segmentos
-
-        //memcpy(&memoria_spectrum[65536+32768],&memoria_spectrum[65536],32768);
-
-
-            //msx_memory_slots[1][2]=MSX_SLOT_MEMORY_TYPE_ROM;
-            //msx_memory_slots[1][3]=MSX_SLOT_MEMORY_TYPE_ROM;
-    }    
 
     
     int i;

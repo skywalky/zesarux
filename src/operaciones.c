@@ -6980,7 +6980,7 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//if (puerto==0xa8) return 0x50; //temporal
 
 	if (puerto_l==0x98) {
-		printf ("VDP Video Ram Data IN\n");
+		//printf ("VDP Video Ram Data IN\n");
 		return msx_in_port_vdp_data();
 	}	
 
