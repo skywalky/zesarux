@@ -671,7 +671,7 @@ void scr_refresca_pantalla_y_border_msx(void)
         int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
         int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
 
-        printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
+        //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 
         int bytes_per_sprite;
         int bytes_per_line;
@@ -695,6 +695,9 @@ void scr_refresca_pantalla_y_border_msx(void)
         int sprite;
         int salir=0;
 
+        //En boundary de 128
+        sprite_attribute_table &=(65535-128);
+
         for (sprite=0;sprite<32 && !salir;sprite++) {
             z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table++);
             z80_byte horiz_pos=msx_read_vram_byte(sprite_attribute_table++);
@@ -710,22 +713,63 @@ void scr_refresca_pantalla_y_border_msx(void)
 
                 //Si coord valida
                 if (vert_pos<192) {
-                    int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
+                    //int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
+                      int offset_pattern_table=sprite_name*8+sprite_pattern_table;
                     z80_byte color=attr_color_etc & 15;
 
                     int x,y,byte_linea;
 
-                    for (y=0;y<sprite_size;y++) {
-                        for (byte_linea=0;bytes_per_line<bytes_per_line;byte_linea++) {
-                            byte_leido=msx_read_vram_byte(offset_pattern_table++);
-                            for (x=0;x<8;x++) {
-                                int pos_x_final=horiz_pos+(byte_linea*8)+x;
-                                int pos_y_final=vert_pos+y;
+                    if (sprite_size==16) {
+                        int quad_x,quad_y;
 
-                                if (byte_leido & 128) scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                        for (quad_x=0;quad_x<2;quad_x++) {
+                            for (quad_y=0;quad_y<2;quad_y++) {
+                                for (y=0;y<8;y++) {
+                                
+                                    byte_leido=msx_read_vram_byte(offset_pattern_table++);
+                                    for (x=0;x<8;x++) {
 
-                                byte_leido = byte_leido << 1;
+                                            int pos_x_final;
+                                            int pos_y_final;
+
+                                        pos_x_final=horiz_pos+(quad_x*8)+x;
+                                        pos_y_final=vert_pos+(quad_y*8)+y;
+                                        
+
+                                        if (byte_leido & 128) {
+                                            //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+                                            scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                        }
+
+                                        byte_leido = byte_leido << 1;
+                                    }
+                                }
                             }
+                        }                        
+                    }
+
+                    else {
+
+                        for (y=0;y<8;y++) {
+
+                                byte_leido=msx_read_vram_byte(offset_pattern_table++);
+                                for (x=0;x<8;x++) {
+
+                                        int pos_x_final;
+                                        int pos_y_final;
+
+                                    pos_x_final=horiz_pos+x;
+                                    pos_y_final=vert_pos+y;
+                                    
+
+                                    if (byte_leido & 128) {
+                                        //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+                                        scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                    }
+
+                                    byte_leido = byte_leido << 1;
+                                }
+                            
                         }
                     }
 
