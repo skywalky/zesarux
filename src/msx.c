@@ -30,6 +30,7 @@
 #include "debug.h"
 #include "ay38912.h"
 #include "tape.h"
+#include "screen.h"
 
 z80_byte *msx_vram_memory=NULL;
 
@@ -368,5 +369,291 @@ void msx_empty_romcartridge_space(void)
     for (i=0;i<4;i++) {
         msx_memory_slots[1][i]=MSX_SLOT_MEMORY_TYPE_EMPTY;
     }
+
+}
+
+
+//Refresco pantalla sin rainbow
+void scr_refresca_pantalla_y_border_msx(void)
+{
+
+
+
+	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>1)&1;
+
+	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
+
+	z80_byte video_mode=video_mode_m12 | video_mode_m3;
+
+	//printf ("video_mode: %d\n",video_mode);
+
+
+	int x,y,bit; 
+	z80_int direccion_name_table;
+	z80_byte byte_leido;
+    z80_byte byte_color;
+	int color=0;
+	
+	//int zx,zy;
+
+	z80_byte ink,paper;
+
+
+	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
+	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
+
+	pattern_name_table=(vdp_9918a_registers[2]&15) * 0x400; 
+
+
+
+	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
+
+
+	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+
+	//z80_byte *screen=get_base_mem_pantalla();
+
+
+
+	int chars_in_line;
+	int char_width;
+
+	switch(video_mode) {
+
+		case 4:
+		case 0:
+		//"screen 0": Text, characters of 6 x 8	40 x 24 characters
+		//video_mode: 4		
+
+	
+
+		//pattern_base_address=0; //TODO: Puesto a pelo		
+		//"screen 1": Text, characters of 8 x 8	, 32 x 24 characters
+		//video_mode: 0	
+
+
+
+		if (video_mode==4) {
+			chars_in_line=40;
+			char_width=6;
+
+			//En modo texto 40x24, color tinta y papel fijos
+
+			ink=(vdp_9918a_registers[7]>>4)&15;
+			paper=(vdp_9918a_registers[7])&15;			
+		}
+
+		else {
+			chars_in_line=32;
+			char_width=8;
+		}
+
+
+		direccion_name_table=pattern_name_table;  
+
+        for (y=0;y<24;y++) {
+			for (x=0;x<chars_in_line;x++) {  
+       
+            		
+				z80_byte caracter=msx_read_vram_byte(direccion_name_table);
+                
+				if (video_mode==0) {
+					int posicion_color=caracter/8;
+
+					z80_byte byte_color=msx_read_vram_byte(pattern_color_table+posicion_color);
+
+					ink=(byte_color >> 4) & 15;
+					paper=(byte_color ) & 15;
+				}
+
+
+				int scanline;
+
+				z80_int pattern_address=pattern_base_address+caracter*8;
+
+				for (scanline=0;scanline<8;scanline++) {
+
+					byte_leido=msx_read_vram_byte(pattern_address++);
+	                       
+
+                    for (bit=0;bit<char_width;bit++) {
+
+						int fila=(x*char_width+bit)/8;
+						
+						
+						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+						if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
+							color= ( byte_leido & 128 ? ink : paper );
+							scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
+						}
+
+						byte_leido=byte_leido<<1;
+        	        }
+				}
+
+
+				direccion_name_table++;
+
+			}
+			
+
+   		 }
+
+		break;
+
+
+		//Screen 2. high-res mode, 256x192
+		//video_mode: 1
+		case 1:
+
+			chars_in_line=32;
+			char_width=8;
+
+            //printf ("pattern base address before mask: %d\n",pattern_base_address);
+
+            //printf ("pattern color table before mask:  %d\n",pattern_color_table);            
+
+
+			pattern_base_address &=8192; //Cae en offset 0 o 8192
+          
+			pattern_color_table &=8192; //Cae en offset 0 o 8192
+
+
+            //printf ("pattern base address after mask: %d\n",pattern_base_address);
+
+            //printf ("pattern color table after mask:  %d\n",pattern_color_table);
+
+			direccion_name_table=pattern_name_table;  
+
+			for (y=0;y<24;y++) {
+
+				int tercio=y/8;
+
+				for (x=0;x<chars_in_line;x++) {  
+					
+					
+					z80_byte caracter=msx_read_vram_byte(direccion_name_table);
+					
+
+					int scanline;
+
+					z80_int pattern_address=(caracter*8+2048*tercio) ;
+					pattern_address +=pattern_base_address;
+					
+					
+
+
+					z80_int color_address=(caracter*8+2048*tercio) ;
+					color_address +=pattern_color_table;
+
+	
+			
+
+					for (scanline=0;scanline<8;scanline++) {
+
+						byte_leido=msx_read_vram_byte(pattern_address++);
+
+						byte_color=msx_read_vram_byte(color_address++);
+
+
+						ink=(byte_color>>4) &15;
+						paper=byte_color &15;
+
+							
+						for (bit=0;bit<char_width;bit++) {
+
+							int fila=(x*char_width+bit)/8;
+
+													
+							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+							if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
+								color= ( byte_leido & 128 ? ink : paper );
+								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
+							}
+
+							byte_leido=byte_leido<<1;
+						}
+					}
+
+						
+					direccion_name_table++;
+
+				}
+		   }
+
+		break;
+
+
+		case 2:
+			//Screen 3. multicolor mode. 64x48
+			//video_mode: 2
+
+
+			direccion_name_table=pattern_name_table;  
+
+			for (y=0;y<24;y++) {
+				for (x=0;x<32;x++) {  
+		
+							
+					z80_byte caracter=msx_read_vram_byte(direccion_name_table++);
+					
+								
+					int incremento_byte=(y&3)*2;
+
+
+					pattern_base_address &=(65536-1023); //Cae offsets de 1kb
+
+					//printf ("pattern_address: %d\n",pattern_base_address);
+
+					z80_int pattern_address=pattern_base_address+caracter*8+incremento_byte;
+
+					int row;
+					for (row=0;row<2;row++) {
+
+						byte_leido=msx_read_vram_byte(pattern_address++);
+						
+						int col;
+						for (col=0;col<2;col++) {
+											
+							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+							if (scr_ver_si_refrescar_por_menu_activo(x,y)) {
+
+								//Primera columna usa color en parte parte alta y luego baja
+								color=(byte_leido>>4)&15;
+
+								byte_leido=byte_leido << 4;
+
+								
+								int subpixel_x,subpixel_y;
+
+								int xfinal=x*8+col*4;
+								int yfinal=y*8+row*4;							
+
+								for (subpixel_y=0;subpixel_y<4;subpixel_y++) {
+									for (subpixel_x=0;subpixel_x<4;subpixel_x++) {
+								
+										scr_putpixel_zoom(xfinal+subpixel_x,  yfinal+subpixel_y,  VDP_9918_INDEX_FIRST_COLOR+color);
+									}
+
+								}
+								
+							}
+						
+						}
+
+					}
+
+				}
+
+			}
+
+		break;		
+
+
+
+
+	}
+
+
 
 }

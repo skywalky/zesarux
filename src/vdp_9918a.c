@@ -126,6 +126,14 @@ void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value)
                 vdp_9918a_registers[vdp_register]=vdp_9918a_last_command_status_bytes[0];
 
                 //printf ("Write VDP Register register: %02XH value %02XH\n",vdp_register,vdp_9918a_last_command_status_bytes[0]);
+
+	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>1)&1;
+
+	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
+
+	z80_byte video_mode=video_mode_m12 | video_mode_m3;
+
+	printf ("video_mode: %d\n",video_mode);                
             }            
         break;
     }
