@@ -6999,7 +6999,7 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		//printf ("reading from psg\n");
 		//14 o 15? cual? en teoria el 14
 		//if (ay_3_8912_registro_sel[0]==15 || ay_3_8912_registro_sel[0]==14) { 	
-		if ( (ay_3_8912_registro_sel[0] & 15) ==14) { 				
+		if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==14) { 				
 			//printf ("read tape\n");
 			//sleep(1);
 			z80_byte valor=255;
@@ -7018,6 +7018,11 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 			}	
 			//printf ("%d \n",valor);
 			return valor;
+		}
+
+		//Registro 15 nada de momento
+		else if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==15) { 		
+			return 255;
 		}
 
 		else {

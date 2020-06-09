@@ -250,7 +250,15 @@ void msx_out_port_psg(z80_byte puerto_l,z80_byte value)
         //Datos
         if (puerto_l==0xA1) {
                         activa_ay_chip_si_conviene();
-                        if (ay_chip_present.v==1) out_port_ay(49149,value);
+                        if (ay_chip_present.v==1) {
+                            
+                            if (ay_3_8912_registro_sel[ay_chip_selected]==14 || ay_3_8912_registro_sel[ay_chip_selected]==15) {
+
+                                //de momento registros 14 y 15 nada
+                            }
+                            else out_port_ay(49149,value);
+
+                        }
         }    
  
 }
@@ -408,6 +416,10 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 
 	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+
+    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
+
+    z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
 
 	//z80_byte *screen=get_base_mem_pantalla();
 
@@ -652,6 +664,77 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 	}
 
+    //En modos 1 y 2 permitimos sprites
+    if (video_mode==1 || video_mode==2) {
+
+        
+        int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
+        int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
+
+        printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
+
+        int bytes_per_sprite;
+        int bytes_per_line;
+
+        if (sprite_size==8) {
+            bytes_per_sprite=8;
+            bytes_per_line=1;
+        }
+
+        else {
+            bytes_per_sprite=32;
+            bytes_per_line=2;
+        }
+
+
+        //TODO: si coordenada Y=208, fin tabla sprites
+        //    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
+
+        //z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
+
+        int sprite;
+        int salir=0;
+
+        for (sprite=0;sprite<32 && !salir;sprite++) {
+            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table++);
+            z80_byte horiz_pos=msx_read_vram_byte(sprite_attribute_table++);
+            z80_byte sprite_name=msx_read_vram_byte(sprite_attribute_table++);
+            z80_byte attr_color_etc=msx_read_vram_byte(sprite_attribute_table++);
+
+            if (vert_pos==208) {
+                salir=1;
+            }
+
+            else  {
+                printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
+
+                //Si coord valida
+                if (vert_pos<192) {
+                    int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
+                    z80_byte color=attr_color_etc & 15;
+
+                    int x,y,byte_linea;
+
+                    for (y=0;y<sprite_size;y++) {
+                        for (byte_linea=0;bytes_per_line<bytes_per_line;byte_linea++) {
+                            byte_leido=msx_read_vram_byte(offset_pattern_table++);
+                            for (x=0;x<8;x++) {
+                                int pos_x_final=horiz_pos+(byte_linea*8)+x;
+                                int pos_y_final=vert_pos+y;
+
+                                if (byte_leido & 128) scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+
+                                byte_leido = byte_leido << 1;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+    }
 
 
 }
