@@ -709,7 +709,7 @@ void scr_refresca_pantalla_y_border_msx(void)
             }
 
             else  {
-                printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
+                //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
 
                 //Si coord valida
                 if (vert_pos<192) {
