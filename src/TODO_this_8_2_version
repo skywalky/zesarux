@@ -310,3 +310,13 @@ Parece que no sucede en la 8.1
 -teclas que falten por emular
 -ajuste real beeper corregir para que use bit de "speaker" de msx
 -sprites que van mas alla del border
+-opcion para desactivar sprites
+-parametro que permita habilitar todos los sprites por linea del msx
+-Frecuencia chip ay en msx
+
+-config slots memoria?
+Como ejemplo, el Toshiba HX-10 (un modelo de 64KB) tiene esta configuración de memoria:
+* 		ROM en las páginas 0 y 1 del slot 0.
+* 		RAM en las páginas 0 a 3 del slot 2.
+* 		Slots 1 y 3 están conectados a las ranuras de cartucho.
+* 		Páginas 2 y 3 del slot 0 no se usan.
