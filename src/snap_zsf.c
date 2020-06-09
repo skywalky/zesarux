@@ -69,6 +69,7 @@
 #include "baseconf.h"
 #include "tbblue.h"
 #include "msx.h"
+#include "vdp_9918a.h"
 
 
 #include "autoselectoptions.h"
@@ -104,6 +105,7 @@
 #define ZSF_TBBLUE_SPRITES 24
 #define ZSF_TIMEX 25
 #define ZSF_MSX_MEMBLOCK 26
+#define ZSF_MSX_CONF 27
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -374,6 +376,17 @@ Byte Fields:
 8 and next bytes: data bytes
 
 
+-Block ID 27: ZSF_MSX_CONF
+Ports and internal registers of ZXUNO machine
+Byte fields:
+0: msx_ppi_register_a
+1: msx_ppi_register_b
+2: msx_ppi_register_c
+3: vdp_9918a_registers[8];
+11:
+
+
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -387,7 +400,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 27
+#define MAX_ZSF_BLOCK_ID_NAMES 28
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -417,6 +430,7 @@ char *zsf_block_id_names[]={
   "ZSF_TBBLUE_SPRITES",
   "ZSF_TIMEX",
   "ZSF_MSX_MEMBLOCK",
+  "ZSF_MSX_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -1125,6 +1139,33 @@ Byte fields:
 }
 
 
+void load_zsf_msx_conf(z80_byte *header)
+{
+
+  /*
+-Block ID 27: ZSF_MSX_CONF
+Ports and internal registers of ZXUNO machine
+Byte fields:
+0: msx_ppi_register_a
+1: msx_ppi_register_b
+2: msx_ppi_register_c
+3: vdp_9918a_registers[8];
+11:
+*/
+
+  msx_ppi_register_a=header[0];
+  msx_ppi_register_b=header[1];
+  msx_ppi_register_c=header[2];
+
+  int i;
+  for (i=0;i<8;i++) vdp_9918a_registers[i]=header[3+i];
+
+
+
+ 
+}
+
+
 
 void load_zsf_tbblue_conf(z80_byte *header)
 {
@@ -1591,6 +1632,10 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
       case ZSF_MSX_MEMBLOCK:
         load_zsf_msx_snapshot_block_data(block_data,block_lenght);
       break;
+
+      case ZSF_MSX_CONF:
+        load_zsf_msx_conf(block_data);
+      break;      
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -2093,6 +2138,30 @@ Byte Fields:
 
 if (MACHINE_IS_MSX) {
 
+    z80_byte msxconfblock[11];
+
+/*
+-Block ID 27: ZSF_MSX_CONF
+Ports and internal registers of ZXUNO machine
+Byte fields:
+0: msx_ppi_register_a
+1: msx_ppi_register_b
+2: msx_ppi_register_c
+3: vdp_9918a_registers[8];
+11:
+*/    
+
+    msxconfblock[0]=msx_ppi_register_a;
+    msxconfblock[1]=msx_ppi_register_b;
+    msxconfblock[2]=msx_ppi_register_c;
+    int i;
+    for (i=0;i<8;i++) msxconfblock[3+i]=vdp_9918a_registers[i];
+
+
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, msxconfblock,ZSF_MSX_CONF, 11);
+
+
 
    int longitud_ram=16384;
 
@@ -2126,25 +2195,29 @@ Byte Fields:
 
     for (segment=0;segment<4;segment++) {
 
-      compressed_ramblock[0]=0;
-      compressed_ramblock[1]=value_16_to_8l(16384);
-      compressed_ramblock[2]=value_16_to_8h(16384);
-      compressed_ramblock[3]=value_16_to_8l(longitud_ram);
-      compressed_ramblock[4]=value_16_to_8h(longitud_ram);
-      compressed_ramblock[5]=slot;
-      compressed_ramblock[6]=segment;
-      compressed_ramblock[7]=msx_memory_slots[slot][segment];
+      //Store block to file, if block present
+      if (msx_memory_slots[slot][segment]!=MSX_SLOT_MEMORY_TYPE_EMPTY) {
 
-      int offset=(slot*4+segment)*16384;
+        compressed_ramblock[0]=0;
+        compressed_ramblock[1]=value_16_to_8l(16384);
+        compressed_ramblock[2]=value_16_to_8h(16384);
+        compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+        compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+        compressed_ramblock[5]=slot;
+        compressed_ramblock[6]=segment;
+        compressed_ramblock[7]=msx_memory_slots[slot][segment];
 
-      int si_comprimido;
-      int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[8],longitud_ram,&si_comprimido);
-      if (si_comprimido) compressed_ramblock[0]|=1;
+        int offset=(slot*4+segment)*16384;
 
-      debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_MEMBLOCK slot: %d segment: %d length: %d",slot,segment,longitud_bloque);
+        int si_comprimido;
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[8],longitud_ram,&si_comprimido);
+        if (si_comprimido) compressed_ramblock[0]|=1;
 
-      //Store block to file
-      zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_MEMBLOCK, longitud_bloque+8);
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_MEMBLOCK slot: %d segment: %d length: %d",slot,segment,longitud_bloque);
+
+        
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_MEMBLOCK, longitud_bloque+8);
+      }
 
     }
   }
