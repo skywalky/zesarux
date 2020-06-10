@@ -379,9 +379,73 @@ void msx_empty_romcartridge_space(void)
 }
 
 
+
+
+
+void msx_refresca_border(void)
+{
+
+    unsigned int color=vdp_9918a_registers[7] & 15;
+
+
+
+
+        int x,y;
+
+
+
+
+	//Top border cambia en spectrum y zx8081 y ace
+	int topborder=TOP_BORDER;
+	
+
+	//color +=spectrum_palette_offset;
+
+
+        //parte superior
+        for (y=0;y<topborder;y++) {
+                for (x=0;x<ANCHO_PANTALLA*zoom_x+LEFT_BORDER*2;x++) {
+                                scr_putpixel(x,y,VDP_9918_INDEX_FIRST_COLOR+color);
+                }
+        }
+
+        //parte inferior
+        for (y=0;y<BOTTOM_BORDER;y++) {
+                for (x=0;x<ANCHO_PANTALLA*zoom_x+LEFT_BORDER*2;x++) {
+                                scr_putpixel(x,topborder+y+ALTO_PANTALLA*zoom_y,VDP_9918_INDEX_FIRST_COLOR+color);
+
+
+                }
+        }
+
+
+        //laterales
+        for (y=0;y<ALTO_PANTALLA*zoom_y;y++) {
+                for (x=0;x<LEFT_BORDER;x++) {
+                        scr_putpixel(x,topborder+y,color);
+                        scr_putpixel(LEFT_BORDER+ANCHO_PANTALLA*zoom_x+x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
+                }
+
+        }
+
+
+
+
+}
+
 //Refresco pantalla sin rainbow
 void scr_refresca_pantalla_y_border_msx(void)
 {
+
+                        if (border_enabled.v) {
+                                //ver si hay que refrescar border
+                                if (modificado_border.v)
+                                {
+                                        msx_refresca_border();
+                                        modificado_border.v=0;
+                                }
+
+                        }
 
 
 
