@@ -422,7 +422,7 @@ void msx_refresca_border(void)
         //laterales
         for (y=0;y<ALTO_PANTALLA*zoom_y;y++) {
                 for (x=0;x<LEFT_BORDER;x++) {
-                        scr_putpixel(x,topborder+y,color);
+                        scr_putpixel(x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
                         scr_putpixel(LEFT_BORDER+ANCHO_PANTALLA*zoom_x+x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
                 }
 
