@@ -320,3 +320,6 @@ Como ejemplo, el Toshiba HX-10 (un modelo de 64KB) tiene esta configuración d
 * 		RAM en las páginas 0 a 3 del slot 2.
 * 		Slots 1 y 3 están conectados a las ranuras de cartucho.
 * 		Páginas 2 y 3 del slot 0 no se usan.
+
+-border en caso modo 40x24
+-orden sprites tiene que ir de mayor a menor al pintarlos
