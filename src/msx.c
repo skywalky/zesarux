@@ -791,6 +791,15 @@ void scr_refresca_pantalla_y_border_msx(void)
             z80_byte sprite_name=msx_read_vram_byte(sprite_attribute_table+2);
             z80_byte attr_color_etc=msx_read_vram_byte(sprite_attribute_table+3);
 
+/*
+  0: Y-pos, Vertical position (FFh is topmost, 00h is second line, etc.)
+  1: X-pos, Horizontal position (00h is leftmost)
+  2: Pattern number
+  3: Attributes. b0-3:Color, b4-6:unused, b7:EC (Early Clock)            
+*/
+
+            vert_pos++;
+
             //Siguiente sprite
             sprite_attribute_table -=4;
 

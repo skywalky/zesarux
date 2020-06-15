@@ -103,6 +103,7 @@
 #include "zeng.h"
 #include "network.h"
 #include "stats.h"
+#include "vdp_9918a.h"
 
 
 #ifdef COMPILE_ALSA
@@ -2828,22 +2829,22 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 
 
-int menu_debug_tsconf_tbblue_videoregisters_valor_contador_segundo_anterior;
+int menu_debug_tsconf_tbblue_msx_videoregisters_valor_contador_segundo_anterior;
 
-zxvision_window *menu_debug_tsconf_tbblue_videoregisters_overlay_window;
+zxvision_window *menu_debug_tsconf_tbblue_msx_videoregisters_overlay_window;
 
-void menu_debug_tsconf_tbblue_videoregisters_overlay(void)
+void menu_debug_tsconf_tbblue_msx_videoregisters_overlay(void)
 {
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 
 	zxvision_window *ventana;
 
-	ventana=menu_debug_tsconf_tbblue_videoregisters_overlay_window;	
+	ventana=menu_debug_tsconf_tbblue_msx_videoregisters_overlay_window;	
 
 //esto hara ejecutar esto 2 veces por segundo
-			if ( ((contador_segundo%500) == 0 && menu_debug_tsconf_tbblue_videoregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-											menu_debug_tsconf_tbblue_videoregisters_valor_contador_segundo_anterior=contador_segundo;
+			if ( ((contador_segundo%500) == 0 && menu_debug_tsconf_tbblue_msx_videoregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+											menu_debug_tsconf_tbblue_msx_videoregisters_valor_contador_segundo_anterior=contador_segundo;
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
 				int linea=0;
@@ -3001,6 +3002,15 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 				}
 
+				if (MACHINE_IS_MSX) {
+	
+					zxvision_print_string_defaults(ventana,1,linea++,"Video mode:");
+
+					zxvision_print_string_defaults_fillspc(ventana,1,linea++,get_vdp_9918_string_video_mode() );
+
+					linea++;
+		
+				}
 
 
 				zxvision_draw_window_contents(ventana);	
@@ -3009,10 +3019,10 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 
 
-zxvision_window menu_debug_tsconf_tbblue_videoregisters_ventana;
+zxvision_window menu_debug_tsconf_tbblue_msx_videoregisters_ventana;
 
 
-void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
+void menu_debug_tsconf_tbblue_msx_videoregisters(MENU_ITEM_PARAMETERS)
 {
 
 	menu_espera_no_tecla();
@@ -3020,7 +3030,7 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 	zxvision_window *ventana;
 		
-	ventana=&menu_debug_tsconf_tbblue_videoregisters_ventana;	
+	ventana=&menu_debug_tsconf_tbblue_msx_videoregisters_ventana;	
 
 	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
 	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
@@ -3039,6 +3049,11 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 			//yventana=0;
 			alto_ventana=24;
 		}
+
+		else if (MACHINE_IS_MSX) {
+			//yventana=0;
+			alto_ventana=4;
+		}		
 
 		else {
 			//yventana=7;
@@ -3061,13 +3076,13 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 	zxvision_draw_window(ventana);
 
 
-	menu_debug_tsconf_tbblue_videoregisters_overlay_window=ventana;
+	menu_debug_tsconf_tbblue_msx_videoregisters_overlay_window=ventana;
 
 
 
 	//Cambiamos funcion overlay de texto de menu
 	//Se establece a la de funcion de onda + texto
-	set_menu_overlay_function(menu_debug_tsconf_tbblue_videoregisters_overlay);
+	set_menu_overlay_function(menu_debug_tsconf_tbblue_msx_videoregisters_overlay);
 
 
        //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
@@ -3122,13 +3137,13 @@ void menu_debug_tsconf_tbblue_videoregisters(MENU_ITEM_PARAMETERS)
 
 
 
-//int menu_debug_tsconf_tbblue_spritenav_current_palette=0;
-int menu_debug_tsconf_tbblue_spritenav_current_sprite=0;
+//int menu_debug_tsconf_tbblue_msx_spritenav_current_palette=0;
+int menu_debug_tsconf_tbblue_msx_spritenav_current_sprite=0;
 
 
-zxvision_window *menu_debug_tsconf_tbblue_spritenav_draw_sprites_window;
+zxvision_window *menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window;
 
-int menu_debug_tsconf_tbblue_spritenav_get_total_sprites(void)
+int menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites(void)
 {
 	int limite;
 
@@ -3140,16 +3155,16 @@ int menu_debug_tsconf_tbblue_spritenav_get_total_sprites(void)
 }
 
 
-int menu_debug_tsconf_tbblue_spritenav_get_total_height_win(void)
+int menu_debug_tsconf_tbblue_msx_spritenav_get_total_height_win(void)
 {
 
-	if (MACHINE_IS_TSCONF) return menu_debug_tsconf_tbblue_spritenav_get_total_sprites()*2;
-	else return menu_debug_tsconf_tbblue_spritenav_get_total_sprites()*3;
+	if (MACHINE_IS_TSCONF) return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*2;
+	else return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*3;
 
 }
 
 //Muestra lista de sprites
-void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
+void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 {
 
 	char dumpmemoria[64];
@@ -3162,7 +3177,7 @@ void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 
 	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;*/
 
-	limite=menu_debug_tsconf_tbblue_spritenav_get_total_sprites();
+	limite=menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites();
 
 	//z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][4];
 	/*
@@ -3177,7 +3192,7 @@ void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 
 		for (linea_color=0;linea_color<limite;linea_color++) {					
 
-			current_sprite=menu_debug_tsconf_tbblue_spritenav_current_sprite+linea_color;
+			current_sprite=menu_debug_tsconf_tbblue_msx_spritenav_current_sprite+linea_color;
 
 			if (MACHINE_IS_TSCONF) {
 
@@ -3208,7 +3223,7 @@ void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 
 				sprintf (dumpmemoria,"%02d X: %3d Y: %3d (%2dX%2d)",current_sprite,x,y,xsize,ysize);
 				//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 				sprintf (dumpmemoria,"Tile:%2d,%2d %s %s %s %s P:%2d",tnum_x,tnum_y,
 					(sprite_act ? "ACT" : "   "),(sprite_leap ? "LEAP": "    "),
@@ -3216,7 +3231,7 @@ void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 					spal );
 
 				//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 			}
 
 			if (MACHINE_IS_TBBLUE) {
@@ -3280,16 +3295,16 @@ void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 				sprintf (dumpmemoria,"%03d%s X: %3d Y: %3d %s %s %s",current_sprite,buf_subindex_4_bit,x,y,
 						(mirror_x ? "MX" : "  "),(mirror_y ? "MY" : "  "),(rotate ? "ROT" : "   ")
 				);				
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 
 				sprintf (dumpmemoria," Pattn: %2d Palof: %3d Vis: %s"
 					,pattern,paloff, (visible ? "Yes" : "No ") );
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 
 				sprintf(dumpmemoria," %dbpp ZX: %d ZY: %d",(sprite_es_4bpp ? 4 : 8) ,zoom_x,zoom_y);
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window,1,linea++,dumpmemoria);				
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);				
 
 				
 			}
@@ -3297,12 +3312,12 @@ void menu_debug_tsconf_tbblue_spritenav_lista_sprites(void)
 					
 		}
 
-	zxvision_draw_window_contents(menu_debug_tsconf_tbblue_spritenav_draw_sprites_window); 
+	zxvision_draw_window_contents(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window); 
 
 
 }
 
-void menu_debug_tsconf_tbblue_spritenav_draw_sprites(void)
+void menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites(void)
 {
 
 
@@ -3311,7 +3326,7 @@ void menu_debug_tsconf_tbblue_spritenav_draw_sprites(void)
 
 
 				//Mostrar lista sprites
-				menu_debug_tsconf_tbblue_spritenav_lista_sprites();
+				menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites();
 
 				//Esto tiene que estar despues de escribir la lista de sprites, para que se refresque y se vea
 				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
@@ -3320,7 +3335,7 @@ void menu_debug_tsconf_tbblue_spritenav_draw_sprites(void)
 
 				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 				if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
-				menu_debug_tsconf_tbblue_spritenav_lista_sprites();
+				menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites();
 
 
 
@@ -3328,7 +3343,7 @@ void menu_debug_tsconf_tbblue_spritenav_draw_sprites(void)
 
 zxvision_window zxvision_window_tsconf_tbblue_spritenav;
 
-void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
+void menu_debug_tsconf_tbblue_msx_spritenav(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();
@@ -3354,7 +3369,7 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 
 	zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							TSCONF_SPRITENAV_WINDOW_ANCHO-1,menu_debug_tsconf_tbblue_spritenav_get_total_height_win(),"Sprite navigator");
+							TSCONF_SPRITENAV_WINDOW_ANCHO-1,menu_debug_tsconf_tbblue_msx_spritenav_get_total_height_win(),"Sprite navigator");
 
 	ventana->can_be_backgrounded=1;
 	//indicar nombre del grabado de geometria
@@ -3362,9 +3377,9 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 	zxvision_draw_window(ventana);		
 
-    set_menu_overlay_function(menu_debug_tsconf_tbblue_spritenav_draw_sprites);
+    set_menu_overlay_function(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites);
 
-	menu_debug_tsconf_tbblue_spritenav_draw_sprites_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+	menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
        //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
@@ -3427,11 +3442,11 @@ void menu_debug_tsconf_tbblue_spritenav(MENU_ITEM_PARAMETERS)
 
 
 
-int menu_debug_tsconf_tbblue_tilenav_current_tilelayer=0;
+int menu_debug_tsconf_tbblue_msx_tilenav_current_tilelayer=0;
 
-z80_bit menu_debug_tsconf_tbblue_tilenav_showmap={0};
+z80_bit menu_debug_tsconf_tbblue_msx_tilenav_showmap={0};
 
-zxvision_window *menu_debug_tsconf_tbblue_tilenav_lista_tiles_window;
+zxvision_window *menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window;
 
 
 #define DEBUG_TSCONF_TILENAV_MAX_TILES (64*64)
@@ -3439,7 +3454,7 @@ zxvision_window *menu_debug_tsconf_tbblue_tilenav_lista_tiles_window;
 //#define DEBUG_TBBLUE_TILENAV_MAX_TILES_4032 (40*32)
 
 
-char menu_debug_tsconf_tbblue_tiles_retorna_visualchar(int tnum)
+char menu_debug_tsconf_tbblue_msx_tiles_retorna_visualchar(int tnum)
 {
 	//Hacer un conjunto de 64 caracteres. Mismo set de caracteres que para Base64. Por que? Por que si :)
 			   //0123456789012345678901234567890123456789012345678901234567890123
@@ -3449,27 +3464,27 @@ char menu_debug_tsconf_tbblue_tiles_retorna_visualchar(int tnum)
 	return caracter_list[index];
 }
 
-int menu_debug_tsconf_tbblue_tilenav_total_vert(void)
+int menu_debug_tsconf_tbblue_msx_tilenav_total_vert(void)
 {
 
 	int limite_vertical;
 
 	if (MACHINE_IS_TSCONF) {
 		limite_vertical=DEBUG_TSCONF_TILENAV_MAX_TILES;
-		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
+		if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
 	}
 
 	else  { //TBBLUE
 		limite_vertical=tbblue_get_tilemap_width()*32;
 
-		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) limite_vertical=32;	
+		if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) limite_vertical=32;	
 	}
 
 	return limite_vertical;
 }
 
 //Muestra lista de tiles
-void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
+void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 {
 
 	//Suficientemente grande para almacenar regla superior en modo visual
@@ -3523,12 +3538,12 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 	puntero_tilemap_orig=puntero_tilemap;
 
-	int limite_vertical=menu_debug_tsconf_tbblue_tilenav_total_vert();
+	int limite_vertical=menu_debug_tsconf_tbblue_msx_tilenav_total_vert();
 
 
 	int offset_vertical=0;
 
-	if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+	if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) {
 		if (MACHINE_IS_TSCONF) {
 				  //0123456789012345678901234567890123456789012345678901234567890123
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
@@ -3550,12 +3565,12 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 		//dumpmemoria[current_tile_x+TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+3]=0;  //3 espacios al inicio
 
 		//menu_escribe_linea_opcion(linea++,-1,1,&dumpmemoria[current_tile_x]); //Mostrar regla superior
-		zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,0,dumpmemoria);
+		zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,0,dumpmemoria);
 	}
 	else {
 		//Aumentarlo en cuanto al offset que estamos (si modo lista)
 
-		int offset_y=menu_debug_tsconf_tbblue_tilenav_lista_tiles_window->offset_y;
+		int offset_y=menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window->offset_y;
 		
 
 		offset_vertical=offset_y/2;
@@ -3576,7 +3591,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 			int repetir_ancho=1;
 			int mapa_tile_x=3;
-			if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+			if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v==0) {
 				//Modo lista tiles
 				current_tile=offset_vertical;
 			}
@@ -3616,7 +3631,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 					int offset=(256*y)+(x*2);
 
-					offset+=menu_debug_tsconf_tbblue_tilenav_current_tilelayer*128;
+					offset+=menu_debug_tsconf_tbblue_msx_tilenav_current_tilelayer*128;
 
 					int tnum=puntero_tilemap[offset]+256*(puntero_tilemap[offset+1]&0xF);
 
@@ -3630,17 +3645,17 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 					z80_byte tile_xf=puntero_tilemap[offset+1]&64;
 					z80_byte tile_yf=puntero_tilemap[offset+1]&128;
 
-					if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+					if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v==0) {
 						//Modo lista tiles
 						sprintf (dumpmemoria,"X: %3d Y: %3d                   ",x,y);
 
-						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 
 						sprintf (dumpmemoria," Tile: %2d,%2d %s %s P:%2d",tnum_x,tnum_y,
 							(tile_xf ? "XF" : "  "),(tile_yf ? "YF": "  "),
 							tpal );
 
-						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 					}
 					else {
 						//Modo mapa tiles
@@ -3650,7 +3665,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 							caracter_final=' '; 
 						}
 						else {
-							caracter_final=menu_debug_tsconf_tbblue_tiles_retorna_visualchar(tnum);
+							caracter_final=menu_debug_tsconf_tbblue_msx_tiles_retorna_visualchar(tnum);
 						}
 
 						dumpmemoria[mapa_tile_x++]=caracter_final;
@@ -3748,18 +3763,18 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 					//printf ("tnum: %d\n",tnum);
 
 
-					if (menu_debug_tsconf_tbblue_tilenav_showmap.v==0) {
+					if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v==0) {
 						//Modo lista tiles
 						sprintf (dumpmemoria,"X: %3d Y: %3d                   ",x,y);
 
-						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 
 						sprintf (dumpmemoria," Tile: %3d %s %s %s %s P:%2d ",tnum,
 							(xmirror ? "MX" : "  "),(ymirror ? "MY": "  "),
 							(rotate ? "R" : " "),(ula_over_tilemap ? "U": " "),
 							tpal );
 
-						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 					}
 					else {
 						//Modo mapa tiles
@@ -3769,7 +3784,7 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 							caracter_final=' '; 
 						}
 						else {
-							caracter_final=menu_debug_tsconf_tbblue_tiles_retorna_visualchar(tnum);
+							caracter_final=menu_debug_tsconf_tbblue_msx_tiles_retorna_visualchar(tnum);
 						}
 
 						dumpmemoria[mapa_tile_x++]=caracter_final;
@@ -3783,8 +3798,8 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 				repetir_ancho--;
 			} while (repetir_ancho);
 
-			if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+			if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) {
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 				puntero_tilemap=puntero_tilemap_orig;
 			}
 					
@@ -3794,17 +3809,17 @@ void menu_debug_tsconf_tbblue_tilenav_lista_tiles(void)
 
 	//return linea;
 
-	zxvision_draw_window_contents(menu_debug_tsconf_tbblue_tilenav_lista_tiles_window); 
+	zxvision_draw_window_contents(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window); 
 }
 
-void menu_debug_tsconf_tbblue_tilenav_draw_tiles(void)
+void menu_debug_tsconf_tbblue_msx_tilenav_draw_tiles(void)
 {
 /*
 				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
 				//Mostrar lista tiles
-				menu_debug_tsconf_tbblue_tilenav_lista_tiles();
+				menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles();
 
 				//Esto tiene que estar despues de escribir la lista de tiles, para que se refresque y se vea
 				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
@@ -3815,13 +3830,13 @@ void menu_debug_tsconf_tbblue_tilenav_draw_tiles(void)
 
 				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 				if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
-				menu_debug_tsconf_tbblue_tilenav_lista_tiles();				
+				menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles();				
 
 }
 
 
 
-void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
+void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 {
 
 		char titulo[33];
@@ -3834,7 +3849,7 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
         antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
         menu_writing_inverse_color.v=1;		
 
-		int total_height=menu_debug_tsconf_tbblue_tilenav_total_vert();
+		int total_height=menu_debug_tsconf_tbblue_msx_tilenav_total_vert();
 		int total_width=31;
 
 		char texto_layer[32];
@@ -3842,9 +3857,9 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 		//En caso de tbblue, solo hay una capa
 		if (MACHINE_IS_TBBLUE) texto_layer[0]=0;
 
-		else sprintf (texto_layer,"~~Layer %d",menu_debug_tsconf_tbblue_tilenav_current_tilelayer);
+		else sprintf (texto_layer,"~~Layer %d",menu_debug_tsconf_tbblue_msx_tilenav_current_tilelayer);
 
-		if (menu_debug_tsconf_tbblue_tilenav_showmap.v) {
+		if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) {
 			sprintf (linea_leyenda,"~~Mode: Visual %s",texto_layer);
 
 			if (MACHINE_IS_TSCONF) {
@@ -3905,14 +3920,14 @@ void menu_debug_tsconf_tbblue_tilenav_new_window(zxvision_window *ventana)
 }
 
 
-void menu_debug_tsconf_tbblue_save_geometry(zxvision_window *ventana)
+void menu_debug_tsconf_tbblue_msx_save_geometry(zxvision_window *ventana)
 {
 	util_add_window_geometry_compact(ventana);
 }
 
 zxvision_window zxvision_window_tsconf_tbblue_tilenav;
 
-void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
+void menu_debug_tsconf_tbblue_msx_tilenav(MENU_ITEM_PARAMETERS)
 {
 
 	menu_espera_no_tecla();
@@ -3927,11 +3942,11 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
     zxvision_delete_window_if_exists(ventana);	
 
-	menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
+	menu_debug_tsconf_tbblue_msx_tilenav_new_window(ventana);
 
-	set_menu_overlay_function(menu_debug_tsconf_tbblue_tilenav_draw_tiles);
+	set_menu_overlay_function(menu_debug_tsconf_tbblue_msx_tilenav_draw_tiles);
 
-	menu_debug_tsconf_tbblue_tilenav_lista_tiles_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+	menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
        //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
@@ -3964,18 +3979,18 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
 			case 'l':
 				//En caso de tbblue, hay una sola capa
 				if (!MACHINE_IS_TBBLUE) {			
-					menu_debug_tsconf_tbblue_save_geometry(ventana);		
+					menu_debug_tsconf_tbblue_msx_save_geometry(ventana);		
 					zxvision_destroy_window(ventana);	
-					menu_debug_tsconf_tbblue_tilenav_current_tilelayer ^=1;
-					menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
+					menu_debug_tsconf_tbblue_msx_tilenav_current_tilelayer ^=1;
+					menu_debug_tsconf_tbblue_msx_tilenav_new_window(ventana);
 				}
 			break;
 
 			case 'm':
-				menu_debug_tsconf_tbblue_save_geometry(ventana);
+				menu_debug_tsconf_tbblue_msx_save_geometry(ventana);
 				zxvision_destroy_window(ventana);		
-				menu_debug_tsconf_tbblue_tilenav_showmap.v ^=1;
-				menu_debug_tsconf_tbblue_tilenav_new_window(ventana);
+				menu_debug_tsconf_tbblue_msx_tilenav_showmap.v ^=1;
+				menu_debug_tsconf_tbblue_msx_tilenav_new_window(ventana);
 
 			break;
 
@@ -3998,7 +4013,7 @@ void menu_debug_tsconf_tbblue_tilenav(MENU_ITEM_PARAMETERS)
     cls_menu_overlay();
 
     //Grabar geometria ventana. Usamos funcion auxiliar pues la llamamos tambien al cambiar de modo y layer
-	menu_debug_tsconf_tbblue_save_geometry(ventana);
+	menu_debug_tsconf_tbblue_msx_save_geometry(ventana);
 
 
     if (tecla==3) {
@@ -21566,32 +21581,32 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_debug_tsconf_tbblue(MENU_ITEM_PARAMETERS)
+void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_debug_tsconf_tbblue;
+        menu_item *array_menu_debug_tsconf_tbblue_msx;
         menu_item item_seleccionado;
 	int retorno_menu;
         do {
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_videoregisters,NULL,"Video ~~Info");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'i');
+		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_videoregisters,NULL,"Video ~~Info");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'i');
 
-		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'l');
+		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'l');
 
-		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_spritenav,NULL,"~~Sprite navigator");
-		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'s');
+		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_spritenav,NULL,"~~Sprite navigator");
+		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'s');
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE) {
-			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_tilenav,NULL,"~~Tile navigator");
-			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue,'t');
+			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_tilenav,NULL,"~~Tile navigator");
+			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'t');
 		}
 
-                menu_add_item_menu(array_menu_debug_tsconf_tbblue,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_debug_tsconf_tbblue,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_debug_tsconf_tbblue);
+                menu_add_item_menu(array_menu_debug_tsconf_tbblue_msx,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_debug_tsconf_tbblue_msx,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_debug_tsconf_tbblue_msx);
 
 		char titulo_ventana[33];
 
@@ -21599,8 +21614,9 @@ void menu_debug_tsconf_tbblue(MENU_ITEM_PARAMETERS)
 		strcpy(titulo_ventana,"Debug TSConf");
 
 		if (MACHINE_IS_TBBLUE) strcpy(titulo_ventana,"Debug TBBlue");
+		if (MACHINE_IS_MSX) strcpy(titulo_ventana,"Debug MSX");
 
-                retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue,titulo_ventana);
+                retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue_msx,titulo_ventana);
 
                 
 

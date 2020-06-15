@@ -2286,28 +2286,38 @@ Byte Fields:
     for (segment=0;segment<4;segment++) {
 
       //Store block to file, if block present
+
+      //Y no grabar la rom interna (slot 0, segmento 0 y 1)
+      //Aunque luego realmente la rutina de carga si que permite cargar esto, pero dado que será siempre la misma rom de msx,
+      //no tiene sentido grabarla y ocupar espacio
       if (msx_memory_slots[slot][segment]!=MSX_SLOT_MEMORY_TYPE_EMPTY) {
 
-        compressed_ramblock[0]=0;
-        compressed_ramblock[1]=value_16_to_8l(16384);
-        compressed_ramblock[2]=value_16_to_8h(16384);
-        compressed_ramblock[3]=value_16_to_8l(longitud_ram);
-        compressed_ramblock[4]=value_16_to_8h(longitud_ram);
-        compressed_ramblock[5]=slot;
-        compressed_ramblock[6]=segment;
-        compressed_ramblock[7]=msx_memory_slots[slot][segment];
+        int grabar=1;
 
-        int offset=(slot*4+segment)*16384;
+        if (slot==0 && (segment==0 || segment==1)) grabar=0;
 
-        int si_comprimido;
-        int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[8],longitud_ram,&si_comprimido);
-        if (si_comprimido) compressed_ramblock[0]|=1;
+        if (grabar) {
+          compressed_ramblock[0]=0;
+          compressed_ramblock[1]=value_16_to_8l(16384);
+          compressed_ramblock[2]=value_16_to_8h(16384);
+          compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+          compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+          compressed_ramblock[5]=slot;
+          compressed_ramblock[6]=segment;
+          compressed_ramblock[7]=msx_memory_slots[slot][segment];
 
-        debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_MEMBLOCK slot: %d segment: %d length: %d",slot,segment,longitud_bloque);
+          int offset=(slot*4+segment)*16384;
 
-        
-        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_MEMBLOCK, longitud_bloque+8);
-      }
+          int si_comprimido;
+          int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[8],longitud_ram,&si_comprimido);
+          if (si_comprimido) compressed_ramblock[0]|=1;
+
+          debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_MEMBLOCK slot: %d segment: %d length: %d",slot,segment,longitud_bloque);
+
+          
+          zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_MEMBLOCK, longitud_bloque+8);
+        }
+      } 
 
     }
   }

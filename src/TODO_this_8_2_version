@@ -322,4 +322,23 @@ Como ejemplo, el Toshiba HX-10 (un modelo de 64KB) tiene esta configuración d
 * 		Páginas 2 y 3 del slot 0 no se usan.
 
 -border en caso modo 40x24
--orden sprites tiene que ir de mayor a menor al pintarlos
+-.zsf en Msx que ni guarde contenido rom de sistema 
+
+-render pantalla msx realmente eso tendria que estar en el driver de vdp
+luego leer variable screen de pantalla activa sirve de algo? porque la funcion que lee de vram deberia 
+tener dos parametros: puntero a vram y direcccion a leer, para poder separar eso del msx y hacerlo generico. 
+por tanto variable screen tiene que ser parametro de entrada a render , y le llega desde msx
+
+
+-Info colecovision y sirve también para msx el vdp:
+
+
+Complete Colecovision Specs · alekmaul/pvcollib Wiki
+https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
+
+
+The-MSX-Red-Book/the_msx_red_book.md at master · gseidler/The-MSX-Red-Book
+https://github.com/gseidler/The-MSX-Red-Book/blob/master/the_msx_red_book.md
+
+
+Y-pos, Vertical position (FFh is topmost, 00h is second line, etc.

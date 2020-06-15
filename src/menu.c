@@ -4914,9 +4914,9 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"sprites",menu_debug_view_sprites},
 	{"watches",menu_watches},
 	{"displaypalettes",menu_display_total_palette},
-	{"videoinfo",menu_debug_tsconf_tbblue_videoregisters},
-	{"tsconftbbluespritenav",menu_debug_tsconf_tbblue_spritenav},
-	{"tsconftbbluetilenav",menu_debug_tsconf_tbblue_tilenav},
+	{"videoinfo",menu_debug_tsconf_tbblue_msx_videoregisters},
+	{"tsconftbbluespritenav",menu_debug_tsconf_tbblue_msx_spritenav},
+	{"tsconftbbluetilenav",menu_debug_tsconf_tbblue_msx_tilenav},
 	{"debugcpu",menu_debug_registers},
 	{"helpshowkeyboard",menu_help_show_keyboard},
 
@@ -23181,9 +23181,13 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE) {
-			if (MACHINE_IS_TSCONF) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue,NULL,"~~TSConf");
-			if (MACHINE_IS_TBBLUE) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue,NULL,"~~TBBlue");
+			if (MACHINE_IS_TSCONF) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"~~TSConf");
+			if (MACHINE_IS_TBBLUE) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"~~TBBlue");
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'t');
+		}
+
+		if (MACHINE_IS_MSX) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"MSX");
 		}
 
 

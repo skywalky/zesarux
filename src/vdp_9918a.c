@@ -147,3 +147,56 @@ void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value)
 
 
 }
+
+/*
+  M1 M2 M3 Screen format
+  0  0  0  Half text  32x24             (Mode 0 - Graphic 1)
+  1  0  0  Text       40x24             (Mode 1 - Text)
+  0  0  1  Hi resolution 256x192        (Mode 2 - Graphic 2)
+  0  1  0  Multicolour  4x4pix blocks   (Mode 3 - Multicolor)
+*/
+
+//                              01234567890123456789012345678901
+const char *s_msx_video_mode_0="0 - Text 40x24";
+const char *s_msx_video_mode_1="1 - Text 32x24";
+const char *s_msx_video_mode_2="2 - Graphic 256x192";
+const char *s_msx_video_mode_3="3 - Graphic 64x48";
+
+
+
+
+char *get_vdp_9918_string_video_mode(void) 
+{
+
+
+	//Por defecto
+	const char *string_mode=s_msx_video_mode_0;
+
+	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>1)&1;
+
+	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
+
+	z80_byte video_mode=video_mode_m12 | video_mode_m3;
+
+	
+	switch(video_mode) {
+
+		case 0:
+            string_mode=s_msx_video_mode_1;
+        break;
+
+
+		case 1:
+
+			string_mode=s_msx_video_mode_2;
+		break;
+
+
+		case 2:
+			string_mode=s_msx_video_mode_3;
+		break;
+    }
+
+    return (char *)string_mode;
+
+}
