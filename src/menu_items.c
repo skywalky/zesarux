@@ -7325,39 +7325,39 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 
 				if (MACHINE_IS_TSCONF) {
 
-				//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
-				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
-				linea +=3;
+					//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
+					linea +=3;
 
-                sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(tsconf_if_ula_enabled()));
-                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
-				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
-				linea +=3;
+					sprintf (texto_layer,"ULA:       %s",menu_tsconf_layer_aux_usedunused(tsconf_if_ula_enabled()));
+					//menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;
 
-                sprintf (texto_layer,"Sprites 0: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
-                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
-				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
-				linea +=3;		
+					sprintf (texto_layer,"Sprites 0: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+					//menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;		
 
-				sprintf (texto_layer,"Tiles 0:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_zero_enabled()));
-                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
-				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
-				linea +=3;	
+					sprintf (texto_layer,"Tiles 0:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_zero_enabled()));
+					//menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;	
 
-                sprintf (texto_layer,"Sprites 1: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
-                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
-				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
-				linea +=3;	
+					sprintf (texto_layer,"Sprites 1: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+					//menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;	
 
-		    	sprintf (texto_layer,"Tiles 1:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_one_enabled()));
-                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);
-				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
-				linea +=3;
+					sprintf (texto_layer,"Tiles 1:   %s",menu_tsconf_layer_aux_usedunused(tsconf_if_tiles_one_enabled()));
+					//menu_escribe_linea_opcion(linea,-1,1,texto_layer);
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;
 
-                sprintf (texto_layer,"Sprites 2: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
-                //menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
-				zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
-				linea +=3;		
+					sprintf (texto_layer,"Sprites 2: %s",menu_tsconf_layer_aux_usedunused(tsconf_if_sprites_enabled()));
+					//menu_escribe_linea_opcion(linea,-1,1,texto_layer);	
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_layer);
+					linea +=3;		
 				}
 
 				if (MACHINE_IS_TBBLUE) {
