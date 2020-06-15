@@ -763,17 +763,22 @@ void scr_refresca_pantalla_y_border_msx(void)
         sprite_attribute_table &=(65535-128);
 
         for (sprite=0;sprite<32 && !salir;sprite++) {
-            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table++);
-            z80_byte horiz_pos=msx_read_vram_byte(sprite_attribute_table++);
-            z80_byte sprite_name=msx_read_vram_byte(sprite_attribute_table++);
-            z80_byte attr_color_etc=msx_read_vram_byte(sprite_attribute_table++);
+            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
+            z80_byte horiz_pos=msx_read_vram_byte(sprite_attribute_table+1);
+            z80_byte sprite_name=msx_read_vram_byte(sprite_attribute_table+2);
+            z80_byte attr_color_etc=msx_read_vram_byte(sprite_attribute_table+3);
+
+            //Siguiente sprite
+            sprite_attribute_table +=4;
+
+            printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
 
             if (vert_pos==208) {
                 salir=1;
             }
 
             else  {
-                //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
+                
 
                 //Si coord valida
                 if (vert_pos<192) {
