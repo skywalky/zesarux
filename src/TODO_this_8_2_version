@@ -306,11 +306,11 @@ Parece que no sucede en la 8.1
 
 -msx:
 -renderizado realvideo
--snapshot zsf que grabe vram, registros vdp
+
 -teclas que falten por emular
 -ajuste real beeper corregir para que use bit de "speaker" de msx
 -sprites que van mas alla del border
--opcion para desactivar sprites
+
 -parametro que permita habilitar todos los sprites por linea del msx
 -Frecuencia chip ay en msx
 
@@ -322,7 +322,7 @@ Como ejemplo, el Toshiba HX-10 (un modelo de 64KB) tiene esta configuración d
 * 		Páginas 2 y 3 del slot 0 no se usan.
 
 -border en caso modo 40x24
--.zsf en Msx que ni guarde contenido rom de sistema 
+
 
 -render pantalla msx realmente eso tendria que estar en el driver de vdp
 luego leer variable screen de pantalla activa sirve de algo? porque la funcion que lee de vram deberia 
@@ -341,4 +341,3 @@ The-MSX-Red-Book/the_msx_red_book.md at master · gseidler/The-MSX-Red-Book
 https://github.com/gseidler/The-MSX-Red-Book/blob/master/the_msx_red_book.md
 
 
-Y-pos, Vertical position (FFh is topmost, 00h is second line, etc.
