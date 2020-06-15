@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "msx.h"
 #include "vdp_9918a.h"
@@ -445,27 +446,187 @@ void msx_refresca_border(void)
 
 }
 
-//Refresco pantalla sin rainbow
-void scr_refresca_pantalla_y_border_msx(void)
+
+
+
+void msx_render_sprites_no_rainbow(void)
+{
+ 
+
+
+    z80_byte video_mode=vdp_9918a_get_video_mode();
+
+
+
+
+    //En modos 1 y 2 permitimos sprites
+    if (video_mode!=1 && video_mode!=2) return;
+
+
+
+    z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
+    
+    z80_byte byte_leido;
+
+        
+        int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
+        int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
+
+        //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
+
+        int bytes_per_sprite;
+        int bytes_per_line;
+
+        if (sprite_size==8) {
+            bytes_per_sprite=8;
+            bytes_per_line=1;
+        }
+
+        else {
+            bytes_per_sprite=32;
+            bytes_per_line=2;
+        }
+
+
+        //TODO: si coordenada Y=208, fin tabla sprites
+        //    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
+
+        //z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
+
+        int sprite;
+        int salir=0;
+
+        //En boundary de 128
+        //sprite_attribute_table &=(65535-128);
+
+        z80_int sprite_attribute_table=vdp_9918a_get_sprite_attribute_table();
+
+        //Empezar por la del final
+        //Ver si hay alguno con coordenada 208 que indica final
+
+        int primer_sprite_final=VDP_9918A_MAX_SPRITES-1;
+
+        int offset_sprite=sprite_attribute_table;
+
+        int i;
+        for (primer_sprite_final=0;primer_sprite_final<32 && !salir;primer_sprite_final++) {
+            int offset_sprite=sprite_attribute_table+primer_sprite_final*4;
+
+            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
+            if (vert_pos==208) salir=1;
+
+        }
+
+        //Siempre estara al siguiente
+        primer_sprite_final--;
+
+        sprite_attribute_table +=(primer_sprite_final*4);
+
+        //Empezar desde final hacia principio
+
+        for (sprite=primer_sprite_final;sprite>=0;sprite--) {
+            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
+            z80_byte horiz_pos=msx_read_vram_byte(sprite_attribute_table+1);
+            z80_byte sprite_name=msx_read_vram_byte(sprite_attribute_table+2);
+            z80_byte attr_color_etc=msx_read_vram_byte(sprite_attribute_table+3);
+
+/*
+  0: Y-pos, Vertical position (FFh is topmost, 00h is second line, etc.)
+  1: X-pos, Horizontal position (00h is leftmost)
+  2: Pattern number
+  3: Attributes. b0-3:Color, b4-6:unused, b7:EC (Early Clock)            
+*/
+
+            vert_pos++;
+
+            //Siguiente sprite
+            sprite_attribute_table -=4;
+
+            printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
+
+       
+                
+
+                //Si coord valida
+                if (vert_pos<192) {
+                    //int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
+                      int offset_pattern_table=sprite_name*8+sprite_pattern_table;
+                    z80_byte color=attr_color_etc & 15;
+
+                    int x,y,byte_linea;
+
+                    if (sprite_size==16) {
+                        int quad_x,quad_y;
+
+                        for (quad_x=0;quad_x<2;quad_x++) {
+                            for (quad_y=0;quad_y<2;quad_y++) {
+                                for (y=0;y<8;y++) {
+                                
+                                    byte_leido=msx_read_vram_byte(offset_pattern_table++);
+                                    for (x=0;x<8;x++) {
+
+                                            int pos_x_final;
+                                            int pos_y_final;
+
+                                        pos_x_final=horiz_pos+(quad_x*8)+x;
+                                        pos_y_final=vert_pos+(quad_y*8)+y;
+                                        
+                                        //Si dentro de limites
+                                        if (pos_x_final<255 && pos_y_final<192) {
+
+                                            //Si bit a 1
+                                            if (byte_leido & 128) {
+                                                //Y si ese color no es transparente
+                                                if (color!=0) {
+                                                    //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+                                                    scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                                }
+                                            }
+
+                                            byte_leido = byte_leido << 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }                        
+                    }
+
+                    else {
+
+                        for (y=0;y<8;y++) {
+
+                                byte_leido=msx_read_vram_byte(offset_pattern_table++);
+                                for (x=0;x<8;x++) {
+
+                                        int pos_x_final;
+                                        int pos_y_final;
+
+                                    pos_x_final=horiz_pos+x;
+                                    pos_y_final=vert_pos+y;
+                                    
+
+                                    if (byte_leido & 128) {
+                                        //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+                                        scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                    }
+
+                                    byte_leido = byte_leido << 1;
+                                }
+                            
+                        }
+                    }
+
+                }
+            
+
+        }   
+}
+
+void msx_render_ula_no_rainbow(void)
 {
 
-                        if (border_enabled.v) {
-                                //ver si hay que refrescar border
-                                if (modificado_border.v)
-                                {
-                                        msx_refresca_border();
-                                        modificado_border.v=0;
-                                }
 
-                        }
-
-
-
-	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>1)&1;
-
-	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
-
-	z80_byte video_mode=video_mode_m12 | video_mode_m3;
+	z80_byte video_mode=vdp_9918a_get_video_mode();
 
 	//printf ("video_mode: %d\n",video_mode);
 
@@ -495,7 +656,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
     //z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
 
-    z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
+     
 
 	//z80_byte *screen=get_base_mem_pantalla();
 
@@ -738,165 +899,45 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 
 
-	}
+	}    
+}
 
-    //En modos 1 y 2 permitimos sprites
-    if (video_mode==1 || video_mode==2) {
+//Refresco pantalla sin rainbow
+void scr_refresca_pantalla_y_border_msx(void)
+{
 
-        
-        int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
-        int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
-
-        //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
-
-        int bytes_per_sprite;
-        int bytes_per_line;
-
-        if (sprite_size==8) {
-            bytes_per_sprite=8;
-            bytes_per_line=1;
-        }
-
-        else {
-            bytes_per_sprite=32;
-            bytes_per_line=2;
-        }
-
-
-        //TODO: si coordenada Y=208, fin tabla sprites
-        //    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
-
-        //z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
-
-        int sprite;
-        int salir=0;
-
-        //En boundary de 128
-        //sprite_attribute_table &=(65535-128);
-
-        z80_int sprite_attribute_table=vdp_9918a_get_sprite_attribute_table();
-
-        //Empezar por la del final
-        //Ver si hay alguno con coordenada 208 que indica final
-
-        int primer_sprite_final=VDP_9918A_MAX_SPRITES-1;
-
-        int offset_sprite=sprite_attribute_table;
-
-        int i;
-        for (primer_sprite_final=0;primer_sprite_final<32 && !salir;primer_sprite_final++) {
-            int offset_sprite=sprite_attribute_table+primer_sprite_final*4;
-
-            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
-            if (vert_pos==208) salir=1;
-
-        }
-
-        //Siempre estara al siguiente
-        primer_sprite_final--;
-
-        sprite_attribute_table +=(primer_sprite_final*4);
-
-        //Empezar desde final hacia principio
-
-        for (sprite=primer_sprite_final;sprite>=0;sprite--) {
-            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
-            z80_byte horiz_pos=msx_read_vram_byte(sprite_attribute_table+1);
-            z80_byte sprite_name=msx_read_vram_byte(sprite_attribute_table+2);
-            z80_byte attr_color_etc=msx_read_vram_byte(sprite_attribute_table+3);
-
-/*
-  0: Y-pos, Vertical position (FFh is topmost, 00h is second line, etc.)
-  1: X-pos, Horizontal position (00h is leftmost)
-  2: Pattern number
-  3: Attributes. b0-3:Color, b4-6:unused, b7:EC (Early Clock)            
-*/
-
-            vert_pos++;
-
-            //Siguiente sprite
-            sprite_attribute_table -=4;
-
-            printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
-
-       
-                
-
-                //Si coord valida
-                if (vert_pos<192) {
-                    //int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
-                      int offset_pattern_table=sprite_name*8+sprite_pattern_table;
-                    z80_byte color=attr_color_etc & 15;
-
-                    int x,y,byte_linea;
-
-                    if (sprite_size==16) {
-                        int quad_x,quad_y;
-
-                        for (quad_x=0;quad_x<2;quad_x++) {
-                            for (quad_y=0;quad_y<2;quad_y++) {
-                                for (y=0;y<8;y++) {
-                                
-                                    byte_leido=msx_read_vram_byte(offset_pattern_table++);
-                                    for (x=0;x<8;x++) {
-
-                                            int pos_x_final;
-                                            int pos_y_final;
-
-                                        pos_x_final=horiz_pos+(quad_x*8)+x;
-                                        pos_y_final=vert_pos+(quad_y*8)+y;
-                                        
-                                        //Si dentro de limites
-                                        if (pos_x_final<255 && pos_y_final<192) {
-
-                                            //Si bit a 1
-                                            if (byte_leido & 128) {
-                                                //Y si ese color no es transparente
-                                                if (color!=0) {
-                                                    //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
-                                                    scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
-                                                }
-                                            }
-
-                                            byte_leido = byte_leido << 1;
-                                        }
-                                    }
-                                }
-                            }
-                        }                        
-                    }
-
-                    else {
-
-                        for (y=0;y<8;y++) {
-
-                                byte_leido=msx_read_vram_byte(offset_pattern_table++);
-                                for (x=0;x<8;x++) {
-
-                                        int pos_x_final;
-                                        int pos_y_final;
-
-                                    pos_x_final=horiz_pos+x;
-                                    pos_y_final=vert_pos+y;
-                                    
-
-                                    if (byte_leido & 128) {
-                                        //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
-                                        scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
-                                    }
-
-                                    byte_leido = byte_leido << 1;
-                                }
-                            
-                        }
-                    }
-
-                }
-            
-
-        }
+    if (border_enabled.v && msx_force_disable_layer_border.v==0) {
+            //ver si hay que refrescar border
+            if (modificado_border.v)
+            {
+                    msx_refresca_border();
+                    modificado_border.v=0;
+            }
 
     }
+
+
+    if (msx_force_disable_layer_ula.v==0) {
+        msx_render_ula_no_rainbow();
+    }
+
+    else {
+        //En ese caso, poner fondo negro
+        int x,y;
+        for (y=0;y<192;y++) {
+            for (x=0;x<256;x++) {
+                scr_putpixel_zoom(x,y,  VDP_9918_INDEX_FIRST_COLOR+0);
+            }
+        }
+    }
+
+
+
+    if (msx_force_disable_layer_sprites.v==0) {
+        msx_render_sprites_no_rainbow();
+    }
+        
+        
 
 
 }

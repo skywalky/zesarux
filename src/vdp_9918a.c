@@ -163,6 +163,18 @@ const char *s_msx_video_mode_2="2 - Graphic 256x192";
 const char *s_msx_video_mode_3="3 - Graphic 64x48";
 
 
+z80_byte vdp_9918a_get_video_mode(void)
+{
+
+	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>1)&1;
+
+	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
+
+	z80_byte video_mode=video_mode_m12 | video_mode_m3;
+
+
+    return video_mode;
+}
 
 
 char *get_vdp_9918_string_video_mode(void) 
@@ -172,11 +184,8 @@ char *get_vdp_9918_string_video_mode(void)
 	//Por defecto
 	const char *string_mode=s_msx_video_mode_0;
 
-	z80_byte video_mode_m3=(vdp_9918a_registers[0]>>1)&1;
 
-	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
-
-	z80_byte video_mode=video_mode_m12 | video_mode_m3;
+	z80_byte video_mode=vdp_9918a_get_video_mode();
 
 	
 	switch(video_mode) {
