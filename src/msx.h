@@ -43,4 +43,14 @@ extern z80_byte *msx_return_segment_address(z80_int direccion,int *tipo);
 
 extern void msx_insert_rom_cartridge(char *filename);
 
+
+extern z80_bit msx_force_disable_layer_ula;
+extern z80_bit msx_force_disable_layer_sprites;
+extern z80_bit msx_force_disable_layer_border;
+
+
+//Forzar a dibujar capa con color fijo, para debug
+extern z80_bit msx_reveal_layer_ula;
+extern z80_bit msx_reveal_layer_sprites;
+
 #endif

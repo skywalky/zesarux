@@ -104,7 +104,7 @@
 #include "network.h"
 #include "stats.h"
 #include "vdp_9918a.h"
-
+#include "msx.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -7422,10 +7422,24 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 
 					}
 				
-				}			
+				}		
 
 
-         
+				if (MACHINE_IS_MSX) {
+
+					//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
+					linea +=3;
+
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"ULA:");
+					linea +=3;
+
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Sprites:");
+					linea +=3;		
+
+	
+				}					
+
 
 
 
@@ -7566,6 +7580,38 @@ void menu_tsconf_layer_reveal_tiles_one(MENU_ITEM_PARAMETERS)
 	tsconf_reveal_layer_tiles_one.v ^=1;
 }
 
+
+
+void menu_msx_layer_settings_border(MENU_ITEM_PARAMETERS)
+{
+	msx_force_disable_layer_border.v ^=1;
+}
+
+
+void menu_msx_layer_settings_ula(MENU_ITEM_PARAMETERS)
+{
+	msx_force_disable_layer_ula.v ^=1;
+}
+
+void menu_msx_layer_settings_sprites(MENU_ITEM_PARAMETERS)
+{
+	msx_force_disable_layer_sprites.v ^=1;
+}
+
+
+
+
+void menu_msx_layer_reveal_ula(MENU_ITEM_PARAMETERS)
+{
+	msx_reveal_layer_ula.v ^=1;
+}
+
+void menu_msx_layer_reveal_sprites(MENU_ITEM_PARAMETERS)
+{
+	msx_reveal_layer_sprites.v ^=1;
+}
+
+
 void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 {
 
@@ -7582,6 +7628,11 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 	if (MACHINE_IS_TBBLUE) {
 		alto=20;
 		//y=1;
+	}
+
+
+	else if (MACHINE_IS_MSX) {
+		alto=11;
 	}
 
 
@@ -7685,7 +7736,24 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			lin+=3;				
 		}
 
+		if (MACHINE_IS_MSX) {
 
+ 			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(msx_force_disable_layer_border.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			lin+=3;			
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_ula,NULL,"%s",(msx_force_disable_layer_ula.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_reveal_ula,NULL,"%s",(msx_reveal_layer_ula.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);		
+			lin+=3;
+
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_sprites,NULL,"%s",(msx_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_reveal_sprites,NULL,"%s",(msx_reveal_layer_sprites.v ? "Reveal" : "Normal"));
+			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
+			lin+=3;
+		}
 				
 
         retorno_menu=menu_dibuja_menu(&tsconf_layer_settings_opcion_seleccionada,&item_seleccionado,array_menu_tsconf_layer_settings,"TSConf Layers" );

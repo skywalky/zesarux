@@ -57,6 +57,18 @@ z80_byte msx_keyboard_table[16]={
 int msx_memory_slots[4][4];
 
 
+
+//Forzar desde menu a desactivar capas 
+z80_bit msx_force_disable_layer_ula={0};
+z80_bit msx_force_disable_layer_sprites={0};
+z80_bit msx_force_disable_layer_border={0};
+
+
+//Forzar a dibujar capa con color fijo, para debug
+z80_bit msx_reveal_layer_ula={0};
+z80_bit msx_reveal_layer_sprites={0};
+
+
 //Retorna direccion de memoria donde esta mapeada la ram y su tipo
 z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)
 {
