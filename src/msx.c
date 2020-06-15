@@ -555,6 +555,7 @@ void msx_render_sprites_no_rainbow(void)
 
                     int x,y,byte_linea;
 
+                    //Sprites de 16x16
                     if (sprite_size==16) {
                         int quad_x,quad_y;
 
@@ -572,13 +573,30 @@ void msx_render_sprites_no_rainbow(void)
                                         pos_y_final=vert_pos+(quad_y*8)+y;
                                         
                                         //Si dentro de limites
-                                        if (pos_x_final<255 && pos_y_final<192) {
+                                        if (pos_x_final<256 && pos_y_final<192) {
 
                                             //Si bit a 1
                                             if (byte_leido & 128) {
                                                 //Y si ese color no es transparente
                                                 if (color!=0) {
                                                     //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+
+                                                    if (msx_reveal_layer_sprites.v) {
+                                                        int posx=pos_x_final&1;
+                                                        int posy=pos_y_final&1;
+
+                                                        //0,0: 0
+                                                        //0,1: 1
+                                                        //1,0: 1
+                                                        //1,0: 0
+                                                        //Es un xor
+
+                                                        int si_blanco_negro=posx ^ posy;
+                                                        printf ("si_blanco_negro: %d\n",si_blanco_negro);
+                                                        color=si_blanco_negro*15;
+                                                    }
+
+
                                                     scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
                                                 }
                                             }
@@ -591,6 +609,7 @@ void msx_render_sprites_no_rainbow(void)
                         }                        
                     }
 
+                    //Sprites de 8x8
                     else {
 
                         for (y=0;y<8;y++) {
@@ -606,8 +625,25 @@ void msx_render_sprites_no_rainbow(void)
                                     
 
                                     if (byte_leido & 128) {
-                                        //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
-                                        scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                        //Y si ese color no es transparente
+                                        if (color!=0) {
+                                            //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+
+                                            if (msx_reveal_layer_sprites.v) {
+                                                int posx=pos_x_final&1;
+                                                int posy=pos_y_final&1;
+
+                                                //0,0: 0
+                                                //0,1: 1
+                                                //1,0: 1
+                                                //1,0: 0
+                                                //Es un xor
+
+                                                int si_blanco_negro=posx ^ posy;
+                                                color=si_blanco_negro*15;
+                                            }                                            
+                                            scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                        }
                                     }
 
                                     byte_leido = byte_leido << 1;
