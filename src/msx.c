@@ -542,7 +542,7 @@ void msx_render_sprites_no_rainbow(void)
             //Siguiente sprite
             sprite_attribute_table -=4;
 
-            printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
+            //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
 
        
                 
@@ -566,8 +566,8 @@ void msx_render_sprites_no_rainbow(void)
                                     byte_leido=msx_read_vram_byte(offset_pattern_table++);
                                     for (x=0;x<8;x++) {
 
-                                            int pos_x_final;
-                                            int pos_y_final;
+                                        int pos_x_final;
+                                        int pos_y_final;
 
                                         pos_x_final=horiz_pos+(quad_x*8)+x;
                                         pos_y_final=vert_pos+(quad_y*8)+y;
@@ -577,9 +577,11 @@ void msx_render_sprites_no_rainbow(void)
 
                                             //Si bit a 1
                                             if (byte_leido & 128) {
-                                                //Y si ese color no es transparente
+                                                //Y si ese color no es transparente 
                                                 if (color!=0) {
                                                     //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+
+                                                    z80_byte color_sprite=color;
 
                                                     if (msx_reveal_layer_sprites.v) {
                                                         int posx=pos_x_final&1;
@@ -592,12 +594,13 @@ void msx_render_sprites_no_rainbow(void)
                                                         //Es un xor
 
                                                         int si_blanco_negro=posx ^ posy;
-                                                        printf ("si_blanco_negro: %d\n",si_blanco_negro);
-                                                        color=si_blanco_negro*15;
+                                                        //printf ("si_blanco_negro: %d\n",si_blanco_negro);
+                                                        color_sprite=si_blanco_negro*15;
+                                                        //printf ("color: %d\n",color);
                                                     }
 
 
-                                                    scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                                    scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
                                                 }
                                             }
 
@@ -629,6 +632,8 @@ void msx_render_sprites_no_rainbow(void)
                                         if (color!=0) {
                                             //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
 
+                                            z80_byte color_sprite=color;
+
                                             if (msx_reveal_layer_sprites.v) {
                                                 int posx=pos_x_final&1;
                                                 int posy=pos_y_final&1;
@@ -640,9 +645,9 @@ void msx_render_sprites_no_rainbow(void)
                                                 //Es un xor
 
                                                 int si_blanco_negro=posx ^ posy;
-                                                color=si_blanco_negro*15;
+                                                color_sprite=si_blanco_negro*15;
                                             }                                            
-                                            scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                            scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
                                         }
                                     }
 
