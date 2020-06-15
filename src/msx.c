@@ -918,7 +918,25 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 
     if (msx_force_disable_layer_ula.v==0) {
-        msx_render_ula_no_rainbow();
+
+        //Capa activada. Pero tiene reveal?
+
+        if (msx_reveal_layer_ula.v) {
+            //En ese caso, poner fondo tramado
+            int x,y;
+            for (y=0;y<192;y++) {
+                for (x=0;x<256;x++) {
+                    int posx=x&1;
+			        int posy=y&1;
+                    int si_blanco_negro=posx ^ posy;
+                    int color=si_blanco_negro*15;
+                    scr_putpixel_zoom(x,y,  VDP_9918_INDEX_FIRST_COLOR+color);
+                }
+            }
+        }
+        else {
+            msx_render_ula_no_rainbow();
+        }
     }
 
     else {
