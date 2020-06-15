@@ -762,22 +762,41 @@ void scr_refresca_pantalla_y_border_msx(void)
         //En boundary de 128
         sprite_attribute_table &=(65535-128);
 
-        for (sprite=0;sprite<32 && !salir;sprite++) {
+        //Empezar por la del final
+        //Ver si hay alguno con coordenada 208 que indica final
+
+        int primer_sprite_final=31;
+
+        int offset_sprite=sprite_attribute_table;
+
+        int i;
+        for (primer_sprite_final=0;primer_sprite_final<32 && !salir;primer_sprite_final++) {
+            int offset_sprite=sprite_attribute_table+primer_sprite_final*4;
+
+            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
+            if (vert_pos==208) salir=1;
+
+        }
+
+        //Siempre estara al siguiente
+        primer_sprite_final--;
+
+        sprite_attribute_table +=(primer_sprite_final*4);
+
+        //Empezar desde final hacia principio
+
+        for (sprite=primer_sprite_final;sprite>=0;sprite--) {
             z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
             z80_byte horiz_pos=msx_read_vram_byte(sprite_attribute_table+1);
             z80_byte sprite_name=msx_read_vram_byte(sprite_attribute_table+2);
             z80_byte attr_color_etc=msx_read_vram_byte(sprite_attribute_table+3);
 
             //Siguiente sprite
-            sprite_attribute_table +=4;
+            sprite_attribute_table -=4;
 
             printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
 
-            if (vert_pos==208) {
-                salir=1;
-            }
-
-            else  {
+       
                 
 
                 //Si coord valida
@@ -806,9 +825,14 @@ void scr_refresca_pantalla_y_border_msx(void)
                                         
                                         //Si dentro de limites
                                         if (pos_x_final<255 && pos_y_final<192) {
+
+                                            //Si bit a 1
                                             if (byte_leido & 128) {
-                                                //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
-                                                scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                                //Y si ese color no es transparente
+                                                if (color!=0) {
+                                                    //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+                                                    scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color);
+                                                }
                                             }
 
                                             byte_leido = byte_leido << 1;
@@ -845,7 +869,7 @@ void scr_refresca_pantalla_y_border_msx(void)
                     }
 
                 }
-            }
+            
 
         }
 
