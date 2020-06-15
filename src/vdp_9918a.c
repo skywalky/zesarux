@@ -200,3 +200,15 @@ char *get_vdp_9918_string_video_mode(void)
     return (char *)string_mode;
 
 }
+
+
+z80_int vdp_9918a_get_sprite_attribute_table(void)
+{
+
+    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
+
+    //En boundary de 128
+    sprite_attribute_table &=(65535-128);
+
+    return sprite_attribute_table;
+}

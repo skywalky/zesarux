@@ -481,7 +481,7 @@ void scr_refresca_pantalla_y_border_msx(void)
 
 	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
 
-    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
+    //z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
 
     z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
 
@@ -760,12 +760,14 @@ void scr_refresca_pantalla_y_border_msx(void)
         int salir=0;
 
         //En boundary de 128
-        sprite_attribute_table &=(65535-128);
+        //sprite_attribute_table &=(65535-128);
+
+        z80_int sprite_attribute_table=vdp_9918a_get_sprite_attribute_table();
 
         //Empezar por la del final
         //Ver si hay alguno con coordenada 208 que indica final
 
-        int primer_sprite_final=31;
+        int primer_sprite_final=VDP_9918A_MAX_SPRITES-1;
 
         int offset_sprite=sprite_attribute_table;
 
