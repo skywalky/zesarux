@@ -52,6 +52,7 @@
 
 #include "snap_zsf.h"
 #include "zeng.h"
+#include "msx.h"
 
 
 z80_byte byte_leido_core_msx;

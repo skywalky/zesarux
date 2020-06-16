@@ -36,6 +36,7 @@
 #include "settings.h"
 #include "audio_sine_table.h"
 #include "ay38912.h"
+#include "msx.h"
 
 #include "audionull.h"
 

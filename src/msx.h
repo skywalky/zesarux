@@ -37,11 +37,25 @@ extern int msx_memory_slots[4][4];
 
 extern z80_byte *msx_return_segment_address(z80_int direccion,int *tipo);
 
+extern int da_amplitud_speaker_msx(void);
+
 #define MSX_SLOT_MEMORY_TYPE_ROM 0
 #define MSX_SLOT_MEMORY_TYPE_RAM 1
 #define MSX_SLOT_MEMORY_TYPE_EMPTY 2
 
 extern void msx_insert_rom_cartridge(char *filename);
+extern void msx_empty_romcartridge_space(void);
+extern void msx_out_port_vdp_data(z80_byte value);
+extern void msx_out_port_vdp_command_status(z80_byte value);
+extern void msx_out_port_psg(z80_byte puerto_l,z80_byte value);
+extern void msx_out_port_ppi(z80_byte puerto_l,z80_byte value);
+extern z80_byte msx_in_port_vdp_data(void);
+extern z80_byte msx_in_port_vdp_status(void);
+extern z80_byte msx_in_port_ppi(z80_byte puerto_l);
+extern void msx_reset(void);
+extern void msx_alloc_vram_memory(void);
+extern void msx_init_memory_tables(void);
+extern void scr_refresca_pantalla_y_border_msx(void);
 
 
 extern z80_bit msx_force_disable_layer_ula;

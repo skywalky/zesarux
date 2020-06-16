@@ -170,7 +170,7 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
 {
     //printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
 
-    int slot,segment;
+    //int slot,segment;
 
     switch (puerto_l) {
         case 0xA8:
@@ -211,7 +211,7 @@ z80_byte msx_in_port_ppi(z80_byte puerto_l)
 {
     //printf ("In port ppi. Port %02XH\n",puerto_l);
 
-    z80_byte valor;
+    //z80_byte valor;
 
     switch (puerto_l) {
 
@@ -380,7 +380,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 
 
     
-    int i;
+    //int i;
 
 
         fclose(ptr_cartridge);
@@ -543,13 +543,13 @@ void msx_render_sprites_no_rainbow(void)
 
         int primer_sprite_final=VDP_9918A_MAX_SPRITES-1;
 
-        int offset_sprite=sprite_attribute_table;
+        //int offset_sprite=sprite_attribute_table;
 
-        int i;
+        //int i;
         for (primer_sprite_final=0;primer_sprite_final<32 && !salir;primer_sprite_final++) {
             int offset_sprite=sprite_attribute_table+primer_sprite_final*4;
 
-            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
+            z80_byte vert_pos=msx_read_vram_byte(offset_sprite);
             if (vert_pos==208) salir=1;
 
         }
@@ -606,7 +606,7 @@ void msx_render_sprites_no_rainbow(void)
                       int offset_pattern_table=sprite_name*8+sprite_pattern_table;
                     z80_byte color=attr_color_etc & 15;
 
-                    int x,y,byte_linea;
+                    int x,y;
 
                     //Sprites de 16x16
                     if (sprite_size==16) {

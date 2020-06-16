@@ -101,6 +101,7 @@
 #include "stats.h"
 #include "network.h"
 #include "hilow.h"
+#include "msx.h"
 
 
 

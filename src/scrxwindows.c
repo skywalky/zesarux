@@ -42,6 +42,7 @@
 #include "sam.h"
 #include "ql.h"
 #include "settings.h"
+#include "msx.h"
 
 
 #include <X11/Xlib.h> // Every Xlib program must include this

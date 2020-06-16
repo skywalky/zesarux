@@ -69,6 +69,7 @@
 #include "prism.h"
 #include "sam.h"
 #include "ql.h"
+#include "msx.h"
 
 
 int gArgc;

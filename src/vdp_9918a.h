@@ -30,6 +30,24 @@ extern char *get_vdp_9918_string_video_mode(void);
 
 extern z80_int vdp_9918a_get_sprite_attribute_table(void);
 
+extern z80_byte vdp_9918a_get_video_mode(void);
+
+extern void vdp_9918a_out_vram_data(z80_byte *vram_memory,z80_byte value);
+
+extern z80_int vdp_9918a_get_pattern_name_table(void);
+
+extern z80_byte vdp_9918a_in_vram_data(z80_byte *vram_memory);
+
+extern z80_byte vdp_9918a_get_border_color(void);
+
+extern z80_byte vdp_9918a_in_vdp_status(void);
+
+extern void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value);
+
+extern int vdp_9918a_get_tile_heigth(void);
+
+extern int vdp_9918a_get_tile_width(void);
+
 #define VDP_9918A_MAX_SPRITES 32
 
 #endif
