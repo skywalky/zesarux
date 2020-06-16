@@ -525,8 +525,8 @@ void msx_render_sprites_no_rainbow(void)
         //Empezar desde final hacia principio
 
         for (sprite=primer_sprite_final;sprite>=0;sprite--) {
-            z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
-            z80_byte horiz_pos=msx_read_vram_byte(sprite_attribute_table+1);
+            int vert_pos=msx_read_vram_byte(sprite_attribute_table);
+            int horiz_pos=msx_read_vram_byte(sprite_attribute_table+1);
             z80_byte sprite_name=msx_read_vram_byte(sprite_attribute_table+2);
             z80_byte attr_color_etc=msx_read_vram_byte(sprite_attribute_table+3);
 
@@ -537,17 +537,33 @@ void msx_render_sprites_no_rainbow(void)
   3: Attributes. b0-3:Color, b4-6:unused, b7:EC (Early Clock)            
 */
 
-            vert_pos++;
+            vert_pos++; //255->coordenada 0
+            if (vert_pos==256) vert_pos=0;
 
-            //Siguiente sprite
+            //Entre 255 y 256-32-> son coordenadas negativas
+            if (vert_pos>=256-32) {
+                printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);                
+                printf ("Sprite Y negative: %d\n",vert_pos-256);
+                vert_pos=vert_pos-256;
+
+            }
+
+            //Siguiente sprite. El precedente
             sprite_attribute_table -=4;
+
+            //Si early clock, x-=32
+
+            if (attr_color_etc & 128) {
+                //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);                
+                horiz_pos -=32;
+            }
 
             //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
 
        
                 
 
-                //Si coord valida
+                //Si coord Y no esta en el borde inferior
                 if (vert_pos<192) {
                     //int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
                       int offset_pattern_table=sprite_name*8+sprite_pattern_table;
@@ -573,7 +589,7 @@ void msx_render_sprites_no_rainbow(void)
                                         pos_y_final=vert_pos+(quad_y*8)+y;
                                         
                                         //Si dentro de limites
-                                        if (pos_x_final<256 && pos_y_final<192) {
+                                        if (pos_x_final>=0 && pos_x_final<=255 && pos_y_final>=0 && pos_y_final<=191) {
 
                                             //Si bit a 1
                                             if (byte_leido & 128) {
@@ -620,34 +636,37 @@ void msx_render_sprites_no_rainbow(void)
                                 byte_leido=msx_read_vram_byte(offset_pattern_table++);
                                 for (x=0;x<8;x++) {
 
-                                        int pos_x_final;
-                                        int pos_y_final;
+                                    int pos_x_final;
+                                    int pos_y_final;
 
                                     pos_x_final=horiz_pos+x;
                                     pos_y_final=vert_pos+y;
                                     
+                                    if (pos_x_final>=0 && pos_x_final<=255 && pos_y_final>=0 && pos_y_final<=191) {
 
-                                    if (byte_leido & 128) {
-                                        //Y si ese color no es transparente
-                                        if (color!=0) {
-                                            //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+                                        //Si bit a 1
+                                        if (byte_leido & 128) {
+                                            //Y si ese color no es transparente
+                                            if (color!=0) {
+                                                //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
 
-                                            z80_byte color_sprite=color;
+                                                z80_byte color_sprite=color;
 
-                                            if (msx_reveal_layer_sprites.v) {
-                                                int posx=pos_x_final&1;
-                                                int posy=pos_y_final&1;
+                                                if (msx_reveal_layer_sprites.v) {
+                                                    int posx=pos_x_final&1;
+                                                    int posy=pos_y_final&1;
 
-                                                //0,0: 0
-                                                //0,1: 1
-                                                //1,0: 1
-                                                //1,0: 0
-                                                //Es un xor
+                                                    //0,0: 0
+                                                    //0,1: 1
+                                                    //1,0: 1
+                                                    //1,0: 0
+                                                    //Es un xor
 
-                                                int si_blanco_negro=posx ^ posy;
-                                                color_sprite=si_blanco_negro*15;
-                                            }                                            
-                                            scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    int si_blanco_negro=posx ^ posy;
+                                                    color_sprite=si_blanco_negro*15;
+                                                }                                            
+                                                scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                            }
                                         }
                                     }
 
@@ -686,7 +705,7 @@ void msx_render_ula_no_rainbow(void)
 	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
 	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
 
-	pattern_name_table=(vdp_9918a_registers[2]&15) * 0x400; 
+	pattern_name_table=vdp_9918a_get_pattern_name_table(); //(vdp_9918a_registers[2]&15) * 0x400; 
 
 
 

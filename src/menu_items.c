@@ -3503,6 +3503,12 @@ int menu_debug_tsconf_tbblue_msx_tilenav_total_vert(void)
 		if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
 	}
 
+	else if (MACHINE_IS_MSX) { 
+		limite_vertical=vdp_9918a_get_tile_heigth()*vdp_9918a_get_tile_width();
+
+		if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) limite_vertical=vdp_9918a_get_tile_heigth();	
+	}	
+
 	else  { //TBBLUE
 		limite_vertical=tbblue_get_tilemap_width()*32;
 
@@ -3517,7 +3523,9 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 {
 
 	//Suficientemente grande para almacenar regla superior en modo visual
-	char dumpmemoria[84]; //80 + 3 espacios izquierda + 0 final
+	//80 + 3 espacios izquierda + 0 final	
+#define DEBUG_TILENAV_TEXTO_LINEA 84
+	char dumpmemoria[DEBUG_TILENAV_TEXTO_LINEA]; 
 
 	
 	//int limite;
@@ -3530,9 +3538,16 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 	z80_byte *puntero_tilemap;
 	z80_byte *puntero_tilemap_orig;
 
+	z80_int msx_pattern_name_table; 
+
 	if (MACHINE_IS_TSCONF) {
 		puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
 	}
+
+	else if (MACHINE_IS_MSX) {
+		msx_pattern_name_table=vdp_9918a_get_pattern_name_table();
+		puntero_tilemap=NULL; //no se usa, pero para evitar warnings del compilador
+	}	
 
 	else {  //TBBLUE
 		//puntero_tilemap=tbblue_ram_mem_table[5]+tbblue_get_offset_start_tilemap();
@@ -3565,6 +3580,10 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 
 	}
 
+	if (MACHINE_IS_MSX) {
+		tilemap_width=vdp_9918a_get_tile_width();
+	}
+
 	puntero_tilemap_orig=puntero_tilemap;
 
 	int limite_vertical=menu_debug_tsconf_tbblue_msx_tilenav_total_vert();
@@ -3578,10 +3597,21 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
 		}
 
+		else if (MACHINE_IS_MSX) {
+			if (tilemap_width==32) {
+				  			 //01234567890123456789012345678901
+		strcpy(dumpmemoria,"   0    5    10   15   20   25   30        ");
+			}
+			else {
+				  			 //0123456789012345678901234567890123456789012345678901234567890123
+		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   ");
+			}
+		}		
+
 		else { //TBBLUE
 			if (tilemap_width==40) {
 				             //0123456789012345678901234567890123456789012345678901234567890123
-		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   ");
+		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35                                           ");
 			}
 			else {
 				             //01234567890123456789012345678901234567890123456789012345678901234567890123456789
@@ -3618,6 +3648,17 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 
 		for (;offset_vertical<limite_vertical;offset_vertical++) {
 
+				//texto linea inicializarlo siempre con espacios
+				//#define DEBUG_TILENAV_TEXTO_LINEA 84
+				//char dumpmemoria[DEBUG_TILENAV_TEXTO_LINEA]; 
+				int i;
+				for (i=0;i<DEBUG_TILENAV_TEXTO_LINEA-1;i++) {
+					dumpmemoria[i]=' ';
+				}
+
+				//Y 0 del final
+				dumpmemoria[i]=0;			
+
 			int repetir_ancho=1;
 			int mapa_tile_x=3;
 			if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v==0) {
@@ -3637,6 +3678,16 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 					else sprintf (dumpmemoria,"   ");
 				}
 
+				else if (MACHINE_IS_MSX) {
+					current_tile=offset_vertical*tilemap_width;
+					repetir_ancho=tilemap_width;
+
+					//poner regla vertical
+					int linea_tile=current_tile/tilemap_width;
+					if ( (linea_tile%5)==0) sprintf (dumpmemoria,"%2d ",linea_tile);
+					else sprintf (dumpmemoria,"   ");
+				}				
+
 				else { //TBBLUE
 					current_tile=offset_vertical*tilemap_width;
 					repetir_ancho=tilemap_width;
@@ -3651,6 +3702,9 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 			//printf ("linea: %3d current tile: %10d puntero: %10d\n",linea_color,current_tile,puntero_tilemap-tsconf_ram_mem_table[0]-tsconf_return_tilemappage()	);
 
 			do {
+
+
+
 				if (MACHINE_IS_TSCONF) {
 					int y=current_tile/64;
 					int x=current_tile%64; 
@@ -3699,6 +3753,46 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 
 						dumpmemoria[mapa_tile_x++]=caracter_final;
 					}
+				}
+
+				if (MACHINE_IS_MSX) {
+					int y=current_tile/tilemap_width;
+					int x=current_tile%tilemap_width; 	
+
+					int tnum=msx_read_vram_byte(msx_pattern_name_table+current_tile);	
+
+					if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v==0) {
+						//Modo lista tiles
+						sprintf (dumpmemoria,"X: %3d Y: %3d                   ",x,y);
+
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
+
+						sprintf (dumpmemoria," Tile: %3d %c",tnum,(tnum>=33 && tnum<=126 ? tnum : ' ' ));
+
+						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);						
+
+					}
+					else {
+						//Modo mapa tiles
+						int caracter_final;
+
+						if (tnum==0) {
+							caracter_final=' '; 
+						}
+						else {
+
+							//Si caracter imprimible, mostramos. Si no, mostrar set alternativo
+							if (tnum>=32 && tnum<=126) {
+								caracter_final=tnum;
+							}
+							else {
+								caracter_final=menu_debug_tsconf_tbblue_msx_tiles_retorna_visualchar(tnum);
+							}
+						}
+
+						dumpmemoria[mapa_tile_x++]=caracter_final;
+					}					
+
 				}
 
 				if (MACHINE_IS_TBBLUE) {
@@ -3883,8 +3977,8 @@ void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 
 		char texto_layer[32];
 
-		//En caso de tbblue, solo hay una capa
-		if (MACHINE_IS_TBBLUE) texto_layer[0]=0;
+		//En caso de tbblue y msx, solo hay una capa
+		if (MACHINE_IS_TBBLUE || MACHINE_IS_MSX) texto_layer[0]=0;
 
 		else sprintf (texto_layer,"~~Layer %d",menu_debug_tsconf_tbblue_msx_tilenav_current_tilelayer);
 
@@ -3894,6 +3988,10 @@ void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 			if (MACHINE_IS_TSCONF) {
 			total_width=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4;
 			}
+			else if (MACHINE_IS_MSX) {
+				//Le ponemos siempre el maximo
+				total_width=40+4; 
+			}			
 			else {
 				//TBBLUE
 				total_width=tbblue_get_tilemap_width()+4;
@@ -10486,6 +10584,11 @@ int menu_debug_sprites_total_colors_mapped_palette(int paleta)
 			return 256;
 		break;
 
+		//msx
+		case 16:
+			return 16;
+		break;		
+
 	}
 
 	return 16;
@@ -10549,6 +10652,11 @@ int menu_debug_sprites_max_value_mapped_palette(int paleta)
 		case 15:
 			return TSCONF_TOTAL_PALETTE_COLOURS;
 		break;
+
+		//MSX
+		case 16:
+			return VDP_9918_TOTAL_PALETTE_COLOURS;
+		break;		
 
 	}
 
@@ -10643,6 +10751,11 @@ int menu_debug_sprites_return_index_palette(int paleta, z80_byte color)
 			return tsconf_return_cram_color(color);
 		break;
 
+		case 16:
+			//MSX
+			return color; //Dado que realmente no hay mapeo
+		break;		
+
 	}
 
 	return color;
@@ -10699,6 +10812,10 @@ int menu_debug_sprites_return_color_palette(int paleta, z80_byte color)
 		case 15:
 			return TSCONF_INDEX_FIRST_COLOR+index;
 		break;
+
+		case 16:
+			return VDP_9918_INDEX_FIRST_COLOR+index;
+		break;		
 
 	}
 
@@ -10780,6 +10897,9 @@ void menu_debug_sprites_get_palette_name(int paleta, char *s)
 			strcpy(s,"TSConf");
 		break;
 
+		case 16:
+			strcpy(s,"MSX");
+		break;
 
 		default:
 			strcpy(s,"UNKNOWN");
@@ -21696,7 +21816,7 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_spritenav,NULL,"~~Sprite navigator");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'s');
 
-		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE) {
+		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE || MACHINE_IS_MSX) {
 			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_tilenav,NULL,"~~Tile navigator");
 			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'t');
 		}

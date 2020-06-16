@@ -11341,6 +11341,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       if (MACHINE_IS_Z88) {
       	size=0; //Solo zona memoria de 4 mb en caso de z88
       }
+
+      if (MACHINE_IS_MSX) {
+      	size=0; //Mostrar zona de memoria de 256kb en caso de msx
+      }      
  
 
     break;
@@ -11398,6 +11402,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       if (MACHINE_IS_SAM) {
 	size=32768;
       }
+
+      if (MACHINE_IS_MSX) {
+	size=32768;
+      }      
 
       if (MACHINE_IS_Z88) {
       	size=0; //Solo zona memoria de 4 mb en caso de z88
@@ -11603,12 +11611,14 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         }
     break;
 
-    case MEMORY_ZONE_MSX_CARTRIDGE:
+    case MEMORY_ZONE_MSX_ALL_MEM:
         if (MACHINE_IS_MSX) {
               *readwrite=1; 
-              size=32768;  
+              size=256*1024;  //Zona entera de los 256kb
         }
-    break;    
+    break;  
+
+    
 
   }
 
@@ -11922,9 +11932,9 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
         }        
     break;
 
-    case MEMORY_ZONE_MSX_CARTRIDGE:
+    case MEMORY_ZONE_MSX_ALL_MEM:
         if (MACHINE_IS_MSX) {
-                p=&memoria_spectrum[65536+16384+address];
+                p=&memoria_spectrum[address];
         }        
     break;
 
@@ -12270,10 +12280,10 @@ void machine_get_memory_zone_name(int zone, char *name)
     break;
 
 
-    case MEMORY_ZONE_MSX_CARTRIDGE:
+    case MEMORY_ZONE_MSX_ALL_MEM:
         if (MACHINE_IS_MSX) {
                           //123456789012345
-               strcpy(name,"MSX Cartridge"); 
+               strcpy(name,"MSX All Mem"); 
         }
     break;
 

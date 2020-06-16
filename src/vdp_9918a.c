@@ -177,6 +177,13 @@ z80_byte vdp_9918a_get_video_mode(void)
 }
 
 
+z80_int vdp_9918a_get_pattern_name_table(void)
+{
+    return (vdp_9918a_registers[2]&15) * 0x400; 
+}
+
+
+
 char *get_vdp_9918_string_video_mode(void) 
 {
 
@@ -210,6 +217,57 @@ char *get_vdp_9918_string_video_mode(void)
 
 }
 
+//Funciones que se usan en el tile navigator
+int vdp_9918a_get_tile_width(void)
+{
+    z80_byte video_mode=vdp_9918a_get_video_mode();
+
+    //por defecto
+    int width=40;
+
+	switch(video_mode) {
+
+		case 0:
+        case 1:
+        case 2:
+        //Incluso en 64x48, la definicion del tile es 32x24
+
+            width=32;
+		break;
+
+
+    }
+
+    return width;   
+
+    
+}
+
+int vdp_9918a_get_tile_heigth(void)
+{
+    z80_byte video_mode=vdp_9918a_get_video_mode();
+
+    //por defecto
+    int heigth=24;
+
+    return heigth;
+
+    //Incluso en 64x48, la definicion del tile es 32x24
+
+/*
+	switch(video_mode) {
+
+
+		case 2:
+			heigth=48;
+		break;
+    }
+
+    return heigth;   
+    */
+
+    
+}
 
 z80_int vdp_9918a_get_sprite_attribute_table(void)
 {

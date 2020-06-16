@@ -329,7 +329,6 @@ luego leer variable screen de pantalla activa sirve de algo? porque la funcion q
 tener dos parametros: puntero a vram y direcccion a leer, para poder separar eso del msx y hacerlo generico. 
 por tanto variable screen tiene que ser parametro de entrada a render , y le llega desde msx
 
--si bit EC, sprites empiezan x-32. Pero dibujarlo solo cuando x>=0
 -Parece que valores -31 para Y son permitidos. Pero dibujarlo solo cuando y>=0
 
 -Info colecovision y sirve también para msx el vdp:
