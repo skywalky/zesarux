@@ -198,7 +198,7 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
             msx_ppi_register_c=value;
 
             
-                printf ("Posible beep: %d\n",value&128);
+                //printf ("Posible beep: %d\n",value&128);
             
 			set_value_beeper_on_array(da_amplitud_speaker_msx() );
 
@@ -310,8 +310,8 @@ void msx_insert_rom_cartridge(char *filename)
 
     long tamanyo_archivo=get_file_size(filename);
 
-    if (tamanyo_archivo!=16384 && tamanyo_archivo!=32768) {
-        debug_printf(VERBOSE_ERR,"Only 16k and 32k rom cartridge are allowed");
+    if (tamanyo_archivo!=8192 && tamanyo_archivo!=16384 && tamanyo_archivo!=32768) {
+        debug_printf(VERBOSE_ERR,"Only 8k, 16k and 32k rom cartridges are allowed");
         return;
     }
 
@@ -325,7 +325,7 @@ void msx_insert_rom_cartridge(char *filename)
 
 
 
-	//Leer cada bloque de 16 kb si conviene
+	//Leer cada bloque de 16 kb si conviene. Esto permite tambien cargar cartucho de 8kb como si fuera de 16kb
 
 	int bloque;
 
@@ -363,6 +363,11 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 
     if (bloques_totales==1) {
             //Copiar en los otros 3 segmentos
+
+            //Antes, si es un bloque de 8kb, copiar 8kb bajos en parte alta
+            if (tamanyo_archivo==8192) {
+                memcpy(&memoria_spectrum[65536+8192],&memoria_spectrum[65536],8192);
+            }
 
             memcpy(&memoria_spectrum[65536],&memoria_spectrum[65536+16384],16384);
             memcpy(&memoria_spectrum[65536+32768],&memoria_spectrum[65536+16384],16384);
