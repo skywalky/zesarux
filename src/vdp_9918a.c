@@ -161,7 +161,7 @@ const char *s_msx_video_mode_0="0 - Text 40x24";
 const char *s_msx_video_mode_1="1 - Text 32x24";
 const char *s_msx_video_mode_2="2 - Graphic 256x192";
 const char *s_msx_video_mode_3="3 - Graphic 64x48";
-
+                                               
 
 z80_byte vdp_9918a_get_video_mode(void)
 {
@@ -241,6 +241,12 @@ int vdp_9918a_get_tile_width(void)
     return width;   
 
     
+}
+
+z80_byte vdp_9918a_get_border_color(void)
+{
+
+    return vdp_9918a_registers[7] & 15;
 }
 
 int vdp_9918a_get_tile_heigth(void)

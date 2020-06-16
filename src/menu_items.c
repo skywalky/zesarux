@@ -3004,12 +3004,14 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 				if (MACHINE_IS_MSX) {
 	
-					zxvision_print_string_defaults(ventana,1,linea++,"Video mode:");
+					sprintf (texto_buffer,"Video mode: %s",get_vdp_9918_string_video_mode() );
+					zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);
 
-					zxvision_print_string_defaults_fillspc(ventana,1,linea++,get_vdp_9918_string_video_mode() );
 
-					linea++;
-		
+					sprintf (texto_buffer,"Border: %2d",vdp_9918a_get_border_color());
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);										
+
+
 				}
 
 
@@ -3051,8 +3053,7 @@ void menu_debug_tsconf_tbblue_msx_videoregisters(MENU_ITEM_PARAMETERS)
 		}
 
 		else if (MACHINE_IS_MSX) {
-			//yventana=0;
-			alto_ventana=4;
+			alto_ventana=8;
 		}		
 
 		else {

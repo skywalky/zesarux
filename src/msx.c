@@ -398,7 +398,7 @@ void msx_empty_romcartridge_space(void)
 void msx_refresca_border(void)
 {
 
-    unsigned int color=vdp_9918a_registers[7] & 15;
+    unsigned int color=vdp_9918a_get_border_color();
 
 
 
@@ -409,7 +409,7 @@ void msx_refresca_border(void)
 
 
 	//Top border cambia en spectrum y zx8081 y ace
-	int topborder=TOP_BORDER;
+	int topborder=MSX_TOP_BORDER;
 	
 
 	//color +=spectrum_palette_offset;
@@ -417,27 +417,50 @@ void msx_refresca_border(void)
 
         //parte superior
         for (y=0;y<topborder;y++) {
-                for (x=0;x<ANCHO_PANTALLA*zoom_x+LEFT_BORDER*2;x++) {
+                for (x=0;x<MSX_ANCHO_PANTALLA*zoom_x+MSX_LEFT_BORDER*2;x++) {
                                 scr_putpixel(x,y,VDP_9918_INDEX_FIRST_COLOR+color);
                 }
         }
 
         //parte inferior
-        for (y=0;y<BOTTOM_BORDER;y++) {
-                for (x=0;x<ANCHO_PANTALLA*zoom_x+LEFT_BORDER*2;x++) {
-                                scr_putpixel(x,topborder+y+ALTO_PANTALLA*zoom_y,VDP_9918_INDEX_FIRST_COLOR+color);
+        for (y=0;y<MSX_BOTTOM_BORDER;y++) {
+                for (x=0;x<MSX_ANCHO_PANTALLA*zoom_x+MSX_LEFT_BORDER*2;x++) {
+                                scr_putpixel(x,topborder+y+MSX_ALTO_PANTALLA*zoom_y,VDP_9918_INDEX_FIRST_COLOR+color);
 
 
                 }
         }
 
 
-        //laterales
-        for (y=0;y<ALTO_PANTALLA*zoom_y;y++) {
-                for (x=0;x<LEFT_BORDER;x++) {
+
+
+
+
+        for (y=0;y<MSX_ALTO_PANTALLA*zoom_y;y++) {
+                for (x=0;x<MSX_LEFT_BORDER;x++) {
                         scr_putpixel(x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
-                        scr_putpixel(LEFT_BORDER+ANCHO_PANTALLA*zoom_x+x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
                 }
+
+        
+
+        }
+
+        int ancho_pantalla=MSX_ANCHO_PANTALLA;
+        int ancho_border_derecho=MSX_LEFT_BORDER;
+
+        //laterales. En modo 0, 40x24, border derecho es 16 pixeles mas ancho
+        z80_byte video_mode=vdp_9918a_get_video_mode();        
+
+        if (video_mode==4) {
+            ancho_pantalla -=16;
+            ancho_border_derecho +=16*zoom_x;
+        }
+
+        for (y=0;y<MSX_ALTO_PANTALLA*zoom_y;y++) {
+
+                for (x=0;x<ancho_border_derecho;x++) {
+                        scr_putpixel(MSX_LEFT_BORDER+ancho_pantalla*zoom_x+x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
+                }                
 
         }
 
@@ -542,8 +565,8 @@ void msx_render_sprites_no_rainbow(void)
 
             //Entre 255 y 256-32-> son coordenadas negativas
             if (vert_pos>=256-32) {
-                printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);                
-                printf ("Sprite Y negative: %d\n",vert_pos-256);
+                //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);                
+                //printf ("Sprite Y negative: %d\n",vert_pos-256);
                 vert_pos=vert_pos-256;
 
             }
