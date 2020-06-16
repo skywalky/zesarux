@@ -6844,7 +6844,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         blink_kbd_a11 |= 64;
                                         cpc_keyboard_table[0] |=2;
                                         msx_keyboard_table[8] |=128;
-                                        ql_keyboard_table[1] |= 16;
+                                        ql_keyboard_table[1] |= 16;                                      
                                 }
                         break;
 

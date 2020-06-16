@@ -32,6 +32,7 @@
 #include "ay38912.h"
 #include "tape.h"
 #include "screen.h"
+#include "audio.h"
 
 z80_byte *msx_vram_memory=NULL;
 
@@ -174,16 +175,17 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
     switch (puerto_l) {
         case 0xA8:
             msx_ppi_register_a=value;
-            printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
+            //printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
 
     //temporal mostrar mapeos
     
-
+/*
     for (slot=0;slot<4;slot++) {
         for (segment=0;segment<4;segment++) {
             printf ("%d %d : %d\n",slot,segment,msx_memory_slots[slot][segment]);
         }
     }
+*/
 
         break;
 
@@ -194,6 +196,13 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
 
         case 0xAA:
             msx_ppi_register_c=value;
+
+            
+                printf ("Posible beep: %d\n",value&128);
+            
+			set_value_beeper_on_array(da_amplitud_speaker_msx() );
+
+
         break;
     }
 }
@@ -1041,4 +1050,11 @@ void scr_refresca_pantalla_y_border_msx(void)
         
 
 
+}
+
+
+int da_amplitud_speaker_msx(void)
+{
+                                if (msx_ppi_register_c & 128) return amplitud_speaker_actual_msx;
+                                else return -amplitud_speaker_actual_msx;
 }

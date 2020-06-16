@@ -237,8 +237,8 @@ void core_msx_fin_scanline(void)
 
 				if (beeper_enabled.v) {
 					if (beeper_real_enabled==0) {
-						audio_valor_enviar_sonido_izquierdo += value_beeper;
-						audio_valor_enviar_sonido_derecho += value_beeper;
+						audio_valor_enviar_sonido_izquierdo += da_amplitud_speaker_msx();
+						audio_valor_enviar_sonido_derecho += da_amplitud_speaker_msx();
 					}
 
 					else {

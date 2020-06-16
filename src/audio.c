@@ -282,6 +282,9 @@ z80_bit aofile_inserted;
 //este valor lo alteramos al simular sonido de carga del zx8081
 int amplitud_speaker_actual_zx8081=AMPLITUD_BEEPER;
 
+
+int amplitud_speaker_actual_msx=AMPLITUD_BEEPER;
+
 char *aofile_buffer;
 
 int aofile_type;
@@ -665,6 +668,10 @@ char beeper_get_last_value_send(void)
                 else if (MACHINE_IS_ZX8081) {
                         return da_amplitud_speaker_zx8081();
                 }
+
+                else if (MACHINE_IS_MSX) {
+                        return da_amplitud_speaker_msx();
+                }				
 
 		else if (MACHINE_IS_ACE) {
 			return da_amplitud_speaker_ace();

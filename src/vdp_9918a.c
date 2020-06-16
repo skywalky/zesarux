@@ -125,8 +125,8 @@ void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value)
 
                 vdp_9918a_registers[vdp_register]=vdp_9918a_last_command_status_bytes[0];
 
-
-                if (vdp_register==7) {
+                //Cambio color o bits de modo, actualizar border
+                if (vdp_register==0 || vdp_register==1 || vdp_register==7) {
                     modificado_border.v=1;
                     //printf ("modificado border: %d\n",vdp_9918a_registers[7] &15);
                 }
