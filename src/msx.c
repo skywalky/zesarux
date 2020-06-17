@@ -581,16 +581,47 @@ void screen_store_scanline_rainbow_solo_display_msx(void)
         //linea en coordenada display (no border) que se debe leer
         int y_display=t_scanline_draw-screen_indice_inicio_pant;
 
-        printf ("y: %d\n",y_display);
+        //printf ("y: %d\n",y_display);
 
         //Para almacenaje temporal de la linea
         //mas que suficiente
-        //seria la suma de screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+256
+        //seria la suma de (screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+256
         //normalmente : 48 + 48 + 256
         z80_int msx_scanline_buffer[512];
 
+        //temp
+        int i;
+        for (i=0;i<(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+256;i++) {
+            msx_scanline_buffer[i]=0;
+        }
 
-        vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer);
+        //Render pixeles
+        vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer,msx_vram_memory);
+
+        //Y transferir a rainbow buffer
+
+        z80_int *puntero_buf_rainbow;
+
+        int y_destino_rainbow;
+
+        y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
+        if (border_enabled.v==0) y_destino_rainbow=y_destino_rainbow-screen_borde_superior;
+
+        puntero_buf_rainbow=&rainbow_buffer[ y_destino_rainbow*get_total_ancho_rainbow() ];
+
+
+        int limite=get_total_ancho_rainbow();
+
+        z80_int *origen_scanline_buffer;
+        origen_scanline_buffer=msx_scanline_buffer;
+
+        for (i=0;i<limite;i++) {
+            *puntero_buf_rainbow=*origen_scanline_buffer;
+
+            origen_scanline_buffer++;
+            puntero_buf_rainbow++;
+        }
+        
 
   }    
 
