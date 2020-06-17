@@ -598,6 +598,9 @@ void screen_store_scanline_rainbow_solo_display_msx(void)
         //Render pixeles
         vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer,msx_vram_memory);
 
+        //Render sprites
+        vdp_9918a_render_rainbow_sprites_line(y_display,msx_scanline_buffer,msx_vram_memory);
+
         //Y transferir a rainbow buffer
 
         z80_int *puntero_buf_rainbow;

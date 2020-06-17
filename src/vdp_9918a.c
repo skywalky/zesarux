@@ -1217,3 +1217,300 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 	}    
 
 }
+
+
+
+//Renderiza una linea de sprites 
+void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
+{
+
+
+    z80_byte video_mode=vdp_9918a_get_video_mode();
+
+
+
+
+    //En modos 1 y 2 permitimos sprites
+    if (video_mode!=1 && video_mode!=2) return;
+
+   //Nos ubicamos ya en la zona de pixeles, saltando el border
+    //En esta capa, si color=0, no lo ponemos como transparente sino como color negro
+    z80_int *destino_scanline_buffer;
+    destino_scanline_buffer=&scanline_buffer[screen_total_borde_izquierdo];
+
+
+	
+
+	//printf ("video_mode: %d\n",video_mode);
+
+
+	int x,y,bit; 
+	z80_int direccion_name_table;
+	
+    z80_byte byte_color;
+	int color=0;
+	
+	//int zx,zy;
+
+	z80_byte ink,paper;
+
+
+	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
+	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
+
+	pattern_name_table=vdp_9918a_get_pattern_name_table(); //(vdp_9918a_registers[2]&15) * 0x400; 
+
+
+
+	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
+
+
+	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+
+
+    //Sumar el offset por linea
+
+    int fila=scanline/8;
+
+    //entre 0 y 7 dentro de la fila
+    int scanline_fila=scanline % 8;    
+
+    int offset_sumar_linea;
+
+
+	int chars_in_line;
+	int char_width;    
+
+    z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
+    
+    z80_byte byte_leido;
+
+        
+        int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
+        int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
+
+        //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
+
+        int bytes_per_sprite;
+        int bytes_per_line;
+
+        if (sprite_size==8) {
+            bytes_per_sprite=8;
+            bytes_per_line=1;
+        }
+
+        else {
+            bytes_per_sprite=32;
+            bytes_per_line=2;
+        }
+
+
+        //TODO: si coordenada Y=208, fin tabla sprites
+        //    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
+
+        //z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
+
+        int sprite;
+        int salir=0;
+
+        //En boundary de 128
+        //sprite_attribute_table &=(65535-128);
+
+        z80_int sprite_attribute_table=vdp_9918a_get_sprite_attribute_table();
+
+        //Empezar por la del final
+        //Ver si hay alguno con coordenada 208 que indica final
+
+        int primer_sprite_final=VDP_9918A_MAX_SPRITES-1;
+
+        //int offset_sprite=sprite_attribute_table;
+
+        //int i;
+        for (primer_sprite_final=0;primer_sprite_final<32 && !salir;primer_sprite_final++) {
+            int offset_sprite=sprite_attribute_table+primer_sprite_final*4;
+
+            z80_byte vert_pos=vdp_9918a_read_vram_byte(vram,offset_sprite);
+            if (vert_pos==208) salir=1;
+
+        }
+
+        //Siempre estara al siguiente
+        primer_sprite_final--;
+
+        sprite_attribute_table +=(primer_sprite_final*4);
+
+        //Empezar desde final hacia principio
+
+        for (sprite=primer_sprite_final;sprite>=0;sprite--) {
+            int vert_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table);
+            int horiz_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+1);
+            z80_byte sprite_name=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+2);
+            z80_byte attr_color_etc=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+3);
+
+/*
+  0: Y-pos, Vertical position (FFh is topmost, 00h is second line, etc.)
+  1: X-pos, Horizontal position (00h is leftmost)
+  2: Pattern number
+  3: Attributes. b0-3:Color, b4-6:unused, b7:EC (Early Clock)            
+*/
+
+            vert_pos++; //255->coordenada 0
+            if (vert_pos==256) vert_pos=0;
+
+            //Entre 255 y 256-32-> son coordenadas negativas
+            if (vert_pos>=256-32) {
+                //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);                
+                //printf ("Sprite Y negative: %d\n",vert_pos-256);
+                vert_pos=vert_pos-256;
+
+            }
+
+            //Siguiente sprite. El precedente
+            sprite_attribute_table -=4;
+
+            //Si early clock, x-=32
+
+            if (attr_color_etc & 128) {
+                //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);                
+                horiz_pos -=32;
+            }
+
+            //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
+
+       
+                
+
+                //Si posicion Y sprite esta en el margen
+                if (scanline>=vert_pos && scanline<vert_pos+sprite_size) {
+                //if (vert_pos<192) {
+                    //int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
+                      int offset_pattern_table=sprite_name*8+sprite_pattern_table;
+                    z80_byte color=attr_color_etc & 15;
+
+                    int x,y;
+
+                    //Sprites de 16x16
+                    if (sprite_size==16) {
+                        int quad_x,quad_y;
+
+                        int fila_sprites_16=scanline % 16;
+
+                        int quadrante_y=fila_sprites_16/8;
+
+                        offset_pattern_table +=quadrante_y*16;
+
+                        offset_pattern_table +=fila_sprites_16;
+
+                        for (quad_x=0;quad_x<2;quad_x++) {
+                            //for (quad_y=0;quad_y<2;quad_y++) {
+                                //for (y=0;y<8;y++) {
+                                
+                                    byte_leido=vdp_9918a_read_vram_byte(vram,offset_pattern_table);
+                                    for (x=0;x<8;x++) {
+
+                                        int pos_x_final;
+                                        int pos_y_final;
+
+                                        pos_x_final=horiz_pos+(quad_x*8)+x;
+                                        pos_y_final=vert_pos+(quad_y*8)+y;
+                                        
+                                        //Si dentro de limites
+                                        if (pos_x_final>=0 && pos_x_final<=255 /*&& pos_y_final>=0 && pos_y_final<=191*/) {
+
+                                            //Si bit a 1
+                                            if (byte_leido & 128) {
+                                                //Y si ese color no es transparente 
+                                                if (color!=0) {
+                                                    //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+
+                                                    z80_byte color_sprite=color;
+
+                                                    if (msx_reveal_layer_sprites.v) {
+                                                        int posx=pos_x_final&1;
+                                                        int posy=pos_y_final&1;
+
+                                                        //0,0: 0
+                                                        //0,1: 1
+                                                        //1,0: 1
+                                                        //1,0: 0
+                                                        //Es un xor
+
+                                                        int si_blanco_negro=posx ^ posy;
+                                                        //printf ("si_blanco_negro: %d\n",si_blanco_negro);
+                                                        color_sprite=si_blanco_negro*15;
+                                                        //printf ("color: %d\n",color);
+                                                    }
+
+
+                                                    //scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    destino_scanline_buffer[pos_x_final]=VDP_9918_INDEX_FIRST_COLOR+color;
+                                
+                                                }
+                                            }
+
+                                            byte_leido = byte_leido << 1;
+                                        }
+                                    }
+                                //}
+                            //}
+
+                            offset_pattern_table+=16; //byte del cuadrante derecho
+                        }                        
+                    }
+
+                    //Sprites de 8x8
+                    else {
+
+                        for (y=0;y<8;y++) {
+
+                                byte_leido=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                                for (x=0;x<8;x++) {
+
+                                    int pos_x_final;
+                                    int pos_y_final;
+
+                                    pos_x_final=horiz_pos+x;
+                                    pos_y_final=vert_pos+y;
+                                    
+                                    if (pos_x_final>=0 && pos_x_final<=255 && pos_y_final>=0 && pos_y_final<=191) {
+
+                                        //Si bit a 1
+                                        if (byte_leido & 128) {
+                                            //Y si ese color no es transparente
+                                            if (color!=0) {
+                                                //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+
+                                                z80_byte color_sprite=color;
+
+                                                if (msx_reveal_layer_sprites.v) {
+                                                    int posx=pos_x_final&1;
+                                                    int posy=pos_y_final&1;
+
+                                                    //0,0: 0
+                                                    //0,1: 1
+                                                    //1,0: 1
+                                                    //1,0: 0
+                                                    //Es un xor
+
+                                                    int si_blanco_negro=posx ^ posy;
+                                                    color_sprite=si_blanco_negro*15;
+                                                }                                            
+                                                //scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                            }
+                                        }
+                                    }
+
+                                    byte_leido = byte_leido << 1;
+                                }
+                            
+                        }
+                    }
+
+                }
+            
+
+        }   
+
+
+
+}

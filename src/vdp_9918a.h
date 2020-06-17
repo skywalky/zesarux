@@ -56,6 +56,9 @@ extern void vdp_9918a_refresca_border(void);
 
 extern void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram);
 
+
+extern void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer,z80_byte *vram);
+
 #define VDP_9918A_MAX_SPRITES 32
 
 #endif
