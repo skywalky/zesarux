@@ -329,7 +329,7 @@ luego leer variable screen de pantalla activa sirve de algo? porque la funcion q
 tener dos parametros: puntero a vram y direcccion a leer, para poder separar eso del msx y hacerlo generico. 
 por tanto variable screen tiene que ser parametro de entrada a render , y le llega desde msx
 
-
+-uso de scr_ver_si_refrescar_por_menu_activo en sprites sin rainbow
 
 -Info colecovision y sirve también para msx el vdp:
 

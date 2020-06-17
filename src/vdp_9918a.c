@@ -1021,12 +1021,12 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 						
 						
 						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-						if (scr_ver_si_refrescar_por_menu_activo(columna,fila)) {
+						//if (scr_ver_si_refrescar_por_menu_activo(columna,fila)) {
 							color= ( byte_leido & 128 ? ink : paper );
 							//scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
                             *destino_scanline_buffer=VDP_9918_INDEX_FIRST_COLOR+color;
                             destino_scanline_buffer++;
-						}
+						//}
 
 						byte_leido=byte_leido<<1;
         	        }
@@ -1080,7 +1080,7 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 						for (col=0;col<2;col++) {
 											
 							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-							if (scr_ver_si_refrescar_por_menu_activo(x,fila)) {
+							//if (scr_ver_si_refrescar_por_menu_activo(x,fila)) {
 
 								//Primera columna usa color en parte parte alta y luego baja
 								color=(byte_leido>>4)&15;
@@ -1106,7 +1106,7 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 
 								//}
 								
-							}
+							//}
 						
 						}
 
@@ -1189,12 +1189,12 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 
 													
 							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-							if (scr_ver_si_refrescar_por_menu_activo(columna,fila)) {
+							//if (scr_ver_si_refrescar_por_menu_activo(columna,fila)) {
 								color= ( byte_leido & 128 ? ink : paper );
 								//scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
                                 *destino_scanline_buffer=VDP_9918_INDEX_FIRST_COLOR+color;
                                 destino_scanline_buffer++;                                
-							}
+							//}
 
 							byte_leido=byte_leido<<1;
 						}
@@ -1270,10 +1270,10 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
 
     //Sumar el offset por linea
 
-    int fila=scanline/8;
+    //int fila=scanline/8;
 
     //entre 0 y 7 dentro de la fila
-    int scanline_fila=scanline % 8;    
+    //int scanline_fila=scanline % 8;    
 
     int offset_sumar_linea;
 
