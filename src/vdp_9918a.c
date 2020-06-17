@@ -1468,6 +1468,8 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
                     //Sprites de 8x8
                     else {
 
+                        //printf("Sprites de 8x8\n");
+
                         for (y=0;y<8;y++) {
 
                                 byte_leido=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
