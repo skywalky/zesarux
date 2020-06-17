@@ -50,6 +50,8 @@ extern int vdp_9918a_get_tile_width(void);
 
 extern void vdp_9918a_render_ula_no_rainbow(z80_byte *vram);
 
+extern void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram);
+
 #define VDP_9918A_MAX_SPRITES 32
 
 #endif
