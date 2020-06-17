@@ -591,9 +591,9 @@ void screen_store_scanline_rainbow_solo_display_msx(void)
 
         //temp
         int i;
-        for (i=0;i<(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+256;i++) {
-            msx_scanline_buffer[i]=0;
-        }
+        //for (i=0;i<(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+256;i++) {
+        //    msx_scanline_buffer[i]=0;
+        //}
 
         //Render pixeles
         vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer,msx_vram_memory);
