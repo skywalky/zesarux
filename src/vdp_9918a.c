@@ -1451,7 +1451,7 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
 
 
                                                     //scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
-                                                    destino_scanline_buffer[pos_x_final]=VDP_9918_INDEX_FIRST_COLOR+color;
+                                                    destino_scanline_buffer[pos_x_final]=VDP_9918_INDEX_FIRST_COLOR+color_sprite;
                                 
                                                 }
                                             }

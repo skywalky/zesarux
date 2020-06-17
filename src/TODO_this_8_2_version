@@ -331,6 +331,8 @@ por tanto variable screen tiene que ser parametro de entrada a render , y le lle
 
 -uso de scr_ver_si_refrescar_por_menu_activo en sprites sin rainbow
 
+-modo reveal en ula y border con rainbow
+
 -Info colecovision y sirve también para msx el vdp:
 
 
