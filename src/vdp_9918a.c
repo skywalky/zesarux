@@ -1393,14 +1393,20 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
                     if (sprite_size==16) {
                         int quad_x,quad_y;
 
+                        //linea 0..15 dentro del sprite
                         int fila_sprites_16=scanline-vert_pos;
                         //printf ("fila: %d\n",fila_sprites_16);
 
+                        //Cuadrante 0...1
                         int quadrante_y=fila_sprites_16/8;
 
+                        //Sumar 8 bytes si cuadrante 1
                         offset_pattern_table +=quadrante_y*8;
 
+                        //Sumar 0..7 segun linea
                         offset_pattern_table +=fila_sprites_16 % 8;
+
+                        //Nota: seguro que estas sumas se pueden simplificar, pero asi queda mas claro
 
                         for (quad_x=0;quad_x<2;quad_x++) {
                             //for (quad_y=0;quad_y<2;quad_y++) {
