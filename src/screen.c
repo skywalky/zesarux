@@ -7227,6 +7227,12 @@ void screen_store_scanline_rainbow_solo_display(void)
 		return;
 	}
 
+	//Funcion aparte para msx
+	if (MACHINE_IS_MSX) {
+		screen_store_scanline_rainbow_solo_display_msx();
+		return;
+	}	
+
 	//si linea no coincide con entrelazado, volvemos
 	if (if_store_scanline_interlace(t_scanline_draw)==0) return;
 

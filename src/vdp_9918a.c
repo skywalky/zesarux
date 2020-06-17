@@ -889,3 +889,11 @@ void vdp_9918a_refresca_border(void)
 
 
 }
+
+
+
+//Renderiza una linea de display (pantalla y sprites, pero no border)
+void vdp_9918a_render_rainbow_display_line(int y_display,z80_int *scanline_buffer)
+{
+    
+}

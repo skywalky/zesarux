@@ -559,3 +559,39 @@ int da_amplitud_speaker_msx(void)
                                 if (msx_ppi_register_c & 128) return amplitud_speaker_actual_msx;
                                 else return -amplitud_speaker_actual_msx;
 }
+
+
+
+
+
+
+
+//Guardar en buffer rainbow la linea actual. Para MSX. solo display
+//Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
+//en cambio, si border esta activado, la primera linea del buffer sera de border
+void screen_store_scanline_rainbow_solo_display_msx(void)
+{
+
+
+
+  if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
+
+
+
+        //linea en coordenada display (no border) que se debe leer
+        int y_display=t_scanline_draw-screen_indice_inicio_pant;
+
+        printf ("y: %d\n",y_display);
+
+        //Para almacenaje temporal de la linea
+        //mas que suficiente
+        //seria la suma de screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+256
+        //normalmente : 48 + 48 + 256
+        z80_int msx_scanline_buffer[512];
+
+
+        vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer);
+
+  }    
+
+}
