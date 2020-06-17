@@ -409,79 +409,6 @@ void msx_empty_romcartridge_space(void)
 
 
 
-void msx_refresca_border(void)
-{
-
-    unsigned int color=vdp_9918a_get_border_color();
-
-
-
-
-        int x,y;
-
-
-
-
-	//Top border cambia en spectrum y zx8081 y ace
-	int topborder=MSX_TOP_BORDER;
-	
-
-	//color +=spectrum_palette_offset;
-
-
-        //parte superior
-        for (y=0;y<topborder;y++) {
-                for (x=0;x<MSX_ANCHO_PANTALLA*zoom_x+MSX_LEFT_BORDER*2;x++) {
-                                scr_putpixel(x,y,VDP_9918_INDEX_FIRST_COLOR+color);
-                }
-        }
-
-        //parte inferior
-        for (y=0;y<MSX_BOTTOM_BORDER;y++) {
-                for (x=0;x<MSX_ANCHO_PANTALLA*zoom_x+MSX_LEFT_BORDER*2;x++) {
-                                scr_putpixel(x,topborder+y+MSX_ALTO_PANTALLA*zoom_y,VDP_9918_INDEX_FIRST_COLOR+color);
-
-
-                }
-        }
-
-
-
-
-
-
-        for (y=0;y<MSX_ALTO_PANTALLA*zoom_y;y++) {
-                for (x=0;x<MSX_LEFT_BORDER;x++) {
-                        scr_putpixel(x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
-                }
-
-        
-
-        }
-
-        int ancho_pantalla=MSX_ANCHO_PANTALLA;
-        int ancho_border_derecho=MSX_LEFT_BORDER;
-
-        //laterales. En modo 0, 40x24, border derecho es 16 pixeles mas ancho
-        z80_byte video_mode=vdp_9918a_get_video_mode();        
-
-        if (video_mode==4) {
-            ancho_pantalla -=16;
-            ancho_border_derecho +=16*zoom_x;
-        }
-
-        for (y=0;y<MSX_ALTO_PANTALLA*zoom_y;y++) {
-
-                for (x=0;x<ancho_border_derecho;x++) {
-                        scr_putpixel(MSX_LEFT_BORDER+ancho_pantalla*zoom_x+x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
-                }                
-
-        }
-
-
-
-
-}
 
 
 
@@ -492,11 +419,13 @@ void msx_refresca_border(void)
 void scr_refresca_pantalla_y_border_msx(void)
 {
 
+ 
+
     if (border_enabled.v && msx_force_disable_layer_border.v==0) {
             //ver si hay que refrescar border
             if (modificado_border.v)
             {
-                    msx_refresca_border();
+                    vdp_9918a_refresca_border();
                     modificado_border.v=0;
             }
 
