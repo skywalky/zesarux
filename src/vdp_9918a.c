@@ -1391,7 +1391,8 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
 
                     //Sprites de 16x16
                     if (sprite_size==16) {
-                        int quad_x,quad_y;
+                        int quad_x;
+                        //int quad_y;
 
                         //linea 0..15 dentro del sprite
                         int fila_sprites_16=scanline-vert_pos;
@@ -1416,10 +1417,10 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
                                     for (x=0;x<8;x++) {
 
                                         int pos_x_final;
-                                        int pos_y_final;
+                                        //int pos_y_final;
 
                                         pos_x_final=horiz_pos+(quad_x*8)+x;
-                                        pos_y_final=vert_pos+(quad_y*8)+y;
+                                        //pos_y_final=vert_pos+(quad_y*8)+y;
                                         
                                         //Si dentro de limites
                                         if (pos_x_final>=0 && pos_x_final<=255 /*&& pos_y_final>=0 && pos_y_final<=191*/) {
@@ -1434,7 +1435,7 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
 
                                                     if (msx_reveal_layer_sprites.v) {
                                                         int posx=pos_x_final&1;
-                                                        int posy=pos_y_final&1;
+                                                        int posy=scanline&1;
 
                                                         //0,0: 0
                                                         //0,1: 1
@@ -1470,18 +1471,22 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
 
                         //printf("Sprites de 8x8\n");
 
-                        for (y=0;y<8;y++) {
+                        //for (y=0;y<8;y++) {
+                        //linea 0..7 dentro del sprite
+                        int fila_sprites=scanline-vert_pos;
 
-                                byte_leido=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                            offset_pattern_table +=fila_sprites;
+
+                                byte_leido=vdp_9918a_read_vram_byte(vram,offset_pattern_table);
                                 for (x=0;x<8;x++) {
 
                                     int pos_x_final;
-                                    int pos_y_final;
+                                    //int pos_y_final;
 
                                     pos_x_final=horiz_pos+x;
-                                    pos_y_final=vert_pos+y;
+                                    //pos_y_final=vert_pos+y;
                                     
-                                    if (pos_x_final>=0 && pos_x_final<=255 && pos_y_final>=0 && pos_y_final<=191) {
+                                    if (pos_x_final>=0 && pos_x_final<=255 /*&& pos_y_final>=0 && pos_y_final<=191*/) {
 
                                         //Si bit a 1
                                         if (byte_leido & 128) {
@@ -1493,7 +1498,7 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
 
                                                 if (msx_reveal_layer_sprites.v) {
                                                     int posx=pos_x_final&1;
-                                                    int posy=pos_y_final&1;
+                                                    int posy=scanline&1;
 
                                                     //0,0: 0
                                                     //0,1: 1
@@ -1505,6 +1510,7 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
                                                     color_sprite=si_blanco_negro*15;
                                                 }                                            
                                                 //scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                destino_scanline_buffer[pos_x_final]=VDP_9918_INDEX_FIRST_COLOR+color_sprite;
                                             }
                                         }
                                     }
@@ -1512,7 +1518,7 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
                                     byte_leido = byte_leido << 1;
                                 }
                             
-                        }
+                        //}
                     }
 
                 }
