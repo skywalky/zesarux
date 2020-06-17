@@ -1135,7 +1135,7 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 
 			//for (y=0;y<24;y++) {
 
-				int tercio=scanline_fila/8;
+				int tercio=fila/8;
 
 				for (x=0;x<chars_in_line;x++) {  
 					
@@ -1186,7 +1186,7 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 					//}
 
 						
-					//direccion_name_table++;
+					direccion_name_table++;
 
 				}
 		   //}
