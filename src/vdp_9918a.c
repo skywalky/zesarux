@@ -1393,13 +1393,14 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
                     if (sprite_size==16) {
                         int quad_x,quad_y;
 
-                        int fila_sprites_16=scanline % 16;
+                        int fila_sprites_16=scanline-vert_pos;
+                        //printf ("fila: %d\n",fila_sprites_16);
 
                         int quadrante_y=fila_sprites_16/8;
 
-                        offset_pattern_table +=quadrante_y*16;
+                        offset_pattern_table +=quadrante_y*8;
 
-                        offset_pattern_table +=fila_sprites_16;
+                        offset_pattern_table +=fila_sprites_16 % 8;
 
                         for (quad_x=0;quad_x<2;quad_x++) {
                             //for (quad_y=0;quad_y<2;quad_y++) {
