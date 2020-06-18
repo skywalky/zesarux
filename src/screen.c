@@ -7718,6 +7718,11 @@ void screen_store_scanline_rainbow_solo_border(void)
 		return;
 	}
 
+	if (MACHINE_IS_MSX) {
+		screen_store_scanline_rainbow_solo_border_msx();
+		return;
+	}	
+
 	if (MACHINE_IS_TSCONF) {
 		//se gestiona todo desde el solo_display
 		return;
