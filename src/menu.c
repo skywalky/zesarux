@@ -1444,7 +1444,7 @@ int menu_if_pressed_background_button(void)
 	//Si se pulsa tecla F que no es default
 	if (menu_button_f_function.v && menu_button_f_function_index>=0) {
 
-		printf ("Pulsada alguna tecla de funcion\n");
+		//printf ("Pulsada alguna tecla de funcion\n");
 
 		//Estas variables solo se activan cuando   //Abrir menu si funcion no es defecto y no es background window
   		//if (accion!=F_FUNCION_DEFAULT && accion!=F_FUNCION_BACKGROUND_WINDOW) {
@@ -1456,7 +1456,7 @@ int menu_if_pressed_background_button(void)
 		if (accion==F_FUNCION_BACKGROUND_WINDOW) {
 			//liberamos indicador de tecla de funcion
 			menu_button_f_function.v=0;
-			printf ("Pulsada tecla F background\n");
+			//printf ("Pulsada tecla F background\n");
 			//sleep(1);
 			return 1;
 		}
@@ -1468,7 +1468,7 @@ int menu_if_pressed_background_button(void)
 			if (indice==6-1 && accion==F_FUNCION_DEFAULT) {
 				//liberamos indicador de tecla de funcion
 				menu_button_f_function.v=0;
-				printf ("Es F6 por defecto\n");
+				//printf ("Es F6 por defecto\n");
 				return 1;
 			}
 
@@ -28846,9 +28846,9 @@ void menu_inicio_bucle_main(void)
 
 		retorno_menu=menu_dibuja_menu(&menu_inicio_opcion_seleccionada,&item_seleccionado,array_menu_principal,"ZEsarUX v." EMULATOR_VERSION );
 
-		printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);
-		printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
-		printf ("Retorno menu: %d\n",retorno_menu);
+		//printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);
+		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
+		//printf ("Retorno menu: %d\n",retorno_menu);
 		
 
 		if ( (retorno_menu!=MENU_RETORNO_ESC) &&  (retorno_menu==MENU_RETORNO_F10)  ) {
