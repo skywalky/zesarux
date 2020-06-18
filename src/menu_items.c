@@ -21823,7 +21823,7 @@ void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
 {
 
 	int ancho_ventana=32;
-	int alto_ventana=16;
+	int alto_ventana=15;
 
 	int xventana=menu_center_x()-ancho_ventana/2;
 	int yventana=menu_center_y()-alto_ventana/2;
@@ -21905,7 +21905,7 @@ void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
 		//menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		menu_add_ESC_item(array_menu_common);
-		menu_add_item_menu_tabulado(array_menu_common,1,12);
+		menu_add_item_menu_tabulado(array_menu_common,1,alto_ventana-4);
 
 		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window management");
 
