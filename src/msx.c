@@ -654,7 +654,7 @@ void screen_store_scanline_rainbow_border_comun_msx(z80_int *puntero_buf_rainbow
 	z80_byte border_leido;
 
 	//Para modo interlace
-	int y=t_scanline_draw;
+	//int y=t_scanline_draw;
 
 	z80_int color_border;
 
@@ -684,9 +684,11 @@ void screen_store_scanline_rainbow_border_comun_msx(z80_int *puntero_buf_rainbow
 					}
 			}
 
+            store_value_rainbow(puntero_buf_rainbow,VDP_9918_INDEX_FIRST_COLOR+color_border);
+
 			//Se llega a siguiente linea
 			if (indice_border==inicio_retrace_horiz) {
-				y++;
+				//y++;
 				//En caso de tbblue hay que saltar una linea mas en buffer rainbow, ya que hacemos doble de alto
 
 			}
@@ -701,6 +703,7 @@ void screen_store_scanline_rainbow_border_comun_msx(z80_int *puntero_buf_rainbow
 }
 
 //Guardar en buffer rainbow linea actual de borde superior o inferior
+
 void screen_store_scanline_rainbow_border_comun_supinf_msx(z80_int *puntero_buf_rainbow)
 {
 
@@ -715,17 +718,32 @@ void screen_store_scanline_rainbow_border_comun_supinf_msx(z80_int *puntero_buf_
 	//puntero_buf_rainbow=&rainbow_buffer[scanline_copia*get_total_ancho_rainbow()+x];
 
 	//Empezamos desde x en zona display, o sea, justo despues del ancho del borde izquierdo
-	screen_store_scanline_rainbow_border_comun(&puntero_buf_rainbow[x],x );
+	screen_store_scanline_rainbow_border_comun_msx(&puntero_buf_rainbow[x],x );
 
 
 }
 
+void screen_store_scanline_rainbow_solo_border_msx_section(z80_int *buffer,int lenght)
+{
+    int i;
+
+    z80_byte border_color=vdp_9918a_get_border_color();
+
+    for (i=0;i<lenght;i++) {
+        *buffer=VDP_9918_INDEX_FIRST_COLOR+border_color;
+        buffer++;
+    }
+}
 
 
-
-
+//Nota: no se va a tener en cuenta dibujado completamente real, es decir, que el electron empieza donde la zona de pantalla,
+//a la derecha del borde izquierdo,
+//sino que cada scanline empieza a la izquierda del borde izquierdo
 void screen_store_scanline_rainbow_solo_border_msx(void)
 {
+
+    
+
 
 
 
@@ -736,49 +754,51 @@ void screen_store_scanline_rainbow_solo_border_msx(void)
         if ( (t_scanline_draw>=screen_invisible_borde_superior && t_scanline_draw<screen_indice_inicio_pant) ||
              (t_scanline_draw>=screen_indice_fin_pant && t_scanline_draw<screen_indice_fin_pant+screen_total_borde_inferior)
 	   ) {
+            //printf ("linea superior o inferior: %d\n",t_scanline_draw);
 
-		screen_store_scanline_rainbow_border_comun_supinf_msx(msx_scanline_buffer);
+            //Metemos directamente en rainbow buffer
+            int y;
+	        y=t_scanline_draw-screen_invisible_borde_superior;
+
+            z80_int *puntero_buf_rainbow;
+		
+		puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow()]; 
+
+
+
+            screen_store_scanline_rainbow_solo_border_msx_section(puntero_buf_rainbow,
+                screen_total_borde_izquierdo+ancho_pantalla+screen_total_borde_derecho);
+		//screen_store_scanline_rainbow_border_comun_supinf_msx(msx_scanline_buffer);
         }
 
         //zona de border + pantalla + border
-	//Dibujar desde borde derecho hasta borde izquierdo de linea siguiente
+
         else if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
 
-	        //linea que se debe leer
-	        //int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+            
 
-        	z80_int *puntero_buf_rainbow;
-	        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
-        	int y;
+            z80_int *buffer_destino;
 
-	        y=t_scanline_draw-screen_invisible_borde_superior;
+            //Borde izquierdo
+            screen_store_scanline_rainbow_solo_border_msx_section(msx_scanline_buffer,screen_total_borde_izquierdo);
 
-		//nos situamos en borde derecho
-		//y se dibujara desde el borde derecho hasta el izquierdo de la siguiente linea
-		puntero_buf_rainbow=&msx_scanline_buffer[ screen_total_borde_izquierdo+ancho_pantalla ];
-
-
-	        screen_store_scanline_rainbow_border_comun_msx(puntero_buf_rainbow,screen_total_borde_izquierdo+ancho_pantalla);
+            //Borde detecho
+            screen_store_scanline_rainbow_solo_border_msx_section(&msx_scanline_buffer[screen_total_borde_izquierdo+ancho_pantalla],
+                screen_total_borde_derecho);
 
         }
 
-	//primera linea de border. Realmente empieza una linea atras y acaba la primera linea de borde
-	//con el borde izquierdo de la primera linea visible
-	//Esto solo sirve para dibujar primera linea de border (de ancho izquierdo solamente)
-
-	else if ( t_scanline_draw==screen_invisible_borde_superior-1 ) {
-		//z80_int *puntero_buf_rainbow;
-
-		//puntero_buf_rainbow=&rainbow_buffer[0];
-
-		int xinicial=screen_total_borde_izquierdo+ancho_pantalla+screen_total_borde_derecho+screen_invisible_borde_derecho;
-
-
-		screen_store_scanline_rainbow_border_comun_msx(msx_scanline_buffer,xinicial);
-
-	}
 
 
 
 
 }
+
+void screen_store_scanline_rainbow_msx_border_and_display(void) 
+{
+
+					screen_store_scanline_rainbow_solo_border();
+					screen_store_scanline_rainbow_solo_display();
+
+}
+					

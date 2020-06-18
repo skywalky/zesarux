@@ -403,10 +403,10 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 						
 						
 						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-						if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
+						//if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
 							color= ( byte_leido & 128 ? ink : paper );
 							scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
-						}
+						//}
 
 						byte_leido=byte_leido<<1;
         	        }
@@ -454,7 +454,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 						for (col=0;col<2;col++) {
 											
 							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-							if (scr_ver_si_refrescar_por_menu_activo(x,y)) {
+							//if (scr_ver_si_refrescar_por_menu_activo(x,y)) {
 
 								//Primera columna usa color en parte parte alta y luego baja
 								color=(byte_leido>>4)&15;
@@ -475,7 +475,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 								}
 								
-							}
+							//}
 						
 						}
 
@@ -553,10 +553,10 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 													
 							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-							if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
+							//if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
 								color= ( byte_leido & 128 ? ink : paper );
 								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
-							}
+							//}
 
 							byte_leido=byte_leido<<1;
 						}

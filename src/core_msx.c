@@ -305,8 +305,10 @@ void core_msx_fin_scanline(void)
 				else {
 					//if ((t_estados/screen_testados_linea)>319) printf ("storing rainbow buffer\n");
 					//TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_msx_store_scanline_rainbow);
-					screen_store_scanline_rainbow_solo_border();
-					screen_store_scanline_rainbow_solo_display();
+					//screen_store_scanline_rainbow_solo_border();
+					//screen_store_scanline_rainbow_solo_display();
+
+					screen_store_scanline_rainbow_msx_border_and_display();
 					//TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_msx_store_scanline_rainbow);
 				}
 
