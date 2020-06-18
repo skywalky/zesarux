@@ -56,6 +56,9 @@ void vdp_9918a_out_vram_data(z80_byte *vram_memory,z80_byte value)
 
     vdp_9918a_last_vram_position++;
 
+    //temp. simular retardo al escribir en vram
+    //t_estados +=7;
+
 
 }
 
@@ -69,6 +72,9 @@ z80_byte vdp_9918a_in_vram_data(z80_byte *vram_memory)
     z80_byte value=vram_memory[posicion_leer];
 
     vdp_9918a_last_vram_position++;
+
+    //temp. simular retardo al leer de vram
+    //t_estados +=7;    
 
     return value;
 
