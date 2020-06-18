@@ -562,7 +562,7 @@ int da_amplitud_speaker_msx(void)
 
 
 
-
+z80_int msx_scanline_buffer[512];
 
 
 
@@ -587,13 +587,15 @@ void screen_store_scanline_rainbow_solo_display_msx(void)
         //mas que suficiente
         //seria la suma de (screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+256
         //normalmente : 48 + 48 + 256
-        z80_int msx_scanline_buffer[512];
+        
+
+        int i;
 
         //TEMPORAL. TODO render a 0
-        int i;
+        /*int i;
         for (i=0;i<(screen_total_borde_izquierdo+screen_total_borde_derecho)*border_enabled.v+256;i++) {
             msx_scanline_buffer[i]=0;
-        }
+        }*/
 
         //Render pixeles
         vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer,msx_vram_memory);
@@ -676,7 +678,7 @@ void screen_store_scanline_rainbow_border_comun_msx(z80_int *puntero_buf_rainbow
 				//Por cada t_estado van 2 pixeles normalmente
 					int jj;
 					for (jj=0;jj<t_estados_por_pixel;jj++) {
-						store_value_rainbow(puntero_buf_rainbow,color_border);
+						store_value_rainbow(puntero_buf_rainbow,VDP_9918_INDEX_FIRST_COLOR+color_border);
 							
 
 					}
@@ -699,21 +701,21 @@ void screen_store_scanline_rainbow_border_comun_msx(z80_int *puntero_buf_rainbow
 }
 
 //Guardar en buffer rainbow linea actual de borde superior o inferior
-void screen_store_scanline_rainbow_border_comun_supinf_msx(void)
+void screen_store_scanline_rainbow_border_comun_supinf_msx(z80_int *puntero_buf_rainbow)
 {
 
 	int scanline_copia=t_scanline_draw-screen_invisible_borde_superior;
 
-	z80_int *puntero_buf_rainbow;
+	
 
 	int x=screen_total_borde_izquierdo;
 
 	//printf ("%d\n",scanline_copia*get_total_ancho_rainbow());
 	//esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
-	puntero_buf_rainbow=&rainbow_buffer[scanline_copia*get_total_ancho_rainbow()+x];
+	//puntero_buf_rainbow=&rainbow_buffer[scanline_copia*get_total_ancho_rainbow()+x];
 
 	//Empezamos desde x en zona display, o sea, justo despues del ancho del borde izquierdo
-	screen_store_scanline_rainbow_border_comun(puntero_buf_rainbow,x );
+	screen_store_scanline_rainbow_border_comun(&puntero_buf_rainbow[x],x );
 
 
 }
@@ -735,7 +737,7 @@ void screen_store_scanline_rainbow_solo_border_msx(void)
              (t_scanline_draw>=screen_indice_fin_pant && t_scanline_draw<screen_indice_fin_pant+screen_total_borde_inferior)
 	   ) {
 
-		screen_store_scanline_rainbow_border_comun_supinf_msx();
+		screen_store_scanline_rainbow_border_comun_supinf_msx(msx_scanline_buffer);
         }
 
         //zona de border + pantalla + border
@@ -753,7 +755,7 @@ void screen_store_scanline_rainbow_solo_border_msx(void)
 
 		//nos situamos en borde derecho
 		//y se dibujara desde el borde derecho hasta el izquierdo de la siguiente linea
-		puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow()+screen_total_borde_izquierdo+ancho_pantalla ];
+		puntero_buf_rainbow=&msx_scanline_buffer[ screen_total_borde_izquierdo+ancho_pantalla ];
 
 
 	        screen_store_scanline_rainbow_border_comun_msx(puntero_buf_rainbow,screen_total_borde_izquierdo+ancho_pantalla);
@@ -765,20 +767,14 @@ void screen_store_scanline_rainbow_solo_border_msx(void)
 	//Esto solo sirve para dibujar primera linea de border (de ancho izquierdo solamente)
 
 	else if ( t_scanline_draw==screen_invisible_borde_superior-1 ) {
-		z80_int *puntero_buf_rainbow;
+		//z80_int *puntero_buf_rainbow;
 
-		puntero_buf_rainbow=&rainbow_buffer[0];
+		//puntero_buf_rainbow=&rainbow_buffer[0];
 
 		int xinicial=screen_total_borde_izquierdo+ancho_pantalla+screen_total_borde_derecho+screen_invisible_borde_derecho;
 
 
-
-		screen_border_last_color=get_border_colour_from_out();
-		
-
-
-
-		screen_store_scanline_rainbow_border_comun_msx(puntero_buf_rainbow,xinicial);
+		screen_store_scanline_rainbow_border_comun_msx(msx_scanline_buffer,xinicial);
 
 	}
 
