@@ -21820,11 +21820,31 @@ void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
 
 	int comun_opcion_seleccionada=0;
 
+
+	//Donde van los bloques
+
+	int inicio_bloque_x=8;
+	int inicio_bloque_y=2;
+	int ancho_bloque=6;
+
+	int linea=inicio_bloque_y;
+	zxvision_print_string_defaults(&ventana,1,linea,"C000H");
+	linea+=2;
+
+	zxvision_print_string_defaults(&ventana,1,linea,"8000H");
+	linea+=2;
+
+	zxvision_print_string_defaults(&ventana,1,linea,"4000H");
+	linea+=2;
+
+	zxvision_print_string_defaults(&ventana,1,linea,"0000H");
+	linea+=2;
+
 	do {
 
 
 		
-		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Memory info");
+		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Slot 0 Slot 1 Slot 2 Slot 3");
 		menu_add_item_menu_tabulado(array_menu_common,1,0);
 
 		int slot, segment;
@@ -21837,8 +21857,9 @@ void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
 #define MSX_SLOT_MEMORY_TYPE_RAM 1
 #define MSX_SLOT_MEMORY_TYPE_EMPTY 2
 */
-		for (slot=0;slot<4;slot++) {
-			for (segment=0;segment<4;segment++) {
+		for (segment=3;segment>=0;segment--) {
+			for (slot=0;slot<4;slot++) {
+			
 
 				char buffer_mem_type[32];
 
@@ -21857,7 +21878,7 @@ void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
 	
 
 				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,buffer_mem_type);
-				menu_add_item_menu_tabulado(array_menu_common,1+slot*6,1+segment*2);
+				menu_add_item_menu_tabulado(array_menu_common,inicio_bloque_x+slot*ancho_bloque,inicio_bloque_y+(3-segment)*2);
 			}
 		}
 
@@ -21865,9 +21886,10 @@ void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
 
 		//if (!total_ventanas) menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"(Empty)");
 
-		menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		//menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		menu_add_ESC_item(array_menu_common);
+		menu_add_item_menu_tabulado(array_menu_common,1,12);
 
 		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window management");
 
