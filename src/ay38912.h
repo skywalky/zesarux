@@ -56,6 +56,7 @@ extern z80_bit aymidi_rs232_enabled;
 #define FRECUENCIA_SPECTRUM_AY 1773400
 #define FRECUENCIA_CPC_AY      1000000
 #define FRECUENCIA_ZX81_AY     1625000
+#define FRECUENCIA_MSX_AY      1789772
 
 
 extern int ay_chip_frequency;
