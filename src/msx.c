@@ -573,21 +573,14 @@ void screen_store_scanline_rainbow_solo_display_msx(void)
 {
 
 
-
+  //Si en zona pantalla (no border superior ni inferior)
   if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
-
 
 
         //linea en coordenada display (no border) que se debe leer
         int y_display=t_scanline_draw-screen_indice_inicio_pant;
 
  
-        
-
-       
-
- 
-
         //Render pixeles
         vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer,msx_vram_memory);
 
@@ -613,7 +606,11 @@ void screen_store_scanline_rainbow_solo_border_msx_section(z80_int *buffer,int l
     z80_byte border_color=vdp_9918a_get_border_color();
 
     for (i=0;i<lenght;i++) {
-        *buffer=VDP_9918_INDEX_FIRST_COLOR+border_color;
+        z80_int color_final=VDP_9918_INDEX_FIRST_COLOR+border_color;
+
+        if (msx_force_disable_layer_border.v) color_final=0;
+
+        *buffer=color_final;
         buffer++;
     }
 }
@@ -651,8 +648,19 @@ void screen_store_scanline_rainbow_solo_border_msx(void)
         screen_store_scanline_rainbow_solo_border_msx_section(msx_scanline_buffer,screen_total_borde_izquierdo);
 
         //Borde detecho
+        int ancho_border_derecho=screen_total_borde_derecho;
+
+        //laterales. En modo 0, 40x24, border derecho es 16 pixeles mas ancho
+        z80_byte video_mode=vdp_9918a_get_video_mode();        
+
+        if (video_mode==4) {
+            ancho_pantalla -=16;
+            ancho_border_derecho +=16*zoom_x;
+        }
+
+
         screen_store_scanline_rainbow_solo_border_msx_section(&msx_scanline_buffer[screen_total_borde_izquierdo+ancho_pantalla],
-            screen_total_borde_derecho);
+            ancho_border_derecho);
 
     }
 
@@ -665,6 +673,7 @@ void screen_store_scanline_rainbow_solo_border_msx(void)
 void screen_store_scanline_rainbow_msx_border_and_display(void) 
 {
 
+    //Renderizar zonas de border y display
     screen_store_scanline_rainbow_solo_border_msx();
     screen_store_scanline_rainbow_solo_display_msx();
 
