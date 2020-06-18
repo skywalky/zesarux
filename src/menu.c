@@ -23121,6 +23121,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
         menu_item *array_menu_debug_settings;
         menu_item item_seleccionado;
 	int retorno_menu;
+
+		//letras usadas: rhndmictxbsvfpoaug
         do {
                 menu_add_item_menu_inicial(&array_menu_debug_settings,"~~Reset",MENU_OPCION_NORMAL,menu_debug_reset,NULL);
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'r');
@@ -23188,7 +23190,9 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		if (MACHINE_IS_MSX) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"MSX");
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"~~MSX");
+			//Letra M tambien se usa en DMA, pero como no hay DMA en MSX, pues no estaran nunca las dos opciones a la vez
+			menu_add_item_menu_shortcut(array_menu_debug_settings,'m');
 		}
 
 
