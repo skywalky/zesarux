@@ -70,6 +70,31 @@ z80_bit msx_force_disable_layer_border={0};
 z80_bit msx_reveal_layer_ula={0};
 z80_bit msx_reveal_layer_sprites={0};
 
+const char *msx_string_memory_type_rom="ROM";
+const char *msx_string_memory_type_ram="RAM";
+const char *msx_string_memory_type_empty="EMPTY";
+
+char *msx_get_string_memory_type(int tipo)
+{
+    		
+
+    switch (tipo) {
+
+        case MSX_SLOT_MEMORY_TYPE_ROM:
+            return (char *)msx_string_memory_type_rom;
+        break;
+
+        case MSX_SLOT_MEMORY_TYPE_RAM:
+            return (char *)msx_string_memory_type_ram;
+        break;
+
+        default:
+            return (char *)msx_string_memory_type_empty;
+        break;
+
+    }
+}
+
 
 //Retorna direccion de memoria donde esta mapeada la ram y su tipo
 z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)

@@ -57,6 +57,8 @@ extern void msx_alloc_vram_memory(void);
 extern void msx_init_memory_tables(void);
 extern void scr_refresca_pantalla_y_border_msx(void);
 
+extern char *msx_get_string_memory_type(int tipo);
+
 
 extern z80_bit msx_force_disable_layer_ula;
 extern z80_bit msx_force_disable_layer_sprites;

@@ -21799,11 +21799,31 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_debug_msx_memory_info_slot_segment(MENU_ITEM_PARAMETERS)
+{
+	//Le indicamos el valor de slot y segmento, codificandolo en valor hexadecimal: slot*16+segment
+
+	int slot=(valor_opcion>>4) & 0xF;
+	int segment=valor_opcion & 0xF;
+
+	int tipo=msx_memory_slots[slot][segment];
+
+	int inicio_bloque=segment*16384;
+	int fin_bloque=((segment+1)*16384)-1;
+		
+
+	menu_generic_message_format("Block info","Slot: %d Segment: %d Type: %s Uses: %04XH-%04XH"
+	,slot,segment,msx_get_string_memory_type(tipo),inicio_bloque,fin_bloque);
+
+
+}
+
+
 void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
 {
 
 	int ancho_ventana=32;
-	int alto_ventana=20;
+	int alto_ventana=16;
 
 	int xventana=menu_center_x()-ancho_ventana/2;
 	int yventana=menu_center_y()-alto_ventana/2;
@@ -21844,7 +21864,7 @@ void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
 
 
 		
-		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Slot 0 Slot 1 Slot 2 Slot 3");
+		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"       Slot0 Slot1 Slot2 Slot3");
 		menu_add_item_menu_tabulado(array_menu_common,1,0);
 
 		int slot, segment;
@@ -21864,21 +21884,17 @@ void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
 				char buffer_mem_type[32];
 
 				int tipo=msx_memory_slots[slot][segment];
-				if (tipo==MSX_SLOT_MEMORY_TYPE_ROM) {
-					strcpy (buffer_mem_type,"ROM");
-				}
-				else if (tipo==MSX_SLOT_MEMORY_TYPE_ROM) {
-					strcpy (buffer_mem_type,"RAM");
-				}
+		
+				strcpy (buffer_mem_type,msx_get_string_memory_type(tipo));
+		
 
-				else {
-					strcpy (buffer_mem_type,"EMPTY");
-				}
-
-	
-
-				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,buffer_mem_type);
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_msx_memory_info_slot_segment,NULL,buffer_mem_type);
 				menu_add_item_menu_tabulado(array_menu_common,inicio_bloque_x+slot*ancho_bloque,inicio_bloque_y+(3-segment)*2);
+
+				//Le indicamos el valor de slot y segmento, codificandolo en valor hexadecimal: slot*16+segment
+
+				int valor_opcion=slot*16+segment;
+				menu_add_item_menu_valor_opcion(array_menu_common,valor_opcion);
 			}
 		}
 
