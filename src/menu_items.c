@@ -21799,6 +21799,97 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_debug_msx_memory_info(MENU_ITEM_PARAMETERS)
+{
+
+	int ancho_ventana=32;
+	int alto_ventana=20;
+
+	int xventana=menu_center_x()-ancho_ventana/2;
+	int yventana=menu_center_y()-alto_ventana/2;
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+                                                        ancho_ventana-1,alto_ventana-2,"MSX Memory Info");
+
+	//Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+	menu_item *array_menu_common;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+	int comun_opcion_seleccionada=0;
+
+	do {
+
+
+		
+		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Memory info");
+		menu_add_item_menu_tabulado(array_menu_common,1,0);
+
+		int slot, segment;
+
+		////slots asignados, y sus 4 segmentos
+//tipos: rom, ram, vacio
+//int msx_memory_slots[4][4];
+/*
+#define MSX_SLOT_MEMORY_TYPE_ROM 0
+#define MSX_SLOT_MEMORY_TYPE_RAM 1
+#define MSX_SLOT_MEMORY_TYPE_EMPTY 2
+*/
+		for (slot=0;slot<4;slot++) {
+			for (segment=0;segment<4;segment++) {
+
+				char buffer_mem_type[32];
+
+				int tipo=msx_memory_slots[slot][segment];
+				if (tipo==MSX_SLOT_MEMORY_TYPE_ROM) {
+					strcpy (buffer_mem_type,"ROM");
+				}
+				else if (tipo==MSX_SLOT_MEMORY_TYPE_ROM) {
+					strcpy (buffer_mem_type,"RAM");
+				}
+
+				else {
+					strcpy (buffer_mem_type,"EMPTY");
+				}
+
+	
+
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,buffer_mem_type);
+				menu_add_item_menu_tabulado(array_menu_common,1+slot*6,1+segment*2);
+			}
+		}
+
+
+
+		//if (!total_ventanas) menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"(Empty)");
+
+		menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		menu_add_ESC_item(array_menu_common);
+
+		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window management");
+
+			
+			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+					//llamamos por valor de funcion
+					if (item_seleccionado.menu_funcion!=NULL) {
+							//printf ("actuamos por funcion\n");
+							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+							
+					}
+			}
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+                                //En caso de menus tabulados, es responsabilidad de este de liberar ventana
+                zxvision_destroy_window(&ventana);	
+
+}
+
+
 void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_debug_tsconf_tbblue_msx;
@@ -21820,6 +21911,11 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE || MACHINE_IS_MSX) {
 			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_tilenav,NULL,"~~Tile navigator");
 			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'t');
+		}
+
+		if (MACHINE_IS_MSX) {
+			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_msx_memory_info,NULL,"~~Memory Info");
+			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'m');		
 		}
 
                 menu_add_item_menu(array_menu_debug_tsconf_tbblue_msx,"",MENU_OPCION_SEPARADOR,NULL,NULL);
