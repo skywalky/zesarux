@@ -582,10 +582,46 @@ void screen_store_scanline_rainbow_solo_display_msx(void)
 
  
         //Render pixeles
-        vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer,msx_vram_memory);
+        if (msx_force_disable_layer_ula.v==0 && msx_reveal_layer_ula.v==0) {
+            vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer,msx_vram_memory);
+        }
+
+        else {
+            //Capa desactivada o reveal
+            //Nos ubicamos en zona central
+            int inicio_buffer=screen_total_borde_izquierdo;
+
+            int i;
+
+
+
+            for (i=0;i<256;i++) {
+
+                z80_int color=0;
+
+                if (msx_reveal_layer_ula.v) {
+                    int posx=i&1;
+                    int posy=t_scanline_draw&1;
+
+                    int si_blanco_negro=posx ^ posy;
+
+                    //color 0 o 15
+                    color=si_blanco_negro*15;                    
+                }
+
+                msx_scanline_buffer[inicio_buffer+i]=VDP_9918_INDEX_FIRST_COLOR+color;
+            }
+
+        }
+
+
+
+
 
         //Render sprites
-        vdp_9918a_render_rainbow_sprites_line(y_display,msx_scanline_buffer,msx_vram_memory);
+        if (msx_force_disable_layer_sprites.v==0) {
+            vdp_9918a_render_rainbow_sprites_line(y_display,msx_scanline_buffer,msx_vram_memory);
+        }
 
 
         
@@ -608,7 +644,7 @@ void screen_store_scanline_rainbow_solo_border_msx_section(z80_int *buffer,int l
     for (i=0;i<lenght;i++) {
         z80_int color_final=VDP_9918_INDEX_FIRST_COLOR+border_color;
 
-        if (msx_force_disable_layer_border.v) color_final=0;
+        if (msx_force_disable_layer_border.v) color_final=VDP_9918_INDEX_FIRST_COLOR; //color 0 de su paleta de colores
 
         *buffer=color_final;
         buffer++;

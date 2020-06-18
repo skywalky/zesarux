@@ -7530,7 +7530,7 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
 					linea +=3;
 
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"ULA:");
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Pixels:");
 					linea +=3;
 
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Sprites:");
