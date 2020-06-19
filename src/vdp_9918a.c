@@ -32,6 +32,8 @@
 
 z80_byte vdp_9918a_registers[8];
 
+z80_byte vdp_9918a_status_register=255;
+
 
 //Ultimos dos bytes enviados al puerto de comando/status
 z80_byte vdp_9918a_last_command_status_bytes[2];
@@ -85,9 +87,19 @@ z80_byte vdp_9918a_in_vdp_status(void)
 {
     //7 6  5 43210
     //F 5S C Fifth sprite number
+    //F: interrupt pending flag
+    //5S: fifth sprite flag
+    //C: sprite colision (coincidence) flag
+    //fifth sprite number
 
-    //TODO
-    return 255;
+    z80_byte retorno=vdp_9918a_status_register;
+
+    
+
+    //The C bit of the status register is reset after the register is read.
+    vdp_9918a_status_register&= (255-32);
+
+    return retorno;
 
 }
 
@@ -1225,24 +1237,41 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 }
 
 
+//Color 0 es transparente
+z80_int vdp_9918a_buffer_render_sprites[256];
+
+
+//Pone sprite en buffer y activa bit de colision si hace falta
+void vdp9918a_put_sprite_pixel(z80_int *destino,z80_int color)
+{
+
+    if ( (*destino) !=0 ) {
+        //printf ("Colision. Color anterior: %d VDP_9918_INDEX_FIRST_COLOR: %d\n",*destino,VDP_9918_INDEX_FIRST_COLOR);
+
+    //7 6  5 43210
+    //F 5S C Fifth sprite number
+    //F: interrupt pending flag
+    //5S: fifth sprite flag
+    //C: sprite colision (coincidence) flag
+    //fifth sprite number
+
+    
+        vdp_9918a_status_register |=32;
+
+    }
+
+    *destino=color;
+}
+
 
 //Renderiza una linea de sprites 
-void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
+void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_scanline_buffer,z80_byte *vram)
 {
 
 
-    z80_byte video_mode=vdp_9918a_get_video_mode();
 
 
 
-
-    //En modos 1 y 2 permitimos sprites
-    if (video_mode!=1 && video_mode!=2) return;
-
-   //Nos ubicamos ya en la zona de pixeles, saltando el border
-    //En esta capa, si color=0, no lo ponemos como transparente sino como color negro
-    z80_int *destino_scanline_buffer;
-    destino_scanline_buffer=&scanline_buffer[screen_total_borde_izquierdo];
 
 
 	
@@ -1457,7 +1486,10 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
 
 
                                                     //scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
-                                                    destino_scanline_buffer[pos_x_final]=VDP_9918_INDEX_FIRST_COLOR+color_sprite;
+                                                    //destino_scanline_buffer[pos_x_final]=VDP_9918_INDEX_FIRST_COLOR+color_sprite;
+
+
+                                                    vdp9918a_put_sprite_pixel(&destino_scanline_buffer[pos_x_final],VDP_9918_INDEX_FIRST_COLOR+color_sprite);
                                 
                                                 }
                                             }
@@ -1516,7 +1548,9 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
                                                     color_sprite=si_blanco_negro*15;
                                                 }                                            
                                                 //scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
-                                                destino_scanline_buffer[pos_x_final]=VDP_9918_INDEX_FIRST_COLOR+color_sprite;
+                                                //destino_scanline_buffer[pos_x_final]=VDP_9918_INDEX_FIRST_COLOR+color_sprite;
+
+                                                vdp9918a_put_sprite_pixel(&destino_scanline_buffer[pos_x_final],VDP_9918_INDEX_FIRST_COLOR+color_sprite);
                                             }
                                         }
                                     }
@@ -1533,5 +1567,46 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
         }   
 
 
+
+}
+
+
+//Renderiza una linea de sprites, primero en buffer temporal así para poder gestionar colisiones
+void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
+{
+
+    z80_byte video_mode=vdp_9918a_get_video_mode();
+
+
+
+
+    //En modos 1 y 2 permitimos sprites
+    if (video_mode!=1 && video_mode!=2) return;
+
+
+
+    int i;
+
+    //Inicializar buffer temporal a color 0 transparente
+    for (i=0;i<256;i++) {
+        vdp_9918a_buffer_render_sprites[i]=0;
+    }
+
+
+    vdp_9918a_render_rainbow_sprites_line_post(scanline,vdp_9918a_buffer_render_sprites,vram);
+
+    //Y copiar al buffer inicial
+
+
+    for (i=0;i<256;i++) {
+        //TODO. hacer esto con memcpy
+
+        //Copiar en destino, saltando border izquierdo, solo si color no es transparente
+        z80_int color_pixel=vdp_9918a_buffer_render_sprites[i];
+
+        if (color_pixel!=0) {
+            scanline_buffer[screen_total_borde_izquierdo+i]=color_pixel;
+        }
+    }
 
 }
