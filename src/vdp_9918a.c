@@ -609,8 +609,8 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 
 
 
-    //Solo En modos 1 y 2 permitimos sprites? Pitfall1 pone mode 32x24 y usa sprites??
-    if (video_mode!=1 && video_mode!=2) return;
+    //En modo 40x24 no permitimos sprites
+    if (video_mode==4) return;
 
 
 
@@ -1580,8 +1580,8 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
 
 
 
-    //Solo En modos 1 y 2 permitimos sprites? Pitfall1 pone mode 32x24 y usa sprites??
-    if (video_mode!=1 && video_mode!=2) return;
+    //En modo 40x24 no permitimos sprites
+    if (video_mode==4) return;
 
 
 
