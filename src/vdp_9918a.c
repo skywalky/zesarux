@@ -609,8 +609,8 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 
 
 
-    //En modos 1 y 2 permitimos sprites
-    if (video_mode!=1 && video_mode!=2) return;
+    //En modos 1 y 2 permitimos sprites????
+    //if (video_mode!=1 && video_mode!=2) return;
 
 
 
@@ -1375,6 +1375,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
         sprite_attribute_table +=(primer_sprite_final*4);
 
         //Empezar desde final hacia principio
+        //printf ("Sprite final: %d\n",primer_sprite_final);
 
         for (sprite=primer_sprite_final;sprite>=0;sprite--) {
             int vert_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table);
@@ -1579,9 +1580,8 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
 
 
 
-
-    //En modos 1 y 2 permitimos sprites
-    if (video_mode!=1 && video_mode!=2) return;
+    //En modos 1 y 2 permitimos sprites. ???
+    //if (video_mode!=1 && video_mode!=2) return;
 
 
 
