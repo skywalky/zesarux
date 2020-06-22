@@ -425,12 +425,6 @@ void msx_empty_romcartridge_space(void)
 
 
 
-
-
-
-
-
-
 //Refresco pantalla sin rainbow
 void scr_refresca_pantalla_y_border_msx_no_rainbow(void)
 {
@@ -575,14 +569,6 @@ int da_amplitud_speaker_msx(void)
                                 if (msx_ppi_register_c & 128) return amplitud_speaker_actual_msx;
                                 else return -amplitud_speaker_actual_msx;
 }
-
-
-
-
-
-
-
-
 
 
 
