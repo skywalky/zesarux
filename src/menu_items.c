@@ -3763,7 +3763,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 					}
 				}
 
-				if (MACHINE_IS_MSX) {
+				if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 					int y=current_tile/tilemap_width;
 					int x=current_tile%tilemap_width; 	
 
