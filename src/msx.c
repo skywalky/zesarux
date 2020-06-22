@@ -596,36 +596,8 @@ z80_int msx_scanline_buffer[512];
 void screen_store_scanline_rainbow_msx_border_and_display(void) 
 {
 
-    //Renderizar zonas de border y display
-    screen_store_scanline_rainbow_solo_border_vdp_9918a(msx_scanline_buffer);
-    screen_store_scanline_rainbow_solo_display_vdp_9918a(msx_scanline_buffer,msx_vram_memory);
+    screen_store_scanline_rainbow_vdp_9918a_border_and_display(msx_scanline_buffer,msx_vram_memory);
 
-
-    //Y transferir a rainbow buffer
-
-    z80_int *puntero_buf_rainbow;
-
-    int y_destino_rainbow;
-
-    y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
-    if (border_enabled.v==0) y_destino_rainbow=y_destino_rainbow-screen_borde_superior;
-
-    puntero_buf_rainbow=&rainbow_buffer[ y_destino_rainbow*get_total_ancho_rainbow() ];
-
-
-    int limite=get_total_ancho_rainbow();
-
-    z80_int *origen_scanline_buffer;
-    origen_scanline_buffer=msx_scanline_buffer;
-
-    int i;
-
-    for (i=0;i<limite;i++) {
-        *puntero_buf_rainbow=*origen_scanline_buffer;
-
-        origen_scanline_buffer++;
-        puntero_buf_rainbow++;
-    }
 
 }
 					
