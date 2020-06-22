@@ -23221,6 +23221,9 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'m');
 		}
 
+		if (MACHINE_IS_COLECO) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"Colecovision");
+		}
 
 
 		menu_add_item_menu(array_menu_debug_settings,"He~~xadecimal Editor",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);

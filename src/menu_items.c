@@ -21947,7 +21947,7 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_spritenav,NULL,"~~Sprite navigator");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'s');
 
-		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE || MACHINE_IS_MSX) {
+		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE || MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_tilenav,NULL,"~~Tile navigator");
 			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'t');
 		}
