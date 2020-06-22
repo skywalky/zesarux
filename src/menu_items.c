@@ -3003,7 +3003,7 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 				}
 
-				if (MACHINE_IS_MSX) {
+				if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 	
 					sprintf (texto_buffer,"Video mode: %s",get_vdp_9918_string_video_mode() );
 					zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);
@@ -3053,7 +3053,7 @@ void menu_debug_tsconf_tbblue_msx_videoregisters(MENU_ITEM_PARAMETERS)
 			alto_ventana=24;
 		}
 
-		else if (MACHINE_IS_MSX) {
+		else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 			alto_ventana=8;
 		}		
 
@@ -7525,7 +7525,7 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				}		
 
 
-				if (MACHINE_IS_MSX) {
+				if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 
 					//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
@@ -7731,7 +7731,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 	}
 
 
-	else if (MACHINE_IS_MSX) {
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 		alto=11;
 	}
 
@@ -7836,7 +7836,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			lin+=3;				
 		}
 
-		if (MACHINE_IS_MSX) {
+		if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 
  			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(vdp_9918a_force_disable_layer_border.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
