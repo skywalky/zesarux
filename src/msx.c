@@ -60,15 +60,7 @@ int msx_memory_slots[4][4];
 
 
 
-//Forzar desde menu a desactivar capas 
-z80_bit msx_force_disable_layer_ula={0};
-z80_bit msx_force_disable_layer_sprites={0};
-z80_bit msx_force_disable_layer_border={0};
 
-
-//Forzar a dibujar capa con color fijo, para debug
-z80_bit msx_reveal_layer_ula={0};
-z80_bit msx_reveal_layer_sprites={0};
 
 const char *msx_string_memory_type_rom="ROM";
 const char *msx_string_memory_type_ram="RAM";
@@ -445,7 +437,7 @@ void scr_refresca_pantalla_y_border_msx_no_rainbow(void)
 
  
 
-    if (border_enabled.v && msx_force_disable_layer_border.v==0) {
+    if (border_enabled.v && vdp_9918a_force_disable_layer_border.v==0) {
             //ver si hay que refrescar border
             if (modificado_border.v)
             {
@@ -456,11 +448,11 @@ void scr_refresca_pantalla_y_border_msx_no_rainbow(void)
     }
 
 
-    if (msx_force_disable_layer_ula.v==0) {
+    if (vdp_9918a_force_disable_layer_ula.v==0) {
 
         //Capa activada. Pero tiene reveal?
 
-        if (msx_reveal_layer_ula.v) {
+        if (vdp_9918a_reveal_layer_ula.v) {
             //En ese caso, poner fondo tramado
             int x,y;
             for (y=0;y<192;y++) {
@@ -490,7 +482,7 @@ void scr_refresca_pantalla_y_border_msx_no_rainbow(void)
 
 
 
-    if (msx_force_disable_layer_sprites.v==0) {
+    if (vdp_9918a_force_disable_layer_sprites.v==0) {
         vdp_9918a_render_sprites_no_rainbow(msx_vram_memory);
     }
         
@@ -585,157 +577,28 @@ int da_amplitud_speaker_msx(void)
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 //Almacenaje temporal de render de la linea actual
 z80_int msx_scanline_buffer[512];
 
-
-
-//Guardar en buffer rainbow la linea actual. Para MSX. solo display
-//Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
-//en cambio, si border esta activado, la primera linea del buffer sera de border
-void screen_store_scanline_rainbow_solo_display_msx(void)
-{
-
-
-  //Si en zona pantalla (no border superior ni inferior)
-  if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
-
-
-        //linea en coordenada display (no border) que se debe leer
-        int y_display=t_scanline_draw-screen_indice_inicio_pant;
-
- 
-        //Render pixeles
-        if (msx_force_disable_layer_ula.v==0 && msx_reveal_layer_ula.v==0) {
-            vdp_9918a_render_rainbow_display_line(y_display,msx_scanline_buffer,msx_vram_memory);
-        }
-
-        else {
-            //Capa desactivada o reveal
-            //Nos ubicamos en zona central
-            int inicio_buffer=screen_total_borde_izquierdo;
-
-            int i;
-
-
-
-            for (i=0;i<256;i++) {
-
-                z80_int color=0;
-
-                if (msx_reveal_layer_ula.v) {
-                    int posx=i&1;
-                    int posy=t_scanline_draw&1;
-
-                    int si_blanco_negro=posx ^ posy;
-
-                    //color 0 o 15
-                    color=si_blanco_negro*15;                    
-                }
-
-                msx_scanline_buffer[inicio_buffer+i]=VDP_9918_INDEX_FIRST_COLOR+color;
-            }
-
-        }
-
-
-
-
-
-        //Render sprites
-        if (msx_force_disable_layer_sprites.v==0) {
-            vdp_9918a_render_rainbow_sprites_line(y_display,msx_scanline_buffer,msx_vram_memory);
-        }
-
-
-        
-
-  }    
-
-}
-
-
-
-
-
-
-void screen_store_scanline_rainbow_solo_border_msx_section(z80_int *buffer,int lenght)
-{
-    int i;
-
-    z80_byte border_color=vdp_9918a_get_border_color();
-
-    for (i=0;i<lenght;i++) {
-        z80_int color_final=VDP_9918_INDEX_FIRST_COLOR+border_color;
-
-        if (msx_force_disable_layer_border.v) color_final=VDP_9918_INDEX_FIRST_COLOR; //color 0 de su paleta de colores
-
-        *buffer=color_final;
-        buffer++;
-    }
-}
-
-
-//Nota: no se va a tener en cuenta dibujado completamente real, es decir, que el electron empieza donde la zona de pantalla,
-//a la derecha del borde izquierdo,
-//sino que cada scanline empieza a la izquierda del borde izquierdo
-void screen_store_scanline_rainbow_solo_border_msx(void)
-{
-
-    
-
-	int ancho_pantalla=256;
-
-    //zona de border superior o inferior. Dibujar desde posicion x donde acaba el ancho izquierdo de borde, linea horizontal
-	//hasta derecha del todo, y luego trozo de ancho izquiero del borde de linea siguiente
-    if ( (t_scanline_draw>=screen_invisible_borde_superior && t_scanline_draw<screen_indice_inicio_pant) ||
-             (t_scanline_draw>=screen_indice_fin_pant && t_scanline_draw<screen_indice_fin_pant+screen_total_borde_inferior)
-	   ) {
- 
-
-        screen_store_scanline_rainbow_solo_border_msx_section(msx_scanline_buffer,
-            screen_total_borde_izquierdo+ancho_pantalla+screen_total_borde_derecho);
-		
-    }
-
-        //zona de border + pantalla + border
-
-    else if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
-
-        z80_int *buffer_destino;
-
-        //Borde izquierdo
-        screen_store_scanline_rainbow_solo_border_msx_section(msx_scanline_buffer,screen_total_borde_izquierdo);
-
-        //Borde detecho
-        int ancho_border_derecho=screen_total_borde_derecho;
-
-        //laterales. En modo 0, 40x24, border derecho es 16 pixeles mas ancho
-        z80_byte video_mode=vdp_9918a_get_video_mode();        
-
-        if (video_mode==4) {
-            ancho_pantalla -=16;
-            ancho_border_derecho +=16*zoom_x;
-        }
-
-
-        screen_store_scanline_rainbow_solo_border_msx_section(&msx_scanline_buffer[screen_total_borde_izquierdo+ancho_pantalla],
-            ancho_border_derecho);
-
-    }
-
-
-
-
-
-}
 
 void screen_store_scanline_rainbow_msx_border_and_display(void) 
 {
 
     //Renderizar zonas de border y display
-    screen_store_scanline_rainbow_solo_border_msx();
-    screen_store_scanline_rainbow_solo_display_msx();
+    screen_store_scanline_rainbow_solo_border_vdp_9918a(msx_scanline_buffer);
+    screen_store_scanline_rainbow_solo_display_vdp_9918a(msx_scanline_buffer,msx_vram_memory);
 
 
     //Y transferir a rainbow buffer

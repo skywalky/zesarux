@@ -59,6 +59,35 @@ extern void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline
 
 extern void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer,z80_byte *vram);
 
+
+extern z80_bit vdp_9918a_force_disable_layer_ula;
+extern z80_bit vdp_9918a_force_disable_layer_sprites;
+extern z80_bit vdp_9918a_force_disable_layer_border;
+
+
+//Forzar a dibujar capa con color fijo, para debug
+extern z80_bit vdp_9918a_reveal_layer_ula;
+extern z80_bit vdp_9918a_reveal_layer_sprites;
+
+
+#define VDP_9918A_LEFT_BORDER_NO_ZOOM 48
+#define VDP_9918A_RIGHT_BORDER_NO_ZOOM 48
+
+#define VDP_9918A_TOP_BORDER_NO_ZOOM 56
+#define VDP_9918A_BOTTOM_BORDER_NO_ZOOM 56
+
+#define VDP_9918A_ANCHO_PANTALLA 256
+#define VDP_9918A_ALTO_PANTALLA 192
+
+
+#define VDP_9918A_TOP_BORDER VDP_9918A_TOP_BORDER_NO_ZOOM*zoom_y
+
+#define VDP_9918A_LEFT_BORDER VDP_9918A_LEFT_BORDER_NO_ZOOM*zoom_x
+
+
+#define VDP_9918A_BOTTOM_BORDER BOTTOM_BORDER_NO_ZOOM*zoom_y
+
+
 #define VDP_9918A_MAX_SPRITES 32
 
 #endif

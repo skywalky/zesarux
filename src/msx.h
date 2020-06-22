@@ -60,32 +60,8 @@ extern void scr_refresca_pantalla_y_border_msx(void);
 extern char *msx_get_string_memory_type(int tipo);
 
 
-extern z80_bit msx_force_disable_layer_ula;
-extern z80_bit msx_force_disable_layer_sprites;
-extern z80_bit msx_force_disable_layer_border;
 
 
-//Forzar a dibujar capa con color fijo, para debug
-extern z80_bit msx_reveal_layer_ula;
-extern z80_bit msx_reveal_layer_sprites;
-
-
-#define MSX_LEFT_BORDER_NO_ZOOM 48
-#define MSX_RIGHT_BORDER_NO_ZOOM 48
-
-#define MSX_TOP_BORDER_NO_ZOOM 56
-#define MSX_BOTTOM_BORDER_NO_ZOOM 56
-
-#define MSX_ANCHO_PANTALLA 256
-#define MSX_ALTO_PANTALLA 192
-
-
-#define MSX_TOP_BORDER MSX_TOP_BORDER_NO_ZOOM*zoom_y
-
-#define MSX_LEFT_BORDER MSX_LEFT_BORDER_NO_ZOOM*zoom_x
-
-
-#define MSX_BOTTOM_BORDER BOTTOM_BORDER_NO_ZOOM*zoom_y
 
 
 #endif

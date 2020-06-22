@@ -28,7 +28,7 @@
 #include "cpu.h"
 #include "debug.h"
 #include "screen.h"
-#include "msx.h"
+//#include "msx.h"
 
 z80_byte vdp_9918a_registers[8];
 
@@ -46,6 +46,17 @@ z80_byte vdp_9918a_last_vram_bytes[3];
 //int vdp_9918a_last_vram_bytes_counter=0;
 
 z80_int vdp_9918a_last_vram_position;
+
+
+//Forzar desde menu a desactivar capas 
+z80_bit vdp_9918a_force_disable_layer_ula={0};
+z80_bit vdp_9918a_force_disable_layer_sprites={0};
+z80_bit vdp_9918a_force_disable_layer_border={0};
+
+
+//Forzar a dibujar capa con color fijo, para debug
+z80_bit vdp_9918a_reveal_layer_ula={0};
+z80_bit vdp_9918a_reveal_layer_sprites={0};
 
 
 void vdp_9918a_out_vram_data(z80_byte *vram_memory,z80_byte value)
@@ -177,10 +188,10 @@ void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value)
 */
 
 //                              01234567890123456789012345678901
-const char *s_msx_video_mode_0="0 - Text 40x24";
-const char *s_msx_video_mode_1="1 - Text 32x24";
-const char *s_msx_video_mode_2="2 - Graphic 256x192";
-const char *s_msx_video_mode_3="3 - Graphic 64x48";
+const char *s_vdp_9918a_video_mode_0="0 - Text 40x24";
+const char *s_vdp_9918a_video_mode_1="1 - Text 32x24";
+const char *s_vdp_9918a_video_mode_2="2 - Graphic 256x192";
+const char *s_vdp_9918a_video_mode_3="3 - Graphic 64x48";
                                                
 
 z80_byte vdp_9918a_get_video_mode(void)
@@ -209,7 +220,7 @@ char *get_vdp_9918_string_video_mode(void)
 
 
 	//Por defecto
-	const char *string_mode=s_msx_video_mode_0;
+	const char *string_mode=s_vdp_9918a_video_mode_0;
 
 
 	z80_byte video_mode=vdp_9918a_get_video_mode();
@@ -218,18 +229,18 @@ char *get_vdp_9918_string_video_mode(void)
 	switch(video_mode) {
 
 		case 0:
-            string_mode=s_msx_video_mode_1;
+            string_mode=s_vdp_9918a_video_mode_1;
         break;
 
 
 		case 1:
 
-			string_mode=s_msx_video_mode_2;
+			string_mode=s_vdp_9918a_video_mode_2;
 		break;
 
 
 		case 2:
-			string_mode=s_msx_video_mode_3;
+			string_mode=s_vdp_9918a_video_mode_3;
 		break;
     }
 
@@ -749,7 +760,7 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 
                                                     z80_byte color_sprite=color;
 
-                                                    if (msx_reveal_layer_sprites.v) {
+                                                    if (vdp_9918a_reveal_layer_sprites.v) {
                                                         int posx=pos_x_final&1;
                                                         int posy=pos_y_final&1;
 
@@ -802,7 +813,7 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 
                                                 z80_byte color_sprite=color;
 
-                                                if (msx_reveal_layer_sprites.v) {
+                                                if (vdp_9918a_reveal_layer_sprites.v) {
                                                     int posx=pos_x_final&1;
                                                     int posy=pos_y_final&1;
 
@@ -848,7 +859,7 @@ void vdp_9918a_refresca_border(void)
 
 
 	//Top border cambia en spectrum y zx8081 y ace
-	int topborder=MSX_TOP_BORDER;
+	int topborder=VDP_9918A_TOP_BORDER;
 	
 
 	//color +=spectrum_palette_offset;
@@ -856,15 +867,15 @@ void vdp_9918a_refresca_border(void)
 
         //parte superior
         for (y=0;y<topborder;y++) {
-                for (x=0;x<MSX_ANCHO_PANTALLA*zoom_x+MSX_LEFT_BORDER*2;x++) {
+                for (x=0;x<VDP_9918A_ANCHO_PANTALLA*zoom_x+VDP_9918A_LEFT_BORDER*2;x++) {
                                 scr_putpixel(x,y,VDP_9918_INDEX_FIRST_COLOR+color);
                 }
         }
 
         //parte inferior
-        for (y=0;y<MSX_BOTTOM_BORDER;y++) {
-                for (x=0;x<MSX_ANCHO_PANTALLA*zoom_x+MSX_LEFT_BORDER*2;x++) {
-                                scr_putpixel(x,topborder+y+MSX_ALTO_PANTALLA*zoom_y,VDP_9918_INDEX_FIRST_COLOR+color);
+        for (y=0;y<VDP_9918A_BOTTOM_BORDER;y++) {
+                for (x=0;x<VDP_9918A_ANCHO_PANTALLA*zoom_x+VDP_9918A_LEFT_BORDER*2;x++) {
+                                scr_putpixel(x,topborder+y+VDP_9918A_ALTO_PANTALLA*zoom_y,VDP_9918_INDEX_FIRST_COLOR+color);
 
 
                 }
@@ -875,8 +886,8 @@ void vdp_9918a_refresca_border(void)
 
 
 
-        for (y=0;y<MSX_ALTO_PANTALLA*zoom_y;y++) {
-                for (x=0;x<MSX_LEFT_BORDER;x++) {
+        for (y=0;y<VDP_9918A_ALTO_PANTALLA*zoom_y;y++) {
+                for (x=0;x<VDP_9918A_LEFT_BORDER;x++) {
                         scr_putpixel(x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
                 }
 
@@ -884,8 +895,8 @@ void vdp_9918a_refresca_border(void)
 
         }
 
-        int ancho_pantalla=MSX_ANCHO_PANTALLA;
-        int ancho_border_derecho=MSX_LEFT_BORDER;
+        int ancho_pantalla=VDP_9918A_ANCHO_PANTALLA;
+        int ancho_border_derecho=VDP_9918A_LEFT_BORDER;
 
         //laterales. En modo 0, 40x24, border derecho es 16 pixeles mas ancho
         z80_byte video_mode=vdp_9918a_get_video_mode();        
@@ -895,10 +906,10 @@ void vdp_9918a_refresca_border(void)
             ancho_border_derecho +=16*zoom_x;
         }
 
-        for (y=0;y<MSX_ALTO_PANTALLA*zoom_y;y++) {
+        for (y=0;y<VDP_9918A_ALTO_PANTALLA*zoom_y;y++) {
 
                 for (x=0;x<ancho_border_derecho;x++) {
-                        scr_putpixel(MSX_LEFT_BORDER+ancho_pantalla*zoom_x+x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
+                        scr_putpixel(VDP_9918A_LEFT_BORDER+ancho_pantalla*zoom_x+x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
                 }                
 
         }
@@ -1469,7 +1480,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
                                                     z80_byte color_sprite=color;
 
-                                                    if (msx_reveal_layer_sprites.v) {
+                                                    if (vdp_9918a_reveal_layer_sprites.v) {
                                                         int posx=pos_x_final&1;
                                                         int posy=scanline&1;
 
@@ -1535,7 +1546,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
                                                 z80_byte color_sprite=color;
 
-                                                if (msx_reveal_layer_sprites.v) {
+                                                if (vdp_9918a_reveal_layer_sprites.v) {
                                                     int posx=pos_x_final&1;
                                                     int posy=scanline&1;
 
@@ -1608,5 +1619,145 @@ void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer
             scanline_buffer[screen_total_borde_izquierdo+i]=color_pixel;
         }
     }
+
+}
+
+
+
+
+
+void screen_store_scanline_rainbow_solo_border_vdp_9918a_section(z80_int *buffer,int lenght)
+{
+    int i;
+
+    z80_byte border_color=vdp_9918a_get_border_color();
+
+    for (i=0;i<lenght;i++) {
+        z80_int color_final=VDP_9918_INDEX_FIRST_COLOR+border_color;
+
+        if (vdp_9918a_force_disable_layer_border.v) color_final=VDP_9918_INDEX_FIRST_COLOR; //color 0 de su paleta de colores
+
+        *buffer=color_final;
+        buffer++;
+    }
+}
+
+
+//Nota: no se va a tener en cuenta dibujado completamente real, es decir, que el electron empieza donde la zona de pantalla,
+//a la derecha del borde izquierdo,
+//sino que cada scanline empieza a la izquierda del borde izquierdo
+void screen_store_scanline_rainbow_solo_border_vdp_9918a(z80_int *scanline_buffer)
+{
+
+    
+
+	int ancho_pantalla=256;
+
+    //zona de border superior o inferior. Dibujar desde posicion x donde acaba el ancho izquierdo de borde, linea horizontal
+	//hasta derecha del todo, y luego trozo de ancho izquiero del borde de linea siguiente
+    if ( (t_scanline_draw>=screen_invisible_borde_superior && t_scanline_draw<screen_indice_inicio_pant) ||
+             (t_scanline_draw>=screen_indice_fin_pant && t_scanline_draw<screen_indice_fin_pant+screen_total_borde_inferior)
+	   ) {
+ 
+
+        screen_store_scanline_rainbow_solo_border_vdp_9918a_section(scanline_buffer,
+            screen_total_borde_izquierdo+ancho_pantalla+screen_total_borde_derecho);
+		
+    }
+
+        //zona de border + pantalla + border
+
+    else if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
+
+        z80_int *buffer_destino;
+
+        //Borde izquierdo
+        screen_store_scanline_rainbow_solo_border_vdp_9918a_section(scanline_buffer,screen_total_borde_izquierdo);
+
+        //Borde detecho
+        int ancho_border_derecho=screen_total_borde_derecho;
+
+        //laterales. En modo 0, 40x24, border derecho es 16 pixeles mas ancho
+        z80_byte video_mode=vdp_9918a_get_video_mode();        
+
+        if (video_mode==4) {
+            ancho_pantalla -=16;
+            ancho_border_derecho +=16*zoom_x;
+        }
+
+
+        screen_store_scanline_rainbow_solo_border_vdp_9918a_section(&scanline_buffer[screen_total_borde_izquierdo+ancho_pantalla],
+            ancho_border_derecho);
+
+    }
+
+
+
+
+
+}
+
+
+//Guardar en buffer rainbow la linea actual. Para MSX. solo display
+//Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
+//en cambio, si border esta activado, la primera linea del buffer sera de border
+void screen_store_scanline_rainbow_solo_display_vdp_9918a(z80_int *scanline_buffer,z80_byte *vram_memory_pointer)
+{
+
+
+  //Si en zona pantalla (no border superior ni inferior)
+  if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
+
+
+        //linea en coordenada display (no border) que se debe leer
+        int y_display=t_scanline_draw-screen_indice_inicio_pant;
+
+ 
+        //Render pixeles
+        if (vdp_9918a_force_disable_layer_ula.v==0 && vdp_9918a_reveal_layer_ula.v==0) {
+            vdp_9918a_render_rainbow_display_line(y_display,scanline_buffer,vram_memory_pointer);
+        }
+
+        else {
+            //Capa desactivada o reveal
+            //Nos ubicamos en zona central
+            int inicio_buffer=screen_total_borde_izquierdo;
+
+            int i;
+
+
+
+            for (i=0;i<256;i++) {
+
+                z80_int color=0;
+
+                if (vdp_9918a_reveal_layer_ula.v) {
+                    int posx=i&1;
+                    int posy=t_scanline_draw&1;
+
+                    int si_blanco_negro=posx ^ posy;
+
+                    //color 0 o 15
+                    color=si_blanco_negro*15;                    
+                }
+
+                scanline_buffer[inicio_buffer+i]=VDP_9918_INDEX_FIRST_COLOR+color;
+            }
+
+        }
+
+
+
+
+
+        //Render sprites
+        if (vdp_9918a_force_disable_layer_sprites.v==0) {
+            vdp_9918a_render_rainbow_sprites_line(y_display,scanline_buffer,vram_memory_pointer);
+        }
+
+
+        
+
+  }    
 
 }
