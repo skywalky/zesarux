@@ -469,8 +469,9 @@ char *array_fabricantes[]={
         "NedoPC",
   "TS Labs",
 	"VTrucco/FB Labs",
-	"Jupiter Cantab"
-        "Ascii Corp"
+	"Jupiter Cantab",
+        "Ascii Corp",
+        "Coleco Industries"
         
 };
 
@@ -492,14 +493,15 @@ char *array_fabricantes_hotkey[]={
         "TS ~~Labs",
         "~~VTrucco/FB Labs",
         "J~~upiter Cantab",
-        "Ascii C~~orp"
+        "Ascii C~~orp",
+        "Coleco In~~dustries"
         
 
 
 };
 
 //Si letra es espacio->no hay letra
-char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvuo";
+char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvuod";
 
 
 
@@ -527,6 +529,10 @@ int array_maquinas_microdigital_electronica[]={
 
 int array_maquinas_ascii_corp[]={
 	MACHINE_ID_MSX1,255
+};
+
+int array_maquinas_coleco_industries[]={
+	MACHINE_ID_COLECO,255
 };
 
 int array_maquinas_amstrad[]={
@@ -604,6 +610,10 @@ int *return_maquinas_fabricante(int fabricante)
 		case FABRICANTE_ASCII_CORP:
 			return array_maquinas_ascii_corp;
 		break;                
+
+		case FABRICANTE_COLECO_INDUSTRIES:
+			return array_maquinas_coleco_industries;
+		break;    
 
 		case FABRICANTE_AMSTRAD:
 			return array_maquinas_amstrad;
@@ -709,6 +719,10 @@ int return_fabricante_maquina(int maquina)
                 case MACHINE_ID_CPC_4128:
 			return FABRICANTE_AMSTRAD;
 		break;
+
+                case MACHINE_ID_COLECO:
+			return FABRICANTE_COLECO_INDUSTRIES;
+		break;                   
 
                 case MACHINE_ID_MSX1:
 			return FABRICANTE_ASCII_CORP;
@@ -4905,7 +4919,7 @@ int quickload_continue(char *nombre) {
 	else if (
                 !util_compare_file_extension(nombre,"rom")
         ) {
-		//Aqui el autoload da igual. cambiamos siempre a cpc si conviene
+		//Aqui el autoload da igual. cambiamos siempre a msx si conviene
                 if (!MACHINE_IS_MSX) {
 			current_machine_type=MACHINE_ID_MSX1;
                         set_machine(NULL);
@@ -4922,6 +4936,28 @@ int quickload_continue(char *nombre) {
                 return 0;
 
         }        
+
+	//Cartuchos de Coleco
+	else if (
+                !util_compare_file_extension(nombre,"col")
+        ) {
+		//Aqui el autoload da igual. cambiamos siempre a coleco si conviene
+                if (!MACHINE_IS_COLECO) {
+			current_machine_type=MACHINE_ID_COLECO;
+                        set_machine(NULL);
+
+                                //establecer parametros por defecto. Incluido quitar slots de memoria
+                           set_machine_params();
+
+                          reset_cpu();
+                }
+
+                coleco_insert_rom_cartridge(nombre);
+
+
+                return 0;
+
+        }           
 
 
 	//eprom cards de Z88
@@ -9860,6 +9896,7 @@ int get_machine_id_by_name(char *machine_name)
                                 else if (!strcasecmp(machine_name,"MK14")) return_machine=MACHINE_ID_MK14_STANDARD;
                                 
                                 else if (!strcasecmp(machine_name,"MSX1")) return_machine=MACHINE_ID_MSX1;
+                                else if (!strcasecmp(machine_name,"COLECO")) return_machine=MACHINE_ID_COLECO;
                                 else {
                                         debug_printf (VERBOSE_ERR,"Unknown machine %s",machine_name);
                                         return_machine=-1;

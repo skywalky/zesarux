@@ -53,6 +53,7 @@
 #include "settings.h"
 #include "vdp_9918a.h"
 #include "msx.h"
+#include "coleco.h"
 
 //Incluimos estos dos para la funcion de fade out
 #ifdef COMPILE_XWINDOWS
@@ -221,7 +222,7 @@ total_palette_colours total_palette_colours_array[TOTAL_PALETAS_COLORES]={
 	{"Sam Coupe","Sam 128 colour palette",SAM_INDEX_FIRST_COLOR,SAM_TOTAL_PALETTE_COLOURS},
 	{"TBBlue RGB9","TBBlue 512 colour palette",RGB9_INDEX_FIRST_COLOR,RGB9_TOTAL_PALETTE_COLOURS},
 	{"TSConf","TSConf 15 bit palette",TSCONF_INDEX_FIRST_COLOR,TSCONF_TOTAL_PALETTE_COLOURS},
-	{"MSX","16 colour standard",VDP_9918_INDEX_FIRST_COLOR,VDP_9918_TOTAL_PALETTE_COLOURS}
+	{"VDP9918A","16 colour standard",VDP_9918_INDEX_FIRST_COLOR,VDP_9918_TOTAL_PALETTE_COLOURS}
 };
 
 

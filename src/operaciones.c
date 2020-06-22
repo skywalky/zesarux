@@ -75,6 +75,7 @@
 #include "datagear.h"
 #include "hilow.h"
 #include "msx.h"
+#include "coleco.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -1091,6 +1092,16 @@ z80_byte fetch_opcode_sam(void)
 }
 
 
+z80_byte fetch_opcode_coleco(void)
+{
+#ifdef EMULATE_VISUALMEM
+	set_visualmemopcodebuffer(reg_pc);
+#endif
+
+	return peek_byte_no_time (reg_pc);
+}
+
+
 z80_byte fetch_opcode_msx(void)
 {
 #ifdef EMULATE_VISUALMEM
@@ -1763,6 +1774,98 @@ z80_byte peek_byte_msx1(z80_int dir)
 
 
 	return peek_byte_no_time_msx1(dir);
+
+}
+
+
+
+
+void poke_byte_no_time_coleco(z80_int dir,z80_byte valor)
+{
+
+
+	z80_byte *puntero_memoria;
+	int tipo;
+
+	puntero_memoria=coleco_return_segment_address(dir,&tipo);
+
+	//Si esta vacio o es ROM, no hacer nada. O sea, si no es RAM
+	if (tipo!=MSX_SLOT_MEMORY_TYPE_RAM) return;
+
+	else {
+			
+#ifdef EMULATE_VISUALMEM
+
+		set_visualmembuffer(dir);
+
+#endif
+
+		*puntero_memoria=valor;	
+
+	}
+
+
+}
+
+void poke_byte_coleco(z80_int dir,z80_byte valor)
+{
+/*
+#ifdef EMULATE_CONTEND
+        if ( (dir&49152)==16384) {
+                t_estados += contend_table[ t_estados ];
+        }
+#endif
+*/
+
+	//Y sumamos estados normales
+	t_estados += 3;
+
+
+	poke_byte_no_time_coleco(dir,valor);
+}
+
+
+
+
+z80_byte peek_byte_no_time_coleco(z80_int dir)
+{
+#ifdef EMULATE_VISUALMEM
+	set_visualmemreadbuffer(dir);
+#endif
+
+		//z80_byte *coleco_return_segment_address(z80_int direccion,int *tipo)
+
+		z80_byte *puntero_memoria;
+		int tipo;
+
+		puntero_memoria=coleco_return_segment_address(dir,&tipo);
+
+		//Si esta vacio, retornar 0 o 255???
+		if (tipo==MSX_SLOT_MEMORY_TYPE_EMPTY) return 255;
+
+        else return *puntero_memoria;
+}
+
+
+z80_byte peek_byte_coleco(z80_int dir)
+{
+
+/*
+#ifdef EMULATE_CONTEND
+        if ( (dir&49152)==16384) {
+		//printf ("%d\n",t_estados);
+                t_estados += contend_table[ t_estados ];
+        }
+#endif
+*/
+
+        t_estados +=3;
+
+
+
+
+
+	return peek_byte_no_time_coleco(dir);
 
 }
 
@@ -7042,6 +7145,155 @@ z80_byte lee_puerto_msx1(z80_byte puerto_h,z80_byte puerto_l)
   //ula_contend_port_early( port );
   //ula_contend_port_late( port );
   z80_byte valor = lee_puerto_msx1_no_time( puerto_h, puerto_l );
+
+  t_estados++;
+
+  return valor;
+
+}
+
+
+void out_port_coleco_no_time(z80_int puerto,z80_byte value)
+{
+
+	debug_fired_out=1;
+        //Los OUTS los capturan los diferentes interfaces que haya conectados, por tanto no hacer return en ninguno, para que se vayan comprobando
+        //uno despues de otro
+	z80_byte puerto_l=puerto&255;
+	z80_byte puerto_h=(puerto>>8)&0xFF;
+
+	//printf ("Out coleco port: %04XH value: %02XH char: %c PC=%04XH\n",puerto,value,
+	//  (value>=32 && value<=126 ? value : '?'),reg_pc );
+
+
+/*
+	printf ("Out coleco port: %04XH value: %02XH char: %c\n",puerto,value,
+	  (value>=32 && value<=126 ? value : '?') );
+
+	if (puerto_l==0xA8) printf ("Puerto PPI Port R/W Port A\n");
+	if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
+	if (puerto_l==0x99) printf ("VDP Command and status register\n");*/
+
+
+	//if (puerto_l==0x98) printf ("%c",
+	//  (value>=32 && value<=126 ? value : '?') );
+
+	if (puerto_l==0x98) {
+		//printf ("VDP Video Ram Data\n");
+		coleco_out_port_vdp_data(value);
+	}
+
+	if (puerto_l==0x99) {
+		//printf ("VDP Command and status register\n");	
+		coleco_out_port_vdp_command_status(value);  
+	}
+
+	if (puerto_l>=0x9A && puerto_l<0xA0) {
+		printf ("Out port possibly vdp. Port %04XH value %02XH\n",puerto,value);
+	}
+
+	if (puerto_l>=0xA0 && puerto_l<=0xA7) {
+		coleco_out_port_psg(puerto_l,value);
+	}	
+
+	if (puerto_l>=0xA8 && puerto_l<=0xAB) {
+		coleco_out_port_ppi(puerto_l,value);
+	}
+
+}
+
+void out_port_coleco(z80_int puerto,z80_byte value)
+{
+  ula_contend_port_early( puerto );
+  out_port_coleco_no_time(puerto,value);
+  ula_contend_port_late( puerto ); t_estados++;
+}
+
+
+//Devuelve valor puerto para maquinas Coleco
+z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h,z80_byte puerto_l)
+{
+
+	debug_fired_in=1;
+	//extern z80_byte in_port_ay(z80_int puerto);
+	//65533 o 49149
+	//FFFDh (65533), BFFDh (49149)
+
+	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+
+
+	//printf ("Lee puerto coleco %04XH PC=%04XH\n",puerto,reg_pc);
+
+	//if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
+	//if (puerto_l==0x99) printf ("VDP Command and status register\n");	
+
+
+	//A8. 
+	//if (puerto==0xa8) return 0x50; //temporal
+
+	if (puerto_l==0x98) {
+		//printf ("VDP Video Ram Data IN\n");
+		return coleco_in_port_vdp_data();
+	}	
+
+	if (puerto_l==0x99) {
+		//printf ("VDP Status IN\n");
+		return coleco_in_port_vdp_status();
+	}		
+
+	if (puerto_l>=0xA8 && puerto_l<=0xAB) {
+		return coleco_in_port_ppi(puerto_l);
+	}
+
+
+	//if (puerto_l==0xA0 && ay_3_8912_registro_sel[0]==14) { 
+	if (puerto_l==0xA2) {
+		//printf ("reading from psg\n");
+		//14 o 15? cual? en teoria el 14
+		//if (ay_3_8912_registro_sel[0]==15 || ay_3_8912_registro_sel[0]==14) { 	
+		if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==14) { 				
+			//printf ("read tape\n");
+			//sleep(1);
+			z80_byte valor=255;
+			if (realtape_inserted.v && realtape_playing.v) {
+				//printf ("%d ",realtape_last_value);
+					if (realtape_last_value>=realtape_volumen) { //-50
+							valor=valor|128;
+							//printf ("1 \n");
+							//valor=255;
+					}
+					else {
+							valor=(valor & (255-128));
+							//printf ("0 \n");
+							//valor=0;
+					}
+			}	
+			//printf ("%d \n",valor);
+			return valor;
+		}
+
+		//Registro 15 nada de momento
+		else if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==15) { 		
+			return 255;
+		}
+
+		else {
+			return in_port_ay(0xFF);
+		}
+	}
+
+
+	return 255;
+ 
+	
+}
+
+z80_byte lee_puerto_coleco(z80_byte puerto_h,z80_byte puerto_l)
+{
+  z80_int port=value_8_to_16(puerto_h,puerto_l);
+  //ula_contend_port_early( port );
+  //ula_contend_port_late( port );
+  z80_byte valor = lee_puerto_coleco_no_time( puerto_h, puerto_l );
 
   t_estados++;
 

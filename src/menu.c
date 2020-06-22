@@ -102,6 +102,7 @@
 #include "network.h"
 #include "hilow.h"
 #include "msx.h"
+#include "coleco.h"
 
 
 
@@ -15953,13 +15954,19 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 
 }
 
-
+//Comun para coleco y msx
 void menu_msxcart_load(MENU_ITEM_PARAMETERS)
 {
 
         char *filtros[2];
 
-        filtros[0]="rom";
+		if (MACHINE_IS_COLECO) {
+        	filtros[0]="col";
+		}
+
+		else {
+			filtros[0]="rom";
+		}
 
         filtros[1]=0;
 
@@ -16000,7 +16007,12 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
                 reset_menu_overlay_function();
 
 
+				if (MACHINE_IS_MSX) {
                         msx_insert_rom_cartridge(last_msx_cart);
+				}
+				else {
+					coleco_insert_rom_cartridge(last_msx_cart);
+				}
 
                 //restauramos modo normal de texto de menu
                 set_menu_overlay_function(normal_overlay_texto_menu);
@@ -16015,7 +16027,9 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
 
 void menu_msxcart_eject(MENU_ITEM_PARAMETERS)
 {
-	msx_empty_romcartridge_space();
+
+	if (MACHINE_IS_COLECO) coleco_empty_romcartridge_space();
+	else msx_empty_romcartridge_space();
 	menu_generic_message("Eject Cartridge","OK. Cartridge ejected");
 }
 
@@ -16044,7 +16058,12 @@ void menu_msxcart(MENU_ITEM_PARAMETERS)
      				menu_add_item_menu(array_menu_msxcart,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 menu_add_ESC_item(array_menu_msxcart);
 
-                retorno_menu=menu_dibuja_menu(&msxcart_opcion_seleccionada,&item_seleccionado,array_menu_msxcart,"MSX Cartridge" );
+				char window_title[64];
+
+				if (MACHINE_IS_COLECO) strcpy(window_title,"Coleco Cartridge");
+				else strcpy(window_title,"MSX Cartridge");
+
+                retorno_menu=menu_dibuja_menu(&msxcart_opcion_seleccionada,&item_seleccionado,array_menu_msxcart,window_title);
 
                 
 
@@ -16135,6 +16154,13 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_MSX) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_msxcart,NULL,"MSX ~~Cartridge");
+			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"MSX Cartridge Settings");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"MSX Cartridge Settings");
+		}
+
+		if (MACHINE_IS_COLECO) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_msxcart,NULL,"Coleco ~~Cartridge");
 			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
 			menu_add_item_menu_tooltip(array_menu_storage_settings,"MSX Cartridge Settings");
 			menu_add_item_menu_ayuda(array_menu_storage_settings,"MSX Cartridge Settings");

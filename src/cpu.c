@@ -119,6 +119,7 @@
 #include "hilow.h"
 #include "ds1307.h"
 #include "msx.h"
+#include "coleco.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -1066,6 +1067,10 @@ void reset_cpu(void)
 		msx_reset();
 	}
 
+	if (MACHINE_IS_COLECO) {
+		coleco_reset();
+	}	
+
 	t_estados=0;
 	t_scanline=0;
 	t_scanline_draw=0;
@@ -1260,6 +1265,7 @@ char *string_machines_list_description=
 							" CPC4128  Amstrad CPC 4128\n"
 							
 							" MSX1     MSX1\n"
+							" Coleco   Colecovision\n"
 							;
 
 
@@ -2468,6 +2474,7 @@ struct s_machine_names machine_names[]={
                                             {"ZX Spectrum +3 (Spanish)",		MACHINE_ID_SPECTRUM_P3_SPA},
 
 {"MSX1",MACHINE_ID_MSX1},
+{"Coleco",MACHINE_ID_COLECO},
 
                                             {"ZX80",  				120},
                                             {"ZX81",  				121},
@@ -2822,6 +2829,20 @@ void malloc_mem_machine(void) {
 
         }
 
+        else if (MACHINE_IS_COLECO) {
+                //total 64kb 
+                malloc_machine(65536);
+                random_ram(memoria_spectrum+32768,32768);
+
+
+				//y 16kb para vram
+				coleco_alloc_vram_memory();
+
+
+				coleco_init_memory_tables();
+
+        }		
+
 
 	else if (MACHINE_IS_Z88) {
 		//Asignar 4 MB
@@ -2890,6 +2911,7 @@ void set_machine_params(void)
 27=Amstrad +3 - Espa�ol
 
 28-29 Reservado (Spectrum)
+100=colecovision
 110-119 msx:
 110 msx1
 120=zx80 (old 20)
@@ -2994,6 +3016,10 @@ void set_machine_params(void)
 		else if (MACHINE_IS_MSX) {
 			cpu_core_loop_active=CPU_CORE_MSX;
 		}		
+
+		else if (MACHINE_IS_COLECO) {
+			cpu_core_loop_active=CPU_CORE_COLECO;
+		}	
 
 
 		else {
@@ -3360,7 +3386,20 @@ You don't need timings for H/V sync =)
 			
 			screen_testados_linea=228;
 
-		}				
+		}		
+
+		else if (MACHINE_IS_COLECO) {
+			contend_read=contend_read_coleco;
+			contend_read_no_mreq=contend_read_no_mreq_coleco;
+			contend_write_no_mreq=contend_write_no_mreq_coleco;
+
+			ula_contend_port_early=ula_contend_port_early_coleco;
+			ula_contend_port_late=ula_contend_port_late_coleco;
+
+			
+			screen_testados_linea=228;
+
+		}					
 
 		else if (MACHINE_IS_SAM) {
 			contend_read=contend_read_sam;
@@ -3660,6 +3699,17 @@ You don't need timings for H/V sync =)
 								//if (autodetect_rainbow.v) enable_rainbow();
 
 								break;
+
+		case MACHINE_ID_COLECO:
+                poke_byte=poke_byte_coleco;
+                peek_byte=peek_byte_coleco;
+				peek_byte_no_time=peek_byte_no_time_coleco;
+				poke_byte_no_time=poke_byte_no_time_coleco;
+                lee_puerto=lee_puerto_coleco;
+				out_port=out_port_coleco;
+				fetch_opcode=fetch_opcode_coleco;
+				ay_chip_present.v=0;
+        break;
 
 
 		case MACHINE_ID_MSX1:
@@ -4221,6 +4271,10 @@ void rom_load(char *romfilename)
                 case 21:
                 romfilename="pentagon.rom";
                 break;
+
+                case MACHINE_ID_COLECO:
+                romfilename="coleco.rom";
+                break;				
                 
                 case MACHINE_ID_MSX1:
                 romfilename="msx.rom";
@@ -4471,6 +4525,14 @@ Total 20 pages=320 Kb
 
 
                 }
+
+                else if (MACHINE_IS_COLECO) {
+			//coleco 8 kb rom
+                        	leidos=fread(memoria_spectrum,1,8192,ptr_romfile);
+				if (leidos!=8192) {
+				 	cpu_panic("Error loading ROM");
+				}
+		}				
                 
                 else if (MACHINE_IS_MSX1) {
 			//msx 32 kb rom

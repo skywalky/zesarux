@@ -43,6 +43,7 @@
 #include "ql.h"
 #include "settings.h"
 #include "msx.h"
+#include "coleco.h"
 
 
 #include <X11/Xlib.h> // Every Xlib program must include this
@@ -919,7 +920,9 @@ void scrxwindows_refresca_pantalla(void)
 		scr_refresca_pantalla_y_border_msx();
 	}    		
 
-
+	else if (MACHINE_IS_COLECO) {
+		scr_refresca_pantalla_y_border_coleco();
+	}    
 
 	//printf ("%d\n",spectrum_colortable[1]);
 

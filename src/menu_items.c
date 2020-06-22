@@ -105,6 +105,7 @@
 #include "stats.h"
 #include "vdp_9918a.h"
 #include "msx.h"
+#include "coleco.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -10899,7 +10900,7 @@ void menu_debug_sprites_get_palette_name(int paleta, char *s)
 		break;
 
 		case 16:
-			strcpy(s,"MSX");
+			strcpy(s,"VDP9918A");
 		break;
 
 		default:

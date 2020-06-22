@@ -227,6 +227,7 @@ extern z80_byte fetch_opcode_ace(void);
 extern z80_byte fetch_opcode_cpc(void);
 extern z80_byte fetch_opcode_sam(void);
 extern z80_byte fetch_opcode_msx(void);
+extern z80_byte fetch_opcode_coleco(void);
 
 extern void poke_byte_spectrum_48k(z80_int dir,z80_byte valor);
 
@@ -248,6 +249,7 @@ extern void poke_byte_cpc(z80_int dir,z80_byte valor);
 extern void poke_byte_sam(z80_int dir,z80_byte valor);
 extern void poke_byte_tbblue(z80_int dir,z80_byte valor);
 extern void poke_byte_msx1(z80_int dir,z80_byte valor);
+extern void poke_byte_coleco(z80_int dir,z80_byte valor);
 
 extern void poke_byte_no_time_spectrum_48k(z80_int dir,z80_byte valor);
 extern void poke_byte_no_time_spectrum_128k(z80_int dir,z80_byte valor);
@@ -264,7 +266,7 @@ extern void poke_byte_no_time_cpc(z80_int dir,z80_byte valor);
 extern void poke_byte_no_time_sam(z80_int dir,z80_byte valor);
 extern void poke_byte_no_time_tbblue(z80_int dir,z80_byte valor);
 extern void poke_byte_no_time_msx1(z80_int dir,z80_byte valor);
-
+extern void poke_byte_no_time_coleco(z80_int dir,z80_byte valor);
 
 extern void poke_byte_zx81(z80_int dir,z80_byte valor);
 extern z80_byte peek_byte_spectrum_48k(z80_int dir);
@@ -283,6 +285,7 @@ extern z80_byte peek_byte_cpc(z80_int dir);
 extern z80_byte peek_byte_sam(z80_int dir);
 extern z80_byte peek_byte_tbblue(z80_int dir);
 extern z80_byte peek_byte_msx1(z80_int dir);
+extern z80_byte peek_byte_coleco(z80_int dir);
 
 extern z80_byte peek_byte_zx80_no_time(z80_int dir);
 extern z80_byte peek_byte_no_time_spectrum_48k(z80_int dir);
@@ -299,6 +302,7 @@ extern z80_byte peek_byte_no_time_cpc(z80_int dir);
 extern z80_byte peek_byte_no_time_sam(z80_int dir);
 extern z80_byte peek_byte_no_time_tbblue(z80_int dir);
 extern z80_byte peek_byte_no_time_msx1(z80_int dir);
+extern z80_byte peek_byte_no_time_coleco(z80_int dir);
 
 
 extern void poke_byte_chrome(z80_int dir,z80_byte valor);
@@ -499,6 +503,7 @@ extern z80_byte lee_puerto_ace(z80_byte h,z80_byte l);
 extern z80_byte lee_puerto_cpc(z80_byte h,z80_byte l);
 extern z80_byte lee_puerto_sam(z80_byte h,z80_byte l);
 extern z80_byte lee_puerto_msx1(z80_byte puerto_h,z80_byte puerto_l);
+extern z80_byte lee_puerto_coleco(z80_byte puerto_h,z80_byte puerto_l);
 extern z80_byte (*lee_puerto)(z80_byte puerto_h,z80_byte puerto_l);
 
 
@@ -512,6 +517,7 @@ extern void out_port_ace(z80_int puerto,z80_byte value);
 extern void out_port_cpc(z80_int puerto,z80_byte value);
 extern void out_port_sam(z80_int puerto,z80_byte value);
 extern void out_port_msx1(z80_int puerto,z80_byte value);
+extern void out_port_coleco(z80_int puerto,z80_byte value);
 
 extern void out_port_spectrum_no_time(z80_int puerto,z80_byte value);
 

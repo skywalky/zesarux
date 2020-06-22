@@ -377,7 +377,9 @@ void scrsdl_refresca_pantalla(void)
 		scr_refresca_pantalla_y_border_msx();
 	}    
 
-
+	else if (MACHINE_IS_COLECO) {
+		scr_refresca_pantalla_y_border_coleco();
+	}    
 
 
 

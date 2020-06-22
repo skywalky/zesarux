@@ -156,6 +156,13 @@ extern void ula_contend_port_early_msx1( z80_int port );
 extern void ula_contend_port_late_msx1( z80_int port );
 
 
+extern void contend_read_coleco(z80_int direccion,int time);
+extern void contend_read_no_mreq_coleco(z80_int direccion,int time);
+extern void contend_write_no_mreq_coleco(z80_int direccion,int time);
+extern void ula_contend_port_early_coleco( z80_int port );
+extern void ula_contend_port_late_coleco( z80_int port );
+
+
 extern int port_from_ula_48k (z80_int puerto);
 extern int port_from_ula_p2a (z80_int puerto);
 

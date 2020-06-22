@@ -28,6 +28,8 @@ And also:
 * TBBlue/ZX Spectrum Next
 * Jupiter Ace
 * Amstrad CPC 464, CPC 4128
+* MSX1 
+* Colecovision
 
 ZEsarUX source code and binaries are distributed under GNU GPL license. 
 ZEsarUX also includes a folder, "my_soft", which has some programs and data made by me. The entire folder is also covered by the GNU GPL license.
@@ -106,7 +108,8 @@ __FEATURES__
 * TBBlue/ZX Spectrum Next
 * Jupiter Ace
 * Amstrad CPC 464, CPC 4128
-* MSX1 (beta)
+* MSX1 
+* Colecovision
 
 * Is the only emulator for machines: Chloe 140/280, Prism and Chrome
 

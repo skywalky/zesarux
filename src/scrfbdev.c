@@ -464,6 +464,10 @@ void scrfbdev_refresca_pantalla(void)
 	}    
 
 
+	else if (MACHINE_IS_COLECO) {
+		scr_refresca_pantalla_y_border_coleco();
+	}    
+
 
 
 
