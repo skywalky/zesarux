@@ -12339,7 +12339,7 @@ void machine_get_memory_zone_name(int zone, char *name)
 
     case MEMORY_ZONE_COLECO_VRAM:
         if (MACHINE_IS_COLECO) {
-               strcpy(name,"COLECO VRAM"); 
+               strcpy(name,"Coleco VRAM"); 
         }
     break;    
 
