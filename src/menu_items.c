@@ -3152,7 +3152,7 @@ int menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites(void)
 	limite=TSCONF_MAX_SPRITES; //85 sprites max
 
 	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
-	else if (MACHINE_IS_MSX) limite=VDP_9918A_MAX_SPRITES;
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) limite=VDP_9918A_MAX_SPRITES;
 
 	return limite;
 }
@@ -3162,7 +3162,7 @@ int menu_debug_tsconf_tbblue_msx_spritenav_get_total_height_win(void)
 {
 
 	if (MACHINE_IS_TSCONF) return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*2;
-	else if (MACHINE_IS_MSX) return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*2;
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*2;
 	else return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*3;
 
 }
@@ -3311,7 +3311,7 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				
 			}
 
-			if (MACHINE_IS_MSX) {
+			if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 				z80_int sprite_attribute_table=vdp_9918a_get_sprite_attribute_table();
 
 
@@ -3320,10 +3320,16 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 				sprite_attribute_table +=offset_sprite; 
 
-				z80_byte vert_pos=msx_read_vram_byte(sprite_attribute_table);
-				z80_byte horiz_pos=msx_read_vram_byte(sprite_attribute_table+1);
-				z80_byte sprite_name=msx_read_vram_byte(sprite_attribute_table+2);
-				z80_byte attr_color_etc=msx_read_vram_byte(sprite_attribute_table+3);					
+
+				z80_byte (*vram_read_function_pointer)(z80_int address);
+
+				if (MACHINE_IS_MSX) vram_read_function_pointer=msx_read_vram_byte;
+				else vram_read_function_pointer=coleco_read_vram_byte;
+
+				z80_byte vert_pos=vram_read_function_pointer(sprite_attribute_table);
+				z80_byte horiz_pos=vram_read_function_pointer(sprite_attribute_table+1);
+				z80_byte sprite_name=vram_read_function_pointer(sprite_attribute_table+2);
+				z80_byte attr_color_etc=vram_read_function_pointer(sprite_attribute_table+3);					
 
 				vert_pos++;
 
@@ -3505,7 +3511,7 @@ int menu_debug_tsconf_tbblue_msx_tilenav_total_vert(void)
 		if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
 	}
 
-	else if (MACHINE_IS_MSX) { 
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) { 
 		limite_vertical=vdp_9918a_get_tile_heigth()*vdp_9918a_get_tile_width();
 
 		if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) limite_vertical=vdp_9918a_get_tile_heigth();	
@@ -3546,7 +3552,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 		puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
 	}
 
-	else if (MACHINE_IS_MSX) {
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 		msx_pattern_name_table=vdp_9918a_get_pattern_name_table();
 		puntero_tilemap=NULL; //no se usa, pero para evitar warnings del compilador
 	}	
@@ -3582,7 +3588,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 
 	}
 
-	if (MACHINE_IS_MSX) {
+	if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 		tilemap_width=vdp_9918a_get_tile_width();
 	}
 
@@ -3599,7 +3605,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
 		}
 
-		else if (MACHINE_IS_MSX) {
+		else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 			if (tilemap_width==32) {
 				  			 //01234567890123456789012345678901
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30        ");
@@ -3680,7 +3686,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 					else sprintf (dumpmemoria,"   ");
 				}
 
-				else if (MACHINE_IS_MSX) {
+				else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 					current_tile=offset_vertical*tilemap_width;
 					repetir_ancho=tilemap_width;
 
@@ -3761,7 +3767,14 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 					int y=current_tile/tilemap_width;
 					int x=current_tile%tilemap_width; 	
 
-					int tnum=msx_read_vram_byte(msx_pattern_name_table+current_tile);	
+					int tnum;	
+
+					if (MACHINE_IS_MSX) {
+						tnum=msx_read_vram_byte(msx_pattern_name_table+current_tile);	
+					}
+					else {
+						tnum=coleco_read_vram_byte(msx_pattern_name_table+current_tile);	
+					}
 
 					if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v==0) {
 						//Modo lista tiles
@@ -3980,7 +3993,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 		char texto_layer[32];
 
 		//En caso de tbblue y msx, solo hay una capa
-		if (MACHINE_IS_TBBLUE || MACHINE_IS_MSX) texto_layer[0]=0;
+		if (MACHINE_IS_TBBLUE || MACHINE_IS_MSX || MACHINE_IS_COLECO) texto_layer[0]=0;
 
 		else sprintf (texto_layer,"~~Layer %d",menu_debug_tsconf_tbblue_msx_tilenav_current_tilelayer);
 
@@ -3990,7 +4003,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 			if (MACHINE_IS_TSCONF) {
 			total_width=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4;
 			}
-			else if (MACHINE_IS_MSX) {
+			else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
 				//Le ponemos siempre el maximo
 				total_width=40+4; 
 			}			
@@ -21968,6 +21981,7 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_TBBLUE) strcpy(titulo_ventana,"Debug TBBlue");
 		if (MACHINE_IS_MSX) strcpy(titulo_ventana,"Debug MSX");
+		if (MACHINE_IS_COLECO) strcpy(titulo_ventana,"Debug Colecovision");
 
                 retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue_msx,titulo_ventana);
 
