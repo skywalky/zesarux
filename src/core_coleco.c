@@ -53,6 +53,7 @@
 #include "snap_zsf.h"
 #include "zeng.h"
 #include "coleco.h"
+#include "vdp_9918a.h"
 
 
 z80_byte byte_leido_core_coleco;
@@ -182,6 +183,13 @@ void core_coleco_fin_frame_pantalla(void)
 
 				}
 
+				//Si se genera nmi mediante bit 5 de registro vdp 1
+				//VR1
+				//5    IE0        V-Blank Interrupt Enable   (0=Disable, 1=Enable)
+				if (vdp_9918a_registers[1] & 32) {
+					//printf ("Generando nmi\n");
+					generate_nmi();
+				}
 						
 
 

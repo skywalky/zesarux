@@ -1215,7 +1215,7 @@ core_mk14.o: core_mk14.c core_mk14.h scmp.h cpu.h debug.h tape.h audio.h screen.
 core_msx.o: core_msx.c core_msx.h cpu.h debug.h tape.h audio.h screen.h ay38912.h operaciones.h snap.h timer.h menu.h chardetect.h compileoptions.h contend.h snap_zx8081.h utils.h realjoystick.h  settings.h msx.h
 	\$(CC) \$(CFLAGS) -c core_msx.c
 
-core_coleco.o: core_coleco.c core_coleco.h cpu.h debug.h tape.h audio.h screen.h ay38912.h operaciones.h snap.h timer.h menu.h chardetect.h compileoptions.h contend.h snap_zx8081.h utils.h realjoystick.h  settings.h coleco.h
+core_coleco.o: core_coleco.c core_coleco.h cpu.h debug.h tape.h audio.h screen.h ay38912.h operaciones.h snap.h timer.h menu.h chardetect.h compileoptions.h contend.h snap_zx8081.h utils.h realjoystick.h  settings.h coleco.h vdp_9918a.h
 	\$(CC) \$(CFLAGS) -c core_coleco.c
 
 mk14.o: mk14.c mk14.h cpu.h debug.h scmp.h utils.h menu.h

@@ -7221,7 +7221,7 @@ z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//if (puerto==0xa8) return 0x50; //temporal
 
        //temp coleco
-       printf ("In port : %04XH\n",puerto);
+       //printf ("In port : %04XH\n",puerto);
        if (puerto_l==0xBE) {
                //printf ("VDP Video Ram Data IN\n");
                return coleco_in_port_vdp_data();
@@ -7236,8 +7236,13 @@ z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h,z80_byte puerto_l)
        //FC- Reading this port gives the status of controller #1. (farthest from front)
 	   //Temporal fila de teclas
        if (puerto_l==0xFC) {
-               return puerto_49150;
-                       ////puerto_49150    db              255  ; H                J         K      L    Enter ;6
+
+//puerto_63486    db              255  ; 5    4    3    2    1     ;3
+//puerto_61438    db              255  ; 6    7    8    9    0     ;4
+
+				//345 67890
+               return (puerto_61438 & 31) | ((puerto_63486<<3) & (128+64+32) );
+             
        }
 
 
