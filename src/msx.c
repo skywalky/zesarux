@@ -100,8 +100,7 @@ char *msx_get_string_memory_type(int tipo)
 z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)
 {
     int segmento=direccion/16384;
-
-    
+   
     z80_byte slot=msx_ppi_register_a;
 
     int rotar=segmento*2;
@@ -391,7 +390,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 
             //Antes, si es un bloque de 8kb, copiar 8kb bajos en parte alta
             if (tamanyo_archivo==8192) {
-                memcpy(&memoria_spectrum[65536+8192],&memoria_spectrum[65536],8192);
+                memcpy(&memoria_spectrum[65536+16384+8192],&memoria_spectrum[65536+16384],8192);
             }
 
             memcpy(&memoria_spectrum[65536],&memoria_spectrum[65536+16384],16384);
