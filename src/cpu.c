@@ -2474,7 +2474,7 @@ struct s_machine_names machine_names[]={
                                             {"ZX Spectrum +3 (Spanish)",		MACHINE_ID_SPECTRUM_P3_SPA},
 
 {"MSX1",MACHINE_ID_MSX1},
-{"Coleco",MACHINE_ID_COLECO},
+{"ColecoVision",MACHINE_ID_COLECO},
 
                                             {"ZX80",  				120},
                                             {"ZX81",  				121},

@@ -432,4 +432,115 @@ void screen_store_scanline_rainbow_coleco_border_and_display(void)
 
 
 }
+
+
+void coleco_out_port_sound(z80_byte value)
+{
+
+    //Ugly test simulating it with the AY Chip
+
+    if (value & 128) {
+        //|1 |R2|R1|R0|D3|D2|D1|D0|
+        z80_byte sound_register=(value >>4) &7;
+        z80_byte sound_data=value & 15;
+
+        /*
+        1: This denotes that this is a control word
+R2-R0 the register number:
+
+000 Tone 1 Frequency
+001 Tone 1 Volume
+010 Tone 2 Frequency
+011 Tone 2 Volume
+100 Tone 3 Frequency
+101 Tone 3 Volume
+110 Noise Control
+111 Noise Volume
+        */
+
+        int cambio_frecuencia=0;
+        int cambio_volumen=0;
+        //int canal=0;
+        int volumen_final;
+        int frecuencia_final;
+
+        int canal=sound_register/2;
+
+        printf ("Canal: %d\n",canal);
+
+        if (canal==3) {
+            //ruido
+            return;
+        }
+
+        int tipo=sound_register & 1;
+
+        if (tipo==0) {
+            cambio_frecuencia=1;
+            frecuencia_final=sound_data;
+        }
+
+        if (tipo==1) {
+            cambio_volumen=1;
+            volumen_final=15-sound_data;
+        }
+
+        if (cambio_volumen) {
+            out_port_ay(65533,7);
+            out_port_ay(49149,255-1-2-4);
+
+            out_port_ay(65533,8+canal);
+            out_port_ay(49149,volumen_final);            
+        }
+
+        if (cambio_frecuencia) {
+            out_port_ay(65533,7);
+            out_port_ay(49149,255-1-2-4);
+
+            out_port_ay(65533,1+2*canal);
+            out_port_ay(49149,frecuencia_final);            
+        }
+
+
+
+/*
+RO � Ajuste fino del tono, canal A
+R1 � Ajuste aproximado del tono, canal A-
+R2 � Ajuste fino del tono, canal B
+R3 � Ajuste aproximado del tono, canal B
+R4 � Ajuste fino del tono, canal C
+R5 � Ajuste aproximado del tono, canal C
+
+El tono de cada canal es un valor de 12 bits que se forma combinando los bits D3-DO
+del registro de ajuste aproximado y los bits D7-DO del registro de ajuste fino. La uni-
+dad b~sica del tono es la frecuencia de reloj ~ividida por 16 (es decir, 110.83 KHz).
+Como el contador es de 12 bits, se puede g ~erar frecuencias de 27 Hz a 110 KHz.
+
+R6 � Control del generador de ruido, D4-DO
+El periodo del generador de ruido se toma contando los cinco bits inferiores del regis-
+tro de ruido cada periodo del reloj de sonido dividido por 16.
+
+R7 � Control del mezclador y de E/S
+D7 No utilizado
+D6 1=puerta de entrada, 0=puerta de salida
+D5 Ruido en el canal C
+D4 Ruido en el canal B
+D3 Ruido en el canal A
+D2 Tono en el canal C
+D1 Tono en el canal B
+DO Tono en el canal A
+Seccion 30. Informacion de referencia
+309
+Este registro controla la mezcla de ruido y tono para cada canal y la direccion
+puerta de E/S de ocho bits. Un cero en un bit de mezcla indica que la funcion
+activada.
+
+R8 � Control de amplitud del ca~al A
+R9 � Control de amplitud del canal B
+RA � Control de amplitud del canal C
+D4
+*/
+
+    }
+}
 					
