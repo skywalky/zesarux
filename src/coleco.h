@@ -26,14 +26,10 @@
 
 extern z80_byte *coleco_vram_memory;
 
-extern z80_byte coleco_ppi_register_a;
-extern z80_byte coleco_ppi_register_b;
-extern z80_byte coleco_ppi_register_c;
 
-extern z80_byte coleco_keyboard_table[];
 extern z80_byte coleco_read_vram_byte(z80_int address);
 
-extern int coleco_memory_slots[4][4];
+
 
 extern z80_byte *coleco_return_segment_address(z80_int direccion,int *tipo);
 
@@ -47,11 +43,10 @@ extern void coleco_insert_rom_cartridge(char *filename);
 extern void coleco_empty_romcartridge_space(void);
 extern void coleco_out_port_vdp_data(z80_byte value);
 extern void coleco_out_port_vdp_command_status(z80_byte value);
-extern void coleco_out_port_psg(z80_byte puerto_l,z80_byte value);
-extern void coleco_out_port_ppi(z80_byte puerto_l,z80_byte value);
+
 extern z80_byte coleco_in_port_vdp_data(void);
 extern z80_byte coleco_in_port_vdp_status(void);
-extern z80_byte coleco_in_port_ppi(z80_byte puerto_l);
+
 extern void coleco_reset(void);
 extern void coleco_alloc_vram_memory(void);
 extern void coleco_init_memory_tables(void);

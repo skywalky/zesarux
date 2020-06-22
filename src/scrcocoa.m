@@ -70,6 +70,7 @@
 #include "sam.h"
 #include "ql.h"
 #include "msx.h"
+#include "coleco.h"
 
 
 int gArgc;
@@ -2492,6 +2493,10 @@ void scrcocoa_refresca_pantalla(void)
 	else if (MACHINE_IS_MSX) {
 		scr_refresca_pantalla_y_border_msx();
 	}        
+
+	else if (MACHINE_IS_COLECO) {
+		scr_refresca_pantalla_y_border_coleco();
+	}      
 
         //printf ("%d\n",spectrum_colortable[1]);
 

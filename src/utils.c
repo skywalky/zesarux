@@ -108,6 +108,7 @@
 #include "scl2trd.h"
 #include "zip.h"
 #include "msx.h"
+#include "coleco.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -11655,6 +11656,12 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         }
     break;  
 
+    case MEMORY_ZONE_COLECO_VRAM:
+        if (MACHINE_IS_COLECO) {
+              *readwrite=1; 
+              size=16384;  
+        }
+    break;
     
 
   }
@@ -11975,6 +11982,12 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
         }        
     break;
 
+
+    case MEMORY_ZONE_COLECO_VRAM:
+        if (MACHINE_IS_COLECO) {
+                p=&coleco_vram_memory[address];
+        }        
+    break;
 
   }
 
@@ -12323,6 +12336,12 @@ void machine_get_memory_zone_name(int zone, char *name)
                strcpy(name,"MSX All Mem"); 
         }
     break;
+
+    case MEMORY_ZONE_COLECO_VRAM:
+        if (MACHINE_IS_COLECO) {
+               strcpy(name,"COLECO VRAM"); 
+        }
+    break;    
 
   }
 

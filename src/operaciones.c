@@ -1790,7 +1790,7 @@ void poke_byte_no_time_coleco(z80_int dir,z80_byte valor)
 	puntero_memoria=coleco_return_segment_address(dir,&tipo);
 
 	//Si esta vacio o es ROM, no hacer nada. O sea, si no es RAM
-	if (tipo!=MSX_SLOT_MEMORY_TYPE_RAM) return;
+	if (tipo!=COLECO_SLOT_MEMORY_TYPE_RAM) return;
 
 	else {
 			
@@ -1841,7 +1841,7 @@ z80_byte peek_byte_no_time_coleco(z80_int dir)
 		puntero_memoria=coleco_return_segment_address(dir,&tipo);
 
 		//Si esta vacio, retornar 0 o 255???
-		if (tipo==MSX_SLOT_MEMORY_TYPE_EMPTY) return 255;
+		if (tipo==COLECO_SLOT_MEMORY_TYPE_EMPTY) return 255;
 
         else return *puntero_memoria;
 }
@@ -7178,27 +7178,16 @@ void out_port_coleco_no_time(z80_int puerto,z80_byte value)
 	//if (puerto_l==0x98) printf ("%c",
 	//  (value>=32 && value<=126 ? value : '?') );
 
-	if (puerto_l==0x98) {
-		//printf ("VDP Video Ram Data\n");
-		coleco_out_port_vdp_data(value);
-	}
+   
+       if (puerto_l==0xBE) {
+              //printf ("VDP Video Ram Data\n");
+               coleco_out_port_vdp_data(value);
+       }
 
-	if (puerto_l==0x99) {
-		//printf ("VDP Command and status register\n");	
-		coleco_out_port_vdp_command_status(value);  
-	}
-
-	if (puerto_l>=0x9A && puerto_l<0xA0) {
-		printf ("Out port possibly vdp. Port %04XH value %02XH\n",puerto,value);
-	}
-
-	if (puerto_l>=0xA0 && puerto_l<=0xA7) {
-		coleco_out_port_psg(puerto_l,value);
-	}	
-
-	if (puerto_l>=0xA8 && puerto_l<=0xAB) {
-		coleco_out_port_ppi(puerto_l,value);
-	}
+       if (puerto_l==0xBF) {
+               //printf ("VDP Command and status register\n");
+               coleco_out_port_vdp_command_status(value);
+       }
 
 }
 
@@ -7231,56 +7220,27 @@ z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//A8. 
 	//if (puerto==0xa8) return 0x50; //temporal
 
-	if (puerto_l==0x98) {
-		//printf ("VDP Video Ram Data IN\n");
-		return coleco_in_port_vdp_data();
-	}	
+       //temp coleco
+       printf ("In port : %04XH\n",puerto);
+       if (puerto_l==0xBE) {
+               //printf ("VDP Video Ram Data IN\n");
+               return coleco_in_port_vdp_data();
+       }
 
-	if (puerto_l==0x99) {
-		//printf ("VDP Status IN\n");
-		return coleco_in_port_vdp_status();
-	}		
-
-	if (puerto_l>=0xA8 && puerto_l<=0xAB) {
-		return coleco_in_port_ppi(puerto_l);
-	}
+       if (puerto_l==0xBF) {
+               //printf ("VDP Status IN\n");
+               return coleco_in_port_vdp_status();
+       }
 
 
-	//if (puerto_l==0xA0 && ay_3_8912_registro_sel[0]==14) { 
-	if (puerto_l==0xA2) {
-		//printf ("reading from psg\n");
-		//14 o 15? cual? en teoria el 14
-		//if (ay_3_8912_registro_sel[0]==15 || ay_3_8912_registro_sel[0]==14) { 	
-		if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==14) { 				
-			//printf ("read tape\n");
-			//sleep(1);
-			z80_byte valor=255;
-			if (realtape_inserted.v && realtape_playing.v) {
-				//printf ("%d ",realtape_last_value);
-					if (realtape_last_value>=realtape_volumen) { //-50
-							valor=valor|128;
-							//printf ("1 \n");
-							//valor=255;
-					}
-					else {
-							valor=(valor & (255-128));
-							//printf ("0 \n");
-							//valor=0;
-					}
-			}	
-			//printf ("%d \n",valor);
-			return valor;
-		}
+       //FC- Reading this port gives the status of controller #1. (farthest from front)
+	   //Temporal fila de teclas
+       if (puerto_l==0xFC) {
+               return puerto_49150;
+                       ////puerto_49150    db              255  ; H                J         K      L    Enter ;6
+       }
 
-		//Registro 15 nada de momento
-		else if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==15) { 		
-			return 255;
-		}
 
-		else {
-			return in_port_ay(0xFF);
-		}
-	}
 
 
 	return 255;
