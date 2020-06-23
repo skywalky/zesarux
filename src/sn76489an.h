@@ -33,6 +33,20 @@ extern z80_bit sn_chip_present;
 
 extern z80_byte sn_last_audio_channel_frequency;
 
+extern void sn_set_register_port(z80_byte value);
+
+extern void sn_set_value_register(z80_byte value);
+
+extern char da_output_sn(void);
+
+extern void sn_chip_siguiente_ciclo(void);
+
+extern void sn_set_noise_type(z80_byte tipo);
+
+extern void sn_set_volume_noise(z80_byte volume);
+
+extern void sn_set_volume_tone_channel(z80_byte canal,z80_byte volumen_final);
+
 
 //1'7734*1000000 (Hz) en Spectrum
 //En Amstrad, 1 MHz

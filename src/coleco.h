@@ -54,7 +54,7 @@ extern void scr_refresca_pantalla_y_border_coleco(void);
 
 extern char *coleco_get_string_memory_type(int tipo);
 
-
+extern void screen_store_scanline_rainbow_coleco_border_and_display(void);
 
 
 

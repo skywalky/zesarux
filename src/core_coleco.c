@@ -54,6 +54,7 @@
 #include "zeng.h"
 #include "coleco.h"
 #include "vdp_9918a.h"
+#include "sn76489an.h"
 
 
 z80_byte byte_leido_core_coleco;

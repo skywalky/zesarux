@@ -44,6 +44,8 @@ extern z80_byte vdp_9918a_in_vdp_status(void);
 
 extern void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value);
 
+extern void screen_store_scanline_rainbow_vdp_9918a_border_and_display(z80_int *scanline_buffer,z80_byte *vram_memory);
+
 extern int vdp_9918a_get_tile_heigth(void);
 
 extern int vdp_9918a_get_tile_width(void);

@@ -39,12 +39,9 @@ z80_byte *coleco_vram_memory=NULL;
 
 
 
-
-
-
 //slots asignados, y sus 4 segmentos
 //tipos: rom, ram, vacio
-int coleco_memory_slots[4][4];
+//int coleco_memory_slots[4][4];
 
 
 
@@ -222,12 +219,11 @@ When the system finds a header, it selects the ROM slot only on the memory page 
         */
         int offset=32768+bloque*16384;
 		int leidos=fread(&memoria_spectrum[offset],1,16384,ptr_cartridge);
-        if (leidos==16384) {
-            coleco_memory_slots[1][1+bloque]=COLECO_SLOT_MEMORY_TYPE_ROM;
+        if (leidos==16384) { 
+            //coleco_memory_slots[1][1+bloque]=COLECO_SLOT_MEMORY_TYPE_ROM;
             printf ("loaded 16kb bytes of rom at slot 1 block %d\n",bloque);
 
             bloques_totales++;
-
 
         }
         else {
@@ -513,11 +509,7 @@ R2-R0 the register number:
 111 Noise Volume
         */
 
-        int cambio_frecuencia=0;
-        int cambio_volumen=0;
-        //int canal=0;
-        int volumen_final;
-        int frecuencia_final;
+
 
         int canal=sound_register/2;
 
@@ -539,8 +531,6 @@ R2-R0 the register number:
                 //establecer frecuencia ruido
                 sn_set_noise_type(sound_data);
 
-
-
             }
             if (tipo==1) {
                 //Noise volume
@@ -554,71 +544,18 @@ R2-R0 the register number:
         
 
         if (tipo==0) {
-            cambio_frecuencia=1;
-            frecuencia_final=sound_data;
             sn_last_audio_channel_frequency=canal;
+
+            sn_set_register_port(2*canal);
+            sn_set_value_register(sound_data);               
         }
 
         if (tipo==1) {
-            cambio_volumen=1;
-            volumen_final=sound_data;
-        }
-
-        if (cambio_volumen) {
-            sn_set_volume_tone_channel(canal,volumen_final);
-        }
-
-        if (cambio_frecuencia) {
-            //sn_chip_registers[canal*2]=frecuencia_final;
-
-            //int frecuencia=coleco_get_frequency_channel(canal);
-            //coleco_set_sn_freq(canal,frecuencia);
-
-
-            sn_set_register_port(2*canal);
-            sn_set_value_register(frecuencia_final);   
-          
+            sn_set_volume_tone_channel(canal,sound_data);
         }
 
 
 
-/*
-RO � Ajuste fino del tono, canal A
-R1 � Ajuste aproximado del tono, canal A-
-R2 � Ajuste fino del tono, canal B
-R3 � Ajuste aproximado del tono, canal B
-R4 � Ajuste fino del tono, canal C
-R5 � Ajuste aproximado del tono, canal C
-
-El tono de cada canal es un valor de 12 bits que se forma combinando los bits D3-DO
-del registro de ajuste aproximado y los bits D7-DO del registro de ajuste fino. La uni-
-dad b~sica del tono es la frecuencia de reloj ~ividida por 16 (es decir, 110.83 KHz).
-Como el contador es de 12 bits, se puede g ~erar frecuencias de 27 Hz a 110 KHz.
-
-R6 � Control del generador de ruido, D4-DO
-El periodo del generador de ruido se toma contando los cinco bits inferiores del regis-
-tro de ruido cada periodo del reloj de sonido dividido por 16.
-
-R7 � Control del mezclador y de E/S
-D7 No utilizado
-D6 1=puerta de entrada, 0=puerta de salida
-D5 Ruido en el canal C
-D4 Ruido en el canal B
-D3 Ruido en el canal A
-D2 Tono en el canal C
-D1 Tono en el canal B
-DO Tono en el canal A
-Seccion 30. Informacion de referencia
-309
-Este registro controla la mezcla de ruido y tono para cada canal y la direccion
-puerta de E/S de ocho bits. Un cero en un bit de mezcla indica que la funcion
-activada.
-
-R8 � Control de amplitud del ca~al A
-R9 � Control de amplitud del canal B
-RA � Control de amplitud del canal C
-D4
-*/
 
     }
 
