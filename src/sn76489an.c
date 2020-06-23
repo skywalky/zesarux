@@ -233,7 +233,12 @@ z80_byte sn_3_8912_registro_sel;
 
 
 //frecuencia de cada canal
-int sn_freq_tono_A[MAX_SN_CHIPS],sn_freq_tono_B[MAX_SN_CHIPS],sn_freq_tono_C[MAX_SN_CHIPS];
+//int sn_freq_tono_A[MAX_SN_CHIPS];
+int sn_freq_tono_A;
+//int sn_freq_tono_B[MAX_SN_CHIPS];
+int sn_freq_tono_B;
+//int sn_freq_tono_C[MAX_SN_CHIPS];
+int sn_freq_tono_C;
 
 //contador de cada canal... (FRECUENCIA_CONSTANTE_NORMAL_SONIDO/freq_tono)
 int sn_contador_tono_A[MAX_SN_CHIPS],sn_contador_tono_B[MAX_SN_CHIPS],sn_contador_tono_C[MAX_SN_CHIPS];
@@ -562,19 +567,19 @@ void sn_chip_siguiente_ciclo_siguiente(int chip)
 
 	//actualizamos contadores de frecuencias
 	sn_ultimo_valor_tono_A=sn_sine_table[sn_contador_tono_A[chip]];
-	sn_contador_tono_A[chip] +=sn_freq_tono_A[chip];
+	sn_contador_tono_A[chip] +=sn_freq_tono_A;
 	if (sn_contador_tono_A[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
 			sn_contador_tono_A[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 	}
 
 	sn_ultimo_valor_tono_B=sn_sine_table[sn_contador_tono_B[chip]];
-	sn_contador_tono_B[chip] +=sn_freq_tono_B[chip];
+	sn_contador_tono_B[chip] +=sn_freq_tono_B;
 	if (sn_contador_tono_B[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
 			sn_contador_tono_B[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 	}
 
 	sn_ultimo_valor_tono_C=sn_sine_table[sn_contador_tono_C[chip]];
-	sn_contador_tono_C[chip] +=sn_freq_tono_C[chip];
+	sn_contador_tono_C[chip] +=sn_freq_tono_C;
 	if (sn_contador_tono_C[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
 			sn_contador_tono_C[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 	} 
@@ -713,23 +718,23 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 		if (sn_3_8912_registro_sel ==0 || sn_3_8912_registro_sel == 1) {
 			//Canal A
-			//sn_establece_frecuencia_tono(0,&sn_freq_tono_A[sn_chip_selected],&sn_contador_tono_A[sn_chip_selected]);
-			sn_establece_frecuencia_tono(0,&sn_freq_tono_A[sn_chip_selected]);
+			
+			sn_establece_frecuencia_tono(0,&sn_freq_tono_A);
 
 		}
 
 		if (sn_3_8912_registro_sel ==2 || sn_3_8912_registro_sel == 3) {
 			//Canal B
-			//sn_establece_frecuencia_tono(2,&sn_freq_tono_B[sn_chip_selected],&sn_contador_tono_B[sn_chip_selected]);
-			sn_establece_frecuencia_tono(2,&sn_freq_tono_B[sn_chip_selected]);
+			
+			sn_establece_frecuencia_tono(2,&sn_freq_tono_B);
 
 		}
 
 
 		if (sn_3_8912_registro_sel ==4 || sn_3_8912_registro_sel == 5) {
 			//Canal C
-			//sn_establece_frecuencia_tono(4,&sn_freq_tono_C[sn_chip_selected],&sn_contador_tono_C[sn_chip_selected]);
-			sn_establece_frecuencia_tono(4,&sn_freq_tono_C[sn_chip_selected]);
+			
+			sn_establece_frecuencia_tono(4,&sn_freq_tono_C);
 		}
 
 		if (sn_3_8912_registro_sel ==6) {
