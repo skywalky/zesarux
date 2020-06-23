@@ -477,11 +477,15 @@ void coleco_set_sn_freq(int canal,int frecuencia)
     fino=frecuencia & 0xFF;
     aproximado=(frecuencia >>8) & 0xF;
 
-            out_port_sn(65533,2*canal);
-            out_port_sn(49149,fino);      
+    sn_set_channel_fine_tune(canal,fino);
 
-            out_port_sn(65533,1+2*canal);
-            out_port_sn(49149,aproximado);                
+
+            //out_port_sn(65533,2*canal);
+            //out_port_sn(49149,fino);      
+
+    sn_set_channel_aprox_tune(canal,aproximado);
+            //out_port_sn(65533,1+2*canal);
+            //out_port_sn(49149,aproximado);                
 }
 
 int temp_last_coleco_audio_channel=0;
@@ -534,7 +538,7 @@ R2-R0 the register number:
                 //|1 |1 |1 |0 |xx|FB|M1|M0|
                 
                 //establecer frecuencia ruido
-                sn_set_noise_type();
+                sn_set_noise_type(sound_data);
 
 
 

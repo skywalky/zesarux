@@ -222,6 +222,16 @@ z80_byte sn_3_8912_registros[16];
 z80_byte sn_3_8912_registro_sel;
 
 
+/*
+RO � Ajuste fino del tono, canal A (4 low bits)
+R1 � Ajuste aproximado del tono, canal A- (6 high bits)
+R2 � Ajuste fino del tono, canal B
+R3 � Ajuste aproximado del tono, canal B
+R4 � Ajuste fino del tono, canal C
+R5 � Ajuste aproximado del tono, canal C
+*/
+z80_byte sn_tone_channels[6];
+
 
 //frecuencia de cada canal
 //int sn_freq_tono_A[MAX_SN_CHIPS];
@@ -784,14 +794,53 @@ void sn_set_volume_tone_channel(z80_byte canal,z80_byte volumen_final)
 }
 
 //de momento no se establece tipo
-void sn_set_noise_type(void)
+void sn_set_noise_type(z80_byte tipo)
 {
+/*
+               //|1 |1 |1 |0 |xx|FB|M1|M0|
+          M1-M0= mode bits:
+
+00= Fosc/512  Very 'hissy'; like grease frying
+01= Fosc/1024 Slightly lower
+10= Fosc/2048 More of a high rumble
+11= output of tone generator #3
+
+
+				*/
+
 	out_port_sn(65533,6);
-	out_port_sn(49149,15); //mitad del maximo aprox (31/2)
+
+	z80_byte frecuencia_ruido=31;
+
+
+	tipo &=3;
+
+	z80_byte divisor_ruido=tipo+1; //Evitamos divisiones por 0
+
+	frecuencia_ruido /=divisor_ruido;
+
+	out_port_sn(49149,frecuencia_ruido); //mitad del maximo aprox (31/2)
 
                 /*
                 R6 � Control del generador de ruido, D4-DO
 El periodo del generador de ruido se toma contando los cinco bits inferiores del regis-
 tro de ruido cada periodo del reloj de sonido dividido por 16.
                 */	
+}
+
+
+
+void sn_set_channel_fine_tune(z80_byte canal,z80_byte fino)
+{
+
+
+            out_port_sn(65533,2*canal);
+            out_port_sn(49149,fino);   
+}
+
+
+void sn_set_channel_aprox_tune(z80_byte canal,z80_byte aproximado)
+{
+            out_port_sn(65533,1+2*canal);
+            out_port_sn(49149,aproximado);   
 }
