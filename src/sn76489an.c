@@ -212,7 +212,7 @@ short sn_sine_table[FRECUENCIA_CONSTANTE_NORMAL_SONIDO];
 
 
 //16 BYTES Contenido de los registros del chip de sonido
-//z80_byte sn_3_8912_registros[MAX_SN_CHIPS][16];
+
 z80_byte sn_3_8912_registros[16];
 
 //Ultimo registro seleccionado por el puerto 65533
@@ -281,8 +281,10 @@ R7 Volume B
 R8 Volume C
 R9 Noise
 R10 Noise Volume
+
+//Aunque solo uso 10, dejo total 16 
 */
-z80_byte sn_chip_registers[10];
+z80_byte sn_chip_registers[16];
 
 
 
@@ -307,7 +309,7 @@ void init_chip_sn(void)
 	for (r=0;r<16;r++) sn_3_8912_registros[r]=255;
 
 	int tono;
-	for (tono=0;tono<6;tono++) sn_chip_registers[tono]=255;
+	for (tono=0;tono<16;tono++) sn_chip_registers[tono]=255;
 
 
 
@@ -480,9 +482,9 @@ char da_output_sn(void)
 	if (sn_chip_present.v==1) {
 
 
-		valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_A,sn_3_8912_registros[8]);
-		valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_B,sn_3_8912_registros[9]);
-		valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_C,sn_3_8912_registros[10]);
+		valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_A,sn_chip_registers[6]);
+		valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_B,sn_chip_registers[7]);
+		valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_C,sn_chip_registers[8]);
 
 		valor_enviar_sn +=sn_da_output_canal_ruido();
 
@@ -557,11 +559,11 @@ Frecuencia real= X = (CPU Speed / 32) / Desired frequency
 
 
 	int freq_temp;
-	//freq_temp=sn_3_8912_registros[indice]+256*(sn_3_8912_registros[indice+1] & 0x0F);
+	
 
 	freq_temp=(sn_chip_registers[indice] & 0xF) | ((sn_chip_registers[indice+1] & 63)<<4);
 
-	printf ("Valor freq_temp : %d\n",freq_temp);
+	printf ("Valor freq_temp : %d Hz\n",freq_temp);
 	//freq_temp=freq_temp*16;
 
 
@@ -569,9 +571,6 @@ Frecuencia real= X = (CPU Speed / 32) / Desired frequency
 	if (!freq_temp) freq_temp++;
 
 	*freq_tono=FRECUENCIA_SN/freq_temp;
-
-
-
 
 
     if (*freq_tono>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
@@ -623,6 +622,8 @@ void out_port_sn(z80_int puerto,z80_byte value)
 		//valor a registro
 		sn_3_8912_registros[sn_3_8912_registro_sel&15]=value;
 
+		sn_chip_registers[sn_3_8912_registro_sel&15]=value;
+
 
 
 		//Nota sobre registro 7 mixer:
@@ -633,14 +634,12 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 		if (sn_3_8912_registro_sel ==0 || sn_3_8912_registro_sel == 1) {
 			//Canal A
-			sn_chip_registers[sn_3_8912_registro_sel&15]=value;
 			sn_establece_frecuencia_tono(0,&sn_freq_tono_A);
 
 		}
 
 		if (sn_3_8912_registro_sel ==2 || sn_3_8912_registro_sel == 3) {
 			//Canal B
-			sn_chip_registers[sn_3_8912_registro_sel&15]=value;
 			sn_establece_frecuencia_tono(2,&sn_freq_tono_B);
 
 		}
@@ -648,13 +647,12 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 		if (sn_3_8912_registro_sel ==4 || sn_3_8912_registro_sel == 5) {
 			//Canal C
-			sn_chip_registers[sn_3_8912_registro_sel&15]=value;
 			sn_establece_frecuencia_tono(4,&sn_freq_tono_C);
 		}
 
 		if (sn_3_8912_registro_sel ==6) {
 			//Frecuencia ruido
-			int freq_temp=sn_3_8912_registros[6] & 31;
+			int freq_temp=sn_chip_registers[9] & 31;
 	       		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
 			freq_temp=freq_temp*16;
 
@@ -694,24 +692,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 
 
-/*
-//Retorna la frecuencia de un registro concreto del chip SN de sonido
-int sn_retorna_frecuencia(int registro)
-{
-	int freq_temp;
-	int freq_tono;	
-	freq_temp=sn_3_8912_registros[registro*2]+256*(sn_3_8912_registros[registro*2+1] & 0x0F);
-	//printf ("Valor freq_temp : %d\n",freq_temp);
-	freq_temp=freq_temp*16;
 
-
-	//controlamos divisiones por cero
-	if (!freq_temp) freq_temp++;
-
-	freq_tono=FRECUENCIA_SN/freq_temp;
-
-	return freq_tono;
-}*/
 
 /*
 
@@ -762,17 +743,7 @@ void sn_init_filters(void)
 	
 }
 
-//Retorna el registro del mezclador, pero aplicando filtro de canal activado/no, ruido si/no, tono si/no
-//Usado en mid export, direct midi
-z80_byte sn_retorna_mixer_register(void) 
-{
-	z80_byte valor=sn_3_8912_registros[7];
 
-	//Aplicar filtro
-	valor |=sn_filtros;
-
-	return valor;
-}
 
 
 
@@ -787,7 +758,7 @@ void sn_set_volume_noise(z80_byte volume)
 void sn_set_volume_tone_channel(z80_byte canal,z80_byte volumen_final)
 {
 
-            out_port_sn(65533,8+canal);
+            out_port_sn(65533,6+canal);
             out_port_sn(49149,volumen_final);        
 }
 
@@ -806,7 +777,7 @@ void sn_set_noise_type(z80_byte tipo)
 
 				*/
 
-	out_port_sn(65533,6);
+	out_port_sn(65533,9);
 
 	z80_byte frecuencia_ruido=31;
 
