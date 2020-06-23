@@ -919,3 +919,26 @@ void sn_set_volume_noise(z80_byte volume)
                 sn_volumen_canal_ruido=volume;
 
 }
+
+
+void sn_set_volume_tone_channel(z80_byte canal,z80_byte volumen_final)
+{
+	            out_port_sn(65533,7);
+            out_port_sn(49149,255-1-2-4);
+
+            out_port_sn(65533,8+canal);
+            out_port_sn(49149,volumen_final);        
+}
+
+//de momento no se establece tipo
+void sn_set_noise_type(void)
+{
+	out_port_sn(65533,6);
+	out_port_sn(49149,15); //mitad del maximo aprox (31/2)
+
+                /*
+                R6 � Control del generador de ruido, D4-DO
+El periodo del generador de ruido se toma contando los cinco bits inferiores del regis-
+tro de ruido cada periodo del reloj de sonido dividido por 16.
+                */	
+}

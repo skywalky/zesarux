@@ -469,6 +469,9 @@ int coleco_get_frequency_channel(int canal)
 //Establecer frecuencia del AY con valor entrada de 10 bits. funcion TEMPORAL
 void coleco_set_sn_freq(int canal,int frecuencia)
 {
+
+    canal=canal % 3; //0,1,2
+
     z80_byte fino,aproximado;
 
     fino=frecuencia & 0xFF;
@@ -531,13 +534,8 @@ R2-R0 the register number:
                 //|1 |1 |1 |0 |xx|FB|M1|M0|
                 
                 //establecer frecuencia ruido
-                out_port_sn(65533,6);
-                out_port_sn(49149,15); //mitad del maximo aprox (31/2)
-                /*
-                R6 � Control del generador de ruido, D4-DO
-El periodo del generador de ruido se toma contando los cinco bits inferiores del regis-
-tro de ruido cada periodo del reloj de sonido dividido por 16.
-                */
+                sn_set_noise_type();
+
 
 
             }
@@ -564,11 +562,7 @@ tro de ruido cada periodo del reloj de sonido dividido por 16.
         }
 
         if (cambio_volumen) {
-            out_port_sn(65533,7);
-            out_port_sn(49149,255-1-2-4);
-
-            out_port_sn(65533,8+canal);
-            out_port_sn(49149,volumen_final);            
+            sn_set_volume_tone_channel(canal,volumen_final);
         }
 
         if (cambio_frecuencia) {
