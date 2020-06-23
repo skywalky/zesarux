@@ -249,13 +249,16 @@ short sn_ultimo_valor_tono_C;
 
 
 //frecuencia de canal de ruido
-int sn_freq_ruido[MAX_SN_CHIPS];
+//int sn_freq_ruido[MAX_SN_CHIPS];
+int sn_freq_ruido;
 
 //contador de canal de ruido .... (FRECUENCIA_CONSTANTE_NORMAL_SONIDO/sn_freq_ruido)
-int sn_contador_ruido[MAX_SN_CHIPS];
+//int sn_contador_ruido[MAX_SN_CHIPS];
+int sn_contador_ruido;
 
 //ultimo valor enviado para canal de ruido. valor con signo:
-short sn_ultimo_valor_ruido[MAX_SN_CHIPS];
+//short sn_ultimo_valor_ruido[MAX_SN_CHIPS];
+short sn_ultimo_valor_ruido;
 
 //valor randomize
 //z80_int sn_randomize_noise[MAX_SN_CHIPS];
@@ -303,7 +306,7 @@ void init_chip_sn(void)
 
 		
 
-		sn_ultimo_valor_ruido[chip]=+32767;
+		sn_ultimo_valor_ruido=+32767;
 	
 
 int i;
@@ -389,8 +392,8 @@ void sn_chip_valor_aleatorio(int chip)
           ;32768..65535 -> -1
   */
 
-	if (sn_randomize_noise<32768) sn_ultimo_valor_ruido[chip]=+32767;
-	else sn_ultimo_valor_ruido[chip]=-32767;
+	if (sn_randomize_noise<32768) sn_ultimo_valor_ruido=+32767;
+	else sn_ultimo_valor_ruido=-32767;
 
 	//printf ("Cambio ruido a : %d\n",sn_ultimo_valor_ruido);
 
@@ -463,7 +466,7 @@ COMMENT !
 
 
 	
-                valor=sn_ultimo_valor_ruido[0];
+                valor=sn_ultimo_valor_ruido;
                 silence_detection_counter=0;
         
 
@@ -577,9 +580,9 @@ void sn_chip_siguiente_ciclo_siguiente(int chip)
 	} 
 
 
-	sn_contador_ruido[chip] +=sn_freq_ruido[chip];
-	if (sn_contador_ruido[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
-			sn_contador_ruido[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
+	sn_contador_ruido +=sn_freq_ruido;
+	if (sn_contador_ruido>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+			sn_contador_ruido -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 			sn_chip_valor_aleatorio(chip);
 			//printf ("Conmutar ruido\n");
 	}
@@ -738,24 +741,24 @@ void out_port_sn(z80_int puerto,z80_byte value)
 			//controlamos divisiones por cero
 			if (!freq_temp) freq_temp++;
 
-			sn_freq_ruido[sn_chip_selected]=SN_FRECUENCIA_NOISE/freq_temp;
+			sn_freq_ruido=SN_FRECUENCIA_NOISE/freq_temp;
 			//printf ("Frecuencia ruido: %d Hz\n",sn_freq_ruido);
 
 			//sn_freq_ruido realmente tiene frecuencia*2... dice cada cuando se conmuta de signo
 			//sn_freq_ruido=sn_freq_ruido*TEMP_MULTIPLICADOR;
-			sn_freq_ruido[sn_chip_selected]=sn_freq_ruido[sn_chip_selected]*2;
+			sn_freq_ruido=sn_freq_ruido*2;
 
 
 
-			if (sn_freq_ruido[sn_chip_selected]>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+			if (sn_freq_ruido>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
 	                  //debug_printf (VERBOSE_DEBUG,"Frequency noise %d out of range",sn_freq_ruido[sn_chip_selected]/2);
-        	          sn_freq_ruido[sn_chip_selected]=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
+        	          sn_freq_ruido=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 			}
 
 
 			//si la frecuencia del ruido es exactamente igual a la del sonido
 			//alteramos un poco el valor
-			if ( sn_freq_ruido[sn_chip_selected]==FRECUENCIA_CONSTANTE_NORMAL_SONIDO) sn_freq_ruido[sn_chip_selected]=FRECUENCIA_CONSTANTE_NORMAL_SONIDO-10;
+			if ( sn_freq_ruido==FRECUENCIA_CONSTANTE_NORMAL_SONIDO) sn_freq_ruido=FRECUENCIA_CONSTANTE_NORMAL_SONIDO-10;
 
 
 
