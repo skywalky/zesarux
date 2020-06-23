@@ -474,8 +474,8 @@ void coleco_set_sn_freq(int canal,int frecuencia)
 
     z80_byte fino,aproximado;
 
-    fino=frecuencia & 0xFF;
-    aproximado=(frecuencia >>8) & 0xF;
+    fino=frecuencia & 0xF;
+    aproximado=(frecuencia >>4) & 63;
 
     sn_set_channel_fine_tune(canal,fino);
 

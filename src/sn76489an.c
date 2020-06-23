@@ -220,15 +220,7 @@ z80_byte sn_3_8912_registros[16];
 z80_byte sn_3_8912_registro_sel;
 
 
-/*
-RO � Ajuste fino del tono, canal A (4 low bits)
-R1 � Ajuste aproximado del tono, canal A- (6 high bits)
-R2 � Ajuste fino del tono, canal B
-R3 � Ajuste aproximado del tono, canal B
-R4 � Ajuste fino del tono, canal C
-R5 � Ajuste aproximado del tono, canal C
-*/
-z80_byte sn_tone_channels[6];
+
 
 
 //frecuencia de cada canal
@@ -276,6 +268,22 @@ z80_int sn_randomize_noise;
 
 
 
+/*
+RO � Ajuste fino del tono, canal A (4 low bits)
+R1 � Ajuste aproximado del tono, canal A- (6 high bits)
+R2 � Ajuste fino del tono, canal B
+R3 � Ajuste aproximado del tono, canal B
+R4 � Ajuste fino del tono, canal C
+R5 � Ajuste aproximado del tono, canal C
+
+R6 Volume A
+R7 Volume B
+R8 Volume C
+R9 Noise
+R10 Noise Volume
+*/
+z80_byte sn_chip_registers[10];
+
 
 
 
@@ -299,7 +307,7 @@ void init_chip_sn(void)
 	for (r=0;r<16;r++) sn_3_8912_registros[r]=255;
 
 	int tono;
-	for (tono=0;tono<6;tono++) sn_tone_channels[tono]=255;
+	for (tono=0;tono<6;tono++) sn_chip_registers[tono]=255;
 
 
 
@@ -551,7 +559,7 @@ Frecuencia real= X = (CPU Speed / 32) / Desired frequency
 	int freq_temp;
 	//freq_temp=sn_3_8912_registros[indice]+256*(sn_3_8912_registros[indice+1] & 0x0F);
 
-	freq_temp=(sn_tone_channels[indice] & 0xF) | ((sn_tone_channels[indice+1] & 63)<<4);
+	freq_temp=(sn_chip_registers[indice] & 0xF) | ((sn_chip_registers[indice+1] & 63)<<4);
 
 	printf ("Valor freq_temp : %d\n",freq_temp);
 	//freq_temp=freq_temp*16;
@@ -625,14 +633,14 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 		if (sn_3_8912_registro_sel ==0 || sn_3_8912_registro_sel == 1) {
 			//Canal A
-			sn_tone_channels[sn_3_8912_registro_sel&15]=value;
+			sn_chip_registers[sn_3_8912_registro_sel&15]=value;
 			sn_establece_frecuencia_tono(0,&sn_freq_tono_A);
 
 		}
 
 		if (sn_3_8912_registro_sel ==2 || sn_3_8912_registro_sel == 3) {
 			//Canal B
-			sn_tone_channels[sn_3_8912_registro_sel&15]=value;
+			sn_chip_registers[sn_3_8912_registro_sel&15]=value;
 			sn_establece_frecuencia_tono(2,&sn_freq_tono_B);
 
 		}
@@ -640,7 +648,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 		if (sn_3_8912_registro_sel ==4 || sn_3_8912_registro_sel == 5) {
 			//Canal C
-			sn_tone_channels[sn_3_8912_registro_sel&15]=value;
+			sn_chip_registers[sn_3_8912_registro_sel&15]=value;
 			sn_establece_frecuencia_tono(4,&sn_freq_tono_C);
 		}
 
@@ -826,6 +834,7 @@ void sn_set_channel_fine_tune(z80_byte canal,z80_byte fino)
 
             out_port_sn(65533,2*canal);
             out_port_sn(49149,fino);   
+
 }
 
 //10 low bits of frequency
