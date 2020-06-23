@@ -241,7 +241,12 @@ int sn_freq_tono_B;
 int sn_freq_tono_C;
 
 //contador de cada canal... (FRECUENCIA_CONSTANTE_NORMAL_SONIDO/freq_tono)
-int sn_contador_tono_A[MAX_SN_CHIPS],sn_contador_tono_B[MAX_SN_CHIPS],sn_contador_tono_C[MAX_SN_CHIPS];
+//int sn_contador_tono_A[MAX_SN_CHIPS];
+int sn_contador_tono_A;
+//int sn_contador_tono_B[MAX_SN_CHIPS];
+int sn_contador_tono_B;
+//int sn_contador_tono_C[MAX_SN_CHIPS];
+int sn_contador_tono_C;
 
 //ultimo valor enviado para cada canal, valores con signo:
 //short sn_ultimo_valor_tono_A[MAX_SN_CHIPS];
@@ -566,22 +571,22 @@ void sn_chip_siguiente_ciclo_siguiente(int chip)
 
 
 	//actualizamos contadores de frecuencias
-	sn_ultimo_valor_tono_A=sn_sine_table[sn_contador_tono_A[chip]];
-	sn_contador_tono_A[chip] +=sn_freq_tono_A;
-	if (sn_contador_tono_A[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
-			sn_contador_tono_A[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
+	sn_ultimo_valor_tono_A=sn_sine_table[sn_contador_tono_A];
+	sn_contador_tono_A +=sn_freq_tono_A;
+	if (sn_contador_tono_A>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+			sn_contador_tono_A -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 	}
 
-	sn_ultimo_valor_tono_B=sn_sine_table[sn_contador_tono_B[chip]];
-	sn_contador_tono_B[chip] +=sn_freq_tono_B;
-	if (sn_contador_tono_B[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
-			sn_contador_tono_B[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
+	sn_ultimo_valor_tono_B=sn_sine_table[sn_contador_tono_B];
+	sn_contador_tono_B +=sn_freq_tono_B;
+	if (sn_contador_tono_B>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+			sn_contador_tono_B -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 	}
 
-	sn_ultimo_valor_tono_C=sn_sine_table[sn_contador_tono_C[chip]];
-	sn_contador_tono_C[chip] +=sn_freq_tono_C;
-	if (sn_contador_tono_C[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
-			sn_contador_tono_C[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
+	sn_ultimo_valor_tono_C=sn_sine_table[sn_contador_tono_C];
+	sn_contador_tono_C +=sn_freq_tono_C;
+	if (sn_contador_tono_C>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+			sn_contador_tono_C -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 	} 
 
 
