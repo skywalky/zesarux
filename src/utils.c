@@ -4507,6 +4507,7 @@ int quickload_valid_extension(char *nombre) {
     || !util_compare_file_extension(nombre,"scr")
     || !util_compare_file_extension(nombre,"rzx")
     || !util_compare_file_extension(nombre,"rom")
+    || !util_compare_file_extension(nombre,"col")
 	) {
 		return 1;
 	}

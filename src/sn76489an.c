@@ -401,27 +401,17 @@ char sn_da_output_canal(z80_byte mascara,short ultimo_valor_tono,z80_byte volume
 	char valor8;
 	int valor;
 
-
-
-
-
-
 	
-		valor=ultimo_valor_tono;
-		silence_detection_counter=0;
+	valor=ultimo_valor_tono;
+	silence_detection_counter=0;
 	
-
-
 	volumen=volumen & 15; //Evitar valores de volumen fuera de rango que vengan de los registros de volumen
 
-	//if (volumen>15) printf ("  Error volumen >15 : %d\n",volumen);
-        valor=valor*sn_volume_table[volumen];
+
+    valor=valor*sn_volume_table[volumen];
 	valor=valor/32767;
 	valor8=valor;
-	//printf ("valor final tono: %d\n",valor8);
 
-	//if (valor8>24) printf ("valor final tono: %d\n",valor8);
-	//if (valor8<-24) printf ("valor final tono: %d\n",valor8);
 
 	return valor8;
 
@@ -870,8 +860,6 @@ void sn_set_volume_noise(z80_byte volume)
 
 void sn_set_volume_tone_channel(z80_byte canal,z80_byte volumen_final)
 {
-	            out_port_sn(65533,7);
-            out_port_sn(49149,255-1-2-4);
 
             out_port_sn(65533,8+canal);
             out_port_sn(49149,volumen_final);        

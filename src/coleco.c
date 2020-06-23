@@ -568,9 +568,6 @@ R2-R0 the register number:
         if (cambio_frecuencia) {
             temp_coleco_audio_frecuencies[canal*2]=frecuencia_final;
 
-            out_port_sn(65533,7);
-            out_port_sn(49149,255-1-2-4);
-
             int frecuencia=coleco_get_frequency_channel(canal);
             coleco_set_sn_freq(canal,frecuencia);
           
