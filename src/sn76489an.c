@@ -189,12 +189,6 @@ char sn_volume_table[16]={24,20,16,15,
 			   1,1,0,0};			   
 
 
-//Este es bit enviado cuando tanto tono como ruido son 0.... Esto permite speech, como en chase hq
-//si lo ponemos a 0, no se oye nada
-z80_bit sn_speech_enabled;
-
-
-
 
 
 
@@ -217,7 +211,8 @@ short sn_sine_table[FRECUENCIA_CONSTANTE_NORMAL_SONIDO];
 z80_byte sn_3_8912_registro_sel;
 
 
-
+//Ultimo canal seleccionado al cambiar valor frecuencia tipo fino
+z80_byte sn_last_audio_channel_frequency=0;
 
 
 //frecuencia de cada canal
@@ -589,41 +584,29 @@ Frecuencia real= X = (CPU Speed / 32) / Desired frequency
 
 
 
+void sn_set_register_port(z80_byte value)
+{
+		//seleccion de registro
+		sn_3_8912_registro_sel=value & 15; //evitamos valores fuera de rango	
+}
+
 
 
 //Enviar valor a puerto
-void out_port_sn(z80_int puerto,z80_byte value)
+void sn_set_value_register(z80_byte value)
 {
 
 	//Resetear detector de silencio
 	silence_detection_counter=0;
 
 
-	//printf ("Out port sn chip. Puerto: %d Valor: %d\n",puerto,value);
 
-
-	//if (puerto==65533 && value>=14) printf("Out seleccion registro valor: %d\n",value);
-
-
-	if (puerto==65533) {
-		
-		//seleccion de registro
-		sn_3_8912_registro_sel=value & 15; //evitamos valores fuera de rango
-
-		
-	}
-	else if (puerto==49149) {
 		//valor a registro
 		
 
 		sn_chip_registers[sn_3_8912_registro_sel&15]=value;
 
 
-
-		//Nota sobre registro 7 mixer:
-		//Bit 6 controla la direccion del registro de I/O - registro R14 - de puerto paralelo
-		//como no emulamos puerto paralelo, no nos debe preocupar esto
-		//registro R15 en este chip sn3-8912 no se usa para nada
 
 
 		if (sn_3_8912_registro_sel ==0 || sn_3_8912_registro_sel == 1) {
@@ -644,7 +627,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 			sn_establece_frecuencia_tono(4,&sn_freq_tono_C);
 		}
 
-		if (sn_3_8912_registro_sel ==6) {
+		if (sn_3_8912_registro_sel ==9) {
 			//Frecuencia ruido
 			int freq_temp=sn_chip_registers[9] & 31;
 	       		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
@@ -681,7 +664,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 	
 
-	}
+	
 }
 
 
@@ -752,8 +735,8 @@ void sn_set_volume_noise(z80_byte volume)
 void sn_set_volume_tone_channel(z80_byte canal,z80_byte volumen_final)
 {
 
-            out_port_sn(65533,6+canal);
-            out_port_sn(49149,volumen_final);        
+            sn_set_register_port(6+canal);
+            sn_set_value_register(volumen_final);        
 }
 
 //de momento no se establece tipo
@@ -771,7 +754,7 @@ void sn_set_noise_type(z80_byte tipo)
 
 				*/
 
-	out_port_sn(65533,9);
+	sn_set_register_port(9);
 
 	z80_byte frecuencia_ruido=31;
 
@@ -782,7 +765,7 @@ void sn_set_noise_type(z80_byte tipo)
 
 	frecuencia_ruido /=divisor_ruido;
 
-	out_port_sn(49149,frecuencia_ruido); //mitad del maximo aprox (31/2)
+	sn_set_value_register(frecuencia_ruido); //mitad del maximo aprox (31/2)
 
                 /*
                 R6 � Control del generador de ruido, D4-DO
@@ -797,14 +780,14 @@ void sn_set_channel_fine_tune(z80_byte canal,z80_byte fino)
 {
 
 
-            out_port_sn(65533,2*canal);
-            out_port_sn(49149,fino);   
+            sn_set_register_port(2*canal);
+            sn_set_value_register(fino);   
 
 }
 
 //10 low bits of frequency
 void sn_set_channel_aprox_tune(z80_byte canal,z80_byte aproximado)
 {
-            out_port_sn(65533,1+2*canal);
-            out_port_sn(49149,aproximado);   
+            sn_set_register_port(1+2*canal);
+            sn_set_value_register(aproximado);   
 }

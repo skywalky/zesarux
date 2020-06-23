@@ -452,6 +452,7 @@ R5 � Ajuste aproximado del tono, canal C
 //Valores de 10 bits
 //z80_byte temp_coleco_audio_frecuencies[6];
 
+/*
 int coleco_get_frequency_channel(int canal)
 {
     if (canal<0 || canal>2) return 0;
@@ -465,9 +466,11 @@ int coleco_get_frequency_channel(int canal)
 
     return frecuencia;
 }
+*/
 
 
 //Establecer frecuencia del AY con valor entrada de 10 bits. funcion TEMPORAL
+/*
 void coleco_set_sn_freq(int canal,int frecuencia)
 {
 
@@ -479,22 +482,17 @@ void coleco_set_sn_freq(int canal,int frecuencia)
     aproximado=(frecuencia >>4) & 63;
 
     sn_set_channel_fine_tune(canal,fino);
-
-
-            //out_port_sn(65533,2*canal);
-            //out_port_sn(49149,fino);      
-
+   
     sn_set_channel_aprox_tune(canal,aproximado);
-            //out_port_sn(65533,1+2*canal);
-            //out_port_sn(49149,aproximado);                
+            
 }
 
-int temp_last_coleco_audio_channel=0;
+*/
+
 
 void coleco_out_port_sound(z80_byte value)
 {
 
-    //Ugly test simulating it with the AY Chip
 
     if (value & 128) {
         //|1 |R2|R1|R0|D3|D2|D1|D0|
@@ -523,7 +521,7 @@ R2-R0 the register number:
 
         int canal=sound_register/2;
 
-        printf ("Canal: %d\n",canal);
+        //printf ("Canal: %d\n",canal);
 
         int tipo=sound_register & 1;
 
@@ -546,7 +544,7 @@ R2-R0 the register number:
             }
             if (tipo==1) {
                 //Noise volume
-                printf ("ruido\n");
+                //printf ("ruido\n");
                 sn_set_volume_noise(sound_data);
             }
 
@@ -558,7 +556,7 @@ R2-R0 the register number:
         if (tipo==0) {
             cambio_frecuencia=1;
             frecuencia_final=sound_data;
-            temp_last_coleco_audio_channel=canal;
+            sn_last_audio_channel_frequency=canal;
         }
 
         if (tipo==1) {
@@ -571,10 +569,14 @@ R2-R0 the register number:
         }
 
         if (cambio_frecuencia) {
-            sn_chip_registers[canal*2]=frecuencia_final;
+            //sn_chip_registers[canal*2]=frecuencia_final;
 
-            int frecuencia=coleco_get_frequency_channel(canal);
-            coleco_set_sn_freq(canal,frecuencia);
+            //int frecuencia=coleco_get_frequency_channel(canal);
+            //coleco_set_sn_freq(canal,frecuencia);
+
+
+            sn_set_register_port(2*canal);
+            sn_set_value_register(frecuencia_final);   
           
         }
 
@@ -642,14 +644,18 @@ to it, it uses which ever register you used in the control word.
 
         */
 
-       //temp_last_coleco_audio_channel
+       //sn_last_audio_channel_frequency
 
 
-            sn_chip_registers[temp_last_coleco_audio_channel*2+1]=value;
+            //sn_chip_registers[sn_last_audio_channel_frequency*2+1]=value;
 
 
-            int frecuencia=coleco_get_frequency_channel(temp_last_coleco_audio_channel);
-            coleco_set_sn_freq(temp_last_coleco_audio_channel,frecuencia);
+            //int frecuencia=coleco_get_frequency_channel(sn_last_audio_channel_frequency);
+            //coleco_set_sn_freq(sn_last_audio_channel_frequency,frecuencia);
+
+
+            sn_set_register_port(2*sn_last_audio_channel_frequency+1);
+            sn_set_value_register(value);               
     }
 }
 					

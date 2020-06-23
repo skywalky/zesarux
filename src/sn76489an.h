@@ -31,6 +31,8 @@ extern z80_byte sn_chip_registers[];
 
 extern z80_bit sn_chip_present;
 
+extern z80_byte sn_last_audio_channel_frequency;
+
 
 //1'7734*1000000 (Hz) en Spectrum
 //En Amstrad, 1 MHz
