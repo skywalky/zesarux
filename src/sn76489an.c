@@ -150,6 +150,10 @@ channels.
 
 */
 
+
+// This audio emulation code derived from the ay emulation core from myself,
+// just reusing AY code and removing what doesnt exist on the SN
+
 #include <stdio.h>
 //#include <math.h>
 
@@ -166,11 +170,7 @@ z80_bit sn_chip_present;
 
 
 //Por defecto la frecuencia del spectrum
-int sn_chip_frequency=FRECUENCIA_SPECTRUM_SN;
-
-//#define FRECUENCIA_SPECTRUM_SN 1773400
-//#define FRECUENCIA_CPC_SN      1000000
-//#define FRECUENCIA_ZX81_SN     1625000
+int sn_chip_frequency=FRECUENCIA_COLECO_SN;
 
 
 
@@ -213,10 +213,6 @@ short sn_sine_table[FRECUENCIA_CONSTANTE_NORMAL_SONIDO];
 
 
 
-
-//
-//Variables que dependen del chip activo
-//
 //16 BYTES Contenido de los registros del chip de sonido
 //z80_byte sn_3_8912_registros[MAX_SN_CHIPS][16];
 z80_byte sn_3_8912_registros[16];
@@ -224,7 +220,6 @@ z80_byte sn_3_8912_registros[16];
 //Ultimo registro seleccionado por el puerto 65533
 //z80_byte sn_3_8912_registro_sel[MAX_SN_CHIPS];
 z80_byte sn_3_8912_registro_sel;
-
 
 
 
@@ -270,9 +265,6 @@ short sn_ultimo_valor_ruido;
 //z80_int sn_randomize_noise[MAX_SN_CHIPS];
 z80_int sn_randomize_noise;
 
-//
-//Fin variables que dependen del chip activo
-//
 
 
 
@@ -294,27 +286,23 @@ void init_chip_sn(void)
 
 
 
+	//resetear valores de puertos de sonido
+	int r;
+	for (r=0;r<16;r++) sn_3_8912_registros[r]=255;
 
 
 
+	//ultimo valor enviado para cada canal, valores con signo:
+	sn_ultimo_valor_tono_A=+32767;
+	sn_ultimo_valor_tono_B=+32767;
+	sn_ultimo_valor_tono_C=+32767;
 
-		//resetear valores de puertos de sonido
-		int r;
-		for (r=0;r<16;r++) sn_3_8912_registros[r]=255;
-
-
-
-		//ultimo valor enviado para cada canal, valores con signo:
-		sn_ultimo_valor_tono_A=+32767;
-		sn_ultimo_valor_tono_B=+32767;
-		sn_ultimo_valor_tono_C=+32767;
-
-		
-
-		sn_ultimo_valor_ruido=+32767;
 	
 
-int i;
+	sn_ultimo_valor_ruido=+32767;
+	
+
+	int i;
 
 
 
@@ -327,10 +315,8 @@ int i;
 	}
 
 	//Establecemos frecuencia
-	if (MACHINE_IS_CPC) sn_chip_frequency=FRECUENCIA_CPC_SN;
-	else if (MACHINE_IS_ZX8081) sn_chip_frequency=FRECUENCIA_ZX81_SN;
-	else if (MACHINE_IS_MSX) sn_chip_frequency=FRECUENCIA_MSX_SN;
-	else sn_chip_frequency=FRECUENCIA_SPECTRUM_SN;
+	sn_chip_frequency=FRECUENCIA_COLECO_SN;
+
 
 	debug_printf (VERBOSE_INFO,"Setting SN chip frequency to %d HZ",sn_chip_frequency);
 
@@ -443,43 +429,11 @@ char sn_da_output_canal_ruido(void)
 
 	z80_byte volumen=sn_volumen_canal_ruido;
 
-/*
-COMMENT !
-    The noise and tone output of a channel is combined in the mixer in the
-    following wsn:
-
-        Output_A = (Tone_A OR Ta) AND (Noise OR Na)
-
-    Here Tone_A is the binary output of tone generator A, and Noise is the
-    binary output of the noise generator.  Note that setting both Ta and Na
-    to 1 produces a constant 1 as output.  Also note that setting both Ta
-    and Na to 0 produces bursts of noise and half-periods of constant
-    output 0.
-( Tone_a OR 0 ) AND ( Noise_a OR 0 )= Tone_a AND Noise_a
-( Tone_a OR 0 ) AND ( Noise_a OR 1 )= Tone_a
-( Tone_a OR 1 ) AND ( Noise_a OR 0 )= Noise_a
-( Tone_a OR 1 ) AND ( Noise_a OR 1 )= 1
-!
-*/
-
-
-
-//	printf ("ultimo_valor_tono: %d\n",ultimo_valor_tono);
-
-
-
-
 
 	
-                valor=sn_ultimo_valor_ruido;
-                silence_detection_counter=0;
+	valor=sn_ultimo_valor_ruido;
+	silence_detection_counter=0;
         
-
-
-
-
-
-
 
 
 	volumen=volumen & 15; //Evitar valores de volumen fuera de rango que vengan de los registros de volumen
@@ -503,49 +457,23 @@ char da_output_sn(void)
 {
 
 
-        //char valor_enviar_sn=0;
-        int valor_enviar_sn=0;
+	int valor_enviar_sn=0;
 	if (sn_chip_present.v==1) {
 
 
+		valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_A,sn_3_8912_registros[8]);
+		valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_B,sn_3_8912_registros[9]);
+		valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_C,sn_3_8912_registros[10]);
 
-	
-
-
-			valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_A,sn_3_8912_registros[8]);
-			valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_B,sn_3_8912_registros[9]);
-			valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_C,sn_3_8912_registros[10]);
-
-
-			valor_enviar_sn +=sn_da_output_canal_ruido();
-
-
+		valor_enviar_sn +=sn_da_output_canal_ruido();
 
 	}
-
-
 
 
 	return valor_enviar_sn;
 
 }
 
-int sn3_stereo_mode=0;
-
-int sn3_custom_stereo_A=0;
-int sn3_custom_stereo_B=1;
-int sn3_custom_stereo_C=2;
-/*
-          0=Mono
-          1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
-          2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
-		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
-		  4=Custom. Depende de variables 
-		  	sn3_custom_stereo_A 
-			sn3_custom_stereo_B
-			sn3_custom_stereo_C
-			En cada una de esas 3, si vale 0=Left. Si 1=Center, Si 2=Right		  
-*/
 
 
 
@@ -581,7 +509,6 @@ void sn_chip_siguiente_ciclo_siguiente(void)
 	if (sn_contador_ruido>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
 			sn_contador_ruido -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 			sn_chip_valor_aleatorio();
-			//printf ("Conmutar ruido\n");
 	}
 
 	
@@ -590,19 +517,14 @@ void sn_chip_siguiente_ciclo_siguiente(void)
 
 
 
-
-
-
 void sn_chip_siguiente_ciclo(void)
 {
 
 
-		sn_chip_siguiente_ciclo_siguiente();
+	sn_chip_siguiente_ciclo_siguiente();
 	
 
 }
-
-
 
 
 //Calcular contadores de incremento
