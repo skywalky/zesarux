@@ -212,12 +212,7 @@ short sn_sine_table[FRECUENCIA_CONSTANTE_NORMAL_SONIDO];
 
 
 
-//z80_bit turbosound_enabled={0};
 
-//int total_sn_chips=1;
-
-//Chip de sonido activo 
-int sn_chip_selected=0;
 
 //
 //Variables que dependen del chip activo
@@ -296,11 +291,10 @@ void init_chip_sn(void)
 
 	debug_printf (VERBOSE_INFO,"Initializing SN Chip");
 
-	sn_chip_selected=0;
 
 
-	//resetear valores de cada chip
-	int chip=0;
+
+
 
 
 
@@ -366,7 +360,7 @@ float sineval,radians;
 
 
 
-void sn_randomize(int chip)
+void sn_randomize(void) 
 {
 /*
 ;Seguimos la misma formula RND del spectrum:
@@ -392,10 +386,10 @@ generar_random_noise:
 
 
 //Generar salida aleatoria
-void sn_chip_valor_aleatorio(int chip)
+void sn_chip_valor_aleatorio(void)
 {
 
-	sn_randomize(chip);
+	sn_randomize();
 
 /*
           ;Generar +1 o -1
@@ -413,7 +407,7 @@ void sn_chip_valor_aleatorio(int chip)
 
 
 //Devuelve la salida del canal indicado, devuelve valor con signo
-char sn_da_output_canal(z80_byte mascara,short ultimo_valor_tono,z80_byte volumen,int chip)
+char sn_da_output_canal(short ultimo_valor_tono,z80_byte volumen)
 {
 
 	//valor con signo
@@ -468,7 +462,7 @@ COMMENT !
 !
 */
 
-	z80_bit tone,noise;
+
 
 //	printf ("ultimo_valor_tono: %d\n",ultimo_valor_tono);
 
@@ -513,24 +507,20 @@ char da_output_sn(void)
         int valor_enviar_sn=0;
 	if (sn_chip_present.v==1) {
 
-		//Hacerlo para cada chip
-		int chips=sn_retorna_numero_chips();
-
-		int i=0;
 
 
-			valor_enviar_sn +=sn_da_output_canal(1+8,sn_ultimo_valor_tono_A,sn_3_8912_registros[8],i);
-			valor_enviar_sn +=sn_da_output_canal(2+16,sn_ultimo_valor_tono_B,sn_3_8912_registros[9],i);
-			valor_enviar_sn +=sn_da_output_canal(4+32,sn_ultimo_valor_tono_C,sn_3_8912_registros[10],i);
+	
+
+
+			valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_A,sn_3_8912_registros[8]);
+			valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_B,sn_3_8912_registros[9]);
+			valor_enviar_sn +=sn_da_output_canal(sn_ultimo_valor_tono_C,sn_3_8912_registros[10]);
 
 
 			valor_enviar_sn +=sn_da_output_canal_ruido();
 
 
-		
 
-		//Dividir valor restante entre numero de chips
-		valor_enviar_sn /=chips;
 	}
 
 
@@ -560,7 +550,7 @@ int sn3_custom_stereo_C=2;
 
 
 //Calcular e invertir , si conviene, salida de cada canal
-void sn_chip_siguiente_ciclo_siguiente(int chip)
+void sn_chip_siguiente_ciclo_siguiente(void)
 {
 
 	if (sn_chip_present.v==0) return;
@@ -590,7 +580,7 @@ void sn_chip_siguiente_ciclo_siguiente(int chip)
 	sn_contador_ruido +=sn_freq_ruido;
 	if (sn_contador_ruido>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
 			sn_contador_ruido -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
-			sn_chip_valor_aleatorio(chip);
+			sn_chip_valor_aleatorio();
 			//printf ("Conmutar ruido\n");
 	}
 
@@ -601,21 +591,14 @@ void sn_chip_siguiente_ciclo_siguiente(int chip)
 
 
 
-int sn_retorna_numero_chips(void)
-{
 
-	return 1;
-
-}
 
 void sn_chip_siguiente_ciclo(void)
 {
 
-	int chips=sn_retorna_numero_chips();
-	int j;
-	for (j=0;j<chips;j++) {
-		sn_chip_siguiente_ciclo_siguiente(j);
-	}
+
+		sn_chip_siguiente_ciclo_siguiente();
+	
 
 }
 
@@ -758,7 +741,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 
 			if (sn_freq_ruido>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
-	                  //debug_printf (VERBOSE_DEBUG,"Frequency noise %d out of range",sn_freq_ruido[sn_chip_selected]/2);
+	                  
         	          sn_freq_ruido=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 			}
 
@@ -783,7 +766,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 
 //Retorna la frecuencia de un registro concreto del chip SN de sonido
-int sn_retorna_frecuencia(int registro,int chip)
+int sn_retorna_frecuencia(int registro)
 {
 	int freq_temp;
 	int freq_tono;	
@@ -840,24 +823,23 @@ Canal C sin nada: xx1xx1xx
  */
 
 //A 0 todos para normal
-z80_byte sn_filtros[MAX_SN_CHIPS];
+z80_byte sn_filtros;
 
 void sn_init_filters(void)
 {
-	int i;
-	for (i=0;i<MAX_SN_CHIPS;i++) {
-		sn_filtros[i]=0;
-	}
+
+		sn_filtros=0;
+	
 }
 
 //Retorna el registro del mezclador, pero aplicando filtro de canal activado/no, ruido si/no, tono si/no
 //Usado en mid export, direct midi
-z80_byte sn_retorna_mixer_register(int chip)
+z80_byte sn_retorna_mixer_register(void) 
 {
 	z80_byte valor=sn_3_8912_registros[7];
 
 	//Aplicar filtro
-	valor |=sn_filtros[chip];
+	valor |=sn_filtros;
 
 	return valor;
 }

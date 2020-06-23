@@ -24,13 +24,12 @@
 
 #include "cpu.h"
 
-#define MAX_SN_CHIPS 1
+
 
 extern void out_port_sn(z80_int puerto,z80_byte value);
 
 
 
-extern z80_byte sn_retorna_mixer_register(int chip);
 
 //1'7734*1000000 (Hz) en Spectrum
 //En Amstrad, 1 MHz
