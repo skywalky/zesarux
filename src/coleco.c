@@ -529,8 +529,17 @@ R2-R0 the register number:
             //ruido
             if (tipo==0) {
                 //|1 |1 |1 |0 |xx|FB|M1|M0|
-                //de momento nada
-                //TODO. establecer frecuencia ruido
+                
+                //establecer frecuencia ruido
+                out_port_sn(65533,6);
+                out_port_sn(49149,15); //mitad del maximo aprox (31/2)
+                /*
+                R6 � Control del generador de ruido, D4-DO
+El periodo del generador de ruido se toma contando los cinco bits inferiores del regis-
+tro de ruido cada periodo del reloj de sonido dividido por 16.
+                */
+
+
             }
             if (tipo==1) {
                 //Noise volume
