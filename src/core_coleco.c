@@ -240,8 +240,10 @@ void core_coleco_fin_scanline(void)
 
 				audio_valor_enviar_sonido_izquierdo=audio_valor_enviar_sonido_derecho=0;
 
-				audio_valor_enviar_sonido_izquierdo +=da_output_ay_izquierdo();
-				audio_valor_enviar_sonido_derecho +=da_output_ay_derecho();
+				//audio_valor_enviar_sonido_izquierdo +=da_output_sn_izquierdo();
+				//audio_valor_enviar_sonido_derecho +=da_output_sn_derecho();
+				audio_valor_enviar_sonido_izquierdo +=da_output_sn();
+				audio_valor_enviar_sonido_derecho +=da_output_sn();				
 
 
 				/*
@@ -298,7 +300,7 @@ void core_coleco_fin_scanline(void)
 
 
 
-				ay_chip_siguiente_ciclo();
+				sn_chip_siguiente_ciclo();
 
 			
 

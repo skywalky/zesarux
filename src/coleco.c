@@ -434,6 +434,55 @@ void screen_store_scanline_rainbow_coleco_border_and_display(void)
 }
 
 
+
+/*
+RO � Ajuste fino del tono, canal A
+R1 � Ajuste aproximado del tono, canal A-
+R2 � Ajuste fino del tono, canal B
+R3 � Ajuste aproximado del tono, canal B
+R4 � Ajuste fino del tono, canal C
+R5 � Ajuste aproximado del tono, canal C
+*/
+
+
+//Fino: xxxxx|D3|D2|D1|D0|
+//Aproximado: |xx|xx|D9|D8|D7|D6|D5|D4|
+
+//Valores de 10 bits
+z80_byte temp_coleco_audio_frecuencies[6];
+
+int coleco_get_frequency_channel(int canal)
+{
+    if (canal<0 || canal>2) return 0;
+
+    z80_byte fino,aproximado;
+
+    fino=temp_coleco_audio_frecuencies[canal*2] & 0xF;
+    aproximado=(temp_coleco_audio_frecuencies[canal*2+1] & 63);
+
+    int frecuencia=(aproximado<<4) | fino;
+
+    return frecuencia;
+}
+
+
+//Establecer frecuencia del AY con valor entrada de 10 bits. funcion TEMPORAL
+void coleco_set_sn_freq(int canal,int frecuencia)
+{
+    z80_byte fino,aproximado;
+
+    fino=frecuencia & 0xFF;
+    aproximado=(frecuencia >>8) & 0xF;
+
+            out_port_sn(65533,2*canal);
+            out_port_sn(49149,fino);      
+
+            out_port_sn(65533,1+2*canal);
+            out_port_sn(49149,aproximado);                
+}
+
+int temp_last_coleco_audio_channel=0;
+
 void coleco_out_port_sound(z80_byte value)
 {
 
@@ -468,37 +517,60 @@ R2-R0 the register number:
 
         printf ("Canal: %d\n",canal);
 
+        int tipo=sound_register & 1;
+
+
+
         if (canal==3) {
+            /*
+            110 Noise Control
+            111 Noise Volume
+            */
             //ruido
+            if (tipo==0) {
+                //|1 |1 |1 |0 |xx|FB|M1|M0|
+                //de momento nada
+                //TODO. establecer frecuencia ruido
+            }
+            if (tipo==1) {
+                //Noise volume
+                printf ("ruido\n");
+                sn_set_volume_noise(sound_data);
+            }
+
             return;
         }
 
-        int tipo=sound_register & 1;
+        
 
         if (tipo==0) {
             cambio_frecuencia=1;
             frecuencia_final=sound_data;
+            temp_last_coleco_audio_channel=canal;
         }
 
         if (tipo==1) {
             cambio_volumen=1;
-            volumen_final=15-sound_data;
+            volumen_final=sound_data;
         }
 
         if (cambio_volumen) {
-            out_port_ay(65533,7);
-            out_port_ay(49149,255-1-2-4);
+            out_port_sn(65533,7);
+            out_port_sn(49149,255-1-2-4);
 
-            out_port_ay(65533,8+canal);
-            out_port_ay(49149,volumen_final);            
+            out_port_sn(65533,8+canal);
+            out_port_sn(49149,volumen_final);            
         }
 
         if (cambio_frecuencia) {
-            out_port_ay(65533,7);
-            out_port_ay(49149,255-1-2-4);
+            temp_coleco_audio_frecuencies[canal*2]=frecuencia_final;
 
-            out_port_ay(65533,1+2*canal);
-            out_port_ay(49149,frecuencia_final);            
+            out_port_sn(65533,7);
+            out_port_sn(49149,255-1-2-4);
+
+            int frecuencia=coleco_get_frequency_channel(canal);
+            coleco_set_sn_freq(canal,frecuencia);
+          
         }
 
 
@@ -541,6 +613,38 @@ RA � Control de amplitud del canal C
 D4
 */
 
+    }
+
+    else {
+
+        //Parte alta de la frecuencia
+        /*
+Here's the second frequency register:
+
++--+--+--+--+--+--+--+--+
+|0 |xx|D9|D8|D7|D6|D5|D4|
++--+--+--+--+--+--+--+--+
+
+0: This denotes that we are sending the 2nd part of the frequency
+
+D9-D4 is 6 more bits of frequency 
+
+
+To write a 10-bit word for frequenct into the sound chip you must first
+send the control word, then the second frequency register.  Note that the
+second frequency register doesn't have a register number.  When you write
+to it, it uses which ever register you used in the control word.
+
+        */
+
+       //temp_last_coleco_audio_channel
+
+
+            temp_coleco_audio_frecuencies[temp_last_coleco_audio_channel*2+1]=value;
+
+
+            int frecuencia=coleco_get_frequency_channel(temp_last_coleco_audio_channel);
+            coleco_set_sn_freq(temp_last_coleco_audio_channel,frecuencia);
     }
 }
 					

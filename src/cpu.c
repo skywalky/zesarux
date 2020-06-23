@@ -120,6 +120,7 @@
 #include "ds1307.h"
 #include "msx.h"
 #include "coleco.h"
+#include "sn76489an.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -2933,6 +2934,7 @@ void set_machine_params(void)
 
 		//defaults
 		ay_chip_present.v=0;
+		sn_chip_present.v=0;
 
 		if (!MACHINE_IS_Z88) {
 			//timer_sleep_machine=original_timer_sleep_machine=20000;
@@ -3708,7 +3710,7 @@ You don't need timings for H/V sync =)
                 lee_puerto=lee_puerto_coleco;
 				out_port=out_port_coleco;
 				fetch_opcode=fetch_opcode_coleco;
-				ay_chip_present.v=0;
+				sn_chip_present.v=1;
         break;
 
 
@@ -8112,7 +8114,9 @@ init_randomize_noise_value();
 
 
 	init_chip_ay();
+	init_chip_sn();
 	ay_init_filters();
+	sn_init_filters();
 	
 	mid_reset_export_buffers();
 
