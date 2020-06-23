@@ -33,6 +33,7 @@
 #include "tape.h"
 #include "screen.h"
 #include "audio.h"
+#include "sn76489an.h"
 
 z80_byte *coleco_vram_memory=NULL;
 
@@ -449,7 +450,7 @@ R5 � Ajuste aproximado del tono, canal C
 //Aproximado: |xx|xx|D9|D8|D7|D6|D5|D4|
 
 //Valores de 10 bits
-z80_byte temp_coleco_audio_frecuencies[6];
+//z80_byte temp_coleco_audio_frecuencies[6];
 
 int coleco_get_frequency_channel(int canal)
 {
@@ -457,8 +458,8 @@ int coleco_get_frequency_channel(int canal)
 
     z80_byte fino,aproximado;
 
-    fino=temp_coleco_audio_frecuencies[canal*2] & 0xF;
-    aproximado=(temp_coleco_audio_frecuencies[canal*2+1] & 63);
+    fino=sn_chip_registers[canal*2] & 0xF;
+    aproximado=(sn_chip_registers[canal*2+1] & 63);
 
     int frecuencia=(aproximado<<4) | fino;
 
@@ -570,7 +571,7 @@ R2-R0 the register number:
         }
 
         if (cambio_frecuencia) {
-            temp_coleco_audio_frecuencies[canal*2]=frecuencia_final;
+            sn_chip_registers[canal*2]=frecuencia_final;
 
             int frecuencia=coleco_get_frequency_channel(canal);
             coleco_set_sn_freq(canal,frecuencia);
@@ -644,7 +645,7 @@ to it, it uses which ever register you used in the control word.
        //temp_last_coleco_audio_channel
 
 
-            temp_coleco_audio_frecuencies[temp_last_coleco_audio_channel*2+1]=value;
+            sn_chip_registers[temp_last_coleco_audio_channel*2+1]=value;
 
 
             int frecuencia=coleco_get_frequency_channel(temp_last_coleco_audio_channel);

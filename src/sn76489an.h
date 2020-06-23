@@ -26,9 +26,10 @@
 
 
 
-extern void out_port_sn(z80_int puerto,z80_byte value);
 
+extern z80_byte sn_chip_registers[];
 
+extern z80_bit sn_chip_present;
 
 
 //1'7734*1000000 (Hz) en Spectrum
