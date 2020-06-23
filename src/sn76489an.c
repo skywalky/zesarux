@@ -226,7 +226,8 @@ int sn_chip_selected=0;
 z80_byte sn_3_8912_registros[MAX_SN_CHIPS][16];
 
 //Ultimo registro seleccionado por el puerto 65533
-z80_byte sn_3_8912_registro_sel[MAX_SN_CHIPS];
+//z80_byte sn_3_8912_registro_sel[MAX_SN_CHIPS];
+z80_byte sn_3_8912_registro_sel;
 
 
 
@@ -238,10 +239,13 @@ int sn_freq_tono_A[MAX_SN_CHIPS],sn_freq_tono_B[MAX_SN_CHIPS],sn_freq_tono_C[MAX
 int sn_contador_tono_A[MAX_SN_CHIPS],sn_contador_tono_B[MAX_SN_CHIPS],sn_contador_tono_C[MAX_SN_CHIPS];
 
 //ultimo valor enviado para cada canal, valores con signo:
-short sn_ultimo_valor_tono_A[MAX_SN_CHIPS];
-short sn_ultimo_valor_tono_B[MAX_SN_CHIPS];
-short sn_ultimo_valor_tono_C[MAX_SN_CHIPS];
+//short sn_ultimo_valor_tono_A[MAX_SN_CHIPS];
+//short sn_ultimo_valor_tono_B[MAX_SN_CHIPS];
+//short sn_ultimo_valor_tono_C[MAX_SN_CHIPS];
 
+short sn_ultimo_valor_tono_A;
+short sn_ultimo_valor_tono_B;
+short sn_ultimo_valor_tono_C;
 
 
 //frecuencia de canal de ruido
@@ -281,9 +285,9 @@ void init_chip_sn(void)
 
 
 	//resetear valores de cada chip
-	int chip;
+	int chip=0;
 
-	for (chip=0;chip<MAX_SN_CHIPS;chip++) {
+
 
 		//resetear valores de puertos de sonido
 		int r;
@@ -292,14 +296,14 @@ void init_chip_sn(void)
 
 
 		//ultimo valor enviado para cada canal, valores con signo:
-		sn_ultimo_valor_tono_A[chip]=+32767;
-		sn_ultimo_valor_tono_B[chip]=+32767;
-		sn_ultimo_valor_tono_C[chip]=+32767;
+		sn_ultimo_valor_tono_A=+32767;
+		sn_ultimo_valor_tono_B=+32767;
+		sn_ultimo_valor_tono_C=+32767;
 
 		
 
 		sn_ultimo_valor_ruido[chip]=+32767;
-	}
+	
 
 int i;
 
@@ -497,19 +501,18 @@ char da_output_sn(void)
 		//Hacerlo para cada chip
 		int chips=sn_retorna_numero_chips();
 
-		int i;
+		int i=0;
 
-		for (i=0;i<chips;i++) {
 
-			valor_enviar_sn +=sn_da_output_canal(1+8,sn_ultimo_valor_tono_A[i],sn_3_8912_registros[i][8],i);
-			valor_enviar_sn +=sn_da_output_canal(2+16,sn_ultimo_valor_tono_B[i],sn_3_8912_registros[i][9],i);
-			valor_enviar_sn +=sn_da_output_canal(4+32,sn_ultimo_valor_tono_C[i],sn_3_8912_registros[i][10],i);
+			valor_enviar_sn +=sn_da_output_canal(1+8,sn_ultimo_valor_tono_A,sn_3_8912_registros[i][8],i);
+			valor_enviar_sn +=sn_da_output_canal(2+16,sn_ultimo_valor_tono_B,sn_3_8912_registros[i][9],i);
+			valor_enviar_sn +=sn_da_output_canal(4+32,sn_ultimo_valor_tono_C,sn_3_8912_registros[i][10],i);
 
 
 			valor_enviar_sn +=sn_da_output_canal_ruido();
 
 
-		}
+		
 
 		//Dividir valor restante entre numero de chips
 		valor_enviar_sn /=chips;
@@ -554,19 +557,19 @@ void sn_chip_siguiente_ciclo_siguiente(int chip)
 
 
 	//actualizamos contadores de frecuencias
-	sn_ultimo_valor_tono_A[chip]=sn_sine_table[sn_contador_tono_A[chip]];
+	sn_ultimo_valor_tono_A=sn_sine_table[sn_contador_tono_A[chip]];
 	sn_contador_tono_A[chip] +=sn_freq_tono_A[chip];
 	if (sn_contador_tono_A[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
 			sn_contador_tono_A[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 	}
 
-	sn_ultimo_valor_tono_B[chip]=sn_sine_table[sn_contador_tono_B[chip]];
+	sn_ultimo_valor_tono_B=sn_sine_table[sn_contador_tono_B[chip]];
 	sn_contador_tono_B[chip] +=sn_freq_tono_B[chip];
 	if (sn_contador_tono_B[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
 			sn_contador_tono_B[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 	}
 
-	sn_ultimo_valor_tono_C[chip]=sn_sine_table[sn_contador_tono_C[chip]];
+	sn_ultimo_valor_tono_C=sn_sine_table[sn_contador_tono_C[chip]];
 	sn_contador_tono_C[chip] +=sn_freq_tono_C[chip];
 	if (sn_contador_tono_C[chip]>=FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
 			sn_contador_tono_C[chip] -=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
@@ -688,13 +691,13 @@ void out_port_sn(z80_int puerto,z80_byte value)
 	if (puerto==65533) {
 		
 		//seleccion de registro
-		sn_3_8912_registro_sel[sn_chip_selected]=value & 15; //evitamos valores fuera de rango
+		sn_3_8912_registro_sel=value & 15; //evitamos valores fuera de rango
 
 		
 	}
 	else if (puerto==49149) {
 		//valor a registro
-		sn_3_8912_registros[sn_chip_selected][sn_3_8912_registro_sel[sn_chip_selected]&15]=value;
+		sn_3_8912_registros[sn_chip_selected][sn_3_8912_registro_sel&15]=value;
 
 
 
@@ -704,14 +707,14 @@ void out_port_sn(z80_int puerto,z80_byte value)
 		//registro R15 en este chip sn3-8912 no se usa para nada
 
 
-		if (sn_3_8912_registro_sel[sn_chip_selected] ==0 || sn_3_8912_registro_sel[sn_chip_selected] == 1) {
+		if (sn_3_8912_registro_sel ==0 || sn_3_8912_registro_sel == 1) {
 			//Canal A
 			//sn_establece_frecuencia_tono(0,&sn_freq_tono_A[sn_chip_selected],&sn_contador_tono_A[sn_chip_selected]);
 			sn_establece_frecuencia_tono(0,&sn_freq_tono_A[sn_chip_selected]);
 
 		}
 
-		if (sn_3_8912_registro_sel[sn_chip_selected] ==2 || sn_3_8912_registro_sel[sn_chip_selected] == 3) {
+		if (sn_3_8912_registro_sel ==2 || sn_3_8912_registro_sel == 3) {
 			//Canal B
 			//sn_establece_frecuencia_tono(2,&sn_freq_tono_B[sn_chip_selected],&sn_contador_tono_B[sn_chip_selected]);
 			sn_establece_frecuencia_tono(2,&sn_freq_tono_B[sn_chip_selected]);
@@ -719,13 +722,13 @@ void out_port_sn(z80_int puerto,z80_byte value)
 		}
 
 
-		if (sn_3_8912_registro_sel[sn_chip_selected] ==4 || sn_3_8912_registro_sel[sn_chip_selected] == 5) {
+		if (sn_3_8912_registro_sel ==4 || sn_3_8912_registro_sel == 5) {
 			//Canal C
 			//sn_establece_frecuencia_tono(4,&sn_freq_tono_C[sn_chip_selected],&sn_contador_tono_C[sn_chip_selected]);
 			sn_establece_frecuencia_tono(4,&sn_freq_tono_C[sn_chip_selected]);
 		}
 
-		if (sn_3_8912_registro_sel[sn_chip_selected] ==6) {
+		if (sn_3_8912_registro_sel ==6) {
 			//Frecuencia ruido
 			int freq_temp=sn_3_8912_registros[sn_chip_selected][6] & 31;
 	       		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
