@@ -258,7 +258,8 @@ int sn_contador_ruido[MAX_SN_CHIPS];
 short sn_ultimo_valor_ruido[MAX_SN_CHIPS];
 
 //valor randomize
-z80_int sn_randomize_noise[MAX_SN_CHIPS];
+//z80_int sn_randomize_noise[MAX_SN_CHIPS];
+z80_int sn_randomize_noise;
 
 //
 //Fin variables que dependen del chip activo
@@ -363,11 +364,11 @@ generar_random_noise:
         int resultado;
         int r;
 
-        r=sn_randomize_noise[chip];
+        r=sn_randomize_noise;
 
         resultado=(75*(r+1)-1);
 
-        sn_randomize_noise[chip]=resultado & 0xFFFF;
+        sn_randomize_noise=resultado & 0xFFFF;
 
         //printf ("sn_randomize_noise: %d\n",sn_randomize_noise);
 
@@ -388,7 +389,7 @@ void sn_chip_valor_aleatorio(int chip)
           ;32768..65535 -> -1
   */
 
-	if (sn_randomize_noise[chip]<32768) sn_ultimo_valor_ruido[chip]=+32767;
+	if (sn_randomize_noise<32768) sn_ultimo_valor_ruido[chip]=+32767;
 	else sn_ultimo_valor_ruido[chip]=-32767;
 
 	//printf ("Cambio ruido a : %d\n",sn_ultimo_valor_ruido);
