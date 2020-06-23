@@ -30,6 +30,7 @@ And also:
 * Amstrad CPC 464, CPC 4128
 * MSX1 
 * Colecovision
+* Sega SG1000
 
 ZEsarUX source code and binaries are distributed under GNU GPL license. 
 ZEsarUX also includes a folder, "my_soft", which has some programs and data made by me. The entire folder is also covered by the GNU GPL license.
@@ -110,6 +111,7 @@ __FEATURES__
 * Amstrad CPC 464, CPC 4128
 * MSX1 
 * Colecovision
+* Sega SG1000
 
 * Is the only emulator for machines: Chloe 140/280, Prism and Chrome
 

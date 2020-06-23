@@ -16011,7 +16011,7 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
                         msx_insert_rom_cartridge(last_msx_cart);
 				}
 				else if (MACHINE_IS_SG1000) {
-					coleco_insert_rom_cartridge(last_msx_cart);
+					sg1000_insert_rom_cartridge(last_msx_cart);
 				}
 				else {
 					coleco_insert_rom_cartridge(last_msx_cart);

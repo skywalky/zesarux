@@ -232,7 +232,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 		int leidos=fread(&memoria_spectrum[offset],1,16384,ptr_cartridge);
         if (leidos==16384) { 
             //sg1000_memory_slots[1][1+bloque]=SG1000_SLOT_MEMORY_TYPE_ROM;
-            printf ("loaded 16kb bytes of rom at slot 1 block %d\n",bloque);
+            printf ("sg1000 loaded 16kb bytes of rom at slot 1 block %d\n",bloque);
 
             bloques_totales++;
 
