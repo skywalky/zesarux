@@ -44,7 +44,6 @@ extern void coleco_empty_romcartridge_space(void);
 extern void coleco_out_port_vdp_data(z80_byte value);
 extern void coleco_out_port_vdp_command_status(z80_byte value);
 
-extern void coleco_out_port_sound(z80_byte value);
 
 extern z80_byte coleco_in_port_vdp_data(void);
 extern z80_byte coleco_in_port_vdp_status(void);
