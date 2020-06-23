@@ -201,7 +201,9 @@ __FEATURES__
 
 * Handles compressed formats zip (with internal decompressor), and tar, rar, gz through external utilities
 
-* Supports AY Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
+* Supports AY Audio Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
+
+* Supports SN76489AN Audio Chip
 
 * Real time playback from AY Chip sound to external MIDI device 
 

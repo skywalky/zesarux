@@ -7190,7 +7190,7 @@ void out_port_coleco_no_time(z80_int puerto,z80_byte value)
        }
 
 	   if (puerto_l>=0xE0 && puerto_l<=0xFF) {
-		   printf ("Puerto sonido %04XH valor %02XH\n",puerto,value);
+		   //printf ("Puerto sonido %04XH valor %02XH\n",puerto,value);
 		   coleco_out_port_sound(value);
 	   }
 
