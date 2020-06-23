@@ -197,7 +197,6 @@ z80_bit sn_speech_enabled;
 
 
 
-z80_byte sn_volumen_canal_ruido=0;
 
 //valores de 16 bits con signo
 //tempp  short sn_sine_table[FRECUENCIA_CONSTANTE_NORMAL_SONIDO];
@@ -211,9 +210,7 @@ short sn_sine_table[FRECUENCIA_CONSTANTE_NORMAL_SONIDO];
 
 
 
-//16 BYTES Contenido de los registros del chip de sonido
 
-z80_byte sn_3_8912_registros[16];
 
 //Ultimo registro seleccionado por el puerto 65533
 //z80_byte sn_3_8912_registro_sel[MAX_SN_CHIPS];
@@ -306,10 +303,7 @@ void init_chip_sn(void)
 
 	//resetear valores de puertos de sonido
 	int r;
-	for (r=0;r<16;r++) sn_3_8912_registros[r]=255;
-
-	int tono;
-	for (tono=0;tono<16;tono++) sn_chip_registers[tono]=255;
+	for (r=0;r<16;r++) sn_chip_registers[r]=255;
 
 
 
@@ -448,7 +442,7 @@ char sn_da_output_canal_ruido(void)
 	char valor8;
 	int valor;
 
-	z80_byte volumen=sn_volumen_canal_ruido;
+	z80_byte volumen=sn_chip_registers[10];
 
 
 	
@@ -620,7 +614,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 	}
 	else if (puerto==49149) {
 		//valor a registro
-		sn_3_8912_registros[sn_3_8912_registro_sel&15]=value;
+		
 
 		sn_chip_registers[sn_3_8912_registro_sel&15]=value;
 
@@ -750,7 +744,7 @@ void sn_init_filters(void)
 void sn_set_volume_noise(z80_byte volume)
 {
 
-                sn_volumen_canal_ruido=volume;
+                sn_chip_registers[10]=volume;
 
 }
 
