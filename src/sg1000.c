@@ -54,6 +54,7 @@ const char *sg1000_string_memory_type_empty="EMPTY";
 char *sg1000_get_string_memory_type(int tipo)
 {
     		
+            
 
     switch (tipo) {
 
@@ -76,6 +77,12 @@ char *sg1000_get_string_memory_type(int tipo)
 //Retorna direccion de memoria donde esta mapeada la ram y su tipo
 z80_byte *sg1000_return_segment_address(z80_int direccion,int *tipo)
 {
+
+
+//TODO
+    //temp sega
+    *tipo=SG1000_SLOT_MEMORY_TYPE_RAM;
+    return &memoria_spectrum[direccion];
 
 /*
 0000-1FFF = BIOS ROM
@@ -218,6 +225,10 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 
         */
         int offset=32768+bloque*16384;
+
+        //temp sg1000
+        offset=bloque*16384;
+
 		int leidos=fread(&memoria_spectrum[offset],1,16384,ptr_cartridge);
         if (leidos==16384) { 
             //sg1000_memory_slots[1][1+bloque]=SG1000_SLOT_MEMORY_TYPE_ROM;
@@ -231,7 +242,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
         }
 
 	}
-
+/* TODO
     if (bloques_totales==1) {
             //Copiar en los otros 2 segmentos
 
@@ -245,6 +256,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 
 
     }
+    */
 
 
     

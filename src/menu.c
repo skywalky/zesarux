@@ -16010,6 +16010,9 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
 				if (MACHINE_IS_MSX) {
                         msx_insert_rom_cartridge(last_msx_cart);
 				}
+				else if (MACHINE_IS_SG1000) {
+					coleco_insert_rom_cartridge(last_msx_cart);
+				}
 				else {
 					coleco_insert_rom_cartridge(last_msx_cart);
 				}
@@ -16161,6 +16164,14 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_COLECO) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_msxcart,NULL,"Coleco ~~Cartridge");
+			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"MSX Cartridge Settings");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"MSX Cartridge Settings");
+		}
+
+
+		if (MACHINE_IS_SG1000) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_msxcart,NULL,"SG1000 ~~Cartridge");
 			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
 			menu_add_item_menu_tooltip(array_menu_storage_settings,"MSX Cartridge Settings");
 			menu_add_item_menu_ayuda(array_menu_storage_settings,"MSX Cartridge Settings");
