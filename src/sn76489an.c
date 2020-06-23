@@ -195,8 +195,6 @@ z80_bit sn_speech_enabled;
 
 
 
-//una onda oscila 2 veces de signo en su frecuencia
-#define TEMP_MULTIPLICADOR 1
 
 
 z80_byte sn_volumen_canal_ruido=0;
@@ -299,6 +297,9 @@ void init_chip_sn(void)
 	//resetear valores de puertos de sonido
 	int r;
 	for (r=0;r<16;r++) sn_3_8912_registros[r]=255;
+
+	int tono;
+	for (tono=0;tono<6;tono++) sn_tone_channels[tono]=255;
 
 
 
@@ -542,10 +543,18 @@ void sn_chip_siguiente_ciclo(void)
 void sn_establece_frecuencia_tono(z80_byte indice, int *freq_tono)
 {
 
+/*
+Frecuencia real= X = (CPU Speed / 32) / Desired frequency
+*/
+
+
 	int freq_temp;
-	freq_temp=sn_3_8912_registros[indice]+256*(sn_3_8912_registros[indice+1] & 0x0F);
-	//printf ("Valor freq_temp : %d\n",freq_temp);
-	freq_temp=freq_temp*16;
+	//freq_temp=sn_3_8912_registros[indice]+256*(sn_3_8912_registros[indice+1] & 0x0F);
+
+	freq_temp=(sn_tone_channels[indice] & 0xF) | ((sn_tone_channels[indice+1] & 63)<<4);
+
+	printf ("Valor freq_temp : %d\n",freq_temp);
+	//freq_temp=freq_temp*16;
 
 
 	//controlamos divisiones por cero
@@ -553,31 +562,12 @@ void sn_establece_frecuencia_tono(z80_byte indice, int *freq_tono)
 
 	*freq_tono=FRECUENCIA_SN/freq_temp;
 
-	//printf ("Valor freq_tono : %d\n",*freq_tono);
-
-	/* Pruebas notas
-	Octava 4. Nota C Valor registros: 424. Freq_tono=261 hz ok
-	          Nota D Valor registros: 377. Freq_tono=293 hz ok
-
-	Maximo valor en registro=12 bit=4095. 4095*16=65520
-	FRECUENCIA_SN=1773400
-	1773400/65520=27 Hz
-
-	Minimo valor en registro=0
-	1773400/(0*16) infinito
-
-	Si es 1 por ejemplo, 1*16=16
-	1773400/16= 110.837 KHz
-
-	*/
 
 
-	//freq_tono realmente tiene frecuencia*2... dice cada cuando se conmuta de signo
-	//esto ya no hace falta con la tabla... multiplicador=1
-	*freq_tono=(*freq_tono)*TEMP_MULTIPLICADOR;
 
-        if (*freq_tono>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
-		//debug_printf (VERBOSE_DEBUG,"Frequency tone %d out of range",(*freq_tono)/TEMP_MULTIPLICADOR);
+
+    if (*freq_tono>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+		
 		*freq_tono=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
 	}
 
@@ -635,14 +625,14 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 		if (sn_3_8912_registro_sel ==0 || sn_3_8912_registro_sel == 1) {
 			//Canal A
-			
+			sn_tone_channels[sn_3_8912_registro_sel&15]=value;
 			sn_establece_frecuencia_tono(0,&sn_freq_tono_A);
 
 		}
 
 		if (sn_3_8912_registro_sel ==2 || sn_3_8912_registro_sel == 3) {
 			//Canal B
-			
+			sn_tone_channels[sn_3_8912_registro_sel&15]=value;
 			sn_establece_frecuencia_tono(2,&sn_freq_tono_B);
 
 		}
@@ -650,7 +640,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 		if (sn_3_8912_registro_sel ==4 || sn_3_8912_registro_sel == 5) {
 			//Canal C
-			
+			sn_tone_channels[sn_3_8912_registro_sel&15]=value;
 			sn_establece_frecuencia_tono(4,&sn_freq_tono_C);
 		}
 
@@ -667,7 +657,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 			//printf ("Frecuencia ruido: %d Hz\n",sn_freq_ruido);
 
 			//sn_freq_ruido realmente tiene frecuencia*2... dice cada cuando se conmuta de signo
-			//sn_freq_ruido=sn_freq_ruido*TEMP_MULTIPLICADOR;
+			
 			sn_freq_ruido=sn_freq_ruido*2;
 
 
@@ -696,7 +686,7 @@ void out_port_sn(z80_int puerto,z80_byte value)
 
 
 
-
+/*
 //Retorna la frecuencia de un registro concreto del chip SN de sonido
 int sn_retorna_frecuencia(int registro)
 {
@@ -713,7 +703,7 @@ int sn_retorna_frecuencia(int registro)
 	freq_tono=FRECUENCIA_SN/freq_temp;
 
 	return freq_tono;
-}
+}*/
 
 /*
 
@@ -829,7 +819,7 @@ tro de ruido cada periodo del reloj de sonido dividido por 16.
 }
 
 
-
+//4 low bits of frequency
 void sn_set_channel_fine_tune(z80_byte canal,z80_byte fino)
 {
 
@@ -838,7 +828,7 @@ void sn_set_channel_fine_tune(z80_byte canal,z80_byte fino)
             out_port_sn(49149,fino);   
 }
 
-
+//10 low bits of frequency
 void sn_set_channel_aprox_tune(z80_byte canal,z80_byte aproximado)
 {
             out_port_sn(65533,1+2*canal);

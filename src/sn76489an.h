@@ -40,7 +40,7 @@ extern void out_port_sn(z80_int puerto,z80_byte value);
 
 #define FRECUENCIA_SN (sn_chip_frequency)
 
-#define FRECUENCIA_COLECO_SN 1773400
+#define FRECUENCIA_COLECO_SN (3500000/32)
 
 
 
