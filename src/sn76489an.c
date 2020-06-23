@@ -401,68 +401,15 @@ char sn_da_output_canal(z80_byte mascara,short ultimo_valor_tono,z80_byte volume
 	char valor8;
 	int valor;
 
-/*
-COMMENT !
-    The noise and tone output of a channel is combined in the mixer in the
-    following wsn:
 
-        Output_A = (Tone_A OR Ta) AND (Noise OR Na)
 
-    Here Tone_A is the binary output of tone generator A, and Noise is the
-    binary output of the noise generator.  Note that setting both Ta and Na
-    to 1 produces a constant 1 as output.  Also note that setting both Ta
-    and Na to 0 produces bursts of noise and half-periods of constant
-    output 0.
-( Tone_a OR 0 ) AND ( Noise_a OR 0 )= Tone_a AND Noise_a
-( Tone_a OR 0 ) AND ( Noise_a OR 1 )= Tone_a
-( Tone_a OR 1 ) AND ( Noise_a OR 0 )= Noise_a
-( Tone_a OR 1 ) AND ( Noise_a OR 1 )= 1
-!
-*/
 
-	z80_bit tone,noise;
 
-//	printf ("ultimo_valor_tono: %d\n",ultimo_valor_tono);
 
-	tone.v=!(sn_retorna_mixer_register(chip) & mascara & 7);
-	noise.v=!(sn_retorna_mixer_register(chip) & mascara & (8+16+32));
-
-	if (tone.v==1 && noise.v==0)  {
+	
 		valor=ultimo_valor_tono;
 		silence_detection_counter=0;
-	}
-
-	else if (tone.v==0 && noise.v==1)  {
-                valor=sn_ultimo_valor_ruido[chip];
-                silence_detection_counter=0;
-        }
-
-	else if (tone.v==1 && noise.v==1)  {
-		/*
-		 Also note that setting both Ta
-    and Na to 0 produces bursts of noise and half-periods of constant
-    output 0.
-*/
-		//Valor combinado ruido y tono
-		//en version 1.0 este /2 no estaba, era un error, por tanto se generaba al final un volumen msnor de lo normal,
-		//cosa que podia hacer que el valor final del sonido cambiase de signo,
-		//provocando ruido mas alto de lo normal
-		valor=(sn_ultimo_valor_ruido[chip]+ultimo_valor_tono)/2;
-
-                silence_detection_counter=0;
-		//printf ("tone y noise. valor:%d\n",valor);
-
-        }
-
-	else {
-		//Canales desactivados
-		//Parece que deberiamos devolver 0, pero no, devuelve 1
-		//esto permite generar sintetizacion de voz/sonido, etc en juegos como Chase HQ por ejemplo, Dizzy III
-		//valor=1;
-		valor=sn_speech_enabled.v*32767;
-	}
-
-
+	
 
 
 	volumen=volumen & 15; //Evitar valores de volumen fuera de rango que vengan de los registros de volumen
