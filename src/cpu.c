@@ -1072,6 +1072,10 @@ void reset_cpu(void)
 		coleco_reset();
 	}	
 
+	if (MACHINE_IS_SG1000) {
+		sg1000_reset();
+	}		
+
 	t_estados=0;
 	t_scanline=0;
 	t_scanline_draw=0;
@@ -1267,6 +1271,7 @@ char *string_machines_list_description=
 							
 							" MSX1     MSX1\n"
 							" Coleco   Colecovision\n"
+							" SG1000   Sega SG1000\n"
 							;
 
 
@@ -2476,6 +2481,7 @@ struct s_machine_names machine_names[]={
 
 {"MSX1",MACHINE_ID_MSX1},
 {"ColecoVision",MACHINE_ID_COLECO},
+{"SG1000",MACHINE_ID_SG1000},
 
                                             {"ZX80",  				120},
                                             {"ZX81",  				121},
@@ -2844,6 +2850,20 @@ void malloc_mem_machine(void) {
 
         }		
 
+        else if (MACHINE_IS_SG1000) {
+                //total 64kb 
+                malloc_machine(65536);
+                random_ram(memoria_spectrum,65536);
+
+
+				//y 16kb para vram
+				sg1000_alloc_vram_memory();
+
+
+				sg1000_init_memory_tables();
+
+        }			
+
 
 	else if (MACHINE_IS_Z88) {
 		//Asignar 4 MB
@@ -2913,6 +2933,7 @@ void set_machine_params(void)
 
 28-29 Reservado (Spectrum)
 100=colecovision
+101=sega sg1000
 110-119 msx:
 110 msx1
 120=zx80 (old 20)
@@ -3022,6 +3043,10 @@ void set_machine_params(void)
 		else if (MACHINE_IS_COLECO) {
 			cpu_core_loop_active=CPU_CORE_COLECO;
 		}	
+
+		else if (MACHINE_IS_SG1000) {
+			cpu_core_loop_active=CPU_CORE_SG1000;
+		}			
 
 
 		else {
@@ -3401,7 +3426,20 @@ You don't need timings for H/V sync =)
 			
 			screen_testados_linea=228;
 
-		}					
+		}		
+
+		else if (MACHINE_IS_SG1000) {
+			contend_read=contend_read_sg1000;
+			contend_read_no_mreq=contend_read_no_mreq_sg1000;
+			contend_write_no_mreq=contend_write_no_mreq_sg1000;
+
+			ula_contend_port_early=ula_contend_port_early_sg1000;
+			ula_contend_port_late=ula_contend_port_late_sg1000;
+
+			
+			screen_testados_linea=228;
+
+		}						
 
 		else if (MACHINE_IS_SAM) {
 			contend_read=contend_read_sam;
@@ -3713,6 +3751,16 @@ You don't need timings for H/V sync =)
 				sn_chip_present.v=1;
         break;
 
+		case MACHINE_ID_SG1000:
+                poke_byte=poke_byte_sg1000;
+                peek_byte=peek_byte_sg1000;
+				peek_byte_no_time=peek_byte_no_time_sg1000;
+				poke_byte_no_time=poke_byte_no_time_sg1000;
+                lee_puerto=lee_puerto_sg1000;
+				out_port=out_port_sg1000;
+				fetch_opcode=fetch_opcode_sg1000;
+				sn_chip_present.v=1;
+        break;
 
 		case MACHINE_ID_MSX1:
                 poke_byte=poke_byte_msx1;
@@ -4276,7 +4324,11 @@ void rom_load(char *romfilename)
 
                 case MACHINE_ID_COLECO:
                 romfilename="coleco.rom";
-                break;				
+                break;	
+
+                case MACHINE_ID_SG1000:
+                romfilename="sg1000.rom"; //no tiene rom
+                break;							
                 
                 case MACHINE_ID_MSX1:
                 romfilename="msx.rom";
@@ -4536,6 +4588,11 @@ Total 20 pages=320 Kb
 				}
 		}				
                 
+                else if (MACHINE_IS_SG1000) {
+					//no tiene rom
+			
+		}	
+
                 else if (MACHINE_IS_MSX1) {
 			//msx 32 kb rom
                         	leidos=fread(memoria_spectrum,1,32768,ptr_romfile);

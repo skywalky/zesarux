@@ -472,7 +472,8 @@ char *array_fabricantes[]={
 	"VTrucco/FB Labs",
 	"Jupiter Cantab",
         "Ascii Corp",
-        "Coleco Industries"
+        "Coleco Industries",
+        "Sega"
         
 };
 
@@ -495,14 +496,15 @@ char *array_fabricantes_hotkey[]={
         "~~VTrucco/FB Labs",
         "J~~upiter Cantab",
         "Ascii C~~orp",
-        "Coleco In~~dustries"
+        "Coleco In~~dustries",
+        "Sega"
         
 
 
 };
 
-//Si letra es espacio->no hay letra
-char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvuod";
+//Si letra es espacio->no hay letra. Repetida d final sega temporal
+char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvuodd";
 
 
 
@@ -534,6 +536,10 @@ int array_maquinas_ascii_corp[]={
 
 int array_maquinas_coleco_industries[]={
 	MACHINE_ID_COLECO,255
+};
+
+int array_maquinas_sega[]={
+	MACHINE_ID_SG1000,255
 };
 
 int array_maquinas_amstrad[]={
@@ -615,6 +621,10 @@ int *return_maquinas_fabricante(int fabricante)
 		case FABRICANTE_COLECO_INDUSTRIES:
 			return array_maquinas_coleco_industries;
 		break;    
+
+		case FABRICANTE_SEGA:
+			return array_maquinas_sega;
+		break;                  
 
 		case FABRICANTE_AMSTRAD:
 			return array_maquinas_amstrad;
@@ -723,7 +733,11 @@ int return_fabricante_maquina(int maquina)
 
                 case MACHINE_ID_COLECO:
 			return FABRICANTE_COLECO_INDUSTRIES;
-		break;                   
+		break;      
+
+                case MACHINE_ID_SG1000:
+			return FABRICANTE_SEGA;
+		break;                                
 
                 case MACHINE_ID_MSX1:
 			return FABRICANTE_ASCII_CORP;
@@ -4508,6 +4522,7 @@ int quickload_valid_extension(char *nombre) {
     || !util_compare_file_extension(nombre,"rzx")
     || !util_compare_file_extension(nombre,"rom")
     || !util_compare_file_extension(nombre,"col")
+    || !util_compare_file_extension(nombre,"sg")
 	) {
 		return 1;
 	}
@@ -4960,6 +4975,28 @@ int quickload_continue(char *nombre) {
                 return 0;
 
         }           
+
+	//Cartuchos de SG1000
+	else if (
+                !util_compare_file_extension(nombre,"sg")
+        ) {
+		//Aqui el autoload da igual. cambiamos siempre a sg1000 si conviene
+                if (!MACHINE_IS_SG1000) {
+			current_machine_type=MACHINE_ID_SG1000;
+                        set_machine(NULL);
+
+                                //establecer parametros por defecto. Incluido quitar slots de memoria
+                           set_machine_params();
+
+                          reset_cpu();
+                }
+
+                sg1000_insert_rom_cartridge(nombre);
+
+
+                return 0;
+
+        }              
 
 
 	//eprom cards de Z88
@@ -9899,6 +9936,7 @@ int get_machine_id_by_name(char *machine_name)
                                 
                                 else if (!strcasecmp(machine_name,"MSX1")) return_machine=MACHINE_ID_MSX1;
                                 else if (!strcasecmp(machine_name,"COLECO")) return_machine=MACHINE_ID_COLECO;
+                                else if (!strcasecmp(machine_name,"SG1000")) return_machine=MACHINE_ID_SG1000;
                                 else {
                                         debug_printf (VERBOSE_ERR,"Unknown machine %s",machine_name);
                                         return_machine=-1;

@@ -2498,6 +2498,11 @@ void scrcocoa_refresca_pantalla(void)
 		scr_refresca_pantalla_y_border_coleco();
 	}      
 
+
+	else if (MACHINE_IS_SG1000) {
+		scr_refresca_pantalla_y_border_sg1000();
+	}            
+
         //printf ("%d\n",spectrum_colortable[1]);
 
 	if (menu_overlay_activo) {

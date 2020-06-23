@@ -90,6 +90,7 @@
 #include "core_coleco.h"
 #include "msx.h"
 #include "coleco.h"
+#include "core_sg1000.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -1594,6 +1595,12 @@ void set_cpu_core_loop(void)
       debug_printf(VERBOSE_INFO,"Setting COLECO CPU core");
       cpu_core_loop=cpu_core_loop_coleco;
       cpu_core_loop_name="COLECO";
+    break;		
+
+    case CPU_CORE_SG1000:
+      debug_printf(VERBOSE_INFO,"Setting SG1000 CPU core");
+      cpu_core_loop=cpu_core_loop_sg1000;
+      cpu_core_loop_name="SG1000";
     break;		
 
 
