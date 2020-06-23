@@ -7162,8 +7162,11 @@ void out_port_coleco_no_time(z80_int puerto,z80_byte value)
 	z80_byte puerto_l=puerto&255;
 	z80_byte puerto_h=(puerto>>8)&0xFF;
 
-	//printf ("Out coleco port: %04XH value: %02XH char: %c PC=%04XH\n",puerto,value,
-	//  (value>=32 && value<=126 ? value : '?'),reg_pc );
+	//if (puerto_l!=0xBE && puerto_l!=0xBF) {
+	//	printf ("Out coleco port: %04XH value: %02XH char: %c PC=%04XH\n",puerto,value,(value>=32 && value<=126 ? value : '?'),reg_pc );
+	//}
+
+
 
 
 /*
