@@ -7474,7 +7474,24 @@ z80_byte lee_puerto_sg1000_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
        //FC- Reading this port gives the status of controller #1. (farthest from front)
 	   //Temporal fila de teclas
-       if (puerto_l==0xFC) {
+       /*if (puerto_l==0xFC) {
+
+//puerto_63486    db              255  ; 5    4    3    2    1     ;3
+//puerto_61438    db              255  ; 6    7    8    9    0     ;4
+
+				//345 67890
+               return (puerto_61438 & 31) | ((puerto_63486<<3) & (128+64+32) );
+             
+       }*/
+	   /*
+	   Lee puerto sg1000 04DCH PC=1D7AH
+
+
+Lee puerto sg1000 03DDH PC=1D7DH
+Lee puerto sg1000 02DEH PC=1DBFH
+*/
+
+       if (puerto_l==0xDC) {
 
 //puerto_63486    db              255  ; 5    4    3    2    1     ;3
 //puerto_61438    db              255  ; 6    7    8    9    0     ;4
@@ -7484,7 +7501,28 @@ z80_byte lee_puerto_sg1000_no_time(z80_byte puerto_h,z80_byte puerto_l)
              
        }
 
+	/*
+		if (puerto_l==0xDD) {
+	   ////puerto_64510    db              255  ; T    R    E    W    Q     ;2
+	   //puerto_57342    db              255  ; Y    U    I    O    P     ;5
 
+				//345 67890
+               return (puerto_64510 & 31) | ((puerto_57342<<3) & (128+64+32) );
+		}
+		*/
+
+	/*
+		if (puerto_l==0xDE) {
+	   //puerto_65022   db    255  ; G    F    D    S    A     ;1
+	   //puerto_49150    db              255  ; H                J         K      L    Enter ;6
+
+				//345 67890
+               return (puerto_65022 & 31) | ((puerto_49150<<3) & (128+64+32) );
+		}		
+	*/
+
+
+	printf ("Lee puerto sg1000 %04XH PC=%04XH\n",puerto,reg_pc);
 
 
 	return 255;

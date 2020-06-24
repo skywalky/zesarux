@@ -187,10 +187,14 @@ void core_sg1000_fin_frame_pantalla(void)
 				//Si se genera nmi mediante bit 5 de registro vdp 1
 				//VR1
 				//5    IE0        V-Blank Interrupt Enable   (0=Disable, 1=Enable)
+
+				/*
+				Parece que a diferencia de colecovision, sg1000 no genera nmi
 				if (vdp_9918a_registers[1] & 32) {
 					//printf ("Generando nmi\n");
 					generate_nmi();
 				}
+				*/
 						
 
 

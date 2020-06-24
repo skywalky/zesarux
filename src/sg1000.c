@@ -78,41 +78,24 @@ char *sg1000_get_string_memory_type(int tipo)
 z80_byte *sg1000_return_segment_address(z80_int direccion,int *tipo)
 {
 
-
-//TODO
-    //temp sega
-    *tipo=SG1000_SLOT_MEMORY_TYPE_RAM;
-    return &memoria_spectrum[direccion];
-
 /*
-0000-1FFF = BIOS ROM
-2000-3FFF = Expansion port
-4000-5FFF = Expansion port
-6000-7FFF = RAM (1K mapped into an 8K spot)
-8000-9FFF = Cart ROM 
-A000-BFFF = Cart ROM 
-C000-DFFF = Cart ROM      
-E000-FFFF = Cart ROM 
+Region	Maps to
+$0000-$bfff	Cartridge (ROM/RAM/etc)
+$c000-$c3ff	System RAM
+$c400-$ffff	System RAM (mirrored every 1KB)
 */
 
     //ROM
-    if (direccion<=0x1FFF || direccion>=0x8000) {
+    if (direccion<=0xbfff) {
         *tipo=SG1000_SLOT_MEMORY_TYPE_ROM;
         return &memoria_spectrum[direccion];
     }
 
     //RAM 1 KB
-    else if (direccion>=0x6000 && direccion<=0x7FFF) {
-        *tipo=SG1000_SLOT_MEMORY_TYPE_RAM;
-        return &memoria_spectrum[0x6000 + (direccion & 1023)];
-    }
-
-    //Vacio
     else {
-        *tipo=SG1000_SLOT_MEMORY_TYPE_EMPTY;
-        return &memoria_spectrum[direccion];
+        *tipo=SG1000_SLOT_MEMORY_TYPE_RAM;
+        return &memoria_spectrum[0xc000 + (direccion & 1023)];
     }
-
 
     
     
@@ -224,10 +207,8 @@ When a primary Slot is expanded, the search is done in the corresponding seconda
 When the system finds a header, it selects the ROM slot only on the memory page corresponding to the address specified in INIT then, runs the program in ROM at the same address. (In short, it makes an inter-slot call.)
 
         */
-        int offset=32768+bloque*16384;
-
-        //temp sg1000
-        offset=bloque*16384;
+        int offset=bloque*16384;
+        
 
 		int leidos=fread(&memoria_spectrum[offset],1,16384,ptr_cartridge);
         if (leidos==16384) { 
@@ -242,21 +223,21 @@ When the system finds a header, it selects the ROM slot only on the memory page 
         }
 
 	}
-/* TODO
+
     if (bloques_totales==1) {
-            //Copiar en los otros 2 segmentos
+            //Copiar en los otros segmentos
 
             //Antes, si es un bloque de 8kb, copiar 8kb bajos en parte alta
             if (tamanyo_archivo==8192) {
-                memcpy(&memoria_spectrum[32768+8192],&memoria_spectrum[32768],8192);
+                memcpy(&memoria_spectrum[8192],&memoria_spectrum[0],8192);
             }
 
-            memcpy(&memoria_spectrum[49152],&memoria_spectrum[32768],16384);
+            memcpy(&memoria_spectrum[16384],&memoria_spectrum[0],16384);
 
 
 
     }
-    */
+    
 
 
     

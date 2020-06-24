@@ -347,3 +347,6 @@ https://github.com/gseidler/The-MSX-Red-Book/blob/master/the_msx_red_book.md
 -msx timings accesos a vram write/read y depende de modo
 
 
+-redibujado sg1000 en todos drivers
+
+-rom sg1000 no deberia cargarla. o meter un archivo vacio

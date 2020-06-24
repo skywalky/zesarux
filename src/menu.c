@@ -15964,6 +15964,10 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
         	filtros[0]="col";
 		}
 
+		else if (MACHINE_IS_SG1000) {
+        	filtros[0]="sg";
+		}		
+
 		else {
 			filtros[0]="rom";
 		}
@@ -16064,6 +16068,7 @@ void menu_msxcart(MENU_ITEM_PARAMETERS)
 				char window_title[64];
 
 				if (MACHINE_IS_COLECO) strcpy(window_title,"Coleco Cartridge");
+				else if (MACHINE_IS_SG1000) strcpy(window_title,"SG1000 Cartridge");
 				else strcpy(window_title,"MSX Cartridge");
 
                 retorno_menu=menu_dibuja_menu(&msxcart_opcion_seleccionada,&item_seleccionado,array_menu_msxcart,window_title);
