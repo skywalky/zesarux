@@ -173,85 +173,31 @@ void sg1000_insert_rom_cartridge(char *filename)
 
     long tamanyo_archivo=get_file_size(filename);
 
-    if (tamanyo_archivo!=8192 && tamanyo_archivo!=16384 && tamanyo_archivo!=32768 && tamanyo_archivo!=49152) {
-        debug_printf(VERBOSE_ERR,"Only 8k, 16k, 32k and 48k rom cartridges are allowed");
+    if (tamanyo_archivo>49152) {
+        debug_printf(VERBOSE_ERR,"Cartridges bigger than 48K are not allowed");
         return;
     }
 
-        FILE *ptr_cartridge;
-        ptr_cartridge=fopen(filename,"rb");
+    FILE *ptr_cartridge;
+    ptr_cartridge=fopen(filename,"rb");
 
-        if (!ptr_cartridge) {
-		debug_printf (VERBOSE_ERR,"Unable to open cartridge file %s",filename);
-                return;
-        }
-
-
-
-	//Leer cada bloque de 16 kb si conviene. Esto permite tambien cargar cartucho de 8kb como si fuera de 16kb
-
-	int bloque;
-
-    int salir=0;
-
-    int bloques_totales=0;
-
-	for (bloque=0;bloque<3 && !salir;bloque++) {
-        /*
-        The ROM Header
-
-A ROM needs a header to be auto-executed by the system when the SG1000 is initialized.
-
-After finding the RAM and initializing the system variables, the SG1000 looks for the ROM headers in all the slots 
-on the memory pages 4000h-7FFFh and 8000h-FFFh. The search is done in ascending order. 
-When a primary Slot is expanded, the search is done in the corresponding secondary Slots before going to the next Primary Slot.
-When the system finds a header, it selects the ROM slot only on the memory page corresponding to the address specified in INIT then, runs the program in ROM at the same address. (In short, it makes an inter-slot call.)
-
-        */
-        int offset=bloque*16384;
-        
-
-		int leidos=fread(&memoria_spectrum[offset],1,16384,ptr_cartridge);
-        if (leidos==16384) { 
-            //sg1000_memory_slots[1][1+bloque]=SG1000_SLOT_MEMORY_TYPE_ROM;
-            printf ("sg1000 loaded 16kb bytes of rom at slot 1 block %d\n",bloque);
-
-            bloques_totales++;
-
-        }
-        else {
-            salir=1;
-        }
-
-	}
-
-    if (bloques_totales==1) {
-            //Copiar en los otros segmentos
-
-            //Antes, si es un bloque de 8kb, copiar 8kb bajos en parte alta
-            if (tamanyo_archivo==8192) {
-                memcpy(&memoria_spectrum[8192],&memoria_spectrum[0],8192);
-            }
-
-            memcpy(&memoria_spectrum[16384],&memoria_spectrum[0],16384);
-
-
-
+    if (!ptr_cartridge) {
+    debug_printf (VERBOSE_ERR,"Unable to open cartridge file %s",filename);
+            return;
     }
+
+
+
+    int leidos=fread(memoria_spectrum,1,tamanyo_archivo,ptr_cartridge);
     
 
-
-    
-    //int i;
+    fclose(ptr_cartridge);
 
 
-        fclose(ptr_cartridge);
-
-
-        if (noautoload.v==0) {
-                debug_printf (VERBOSE_INFO,"Reset cpu due to autoload");
-                reset_cpu();
-        }
+    if (noautoload.v==0) {
+            debug_printf (VERBOSE_INFO,"Reset cpu due to autoload");
+            reset_cpu();
+    }
 
 
 }

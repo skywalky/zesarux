@@ -7387,26 +7387,12 @@ void out_port_sg1000_no_time(z80_int puerto,z80_byte value)
 	z80_byte puerto_l=puerto&255;
 	z80_byte puerto_h=(puerto>>8)&0xFF;
 
-	//if (puerto_l!=0xBE && puerto_l!=0xBF) {
-	//	printf ("Out sg1000 port: %04XH value: %02XH char: %c PC=%04XH\n",puerto,value,(value>=32 && value<=126 ? value : '?'),reg_pc );
-	//}
-
-
-
-
-/*
-	printf ("Out sg1000 port: %04XH value: %02XH char: %c\n",puerto,value,
-	  (value>=32 && value<=126 ? value : '?') );
-
-	if (puerto_l==0xA8) printf ("Puerto PPI Port R/W Port A\n");
-	if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
-	if (puerto_l==0x99) printf ("VDP Command and status register\n");*/
 
 
 	//if (puerto_l==0x98) printf ("%c",
 	//  (value>=32 && value<=126 ? value : '?') );
 
-	//coleco sound
+	//sg1000 sound
 		   if (puerto_l==0x7F) {
 		   //printf ("Puerto sonido %04XH valor %02XH\n",puerto,value);
 		   sn_out_port_sound(value);
@@ -7423,10 +7409,7 @@ void out_port_sg1000_no_time(z80_int puerto,z80_byte value)
                sg1000_out_port_vdp_command_status(value);
        }
 
-	   if (puerto_l>=0xE0 && puerto_l<=0xFF) {
-		   //printf ("Puerto sonido %04XH valor %02XH\n",puerto,value);
-		   sn_out_port_sound(value);
-	   }
+
 
 }
 
@@ -7459,7 +7442,7 @@ z80_byte lee_puerto_sg1000_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//A8. 
 	//if (puerto==0xa8) return 0x50; //temporal
 
-       //temp sg1000
+       
        //printf ("In port : %04XH\n",puerto);
        if (puerto_l==0xBE) {
                //printf ("VDP Video Ram Data IN\n");
@@ -7506,28 +7489,10 @@ Lee puerto sg1000 02DEH PC=1DBFH
              
        }	   
 
-	/*
-		if (puerto_l==0xDD) {
-	   ////puerto_64510    db              255  ; T    R    E    W    Q     ;2
-	   //puerto_57342    db              255  ; Y    U    I    O    P     ;5
-
-				//345 67890
-               return (puerto_64510 & 31) | ((puerto_57342<<3) & (128+64+32) );
-		}
-		*/
-
-	/*
-		if (puerto_l==0xDE) {
-	   //puerto_65022   db    255  ; G    F    D    S    A     ;1
-	   //puerto_49150    db              255  ; H                J         K      L    Enter ;6
-
-				//345 67890
-               return (puerto_65022 & 31) | ((puerto_49150<<3) & (128+64+32) );
-		}		
-	*/
 
 
-	printf ("Lee puerto sg1000 %04XH PC=%04XH\n",puerto,reg_pc);
+
+	//printf ("Lee puerto sg1000 %04XH PC=%04XH\n",puerto,reg_pc);
 
 
 	return 255;
