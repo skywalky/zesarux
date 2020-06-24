@@ -11846,9 +11846,16 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
         do {
 
 					char buffer_ay_registers_texto[64];
+					char buffer_ay_piano_texto[64];
 
-					if (sn_chip_present.v) strcpy(buffer_ay_registers_texto,"SN ~~Registers");
-					else strcpy(buffer_ay_registers_texto,"AY ~~Registers");
+					if (sn_chip_present.v) {
+						strcpy(buffer_ay_registers_texto,"SN ~~Registers");
+						strcpy(buffer_ay_piano_texto,"SN P~~iano");
+					}
+					else {
+						strcpy(buffer_ay_registers_texto,"AY ~~Registers");
+						strcpy(buffer_ay_piano_texto,"AY P~~iano");
+					}
 
 					menu_add_item_menu_inicial(&array_menu_audio_settings,buffer_ay_registers_texto,MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_or_sn_chip);
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'r');
@@ -11857,7 +11864,7 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY Mi~~xer");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'x');
 
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_chip,"AY P~~iano");
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_or_sn_chip,"AY P~~iano");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'i');
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
                 	menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
