@@ -47,6 +47,8 @@ extern void sn_set_volume_noise(z80_byte volume);
 
 extern void sn_set_volume_tone_channel(z80_byte canal,z80_byte volumen_final);
 
+extern int sn_retorna_frecuencia(int registro);
+
 
 //1'7734*1000000 (Hz) en Spectrum
 //En Amstrad, 1 MHz

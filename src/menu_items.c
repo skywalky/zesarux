@@ -2568,11 +2568,11 @@ void menu_ay_registers_overlay(void)
 			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
 
 
-/*
 
-			int freq_a=ay_retorna_frecuencia(0,chip);
-			int freq_b=ay_retorna_frecuencia(1,chip);
-			int freq_c=ay_retorna_frecuencia(2,chip);
+
+			int freq_a=sn_retorna_frecuencia(0);
+			int freq_b=sn_retorna_frecuencia(1);
+			int freq_c=sn_retorna_frecuencia(2);
 			sprintf (textotono,"Channel A:  %3s %7d Hz",get_note_name(freq_a),freq_a);
 			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
 			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
@@ -2587,6 +2587,7 @@ void menu_ay_registers_overlay(void)
 
 
 					                        //Frecuencia ruido
+											/*
                         int freq_temp=ay_3_8912_registros[chip][6] & 31;
                         //printf ("Valor registros ruido : %d Hz\n",freq_temp);
                         freq_temp=freq_temp*16;
@@ -2599,8 +2600,9 @@ void menu_ay_registers_overlay(void)
                         sprintf (textotono,"Frequency Noise: %6d Hz",freq_ruido);
                         //menu_escribe_linea_opcion(linea++,-1,1,textotono);
 						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+							*/
 
-						*/
+						
 
 
 	}
