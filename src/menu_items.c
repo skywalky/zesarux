@@ -2495,6 +2495,7 @@ Calculando ese tiempo: 12% cpu
 int ayregisters_previo_valor_volume_A[MAX_AY_CHIPS];
 int ayregisters_previo_valor_volume_B[MAX_AY_CHIPS];
 int ayregisters_previo_valor_volume_C[MAX_AY_CHIPS];
+int ayregisters_previo_valor_volume_noise;
 
 	int menu_ayregisters_valor_contador_segundo_anterior;
 
@@ -2522,7 +2523,7 @@ void menu_ay_registers_overlay(void)
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
-	int vol_A[MAX_AY_CHIPS],vol_B[MAX_AY_CHIPS],vol_C[MAX_AY_CHIPS];
+	int vol_A[MAX_AY_CHIPS],vol_B[MAX_AY_CHIPS],vol_C[MAX_AY_CHIPS],vol_noise;
 
 
 	if (sn_chip_present.v) {
@@ -2535,16 +2536,19 @@ void menu_ay_registers_overlay(void)
       		vol_A[0]=sn_chip_registers[6] & 15;
         	vol_B[0]=sn_chip_registers[7] & 15;
         	vol_C[0]=sn_chip_registers[8] & 15;
+			vol_noise=sn_chip_registers[10] & 15;
 
 			//Controlar limites, dado que las variables entran sin inicializar
 			if (ayregisters_previo_valor_volume_A[0]>16) ayregisters_previo_valor_volume_A[0]=16;
 			if (ayregisters_previo_valor_volume_B[0]>16) ayregisters_previo_valor_volume_B[0]=16;
 			if (ayregisters_previo_valor_volume_C[0]>16) ayregisters_previo_valor_volume_C[0]=16;
+			if (ayregisters_previo_valor_volume_noise>16) ayregisters_previo_valor_volume_noise=16;
 			
 
 			ayregisters_previo_valor_volume_A[0]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_A[0],vol_A[0]);
 			ayregisters_previo_valor_volume_B[0]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_B[0],vol_B[0]);
 			ayregisters_previo_valor_volume_C[0]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_C[0],vol_C[0]);
+			ayregisters_previo_valor_volume_noise=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_noise,vol_noise);
 
 
 			z80_byte volumen_canal;
@@ -2567,6 +2571,13 @@ void menu_ay_registers_overlay(void)
 			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
 			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
 
+
+			volumen_canal=15 - (sn_chip_registers[10] & 15);
+			menu_string_volumen(volumen,volumen_canal,ayregisters_previo_valor_volume_noise);
+								//"Volume C: %s"
+			sprintf (textovolumen,"V Noise:  %s",volumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
 
 
 
@@ -2626,6 +2637,7 @@ void menu_ay_registers_overlay(void)
 			ayregisters_previo_valor_volume_A[chip]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_A[chip],vol_A[chip]);
 			ayregisters_previo_valor_volume_B[chip]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_B[chip],vol_B[chip]);
 			ayregisters_previo_valor_volume_C[chip]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_C[chip],vol_C[chip]);
+
 
 
         		//if (ayregisters_previo_valor_volume_A[chip]<vol_A[chip]) ayregisters_previo_valor_volume_A[chip]=vol_A[chip];
@@ -2741,7 +2753,7 @@ void menu_ay_registers_overlay(void)
 
 
 
-	//Hacer decaer volumenes
+	//Hacer decaer volumenes si multitarea off
                         //Decrementar volumenes que caen, pero hacerlo no siempre, sino 2 veces por segundo
             //esto hara ejecutar esto 2 veces por segundo
             if ( ((contador_segundo%500) == 0 && menu_ayregisters_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
@@ -2757,6 +2769,9 @@ void menu_ay_registers_overlay(void)
 
 
 				}
+				
+
+				ayregisters_previo_valor_volume_noise=menu_decae_dec_valor_volumen(ayregisters_previo_valor_volume_noise,vol_noise);
 
 
         }
