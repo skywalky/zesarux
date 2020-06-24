@@ -173,8 +173,8 @@ void sg1000_insert_rom_cartridge(char *filename)
 
     long tamanyo_archivo=get_file_size(filename);
 
-    if (tamanyo_archivo!=8192 && tamanyo_archivo!=16384 && tamanyo_archivo!=32768) {
-        debug_printf(VERBOSE_ERR,"Only 8k, 16k and 32k rom cartridges are allowed");
+    if (tamanyo_archivo!=8192 && tamanyo_archivo!=16384 && tamanyo_archivo!=32768 && tamanyo_archivo!=49152) {
+        debug_printf(VERBOSE_ERR,"Only 8k, 16k, 32k and 48k rom cartridges are allowed");
         return;
     }
 
@@ -196,7 +196,7 @@ void sg1000_insert_rom_cartridge(char *filename)
 
     int bloques_totales=0;
 
-	for (bloque=0;bloque<2 && !salir;bloque++) {
+	for (bloque=0;bloque<3 && !salir;bloque++) {
         /*
         The ROM Header
 
