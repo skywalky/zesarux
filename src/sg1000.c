@@ -260,7 +260,11 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 void sg1000_empty_romcartridge_space(void)
 {
 
-//TODO: poner a 0
+//poner a 0
+    int i;
+    for (i=0;i<65536;i++) {
+        memoria_spectrum[i]=0;
+    }
 }
 
 

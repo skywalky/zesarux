@@ -1087,6 +1087,8 @@ void reset_cpu(void)
 
 	init_chip_ay();
 
+	init_chip_sn();
+
 #ifdef EMULATE_CPU_STATS
 util_stats_init();
 #endif
