@@ -107,6 +107,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sn76489an.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -1023,6 +1024,11 @@ int menu_cond_ay_chip(void)
 	return ay_chip_present.v;
 }
 
+int menu_cond_ay_or_sn_chip(void)
+{
+	if (ay_chip_present.v || sn_chip_present.v) return 1;
+	else return 0;
+}
 
 void menu_audio_beep_filter_on_rom_save(MENU_ITEM_PARAMETERS)
 {
@@ -2680,7 +2686,7 @@ zxvision_window zxvision_ay_registers_overlay;
 
 void menu_ay_registers_crea_ventana(zxvision_window *ventana,int xventana,int yventana,int ancho_ventana,int alto_ventana)
 {
-		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"AY Registers");
+		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Audio Chip Registers");
 		ventana->can_be_backgrounded=1;	
 		//indicar nombre del grabado de geometria
 		strcpy(ventana->geometry_name,"ayregisters");

@@ -103,6 +103,7 @@
 #include "hilow.h"
 #include "msx.h"
 #include "coleco.h"
+#include "sn76489an.h"
 
 
 
@@ -11844,8 +11845,12 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
         do {
 
+					char buffer_ay_registers_texto[64];
 
-					menu_add_item_menu_inicial(&array_menu_audio_settings,"AY ~~Registers",MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_chip);
+					if (sn_chip_present.v) strcpy(buffer_ay_registers_texto,"SN ~~Registers");
+					else strcpy(buffer_ay_registers_texto,"AY ~~Registers");
+
+					menu_add_item_menu_inicial(&array_menu_audio_settings,buffer_ay_registers_texto,MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_or_sn_chip);
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'r');
 
 
