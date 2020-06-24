@@ -16926,11 +16926,20 @@ void menu_ay_partitura_overlay(void)
 			char nota_c[4];
 
 
+			int freq_a,freq_b,freq_c;
 
+			if (sn_chip_present.v) {
+				freq_a=sn_retorna_frecuencia(0);
+				freq_b=sn_retorna_frecuencia(1);
+				freq_c=sn_retorna_frecuencia(2);
+			}
 
-			int freq_a=ay_retorna_frecuencia(0,menu_ay_partitura_chip);
-			int freq_b=ay_retorna_frecuencia(1,menu_ay_partitura_chip);
-			int freq_c=ay_retorna_frecuencia(2,menu_ay_partitura_chip);
+			else {
+
+				freq_a=ay_retorna_frecuencia(0,menu_ay_partitura_chip);
+				freq_b=ay_retorna_frecuencia(1,menu_ay_partitura_chip);
+				freq_c=ay_retorna_frecuencia(2,menu_ay_partitura_chip);
+			}
 
 
 			sprintf(nota_a,"%s",get_note_name(freq_a) );
@@ -16942,9 +16951,17 @@ void menu_ay_partitura_overlay(void)
 			sprintf(nota_c,"%s",get_note_name(freq_c) );
 
 			//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
-			if (ay_3_8912_registros[menu_ay_partitura_chip][7]&1 || ay_3_8912_registros[menu_ay_partitura_chip][8]==0) nota_a[0]=0;
-			if (ay_3_8912_registros[menu_ay_partitura_chip][7]&2 || ay_3_8912_registros[menu_ay_partitura_chip][9]==0) nota_b[0]=0;
-			if (ay_3_8912_registros[menu_ay_partitura_chip][7]&4 || ay_3_8912_registros[menu_ay_partitura_chip][10]==0) nota_c[0]=0;
+			if (sn_chip_present.v) {
+				if ((sn_chip_registers[6] & 15)==15) nota_a[0]=0;
+				if ((sn_chip_registers[7] & 15)==15) nota_b[0]=0;
+				if ((sn_chip_registers[8] & 15)==15) nota_c[0]=0;
+
+			}
+			else {
+				if (ay_3_8912_registros[menu_ay_partitura_chip][7]&1 || ay_3_8912_registros[menu_ay_partitura_chip][8]==0) nota_a[0]=0;
+				if (ay_3_8912_registros[menu_ay_partitura_chip][7]&2 || ay_3_8912_registros[menu_ay_partitura_chip][9]==0) nota_b[0]=0;
+				if (ay_3_8912_registros[menu_ay_partitura_chip][7]&4 || ay_3_8912_registros[menu_ay_partitura_chip][10]==0) nota_c[0]=0;
+			}
 
 
 	
@@ -21419,9 +21436,9 @@ void menu_ay_pianokeyboard_overlay(void)
 
 			//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
 			if (sn_chip_present.v) {
-				if (sn_chip_registers[6]==15) nota_a[0]=0;
-				if (sn_chip_registers[7]==15) nota_b[0]=0;
-				if (sn_chip_registers[8]==15) nota_c[0]=0;
+				if ((sn_chip_registers[6] & 15)==15) nota_a[0]=0;
+				if ((sn_chip_registers[7] & 15)==15) nota_b[0]=0;
+				if ((sn_chip_registers[8] & 15)==15) nota_c[0]=0;				
 			}
 
 			else {
