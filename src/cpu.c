@@ -4327,7 +4327,7 @@ void rom_load(char *romfilename)
                 break;	
 
                 case MACHINE_ID_SG1000:
-                romfilename="sg1000.rom"; //no tiene rom
+                romfilename="sg1000.rom"; 
                 break;							
                 
                 case MACHINE_ID_MSX1:
@@ -4589,7 +4589,8 @@ Total 20 pages=320 Kb
 		}				
                 
                 else if (MACHINE_IS_SG1000) {
-					//no tiene rom
+					//no tiene rom. No cargamos nada, aunque mas arriba intenta siempre abrir un archivo de rom,
+					//es por eso que es necesario que exista el archivo de rom, aunque no se cargue ni se use para nada
 			
 		}	
 
