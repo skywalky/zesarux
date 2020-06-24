@@ -1281,7 +1281,7 @@ msx.o: msx.c msx.h cpu.h debug.h vdp_9918a.h tape.h screen.h audio.h
 coleco.o: coleco.c coleco.h cpu.h debug.h vdp_9918a.h tape.h screen.h audio.h sn76489an.h
 	\$(CC) \$(CFLAGS) -c coleco.c
 
-sg1000.o: sg1000.c sg1000.h cpu.h debug.h vdp_9918a.h tape.h screen.h audio.h sn76489an.h
+sg1000.o: sg1000.c sg1000.h cpu.h debug.h vdp_9918a.h tape.h screen.h audio.h sn76489an.h joystick.h
 	\$(CC) \$(CFLAGS) -c sg1000.c
 
 saa_simul.o: saa_simul.c saa_simul.h ay38912.h cpu.h audio.h debug.h

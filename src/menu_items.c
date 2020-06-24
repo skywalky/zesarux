@@ -106,6 +106,7 @@
 #include "vdp_9918a.h"
 #include "msx.h"
 #include "coleco.h"
+#include "sg1000.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -3323,8 +3324,11 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 				z80_byte (*vram_read_function_pointer)(z80_int address);
 
-				if (MACHINE_IS_MSX) vram_read_function_pointer=msx_read_vram_byte;
-				else vram_read_function_pointer=coleco_read_vram_byte;
+
+				if (MACHINE_IS_COLECO) vram_read_function_pointer=coleco_read_vram_byte;
+				else if (MACHINE_IS_SG1000) vram_read_function_pointer=sg1000_read_vram_byte;
+				else vram_read_function_pointer=msx_read_vram_byte;
+								
 
 				z80_byte vert_pos=vram_read_function_pointer(sprite_attribute_table);
 				z80_byte horiz_pos=vram_read_function_pointer(sprite_attribute_table+1);
@@ -3769,12 +3773,20 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 
 					int tnum;	
 
-					if (MACHINE_IS_MSX) {
+
+
+					if (MACHINE_IS_COLECO) {
+						tnum=coleco_read_vram_byte(msx_pattern_name_table+current_tile);	
+					}	
+
+					else if (MACHINE_IS_SG1000) {
+						tnum=sg1000_read_vram_byte(msx_pattern_name_table+current_tile);	
+					}	
+
+					else {
 						tnum=msx_read_vram_byte(msx_pattern_name_table+current_tile);	
 					}
-					else {
-						tnum=coleco_read_vram_byte(msx_pattern_name_table+current_tile);	
-					}
+				
 
 					if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v==0) {
 						//Modo lista tiles

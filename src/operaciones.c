@@ -7492,14 +7492,17 @@ Lee puerto sg1000 02DEH PC=1DBFH
 */
 
        if (puerto_l==0xDC) {
+		   return sg1000_get_joypad_a();
 
-//puerto_63486    db              255  ; 5    4    3    2    1     ;3
-//puerto_61438    db              255  ; 6    7    8    9    0     ;4
-
-				//345 67890
-               return (puerto_61438 & 31) | ((puerto_63486<<3) & (128+64+32) );
              
        }
+
+
+       if (puerto_l==0xDD) {
+		   return sg1000_get_joypad_b();
+
+             
+       }	   
 
 	/*
 		if (puerto_l==0xDD) {

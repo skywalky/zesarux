@@ -349,4 +349,68 @@ https://github.com/gseidler/The-MSX-Red-Book/blob/master/the_msx_red_book.md
 
 -redibujado sg1000 en todos drivers
 
--rom sg1000 no deberia cargarla. o meter un archivo vacio
+-sg1000: 6 disparo
+-7 derecha
+-8 izquierda
+-9 abajo
+-0 arriba
+-3 disparo
+
+
+
+/// Bit flags for Joypad Port A.
+///
+/// Note that a button press is indicated by a flag *not* being set.
+pub mod joypad_a_bits {
+    pub const JOYPAD2_DOWN: u8 = 0b10000000;
+    pub const JOYPAD2_UP: u8 = 0b01000000;
+    pub const JOYPAD1_B: u8 = 0b00100000;
+    pub const JOYPAD1_A: u8 = 0b00010000;
+    pub const JOYPAD1_RIGHT: u8 = 0b00001000;
+    pub const JOYPAD1_LEFT: u8 = 0b00000100;
+    pub const JOYPAD1_DOWN: u8 = 0b00000010;
+    pub const JOYPAD1_UP: u8 = 0b00000001;
+}
+
+/// Bit flags for Joypad Port B.
+///
+/// Note that a button press is indicated by a flag *not* being set.
+pub mod joypad_b_bits {
+    pub const B_TH: u8 = 0b10000000;
+    pub const A_TH: u8 = 0b01000000;
+    pub const CONT: u8 = 0b00100000;
+    pub const RESET: u8 = 0b00010000;
+    pub const JOYPAD2_B: u8 = 0b00001000;
+    pub const JOYPAD2_A: u8 = 0b00000100;
+    pub const JOYPAD2_RIGHT: u8 = 0b00000010;
+    pub const JOYPAD2_LEFT: u8 = 0b00000001;
+}
+
+
+        let masked = (address & 0b11000001) as u8;
+        let value = match masked {
+
+
+            0b11000000 => {
+                // IO port A/B register
+                self.player_input.joypad_a()
+            }
+            0b11000001 => {
+                // IO port B register
+                self.player_input.joypad_b()
+            }
+
+
+            //puerto DC =  1101 1100  - mask 0b11000001 = 1100000000 -> joypad A
+
+ Player 1                        A       B
+            up down left right fire/space Z
+
+Player 2 
+             q   a    o    p     m       n 
+
+
+             A B cont reset 
+
+             Z X   C    backspace
+
