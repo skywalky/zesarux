@@ -3003,7 +3003,7 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 				}
 
-				if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+				if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 	
 					sprintf (texto_buffer,"Video mode: %s",get_vdp_9918_string_video_mode() );
 					zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);
@@ -3053,7 +3053,7 @@ void menu_debug_tsconf_tbblue_msx_videoregisters(MENU_ITEM_PARAMETERS)
 			alto_ventana=24;
 		}
 
-		else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+		else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 			alto_ventana=8;
 		}		
 
@@ -3152,7 +3152,7 @@ int menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites(void)
 	limite=TSCONF_MAX_SPRITES; //85 sprites max
 
 	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
-	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) limite=VDP_9918A_MAX_SPRITES;
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) limite=VDP_9918A_MAX_SPRITES;
 
 	return limite;
 }
@@ -3162,7 +3162,7 @@ int menu_debug_tsconf_tbblue_msx_spritenav_get_total_height_win(void)
 {
 
 	if (MACHINE_IS_TSCONF) return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*2;
-	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*2;
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*2;
 	else return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*3;
 
 }
@@ -3311,7 +3311,7 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				
 			}
 
-			if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+			if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 				z80_int sprite_attribute_table=vdp_9918a_get_sprite_attribute_table();
 
 
@@ -3511,7 +3511,7 @@ int menu_debug_tsconf_tbblue_msx_tilenav_total_vert(void)
 		if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) limite_vertical=TSCONF_TILENAV_TILES_VERT_PER_WINDOW;	
 	}
 
-	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) { 
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) { 
 		limite_vertical=vdp_9918a_get_tile_heigth()*vdp_9918a_get_tile_width();
 
 		if (menu_debug_tsconf_tbblue_msx_tilenav_showmap.v) limite_vertical=vdp_9918a_get_tile_heigth();	
@@ -3552,7 +3552,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 		puntero_tilemap=tsconf_ram_mem_table[0]+tsconf_return_tilemappage();
 	}
 
-	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 		msx_pattern_name_table=vdp_9918a_get_pattern_name_table();
 		puntero_tilemap=NULL; //no se usa, pero para evitar warnings del compilador
 	}	
@@ -3588,7 +3588,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 
 	}
 
-	if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+	if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 		tilemap_width=vdp_9918a_get_tile_width();
 	}
 
@@ -3605,7 +3605,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30   35   40   45   50   55   60  ");
 		}
 
-		else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+		else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 			if (tilemap_width==32) {
 				  			 //01234567890123456789012345678901
 		strcpy(dumpmemoria,"   0    5    10   15   20   25   30        ");
@@ -3686,7 +3686,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 					else sprintf (dumpmemoria,"   ");
 				}
 
-				else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+				else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 					current_tile=offset_vertical*tilemap_width;
 					repetir_ancho=tilemap_width;
 
@@ -3763,7 +3763,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 					}
 				}
 
-				if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+				if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 					int y=current_tile/tilemap_width;
 					int x=current_tile%tilemap_width; 	
 
@@ -3993,7 +3993,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 		char texto_layer[32];
 
 		//En caso de tbblue y msx, solo hay una capa
-		if (MACHINE_IS_TBBLUE || MACHINE_IS_MSX || MACHINE_IS_COLECO) texto_layer[0]=0;
+		if (MACHINE_IS_TBBLUE || MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) texto_layer[0]=0;
 
 		else sprintf (texto_layer,"~~Layer %d",menu_debug_tsconf_tbblue_msx_tilenav_current_tilelayer);
 
@@ -4003,7 +4003,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 			if (MACHINE_IS_TSCONF) {
 			total_width=TSCONF_TILENAV_TILES_HORIZ_PER_WINDOW+4;
 			}
-			else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+			else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 				//Le ponemos siempre el maximo
 				total_width=40+4; 
 			}			
@@ -7538,7 +7538,7 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				}		
 
 
-				if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+				if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 
 					//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
@@ -7744,7 +7744,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 	}
 
 
-	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 		alto=11;
 	}
 
@@ -7849,7 +7849,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			lin+=3;				
 		}
 
-		if (MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+		if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 
  			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(vdp_9918a_force_disable_layer_border.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
@@ -21960,7 +21960,7 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_spritenav,NULL,"~~Sprite navigator");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'s');
 
-		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE || MACHINE_IS_MSX || MACHINE_IS_COLECO) {
+		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE || MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_tilenav,NULL,"~~Tile navigator");
 			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'t');
 		}
@@ -21982,6 +21982,7 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_TBBLUE) strcpy(titulo_ventana,"Debug TBBlue");
 		if (MACHINE_IS_MSX) strcpy(titulo_ventana,"Debug MSX");
 		if (MACHINE_IS_COLECO) strcpy(titulo_ventana,"Debug Colecovision");
+		if (MACHINE_IS_SG1000) strcpy(titulo_ventana,"Debug SG1000");
 
                 retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue_msx,titulo_ventana);
 

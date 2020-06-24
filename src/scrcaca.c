@@ -309,6 +309,9 @@ void scrcaca_refresca_pantalla(void)
 		scr_refresca_pantalla_y_border_coleco();
 	}            
 
+	else if (MACHINE_IS_SG1000) {
+		scr_refresca_pantalla_y_border_sg1000();
+	}        
 
 
 	//printf ("caca_dither_bitmap imgwidth=%d imgheight=%d\n",imgwidth,imgheight);

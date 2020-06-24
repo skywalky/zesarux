@@ -16036,6 +16036,7 @@ void menu_msxcart_eject(MENU_ITEM_PARAMETERS)
 {
 
 	if (MACHINE_IS_COLECO) coleco_empty_romcartridge_space();
+	else if (MACHINE_IS_SG1000) sg1000_empty_romcartridge_space();
 	else msx_empty_romcartridge_space();
 	menu_generic_message("Eject Cartridge","OK. Cartridge ejected");
 }
@@ -23240,6 +23241,10 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_COLECO) {
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"Colecovision");
 		}
+
+		if (MACHINE_IS_SG1000) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"SG1000");
+		}		
 
 
 		menu_add_item_menu(array_menu_debug_settings,"He~~xadecimal Editor",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);

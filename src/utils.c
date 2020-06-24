@@ -109,6 +109,7 @@
 #include "zip.h"
 #include "msx.h"
 #include "coleco.h"
+#include "sg1000.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -11703,6 +11704,14 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     break;
     
 
+    case MEMORY_ZONE_SG1000_VRAM:
+        if (MACHINE_IS_SG1000) {
+              *readwrite=1; 
+              size=16384;  
+        }
+    break;
+
+
   }
 
   return size;
@@ -12027,6 +12036,12 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
                 p=&coleco_vram_memory[address];
         }        
     break;
+
+    case MEMORY_ZONE_SG1000_VRAM:
+        if (MACHINE_IS_SG1000) {
+                p=&sg1000_vram_memory[address];
+        }        
+    break;    
 
   }
 
@@ -12381,6 +12396,12 @@ void machine_get_memory_zone_name(int zone, char *name)
                strcpy(name,"Coleco VRAM"); 
         }
     break;    
+
+    case MEMORY_ZONE_SG1000_VRAM:
+        if (MACHINE_IS_SG1000) {
+               strcpy(name,"SG1000 VRAM"); 
+        }
+    break;     
 
   }
 
