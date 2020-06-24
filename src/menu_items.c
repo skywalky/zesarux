@@ -2522,7 +2522,91 @@ void menu_ay_registers_overlay(void)
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
-		int vol_A[MAX_AY_CHIPS],vol_B[MAX_AY_CHIPS],vol_C[MAX_AY_CHIPS];
+	int vol_A[MAX_AY_CHIPS],vol_B[MAX_AY_CHIPS],vol_C[MAX_AY_CHIPS];
+
+
+	if (sn_chip_present.v) {
+
+		//Para chip SN76489A de coleco y sg1000
+		total_chips=1;
+
+
+
+      		vol_A[0]=sn_chip_registers[6] & 15;
+        	vol_B[0]=sn_chip_registers[7] & 15;
+        	vol_C[0]=sn_chip_registers[8] & 15;
+
+			//Controlar limites, dado que las variables entran sin inicializar
+			if (ayregisters_previo_valor_volume_A[0]>16) ayregisters_previo_valor_volume_A[0]=16;
+			if (ayregisters_previo_valor_volume_B[0]>16) ayregisters_previo_valor_volume_B[0]=16;
+			if (ayregisters_previo_valor_volume_C[0]>16) ayregisters_previo_valor_volume_C[0]=16;
+			
+
+			ayregisters_previo_valor_volume_A[0]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_A[0],vol_A[0]);
+			ayregisters_previo_valor_volume_B[0]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_B[0],vol_B[0]);
+			ayregisters_previo_valor_volume_C[0]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_C[0],vol_C[0]);
+
+
+			z80_byte volumen_canal;
+
+			volumen_canal=15 - (sn_chip_registers[6] & 15);
+			menu_string_volumen(volumen,volumen_canal,ayregisters_previo_valor_volume_A[0]);
+			sprintf (textovolumen,"Volume A: %s",volumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
+
+			volumen_canal=15 - (sn_chip_registers[7] & 15);
+			menu_string_volumen(volumen,volumen_canal,ayregisters_previo_valor_volume_B[0]);
+			sprintf (textovolumen,"Volume B: %s",volumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
+
+			volumen_canal=15 - (sn_chip_registers[8] & 15);
+			menu_string_volumen(volumen,volumen_canal,ayregisters_previo_valor_volume_C[0]);
+			sprintf (textovolumen,"Volume C: %s",volumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
+
+
+/*
+
+			int freq_a=ay_retorna_frecuencia(0,chip);
+			int freq_b=ay_retorna_frecuencia(1,chip);
+			int freq_c=ay_retorna_frecuencia(2,chip);
+			sprintf (textotono,"Channel A:  %3s %7d Hz",get_note_name(freq_a),freq_a);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+			sprintf (textotono,"Channel B:  %3s %7d Hz",get_note_name(freq_b),freq_b);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+			sprintf (textotono,"Channel C:  %3s %7d Hz",get_note_name(freq_c),freq_c);
+			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+
+					                        //Frecuencia ruido
+                        int freq_temp=ay_3_8912_registros[chip][6] & 31;
+                        //printf ("Valor registros ruido : %d Hz\n",freq_temp);
+                        freq_temp=freq_temp*16;
+
+                        //controlamos divisiones por cero
+                        if (!freq_temp) freq_temp++;
+
+                        int freq_ruido=FRECUENCIA_NOISE/freq_temp;
+
+                        sprintf (textotono,"Frequency Noise: %6d Hz",freq_ruido);
+                        //menu_escribe_linea_opcion(linea++,-1,1,textotono);
+						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+						*/
+
+
+	}
+
+
+	else {
 
 	for (chip=0;chip<total_chips;chip++) {
 
@@ -2647,6 +2731,8 @@ void menu_ay_registers_overlay(void)
                         //menu_escribe_linea_opcion(linea++,-1,1,textotono);
 						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 			}
+
+	}
 
 	}
 
