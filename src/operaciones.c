@@ -7491,14 +7491,16 @@ Lee puerto sg1000 03DDH PC=1D7DH
 Lee puerto sg1000 02DEH PC=1DBFH
 */
 
-       if (puerto_l==0xDC) {
+		//tipicamente DC
+       if ((puerto_l & 193) == 192 ) {
 		   return sg1000_get_joypad_a();
 
              
        }
 
 
-       if (puerto_l==0xDD) {
+		//tipicamente DD
+       if ((puerto_l & 193) == 193) {
 		   return sg1000_get_joypad_b();
 
              

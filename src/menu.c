@@ -18113,7 +18113,7 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
 	menu_first_aid("smartload");
 
-        char *filtros[32];
+        char *filtros[34];
 
         filtros[0]="zx";
         filtros[1]="sp";
@@ -18164,7 +18164,11 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
 	filtros[30]="rom";
 
-	filtros[31]=0;
+	filtros[31]="col";
+
+	filtros[32]="sg";
+
+	filtros[33]=0;
 
 
         //guardamos directorio actual

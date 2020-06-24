@@ -488,10 +488,13 @@ void sg1000_set_sn_freq(int canal,int frecuencia)
 
 
 
-            Mascara de puertos 0b11000001
+            Mascara de puertos 0b11000001 = 193 = 0xC1
 
 
-            //puerto DC =  1101 1100  - mask 0b11000001 = 1100000000 -> joypad A
+            
+
+
+            //puerto DC =  1101 1100  - mask 0b11000001 (193 decimal) = 1100000000 -> joypad A
 
  Player 1                        A       B
             up down left right fire/space Z
@@ -504,6 +507,9 @@ Player 2
 
              Z X   C    R
 
+
+             //Puerto DE = 1101 1110 - mask 0b11000001 = 1100 0000
+
 */
 
 
@@ -513,7 +519,7 @@ z80_byte sg1000_get_joypad_a(void)
     z80_byte valor_joystick=255;
 
 /*
-joypad_a
+joypad_a (value after mask 0b11000000 = 192)
 JOYPAD2_DOWN:   = 0b10000000;
 JOYPAD2_UP:     = 0b01000000;
 JOYPAD1_B:      = 0b00100000;
@@ -574,7 +580,7 @@ z80_byte sg1000_get_joypad_b(void)
     z80_byte valor_joystick=255;
 
 /*
-
+value after mask port = 0b11000001 = 193
 B_TH:           = 0b10000000;
 A_TH:           = 0b01000000;
 CONT:           = 0b00100000;
