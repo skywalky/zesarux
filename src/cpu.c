@@ -3426,7 +3426,7 @@ You don't need timings for H/V sync =)
 			ula_contend_port_late=ula_contend_port_late_coleco;
 
 			
-			screen_testados_linea=228;
+			screen_testados_linea=215;
 
 		}		
 

@@ -604,6 +604,23 @@ z80_byte coleco_get_keypad_a(void)
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 7") PORT_CODE(KEYCODE_7_PAD)
 */ 
 
+/*
+	if (!BIT(keypad, 0)) data &= 0x0a;
+	if (!BIT(keypad, 1)) data &= 0x0d;
+	if (!BIT(keypad, 2)) data &= 0x07;
+	if (!BIT(keypad, 3)) data &= 0x0c;
+	if (!BIT(keypad, 4)) data &= 0x02;
+	if (!BIT(keypad, 5)) data &= 0x03;
+	if (!BIT(keypad, 6)) data &= 0x0e;
+	if (!BIT(keypad, 7)) data &= 0x05;
+	if (!BIT(keypad, 8)) data &= 0x01;
+	if (!BIT(keypad, 9)) data &= 0x0b;
+	if (!BIT(keypad, 10)) data &= 0x06;
+	if (!BIT(keypad, 11)) data &= 0x09;
+    */
+
+  
+
     //Tecla 0
     //puerto_61438    db              255  ; 6    7    8    9    0     ;4
     if ((puerto_61438 & 1)==0) valor_joystick &=(255-1); 
@@ -651,6 +668,24 @@ z80_byte coleco_get_keypad_b(void)
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad #") PORT_CODE(KEYCODE_MINUS_PAD)
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad *") PORT_CODE(KEYCODE_PLUS_PAD)
 */
+
+/*
+	if (!BIT(keypad, 0)) data &= 0x0a;
+	if (!BIT(keypad, 1)) data &= 0x0d;
+	if (!BIT(keypad, 2)) data &= 0x07;
+	if (!BIT(keypad, 3)) data &= 0x0c;
+	if (!BIT(keypad, 4)) data &= 0x02;
+	if (!BIT(keypad, 5)) data &= 0x03;
+	if (!BIT(keypad, 6)) data &= 0x0e;
+	if (!BIT(keypad, 7)) data &= 0x05;
+	if (!BIT(keypad, 8)) data &= 0x01;
+	if (!BIT(keypad, 9)) data &= 0x0b;
+	if (!BIT(keypad, 10)) data &= 0x06;
+	if (!BIT(keypad, 11)) data &= 0x09;
+    */
+
+
+ 
 
     //Tecla 8
     //puerto_61438    db              255  ; 6    7    8    9    0     ;4
