@@ -59,16 +59,22 @@ extern int sn_retorna_frecuencia(int registro);
 
 #define FRECUENCIA_SN (sn_chip_frequency)
 
-#define FRECUENCIA_COLECO_SN (3500000/32)
+//#define FRECUENCIA_COLECO_SN (3500000/32)
 
 
+#define FRECUENCIA_COLECO_SN 3579545
+#define FRECUENCIA_SG1000_SN 3579545
 
+#define SN_DIVISOR_FRECUENCIA 32
+
+
+extern int sn_chip_frequency;
 
 
 
 #define SN_FRECUENCIA_NOISE (FRECUENCIA_SN/2)
 
-#define FRECUENCIA_ENVELOPE 6927*10
+//#define FRECUENCIA_ENVELOPE 6927*10
 
 
 extern void sn_chip_siguiente_ciclo(void);

@@ -17138,7 +17138,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 		//Inicializar array de estado
 		menu_ay_partitura_init_state();
 
-		char *titulo_ventana="AY Sheet (60 BPM)";
+		char *titulo_ventana="Audio Chip Sheet (60 BPM)";
 
 
 		if (!util_find_window_geometry("aysheet",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
@@ -17239,7 +17239,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 
             	//Nombre de ventana solo aparece en el caso de stdout
-        		retorno_menu=menu_dibuja_menu(&nonamed_opcion_seleccionada,&item_seleccionado,array_menu_nonamed,"AY Sheet (60 BPM)" );
+        		retorno_menu=menu_dibuja_menu(&nonamed_opcion_seleccionada,&item_seleccionado,array_menu_nonamed,"Audio Chip Sheet (60 BPM)" );
 
 
 				if (retorno_menu!=MENU_RETORNO_BACKGROUND) {
@@ -17922,6 +17922,20 @@ menu_item *array_menu_ay_mixer;
 }
 
 
+
+void menu_audio_chip_info(MENU_ITEM_PARAMETERS)
+{
+
+	int chip_frequency;
+
+	if (sn_chip_present.v) chip_frequency=sn_chip_frequency;
+	else chip_frequency=ay_chip_frequency;
+
+	menu_generic_message_format("Audio Chip Info","Audio Chip: %s\nFrequency: %d Hz",
+		(sn_chip_present.v ? "Texas Instruments SN76489AN" : "General Instrument AY-3-8910"),
+		chip_frequency
+	);
+}
 
 
 void menu_uartbridge_file(MENU_ITEM_PARAMETERS)
@@ -21503,7 +21517,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 		//Max 3 ay chips
 		if (total_chips>3) total_chips=3;
 
-		char *titulo_ventana="AY Piano";
+		char *titulo_ventana="Audio Chip Piano";
 
 		if (!util_find_window_geometry("aypiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
 

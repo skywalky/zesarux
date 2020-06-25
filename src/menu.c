@@ -11845,40 +11845,30 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
         do {
 
-					char buffer_ay_registers_texto[64];
-					char buffer_ay_piano_texto[64];
-					char buffer_ay_sheet_texto[64];
+				
 
-					if (sn_chip_present.v) {
-						strcpy(buffer_ay_registers_texto,"SN ~~Registers");
-						strcpy(buffer_ay_piano_texto,"SN P~~iano");
-						strcpy(buffer_ay_sheet_texto,"SN ~~Sheet");
-					}
-					else {
-						strcpy(buffer_ay_registers_texto,"AY ~~Registers");
-						strcpy(buffer_ay_piano_texto,"AY P~~iano");
-						strcpy(buffer_ay_sheet_texto,"AY ~~Sheet");
-					}
-
-					menu_add_item_menu_inicial(&array_menu_audio_settings,buffer_ay_registers_texto,MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_or_sn_chip);
+					menu_add_item_menu_inicial(&array_menu_audio_settings,"Audio Chip Registers",MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_or_sn_chip);
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'r');
 
 
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY Mi~~xer");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'x');
 
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_or_sn_chip,buffer_ay_piano_texto);
+
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_or_sn_chip,"Audio Chip Piano");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'i');
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
                 	menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
 
 
 		if (si_complete_video_driver() ) {
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_partitura,menu_cond_ay_or_sn_chip,buffer_ay_sheet_texto);
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_partitura,menu_cond_ay_or_sn_chip,"Audio Chip Sheet");
 					menu_add_item_menu_shortcut(array_menu_audio_settings,'s');
 
 		}
+
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_chip_info,menu_cond_ay_or_sn_chip,"Audio Chip Info");
 					
+					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY Mi~~xer");
+					menu_add_item_menu_shortcut(array_menu_audio_settings,'x');					
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_ayplayer,NULL,"AY ~~Player");
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Opens the .ay file player menu");

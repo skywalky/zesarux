@@ -325,7 +325,8 @@ void init_chip_sn(void)
 	}
 
 	//Establecemos frecuencia
-	sn_chip_frequency=FRECUENCIA_COLECO_SN;
+	if (MACHINE_IS_SG1000) sn_chip_frequency=FRECUENCIA_SG1000_SN;
+	else sn_chip_frequency=FRECUENCIA_COLECO_SN;
 
 
 	debug_printf (VERBOSE_INFO,"Setting SN chip frequency to %d HZ",sn_chip_frequency);
@@ -553,7 +554,7 @@ Frecuencia real= X = (CPU Speed / 32) / Desired frequency
 	freq_temp=(sn_chip_registers[indice] & 0xF) | ((sn_chip_registers[indice+1] & 63)<<4);
 
 	//printf ("Valor freq_temp : %d Hz\n",freq_temp);
-	//freq_temp=freq_temp*16;
+	freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
 
 
 	//controlamos divisiones por cero
@@ -593,7 +594,7 @@ int freq_tono;
 	freq_temp=(sn_chip_registers[indice] & 0xF) | ((sn_chip_registers[indice+1] & 63)<<4);
 
 	//printf ("Valor freq_temp : %d Hz\n",freq_temp);
-	//freq_temp=freq_temp*16;
+	freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
 
 
 	//controlamos divisiones por cero
@@ -654,7 +655,7 @@ void sn_set_value_register(z80_byte value)
 			//Frecuencia ruido
 			int freq_temp=sn_chip_registers[9] & 31;
 	       		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
-			freq_temp=freq_temp*16;
+			freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
 
 			//controlamos divisiones por cero
 			if (!freq_temp) freq_temp++;
