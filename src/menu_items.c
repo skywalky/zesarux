@@ -2620,6 +2620,8 @@ M1-M0= mode bits:
 											*/
 
 						z80_byte noise_control=sn_chip_registers[9];
+
+
 						sprintf (textotono,"Noise Type: %s",(noise_control & 4 ? "White" : "Periodic"));
 						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
