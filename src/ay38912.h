@@ -63,6 +63,9 @@ extern int ay_chip_frequency;
 
 //#define FRECUENCIA_NOISE 886700
 
+
+#define AY_DIVISOR_FRECUENCIA 16
+
 #define FRECUENCIA_NOISE (FRECUENCIA_AY/2)
 
 #define FRECUENCIA_ENVELOPE 6927*10
