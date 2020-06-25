@@ -2623,7 +2623,7 @@ M1-M0= mode bits:
 
 
 						sprintf (textotono,"Noise Type: %s",(noise_control & 4 ? "White" : "Periodic"));
-						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+						zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 						
 						sprintf (textotono,"Noise Mode: %d",noise_control & 3);
