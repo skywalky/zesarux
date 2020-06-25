@@ -1433,11 +1433,36 @@ void activa_ay_chip_si_conviene(void)
 }
 
 
+//Retorna la frecuencia del tono sobre un valor concreto del chip de sonido
+//Se le pasa valores fino (8 bits bajos) y algo (8 bits altos)
+int ay_retorna_frecuencia_valor_registro(z80_byte value_l,z80_byte value_h)
+{
+        int freq_temp;
+	int freq_tono;
+        freq_temp=value_l+256*(value_h & 0x0F);
+        //printf ("Valor freq_temp : %d\n",freq_temp);
+        freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
+
+
+        //controlamos divisiones por cero
+        if (!freq_temp) freq_temp++;
+
+        freq_tono=FRECUENCIA_AY/freq_temp;
+
+	return freq_tono;
+}
+
+
 //Retorna la frecuencia de un registro concreto del chip AY de sonido
 int ay_retorna_frecuencia(int registro,int chip)
 {
         int freq_temp;
 	int freq_tono;
+
+		return ay_retorna_frecuencia_valor_registro(ay_3_8912_registros[chip][registro*2],ay_3_8912_registros[chip][registro*2+1]);
+
+		/*
+
         freq_temp=ay_3_8912_registros[chip][registro*2]+256*(ay_3_8912_registros[chip][registro*2+1] & 0x0F);
         //printf ("Valor freq_temp : %d\n",freq_temp);
         freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
@@ -1449,6 +1474,7 @@ int ay_retorna_frecuencia(int registro,int chip)
         freq_tono=FRECUENCIA_AY/freq_temp;
 
 	return freq_tono;
+	*/
 }
 
 /*

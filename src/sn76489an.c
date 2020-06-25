@@ -583,6 +583,30 @@ Frecuencia real= X = (CPU Speed / 32) / Desired frequency
 
 }
 
+//Retorna la frecuencia del tono sobre un valor concreto del chip de sonido
+//Se le pasa valores fino (8 bits bajos) y algo (8 bits altos)
+int sn_retorna_frecuencia_valor_registro(z80_byte value_l,z80_byte value_h)
+{
+	int freq_temp;
+	
+int freq_tono;
+	
+	freq_temp=(value_l & 0xF) | ((value_h & 63)<<4);
+
+	//printf ("Valor freq_temp : %d Hz\n",freq_temp);
+	freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
+
+
+	//controlamos divisiones por cero
+	if (!freq_temp) freq_temp++;
+
+	freq_tono=FRECUENCIA_SN/freq_temp;
+
+
+	return freq_tono;
+
+}
+
 
 //Retorna la frecuencia de un registro concreto del chip AY de sonido
 int sn_retorna_frecuencia(int registro)
@@ -591,6 +615,10 @@ int sn_retorna_frecuencia(int registro)
 	
 int freq_tono;
 	int indice=registro*2;
+
+	return sn_retorna_frecuencia_valor_registro(sn_chip_registers[indice],sn_chip_registers[indice+1]);
+
+/*
 	freq_temp=(sn_chip_registers[indice] & 0xF) | ((sn_chip_registers[indice+1] & 63)<<4);
 
 	//printf ("Valor freq_temp : %d Hz\n",freq_temp);
@@ -604,6 +632,7 @@ int freq_tono;
 
 
 	return freq_tono;
+*/
 
 }
 
