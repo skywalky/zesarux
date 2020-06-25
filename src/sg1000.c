@@ -36,13 +36,12 @@
 #include "sn76489an.h"
 #include "joystick.h"
 
+
+
+//Memory Map - Development - SMS Power!
+//https://www.smspower.org/Development/MemoryMap
+
 z80_byte *sg1000_vram_memory=NULL;
-
-
-
-//slots asignados, y sus 4 segmentos
-//tipos: rom, ram, vacio
-//int sg1000_memory_slots[4][4];
 
 
 
@@ -376,58 +375,6 @@ void screen_store_scanline_rainbow_sg1000_border_and_display(void)
 
 
 
-/*
-RO � Ajuste fino del tono, canal A
-R1 � Ajuste aproximado del tono, canal A-
-R2 � Ajuste fino del tono, canal B
-R3 � Ajuste aproximado del tono, canal B
-R4 � Ajuste fino del tono, canal C
-R5 � Ajuste aproximado del tono, canal C
-*/
-
-
-//Fino: xxxxx|D3|D2|D1|D0|
-//Aproximado: |xx|xx|D9|D8|D7|D6|D5|D4|
-
-//Valores de 10 bits
-//z80_byte temp_sg1000_audio_frecuencies[6];
-
-/*
-int sg1000_get_frequency_channel(int canal)
-{
-    if (canal<0 || canal>2) return 0;
-
-    z80_byte fino,aproximado;
-
-    fino=sn_chip_registers[canal*2] & 0xF;
-    aproximado=(sn_chip_registers[canal*2+1] & 63);
-
-    int frecuencia=(aproximado<<4) | fino;
-
-    return frecuencia;
-}
-*/
-
-
-//Establecer frecuencia del AY con valor entrada de 10 bits. funcion TEMPORAL
-/*
-void sg1000_set_sn_freq(int canal,int frecuencia)
-{
-
-    canal=canal % 3; //0,1,2
-
-    z80_byte fino,aproximado;
-
-    fino=frecuencia & 0xF;
-    aproximado=(frecuencia >>4) & 63;
-
-    sn_set_channel_fine_tune(canal,fino);
-   
-    sn_set_channel_aprox_tune(canal,aproximado);
-            
-}
-
-*/
 
 /*
 
