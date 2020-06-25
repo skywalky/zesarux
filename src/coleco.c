@@ -184,8 +184,8 @@ void coleco_insert_rom_cartridge(char *filename)
 
     long tamanyo_archivo=get_file_size(filename);
 
-    if (tamanyo_archivo!=8192 && tamanyo_archivo!=16384 && tamanyo_archivo!=32768) {
-        debug_printf(VERBOSE_ERR,"Only 8k, 16k and 32k rom cartridges are allowed");
+    if (tamanyo_archivo!=8192 && tamanyo_archivo!=16384 && tamanyo_archivo!=24576 && tamanyo_archivo!=32768) {
+        debug_printf(VERBOSE_ERR,"Only 8k, 16k, 24k and 32k rom cartridges are allowed");
         return;
     }
 
@@ -234,6 +234,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 
 	}
 
+/*
     if (bloques_totales==1) {
             //Copiar en los otros 2 segmentos
 
@@ -247,6 +248,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 
 
     }
+    */
 
 
     
