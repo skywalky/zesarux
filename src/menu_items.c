@@ -2593,11 +2593,44 @@ void menu_ay_registers_overlay(void)
 			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 			sprintf (textotono,"Channel C:  %3s %7d Hz",get_note_name(freq_c),freq_c);
-			//menu_escribe_linea_opcion(linea++,-1,1,textotono);
 			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
 
-					                        //Frecuencia ruido
+					                        //Tipo ruido
+											/*
++--+--+--+--+--+--+--+--+
+|1 |1 |1 |0 |xx|FB|M1|M0|
++--+--+--+--+--+--+--+--+
+
+FB= Feedback:
+
+0= 'Periodic' noise
+1= 'white' noise 
+
+The white noise sounds, well, like white noise.
+The periodic noise is intresting.  Depending on the frequency, it can
+sound very tonal and smooth.
+
+M1-M0= mode bits:
+
+00= Fosc/512  Very 'hissy'; like grease frying
+01= Fosc/1024 Slightly lower
+10= Fosc/2048 More of a high rumble
+11= output of tone generator #3											
+											*/
+
+						z80_byte noise_control=sn_chip_registers[9];
+						sprintf (textotono,"Noise Type: %s",(noise_control & 4 ? "White" : "Periodic"));
+						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
+
+						if ( (noise_control & 4) == 0) {
+							sprintf (textotono,"Periodic Mode: %d",noise_control & 3);
+							zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);							
+						}
+						else {
+							zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,"");
+						}
+
 											/*
                         int freq_temp=ay_3_8912_registros[chip][6] & 31;
                         //printf ("Valor registros ruido : %d Hz\n",freq_temp);
@@ -17943,12 +17976,25 @@ void menu_audio_chip_info(MENU_ITEM_PARAMETERS)
 	}
 
 	
+	if (sn_chip_present.v) {
+		//SN
+		menu_generic_message_format("Audio Chip Info","Audio Chip: Texas Instruments SN76489AN\nFrequency: %d Hz\n"
+									"Min Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz\n"
+									"3 Tone Channels, 1 Noise Channel",
+			chip_frequency,min_freq,max_freq
+		);
+	}
 
-	menu_generic_message_format("Audio Chip Info","Audio Chip: %s\nFrequency: %d Hz\n"
-								"Min Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz",
-		(sn_chip_present.v ? "Texas Instruments SN76489AN" : "General Instrument AY-3-8910"),
-		chip_frequency,min_freq,max_freq
-	);
+	else {
+		//AY
+		menu_generic_message_format("Audio Chip Info","Audio Chip: General Instrument AY-3-8910\nFrequency: %d Hz\n"
+									"Min Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz\n"
+									"3 Noise/Tone Channels, 1 Envelope Generator",
+			chip_frequency,min_freq,max_freq
+		);		
+	}
+
+
 }
 
 
