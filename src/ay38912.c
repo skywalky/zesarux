@@ -956,11 +956,14 @@ void establece_frecuencia_tono(z80_byte indice, int *freq_tono)
 	int freq_temp;
 	freq_temp=ay_3_8912_registros[ay_chip_selected][indice]+256*(ay_3_8912_registros[ay_chip_selected][indice+1] & 0x0F);
         //printf ("Valor freq_temp : %d\n",freq_temp);
-        freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
-
 
 	//controlamos divisiones por cero
 	if (!freq_temp) freq_temp++;
+
+        freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
+
+
+
 
         *freq_tono=FRECUENCIA_AY/freq_temp;
 
@@ -1315,10 +1318,13 @@ void out_port_ay(z80_int puerto,z80_byte value)
 			//Frecuencia ruido
 			int freq_temp=ay_3_8912_registros[ay_chip_selected][6] & 31;
 	       		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
-			freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
 
 			//controlamos divisiones por cero
 			if (!freq_temp) freq_temp++;
+
+			freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
+
+
 
                         freq_ruido[ay_chip_selected]=FRECUENCIA_NOISE/freq_temp;
 			//printf ("Frecuencia ruido: %d Hz\n",freq_ruido);
@@ -1376,6 +1382,7 @@ void out_port_ay(z80_int puerto,z80_byte value)
 
 		        //controlamos divisiones por cero
 			if (!freq_temp) freq_temp++;
+			
 		        freq_envelope[ay_chip_selected]=FRECUENCIA_ENVELOPE/freq_temp;
 
 		        if (freq_envelope[ay_chip_selected]>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {

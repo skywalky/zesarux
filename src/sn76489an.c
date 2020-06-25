@@ -554,11 +554,14 @@ Frecuencia real= X = (CPU Speed / 32) / Desired frequency
 	freq_temp=(sn_chip_registers[indice] & 0xF) | ((sn_chip_registers[indice+1] & 63)<<4);
 
 	//printf ("Valor freq_temp : %d Hz\n",freq_temp);
-	freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
-
 
 	//controlamos divisiones por cero
 	if (!freq_temp) freq_temp++;
+
+	freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
+
+
+
 
 	*freq_tono=FRECUENCIA_SN/freq_temp;
 
@@ -687,10 +690,13 @@ void sn_set_value_register(z80_byte value)
 			//Frecuencia ruido
 			int freq_temp=sn_chip_registers[9] & 31;
 	       		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
-			freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
 
 			//controlamos divisiones por cero
 			if (!freq_temp) freq_temp++;
+
+			freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
+
+
 
 			sn_freq_ruido=SN_FRECUENCIA_NOISE/freq_temp;
 			//printf ("Frecuencia ruido: %d Hz\n",sn_freq_ruido);
