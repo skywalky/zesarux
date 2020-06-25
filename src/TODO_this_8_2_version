@@ -346,11 +346,10 @@ https://github.com/gseidler/The-MSX-Red-Book/blob/master/the_msx_red_book.md
 
 -msx timings accesos a vram write/read y depende de modo
 
--emulacion ruido chip SN
+-emulacion ruido chip SN mejorar
 
 -menus de chip AY que el titulo diga "SN... " en vez de "AY...."
 
--joystick correcto para colecovision
 
 -Ay a midi y sn a midi. Tanto mid como midi device
 
