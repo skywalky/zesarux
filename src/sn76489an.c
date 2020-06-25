@@ -805,13 +805,39 @@ void sn_set_volume_tone_channel(z80_byte canal,z80_byte volumen_final)
 void sn_set_noise_type(z80_byte tipo)
 {
 /*
-               //|1 |1 |1 |0 |xx|FB|M1|M0|
-          M1-M0= mode bits:
+
+TODO: emulacion correcta de esto:
+
+The noise source is quite intresting.  It has several modes of operation.
+Here's a control word:
+
++--+--+--+--+--+--+--+--+
+|1 |1 |1 |0 |xx|FB|M1|M0|
++--+--+--+--+--+--+--+--+
+
+FB= Feedback:
+
+0= 'Periodic' noise
+1= 'white' noise 
+
+The white noise sounds, well, like white noise.
+The periodic noise is intresting.  Depending on the frequency, it can
+sound very tonal and smooth.
+
+M1-M0= mode bits:
 
 00= Fosc/512  Very 'hissy'; like grease frying
 01= Fosc/1024 Slightly lower
 10= Fosc/2048 More of a high rumble
 11= output of tone generator #3
+
+You can use the output of gen. #3 for intresting effects.  If you sweep
+the frequency of gen. #3, it'll cause a cool sweeping effect of the noise.
+The usual way of using this mode is to attenuate gen. #3, and use the
+output of the noise source only.
+
+The attenuator for noise works in the same way as it does for the other
+channels.
 
 
 				*/
@@ -901,6 +927,8 @@ R2-R0 the register number:
                 
                 //establecer frecuencia ruido
                 sn_set_noise_type(sound_data);
+
+				//printf ("Establecer ruido: %02XH\n",sound_data & 7);
 
             }
             if (tipo==1) {

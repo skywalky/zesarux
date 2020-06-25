@@ -41,6 +41,8 @@
 //Memory Map - Development - SMS Power!
 //https://www.smspower.org/Development/MemoryMap
 
+//https://github.com/mikebenfield/euphrates/blob/master/euphrates/src/hardware/sms_io.rs
+
 z80_byte *sg1000_vram_memory=NULL;
 
 

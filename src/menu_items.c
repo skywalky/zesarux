@@ -2625,13 +2625,11 @@ M1-M0= mode bits:
 						sprintf (textotono,"Noise Type: %s",(noise_control & 4 ? "White" : "Periodic"));
 						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
-						if ( (noise_control & 4) == 0) {
-							sprintf (textotono,"Periodic Mode: %d",noise_control & 3);
-							zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);							
-						}
-						else {
-							zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,"");
-						}
+						
+						sprintf (textotono,"Noise Mode: %d",noise_control & 3);
+						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);							
+						
+					
 
 											/*
                         int freq_temp=ay_3_8912_registros[chip][6] & 31;
@@ -22367,6 +22365,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		else if (MACHINE_IS_MK14) strcpy(nombrebmp,"keyboard_mk14.bmp");
 		else if (MACHINE_IS_SAM) strcpy(nombrebmp,"keyboard_sam.bmp");
 		else if (MACHINE_IS_CPC) strcpy(nombrebmp,"keyboard_cpc.bmp");
+		else if (MACHINE_IS_COLECO) strcpy(nombrebmp,"keyboard_coleco.bmp");
 		else if (MACHINE_IS_SG1000) strcpy(nombrebmp,"keyboard_sg1000.bmp");
 		
 		else strcpy(nombrebmp,"keyboard_48.bmp");

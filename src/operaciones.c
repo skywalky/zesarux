@@ -7345,17 +7345,15 @@ z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h,z80_byte puerto_l)
        //FC- Reading this port gives the status of controller #1. (farthest from front)
 	   //Temporal fila de teclas
        if (puerto_l==0xFC) {
-
-//puerto_63486    db              255  ; 5    4    3    2    1     ;3
-//puerto_61438    db              255  ; 6    7    8    9    0     ;4
-
-				//345 67890
-               return (puerto_61438 & 31) | ((puerto_63486<<3) & (128+64+32) );
-             
+               return coleco_get_joypad_a();
        }
 
+//FF- Reading this one gives the status of controller #2. (closest to front)	   
+       if (puerto_l==0xFF) {
+               return coleco_get_joypad_b();
+       }
 
-
+printf ("In port : %04XH\n",puerto);
 
 	return 255;
  
@@ -7421,7 +7419,7 @@ void out_port_sg1000(z80_int puerto,z80_byte value)
 }
 
 
-//Devuelve valor puerto para maquinas Coleco
+//Devuelve valor puerto para maquinas SG1000
 z80_byte lee_puerto_sg1000_no_time(z80_byte puerto_h,z80_byte puerto_l)
 {
 

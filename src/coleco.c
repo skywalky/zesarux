@@ -34,6 +34,7 @@
 #include "screen.h"
 #include "audio.h"
 #include "sn76489an.h"
+#include "joystick.h"
 
 z80_byte *coleco_vram_memory=NULL;
 
@@ -485,3 +486,139 @@ void coleco_set_sn_freq(int canal,int frecuencia)
 
 */
 
+
+
+
+
+
+z80_byte coleco_get_joypad_a(void) 
+{
+
+    z80_byte valor_joystick=255;
+
+/*
+joypad_a (value after mask 0b11000000 = 192)
+JOYPAD2_DOWN:   = 0b10000000;
+JOYPAD2_UP:     = 0b01000000;
+JOYPAD1_B:      = 0b00100000;
+JOYPAD1_A:      = 0b00010000;
+JOYPAD1_RIGHT:  = 0b00001000;
+JOYPAD1_LEFT:   = 0b00000100;
+JOYPAD1_DOWN:   = 0b00000010;
+JOYPAD1_UP:     = 0b00000001;
+}
+*/
+
+//puerto_63486    db              255  ; 5    4    3    2    1     ;3
+//puerto_61438    db              255  ; 6    7    8    9    0     ;4
+
+			//z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
+
+			if ((puerto_especial_joystick&1)) valor_joystick &=(255-8);
+			if ((puerto_especial_joystick&2)) valor_joystick &=(255-4);
+			if ((puerto_especial_joystick&4)) valor_joystick &=(255-2);
+			if ((puerto_especial_joystick&8)) valor_joystick &=(255-1);
+
+			if ((puerto_especial_joystick&16)) valor_joystick &=(255-16);
+
+            //Espacio tambien vale como Fire/A
+            //puerto_32766    db              255  ; B    N    M    Simb Space ;7
+            if ((puerto_32766 & 1)==0) valor_joystick &=(255-16);
+
+            //B = Tecla Z
+
+            //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
+            if ((puerto_65278 & 2)==0) valor_joystick &=(255-32);
+
+
+            //Player 2. Q
+            //puerto_64510    db              255  ; T    R    E    W    Q     ;2            
+            if ((puerto_64510 & 1)==0) valor_joystick &=(255-64);
+
+
+
+
+            //Player 2. A
+            //puerto_65022   db    255  ; G    F    D    S    A     ;1
+            if ((puerto_65022 & 1)==0) valor_joystick &=(255-128);
+
+
+
+
+
+    return valor_joystick;
+}
+
+
+
+
+z80_byte coleco_get_joypad_b(void) 
+{
+
+    z80_byte valor_joystick=255;
+
+/*
+value after mask port = 0b11000001 = 193
+B_TH:           = 0b10000000;
+A_TH:           = 0b01000000;
+CONT:           = 0b00100000;
+RESET:          = 0b00010000;
+JOYPAD2_B:      = 0b00001000;
+JOYPAD2_A:      = 0b00000100;
+JOYPAD2_RIGHT:  = 0b00000010;
+JOYPAD2_LEFT:   = 0b00000001;
+}
+*/
+
+//puerto_63486    db              255  ; 5    4    3    2    1     ;3
+//puerto_61438    db              255  ; 6    7    8    9    0     ;4
+
+			//z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
+
+
+            //Player 2. O
+            //puerto_57342    db              255  ; Y    U    I    O    P     ;5         
+            if ((puerto_57342 & 2)==0) valor_joystick &=(255-1);
+
+
+            //Player 2. P
+            //puerto_57342    db              255  ; Y    U    I    O    P     ;5         
+            if ((puerto_57342 & 1)==0) valor_joystick &=(255-2);
+
+
+            //Player 2. M
+            //puerto_32766    db              255  ; B    N    M    Simb Space ;7
+            if ((puerto_32766 & 4)==0) valor_joystick &=(255-4);
+
+
+            //Player 2. N
+            //puerto_32766    db              255  ; B    N    M    Simb Space ;7
+            if ((puerto_32766 & 8)==0) valor_joystick &=(255-8);            
+
+/*
+             A B cont reset 
+
+             Z X   C    R
+*/
+
+            //Player 2. Reset (R)
+            //puerto_64510    db              255  ; T    R    E    W    Q     ;2
+            if ((puerto_64510 & 8)==0) valor_joystick &=(255-16);   
+
+
+            //Player 2. Cont (C)
+            //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
+            if ((puerto_65278 & 8)==0) valor_joystick &=(255-32); 
+
+
+            //A  (Z)
+            //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
+            if ((puerto_65278 & 2)==0) valor_joystick &=(255-64); 
+
+            //B  (X)
+            //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
+            if ((puerto_65278 & 4)==0) valor_joystick &=(255-128);             
+
+
+    return valor_joystick;
+}
