@@ -17736,6 +17736,7 @@ void util_bmp_putpixel(z80_byte *puntero,int x,int y,int r,int g,int b)
 
         int tamanyo_linea=ancho*3;
         int offset_x=x*3;
+//TODO: determinados anchos de imagen parece que el offset de linea no siempre es este        
         int offset=(yfinal*tamanyo_linea)+offset_x+UTIL_BMP_HEADER_SIZE;
 
         //Each 3-byte triplet in the bitmap array represents the relative intensities of blue, green, and red, respectively, for a pixel.
