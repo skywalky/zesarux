@@ -45,7 +45,8 @@ z80_byte *coleco_vram_memory=NULL;
 //int coleco_memory_slots[4][4];
 
 
-
+//Si lee joystick (0) o keypad (1)
+int colleco_controller_joystick_mode=1;
 
 
 const char *coleco_string_memory_type_rom="ROM";
@@ -128,7 +129,7 @@ void coleco_init_memory_tables(void)
 void coleco_reset(void)
 {
 
-
+    colleco_controller_joystick_mode=1;
 
 }
 
@@ -497,16 +498,36 @@ z80_byte coleco_get_joypad_a(void)
     z80_byte valor_joystick=255;
 
 /*
-joypad_a (value after mask 0b11000000 = 192)
-JOYPAD2_DOWN:   = 0b10000000;
-JOYPAD2_UP:     = 0b01000000;
-JOYPAD1_B:      = 0b00100000;
-JOYPAD1_A:      = 0b00010000;
-JOYPAD1_RIGHT:  = 0b00001000;
-JOYPAD1_LEFT:   = 0b00000100;
-JOYPAD1_DOWN:   = 0b00000010;
-JOYPAD1_UP:     = 0b00000001;
-}
+static INPUT_PORTS_START( coleco_hand_controller )
+	PORT_START("COMMON0")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )
+	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_CUSTOM )
+
+	PORT_START("COMMON1")
+	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_CUSTOM_MEMBER(coleco_hand_controller_device, keypad_r)
+	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_CUSTOM )
+
+	PORT_START("KEYPAD")
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 0") PORT_CODE(KEYCODE_0_PAD)
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 1") PORT_CODE(KEYCODE_1_PAD)
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 2") PORT_CODE(KEYCODE_2_PAD)
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 3") PORT_CODE(KEYCODE_3_PAD)
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 4") PORT_CODE(KEYCODE_4_PAD)
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 5") PORT_CODE(KEYCODE_5_PAD)
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 6") PORT_CODE(KEYCODE_6_PAD)
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 7") PORT_CODE(KEYCODE_7_PAD)
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 8") PORT_CODE(KEYCODE_8_PAD)
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad 9") PORT_CODE(KEYCODE_9_PAD)
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad #") PORT_CODE(KEYCODE_MINUS_PAD)
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_KEYPAD ) PORT_NAME("Keypad *") PORT_CODE(KEYCODE_PLUS_PAD)
+INPUT_PORTS_END
 */
 
 //puerto_63486    db              255  ; 5    4    3    2    1     ;3
@@ -514,33 +535,23 @@ JOYPAD1_UP:     = 0b00000001;
 
 			//z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
 
-			if ((puerto_especial_joystick&1)) valor_joystick &=(255-8);
-			if ((puerto_especial_joystick&2)) valor_joystick &=(255-4);
-			if ((puerto_especial_joystick&4)) valor_joystick &=(255-2);
+			if ((puerto_especial_joystick&1)) valor_joystick &=(255-2);
+			if ((puerto_especial_joystick&2)) valor_joystick &=(255-8);
+			if ((puerto_especial_joystick&4)) valor_joystick &=(255-4);
 			if ((puerto_especial_joystick&8)) valor_joystick &=(255-1);
 
-			if ((puerto_especial_joystick&16)) valor_joystick &=(255-16);
+			if ((puerto_especial_joystick&16)) valor_joystick &=(255-64);
 
             //Espacio tambien vale como Fire/A
             //puerto_32766    db              255  ; B    N    M    Simb Space ;7
-            if ((puerto_32766 & 1)==0) valor_joystick &=(255-16);
+            if ((puerto_32766 & 1)==0) valor_joystick &=(255-64);
 
-            //B = Tecla Z
+            //Custom = Tecla Z
 
             //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
-            if ((puerto_65278 & 2)==0) valor_joystick &=(255-32);
+            if ((puerto_65278 & 2)==0) valor_joystick &=(255-128);
 
 
-            //Player 2. Q
-            //puerto_64510    db              255  ; T    R    E    W    Q     ;2            
-            if ((puerto_64510 & 1)==0) valor_joystick &=(255-64);
-
-
-
-
-            //Player 2. A
-            //puerto_65022   db    255  ; G    F    D    S    A     ;1
-            if ((puerto_65022 & 1)==0) valor_joystick &=(255-128);
 
 
 
@@ -621,4 +632,43 @@ JOYPAD2_LEFT:   = 0b00000001;
 
 
     return valor_joystick;
+}
+
+
+z80_byte coleco_get_keypad_a(void)
+{
+    return 255;
+}
+
+z80_byte coleco_get_keypad_b(void)
+{
+    return 255;
+}
+
+
+void coleco_set_keypad_mode(void)
+{
+    colleco_controller_joystick_mode=0;
+}
+
+
+void coleco_set_joystick_mode(void)
+{
+    colleco_controller_joystick_mode=1;
+}
+
+
+
+z80_byte coleco_get_controller_a(void)
+{
+    if (colleco_controller_joystick_mode) return coleco_get_joypad_a();
+    else return coleco_get_keypad_a();
+}
+
+
+
+z80_byte coleco_get_controller_b(void)
+{
+    if (colleco_controller_joystick_mode) return coleco_get_joypad_b();
+    else return coleco_get_keypad_b();
 }

@@ -7298,6 +7298,20 @@ void out_port_coleco_no_time(z80_int puerto,z80_byte value)
 		   sn_out_port_sound(value);
 	   }
 
+	if (puerto_l >=0x80 && puerto_l <=0x9F) {
+		printf ("Out coleco port: Controls _ Set to keypad mode %04XH value: %02XH char: %c\n",puerto,value,
+		(value>=32 && value<=126 ? value : '?') );	 
+
+		coleco_set_keypad_mode();  
+	}	   
+
+	if (puerto_l >=0xC0 && puerto_l <=0xDF) {
+		printf ("Out coleco port: Controls _ Set to joystick mode %04XH value: %02XH char: %c\n",puerto,value,
+		(value>=32 && value<=126 ? value : '?') );	 
+
+		coleco_set_joystick_mode();   
+	}
+
 }
 
 void out_port_coleco(z80_int puerto,z80_byte value)
@@ -7345,12 +7359,14 @@ z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h,z80_byte puerto_l)
        //FC- Reading this port gives the status of controller #1. (farthest from front)
 	   //Temporal fila de teclas
        if (puerto_l==0xFC) {
-               return coleco_get_joypad_a();
+		   printf ("In coleco controller A\n");
+               return coleco_get_controller_a();
        }
 
 //FF- Reading this one gives the status of controller #2. (closest to front)	   
        if (puerto_l==0xFF) {
-               return coleco_get_joypad_b();
+		   printf ("In coleco controller B\n");
+               return coleco_get_controller_b();
        }
 
 printf ("In port : %04XH\n",puerto);
