@@ -268,7 +268,13 @@ When the system finds a header, it selects the ROM slot only on the memory page 
 void coleco_empty_romcartridge_space(void)
 {
 
-//TODO: poner a 0
+
+//poner a 0 desde 0x2000
+    int i;
+    for (i=0x2000;i<65536;i++) {
+        memoria_spectrum[i]=0;
+    }
+
 }
 
 
@@ -546,10 +552,10 @@ INPUT_PORTS_END
             //puerto_32766    db              255  ; B    N    M    Simb Space ;7
             if ((puerto_32766 & 1)==0) valor_joystick &=(255-64);
 
-            //Custom = Tecla Z
+            //Custom = Tecla C
 
             //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
-            if ((puerto_65278 & 2)==0) valor_joystick &=(255-128);
+            if ((puerto_65278 & 8)==0) valor_joystick &=(255-128);
 
 
 
