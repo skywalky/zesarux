@@ -17927,13 +17927,27 @@ void menu_audio_chip_info(MENU_ITEM_PARAMETERS)
 {
 
 	int chip_frequency;
+	int max_freq,min_freq;
 
-	if (sn_chip_present.v) chip_frequency=sn_chip_frequency;
-	else chip_frequency=ay_chip_frequency;
+	if (sn_chip_present.v) {
+		//Chip SN
+		chip_frequency=sn_chip_frequency;
+		max_freq=sn_retorna_frecuencia_valor_registro(0,0);
+		min_freq=sn_retorna_frecuencia_valor_registro(255,255);
+	}
+	else {
+		//Chip AY
+		chip_frequency=ay_chip_frequency;
+		max_freq=ay_retorna_frecuencia_valor_registro(0,0);
+		min_freq=ay_retorna_frecuencia_valor_registro(255,255);		
+	}
 
-	menu_generic_message_format("Audio Chip Info","Audio Chip: %s\nFrequency: %d Hz",
+	
+
+	menu_generic_message_format("Audio Chip Info","Audio Chip: %s\nFrequency: %d Hz\n"
+								"Min Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz",
 		(sn_chip_present.v ? "Texas Instruments SN76489AN" : "General Instrument AY-3-8910"),
-		chip_frequency
+		chip_frequency,min_freq,max_freq
 	);
 }
 

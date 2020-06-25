@@ -594,11 +594,14 @@ int freq_tono;
 	freq_temp=(value_l & 0xF) | ((value_h & 63)<<4);
 
 	//printf ("Valor freq_temp : %d Hz\n",freq_temp);
-	freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
-
 
 	//controlamos divisiones por cero
 	if (!freq_temp) freq_temp++;
+
+	freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
+
+
+
 
 	freq_tono=FRECUENCIA_SN/freq_temp;
 

@@ -93,6 +93,7 @@ extern void set_total_ay_chips(int total);
 extern int ay_chip_selected;
 
 extern int ay_retorna_frecuencia(int registro,int chip);
+extern int ay_retorna_frecuencia_valor_registro(z80_byte value_l,z80_byte value_h);
 
 extern char da_output_ay_izquierdo(void);
 extern char da_output_ay_derecho(void);

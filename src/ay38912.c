@@ -47,7 +47,7 @@ R5 � Ajuste aproximado del tono, canal C
 El tono de cada canal es un valor de 12 bits que se forma combinando los bits D3-DO
 del registro de ajuste aproximado y los bits D7-DO del registro de ajuste fino. La uni-
 dad b~sica del tono es la frecuencia de reloj ~ividida por 16 (es decir, 110.83 KHz).
-Como el contador es de 12 bits, se puede g ~erar frecuencias de 27 Hz a 110 KHz.
+Como el contador es de 12 bits, se puede generar frecuencias de 27 Hz a 110 KHz.
 
 R6 � Control del generador de ruido, D4-DO
 El periodo del generador de ruido se toma contando los cinco bits inferiores del regis-
@@ -1441,11 +1441,14 @@ int ay_retorna_frecuencia_valor_registro(z80_byte value_l,z80_byte value_h)
 	int freq_tono;
         freq_temp=value_l+256*(value_h & 0x0F);
         //printf ("Valor freq_temp : %d\n",freq_temp);
-        freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
-
 
         //controlamos divisiones por cero
         if (!freq_temp) freq_temp++;
+
+        freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
+
+
+
 
         freq_tono=FRECUENCIA_AY/freq_temp;
 
