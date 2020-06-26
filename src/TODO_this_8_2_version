@@ -406,3 +406,5 @@ Tamaño sprites
 
 
 -Contención en hacer out e in a vram?
+
+-cambiar de maquina 81 a coleco, peta. quiza por cambio de tamaño ventana. pasa tambien con msx o sg1000? la reves, de otras maquinas a estas nuevas tambien puede pasar. esto estaba en cpu.c creo
