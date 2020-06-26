@@ -387,6 +387,8 @@ se activará real vídeo si setting auto enable está activo. Esto quizá lo lee
 
 -Bit de 5S sprite flag y numero 5º sprite en status register
 
+-al insertar cartridge que solo salgan extensiones reconocidas (rom , col o sg), una para cada maquina
+
 
 -Iniciar ZEsarUX en curses con msx peta 
 
