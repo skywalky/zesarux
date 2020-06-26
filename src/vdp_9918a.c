@@ -103,6 +103,15 @@ z80_byte vdp_9918a_in_vdp_status(void)
     //C: sprite colision (coincidence) flag
     //fifth sprite number
 
+
+    //Activar real video al leer este registro, si esta autoenable
+    if (rainbow_enabled.v==0 && autodetect_rainbow.v) {
+        //Activar realvideo
+        debug_printf (VERBOSE_INFO,"Enabling realvideo due to VDP status register reading");
+
+        enable_rainbow();
+    }
+
     z80_byte retorno=vdp_9918a_status_register;
 
     
