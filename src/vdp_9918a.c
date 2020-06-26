@@ -106,7 +106,7 @@ z80_byte vdp_9918a_in_vdp_status(void)
 
     //Activar real video al leer este registro, si esta autoenable
     if (rainbow_enabled.v==0 && autodetect_rainbow.v) {
-        //Activar realvideo
+        //Activar realvideo. Ya que asi podrá haber lectura de maximo sprites en linea
         debug_printf (VERBOSE_INFO,"Enabling realvideo due to VDP status register reading");
 
         enable_rainbow();
@@ -1340,6 +1340,8 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
     
     z80_byte byte_leido;
 
+    int sprites_en_linea=0;
+
         
         int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
         int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
@@ -1397,7 +1399,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
         //Empezar desde final hacia principio
         //printf ("Sprite final: %d\n",primer_sprite_final);
 
-        for (sprite=primer_sprite_final;sprite>=0;sprite--) {
+        for (sprite=primer_sprite_final;sprite>=0 && sprites_en_linea<VDP_9918A_MAX_SPRITES_PER_LINE;sprite--) {
             int vert_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table);
             int horiz_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+1);
             z80_byte sprite_name=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+2);
@@ -1440,10 +1442,15 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                 if (scanline>=vert_pos && scanline<vert_pos+sprite_size) {
                 //if (vert_pos<192) {
                     //int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
+
+                    
+
                       int offset_pattern_table=sprite_name*8+sprite_pattern_table;
                     z80_byte color=attr_color_etc & 15;
 
                     int x,y;
+
+                    int dibujado_sprite=0;
 
                     //Sprites de 16x16
                     if (sprite_size==16) {
@@ -1480,6 +1487,9 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                                         
                                         //Si dentro de limites
                                         if (pos_x_final>=0 && pos_x_final<=255 /*&& pos_y_final>=0 && pos_y_final<=191*/) {
+
+                                            //Al menos hay un pixel dentro de pantalla, se incrementara contador de sprites por linea
+                                            dibujado_sprite=1;
 
                                             //Si bit a 1
                                             if (byte_leido & 128) {
@@ -1547,6 +1557,9 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                                     
                                     if (pos_x_final>=0 && pos_x_final<=255 /*&& pos_y_final>=0 && pos_y_final<=191*/) {
 
+                                        //Al menos hay un pixel dentro de pantalla, se incrementara contador de sprites por linea
+                                        dibujado_sprite=1;
+
                                         //Si bit a 1
                                         if (byte_leido & 128) {
                                             //Y si ese color no es transparente
@@ -1581,6 +1594,9 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                             
                         //}
                     }
+
+
+                    if (dibujado_sprite) sprites_en_linea++; 
 
                 }
             
