@@ -93,7 +93,6 @@ extern z80_bit vdp_9918a_reveal_layer_sprites;
 #define VDP_9918A_MAX_SPRITES 32
 
 
-//En teoria son 5, pero con 5 el athletic land en MSX no se ve bien  la "plataforma" de la balsa
-#define VDP_9918A_MAX_SPRITES_PER_LINE 6
+#define VDP_9918A_MAX_SPRITES_PER_LINE 5
 
 #endif

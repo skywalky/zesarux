@@ -1488,14 +1488,17 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                                         //Si dentro de limites
                                         if (pos_x_final>=0 && pos_x_final<=255 /*&& pos_y_final>=0 && pos_y_final<=191*/) {
 
-                                            //Al menos hay un pixel dentro de pantalla, se incrementara contador de sprites por linea
-                                            dibujado_sprite=1;
+
 
                                             //Si bit a 1
                                             if (byte_leido & 128) {
                                                 //Y si ese color no es transparente 
                                                 if (color!=0) {
                                                     //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+
+                                                    //Al menos hay un pixel dentro de pantalla, se incrementara contador de sprites por linea
+                                                    //Solo lo hago si el pixel no es transparente, esto esta bien??
+                                                    dibujado_sprite=1;
 
                                                     z80_byte color_sprite=color;
 
@@ -1557,14 +1560,17 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                                     
                                     if (pos_x_final>=0 && pos_x_final<=255 /*&& pos_y_final>=0 && pos_y_final<=191*/) {
 
-                                        //Al menos hay un pixel dentro de pantalla, se incrementara contador de sprites por linea
-                                        dibujado_sprite=1;
+
 
                                         //Si bit a 1
                                         if (byte_leido & 128) {
                                             //Y si ese color no es transparente
                                             if (color!=0) {
                                                 //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
+
+                                                //Al menos hay un pixel dentro de pantalla, se incrementara contador de sprites por linea
+                                                //Solo lo hago si el pixel no es transparente, esto esta bien??
+                                                dibujado_sprite=1;
 
                                                 z80_byte color_sprite=color;
 
