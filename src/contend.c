@@ -1470,7 +1470,19 @@ z80_byte *contend_table_no_mreq;
 
         }
 
-	//TODO sam coupe. de momento sin contend y no inicializamos tabla porque sino se sale de testados y se sale de la tabla
+	//TODO msx, coleco y sg1000. de momento sin contend y no inicializamos tabla porque sino se sale de testados y se sale de la tabla
+	if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
+                timings=contend_patron_no_contend;
+                offset_time=0;
+                offset_patron=0;
+
+                //printf ("timings: %d [0]: %d\n",timings,timings[0]);
+
+		return;
+
+        }
+
+//TODO sam coupe. de momento sin contend y no inicializamos tabla porque sino se sale de testados y se sale de la tabla
 	if (MACHINE_IS_SAM) {
                 timings=contend_patron_no_contend;
                 offset_time=0;
@@ -1481,6 +1493,8 @@ z80_byte *contend_table_no_mreq;
 		return;
 
         }
+
+
 
 
         //TODO QL. de momento sin contend y no inicializamos tabla porque sino se sale de testados y se sale de la tabla
