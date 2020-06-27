@@ -1116,6 +1116,106 @@ scr_refresca_pantalla_cpc_text(scrcurses_refresca_pantalla_cpc_fun_color,scrcurs
 }
 
 
+void scrcurses_refresca_pantalla_vdp9918(void)
+{
+z80_byte video_mode=vdp_9918a_get_video_mode();
+
+	//printf ("video_mode: %d\n",video_mode);
+
+
+	int x,y,bit; 
+	z80_int direccion_name_table;
+	z80_byte byte_leido;
+    z80_byte byte_color;
+	int color=0;
+	
+	//int zx,zy;
+
+	z80_byte ink,paper;
+
+
+	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
+	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
+
+	pattern_name_table=vdp_9918a_get_pattern_name_table(); //(vdp_9918a_registers[2]&15) * 0x400; 
+
+
+
+	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
+
+
+	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+
+    //z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
+
+     
+
+	//z80_byte *screen=get_base_mem_pantalla();
+
+
+
+	int chars_in_line;
+	int char_width;
+
+	z80_byte *vram=get_base_mem_pantalla();
+
+		
+	
+
+		//pattern_base_address=0; //TODO: Puesto a pelo		
+		//"screen 1": Text, characters of 8 x 8	, 32 x 24 characters
+		//video_mode: 0	
+
+
+
+		if (video_mode==4) {
+			chars_in_line=40;
+			char_width=6;
+
+			//En modo texto 40x24, color tinta y papel fijos
+
+			ink=(vdp_9918a_registers[7]>>4)&15;
+			paper=(vdp_9918a_registers[7])&15;			
+		}
+		
+		
+
+		else {
+			chars_in_line=32;
+			char_width=8;
+		}
+
+
+		direccion_name_table=pattern_name_table;  
+
+        for (y=0;y<24;y++) {
+			for (x=0;x<chars_in_line;x++) {  
+       
+            		
+				z80_byte caracter=vdp_9918a_read_vram_byte(vram,direccion_name_table++);
+                
+                move(y,x);
+				
+				 addch(caracter);
+
+				
+			
+
+   	}
+
+
+	
+
+
+
+
+	}    
+
+
+
+}
+
+
 void scrcurses_refresca_pantalla_solo_driver(void)
 {
         //Como esto solo lo uso de momento para drivers graficos, de momento lo dejo vacio
@@ -1206,6 +1306,11 @@ void scrcurses_refresca_pantalla(void)
 
 	else if (MACHINE_IS_CHLOE) {
 		scrcurses_refresca_pantalla_chloe();
+	}
+	
+	//para maquinas con chip vdp9918
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
+	scrcurses_refresca_pantalla_vdp9918();
 	}
 
 
