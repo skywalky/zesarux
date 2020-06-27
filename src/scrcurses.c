@@ -46,6 +46,7 @@
 #include "chloe.h"
 #include "timex.h"
 #include "compileoptions.h"
+#include "vdp_9918a.h"
 
 #ifdef COMPILE_CURSESW
 	#include "cursesw_ext.h"
