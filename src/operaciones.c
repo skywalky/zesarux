@@ -7299,15 +7299,13 @@ void out_port_coleco_no_time(z80_int puerto,z80_byte value)
 	   }
 
 	if (puerto_l >=0x80 && puerto_l <=0x9F) {
-		//printf ("Out coleco port: Controls _ Set to keypad mode %04XH value: %02XH char: %c\n",puerto,value,
-		(value>=32 && value<=126 ? value : '?') );	 
+		//printf ("Out coleco port: Controls _ Set to keypad mode %04XH value: %02XH char: %c\n",puerto,value,(value>=32 && value<=126 ? value : '?') );	 
 
 		coleco_set_keypad_mode();  
 	}	   
 
 	if (puerto_l >=0xC0 && puerto_l <=0xDF) {
-		//printf ("Out coleco port: Controls _ Set to joystick mode %04XH value: %02XH char: %c\n",puerto,value,
-		(value>=32 && value<=126 ? value : '?') );	 
+		//printf ("Out coleco port: Controls _ Set to joystick mode %04XH value: %02XH char: %c\n",puerto,value,(value>=32 && value<=126 ? value : '?') );	 
 
 		coleco_set_joystick_mode();   
 	}
