@@ -1194,6 +1194,8 @@ z80_byte video_mode=vdp_9918a_get_video_mode();
        
             		
 				z80_byte caracter=vdp_9918a_read_vram_byte(vram,direccion_name_table++);
+				
+				if (caracter<32 || caracter>126) caracter='?';
                 
                 move(y,x);
 				
