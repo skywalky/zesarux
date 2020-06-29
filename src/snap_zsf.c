@@ -72,6 +72,7 @@
 #include "vdp_9918a.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sn76489an.h"
 
 
 #include "autoselectoptions.h"
@@ -111,6 +112,7 @@
 #define ZSF_MSX_VRAM 28
 #define ZSF_GENERIC_64K_MEM 29
 #define ZSF_VDP_9918A_CONF 30
+#define ZSF_SNCHIP 31
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -419,6 +421,11 @@ Byte fields:
 0: vdp_9918a_registers[8];
 
 
+-Block ID 31: ZSF_SNCHIP
+Byte fields:
+0-15: SN Chip contents
+
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -432,7 +439,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 31
+#define MAX_ZSF_BLOCK_ID_NAMES 32
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -466,6 +473,7 @@ char *zsf_block_id_names[]={
   "ZSF_MSX_VRAM",
   "ZSF_GENERIC_64K_MEM",
   "ZSF_VDP_9918A_CONF",
+  "ZSF_SNCHIP",
 
   "Unknown"  //Este siempre al final
 };
@@ -1049,6 +1057,30 @@ Byte fields:
 1: Current AY Chip selected (variable ay_chip_selected). Redundant in all ZSF_AYCHIP blocks
 2: AY Last Register selection
 3-18: AY Chip contents
+      */
+  /*
+
+*/
+
+}
+
+
+void load_zsf_snchip(z80_byte *header)
+{
+
+  
+  sn_chip_present.v=1;
+
+
+      int j;
+      for (j=0;j<16;j++) sn_chip_registers[j]=header[j];
+  
+
+/*
+      
+-Block ID 31: ZSF_SNCHIP
+Byte fields:
+0-15: AY Chip contents
       */
   /*
 
@@ -1788,7 +1820,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_VDP_9918A_CONF:
         load_zsf_vdp_9918a_conf(block_data);
-      break;                   
+      break;    
+
+      case ZSF_SNCHIP:
+        load_zsf_snchip(block_data);
+      break;                     
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -2977,6 +3013,26 @@ Byte fields:
       zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, aycontents,ZSF_AYCHIP, 19);
     }
   }
+
+  //Registros chip SN
+  if (sn_chip_present.v) {
+
+
+      z80_byte sncontents[16];
+
+      /*
+
+-Block ID 31: ZSF_SNCHIP
+Byte fields:
+0-15: SN Chip contents
+      */
+
+      int j;
+      for (j=0;j<16;j++) sncontents[j]=sn_chip_registers[j];
+
+      zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, sncontents,ZSF_SNCHIP, 16);
+    }
+  
 
  //DIVMMC/DIVIDE config
  //Solo si diviface esta habilitado 

@@ -91,6 +91,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "core_sg1000.h"
+#include "sn76489an.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -4564,9 +4565,22 @@ void debug_get_ioports(char *stats_buffer)
   	                }
 
   		}
-
-
   	}
+
+  	if (sn_chip_present.v) {
+
+  			sprintf (buf_linea,"\nSN76489AN chip:\n");
+  			sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+
+			int i;
+			for (i=0;i<10;i++) {
+					sprintf (buf_linea,"%02X:  %02X\n",i,sn_chip_registers[i]);
+					sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+			}
+
+  		
+  	}	  
 
   	if (MACHINE_IS_Z88) {
   		sprintf (buf_linea,"Z88 Blink:\n\n");
