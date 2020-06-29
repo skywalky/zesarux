@@ -110,6 +110,7 @@
 #define ZSF_MSX_CONF 27
 #define ZSF_MSX_VRAM 28
 #define ZSF_GENERIC_64K_MEM 29
+#define ZSF_VDP_9918A_CONF 30
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -411,6 +412,15 @@ Byte Fields:
 3,4: Block lenght
 5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff)
 
+
+
+-Block ID 30: ZSF_VDP_9918A_CONF
+Ports and internal registers of VDP 9918A registers
+Byte fields:
+0: vdp_9918a_registers[8];
+
+
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -423,7 +433,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 30
+#define MAX_ZSF_BLOCK_ID_NAMES 31
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -456,6 +466,7 @@ char *zsf_block_id_names[]={
   "ZSF_MSX_CONF",
   "ZSF_MSX_VRAM",
   "ZSF_GENERIC_64K_MEM",
+  "ZSF_VDP_9918A_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -1283,6 +1294,24 @@ Byte fields:
 }
 
 
+void load_zsf_vdp_9918a_conf(z80_byte *header)
+{
+
+  /*
+-Block ID 30: ZSF_VDP_9918A_CONF
+Ports and internal registers of VDP 9918A
+Byte fields:
+0: vdp_9918a_registers[8];
+*/
+
+
+  int i;
+  for (i=0;i<8;i++) vdp_9918a_registers[i]=header[i];
+
+
+ 
+}
+
 
 void load_zsf_tbblue_conf(z80_byte *header)
 {
@@ -1760,7 +1789,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_GENERIC_64K_MEM:
         load_zsf_generic_64k_mem_snapshot_block_data(block_data,block_lenght);
-      break;             
+      break;  
+
+      case ZSF_VDP_9918A_CONF:
+        load_zsf_vdp_9918a_conf(block_data);
+      break;                   
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -2400,28 +2433,27 @@ Byte Fields:
 
 if (MACHINE_IS_SG1000 || MACHINE_IS_COLECO) {
 
-    z80_byte msxconfblock[11];
+
+    z80_byte vdpconfblock[8];
 
 /*
--Block ID 27: ZSF_MSX_CONF
-Ports and internal registers of ZXUNO machine
+-Block ID 30: ZSF_VDP_9918A_CONF
+Ports and internal registers of VDP 9918A
 Byte fields:
-0: msx_ppi_register_a
-1: msx_ppi_register_b
-2: msx_ppi_register_c
-3: vdp_9918a_registers[8];
-11:
+0: vdp_9918a_registers[8];
 */    
 
-    msxconfblock[0]=msx_ppi_register_a;
-    msxconfblock[1]=msx_ppi_register_b;
-    msxconfblock[2]=msx_ppi_register_c;
+
     int i;
-    for (i=0;i<8;i++) msxconfblock[3+i]=vdp_9918a_registers[i];
+    for (i=0;i<8;i++) vdpconfblock[i]=vdp_9918a_registers[i];
+
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, 8);  
 
 
 
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, msxconfblock,ZSF_MSX_CONF, 11);
+
+
    
 int longitud_ram=16384;
   
