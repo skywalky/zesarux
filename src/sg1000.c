@@ -414,6 +414,10 @@ Player 2
 z80_byte sg1000_get_joypad_a(void) 
 {
 
+
+    //si estamos en el menu, no devolver tecla
+    if (zxvision_key_not_sent_emulated_mach() ) return 255;
+
     z80_byte valor_joystick=255;
 
 /*
@@ -474,6 +478,10 @@ JOYPAD1_UP:     = 0b00000001;
 
 z80_byte sg1000_get_joypad_b(void) 
 {
+
+    //si estamos en el menu, no devolver tecla
+    if (zxvision_key_not_sent_emulated_mach() ) return 255;
+
 
     z80_byte valor_joystick=255;
 

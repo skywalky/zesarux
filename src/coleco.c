@@ -710,6 +710,10 @@ void coleco_set_joystick_mode(void)
 z80_byte coleco_get_controller_a(void)
 {
 
+    //si estamos en el menu, no devolver tecla
+    if (zxvision_key_not_sent_emulated_mach() ) return 255;
+
+
     if (colleco_controller_joystick_mode) return coleco_get_joypad_a();
     else return coleco_get_keypad_a();
 }
@@ -718,6 +722,10 @@ z80_byte coleco_get_controller_a(void)
 
 z80_byte coleco_get_controller_b(void)
 {
+
+    //si estamos en el menu, no devolver tecla
+    if (zxvision_key_not_sent_emulated_mach() ) return 255;
+
     if (colleco_controller_joystick_mode) return coleco_get_joypad_b();
     else return coleco_get_keypad_b();
 }
