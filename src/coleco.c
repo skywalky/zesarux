@@ -131,6 +131,12 @@ void coleco_reset(void)
 
     colleco_controller_joystick_mode=1;
 
+
+    //Resetear vram
+    int i;
+
+    for (i=0;i<16384;i++) coleco_vram_memory[i]=0;    
+
 }
 
 void coleco_out_port_vdp_data(z80_byte value)

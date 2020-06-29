@@ -154,7 +154,10 @@ void msx_reset(void)
     //Mapear inicialmente todo a slot 0
     msx_ppi_register_a=0;
 
+    //Resetear vram
+    int i;
 
+    for (i=0;i<16384;i++) msx_vram_memory[i]=0;
 
 }
 

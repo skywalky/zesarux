@@ -119,7 +119,10 @@ void sg1000_init_memory_tables(void)
 void sg1000_reset(void)
 {
 
+    //Resetear vram
+    int i;
 
+    for (i=0;i<16384;i++) sg1000_vram_memory[i]=0;
 
 }
 
