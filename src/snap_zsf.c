@@ -1086,6 +1086,9 @@ Byte fields:
 
 */
 
+
+  sn_establece_frecuencias_todos_canales();
+
 }
 
 void load_zsf_ula(z80_byte *header)

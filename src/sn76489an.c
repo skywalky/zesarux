@@ -650,6 +650,49 @@ void sn_set_register_port(z80_byte value)
 }
 
 
+void sn_establece_frecuencia_ruido(void)
+{
+
+	
+			//Frecuencia ruido
+			int freq_temp=sn_chip_registers[9] & 31;
+	       		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
+
+			//controlamos divisiones por cero
+			if (!freq_temp) freq_temp++;
+
+			freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
+
+
+
+			sn_freq_ruido=SN_FRECUENCIA_NOISE/freq_temp;
+			//printf ("Frecuencia ruido: %d Hz\n",sn_freq_ruido);
+
+			//sn_freq_ruido realmente tiene frecuencia*2... dice cada cuando se conmuta de signo
+			
+			sn_freq_ruido=sn_freq_ruido*2;
+
+
+
+			if (sn_freq_ruido>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+	                  
+        	          sn_freq_ruido=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
+			}
+
+
+			//si la frecuencia del ruido es exactamente igual a la del sonido
+			//alteramos un poco el valor
+			if ( sn_freq_ruido==FRECUENCIA_CONSTANTE_NORMAL_SONIDO) sn_freq_ruido=FRECUENCIA_CONSTANTE_NORMAL_SONIDO-10;
+
+
+
+			//printf ("Frecuencia ruido final: %d Hz\n",sn_freq_ruido);
+
+
+		
+
+}
+
 
 //Enviar valor a puerto
 void sn_set_value_register(z80_byte value)
@@ -688,39 +731,7 @@ void sn_set_value_register(z80_byte value)
 
 		if (sn_3_8912_registro_sel ==9) {
 			//Frecuencia ruido
-			int freq_temp=sn_chip_registers[9] & 31;
-	       		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
-
-			//controlamos divisiones por cero
-			if (!freq_temp) freq_temp++;
-
-			freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
-
-
-
-			sn_freq_ruido=SN_FRECUENCIA_NOISE/freq_temp;
-			//printf ("Frecuencia ruido: %d Hz\n",sn_freq_ruido);
-
-			//sn_freq_ruido realmente tiene frecuencia*2... dice cada cuando se conmuta de signo
-			
-			sn_freq_ruido=sn_freq_ruido*2;
-
-
-
-			if (sn_freq_ruido>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
-	                  
-        	          sn_freq_ruido=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
-			}
-
-
-			//si la frecuencia del ruido es exactamente igual a la del sonido
-			//alteramos un poco el valor
-			if ( sn_freq_ruido==FRECUENCIA_CONSTANTE_NORMAL_SONIDO) sn_freq_ruido=FRECUENCIA_CONSTANTE_NORMAL_SONIDO-10;
-
-
-
-			//printf ("Frecuencia ruido final: %d Hz\n",sn_freq_ruido);
-
+			sn_establece_frecuencia_ruido();
 
 		}
 
@@ -994,4 +1005,18 @@ to it, it uses which ever register you used in the control word.
             sn_set_value_register(value);               
     }
 }
-					
+
+
+
+void sn_establece_frecuencias_todos_canales(void)
+{
+		
+	sn_establece_frecuencia_tono(0,&sn_freq_tono_A);
+
+	sn_establece_frecuencia_tono(2,&sn_freq_tono_B);
+
+	sn_establece_frecuencia_tono(4,&sn_freq_tono_C);
+
+	sn_establece_frecuencia_ruido();
+		
+}			

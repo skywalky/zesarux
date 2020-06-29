@@ -409,3 +409,11 @@ al reves, de otras maquinas a estas nuevas tambien puede pasar. esto estaba en c
 
 
 -VDP interrupt con Registro 1 de vdp
+
+-Al cargar ZSF con registros del chip de audio SN, si hay canales en ON con sonido reproduciendo, no se oye ese sonido.
+Los registros los carga pero no se establecen los contadores de frecuencia, etc. Esto seguramente tambien pasa con chip AY
+Para reproducirlo, cargar un juego de SG1000, y cuando suene sonido, hacer eject y se quedará el sonido activo
+
+:
+
+se tiene sn_establece_frecuencias_todos_canales, faltaria para todo chip AY
