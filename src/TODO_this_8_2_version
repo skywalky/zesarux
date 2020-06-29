@@ -410,7 +410,4 @@ al reves, de otras maquinas a estas nuevas tambien puede pasar. esto estaba en c
 
 -VDP interrupt con Registro 1 de vdp
 
--.zsf para coleco y sg1000
-
-
--separar ZSF_MSX_CONF los registros de vdp
+-.zsf SN audio chip registers
