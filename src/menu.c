@@ -3602,6 +3602,7 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
 
 	if (prefijo_utf==0xD0) {
 		if (caracter==0x90) return 'A';
+		if (caracter==0x92) return 'B';
 		if (caracter==0x9C) return 'M'; //cyrillic capital letter em (U+041C)
 		if (caracter==0xA1) return 'C';
 		if (caracter==0xA8) { //Ш
