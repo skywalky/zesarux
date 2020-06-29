@@ -2489,7 +2489,7 @@ Byte Fields:
         debug_printf(VERBOSE_DEBUG,"Saving ZSF_GENERIC_64K_MEM segment: %d length: %d",segment,longitud_bloque);
 
         
-        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_MEMBLOCK, longitud_bloque+6);
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_GENERIC_64K_MEM, longitud_bloque+6);
         
       
 
