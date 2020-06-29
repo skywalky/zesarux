@@ -193,6 +193,8 @@ void sg1000_insert_rom_cartridge(char *filename)
 
 
     int leidos=fread(memoria_spectrum,1,tamanyo_archivo,ptr_cartridge);
+
+    debug_printf(VERBOSE_INFO,"Loaded %d bytes of cartridge rom",leidos);
     
 
     fclose(ptr_cartridge);
