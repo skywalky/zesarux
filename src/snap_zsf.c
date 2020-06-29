@@ -2400,8 +2400,28 @@ Byte Fields:
 
 if (MACHINE_IS_SG1000 || MACHINE_IS_COLECO) {
 
- 
+    z80_byte msxconfblock[11];
 
+/*
+-Block ID 27: ZSF_MSX_CONF
+Ports and internal registers of ZXUNO machine
+Byte fields:
+0: msx_ppi_register_a
+1: msx_ppi_register_b
+2: msx_ppi_register_c
+3: vdp_9918a_registers[8];
+11:
+*/    
+
+    msxconfblock[0]=msx_ppi_register_a;
+    msxconfblock[1]=msx_ppi_register_b;
+    msxconfblock[2]=msx_ppi_register_c;
+    int i;
+    for (i=0;i<8;i++) msxconfblock[3+i]=vdp_9918a_registers[i];
+
+
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, msxconfblock,ZSF_MSX_CONF, 11);
    
 int longitud_ram=16384;
   
