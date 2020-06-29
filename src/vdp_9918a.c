@@ -1002,10 +1002,10 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 
 
 
-	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
+	pattern_base_address=vdp_9918a_get_pattern_base_address();
 
 
-	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+	z80_int pattern_color_table=vdp_9918a_get_pattern_color_table();
 
 
     //Sumar el offset por linea
@@ -1336,10 +1336,10 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
 
 
-	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
+	pattern_base_address=vdp_9918a_get_pattern_base_address();
 
 
-	//z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+
 
 
     //Sumar el offset por linea
