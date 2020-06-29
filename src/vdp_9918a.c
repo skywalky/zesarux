@@ -124,7 +124,7 @@ z80_byte vdp_9918a_in_vdp_status(void)
 }
 
 
-void vdp_9918a_out_command_status(z80_byte *vram_memory,z80_byte value)
+void vdp_9918a_out_command_status(z80_byte value)
 {
     //printf ("vdp_9918a write status: %02XH position: %d\n",value,vdp_9918a_last_command_status_bytes_counter);
 
@@ -291,7 +291,7 @@ z80_byte vdp_9918a_get_border_color(void)
 
 int vdp_9918a_get_tile_heigth(void)
 {
-    z80_byte video_mode=vdp_9918a_get_video_mode();
+    //z80_byte video_mode=vdp_9918a_get_video_mode();
 
     //por defecto
     int heigth=24;
@@ -437,7 +437,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
                     for (bit=0;bit<char_width;bit++) {
 
-						int fila=(x*char_width+bit)/8;
+						//int fila=(x*char_width+bit)/8;
 						
 						
 						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
@@ -587,7 +587,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 							
 						for (bit=0;bit<char_width;bit++) {
 
-							int fila=(x*char_width+bit)/8;
+							//int fila=(x*char_width+bit)/8;
 
 													
 							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
@@ -946,7 +946,7 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 	//printf ("video_mode: %d\n",video_mode);
 
 
-	int x,y,bit; 
+	int x,bit; 
 	z80_int direccion_name_table;
 	z80_byte byte_leido;
     z80_byte byte_color;
@@ -1055,7 +1055,7 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 
                     for (bit=0;bit<char_width;bit++) {
 
-						int columna=(x*char_width+bit)/8;
+						//int columna=(x*char_width+bit)/8;
 						
 						
 						//Ver en casos en que puede que haya menu activo y hay que hacer overlay
@@ -1109,7 +1109,7 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 
 					z80_int pattern_address=pattern_base_address+caracter*8+incremento_byte+scanline_fila/4;
 
-					int row;
+					//int row;
 					//for (row=0;row<2;row++) {
 
 						byte_leido=vdp_9918a_read_vram_byte(vram,pattern_address++);
@@ -1126,7 +1126,8 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 								byte_leido=byte_leido << 4;
 
 								
-								int subpixel_x,subpixel_y;
+								int subpixel_x;
+                                //int subpixel_y;
 
 								int xfinal=x*8+col*4;
 								//int yfinal=y*8+row*4;							
@@ -1196,7 +1197,7 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 					z80_byte caracter=vdp_9918a_read_vram_byte(vram,direccion_name_table);
 					
 
-					int scanline;
+					//int scanline;
 
 					z80_int pattern_address=(caracter*8+2048*tercio) ;
 					pattern_address +=pattern_base_address+scanline_fila;
@@ -1223,7 +1224,7 @@ void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer
 							
 						for (bit=0;bit<char_width;bit++) {
 
-							int columna=(x*char_width+bit)/8;
+							//int columna=(x*char_width+bit)/8;
 
 													
 							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
@@ -1290,26 +1291,6 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
 
 
-
-
-
-
-	
-
-	//printf ("video_mode: %d\n",video_mode);
-
-
-	int x,y,bit; 
-	z80_int direccion_name_table;
-	
-    z80_byte byte_color;
-	int color=0;
-	
-	//int zx,zy;
-
-	z80_byte ink,paper;
-
-
 	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
 	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
 
@@ -1320,7 +1301,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
 
 
-	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+	//z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
 
 
     //Sumar el offset por linea
@@ -1330,11 +1311,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
     //entre 0 y 7 dentro de la fila
     //int scanline_fila=scanline % 8;    
 
-    int offset_sumar_linea;
 
-
-	int chars_in_line;
-	int char_width;    
 
     z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
     
@@ -1453,7 +1430,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                       int offset_pattern_table=sprite_name*8+sprite_pattern_table;
                     z80_byte color=attr_color_etc & 15;
 
-                    int x,y;
+                    int x;
 
                     int dibujado_sprite=0;
 
@@ -1719,7 +1696,6 @@ void screen_store_scanline_rainbow_solo_border_vdp_9918a(z80_int *scanline_buffe
 
     else if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
 
-        z80_int *buffer_destino;
 
         //Borde izquierdo
         screen_store_scanline_rainbow_solo_border_vdp_9918a_section(scanline_buffer,screen_total_borde_izquierdo);

@@ -146,7 +146,7 @@ z80_byte sg1000_in_port_vdp_status(void)
 
 void sg1000_out_port_vdp_command_status(z80_byte value)
 {
-    vdp_9918a_out_command_status(sg1000_vram_memory,value);
+    vdp_9918a_out_command_status(value);
 }
 
 

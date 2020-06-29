@@ -74,7 +74,7 @@ void t_scanline_next_fullborder_coleco(void)
 {
         //resetear buffer border
 
-        int i;
+        //int i;
 
 
 

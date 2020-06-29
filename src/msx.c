@@ -181,7 +181,7 @@ z80_byte msx_in_port_vdp_status(void)
 
 void msx_out_port_vdp_command_status(z80_byte value)
 {
-    vdp_9918a_out_command_status(msx_vram_memory,value);
+    vdp_9918a_out_command_status(value);
 }
 
 
@@ -525,7 +525,7 @@ void scr_refresca_pantalla_y_border_msx_rainbow(void)
 	for (y=0;y<alto;y++) {
 
 
-		int altoborder=screen_borde_superior;
+		//int altoborder=screen_borde_superior;
 
 		
 		for (x=0;x<ancho;x+=8) {

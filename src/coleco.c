@@ -159,7 +159,7 @@ z80_byte coleco_in_port_vdp_status(void)
 
 void coleco_out_port_vdp_command_status(z80_byte value)
 {
-    vdp_9918a_out_command_status(coleco_vram_memory,value);
+    vdp_9918a_out_command_status(value);
 }
 
 
