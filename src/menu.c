@@ -26329,6 +26329,10 @@ void menu_machine_selection_for_manufacturer(int fabricante)
 												}
 
 										}
+
+										if (MACHINE_IS_SG1000) {
+											menu_first_aid("sg1000_boot");
+										}
 										
 
 
@@ -31820,6 +31824,11 @@ char *first_aid_string_realjoystick_detected="A real joystick has been detected\
 							"You can go to menu Settings->Hardware->Real joystick support and set your buttons configuration";	
 
 
+int first_aid_no_sg1000_boot=0;
+char *first_aid_string_sg1000_boot="The SG1000 doesn't have a BIOS, so you must insert a game rom from menu Storage->SG1000 Cartridge";
+							
+
+
 int first_aid_no_backgroundwindows=0;
 char *first_aid_string_backgroundwindows="You can enable background windows and put some windows on the background. "
 		"Go to Settings-> GUI-> Windows settings-> Background windows to enable it";
@@ -31837,6 +31846,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("initial_menu",&first_aid_no_initial_menu,first_aid_string_initial_menu,0);
 	menu_first_aid_add("no_ssl_wos",&first_aid_no_ssl_wos,first_aid_string_no_ssl_wos,0);
 	menu_first_aid_add("realjoystick_detected",&first_aid_no_realjoystick_detected,first_aid_string_realjoystick_detected,0);
+	menu_first_aid_add("sg1000_boot",&first_aid_no_sg1000_boot,first_aid_string_sg1000_boot,0);
 
 	//Items que se disparan en startup
 	menu_first_aid_add("startup_aid",&first_aid_no_startup_aid,first_aid_string_startup_aid,1);
