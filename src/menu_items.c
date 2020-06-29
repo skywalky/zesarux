@@ -3148,7 +3148,7 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 				if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
 	
-					sprintf (texto_buffer,"Video mode: %s",get_vdp_9918_string_video_mode() );
+					sprintf (texto_buffer,"Video mode:%s",get_vdp_9918_string_video_mode() );
 					zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);
 
 
@@ -3165,17 +3165,17 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					sprintf (texto_buffer,"Magnification: %dX",vdp_9918a_get_sprite_double()+1);
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
 
-					sprintf (texto_buffer,"Name Table: %04XH",vdp_9918a_get_pattern_name_table());
+					sprintf (texto_buffer,"Name Table:           %04XH",vdp_9918a_get_pattern_name_table());
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);	
 
-					sprintf (texto_buffer,"Color Table: %04XH",vdp_9918a_get_pattern_color_table());
+					sprintf (texto_buffer,"Color Table:          %04XH",vdp_9918a_get_pattern_color_table());
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);	
 
-					sprintf (texto_buffer,"Pattern Generator: %04XH",vdp_9918a_get_pattern_base_address());
+					sprintf (texto_buffer,"Pattern Generator:    %04XH",vdp_9918a_get_pattern_base_address());
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);						
 
 
-					sprintf (texto_buffer,"Sprite Attr. Table: %04XH",vdp_9918a_get_sprite_attribute_table());
+					sprintf (texto_buffer,"Sprite Attr. Table:   %04XH",vdp_9918a_get_sprite_attribute_table());
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
 
 					sprintf (texto_buffer,"Sprite Pattern Table: %04XH",vdp_9918a_get_sprite_pattern_table());
