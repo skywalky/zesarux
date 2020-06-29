@@ -283,10 +283,18 @@ int vdp_9918a_get_tile_width(void)
     
 }
 
+//Color border/background
 z80_byte vdp_9918a_get_border_color(void)
 {
 
     return vdp_9918a_registers[7] & 15;
+}
+
+z80_byte vdp_9918a_get_foreground_color(void)
+{
+    z80_byte ink=(vdp_9918a_registers[7]>>4)&15;
+    
+    return ink;
 }
 
 int vdp_9918a_get_tile_heigth(void)
@@ -333,6 +341,20 @@ z80_byte vdp_9918a_read_vram_byte(z80_byte *vram,z80_int address)
     return vram[address & 16383];
 }
 
+z80_int vdp_9918a_get_pattern_color_table(void)
+{
+    z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+
+    return pattern_color_table;
+}
+
+z80_int vdp_9918a_get_pattern_base_address(void)
+{
+
+    z80_int pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
+
+    return pattern_base_address;
+}
 
 void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 {
@@ -354,17 +376,17 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 	z80_byte ink,paper;
 
 
-	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
+    z80_int pattern_color_table;
+	z80_int pattern_base_address; 
 	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
 
 	pattern_name_table=vdp_9918a_get_pattern_name_table(); //(vdp_9918a_registers[2]&15) * 0x400; 
 
 
+	pattern_color_table=vdp_9918a_get_pattern_color_table();
 
-	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
 
-
-	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+    pattern_base_address=vdp_9918a_get_pattern_base_address();
 
     //z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
 
@@ -398,8 +420,12 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 			//En modo texto 40x24, color tinta y papel fijos
 
-			ink=(vdp_9918a_registers[7]>>4)&15;
-			paper=(vdp_9918a_registers[7])&15;			
+			//ink=(vdp_9918a_registers[7]>>4)&15;
+			//paper=(vdp_9918a_registers[7])&15;			
+
+
+			ink=vdp_9918a_get_foreground_color();
+			paper=vdp_9918a_get_border_color();          
 		}
 
 		else {
@@ -617,7 +643,19 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 	}    
 }
 
+int vdp_9918a_get_sprite_size(void)
+{
+   int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
 
+   return sprite_size; 
+}
+
+int vdp_9918a_get_sprite_double(void)
+{
+    int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
+
+    return sprite_double;
+}
 
 void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 {
@@ -639,8 +677,8 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
     z80_byte byte_leido;
 
         
-        int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
-        int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
+        int sprite_size=vdp_9918a_get_sprite_size();
+        int sprite_double=vdp_9918a_get_sprite_double();
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 

@@ -3152,8 +3152,27 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);
 
 
-					sprintf (texto_buffer,"Border: %2d",vdp_9918a_get_border_color());
-					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);										
+					sprintf (texto_buffer,"Background Color: %2d",vdp_9918a_get_border_color());
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
+
+					sprintf (texto_buffer,"Foreground Color: %2d",vdp_9918a_get_foreground_color());
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);						
+
+					int sprite_size=vdp_9918a_get_sprite_size();
+					sprintf (texto_buffer,"Sprite size: %dX%d",sprite_size,sprite_size);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
+
+					sprintf (texto_buffer,"Magnification: %dX",vdp_9918a_get_sprite_double()+1);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
+
+					sprintf (texto_buffer,"Name Table: %04XH",vdp_9918a_get_pattern_name_table());
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);	
+
+					sprintf (texto_buffer,"Color Table: %04XH",vdp_9918a_get_pattern_color_table());
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);	
+
+					sprintf (texto_buffer,"Pattern Generator: %04XH",vdp_9918a_get_pattern_base_address());
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);						
 
 
 				}

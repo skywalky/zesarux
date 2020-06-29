@@ -382,10 +382,6 @@ http://www.atarihq.com/danb/files/CV-Tech.txt
 
 https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
 
--Al leer byte de estado de vdp, que es donde está bit de colision y de máximo sprite por línea, 
-se activará real vídeo si setting auto enable está activo. Esto quizá lo lee también en la rom? No debería 
-
-
 
 -Iniciar ZEsarUX en curses con msx peta 
 
@@ -410,3 +406,8 @@ Tamaño sprites
 
 -cambiar de maquina 81 a coleco, peta. quiza por cambio de tamaño ventana. pasa tambien con msx o sg1000? 
 al reves, de otras maquinas a estas nuevas tambien puede pasar. esto estaba en cpu.c creo
+
+
+-VDP interrupt con Registro 1 de vdp
+
+-.zsf para coleco y sg1000
