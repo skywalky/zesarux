@@ -116,8 +116,8 @@ z80_byte vdp_9918a_in_vdp_status(void)
 
     
 
-    //The C bit of the status register is reset after the register is read.
-    vdp_9918a_status_register&= (255-32);
+    //The IRQ flag (bit 7) and the collision flag (bit 5) get cleared after reading Status register
+    vdp_9918a_status_register&= (255-32-128);
 
     return retorno;
 
@@ -1342,6 +1342,11 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
     int sprites_en_linea=0;
 
+
+    //Asumimos que se resetea el bit 5S del status register
+    //Bit  6    5S         1 if more than 4 sprites on a horizontal line
+    vdp_9918a_status_register&= (255-64);
+
         
         int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
         int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
@@ -1608,6 +1613,20 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
             
 
         }   
+
+
+        //Si llega al maximo de sprites
+        if (sprites_en_linea>=VDP_9918A_MAX_SPRITES_PER_LINE) {
+            //Indicamos justo el anterior en el status register
+            //Bit 0-4  SP4-0      Number for the 5th sprite (9th in screen 4-8) on a line (b0=SP4, b4=SP0)
+            vdp_9918a_status_register&= 128+64+32;
+
+
+            vdp_9918a_status_register |=(sprite-1);
+
+            //Y el flag 5S
+            vdp_9918a_status_register |=64;
+        }
 
 
 
