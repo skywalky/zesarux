@@ -387,8 +387,6 @@ se activará real vídeo si setting auto enable está activo. Esto quizá lo lee
 
 -Bit de 5S sprite flag y numero 5º sprite en status register
 
--al insertar cartridge que solo salgan extensiones reconocidas (rom , col o sg), una para cada maquina
-
 
 -Iniciar ZEsarUX en curses con msx peta 
 
@@ -412,4 +410,5 @@ Tamaño sprites
 
 -Contención en hacer out e in a vram?
 
--cambiar de maquina 81 a coleco, peta. quiza por cambio de tamaño ventana. pasa tambien con msx o sg1000? la reves, de otras maquinas a estas nuevas tambien puede pasar. esto estaba en cpu.c creo
+-cambiar de maquina 81 a coleco, peta. quiza por cambio de tamaño ventana. pasa tambien con msx o sg1000? 
+al reves, de otras maquinas a estas nuevas tambien puede pasar. esto estaba en cpu.c creo

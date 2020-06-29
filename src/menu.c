@@ -16140,7 +16140,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		else if (!MACHINE_IS_CHLOE) {
+		else if (!MACHINE_IS_CHLOE && !MACHINE_IS_COLECO && !MACHINE_IS_SG1000) {
 	            	menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_tape_settings,menu_tape_settings_cond,"~~Tape");
                 	menu_add_item_menu_shortcut(array_menu_storage_settings,'t');
                 	menu_add_item_menu_tooltip(array_menu_storage_settings,"Select tape and options");
