@@ -107,6 +107,7 @@
 #define ZSF_MSX_MEMBLOCK 26
 #define ZSF_MSX_CONF 27
 #define ZSF_MSX_VRAM 28
+#define ZSF_GENERIC_64K_MEM 29
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -398,6 +399,16 @@ Byte Fields:
 
 
 
+
+-Block ID 29: ZSF_GENERIC_64K_MEM
+A ram binary block for a coleco, sg1000 or anything that has only 64kb
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff)
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -410,7 +421,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 29
+#define MAX_ZSF_BLOCK_ID_NAMES 30
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -442,6 +453,7 @@ char *zsf_block_id_names[]={
   "ZSF_MSX_MEMBLOCK",
   "ZSF_MSX_CONF",
   "ZSF_MSX_VRAM",
+  "ZSF_GENERIC_64K_MEM",
 
   "Unknown"  //Este siempre al final
 };
@@ -765,6 +777,53 @@ Byte Fields:
 
 }
 
+
+
+void load_zsf_generic_64k_mem_snapshot_block_data(z80_byte *block_data,int longitud_original)
+{
+/*
+-Block ID 29: ZSF_GENERIC_64K_MEM
+A ram binary block for a coleco, sg1000 or anything that has only 64kb
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff)
+*/
+
+
+  int i=0;
+  z80_byte block_flags=block_data[i];
+
+  //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 8 bytes
+
+  i++;
+  z80_int block_start=value_8_to_16(block_data[i+1],block_data[i]);
+  i +=2;
+  z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+  i+=2;
+
+
+  z80_byte segment=block_data[i];
+  i++;
+
+
+  debug_printf (VERBOSE_DEBUG,"Block segment: %d start: %d Length: %d Compressed: %s Length_source: %d",segment,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+  longitud_original -=6;
+
+  //if (ram_page>1) cpu_panic("Loading more than 32kb ram not implemented yet");
+
+
+
+  int offset=segment*16384;
+
+
+  load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[offset],block_lenght,longitud_original,block_flags&1);
+
+}
 
 
 void load_zsf_msx_snapshot_vram_data(z80_byte *block_data,int longitud_original)
@@ -1690,7 +1749,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_MSX_VRAM:
         load_zsf_msx_snapshot_vram_data(block_data,block_lenght);
-      break;         
+      break;  
+
+      case ZSF_GENERIC_64K_MEM:
+        load_zsf_generic_64k_mem_snapshot_block_data(block_data,block_lenght);
+      break;             
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -2326,6 +2389,73 @@ Byte Fields:
 
 
   }
+
+
+if (MACHINE_IS_SG1000 || MACHINE_IS_COLECO) {
+
+ 
+
+   
+int longitud_ram=16384;
+  
+   //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
+  if (compressed_ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+
+  /*
+
+
+
+-Block ID 29: ZSF_GENERIC_64K_MEM
+A ram binary block for a coleco, sg1000 or anything that has only 64kb
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff)
+  */
+
+
+  int segment;
+
+  
+
+    for (segment=0;segment<4;segment++) {
+
+      //Store block to file
+
+        compressed_ramblock[0]=0;
+        compressed_ramblock[1]=value_16_to_8l(16384);
+        compressed_ramblock[2]=value_16_to_8h(16384);
+        compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+        compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+        compressed_ramblock[5]=segment;
+
+
+        int offset=segment*16384;
+
+        int si_comprimido;
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+        if (si_comprimido) compressed_ramblock[0]|=1;
+
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_GENERIC_64K_MEM segment: %d length: %d",segment,longitud_bloque);
+
+        
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_MEMBLOCK, longitud_bloque+6);
+        
+      
+
+    }
+  
+  free(compressed_ramblock);
+
+
+  }  
 
 
 if (MACHINE_IS_TBBLUE) {
