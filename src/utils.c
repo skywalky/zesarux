@@ -504,7 +504,7 @@ char *array_fabricantes_hotkey[]={
 
 };
 
-//Si letra es espacio->no hay letra. Repetida d final sega temporal
+//Si letra es espacio->no hay letra. TODO: Repetida d final sega, porque no hay letras libres
 char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvuodd";
 
 
