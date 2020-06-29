@@ -3175,6 +3175,13 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);						
 
 
+					sprintf (texto_buffer,"Sprite Attr. Table: %04XH",vdp_9918a_get_sprite_attribute_table());
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
+
+					sprintf (texto_buffer,"Sprite Pattern Table: %04XH",vdp_9918a_get_sprite_pattern_table());
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);						
+
+
 				}
 
 
@@ -3216,7 +3223,7 @@ void menu_debug_tsconf_tbblue_msx_videoregisters(MENU_ITEM_PARAMETERS)
 		}
 
 		else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
-			alto_ventana=8;
+			alto_ventana=12;
 		}		
 
 		else {

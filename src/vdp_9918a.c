@@ -323,16 +323,7 @@ int vdp_9918a_get_tile_heigth(void)
     
 }
 
-z80_int vdp_9918a_get_sprite_attribute_table(void)
-{
 
-    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
-
-    //En boundary de 128
-    sprite_attribute_table &=(65535-128);
-
-    return sprite_attribute_table;
-}
 
 
 z80_byte vdp_9918a_read_vram_byte(z80_byte *vram,z80_int address)
@@ -354,6 +345,39 @@ z80_int vdp_9918a_get_pattern_base_address(void)
     z80_int pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
 
     return pattern_base_address;
+}
+
+int vdp_9918a_get_sprite_size(void)
+{
+   int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
+
+   return sprite_size; 
+}
+
+int vdp_9918a_get_sprite_double(void)
+{
+    int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
+
+    return sprite_double;
+}
+
+z80_int vdp_9918a_get_sprite_pattern_table(void)
+{
+    z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
+
+    return sprite_pattern_table;
+}
+
+
+z80_int vdp_9918a_get_sprite_attribute_table(void)
+{
+
+    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
+
+    //En boundary de 128
+    sprite_attribute_table &=(65535-128);
+
+    return sprite_attribute_table;
 }
 
 void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
@@ -643,19 +667,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 	}    
 }
 
-int vdp_9918a_get_sprite_size(void)
-{
-   int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
 
-   return sprite_size; 
-}
-
-int vdp_9918a_get_sprite_double(void)
-{
-    int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
-
-    return sprite_double;
-}
 
 void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 {
@@ -672,7 +684,7 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 
 
 
-    z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
+    z80_int sprite_pattern_table=vdp_9918a_get_sprite_pattern_table();
     
     z80_byte byte_leido;
 
@@ -1351,7 +1363,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
 
 
-    z80_int sprite_pattern_table=(vdp_9918a_registers[6]) * 0x800;
+    z80_int sprite_pattern_table=vdp_9918a_get_sprite_pattern_table();
     
     z80_byte byte_leido;
 
