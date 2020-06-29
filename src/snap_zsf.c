@@ -70,6 +70,8 @@
 #include "tbblue.h"
 #include "msx.h"
 #include "vdp_9918a.h"
+#include "coleco.h"
+#include "sg1000.h"
 
 
 #include "autoselectoptions.h"
@@ -857,10 +859,15 @@ Byte Fields:
 
   //if (ram_page>1) cpu_panic("Loading more than 32kb ram not implemented yet");
 
+  z80_byte *vram_destination;
+
+  if (MACHINE_IS_COLECO) vram_destination=coleco_vram_memory;
+  else if (MACHINE_IS_SG1000) vram_destination=sg1000_vram_memory;
+  else vram_destination=msx_vram_memory;
 
 
 
-  load_zsf_snapshot_block_data_addr(&block_data[i],msx_vram_memory,block_lenght,longitud_original,block_flags&1);
+  load_zsf_snapshot_block_data_addr(&block_data[i],vram_destination,block_lenght,longitud_original,block_flags&1);
 
 }
 
@@ -2404,6 +2411,42 @@ int longitud_ram=16384;
     debug_printf (VERBOSE_ERR,"Error allocating memory");
     return;
   }
+
+
+/*
+-Block ID 28: ZSF_MSX_VRAM
+VRAM contents for msx
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+*/
+
+        compressed_ramblock[0]=0;
+        compressed_ramblock[1]=value_16_to_8l(16384);
+        compressed_ramblock[2]=value_16_to_8h(16384);
+        compressed_ramblock[3]=value_16_to_8l(longitud_ram); //"Casualidad" que la vram tambien ocupa 16kb
+        compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+
+  z80_byte *vram;
+
+  if (MACHINE_IS_COLECO) vram=coleco_vram_memory;
+  else vram=sg1000_vram_memory;
+
+
+        int si_comprimido;
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(vram,&compressed_ramblock[5],longitud_ram,&si_comprimido);
+        if (si_comprimido) compressed_ramblock[0]|=1;
+
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_VRAM length: %d",longitud_bloque);
+
+
+
+
+        
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_VRAM, longitud_bloque+5);
+
 
 
   /*
