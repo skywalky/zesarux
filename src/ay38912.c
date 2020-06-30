@@ -1336,28 +1336,28 @@ void out_port_ay(z80_int puerto,z80_byte value)
 
 		if (total_ay_chips>1 && value_sin_mascara==156) {
 
-		/*the IC selection still the same
-		TS is 111111 XX
-		I suppose 255 value for first chip, 254 for second and 253 for third, right?
+			/*the IC selection still the same
+			TS is 111111 XX
+			I suppose 255 value for first chip, 254 for second and 253 for third, right?
 
-		11 to 1st ay, 10 to 2nd, 01 to 3rd and 00 to SID
-		yes
-		I made a change to pan the channels, but you can start with these.
-		TBBlue now uses bit 6 and 5 to pan
-		1LR111XX
-		its compatible with original TS, because the tracas are selected by 111111XX, got it?
-		Example:
-		select 2nd AY with audio on Right side only
-		10111110
-		2nd AY, left side only 11011110
-		3rd AY, both sides: 11111101
-		*/
+			11 to 1st ay, 10 to 2nd, 01 to 3rd and 00 to SID
+			yes
+			I made a change to pan the channels, but you can start with these.
+			TBBlue now uses bit 6 and 5 to pan
+			1LR111XX
+			its compatible with original TS, because the tracas are selected by 111111XX, got it?
+			Example:
+			select 2nd AY with audio on Right side only
+			10111110
+			2nd AY, left side only 11011110
+			3rd AY, both sides: 11111101
+			*/
 
 
-		//if (turbosound_enabled.v &&
-		//   (value==255 || value==254 || value==253)
-		//)
-		//{
+			//if (turbosound_enabled.v &&
+			//   (value==255 || value==254 || value==253)
+			//)
+			//{
 
 			int value_chip=value&3;
 
@@ -1380,8 +1380,6 @@ void out_port_ay(z80_int puerto,z80_byte value)
 		ay_3_8912_registros[ay_chip_selected][ay_3_8912_registro_sel[ay_chip_selected]&15]=value;
 
 
-
-
 		//Nota sobre registro 7 mixer:
 		//Bit 6 controla la direccion del registro de I/O - registro R14 - de puerto paralelo
 		//como no emulamos puerto paralelo, no nos debe preocupar esto
@@ -1391,49 +1389,40 @@ void out_port_ay(z80_int puerto,z80_byte value)
 		if (ay_3_8912_registro_sel[ay_chip_selected] ==0 || ay_3_8912_registro_sel[ay_chip_selected] == 1) {
 			//Canal A
 			ay_establece_frecuencia_tono(0,&freq_tono_A[ay_chip_selected]);
-
 		}
 
-                if (ay_3_8912_registro_sel[ay_chip_selected] ==2 || ay_3_8912_registro_sel[ay_chip_selected] == 3) {
-                        //Canal B
+		if (ay_3_8912_registro_sel[ay_chip_selected] ==2 || ay_3_8912_registro_sel[ay_chip_selected] == 3) {
+			//Canal B
 			ay_establece_frecuencia_tono(2,&freq_tono_B[ay_chip_selected]);
+		}
 
-                }
 
-
-                if (ay_3_8912_registro_sel[ay_chip_selected] ==4 || ay_3_8912_registro_sel[ay_chip_selected] == 5) {
-                        //Canal C
+		if (ay_3_8912_registro_sel[ay_chip_selected] ==4 || ay_3_8912_registro_sel[ay_chip_selected] == 5) {
+			//Canal C
 			ay_establece_frecuencia_tono(4,&freq_tono_C[ay_chip_selected]);
-                }
+		}
 
 		if (ay_3_8912_registro_sel[ay_chip_selected] ==6) {
 			//Frecuencia ruido
 			ay_establece_frecuencia_ruido();
-		
-
+	
 		}
 
 		//Envelope
 		//Esto se ejecuta aunque desactivemos el envelope por linea de comandos... pero da igual, al final no se escuchara el envelope
         if (ay_3_8912_registro_sel[ay_chip_selected] == 11 || ay_3_8912_registro_sel[ay_chip_selected] == 12) {
-
 			ay_establece_frecuencia_envelope();
-
-	
-
-   }
-
-
-
-                //Envelope
-		//Esto se ejecuta aunque desactivemos el envelope por linea de comandos... pero da igual, al final no se escuchara el envelope
-                if (ay_3_8912_registro_sel[ay_chip_selected] == 13) {
-			//debug_printf (VERBOSE_DEBUG,"Register Envelope Type ay : %d",value);
-                        //Resetear el ciclo de envolvente
-                        ciclo_envolvente[ay_chip_selected]=0;
-
 		}
 
+
+
+		//Envelope
+		//Esto se ejecuta aunque desactivemos el envelope por linea de comandos... pero da igual, al final no se escuchara el envelope
+		if (ay_3_8912_registro_sel[ay_chip_selected] == 13) {
+			//debug_printf (VERBOSE_DEBUG,"Register Envelope Type ay : %d",value);
+			//Resetear el ciclo de envolvente
+			ciclo_envolvente[ay_chip_selected]=0;
+		}
 
 
 
