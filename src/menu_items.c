@@ -17197,7 +17197,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 		//Inicializar array de estado
 		menu_ay_partitura_init_state();
 
-		char *titulo_ventana="Audio Chip Sheet (60 BPM)";
+		char *titulo_ventana="Au. Chip Sheet (60 BPM)";
 
 
 		if (!util_find_window_geometry("aysheet",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
