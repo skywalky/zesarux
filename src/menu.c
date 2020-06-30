@@ -20497,50 +20497,67 @@ void menu_file_col_browser_show(char *filename)
 
 		fclose(ptr_file_z80_browser);
 
-		//Offset a Texto info
-        int i=0x24;
-
-		//8024 - nnnn:   String with two delemiters "/" as "LINE2/LINE1/YEAR"
-
-		int salir=0;
-
 		char texto_info[256];
 		char buffer_texto[512];
 
-		int destino=0;
+		//8000 - 8001:   If bytes are AAh and 55h, the CV will show a title screen
+        //       and game name, etc.
+        //       If bytes are 55h and AAh, the CV will jump directly to the
+        //       start of code vector.
 
-		int contador_barras=0;
 
-		int digitos_anyos=0;
+		if (z80_header[0]==0xAA && z80_header[1]==0x55) {
 
-		for (;i<256 && !salir;i++) {
-			z80_byte letra=z80_header[i];
+			//Offset a Texto info
+			int i=0x24;
 
-			//Contar cuantas barras division
-			if (letra=='/') contador_barras++;
+			//8024 - nnnn:   String with two delemiters "/" as "LINE2/LINE1/YEAR"
 
-			//Evitar caracteres raros
-			if (letra<32 || letra>126) letra='.';
+			int salir=0;
 
-			//Cada barra es un salto de linea
-			if (letra=='/') letra='\n';
+			
+			
 
-			texto_info[destino++]=letra;
+			int destino=0;
 
-			//Si dos barras, contar 4 digitos de anyos
-			if (contador_barras==2) {
-				digitos_anyos++;
+			int contador_barras=0;
 
-				//Fin
-				if (digitos_anyos==4) salir=1;
+			int digitos_anyos=0;
+
+			for (;i<256 && !salir;i++) {
+				z80_byte letra=z80_header[i];
+
+				//Si dos barras, contar 4 digitos de anyos
+				if (contador_barras>=2) {
+					digitos_anyos++;
+
+					//Fin
+					if (digitos_anyos==4) salir=1;
+				}				
+
+				//Contar cuantas barras division
+				if (letra=='/') contador_barras++;
+
+				//Evitar caracteres raros
+				if (letra<32 || letra>126) letra='.';
+
+				//Cada barra es un salto de linea
+				if (letra=='/') letra='\n';
+
+				texto_info[destino++]=letra;
+
+
+		
+
 			}
-	
+
+			texto_info[destino]=0;
 
 		}
 
-		texto_info[destino]=0;
-
-  
+		else {
+			strcpy(texto_info,"No Info");
+		}
 
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
