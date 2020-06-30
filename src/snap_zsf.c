@@ -1047,6 +1047,9 @@ void load_zsf_aychip(z80_byte *header)
 
       int j;
       for (j=0;j<16;j++) ay_3_8912_registros[header_aychip_number][j]=header[3+j];
+
+
+  ay_establece_frecuencias_todos_canales();
   
 
 /*

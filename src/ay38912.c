@@ -949,8 +949,8 @@ z80_byte in_port_ay(z80_byte puerto_h)
 
 
 //Calcular contadores de incremento
-//void establece_frecuencia_tono(z80_byte indice, int *freq_tono, int *contador_tono)
-void establece_frecuencia_tono(z80_byte indice, int *freq_tono)
+//void ay_establece_frecuencia_tono(z80_byte indice, int *freq_tono, int *contador_tono)
+void ay_establece_frecuencia_tono(z80_byte indice, int *freq_tono)
 {
 
 	int freq_temp;
@@ -1011,6 +1011,106 @@ void establece_frecuencia_tono(z80_byte indice, int *freq_tono)
 }
 
 
+
+void ay_establece_frecuencia_ruido(void)
+{
+			
+	//Frecuencia ruido
+	int freq_temp=ay_3_8912_registros[ay_chip_selected][6] & 31;
+		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
+
+	//controlamos divisiones por cero
+	if (!freq_temp) freq_temp++;
+
+	freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
+
+
+
+				freq_ruido[ay_chip_selected]=FRECUENCIA_NOISE/freq_temp;
+	//printf ("Frecuencia ruido: %d Hz\n",freq_ruido);
+
+		//freq_ruido realmente tiene frecuencia*2... dice cada cuando se conmuta de signo
+		//freq_ruido=freq_ruido*TEMP_MULTIPLICADOR;
+		freq_ruido[ay_chip_selected]=freq_ruido[ay_chip_selected]*2;
+
+
+
+	if (freq_ruido[ay_chip_selected]>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+				//debug_printf (VERBOSE_DEBUG,"Frequency noise %d out of range",freq_ruido[ay_chip_selected]/2);
+				freq_ruido[ay_chip_selected]=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
+		}
+
+
+//si la frecuencia del ruido es exactamente igual a la del sonido
+//alteramos un poco el valor
+if ( freq_ruido[ay_chip_selected]==FRECUENCIA_CONSTANTE_NORMAL_SONIDO) freq_ruido[ay_chip_selected]=FRECUENCIA_CONSTANTE_NORMAL_SONIDO-10;
+
+
+
+	//printf ("Frecuencia ruido final: %d Hz\n",freq_ruido);
+
+
+		
+}
+
+
+void ay_establece_frecuencia_envelope(void)
+{
+
+			//debug_printf (VERBOSE_DEBUG,"Register Frequency Envelope ay");
+			//contador de 16 bits?
+	        	int freq_temp=ay_3_8912_registros[ay_chip_selected][11]+256*(ay_3_8912_registros[ay_chip_selected][12] & 0xFF);
+			//debug_printf (VERBOSE_DEBUG,"Register counter envelope: %d",freq_temp);
+		        //freq_temp=freq_temp*256;
+	       		//printf ("Valor frecuencia envelope : %d Hz\n",freq_temp);
+
+			/* Envolvente: En teoria debe ir desde 0.1 Hz a 6 KHz
+
+			SI X=6927
+
+			Minimo valor(maxima frecuencia)=1.
+
+			X/1= aprox 6000 Hz
+
+			Maximo valor (menor frecuencia)=65536.  65536
+			X/65536=0.09
+
+			multiplicamos por 10
+
+			X=69270
+
+			*/
+
+
+		        //controlamos divisiones por cero
+			if (!freq_temp) freq_temp++;
+			
+		        freq_envelope[ay_chip_selected]=FRECUENCIA_ENVELOPE/freq_temp;
+
+		        if (freq_envelope[ay_chip_selected]>FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+		                //debug_printf (VERBOSE_DEBUG,"Frequency envelope %d out of range",freq_envelope[ay_chip_selected]);
+		                freq_envelope[ay_chip_selected]=FRECUENCIA_CONSTANTE_NORMAL_SONIDO;
+		        }
+
+
+				//si la frecuencia del envelope es exactamente igual a la del sonido
+				//alteramos un poco el valor
+			//esto sucede con valores demasiado altos y quedan fijados a FRECUENCIA_CONSTANTE_NORMAL_SONIDO en el trozo de codigo anterior
+
+
+			//si lo alterasemos solo un poquito, sucede que juegos como el Robocop 2 no se oyen los disparos
+			//lo alteramos mas ( *2 / 3)
+				if ( freq_envelope[ay_chip_selected]==FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+				//printf ("temp freq_envelope = FRECUENCIA_CONSTANTE_NORMAL_SONIDO : %d\n",freq_envelope);
+				freq_envelope[ay_chip_selected] *=2;
+				freq_envelope[ay_chip_selected] /=3;
+			}
+
+
+
+						//debug_printf (VERBOSE_DEBUG,"Frequency envelope *10 : %d Hz",freq_envelope[ay_chip_selected]);
+
+}
 
 
 // Emulación y gestión de los dos registros de conexión con el chip AY mediante protocolo serie
@@ -1295,27 +1395,29 @@ void out_port_ay(z80_int puerto,z80_byte value)
 
 		if (ay_3_8912_registro_sel[ay_chip_selected] ==0 || ay_3_8912_registro_sel[ay_chip_selected] == 1) {
 			//Canal A
-			//establece_frecuencia_tono(0,&freq_tono_A[ay_chip_selected],&contador_tono_A[ay_chip_selected]);
-			establece_frecuencia_tono(0,&freq_tono_A[ay_chip_selected]);
+			//ay_establece_frecuencia_tono(0,&freq_tono_A[ay_chip_selected],&contador_tono_A[ay_chip_selected]);
+			ay_establece_frecuencia_tono(0,&freq_tono_A[ay_chip_selected]);
 
 		}
 
                 if (ay_3_8912_registro_sel[ay_chip_selected] ==2 || ay_3_8912_registro_sel[ay_chip_selected] == 3) {
                         //Canal B
-			//establece_frecuencia_tono(2,&freq_tono_B[ay_chip_selected],&contador_tono_B[ay_chip_selected]);
-			establece_frecuencia_tono(2,&freq_tono_B[ay_chip_selected]);
+			//ay_establece_frecuencia_tono(2,&freq_tono_B[ay_chip_selected],&contador_tono_B[ay_chip_selected]);
+			ay_establece_frecuencia_tono(2,&freq_tono_B[ay_chip_selected]);
 
                 }
 
 
                 if (ay_3_8912_registro_sel[ay_chip_selected] ==4 || ay_3_8912_registro_sel[ay_chip_selected] == 5) {
                         //Canal C
-			//establece_frecuencia_tono(4,&freq_tono_C[ay_chip_selected],&contador_tono_C[ay_chip_selected]);
-			establece_frecuencia_tono(4,&freq_tono_C[ay_chip_selected]);
+			//ay_establece_frecuencia_tono(4,&freq_tono_C[ay_chip_selected],&contador_tono_C[ay_chip_selected]);
+			ay_establece_frecuencia_tono(4,&freq_tono_C[ay_chip_selected]);
                 }
 
 		if (ay_3_8912_registro_sel[ay_chip_selected] ==6) {
 			//Frecuencia ruido
+			ay_establece_frecuencia_ruido();
+			/*
 			int freq_temp=ay_3_8912_registros[ay_chip_selected][6] & 31;
 	       		//printf ("Valor registros ruido : %d Hz\n",freq_temp);
 
@@ -1349,12 +1451,18 @@ void out_port_ay(z80_int puerto,z80_byte value)
 
 			//printf ("Frecuencia ruido final: %d Hz\n",freq_ruido);
 
+			*/
 
 		}
 
 		//Envelope
 		//Esto se ejecuta aunque desactivemos el envelope por linea de comandos... pero da igual, al final no se escuchara el envelope
-                if (ay_3_8912_registro_sel[ay_chip_selected] == 11 || ay_3_8912_registro_sel[ay_chip_selected] == 12) {
+        if (ay_3_8912_registro_sel[ay_chip_selected] == 11 || ay_3_8912_registro_sel[ay_chip_selected] == 12) {
+
+			ay_establece_frecuencia_envelope();
+
+			/*
+
 			//debug_printf (VERBOSE_DEBUG,"Register Frequency Envelope ay");
 			//contador de 16 bits?
 	        	int freq_temp=ay_3_8912_registros[ay_chip_selected][11]+256*(ay_3_8912_registros[ay_chip_selected][12] & 0xFF);
@@ -1362,22 +1470,22 @@ void out_port_ay(z80_int puerto,z80_byte value)
 		        //freq_temp=freq_temp*256;
 	       		//printf ("Valor frecuencia envelope : %d Hz\n",freq_temp);
 
-			/* Envolvente: En teoria debe ir desde 0.1 Hz a 6 KHz
+			// Envolvente: En teoria debe ir desde 0.1 Hz a 6 KHz
 
-			SI X=6927
+			// SI X=6927
 
-			Minimo valor(maxima frecuencia)=1.
+			// Minimo valor(maxima frecuencia)=1.
 
-			X/1= aprox 6000 Hz
+			// X/1= aprox 6000 Hz
 
-			Maximo valor (menor frecuencia)=65536.  65536
-			X/65536=0.09
+			// Maximo valor (menor frecuencia)=65536.  65536
+			// X/65536=0.09
 
-			multiplicamos por 10
+			// multiplicamos por 10
 
-			X=69270
+			// X=69270
 
-			*/
+			
 
 
 		        //controlamos divisiones por cero
@@ -1391,27 +1499,31 @@ void out_port_ay(z80_int puerto,z80_byte value)
 		        }
 
 
-        //si la frecuencia del envelope es exactamente igual a la del sonido
-        //alteramos un poco el valor
-	//esto sucede con valores demasiado altos y quedan fijados a FRECUENCIA_CONSTANTE_NORMAL_SONIDO en el trozo de codigo anterior
+				//si la frecuencia del envelope es exactamente igual a la del sonido
+				//alteramos un poco el valor
+			//esto sucede con valores demasiado altos y quedan fijados a FRECUENCIA_CONSTANTE_NORMAL_SONIDO en el trozo de codigo anterior
 
 
-	//si lo alterasemos solo un poquito, sucede que juegos como el Robocop 2 no se oyen los disparos
-	//lo alteramos mas ( *2 / 3)
-        if ( freq_envelope[ay_chip_selected]==FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
-		//printf ("temp freq_envelope = FRECUENCIA_CONSTANTE_NORMAL_SONIDO : %d\n",freq_envelope);
-		freq_envelope[ay_chip_selected] *=2;
-		freq_envelope[ay_chip_selected] /=3;
-	}
-
-
-
-		        //debug_printf (VERBOSE_DEBUG,"Frequency envelope *10 : %d Hz",freq_envelope[ay_chip_selected]);
+			//si lo alterasemos solo un poquito, sucede que juegos como el Robocop 2 no se oyen los disparos
+			//lo alteramos mas ( *2 / 3)
+				if ( freq_envelope[ay_chip_selected]==FRECUENCIA_CONSTANTE_NORMAL_SONIDO) {
+				//printf ("temp freq_envelope = FRECUENCIA_CONSTANTE_NORMAL_SONIDO : %d\n",freq_envelope);
+				freq_envelope[ay_chip_selected] *=2;
+				freq_envelope[ay_chip_selected] /=3;
+			}
 
 
 
+						//debug_printf (VERBOSE_DEBUG,"Frequency envelope *10 : %d Hz",freq_envelope[ay_chip_selected]);
 
-                }
+
+			*/
+
+   }
+
+
+
+
 
                 //Envelope
 		//Esto se ejecuta aunque desactivemos el envelope por linea de comandos... pero da igual, al final no se escuchara el envelope
@@ -1534,3 +1646,27 @@ z80_byte ay_retorna_mixer_register(int chip)
 
 	return valor;
 }
+
+
+
+void ay_establece_frecuencias_todos_canales(void)
+{
+		
+	int chips=ay_retorna_numero_chips();
+	int j;
+	for (j=0;j<chips;j++) {
+
+		ay_chip_selected=j;
+
+		ay_establece_frecuencia_tono(0,&freq_tono_A[j]);
+
+		ay_establece_frecuencia_tono(2,&freq_tono_B[j]);
+
+		ay_establece_frecuencia_tono(4,&freq_tono_C[j]);
+
+		ay_establece_frecuencia_ruido();
+
+		ay_establece_frecuencia_envelope();
+	}
+		
+}	
