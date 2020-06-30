@@ -59,6 +59,13 @@ z80_bit vdp_9918a_reveal_layer_ula={0};
 z80_bit vdp_9918a_reveal_layer_sprites={0};
 
 
+void vdp_9918a_reset(void)
+{
+    int i;
+
+    for (i=0;i<8;i++) vdp_9918a_registers[i]=0;
+}
+
 void vdp_9918a_out_vram_data(z80_byte *vram_memory,z80_byte value)
 {
 

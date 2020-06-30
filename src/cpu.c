@@ -1074,7 +1074,9 @@ void reset_cpu(void)
 
 	if (MACHINE_IS_SG1000) {
 		sg1000_reset();
-	}		
+	}	
+
+	vdp_9918a_reset();	
 
 	t_estados=0;
 	t_scanline=0;
@@ -4017,20 +4019,21 @@ void post_set_mach_reopen_screen(void)
 			//scr_init_pantalla();
 }
 
-
+//Reabrir ventana en caso de que maquina seleccionada sea diferente a la anterior
 void post_set_machine_no_rom_load_reopen_window(void)
 {
 	set_menu_gui_zoom();
 
 	if (last_machine_type!=255 && last_machine_type!=current_machine_type) {
-		//debug_printf (VERBOSE_INFO,"Reopening window so current machine is different and may hace different window size");
-		printf ("Reopening window so current machine is different and may hace different window size\n");
+		debug_printf (VERBOSE_INFO,"Reopening window so current machine is different and may have different window size");
+		//printf ("Reopening window so current machine is different and may have different window size\n");
 		post_set_mach_reopen_screen();
 		return;		
 	}
 }
 
 /*
+Vieja funcion
 Reabrir ventana en caso de que maquina seleccionada tenga tamanyo diferente que la anterior
 TODO: Quiza se podria simplificar esto, se empezó con Z88 a spectrum y se han ido agregando,
 se exponen todos los casos de maquinas con diferentes tamanyos de ventana,
