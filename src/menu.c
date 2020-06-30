@@ -1536,7 +1536,7 @@ int menu_if_pressed_menu_button(void)
 
 	//Sera tecla F5 por defecto, ya que no se ha pulsado tecla con no default
 	if ((puerto_especial2&16)==0) {
-		printf ("Pulsada F5 por defecto\n");
+		//printf ("Pulsada F5 por defecto\n");
 		//sleep(1);
 		return 1;
 	}
@@ -1564,7 +1564,7 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 	//No acabo de tener claro que este sea el mejor sitio para comprobar esto... o si?
 	if (menu_if_pressed_menu_button()) {
 	//if ((puerto_especial2&16)==0) {
-		printf ("Pulsada tecla abrir menu\n");
+		//printf ("Pulsada tecla abrir menu\n");
 		//sleep(1);
 		menu_pressed_open_menu_while_in_menu.v=1;
 		/*
@@ -28955,7 +28955,7 @@ void menu_inicio_bucle_main(void)
 		*/
 
 		if (retorno_menu==MENU_RETORNO_ESC || (item_seleccionado.tipo_opcion & MENU_OPCION_ESC) == MENU_OPCION_ESC) {
-			printf ("opcion ESC o pulsado ESC\n");
+			//printf ("opcion ESC o pulsado ESC\n");
 			salir_menu=1;
 		}
 
@@ -28993,7 +28993,7 @@ void menu_inicio_bucle(void)
 		if (menu_pressed_open_menu_while_in_menu.v) {
 			menu_pressed_open_menu_while_in_menu.v=0;
 			reopen_menu=1;
-			printf ("Reabrimos menu\n");
+			//printf ("Reabrimos menu\n");
 		}
 
 
