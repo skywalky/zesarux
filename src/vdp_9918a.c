@@ -1857,6 +1857,12 @@ void screen_store_scanline_rainbow_vdp_9918a_border_and_display(z80_int *scanlin
     y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
     if (border_enabled.v==0) y_destino_rainbow=y_destino_rainbow-screen_borde_superior;
 
+    //Limite inferior y superior. Sobretodo el inferior, pues puede ser negativo (en zona border invisible)
+    //En teoria superior no deberia ser mayor, pero por si acaso
+    int max_y=get_total_alto_rainbow();
+
+    if (y_destino_rainbow<0 || y_destino_rainbow>=max_y) return;
+
     puntero_buf_rainbow=&rainbow_buffer[ y_destino_rainbow*get_total_ancho_rainbow() ];
 
 
