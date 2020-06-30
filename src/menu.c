@@ -20556,7 +20556,7 @@ void menu_file_col_browser_show(char *filename)
 		}
 
 		else {
-			strcpy(texto_info,"No Info");
+			strcpy(texto_info,"Unknown");
 		}
 
 	char texto_browser[MAX_TEXTO_BROWSER];
@@ -20566,6 +20566,8 @@ void menu_file_col_browser_show(char *filename)
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
  
+ 	sprintf(buffer_texto,"Code start: %02X%02XH\n",z80_header[0x0b],z80_header[0x0a]);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);
