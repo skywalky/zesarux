@@ -20472,6 +20472,93 @@ void menu_file_z80_browser_show(char *filename)
 }
 
 
+
+void menu_file_col_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo col
+        FILE *ptr_file_z80_browser;
+        ptr_file_z80_browser=fopen(filename,"rb");
+
+        if (!ptr_file_z80_browser) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+	}
+
+	//Leemos primeros 256 bytes de cabecera
+	z80_byte z80_header[256];
+
+        int leidos=fread(z80_header,1,256,ptr_file_z80_browser);
+
+	if (leidos==0) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+		fclose(ptr_file_z80_browser);
+
+		//Offset a Texto info
+        int i=0x24;
+
+		//8024 - nnnn:   String with two delemiters "/" as "LINE2/LINE1/YEAR"
+
+		int salir=0;
+
+		char texto_info[256];
+		char buffer_texto[512];
+
+		int destino=0;
+
+		int contador_barras=0;
+
+		int digitos_anyos=0;
+
+		for (;i<256 && !salir;i++) {
+			z80_byte letra=z80_header[i];
+
+			//Contar cuantas barras division
+			if (letra=='/') contador_barras++;
+
+			//Evitar caracteres raros
+			if (letra<32 || letra>126) letra='.';
+
+			//Cada barra es un salto de linea
+			if (letra=='/') letra='\n';
+
+			texto_info[destino++]=letra;
+
+			//Si dos barras, contar 4 digitos de anyos
+			if (contador_barras==2) {
+				digitos_anyos++;
+
+				//Fin
+				if (digitos_anyos==4) salir=1;
+			}
+	
+
+		}
+
+		texto_info[destino]=0;
+
+  
+
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	sprintf(buffer_texto,"Colecovision File Info:\n%s",texto_info);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+ 
+
+	texto_browser[indice_buffer]=0;
+	//menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("Colecovision file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+
+}
+
 void menu_file_tzx_browser_show(char *filename)
 {
 
@@ -22755,6 +22842,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"sp")) menu_file_sp_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"z80")) menu_file_z80_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"col")) menu_file_col_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"sna")) menu_file_sna_browser_show(file_name);
 
