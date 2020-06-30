@@ -4017,13 +4017,27 @@ void post_set_mach_reopen_screen(void)
 			//scr_init_pantalla();
 }
 
+
+void post_set_machine_no_rom_load_reopen_window(void)
+{
+	set_menu_gui_zoom();
+
+	if (last_machine_type!=255 && last_machine_type!=current_machine_type) {
+		//debug_printf (VERBOSE_INFO,"Reopening window so current machine is different and may hace different window size");
+		printf ("Reopening window so current machine is different and may hace different window size\n");
+		post_set_mach_reopen_screen();
+		return;		
+	}
+}
+
 /*
 Reabrir ventana en caso de que maquina seleccionada tenga tamanyo diferente que la anterior
 TODO: Quiza se podria simplificar esto, se empezó con Z88 a spectrum y se han ido agregando,
 se exponen todos los casos de maquinas con diferentes tamanyos de ventana,
 pero quiza simplemente habria que ver que el tamanyo anterior fuera diferente al actual y entonces reabrir ventana
+O que la maquina actual es diferente de la anterior
 */
-void post_set_machine_no_rom_load_reopen_window(void)
+void old_post_set_machine_no_rom_load_reopen_window(void)
 {
 
 	set_menu_gui_zoom();
