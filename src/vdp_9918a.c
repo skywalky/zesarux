@@ -697,7 +697,7 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 
         
         int sprite_size=vdp_9918a_get_sprite_size();
-        int sprite_double=vdp_9918a_get_sprite_double();
+        //int sprite_double=vdp_9918a_get_sprite_double();
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 
@@ -1383,7 +1383,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
         
         int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
-        int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
+        //int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 

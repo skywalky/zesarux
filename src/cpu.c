@@ -120,7 +120,9 @@
 #include "ds1307.h"
 #include "msx.h"
 #include "coleco.h"
+#include "sg1000.h"
 #include "sn76489an.h"
+#include "vdp_9918a.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"

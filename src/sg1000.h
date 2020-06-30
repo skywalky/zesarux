@@ -58,6 +58,7 @@ extern char *sg1000_get_string_memory_type(int tipo);
 extern void screen_store_scanline_rainbow_sg1000_border_and_display(void);
 
 
-
+extern z80_byte sg1000_get_joypad_a(void);
+extern z80_byte sg1000_get_joypad_b(void);
 
 #endif

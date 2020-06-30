@@ -921,7 +921,7 @@ void ula_contend_port_late_mk14( z80_int port  GCC_UNUSED)
 
 
 
-void contend_read_msx1(z80_int direccion,int time)
+void contend_read_msx1(z80_int direccion GCC_UNUSED,int time)
 {
 
 #ifdef EMULATE_CONTEND
@@ -933,7 +933,7 @@ void contend_read_msx1(z80_int direccion,int time)
 
 }
 
-void contend_read_no_mreq_msx1(z80_int direccion,int time)
+void contend_read_no_mreq_msx1(z80_int direccion GCC_UNUSED,int time)
 {
 
 #ifdef EMULATE_CONTEND
@@ -945,7 +945,7 @@ void contend_read_no_mreq_msx1(z80_int direccion,int time)
 
 }
 
-void contend_write_no_mreq_msx1(z80_int direccion,int time)
+void contend_write_no_mreq_msx1(z80_int direccion GCC_UNUSED,int time)
 {
 
 #ifdef EMULATE_CONTEND
@@ -958,7 +958,7 @@ void contend_write_no_mreq_msx1(z80_int direccion,int time)
 }
 
 
-void ula_contend_port_early_msx1( z80_int port )
+void ula_contend_port_early_msx1( z80_int port GCC_UNUSED )
 {
 #ifdef EMULATE_CONTEND
 
@@ -968,7 +968,7 @@ void ula_contend_port_early_msx1( z80_int port )
 	t_estados++;
 }
 
-void ula_contend_port_late_msx1( z80_int port )
+void ula_contend_port_late_msx1( z80_int port GCC_UNUSED)
 {
 #ifdef EMULATE_CONTEND
  
@@ -980,7 +980,7 @@ void ula_contend_port_late_msx1( z80_int port )
 }
 
 
-void contend_read_coleco(z80_int direccion,int time)
+void contend_read_coleco(z80_int direccion GCC_UNUSED,int time)
 {
 
 #ifdef EMULATE_CONTEND
@@ -992,7 +992,7 @@ void contend_read_coleco(z80_int direccion,int time)
 
 }
 
-void contend_read_no_mreq_coleco(z80_int direccion,int time)
+void contend_read_no_mreq_coleco(z80_int direccion GCC_UNUSED,int time)
 {
 
 #ifdef EMULATE_CONTEND
@@ -1004,7 +1004,7 @@ void contend_read_no_mreq_coleco(z80_int direccion,int time)
 
 }
 
-void contend_write_no_mreq_coleco(z80_int direccion,int time)
+void contend_write_no_mreq_coleco(z80_int direccion GCC_UNUSED,int time)
 {
 
 #ifdef EMULATE_CONTEND
@@ -1017,7 +1017,7 @@ void contend_write_no_mreq_coleco(z80_int direccion,int time)
 }
 
 
-void ula_contend_port_early_coleco( z80_int port )
+void ula_contend_port_early_coleco( z80_int port GCC_UNUSED)
 {
 #ifdef EMULATE_CONTEND
 
@@ -1027,7 +1027,7 @@ void ula_contend_port_early_coleco( z80_int port )
 	t_estados++;
 }
 
-void ula_contend_port_late_coleco( z80_int port )
+void ula_contend_port_late_coleco( z80_int port GCC_UNUSED)
 {
 #ifdef EMULATE_CONTEND
  
@@ -1040,7 +1040,7 @@ void ula_contend_port_late_coleco( z80_int port )
 
 
 
-void contend_read_sg1000(z80_int direccion,int time)
+void contend_read_sg1000(z80_int direccion GCC_UNUSED,int time)
 {
 
 #ifdef EMULATE_CONTEND
@@ -1052,7 +1052,7 @@ void contend_read_sg1000(z80_int direccion,int time)
 
 }
 
-void contend_read_no_mreq_sg1000(z80_int direccion,int time)
+void contend_read_no_mreq_sg1000(z80_int direccion GCC_UNUSED,int time)
 {
 
 #ifdef EMULATE_CONTEND
@@ -1064,7 +1064,7 @@ void contend_read_no_mreq_sg1000(z80_int direccion,int time)
 
 }
 
-void contend_write_no_mreq_sg1000(z80_int direccion,int time)
+void contend_write_no_mreq_sg1000(z80_int direccion GCC_UNUSED,int time)
 {
 
 #ifdef EMULATE_CONTEND
@@ -1077,7 +1077,7 @@ void contend_write_no_mreq_sg1000(z80_int direccion,int time)
 }
 
 
-void ula_contend_port_early_sg1000( z80_int port )
+void ula_contend_port_early_sg1000( z80_int port GCC_UNUSED)
 {
 #ifdef EMULATE_CONTEND
 
@@ -1087,7 +1087,7 @@ void ula_contend_port_early_sg1000( z80_int port )
 	t_estados++;
 }
 
-void ula_contend_port_late_sg1000( z80_int port )
+void ula_contend_port_late_sg1000( z80_int port GCC_UNUSED)
 {
 #ifdef EMULATE_CONTEND
  

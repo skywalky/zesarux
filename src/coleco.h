@@ -44,6 +44,10 @@ extern void coleco_empty_romcartridge_space(void);
 extern void coleco_out_port_vdp_data(z80_byte value);
 extern void coleco_out_port_vdp_command_status(z80_byte value);
 
+extern void coleco_set_keypad_mode(void);
+extern void coleco_set_joystick_mode(void);
+extern z80_byte coleco_get_controller_a(void);
+extern z80_byte coleco_get_controller_b(void);
 
 extern z80_byte coleco_in_port_vdp_data(void);
 extern z80_byte coleco_in_port_vdp_status(void);

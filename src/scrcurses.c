@@ -47,6 +47,9 @@
 #include "timex.h"
 #include "compileoptions.h"
 #include "vdp_9918a.h"
+#include "msx.h"
+#include "coleco.h"
+#include "sg1000.h"
 
 #ifdef COMPILE_CURSESW
 	#include "cursesw_ext.h"
@@ -55,6 +58,16 @@
 
 #define CURSES_IZQ_BORDER 4
 #define CURSES_TOP_BORDER 4
+
+
+
+//Nota: la definicion de GCC_UNUSED la redefine desde 
+// /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/curses.h:510 como:
+// #define GCC_UNUSED /* nothing */
+// Por tanto no tienen efecto estas directivas en este archivo
+
+
+
 
 
 //contiene el puntero a la pantalla de spectrum, actualizado en varias funciones de scrcurses
@@ -1124,11 +1137,12 @@ z80_byte video_mode=vdp_9918a_get_video_mode();
 	//printf ("video_mode: %d\n",video_mode);
 
 
-	int x,y,bit; 
+	int x,y;
+	 
 	z80_int direccion_name_table;
-	z80_byte byte_leido;
-    z80_byte byte_color;
-	int color=0;
+	//z80_byte byte_leido;
+    //z80_byte byte_color;
+	//int color=0;
 	
 	//int zx,zy;
 
@@ -1145,7 +1159,7 @@ z80_byte video_mode=vdp_9918a_get_video_mode();
 	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
 
 
-	z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
+	//z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
 
     //z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
 

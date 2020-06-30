@@ -1466,25 +1466,11 @@ int ay_retorna_frecuencia_valor_registro(z80_byte value_l,z80_byte value_h)
 //Retorna la frecuencia de un registro concreto del chip AY de sonido
 int ay_retorna_frecuencia(int registro,int chip)
 {
-        int freq_temp;
-	int freq_tono;
+
 
 		return ay_retorna_frecuencia_valor_registro(ay_3_8912_registros[chip][registro*2],ay_3_8912_registros[chip][registro*2+1]);
 
-		/*
 
-        freq_temp=ay_3_8912_registros[chip][registro*2]+256*(ay_3_8912_registros[chip][registro*2+1] & 0x0F);
-        //printf ("Valor freq_temp : %d\n",freq_temp);
-        freq_temp=freq_temp*AY_DIVISOR_FRECUENCIA;
-
-
-        //controlamos divisiones por cero
-        if (!freq_temp) freq_temp++;
-
-        freq_tono=FRECUENCIA_AY/freq_temp;
-
-	return freq_tono;
-	*/
 }
 
 /*

@@ -40,6 +40,9 @@
 #include "z88.h"
 #include "textspeech.h"
 #include "settings.h"
+#include "msx.h"
+#include "coleco.h"
+#include "sg1000.h"
 
 
 aa_context *context;

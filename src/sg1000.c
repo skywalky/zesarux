@@ -320,7 +320,7 @@ void scr_refresca_pantalla_y_border_sg1000_rainbow(void)
 	for (y=0;y<alto;y++) {
 
 
-		int altoborder=screen_borde_superior;
+		//int altoborder=screen_borde_superior;
 
 		
 		for (x=0;x<ancho;x+=8) {

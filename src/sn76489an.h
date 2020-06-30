@@ -50,6 +50,10 @@ extern void sn_set_volume_tone_channel(z80_byte canal,z80_byte volumen_final);
 extern int sn_retorna_frecuencia(int registro);
 extern int sn_retorna_frecuencia_valor_registro(z80_byte value_l,z80_byte value_h);
 
+extern void sn_out_port_sound(z80_byte value);
+
+extern void sn_establece_frecuencias_todos_canales(void);
+
 
 //1'7734*1000000 (Hz) en Spectrum
 //En Amstrad, 1 MHz

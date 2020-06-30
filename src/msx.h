@@ -37,6 +37,8 @@ extern int msx_memory_slots[4][4];
 
 extern z80_byte *msx_return_segment_address(z80_int direccion,int *tipo);
 
+extern void screen_store_scanline_rainbow_msx_border_and_display(void);
+
 extern int da_amplitud_speaker_msx(void);
 
 #define MSX_SLOT_MEMORY_TYPE_ROM 0

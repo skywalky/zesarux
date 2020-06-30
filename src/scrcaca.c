@@ -36,6 +36,9 @@
 #include "joystick.h"
 #include "z88.h"
 #include "settings.h"
+#include "msx.h"
+#include "coleco.h"
+#include "sg1000.h"
 
 int imgwidth,imgheight;
 

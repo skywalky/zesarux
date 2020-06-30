@@ -7774,8 +7774,8 @@ Es lo que pasa con otras ventanas de texto, que no se amplía el ancho total al 
 	int yfinal=y+window_pixel_start_y-(w->offset_y)*8*zoom_y;
 
 
-	int total_width_window=((w->visible_width)-zxvision_get_minus_width_byscrollvbar(w))*menu_char_width*zoom_x;
-	int total_height_window=((w->visible_height)-2)*8*zoom_y;
+	//int total_width_window=((w->visible_width)-zxvision_get_minus_width_byscrollvbar(w))*menu_char_width*zoom_x;
+	//int total_height_window=((w->visible_height)-2)*8*zoom_y;
 
 
 

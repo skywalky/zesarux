@@ -77,6 +77,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sn76489an.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -7112,7 +7113,7 @@ void out_port_msx1_no_time(z80_int puerto,z80_byte value)
         //Los OUTS los capturan los diferentes interfaces que haya conectados, por tanto no hacer return en ninguno, para que se vayan comprobando
         //uno despues de otro
 	z80_byte puerto_l=puerto&255;
-	z80_byte puerto_h=(puerto>>8)&0xFF;
+	//z80_byte puerto_h=(puerto>>8)&0xFF;
 
 	//printf ("Out msx port: %04XH value: %02XH char: %c PC=%04XH\n",puerto,value,
 	//  (value>=32 && value<=126 ? value : '?'),reg_pc );
@@ -7163,7 +7164,7 @@ void out_port_msx1(z80_int puerto,z80_byte value)
 
 
 //Devuelve valor puerto para maquinas MSX1
-z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
+z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 {
 
 	debug_fired_in=1;
@@ -7171,7 +7172,7 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//65533 o 49149
 	//FFFDh (65533), BFFDh (49149)
 
-	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+	//z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
 
 	//printf ("Lee puerto msx %04XH PC=%04XH\n",puerto,reg_pc);
@@ -7242,7 +7243,7 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_msx1(z80_byte puerto_h,z80_byte puerto_l)
 {
-  z80_int port=value_8_to_16(puerto_h,puerto_l);
+  //z80_int port=value_8_to_16(puerto_h,puerto_l);
   //ula_contend_port_early( port );
   //ula_contend_port_late( port );
   z80_byte valor = lee_puerto_msx1_no_time( puerto_h, puerto_l );
@@ -7261,7 +7262,7 @@ void out_port_coleco_no_time(z80_int puerto,z80_byte value)
         //Los OUTS los capturan los diferentes interfaces que haya conectados, por tanto no hacer return en ninguno, para que se vayan comprobando
         //uno despues de otro
 	z80_byte puerto_l=puerto&255;
-	z80_byte puerto_h=(puerto>>8)&0xFF;
+	//z80_byte puerto_h=(puerto>>8)&0xFF;
 
 	//if (puerto_l!=0xBE && puerto_l!=0xBF) {
 	//	printf ("Out coleco port: %04XH value: %02XH char: %c PC=%04XH\n",puerto,value,(value>=32 && value<=126 ? value : '?'),reg_pc );
@@ -7321,7 +7322,7 @@ void out_port_coleco(z80_int puerto,z80_byte value)
 
 
 //Devuelve valor puerto para maquinas Coleco
-z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h,z80_byte puerto_l)
+z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 {
 
 	debug_fired_in=1;
@@ -7329,7 +7330,7 @@ z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//65533 o 49149
 	//FFFDh (65533), BFFDh (49149)
 
-	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+	//z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
 
 	//printf ("Lee puerto coleco %04XH PC=%04XH\n",puerto,reg_pc);
@@ -7376,7 +7377,7 @@ z80_byte lee_puerto_coleco_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 z80_byte lee_puerto_coleco(z80_byte puerto_h,z80_byte puerto_l)
 {
-  z80_int port=value_8_to_16(puerto_h,puerto_l);
+  //z80_int port=value_8_to_16(puerto_h,puerto_l);
   //ula_contend_port_early( port );
   //ula_contend_port_late( port );
   z80_byte valor = lee_puerto_coleco_no_time( puerto_h, puerto_l );
@@ -7397,7 +7398,7 @@ void out_port_sg1000_no_time(z80_int puerto,z80_byte value)
         //Los OUTS los capturan los diferentes interfaces que haya conectados, por tanto no hacer return en ninguno, para que se vayan comprobando
         //uno despues de otro
 	z80_byte puerto_l=puerto&255;
-	z80_byte puerto_h=(puerto>>8)&0xFF;
+	//z80_byte puerto_h=(puerto>>8)&0xFF;
 
 
 
@@ -7434,7 +7435,7 @@ void out_port_sg1000(z80_int puerto,z80_byte value)
 
 
 //Devuelve valor puerto para maquinas SG1000
-z80_byte lee_puerto_sg1000_no_time(z80_byte puerto_h,z80_byte puerto_l)
+z80_byte lee_puerto_sg1000_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 {
 
 	debug_fired_in=1;
@@ -7442,7 +7443,7 @@ z80_byte lee_puerto_sg1000_no_time(z80_byte puerto_h,z80_byte puerto_l)
 	//65533 o 49149
 	//FFFDh (65533), BFFDh (49149)
 
-	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+	//z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
 
 	//printf ("Lee puerto sg1000 %04XH PC=%04XH\n",puerto,reg_pc);
@@ -7514,7 +7515,7 @@ Lee puerto sg1000 02DEH PC=1DBFH
 
 z80_byte lee_puerto_sg1000(z80_byte puerto_h,z80_byte puerto_l)
 {
-  z80_int port=value_8_to_16(puerto_h,puerto_l);
+  //z80_int port=value_8_to_16(puerto_h,puerto_l);
   //ula_contend_port_early( port );
   //ula_contend_port_late( port );
   z80_byte valor = lee_puerto_sg1000_no_time( puerto_h, puerto_l );

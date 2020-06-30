@@ -40,6 +40,18 @@ extern z80_byte vdp_9918a_in_vram_data(z80_byte *vram_memory);
 
 extern z80_byte vdp_9918a_get_border_color(void);
 
+extern z80_byte vdp_9918a_get_foreground_color(void);
+
+extern int vdp_9918a_get_sprite_size(void);
+
+extern int vdp_9918a_get_sprite_double(void);
+
+extern z80_int vdp_9918a_get_pattern_color_table(void);
+
+extern z80_int vdp_9918a_get_pattern_base_address(void);
+
+extern z80_int vdp_9918a_get_sprite_pattern_table(void);
+
 extern z80_byte vdp_9918a_in_vdp_status(void);
 
 extern void vdp_9918a_out_command_status(z80_byte value);
@@ -60,6 +72,10 @@ extern void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline
 
 
 extern void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer,z80_byte *vram);
+
+extern z80_byte vdp_9918a_read_vram_byte(z80_byte *vram,z80_int address);
+
+extern void vdp_9918a_reset(void);
 
 
 extern z80_bit vdp_9918a_force_disable_layer_ula;

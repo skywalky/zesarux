@@ -71,6 +71,7 @@
 #include "ql.h"
 #include "msx.h"
 #include "coleco.h"
+#include "sg1000.h"
 
 
 int gArgc;

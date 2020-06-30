@@ -617,28 +617,12 @@ int freq_tono;
 //Retorna la frecuencia de un registro concreto del chip AY de sonido
 int sn_retorna_frecuencia(int registro)
 {
-	int freq_temp;
-	
-int freq_tono;
+
 	int indice=registro*2;
 
 	return sn_retorna_frecuencia_valor_registro(sn_chip_registers[indice],sn_chip_registers[indice+1]);
 
-/*
-	freq_temp=(sn_chip_registers[indice] & 0xF) | ((sn_chip_registers[indice+1] & 63)<<4);
 
-	//printf ("Valor freq_temp : %d Hz\n",freq_temp);
-	freq_temp=freq_temp*SN_DIVISOR_FRECUENCIA;
-
-
-	//controlamos divisiones por cero
-	if (!freq_temp) freq_temp++;
-
-	freq_tono=FRECUENCIA_SN/freq_temp;
-
-
-	return freq_tono;
-*/
 
 }
 

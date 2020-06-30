@@ -116,6 +116,9 @@ The scancodes in translated scancode set 2 are given in hex. Between parentheses
 #include "sam.h"
 #include "ql.h"
 #include "settings.h"
+#include "msx.h"
+#include "coleco.h"
+#include "sg1000.h"
 
 z80_byte *fbdev_pointer = 0;
   long int fbdev_screensize = 0;
