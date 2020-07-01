@@ -93,9 +93,14 @@ char *svi_get_string_memory_type(int tipo)
 int svi_return_offset_ram_page(int ram_number)
 {
 
-    //Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb, 
+    //Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb, en SVI328.
+    //En 318, solo 1 pagina de 32 kb ram
 
     int offset=32768*ram_number;
+
+    if (MACHINE_IS_SVI_318) {
+        offset=0; //solo una pagina de RAM
+    }
 
     //saltar las 3 roms
     offset +=3*32768;
@@ -106,7 +111,7 @@ int svi_return_offset_ram_page(int ram_number)
 int svi_return_offset_rom_page(int rom_number)
 {
 
-    //Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb, 
+    //Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb, en SVI328
 
     return 32768*rom_number;
 
@@ -123,6 +128,10 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 
     int offset_segment_low=0;
     int offset_segment_high=svi_return_offset_ram_page(0);    
+
+    //temp
+    //page_config=0xFF;
+
 
     if (page_config!=0xFF) {
 
