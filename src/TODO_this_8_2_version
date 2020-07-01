@@ -390,3 +390,5 @@ https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
 -VDP interrupt con Registro 1 de vdp
 
 -Soporte .cas en msx
+
+-TODO: tipo paginas en svi al retornar direccion

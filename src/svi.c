@@ -90,7 +90,7 @@ char *svi_get_string_memory_type(int tipo)
 }
 
 
-int svi_return_offset_ram_page(int ram_number)
+int svi_return_offset_ram_page(int ram_number,z80_int direccion)
 {
 
     //Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb, en SVI328.
@@ -99,21 +99,24 @@ int svi_return_offset_ram_page(int ram_number)
     int offset=32768*ram_number;
 
     if (MACHINE_IS_SVI_318) {
-        offset=0; //solo una pagina de RAM
+        offset=0; //solo una pagina de RAM, y de 16kb
+        direccion &=16383;
     }
 
     //saltar las 3 roms
     offset +=3*32768;
 
+    offset +=(direccion & 32767);
+
     return offset;
 }
 
-int svi_return_offset_rom_page(int rom_number)
+int svi_return_offset_rom_page(int rom_number,z80_int direccion)
 {
 
     //Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb, en SVI328
 
-    return 32768*rom_number;
+    return 32768*rom_number+(direccion & 32767);
 
 }
 
@@ -126,8 +129,8 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
     z80_byte page_config=ay_3_8912_registros[ay_chip_selected][15];
 
 
-    int offset_segment_low=0;
-    int offset_segment_high=svi_return_offset_ram_page(0);    
+    int offset_segment_low=svi_return_offset_rom_page(0,direccion);  
+    int offset_segment_high=svi_return_offset_ram_page(0,direccion);    
 
     //temp
     //page_config=0xFF;
@@ -138,23 +141,23 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 
         //Ver bits activos
         if ((page_config & 1)==0) {
-            offset_segment_low=svi_return_offset_rom_page(1);
+            offset_segment_low=svi_return_offset_rom_page(1,direccion);
         }
 
         if ((page_config & 2)==0) {
-            offset_segment_low=svi_return_offset_ram_page(1);
+            offset_segment_low=svi_return_offset_ram_page(1,direccion);
         }    
 
         if ((page_config & 4)==0) {
-            offset_segment_high=svi_return_offset_ram_page(2);
+            offset_segment_high=svi_return_offset_ram_page(2,direccion);
         }    
 
         if ((page_config & 8)==0) {
-            offset_segment_low=svi_return_offset_ram_page(3);
+            offset_segment_low=svi_return_offset_ram_page(3,direccion);
         }    
 
         if ((page_config & 16)==0) {
-            offset_segment_high=svi_return_offset_ram_page(4);
+            offset_segment_high=svi_return_offset_ram_page(4,direccion);
         }    
 
         //TODO bits 6,7
@@ -163,11 +166,11 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 
     if (direccion<32768) {
         *tipo=SVI_SLOT_MEMORY_TYPE_ROM;
-        return &memoria_spectrum[offset_segment_low+direccion];
+        return &memoria_spectrum[offset_segment_low];
     }
     else {
         *tipo=SVI_SLOT_MEMORY_TYPE_RAM;
-        return &memoria_spectrum[offset_segment_high+(direccion & 32767)];      
+        return &memoria_spectrum[offset_segment_high];      
     }
 
 
@@ -446,7 +449,7 @@ void svi_insert_rom_cartridge(char *filename)
 
     int bloques_totales=0;
 
-    int leidos=fread(&memoria_spectrum[svi_return_offset_rom_page(1)],1,32768,ptr_cartridge);
+    int leidos=fread(&memoria_spectrum[svi_return_offset_rom_page(1,0)],1,32768,ptr_cartridge);
 
 
 
