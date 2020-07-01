@@ -1359,14 +1359,23 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 					}
 
                                         //mayus para MSX
-					if (MACHINE_IS_MSX || MACHINE_IS_SVI) {
+					if (MACHINE_IS_MSX) {
 						if (pressrelease) {
 							msx_keyboard_table[6] &=255-1;
 						}
 						else {
 							msx_keyboard_table[6] |=1;
 						}
-					}                                        
+					}           
+
+					if (MACHINE_IS_SVI) {
+						if (pressrelease) {
+							svi_keyboard_table[6] &=255-1;
+						}
+						else {
+							svi_keyboard_table[6] |=1;
+						}
+					}                                                                          
 
 					if (MACHINE_IS_CPC) {
 						if (pressrelease) {
@@ -1394,12 +1403,14 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
                                         	blink_kbd_a13 &= (255-64);
 						cpc_keyboard_table[5] &= (255-128);
                                                 msx_keyboard_table[8] &= (255-1);
+                                                svi_keyboard_table[8] &= (255-1);
 					}
 	                                else {
 						puerto_32766 |=1;
                                         	blink_kbd_a13 |= 64;
 						cpc_keyboard_table[5] |= 128;
                                                 msx_keyboard_table[8] |= 1;
+                                                svi_keyboard_table[8] |= 1;
 					}
 
         	                break;
@@ -1413,6 +1424,7 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 						//Enter "grande" del cpc
 						cpc_keyboard_table[2] &= (255-4);
                                                 msx_keyboard_table[7] &= (255-128);
+                                                svi_keyboard_table[6] &= (255-64);
 					}
 
                 	                else {
@@ -1420,6 +1432,7 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 						blink_kbd_a8 |= 64;
 						cpc_keyboard_table[2] |= 4;
                                                 msx_keyboard_table[7] |= 128;
+                                                svi_keyboard_table[6] |= 64;
 					}
 
 
@@ -6690,6 +6703,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 				        cpc_keyboard_table[5] &= (255-128);
                                         ql_keyboard_table[1] &= (255-64);
                                         msx_keyboard_table[8] &= (255-1);
+                                        svi_keyboard_table[8] &= (255-1);
                                 }
                                 else {
                                         puerto_32766 |=1;
@@ -6697,6 +6711,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 					                              cpc_keyboard_table[5] |= 128;
                                         ql_keyboard_table[1] |= 64;
                                         msx_keyboard_table[8] |= 1;
+                                        svi_keyboard_table[8] |= 1;
                                 }
                         break;
 
@@ -6707,6 +6722,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 					                              cpc_keyboard_table[0] &= (255-64);
                                         ql_keyboard_table[1] &= (255-1);
                                         msx_keyboard_table[7] &= (255-128);
+                                        svi_keyboard_table[6] &= (255-64);
 
 					//Avisar de envio enter especial para rutinas de speech, para que envien sonido
 					textspeech_send_new_line();
@@ -6719,6 +6735,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 					                              cpc_keyboard_table[0] |= 64;
                                         ql_keyboard_table[1] |= 1;
                                         msx_keyboard_table[7] |= 128;
+                                        svi_keyboard_table[6] |= 64;
                                 }
 
 
