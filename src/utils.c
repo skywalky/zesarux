@@ -349,6 +349,52 @@ struct x_tabla_teclado msx_tabla_teclado_numeros[]={
 };
 
 
+
+struct x_tabla_teclado svi_tabla_teclado_letras[]={
+	{&svi_keyboard_table[2],2}, //A
+	{&svi_keyboard_table[2],4},
+        {&svi_keyboard_table[2],8},
+        {&svi_keyboard_table[2],16}, //D
+        {&svi_keyboard_table[2],32},
+        {&svi_keyboard_table[2],64},
+        {&svi_keyboard_table[2],128},
+        {&svi_keyboard_table[3],1}, //H
+        {&svi_keyboard_table[3],2},
+        {&svi_keyboard_table[3],4},
+        {&svi_keyboard_table[3],8},
+        {&svi_keyboard_table[3],16}, //L
+        {&svi_keyboard_table[3],32},
+        {&svi_keyboard_table[3],64}, //N
+        {&svi_keyboard_table[3],128},
+        {&svi_keyboard_table[4],1}, //P
+        {&svi_keyboard_table[4],2},
+        {&svi_keyboard_table[4],4},
+        {&svi_keyboard_table[4],8},
+        {&svi_keyboard_table[4],16}, //T
+        {&svi_keyboard_table[4],32},
+        {&svi_keyboard_table[4],64},
+        {&svi_keyboard_table[4],128},
+        {&svi_keyboard_table[5],1}, //X
+        {&svi_keyboard_table[5],2},
+        {&svi_keyboard_table[5],4}
+};
+
+
+struct x_tabla_teclado svi_tabla_teclado_numeros[]={
+        {&svi_keyboard_table[0],1}, //0
+        {&svi_keyboard_table[0],2},
+        {&svi_keyboard_table[0],4},
+        {&svi_keyboard_table[0],8},
+        {&svi_keyboard_table[0],16},
+        {&svi_keyboard_table[0],32},     //5
+        {&svi_keyboard_table[0],64},
+        {&svi_keyboard_table[0],128},
+        {&svi_keyboard_table[1],1},
+        {&svi_keyboard_table[1],2}
+
+};
+
+
 // ================================== matrix ============================
 //        0      1      2      3      4      5      6      7
 //  +-------------------------------------------------------
@@ -2927,6 +2973,9 @@ void reset_keyboard_ports(void)
 	//De MSX
 	for (i=0;i<16;i++) msx_keyboard_table[i]=255;        
 
+	//De Spectravideo
+	for (i=0;i<16;i++) svi_keyboard_table[i]=255;           
+
 	//De QL
 	for (i=0;i<8;i++) ql_keyboard_table[i]=255;
 
@@ -4325,13 +4374,21 @@ void convert_numeros_letras_puerto_teclado_continue_after_recreated(z80_byte tec
                 else *puerto |=mascara;
          }
 
-        if (MACHINE_IS_MSX || MACHINE_IS_SVI) {
+        if (MACHINE_IS_MSX) {
                 puerto=msx_tabla_teclado_letras[indice].puerto;
                 mascara=msx_tabla_teclado_letras[indice].mascara;
 
                 if (pressrelease) *puerto &=255-mascara;
                 else *puerto |=mascara;
          }         
+
+        if (MACHINE_IS_SVI) {
+                puerto=svi_tabla_teclado_letras[indice].puerto;
+                mascara=svi_tabla_teclado_letras[indice].mascara;
+
+                if (pressrelease) *puerto &=255-mascara;
+                else *puerto |=mascara;
+         }             
 
           if (MACHINE_IS_QL) {
             puerto=ql_tabla_teclado_letras[indice].puerto;
@@ -4458,13 +4515,21 @@ void convert_numeros_letras_puerto_teclado_continue_after_recreated(z80_byte tec
                                                 else *puerto |=mascara;
   }
 
-	if (MACHINE_IS_MSX || MACHINE_IS_SVI) {
+	if (MACHINE_IS_MSX) {
                                                 puerto=msx_tabla_teclado_numeros[indice].puerto;
                                                 mascara=msx_tabla_teclado_numeros[indice].mascara;
 
                                                 if (pressrelease) *puerto &=255-mascara;
                                                 else *puerto |=mascara;
   }  
+
+	if (MACHINE_IS_SVI) {
+                                                puerto=svi_tabla_teclado_numeros[indice].puerto;
+                                                mascara=svi_tabla_teclado_numeros[indice].mascara;
+
+                                                if (pressrelease) *puerto &=255-mascara;
+                                                else *puerto |=mascara;
+  }    
 
   if (MACHINE_IS_QL) {
                                           puerto=ql_tabla_teclado_numeros[indice].puerto;

@@ -33,7 +33,6 @@
 #include "tape.h"
 #include "screen.h"
 #include "audio.h"
-#include "msx.h"
 
 z80_byte *svi_vram_memory=NULL;
 
@@ -49,12 +48,12 @@ z80_byte svi_ppi_register_c;
 
 
 //Aunque solo son 10 filas, metemos array de 16 pues es el maximo valor de indice seleccionable por el PPI
-/*
+
 z80_byte svi_keyboard_table[16]={
 255,255,255,255,255,255,255,255,
 255,255,255,255,255,255,255,255
 };
-*/
+
 
 
 //slots asignados, y sus 4 segmentos
@@ -323,8 +322,7 @@ z80_byte svi_in_port_ppi(z80_byte puerto_l)
             //si estamos en el menu, no devolver tecla
             if (zxvision_key_not_sent_emulated_mach() ) return 255;
 
-            //Tabla de teclado de msx 
-            return msx_keyboard_table[svi_ppi_register_c & 0x0F];
+            return svi_keyboard_table[svi_ppi_register_c & 0x0F];
 
         break;
 
