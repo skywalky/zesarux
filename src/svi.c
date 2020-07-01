@@ -33,6 +33,7 @@
 #include "tape.h"
 #include "screen.h"
 #include "audio.h"
+#include "msx.h"
 
 z80_byte *svi_vram_memory=NULL;
 
@@ -48,10 +49,12 @@ z80_byte svi_ppi_register_c;
 
 
 //Aunque solo son 10 filas, metemos array de 16 pues es el maximo valor de indice seleccionable por el PPI
+/*
 z80_byte svi_keyboard_table[16]={
 255,255,255,255,255,255,255,255,
 255,255,255,255,255,255,255,255
 };
+*/
 
 
 //slots asignados, y sus 4 segmentos
@@ -114,17 +117,6 @@ int svi_return_offset_rom_page(int rom_number)
 z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 {
 
-    //temporal
-    /*
-    if (direccion<32768) {
-        *tipo=SVI_SLOT_MEMORY_TYPE_ROM;
-        return &memoria_spectrum[direccion];
-    }
-    else {
-        *tipo=SVI_SLOT_MEMORY_TYPE_RAM;
-        return &memoria_spectrum[svi_return_offset_ram_page(0)];      
-    }
-    */
 
 
     z80_byte page_config=ay_3_8912_registros[ay_chip_selected][15];
@@ -314,7 +306,7 @@ void svi_out_port_ppi(z80_byte puerto_l,z80_byte value)
 
 z80_byte svi_in_port_ppi(z80_byte puerto_l)
 {
-    printf ("In port ppi. Port %02XH\n",puerto_l);
+    //printf ("In port ppi. Port %02XH\n",puerto_l);
 
     //z80_byte valor;
 
@@ -330,8 +322,9 @@ z80_byte svi_in_port_ppi(z80_byte puerto_l)
 
             //si estamos en el menu, no devolver tecla
             if (zxvision_key_not_sent_emulated_mach() ) return 255;
-            
-            return svi_keyboard_table[svi_ppi_register_c & 0x0F];
+
+            //Tabla de teclado de msx 
+            return msx_keyboard_table[svi_ppi_register_c & 0x0F];
 
         break;
 
@@ -423,8 +416,8 @@ void svi_insert_rom_cartridge(char *filename)
 
     long tamanyo_archivo=get_file_size(filename);
 
-    if (tamanyo_archivo!=8192 && tamanyo_archivo!=16384 && tamanyo_archivo!=32768) {
-        debug_printf(VERBOSE_ERR,"Only 8k, 16k and 32k rom cartridges are allowed");
+    if (tamanyo_archivo!=2048 && tamanyo_archivo!=4096 && tamanyo_archivo!=8192 && tamanyo_archivo!=16384 && tamanyo_archivo!=32768) {
+        debug_printf(VERBOSE_ERR,"Only 2k, 4k, 8k, 16k and 32k rom cartridges are allowed");
         return;
     }
 
@@ -446,54 +439,12 @@ void svi_insert_rom_cartridge(char *filename)
 
     int bloques_totales=0;
 
-	for (bloque=0;bloque<2 && !salir;bloque++) {
-        /*
-        The ROM Header
-
-A ROM needs a header to be auto-executed by the system when the SVI is initialized.
-
-After finding the RAM and initializing the system variables, the SVI looks for the ROM headers in all the slots 
-on the memory pages 4000h-7FFFh and 8000h-FFFh. The search is done in ascending order. 
-When a primary Slot is expanded, the search is done in the corresponding secondary Slots before going to the next Primary Slot.
-When the system finds a header, it selects the ROM slot only on the memory page corresponding to the address specified in INIT then, runs the program in ROM at the same address. (In short, it makes an inter-slot call.)
-
-        */
-        int offset=65536+bloque*16384;
-		int leidos=fread(&memoria_spectrum[offset+16384],1,16384,ptr_cartridge);
-        if (leidos==16384) {
-            svi_memory_slots[1][1+bloque]=SVI_SLOT_MEMORY_TYPE_ROM;
-            debug_printf (VERBOSE_INFO,"Loaded 16kb bytes of rom at slot 1 block %d",bloque);
-
-            bloques_totales++;
+    int leidos=fread(&memoria_spectrum[svi_return_offset_rom_page(1)],1,32768,ptr_cartridge);
 
 
-        }
-        else {
-            salir=1;
-        }
-
-	}
-
-    if (bloques_totales==1) {
-            //Copiar en los otros 3 segmentos
-
-            //Antes, si es un bloque de 8kb, copiar 8kb bajos en parte alta
-            if (tamanyo_archivo==8192) {
-                memcpy(&memoria_spectrum[65536+16384+8192],&memoria_spectrum[65536+16384],8192);
-            }
-
-            memcpy(&memoria_spectrum[65536],&memoria_spectrum[65536+16384],16384);
-            memcpy(&memoria_spectrum[65536+32768],&memoria_spectrum[65536+16384],16384);
-            memcpy(&memoria_spectrum[65536+49152],&memoria_spectrum[65536+16384],16384);
-
-            svi_memory_slots[1][0]=SVI_SLOT_MEMORY_TYPE_ROM;
-            svi_memory_slots[1][2]=SVI_SLOT_MEMORY_TYPE_ROM;
-            svi_memory_slots[1][3]=SVI_SLOT_MEMORY_TYPE_ROM;
-    }
 
 
-    
-    //int i;
+
 
 
         fclose(ptr_cartridge);
