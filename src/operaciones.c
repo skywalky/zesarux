@@ -7440,7 +7440,7 @@ z80_byte lee_puerto_svi_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 	//A8. 
 	//if (puerto==0xa8) return 0x50; //temporal
 
-	if (puerto_l==0x80) {
+	if (puerto_l==0x84) {
 		//printf ("VDP Video Ram Data IN\n");
 		return svi_in_port_vdp_data();
 	}	
