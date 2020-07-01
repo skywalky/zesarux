@@ -110,6 +110,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "svi.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -474,7 +475,8 @@ char *array_fabricantes[]={
 	"Jupiter Cantab",
         "Ascii Corp",
         "Coleco Industries",
-        "Sega"
+        "Sega",
+        "Spectravideo International"
         
 };
 
@@ -498,14 +500,16 @@ char *array_fabricantes_hotkey[]={
         "J~~upiter Cantab",
         "Ascii C~~orp",
         "Coleco In~~dustries",
-        "Sega"
+        "Sega",
+        "Spectravideo International"
         
 
 
 };
 
 //Si letra es espacio->no hay letra. TODO: Repetida d final sega, porque no hay letras libres
-char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvuodd";
+//Repetida spectravideo final
+char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvuoddd";
 
 
 
@@ -533,6 +537,10 @@ int array_maquinas_microdigital_electronica[]={
 
 int array_maquinas_ascii_corp[]={
 	MACHINE_ID_MSX1,255
+};
+
+int array_maquinas_spectravideo_international[]={
+	MACHINE_ID_SVI,255
 };
 
 int array_maquinas_coleco_industries[]={
@@ -742,7 +750,11 @@ int return_fabricante_maquina(int maquina)
 
                 case MACHINE_ID_MSX1:
 			return FABRICANTE_ASCII_CORP;
-		break;                
+		break;         
+
+                case MACHINE_ID_SVI:
+			return FABRICANTE_SPECTRAVIDEO_INTERNATIONAL;
+		break;                         
 
 		case 122:
 			return FABRICANTE_JUPITER_CANTAB;
@@ -1297,7 +1309,7 @@ void ascii_to_keyboard_port_set_clear(unsigned tecla,int pressrelease)
 					}
 
                                         //mayus para MSX
-					if (MACHINE_IS_MSX) {
+					if (MACHINE_IS_MSX || MACHINE_IS_SVI) {
 						if (pressrelease) {
 							msx_keyboard_table[6] &=255-1;
 						}
@@ -4309,7 +4321,7 @@ void convert_numeros_letras_puerto_teclado_continue_after_recreated(z80_byte tec
                 else *puerto |=mascara;
          }
 
-        if (MACHINE_IS_MSX) {
+        if (MACHINE_IS_MSX || MACHINE_IS_SVI) {
                 puerto=msx_tabla_teclado_letras[indice].puerto;
                 mascara=msx_tabla_teclado_letras[indice].mascara;
 
@@ -4442,7 +4454,7 @@ void convert_numeros_letras_puerto_teclado_continue_after_recreated(z80_byte tec
                                                 else *puerto |=mascara;
   }
 
-	if (MACHINE_IS_MSX) {
+	if (MACHINE_IS_MSX || MACHINE_IS_SVI) {
                                                 puerto=msx_tabla_teclado_numeros[indice].puerto;
                                                 mascara=msx_tabla_teclado_numeros[indice].mascara;
 
@@ -9938,6 +9950,7 @@ int get_machine_id_by_name(char *machine_name)
                                 else if (!strcasecmp(machine_name,"MSX1")) return_machine=MACHINE_ID_MSX1;
                                 else if (!strcasecmp(machine_name,"COLECO")) return_machine=MACHINE_ID_COLECO;
                                 else if (!strcasecmp(machine_name,"SG1000")) return_machine=MACHINE_ID_SG1000;
+                                else if (!strcasecmp(machine_name,"SVI")) return_machine=MACHINE_ID_SVI;
                                 else {
                                         debug_printf (VERBOSE_ERR,"Unknown machine %s",machine_name);
                                         return_machine=-1;
@@ -11424,6 +11437,9 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       	size=0; //Mostrar zona de memoria de 256kb en caso de msx
       }      
  
+       if (MACHINE_IS_SVI) {
+      	size=0; //Mostrar zona de memoria de 256kb en caso de msx
+      }     
 
     break;
 
@@ -11484,6 +11500,9 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       if (MACHINE_IS_MSX) {
 	size=32768;
       }      
+      if (MACHINE_IS_SVI) {
+	size=32768;
+      }   
 
       if (MACHINE_IS_Z88) {
       	size=0; //Solo zona memoria de 4 mb en caso de z88
@@ -11695,6 +11714,21 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
               size=256*1024;  //Zona entera de los 256kb
         }
     break;  
+
+
+    case MEMORY_ZONE_SVI_VRAM:
+        if (MACHINE_IS_SVI) {
+              *readwrite=1; 
+              size=16384;  
+        }
+    break;
+
+    case MEMORY_ZONE_SVI_ALL_MEM:
+        if (MACHINE_IS_SVI) {
+              *readwrite=1; 
+              size=256*1024;  //Zona entera de los 256kb
+        }
+    break;      
 
     case MEMORY_ZONE_COLECO_VRAM:
         if (MACHINE_IS_COLECO) {
@@ -12026,6 +12060,19 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
 
     case MEMORY_ZONE_MSX_ALL_MEM:
         if (MACHINE_IS_MSX) {
+                p=&memoria_spectrum[address];
+        }        
+    break;
+
+
+    case MEMORY_ZONE_SVI_VRAM:
+        if (MACHINE_IS_SVI) {
+                p=&svi_vram_memory[address];
+        }        
+    break;
+
+    case MEMORY_ZONE_SVI_ALL_MEM:
+        if (MACHINE_IS_SVI) {
                 p=&memoria_spectrum[address];
         }        
     break;
@@ -12390,6 +12437,20 @@ void machine_get_memory_zone_name(int zone, char *name)
                strcpy(name,"MSX All Mem"); 
         }
     break;
+
+   case MEMORY_ZONE_SVI_VRAM:
+        if (MACHINE_IS_SVI) {
+               strcpy(name,"SVI VRAM"); 
+        }
+    break;
+
+
+    case MEMORY_ZONE_SVI_ALL_MEM:
+        if (MACHINE_IS_SVI) {
+                          //123456789012345
+               strcpy(name,"SVI All Mem"); 
+        }
+    break;    
 
     case MEMORY_ZONE_COLECO_VRAM:
         if (MACHINE_IS_COLECO) {

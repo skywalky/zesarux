@@ -254,6 +254,7 @@ extern z80_byte video_zx8081_ula_video_output;
 #define CPU_CORE_MSX 9
 #define CPU_CORE_COLECO 10
 #define CPU_CORE_SG1000 11
+#define CPU_CORE_SVI 12
 
 extern struct timeval z80_interrupts_timer_antes, z80_interrupts_timer_ahora;
 extern long z80_timer_difftime, z80_timer_seconds, z80_timer_useconds;
@@ -352,6 +353,7 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 
 #define MACHINE_ID_COLECO 100
 #define MACHINE_ID_SG1000 101
+#define MACHINE_ID_SVI 102
 
 #define MACHINE_ID_MSX1 110
 
@@ -405,6 +407,8 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define MACHINE_IS_COLECO (current_machine_type==MACHINE_ID_COLECO)
 
 #define MACHINE_IS_SG1000 (current_machine_type==MACHINE_ID_SG1000)
+
+#define MACHINE_IS_SVI (current_machine_type==MACHINE_ID_SVI)
 
 #define MACHINE_IS_MSX1 (current_machine_type==MACHINE_ID_MSX1)
 

@@ -37,6 +37,7 @@
 #include "audio_sine_table.h"
 #include "ay38912.h"
 #include "msx.h"
+#include "svi.h"
 
 #include "audionull.h"
 
@@ -283,8 +284,12 @@ z80_bit aofile_inserted;
 //este valor lo alteramos al simular sonido de carga del zx8081
 int amplitud_speaker_actual_zx8081=AMPLITUD_BEEPER;
 
-
+//msx 
 int amplitud_speaker_actual_msx=AMPLITUD_BEEPER;
+
+
+//svi
+int amplitud_speaker_actual_svi=AMPLITUD_BEEPER;
 
 char *aofile_buffer;
 
@@ -673,6 +678,10 @@ char beeper_get_last_value_send(void)
                 else if (MACHINE_IS_MSX) {
                         return da_amplitud_speaker_msx();
                 }				
+
+                else if (MACHINE_IS_SVI) {
+                        return da_amplitud_speaker_svi();
+                }						
 
 		else if (MACHINE_IS_ACE) {
 			return da_amplitud_speaker_ace();

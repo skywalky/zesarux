@@ -105,6 +105,7 @@
 #include "coleco.h"
 #include "sn76489an.h"
 #include "sg1000.h"
+#include "svi.h"
 
 
 

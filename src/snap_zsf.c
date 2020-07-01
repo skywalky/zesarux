@@ -73,6 +73,7 @@
 #include "coleco.h"
 #include "sg1000.h"
 #include "sn76489an.h"
+#include "svi.h"
 
 
 #include "autoselectoptions.h"

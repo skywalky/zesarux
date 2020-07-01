@@ -61,6 +61,7 @@ extern int frecuencia_sonido_variable;
 
 extern int amplitud_speaker_actual_zx8081;
 extern int amplitud_speaker_actual_msx;
+extern int amplitud_speaker_actual_svi;
 
 extern int (*audio_init) (void);
 extern int (*audio_thread_finish) (void);

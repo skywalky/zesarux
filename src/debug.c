@@ -92,6 +92,8 @@
 #include "coleco.h"
 #include "core_sg1000.h"
 #include "sn76489an.h"
+#include "core_svi.h"
+#include "svi.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -1602,7 +1604,13 @@ void set_cpu_core_loop(void)
       debug_printf(VERBOSE_INFO,"Setting SG1000 CPU core");
       cpu_core_loop=cpu_core_loop_sg1000;
       cpu_core_loop_name="SG1000";
-    break;		
+    break;	
+
+    case CPU_CORE_SVI:
+      debug_printf(VERBOSE_INFO,"Setting SVI CPU core");
+      cpu_core_loop=cpu_core_loop_svi;
+      cpu_core_loop_name="SVI";
+    break;			
 
 
                 default:
@@ -4677,6 +4685,17 @@ void debug_get_ioports(char *stats_buffer)
   		sprintf (buf_linea,"PPI Port C: %02X\n",msx_ppi_register_c);
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);		  		  
   	}	  
+
+  	if (MACHINE_IS_SVI) {
+  		sprintf (buf_linea,"PPI Port A: %02X\n",svi_ppi_register_a);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+  		sprintf (buf_linea,"PPI Port B: %02X\n",svi_ppi_register_b);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+  		sprintf (buf_linea,"PPI Port C: %02X\n",svi_ppi_register_c);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);		  		  
+  	}	  	  
 
           stats_buffer[index_buffer]=0;
 

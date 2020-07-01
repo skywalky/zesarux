@@ -222,7 +222,7 @@ void scrfbdev_z88_cpc_load_keymap(void)
 	//y los codigos raw de retorno siempre son los mismos.
 	//por tanto, devolvemos lo mismo que con keymap english siempre:
 
-	if (MACHINE_IS_Z88 || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX) {
+	if (MACHINE_IS_Z88 || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI) {
 		scrfbdev_keymap_z88_cpc_minus=RAWKEY_minus;
 		scrfbdev_keymap_z88_cpc_equal=RAWKEY_equal;
 		scrfbdev_keymap_z88_cpc_backslash=RAWKEY_grave;
@@ -465,6 +465,10 @@ void scrfbdev_refresca_pantalla(void)
 	else if (MACHINE_IS_MSX) {
 		scr_refresca_pantalla_y_border_msx();
 	}    
+
+	else if (MACHINE_IS_SVI) {
+		scr_refresca_pantalla_y_border_svi();
+	}    		
 
 
 	else if (MACHINE_IS_COLECO) {
@@ -826,7 +830,7 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 
 
         int tecla_gestionada_sam_ql=0;
-        if (MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX) {
+        if (MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI) {
                 tecla_gestionada_sam_ql=1;
 
                         if (teclaraw==scrfbdev_keymap_z88_cpc_minus) util_set_reset_key_common_keymap(UTIL_KEY_COMMON_KEYMAP_MINUS,pressrelease);

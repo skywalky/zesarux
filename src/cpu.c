@@ -123,6 +123,7 @@
 #include "sg1000.h"
 #include "sn76489an.h"
 #include "vdp_9918a.h"
+#include "svi.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -1070,6 +1071,10 @@ void reset_cpu(void)
 		msx_reset();
 	}
 
+	if (MACHINE_IS_SVI) {
+		svi_reset();
+	}	
+
 	if (MACHINE_IS_COLECO) {
 		coleco_reset();
 	}	
@@ -1278,6 +1283,7 @@ char *string_machines_list_description=
 							" MSX1     MSX1\n"
 							" Coleco   Colecovision\n"
 							" SG1000   Sega SG1000\n"
+							" SVI      Spectravideo SVI 318\n"
 							;
 
 
@@ -2488,6 +2494,7 @@ struct s_machine_names machine_names[]={
 {"MSX1",MACHINE_ID_MSX1},
 {"ColecoVision",MACHINE_ID_COLECO},
 {"SG1000",MACHINE_ID_SG1000},
+{"Spectravideo 318",MACHINE_ID_SVI},
 
                                             {"ZX80",  				120},
                                             {"ZX81",  				121},
@@ -2842,6 +2849,21 @@ void malloc_mem_machine(void) {
 
         }
 
+
+        else if (MACHINE_IS_SVI) {
+                //total 64kb * 4
+                malloc_machine(65536*4);
+                random_ram(memoria_spectrum+32768,32768);
+
+
+				//y 16kb para vram
+				svi_alloc_vram_memory();
+
+
+				svi_init_memory_tables();
+
+        }		
+
         else if (MACHINE_IS_COLECO) {
                 //total 64kb 
                 malloc_machine(65536);
@@ -2940,6 +2962,7 @@ void set_machine_params(void)
 28-29 Reservado (Spectrum)
 100=colecovision
 101=sega sg1000
+102=Spectravideo 318
 110-119 msx:
 110 msx1
 120=zx80 (old 20)
@@ -3045,6 +3068,10 @@ void set_machine_params(void)
 		else if (MACHINE_IS_MSX) {
 			cpu_core_loop_active=CPU_CORE_MSX;
 		}		
+
+		else if (MACHINE_IS_SVI) {
+			cpu_core_loop_active=CPU_CORE_SVI;
+		}			
 
 		else if (MACHINE_IS_COLECO) {
 			cpu_core_loop_active=CPU_CORE_COLECO;
@@ -3421,6 +3448,19 @@ You don't need timings for H/V sync =)
 
 		}		
 
+		else if (MACHINE_IS_SVI) {
+			contend_read=contend_read_svi;
+			contend_read_no_mreq=contend_read_no_mreq_svi;
+			contend_write_no_mreq=contend_write_no_mreq_svi;
+
+			ula_contend_port_early=ula_contend_port_early_svi;
+			ula_contend_port_late=ula_contend_port_late_svi;
+
+			
+			screen_testados_linea=228;
+
+		}			
+
 		else if (MACHINE_IS_COLECO) {
 			contend_read=contend_read_coleco;
 			contend_read_no_mreq=contend_read_no_mreq_coleco;
@@ -3779,6 +3819,17 @@ You don't need timings for H/V sync =)
 				ay_chip_present.v=1;
         break;
 
+
+		case MACHINE_ID_SVI:
+                poke_byte=poke_byte_svi;
+                peek_byte=peek_byte_svi;
+				peek_byte_no_time=peek_byte_no_time_svi;
+				poke_byte_no_time=poke_byte_no_time_svi;
+                lee_puerto=lee_puerto_svi;
+				out_port=out_port_svi;
+				fetch_opcode=fetch_opcode_svi;
+				ay_chip_present.v=1;
+        break;
 
 
 		case 120:
@@ -4355,6 +4406,10 @@ void rom_load(char *romfilename)
                 romfilename="msx.rom";
                 break;
 
+                case MACHINE_ID_SVI:
+                romfilename="svi.rom";
+                break;				
+
 								case MACHINE_ID_CHROME:
 								romfilename="chrome.rom";
 								break;
@@ -4617,6 +4672,15 @@ Total 20 pages=320 Kb
 
                 else if (MACHINE_IS_MSX1) {
 			//msx 32 kb rom
+                        	leidos=fread(memoria_spectrum,1,32768,ptr_romfile);
+				if (leidos!=32768) {
+				 	cpu_panic("Error loading ROM");
+				}
+		}
+
+
+                else if (MACHINE_IS_SVI) {
+			//svi 32 kb rom
                         	leidos=fread(memoria_spectrum,1,32768,ptr_romfile);
 				if (leidos!=32768) {
 				 	cpu_panic("Error loading ROM");

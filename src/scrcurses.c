@@ -1326,7 +1326,7 @@ void scrcurses_refresca_pantalla(void)
 	}
 	
 	//para maquinas con chip vdp9918
-	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000) {
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000 || MACHINE_IS_SVI) {
 	scrcurses_refresca_pantalla_vdp9918();
 	}
 
