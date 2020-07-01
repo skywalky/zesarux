@@ -29,7 +29,7 @@ And also:
 * Jupiter Ace
 * Amstrad CPC 464, CPC 4128
 * MSX1 
-* Spectravideo 318
+* Spectravideo 318/328
 * Colecovision
 * Sega SG1000
 
@@ -111,7 +111,7 @@ __FEATURES__
 * Jupiter Ace
 * Amstrad CPC 464, CPC 4128
 * MSX1 
-* Spectravideo 318
+* Spectravideo 318/328
 * Colecovision
 * Sega SG1000
 
