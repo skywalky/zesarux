@@ -101,12 +101,15 @@ int svi_return_offset_ram_page(int ram_number,z80_int direccion)
     if (MACHINE_IS_SVI_318) {
         offset=0; //solo una pagina de RAM, y de 16kb
         direccion &=16383;
+        //TODO: parece que el basic muestra 30 kb aun con esto
     }
 
     //saltar las 3 roms
     offset +=3*32768;
 
     offset +=(direccion & 32767);
+
+    //if (offset>=16384+3*32768)  printf ("offset: %d\n",offset-3*32768);
 
     return offset;
 }
@@ -131,9 +134,6 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 
     int offset_segment_low=svi_return_offset_rom_page(0,direccion);  
     int offset_segment_high=svi_return_offset_ram_page(0,direccion);    
-
-    //temp
-    //page_config=0xFF;
 
 
     if (page_config!=0xFF) {
@@ -390,9 +390,9 @@ void svi_out_port_psg(z80_byte puerto_l,z80_byte value)
                                 }
                             }*/
 
-                                if (ay_3_8912_registro_sel[ay_chip_selected]==15) {
-                                    printf ("Out port AY register 15: %02XH\n",value);
-                                }                            
+                                //if (ay_3_8912_registro_sel[ay_chip_selected]==15) {
+                                //    printf ("Out port AY register 15: %02XH\n",value);
+                                //}                            
                             
                             out_port_ay(49149,value);
 
