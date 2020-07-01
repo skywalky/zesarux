@@ -2851,9 +2851,10 @@ void malloc_mem_machine(void) {
 
 
         else if (MACHINE_IS_SVI) {
-                //total 64kb * 4
-                malloc_machine(65536*4);
-                random_ram(memoria_spectrum+32768,32768);
+			//Total:  5 RAMS de 32 kb, 3 ROMS de 32 kb -> 5*32 + 3*32 = 160 + 96 = 256
+                
+                malloc_machine(256*1024);
+                random_ram(memoria_spectrum,256*1024);
 
 
 				//y 16kb para vram

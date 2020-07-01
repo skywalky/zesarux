@@ -88,31 +88,110 @@ char *svi_get_string_memory_type(int tipo)
 }
 
 
+int svi_return_offset_ram_page(int ram_number)
+{
+
+    //Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb, 
+
+    int offset=32768*ram_number;
+
+    //saltar las 3 roms
+    offset +=3*32768;
+
+    return offset;
+}
+
+int svi_return_offset_rom_page(int rom_number)
+{
+
+    //Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb, 
+
+    return 32768*rom_number;
+
+}
+
 //Retorna direccion de memoria donde esta mapeada la ram y su tipo
 z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 {
-    int segmento=direccion/16384;
-   
-    z80_byte slot=svi_ppi_register_a;
 
-    int rotar=segmento*2;
+    //temporal
+    /*
+    if (direccion<32768) {
+        *tipo=SVI_SLOT_MEMORY_TYPE_ROM;
+        return &memoria_spectrum[direccion];
+    }
+    else {
+        *tipo=SVI_SLOT_MEMORY_TYPE_RAM;
+        return &memoria_spectrum[svi_return_offset_ram_page(0)];      
+    }
+    */
 
-    if (segmento>0) {
-        slot=slot>>rotar;
+
+    z80_byte page_config=ay_3_8912_registros[ay_chip_selected][15];
+
+
+    int offset_segment_low=0;
+    int offset_segment_high=svi_return_offset_ram_page(0);    
+
+    if (page_config!=0xFF) {
+
+
+        //Ver bits activos
+        if ((page_config & 1)==0) {
+            offset_segment_low=svi_return_offset_rom_page(1);
+        }
+
+        if ((page_config & 2)==0) {
+            offset_segment_low=svi_return_offset_ram_page(1);
+        }    
+
+        if ((page_config & 4)==0) {
+            offset_segment_high=svi_return_offset_ram_page(2);
+        }    
+
+        if ((page_config & 8)==0) {
+            offset_segment_low=svi_return_offset_ram_page(3);
+        }    
+
+        if ((page_config & 16)==0) {
+            offset_segment_high=svi_return_offset_ram_page(4);
+        }    
+
+        //TODO bits 6,7
     }
 
-    slot &=3;
 
-     
+    if (direccion<32768) {
+        *tipo=SVI_SLOT_MEMORY_TYPE_ROM;
+        return &memoria_spectrum[offset_segment_low+direccion];
+    }
+    else {
+        *tipo=SVI_SLOT_MEMORY_TYPE_RAM;
+        return &memoria_spectrum[offset_segment_high+(direccion & 32767)];      
+    }
 
-    *tipo=svi_memory_slots[slot][segmento];
 
-    int offset=((slot*4)+segmento)*16384;
+/*
+PSG Port B Output
 
-    //if (slot>0) printf ("direccion %6d segmento %d slot %d offset %d\n",direccion,segmento,slot,offset);
+Bit Name    Description
+1   /CART   Memory bank 11, ROM 0000-7FFF (Cartridge /CCS1, /CCS2)  -> Rom 1 para mi (32 kb)
+2   /BK21   Memory bank 21, RAM 0000-7FFF                           -> Ram 1 para mi (32 kb)
+3   /BK22   Memory bank 22, RAM 8000-FFFF                           -> Ram 2 para mi (32 kb)
+4   /BK31   Memory bank 31, RAM 0000-7FFF                           -> Ram 3 para mi (32 kb)
 
-    return &memoria_spectrum[offset+(direccion&16383)];
+5   /BK32   Memory bank 32, RAM 8000-FFFF                           -> Ram 4 para mi (32 kb)
+6   CAPS    Caps-Lock diod
+7   /ROMEN0 Memory bank 12, ROM 8000-BFFF* (Cartridge /CCS3)        -> Rom 2.0 para mi (16 kb)
+8   /ROMEN1 Memory bank 12, ROM C000-FFFF* (Cartridge /CCS4)        -> Rom 2.1 para mi (16 kb)
 
+Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb, 
+
+ The /CART signal must be active for any effect,
+  then all banks of RAM are disabled. 
+
+  Por defecto: bank01 rom basic, bank02 ram
+*/
 
 
 }
@@ -152,7 +231,7 @@ void svi_init_memory_tables(void)
 void svi_reset(void)
 {
     //Mapear inicialmente todo a slot 0
-    svi_ppi_register_a=0;
+    ay_3_8912_registros[ay_chip_selected][15]=0xFF;
 
     //Resetear vram
     int i;
@@ -163,6 +242,11 @@ void svi_reset(void)
 
 void svi_out_port_vdp_data(z80_byte value)
 {
+    //printf ("out port vdp data %02XH char: %c\n",value,
+    //(value>=32 && value<=126 ? value : '?') );
+
+	  
+
     vdp_9918a_out_vram_data(svi_vram_memory,value);
 }
 
@@ -181,6 +265,8 @@ z80_byte svi_in_port_vdp_status(void)
 
 void svi_out_port_vdp_command_status(z80_byte value)
 {
+    //printf ("out port vdp command %02XH char: %c\n",value,
+    //(value>=32 && value<=126 ? value : '?') );
     vdp_9918a_out_command_status(value);
 }
 
@@ -228,7 +314,7 @@ void svi_out_port_ppi(z80_byte puerto_l,z80_byte value)
 
 z80_byte svi_in_port_ppi(z80_byte puerto_l)
 {
-    //printf ("In port ppi. Port %02XH\n",puerto_l);
+    printf ("In port ppi. Port %02XH\n",puerto_l);
 
     //z80_byte valor;
 
@@ -293,11 +379,19 @@ void svi_out_port_psg(z80_byte puerto_l,z80_byte value)
                         activa_ay_chip_si_conviene();
                         if (ay_chip_present.v==1) {
                             
-                            if (ay_3_8912_registro_sel[ay_chip_selected]==14 || ay_3_8912_registro_sel[ay_chip_selected]==15) {
+                            /*if (ay_3_8912_registro_sel[ay_chip_selected]==14 || ay_3_8912_registro_sel[ay_chip_selected]==15) {
 
                                 //de momento registros 14 y 15 nada
-                            }
-                            else out_port_ay(49149,value);
+                                if (ay_3_8912_registro_sel[ay_chip_selected]==15) {
+                                    printf ("Out port AY register 15: %02XH\n",value);
+                                }
+                            }*/
+
+                                if (ay_3_8912_registro_sel[ay_chip_selected]==15) {
+                                    printf ("Out port AY register 15: %02XH\n",value);
+                                }                            
+                            
+                            out_port_ay(49149,value);
 
                         }
         }    

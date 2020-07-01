@@ -625,7 +625,11 @@ int *return_maquinas_fabricante(int fabricante)
 
 		case FABRICANTE_ASCII_CORP:
 			return array_maquinas_ascii_corp;
-		break;                
+		break;          
+
+		case FABRICANTE_SPECTRAVIDEO_INTERNATIONAL:
+			return array_maquinas_spectravideo_international;
+		break;                         
 
 		case FABRICANTE_COLECO_INDUSTRIES:
 			return array_maquinas_coleco_industries;
