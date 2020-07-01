@@ -353,7 +353,8 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 
 #define MACHINE_ID_COLECO 100
 #define MACHINE_ID_SG1000 101
-#define MACHINE_ID_SVI 102
+#define MACHINE_ID_SVI_318 102
+#define MACHINE_ID_SVI_328 103
 
 #define MACHINE_ID_MSX1 110
 
@@ -408,7 +409,7 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 
 #define MACHINE_IS_SG1000 (current_machine_type==MACHINE_ID_SG1000)
 
-#define MACHINE_IS_SVI (current_machine_type==MACHINE_ID_SVI)
+#define MACHINE_IS_SVI (current_machine_type==MACHINE_ID_SVI_318 || current_machine_type==MACHINE_ID_SVI_328)
 
 #define MACHINE_IS_MSX1 (current_machine_type==MACHINE_ID_MSX1)
 

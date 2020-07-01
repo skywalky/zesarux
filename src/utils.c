@@ -586,7 +586,7 @@ int array_maquinas_ascii_corp[]={
 };
 
 int array_maquinas_spectravideo_international[]={
-	MACHINE_ID_SVI,255
+	MACHINE_ID_SVI_318,MACHINE_ID_SVI_328,255
 };
 
 int array_maquinas_coleco_industries[]={
@@ -802,7 +802,8 @@ int return_fabricante_maquina(int maquina)
 			return FABRICANTE_ASCII_CORP;
 		break;         
 
-                case MACHINE_ID_SVI:
+                case MACHINE_ID_SVI_318:
+                case MACHINE_ID_SVI_328:
 			return FABRICANTE_SPECTRAVIDEO_INTERNATIONAL;
 		break;                         
 
@@ -10048,7 +10049,8 @@ int get_machine_id_by_name(char *machine_name)
                                 else if (!strcasecmp(machine_name,"MSX1")) return_machine=MACHINE_ID_MSX1;
                                 else if (!strcasecmp(machine_name,"COLECO")) return_machine=MACHINE_ID_COLECO;
                                 else if (!strcasecmp(machine_name,"SG1000")) return_machine=MACHINE_ID_SG1000;
-                                else if (!strcasecmp(machine_name,"SVI")) return_machine=MACHINE_ID_SVI;
+                                else if (!strcasecmp(machine_name,"SVI318")) return_machine=MACHINE_ID_SVI_318;
+                                else if (!strcasecmp(machine_name,"SVI328")) return_machine=MACHINE_ID_SVI_328;
                                 else {
                                         debug_printf (VERBOSE_ERR,"Unknown machine %s",machine_name);
                                         return_machine=-1;

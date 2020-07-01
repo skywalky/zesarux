@@ -1283,7 +1283,8 @@ char *string_machines_list_description=
 							" MSX1     MSX1\n"
 							" Coleco   Colecovision\n"
 							" SG1000   Sega SG1000\n"
-							" SVI      Spectravideo SVI 318\n"
+							" SVI318   Spectravideo SVI 318\n"
+							" SVI328   Spectravideo SVI 328\n"
 							;
 
 
@@ -2494,7 +2495,8 @@ struct s_machine_names machine_names[]={
 {"MSX1",MACHINE_ID_MSX1},
 {"ColecoVision",MACHINE_ID_COLECO},
 {"SG1000",MACHINE_ID_SG1000},
-{"Spectravideo 318",MACHINE_ID_SVI},
+{"Spectravideo 318",MACHINE_ID_SVI_318},
+{"Spectravideo 328",MACHINE_ID_SVI_328},
 
                                             {"ZX80",  				120},
                                             {"ZX81",  				121},
@@ -2964,6 +2966,7 @@ void set_machine_params(void)
 100=colecovision
 101=sega sg1000
 102=Spectravideo 318
+103=Spectravideo 328
 110-119 msx:
 110 msx1
 120=zx80 (old 20)
@@ -3821,7 +3824,8 @@ You don't need timings for H/V sync =)
         break;
 
 
-		case MACHINE_ID_SVI:
+		case MACHINE_ID_SVI_318:
+		case MACHINE_ID_SVI_328:
                 poke_byte=poke_byte_svi;
                 peek_byte=peek_byte_svi;
 				peek_byte_no_time=peek_byte_no_time_svi;
@@ -4407,7 +4411,8 @@ void rom_load(char *romfilename)
                 romfilename="msx.rom";
                 break;
 
-                case MACHINE_ID_SVI:
+                case MACHINE_ID_SVI_318:
+				case MACHINE_ID_SVI_328:
                 romfilename="svi.rom";
                 break;				
 

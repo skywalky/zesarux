@@ -1,7 +1,7 @@
 Version 8.2 - Turbo Esprit edition. 21 May 2020
 
 Added new emulated machine: MSX1 
-Added new emulated machine: Spectravideo 318
+Added new emulated machines: Spectravideo 318/328
 Added new emulated machine: Colecovision 
 Added new emulated machine: Sega SG1000
 Added support for compilation on FreeBSD

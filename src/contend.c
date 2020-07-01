@@ -1530,7 +1530,7 @@ z80_byte *contend_table_no_mreq;
         }
 
 	//TODO msx, coleco y sg1000. de momento sin contend y no inicializamos tabla porque sino se sale de testados y se sale de la tabla
-	if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000 || MACHINE_IS_SVI) {
+	if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000 || MACHINE_IS_SVI) {
                 timings=contend_patron_no_contend;
                 offset_time=0;
                 offset_patron=0;
