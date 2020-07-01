@@ -7248,7 +7248,7 @@ void out_port_msx1_no_time(z80_int puerto,z80_byte value)
 	}
 
 	if (puerto_l>=0x9A && puerto_l<0xA0) {
-		printf ("Out port possibly vdp. Port %04XH value %02XH\n",puerto,value);
+		//printf ("Out port possibly vdp. Port %04XH value %02XH\n",puerto,value);
 	}
 
 	if (puerto_l>=0xA0 && puerto_l<=0xA7) {
@@ -7387,25 +7387,25 @@ void out_port_svi_no_time(z80_int puerto,z80_byte value)
 	//if (puerto_l==0x98) printf ("%c",
 	//  (value>=32 && value<=126 ? value : '?') );
 
-	if (puerto_l==0x98) {
+	if (puerto_l==0x80) {
 		//printf ("VDP Video Ram Data\n");
 		svi_out_port_vdp_data(value);
 	}
 
-	if (puerto_l==0x99) {
+	if (puerto_l==0x81) {
 		//printf ("VDP Command and status register\n");	
 		svi_out_port_vdp_command_status(value);  
 	}
 
 	if (puerto_l>=0x9A && puerto_l<0xA0) {
-		printf ("Out port possibly vdp. Port %04XH value %02XH\n",puerto,value);
+		//printf ("Out port possibly vdp. Port %04XH value %02XH\n",puerto,value);
 	}
 
-	if (puerto_l>=0xA0 && puerto_l<=0xA7) {
+	if (puerto_l==0x88 || puerto_l==0x8c) {
 		svi_out_port_psg(puerto_l,value);
 	}	
 
-	if (puerto_l>=0xA8 && puerto_l<=0xAB) {
+	if (puerto_l>=0x96 && puerto_l<=0x99) {
 		svi_out_port_ppi(puerto_l,value);
 	}
 
@@ -7440,23 +7440,23 @@ z80_byte lee_puerto_svi_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 	//A8. 
 	//if (puerto==0xa8) return 0x50; //temporal
 
-	if (puerto_l==0x98) {
+	if (puerto_l==0x80) {
 		//printf ("VDP Video Ram Data IN\n");
 		return svi_in_port_vdp_data();
 	}	
 
-	if (puerto_l==0x99) {
+	if (puerto_l==0x81) {
 		//printf ("VDP Status IN\n");
 		return svi_in_port_vdp_status();
 	}		
 
-	if (puerto_l>=0xA8 && puerto_l<=0xAB) {
+	if (puerto_l==0x96 || puerto_l==0x98 || puerto_l==0x99 || puerto_l==0x9a) {
 		return svi_in_port_ppi(puerto_l);
 	}
 
 
 	//if (puerto_l==0xA0 && ay_3_8912_registro_sel[0]==14) { 
-	if (puerto_l==0xA2) {
+	if (puerto_l==0x90) {
 		//printf ("reading from psg\n");
 		//14 o 15? cual? en teoria el 14
 		//if (ay_3_8912_registro_sel[0]==15 || ay_3_8912_registro_sel[0]==14) { 	

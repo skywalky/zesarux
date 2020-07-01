@@ -192,7 +192,7 @@ void svi_out_port_ppi(z80_byte puerto_l,z80_byte value)
     //int slot,segment;
 
     switch (puerto_l) {
-        case 0xA8:
+        case 0x98:
             svi_ppi_register_a=value;
             //printf ("Out port ppi. Port %02XH value %02XH\n",puerto_l,value);
 
@@ -208,12 +208,12 @@ void svi_out_port_ppi(z80_byte puerto_l,z80_byte value)
 
         break;
 
-        case 0xA9:
+        case 0x99:
             svi_ppi_register_b=value;
         break;
 
 
-        case 0xAA:
+        case 0x96:
             svi_ppi_register_c=value;
 
             
@@ -234,11 +234,11 @@ z80_byte svi_in_port_ppi(z80_byte puerto_l)
 
     switch (puerto_l) {
 
-        case 0xA8:
+        case 0x98:
             return svi_ppi_register_a;
         break;        
  
-        case 0xA9:
+        case 0x99:
             //Leer registro B (filas teclado)
             //que fila? svi_ppi_register_c
 
@@ -249,7 +249,7 @@ z80_byte svi_in_port_ppi(z80_byte puerto_l)
 
         break;
 
-        case 0xAA:
+        case 0x96:
         //printf ("read tape??\n");
 
 
@@ -284,12 +284,12 @@ void svi_out_port_psg(z80_byte puerto_l,z80_byte value)
 
 
         //Registro
-        if (puerto_l==0xA0) {
+        if (puerto_l==0x88) {
                         activa_ay_chip_si_conviene();
                         if (ay_chip_present.v==1) out_port_ay(65533,value);
                 }
         //Datos
-        if (puerto_l==0xA1) {
+        if (puerto_l==0x8c) {
                         activa_ay_chip_si_conviene();
                         if (ay_chip_present.v==1) {
                             
