@@ -20562,11 +20562,29 @@ void menu_file_col_browser_show(char *filename)
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
-	sprintf(buffer_texto,"Colecovision File Info:\n%s",texto_info);
+	sprintf(buffer_texto,"Game description:\n%s\n",texto_info);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+	/*
+	8002 - 8003:   Pointer to RAM copy of the sprite name table 
+8004 - 8005:   Pointer to RAM sprite table
+8006 - 8007:   Pointer to free buffer space in RAM
+8008 - 8009:   Pointer to controller memory map
+800A - 800B:   Pointer to start of code
+	*/
+
+ 	sprintf(buffer_texto,"Sprite name table copy: %02X%02XH",z80_header[0x03],z80_header[0x02]);
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
- 
- 	sprintf(buffer_texto,"Code start: %02X%02XH\n",z80_header[0x0b],z80_header[0x0a]);
+ 	sprintf(buffer_texto,"Sprite table:           %02X%02XH",z80_header[0x05],z80_header[0x04]);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);	 
+
+ 	sprintf(buffer_texto,"Free buffer space:      %02X%02XH",z80_header[0x07],z80_header[0x06]);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);	
+
+ 	sprintf(buffer_texto,"Controller memory map:  %02X%02XH",z80_header[0x09],z80_header[0x08]);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);	 	 
+
+ 	sprintf(buffer_texto,"Code start:             %02X%02XH",z80_header[0x0b],z80_header[0x0a]);
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 	texto_browser[indice_buffer]=0;
