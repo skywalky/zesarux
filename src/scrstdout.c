@@ -56,6 +56,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "svi.h"
 
 void scrstdout_establece_tablas_teclado(int c);
 void scrstdout_reset_teclas(void);

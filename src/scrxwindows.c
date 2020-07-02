@@ -45,6 +45,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "svi.h"
 
 
 #include <X11/Xlib.h> // Every Xlib program must include this

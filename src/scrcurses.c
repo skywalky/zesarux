@@ -50,6 +50,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "svi.h"
 
 #ifdef COMPILE_CURSESW
 	#include "cursesw_ext.h"

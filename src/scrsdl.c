@@ -50,6 +50,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "svi.h"
 
 
 

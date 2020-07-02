@@ -42,6 +42,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "svi.h"
 
 void scrsimpletext_repinta_pantalla(void);
 
