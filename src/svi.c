@@ -443,13 +443,15 @@ void svi_insert_rom_cartridge(char *filename)
 
 	//Leer cada bloque de 16 kb si conviene. Esto permite tambien cargar cartucho de 8kb como si fuera de 16kb
 
-	int bloque;
+	//int bloque;
 
-    int salir=0;
+    //int salir=0;
 
-    int bloques_totales=0;
+    //int bloques_totales=0;
 
-    int leidos=fread(&memoria_spectrum[svi_return_offset_rom_page(1,0)],1,32768,ptr_cartridge);
+    //int leidos=fread(&memoria_spectrum[svi_return_offset_rom_page(1,0)],1,32768,ptr_cartridge);
+
+    fread(&memoria_spectrum[svi_return_offset_rom_page(1,0)],1,32768,ptr_cartridge);
 
 
 
