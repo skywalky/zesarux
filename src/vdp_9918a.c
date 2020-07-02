@@ -701,6 +701,7 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 
+        /*
         int bytes_per_sprite;
         int bytes_per_line;
 
@@ -713,7 +714,7 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
             bytes_per_sprite=32;
             bytes_per_line=2;
         }
-
+        */
 
         //TODO: si coordenada Y=208, fin tabla sprites
         //    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
@@ -1348,14 +1349,14 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
 
 
-	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
+	//z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
 	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
 
 	pattern_name_table=vdp_9918a_get_pattern_name_table(); //(vdp_9918a_registers[2]&15) * 0x400; 
 
 
 
-	pattern_base_address=vdp_9918a_get_pattern_base_address();
+	//pattern_base_address=vdp_9918a_get_pattern_base_address();
 
 
 
