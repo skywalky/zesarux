@@ -5691,11 +5691,13 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                         puerto_teclado_sam_eff9 &= 255-64;
                                         ql_keyboard_table[3] &= 255-32;
                                         msx_keyboard_table[1] &= 255-8;
+                                        svi_keyboard_table[1] &=255-32;
                                 }
                                 else {
                                         puerto_teclado_sam_eff9 |= 64;
                                         ql_keyboard_table[3] |= 32;
                                         msx_keyboard_table[1] |=8;
+                                        svi_keyboard_table[1] |=32;
                                 }
                         break;
 

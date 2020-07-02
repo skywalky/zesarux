@@ -394,7 +394,6 @@ https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
 -TODO: tipo paginas en svi al retornar direccion
 
 -opcion keymap para Spectravideo_SVI
--no teclado en msx desde la rom???
 
 -Snapshots zsf soporte Spectravideo 
 
@@ -402,4 +401,4 @@ https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
 O quizá esa rom es del 328 en vez del 318
 
 
--comparar commits zesarux-a872766827f5748fb1b0edfad76d74141d2413da y zesarux-c9877cdf50589867236b8378c7fbd49d100576dd/
+
