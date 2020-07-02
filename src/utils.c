@@ -5706,10 +5706,12 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                   // 6|   Ret   Left     Up    Esc  Right      \  Space   Down     ql_keyboard_table[1]
                                   ql_keyboard_table[1] &=255-32;
                                   msx_keyboard_table[1] &= 255-16;
+                                  svi_keyboard_table[5] &= 255-16;
                                 }
                                 else {
                                   ql_keyboard_table[1] |=32;
                                   msx_keyboard_table[1] |=16;
+                                  svi_keyboard_table[5] |= 16;
                                 }
                         break;
 
@@ -5721,11 +5723,13 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                        //// 4|     [   Caps      k      s      f      =      g      ;     ql_keyboard_table[3]
                                        ql_keyboard_table[3] &=255-1;
                                        msx_keyboard_table[1] &= 255-32;
+                                       svi_keyboard_table[5] &= 255-8;
                                 }
                                 else {
 					                             puerto_teclado_sam_dff9 |= 32;
                                        ql_keyboard_table[3] |=1;
                                        msx_keyboard_table[1] |=32;
+                                       svi_keyboard_table[5] |= 8;
                                 }
                         break;
 
@@ -5736,11 +5740,13 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                        // 5|     ]      z      .      c      b  Pound      m      '     ql_keyboard_table[2]
                                        ql_keyboard_table[2] &=255-1;
                                        msx_keyboard_table[1] &= 255-64;
+                                       svi_keyboard_table[5] &= 255-32;
                                 }
                                 else {
                                         puerto_teclado_sam_dff9 |= 64;
                                         ql_keyboard_table[2] |=1;
                                         msx_keyboard_table[1] |=64;
+                                        svi_keyboard_table[5] |= 32;
                                 }
                         break;
 
