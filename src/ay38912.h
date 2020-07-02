@@ -110,4 +110,6 @@ extern z80_byte ay_retorna_mixer_register(int chip);
 extern z80_byte ay_filtros[];
 extern void ay_init_filters(void);
 
+extern void ay_establece_frecuencias_todos_canales(void);
+
 #endif
