@@ -5675,12 +5675,14 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                         puerto_teclado_sam_eff9 &= 255-32;
                                         ql_keyboard_table[5] &= 255-32;
                                         msx_keyboard_table[1] &=255-4;
+                                        svi_keyboard_table[2] &=255-1;
                                         //printf ("tecla minus\n");
                                 }
                                 else {
                                         puerto_teclado_sam_eff9 |= 32;
                                         ql_keyboard_table[5] |= 32;
                                         msx_keyboard_table[1] |=4;
+                                        svi_keyboard_table[2] |=1;
                                 }
                         break;
 
