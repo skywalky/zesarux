@@ -933,7 +933,7 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
 
 
         int tecla_gestionada_sam_ql=0;
-        if (MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI) {
+        if (MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI) {
                 tecla_gestionada_sam_ql=1;
 
                         if (tecla==scrsdl_keymap_z88_cpc_minus) util_set_reset_key_common_keymap(UTIL_KEY_COMMON_KEYMAP_MINUS,pressrelease);
