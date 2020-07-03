@@ -26,6 +26,8 @@
 
 extern z80_byte vdp_9918a_registers[];
 
+extern z80_byte vdp_9918a_status_register;
+
 extern char *get_vdp_9918_string_video_mode(void);
 
 extern z80_int vdp_9918a_get_sprite_attribute_table(void);

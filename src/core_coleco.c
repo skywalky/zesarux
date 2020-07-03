@@ -190,6 +190,9 @@ void core_coleco_fin_frame_pantalla(void)
 				if (vdp_9918a_registers[1] & 32) {
 					//printf ("Generando nmi\n");
 					generate_nmi();
+
+					//Avisar vsync en vdp
+					vdp_9918a_status_register |=128;
 				}
 						
 

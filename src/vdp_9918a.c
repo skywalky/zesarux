@@ -123,10 +123,10 @@ z80_byte vdp_9918a_in_vdp_status(void)
 
 
     //The IRQ flag (bit 7) and the collision flag (bit 5) get cleared after reading Status register
-    //vdp_9918a_status_register&= (255-32-128);
+    vdp_9918a_status_register&= (255-32-128);
 
     //Pero... al parecer si borramos tambien bit 7, en MSX Rom no lee teclado
-    vdp_9918a_status_register&= (255-32);    
+    //vdp_9918a_status_register&= (255-32);    
 
     return retorno;
 

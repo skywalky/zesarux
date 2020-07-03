@@ -54,6 +54,8 @@
 #include "zeng.h"
 #include "msx.h"
 
+#include "vdp_9918a.h"
+
 
 z80_byte byte_leido_core_msx;
 
@@ -182,7 +184,15 @@ void core_msx_fin_frame_pantalla(void)
 
 				}
 
-						
+				//Si se avisa de vsync
+				//VR1
+				//5    IE0        V-Blank Interrupt Enable   (0=Disable, 1=Enable)
+				if (vdp_9918a_registers[1] & 32) {
+					//printf ("Generando nmi\n");
+
+					//Avisar vsync en vdp
+					vdp_9918a_status_register |=128;
+				}						
 
 
 				cpu_loop_refresca_pantalla();

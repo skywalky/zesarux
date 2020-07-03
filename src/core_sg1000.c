@@ -195,7 +195,16 @@ void core_sg1000_fin_frame_pantalla(void)
 					generate_nmi();
 				}
 				*/
-						
+
+				//Si se avisa de vsync
+				//VR1
+				//5    IE0        V-Blank Interrupt Enable   (0=Disable, 1=Enable)
+				if (vdp_9918a_registers[1] & 32) {
+					//printf ("Generando nmi\n");
+
+					//Avisar vsync en vdp
+					vdp_9918a_status_register |=128;
+				}							
 
 
 				cpu_loop_refresca_pantalla();

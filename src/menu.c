@@ -17257,7 +17257,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 
 		}
 
-		if (MACHINE_IS_Z88 || MACHINE_IS_CPC || chloe_keyboard.v || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX)  {
+		if (MACHINE_IS_Z88 || MACHINE_IS_CPC || chloe_keyboard.v || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI)  {
 			//keymap solo hace falta con xwindows y sdl. fbdev y cocoa siempre leen en raw como teclado english
 			if (!strcmp(scr_driver_name,"xwindows")  || !strcmp(scr_driver_name,"sdl") ) {
 				if (MACHINE_IS_Z88) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Z88 K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
@@ -17265,6 +17265,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 				else if (MACHINE_IS_SAM) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"SAM K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
 				else if (MACHINE_IS_QL) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"QL K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
 				else if (MACHINE_IS_MSX) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"MSX K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
+				else if (MACHINE_IS_SVI) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"SVI K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
 
 				else menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Chloe K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
 				menu_add_item_menu_shortcut(array_menu_keyboard_settings,'e');
@@ -23384,18 +23385,32 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'t');
 		}
 
-		if (MACHINE_IS_MSX) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"~~MSX");
-			//Letra M tambien se usa en DMA, pero como no hay DMA en MSX, pues no estaran nunca las dos opciones a la vez
-			menu_add_item_menu_shortcut(array_menu_debug_settings,'m');
-		}
+		if (MACHINE_HAS_VDP_9918A) {
+			char buffer_item[32];
+			
+			strcpy(buffer_item,"~~MSX");
+			// por defecto
 
-		if (MACHINE_IS_COLECO) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"Colecovision");
-		}
 
-		if (MACHINE_IS_SG1000) {
-			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"SG1000");
+			if (MACHINE_IS_COLECO) {
+				strcpy(buffer_item,"Colecovision");
+			}
+
+			if (MACHINE_IS_SG1000) {
+				strcpy(buffer_item,"SG1000");
+			}		
+
+			if (MACHINE_IS_SVI) {
+				strcpy(buffer_item,"Spectravideo");
+			}	
+
+
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,buffer_item);
+
+			if (MACHINE_IS_MSX) {
+				//Letra M tambien se usa en DMA, pero como no hay DMA en MSX, pues no estaran nunca las dos opciones a la vez
+				menu_add_item_menu_shortcut(array_menu_debug_settings,'m');
+			}			
 		}		
 
 

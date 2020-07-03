@@ -489,6 +489,10 @@ extern z80_bit stdout_simpletext_automatic_redraw;
 #define CPU_IS_Z80 (!CPU_IS_MOTOROLA && !CPU_IS_SCMP)
 
 
+//Maquinas que tienen el chip de memoria vdp 9918a
+#define MACHINE_HAS_VDP_9918A (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000 || MACHINE_IS_SVI)
+
+
 extern int machine_emulate_memory_refresh;
 extern int machine_emulate_memory_refresh_counter;
 
