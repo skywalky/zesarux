@@ -63,7 +63,7 @@ extern char *msx_get_string_memory_type(int tipo);
 
 extern int tape_block_cas_open(void);
 
-
+extern z80_byte msx_cabecera_firma[];
 
 
 #endif

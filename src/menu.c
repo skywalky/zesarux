@@ -20830,6 +20830,141 @@ void menu_file_tzx_browser_show(char *filename)
 }
 
 
+//Retorna nombre de cinta cas (6 bytes)
+void menu_file_cas_browser_show_getname(z80_byte *tape,char *texto)
+{
+	int i;
+	z80_byte caracter;
+
+	for (i=0;i<6;i++) {
+		caracter=*tape++;
+		if (caracter<32 || caracter>126) caracter='.';
+
+		*texto++=caracter;
+	}
+
+	*texto=0;
+}
+
+
+void menu_file_cas_browser_show(char *filename)
+{
+	long posicion_lectura;
+	z80_byte buffer[10];
+	FILE *ptr_file_cas_browser;
+
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+	//Extracted from https://github.com/joyrex2001/castools/blob/master/casdir.c
+
+	#define CAS_NEXT_NONE   0
+	#define CAS_NEXT_BINARY 1
+	#define CAS_NEXT_DATA   2
+
+	char cas_filename[7]="123456"; //no deberia entrar inicializado pero por si acaso
+
+	int next=CAS_NEXT_NONE;
+
+	z80_byte cas_ascii[10]={ 0xEA,0xEA,0xEA,0xEA,0xEA,0xEA,0xEA,0xEA,0xEA,0xEA };
+	z80_byte cas_bin[10]={ 0xD0,0xD0,0xD0,0xD0,0xD0,0xD0,0xD0,0xD0,0xD0,0xD0 };
+	z80_byte cas_basic[10]={ 0xD3,0xD3,0xD3,0xD3,0xD3,0xD3,0xD3,0xD3,0xD3,0xD3 };
+
+
+	char buffer_texto[300]; //Para poder contener info de msx cas extensa
+
+	ptr_file_cas_browser=fopen(filename,"rb");
+
+	if (ptr_file_cas_browser==NULL) {
+		debug_printf(VERBOSE_ERR,"Error opening cas file %s",filename);
+		return;
+	}
+
+	posicion_lectura=0;
+	while (fread(buffer,1,8,ptr_file_cas_browser)==8) {
+    
+		if (!memcmp(buffer,msx_cabecera_firma,8)) {
+		
+			if (fread(buffer,1,10,ptr_file_cas_browser)==10) {
+			
+				if (next==CAS_NEXT_BINARY) {
+				
+					fseek(ptr_file_cas_browser,posicion_lectura+8,SEEK_SET);
+
+					z80_byte buffer_datos[6];
+
+					fread(buffer_datos,1,6,ptr_file_cas_browser);
+
+					z80_int start,stop,exec;
+
+					start=buffer_datos[0]+256*buffer_datos[1];
+					stop=buffer_datos[2]+256*buffer_datos[3];
+					exec=buffer_datos[4]+256*buffer_datos[5];
+
+					if (!exec) exec=start;
+
+					sprintf(buffer_texto,"Binary: %s\n  Start: %d Stop: %d\n  Exec:  %d",cas_filename,start,stop,exec);
+					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);	  
+					next=CAS_NEXT_NONE;
+				}
+				
+				else if (next==CAS_NEXT_DATA) {
+					next=CAS_NEXT_NONE;
+				}
+				
+				else if (!memcmp(buffer,cas_ascii,10)) {
+				
+					z80_byte buffer_nombre[7];
+					fread(buffer_nombre,1,6,ptr_file_cas_browser);
+					menu_file_cas_browser_show_getname(buffer_nombre,cas_filename);
+
+					sprintf(buffer_texto,"Ascii: %s",cas_filename);
+					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);	  	  
+
+					while (fgetc(ptr_file_cas_browser)!=0x1a && !feof(ptr_file_cas_browser));
+					posicion_lectura=ftell(ptr_file_cas_browser);
+				} 
+				
+				else if (!memcmp(buffer,cas_bin,10)) {  
+					z80_byte buffer_nombre[7];
+					fread(buffer_nombre,1,6,ptr_file_cas_browser);
+					menu_file_cas_browser_show_getname(buffer_nombre,cas_filename);
+					next=CAS_NEXT_BINARY;
+				}
+
+				else if (!memcmp(buffer,cas_basic,10)) {
+					z80_byte buffer_nombre[7];
+					fread(buffer_nombre,1,6,ptr_file_cas_browser);
+					menu_file_cas_browser_show_getname(buffer_nombre,cas_filename);					
+				
+					next=CAS_NEXT_DATA;
+					sprintf(buffer_texto,"Basic: %s", cas_filename);
+					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);		  
+				}
+				
+				else  {
+					sprintf(buffer_texto,"Custom");
+					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);			
+				}
+			
+			}
+
+    	}
+	
+		posicion_lectura++;
+    	fseek(ptr_file_cas_browser,posicion_lectura,SEEK_SET);
+      
+	}
+
+	fclose(ptr_file_cas_browser);
+	
+	texto_browser[indice_buffer]=0;
+	zxvision_generic_message_tooltip("CAS file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
+
+
+}
+
+
 
 
 void menu_file_pzx_browser_show(char *filename)
@@ -21190,6 +21325,13 @@ void menu_tape_browser_show(char *filename)
 		menu_file_pzx_browser_show(filename);
 		return;
 	}	
+
+	//Si cas
+	if (!util_compare_file_extension(filename,"cas") 
+		) {
+		menu_file_cas_browser_show(filename);
+		return;
+	}		
 
 	//tapefile
 	if (util_compare_file_extension(filename,"tap")!=0) {
@@ -22935,6 +23077,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"dsk")) menu_file_dsk_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"tzx")) menu_file_tzx_browser_show(file_name);
+
+	else if (!util_compare_file_extension(file_name,"cas")) menu_file_cas_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"pzx")) menu_file_pzx_browser_show(file_name);
 
