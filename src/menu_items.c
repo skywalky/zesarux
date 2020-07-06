@@ -14382,6 +14382,17 @@ int debug_show_fired_breakpoints_type=0;
 }
 
 
+void menu_debug_ret(void)
+{
+	if (CPU_IS_Z80) {
+		reg_pc=pop_valor();
+	}
+
+	else {
+		menu_warn_message("Ret operation only supported on Z80 cpu");
+	}
+}
+
 void menu_debug_toggle_breakpoint(void)
 {
 	//Buscar primero direccion que indica el cursor
@@ -14789,12 +14800,12 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 
 				menu_debug_get_legend_short_long(s,ancho_visible,
 							//01234567890123456789012345678901
-							// Chrg brkp wtch Toggl Run Runto		
-							  "Ch~~rg ~~brkp ~~wtch Togg~~l Ru~~n R~~unto",
+							// Chr brk wtch Togl Run Runto Ret	
+							  "Ch~~r ~~brk ~~wtch Tog~~l Ru~~n R~~unto R~~et",
 
-							// Changeregisters breakpoints watch Toggle Run Runto	
+							// Changeregisters breakpoints watch Toggle Run Runto Ret	
 							//012345678901234567890123456789012345678901234567890123456789012
-							  "Change~~registers ~~breakpoints ~~watches Togg~~le Ru~~n R~~unto"
+							  "Change~~registers ~~breakpoints ~~watches Togg~~le Ru~~n R~~unto R~~et"
 				);
 			}
 
@@ -15982,6 +15993,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                     si_ejecuta_una_instruccion=0;
                 }
+
+				//Ret
+		        if (tecla=='e' && menu_debug_registers_current_view==1) {
+                    menu_debug_ret();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }				
 								
 				if (tecla=='u' && menu_debug_registers_current_view==1) {
                     menu_debug_runto();

@@ -48,6 +48,7 @@ Improved TBBlue emulation:
 Improved debugging:
 -Added breakpoint action "reset-tstatp"
 -Added SEG0, SEG1, ... SEG7 variables to match TBBlue MMU pages
+-Added key to execute a RET 
 
 Improved Chloe emulation: 
 -Support CPU speed setting via the ZX-Uno SCANDBLCTRL register
