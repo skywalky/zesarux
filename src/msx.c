@@ -33,6 +33,7 @@
 #include "tape.h"
 #include "screen.h"
 #include "audio.h"
+#include "operaciones.h"
 
 z80_byte *msx_vram_memory=NULL;
 
@@ -624,6 +625,9 @@ z80_byte msx_cabecera_firma[8] = { 0x1F,0xA6,0xDE,0xBA,0xCC,0x13,0x7D,0x74 };
 
 void msx_cas_lookup_header(void)
 {
+
+    debug_printf (VERBOSE_DEBUG,"Searching for CAS header");
+
     //Nos quedamos con la posicion actual
     long posicion_cas=ftell(ptr_mycinta);
 
@@ -648,6 +652,8 @@ void msx_cas_lookup_header(void)
     if (leidos<8) {
         //Expulsar cinta
         tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
+
+        debug_printf (VERBOSE_INFO,"Ejecting CAS tape");
     }
 
     else {
@@ -660,10 +666,11 @@ void msx_cas_lookup_header(void)
 
 void msx_cas_read_byte(void)
 {
-    //Nos quedamos con la posicion actual
-    long posicion_cas=ftell(ptr_mycinta);
 
-    //Leemos 8 bytes
+    debug_printf (VERBOSE_PARANOID,"Reading CAS byte");
+
+
+    //Leemos 1 byte
     z80_byte byte_leido;
 
     int leidos=fread(&byte_leido,1,1,ptr_mycinta);
