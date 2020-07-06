@@ -61,7 +61,7 @@ extern void scr_refresca_pantalla_y_border_msx(void);
 
 extern char *msx_get_string_memory_type(int tipo);
 
-
+extern int tape_block_cas_open(void);
 
 
 

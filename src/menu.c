@@ -18352,6 +18352,11 @@ void menu_tape_open(MENU_ITEM_PARAMETERS)
                 filtros[6]=0;
         }
 
+	else if (MACHINE_IS_MSX) {
+                filtros[0]="cas";
+                filtros[1]=0;
+        }		
+
 	else {
         filtros[0]="tzx";
         filtros[1]="tap";

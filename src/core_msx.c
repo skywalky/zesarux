@@ -584,7 +584,9 @@ void cpu_core_loop_msx(void)
 		//Gestionar autoload. TODO
 		//gestionar_autoload_msx();
 
-		if (0) {}
+		if (msx_cas_load_detect() ) {
+			msx_cas_load();
+		}
 
 			/*
 		if (tap_load_detect()) {

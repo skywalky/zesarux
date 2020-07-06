@@ -60,8 +60,6 @@ int msx_memory_slots[4][4];
 
 
 
-
-
 const char *msx_string_memory_type_rom="ROM";
 const char *msx_string_memory_type_ram="RAM";
 const char *msx_string_memory_type_empty="EMPTY";
@@ -590,3 +588,97 @@ void screen_store_scanline_rainbow_msx_border_and_display(void)
 
 }
 					
+
+
+
+int tape_block_cas_open(void)
+{
+
+		ptr_mycinta=fopen(tapefile,"rb");
+
+                if (!ptr_mycinta)
+                {
+                        debug_printf(VERBOSE_ERR,"Unable to open input file %s",tapefile);
+
+
+			tapefile=0;
+                        return 1;
+                }
+
+		return 0;
+
+}
+
+int msx_cas_load_detect(void)
+{
+    if (!tapefile) return 0;
+
+    if ( (tape_loadsave_inserted & TAPE_LOAD_INSERTED)==0) return 0;
+
+    if (reg_pc==0xE1 || reg_pc==0xE4) return 1;
+
+    return 0;
+}
+
+z80_byte msx_cabecera_firma[8] = { 0x1F,0xA6,0xDE,0xBA,0xCC,0x13,0x7D,0x74 };
+
+void msx_cas_lookup_header(void)
+{
+    //Nos quedamos con la posicion actual
+    long posicion_cas=ftell(ptr_mycinta);
+
+    //Leemos 8 bytes
+    char buffer_lectura[8];
+
+    int leidos=fread(buffer_lectura,1,8,ptr_mycinta);
+
+    if (leidos==8) {
+        //Ver si se ha leido la firma de cabecera
+        if (!memcmp(buffer_lectura,msx_cabecera_firma,8)) {
+            //Quitar carry y volver
+            Z80_FLAGS &=(255-FLAG_C);
+            return;
+        }
+    }
+
+
+    //Error. Saltar 1 byte, devolver carry
+    Z80_FLAGS |= FLAG_C;
+
+    if (leidos==0) {
+        //Expulsar cinta
+        tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
+    }
+
+    else {
+        posicion_cas++;
+        fseek(ptr_mycinta, posicion_cas, SEEK_SET);
+    }
+}
+
+void msx_cas_load(void)
+{
+
+    if (reg_pc==0xE1) {
+        //Buscar cabecera
+        msx_cas_lookup_header();
+
+        //RET
+        reg_pc=pop_valor();
+        return;
+    }
+
+    if (reg_pc==0xE4) {
+        //Cargar byte
+
+        //RET
+        reg_pc=pop_valor();
+
+        return;
+    }
+
+    //Aqui no se deberia llegar nunca
+    //Pero hacemos reg_pc++ y que continue la fiesta
+    reg_pc++;
+
+}

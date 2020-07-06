@@ -52,6 +52,7 @@
 #include "multiface.h"
 #include "tbblue.h"
 #include "settings.h"
+#include "msx.h"
 
 #include "autoselectoptions.h"
 
@@ -197,7 +198,6 @@ return 0;
 }
 
 
-
 int tape_out_block_p_open(void)
 {
 
@@ -259,7 +259,13 @@ void tape_init(void)
                         else if (!util_compare_file_extension(tapefile,"z81") ) {
                                         debug_printf (VERBOSE_INFO,"ZX80/ZX81 (.Z81) Tape file detected");
                                         tape_block_open=tape_block_z81_open;
+                        }
+
+                        else if (!util_compare_file_extension(tapefile,"cas") ) {
+                                        debug_printf (VERBOSE_INFO,"MSX (.CAS) Tape file detected");
+                                        tape_block_open=tape_block_cas_open;
                                 }
+
 
 
 			//else if (!util_compare_file_extension(tapefile,"smp") ) {
