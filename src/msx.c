@@ -697,6 +697,59 @@ void msx_cas_read_byte(void)
 void msx_cas_load(void)
 {
 
+    /*
+TAPION (00E1H)		*1
+  Function:	reads the header block after turning the cassette motor ON.
+  Input:	none
+  Output:	if failed, the CY flag is set
+  Registers:	all
+
+
+TAPIN (00E4H)		*1
+  Function:	reads data from the tape
+  Input:	none
+  Output:	A for data. If failed, the CY flag is set.
+  Registers:	all
+
+
+The cas format is the result of bypassing the following BIOS calls:
+
+00E1 - TAPION
+00E4 - TAPIN
+00EA - TAPOON
+00ED - TAPOUT
+
+If you call the TAPION function, the BIOS will read from tape untill it has
+found a header, and all of the header is read. The TAPOUT function will
+output a header. In the cas format the header is encoded to these 8 bytes:
+
+1F A6 DE BA CC 13 7D 74
+
+These bytes have to be at a position that can be divided by 8; e.g. 0000,
+0008, 0010 etc. If not, the byte sequence is not recognised as a header.
+
+
+
+There are 4 types of data that can be stored on a tape;
+
+* binary files (bload)
+* basic files (cload)
+* ascii files (load)
+* custom data (to be loaded using the bios)
+
+Data is stored on the tape in blocks, each block is preceeded by a header (the 1f a6 de .. block). The purpose of this header (the pieeeeeeeeep), is to sync for decoding the fsk data.
+
+Binary files (bload) consist out of two blocks; a binary header block, and a binary data block. The binary header block is specified by 10 times 0xD0, followed by 6 characters defining its filename. The block following this header, is the datablock, which also defines the begin,end and start address (0xFE,begin,end,start).
+
+Basic files (cload) also consist out of two blocks; a basic header block, and a basic data block. The basic header block is specified by 10 times 0xD3, followed by 6 characters defining its filename. The block folowing this header is the datablock (tokenized basic data).
+
+Ascii files (load) can consist out of multiple blocks. The first block is always the ascii header block, which is specified by 10 times 0xea, followed again by 6 characters defining the filename. After this, an unlimited number of blocks can follow. The last block can be identified by the EOF (0x1a) character.
+
+Custom blocks are all blocks that don't fit in the 3 specified above.
+
+You might want to look at the casdir.c code, which implemented the above.
+    */
+
     if (reg_pc==0xE1) {
         //Buscar cabecera
         msx_cas_lookup_header();
