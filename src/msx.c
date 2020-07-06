@@ -628,7 +628,7 @@ void msx_cas_lookup_header(void)
     long posicion_cas=ftell(ptr_mycinta);
 
     //Leemos 8 bytes
-    char buffer_lectura[8];
+    z80_byte buffer_lectura[8];
 
     int leidos=fread(buffer_lectura,1,8,ptr_mycinta);
 
@@ -645,7 +645,7 @@ void msx_cas_lookup_header(void)
     //Error. Saltar 1 byte, devolver carry
     Z80_FLAGS |= FLAG_C;
 
-    if (leidos==0) {
+    if (leidos<8) {
         //Expulsar cinta
         tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
     }
@@ -655,6 +655,37 @@ void msx_cas_lookup_header(void)
         fseek(ptr_mycinta, posicion_cas, SEEK_SET);
     }
 }
+
+
+
+void msx_cas_read_byte(void)
+{
+    //Nos quedamos con la posicion actual
+    long posicion_cas=ftell(ptr_mycinta);
+
+    //Leemos 8 bytes
+    z80_byte byte_leido;
+
+    int leidos=fread(&byte_leido,1,1,ptr_mycinta);
+
+    if (leidos==1) {
+        reg_a=byte_leido;
+            //Quitar carry y volver
+            Z80_FLAGS &=(255-FLAG_C);
+            return;
+        
+    }
+
+
+    //Error. devolver carry
+    Z80_FLAGS |= FLAG_C;
+
+    
+    //Expulsar cinta
+    tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
+    
+}
+
 
 void msx_cas_load(void)
 {
@@ -670,6 +701,7 @@ void msx_cas_load(void)
 
     if (reg_pc==0xE4) {
         //Cargar byte
+        msx_cas_read_byte();
 
         //RET
         reg_pc=pop_valor();
