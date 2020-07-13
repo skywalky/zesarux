@@ -19584,17 +19584,24 @@ void menu_network(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_ayuda(array_menu_common,"Connects to the www.zx81.nl site to download ZX81 games. Many thanks to ZXwebmaster for allowing it"); 
 
 
+//online browser ya solo es accesible con ssl
+
+#ifdef COMPILE_SSL
 			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_browse_zxinfowos,NULL,"~~Speccy online browser"); 
 			menu_add_item_menu_shortcut(array_menu_common,'s');  
 
-#ifdef COMPILE_SSL
+
 			//Versión con SSL usa zxinfo, spectrum computing y mirror archive.org
 			menu_add_item_menu_tooltip(array_menu_common,"It uses zxinfo, spectrum computing and archive.org to download the software. Thanks to Thomas Heckmann and Peter Jones for allowing it");
 			menu_add_item_menu_ayuda(array_menu_common,  "It uses zxinfo, spectrum computing and archive.org to download the software. Thanks to Thomas Heckmann and Peter Jones for allowing it");
-#else
+			
+			
+//#else
 			//Versión sin SSL usa zxinfo, servidor WOS
-			menu_add_item_menu_tooltip(array_menu_common,"It uses zxinfo and WOS to download the software. Thanks to Thomas Heckmann and Lee Fogarty for allowing it");
-			menu_add_item_menu_ayuda(array_menu_common,  "It uses zxinfo and WOS to download the software. Thanks to Thomas Heckmann and Lee Fogarty for allowing it");
+			//menu_add_item_menu_tooltip(array_menu_common,"It uses zxinfo and WOS to download the software. Thanks to Thomas Heckmann and Lee Fogarty for allowing it");
+			//menu_add_item_menu_ayuda(array_menu_common,  "It uses zxinfo and WOS to download the software. Thanks to Thomas Heckmann and Lee Fogarty for allowing it");
+			
+			
 #endif    
 
 
