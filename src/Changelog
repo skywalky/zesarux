@@ -7,7 +7,6 @@ Added new emulated machines:
 -Sega SG1000
 
 Added new compiled version: FreeBSD
-Added F key to toggle top cpu speed
 Added emulation of AY chip MIDI registers 14 & 15 and route them to an external MIDI device
 Added Visualmem for MMC Read/Write
 Added Visualmem "Defrag style"
@@ -15,6 +14,7 @@ Added browser for quicksave snapshots
 Added save screen to bmp feature
 Added Solarized Dark & Light Gui Style
 Added Windows icon
+Added F key to toggle top cpu speed
 
 Added ZRCP commands:
 -save-screen: to save machine screen to file
@@ -22,7 +22,8 @@ Added ZRCP commands:
 
 
 Improved menu:
--Allow some windows to be running on the background. Also active windows are saved and restored on startup
+-Allow some windows to be running on the background, all at the same time. This makes the menu environment more powerful!
+-Active windows are saved and restored on startup
 -Pressing the menu key (F5 by default) when menu is open, it will send you back to the main menu. Also pressing over Z logo on ext desktop
 -Added setting to disable showing cpu temperature, or FPS on footer
 -Added keyboard help window for most machines
