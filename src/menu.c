@@ -26810,7 +26810,7 @@ int menu_generic_message_aux_filter(char *texto,int inicio, int final)
 
 		//Caracter 255 significa "transparente"
 		else if ( !(si_valid_char(caracter)) && caracter!=255 ) {
-			printf ("detectado caracter extranyo %d en posicion %d\n",caracter,inicio);
+			//printf ("detectado caracter extranyo %d en posicion %d\n",caracter,inicio);
 
 			texto[inicio]='?';
 		}
