@@ -1937,9 +1937,10 @@ void scrcurses_actualiza_tablas_teclado(void)
 
                                 //TAB Emula shift+symbol -> Extended
                                 case 9:
-                                        puerto_32766 &=255-2;
-                                        puerto_65278 &=255-1;
-					blink_kbd_a14 &= (255-32);
+                                		util_set_reset_key(UTIL_KEY_TAB,1);
+                                        //puerto_32766 &=255-2;
+                                        //puerto_65278 &=255-1;
+					//blink_kbd_a14 &= (255-32);
                                 break;
 
 	                        //PgUp
