@@ -348,7 +348,7 @@ https://github.com/gseidler/The-MSX-Red-Book/blob/master/the_msx_red_book.md
 
 
 
--Si ratón pulsa en zona que haya texto con letra inversa, envía esa letra como teclado 
+
 
 
 -spectra video  SVI-318/328 
@@ -397,4 +397,4 @@ O quizá esa rom es del 328 en vez del 318
 -TODO: tipo paginas en svi al retornar direccion
 
 
-
+-Si ratón pulsa en zona que haya texto con letra inversa, envía esa letra como teclado. Vigilar con letras como “tab” o “enter”. No enviar Tecla si tiene otra pegada al lado y es inversa. Detectar realmente una palabra entera y buscar ahí la letra inversa
