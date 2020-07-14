@@ -275,7 +275,6 @@ no-thread no funcionara tampoco
 
 -Browser cintas que permita alterar la posición de la cinta
 
--incluir pantallas de teclado spectrum, zx80,zx81, z88, etc
 
 -descomprimir rar,gz, etc con espacio en nombres a veces falla. el comando system le envia las "" pero el propio comando
 no gestiona bien nombres con espacios
