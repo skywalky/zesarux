@@ -1930,9 +1930,10 @@ void scrcurses_actualiza_tablas_teclado(void)
 				//En algunos terminales, como Mac, genera 127
 				//Se puede tambien simular mediante CTRL-H
 				case 127:
-                                        puerto_65278 &=255-1;
-                                        puerto_61438 &=255-1;
-					blink_kbd_a8 &= (255-128);
+									util_set_reset_key(UTIL_KEY_BACKSPACE,1);
+                                        //puerto_65278 &=255-1;
+                                        //puerto_61438 &=255-1;
+					//blink_kbd_a8 &= (255-128);
                                 break;
 
                                 //TAB Emula shift+symbol -> Extended
