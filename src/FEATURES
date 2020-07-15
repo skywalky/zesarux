@@ -80,15 +80,15 @@
 
 * Simulates real tape loading on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81
 
-* Handles snapshot format: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, O, Z81, ACE
+* Handles snapshot formats: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, O, Z81, ACE
+
+* Handles cartridge formats: DCK, ROM, COL, SG
 
 * Handles RZX playback 
 
 * Emulates Multiface One, 128 and Three
 
-* Emulates Datagear/MB02 DMA
-
-* Handles DCK Timex dock cartridges
+* Emulates Datagear/MB02 DMA, ZX-Uno DMA
 
 * Emulates +3 Disk
 
