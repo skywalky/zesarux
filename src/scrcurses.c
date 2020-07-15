@@ -1147,10 +1147,10 @@ z80_byte video_mode=vdp_9918a_get_video_mode();
 	
 	//int zx,zy;
 
-	z80_byte ink,paper;
+	//z80_byte ink,paper;
 
 
-	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
+	//z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
 	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
 
 	pattern_name_table=vdp_9918a_get_pattern_name_table(); //(vdp_9918a_registers[2]&15) * 0x400; 
@@ -1171,7 +1171,7 @@ z80_byte video_mode=vdp_9918a_get_video_mode();
 
 
 	int chars_in_line;
-	int char_width;
+	//int char_width;
 
 	z80_byte *vram=get_base_mem_pantalla();
 
