@@ -1190,8 +1190,8 @@ z80_byte video_mode=vdp_9918a_get_video_mode();
 
 			//En modo texto 40x24, color tinta y papel fijos
 
-			ink=(vdp_9918a_registers[7]>>4)&15;
-			paper=(vdp_9918a_registers[7])&15;			
+			//ink=(vdp_9918a_registers[7]>>4)&15;
+			//paper=(vdp_9918a_registers[7])&15;			
 		}
 		
 		
