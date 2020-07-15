@@ -1157,7 +1157,7 @@ z80_byte video_mode=vdp_9918a_get_video_mode();
 
 
 
-	pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
+	//pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
 
 
 	//z80_int pattern_color_table=(vdp_9918a_registers[3]) * 0x40;
@@ -1186,7 +1186,7 @@ z80_byte video_mode=vdp_9918a_get_video_mode();
 
 		if (video_mode==4) {
 			chars_in_line=40;
-			char_width=6;
+			//char_width=6;
 
 			//En modo texto 40x24, color tinta y papel fijos
 
@@ -1198,7 +1198,7 @@ z80_byte video_mode=vdp_9918a_get_video_mode();
 
 		else {
 			chars_in_line=32;
-			char_width=8;
+			//char_width=8;
 		}
 
 
