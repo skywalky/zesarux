@@ -79,7 +79,9 @@ Fixed tbblue bugs:
 -Fixed reading palette colours. Fixed returning from multiface nmi 
 -Fixed reading clipping values
 -Fixed screensaver
--Fixed using tab and backspace keys in curses driver
+
+
+Fixed using tab and backspace keys in curses driver
 
 
 
