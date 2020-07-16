@@ -398,3 +398,7 @@ O quizá esa rom es del 328 en vez del 318
 
 
 -Si ratón pulsa en zona que haya texto con letra inversa, envía esa letra como teclado. Vigilar con letras como “tab” o “enter”. No enviar Tecla si tiene otra pegada al lado y es inversa. Detectar realmente una palabra entera y buscar ahí la letra inversa
+
+- curses: con ventana ay piano en background, al ir a Smartload se mezcla texto de ventana ay piano en Smartload
+
+- Msx games browser desde planetemu
