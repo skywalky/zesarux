@@ -8246,23 +8246,46 @@ z80_byte zxvision_get_key_hotkey(zxvision_window *w,int x,int y)
 typedef struct s_overlay_screen overlay_screen;
 				*/
 
+			int xorig=x;
+
+			int inverso;
+
 				
 
 				//Ver desde posicion X hasta atras, hasta llegar a 0 o espacio, y si hay un inverso
 
 				for (;x>=0;x--) {
 
-					int inverso;
+					
 
 					z80_byte caracter=zxvision_get_char_at_position(w,x,y,&inverso);
 
 					//Interpretar si es inverso
 					if (caracter>=32 && caracter<=126 && inverso) return caracter;
 
-					//Espacio, volver
-					if (caracter==32) return 0;
+					//Espacio, salir
+					if (caracter==32) break;
 
 				}
+
+				x=xorig;
+
+				//Ver desde posicion X hasta adelante, hasta llegar a 0 o espacio, y si hay un inverso
+
+				for (;x<=w->visible_width;x++) {
+
+
+					z80_byte caracter=zxvision_get_char_at_position(w,x,y,&inverso);
+
+					//Interpretar si es inverso
+					if (caracter>=32 && caracter<=126 && inverso) return caracter;
+
+					//Espacio, salir
+					if (caracter==32) break;
+
+				}				
+
+
 
 	return 0;
 }
