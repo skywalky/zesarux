@@ -2106,23 +2106,14 @@ void audio_send_mono_sample(char valor_sonido)
 
 	int limite_buffer_audio;
 
-	//if (audio_driver_accepts_stereo.v==0) {
-	//	limite_buffer_audio=AUDIO_BUFFER_SIZE;
-	//	audio_buffer[audio_buffer_indice]=valor_sonido;
-	//	if (audio_buffer_indice<limite_buffer_audio-1) audio_buffer_indice++;
-	//}
+	limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
 
+	
+	audio_buffer[audio_buffer_indice]=valor_sonido;
+	audio_buffer[audio_buffer_indice+1]=valor_sonido;
 
-	//else {
-		limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
+	if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
 
-		
-
-		audio_buffer[audio_buffer_indice]=valor_sonido;
-		audio_buffer[audio_buffer_indice+1]=valor_sonido;
-
-		if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
-	//}
 
 }
 
@@ -2132,26 +2123,12 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 
 	int limite_buffer_audio;
 
-	//if (audio_driver_accepts_stereo.v==0) {
-	//	limite_buffer_audio=AUDIO_BUFFER_SIZE;
+	limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
 
-	//	//Mezclar los dos canales en uno
-	//	int suma=valor_sonido_izquierdo+valor_sonido_derecho;
-	//	suma /=2;
+	audio_buffer[audio_buffer_indice]=valor_sonido_izquierdo;
+	audio_buffer[audio_buffer_indice+1]=valor_sonido_derecho;
 
-	//	audio_buffer[audio_buffer_indice]=suma;
-	//	if (audio_buffer_indice<limite_buffer_audio-1) audio_buffer_indice++;
-	//}
-
-
-	//else {
-		limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
-
-		audio_buffer[audio_buffer_indice]=valor_sonido_izquierdo;
-		audio_buffer[audio_buffer_indice+1]=valor_sonido_derecho;
-
-		if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
-	//}
+	if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
 
 }
 
