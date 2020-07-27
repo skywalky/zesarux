@@ -1278,6 +1278,11 @@ void menu_silence_detector(MENU_ITEM_PARAMETERS)
 	silence_detector_setting.v ^=1;
 }
 
+void menu_audio_resample_1bit(MENU_ITEM_PARAMETERS)
+{
+	audio_resample_1bit.v ^=1;
+}
+
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_settings_audio;
@@ -1435,6 +1440,11 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 		}
 
+
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_resample_1bit,NULL,"[%c] 1 bit resample",(audio_resample_1bit.v ? 'X' : ' '));
+		menu_add_item_menu_tooltip(array_menu_settings_audio,"Resample audio output to 1 bit only");
+		menu_add_item_menu_ayuda(array_menu_settings_audio,"Resample audio output to 1 bit only");
+		
 	
 		menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 

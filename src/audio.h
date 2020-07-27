@@ -248,6 +248,8 @@ extern audiodac_type audiodac_types[];
 
 extern z80_bit beeper_enabled;
 
+extern z80_bit audio_resample_1bit;
+
 extern void audiodac_mix(void);
 
 extern int audio_using_sdl2;

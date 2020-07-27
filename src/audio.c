@@ -264,6 +264,10 @@ int silence_detection_counter=0;
 z80_bit beeper_enabled={1};
 
 
+//Si la salida a la tarjeta de sonido solo tiene dos valores: 0 o 1 (+127 o -128 realmente)
+z80_bit audio_resample_1bit={0};
+
+
 //Similar a silence_detection_counter pero solo para operaciones del beeper
 int beeper_silence_detection_counter=0;
 
@@ -2108,6 +2112,14 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 	int limite_buffer_audio;
 
 	limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
+
+	if (audio_resample_1bit.v) {
+		if (valor_sonido_izquierdo>0) valor_sonido_izquierdo=+127;
+		else valor_sonido_izquierdo=-128;
+
+		if (valor_sonido_derecho>0) valor_sonido_derecho=+127;
+		else valor_sonido_derecho=-128;
+	}
 
 	audio_buffer[audio_buffer_indice]=valor_sonido_izquierdo;
 	audio_buffer[audio_buffer_indice+1]=valor_sonido_derecho;
