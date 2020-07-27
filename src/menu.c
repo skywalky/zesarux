@@ -8261,7 +8261,7 @@ typedef struct s_overlay_screen overlay_screen;
 					z80_byte caracter=zxvision_get_char_at_position(w,x,y,&inverso);
 
 					//Interpretar si es inverso
-					if (caracter>=32 && caracter<=126 && inverso) return caracter;
+					if (inverso) return caracter;
 
 					//Espacio, salir
 					if (caracter==32) break;
@@ -8278,7 +8278,7 @@ typedef struct s_overlay_screen overlay_screen;
 					z80_byte caracter=zxvision_get_char_at_position(w,x,y,&inverso);
 
 					//Interpretar si es inverso
-					if (caracter>=32 && caracter<=126 && inverso) return caracter;
+					if (inverso) return caracter;
 
 					//Espacio, salir
 					if (caracter==32) break;
