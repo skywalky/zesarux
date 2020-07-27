@@ -1666,6 +1666,7 @@ z80_byte menu_get_pressed_key(void)
 	}	
 
 	if (mouse_pressed_hotkey_window) {
+		mouse_pressed_hotkey_window=0;
 		return mouse_pressed_hotkey_window_key;
 	}
 
@@ -5612,6 +5613,7 @@ z80_byte zxvision_read_keyboard(void)
 	}	
 
 	if (mouse_pressed_hotkey_window) {
+		mouse_pressed_hotkey_window=0;
 		return mouse_pressed_hotkey_window_key;
 	}
 
