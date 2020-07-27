@@ -7511,6 +7511,129 @@ void zxvision_draw_window_contents(zxvision_window *w)
 }
 
 
+
+void zxvision_get_character_at_mouse(zxvision_window *w,int x,int y,overlay_screen *caracter_retorno)
+{
+
+
+	int width,height;
+
+	width=zxvision_get_effective_width(w);
+
+	//Alto del contenido es 2 menos, por el titulo de ventana y la linea por debajo de margen
+	height=zxvision_get_effective_height(w);
+
+
+
+	//for (y=0;y<height;y++) {
+		
+		//for (x=0;x<width;x++) {
+
+			//printf ("x %d y %d\n",x,y);
+		
+			//int xdestination=w->x+x;
+			//int ydestination=(w->y)+1+y; //y +1 porque empezamos a escribir debajo del titulo
+
+			//Ver si caracter final tiene ventana por encima
+			int ventana_encima=0;
+
+			
+			//obtener caracter
+			int out_of_bonds=0;
+
+			int offset_x_final=x+w->offset_x;
+			if (offset_x_final>=w->total_width) out_of_bonds=1;
+
+			int offset_y_final=y+w->offset_y;
+
+			int lower_margin_starts_at=height-(w->lower_margin);
+
+			//printf ("sonda 1\n");
+				
+				//Texto leyenda parte superior
+				if (y<w->upper_margin) {
+					offset_y_final=y;
+				}
+				//Texto leyenda parte inferior
+				else if (y>=lower_margin_starts_at) {
+					int effective_height=height-w->upper_margin-w->lower_margin;
+					int final_y=y-effective_height;
+					offset_y_final=final_y;
+				}
+				else {
+					offset_y_final +=w->lower_margin; //Dado que ya hemos pasado la parte superior, saltar la inferior
+				}
+			//printf ("sonda 2\n");
+
+			if (offset_y_final>=w->total_height) out_of_bonds=1;
+
+			if (!out_of_bonds) {
+
+				//Origen de donde obtener el texto
+				int offset_caracter;
+				
+				offset_caracter=((offset_y_final)*w->total_width)+offset_x_final;
+
+				overlay_screen *caracter;
+				caracter=w->memory;
+				caracter=&caracter[offset_caracter];
+
+				z80_byte caracter_escribir=caracter->caracter;
+
+				int tinta=caracter->tinta;
+				int papel=caracter->papel;
+
+				//Si esta linea cursor visible
+				int linea_cursor=w->cursor_line;
+				//tener en cuenta desplazamiento de margenes superior e inferior
+				linea_cursor +=w->lower_margin;
+				linea_cursor +=w->upper_margin;
+				if (w->visible_cursor && linea_cursor==offset_y_final) {
+					tinta=ESTILO_GUI_TINTA_SELECCIONADO;
+					papel=ESTILO_GUI_PAPEL_SELECCIONADO;
+				} 
+			
+				//Chapucilla para evitar que las ventanas en background sobreescriban a la current
+				//if (!zxvision_coords_in_front_window(w,xdestination,ydestination)) {
+
+				//Chapucilla para evitar que las ventanas en background sobreescriban a cualquiera que haya encima
+				if (!ventana_encima) {
+				//if (!zxvision_coords_in_superior_windows(w,xdestination,ydestination)) {
+
+				//printf ("antes de putchar\n");
+
+				caracter_retorno->caracter=caracter_escribir;
+
+				caracter_retorno->tinta=caracter->tinta;
+				caracter_retorno->papel=caracter->papel;
+				caracter_retorno->parpadeo=caracter->parpadeo;
+				return;
+				//putchar_menu_overlay_parpadeo(xdestination,ydestination,
+				//	caracter_escribir,tinta,papel,caracter->parpadeo);
+
+					//printf ("despues de putchar\n");
+
+
+				}
+			}
+
+			//Fuera de rango. Retornamos 0
+			else {
+				//printf ("fuera de rango\n");
+				if (!ventana_encima) {
+					caracter_retorno->caracter=0;
+				}
+			}
+
+
+	caracter_retorno->caracter=0;
+
+	
+
+
+}
+
+
 void zxvision_draw_window_contents_no_speech(zxvision_window *ventana)
 {
                 //No queremos que el speech vuelva a leer la ventana, solo cargar ventana
@@ -8250,6 +8373,31 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				//printf ("Pulsado dentro ventana. %d,%d\n",last_x_mouse_clicked,last_y_mouse_clicked);
 				//mouse_pressed_hotkey_window=1;
 				//mouse_pressed_hotkey_window_key='t'; //test
+
+				/*
+				struct s_overlay_screen {
+	int tinta,papel,parpadeo;
+	z80_byte caracter;
+};
+
+typedef struct s_overlay_screen overlay_screen;
+				*/
+
+				overlay_screen caracter;
+
+				zxvision_get_character_at_mouse(w,last_x_mouse_clicked,last_y_mouse_clicked-1,&caracter);
+
+				printf ("Caracter: %c (%d)\n",(caracter.caracter>31 && caracter.caracter<126 ? caracter.caracter : '.') ,caracter.caracter);
+
+				//Interpretar si es inverso
+				if (caracter.caracter>=32 && caracter.caracter<=126) {
+					if (caracter.tinta==ESTILO_GUI_PAPEL_NORMAL && caracter.papel==ESTILO_GUI_TINTA_NORMAL) {
+						printf ("Caracter es inverso\n");
+
+						mouse_pressed_hotkey_window=1;
+						mouse_pressed_hotkey_window_key=caracter.caracter;
+					}
+				}
 			}
 					
 
