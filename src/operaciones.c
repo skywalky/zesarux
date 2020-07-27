@@ -7808,22 +7808,22 @@ void set_value_beeper (int v)
   //rutina load: 1374
   //rutina beep: 995
   if (reg_pc>1200 && reg_pc<1350 && output_beep_filter_on_rom_save.v) {
-	//Estamos en save.
-	//printf ("valor beeper: %d\n",v);
-	value_beeper=( v ? AMPLITUD_TAPE*2 : -AMPLITUD_TAPE*2);
+		//Estamos en save.
+		//printf ("valor beeper: %d\n",v);
+		value_beeper=( v ? AMPLITUD_TAPE*2 : -AMPLITUD_TAPE*2);
 
-	//Si activamos modo alteracion beeper. Ideal para que se escuche mas alto y poder enviar a inves
-	/*
-	En audacity, despues de exportar con valor 122 de beeper, aplicar reduccion de ruido:
-	db 3, sensibilidad 0, suavidad 150 hz, ataque 0.15
-	Tambien se puede aplicar reduccion de agudos -5
-	Luego reproducir con volumen del pc al maximo
-	*/
+		//Si activamos modo alteracion beeper. Ideal para que se escuche mas alto y poder enviar a inves
+		/*
+		En audacity, despues de exportar con valor 122 de beeper, aplicar reduccion de ruido:
+		db 3, sensibilidad 0, suavidad 150 hz, ataque 0.15
+		Tambien se puede aplicar reduccion de agudos -5
+		Luego reproducir con volumen del pc al maximo
+		*/
 
-	if (output_beep_filter_alter_volume.v) {
-		//value_beeper=( v ? 122 : -122);
-		value_beeper=( v ? output_beep_filter_volume : -output_beep_filter_volume);
-	}
+		if (output_beep_filter_alter_volume.v) {
+			//value_beeper=( v ? 122 : -122);
+			value_beeper=( v ? output_beep_filter_volume : -output_beep_filter_volume);
+		}
 
 	
 
@@ -7831,21 +7831,21 @@ void set_value_beeper (int v)
 
   else {
 
-	  //Si salida resample 1bit. Para que solo oscile entre dos valores
-	  if (audio_resample_1bit.v) {
+	//Si salida resample 1bit. Para que solo oscile entre dos valores
+	if (audio_resample_1bit.v) {
 		value_beeper=( v ? +127 : -128);  
-	  }
+	}
 
-	  else {
-
-
-  //Por defecto el sonido se genera en negativo y de ahi oscila
-
-  //temp normal en fuse
-  value_beeper = -beeper_ampl[3] + beeper_ampl[v]*2;
+	else {
 
 
-	  }
+		//Por defecto el sonido se genera en negativo y de ahi oscila
+
+		//temp normal en fuse
+		value_beeper = -beeper_ampl[3] + beeper_ampl[v]*2;
+
+
+	}
 
   }
 
