@@ -193,6 +193,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN},
 	{"ReloadMMC",F_FUNCION_RELOADMMC},
 	{"ReinsertTape",F_FUNCION_REINSERTTAPE},
+	{"PauseUnpauseTape",F_FUNCION_PAUSEUNPAUSETAPE},
 	{"DebugCPU",F_FUNCION_DEBUGCPU},
 	{"Pause",F_FUNCION_PAUSE},
 	{"TopSpeed",F_FUNCION_TOPSPEED},
@@ -18431,17 +18432,6 @@ void menu_realtape_insert(MENU_ITEM_PARAMETERS)
 	else realtape_eject();
 }
 
-void menu_realtape_play(MENU_ITEM_PARAMETERS)
-{
-	realtape_pause_unpause();
-}
-
-void menu_realtape_volumen(MENU_ITEM_PARAMETERS)
-{
-	realtape_volumen++;
-	if (realtape_volumen==16) realtape_volumen=0;
-}
-
 int menu_realtape_cond(void)
 {
 	if (realtape_name==NULL) return 0;
@@ -18453,6 +18443,23 @@ int menu_realtape_inserted_cond(void)
 	if (menu_realtape_cond()==0) return 0;
 	return realtape_inserted.v;
 }
+
+void menu_realtape_pause_unpause(MENU_ITEM_PARAMETERS)
+{
+	//Este if solo es util cuando se llama desde una tecla F
+	if (!menu_realtape_inserted_cond()) return;
+
+	realtape_pause_unpause();
+}
+
+void menu_realtape_volumen(MENU_ITEM_PARAMETERS)
+{
+	realtape_volumen++;
+	if (realtape_volumen==16) realtape_volumen=0;
+}
+
+
+
 
 void menu_realtape_open(MENU_ITEM_PARAMETERS)
 {
@@ -21505,7 +21512,7 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_play,menu_realtape_inserted_cond,"[%c] ~~Playing", (realtape_playing.v==1 ? 'X' : ' '));
+		menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_realtape_pause_unpause,menu_realtape_inserted_cond,"[%c] ~~Playing", (realtape_playing.v==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_tape_settings,'p');
 		menu_add_item_menu_tooltip(array_menu_tape_settings,"Start playing the audio tape");
 		menu_add_item_menu_ayuda(array_menu_tape_settings,"Start playing the audio tape");
@@ -29530,6 +29537,10 @@ void menu_process_f_functions_by_action(int accion)
 		case F_FUNCION_REINSERTTAPE:
 			menu_reinsert_tape();
 		break;
+
+		case F_FUNCION_PAUSEUNPAUSETAPE:
+			menu_realtape_pause_unpause(0);
+		break;		
 
 		case F_FUNCION_DEBUGCPU:
 			menu_debug_registers(0);
