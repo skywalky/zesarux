@@ -18433,8 +18433,7 @@ void menu_realtape_insert(MENU_ITEM_PARAMETERS)
 
 void menu_realtape_play(MENU_ITEM_PARAMETERS)
 {
-	if (realtape_playing.v) realtape_stop_playing();
-	else realtape_start_playing();
+	realtape_pause_unpause();
 }
 
 void menu_realtape_volumen(MENU_ITEM_PARAMETERS)

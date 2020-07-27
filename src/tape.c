@@ -2119,6 +2119,12 @@ void realtape_stop_playing(void)
 }
 
 
+void realtape_pause_unpause(void)
+{
+        if (realtape_playing.v) realtape_stop_playing();
+        else realtape_start_playing();
+}
+
 //Rutinas de autodeteccion de rutinas de carga
 
 
