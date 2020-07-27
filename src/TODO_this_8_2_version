@@ -413,3 +413,11 @@ Detectar realmente una palabra entera y buscar ahí la letra inversa
 - Cpc real video 
 
 -hotkey con click de raton: que solo se habilite en ciertas ventanas
+
+-Hot key ratón:
+
+-buscar a la izquierda hasta x cero o espacio
+-de ahí hacia la derecha hasta espacio, final de ancho o : puntos
+-contar caracteres inverso: si solo 1, enviar Tecla. Si es más de 1 puede ser “enter” y por tanto ignorar. O si es “ent” enviar 13
+
+-cuidado con Y siendo mayor que el rango
