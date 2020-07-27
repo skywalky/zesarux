@@ -6128,6 +6128,7 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
         //puerto_especial1 |=1;
         mouse_pressed_close_window=0;
         mouse_pressed_background_window=0;
+        mouse_pressed_hotkey_window=0;
 
       }
     break;

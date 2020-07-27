@@ -1665,6 +1665,10 @@ z80_byte menu_get_pressed_key(void)
 		return 3; //Como F6 background
 	}	
 
+	if (mouse_pressed_hotkey_window) {
+		return mouse_pressed_hotkey_window_key;
+	}
+
 	z80_byte tecla;
 
 	//primero joystick
@@ -5584,7 +5588,7 @@ z80_byte zxvision_read_keyboard(void)
 	//printf ("antes menu_get_pressed_key\n");
     z80_byte tecla;
 	
-	if (!mouse_pressed_close_window && !mouse_pressed_background_window) {
+	if (!mouse_pressed_close_window && !mouse_pressed_background_window && !mouse_pressed_hotkey_window) {
 		tecla=menu_get_pressed_key();
 
 
@@ -5606,6 +5610,10 @@ z80_byte zxvision_read_keyboard(void)
 		//sleep(5);
 		return 3;
 	}	
+
+	if (mouse_pressed_hotkey_window) {
+		return mouse_pressed_hotkey_window_key;
+	}
 
 	//Si se ha pulsado F4, leer ventana
 	//z80_byte puerto_especial2=255; //   F5 F4 F3 F2 F1
@@ -8232,8 +8240,18 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					if (last_x_mouse_clicked==w->visible_width-1 && menu_hide_minimize_button.v==0 && w->can_be_resized) {
 						putchar_menu_overlay(w->x+w->visible_width-1,w->y,menu_retorna_caracter_minimizar(w),ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 					}
+
 				}
 			}
+
+
+			//Si se pulsa en ventana y alrededor tecla hotkey
+			if (last_y_mouse_clicked>0) {
+				//printf ("Pulsado dentro ventana. %d,%d\n",last_x_mouse_clicked,last_y_mouse_clicked);
+				//mouse_pressed_hotkey_window=1;
+				//mouse_pressed_hotkey_window_key='t'; //test
+			}
+					
 
 			//Pulsado en botones Scroll horizontal
 			if (zxvision_if_horizontal_scroll_bar(w)) {
@@ -9261,6 +9279,11 @@ z80_byte menu_da_todas_teclas(void)
 	if (mouse_pressed_background_window) {
 		//printf ("pulsado background en menu_da_todas_teclas\n");
 		//sleep(5);		
+		acumulado |=1;
+	}	
+
+	//Boton hotkey ventana
+	if (mouse_pressed_hotkey_window) {
 		acumulado |=1;
 	}	
 

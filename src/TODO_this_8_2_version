@@ -407,7 +407,6 @@ Detectar realmente una palabra entera y buscar ahí la letra inversa
 
 - curses: en menú no aparece carácter “.” (Punto)
 
-- Efecto música 1 bit: si > 0, sonar 127. Caso contrario, sonar -128
 
 - Opción para conmutar vista maquinas: listado alfabético
 
