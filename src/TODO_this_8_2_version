@@ -404,3 +404,11 @@ O quizá esa rom es del 328 en vez del 318
 - Msx games browser desde planetemu. Mismo sirve para coleco y sg1000
 
 - curses: en menú no aparece carácter “.” (Punto)
+
+- Efecto música 1 bit: si > 0, sonar 127. Caso contrario, sonar -128
+
+- Opción para conmutar vista maquinas: listado alfabético
+
+- Tecla F para pausar cinta
+
+- Cpc real video 

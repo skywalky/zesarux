@@ -229,6 +229,9 @@ z80_bit tbblue_store_scanlines={0};
 //Lo mismo pero para el border
 z80_bit tbblue_store_scanlines_border={0};
 
+//Sin limites de sprites por linea en chip vdp 9918a
+z80_bit vdp_9918a_unlimited_sprites_line={0};
+
 
 
 //

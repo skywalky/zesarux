@@ -79,5 +79,7 @@ extern z80_bit tbblue_store_scanlines_border;
 
 extern z80_bit menu_reopen_background_windows_on_start;
 
+extern z80_bit vdp_9918a_unlimited_sprites_line;
+
 #endif
 

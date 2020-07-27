@@ -9745,6 +9745,11 @@ void menu_display_tbblue_store_scanlines_border(MENU_ITEM_PARAMETERS)
 	tbblue_store_scanlines_border.v ^=1;
 }
 
+void menu_display_vdp_9918a_unlimited_sprites_line(MENU_ITEM_PARAMETERS)
+{
+	vdp_9918a_unlimited_sprites_line.v ^=1;
+}
+
 
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
@@ -10153,6 +10158,10 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_settings_display,"Sends a space after every word on the Adventure Text OSD Keyboard");
 			
 
+		}
+
+		if (MACHINE_HAS_VDP_9918A) {
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_vdp_9918a_unlimited_sprites_line,NULL,"[%c] Unlimited sprites per line", (vdp_9918a_unlimited_sprites_line.v ? 'X' : ' ') );	
 		}
 
 		menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_ocr_23606,NULL,"[%c] OCR Alternate chars", (ocr_settings_not_look_23606.v==0 ? 'X' : ' ') );

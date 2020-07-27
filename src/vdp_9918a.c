@@ -28,6 +28,7 @@
 #include "cpu.h"
 #include "debug.h"
 #include "screen.h"
+#include "settings.h"
 
 
 z80_byte vdp_9918a_registers[8];
@@ -1442,7 +1443,14 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
         //Empezar desde final hacia principio
         //printf ("Sprite final: %d\n",primer_sprite_final);
 
-        for (sprite=primer_sprite_final;sprite>=0 && sprites_en_linea<VDP_9918A_MAX_SPRITES_PER_LINE;sprite--) {
+        int maximo_sprites_por_linea=VDP_9918A_MAX_SPRITES_PER_LINE;
+
+        //Si hay setting de no limite sprites por linea
+        if (vdp_9918a_unlimited_sprites_line.v) {
+            maximo_sprites_por_linea=9999;
+        }
+
+        for (sprite=primer_sprite_final;sprite>=0 && sprites_en_linea<maximo_sprites_por_linea;sprite--) {
             int vert_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table);
             int horiz_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+1);
             z80_byte sprite_name=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+2);
@@ -1654,7 +1662,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
 
         //Si llega al maximo de sprites
-        if (sprites_en_linea>=VDP_9918A_MAX_SPRITES_PER_LINE) {
+        if (sprites_en_linea>=maximo_sprites_por_linea) {
             //Indicamos justo el anterior en el status register
             //Bit 0-4  SP4-0      Number for the 5th sprite (9th in screen 4-8) on a line (b0=SP4, b4=SP0)
             vdp_9918a_status_register&= 128+64+32;
