@@ -8207,6 +8207,66 @@ int zxvision_if_mouse_in_zlogo_desktop(void)
 	return 0;
 }
 
+
+z80_byte zxvision_get_char_at_position(zxvision_window *w,int x,int y,int *inverso)
+{
+						overlay_screen caracter;
+
+					zxvision_get_character_at_mouse(w,x,y,&caracter);
+
+					printf ("Caracter: %c (%d)\n",(caracter.caracter>31 && caracter.caracter<126 ? caracter.caracter : '.') ,caracter.caracter);
+
+					//Interpretar si es inverso
+					if (caracter.caracter>=32 && caracter.caracter<=126) {
+						if (caracter.tinta==ESTILO_GUI_PAPEL_NORMAL && caracter.papel==ESTILO_GUI_TINTA_NORMAL) {
+							printf ("Caracter es inverso\n");
+							*inverso=1;
+							return caracter.caracter;
+
+							
+						}
+					}
+
+					*inverso=0;
+					return caracter.caracter;
+}
+
+z80_byte zxvision_get_key_hotkey(zxvision_window *w,int x,int y)
+{
+					//printf ("Pulsado dentro ventana. %d,%d\n",last_x_mouse_clicked,last_y_mouse_clicked);
+				//mouse_pressed_hotkey_window=1;
+				//mouse_pressed_hotkey_window_key='t'; //test
+
+				/*
+				struct s_overlay_screen {
+	int tinta,papel,parpadeo;
+	z80_byte caracter;
+};
+
+typedef struct s_overlay_screen overlay_screen;
+				*/
+
+				
+
+				//Ver desde posicion X hasta atras, hasta llegar a 0 o espacio, y si hay un inverso
+
+				for (;x>=0;x--) {
+
+					int inverso;
+
+					z80_byte caracter=zxvision_get_char_at_position(w,x,y,&inverso);
+
+					//Interpretar si es inverso
+					if (caracter>=32 && caracter<=126 && inverso) return caracter;
+
+					//Espacio, volver
+					if (caracter==32) return 0;
+
+				}
+
+	return 0;
+}
+
 //int zxvision_mouse_events_counter=0;
 //int tempconta;
 //Retorna 1 si pulsado boton de cerrar ventana
@@ -8372,33 +8432,19 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			//Si se pulsa en ventana y alrededor tecla hotkey
 			if (last_y_mouse_clicked>0) {
-				//printf ("Pulsado dentro ventana. %d,%d\n",last_x_mouse_clicked,last_y_mouse_clicked);
-				//mouse_pressed_hotkey_window=1;
-				//mouse_pressed_hotkey_window_key='t'; //test
+				
 
-				/*
-				struct s_overlay_screen {
-	int tinta,papel,parpadeo;
-	z80_byte caracter;
-};
-
-typedef struct s_overlay_screen overlay_screen;
-				*/
-
-				overlay_screen caracter;
-
-				zxvision_get_character_at_mouse(w,last_x_mouse_clicked,last_y_mouse_clicked-1,&caracter);
-
-				printf ("Caracter: %c (%d)\n",(caracter.caracter>31 && caracter.caracter<126 ? caracter.caracter : '.') ,caracter.caracter);
-
-				//Interpretar si es inverso
-				if (caracter.caracter>=32 && caracter.caracter<=126) {
-					if (caracter.tinta==ESTILO_GUI_PAPEL_NORMAL && caracter.papel==ESTILO_GUI_TINTA_NORMAL) {
-						printf ("Caracter es inverso\n");
+				z80_byte caracter=zxvision_get_key_hotkey(w,last_x_mouse_clicked,last_y_mouse_clicked-1);
+				
+				if (caracter>=32 && caracter<=126) {
 
 						mouse_pressed_hotkey_window=1;
-						mouse_pressed_hotkey_window_key=caracter.caracter;
-					}
+						mouse_pressed_hotkey_window_key=caracter;
+					
+				}
+
+				else {
+					mouse_pressed_hotkey_window=0;
 				}
 			}
 					
