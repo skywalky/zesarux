@@ -2101,22 +2101,6 @@ char old_audio_change_top_speed_sound(char sonido)
 }
 
 
-void audio_send_mono_sample(char valor_sonido)
-{
-
-	int limite_buffer_audio;
-
-	limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
-
-	
-	audio_buffer[audio_buffer_indice]=valor_sonido;
-	audio_buffer[audio_buffer_indice+1]=valor_sonido;
-
-	if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
-
-
-}
-
 
 void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_derecho)
 {
@@ -2130,6 +2114,11 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 
 	if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
 
+}
+
+void audio_send_mono_sample(char valor_sonido)
+{
+	audio_send_stereo_sample(valor_sonido,valor_sonido);
 }
 
 
