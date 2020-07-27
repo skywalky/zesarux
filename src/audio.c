@@ -2114,11 +2114,14 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 	limite_buffer_audio=AUDIO_BUFFER_SIZE*2;
 
 	if (audio_resample_1bit.v) {
-		if (valor_sonido_izquierdo>0) valor_sonido_izquierdo=+127;
-		else valor_sonido_izquierdo=-128;
 
-		if (valor_sonido_derecho>0) valor_sonido_derecho=+127;
-		else valor_sonido_derecho=-128;
+		int volumen_resample=64;
+
+		if (valor_sonido_izquierdo>0) valor_sonido_izquierdo=+volumen_resample;
+		else valor_sonido_izquierdo=-volumen_resample;
+
+		if (valor_sonido_derecho>0) valor_sonido_derecho=+volumen_resample;
+		else valor_sonido_derecho=-volumen_resample;
 	}
 
 	audio_buffer[audio_buffer_indice]=valor_sonido_izquierdo;

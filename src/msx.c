@@ -569,7 +569,8 @@ void scr_refresca_pantalla_y_border_msx(void)
 int da_amplitud_speaker_msx(void)
 {
                                 if (msx_ppi_register_c & 128) return amplitud_speaker_actual_msx;
-                                else return -amplitud_speaker_actual_msx;
+                                //else return -amplitud_speaker_actual_msx;
+                                else return 0;
 }
 
 
