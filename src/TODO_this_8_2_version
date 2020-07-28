@@ -418,3 +418,5 @@ Detectar realmente una palabra entera y buscar ahí la letra inversa
 * que no haga falta mover el raton despues de pulsar para que entienda la letra
 
 -cuidado con Y siendo mayor que el rango
+
+-habilitar mouse hotkeys en file utilities tambien: dado que es un filesel, debe activarlo cuadno está en modo "utilities" solamente

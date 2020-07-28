@@ -1667,6 +1667,7 @@ z80_byte menu_get_pressed_key(void)
 
 	if (mouse_pressed_hotkey_window) {
 		mouse_pressed_hotkey_window=0;
+		printf ("Retornamos hoykey %c desde menu_get_pressed_key\n",mouse_pressed_hotkey_window_key);
 		return mouse_pressed_hotkey_window_key;
 	}
 
@@ -5616,6 +5617,7 @@ z80_byte zxvision_read_keyboard(void)
 
 	if (mouse_pressed_hotkey_window) {
 		mouse_pressed_hotkey_window=0;
+		printf ("Retornamos hoykey %c desde zxvision_read_keyboard\n",mouse_pressed_hotkey_window_key);
 		return mouse_pressed_hotkey_window_key;
 	}
 
@@ -9560,6 +9562,7 @@ z80_byte menu_da_todas_teclas(void)
 
 	//Boton hotkey ventana
 	if (mouse_pressed_hotkey_window) {
+		printf ("pulsado hotkey desde menu_da_todas_teclas\n");
 		acumulado |=1;
 	}	
 
