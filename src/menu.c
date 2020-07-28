@@ -9562,7 +9562,7 @@ z80_byte menu_da_todas_teclas(void)
 
 	//Boton hotkey ventana
 	if (mouse_pressed_hotkey_window) {
-		printf ("pulsado hotkey desde menu_da_todas_teclas\n");
+		//printf ("pulsado hotkey desde menu_da_todas_teclas\n");
 		acumulado &=(255-1);
 		//NOTA: indicamos aqui que ha habido pulsacion de tecla,
 		//dado que partimos de mascara 255, poner ese bit a 0 le decimos que hay pulsada una tecla
@@ -32851,6 +32851,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 	    ventana->lower_margin=4;
 		ventana->visible_cursor=1;
 		strcpy(ventana->geometry_name,"filesel");
+
+		if (menu_filesel_show_utils.v) {
+			//Activar los hotkeys desde raton en el caso de file utilities
+			ventana->can_mouse_send_hotkeys=1;
+		}
 
 		zxvision_draw_window(ventana);
 
