@@ -5277,6 +5277,8 @@ void zxvision_new_window_no_check_range(zxvision_window *w,int x,int y,int visib
 	w->can_use_all_width=0;
 	//w->applied_can_use_all_width=0;
 
+	w->can_mouse_send_hotkeys=0;
+
 	w->visible_cursor=0;
 	w->cursor_line=0;
 
@@ -8485,7 +8487,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			//Si se pulsa en ventana y alrededor tecla hotkey
 			/*
-			if (last_y_mouse_clicked>0) {
+			if (w->can_mouse_send_hotkeys && last_y_mouse_clicked>0) {
 				
 
 				z80_byte caracter=zxvision_get_key_hotkey(w,last_x_mouse_clicked,last_y_mouse_clicked-1);
@@ -8610,7 +8612,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			//Si se pulsa en ventana y alrededor tecla hotkey
 			
-			if (si_menu_mouse_en_ventana() && last_y_mouse_clicked>0) {
+			if (w->can_mouse_send_hotkeys && si_menu_mouse_en_ventana() && last_y_mouse_clicked>0) {
 				
 
 				z80_byte caracter=zxvision_get_key_hotkey(w,last_x_mouse_clicked,last_y_mouse_clicked-1);

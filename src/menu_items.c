@@ -13829,6 +13829,8 @@ void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"debugcpu");
 
+	//Puede enviar hotkeys con raton
+	ventana->can_mouse_send_hotkeys=1;
 
 
 }

@@ -83,6 +83,9 @@ struct s_zxvision_window {
 	//Si boton de background aparece en ventana. Nota: en principio F6 funciona aunque esto no se establezca
 	int can_be_backgrounded;
 
+	//Si se pueden enviar hotkeys desde raton, pulsando en letras inversas
+	int can_mouse_send_hotkeys;
+
 	int height_before_max_min_imize;
 	int width_before_max_min_imize;
 	int x_before_max_min_imize;
