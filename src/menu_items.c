@@ -6399,6 +6399,9 @@ void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int an
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"hexeditor");
 
+	//Permitir hotkeys desde raton
+	ventana->can_mouse_send_hotkeys=1;	
+
 	zxvision_draw_window(ventana);
 
 }
@@ -11774,6 +11777,9 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 	ventana->can_be_backgrounded=1;
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"sprites");
+
+	//Permitir hotkeys desde raton
+	ventana->can_mouse_send_hotkeys=1;
 
 	zxvision_draw_window(ventana);
 

@@ -28,7 +28,7 @@ Improved menu:
 -Allow some windows to be running on the background, all at the same time. This makes the menu environment more powerful!
 -Active windows are saved and restored on startup
 -Pressing the menu key (F5 by default) when menu is open, it will send you back to the main menu. Also pressing over Z logo on ext desktop
--Some window hotkeys can be activated with mouse click (example: Debug CPU Window)
+-Some window hotkeys can be activated with mouse click (example: Debug CPU Window, File utilities, View Sprites, Hex Editor)
 -Added setting to disable showing cpu temperature, or FPS on footer
 -Added keyboard help window for most machines
 -Warn in red colour when FPS low
