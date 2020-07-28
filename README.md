@@ -89,7 +89,7 @@ Thanks!
 
 __FEATURES__
 
-* Runs on any Unix system and Windows: tested on GNU/Linux x86, GNU/Linux x86_64, GNU/Linux Raspbian, GNU/Linux RetroPie, FreeBSD x86_64, Mac OS X, Windows native, Windows + Cygwin
+* Runs on any Unix system and Windows: tested on GNU/Linux x86, GNU/Linux x86_64, GNU/Linux Raspbian, GNU/Linux RetroPie, FreeBSD x86_64, Haiku, Mac OS X, Windows native, Windows + Cygwin
 
 * Emulates:
 * Science of Cambridge MK14
@@ -171,15 +171,15 @@ __FEATURES__
 
 * Simulates real tape loading on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81
 
-* Handles snapshot format: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, O, Z81, ACE
+* Handles snapshot formats: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, O, Z81, ACE
+
+* Handles cartridge formats: DCK, ROM, COL, SG
 
 * Handles RZX playback 
 
 * Emulates Multiface One, 128 and Three
 
-* Emulates Datagear/MB02 DMA
-
-* Handles DCK Timex dock cartridges
+* Emulates Datagear/MB02 DMA, ZX-Uno DMA
 
 * Emulates +3 Disk
 
