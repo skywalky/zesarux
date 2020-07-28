@@ -8210,6 +8210,10 @@ int zxvision_if_mouse_in_zlogo_desktop(void)
 
 z80_byte zxvision_get_char_at_position(zxvision_window *w,int x,int y,int *inverso)
 {
+
+	//Asumimos
+	*inverso=0;
+
 						overlay_screen caracter;
 
 					zxvision_get_character_at_mouse(w,x,y,&caracter);
@@ -8221,13 +8225,13 @@ z80_byte zxvision_get_char_at_position(zxvision_window *w,int x,int y,int *inver
 						if (caracter.tinta==ESTILO_GUI_PAPEL_NORMAL && caracter.papel==ESTILO_GUI_TINTA_NORMAL) {
 							printf ("Caracter es inverso\n");
 							*inverso=1;
-							return caracter.caracter;
+							
 
 							
 						}
 					}
+			
 
-					*inverso=0;
 					return caracter.caracter;
 }
 
@@ -8249,10 +8253,19 @@ typedef struct s_overlay_screen overlay_screen;
 			int xorig=x;
 
 			int inverso;
+			/*
+-Hot key ratón:
 
-				
+-buscar a la izquierda hasta x cero o espacio
+-de ahí hacia la derecha hasta espacio, final de ancho o : puntos
+-contar caracteres inverso: si solo 1, enviar Tecla. Si es más de 1 puede ser “enter” y por tanto ignorar. O si es “ent” enviar 13
 
-				//Ver desde posicion X hasta atras, hasta llegar a 0 o espacio, y si hay un inverso
+-cuidado con Y siendo mayor que el rango			
+			*/
+
+			//Ir hacia inicio del todo a la izquierda
+
+
 
 				for (;x>=0;x--) {
 
@@ -8260,30 +8273,47 @@ typedef struct s_overlay_screen overlay_screen;
 
 					z80_byte caracter=zxvision_get_char_at_position(w,x,y,&inverso);
 
-					//Interpretar si es inverso
-					if (inverso) return caracter;
 
 					//Espacio, salir
 					if (caracter==32) break;
 
 				}
 
-				x=xorig;
+				//if (x<0) x=0;
+				x++;
 
-				//Ver desde posicion X hasta adelante, hasta llegar a 0 o espacio, y si hay un inverso
+
+				//de ahí hacia la derecha hasta espacio, final de ancho o : puntos
+				//-contar caracteres inverso: si solo 1, enviar Tecla. Si es más de 1 puede ser “enter” y por tanto ignorar. O si es “ent” enviar 13
+
+				int total_inversos=0;
+
+				z80_byte caracter_inverso=0;
 
 				for (;x<=w->visible_width;x++) {
 
 
 					z80_byte caracter=zxvision_get_char_at_position(w,x,y,&inverso);
 
+					printf ("X %d Y %d car: %c inverso: %d\n",x,y,caracter,inverso);
+
 					//Interpretar si es inverso
-					if (inverso) return caracter;
+					if (inverso) {
+						total_inversos++;
+						caracter_inverso=caracter;
+					}
 
 					//Espacio, salir
-					if (caracter==32) break;
+					if (caracter==32 || caracter==':') break;
 
-				}				
+				}					
+
+				if (total_inversos==1 && caracter_inverso!=0) {
+					printf ("Detectada tecla hotkey: %c\n",caracter_inverso);
+					return caracter_inverso;
+				}
+
+			
 
 
 
@@ -8454,6 +8484,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 
 			//Si se pulsa en ventana y alrededor tecla hotkey
+			/*
 			if (last_y_mouse_clicked>0) {
 				
 
@@ -8470,6 +8501,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					mouse_pressed_hotkey_window=0;
 				}
 			}
+			*/
 					
 
 			//Pulsado en botones Scroll horizontal
@@ -8574,6 +8606,29 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 				
 			}
+
+
+			//Si se pulsa en ventana y alrededor tecla hotkey
+			
+			if (si_menu_mouse_en_ventana() && last_y_mouse_clicked>0) {
+				
+
+				z80_byte caracter=zxvision_get_key_hotkey(w,last_x_mouse_clicked,last_y_mouse_clicked-1);
+				
+				if (caracter>=32 && caracter<=126) {
+
+						mouse_pressed_hotkey_window=1;
+						mouse_pressed_hotkey_window_key=caracter;
+
+						return;
+					
+				}
+
+				else {
+					mouse_pressed_hotkey_window=0;
+				}
+			}	
+					
 
 
 
