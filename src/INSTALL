@@ -214,11 +214,11 @@ Note for Haiku
 
 You should not use the default gcc (2.97) as it should not compile.
 
-To compile it:
+Before running configure script, please set:
 
 export CFLAGS=-DHAIKU_OS
 
-You need to run configure with setting (at least): --disable-threads
+You need to run configure with setting (at least): --disable-pthreads
 
 If you want to compile ZEsarUX on Haiku with SDL support:
 
@@ -230,12 +230,12 @@ Before running configure, set:
 
 export LDFLAGS=-L/boot/system/develop/lib/
 
-When running ZEsarUX with SDL, you probably need to run:
+When running ZEsarUX with SDL, you probably need to set before:
 
 export LIBRARY_PATH=/boot/system/lib/:$LIBRARY_PATH
 
 
-
+By the way, on File selector menus, all files are treated as regular files (so no directories). This is a known bug
 Please don't ask me about Haiku help, I'm not an expert on this OS ;)
 
 
