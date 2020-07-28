@@ -7,6 +7,7 @@ Added new emulated machines:
 -Sega SG1000
 
 Added new compiled version: FreeBSD
+Added support for compilation on Haiku
 Added emulation of AY chip MIDI registers 14 & 15 and route them to an external MIDI device
 Added Visualmem for MMC Read/Write
 Added Visualmem "Defrag style"

@@ -173,6 +173,13 @@ extern z80_bit core_end_frame_check_zrcp_zeng_snap;
 #endif
 
 
+//Para haiku
+#ifdef HAIKU_OS
+//Para incluir PATH_MAX
+#include <limits.h>
+#endif
+
+
 extern z80_byte puerto_65278; //    db    255  ; V    C    X    Z    Sh    ;0
 extern z80_byte puerto_65022; //    db    255  ; G    F    D    S    A     ;1
 extern z80_byte puerto_64510; //    db              255  ; T    R    E    W    Q     ;2

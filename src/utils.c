@@ -10426,17 +10426,27 @@ int get_file_type(int d_type, char *nombre)
 
 */
 
-
+#ifdef HAIKU_OS
+	
+#else
 	debug_printf (VERBOSE_DEBUG,"Name: %s type: %d constants: DT_DIR: %d DT_REG: %d DT_LNK: %d",
 			nombre,d_type,DT_DIR,DT_REG,DT_LNK);
+#endif
+
 
 #ifndef MINGW
 
+#ifdef HAIKU_OS
+	return 1; //Asumimos siempre tipo archivo regular
+#else
 
 	if (d_type == DT_DIR) return 2;
 	if (d_type == DT_REG || d_type == DT_LNK) return 1;
 
 	return 0;
+#endif
+
+
 #else
 /*
 24 puede significar 16+8:

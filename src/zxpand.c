@@ -1613,7 +1613,14 @@ void zxpand_COM_DirectoryRead(void)
 	//sprintf (nombre_final,"%s/%s",zxpand_last_dir_open,zxpand_dp->d_name);
 
 	//if (get_file_type(zxpand_dp->d_type,zxpand_dp->d_name)==2) {
+
+#ifdef HAIKU_OS
+	if (0) { //Asumimos siempre tipo archivo regular
+#else
 	if (get_file_type(zxpand_dp->d_type,nombre_final)==2) {
+#endif
+
+
 		//meter flags directorio y nombre entre <>
 		zxpand_filinfo_fattrib |=16;
 		sprintf((char *) &zxpand_globaldata[0],"<%s>",zxpand_dp->d_name);

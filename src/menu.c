@@ -18267,7 +18267,12 @@ int menu_file_filter(const char *name,char *filtros[])
 int menu_filesel_filter_func(const struct dirent *d)
 {
 
+#ifdef HAIKU_OS
+	int tipo_archivo=1; //Asumimos siempre tipo archivo regular
+#else
+
 	int tipo_archivo=get_file_type(d->d_type,(char *)d->d_name);
+#endif
 
 
 	//si es directorio, ver si empieza con . y segun el filtro activo
@@ -18281,7 +18286,10 @@ int menu_filesel_filter_func(const struct dirent *d)
 	//Si no es archivo ni link, no ok
 
 	if (tipo_archivo  == 0) {
+#ifdef HAIKU_OS
+#else
 		debug_printf (VERBOSE_DEBUG,"Item is not a directory, file or link. Type: %d",d->d_type);
+#endif
 		return 0;
 	}
 
@@ -18371,7 +18379,13 @@ primer_filesel_item=NULL;
 
 		strcpy(item->d_name,nombreactual->d_name);
 
+
+#ifdef HAIKU_OS
+		item->d_type=1; //Asumimos siempre tipo archivo regular
+#else
 		item->d_type=nombreactual->d_type;
+#endif
+
 		item->next=NULL;
 
 		//primer item
