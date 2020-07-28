@@ -9563,7 +9563,10 @@ z80_byte menu_da_todas_teclas(void)
 	//Boton hotkey ventana
 	if (mouse_pressed_hotkey_window) {
 		printf ("pulsado hotkey desde menu_da_todas_teclas\n");
-		acumulado |=1;
+		acumulado &=(255-1);
+		//NOTA: indicamos aqui que ha habido pulsacion de tecla,
+		//dado que partimos de mascara 255, poner ese bit a 0 le decimos que hay pulsada una tecla
+		//Misterio: porque con mouse_pressed_close_window y mouse_pressed_background_window le hago OR 1? no tiene sentido....
 	}	
 
 
@@ -9589,10 +9592,13 @@ z80_byte menu_da_todas_teclas(void)
 
   
 
-	if ( (acumulado&MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA) return acumulado;
+	if ( (acumulado&MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA) {
+		//printf ("Retornamos acumulado en menu_da_todas_teclas: %d\n",acumulado);
+		return acumulado;
+	}
 
 	
-
+	//printf ("Retornamos acumulado en menu_da_todas_teclas_2: %d\n",acumulado);
 	return acumulado;
 
 
