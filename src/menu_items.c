@@ -11225,11 +11225,14 @@ z80_bit view_sprites_zx81_pseudohires={0}; //Si utiliza puntero a tabla de la ro
 z80_byte menu_debug_draw_sprites_get_byte(menu_z80_moto_int puntero)
 {
 
+	printf ("menu_debug_draw_sprites_get_byte 1\n");
 	z80_byte byte_leido;
 
 					puntero=adjust_address_memory_size(puntero);
-				byte_leido=menu_debug_get_mapped_byte(puntero);
 
+					printf ("menu_debug_draw_sprites_get_byte 2\n");
+				byte_leido=menu_debug_get_mapped_byte(puntero);
+					printf ("menu_debug_draw_sprites_get_byte 3\n");
 				
 
 				//Si hay puntero a valores en rom como algunos juegos pseudo hires de zx81
@@ -11337,8 +11340,12 @@ void menu_debug_draw_sprites(void)
 
 					printf ("tabla atributo sprite: %04XH\n",attribute_table);
 
+					printf ("antes\n");
 					//Obtener byte 2, sprite name
 					z80_byte sprite_name=menu_debug_draw_sprites_get_byte(attribute_table+2);
+
+
+					printf ("despues\n");
 
 					//TODO: asumimos sprites 16x16
 					//TODO: colores del sprite

@@ -3148,7 +3148,9 @@ void set_machine_params(void)
 		realtape_volumen=0;
 
 
-
+		//Resetear a zona memoria por defecto. Evita cuelgues al intentar usar una zona de memoria que ya no esta disponible,
+		//ejemplo: iniciar maquina msx. abrir view sprites->activar hardware. F5 y cambiar a spectravideo. F5. Floating point exception.
+		menu_debug_set_memory_zone_mapped();
 
 		screen_set_parameters_slow_machines();
 
