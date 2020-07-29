@@ -420,3 +420,5 @@ Detectar realmente una palabra entera y buscar ahí la letra inversa
 -cuidado con Y siendo mayor que el rango
 
 -habilitar mouse hotkeys en file utilities tambien: dado que es un filesel, debe activarlo cuadno está en modo "utilities" solamente
+
+-peta metiendo determinado breakpoint de ql desde configfile: /Users/cesarhernandez/Desktop/zesarux_crash_ql_breakpoint.txt. Peta en ql_readbyte_no_ports + 20

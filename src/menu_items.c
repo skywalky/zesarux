@@ -8579,6 +8579,10 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
 	zxvision_new_window(&ventana,0,1,32,20,
 							ancho_total,20-2,"Disassemble");
+
+	//Permitir hotkeys desde raton
+	ventana.can_mouse_send_hotkeys=1;
+
 	zxvision_draw_window(&ventana);			
 
     //Inicializar info de tamanyo zona
@@ -8637,8 +8641,8 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
         zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
 
-        zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"~~M: Ch. pointer ~~E: Export");
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"~~T: Toggle hexa");
+        zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"~~memptr ~~export");
+		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"~~togglehexa");
 
 		zxvision_draw_window_contents(&ventana);
 
