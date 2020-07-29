@@ -378,8 +378,6 @@ https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
 
 -http://bifi.msxnet.org/msxnet/tech/tms9918a.txt
 
--View sprites de MSX , coleco y sg1000
-
 
 
 -Contención en hacer out e in a vram?
@@ -410,3 +408,4 @@ Probado con curl y no parece funcionar
 
 - Cpc real video 
 
+-view sprites hardware vdp acabar de probar y quitar debug printf

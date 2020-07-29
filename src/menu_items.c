@@ -11319,12 +11319,31 @@ void menu_debug_draw_sprites(void)
 
 				//Alterar en el caso de VDP9918A, que es un tanto particular (sobretodo 16x16)
 				if (view_sprites_hardware && MACHINE_HAS_VDP_9918A) {
-					menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+
+					//Accedemos a la tabla de 32 sprites
+
+					//menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+					z80_int attribute_table=vdp_9918a_get_sprite_attribute_table();
+
+					int numero_sprite=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+					numero_sprite %=32;
+
+					printf ("numero sprite: %d\n",numero_sprite);
+
+					attribute_table +=numero_sprite*4;
+
+					printf ("tabla atributo sprite: %04XH\n",attribute_table);
+
+					//Obtener byte 2, sprite name
+					z80_byte sprite_name=menu_debug_draw_sprites_get_byte(attribute_table+2);
 
 					//TODO: asumimos sprites 16x16
 					//TODO: colores del sprite
 
-					puntero_orig *=32; //offset al sprite en cuestion
+					menu_z80_moto_int puntero_orig=sprite_name *8;
 					/*
 					QUADRANT   AC
 					           BD
@@ -11358,9 +11377,12 @@ void menu_debug_draw_sprites(void)
 					}												
 
 		
-					puntero_final +=vdp_9918a_get_pattern_base_address();
+					puntero_final +=vdp_9918a_get_sprite_pattern_table();
 
-					//printf ("puntero final: %04XH\n",puntero_final);
+					printf ("puntero final: %04XH\n",puntero_final);
+
+
+					
 		
 
 				}
