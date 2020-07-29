@@ -397,13 +397,11 @@ O quizá esa rom es del 328 en vez del 318
 -TODO: tipo paginas en svi al retornar direccion
 
 
--Si ratón pulsa en zona que haya texto con letra inversa, envía esa letra como teclado. 
-Vigilar con letras como “tab” o “enter”. No enviar Tecla si tiene otra pegada al lado y es inversa. 
-Detectar realmente una palabra entera y buscar ahí la letra inversa
 
 - curses: con ventana ay piano en background, al ir a Smartload se mezcla texto de ventana ay piano en Smartload
 
-- Msx games browser desde planetemu. Mismo sirve para coleco y sg1000
+- Msx games browser desde planetemu. Mismo sirve para coleco y sg1000. Problema: quiza planetemu no admite peticiones http simple. 
+Probado con curl y no parece funcionar
 
 - curses: en menú no aparece carácter “.” (Punto)
 
@@ -411,11 +409,4 @@ Detectar realmente una palabra entera y buscar ahí la letra inversa
 - Opción para conmutar vista maquinas: listado alfabético
 
 - Cpc real video 
-
--hotkey con click de raton: que solo se habilite en ciertas ventanas
-
--Hot key ratón:
-* que no haga falta mover el raton despues de pulsar para que entienda la letra
-
--cuidado con Y siendo mayor que el rango
 

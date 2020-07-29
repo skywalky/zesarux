@@ -7517,7 +7517,8 @@ void zxvision_draw_window_contents(zxvision_window *w)
 }
 
 
-
+//Funcion derivada de zxvision_draw_window_contents
+//usada para obtener los hotkeys de mouse
 void zxvision_get_character_at_mouse(zxvision_window *w,int x,int y,overlay_screen *caracter_retorno)
 {
 

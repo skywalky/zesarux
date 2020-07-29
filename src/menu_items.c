@@ -11200,6 +11200,10 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 		}
 
 
+		if (MACHINE_HAS_VDP_9918A) {
+			puntero=view_sprites_direccion+vdp_9918a_get_pattern_base_address();
+		}
+
 	}
 
 
@@ -11587,6 +11591,42 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 
 		}
+
+		if (MACHINE_HAS_VDP_9918A) {
+//Parametros que alteramos segun sprite activo
+
+
+                	view_sprites_ancho_sprite=16;
+
+	                view_sprites_alto_sprite=16;
+
+
+
+			//offset paleta
+			view_sprites_offset_palette=0;
+
+			view_sprites_increment_cursor_vertical=1; //saltar de 1 en 1
+
+
+
+			//Permitir solo 1bpp
+
+			view_sprites_bpp=1;
+			view_sprites_ppb=8;
+
+
+            view_sprites_bytes_por_linea=16/view_sprites_ppb;
+
+
+			view_sprites_bytes_por_ventana=8; 
+
+
+			if (MACHINE_IS_MSX) menu_debug_set_memory_zone(MEMORY_ZONE_MSX_VRAM);
+			if (MACHINE_IS_COLECO) menu_debug_set_memory_zone(MEMORY_ZONE_COLECO_VRAM);
+			if (MACHINE_IS_SG1000) menu_debug_set_memory_zone(MEMORY_ZONE_SG1000_VRAM);
+			if (MACHINE_IS_SVI) menu_debug_set_memory_zone(MEMORY_ZONE_SVI_VRAM);
+
+		}
 	}
 
 	else {
@@ -11631,6 +11671,10 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 
 				strcpy(texto_sprite,"Pattern");
 			}
+
+			if (MACHINE_HAS_VDP_9918A) {
+				max_sprites=VDP_9918A_MAX_SPRITES;
+			}
 			sprintf(texto_memptr,"%s: %3d",texto_sprite,view_sprites_direccion%max_sprites); //dos digitos, tsconf hace 85 y tbblue hace 64. suficiente
 		}
 
@@ -11674,7 +11718,7 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		//por defecto
 		mensaje_texto_hardware[0]=0;
 
-		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE) {
+		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE || MACHINE_HAS_VDP_9918A) {
 			sprintf(mensaje_texto_hardware,"[%c] ~~hardware",(view_sprites_hardware ? 'X' : ' ') );
 		}
 
@@ -11762,7 +11806,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
 	zxvision_delete_window_if_exists(ventana);
 
-	if (!MACHINE_IS_TBBLUE & !MACHINE_IS_TSCONF) view_sprites_hardware=0;
+	if (!MACHINE_IS_TBBLUE && !MACHINE_IS_TSCONF && !MACHINE_HAS_VDP_9918A) view_sprites_hardware=0;
 
 	if (!MACHINE_IS_ZX8081) view_sprites_zx81_pseudohires.v=0;
 
@@ -11882,7 +11926,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					break;
 
 					case 'h':
-						if (MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF) view_sprites_hardware ^=1;								
+						if (MACHINE_IS_TBBLUE || MACHINE_IS_TSCONF || MACHINE_HAS_VDP_9918A) view_sprites_hardware ^=1;								
 					break;
 
 					case 'e':
