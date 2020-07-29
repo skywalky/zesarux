@@ -1204,6 +1204,7 @@ unsigned char ql_readbyte(unsigned int Address)
 
 //Puntero a la funcion final que se modifica cuando se asigna maquina QL. Al inicio, se apunta a funcion vacia para
 //que el parser de breakpoints desde configfile no pete
+//Podia petar con --machine QL --set-breakpoint 1 "OPCODE1=207"
 unsigned char (*ql_readbyte_no_ports_function)(unsigned int Address);
 
 unsigned char ql_readbyte_no_ports_vacio(unsigned int Address GCC_UNUSED)
