@@ -11200,9 +11200,9 @@ menu_z80_moto_int menu_debug_draw_sprites_get_pointer_offset(int direccion)
 		}
 
 
-		if (MACHINE_HAS_VDP_9918A) {
-			puntero=view_sprites_direccion+vdp_9918a_get_pattern_base_address();
-		}
+		//if (MACHINE_HAS_VDP_9918A) {
+		//	puntero=view_sprites_direccion+vdp_9918a_get_pattern_base_address();
+		//}
 
 	}
 
@@ -11306,9 +11306,63 @@ void menu_debug_draw_sprites(void)
 			puntero_inicio_linea=puntero;
 			finalx=xorigen;
 			for (x=0;x<view_sprites_ancho_sprite;) {
+				//printf ("puntero: %d\n",puntero);
 				puntero=adjust_address_memory_size(puntero);
 
-				byte_leido=menu_debug_draw_sprites_get_byte(puntero);
+
+				menu_z80_moto_int puntero_final;
+
+				puntero_final=puntero;
+
+				//Alterar en el caso de VDP9918A, que es un tanto particular (sobretodo 16x16)
+				if (view_sprites_hardware && MACHINE_HAS_VDP_9918A) {
+					menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+					//TODO: asumimos sprites 16x16
+					//TODO: colores del sprite
+
+					puntero_orig *=32; //offset al sprite en cuestion
+					/*
+					QUADRANT   AC
+					           BD
+
+					Orden en memoria:
+					A   0
+					B   8
+					C   16 
+					D   24
+					*/
+					//y<8
+
+					//Quad A
+					if (y<=7 && x<=7) {
+						puntero_final=puntero_orig+y;
+					}
+
+					//Quad B
+					else if (y>=8 && y<=15 && x<=7) {
+						puntero_final=puntero_orig+y;
+					}		
+
+					//Quad C
+					else if (y<=7 && x>=8 && x<=15) {
+						puntero_final=puntero_orig+16+y;
+					}	
+
+					//Quad D		
+					else  {
+						puntero_final=puntero_orig+16+y;
+					}												
+
+		
+					puntero_final +=vdp_9918a_get_pattern_base_address();
+
+					//printf ("puntero final: %04XH\n",puntero_final);
+		
+
+				}
+
+				byte_leido=menu_debug_draw_sprites_get_byte(puntero_final);
 
 				/*byte_leido=menu_debug_get_mapped_byte(puntero);
 
