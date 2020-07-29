@@ -11153,7 +11153,10 @@ int util_tape_tap_get_info(z80_byte *tape,char *texto)
 z80_byte peek_byte_z80_moto(unsigned int address)
 {
   address=adjust_address_space_cpu(address);
-  if (MACHINE_IS_QL) return ql_readbyte_no_ports(address);
+
+  //if (MACHINE_IS_QL) return ql_readbyte_no_ports(address);
+  if (MACHINE_IS_QL) return ql_readbyte_no_ports_function(address);
+
   else return peek_byte_no_time(address);
 }
 

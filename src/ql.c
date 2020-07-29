@@ -1202,6 +1202,15 @@ unsigned char ql_readbyte(unsigned int Address)
 	return valor;
 }
 
+//Puntero a la funcion final que se modifica cuando se asigna maquina QL. Al inicio, se apunta a funcion vacia para
+//que el parser de breakpoints desde configfile no pete
+unsigned char (*ql_readbyte_no_ports_function)(unsigned int Address);
+
+unsigned char ql_readbyte_no_ports_vacio(unsigned int Address GCC_UNUSED)
+{
+	return 0;
+}
+
 unsigned char ql_readbyte_no_ports(unsigned int Address)
 {
 	Address&=QL_MEM_LIMIT;

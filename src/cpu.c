@@ -4007,6 +4007,8 @@ You don't need timings for H/V sync =)
 		out_port=out_port_legacy_ql;
 		fetch_opcode=fetch_opcode_legacy_ql;
 
+		ql_readbyte_no_ports_function=ql_readbyte_no_ports;
+
 
 							//Hagamoslo mas lento
 								screen_testados_linea=80;
@@ -7998,6 +8000,8 @@ tooltip_enabled.v=1;
 	fetch_opcode=fetch_opcode_vacio;
 	realjoystick_init=realjoystick_null_init;
 	realjoystick_main=realjoystick_null_main;
+
+	ql_readbyte_no_ports_function=ql_readbyte_no_ports_vacio;
 	//realjoystick_hit=realjoystick_null_hit;
 
 	//Inicializo tambien la de push

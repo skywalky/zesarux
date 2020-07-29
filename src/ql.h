@@ -39,6 +39,9 @@ extern char ql_mdv1_root_dir[];
 extern char ql_mdv2_root_dir[];
 extern char ql_flp1_root_dir[];
 
+extern unsigned char (*ql_readbyte_no_ports_function)(unsigned int Address);
+extern unsigned char ql_readbyte_no_ports_vacio(unsigned int Address);
+
 
 //En principio no hay border. ponemos solo de ejemplo
 #define QL_LEFT_BORDER_NO_ZOOM 8
