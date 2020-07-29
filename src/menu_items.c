@@ -11158,6 +11158,9 @@ void menu_debug_sprites_change_bpp(void)
 		view_sprites_ppb=8;
 	}
 
+	//En algun caso, cambiando de maquina SG1000 a MSX, parece que este view_sprites_ppb llega a ser 0
+	//Dado que es un parametro que se utiliza para dividir, hacer que nunca pueda ser cero
+	if (view_sprites_ppb==0) view_sprites_ppb=1;
 
 	//printf ("bpp: %d ppb: %d\n",view_sprites_bpp,view_sprites_ppb);
 }
@@ -11667,6 +11670,7 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 			view_sprites_bpp=1;
 			view_sprites_ppb=8;
+		
 
 
             view_sprites_bytes_por_linea=16/view_sprites_ppb;
@@ -11913,6 +11917,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 		//porque usa mucha cpu y por ejemplo en maquina tsconf se clava si arrastramos ventana
 		if (redibujar_texto) {
 			//printf ("redibujamos texto\n");
+
+
 			menu_debug_view_sprites_textinfo(ventana);
 
 		
