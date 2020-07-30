@@ -25504,6 +25504,11 @@ void menu_interface_force_confirm_yes(MENU_ITEM_PARAMETERS)
 	force_confirm_yes.v ^=1;
 }
 
+void menu_setting_select_machine_by_name(MENU_ITEM_PARAMETERS)
+{
+	setting_machine_selection_by_name.v ^=1;
+}
+
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_interface_settings;
@@ -25598,6 +25603,14 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'l');	
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button)");			
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_select_machine_by_name,NULL,"[%c] Select machine by name",
+			(setting_machine_selection_by_name.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Select machine by name instead of manufacturer");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Select machine by name instead of manufacturer");
+
+
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_quickexit,NULL,"[%c] ~~Quick exit",
 			(quickexit.v ? 'X' : ' ') );
@@ -29642,8 +29655,13 @@ void menu_inicio_bucle_main(void)
 
 					);
 
-		//menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection,NULL);
-		menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection_by_name,NULL);
+		if (setting_machine_selection_by_name.v==0) {
+			menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection,NULL);
+		}
+		else {
+			menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection_by_name,NULL);
+		}
+
 		menu_add_item_menu_shortcut(array_menu_principal,'m');
 		menu_add_item_menu_tooltip(array_menu_principal,"Change active machine");
 		menu_add_item_menu_ayuda(array_menu_principal,"You can switch to another machine. It also resets the machine");

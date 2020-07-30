@@ -81,5 +81,7 @@ extern z80_bit menu_reopen_background_windows_on_start;
 
 extern z80_bit vdp_9918a_unlimited_sprites_line;
 
+extern z80_bit setting_machine_selection_by_name;
+
 #endif
 

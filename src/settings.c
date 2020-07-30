@@ -243,3 +243,12 @@ int menu_allow_background_windows=0;
 
 //Reabrir ventanas al iniciar el emulador 
 z80_bit menu_reopen_background_windows_on_start={0};
+
+
+//
+// GUI Settings
+//
+
+
+//Si se selecciona maquina con listado ordenado por nombre, en vez de por fabricante
+z80_bit setting_machine_selection_by_name={0};
