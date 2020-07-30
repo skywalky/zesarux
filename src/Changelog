@@ -76,7 +76,12 @@ Fixed Esxdos handler:
 Fixed rom loading: no more cpu panic when the rom is not found
 Fixed SCF/CCF undocumented flags emulation. Not enabled by default on compilation because almost no one is using this
 Fixed saving "Show CPU usage" setting on footer
-
+Fixed using tab and backspace keys in curses driver
+Fixed segfaults when using some memory zones and changing machine
+Fixed segfaults when setting breakpoints from config file and machine is QL
+Fixed loading zsf snapshot and ay registers
+Fixed segfaults when changing machines and resizing windows
+Fixed sending backspace, tab keys on curses
 
 Fixed tbblue bugs:
 -Fixed 8 first lines of tiles on border not shown
@@ -84,14 +89,9 @@ Fixed tbblue bugs:
 -Fixed reading palette colours. Fixed returning from multiface nmi 
 -Fixed reading clipping values
 -Fixed screensaver
-
-
-Fixed using tab and backspace keys in curses driver
-Fixed segfaults when using some memory zones and changing machine
-Fixed segfaults when setting breakpoints from config file and machine is QL
-Fixed loading zsf snapshot and ay registers
-Fixed segfaults when changing machines and resizing windows
-
+-Fixed tbblue memory priorities
+-Fixed tbblue diviface - mmu priority
+-Fixed layer2 mode 2 scroll
 
 
 Version 8.1.1 - The Great Escape edition. 2 March 2020
