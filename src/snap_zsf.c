@@ -882,6 +882,7 @@ Byte Fields:
 
   if (MACHINE_IS_COLECO) vram_destination=coleco_vram_memory;
   else if (MACHINE_IS_SG1000) vram_destination=sg1000_vram_memory;
+  else if (MACHINE_IS_SVI) vram_destination=svi_vram_memory;
   else vram_destination=msx_vram_memory;
 
 
@@ -2477,6 +2478,87 @@ Byte Fields:
 
 
   }
+
+
+if (MACHINE_IS_SVI) {
+
+
+    z80_byte vdpconfblock[8];
+
+/*
+-Block ID 30: ZSF_VDP_9918A_CONF
+Ports and internal registers of VDP 9918A
+Byte fields:
+0: vdp_9918a_registers[8];
+*/    
+
+
+    int i;
+    for (i=0;i<8;i++) vdpconfblock[i]=vdp_9918a_registers[i];
+
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, 8);  
+
+
+
+
+
+   
+int longitud_ram=16384;
+  
+   //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
+  if (compressed_ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+
+/*
+-Block ID 28: ZSF_MSX_VRAM
+VRAM contents for msx
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+*/
+
+        compressed_ramblock[0]=0;
+        compressed_ramblock[1]=value_16_to_8l(16384);
+        compressed_ramblock[2]=value_16_to_8h(16384);
+        compressed_ramblock[3]=value_16_to_8l(longitud_ram); //"Casualidad" que la vram tambien ocupa 16kb
+        compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+
+  z80_byte *vram;
+
+  vram=svi_vram_memory;
+
+
+        int si_comprimido;
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(vram,&compressed_ramblock[5],longitud_ram,&si_comprimido);
+        if (si_comprimido) compressed_ramblock[0]|=1;
+
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_VRAM length: %d",longitud_bloque);
+
+
+
+
+        
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_VRAM, longitud_bloque+5);
+
+
+
+  
+
+
+
+ 
+  
+  free(compressed_ramblock);
+
+
+  }    
 
 
 if (MACHINE_IS_SG1000 || MACHINE_IS_COLECO) {
