@@ -27225,6 +27225,12 @@ void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu_valor_opcion(array_menu_common,memoria_punteros[i]->id);
 
+			//Si coincide id con la maquina actual, cambiar menu_machine_selection_by_name_opcion_seleccionada
+			if (current_machine_type==memoria_punteros[i]->id) {
+				menu_machine_selection_by_name_opcion_seleccionada=i;
+				//printf ("Match current machine %d with list entry %d. Changing last selected\n",current_machine_type,i);
+			}
+
 		}	
 			
 		
