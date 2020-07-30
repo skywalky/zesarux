@@ -820,6 +820,8 @@ int hardware_advanced_opcion_seleccionada=0;
 int custom_machine_opcion_seleccionada;
 int hardware_printers_opcion_seleccionada=0;
 
+int menu_machine_selection_by_name_opcion_seleccionada=0;
+
 int input_file_keyboard_opcion_seleccionada=0;
 int change_video_driver_opcion_seleccionada=0;
 
@@ -27202,7 +27204,7 @@ void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
         menu_item item_seleccionado;
         int retorno_menu;
 
-		int opcion_seleccionada=0;
+		
         do {
 
 
@@ -27223,7 +27225,7 @@ void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
 
             menu_add_ESC_item(array_menu_common);
 
-            retorno_menu=menu_dibuja_menu(&opcion_seleccionada,&item_seleccionado,array_menu_common,"Select Machine" );
+            retorno_menu=menu_dibuja_menu(&menu_machine_selection_by_name_opcion_seleccionada,&item_seleccionado,array_menu_common,"Select Machine" );
 
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
