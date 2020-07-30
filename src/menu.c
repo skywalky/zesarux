@@ -995,8 +995,10 @@ void menu_debug_set_memory_zone_attr(void)
 	//Primero ver si zona actual no esta disponible, fallback a 0 que siempre esta
 	 menu_debug_memory_zone_size=machine_get_memory_zone_attrib(menu_debug_memory_zone,&readwrite);
 	if (!menu_debug_memory_zone_size) {
-		menu_debug_memory_zone=0;
-		menu_debug_memory_zone_size=machine_get_memory_zone_attrib(menu_debug_memory_zone,&readwrite);
+		printf ("Zona no disponible. Fallback a memory mapped\n");
+		menu_debug_set_memory_zone_mapped();
+		//menu_debug_memory_zone=0;
+		//menu_debug_memory_zone_size=machine_get_memory_zone_attrib(menu_debug_memory_zone,&readwrite);
 	}
 }
 
@@ -1012,23 +1014,30 @@ z80_byte menu_debug_get_mapped_byte(int direccion)
 
 
 	//Mostrar zonas mapeadas
+	printf ("menu_debug_get_mapped_byte 1\n");
 	menu_debug_set_memory_zone_attr();
 
+	//Aqui si se ha hecho fallback a mapped zone, recomprobar de nuevo
+	if (menu_debug_show_memory_zones==0) {
+		//printf ("menu_debug_get_mapped_byte dir %04XH result %02XH\n",direccion,peek_byte_z80_moto(direccion));
+		printf ("menu_debug_get_mapped_byte 1.5\n");
+		return peek_byte_z80_moto(direccion);
+	}	
+
+	printf ("menu_debug_get_mapped_byte 2\n");
+
+	printf ("menu_debug_get_mapped_byte menu_debug_memory_zone_size: %d\n",menu_debug_memory_zone_size);
+
 	direccion=direccion % menu_debug_memory_zone_size;
+	printf ("menu_debug_get_mapped_byte 3\n");
 	return *(machine_get_memory_zone_pointer(menu_debug_memory_zone,direccion));
-
+	
 
 
 }
 
 
-//Interrumpe el core y le dice que hay que abrir el menu
-void menu_fire_event_open_menu(void)
-{
-	//printf ("Ejecutar menu_fire_event_open_menu\n");
-	menu_abierto=1;
-	menu_event_open_menu.v=1;
-}
+
 
 //Escribe byte mapeado de ram normal o de zona de menu mapeada
 void menu_debug_write_mapped_byte(int direccion,z80_byte valor)
@@ -1045,11 +1054,26 @@ void menu_debug_write_mapped_byte(int direccion,z80_byte valor)
 	//Mostrar zonas mapeadas
 	menu_debug_set_memory_zone_attr();
 
+
+	//Aqui si se ha hecho fallback a mapped zone, recomprobar de nuevo
+	if (menu_debug_show_memory_zones==0) {
+		return poke_byte_z80_moto(direccion,valor);
+	}	
+
 	direccion=direccion % menu_debug_memory_zone_size;
 	*(machine_get_memory_zone_pointer(menu_debug_memory_zone,direccion))=valor;
 
 
 
+}
+
+
+//Interrumpe el core y le dice que hay que abrir el menu
+void menu_fire_event_open_menu(void)
+{
+	//printf ("Ejecutar menu_fire_event_open_menu\n");
+	menu_abierto=1;
+	menu_event_open_menu.v=1;
 }
 
 
@@ -1076,6 +1100,7 @@ void menu_debug_set_memory_zone_mapped(void)
 {
 		menu_debug_memory_zone=-1;
 		menu_debug_show_memory_zones=0;	
+		menu_debug_memory_zone_size=65536;
 }
 
 

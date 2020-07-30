@@ -3150,7 +3150,9 @@ void set_machine_params(void)
 
 		//Resetear a zona memoria por defecto. Evita cuelgues al intentar usar una zona de memoria que ya no esta disponible,
 		//ejemplo: iniciar maquina msx. abrir view sprites->activar hardware. F5 y cambiar a spectravideo. F5. Floating point exception.
-		menu_debug_set_memory_zone_mapped();
+		//menu_debug_set_memory_zone_mapped();
+		//En principio esto ya no hace falta, desde menu_debug_set_memory_zone_attr, menu_debug_get_mapped_byte y menu_debug_write_mapped_byte
+		//ya se está conmutando correctamente a memory mapped cuando la zona anterior ya no está disponible
 
 		screen_set_parameters_slow_machines();
 
