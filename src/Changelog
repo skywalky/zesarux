@@ -32,7 +32,7 @@ Improved menu:
 -Added setting to select machine by name instead by manufacturer
 -Added setting to disable showing cpu temperature, or FPS on footer
 -Added keyboard help window for most machines
--Warn in red colour when FPS low
+-Footer FPS warns in red colour when FPS low
 
 Improved Esxdos handler: 
 -add f_mkdir function 
@@ -87,6 +87,10 @@ Fixed tbblue bugs:
 
 
 Fixed using tab and backspace keys in curses driver
+Fixed segfaults when using some memory zones and changing machine
+Fixed segfaults when setting breakpoints from config file and machine is QL
+Fixed loading zsf snapshot and ay registers
+Fixed segfaults when changing machines and resizing windows
 
 
 

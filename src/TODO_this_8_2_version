@@ -384,6 +384,7 @@ https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
 Spectravideo
 -opcion keymap para Spectravideo_SVI
 -resto teclas
+-ayuda teclado
 -Quizá para 16kb svi 318 hacer que si direccion > 16kb, retorne tipo vacío y así no escribe ni lee nada 
 O quizá esa rom es del 328 en vez del 318
 -TODO: tipo paginas en svi al retornar direccion
@@ -400,5 +401,9 @@ Probado con curl y no parece funcionar
 
 - Cpc real video 
 
+-Configure haiku dejar? O hacer poder cambiar comando gcc?
 
 
+-copiar documentos msx, svi, sg1000 y coleco a carpeta docs de extras
+
+-Agregar cambios corregidos (fixed en commits) en Changelog
