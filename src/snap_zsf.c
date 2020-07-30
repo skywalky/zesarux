@@ -111,7 +111,7 @@
 #define ZSF_MSX_MEMBLOCK 26
 #define ZSF_MSX_CONF 27
 #define ZSF_MSX_VRAM 28
-#define ZSF_GENERIC_64K_MEM 29
+#define ZSF_GENERIC_LINEAR_MEM 29
 #define ZSF_VDP_9918A_CONF 30
 #define ZSF_SNCHIP 31
 
@@ -405,14 +405,14 @@ Byte Fields:
 
 
 
--Block ID 29: ZSF_GENERIC_64K_MEM
-A ram/rom binary block for a coleco, sg1000 or anything that has only 64kb
+-Block ID 29: ZSF_GENERIC_LINEAR_MEM
+A ram/rom binary block for a coleco, sg1000, spectravideo,or any machine to save memory linear
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
 1,2: Block start address (currently unused)
 3,4: Block lenght
-5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff)
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
 
 
 
@@ -472,7 +472,7 @@ char *zsf_block_id_names[]={
   "ZSF_MSX_MEMBLOCK",
   "ZSF_MSX_CONF",
   "ZSF_MSX_VRAM",
-  "ZSF_GENERIC_64K_MEM",
+  "ZSF_GENERIC_LINEAR_MEM",
   "ZSF_VDP_9918A_CONF",
   "ZSF_SNCHIP",
 
@@ -800,17 +800,17 @@ Byte Fields:
 
 
 
-void load_zsf_generic_64k_mem_snapshot_block_data(z80_byte *block_data,int longitud_original)
+void load_ZSF_GENERIC_LINEAR_MEM_snapshot_block_data(z80_byte *block_data,int longitud_original)
 {
 /*
--Block ID 29: ZSF_GENERIC_64K_MEM
-A ram/rom binary block for a coleco, sg1000 or anything that has only 64kb
+-Block ID 29: ZSF_GENERIC_LINEAR_MEM
+A ram/rom binary block for a coleco, sg1000, spectravideo,or any machine to save memory linear
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
 1,2: Block start address (currently unused)
 3,4: Block lenght
-5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff)
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ....)
 */
 
 
@@ -1822,8 +1822,8 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
         load_zsf_msx_snapshot_vram_data(block_data,block_lenght);
       break;  
 
-      case ZSF_GENERIC_64K_MEM:
-        load_zsf_generic_64k_mem_snapshot_block_data(block_data,block_lenght);
+      case ZSF_GENERIC_LINEAR_MEM:
+        load_ZSF_GENERIC_LINEAR_MEM_snapshot_block_data(block_data,block_lenght);
       break;  
 
       case ZSF_VDP_9918A_CONF:
@@ -2552,14 +2552,14 @@ Byte Fields:
   
 /*
 
--Block ID 29: ZSF_GENERIC_64K_MEM
-A ram/rom binary block for a coleco, sg1000 or anything that has only 64kb
+-Block ID 29: ZSF_GENERIC_LINEAR_MEM
+A ram/rom binary block for a coleco, sg1000, spectravideo,or any machine to save memory linear
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
 1,2: Block start address (currently unused)
 3,4: Block lenght
-5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff)
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
   */
 
 
@@ -2585,10 +2585,10 @@ Byte Fields:
         int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[6],longitud_ram,&si_comprimido);
         if (si_comprimido) compressed_ramblock[0]|=1;
 
-        debug_printf(VERBOSE_DEBUG,"Saving ZSF_GENERIC_64K_MEM segment: %d length: %d",segment,longitud_bloque);
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_GENERIC_LINEAR_MEM segment: %d length: %d",segment,longitud_bloque);
 
         
-        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_GENERIC_64K_MEM, longitud_bloque+6);
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_GENERIC_LINEAR_MEM, longitud_bloque+6);
         
     }
 
@@ -2676,14 +2676,14 @@ Byte Fields:
 
 
 
--Block ID 29: ZSF_GENERIC_64K_MEM
-A ram/rom binary block for a coleco, sg1000 or anything that has only 64kb
+-Block ID 29: ZSF_GENERIC_LINEAR_MEM
+A ram/rom binary block for a coleco, sg1000,spectravideo,or anything that has only 64kb
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
 1,2: Block start address (currently unused)
 3,4: Block lenght
-5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff)
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
   */
 
 
@@ -2709,10 +2709,10 @@ Byte Fields:
         int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[6],longitud_ram,&si_comprimido);
         if (si_comprimido) compressed_ramblock[0]|=1;
 
-        debug_printf(VERBOSE_DEBUG,"Saving ZSF_GENERIC_64K_MEM segment: %d length: %d",segment,longitud_bloque);
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_GENERIC_LINEAR_MEM segment: %d length: %d",segment,longitud_bloque);
 
         
-        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_GENERIC_64K_MEM, longitud_bloque+6);
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_GENERIC_LINEAR_MEM, longitud_bloque+6);
         
       
 
