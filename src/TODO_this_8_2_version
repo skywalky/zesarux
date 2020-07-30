@@ -383,7 +383,6 @@ https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
 
 Spectravideo
 -opcion keymap para Spectravideo_SVI
--Snapshots zsf soporte Spectravideo 
 -resto teclas
 -Quizá para 16kb svi 318 hacer que si direccion > 16kb, retorne tipo vacío y así no escribe ni lee nada 
 O quizá esa rom es del 328 en vez del 318

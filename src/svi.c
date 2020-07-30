@@ -128,7 +128,8 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 {
 
 
-
+    //TODO: si el usuario cambia el numero de chips ay a 2 o 3, esto puede fallar
+    //o puede fallar al cargar snapshot zsf
     z80_byte page_config=ay_3_8912_registros[ay_chip_selected][15];
 
 
