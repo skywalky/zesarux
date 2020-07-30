@@ -3823,6 +3823,8 @@ You don't need timings for H/V sync =)
 				out_port=out_port_msx1;
 				fetch_opcode=fetch_opcode_msx;
 				ay_chip_present.v=1;
+				ay_chip_selected=0;
+				total_ay_chips=1;
         break;
 
 
@@ -3836,6 +3838,8 @@ You don't need timings for H/V sync =)
 				out_port=out_port_svi;
 				fetch_opcode=fetch_opcode_svi;
 				ay_chip_present.v=1;
+				ay_chip_selected=0;
+				total_ay_chips=1;
         break;
 
 
