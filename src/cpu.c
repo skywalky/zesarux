@@ -2453,10 +2453,7 @@ void random_ram_inves(z80_byte *puntero,int longitud)
 
 }
 
-struct s_machine_names {
-	char nombre_maquina[40];  //40 mas que suficiente
-	int id;
-};
+
 
 struct s_machine_names machine_names[]={
 

@@ -27000,6 +27000,7 @@ void menu_machine_selection_for_manufacturer(int fabricante)
 
 }
 
+//Seleccion de maquina por fabricante
 void menu_machine_selection(MENU_ITEM_PARAMETERS)
 {
 
@@ -27085,7 +27086,202 @@ void menu_machine_selection(MENU_ITEM_PARAMETERS)
 
 }
 
+int menu_machine_selection_by_name_alphasort(const struct s_machine_names **d1, const struct s_machine_names **d2)
+{
 
+        //printf ("menu_filesel_alphasort %s %s\n",(*d1)->d_name,(*d2)->d_name );
+
+        //compara nombre
+        return (strcasecmp((*d1)->nombre_maquina,(*d2)->nombre_maquina));
+}
+
+
+//Seleccion de maquina por nombre
+void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
+{
+
+
+
+
+	
+	int total_maquinas;
+
+	int paso;
+
+	//En primer paso, contar total maquinas. En segundo paso, meter en array
+
+	total_maquinas=0;
+
+				int i;
+
+	for (i=0;i<99999 && machine_names[i].nombre_maquina[0]!=0;i++) {
+		printf ("id: %03d nombre: %s\n",machine_names[i].id,machine_names[i].nombre_maquina);
+		total_maquinas++;
+	}
+	
+	printf ("total maquinas: %d\n",total_maquinas);
+
+
+	//Meterlas en array, para poderlas ordenar
+
+	struct s_machine_names *sorted_machine_names;
+
+	int tamanyo_struct=sizeof(struct s_machine_names);
+
+	int tamanyo_total=tamanyo_struct*total_maquinas;
+
+	printf ("Allocating memory for %d\n",tamanyo_total);
+
+	sorted_machine_names=malloc(tamanyo_total);
+
+	if (sorted_machine_names==NULL) cpu_panic ("Cannot allocate memory for machine list");
+
+	//Insertar listado en memoria
+	for (i=0;i<total_maquinas;i++) {
+		printf ("id: %03d nombre: %s\n",machine_names[i].id,machine_names[i].nombre_maquina);
+
+		strcpy(sorted_machine_names[i].nombre_maquina,machine_names[i].nombre_maquina);
+		sorted_machine_names[i].id=machine_names[i].id;
+	}
+
+	//Ordenar ese listado
+
+        //lanzar qsort
+        int (*funcion_compar)(const void *, const void *);
+
+        funcion_compar=( int (*)(const void *, const void *)  ) menu_machine_selection_by_name_alphasort;
+
+        qsort(sorted_machine_names,total_maquinas,sizeof(struct s_machine_names *), funcion_compar);	
+
+	//Imprimir listado de memoria
+	for (i=0;i<total_maquinas;i++) {
+		printf ("sorted id: %03d nombre: %s\n",sorted_machine_names[i].id,sorted_machine_names[i].nombre_maquina);
+
+	}	
+
+/*
+	//Obtener primero total de fabricantes. Y de cada fabricante, las maquinas
+			int fabricante;
+			for (fabricante=0;fabricante<TOTAL_FABRICANTES;fabricante++) {
+				printf ("Fabricante: %s\n",array_fabricantes[fabricante]);
+
+				//Por cada fabricante, obtener las maquinas
+
+
+				int *maquinas_array;
+
+				maquinas_array=return_maquinas_fabricante(fabricante);
+
+
+
+				char *nombre_maquina;
+
+				
+				int maquina;
+
+				
+
+				for (maquina=0;maquinas_array[maquina]!=255;maquina++) {
+					int maquina_id=maquinas_array[maquina];
+					//printf ("%d\n",m);
+					nombre_maquina=get_machine_name(maquina_id);
+					printf ("%d %s\n",maquina_id,nombre_maquina);
+					total_maquinas++;
+
+
+				}
+
+
+	}	
+	*/
+
+
+
+			return;
+
+	
+
+	//Seleccion por fabricante
+                menu_item *array_menu_machine_selection;
+                menu_item item_seleccionado;
+                int retorno_menu;
+
+//return_fabricante_maquina
+		//Establecemos linea menu segun fabricante activo
+		machine_selection_opcion_seleccionada=return_fabricante_maquina(current_machine_type);
+
+                do {
+
+			//Primer fabricante
+                        menu_add_item_menu_inicial_format(&array_menu_machine_selection,MENU_OPCION_NORMAL,NULL,NULL,"%s",array_fabricantes_hotkey[0]);
+			menu_add_item_menu_shortcut(array_menu_machine_selection,array_fabricantes_hotkey_letra[0]);
+
+		//Siguientes fabricantes
+			
+			for (i=1;i<TOTAL_FABRICANTES;i++) {
+				menu_add_item_menu_format(array_menu_machine_selection,MENU_OPCION_NORMAL,NULL,NULL,"%s",array_fabricantes_hotkey[i]);
+				z80_byte letra=array_fabricantes_hotkey_letra[i];
+				if (letra!=' ') menu_add_item_menu_shortcut(array_menu_machine_selection,letra);
+			}
+
+
+                       menu_add_item_menu(array_menu_machine_selection,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                        //Hotswap de Z88 o Jupiter Ace o CHLOE no existe
+                        menu_add_item_menu(array_menu_machine_selection,"~~Hotswap machine",MENU_OPCION_NORMAL,menu_hotswap_machine,menu_hotswap_machine_cond);
+                        menu_add_item_menu_shortcut(array_menu_machine_selection,'h');
+                        menu_add_item_menu_tooltip(array_menu_machine_selection,"Change machine type without resetting");
+                        menu_add_item_menu_ayuda(array_menu_machine_selection,"Change machine type without resetting.");
+
+                        menu_add_item_menu(array_menu_machine_selection,"Cust~~om machine",MENU_OPCION_NORMAL,menu_custom_machine,NULL);
+                        menu_add_item_menu_shortcut(array_menu_machine_selection,'o');
+                        menu_add_item_menu_tooltip(array_menu_machine_selection,"Specify custom machine type & ROM");
+                        menu_add_item_menu_ayuda(array_menu_machine_selection,"Specify custom machine type & ROM");
+
+                        menu_add_item_menu(array_menu_machine_selection,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+                        //menu_add_item_menu(array_menu_machine_selection,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                        menu_add_ESC_item(array_menu_machine_selection);
+
+
+
+                        retorno_menu=menu_dibuja_menu(&machine_selection_opcion_seleccionada,&item_seleccionado,array_menu_machine_selection,"Select manufacturer" );
+
+                        //printf ("Opcion seleccionada: %d\n",machine_selection_opcion_seleccionada);
+
+                        
+
+                        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+
+                                if (machine_selection_opcion_seleccionada>=0 && machine_selection_opcion_seleccionada<=TOTAL_FABRICANTES) {
+
+					//printf ("Seleccionado fabricante %s\n",array_fabricantes[machine_selection_opcion_seleccionada]);
+
+                                        //int last_machine_type=machine_type;
+
+
+					menu_machine_selection_for_manufacturer(machine_selection_opcion_seleccionada);
+
+
+
+			      }
+                                //llamamos por valor de funcion
+                                if (item_seleccionado.menu_funcion!=NULL) {
+                                        //printf ("actuamos por funcion\n");
+                                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                        
+                                }
+
+
+                             
+                        }
+
+              
+                } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+}
 
 
 
@@ -29486,7 +29682,8 @@ void menu_inicio_bucle_main(void)
 
 					);
 
-		menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection,NULL);
+		//menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection,NULL);
+		menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection_by_name,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'m');
 		menu_add_item_menu_tooltip(array_menu_principal,"Change active machine");
 		menu_add_item_menu_ayuda(array_menu_principal,"You can switch to another machine. It also resets the machine");

@@ -403,6 +403,5 @@ Probado con curl y no parece funcionar
 
 - Cpc real video 
 
--view sprites hardware vdp acabar de probar y quitar debug printf
-Probar los otros sprites hardware tbblue,tsconf que funcionen bien
+
 
