@@ -26865,6 +26865,47 @@ int menu_hotswap_machine_cond(void) {
 	return 0;
 }
 
+
+void menu_machine_set_machine_by_id(int id_maquina)
+{
+current_machine_type=id_maquina;
+
+				     set_machine(NULL);
+                                        cold_start_cpu_registers();
+                                        reset_cpu();
+
+                                        //desactivar autoload
+                                        //noautoload.v=1;
+                                        //initial_tap_load.v=0;
+
+
+                                        //expulsamos cintas
+                                        eject_tape_load();
+                                        eject_tape_save();
+
+                                        //Y salimos de todos los menus
+                                        salir_todos_menus=1;
+
+
+										
+										if (MACHINE_IS_TBBLUE) {
+												//Si se pregunta si se quiere autoconfigurar SD, solo si esta el grabado de configuracion, e interfaz permite menu (no stdout ni simpletext ni null)
+												if (save_configuration_file_on_exit.v && tbblue_autoconfigure_sd_asked.v==0 && si_normal_menu_video_driver()) {
+													if (menu_confirm_yesno_texto("Autoconfigure Initial SD","Sure?")) {
+														menu_storage_mmc_autoconfigure_tbblue(0);
+													}
+
+													tbblue_autoconfigure_sd_asked.v=1;
+												}
+
+										}
+
+										if (MACHINE_IS_SG1000) {
+											menu_first_aid("sg1000_boot");
+										}
+											
+}
+
 void menu_machine_selection_for_manufacturer(int fabricante)
 {
 	int i;
@@ -26937,49 +26978,22 @@ void menu_machine_selection_for_manufacturer(int fabricante)
 
 
 
-					//printf ("Seleccion opcion=%d\n",machine_selection_por_fabricante_opcion_seleccionada);
-					int id_maquina=maquinas[machine_selection_por_fabricante_opcion_seleccionada];
-					//printf ("Maquina= %d %s\n",id_maquina, get_machine_name(id_maquina) );
-
-					current_machine_type=id_maquina;
-
-				     set_machine(NULL);
-                                        cold_start_cpu_registers();
-                                        reset_cpu();
-
-                                        //desactivar autoload
-                                        //noautoload.v=1;
-                                        //initial_tap_load.v=0;
+								//printf ("Seleccion opcion=%d\n",machine_selection_por_fabricante_opcion_seleccionada);
+								int id_maquina=maquinas[machine_selection_por_fabricante_opcion_seleccionada];
+								//printf ("Maquina= %d %s\n",id_maquina, get_machine_name(id_maquina) );
 
 
-                                        //expulsamos cintas
-                                        eject_tape_load();
-                                        eject_tape_save();
-
-                                        //Y salimos de todos los menus
-                                        salir_todos_menus=1;
 
 
+								menu_machine_set_machine_by_id(id_maquina);
+
+					
 										
-										if (MACHINE_IS_TBBLUE) {
-												//Si se pregunta si se quiere autoconfigurar SD, solo si esta el grabado de configuracion, e interfaz permite menu (no stdout ni simpletext ni null)
-												if (save_configuration_file_on_exit.v && tbblue_autoconfigure_sd_asked.v==0 && si_normal_menu_video_driver()) {
-													if (menu_confirm_yesno_texto("Autoconfigure Initial SD","Sure?")) {
-														menu_storage_mmc_autoconfigure_tbblue(0);
-													}
-
-													tbblue_autoconfigure_sd_asked.v=1;
-												}
-
-										}
-
-										if (MACHINE_IS_SG1000) {
-											menu_first_aid("sg1000_boot");
-										}
-										
-
 
                               }
+
+
+
                                 //llamamos por valor de funcion
                                 if (item_seleccionado.menu_funcion!=NULL) {
                                         //printf ("actuamos por funcion\n");
@@ -27095,6 +27109,10 @@ int menu_machine_selection_by_name_alphasort(const struct s_machine_names **d1, 
         return (strcasecmp((*d1)->nombre_maquina,(*d2)->nombre_maquina));
 }
 
+void menu_machine_selection_by_name_set(MENU_ITEM_PARAMETERS)
+{
+	menu_machine_set_machine_by_id(valor_opcion);
+}
 
 //Seleccion de maquina por nombre
 void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
@@ -27193,7 +27211,7 @@ void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
 
 			for (i=0;i<total_maquinas;i++) {
 				printf ("sorted id: %03d nombre: %s\n",memoria_punteros[i]->id,memoria_punteros[i]->nombre_maquina);
-				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,memoria_punteros[i]->nombre_maquina);
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_machine_selection_by_name_set,NULL,memoria_punteros[i]->nombre_maquina);
 
 				menu_add_item_menu_valor_opcion(array_menu_common,memoria_punteros[i]->id);
 
