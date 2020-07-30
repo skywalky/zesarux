@@ -114,6 +114,7 @@
 #define ZSF_GENERIC_LINEAR_MEM 29
 #define ZSF_VDP_9918A_CONF 30
 #define ZSF_SNCHIP 31
+#define ZSF_SVI_CONF 32
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -427,6 +428,13 @@ Byte fields:
 0-15: SN Chip contents
 
 
+-Block ID 32: ZSF_SVI_CONF
+Ports and internal registers of SVI machine
+Byte fields:
+0: svi_ppi_register_a
+1: svi_ppi_register_b
+2: svi_ppi_register_c
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -440,7 +448,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 32
+#define MAX_ZSF_BLOCK_ID_NAMES 33
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -475,6 +483,7 @@ char *zsf_block_id_names[]={
   "ZSF_GENERIC_LINEAR_MEM",
   "ZSF_VDP_9918A_CONF",
   "ZSF_SNCHIP",
+  "ZSF_SVI_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -1329,6 +1338,29 @@ Byte fields:
 }
 
 
+void load_zsf_svi_conf(z80_byte *header)
+{
+
+  /*
+-Block ID 27: ZSF_SVI_CONF
+Ports and internal registers of SVI machine
+Byte fields:
+0: svi_ppi_register_a
+1: svi_ppi_register_b
+2: svi_ppi_register_c
+*/
+
+  svi_ppi_register_a=header[0];
+  svi_ppi_register_b=header[1];
+  svi_ppi_register_c=header[2];
+
+
+
+
+ 
+}
+
+
 void load_zsf_vdp_9918a_conf(z80_byte *header)
 {
 
@@ -1832,7 +1864,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_SNCHIP:
         load_zsf_snchip(block_data);
-      break;                     
+      break;     
+
+      case ZSF_SVI_CONF:
+        load_zsf_svi_conf(block_data);
+      break;                         
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -2483,6 +2519,25 @@ Byte Fields:
 if (MACHINE_IS_SVI) {
 
 
+    z80_byte sviconfblock[11];
+
+/*
+-Block ID 27: ZSF_SVI_CONF
+Ports and internal registers of SVI machine
+Byte fields:
+0: svi_ppi_register_a
+1: svi_ppi_register_b
+2: msx_ppi_register_c
+*/    
+
+    sviconfblock[0]=svi_ppi_register_a;
+    sviconfblock[1]=svi_ppi_register_b;
+    sviconfblock[2]=svi_ppi_register_c;
+
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, sviconfblock,ZSF_SVI_CONF, 3);
+
+
     z80_byte vdpconfblock[8];
 
 /*
@@ -2566,7 +2621,7 @@ Byte Fields:
   int segment;
 
   
-
+  //No me complico mucho la vida. Guardo toda la memoria asignada de spectravideo en bloques de 16kb
     for (segment=0;segment<16;segment++) {
 
       //Store block to file
