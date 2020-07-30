@@ -2640,8 +2640,9 @@ Byte Fields:
         int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[6],longitud_ram,&si_comprimido);
         if (si_comprimido) compressed_ramblock[0]|=1;
 
-        debug_printf(VERBOSE_DEBUG,"Saving ZSF_GENERIC_LINEAR_MEM segment: %d length: %d",segment,longitud_bloque);
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_GENERIC_LINEAR_MEM segment: %d length: %d offset: %d",segment,longitud_bloque,offset);
 
+        //printf("Saving ZSF_GENERIC_LINEAR_MEM segment: %d length: %d offset: %d\n",segment,longitud_bloque,offset);
         
         zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_GENERIC_LINEAR_MEM, longitud_bloque+6);
         
