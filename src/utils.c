@@ -7366,11 +7366,13 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         blink_kbd_a14 &= (255-128);
                                         ql_keyboard_table[0] &= (255-2);
                                         msx_keyboard_table[6] &= (255-32);
+                                        svi_keyboard_table[7] &=(255-1);
                                 }
                                 else {
                                         blink_kbd_a14 |= 128;
                                         ql_keyboard_table[0] |= 2;
                                         msx_keyboard_table[6] |= 32;
+                                        svi_keyboard_table[7] |=1;
                                 }
                         break;
 
@@ -7381,11 +7383,13 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         blink_kbd_a15 &= (255-16);
                                         ql_keyboard_table[0] &= (255-8);
                                         msx_keyboard_table[6] &= (255-64);
+                                        svi_keyboard_table[7] &=(255-2);
                                 }
                                 else {
                                         blink_kbd_a15 |= 16;
                                         ql_keyboard_table[0] |= 8;
                                         msx_keyboard_table[6] |= 64;
+                                        svi_keyboard_table[7] |=2;
                                 }
                         break;
 
@@ -7397,11 +7401,13 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         blink_kbd_a14 &= (255-8);
                                         ql_keyboard_table[0] &= (255-16);
                                         msx_keyboard_table[6] &= (255-128);
+                                        svi_keyboard_table[7] &=(255-4);
                                 }
                                 else {
                                         blink_kbd_a14 |= 8;
                                         ql_keyboard_table[0] |= 16;
                                         msx_keyboard_table[6] |= 128;
+                                        svi_keyboard_table[7] |=4;
                                 }
                         break;
 
@@ -7412,11 +7418,13 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
                                    ql_keyboard_table[0] &= (255-1);
                                    msx_keyboard_table[7] &= (255-1);
+                                   svi_keyboard_table[7] &=(255-8);
                                  }
 
                                  else {
                                    ql_keyboard_table[0] |= 1;
                                    msx_keyboard_table[7] |= 1;
+                                   svi_keyboard_table[7] |=8;
                                  }
 		        break;
 
@@ -7428,10 +7436,12 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         ql_keyboard_table[0] &= (255-32); //Caso especial F5 y QL
 
                                         msx_keyboard_table[7] &= (255-2);
+                                        svi_keyboard_table[7] &=(255-16);
                                 }
                                 else {
                                         ql_keyboard_table[0] |= 32;
                                         msx_keyboard_table[7] |= 2;
+                                        svi_keyboard_table[7] |=16;
                                 }
                         break;
 
