@@ -29,6 +29,7 @@ Improved menu:
 -Active windows are saved and restored on startup
 -Pressing the menu key (F5 by default) when menu is open, it will send you back to the main menu. Also pressing over Z logo on ext desktop
 -Some window hotkeys can be activated with mouse click (example: Debug CPU Window, File utilities, View Sprites, Hex Editor, Disassemble)
+-Added setting to select machine by name instead by manufacturer
 -Added setting to disable showing cpu temperature, or FPS on footer
 -Added keyboard help window for most machines
 -Warn in red colour when FPS low

@@ -1814,6 +1814,7 @@ printf (
 		"\n"
 		"--hide-dirs                Do not show directories on file selector menus\n"
 		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
+		"--setmachinebyname         Select machine by name instead of manufacturer\n"
 		"--disablemenu              Disable menu\n"
 		"--disablemenuandexit       Disable menu. Any event that opens the menu will exit the emulator\n"
 		"--disablemenufileutils     Disable File Utilities menu\n"
@@ -5685,6 +5686,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--limitopenmenu")) {
 				menu_limit_menu_open.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--setmachinebyname")) {
+				setting_machine_selection_by_name.v=1;
+			}			
 
 			else if (!strcmp(argv[puntero_parametro],"--hide-dirs")) {
 				menu_filesel_hide_dirs.v=1;

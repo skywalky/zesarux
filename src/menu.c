@@ -27220,7 +27220,7 @@ void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
 		for (i=0;i<total_maquinas;i++) {
-			printf ("sorted id: %03d nombre: %s\n",memoria_punteros[i]->id,memoria_punteros[i]->nombre_maquina);
+			//printf ("sorted id: %03d nombre: %s\n",memoria_punteros[i]->id,memoria_punteros[i]->nombre_maquina);
 			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_machine_selection_by_name_set,NULL,memoria_punteros[i]->nombre_maquina);
 
 			menu_add_item_menu_valor_opcion(array_menu_common,memoria_punteros[i]->id);
