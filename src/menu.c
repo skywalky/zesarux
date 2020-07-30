@@ -27120,26 +27120,20 @@ void menu_machine_selection_by_name_set(MENU_ITEM_PARAMETERS)
 void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
 {
 
-
-
-
 	
 	int total_maquinas;
 
-	int paso;
-
-	//En primer paso, contar total maquinas. En segundo paso, meter en array
 
 	total_maquinas=0;
 
-				int i;
+	int i;
 
 	for (i=0;i<99999 && machine_names[i].nombre_maquina[0]!=0;i++) {
-		printf ("id: %03d nombre: %s\n",machine_names[i].id,machine_names[i].nombre_maquina);
+		//printf ("id: %03d nombre: %s\n",machine_names[i].id,machine_names[i].nombre_maquina);
 		total_maquinas++;
 	}
 	
-	printf ("total maquinas: %d\n",total_maquinas);
+	//printf ("total maquinas: %d\n",total_maquinas);
 
 
 	//Meterlas en array, para poderlas ordenar
@@ -27150,7 +27144,7 @@ void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
 
 	int tamanyo_total=tamanyo_struct*total_maquinas;
 
-	printf ("Allocating memory for %d\n",tamanyo_total);
+	//printf ("Allocating memory for %d\n",tamanyo_total);
 
 	sorted_machine_names=malloc(tamanyo_total);
 
@@ -27158,7 +27152,7 @@ void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
 
 	//Insertar listado en memoria
 	for (i=0;i<total_maquinas;i++) {
-		printf ("id: %03d nombre: %s\n",machine_names[i].id,machine_names[i].nombre_maquina);
+		//printf ("id: %03d nombre: %s\n",machine_names[i].id,machine_names[i].nombre_maquina);
 
 		strcpy(sorted_machine_names[i].nombre_maquina,machine_names[i].nombre_maquina);
 		sorted_machine_names[i].id=machine_names[i].id;
@@ -27181,101 +27175,64 @@ void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
 		memoria_punteros[i]=&sorted_machine_names[i];
 	}
 
-	//Ordenar ese listado
+	//Ordenar ese listado de punteros
 
-        //lanzar qsort
-        int (*funcion_compar)(const void *, const void *);
+	//lanzar qsort
+	int (*funcion_compar)(const void *, const void *);
 
-        funcion_compar=( int (*)(const void *, const void *)  ) menu_machine_selection_by_name_alphasort;
+	funcion_compar=( int (*)(const void *, const void *)  ) menu_machine_selection_by_name_alphasort;
 
-        qsort(memoria_punteros,total_maquinas,sizeof(struct s_machine_names *), funcion_compar);	
+	qsort(memoria_punteros,total_maquinas,sizeof(struct s_machine_names *), funcion_compar);	
 
 	//Imprimir listado de memoria
-	for (i=0;i<total_maquinas;i++) {
+	/*for (i=0;i<total_maquinas;i++) {
 		printf ("sorted id: %03d nombre: %s\n",memoria_punteros[i]->id,memoria_punteros[i]->nombre_maquina);
 
-	}	
+	}
+	*/	
 
 
 	//Meter cada uno en menu. Asignar id maquina como valor_opcion
 
-        //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
-        menu_item *array_menu_common;
-        menu_item item_seleccionado;
-        int retorno_menu;
+	//Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+	menu_item *array_menu_common;
+	menu_item item_seleccionado;
+	int retorno_menu;
 
-		
-        do {
+	
+	do {
 
 
-        	//Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
-			menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+		//Como no sabemos cual sera el item inicial, metemos este sin asignar, que se sobreescribe en el siguiente menu_add_item_menu
+		menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
-			for (i=0;i<total_maquinas;i++) {
-				printf ("sorted id: %03d nombre: %s\n",memoria_punteros[i]->id,memoria_punteros[i]->nombre_maquina);
-				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_machine_selection_by_name_set,NULL,memoria_punteros[i]->nombre_maquina);
+		for (i=0;i<total_maquinas;i++) {
+			printf ("sorted id: %03d nombre: %s\n",memoria_punteros[i]->id,memoria_punteros[i]->nombre_maquina);
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_machine_selection_by_name_set,NULL,memoria_punteros[i]->nombre_maquina);
 
-				menu_add_item_menu_valor_opcion(array_menu_common,memoria_punteros[i]->id);
+			menu_add_item_menu_valor_opcion(array_menu_common,memoria_punteros[i]->id);
 
-			}	
-                
+		}	
 			
-						
-			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		
+					
+		menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-            menu_add_ESC_item(array_menu_common);
+		menu_add_ESC_item(array_menu_common);
 
-            retorno_menu=menu_dibuja_menu(&menu_machine_selection_by_name_opcion_seleccionada,&item_seleccionado,array_menu_common,"Select Machine" );
+		retorno_menu=menu_dibuja_menu(&menu_machine_selection_by_name_opcion_seleccionada,&item_seleccionado,array_menu_common,"Select Machine" );
 
-                
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
+			
+			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+					//llamamos por valor de funcion
+					if (item_seleccionado.menu_funcion!=NULL) {
+							//printf ("actuamos por funcion\n");
+							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+							
+					}
+			}
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);	
-
-/*
-	//Obtener primero total de fabricantes. Y de cada fabricante, las maquinas
-			int fabricante;
-			for (fabricante=0;fabricante<TOTAL_FABRICANTES;fabricante++) {
-				printf ("Fabricante: %s\n",array_fabricantes[fabricante]);
-
-				//Por cada fabricante, obtener las maquinas
-
-
-				int *maquinas_array;
-
-				maquinas_array=return_maquinas_fabricante(fabricante);
-
-
-
-				char *nombre_maquina;
-
-				
-				int maquina;
-
-				
-
-				for (maquina=0;maquinas_array[maquina]!=255;maquina++) {
-					int maquina_id=maquinas_array[maquina];
-					//printf ("%d\n",m);
-					nombre_maquina=get_machine_name(maquina_id);
-					printf ("%d %s\n",maquina_id,nombre_maquina);
-					total_maquinas++;
-
-
-				}
-
-
-	}	
-	*/
-
-
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);	
 
 
 	free(sorted_machine_names);
