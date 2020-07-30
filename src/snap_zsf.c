@@ -406,7 +406,7 @@ Byte Fields:
 
 
 -Block ID 29: ZSF_GENERIC_64K_MEM
-A ram binary block for a coleco, sg1000 or anything that has only 64kb
+A ram/rom binary block for a coleco, sg1000 or anything that has only 64kb
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -804,7 +804,7 @@ void load_zsf_generic_64k_mem_snapshot_block_data(z80_byte *block_data,int longi
 {
 /*
 -Block ID 29: ZSF_GENERIC_64K_MEM
-A ram binary block for a coleco, sg1000 or anything that has only 64kb
+A ram/rom binary block for a coleco, sg1000 or anything that has only 64kb
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -2550,6 +2550,47 @@ Byte Fields:
 
 
   
+/*
+
+-Block ID 29: ZSF_GENERIC_64K_MEM
+A ram/rom binary block for a coleco, sg1000 or anything that has only 64kb
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff)
+  */
+
+
+  int segment;
+
+  
+
+    for (segment=0;segment<16;segment++) {
+
+      //Store block to file
+
+        compressed_ramblock[0]=0;
+        compressed_ramblock[1]=value_16_to_8l(16384);
+        compressed_ramblock[2]=value_16_to_8h(16384);
+        compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+        compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+        compressed_ramblock[5]=segment;
+
+
+        int offset=segment*16384;
+
+        int si_comprimido;
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+        if (si_comprimido) compressed_ramblock[0]|=1;
+
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_GENERIC_64K_MEM segment: %d length: %d",segment,longitud_bloque);
+
+        
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_GENERIC_64K_MEM, longitud_bloque+6);
+        
+    }
 
 
 
@@ -2636,7 +2677,7 @@ Byte Fields:
 
 
 -Block ID 29: ZSF_GENERIC_64K_MEM
-A ram binary block for a coleco, sg1000 or anything that has only 64kb
+A ram/rom binary block for a coleco, sg1000 or anything that has only 64kb
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
