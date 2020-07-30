@@ -6968,6 +6968,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                         	                blink_kbd_a8 &= (255-128);
 						                              cpc_keyboard_table[9] &=(255-128);
                                                 msx_keyboard_table[7] &=(255-32);
+                                                svi_keyboard_table[5] &=(255-64);
                                           ql_pressed_backspace=1;
 
 	                                }
@@ -6977,6 +6978,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 	        blink_kbd_a8 |= 128;
 						                              cpc_keyboard_table[9] |=128;
                                                 msx_keyboard_table[7] |=32;
+                                                svi_keyboard_table[5] |=64;
                                           ql_pressed_backspace=0;
 	                                }
 				}
