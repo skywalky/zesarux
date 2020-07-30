@@ -33,7 +33,7 @@ extern z80_byte svi_ppi_register_c;
 extern z80_byte svi_keyboard_table[];
 extern z80_byte svi_read_vram_byte(z80_int address);
 
-extern int svi_memory_slots[4][4];
+//extern int svi_memory_slots[4][4];
 
 extern z80_byte *svi_return_segment_address(z80_int direccion,int *tipo);
 

@@ -58,7 +58,7 @@ z80_byte svi_keyboard_table[16]={
 
 //slots asignados, y sus 4 segmentos
 //tipos: rom, ram, vacio
-int svi_memory_slots[4][4];
+//int svi_memory_slots[4][4];
 
 
 
@@ -204,6 +204,7 @@ void svi_init_memory_tables(void)
 {
 
     //inicio con todos los slots vacios
+    /*
     int slot,segment;
     for (slot=0;slot<4;slot++) {
         for (segment=0;segment<4;segment++) {
@@ -223,7 +224,7 @@ void svi_init_memory_tables(void)
     svi_memory_slots[2][2]=SVI_SLOT_MEMORY_TYPE_RAM;
     svi_memory_slots[2][3]=SVI_SLOT_MEMORY_TYPE_RAM;
 
-
+    */
 
  
 
@@ -474,10 +475,12 @@ void svi_insert_rom_cartridge(char *filename)
 void svi_empty_romcartridge_space(void)
 {
 
+    /*
     int i;
     for (i=0;i<4;i++) {
         svi_memory_slots[1][i]=SVI_SLOT_MEMORY_TYPE_EMPTY;
     }
+    */
 
 }
 
