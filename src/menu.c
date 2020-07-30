@@ -995,7 +995,7 @@ void menu_debug_set_memory_zone_attr(void)
 	//Primero ver si zona actual no esta disponible, fallback a 0 que siempre esta
 	 menu_debug_memory_zone_size=machine_get_memory_zone_attrib(menu_debug_memory_zone,&readwrite);
 	if (!menu_debug_memory_zone_size) {
-		printf ("Zona no disponible. Fallback a memory mapped\n");
+		//printf ("Zona no disponible. Fallback a memory mapped\n");
 		menu_debug_set_memory_zone_mapped();
 		//menu_debug_memory_zone=0;
 		//menu_debug_memory_zone_size=machine_get_memory_zone_attrib(menu_debug_memory_zone,&readwrite);
@@ -1014,22 +1014,22 @@ z80_byte menu_debug_get_mapped_byte(int direccion)
 
 
 	//Mostrar zonas mapeadas
-	printf ("menu_debug_get_mapped_byte 1\n");
+	//printf ("menu_debug_get_mapped_byte 1\n");
 	menu_debug_set_memory_zone_attr();
 
 	//Aqui si se ha hecho fallback a mapped zone, recomprobar de nuevo
 	if (menu_debug_show_memory_zones==0) {
 		//printf ("menu_debug_get_mapped_byte dir %04XH result %02XH\n",direccion,peek_byte_z80_moto(direccion));
-		printf ("menu_debug_get_mapped_byte 1.5\n");
+		//printf ("menu_debug_get_mapped_byte 1.5\n");
 		return peek_byte_z80_moto(direccion);
 	}	
 
-	printf ("menu_debug_get_mapped_byte 2\n");
+	//printf ("menu_debug_get_mapped_byte 2\n");
 
-	printf ("menu_debug_get_mapped_byte menu_debug_memory_zone_size: %d\n",menu_debug_memory_zone_size);
+	//printf ("menu_debug_get_mapped_byte menu_debug_memory_zone_size: %d\n",menu_debug_memory_zone_size);
 
 	direccion=direccion % menu_debug_memory_zone_size;
-	printf ("menu_debug_get_mapped_byte 3\n");
+	//printf ("menu_debug_get_mapped_byte 3\n");
 	return *(machine_get_memory_zone_pointer(menu_debug_memory_zone,direccion));
 	
 
