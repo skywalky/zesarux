@@ -8626,12 +8626,13 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			if (w->can_mouse_send_hotkeys && si_menu_mouse_en_ventana() && last_y_mouse_clicked>0 && last_y_mouse_clicked<w->visible_height-1) {
 
 				//printf ("visible height: %d\n",w->visible_height);
+				debug_printf (VERBOSE_DEBUG,"Looking for hotkeys at mouse position");
 				
 
 				z80_byte caracter=zxvision_get_key_hotkey(w,last_x_mouse_clicked,last_y_mouse_clicked-1);
 				
 				if (caracter>=32 && caracter<=126) {
-
+						debug_printf (VERBOSE_DEBUG,"Sending hotkey from mouse: %c",caracter);
 						mouse_pressed_hotkey_window=1;
 						mouse_pressed_hotkey_window_key=caracter;
 

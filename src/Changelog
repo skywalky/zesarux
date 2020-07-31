@@ -81,7 +81,6 @@ Fixed segfaults when using some memory zones and changing machine
 Fixed segfaults when setting breakpoints from config file and machine is QL
 Fixed loading zsf snapshot and ay registers
 Fixed segfaults when changing machines and resizing windows
-Fixed sending backspace, tab keys on curses
 
 Fixed tbblue bugs:
 -Fixed 8 first lines of tiles on border not shown

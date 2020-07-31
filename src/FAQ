@@ -413,6 +413,14 @@ A: Chloe needs divmmc paging to boot. Enable it on Storage->MMC menu
 Q: Is there any MMC card with sample programs?
 A: Look on the extras package. On folder zesarux-extras/extras/media/spectrum/chloe/, there's a file called chloehd.mmc, you can use that.
 
+Q: How can I run Chloe from commandline and no configuration file?
+A: Run a sentence like this:
+
+./zesarux --noconfigfile --machine chloe280 --mmc-file /zesarux-extras/extras/media/spectrum/chloe/chloehd.mmc --enable-mmc --enable-divmmc --nowelcomemessage
+
+The /zesarux-extras/extras/media/spectrum/chloe/chloehd.mmc is the location to where you have downloaded the chloehd.mmc from the zesarux-extras package.
+The --nowelcomemessage is only needed to disable the ZEsarUX splash logo which hides the Chloe "boot logo" (the wolf)
+
 
 Q: How can I run programs from the MMC card?
 A: There are some commands to do that:

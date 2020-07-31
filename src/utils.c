@@ -522,7 +522,7 @@ char *array_fabricantes[]={
         "Ascii Corp",
         "Coleco Industries",
         "Sega",
-        "Spectravideo International"
+        "Spectravideo Intl"
         
 };
 
@@ -547,7 +547,7 @@ char *array_fabricantes_hotkey[]={
         "Ascii C~~orp",
         "Coleco In~~dustries",
         "Sega",
-        "Spectravideo International"
+        "Spectravideo Intl"
         
 
 
