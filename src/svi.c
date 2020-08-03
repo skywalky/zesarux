@@ -651,3 +651,307 @@ void screen_store_scanline_rainbow_svi_border_and_display(void)
 
 }
 					
+
+
+int svi_cas_load_detect(void)
+{
+    if (!tapefile) return 0;
+
+    if ( (tape_loadsave_inserted & TAPE_LOAD_INSERTED)==0) return 0;
+
+    if (reg_pc==0x69 || reg_pc==0x6C || reg_pc==0x203a || reg_pc==0x2016) return 1;
+
+    return 0;
+}                    
+
+
+//z80_byte svi_cabecera_firma[8] = { 0x1F,0xA6,0xDE,0xBA,0xCC,0x13,0x7D,0x74 };
+//z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
+
+#define SVI_CAS_HEADER_LENGTH 16
+
+//9
+//z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
+
+//16
+//z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
+
+//17
+//z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
+
+//16
+z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
+
+
+int primera_vez=0;
+
+void svi_cas_lookup_header(void)
+{
+
+    int leidos;
+
+    //Nos quedamos con la posicion actual
+    long posicion_cas=ftell(ptr_mycinta);
+
+    //Leemos SVI_CAS_HEADER_LENGTH bytes
+    z80_byte buffer_lectura[SVI_CAS_HEADER_LENGTH];
+
+    while (1) {
+
+
+
+    debug_printf (VERBOSE_DEBUG,"Searching for CAS header");
+    leidos=fread(buffer_lectura,1,1,ptr_mycinta);
+    printf ("posible byte cabecera: %02XH\n",buffer_lectura[0]);
+
+    if (buffer_lectura[0]==0x7f) {
+            printf ("Encontrada cabecera\n\n");
+            //sleep(1);
+
+
+            //OK
+            //Z80_FLAGS &=(255-FLAG_C);
+
+
+            Z80_FLAGS |= FLAG_C;
+
+            primera_vez++;
+
+            if (primera_vez!=1) {
+                //Rebobinar bytes
+                //printf ("rebobinar\n");
+                        //posicion_cas=ftell(ptr_mycinta);
+                        //posicion_cas  -=16;
+                        //fseek(ptr_mycinta, posicion_cas, SEEK_SET);             
+            }
+
+
+         
+            return;        
+    }
+
+    //Error
+    //Z80_FLAGS |= FLAG_C;
+
+
+
+
+    if (leidos<1) {
+        //Expulsar cinta
+        tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
+
+        debug_printf (VERBOSE_INFO,"Ejecting CAS tape");
+
+        return;
+    }
+
+    }
+
+return;
+
+
+
+
+    leidos=fread(buffer_lectura,1,SVI_CAS_HEADER_LENGTH,ptr_mycinta);
+
+    if (leidos==SVI_CAS_HEADER_LENGTH) {
+        //Ver si se ha leido la firma de cabecera
+        if (!memcmp(buffer_lectura,svi_cabecera_firma,SVI_CAS_HEADER_LENGTH)) {
+            //Quitar carry y volver
+            printf ("Encontrada cabecera\n");
+            //sleep(5);
+            Z80_FLAGS &=(255-FLAG_C);
+            return;
+        }
+
+        else {
+
+            //Si primer byte era 0
+            int j;
+            for (j=0;j<2;j++) {
+            if (buffer_lectura[0]==0 || buffer_lectura[0]==0x55) {
+                printf ("probando segundo intento\n");
+                //saltar
+                posicion_cas++;
+                fseek(ptr_mycinta, posicion_cas, SEEK_SET);
+                leidos=fread(buffer_lectura,1,SVI_CAS_HEADER_LENGTH,ptr_mycinta);
+
+                if (leidos==SVI_CAS_HEADER_LENGTH) {
+                    //Ver si se ha leido la firma de cabecera
+                    if (!memcmp(buffer_lectura,svi_cabecera_firma,SVI_CAS_HEADER_LENGTH)) {
+                        //Quitar carry y volver
+                        printf ("Encontrada cabecera segundo intento\n");
+                        sleep(2);
+                        //sleep(5);
+                        //Rebobinar 2 byte
+                        /*posicion_cas=ftell(ptr_mycinta);
+                        posicion_cas  -=SVI_CAS_HEADER_LENGTH;
+                        fseek(ptr_mycinta, posicion_cas, SEEK_SET);*/
+
+                        Z80_FLAGS &=(255-FLAG_C);
+                        return;
+                    }
+                }
+
+
+            }
+            }
+
+            printf ("no encontrada cabecera. leido: ");
+            int i;
+            for (i=0;i<SVI_CAS_HEADER_LENGTH;i++) printf ("%02X ",buffer_lectura[i]);
+            printf ("\n");
+        }        
+    }
+
+
+
+
+    //Error. Saltar 1 byte, devolver carry
+    Z80_FLAGS |= FLAG_C;
+
+    if (leidos<SVI_CAS_HEADER_LENGTH) {
+        //Expulsar cinta
+        tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
+
+        debug_printf (VERBOSE_INFO,"Ejecting CAS tape");
+    }
+
+    else {
+        posicion_cas++;
+        fseek(ptr_mycinta, posicion_cas, SEEK_SET);
+    }
+
+    //}
+}
+
+
+
+int temporal_print_byte;
+
+void svi_cas_read_byte(void)
+{
+
+    debug_printf (VERBOSE_PARANOID,"Reading CAS byte");
+
+
+    //Leemos 1 byte
+    z80_byte byte_leido;
+
+    int leidos=fread(&byte_leido,1,1,ptr_mycinta);
+
+    if (leidos==1) {
+        reg_a=byte_leido;
+        printf ("%02X ",reg_a);
+
+
+        temporal_print_byte++;
+        if ( (temporal_print_byte % 1024) == 0) printf ("\n");
+
+            //Quitar carry y volver
+            Z80_FLAGS &=(255-FLAG_C);
+            return;
+
+    }
+
+
+    //Error. devolver carry
+    Z80_FLAGS |= FLAG_C;
+
+
+    //Expulsar cinta
+    tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
+
+}
+
+
+void svi_cas_load(void)
+{
+
+    /*
+TAPION (00E1H)		*1
+  Function:	reads the header block after turning the cassette motor ON.
+  Input:	none
+  Output:	if failed, the CY flag is set
+  Registers:	all
+
+
+TAPIN (00E4H)		*1
+  Function:	reads data from the tape
+  Input:	none
+  Output:	A for data. If failed, the CY flag is set.
+  Registers:	all
+
+
+The cas format is the result of bypassing the following BIOS calls:
+
+00E1 - TAPION
+00E4 - TAPIN
+00EA - TAPOON
+00ED - TAPOUT
+
+SVI:
+
+6C - CASIN
+69 - CSRDON
+
+
+If you call the TAPION function, the BIOS will read from tape untill it has
+found a header, and all of the header is read. The TAPOUT function will
+output a header. In the cas format the header is encoded to these 8 bytes:
+
+1F A6 DE BA CC 13 7D 74
+
+These bytes have to be at a position that can be divided by 8; e.g. 0000,
+0008, 0010 etc. If not, the byte sequence is not recognised as a header.
+
+
+
+There are 4 types of data that can be stored on a tape;
+
+* binary files (bload)
+* basic files (cload)
+* ascii files (load)
+* custom data (to be loaded using the bios)
+
+Data is stored on the tape in blocks, each block is preceeded by a header (the 1f a6 de .. block). The purpose of this header (the pieeeeeeeeep), is to sync for decoding the fsk data.
+
+Binary files (bload) consist out of two blocks; a binary header block, and a binary data block. The binary header block is specified by 10 times 0xD0, followed by 6 characters defining its filename. The block following this header, is the datablock, which also defines the begin,end and start address (0xFE,begin,end,start).
+
+Basic files (cload) also consist out of two blocks; a basic header block, and a basic data block. The basic header block is specified by 10 times 0xD3, followed by 6 characters defining its filename. The block folowing this header is the datablock (tokenized basic data).
+
+Ascii files (load) can consist out of multiple blocks. The first block is always the ascii header block, which is specified by 10 times 0xea, followed again by 6 characters defining the filename. After this, an unlimited number of blocks can follow. The last block can be identified by the EOF (0x1a) character.
+
+Custom blocks are all blocks that don't fit in the 3 specified above.
+
+You might want to look at the casdir.c code, which implemented the above.
+    */
+
+    if (reg_pc==0x69 || reg_pc==0x203a) {
+        printf ("buscar cabecera\n");
+        //Buscar cabecera
+        svi_cas_lookup_header();
+
+        //RET
+        reg_pc=pop_valor();
+
+        printf ("volver de buscar cabecera a direccion %04XH\n",reg_pc);
+        return;
+    }
+
+    if (reg_pc==0x6C || reg_pc==0x2016) {
+        //printf ("cargar byte\n");
+        //Cargar byte
+        svi_cas_read_byte();
+
+        //RET
+        reg_pc=pop_valor();
+
+        return;
+    }
+
+    //Aqui no se deberia llegar nunca
+    //Pero hacemos reg_pc++ y que continue la fiesta
+    reg_pc++;
+
+}

@@ -5757,10 +5757,12 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                       // 4|     [   Caps      k      s      f      =      g      ;     ql_keyboard_table[3]
                                       ql_keyboard_table[3] &=255-128;
                                       msx_keyboard_table[1] &= 255-128;
+                                      svi_keyboard_table[1] &= 255-4;
                                 }
                                 else {
                                       ql_keyboard_table[3] |=128;
                                       msx_keyboard_table[1] |=128;
+                                      svi_keyboard_table[1] |= 4;
                                 }
                         break;
 
@@ -5770,11 +5772,13 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                         // 5|     ]      z      .      c      b  Pound      m      '     ql_keyboard_table[2]
                                         ql_keyboard_table[2] &=255-128;
                                         msx_keyboard_table[2] &= 255-1;
+                                        svi_keyboard_table[1] &= 255-8;
                                 }
                                 else {
                                         puerto_teclado_sam_bff9 |= 32;
                                         ql_keyboard_table[2] |=128;
                                          msx_keyboard_table[2] |= 1;
+                                        svi_keyboard_table[1] |= 8;
                                 }
                         break;
 
@@ -5798,12 +5802,14 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
 					                              puerto_teclado_sam_7ff9 &= 255-32;
                                         ql_keyboard_table[7] &=(255-128);
                                         msx_keyboard_table[2] &= 255-4;
+                                        svi_keyboard_table[1] &= 255-16;
 
                                 }
                                 else {
 					                             puerto_teclado_sam_7ff9 |= 32;
                                        ql_keyboard_table[7] |=128;
                                        msx_keyboard_table[2] |= 4;
+                                       svi_keyboard_table[1] |= 16;
                                 }
                         break;
 
@@ -5812,11 +5818,13 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
 					                              puerto_teclado_sam_7ff9 &= 255-64;
                                         ql_keyboard_table[2] &=(255-4);
                                         msx_keyboard_table[2] &= 255-8;
+                                        svi_keyboard_table[1] &= 255-64;
                                  }
                                  else {
 					                              puerto_teclado_sam_7ff9 |= 64;
                                         ql_keyboard_table[2] |=4;
                                         msx_keyboard_table[2] |= 8;
+                                        svi_keyboard_table[1] |= 64;
                                  }
                         break;
 
@@ -5826,11 +5834,13 @@ void util_set_reset_key_common_keymap(enum util_teclas_common_keymap tecla,int p
                                         // 0| Shift   Ctrl    Alt      x      v      /      n      ,     ql_keyboard_table[7]
                                         ql_keyboard_table[7] &=255-32;
                                         msx_keyboard_table[2] &= 255-16;
+                                        svi_keyboard_table[1] &= 255-128;
                                  }
                                  else {
 					                              puerto_teclado_sam_7ff9 |= 128;
                                         ql_keyboard_table[7] |=32;
                                         msx_keyboard_table[2] |= 16;
+                                        svi_keyboard_table[1] |= 128;
                                  }
                         break;
 

@@ -584,7 +584,10 @@ void cpu_core_loop_svi(void)
 		//Gestionar autoload. TODO
 		//gestionar_autoload_svi();
 
-		if (0) {}
+		if (svi_cas_load_detect() ) {
+			//printf ("Load\n");
+			svi_cas_load();
+		}
 
 			/*
 		if (tap_load_detect()) {
