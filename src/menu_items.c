@@ -22589,6 +22589,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		else if (MACHINE_IS_MK14) strcpy(nombrebmp,"keyboard_mk14.bmp");
 		else if (MACHINE_IS_SAM) strcpy(nombrebmp,"keyboard_sam.bmp");
 		else if (MACHINE_IS_CPC) strcpy(nombrebmp,"keyboard_cpc.bmp");
+		else if (MACHINE_IS_MSX) strcpy(nombrebmp,"keyboard_msx.bmp");
 		else if (MACHINE_IS_COLECO) strcpy(nombrebmp,"keyboard_coleco.bmp");
 		else if (MACHINE_IS_SG1000) strcpy(nombrebmp,"keyboard_sg1000.bmp");
 		
