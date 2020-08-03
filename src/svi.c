@@ -124,7 +124,7 @@ int svi_return_offset_rom_page(int rom_number,z80_int direccion)
 
 }
 
-int temp_prin_page_config;
+//int temp_prin_page_config;
 
 //Retorna direccion de memoria donde esta mapeada la ram y su tipo
 z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
@@ -136,7 +136,7 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
     z80_byte page_config=ay_3_8912_registros[ay_chip_selected][15];
 
 
-    temp_prin_page_config++; if ((temp_prin_page_config % 1000) ==0  ) printf ("page config: %02XH\n",page_config);
+    //temp_prin_page_config++; if ((temp_prin_page_config % 5000) ==0  ) printf ("page config: %02XH\n",page_config);
 
 
     int offset_segment_low=svi_return_offset_rom_page(0,direccion);  
@@ -157,7 +157,7 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
         if ((page_config & 2)==0) {
             offset_segment_low=svi_return_offset_ram_page(1,direccion);
             tipo_low=SVI_SLOT_MEMORY_TYPE_RAM;
-            if ((temp_prin_page_config % 1000) ==0  ) printf ("Ram 1 en segmento bajo\n");
+            //if ((temp_prin_page_config % 5000) ==0  ) printf ("Ram 1 en segmento bajo\n");
         }    
 
         if ((page_config & 4)==0) {
@@ -699,85 +699,66 @@ int svi_cas_load_detect(void)
 }                    
 
 
-//z80_byte svi_cabecera_firma[8] = { 0x1F,0xA6,0xDE,0xBA,0xCC,0x13,0x7D,0x74 };
-//z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
 
-#define SVI_CAS_HEADER_LENGTH 16
+//#define SVI_CAS_HEADER_LENGTH 16
 
-//9
-//z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
 
 //16
 //z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
 
-//17
-//z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
 
-//16
-z80_byte svi_cabecera_firma[SVI_CAS_HEADER_LENGTH] = { 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x7f };
+//int primera_vez=0;
 
 
-int primera_vez=0;
-
+//Buscar cabecera en cinta. En vez de complicarlo tanto com msx, buscar solo byte 7f, que va despues de la secuencia 0x55
 void svi_cas_lookup_header(void)
 {
 
     int leidos;
 
     //Nos quedamos con la posicion actual
-    long posicion_cas=ftell(ptr_mycinta);
+    //long posicion_cas=ftell(ptr_mycinta);
 
     //Leemos SVI_CAS_HEADER_LENGTH bytes
-    z80_byte buffer_lectura[SVI_CAS_HEADER_LENGTH];
+    z80_byte buffer_lectura;
 
     while (1) {
 
 
 
-    debug_printf (VERBOSE_DEBUG,"Searching for CAS header");
-    leidos=fread(buffer_lectura,1,1,ptr_mycinta);
-    printf ("posible byte cabecera: %02XH\n",buffer_lectura[0]);
+        debug_printf (VERBOSE_DEBUG,"Searching for CAS header");
+        leidos=fread(&buffer_lectura,1,1,ptr_mycinta);
+        //printf ("posible byte cabecera: %02XH\n",buffer_lectura[0]);
 
-    if (buffer_lectura[0]==0x7f) {
-            printf ("Encontrada cabecera\n\n");
-            //sleep(1);
-
-
-            //OK
-            //Z80_FLAGS &=(255-FLAG_C);
+        if (buffer_lectura==0x7f) {
+                //printf ("Encontrada cabecera\n\n");
+                //sleep(1);
 
 
-            Z80_FLAGS |= FLAG_C;
+                //OK
+                //Z80_FLAGS &=(255-FLAG_C);
 
-            primera_vez++;
+                //No tengo claro que los flags vayan asi
+                Z80_FLAGS |= FLAG_C;
 
-            if (primera_vez!=1) {
-                //Rebobinar bytes
-                //printf ("rebobinar\n");
-                        //posicion_cas=ftell(ptr_mycinta);
-                        //posicion_cas  -=16;
-                        //fseek(ptr_mycinta, posicion_cas, SEEK_SET);             
-            }
+            
+                return;        
+        }
 
-
-         
-            return;        
-    }
-
-    //Error
-    //Z80_FLAGS |= FLAG_C;
+        //Error
+        //Z80_FLAGS |= FLAG_C;
 
 
 
 
-    if (leidos<1) {
-        //Expulsar cinta
-        tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
+        if (leidos<1) {
+            //Expulsar cinta
+            tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
 
-        debug_printf (VERBOSE_INFO,"Ejecting CAS tape");
+            debug_printf (VERBOSE_INFO,"Ejecting CAS tape");
 
-        return;
-    }
+            return;
+        }
 
     }
 
@@ -786,82 +767,13 @@ return;
 
 
 
-    leidos=fread(buffer_lectura,1,SVI_CAS_HEADER_LENGTH,ptr_mycinta);
-
-    if (leidos==SVI_CAS_HEADER_LENGTH) {
-        //Ver si se ha leido la firma de cabecera
-        if (!memcmp(buffer_lectura,svi_cabecera_firma,SVI_CAS_HEADER_LENGTH)) {
-            //Quitar carry y volver
-            printf ("Encontrada cabecera\n");
-            //sleep(5);
-            Z80_FLAGS &=(255-FLAG_C);
-            return;
-        }
-
-        else {
-
-            //Si primer byte era 0
-            int j;
-            for (j=0;j<2;j++) {
-            if (buffer_lectura[0]==0 || buffer_lectura[0]==0x55) {
-                printf ("probando segundo intento\n");
-                //saltar
-                posicion_cas++;
-                fseek(ptr_mycinta, posicion_cas, SEEK_SET);
-                leidos=fread(buffer_lectura,1,SVI_CAS_HEADER_LENGTH,ptr_mycinta);
-
-                if (leidos==SVI_CAS_HEADER_LENGTH) {
-                    //Ver si se ha leido la firma de cabecera
-                    if (!memcmp(buffer_lectura,svi_cabecera_firma,SVI_CAS_HEADER_LENGTH)) {
-                        //Quitar carry y volver
-                        printf ("Encontrada cabecera segundo intento\n");
-                        sleep(2);
-                        //sleep(5);
-                        //Rebobinar 2 byte
-                        /*posicion_cas=ftell(ptr_mycinta);
-                        posicion_cas  -=SVI_CAS_HEADER_LENGTH;
-                        fseek(ptr_mycinta, posicion_cas, SEEK_SET);*/
-
-                        Z80_FLAGS &=(255-FLAG_C);
-                        return;
-                    }
-                }
 
 
-            }
-            }
-
-            printf ("no encontrada cabecera. leido: ");
-            int i;
-            for (i=0;i<SVI_CAS_HEADER_LENGTH;i++) printf ("%02X ",buffer_lectura[i]);
-            printf ("\n");
-        }        
-    }
-
-
-
-
-    //Error. Saltar 1 byte, devolver carry
-    Z80_FLAGS |= FLAG_C;
-
-    if (leidos<SVI_CAS_HEADER_LENGTH) {
-        //Expulsar cinta
-        tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
-
-        debug_printf (VERBOSE_INFO,"Ejecting CAS tape");
-    }
-
-    else {
-        posicion_cas++;
-        fseek(ptr_mycinta, posicion_cas, SEEK_SET);
-    }
-
-    //}
 }
 
 
 
-int temporal_print_byte;
+//int temporal_print_byte;
 
 void svi_cas_read_byte(void)
 {
@@ -876,11 +788,11 @@ void svi_cas_read_byte(void)
 
     if (leidos==1) {
         reg_a=byte_leido;
-        printf ("%02X ",reg_a);
+        //printf ("%02X ",reg_a);
 
 
-        temporal_print_byte++;
-        if ( (temporal_print_byte % 1024) == 0) printf ("\n");
+        //temporal_print_byte++;
+        //if ( (temporal_print_byte % 1024) == 0) printf ("\n");
 
             //Quitar carry y volver
             Z80_FLAGS &=(255-FLAG_C);
@@ -962,14 +874,14 @@ You might want to look at the casdir.c code, which implemented the above.
     */
 
     if (reg_pc==0x69 || reg_pc==0x203a) {
-        printf ("buscar cabecera\n");
+        debug_printf (VERBOSE_DEBUG,"Searching for CAS header");
         //Buscar cabecera
         svi_cas_lookup_header();
 
         //RET
         reg_pc=pop_valor();
 
-        printf ("volver de buscar cabecera a direccion %04XH\n",reg_pc);
+        //printf ("volver de buscar cabecera a direccion %04XH\n",reg_pc);
         return;
     }
 

@@ -6848,6 +6848,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
                                                 //ALT en MSX es stop
                                                 msx_keyboard_table[7] &= (255-16);
+                                                svi_keyboard_table[6] &= (255-32);
                                         }
 
 
@@ -6861,6 +6862,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
                                                 //ALT en MSX es stop
                                                 msx_keyboard_table[7] |= 16;
+                                                svi_keyboard_table[6] |= 32;
                                         }
                                 }
                         break;
@@ -7592,6 +7594,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 					puerto_especial1 &=255-1;
 					cpc_keyboard_table[8] &=(255-4);
                                         msx_keyboard_table[7] &=(255-4);
+                                        svi_keyboard_table[6] &= (255-16);
 					puerto_teclado_sam_f7f9 &= (255-32);
           // 6|   Ret   Left     Up    Esc  Right      \  Space   Down     ql_keyboard_table[1]
           ql_keyboard_table[1] &= (255-8);
@@ -7605,6 +7608,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 					puerto_especial1 |=1;
 					cpc_keyboard_table[8] |=4;
                                         msx_keyboard_table[7] |=4;
+                                        svi_keyboard_table[6] |= 16;
 					puerto_teclado_sam_f7f9 |= 32;
                                         ql_keyboard_table[1] |= 8;
 				}

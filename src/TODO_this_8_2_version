@@ -387,8 +387,7 @@ Spectravideo
 -ayuda teclado
 -Quizá para 16kb svi 318 hacer que si direccion > 16kb, retorne tipo vacío y así no escribe ni lee nada 
 O quizá esa rom es del 328 en vez del 318
--TODO: tipo paginas en svi al retornar direccion
-
+-muchas cintas .cas no cargan o cargan mal el juego
 
 
 - curses: con ventana ay piano en background, al ir a Smartload se mezcla texto de ventana ay piano en Smartload

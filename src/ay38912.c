@@ -1325,7 +1325,9 @@ void out_port_ay(z80_int puerto,z80_byte value)
 	if (puerto==49149 && (ay_3_8912_registro_sel[ay_chip_selected]==14 || ay_3_8912_registro_sel[ay_chip_selected]==15) ) {
 		//printf ("Out midi valor: %d\n",value);
 		//old_ay3_mid_handle(value);
-		nuevo_aymidi_rs232_handle(value);
+
+
+		if (MACHINE_IS_SPECTRUM) nuevo_aymidi_rs232_handle(value);
 	}
 	//if (puerto==65533 && value>=14) printf("Out seleccion registro valor: %d\n",value);
 
