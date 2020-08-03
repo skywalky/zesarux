@@ -323,17 +323,6 @@ Como ejemplo, el Toshiba HX-10 (un modelo de 64KB) tiene esta configuración d
 
 
 
--Info colecovision y sirve también para msx el vdp:
-
-
-Complete Colecovision Specs · alekmaul/pvcollib Wiki
-https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
-
-
-The-MSX-Red-Book/the_msx_red_book.md at master · gseidler/The-MSX-Red-Book
-https://github.com/gseidler/The-MSX-Red-Book/blob/master/the_msx_red_book.md
-
-
 -msx timings accesos a vram write/read y depende de modo
 
 -emulacion ruido chip SN mejorar
@@ -348,36 +337,11 @@ https://github.com/gseidler/The-MSX-Red-Book/blob/master/the_msx_red_book.md
 
 -spectra video  SVI-318/328 
 
--https://es.wikipedia.org/wiki/Spectravideo_SVI-318
-
-Y 328
-
-
 http://www.samdal.com/svsoftware.htm
-
-http://www.samdal.com/svports.htm
-http://www.samdal.com/svmemorybanks.htm
-
-
-
-
-
-
-http://www.atarihq.com/danb/files/CV-Tech.txt
-
-
-https://github.com/alekmaul/pvcollib/wiki/Complete-Colecovision-Specs
-
-
-
-
--http://bifi.msxnet.org/msxnet/tech/tms9918a.txt
 
 
 
 -Contención en hacer out e in a vram?
-
-
 
 
 
@@ -403,4 +367,3 @@ Probado con curl y no parece funcionar
 -Configure haiku dejar? O hacer poder cambiar comando gcc?
 
 
--copiar documentos msx, svi, sg1000 y coleco a carpeta docs de extras
