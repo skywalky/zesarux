@@ -215,7 +215,7 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
         case 0xAA:
             msx_ppi_register_c=value;
 
-            
+            //Chase HQ utiliza esto
                 //printf ("Posible beep: %d\n",value&128);
             
 			set_value_beeper_on_array(da_amplitud_speaker_msx() );
@@ -627,39 +627,45 @@ z80_byte msx_cabecera_firma[8] = { 0x1F,0xA6,0xDE,0xBA,0xCC,0x13,0x7D,0x74 };
 void msx_cas_lookup_header(void)
 {
 
-    debug_printf (VERBOSE_DEBUG,"Searching for CAS header");
+    while (1) {
+        debug_printf (VERBOSE_DEBUG,"Searching for CAS header");
 
-    //Nos quedamos con la posicion actual
-    long posicion_cas=ftell(ptr_mycinta);
+        //Nos quedamos con la posicion actual
+        long posicion_cas=ftell(ptr_mycinta);
 
-    //Leemos 8 bytes
-    z80_byte buffer_lectura[8];
+        //Leemos 8 bytes
+        z80_byte buffer_lectura[8];
 
-    int leidos=fread(buffer_lectura,1,8,ptr_mycinta);
+        int leidos=fread(buffer_lectura,1,8,ptr_mycinta);
 
-    if (leidos==8) {
-        //Ver si se ha leido la firma de cabecera
-        if (!memcmp(buffer_lectura,msx_cabecera_firma,8)) {
-            //Quitar carry y volver
-            Z80_FLAGS &=(255-FLAG_C);
+        if (leidos==8) {
+            //Ver si se ha leido la firma de cabecera
+            if (!memcmp(buffer_lectura,msx_cabecera_firma,8)) {
+                //Quitar carry y volver
+                Z80_FLAGS &=(255-FLAG_C);
+                debug_printf (VERBOSE_DEBUG,"Cas header found");
+                return;
+            }
+        }
+
+
+        //Error. Saltar 1 byte, devolver carry
+        Z80_FLAGS |= FLAG_C;
+
+        if (leidos<8) {
+            //Expulsar cinta
+            tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
+
+            debug_printf (VERBOSE_INFO,"Ejecting CAS tape");
             return;
         }
-    }
 
+        else {
+            posicion_cas++;
+            fseek(ptr_mycinta, posicion_cas, SEEK_SET);
+        }
 
-    //Error. Saltar 1 byte, devolver carry
-    Z80_FLAGS |= FLAG_C;
-
-    if (leidos<8) {
-        //Expulsar cinta
-        tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
-
-        debug_printf (VERBOSE_INFO,"Ejecting CAS tape");
-    }
-
-    else {
-        posicion_cas++;
-        fseek(ptr_mycinta, posicion_cas, SEEK_SET);
+        debug_printf (VERBOSE_DEBUG,"Cas header not found");
     }
 }
 
