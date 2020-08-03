@@ -7482,9 +7482,9 @@ z80_byte lee_puerto_svi_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 		}
 
 		//Registro 15 nada de momento
-		else if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==15) { 		
+		/*else if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==15) { 		
 			return 255;
-		}
+		}*/
 
 		else {
 			return in_port_ay(0xFF);

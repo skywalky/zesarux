@@ -33,6 +33,7 @@
 #include "tape.h"
 #include "screen.h"
 #include "audio.h"
+#include "operaciones.h"
 
 z80_byte *svi_vram_memory=NULL;
 
@@ -123,6 +124,8 @@ int svi_return_offset_rom_page(int rom_number,z80_int direccion)
 
 }
 
+int temp_prin_page_config;
+
 //Retorna direccion de memoria donde esta mapeada la ram y su tipo
 z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 {
@@ -133,8 +136,14 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
     z80_byte page_config=ay_3_8912_registros[ay_chip_selected][15];
 
 
+    temp_prin_page_config++; if ((temp_prin_page_config % 1000) ==0  ) printf ("page config: %02XH\n",page_config);
+
+
     int offset_segment_low=svi_return_offset_rom_page(0,direccion);  
     int offset_segment_high=svi_return_offset_ram_page(0,direccion);    
+
+    int tipo_low=SVI_SLOT_MEMORY_TYPE_ROM;
+    int tipo_high=SVI_SLOT_MEMORY_TYPE_RAM;
 
 
     if (page_config!=0xFF) {
@@ -147,6 +156,8 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 
         if ((page_config & 2)==0) {
             offset_segment_low=svi_return_offset_ram_page(1,direccion);
+            tipo_low=SVI_SLOT_MEMORY_TYPE_RAM;
+            if ((temp_prin_page_config % 1000) ==0  ) printf ("Ram 1 en segmento bajo\n");
         }    
 
         if ((page_config & 4)==0) {
@@ -154,6 +165,7 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
         }    
 
         if ((page_config & 8)==0) {
+            tipo_low=SVI_SLOT_MEMORY_TYPE_RAM;
             offset_segment_low=svi_return_offset_ram_page(3,direccion);
         }    
 
@@ -166,11 +178,11 @@ z80_byte *svi_return_segment_address(z80_int direccion,int *tipo)
 
 
     if (direccion<32768) {
-        *tipo=SVI_SLOT_MEMORY_TYPE_ROM;
+        *tipo=tipo_low;
         return &memoria_spectrum[offset_segment_low];
     }
     else {
-        *tipo=SVI_SLOT_MEMORY_TYPE_RAM;
+        *tipo=tipo_high;
         return &memoria_spectrum[offset_segment_high];      
     }
 
@@ -195,7 +207,17 @@ Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb,
   then all banks of RAM are disabled. 
 
   Por defecto: bank01 rom basic, bank02 ram
-*/
+
+  Bancos:
+
+
+  FFFF      BANK 02 RAM     |      BANK 12 CARTRIDGE ROM    |   BANK 22 RAM     |       BANK 32 RAM
+  8000
+
+
+  7FFF      BANK 01 ROM     |      BANK 11 CARTRIDGE ROM    |   BANK 21 RAM     |       BANK 31 RAM
+  0000
+  */
 
 
 }
@@ -659,7 +681,19 @@ int svi_cas_load_detect(void)
 
     if ( (tape_loadsave_inserted & TAPE_LOAD_INSERTED)==0) return 0;
 
-    if (reg_pc==0x69 || reg_pc==0x6C || reg_pc==0x203a || reg_pc==0x2016) return 1;
+
+    //Si es el JP de la ROM
+    if (reg_pc==0x69 && peek_byte_no_time(0x69)==195) return 1;
+    //O a donde salta ese JP
+    if (reg_pc==0x203a && peek_byte_no_time(0x203a)==0xE5) return 1;
+
+    //Si es el JP de la ROM
+    if (reg_pc==0x6C && peek_byte_no_time(0x69)==195) return 1;
+    //O a donde salta ese JP
+    if (reg_pc==0x2016 && peek_byte_no_time(0x2016)==0xD5) return 1;
+
+
+
 
     return 0;
 }                    
