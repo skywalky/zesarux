@@ -62,7 +62,8 @@ extern void scr_refresca_pantalla_y_border_svi(void);
 extern char *svi_get_string_memory_type(int tipo);
 
 
-
+extern int svi_cas_load_detect(void);
+extern void svi_cas_load(void);
 
 
 
