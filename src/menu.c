@@ -18794,7 +18794,7 @@ void menu_realtape_pause_unpause(MENU_ITEM_PARAMETERS)
 void menu_realtape_volumen(MENU_ITEM_PARAMETERS)
 {
 	realtape_volumen++;
-	if (realtape_volumen==16) realtape_volumen=0;
+	if (realtape_volumen==16) realtape_volumen=-16;
 }
 
 
