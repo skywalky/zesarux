@@ -7344,7 +7344,7 @@ Bit	Description	Comment
 
 					border_reg &=0xF0;
 
-					if (realtape_last_value>=realtape_volumen) { //-50
+					if (realtape_last_value>=realtape_volumen) { 
 							valor=valor|128;
 							//printf ("1 ");
 							//valor=255;
