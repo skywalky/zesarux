@@ -79,6 +79,7 @@
 #include "sg1000.h"
 #include "sn76489an.h"
 #include "svi.h"
+#include "vdp_9918a.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -7331,22 +7332,41 @@ Bit	Description	Comment
 			*/
 			z80_byte valor=255;
 			if (realtape_inserted.v && realtape_playing.v) {
-				//printf ("%d ",realtape_last_value);
+				printf ("(%d) ",realtape_last_value);
+
+					//margen de ceros
+					if (realtape_last_value>=-1 && realtape_last_value<=1) realtape_last_value=-1;
+
+					//Cambiar color border
+					z80_byte border_reg=vdp_9918a_registers[7] &=0xF0;
+
 					if (realtape_last_value>=realtape_volumen) { //-50
 							valor=valor|128;
-							//printf ("1 ");
+							printf ("1 ");
 							//valor=255;
+
+
+							//Cambiar color border
+							border_reg |=4; //azul
+
+
+
 					}
 					else {
 							valor=(valor & (255-128));
-							//printf ("0 ");
+							printf ("0 ");
 							//valor=0;
+
+							//Cambiar color border
+							border_reg |=8; //naranja
+
 					}
 
+					vdp_9918a_registers[7]=border_reg;
 
-					//temp_conta_lee_puerto_msx1_no_time++; if ((temp_conta_lee_puerto_msx1_no_time % 1000)==0) printf ("\n");
+					temp_conta_lee_puerto_msx1_no_time++; if ((temp_conta_lee_puerto_msx1_no_time % 1000)==0) printf ("\n");
 			}	
-			//printf ("%02XH ",valor);
+			printf ("%02XH ",valor);
 			return valor;
 		}
 

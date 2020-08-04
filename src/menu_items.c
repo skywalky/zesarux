@@ -9767,6 +9767,11 @@ void menu_display_vdp_9918a_unlimited_sprites_line(MENU_ITEM_PARAMETERS)
 	vdp_9918a_unlimited_sprites_line.v ^=1;
 }
 
+void menu_display_msx_loading_stripes(MENU_ITEM_PARAMETERS)
+{
+	msx_loading_stripes.v ^=1;
+}
+
 
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
@@ -10180,6 +10185,10 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 		if (MACHINE_HAS_VDP_9918A) {
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_vdp_9918a_unlimited_sprites_line,NULL,"[%c] Unlimited sprites per line", (vdp_9918a_unlimited_sprites_line.v ? 'X' : ' ') );	
 		}
+
+		if (MACHINE_IS_MSX) {
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_msx_loading_stripes,NULL,"[%c] Loading stripes", (msx_loading_stripes.v ? 'X' : ' ') );	
+		}		
 
 		menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_ocr_23606,NULL,"[%c] OCR Alternate chars", (ocr_settings_not_look_23606.v==0 ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_display,"Tells to look for an alternate character set other than the ROM default on OCR functions");

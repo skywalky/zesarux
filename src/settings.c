@@ -232,7 +232,8 @@ z80_bit tbblue_store_scanlines_border={0};
 //Sin limites de sprites por linea en chip vdp 9918a
 z80_bit vdp_9918a_unlimited_sprites_line={0};
 
-
+//Cambiar color paper en carga de msx
+z80_bit msx_loading_stripes={0};
 
 //
 // Windows Settings
