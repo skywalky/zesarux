@@ -7340,7 +7340,9 @@ Bit	Description	Comment
 					}
 
 					//Cambiar color border si conviene
-					z80_byte border_reg=vdp_9918a_registers[7] &=0xF0;
+					z80_byte border_reg=vdp_9918a_registers[7]; 
+
+					border_reg &=0xF0;
 
 					if (realtape_last_value>=realtape_volumen) { //-50
 							valor=valor|128;
