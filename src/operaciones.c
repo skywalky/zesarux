@@ -7269,6 +7269,8 @@ void out_port_msx1(z80_int puerto,z80_byte value)
 }
 
 
+int temp_conta_lee_puerto_msx1_no_time;
+
 //Devuelve valor puerto para maquinas MSX1
 z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 {
@@ -7308,30 +7310,59 @@ z80_byte lee_puerto_msx1_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 	//if (puerto_l==0xA0 && ay_3_8912_registro_sel[0]==14) { 
 	if (puerto_l==0xA2) {
 		//printf ("reading from psg\n");
-		//14 o 15? cual? en teoria el 14
-		//if (ay_3_8912_registro_sel[0]==15 || ay_3_8912_registro_sel[0]==14) { 	
+		
+			
 		if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==14) { 				
 			//printf ("read tape\n");
 			//sleep(1);
+
+			//Bit 7 cinta
+			/*
+PSG I/O port A (r#14) – read-only
+Bit	Description	Comment
+0	Input joystick pin 1	0 = up
+1	Input joystick pin 2	0 = down
+2	Input joystick pin 3	0 = left
+3	Input joystick pin 4	0 = right
+4	Input joystick pin 6	0 = trigger A
+5	Input joystick pin 7	0 = trigger B
+6	Japanese keyboard layout bit	1 = JIS, 0 = ANSI/AIUEO/50on
+7	Cassette input signal				
+			*/
 			z80_byte valor=255;
 			if (realtape_inserted.v && realtape_playing.v) {
 				//printf ("%d ",realtape_last_value);
 					if (realtape_last_value>=realtape_volumen) { //-50
 							valor=valor|128;
-							//printf ("1 \n");
+							//printf ("1 ");
 							//valor=255;
 					}
 					else {
 							valor=(valor & (255-128));
-							//printf ("0 \n");
+							//printf ("0 ");
 							//valor=0;
 					}
+
+
+					//temp_conta_lee_puerto_msx1_no_time++; if ((temp_conta_lee_puerto_msx1_no_time % 1000)==0) printf ("\n");
 			}	
-			//printf ("%d \n",valor);
+			//printf ("%02XH ",valor);
 			return valor;
 		}
 
 		//Registro 15 nada de momento
+		/*
+PSG I/O port B (r#15) – write/read
+Bit	Description	Comment
+0	Output joystick port 1, pin 6	Set to 1 to allow input
+1	Output joystick port 1, pin 7	Set to 1 to allow input
+2	Output joystick port 2, pin 6	Set to 1 to allow input
+3	Output joystick port 2, pin 7	Set to 1 to allow input
+4	Output joystick port 1, pin 8	
+5	Output joystick port 2, pin 8	
+6	Joystick input selection, for r#14 inputs	1 = port 2
+7	Kana led control	1 = off		
+		*/
 		else if ( (ay_3_8912_registro_sel[ay_chip_selected] & 15) ==15) { 		
 			return 255;
 		}

@@ -215,8 +215,8 @@ void msx_out_port_ppi(z80_byte puerto_l,z80_byte value)
         case 0xAA:
             msx_ppi_register_c=value;
 
-            //Chase HQ utiliza esto
-                //printf ("Posible beep: %d\n",value&128);
+            //Curiosidad: Chase HQ utiliza esto
+            //printf ("Posible beep: %d\n",value&128);
             
 			set_value_beeper_on_array(da_amplitud_speaker_msx() );
 
@@ -249,25 +249,21 @@ z80_byte msx_in_port_ppi(z80_byte puerto_l)
         break;
 
         case 0xAA:
-        //printf ("read tape??\n");
+        
+        /*
+AAh	is the port to access the register that control the keyboard CAP LED, 
+two signals to data recorder and a matrix row (use the port C of PPI).
 
-
-		/*valor=0;
-                if (realtape_inserted.v && realtape_playing.v) {
-                        if (realtape_last_value>=realtape_volumen) {
-                                valor=valor|128;
-                                printf ("1 ");
-                        }
-                        else {
-                                valor=(valor & (255-128));
-                                printf ("0 ");
-                        }
-                }	
-		return valor;*/
+bits 0~3 = Row number of specified keyboard matrix to read via port B
+bit 4 = Data recorder motor (reset to turn on)
+bit 5 = Set to write on tape
+bit 6 = Keyboard LED CAPS (reset to turn on)
+bit 7 = 1, then 0 shortly thereafter to make a clicking sound (used for the keyboard).        
+        */
 
 
 
-            //Devolver lo mismo que se ha escrito? TODO revisar esto
+            //Devolver lo mismo que se ha escrito
             return msx_ppi_register_c;
         break;
 
