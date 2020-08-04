@@ -3450,7 +3450,8 @@ You don't need timings for H/V sync =)
 			ula_contend_port_late=ula_contend_port_late_msx1;
 
 			
-			screen_testados_linea=228;
+			// 3579545 / 312 / 50
+			screen_testados_linea=229;
 
 		}		
 
@@ -3462,7 +3463,7 @@ You don't need timings for H/V sync =)
 			ula_contend_port_early=ula_contend_port_early_svi;
 			ula_contend_port_late=ula_contend_port_late_svi;
 
-			
+
 			screen_testados_linea=228;
 
 		}			
