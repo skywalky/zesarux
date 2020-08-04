@@ -83,6 +83,8 @@ extern z80_bit vdp_9918a_unlimited_sprites_line;
 
 extern z80_bit msx_loading_stripes;
 
+extern z80_bit msx_loading_noise_reduction;
+
 extern z80_bit setting_machine_selection_by_name;
 
 #endif

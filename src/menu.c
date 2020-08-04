@@ -28929,6 +28929,11 @@ void menu_about(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_msx_loading_noise_reduction(MENU_ITEM_PARAMETERS)
+{
+	msx_loading_noise_reduction.v ^=1;
+}
+
 //menu tape settings
 void menu_settings_tape(MENU_ITEM_PARAMETERS)
 {
@@ -28997,6 +29002,12 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings_tape,"Apply offset to sound value read");
 		menu_add_item_menu_ayuda(array_menu_settings_tape,"Indicates some value (positive or negative) to sum to the raw value read "
 					"(considering range from -128 to +127) to the input audio value read");
+
+
+		if (MACHINE_IS_MSX) {
+			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_msx_loading_noise_reduction,NULL,"[%c] Loading noise reduction",
+			(msx_loading_noise_reduction.v==1 ? 'X' : ' '));
+		}
 
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_accelerate_loaders,NULL,"[%c] A~~ccelerate loaders",

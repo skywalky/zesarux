@@ -235,6 +235,10 @@ z80_bit vdp_9918a_unlimited_sprites_line={0};
 //Cambiar color paper en carga de msx
 z80_bit msx_loading_stripes={0};
 
+
+//Reduccion ruido
+z80_bit msx_loading_noise_reduction={0};
+
 //
 // Windows Settings
 //
