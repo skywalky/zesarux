@@ -22572,6 +22572,10 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
 	
 		//Cargar el archivo bmp
+		/*
+		Deben ser, idealmente: 540x201.  (puede ser otro tamaño)
+		bmp. 256 colour (indexed)
+		*/
 
 		char nombrebmp[PATH_MAX];
 
@@ -22599,6 +22603,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		else if (MACHINE_IS_SAM) strcpy(nombrebmp,"keyboard_sam.bmp");
 		else if (MACHINE_IS_CPC) strcpy(nombrebmp,"keyboard_cpc.bmp");
 		else if (MACHINE_IS_MSX) strcpy(nombrebmp,"keyboard_msx.bmp");
+		else if (MACHINE_IS_SVI) strcpy(nombrebmp,"keyboard_svi.bmp");
 		else if (MACHINE_IS_COLECO) strcpy(nombrebmp,"keyboard_coleco.bmp");
 		else if (MACHINE_IS_SG1000) strcpy(nombrebmp,"keyboard_sg1000.bmp");
 		

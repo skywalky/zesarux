@@ -345,7 +345,6 @@ http://www.samdal.com/svsoftware.htm
 Spectravideo
 -opcion keymap para Spectravideo_SVI
 -resto teclas
--ayuda teclado
 -Quizá para 16kb svi 318 hacer que si direccion > 16kb, retorne tipo vacío y así no escribe ni lee nada 
 O quizá esa rom es del 328 en vez del 318
 -muchas cintas .cas no cargan o cargan mal el juego
