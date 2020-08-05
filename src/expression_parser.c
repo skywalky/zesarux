@@ -117,6 +117,7 @@ token_parser_textos_indices tpti_funciones[]={
 
 	{TPI_F_PEEK,"PEEK("},
 	{TPI_F_PEEKW,"PEEKW("},
+	{TPI_F_IN,"IN("},
 	{TPI_F_NOT,"NOT("},
 
 	{TPI_F_ABS,"ABS("},
@@ -1578,6 +1579,10 @@ int exp_par_calculate_funcion(int valor,enum token_parser_tipo tipo,enum token_p
 
                     case TPI_F_PEEKW:
         				return peek_byte_z80_moto(valor)+256*peek_byte_z80_moto(valor+1);
+                    break;
+                    
+                    case TPI_F_IN:
+                    return lee_puerto_no_time(valor);
                     break;
 
 
