@@ -363,14 +363,35 @@ z80_int vdp_9918a_get_pattern_base_address(void)
 
 int vdp_9918a_get_sprite_size(void)
 {
-   int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
+/*
+This register can be only written. Use the MSX-BASIC instruction VDP(1) to access it. The instruction reads the system variable REG1SAV (0F3E0h) to return the requested value.
+
+        Bit 7	Bit 6	Bit 5	Bit 4	Bit 3	Bit 2	Bit 1	Bit 0	
+R#1:	4/16K	BL	    IE0	    M2	    M1	    0	    SI  	MAG	
+
+4/16K selects VRAM configuration. Write 1 if the VDP is not a V9938 nor V9958.
+
+BL disables the screen display when reseted.VDP's commands work a bit faster as well. Screen display is displayed by default.
+
+IE0 enables (1) or disable (0) the vertical retrace interrupts that occur at just after each display of the screen (foreground).
+
+M1-2 are bits are used with M3-5 bits of register 0 to define the VDP screen mode. (See here for detail)
+
+SI defines the sprite size. Write 1 to use 16x16 sprites, 0 to usinge 8x8 sprites.
+
+MAG enlarges the sprites when 1 is written. (0 by default)
+*/
+   int sprite_size=(vdp_9918a_registers[1] & 2 ? 16 : 8);
+
+   //mal 
+   //int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
 
    return sprite_size; 
 }
 
 int vdp_9918a_get_sprite_double(void)
 {
-    int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
+    int sprite_double=(vdp_9918a_registers[1] & 1 ? 1 : 0);
 
     return sprite_double;
 }
@@ -1390,7 +1411,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
     vdp_9918a_status_register&= (255-64);
 
         
-        int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
+        int sprite_size=vdp_9918a_get_sprite_size();
         //int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
