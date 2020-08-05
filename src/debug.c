@@ -94,6 +94,7 @@
 #include "sn76489an.h"
 #include "core_svi.h"
 #include "svi.h"
+#include "vdp_9918a.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -4695,7 +4696,19 @@ void debug_get_ioports(char *stats_buffer)
 
   		sprintf (buf_linea,"PPI Port C: %02X\n",svi_ppi_register_c);
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);		  		  
-  	}	  	  
+  	}
+
+	if (MACHINE_HAS_VDP_9918A) {
+  			sprintf (buf_linea,"\nVDP 9918A chip:\n");
+  			sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+
+			int i;
+			for (i=0;i<8;i++) {
+					sprintf (buf_linea,"%02X:  %02X\n",i,vdp_9918a_registers[i]);
+					sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+			}		
+	}	  	  
 
           stats_buffer[index_buffer]=0;
 
