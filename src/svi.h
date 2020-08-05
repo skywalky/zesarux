@@ -65,7 +65,7 @@ extern char *svi_get_string_memory_type(int tipo);
 extern int svi_cas_load_detect(void);
 extern void svi_cas_load(void);
 
-extern void svi_get_string_memory_slot(char *buffer_mem_type,z80_byte slot,z80_byte segment);
+extern void svi_get_string_memory_slot(char *buffer_mem_type,char *long_buffer_memory_type, z80_byte slot,z80_byte segment);
 
 
 

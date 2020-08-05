@@ -222,7 +222,10 @@ Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb,
 
 }
 
-void svi_get_string_memory_slot(char *buffer_mem_type,z80_byte slot,z80_byte segment)
+//Retorna el banco en el slot y pagina de SVI. Son slots fijos
+//Por defecto guarda un texto mas corto en buffer_mem_type. Si long_buffer_memory_type!=NULL, mete una descripcion mas larga
+//para algunos bancos
+void svi_get_string_memory_slot(char *buffer_mem_type,char *long_buffer_memory_type, z80_byte slot,z80_byte segment)
 {
     		switch (slot) {
 						case 0:
@@ -262,6 +265,20 @@ void svi_get_string_memory_slot(char *buffer_mem_type,z80_byte slot,z80_byte seg
 						break;
 
 					}
+
+    if (long_buffer_memory_type!=NULL) {
+        if (slot==1) {
+            if (segment==0) {
+                strcpy(long_buffer_memory_type,"Cartridge ROM 11");
+            }
+            else {
+                strcpy(long_buffer_memory_type,"Cartridge ROM 12");
+            }		
+        }
+        else {
+            strcpy(long_buffer_memory_type,buffer_mem_type);
+        }
+    }
 }
 
 

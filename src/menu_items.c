@@ -22305,17 +22305,18 @@ void menu_debug_msx_memory_info_slot_segment(MENU_ITEM_PARAMETERS)
 
 	if (MACHINE_IS_SVI) {
 		char buffer_mem_type[32];
-		svi_get_string_memory_slot(buffer_mem_type,slot,segment);
+		char long_buffer_mem_type[32];
+		svi_get_string_memory_slot(buffer_mem_type,long_buffer_mem_type,slot,segment);
 
 		menu_generic_message_format("Block info","Slot: %d Segment: %d Type: %s Uses: %04XH-%04XH"
-			,slot,segment,buffer_mem_type,inicio_bloque,fin_bloque);		
+			,slot,segment,long_buffer_mem_type,inicio_bloque,fin_bloque);		
 	}
 		
 	else {
 		//MSX
 	
-	menu_generic_message_format("Block info","Slot: %d Segment: %d Type: %s Uses: %04XH-%04XH"
-	,slot,segment,msx_get_string_memory_type(tipo),inicio_bloque,fin_bloque);
+		menu_generic_message_format("Block info","Slot: %d Segment: %d Type: %s Uses: %04XH-%04XH"
+			,slot,segment,msx_get_string_memory_type(tipo),inicio_bloque,fin_bloque);
 	}
 
 
@@ -22412,7 +22413,7 @@ void menu_debug_msx_svi_memory_info(MENU_ITEM_PARAMETERS)
 
 
 				if (MACHINE_IS_SVI) {
-					svi_get_string_memory_slot(buffer_mem_type,slot,segment);
+					svi_get_string_memory_slot(buffer_mem_type,NULL,slot,segment);
 				}
 				else {
 					//MSX
