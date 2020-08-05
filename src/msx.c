@@ -94,6 +94,24 @@ z80_byte *msx_return_segment_address(z80_int direccion,int *tipo)
    
     z80_byte slot=msx_ppi_register_a;
 
+    /*
+    ppi_register_a
+
+    bits:
+    76  54  32  10
+    |   |   |   |
+    |   |   |   ------ Slot for page 0
+    |   |   |
+    |   |   ---------- Slot for page 1
+    |   |
+    |   -------------- Slot for page 2
+    |   
+    ------------------ Slot for page 3
+
+
+    */
+
+
     int rotar=segmento*2;
 
     if (segmento>0) {

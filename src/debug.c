@@ -5244,6 +5244,22 @@ typedef struct s_debug_memory_segment debug_memory_segment;
   			}
 
 
+  			//MSX
+  			if (MACHINE_IS_MSX) {
+				int pagina;
+				segmentos_totales=4;
+				z80_byte mapping_register=msx_ppi_register_a;
+
+				for (pagina=0;pagina<4;pagina++) {
+	  				sprintf (segmentos[pagina].shortname,"SL%d",mapping_register & 3);
+	  				sprintf (segmentos[pagina].longname,"Slot %02X",mapping_register & 3);
+					segmentos[pagina].length=16384;
+					segmentos[pagina].start=16384*pagina;
+
+					mapping_register=mapping_register >> 2;
+				}
+  			}
+
 
   			//Paginas RAM en CHLOE
   			if (MACHINE_IS_CHLOE || is_zxuno_chloe_mmu() ) {
