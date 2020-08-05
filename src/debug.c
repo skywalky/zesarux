@@ -5384,6 +5384,27 @@ E000-FFFF = Cart ROM
 				*/
 			}
 
+			if (MACHINE_IS_SG1000) {
+				/*
+$0000-$bfff	Cartridge (ROM/RAM/etc)
+$c000-$c3ff	System RAM
+$c400-$ffff	System RAM (mirrored every 1KB)				
+				*/
+				segmentos_totales=2;
+
+				//0
+				segmentos[0].length=0xc000;
+				segmentos[0].start=0;	
+				strcpy (segmentos[0].shortname,"ROM");
+				strcpy (segmentos[0].longname,"Cartridge ROM");				
+
+				//1
+				segmentos[1].length=16384;
+				segmentos[1].start=0xc000;	
+				strcpy (segmentos[1].shortname,"RAM");
+				strcpy (segmentos[1].longname,"RAM (1 KB)");								
+			}
+
 
   			//Paginas RAM en CHLOE
   			if (MACHINE_IS_CHLOE || is_zxuno_chloe_mmu() ) {
