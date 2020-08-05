@@ -5260,6 +5260,88 @@ typedef struct s_debug_memory_segment debug_memory_segment;
 				}
   			}
 
+  			//SVI
+  			if (MACHINE_IS_SVI) {
+
+				segmentos_totales=2;
+
+				//Por defecto: bank01 rom basic, bank02 ram
+				char low_type='O';
+				z80_byte low_number=1;
+
+				char high_type='A';
+				z80_byte high_number=2;
+
+    z80_byte page_config=ay_3_8912_registros[ay_chip_selected][15];
+
+/*
+PSG Port B Output
+
+Bit Name    Description
+1   /CART   Memory bank 11, ROM 0000-7FFF (Cartridge /CCS1, /CCS2)  
+2   /BK21   Memory bank 21, RAM 0000-7FFF                           
+3   /BK22   Memory bank 22, RAM 8000-FFFF                           
+4   /BK31   Memory bank 31, RAM 0000-7FFF                           
+
+5   /BK32   Memory bank 32, RAM 8000-FFFF                           
+6   CAPS    Caps-Lock diod
+7   /ROMEN0 Memory bank 12, ROM 8000-BFFF* (Cartridge /CCS3)        
+8   /ROMEN1 Memory bank 12, ROM C000-FFFF* (Cartridge /CCS4)        
+*/	
+
+
+				if (page_config!=0xFF) {
+
+					//Ver bits activos
+					//Memory bank 11, ROM 0000-7FFF (Cartridge /CCS1, /CCS2)  
+					if ((page_config & 1)==0) {
+						low_number=11;
+					}
+
+					//Memory bank 21, RAM 0000-7FFF 
+					if ((page_config & 2)==0) {
+						low_number=21;
+						low_type='A';
+					}    
+
+					//Memory bank 22, RAM 8000-FFFF 
+					if ((page_config & 4)==0) {
+						high_number=22;
+					}    
+
+					//Memory bank 31, RAM 0000-7FFF
+					if ((page_config & 8)==0) {
+						low_number=31;
+						low_type='A';
+					}    
+
+					//Memory bank 32, RAM 8000-FFFF
+					if ((page_config & 16)==0) {
+						high_number=32;
+					}    
+
+					//TODO bits 6,7
+				}				
+
+				
+				
+				sprintf (segmentos[0].shortname,"R%c%02d",low_type,low_number);
+				sprintf (segmentos[0].longname,"R%cM %02d",low_type,low_number);
+
+				sprintf (segmentos[1].shortname,"R%c%02d",high_type,high_number);
+				sprintf (segmentos[1].longname,"R%cM %02d",high_type,high_number);					
+
+
+				segmentos[0].length=32768;
+				segmentos[0].start=0;
+
+				segmentos[1].length=32768;
+				segmentos[1].start=32768;
+
+
+	
+  			}			  
+
 
   			//Paginas RAM en CHLOE
   			if (MACHINE_IS_CHLOE || is_zxuno_chloe_mmu() ) {
