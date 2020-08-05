@@ -5342,6 +5342,48 @@ Bit Name    Description
 	
   			}			  
 
+			if (MACHINE_IS_COLECO) {
+				segmentos_totales=8;
+
+  				int pagina;
+  				for (pagina=0;pagina<segmentos_totales;pagina++) {
+
+					segmentos[pagina].length=8192;
+					segmentos[pagina].start=8192*pagina;
+				}
+
+				//0-3
+
+				strcpy (segmentos[0].shortname,"BIO");
+				strcpy (segmentos[0].longname,"BIOS ROM");	
+
+				strcpy (segmentos[1].shortname,"EXP");
+				strcpy (segmentos[1].longname,"Expansion port");	
+
+				strcpy (segmentos[2].shortname,"EXP");
+				strcpy (segmentos[2].longname,"Expansion port");	
+
+				strcpy (segmentos[3].shortname,"RAM");
+				strcpy (segmentos[3].longname,"RAM (1 KB)");													
+
+				//4-7
+				for (pagina=4;pagina<8;pagina++) {		
+						strcpy (segmentos[pagina].shortname,"CR");
+						strcpy (segmentos[pagina].longname,"Cartridge ROM");						
+				}
+
+				/*
+0000-1FFF = BIOS ROM
+2000-3FFF = Expansion port
+4000-5FFF = Expansion port
+6000-7FFF = RAM (1K mapped into an 8K spot)
+8000-9FFF = Cart ROM 
+A000-BFFF = Cart ROM 
+C000-DFFF = Cart ROM      
+E000-FFFF = Cart ROM 
+				*/
+			}
+
 
   			//Paginas RAM en CHLOE
   			if (MACHINE_IS_CHLOE || is_zxuno_chloe_mmu() ) {
