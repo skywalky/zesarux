@@ -1582,7 +1582,7 @@ int exp_par_calculate_funcion(int valor,enum token_parser_tipo tipo,enum token_p
                     break;
                     
                     case TPI_F_IN:
-                    return lee_puerto_no_time_spectrum(valor);
+                    return lee_puerto_spectrum_no_time(valor>>8,valor & 255);
                     break;
 
 
