@@ -770,6 +770,24 @@ int svi_cas_load_detect(void)
 
 
 //Buscar cabecera en cinta. En vez de complicarlo tanto com msx, buscar solo byte 7f, que va despues de la secuencia 0x55
+/*
+una cinta .cas tiene el contenido:
+
+00000000  55 55 55 55 55 55 55 55  55 55 55 55 55 55 55 55  |UUUUUUUUUUUUUUUU|
+00000010  7f d3 d3 d3 d3 d3 d3 d3  d3 d3 d3 41 4c 49 45 4e  |...........ALIEN|
+00000020  38 ff 00 55 55 55 55 55  55 55 55 55 55 55 55 55  |8..UUUUUUUUUUUUU|
+00000030  55 55 55 7f 18 80 0a 00  9f 3a bd 0f 0f 2c 12 2c  |UUU......:...,.,|
+00000040  12 3a d8 2c 2c 11 3a c5  2c 11 00 40 80 14 00 91  |.:.,,.:.,..@....|
+00000050  3a 91 22 20 20 20 20 20  20 20 20 20 41 4c 49 45  |:."         ALIE|
+00000060  4e 20 38 20 69 73 20 6c  6f 61 64 69 6e 67 20 2e  |N 8 is loading .|
+
+Podria buscar esos 16 bytes 55H y luego el 0x7f, pero no creo que valga la pena complicarse tanto. Busco el 7F y listo
+Si al final de cada bloque alguien mete un 0x7f en vez de los 16 bytes 55H, esto funcionaria mal, se posicionaria despues del 7F, o
+sea en el primer 55H
+
+Nota: ver funciones similares de MSX, ahí si que se busca una cabecera de varios bytes
+
+*/
 void svi_cas_lookup_header(void)
 {
 
@@ -874,62 +892,14 @@ void svi_cas_load(void)
 {
 
     /*
-TAPION (00E1H)		*1
-  Function:	reads the header block after turning the cassette motor ON.
-  Input:	none
-  Output:	if failed, the CY flag is set
-  Registers:	all
-
-
-TAPIN (00E4H)		*1
-  Function:	reads data from the tape
-  Input:	none
-  Output:	A for data. If failed, the CY flag is set.
-  Registers:	all
-
-
-The cas format is the result of bypassing the following BIOS calls:
-
-00E1 - TAPION
-00E4 - TAPIN
-00EA - TAPOON
-00ED - TAPOUT
 
 SVI:
 
-6C - CASIN
-69 - CSRDON
-
-
-If you call the TAPION function, the BIOS will read from tape untill it has
-found a header, and all of the header is read. The TAPOUT function will
-output a header. In the cas format the header is encoded to these 8 bytes:
-
-1F A6 DE BA CC 13 7D 74
-
-These bytes have to be at a position that can be divided by 8; e.g. 0000,
-0008, 0010 etc. If not, the byte sequence is not recognised as a header.
+6C - CASIN  (es un JP a 2016H)
+69 - CSRDON (es un JP a 203aH)
 
 
 
-There are 4 types of data that can be stored on a tape;
-
-* binary files (bload)
-* basic files (cload)
-* ascii files (load)
-* custom data (to be loaded using the bios)
-
-Data is stored on the tape in blocks, each block is preceeded by a header (the 1f a6 de .. block). The purpose of this header (the pieeeeeeeeep), is to sync for decoding the fsk data.
-
-Binary files (bload) consist out of two blocks; a binary header block, and a binary data block. The binary header block is specified by 10 times 0xD0, followed by 6 characters defining its filename. The block following this header, is the datablock, which also defines the begin,end and start address (0xFE,begin,end,start).
-
-Basic files (cload) also consist out of two blocks; a basic header block, and a basic data block. The basic header block is specified by 10 times 0xD3, followed by 6 characters defining its filename. The block folowing this header is the datablock (tokenized basic data).
-
-Ascii files (load) can consist out of multiple blocks. The first block is always the ascii header block, which is specified by 10 times 0xea, followed again by 6 characters defining the filename. After this, an unlimited number of blocks can follow. The last block can be identified by the EOF (0x1a) character.
-
-Custom blocks are all blocks that don't fit in the 3 specified above.
-
-You might want to look at the casdir.c code, which implemented the above.
     */
 
     if (reg_pc==0x69 || reg_pc==0x203a) {

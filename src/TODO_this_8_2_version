@@ -362,5 +362,4 @@ Probado con curl y no parece funcionar
 
 -Configure haiku dejar? O hacer poder cambiar comando gcc?
 
-
--algo mas de documentacion de spectravideo y headers: bytes UU UU .....
+-vdp 9918: corregir info de bits que puede estar al reves

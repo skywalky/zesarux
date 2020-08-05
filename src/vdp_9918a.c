@@ -30,7 +30,11 @@
 #include "screen.h"
 #include "settings.h"
 
-
+/*
+Nota: parece que en el documento chipstms9918 la numeracion de bits está al revés, por ejemplo,
+registro 1 bit 6 (BL disables the screen display when reseted.VDP's commands work a bit faster as well. Screen display is displayed by default.)
+en el documento aparece mal como bit 1
+*/
 z80_byte vdp_9918a_registers[8];
 
 z80_byte vdp_9918a_status_register=255;
@@ -1892,8 +1896,25 @@ void screen_store_scanline_rainbow_vdp_9918a_border_and_display(z80_int *scanlin
 
     int i;
 
+
+    int blank_color=0;
+    int blanking=0;
+
+    //Bit de blanking
+    if ((vdp_9918a_registers[1] & 64)==0) {
+        //printf ("BLANK: %d\n",vdp_9918a_registers[1] & 2);
+        //En este caso mostrar solamente color del border en toda la pantalla
+        blank_color=vdp_9918a_get_border_color()+VDP_9918_INDEX_FIRST_COLOR;
+        blanking=1;
+    }
+
     for (i=0;i<limite;i++) {
+        if (blanking) {
+            *puntero_buf_rainbow=blank_color;
+        }
+        else {
         *puntero_buf_rainbow=*origen_scanline_buffer;
+        }
 
         origen_scanline_buffer++;
         puntero_buf_rainbow++;
