@@ -222,6 +222,48 @@ Total:  3 ROMS de 32 kb, 5 RAMS de 32 kb,
 
 }
 
+void svi_get_string_memory_slot(char *buffer_mem_type,z80_byte slot,z80_byte segment)
+{
+    		switch (slot) {
+						case 0:
+							if (segment==0) {
+								strcpy(buffer_mem_type,"ROM01");
+							}
+							else {
+								strcpy(buffer_mem_type,"RAM02");
+							}
+						break;
+
+						case 1:
+							if (segment==0) {
+								strcpy(buffer_mem_type,"CRO11");
+							}
+							else {
+								strcpy(buffer_mem_type,"CRO12");
+							}						
+						break;
+
+						case 2:
+							if (segment==0) {
+								strcpy(buffer_mem_type,"RAM21");
+							}
+							else {
+								strcpy(buffer_mem_type,"RAM22");
+							}						
+						break;
+
+						default:
+							if (segment==0) {
+								strcpy(buffer_mem_type,"RAM31");
+							}
+							else {
+								strcpy(buffer_mem_type,"RAM32");
+							}						
+						break;
+
+					}
+}
+
 
 void svi_init_memory_tables(void)
 {
