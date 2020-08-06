@@ -116,6 +116,8 @@ Un tercer botón que diga “take me there” para cuando sugiere menús, que te
 
 -Mientras hay splash de inicio, si se pulsa F5, aparece por un momento overlays de ventanas, cuando F5 esta asignada a "Nothing"
 
+-Smartload de un tap en +3 deja activado top speed (abadía del crimen)
+
 -------------
 
 --- menu - mejoras ---
@@ -172,6 +174,12 @@ en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
 y no vuelve a abrir el menu, y parece que tampoco envia teclado a maquina emulada
 
 -filtro AY se sigue escuchando cosas aun desactivando los 3 canales->tienen que ver envolventes y speech
+
+-file browser no muestra dispositivos. importante para uart
+Por alguna razón, en /dev no llega a leerlos ni entrando antes del filtro. Quiza algun parametro especial del directorio
+o algo que no hago bien al leer directorio. La solución pasa por escribir el nombre directamente en el file selector (pulsando TAB o click de raton
+arriba)
+-no se ven enlaces simbólicos en navegador de archivos. Como mínimo de Mac no se ven. Y en Linux?
 
 -------------
 

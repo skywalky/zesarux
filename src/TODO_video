@@ -136,6 +136,10 @@ Ver http://www.atc.us.es/svn/zxuno/software/modo_radastan/videos_radastanianos/ 
 
 -una vez al pasar de stdout a sdl luego sdl no leia teclas
 
+-Impresión caracteres en consola texto nunca debe mostrar el 127. Es Delete
+Quizá mostrar C en caso de 127
+->Hecho de momento en chardetect y speech
+
 *************
 
 Por drivers:

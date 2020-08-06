@@ -345,7 +345,8 @@ Refresco de Tbblue para curses , stdout y simpletext en caso de:
 
 -Salir de CP/M deja el modo tiles activo
 
-
+-cambiar de maquina no tbblue a tbblue provoca que no funcione divmmc
+porque?
 
 TBBLUE: 
 *eliminar puerto 55h. Corregir demo tosprram para que use 5bh en vez de 55h
