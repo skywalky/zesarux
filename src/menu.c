@@ -28769,6 +28769,39 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_help_background_windows(MENU_ITEM_PARAMETERS)
+{
+
+	
+		menu_generic_message("Background Windows Help",
+			"When you enable Background Windows (from Settings-> GUI Settings-> Windows Settings), "
+			"some features are added to the ZX Desktop and some behaviour is modified\n"
+			"First, windows that can be sent to background, have a new button (exclamation mark !) in the window title\n"
+			"Pressing that button (or F6 key) will send the windows to background and go back to the previous window\n"
+
+			"* pulsando en zlogo abre el menu"
+			"* conmutando ventanas cierra la ventana activa si esta no soporta background"
+			"* pulsando boton de background (!), envia ventana a background y vuelve a menu anterior, si es que ventana permite background"
+			"* ventana que está en background tiene el botón de background (!) parpadeando, siempre que mulitask esté activado. Pero si ventana no actualiza,"
+			"como Debug CPU, está en background pero no parpadea el (!)"
+
+			"si venimos de conmutar de otra ventana, se abrira menu principal"
+			"* boton derecho en menu tiene mismo efecto que ESC: cerrar ventana activa"
+
+			"* con menu abierto, pulsando con el raton en maquina emulada, pierde el foco del menu. Para volver el foco,"
+			"pulsar en cualquiera de las ventanas o en el logo Z-> esto retorna el foco siempre en la ultima ventana antes de perder el foco"
+			"* se permite tener multitask desactivado pero ventanas con background"
+			"* logo Z solo se ve cuando capa de menu esta abierta (esto aplica aunque no haya background windows)"
+			"* pulsar ESC en menu principal, cierra todas ventanas"
+			"* teclas f-solo funcionan con menu cerrado (excepto tecla de menu y de background)"
+
+			
+	);
+
+
+}
+
+
 void menu_licenses(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_common;
@@ -28857,6 +28890,8 @@ void menu_about(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu(array_menu_about,"~~Help",MENU_OPCION_NORMAL,menu_about_help,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'h');
+
+			menu_add_item_menu(array_menu_about,"Help Background Windows",MENU_OPCION_NORMAL,menu_help_background_windows,NULL);
 
 			menu_add_item_menu(array_menu_about,"Help ~~Keyboard",MENU_OPCION_NORMAL,menu_help_show_keyboard,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'k');			

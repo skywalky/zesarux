@@ -102,8 +102,7 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 -Poder ver ventanas en background con menú cerrado de la misma manera que salen mensajes splash?
 
 
-
--Guia uso background windows, quiza en menu help tal cual:
+-Guia uso background windows, quiza en menu help tal cual, si se habilita?:
 * pulsando en zlogo abre el menu
 * conmutando ventanas cierra la ventana activa si esta no soporta background
 * pulsando boton de background (!), envia ventana a background y vuelve a menu anterior, si es que ventana permite background
@@ -119,7 +118,6 @@ pulsar en cualquiera de las ventanas o en el logo Z-> esto retorna el foco siemp
 * logo Z solo se ve cuando capa de menu esta abierta (esto aplica aunque no haya background windows)
 * pulsar ESC en menu principal, cierra todas ventanas
 * teclas f-solo funcionan con menu cerrado (excepto tecla de menu y de background)
-
 
 
 *ventanas minimizadas no redibuja siempre, dado que solo tienen titulo sin contenido. 
