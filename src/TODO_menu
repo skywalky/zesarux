@@ -118,6 +118,10 @@ Un tercer botón que diga “take me there” para cuando sugiere menús, que te
 
 --- menu - mejoras ---
 
+-tecla para poder cerrar todos los menus y volver a emulacion (como F5+ESC). Desaparecen las ventanas en background pero no las cierra realmente
+
+-ayuda teclados  +2, +2a/+3 en spanish
+
 -Mostrar info en menu network de descargas, commits etc. Solo si hay ssl (porque github solo esta con https)
 
 -Al pulsar en footer cuando está con real tape, que se ponga cinta en pausa
