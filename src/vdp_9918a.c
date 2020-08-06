@@ -383,8 +383,7 @@ MAG enlarges the sprites when 1 is written. (0 by default)
 */
    int sprite_size=(vdp_9918a_registers[1] & 2 ? 16 : 8);
 
-   //mal 
-   //int sprite_size=(vdp_9918a_registers[1] & 64 ? 16 : 8);
+
 
    return sprite_size; 
 }
@@ -392,6 +391,8 @@ MAG enlarges the sprites when 1 is written. (0 by default)
 int vdp_9918a_get_sprite_double(void)
 {
     int sprite_double=(vdp_9918a_registers[1] & 1 ? 2 : 1);
+
+    //Bank Panic por ejemplo de SG1000 utiliza X2 en el titulo
 
     return sprite_double;
 }
@@ -1424,7 +1425,6 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
         int sprite_size=vdp_9918a_get_sprite_size();
         int sprite_double=vdp_9918a_get_sprite_double();
 
-        
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 
