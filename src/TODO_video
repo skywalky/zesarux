@@ -145,6 +145,12 @@ Por drivers:
 
 -En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
 
+- curses: con ventana ay piano en background, al ir a Smartload se mezcla texto de ventana ay piano en Smartload
+
+
+
+- curses: en menú no aparece carácter “.” (Punto)
+
 
 
 --stdout--

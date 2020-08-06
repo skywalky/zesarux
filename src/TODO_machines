@@ -343,6 +343,8 @@ Al mover raton hace cosas raras. Tambien en el menu de tbblue
 Refresco de Tbblue para curses , stdout y simpletext en caso de:
 -rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
 
+-Salir de CP/M deja el modo tiles activo
+
 
 
 TBBLUE: 

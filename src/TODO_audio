@@ -55,6 +55,9 @@ Otros TODO menos prioritarios, de aqui hasta el final del archivo:
 
 *** Audio ***
 
+-Ay a midi y sn a midi. Tanto mid como midi device
+
+-comandos reset midi no hace nada?? Solo van en windows. Quiza enviar mejor un noteoff
 
 -revisar mezclado ay+beeper . posiblemente set_value_beeper acaba sacando algun valor beeper 50*2 y se sale todo de rango?
 o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el test de 6/9 canales turbosound?
