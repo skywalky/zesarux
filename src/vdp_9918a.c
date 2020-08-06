@@ -900,8 +900,8 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
                                     int pos_x_final;
                                     int pos_y_final;
 
-                                    pos_x_final=horiz_pos+x;
-                                    pos_y_final=vert_pos+y;
+                                    pos_x_final=horiz_pos+x*sprite_double;
+                                    pos_y_final=vert_pos+y*sprite_double;
                                     
                                     if (pos_x_final>=0 && pos_x_final<=255 && pos_y_final>=0 && pos_y_final<=191) {
 
@@ -927,6 +927,11 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
                                                     color_sprite=si_blanco_negro*15;
                                                 }                                            
                                                 scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                if (sprite_double==2) {
+                                                    scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                }                                                
                                             }
                                         }
                                     }
