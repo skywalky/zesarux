@@ -365,6 +365,4 @@ Probado con curl y no parece funcionar
 -vdp 9918: corregir info de bits que puede estar al reves
 
 
--extension sc en algunos juegos sg1000?
-
 -tecla para poder cerrar todos los menus y volver a emulacion (como F5+ESC). Desaparecen las ventanas en background pero no las cierra realmente
