@@ -35,6 +35,11 @@
 #include "audio.h"
 #include "operaciones.h"
 
+
+// Info, soft etc:
+// http://www.samdal.com/svsoftware.htm
+
+
 z80_byte *svi_vram_memory=NULL;
 
 z80_byte svi_ppi_register_a;

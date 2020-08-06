@@ -823,3 +823,37 @@ Segun MESS:
 -Puerto joystick tk en puerto no estándar?
 
 **
+
+
+-------------
+
+
+--- MSX ---
+
+- Msx games browser desde planetemu. Mismo sirve para coleco y sg1000. Problema: quiza planetemu no admite peticiones http simple. 
+Probado con curl y no parece funcionar
+
+-Contención en hacer out e in a vram?
+-msx timings accesos a vram write/read y depende de modo
+-config slots memoria?
+Como ejemplo, el Toshiba HX-10 (un modelo de 64KB) tiene esta configuración de memoria:
+* 		ROM en las páginas 0 y 1 del slot 0.
+* 		RAM en las páginas 0 a 3 del slot 2.
+* 		Slots 1 y 3 están conectados a las ranuras de cartucho.
+* 		Páginas 2 y 3 del slot 0 no se usan.
+
+-teclas que falten por emular.  cuales mas?
+
+
+
+
+-------------
+
+
+--- Spectravideo ---
+
+-Quizá para 16kb svi 318 hacer que si direccion > 16kb, retorne tipo vacío y así no escribe ni lee nada 
+O quizá esa rom es del 328 en vez del 318
+-muchas cintas .cas no cargan o cargan mal el juego
+
+-teclas que falten por emular.  cuales mas?
