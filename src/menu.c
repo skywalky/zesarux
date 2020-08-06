@@ -16287,21 +16287,26 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 void menu_msxcart_load(MENU_ITEM_PARAMETERS)
 {
 
-        char *filtros[2];
+        char *filtros[3];
 
 		if (MACHINE_IS_COLECO) {
         	filtros[0]="col";
+			filtros[1]=0;
 		}
 
 		else if (MACHINE_IS_SG1000) {
         	filtros[0]="sg";
+			//Aunque extensión SC es de la sega sc3000, algunos cartuchos medio funcionan
+			filtros[1]="sc";
+			filtros[2]=0;
 		}		
 
 		else {
 			filtros[0]="rom";
+			filtros[1]=0;
 		}
 
-        filtros[1]=0;
+        
 
 
 
@@ -28486,6 +28491,11 @@ void menu_about_license_qemu(MENU_ITEM_PARAMETERS)
         menu_about_read_file("Qemu License","licenses/LICENSE_qemu");
 }
 
+void menu_about_license_hilow(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("Hilow License","licenses/LICENSE_hilow");
+}
+
 
 void menu_about_statistics(MENU_ITEM_PARAMETERS)
 {
@@ -28777,6 +28787,9 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu(array_menu_common,"~~Fuse disassembler",MENU_OPCION_NORMAL,menu_about_license_fuse,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'f');	
+
+			menu_add_item_menu(array_menu_common,"~~Hilow",MENU_OPCION_NORMAL,menu_about_license_hilow,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'h');
 
 			menu_add_item_menu(array_menu_common,"m~~dvtool",MENU_OPCION_NORMAL,menu_about_license_mdvtool,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'d');	

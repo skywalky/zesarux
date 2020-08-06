@@ -1072,6 +1072,7 @@ extern void menu_uncompress_zip_progress(char *zip_file,char *dest_dir);
 "[FUNCTION] can be:\n" \
 "PEEK(e): returns the byte at address e, where e is any expression\n" \
 "PEEKW(e): returns the word at address e\n" \
+"IN(e): returns the byte at port e\n" \
 "NOT(e): negates expression e: if it's 0, returns 1. Otherwhise, return 0. \n" \
 "ABS(e): returns absolute value of expression e\n" \
 "BYTE(e): same as (e)&FFH\n" \

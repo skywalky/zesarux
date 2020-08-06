@@ -391,7 +391,7 @@ MAG enlarges the sprites when 1 is written. (0 by default)
 
 int vdp_9918a_get_sprite_double(void)
 {
-    int sprite_double=(vdp_9918a_registers[1] & 1 ? 1 : 0);
+    int sprite_double=(vdp_9918a_registers[1] & 1 ? 2 : 1);
 
     return sprite_double;
 }
@@ -725,7 +725,7 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 
         
         int sprite_size=vdp_9918a_get_sprite_size();
-        //int sprite_double=vdp_9918a_get_sprite_double();
+        int sprite_double=vdp_9918a_get_sprite_double();
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 
@@ -841,8 +841,8 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
                                         int pos_x_final;
                                         int pos_y_final;
 
-                                        pos_x_final=horiz_pos+(quad_x*8)+x;
-                                        pos_y_final=vert_pos+(quad_y*8)+y;
+                                        pos_x_final=horiz_pos+((quad_x*8)+x)*sprite_double;
+                                        pos_y_final=vert_pos+((quad_y*8)+y)*sprite_double;
                                         
                                         //Si dentro de limites
                                         if (pos_x_final>=0 && pos_x_final<=255 && pos_y_final>=0 && pos_y_final<=191) {
@@ -873,6 +873,11 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 
 
                                                     scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    if (sprite_double==2) {
+                                                        scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                        scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                        scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    }
                                                 }
                                             }
 

@@ -3173,7 +3173,7 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					sprintf (texto_buffer,"Sprite size: %dX%d",sprite_size,sprite_size);
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
 
-					sprintf (texto_buffer,"Magnification: %dX",vdp_9918a_get_sprite_double()+1);
+					sprintf (texto_buffer,"Magnification: %dX",vdp_9918a_get_sprite_double());
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
 
 					sprintf (texto_buffer,"Name Table:           %04XH",vdp_9918a_get_pattern_name_table());

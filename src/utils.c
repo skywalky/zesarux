@@ -4621,6 +4621,7 @@ int quickload_valid_extension(char *nombre) {
     || !util_compare_file_extension(nombre,"rom")
     || !util_compare_file_extension(nombre,"col")
     || !util_compare_file_extension(nombre,"sg")
+    || !util_compare_file_extension(nombre,"sc")
 	) {
 		return 1;
 	}
@@ -5077,6 +5078,7 @@ int quickload_continue(char *nombre) {
 	//Cartuchos de SG1000
 	else if (
                 !util_compare_file_extension(nombre,"sg")
+             || !util_compare_file_extension(nombre,"sc")
         ) {
 		//Aqui el autoload da igual. cambiamos siempre a sg1000 si conviene
                 if (!MACHINE_IS_SG1000) {
