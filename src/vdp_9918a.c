@@ -1422,7 +1422,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
         
         int sprite_size=vdp_9918a_get_sprite_size();
-        //int sprite_double=(vdp_9918a_registers[1] & 128 ? 1 : 0);
+        int sprite_double=vdp_9918a_get_sprite_double();
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 
@@ -1525,7 +1525,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                 
 
                 //Si posicion Y sprite esta en el margen
-                if (scanline>=vert_pos && scanline<vert_pos+sprite_size) {
+                if (scanline>=vert_pos && scanline<vert_pos+sprite_size*sprite_double) {
                 //if (vert_pos<192) {
                     //int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
 
@@ -1544,7 +1544,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                         //int quad_y;
 
                         //linea 0..15 dentro del sprite
-                        int fila_sprites_16=scanline-vert_pos;
+                        int fila_sprites_16=(scanline-vert_pos)/sprite_double;
                         //printf ("fila: %d\n",fila_sprites_16);
 
                         //Cuadrante 0...1
@@ -1568,7 +1568,7 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
                                         int pos_x_final;
                                         //int pos_y_final;
 
-                                        pos_x_final=horiz_pos+(quad_x*8)+x;
+                                        pos_x_final=horiz_pos+((quad_x*8)+x)*sprite_double;
                                         //pos_y_final=vert_pos+(quad_y*8)+y;
                                         
                                         //Si dentro de limites
@@ -1610,6 +1610,9 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 
 
                                                     vdp9918a_put_sprite_pixel(&destino_scanline_buffer[pos_x_final],VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    if (sprite_double==2) {
+                                                        vdp9918a_put_sprite_pixel(&destino_scanline_buffer[pos_x_final+1],VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    }
                                 
                                                 }
                                             }
