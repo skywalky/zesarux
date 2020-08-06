@@ -28775,25 +28775,42 @@ void menu_help_background_windows(MENU_ITEM_PARAMETERS)
 	
 		menu_generic_message("Background Windows Help",
 			"When you enable Background Windows (from Settings-> GUI Settings-> Windows Settings), "
-			"some features are added to the ZX Desktop and some behaviour is modified\n"
-			"First, windows that can be sent to background, have a new button (exclamation mark !) in the window title\n"
-			"Pressing that button (or F6 key) will send the windows to background and go back to the previous window\n"
+			"some features are added to the ZX Desktop and some behaviour is modified. \n"
+			"First, we will refer to 'menu' to all the menu windows and all the windows in background. "
+			"When we talk that the 'menu is open' or the 'menu is closed', we talk about all the menu windows and all the windows "
+			"in background, that they are visible or not. \n"
+			"We will refer to 'main menu' to the main menu window (the one with Smartload, Machine, etc). \n"
+			"Windows that can be sent to background, have a new button (exclamation mark !) in the window title. \n"
+			"Pressing that button (or F6 key) will send the window to the background and go back to the previous window. \n"
+			"A window in the background is open, doesn't have the focus, and usually is refreshing its contents "
+			"(we will talk about it later). \n"
+			"If you click to another window, the current window will be sent to background, if it allows to do it. "
+			"If it's not allowed, the current window will be closed. \n"
+			"A window that is in background and refreshes its contents, will have it's background button (!) flashing, only if you have multitasking enabled (by default). \n" 
+			"Some background windows doesn't refresh its contents when they are in background, like Debug CPU. \n"
 
-			"* pulsando en zlogo abre el menu"
-			"* conmutando ventanas cierra la ventana activa si esta no soporta background"
-			"* pulsando boton de background (!), envia ventana a background y vuelve a menu anterior, si es que ventana permite background"
-			"* ventana que está en background tiene el botón de background (!) parpadeando, siempre que mulitask esté activado. Pero si ventana no actualiza,"
-			"como Debug CPU, está en background pero no parpadea el (!)"
 
-			"si venimos de conmutar de otra ventana, se abrira menu principal"
-			"* boton derecho en menu tiene mismo efecto que ESC: cerrar ventana activa"
+			"Pressing F5 when on menu or pressing the ZEsarUX logo (on the bottom right of ZX Desktop) will send you back to main menu. "
 
-			"* con menu abierto, pulsando con el raton en maquina emulada, pierde el foco del menu. Para volver el foco,"
-			"pulsar en cualquiera de las ventanas o en el logo Z-> esto retorna el foco siempre en la ultima ventana antes de perder el foco"
-			"* se permite tener multitask desactivado pero ventanas con background"
-			"* logo Z solo se ve cuando capa de menu esta abierta (esto aplica aunque no haya background windows)"
-			"* pulsar ESC en menu principal, cierra todas ventanas"
-			"* teclas f-solo funcionan con menu cerrado (excepto tecla de menu y de background)"
+			"The ZEsarUX logo only appears when menu is open. \n"
+			
+
+			//???? "si venimos de conmutar de otra ventana, se abrira menu principal"
+			"Pressing window close button, ESC or right mouse it always closes the current window (same behaviour with background windows disabled). \n" 
+
+			"When menu is open, pressing on the emulated machine section (usually on the left), the keyboard focus is lost from the menu "
+			"and goes to the emulated machine. To return the keyboard focus to menu, press on any of the background windows, "
+			"or in the ZEsarUX logo, or press F5. \n"
+
+			
+			
+			"Pressing ESC on main menu, makes disappear all windows. But pressing F5 again will restore all windows. \n"
+			"F-keys are only read when menu is closed (except F5 and F6). \n"
+
+			"You can enable a setting to restore windows when ZEsarUX is opened (from Settings-> GUI Settings-> Windows Settings-> "
+			"Reopen windows on start). \n"
+
+			"You can have background windows enabled but multitasking disabled (not recommended, but allowed). "
 
 			
 	);
