@@ -28776,40 +28776,39 @@ void menu_help_background_windows(MENU_ITEM_PARAMETERS)
 		menu_generic_message("Background Windows Help",
 			"When you enable Background Windows (from Settings-> GUI Settings-> Windows Settings), "
 			"some features are added to the ZX Desktop and some behaviour is modified. \n"
+			"\n"
 			"First, we will refer to 'menu' to all the menu windows and all the windows in background. "
 			"When we talk that the 'menu is open' or the 'menu is closed', we talk about all the menu windows and all the windows "
 			"in background, that they are visible or not. \n"
+			"\n"
 			"We will refer to 'main menu' to the main menu window (the one with Smartload, Machine, etc). \n"
+			"\n"
 			"Windows that can be sent to background, have a new button (exclamation mark !) in the window title. \n"
 			"Pressing that button (or F6 key) will send the window to the background and go back to the previous window. \n"
+			"\n"
 			"A window in the background is open, doesn't have the focus, and usually is refreshing its contents "
 			"(we will talk about it later). \n"
 			"If you click to another window, the current window will be sent to background, if it allows to do it. "
 			"If it's not allowed, the current window will be closed. \n"
 			"A window that is in background and refreshes its contents, will have it's background button (!) flashing, only if you have multitasking enabled (by default). \n" 
 			"Some background windows doesn't refresh its contents when they are in background, like Debug CPU. \n"
-
-
-			"Pressing F5 when on menu or pressing the ZEsarUX logo (on the bottom right of ZX Desktop) will send you back to main menu. "
-
+			"\n"
+			"Pressing F5 when on menu or pressing the ZEsarUX logo (on the bottom right of ZX Desktop) will send you back to main menu.\n"
 			"The ZEsarUX logo only appears when menu is open. \n"
-			
-
+			"\n"
 			//???? "si venimos de conmutar de otra ventana, se abrira menu principal"
 			"Pressing window close button, ESC or right mouse it always closes the current window (same behaviour with background windows disabled). \n" 
-
+			"\n"
 			"When menu is open, pressing on the emulated machine section (usually on the left), the keyboard focus is lost from the menu "
 			"and goes to the emulated machine. To return the keyboard focus to menu, press on any of the background windows, "
 			"or in the ZEsarUX logo, or press F5. \n"
-
-			
-			
+			"\n"
 			"Pressing ESC on main menu, makes disappear all windows. But pressing F5 again will restore all windows. \n"
-			"F-keys are only read when menu is closed (except F5 and F6). \n"
-
+			"F-keys are only read when menu is closed (except F5 and F6, which are also read with menu open). \n"
+			"\n"
 			"You can enable a setting to restore windows when ZEsarUX is opened (from Settings-> GUI Settings-> Windows Settings-> "
 			"Reopen windows on start). \n"
-
+			"\n"
 			"You can have background windows enabled but multitasking disabled (not recommended, but allowed). "
 
 			
