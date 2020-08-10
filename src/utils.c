@@ -7248,18 +7248,20 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
         	                                puerto_65278 &=255-1;
                 	                        puerto_63486 &=255-2;
                         	                blink_kbd_a15 &= (255-8);
-						                              cpc_keyboard_table[8] &=(255-64);
-                                          // 4|     [   Caps      k      s      f      =      g      ;     ql_keyboard_table[3]
-                                          msx_keyboard_table[6] &=(255-8);
-                                          ql_keyboard_table[3] &=(255-2);
+                                                cpc_keyboard_table[8] &=(255-64);
+                                                // 4|     [   Caps      k      s      f      =      g      ;     ql_keyboard_table[3]
+                                                msx_keyboard_table[6] &=(255-8);
+                                                svi_keyboard_table[8] &=(255-8);
+                                                ql_keyboard_table[3] &=(255-2);
 	                                }
         	                        else {
                 	                        puerto_65278 |=1;
                         	                puerto_63486 |=2;
                                 	        blink_kbd_a15 |= 8;
-						                              cpc_keyboard_table[8] |=64;
-                                        msx_keyboard_table[6] |=8;
-                                          ql_keyboard_table[3] |=2;
+                                                cpc_keyboard_table[8] |=64;
+                                                msx_keyboard_table[6] |=8;
+                                                svi_keyboard_table[8] |=8;
+                                                ql_keyboard_table[3] |=2;
 	                                }
 				}
                         break;
