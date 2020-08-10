@@ -423,9 +423,9 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 
 
--aatributos extendidos sprites (quinto byte) zoom, composite etc
+-atributos extendidos sprites (quinto byte) zoom, composite etc
 
-
+-Soporte ulaplus en Next
 	
 
 -reloj deberia salir en nextos, ya que implementa el chip de reloj. Aparece pero con valor 000

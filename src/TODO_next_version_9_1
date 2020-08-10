@@ -1,0 +1,51 @@
+--------Para la próxima versión 9.1:
+
+-Que algunas tareas como store scanline se hagan en thread aparte. Problema: que la mayoria de datos de ese scanline
+pueden variar mientras se está ejecutando el thread con el loop del siguiente scanline
+
+-A veces en Mac, si lanzado con ao null, al perder el foco de la ventana se para la emulacion
+probado con:
+
+./zesarux --noconfigfile --ao null --zoom 1 --realvideo extras/media/spectrum/rainbow/over128.z80 &
+Parece que no sucede en la 8.1
+
+-Meter file browser zxuno en imagen zxuno mmc
+
+https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
+
+
+-Cinta de juegos y programas zx81 pasar a digital
+
+-algun tipo de build que no sea ni linux ni mac ni windows, sino simplemente UNIX_GENERIC o algo similar
+
+-meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
+ ejemplo: ./zesarux --realtape tetris2.pzx
+
+ -Cuando haya fat driver, poder descargar cp/m dentro de la imagen mmc de TBBlue 
+
+
+-para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
+-quiza funcion footer a scr_putchar_footer_comun_zoom se tiene que hacer con coordenadas 0,1 o 2 simplemente
+
+
+-al cargar smartload, por ejemplo ultimo cargado es thelosttapesofalbion. situa el cursor ahi bien, 
+pero al subir para arriba desplaza desde scroll sin mover
+cursor hasta que esta arriba. O sea, deberia mover siempre cursor y no empezar a hacer scroll hasta que no esta arriba
+
+-Probar malloc en 32 bit de 2 gb
+
+
+-utils.c: In function ‘util_extract_hdf’:
+utils.c:11099:18: warning: this decimal constant is unsigned only in ISO C90
+                  2147483648L, //8. 2 GB
+                  ^
+utils.c: In function ‘util_ascii_to_binary’:
+utils.c:11248:9: warning: this decimal constant is unsigned only in ISO C90
+         const unsigned int mascara=(unsigned int)2147483648;
+
+Puede dar problemas?
+
+
+-Con carga top speed salen dos footer ? El nuevo de rojo también...  
+Quizá el Rojo debería ser el Tspeed que ya sale en la carga...
+Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el footer
