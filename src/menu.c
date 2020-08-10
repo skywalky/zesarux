@@ -5553,6 +5553,8 @@ void zxvision_destroy_window(zxvision_window *w)
 	ventana_tipo_activa=1;
 	zxvision_keys_event_not_send_to_machine=1;
 
+	menu_speech_tecla_pulsada=1; //Para no leer las ventanas de detrás al cerrar la actual
+
 	if (zxvision_current_window!=NULL) {
 		//Dibujar las de detras
 		//printf ("Dibujando ventanas por detras\n");
