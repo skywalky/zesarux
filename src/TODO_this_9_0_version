@@ -126,3 +126,6 @@ Parece que no sucede en la 8.1
 
 
 -Acabar de revisar menu ayuda background windows
+
+-Que algunas tareas como store scanline se hagan en thread aparte. Problema: que la mayoria de datos de ese scanline
+pueden variar mientras se está ejecutando el thread con el loop del siguiente scanline
