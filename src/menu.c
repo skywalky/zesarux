@@ -5187,6 +5187,7 @@ int zxvision_if_window_already_exists(zxvision_window *w)
 }
 
 //Borrar ventana si ya existe
+//Esto se suele hacer cuando se conmuta entre ventanas en background
 void zxvision_delete_window_if_exists(zxvision_window *ventana)
 {
     //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
@@ -5199,8 +5200,14 @@ void zxvision_delete_window_if_exists(zxvision_window *ventana)
 
 		debug_printf (VERBOSE_DEBUG,"Window removed from background");
 
+		menu_speech_tecla_pulsada=1; //Para que no envie a speech la ventana que esta por debajo de la que borramos
+
+		//Al borrar la ventana se leeria la ventana que hay justo debajo
         zxvision_window_delete_this_window(ventana);	
-		
+
+		//Forzar a leer la siguiente ventana que se abra (o sea a la que conmutamos)
+		menu_speech_tecla_pulsada=0;
+	
     }   
 }
 
@@ -29964,7 +29971,7 @@ void menu_inicio_bucle(void)
 						//Se reabre el menu tambien si pulsada tecla F5 en cualquiera de los menus
 						if (menu_pressed_open_menu_while_in_menu.v) {
 							menu_pressed_open_menu_while_in_menu.v=0;
-						}					
+						}
 			
 					}
 				}
