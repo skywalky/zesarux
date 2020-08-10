@@ -3501,7 +3501,10 @@ void normal_overlay_texto_menu(void)
 	//Dibujar ventanas en background pero solo si menu está abierto, esto evita que aparezcan las ventanas cuando hay un 
 	//mensaje de splash y el menú está cerrado
 	if (menu_allow_background_windows && menu_abierto) {
+		//Conservar estado de tecla pulsada o no para el speech
+		int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
 		menu_draw_background_windows_overlay_after_normal();
+		menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
 	}
  
 
@@ -5001,6 +5004,8 @@ void zxvision_restore_windows_on_startup(void)
 
 	//Iterar sobre todas
 	int i;
+
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente los textos de las ventanas a speech
 
 	for (i=0;i<total_restore_window_array_elements;i++) {
 		//printf ("Restoring window %s\n",restore_window_array[i]);

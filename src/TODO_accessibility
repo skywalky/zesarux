@@ -2,6 +2,9 @@
 
 --- Accesibilidad ---
 
+-Con background windows, cada vez que se selecciona un item de menu por ejemplo,
+se cierra momentaneamente el item de menu y esta como ventana principal la ventana que habia justo debajo del menu
+En ese momento se lee el contenido de esa ventana completamente, y luego se abre el menu. No deberia leerse dicha ventana
 
 -Speech:
 -enter le envia siempre speech pending. normal?
