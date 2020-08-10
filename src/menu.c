@@ -5560,6 +5560,8 @@ void zxvision_destroy_window(zxvision_window *w)
 	ventana_tipo_activa=1;
 	zxvision_keys_event_not_send_to_machine=1;
 
+	int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
+
 	menu_speech_tecla_pulsada=1; //Para no leer las ventanas de detrás al cerrar la actual
 
 	if (zxvision_current_window!=NULL) {
@@ -5577,6 +5579,8 @@ void zxvision_destroy_window(zxvision_window *w)
 		zxvision_draw_window_contents(zxvision_current_window);
 		//printf ("Dibujando ventana de debajo que ahora es de frente\n");
 	}
+
+	menu_speech_tecla_pulsada=antes_menu_speech_tecla_pulsada;
 
 	//Liberar memoria cuando ya no se use para nada
 	free(w->memory);

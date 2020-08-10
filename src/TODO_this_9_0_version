@@ -48,7 +48,6 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 
 - meter en extras de docs Benchmark legacy tbblue
 
--revisar speech con ventanas en background
 
 -En tape output, aparte de truncate etc, poder usar rotate-truncate para rotar los .tap viejos
 
