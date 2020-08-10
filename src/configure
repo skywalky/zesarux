@@ -19,6 +19,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+CCOMPILER=gcc
+
 echo
 echo "Configuration script for ZEsarUX"
 echo
@@ -32,8 +34,9 @@ show_help()
 {
 
         echo "Usage:"
+	echo "--c-compiler CCOMPILER       Change C compiler (default: $CCOMPILER)"
         echo "--disable-stdout             Disable stdout driver"
-		echo "--disable-simpletext         Disable simpletext driver"
+	echo "--disable-simpletext         Disable simpletext driver"
         echo "--disable-curses             Disable curses driver"
         echo "--disable-cursesw             Disable cursesw driver (extended characters)"
         echo "--disable-aa                 Disable aalib driver"
@@ -162,6 +165,11 @@ while [ $# -gt 0 ]; do
 	--help)
 	show_help
 
+	;;
+
+	--c-compiler)
+        shift
+	CCOMPILER="$1"
 	;;
 
  	--disable-stdout)
@@ -361,11 +369,11 @@ if [ "$SISTEMA" == "Msys" ]; then
 	LDFLAGS="zesarux.res $LDFLAGS -lwinmm"
 fi
 
-echo -n "Checking for gcc compiler ... "
+echo -n "Checking for $CCOMPILER compiler ... "
 
-RESULT=`which gcc`
+RESULT=`which $CCOMPILER`
 if [ $? != 0 ]; then
-	echo "No gcc compiler found"
+	echo "No $CCOMPILER compiler found"
 	exit 1
 fi
 
@@ -386,7 +394,7 @@ return 0;
 }
 _EOF
 
-gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+$CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 CHARSIZE=`./$TEMPFILE.o`
 rm -f $TEMPFILE $TEMPFILE.o
 echo $CHARSIZE
@@ -407,7 +415,7 @@ return 0;
 }
 _EOF
 
-gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+$CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 SHORTSIZE=`./$TEMPFILE.o`
 rm -f $TEMPFILE $TEMPFILE.o
 echo $SHORTSIZE
@@ -428,7 +436,7 @@ return 0;
 }
 _EOF
 
-gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+$CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 SHORTSIZE=`./$TEMPFILE.o`
 rm -f $TEMPFILE $TEMPFILE.o
 echo $SHORTSIZE
@@ -468,7 +476,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -496,7 +504,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -528,7 +536,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -555,7 +563,7 @@ return 0;
 }
 _EOF
 
-	gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+	$CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	RESULTCODE=$?
 	if [ $RESULTCODE != 0 ]; then
 		echo "not found"
@@ -588,7 +596,7 @@ return 0;
 }
 _EOF
 
-	gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+	$CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	RESULTCODE=$?
 	if [ $RESULTCODE != 0 ]; then
 		echo "not found"
@@ -626,7 +634,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -654,7 +662,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -690,7 +698,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -719,7 +727,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -753,7 +761,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -784,7 +792,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS -I/usr/X11R6/include -I/opt/X11/include $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found."
@@ -816,7 +824,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -857,7 +865,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -886,7 +894,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -915,7 +923,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -946,7 +954,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -1032,15 +1040,15 @@ return 0;
 _EOF
 
 	if [ "$SISTEMA" == "Darwin" ]; then
-		gcc -c $CFLAGS -I/Library/Frameworks/$LIBSDL.framework/Headers -framework $LIBSDL -F/Library/Frameworks $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+		$CCOMPILER -c $CFLAGS -I/Library/Frameworks/$LIBSDL.framework/Headers -framework $LIBSDL -F/Library/Frameworks $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	elif [ "$SISTEMA" == "Msys" ]; then
-		#echo "gcc -c $CFLAGS -Lc:\mingw\${LIBSDL}\lib -Ic:\mingw\${LIBSDL}\include -l$LIBSDL $TEMPFILE -o $TEMPFILE.o"
+		#echo "$CCOMPILER -c $CFLAGS -Lc:\mingw\${LIBSDL}\lib -Ic:\mingw\${LIBSDL}\include -l$LIBSDL $TEMPFILE -o $TEMPFILE.o"
 		#echo LIBSDL=${LIBSDL}
 		#temp detectar libsdl1
-		#gcc -c $CFLAGS -Lc:\\mingw\\SDL2\\lib -Ic:\\mingw\\SDL2\\include -lSDL2 $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
-		gcc -c $CFLAGS -L/c/mingw/$LIBSDL/lib -I/c/mingw/$LIBSDL/include -lSDL2 $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+		#$CCOMPILER -c $CFLAGS -Lc:\\mingw\\SDL2\\lib -Ic:\\mingw\\SDL2\\include -lSDL2 $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+		$CCOMPILER -c $CFLAGS -L/c/mingw/$LIBSDL/lib -I/c/mingw/$LIBSDL/include -lSDL2 $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	else
-        	gcc -c $CFLAGS -l$LIBSDL $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        	$CCOMPILER -c $CFLAGS -l$LIBSDL $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
 	fi
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
@@ -1095,7 +1103,7 @@ return 0;
 }
 _EOF
 
-        gcc -I/usr/local $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER -I/usr/local $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -1125,7 +1133,7 @@ return 0;
 }
 _EOF
 
-        gcc $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
+        $CCOMPILER $CFLAGS $TEMPFILE -o $TEMPFILE.o >> $LOGFILE 2>&1
         RESULTCODE=$?
         if [ $RESULTCODE != 0 ]; then
                 echo "not found"
@@ -1160,7 +1168,7 @@ cat > Makefile << _EOF
 EMULATOR_VERSION=9.0
 CFLAGS=$CFLAGS
 LDFLAGS=$LDFLAGS
-CC=gcc
+CC=$CCOMPILER
 INSTALLPREFIX=$INSTALLPREFIX
 
 
@@ -1608,8 +1616,8 @@ macapp: all
 	rm -f macos/zesarux-noncompressed.dmg
 
 
-#CC32=gcc \$(CFLAGS) -m32
-#CC64=gcc \$(CFLAGS) -m64
+#CC32=$CCOMPILER \$(CFLAGS) -m32
+#CC64=$CCOMPILER \$(CFLAGS) -m64
 
 #UTILS32=smpatap_x32 sp_z80_x32 tapabin_x32 leezx81_x32
 #UTILS64=smpatap_x64 sp_z80_x64 tapabin_x64 leezx81_x64
