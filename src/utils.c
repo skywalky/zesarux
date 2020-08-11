@@ -18092,7 +18092,7 @@ reserved	1 byte	 	unused (=0)
 
 
 
-void util_rotate_files(char *filename,int archivos)
+void util_rotate_file(char *filename,int archivos)
 {
 
 	//Borrar el ultimo

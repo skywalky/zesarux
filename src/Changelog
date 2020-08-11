@@ -17,6 +17,7 @@ Added Solarized Dark & Light Gui Style
 Added Windows icon
 Added F key to toggle top cpu speed
 Added F key to pause/unpause tape
+Added setting to rotate output tape
 Added setting to resample audio output to 1 bit
 
 Added ZRCP commands:

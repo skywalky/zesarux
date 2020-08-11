@@ -18614,40 +18614,40 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 void menu_tape_out_open(MENU_ITEM_PARAMETERS)
 {
 
-        char *filtros[5];
+	char *filtros[5];
 	char mensaje_existe[20];
 
-        if (MACHINE_IS_ZX8081) {
+	if (MACHINE_IS_ZX8081) {
 
-			if (MACHINE_IS_ZX80) filtros[0]="o";
-			else filtros[0]="p";
+		if (MACHINE_IS_ZX80) filtros[0]="o";
+		else filtros[0]="p";
 
-			filtros[1]=0;
+		filtros[1]=0;
 
-			strcpy(mensaje_existe,"Overwrite?");
-		}
+		strcpy(mensaje_existe,"Overwrite?");
+	}
 
-		else {
-			filtros[0]="tzx";
-			filtros[1]="tap";
-			filtros[2]="pzx";
-			filtros[3]=0;
-			strcpy(mensaje_existe,"Append?");
-		}
+	else {
+		filtros[0]="tzx";
+		filtros[1]="tap";
+		filtros[2]="pzx";
+		filtros[3]=0;
+		strcpy(mensaje_existe,"Append?");
+	}
 
 
-        if (menu_filesel("Select Output Tape",filtros,tape_out_open_file)==1) {
+	if (menu_filesel("Select Output Tape",filtros,tape_out_open_file)==1) {
 
 		//Ver si archivo existe y preguntar
-                struct stat buf_stat;
+		struct stat buf_stat;
 
-                if (stat(tape_out_open_file, &buf_stat)==0) {
+		if (stat(tape_out_open_file, &buf_stat)==0) {
 
-                	if (MACHINE_IS_ZX8081) {
-                        	if (menu_confirm_yesno_texto("File exists",mensaje_existe)==0) {
-					tape_out_file=NULL;
-					tap_out_close();
-					return;
+			if (MACHINE_IS_ZX8081) {
+					if (menu_confirm_yesno_texto("File exists",mensaje_existe)==0) {
+						tape_out_file=NULL;
+						tap_out_close();
+						return;
 				}
 			}
 
@@ -18666,19 +18666,27 @@ void menu_tape_out_open(MENU_ITEM_PARAMETERS)
 				if (opcion==2) {
 					util_truncate_file(tape_out_open_file);
 				}
+
+				//Rotate
+				if (opcion==3) {
+					//Rotar
+					util_rotate_file(tape_out_open_file,10);
+					//El actual ya se creará cuando se escriba la primera vez
+				}				
+
 			}
 
-                }
+		}
 
-                tape_out_file=tape_out_open_file;
-                tape_out_init();
-        }
+		tape_out_file=tape_out_open_file;
+		tape_out_init();
+	}
 
 
-        else {
-                tape_out_file=NULL;
-			tap_out_close();
-        }
+	else {
+		tape_out_file=NULL;
+		tap_out_close();
+	}
 
 
 
@@ -28039,7 +28047,7 @@ int menu_simple_four_choices(char *texto_ventana,char *texto_interior,char *opci
 
 
 
-//Retorna 0=Cancel, 1=Append, 2=Truncate
+//Retorna 0=Cancel, 1=Append, 2=Truncate, 3=Rotate
 int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior)
 {
 
@@ -28069,6 +28077,9 @@ int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior)
                 menu_add_item_menu_format(array_menu_ask_no_append_truncate,MENU_OPCION_NORMAL,NULL,NULL,"~~Truncate");
                 menu_add_item_menu_shortcut(array_menu_ask_no_append_truncate,'t');
 
+                menu_add_item_menu_format(array_menu_ask_no_append_truncate,MENU_OPCION_NORMAL,NULL,NULL,"~~Rotate");
+                menu_add_item_menu_shortcut(array_menu_ask_no_append_truncate,'r');				
+
                 //separador adicional para que quede mas grande la ventana y mas mono
                 menu_add_item_menu_format(array_menu_ask_no_append_truncate,MENU_OPCION_SEPARADOR,NULL,NULL," ");
 
@@ -28082,7 +28093,7 @@ int menu_ask_no_append_truncate_texto(char *texto_ventana,char *texto_interior)
                         //llamamos por valor de funcion
 			//if (ask_no_append_truncate_opcion_seleccionada==1) return 1;
 			//else return 0;
-                        return ask_no_append_truncate_opcion_seleccionada-1; //0=Cancel, 1=Append, 2=Truncate
+                        return ask_no_append_truncate_opcion_seleccionada-1; //0=Cancel, 1=Append, 2=Truncate, 3=Rotate
                 }
 
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);

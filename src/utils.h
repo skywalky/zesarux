@@ -905,6 +905,6 @@ extern void util_write_screen_bmp(char *archivo);
 
 extern void util_bmp_load_palette(z80_byte *mem,int indice_inicio_color);
 
-extern void util_rotate_files(char *filename,int archivos);
+extern void util_rotate_file(char *filename,int archivos);
 
 #endif
