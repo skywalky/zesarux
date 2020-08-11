@@ -18089,3 +18089,48 @@ reserved	1 byte	 	unused (=0)
 			indice_paleta +=4;
 		}
 }
+
+
+
+void util_rotate_files(char *filename,int archivos)
+{
+
+	//Borrar el ultimo
+	char buffer_last_file[PATH_MAX];
+
+	sprintf(buffer_last_file,"%s.%d",filename,archivos);
+
+	debug_printf (VERBOSE_DEBUG,"Erasing oldest file %s",buffer_last_file);
+
+	util_delete(buffer_last_file);
+
+	//Y renombrar, el penultimo al ultimo, el antepenultimo al penultimo, etc
+	//con 10 archivos:
+	//ren file.9 file.10
+	//ren file.8 file.9
+	//ren file.7 file.8
+	//...
+	//ren file.1 file.2
+	//ren file file.1 esto a mano
+	int i;
+
+	for (i=archivos-1;i>=0;i--) {
+		char buffer_file_orig[PATH_MAX];
+		char buffer_file_dest[PATH_MAX];
+
+		//Caso especial ultimo (seria el .0)
+		if (i==0) {
+			strcpy(buffer_file_orig,filename);
+		}
+		else {
+			sprintf(buffer_file_orig,"%s.%d",filename,i);
+		}
+
+		sprintf(buffer_file_dest,"%s.%d",filename,i+1);
+
+		debug_printf (VERBOSE_DEBUG,"Renaming log file %s -> %s",buffer_file_orig,buffer_file_dest);
+		rename(buffer_file_orig,buffer_file_dest);
+	}
+
+
+}

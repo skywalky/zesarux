@@ -1755,7 +1755,7 @@ z80_bit cpu_trans_log_ignore_repeated_ldxr={0};
 
 
 
-
+//TODO: esto podria usar funcion util_rotate_files
 void transaction_log_rotate_files(int archivos)
 {
 	//Primero cerrar archivo
