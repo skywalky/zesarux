@@ -509,7 +509,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		},
 
         {0,"ZX80/81",7+8,0,
-                1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow
+                1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow, solo mayusculas
                 0,7+8,          //Colores para opcion seleccionada
                 7+8,0,0,7+8,      //Colores para opcion no disponible
                 0,7+8,          //Colores para el titulo y linea recuadro ventana
@@ -555,17 +555,17 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 },
 
         {0,"MSX",VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,
-                0,1,1,0,          //No mostrar cursor,mostrar recuadro,mostrar rainbow
+                0,1,0,0,          //No mostrar cursor,mostrar recuadro,no mostrar rainbow
                 VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para opcion seleccionada
                 VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+6,        //Colores para opcion no disponible
                 VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para el titulo y linea recuadro ventana
 				VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,            //Colores para el titulo y linea recuadro ventana inactiva
                 VDP_9918_INDEX_FIRST_COLOR+15,              //Color waveform
                 0,               //Color para zona no usada en visualmem
-                2,7+8,		//Color para opcion marcada
+                VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
 		'*',
-		VDP_9918_INDEX_FIRST_COLOR+6, //color de aviso
-		colores_franja_cpc_brillo,colores_franja_cpc_oscuro
+		2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
                 },
 
 
