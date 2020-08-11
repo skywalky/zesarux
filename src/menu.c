@@ -563,7 +563,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 VDP_9918_INDEX_FIRST_COLOR+15,              //Color waveform
                 0,               //Color para zona no usada en visualmem
                 VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
-				'*',
+				'.',
 				2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 				colores_franja_speccy_brillo,colores_franja_speccy_oscuro
         },
