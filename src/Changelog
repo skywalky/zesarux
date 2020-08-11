@@ -77,6 +77,9 @@ Fixed ZRCP bugs:
 Fixed Esxdos handler: 
 -Fixed segfaults when using a file handler that was a directory
 
+Fixed Accessibility bugs: 
+-Fixed reading transparent windows
+
 Fixed rom loading: no more cpu panic when the rom is not found
 Fixed SCF/CCF undocumented flags emulation. Not enabled by default on compilation because almost no one is using this
 Fixed saving "Show CPU usage" setting on footer
