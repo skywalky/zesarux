@@ -49,3 +49,14 @@ Puede dar problemas?
 -Con carga top speed salen dos footer ? El nuevo de rojo también...  
 Quizá el Rojo debería ser el Tspeed que ya sale en la carga...
 Pues porque al ser un hotkey, se abre el menu y al cerrar el menu, se pierde el footer
+
+
+-codetests falla si no hay pthreads con:
+
+
+Running zsock http tests
+Paranoid: Found free socket at index 0
+Error: Pthreads unavailable but trying to use TCP/IP sockets
+Segmentation fault: 11
+
+Al parecer en alguna parte no se gestiona correctamente que se haya retornado -1 en la función de red

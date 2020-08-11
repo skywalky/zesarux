@@ -1463,6 +1463,7 @@ void codetests_main(int main_argc,char *main_argv[])
 
 
 	//prueba crear paleta
+	/*
 	int i;
 
 	int valor_paleta=0;
@@ -1472,6 +1473,7 @@ void codetests_main(int main_argc,char *main_argv[])
 
 		valor_paleta +=0x010101;
 	}
+	*/
 
 	exit(0);
 }
