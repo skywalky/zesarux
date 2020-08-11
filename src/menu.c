@@ -18611,6 +18611,8 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 }
 
 
+int menu_tape_out_open_last_rotated=10;
+
 void menu_tape_out_open(MENU_ITEM_PARAMETERS)
 {
 
@@ -18670,7 +18672,27 @@ void menu_tape_out_open(MENU_ITEM_PARAMETERS)
 				//Rotate
 				if (opcion==3) {
 					//Rotar
-					util_rotate_file(tape_out_open_file,10);
+					char string_rotaciones[3];
+
+
+					int valor_leido;
+					sprintf (string_rotaciones,"%d",menu_tape_out_open_last_rotated);
+
+					menu_ventana_scanf("Number of files",string_rotaciones,3);
+
+					valor_leido=parse_string_to_number(string_rotaciones);
+
+					if (valor_leido<1 || valor_leido>99) {
+							debug_printf (VERBOSE_ERR,"Invalid value %d",valor_leido);
+							tape_out_file=NULL;
+							tap_out_close();
+							return;
+					}
+
+					menu_tape_out_open_last_rotated=valor_leido;
+
+
+					util_rotate_file(tape_out_open_file,menu_tape_out_open_last_rotated);
 					//El actual ya se creará cuando se escriba la primera vez
 				}				
 
