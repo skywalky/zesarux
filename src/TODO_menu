@@ -122,6 +122,8 @@ Un tercer botón que diga “take me there” para cuando sugiere menús, que te
 
 --- menu - mejoras ---
 
+-poder extender texto de ventanas de simple message, están fijados siempre a 32
+
 -tecla para poder cerrar todos los menus y volver a emulacion (como F5+ESC). Desaparecen las ventanas en background pero no las cierra realmente
 
 -Poder ver ventanas en background con menú cerrado
