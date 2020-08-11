@@ -290,6 +290,9 @@ La salida debe ser:
  Disabled Video output drivers: stdout curses aa caca cocoa xwindows fbdev 
  Enabled Audio output drivers: sdl null
  Disabled Audio output drivers: dsp alsa pulse coreaudio 
+ ...
+ Pthreads support: yes
+ SSL support: yes
 
 make clean
 make 

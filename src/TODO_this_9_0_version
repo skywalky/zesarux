@@ -1,14 +1,6 @@
 --------Para esta versión 9.0:
 
-
--Actualizar archivo development que diga que la salida esperada del configure incluye ssl
-
-
 -ROM zx85 de Daniel incluir   Y zx82?
-
-
-- meter en extras de docs Benchmark legacy tbblue
- 
 
 -En tape output, aparte de truncate etc, poder usar rotate-truncate para rotar los .tap viejos
 
