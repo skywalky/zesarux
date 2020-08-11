@@ -554,6 +554,21 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro
                 },
 
+        {0,"MSX",1,6+8,
+                0,1,1,0,          //No mostrar cursor,mostrar recuadro,mostrar rainbow
+                6+8,1,            //Colores para opcion seleccionada
+                1,2,6+8,2,        //Colores para opcion no disponible
+                6+8,1,            //Colores para el titulo y linea recuadro ventana
+				1,6+8,            //Colores para el titulo y linea recuadro ventana inactiva
+                6+8,              //Color waveform
+                0,               //Color para zona no usada en visualmem
+                2,7+8,		//Color para opcion marcada
+		'*',
+		2, //color de aviso
+		colores_franja_cpc_brillo,colores_franja_cpc_oscuro
+                },
+
+
         {0,"Sam",7+8,0,
                 0,1,1,0,                //No mostrar cursor,mostrar recuadro,mostrar rainbow
                 5+8,0,          //Colores para opcion seleccionada
@@ -32313,6 +32328,7 @@ void set_charset(void)
 {
 
 	if (estilo_gui_activo==ESTILO_GUI_CPC) char_set=char_set_cpc;
+	else if (estilo_gui_activo==ESTILO_GUI_MSX) char_set=char_set_msx;
 	else if (estilo_gui_activo==ESTILO_GUI_Z88) char_set=char_set_z88;
 	else if (estilo_gui_activo==ESTILO_GUI_SAM) char_set=char_set_sam;
 	else if (estilo_gui_activo==ESTILO_GUI_MANSOFTWARE) char_set=char_set_mansoftware;
