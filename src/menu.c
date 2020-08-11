@@ -30942,6 +30942,7 @@ void set_splash_text(void)
 	if (!strcmp(scr_driver_name,"simpletext")) return;
 
 	textspeech_print_speech(texto_welcome);
+	textspeech_print_speech(texto_edition);
 	textspeech_print_speech(texto_esc_menu);
 
 }

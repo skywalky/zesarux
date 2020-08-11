@@ -187,6 +187,10 @@ void scrtextspeech_filter_welcome_message(void)
         sprintf(texto_welcome," Welcome to ZEsarUX v." EMULATOR_VERSION " ");
 	textspeech_print_speech(texto_welcome);
 
+	char texto_edition[40];
+	sprintf(texto_edition," " EMULATOR_EDITION_NAME " ");
+	textspeech_print_speech(texto_edition);	
+
 	
 	textspeech_print_speech("Press opening curly bracket to manual redraw screen. Press closing curly bracket to automatic redraw screen. Write 'menu' to open the menu. Write 'esc' to simulate scape key on some menu dialogs");
 	
