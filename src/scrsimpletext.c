@@ -148,6 +148,19 @@ int scrsimpletext_driver_can_ext_desktop (void)
         return 0;
 }
 
+void scrsimpletext_textspeech_filter_welcome_message(void)
+{
+
+	char texto_welcome[40];
+	sprintf(texto_welcome," Welcome to ZEsarUX v." EMULATOR_VERSION " ");
+	textspeech_print_speech(texto_welcome);
+
+	char texto_edition[40];
+	sprintf(texto_edition," " EMULATOR_EDITION_NAME " ");
+	textspeech_print_speech(texto_edition);	
+
+	
+}
 
 int scrsimpletext_init (void){ 
 	
@@ -155,6 +168,7 @@ int scrsimpletext_init (void){
 	
 	
 	//Mismos mensajes de bienvenida a traves de filtro texto
+	if (opcion_no_splash.v==0) scrsimpletext_textspeech_filter_welcome_message();
 	
 	
 	scr_debug_registers=scrsimpletext_debug_registers;

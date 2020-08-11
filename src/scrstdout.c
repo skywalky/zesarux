@@ -183,8 +183,8 @@ void scrstdout_textspeech_filter_welcome_message(void)
 	//textspeech_print_speech(filter_text_mensaje);
 
 
-        char texto_welcome[40];
-        sprintf(texto_welcome," Welcome to ZEsarUX v." EMULATOR_VERSION " ");
+	char texto_welcome[40];
+	sprintf(texto_welcome," Welcome to ZEsarUX v." EMULATOR_VERSION " ");
 	textspeech_print_speech(texto_welcome);
 
 	char texto_edition[40];
