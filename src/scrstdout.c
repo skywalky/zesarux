@@ -177,7 +177,7 @@ void scrstdout_z88_cpc_load_keymap(void)
 }
 
 
-void scrtextspeech_filter_welcome_message(void)
+void scrstdout_textspeech_filter_welcome_message(void)
 {
 	//char *filter_text_mensaje="Welcome to ZEsarUX emulator. It is possible you are listening this text through a text to speech filter.";
 	//textspeech_print_speech(filter_text_mensaje);
@@ -236,7 +236,7 @@ int scrstdout_init (void){
 	
 	
 	//Mismos mensajes de bienvenida a traves de filtro texto
-	if (opcion_no_splash.v==0) scrtextspeech_filter_welcome_message();
+	if (opcion_no_splash.v==0) scrstdout_textspeech_filter_welcome_message();
 	
 	
 	if (textspeech_filter_program!=NULL) {
