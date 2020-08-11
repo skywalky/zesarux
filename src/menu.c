@@ -7534,7 +7534,9 @@ void zxvision_draw_window_contents(zxvision_window *w)
 					//printf ("despues de putchar\n");
 
 				if (indice_speech<MAX_BUFFER_SPEECH) {
-					buffer_linea[indice_speech++]=caracter_escribir;
+					//Evitar caracteres fuera de rango
+					//por ejemplo el 255 puede entrar como caracter transparente en ventana de keyboard help
+					if (caracter_escribir<127) buffer_linea[indice_speech++]=caracter_escribir;
 				}
 
 				}
@@ -28868,7 +28870,7 @@ void menu_help_background_windows(MENU_ITEM_PARAMETERS)
 			"or in the ZEsarUX logo, or press F5. \n"
 			"\n"
 			"Pressing ESC on the main menu, makes disappear all windows. But pressing F5 again will restore all windows. \n"
-			"Keep in mind that F-keys are only read when menu is closed (except F4, F5 and F6, which are also read with menu open). \n"
+			"Keep in mind that F-keys are only read when menu is closed (except F4, F5 and F6, which are also read with menu open). "
 			"\n"
 			"You can enable a setting to restore windows when ZEsarUX is opened (from Settings-> GUI Settings-> Windows Settings-> "
 			"Reopen windows on start). \n"

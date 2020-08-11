@@ -22552,6 +22552,8 @@ void menu_help_keyboard_overlay(void)
 	//Si no hay archivo bmp cargado
 	if (help_keyboard_bmp_file_mem==NULL) return;
 
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
 
 	zxvision_window *ventana;
 
