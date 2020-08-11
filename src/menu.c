@@ -554,17 +554,17 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro
                 },
 
-        {0,"MSX",1,6+8,
+        {0,"MSX",VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,
                 0,1,1,0,          //No mostrar cursor,mostrar recuadro,mostrar rainbow
-                6+8,1,            //Colores para opcion seleccionada
-                1,2,6+8,2,        //Colores para opcion no disponible
-                6+8,1,            //Colores para el titulo y linea recuadro ventana
-				1,6+8,            //Colores para el titulo y linea recuadro ventana inactiva
-                6+8,              //Color waveform
+                VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para opcion seleccionada
+                VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+6,        //Colores para opcion no disponible
+                VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para el titulo y linea recuadro ventana
+				VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,            //Colores para el titulo y linea recuadro ventana inactiva
+                VDP_9918_INDEX_FIRST_COLOR+15,              //Color waveform
                 0,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
 		'*',
-		2, //color de aviso
+		VDP_9918_INDEX_FIRST_COLOR+6, //color de aviso
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro
                 },
 
