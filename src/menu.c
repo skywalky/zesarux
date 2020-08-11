@@ -28971,7 +28971,8 @@ void menu_about(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu(array_menu_about,"~~Help",MENU_OPCION_NORMAL,menu_about_help,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'h');
 
-			menu_add_item_menu(array_menu_about,"Help Background Windows",MENU_OPCION_NORMAL,menu_help_background_windows,NULL);
+			menu_add_item_menu(array_menu_about,"Help ~~Background Windows",MENU_OPCION_NORMAL,menu_help_background_windows,NULL);
+			menu_add_item_menu_shortcut(array_menu_about,'b');
 
 			menu_add_item_menu(array_menu_about,"Help ~~Keyboard",MENU_OPCION_NORMAL,menu_help_show_keyboard,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'k');			
