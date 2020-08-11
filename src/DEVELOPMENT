@@ -18,6 +18,11 @@ tener en cuenta de sacar de esta lista los casos que retornan hacia rst8 (con fu
 
 * generar README.md mediante ./generate_readme_md.sh > ../README.md
 
+*cuando hay nueva versión hay que actualizar archivo txt del servidor
+Si es estable, actualizar ambos archivos
+Si es beta, actualizar solo el archivo de snapshot 
+
+
 nombres ediciones:
 Star raiders 2, toi acid, sabre wulf, target renegade, cliff hanger,  Night Shift, Saint Dragon, silent service, bubble bobble, dynamite Dan 2, rygar, frank n stein, match day, Hysteria, Bruce lee, El zorro , Exploding fist, Three weeks in Paradise, Exolon, Koronis Rift, Fox Fights back, Gauntlet, Pheenix, Death Wish 3
 
@@ -193,6 +198,7 @@ make bintargz
 ** Mac
 
 Generar dos binarios de Mac:
+(-Quizá versión legacy de Mac ya no tiene sentido. Requiere Mac OS reciente y los cflags O2 estarán soportados en todos los recientes )
 ZEsarUX-version-macos-legacy.dmg.gz 
 con comandos:
 Versión sin optimizaciones, sin SSL:

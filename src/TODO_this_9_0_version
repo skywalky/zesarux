@@ -1,50 +1,11 @@
 --------Para esta versión 9.0:
 
 
--ejemplos para spool, como:
-./txt_to_basic_lines.sh FAQ 3 si si no > pruebaspool2.txt
-
-
-
--compilar windows con O2. Quiza que haya una version "legacy" sin ello. Y siempre con pthreads
-
-
--Quizá versión legacy de Mac ya no tiene sentido. Requiere Mac OS reciente y los cflags O2 estarán soportados en todos los recientes 
-
-
-
--Meter en development que cuando hay nueva versión hay que actualizar archivo txt del servidor
-Si es estable, actualizar ambos archivos
-Si es beta, actualizar solo el archivo de snapshot 
-
 -Actualizar archivo development que diga que la salida esperada del configure incluye ssl
 
 
 -ROM zx85 de Daniel incluir   Y zx82?
 
-
-
--quiza archivos de updates deban tener algo asi como major version, minor version
-Esto podria corregir el problema de que avise de updates que realmente son versiones anteriores.
-Ejemplo:
-*uso version snapshot 8.1-SN
-*me actualizo a la estable 8.2
-*al arrancar la primera 8.2-SN, verá que hay 8.2-SN ok no pasa nada
-
-*pero:
-*uso version snapshot 8.1-SN
-*paso a usar 8.0. Ultima estable leida: 8.0
-*paso a usar snapshot 8.1-SN, verá que hay 8.2-SN ok no pasa nada
-
-En que casos puede dar problema? Si cambio a mano version snapshot a estable en cpu.h
-Pero esto no deberia suceder: pues al hacer ese cambio se supone que habrá ya un update,
-entonces en el servidor, en el archivo de update de la estable, ya habré actualizado el archivo y dirá la nueva versión
-
-
--Info ZENG en FAQ
-
-
--Poder ver ventanas en background con menú cerrado de la misma manera que salen mensajes splash?
 
 - meter en extras de docs Benchmark legacy tbblue
  
