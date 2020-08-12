@@ -5111,6 +5111,20 @@ void menu_debug_draw_visualmem(void)
 		int multiplicar_alto=8;
 
 		if (menu_visualmem_modo_defrag) {
+
+			//Original
+			//multiplicar_ancho /=4;
+			
+			//Para que con char width =8 resulte /2
+			//multiplicar_ancho /=(menu_char_width/2); 
+			//A/(A/2)=A/1  / A/2 = A*2 /A=2 -> simplificado
+			//Nuevo calculo
+			//multiplicar_ancho=2;
+
+
+
+			//Antiguo calculo
+			//TODO: ajustes segun char size 7,6,5 mejor que lo que hay ahora
 			multiplicar_ancho /=4;
 			multiplicar_alto /=4;
 		}

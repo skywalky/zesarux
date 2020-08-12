@@ -87,3 +87,6 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 - meter en extras de docs Benchmark legacy tbblue: de momento está en el código, en el menú como comentarios
 
 -Opción en menú para descargar los extras
+
+
+-void menu_debug_draw_visualmem(void) ajustes segun char size 7,6,5 mejor que lo que hay ahora
