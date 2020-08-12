@@ -17598,7 +17598,7 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int es
 
                 //El redirect sucede con las url a archive.org
 
-                retorno=zsock_http(nuevo_host,nueva_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl,redirect_url,0);
+                retorno=zsock_http(nuevo_host,nueva_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl,redirect_url,estimated_maximum_size);
 
 	}
 
