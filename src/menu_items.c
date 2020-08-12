@@ -19597,7 +19597,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 			int ret=menu_download_file(host_final,url_juego_final,archivo_temp,ssl_use,1024*1024);  //1 MB mas que suficiente
 
 			if (ret==200) {                    
-				//y habrimos menu de smartload
+				//y abrimos menu de smartload
 				strcpy(quickload_file,archivo_temp);
 	
 				quickfile=quickload_file;
@@ -19716,23 +19716,17 @@ void menu_online_download_extras(MENU_ITEM_PARAMETERS)
 {
 
 
-	printf("URL: %s\n",ZESARUX_EXTRAS_URL);
+	//printf("URL: %s\n",ZESARUX_EXTRAS_URL);
 
 
-
-
-	//http://www.zxspectrumnext.online/cspect/tbbluemmc-32mb.zip
 
 	char host_final[NETWORK_MAX_URL];
 	strcpy(host_final,ZESARUX_EXTRAS_HOST);
-	//ZESARUX_EXTRAS_HOST
 
-	//char *url="/cspect/tbbluemmc-32mb.zip";
 
 	char url[NETWORK_MAX_URL];
 
 	strcpy(url,ZESARUX_EXTRAS_URL);
-
 
 
 	//200 MB. En versión 9.0 son 100 MB. Mas que suficiente para el futuro
@@ -19777,11 +19771,13 @@ void menu_online_download_extras(MENU_ITEM_PARAMETERS)
 		//Descomprimir con ventana de progreso y pthread aparte de descompresion
 		menu_uncompress_zip_progress(archivo_zip,final_mmc_dir);
 
-                                //y habrimos menu de smartload
-                                strcpy(quickload_file,final_mmc_dir);
+		menu_generic_message_format("File downloaded","File has been downloaded and uncompressed to %s",dest_dir);
 
-                                quickfile=quickload_file;
-                                menu_smartload(0);		
+		//y abrimos menu de smartload
+		strcpy(quickload_file,final_mmc_dir);
+
+		quickfile=quickload_file;
+		menu_smartload(0);		
 
 
 		return;
