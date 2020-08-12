@@ -5075,6 +5075,9 @@ void menu_visualmem_putpixel(zxvision_window *ventana,int x,int y,int color_pixe
 							for (x2=0;x2<4;x2++) {
 								int color_final=color_pixel;
 								if (x2==3 || y2==3) color_final=ESTILO_GUI_PAPEL_NORMAL;
+								
+								//if (x2==0 && x<30) printf("%d %d\n",x,x*4+x2);
+
 								zxvision_putpixel(ventana,x*4+x2,y*4+y2,color_final);
 							}
 						}
@@ -5129,20 +5132,29 @@ void menu_debug_draw_visualmem(void)
 			
 
 			//ancho *=multiplicar_ancho;
-			ancho=(ancho*multiplicar_ancho)/4;
+			//en modo defrag cada cuadradito son 4 pixeles de anchoXalto
+
+			
+			ancho=((ancho*multiplicar_ancho)/4);  //-5 //Quitamos 5 para dar margen por la derecha
 
 			multiplicar_alto /=4;
-			alto *=multiplicar_alto;			
+			alto *=multiplicar_alto;	
+
+			//No alterar xorigen. Para que no quede tanto margen por la derecha
+			//xorigen *=multiplicar_ancho;
+			yorigen *=multiplicar_alto;					
 		}
 
 		else {
 
 			ancho *=multiplicar_ancho;
 			alto *=multiplicar_alto;
+
+			xorigen *=multiplicar_ancho;
+			yorigen *=multiplicar_alto;			
 		}
 
-		xorigen *=multiplicar_ancho;
-		yorigen *=multiplicar_alto;
+
 	}
 
 
