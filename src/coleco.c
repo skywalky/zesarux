@@ -29,7 +29,7 @@
 #include "vdp_9918a.h"
 #include "cpu.h"
 #include "debug.h"
-#include "ay38912.h"
+//#include "ay38912.h"
 #include "tape.h"
 #include "screen.h"
 #include "audio.h"
