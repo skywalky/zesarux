@@ -19862,8 +19862,8 @@ void menu_network(MENU_ITEM_PARAMETERS)
 
 
 
-			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_download_extras,NULL,"Download ZEsarUX ~~extras");
-			menu_add_item_menu_shortcut(array_menu_common,'e');   
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_download_extras,NULL,"Download ZEsarUX e~~xtras");
+			menu_add_item_menu_shortcut(array_menu_common,'x');   
 			menu_add_item_menu_tooltip(array_menu_common,"Download ZEsarUX extras package");
 			menu_add_item_menu_ayuda(array_menu_common,"ZEsarUX extras package contains lots of documentation, sample games, demos, etc");
 			
