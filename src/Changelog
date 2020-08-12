@@ -73,6 +73,16 @@ Improve compilation script: allow to set different C compiler
 Improved emulation: use a slightly less cpu on every scanline
 
 
+
+Fixed rom loading: no more cpu panic when the rom is not found
+Fixed SCF/CCF undocumented flags emulation. Not enabled by default on compilation because almost no one is using this
+Fixed saving "Show CPU usage" setting on footer
+Fixed using tab and backspace keys in curses driver
+Fixed segfaults when using some memory zones and changing machine
+Fixed segfaults when setting breakpoints from config file and machine is QL
+Fixed loading zsf snapshot and ay registers
+Fixed segfaults when changing machines and resizing windows
+
 Fixed ZRCP bugs:
 -Fix possible crash when disconnecting socket
 -Using cpu-history ZRCP command no longer fires additional MRA conditions
@@ -83,14 +93,7 @@ Fixed Esxdos handler:
 Fixed Accessibility bugs: 
 -Fixed reading transparent windows
 
-Fixed rom loading: no more cpu panic when the rom is not found
-Fixed SCF/CCF undocumented flags emulation. Not enabled by default on compilation because almost no one is using this
-Fixed saving "Show CPU usage" setting on footer
-Fixed using tab and backspace keys in curses driver
-Fixed segfaults when using some memory zones and changing machine
-Fixed segfaults when setting breakpoints from config file and machine is QL
-Fixed loading zsf snapshot and ay registers
-Fixed segfaults when changing machines and resizing windows
+Fixed network bug when downloading file and redirection
 
 Fixed tbblue bugs:
 -Fixed 8 first lines of tiles on border not shown
