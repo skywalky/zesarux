@@ -2594,6 +2594,97 @@ if (MACHINE_IS_Z88) {
 
 }
 
+//Retorna 0 si ese pixel no se debe mostrar debido a tamaño de caracter < 8
+int scr_putchar_menu_comun_zoom_reduce_charwidth(int bit)
+{
+
+	//Reducciones segun cada tamaño de letra
+	int saltar_pixeles_size7;
+	int saltar_pixeles_size6[2];
+	int saltar_pixeles_size5[3];
+
+
+	//Escalados por defecto
+	//Saltar primer pixel en caso tamaño 7
+	saltar_pixeles_size7=0;
+
+	//Saltar primer pixel y ultimo pixel en caso tamaño 6
+	saltar_pixeles_size6[0]=0;	
+	saltar_pixeles_size6[1]=7;	
+	
+	//Saltar primer pixel y ultimos pixeles en caso tamaño 5
+	saltar_pixeles_size5[0]=0;	
+	saltar_pixeles_size5[1]=6;
+	saltar_pixeles_size5[2]=7;	
+
+	//Segun tipo de letra
+	if (estilo_gui_activo==ESTILO_GUI_MSX)	{
+		saltar_pixeles_size7=7;
+
+		saltar_pixeles_size6[0]=7;	
+		saltar_pixeles_size6[1]=6;		
+
+		saltar_pixeles_size5[0]=7;	
+		saltar_pixeles_size5[1]=6;			
+		saltar_pixeles_size5[2]=5;			
+	}
+
+	if (estilo_gui_activo==ESTILO_GUI_Z88)	{
+		saltar_pixeles_size7=0;
+
+		saltar_pixeles_size6[0]=0;	
+		saltar_pixeles_size6[1]=1;	
+		
+		saltar_pixeles_size5[0]=0;	
+		saltar_pixeles_size5[1]=1;
+		saltar_pixeles_size5[2]=2;			
+	}	
+
+	if (estilo_gui_activo==ESTILO_GUI_SAM) {
+		saltar_pixeles_size7=0;
+
+		saltar_pixeles_size6[0]=0;	
+		saltar_pixeles_size6[1]=1;	
+		
+		saltar_pixeles_size5[0]=0;	
+		saltar_pixeles_size5[1]=1;
+		saltar_pixeles_size5[2]=7;			
+	}
+
+
+	//Los demas se ajustan bien al escalado por defecto
+
+
+	if (menu_char_width==8) {
+		return 1;
+	}
+
+	//Si 7, saltar un pixel
+	else if (menu_char_width==7) {
+		if (bit==saltar_pixeles_size7) {
+			return 0;
+		}
+	}
+
+	//Si 6, saltar dos pixeles
+	else if (menu_char_width==6) {
+		if (bit==saltar_pixeles_size6[0] || bit==saltar_pixeles_size6[1]) {
+			return 0;
+		}
+	}
+
+	//Si 5, saltar tres pixeles
+	else if (menu_char_width==5) {
+		if (bit==saltar_pixeles_size5[0] || bit==saltar_pixeles_size5[1] || bit==saltar_pixeles_size5[2]) {
+			return 0;
+		}
+	}	
+
+
+	//Por defecto
+	return 1;
+}
+
 
 //Muestra un caracter en pantalla, usado en menu
 //entrada: caracter
@@ -2666,6 +2757,13 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,i
 
 		
 			//Ancho de caracter 8, 7 y 6 pixeles
+			if (scr_putchar_menu_comun_zoom_reduce_charwidth(bit)) {
+				scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
+				px++;
+			}
+
+
+			/*
 			if (menu_char_width==8) {
 				scr_putpixel_gui_zoom(xfinal,yfinal,color,zoom_level);
 				px++;
@@ -2694,7 +2792,7 @@ void scr_putchar_menu_comun_zoom(z80_byte caracter,int x,int y,z80_bit inverse,i
 					px++;
 				}
 			}
-
+			*/
 
 
     }

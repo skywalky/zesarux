@@ -9219,6 +9219,115 @@ void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_
         zxvision_destroy_window(&ventana);
 }
 
+
+
+void zxvision_rearrange_background_windows(void)
+{
+
+	//Por si acaso 
+	if (!menu_allow_background_windows) return;
+
+	int origen_x=menu_origin_x();
+
+	//printf ("origen_x: %d\n",origen_x);
+
+	//Si abrir ventanas en zxdesktop o no, contar todo el ancho visible o bien solo el de zxdesktop
+
+	int ancho;
+
+	if (menu_ext_desktop_enabled_place_menu() ) {
+		//ancho=screen_ext_desktop_width/menu_char_width/menu_gui_zoom;
+		ancho=menu_get_width_characters_ext_desktop();
+	}
+
+	else ancho=scr_get_menu_width();
+
+	//printf ("ancho: %d\n",ancho);
+
+	int xfinal=origen_x+ancho;
+
+
+	int alto=scr_get_menu_height();
+
+	//printf ("alto: %d\n",alto);
+
+	int yfinal=alto;
+
+
+	//Empezamos una a una, desde la de mas abajo
+	zxvision_window *ventana;
+
+	ventana=zxvision_current_window;
+
+	if (ventana==NULL) return;
+
+	ventana=zxvision_find_first_window_below_this(ventana);
+
+	if (ventana==NULL) return;
+
+	int origen_y=0;
+
+	//Y de ahi para arriba
+	int x=origen_x;
+	int y=origen_y;
+
+	int alto_maximo_en_fila=0;
+
+	int cambio_coords_origen=0;
+
+	while (ventana!=NULL) {
+
+		debug_printf (VERBOSE_DEBUG,"Setting window %s to %d,%d",ventana->window_title,x,y);
+
+		ventana->x=x;
+		ventana->y=y;
+
+		//Y guardar la geometria
+		util_add_window_geometry_compact(ventana);
+
+		if (ventana->visible_height>alto_maximo_en_fila) alto_maximo_en_fila=ventana->visible_height;
+
+		int ancho_antes=ventana->visible_width;
+
+		ventana=ventana->next_window;
+		if (ventana!=NULL) {
+			x +=ancho_antes;
+			//printf ("%d %d %d\n",x,ventana->visible_width,ancho);
+			if (x+ventana->visible_width>xfinal) {
+
+				//printf ("Next column\n");
+				//Siguiente fila
+				x=origen_x;
+
+				y+=alto_maximo_en_fila;
+
+				alto_maximo_en_fila=0;
+
+
+			}
+
+			//Si volver al principio
+			if (y+ventana->visible_height>yfinal) {
+
+				debug_printf (VERBOSE_DEBUG,"Restart x,y coordinates");
+
+				//alternamos coordenadas origen, para darles cierto "movimiento", 4 caracteres derecha y abajo
+				cambio_coords_origen ^=4;
+
+				x=origen_x + cambio_coords_origen;
+				y=origen_y + cambio_coords_origen;
+						
+			}
+		}
+	}
+
+	cls_menu_overlay();
+}
+
+
+
+
+
 //Retorna el item i
 menu_item *menu_retorna_item(menu_item *m,int i)
 {
@@ -25113,6 +25222,9 @@ void menu_interface_charwidth(MENU_ITEM_PARAMETERS)
 	menu_char_width--;
 
 	if (menu_char_width==4) menu_char_width=8;
+
+	//Reorganizar ventanas en background segun nuevo tamaño caracter
+	if (menu_allow_background_windows) zxvision_rearrange_background_windows();	
 }
 
 void menu_window_settings_reduce_075(MENU_ITEM_PARAMETERS)
@@ -25620,8 +25732,8 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"[%d] Menu char w~~idth",menu_char_width);
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'i');	
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. EXPERIMENTAL feature");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. You can reduce it so allowing more text columns in a window");
 
 
 
