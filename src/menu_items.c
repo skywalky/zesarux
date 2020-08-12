@@ -5125,12 +5125,21 @@ void menu_debug_draw_visualmem(void)
 
 			//Antiguo calculo
 			//TODO: ajustes segun char size 7,6,5 mejor que lo que hay ahora
-			multiplicar_ancho /=4;
+			//multiplicar_ancho /=4;
+			
+
+			//ancho *=multiplicar_ancho;
+			ancho=(ancho*multiplicar_ancho)/4;
+
 			multiplicar_alto /=4;
+			alto *=multiplicar_alto;			
 		}
 
-		ancho *=multiplicar_ancho;
-		alto *=multiplicar_alto;
+		else {
+
+			ancho *=multiplicar_ancho;
+			alto *=multiplicar_alto;
+		}
 
 		xorigen *=multiplicar_ancho;
 		yorigen *=multiplicar_alto;
