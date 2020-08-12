@@ -1253,7 +1253,7 @@ timer.o: timer.c timer.h cpu.h audio.h debug.h menu.h tape.h screen.h compileopt
 	\$(CC) \$(CFLAGS) -c timer.c
 
 
-debug.o: debug.c cpu.h debug.h mem128.h timex.h screen.h menu.h zx8081.h operaciones.h core_spectrum.h core_reduced_spectrum.h core_zx8081.h core_z88.h core_ace.h core_cpc.h core_msx.h core_svi.h core_coleco.h disassemble.h utils.h prism.h core_sam.h core_ql.h spectra.h tbblue.h zxuno.h ulaplus.h timex.h ay38912.h ula.h ql.h m68k.h superupgrade.h core_mk14.h scmp.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h chloe.h cpc.h sam.h snap.h diviface.h betadisk.h zxevo.h tsconf.h baseconf.h remote.h charset.h settings.h datagear.h expression_parser.h atomic.h msx.h svi.h coleco.h sn76489an.h vdp_9918a.h core_svi.h
+debug.o: debug.c cpu.h debug.h mem128.h timex.h screen.h menu.h zx8081.h operaciones.h core_spectrum.h core_reduced_spectrum.h core_zx8081.h core_z88.h core_ace.h core_cpc.h core_msx.h core_svi.h core_coleco.h core_sg1000.h disassemble.h utils.h prism.h core_sam.h core_ql.h spectra.h tbblue.h zxuno.h ulaplus.h timex.h ay38912.h ula.h ql.h m68k.h superupgrade.h core_mk14.h scmp.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h chloe.h cpc.h sam.h snap.h diviface.h betadisk.h zxevo.h tsconf.h baseconf.h remote.h charset.h settings.h datagear.h expression_parser.h atomic.h msx.h coleco.h sn76489an.h svi.h vdp_9918a.h
 	\$(CC) \$(CFLAGS) -c debug.c
 
 tape.o: tape.c tape.h cpu.h operaciones.h debug.h tape_tap.h tape_tzx.h tape_smp.h chloe.h prism.h mem128.h timex.h snap.h compileoptions.h screen.h zx8081.h menu.h snap_z81.h utils.h audio.h screen.h autoselectoptions.h zxuno.h timer.h superupgrade.h multiface.h chrome.h zxevo.h tsconf.h baseconf.h snap_spg.h tbblue.h settings.h msx.h
@@ -1268,7 +1268,7 @@ tape_smp.o: tape_smp.c tape_smp.h tape.h cpu.h operaciones.h debug.h zx8081.h sn
 tape_tzx.o: tape_tzx.c tape_tzx.h tape.h cpu.h operaciones.h debug.h utils.h
 	\$(CC) \$(CFLAGS) -c tape_tzx.c
 
-audio.o: audio.c cpu.h audio.h debug.h screen.h utils.h zx8081.h audionull.h jupiterace.h autoselectoptions.h operaciones.h cpc.h settings.h audio_sine_table.h msx.h coleco.h
+audio.o: audio.c cpu.h audio.h debug.h screen.h utils.h zx8081.h audionull.h jupiterace.h autoselectoptions.h operaciones.h cpc.h settings.h audio_sine_table.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -c audio.c
 
 audio_sine_table.o: audio_sine_table.c audio_sine_table.h audio.h
@@ -1304,7 +1304,7 @@ saa_simul.o: saa_simul.c saa_simul.h ay38912.h cpu.h audio.h debug.h
 screen.o: screen.c screen.h debug.h mem128.h chloe.h prism.h timex.h cpc.h prism.h operaciones.h zx8081.h charset.h menu.h audio.h contend.h ula.h tape_smp.h z88.h ulaplus.h zxuno.h spectra.h spritechip.h timer.h sam.h ql.h chrome.h zxevo.h tsconf.h baseconf.h mk14.h vdp_9918a.h msx.h coleco.h
 	\$(CC) \$(CFLAGS) -c screen.c
 
-mem128.o: mem128.c cpu.h mem128.h debug.h contend.h zxuno.h chloe.h prism.h timex.h sam.h ula.h tbblue.h superupgrade.h chrome.h zxevo.h tsconf.h baseconf.h msx.h coleco.h
+mem128.o: mem128.c cpu.h mem128.h debug.h contend.h zxuno.h chloe.h prism.h timex.h sam.h ula.h tbblue.h superupgrade.h chrome.h zxevo.h tsconf.h baseconf.h msx.h coleco.h sg1000.h svi.h
 	\$(CC) \$(CFLAGS) -c mem128.c
 
 timex.o: timex.c timex.h cpu.h debug.h contend.h tape.h mem128.h menu.h chloe.h prism.h zxuno.h tbblue.h
@@ -1424,10 +1424,10 @@ snap_zx8081.o: snap_zx8081.c snap_zx8081.h cpu.h debug.h operaciones.h zx8081.h 
 snap_rzx.o: snap_rzx.c snap_rzx.h snap.h cpu.h debug.h operaciones.h utils.h menu.h screen.h
 	\$(CC) \$(CFLAGS) -c snap_rzx.c
 
-menu.o: menu.c menu.h menu_items.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h zxevo.h tsconf.h baseconf.h snap_spg.h betadisk.h tape_tzx.h snap_zsf.h settings.h datagear.h stats.h network.h hilow.h msx.h coleco.h sg1000.h
+menu.o: menu.c menu.h menu_items.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h zxevo.h tsconf.h baseconf.h snap_spg.h betadisk.h tape_tzx.h snap_zsf.h settings.h datagear.h stats.h network.h hilow.h msx.h coleco.h sg1000.h svi.h
 	\$(CC) \$(CFLAGS) -c menu.c
 
-menu_items.o: menu_items.c menu_items.h menu.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h zxevo.h tsconf.h baseconf.h snap_spg.h betadisk.h tape_tzx.h snap_zsf.h settings.h datagear.h assemble.h expression_parser.h uartbridge.h zeng.h network.h stats.h vdp_9918a.h msx.h coleco.h sg1000.h sn76489an.h
+menu_items.o: menu_items.c menu_items.h menu.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h zxevo.h tsconf.h baseconf.h snap_spg.h betadisk.h tape_tzx.h snap_zsf.h settings.h datagear.h assemble.h expression_parser.h uartbridge.h zeng.h network.h stats.h vdp_9918a.h msx.h coleco.h sg1000.h svi.h sn76489an.h
 	\$(CC) \$(CFLAGS) -c menu_items.c
 
 settings.o: settings.c settings.h menu_items.h menu.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h zxevo.h tsconf.h baseconf.h snap_spg.h betadisk.h tape_tzx.h snap_zsf.h datagear.h
@@ -1436,7 +1436,7 @@ settings.o: settings.c settings.h menu_items.h menu.h screen.h cpu.h debug.h zx8
 disassemble.o: disassemble.c disassemble.h cpu.h operaciones.h debug.h ql.h utils.h scmp.h menu.h tbblue.h
 	\$(CC) \$(CFLAGS) -c disassemble.c
 
-utils.o: utils.c utils.h cpu.h debug.h joystick.h compileoptions.h tape.h snap.h screen.h realjoystick.h menu.h z88.h playtzx.h tape_tzx.h operaciones.h zx8081.h autoselectoptions.h ulaplus.h ay38912.h textspeech.h spectra.h zxuno.h spritechip.h timex.h cpc.h sam.h divmmc.h divide.h superupgrade.h chardetect.h zx8081.h jupiterace.h mmc.h ide.h zxpand.h diviface.h divmmc.h divide.h dandanator.h kartusho.h ifrom.h spritefinder.h ql.h m68k.h remote.h ula.h snap_rzx.h scmp.h mk14.h esxdos_handler.h tbblue.h zxevo.h tsconf.h baseconf.h mdvtool.h betadisk.h pd765.h settings.h datagear.h zeng.h network.h stats.h scl2trd.h zip.h msx.h coleco.h
+utils.o: utils.c utils.h cpu.h debug.h joystick.h compileoptions.h tape.h snap.h screen.h realjoystick.h menu.h z88.h playtzx.h tape_tzx.h operaciones.h zx8081.h autoselectoptions.h ulaplus.h ay38912.h textspeech.h spectra.h zxuno.h spritechip.h timex.h cpc.h sam.h divmmc.h divide.h superupgrade.h chardetect.h zx8081.h jupiterace.h mmc.h ide.h zxpand.h diviface.h divmmc.h divide.h dandanator.h kartusho.h ifrom.h spritefinder.h ql.h m68k.h remote.h ula.h snap_rzx.h scmp.h mk14.h esxdos_handler.h tbblue.h zxevo.h tsconf.h baseconf.h mdvtool.h betadisk.h pd765.h settings.h datagear.h zeng.h network.h stats.h scl2trd.h zip.h msx.h coleco.h sg1000.h svi.h
 	\$(CC) \$(CFLAGS) -c utils.c
 
 playtzx.o: playtzx.c playtzx.h debug.h audio.h utils.h
@@ -1706,7 +1706,7 @@ fi
 
 if [ "$MAINSOURCE" == "scrcocoa" ]; then
 cat >> Makefile << _EOF
-scrcocoa.o: scrcocoa.m joystick.h compileoptions.h cpu.h screen.h charset.h debug.h utils.h timer.h menu.h cpc.h prism.h sam.h ql.h settings.h msx.h coleco.h
+scrcocoa.o: scrcocoa.m joystick.h compileoptions.h cpu.h screen.h charset.h debug.h utils.h timer.h menu.h cpc.h prism.h sam.h ql.h settings.h msx.h svi.h coleco.h sg1000.h
 	clang scrcocoa.m -c -o scrcocoa.o
 
 _EOF
@@ -1718,7 +1718,7 @@ fi
 if [ "$OPTIONOBJSTDOUT" != "" ]; then
 
 cat >> Makefile << _EOF
-scrstdout.o: scrstdout.c scrstdout.h debug.h screen.h mem128.h zx8081.h operaciones.h cpu.h utils.h menu.h joystick.h ula.h disassemble.h z88.h timer.h chardetect.h textspeech.h tsconf.h baseconf.h settings.h
+scrstdout.o: scrstdout.c scrstdout.h debug.h screen.h mem128.h zx8081.h operaciones.h cpu.h utils.h menu.h joystick.h ula.h disassemble.h z88.h timer.h chardetect.h textspeech.h tsconf.h baseconf.h settings.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -c scrstdout.c
 
 _EOF
@@ -1728,7 +1728,7 @@ fi
 if [ "$OPTIONOBJSIMPLETEXT" != "" ]; then
 
 cat >> Makefile << _EOF
-scrsimpletext.o: scrsimpletext.c scrsimpletext.h debug.h screen.h mem128.h zx8081.h operaciones.h cpu.h utils.h menu.h joystick.h ula.h disassemble.h z88.h timer.h tsconf.h baseconf.h settings.h textspeech.h
+scrsimpletext.o: scrsimpletext.c scrsimpletext.h debug.h screen.h mem128.h zx8081.h operaciones.h cpu.h utils.h menu.h joystick.h ula.h disassemble.h z88.h timer.h tsconf.h baseconf.h settings.h textspeech.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -c scrsimpletext.c
 
 _EOF
@@ -1740,7 +1740,7 @@ fi
 if [ "$OPTIONOBJCURSES" != "" ]; then
 
 cat >> Makefile << _EOF
-scrcurses.o: scrcurses.c cpu.h scrcurses.h compileoptions.h operaciones.h mem128.h charset.c debug.h zx8081.h screen.h audio.h menu.h utils.h joystick.h ula.h z88.h sam.h charset.h tsconf.h baseconf.h settings.h chloe.h timex.h
+scrcurses.o: scrcurses.c cpu.h scrcurses.h compileoptions.h operaciones.h mem128.h charset.c debug.h zx8081.h screen.h audio.h menu.h utils.h joystick.h ula.h z88.h sam.h charset.h tsconf.h baseconf.h settings.h chloe.h timex.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -c scrcurses.c
 
 _EOF
@@ -1760,7 +1760,7 @@ fi
 if [ "$OPTIONOBJFBDEV" != "" ]; then
 
 cat >> Makefile << _EOF
-scrfbdev.o: scrfbdev.c cpu.h scrfbdev.h operaciones.h mem128.h charset.c debug.h zx8081.h screen.h audio.h menu.h utils.h joystick.h ula.h z88.h cpc.h prism.h sam.h ql.h settings.h
+scrfbdev.o: scrfbdev.c cpu.h scrfbdev.h operaciones.h mem128.h charset.c debug.h zx8081.h screen.h audio.h menu.h utils.h joystick.h ula.h z88.h cpc.h prism.h sam.h ql.h settings.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -c scrfbdev.c
 
 _EOF
@@ -1771,7 +1771,7 @@ fi
 if [ "$OPTIONOBJAA" != "" ]; then
 
 cat >> Makefile << _EOF
-scraa.o: scraa.c cpu.h scraa.h operaciones.h mem128.h charset.c debug.h zx8081.h audio.h menu.h screen.h utils.h joystick.h ula.h z88.h textspeech.h settings.h
+scraa.o: scraa.c cpu.h scraa.h operaciones.h mem128.h charset.c debug.h zx8081.h audio.h menu.h screen.h utils.h joystick.h ula.h z88.h textspeech.h settings.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -c scraa.c
 
 _EOF
@@ -1781,7 +1781,7 @@ fi
 if [ "$OPTIONOBJCACA" != "" ]; then
 
 cat >> Makefile << _EOF
-scrcaca.o: scrcaca.c cpu.h scrcaca.h operaciones.h mem128.h charset.c debug.h zx8081.h audio.h menu.h screen.h utils.h joystick.h z88.h settings.h
+scrcaca.o: scrcaca.c cpu.h scrcaca.h operaciones.h mem128.h charset.c debug.h zx8081.h audio.h menu.h screen.h utils.h joystick.h z88.h settings.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -c scrcaca.c
 
 _EOF
@@ -1794,7 +1794,7 @@ fi
 if [ "$OPTIONOBJXWINDOWS" != "" ]; then
 
 cat >> Makefile << _EOF
-scrxwindows.o: scrxwindows.c cpu.h scrxwindows.h debug.h screen.h mem128.h compileoptions.h zx8081.h audio.h charset.h menu.h timer.h utils.h joystick.h cpc.h prism.h z88.h sam.h ql.h settings.h msx.h coleco.h
+scrxwindows.o: scrxwindows.c cpu.h scrxwindows.h debug.h screen.h mem128.h compileoptions.h zx8081.h audio.h charset.h menu.h timer.h utils.h joystick.h cpc.h prism.h z88.h sam.h ql.h settings.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -I/usr/X11R6/include -I/opt/X11/include -c scrxwindows.c
 
 _EOF
@@ -1805,7 +1805,7 @@ fi
 if [ "$OPTIONOBJSDL" != "" ] && [ "$LIBSDL" == "SDL" ]; then
 
 cat >> Makefile << _EOF
-scrsdl.o: scrsdl.c cpu.h scrsdl.h debug.h screen.h mem128.h compileoptions.h zx8081.h audio.h charset.h menu.h timer.h utils.h joystick.h common_sdl.h cpc.h prism.h sam.h ql.h settings.h
+scrsdl.o: scrsdl.c cpu.h scrsdl.h debug.h screen.h mem128.h compileoptions.h zx8081.h audio.h charset.h menu.h timer.h utils.h joystick.h common_sdl.h cpc.h prism.h sam.h ql.h settings.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -c scrsdl.c
 
 audiosdl.o: audiosdl.c audiosdl.h cpu.h audio.h compileoptions.h debug.h common_sdl.h
@@ -1821,7 +1821,7 @@ fi
 if [ "$OPTIONOBJSDL" != "" ] && [ "$LIBSDL" == "SDL2" ]; then
 
 cat >> Makefile << _EOF
-scrsdl2.o: scrsdl2.c cpu.h scrsdl2.h debug.h screen.h mem128.h compileoptions.h zx8081.h audio.h charset.h menu.h timer.h utils.h joystick.h common_sdl2.h cpc.h prism.h sam.h ql.h settings.h
+scrsdl2.o: scrsdl2.c cpu.h scrsdl2.h debug.h screen.h mem128.h compileoptions.h zx8081.h audio.h charset.h menu.h timer.h utils.h joystick.h common_sdl2.h cpc.h prism.h sam.h ql.h settings.h msx.h svi.h coleco.h sg1000.h
 	\$(CC) \$(CFLAGS) -c scrsdl2.c
 
 audiosdl2.o: audiosdl2.c audiosdl2.h cpu.h audio.h compileoptions.h debug.h common_sdl2.h utils.h settings.h
