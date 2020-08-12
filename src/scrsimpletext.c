@@ -43,6 +43,7 @@
 #include "coleco.h"
 #include "sg1000.h"
 #include "svi.h"
+#include "textspeech.h" 
 
 void scrsimpletext_repinta_pantalla(void);
 
@@ -153,7 +154,7 @@ void scrsimpletext_textspeech_filter_welcome_message(void)
 
 	char texto_welcome[40];
 	sprintf(texto_welcome," Welcome to ZEsarUX v." EMULATOR_VERSION " ");
-	textspeech_print_speech(texto_welcome);
+	textspeech_print_speech(texto_welcome); 
 
 	char texto_edition[40];
 	sprintf(texto_edition," " EMULATOR_EDITION_NAME " ");

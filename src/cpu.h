@@ -52,6 +52,15 @@ Examples
 #define EMULATOR_SHORT_DATE "14/07/2020"
 #define EMULATOR_GAME_EDITION "Turbo Esprit"
 #define EMULATOR_EDITION_NAME EMULATOR_GAME_EDITION " edition"
+#define ZESARUX_EXTRAS_HOST "github.com" 
+
+
+//testeo o para forzar una versión en develop
+#define ZESARUX_EXTRAS_URL "https://github.com/chernandezba/zesarux/releases/download/8.1/ZEsarUX_extras-8.1.zip"
+
+//final
+//#define ZESARUX_EXTRAS_URL "/chernandezba/zesarux/releases/download/" EMULATOR_VERSION "/ZEsarUX_extras-" EMULATOR_VERSION ".zip"
+
 
 //8 bits
 typedef unsigned char z80_byte;

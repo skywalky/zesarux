@@ -19712,6 +19712,94 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_online_download_extras(MENU_ITEM_PARAMETERS)
+{
+
+
+	printf("URL: %s\n",ZESARUX_EXTRAS_URL);
+
+
+
+
+	//http://www.zxspectrumnext.online/cspect/tbbluemmc-32mb.zip
+
+	char host_final[NETWORK_MAX_URL];
+	strcpy(host_final,ZESARUX_EXTRAS_HOST);
+	//ZESARUX_EXTRAS_HOST
+
+	//char *url="/cspect/tbbluemmc-32mb.zip";
+
+	char url[NETWORK_MAX_URL];
+
+	strcpy(url,ZESARUX_EXTRAS_URL);
+
+
+
+	//200 MB. En versión 9.0 son 100 MB. Mas que suficiente para el futuro
+	int estimated_size=200*1024*1024;
+
+
+
+	debug_printf(VERBOSE_DEBUG,"Selected url %s",url);
+
+	char archivo_zip[PATH_MAX];
+
+	//Ruta destino en el home
+	char dest_dir[PATH_MAX];
+
+
+
+//Aunque en Windows no le acaba de gustar, por alguna razón, la ruta al unzip. En Windows lo metemos en la ruta actual
+#ifdef MINGW
+	dest_dir[0]=0; //Cadena vacia -> carpeta actual
+#else
+	util_get_home_dir(dest_dir);
+#endif
+
+	
+
+
+	char zipfilename[PATH_MAX];
+	util_get_file_no_directory(url,zipfilename);
+
+	sprintf(archivo_zip,"%s%s",dest_dir,zipfilename);
+
+	int ssl_use=1;
+
+
+	int ret=menu_download_file(host_final,url,archivo_zip,ssl_use,estimated_size);  
+
+	if (ret==200) {       
+		//descomprimimos zip
+		char final_mmc_dir[PATH_MAX];
+		sprintf(final_mmc_dir,"%s.dir",archivo_zip);
+
+		//Descomprimir con ventana de progreso y pthread aparte de descompresion
+		menu_uncompress_zip_progress(archivo_zip,final_mmc_dir);
+
+                                //y habrimos menu de smartload
+                                strcpy(quickload_file,final_mmc_dir);
+
+                                quickfile=quickload_file;
+                                menu_smartload(0);		
+
+
+		return;
+	}
+	else {
+		if (ret<0) {	
+			menu_network_error(ret);
+		}
+		else {
+			debug_printf(VERBOSE_ERR,"Error downloading software. Return code: %d",ret);
+		}
+
+	}
+
+
+}
+
+
 void menu_network(MENU_ITEM_PARAMETERS)
 {
         //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
@@ -19773,7 +19861,10 @@ void menu_network(MENU_ITEM_PARAMETERS)
 			//Versión sin SSL usa zxinfo, servidor WOS
 			//menu_add_item_menu_tooltip(array_menu_common,"It uses zxinfo and WOS to download the software. Thanks to Thomas Heckmann and Lee Fogarty for allowing it");
 			//menu_add_item_menu_ayuda(array_menu_common,  "It uses zxinfo and WOS to download the software. Thanks to Thomas Heckmann and Lee Fogarty for allowing it");
-			
+
+
+
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_online_download_extras,NULL,"Download extras"); 
 			
 #endif    
 

@@ -1002,7 +1002,7 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code,char *re
 				if (redireccion) {
 					char *existe;
 					char *pref_location="Location: ";
-					existe=strstr(buffer_linea,"Location: ");
+					existe=strcasestr(buffer_linea,"Location: ");
 					if (existe!=NULL) {			
 						int longitud=strlen(pref_location);
 						debug_printf (VERBOSE_DEBUG,"zsock_http_skip_headers Detected redirect %s",buffer_linea);

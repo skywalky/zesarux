@@ -4,6 +4,7 @@
 * en Changelog cambiar nombre edicion y fechas
 * activar capture segmentation fault en cpu.c
 * activar capture floating point exception en cpu.c
+* ZESARUX_EXTRAS_URL en cpu.h en principio no hay que tocarlo
 * Cambiar EMULATOR_VERSION en archivo configure 
 * Cambiar version en macos/apptemplate/Contents/Info.plist, tag CFBundleVersion
 * Ajustar juego editionnamegame.tap, si juego no permitido distribucion, eliminar. Ajustar EMULATOR_GAME_EDITION

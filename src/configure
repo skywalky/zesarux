@@ -1728,7 +1728,7 @@ fi
 if [ "$OPTIONOBJSIMPLETEXT" != "" ]; then
 
 cat >> Makefile << _EOF
-scrsimpletext.o: scrsimpletext.c scrsimpletext.h debug.h screen.h mem128.h zx8081.h operaciones.h cpu.h utils.h menu.h joystick.h ula.h disassemble.h z88.h timer.h tsconf.h baseconf.h settings.h
+scrsimpletext.o: scrsimpletext.c scrsimpletext.h debug.h screen.h mem128.h zx8081.h operaciones.h cpu.h utils.h menu.h joystick.h ula.h disassemble.h z88.h timer.h tsconf.h baseconf.h settings.h textspeech.h
 	\$(CC) \$(CFLAGS) -c scrsimpletext.c
 
 _EOF
