@@ -19771,7 +19771,9 @@ void menu_online_download_extras(MENU_ITEM_PARAMETERS)
 		//Descomprimir con ventana de progreso y pthread aparte de descompresion
 		menu_uncompress_zip_progress(archivo_zip,final_mmc_dir);
 
-		menu_generic_message_format("File downloaded","File has been downloaded and uncompressed to %s",dest_dir);
+		if (dest_dir[0]==0) menu_generic_message_format("File downloaded","File has been downloaded and uncompressed to current folder");
+
+		else menu_generic_message_format("File downloaded","File has been downloaded and uncompressed to %s",dest_dir);
 
 		//y abrimos menu de smartload
 		strcpy(quickload_file,final_mmc_dir);
