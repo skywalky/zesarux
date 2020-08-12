@@ -17643,7 +17643,9 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int es
                         return retorno;
                 }
                 else {
-                        debug_printf(VERBOSE_ERR,"Error downloading file. Return code: %d",http_code);
+                        //No hacemos VERBOSE_ERR porque sera responsabilidad del que llame a la funcion util_download_file
+                        //de mostrar mensaje en ventana
+                        debug_printf(VERBOSE_DEBUG,"Error downloading file. Return code: %d",http_code);
                 }
         }	        
 
