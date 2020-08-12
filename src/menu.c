@@ -1529,7 +1529,7 @@ int menu_if_pressed_background_button(void)
 
 	//Si es F6 por default
 	if ((puerto_especial3&1)==0) {
-		printf ("Pulsada F6\n");
+		//printf ("Pulsada F6\n");
 		//sleep(1);
 
 		//Ver si funcion F6 no esta asignada 
@@ -1539,7 +1539,7 @@ int menu_if_pressed_background_button(void)
 		if (accion==F_FUNCION_DEFAULT) {
 				//liberamos indicador de tecla de funcion
 				menu_button_f_function.v=0;
-				printf ("Es F6 por defecto\n");
+				//printf ("Es F6 por defecto\n");
 				return 1;
 		}
 
