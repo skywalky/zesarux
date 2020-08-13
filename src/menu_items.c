@@ -5439,8 +5439,8 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_debug_new_visualmem,MENU_OPCION_NORMAL,menu_debug_new_visualmem_looking,NULL,"~~Looking: %s",texto_looking);
 		menu_add_item_menu_shortcut(array_menu_debug_new_visualmem,'l');
 
-		menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at.\n\nIf you select all MEM, the final color will be a RGB color result of:\n"
-					"Blue component por Written Mem\nGreen component for Read Mem\nRed component for Opcode.\n"
+		menu_add_item_menu_ayuda(array_menu_debug_new_visualmem,"Which visualmem to look at.\n\nIf you select all MEM, the final color will be a RGB color result of:\n\n"
+					"-Blue component por Written Mem\n-Green component for Read Mem\n-Red component for Opcode.\n\n"
 					"Yellow for example is red+green, so opcode fetch+read memory. As an opcode fetch implies a read access,"
 					" you won't ever see a red pixel (only opcode fetch) but all opcode fetch will always be yellow.\n"
 					"Cyan is green+blue, so read+write\n\n"
