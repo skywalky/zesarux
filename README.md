@@ -320,6 +320,11 @@ TBBlue/ZX Spectrum Next
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_tbblue.png "TBBlue/ZX Spectrum Next")
 
 
+CPC 464
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_cpc.png "CPC 464")
+
+
 MSX
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_msx.png "MSX")
@@ -333,11 +338,6 @@ Colecovision
 Sega SG-1000
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_sg1000.png "Sega SG-1000")
-
-
-CPC 464
-
-![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_cpc.png "CPC 464")
 
 
 You can find some ZEsarUX videos on my [Youtube channel](https://www.youtube.com/user/chernandezba)
