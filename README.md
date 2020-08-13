@@ -316,7 +316,28 @@ ZX-Evolution TSConf
 
 
 TBBlue/ZX Spectrum Next
+
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_tbblue.png "TBBlue/ZX Spectrum Next")
+
+
+MSX
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_msx.png "MSX")
+
+
+Colecovision
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_coleco.png "Colecovision")
+
+
+Sega SG-1000
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_sg1000.png "Sega SG-1000")
+
+
+CPC 464
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_cpc.png "CPC 464")
 
 
 You can find some ZEsarUX videos on my [Youtube channel](https://www.youtube.com/user/chernandezba)
