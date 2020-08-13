@@ -4536,6 +4536,7 @@ void menu_audio_draw_sound_wave(void)
 
 
 	//Scroll izquierda de array waveform
+	//Sinceramente no me acuerdo realmente que efecto queria mostrar con esto...
 	if (menu_sound_wave_llena==2) {
 		int scroll_x,scroll_y;
 
@@ -4567,7 +4568,7 @@ void menu_audio_draw_sound_wave(void)
 		//ydestino=menu_audio_draw_sound_wave_ycentro-ydestino;
 		//ydestino=alto/2-ydestino;
 
-		ydestino=alto/2-audiostats.medio*alto/256;
+		ydestino=alto/2-(audiostats.medio*alto)/256;
 		//printf ("y destino: %d\n",ydestino);
 
 		//Siempre que estemos en el rango
