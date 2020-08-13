@@ -2492,7 +2492,7 @@ struct s_machine_names machine_names[]={
 
 {"MSX1",MACHINE_ID_MSX1},
 {"ColecoVision",MACHINE_ID_COLECO},
-{"SG1000",MACHINE_ID_SG1000},
+{"SG-1000",MACHINE_ID_SG1000},
 {"Spectravideo 318",MACHINE_ID_SVI_318},
 {"Spectravideo 328",MACHINE_ID_SVI_328},
 

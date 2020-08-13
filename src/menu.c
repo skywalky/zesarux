@@ -24071,7 +24071,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 			}
 
 			if (MACHINE_IS_SG1000) {
-				strcpy(buffer_item,"SG1000");
+				strcpy(buffer_item,"SG-1000");
 			}		
 
 			if (MACHINE_IS_SVI) {
