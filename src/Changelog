@@ -4,7 +4,7 @@ Added new emulated machines:
 -MSX1 
 -Spectravideo 318/328
 -Colecovision 
--Sega SG1000
+-Sega SG-1000
 
 Added new compiled version: FreeBSD
 Added support for compilation on Haiku
@@ -18,13 +18,6 @@ Added F key to pause/unpause tape
 Added setting to rotate output tape when selecting tape that already exists
 Added setting to resample audio output to 1 bit
 
-Added ZRCP commands:
--save-screen: to save machine screen to file
-
-Added GUI Styles:
--MSX
--Solarized Dark & Light
-
 
 Improved emulation: use a slightly less cpu on every scanline
 Improved compilation script: allow to set different C compiler
@@ -35,6 +28,7 @@ Improved menu:
 -Pressing the menu key (F5 by default) when menu is open, it will send you back to the main menu. Also pressing over Z logo on ext desktop
 -Some window hotkeys can be pressed with mouse click (example: Debug CPU Window, File utilities, View Sprites, Hex Editor, Disassemble)
 -Improved some interface fonts in sizes smaller than 8 pixel width
+-Added GUI Styles: MSX, Solarized Dark & Light
 -Added setting to select machine by name instead by manufacturer
 -Added setting to disable showing cpu temperature, or FPS on footer
 -Added keyboard help window for all machines
@@ -52,7 +46,8 @@ Improved debugging:
 
 Improved ZRCP:
 -Allow to write commands in "". Not all commands support this
--Added save-binary command
+-Added save-binary command, to save binary data to a file
+-Added save-screen command, to save machine screen to a file
 
 Improved Esxdos handler: 
 -Added f_mkdir function 
@@ -62,9 +57,9 @@ Improved TBBlue emulation:
 -Added Layer2 modes 320x256 and 640x256
 -Added 4bpp sprites
 -Enable Timex video by default
--Added altrom feature: now 48k and 128k mode works again
 -Legacy hi-res and border effects disabled by default. Reduces up to 13% cpu use or gain 17 FPS on my environment
 -Reduced a bit cpu usage (2% cpu less on my environment) when rendering scanlines 
+-Added altrom feature: now 48k and 128k mode works again
 -Emulate register 0x8E (142) => Spectrum 128K Memory Mapping
 -Allow to download a 512 MB TBBlue SD official card (allowed download sizes: 32MB, 128MB, 512MB, 2 GB)
 -Allow paths with backslashes on esxdos handler
@@ -85,21 +80,17 @@ Fixed loading zsf snapshot and ay registers
 Fixed segfaults when changing machines and resizing windows
 Fixed network bug when downloading file and redirection
 Fixed Visualmem window size when char size < 8
+Fixed Esxdos handler segfaults when using a file handler that was a directory
+Fixed Accessibility bug reading transparent windows
 
 Fixed ZRCP bugs:
--Fix possible crash when disconnecting socket
+-Fixed possible crash when disconnecting socket
 -Using cpu-history ZRCP command no longer fires additional MRA conditions
-
-Fixed Esxdos handler: 
--Fixed segfaults when using a file handler that was a directory
-
-Fixed Accessibility bugs: 
--Fixed reading transparent windows
 
 Fixed tbblue bugs:
 -Fixed 8 first lines of tiles on border not shown
 -Fixed text mode (1 bit tile)
--Fixed reading palette colours. Fixed returning from multiface nmi 
+-Fixed reading palette colours. That fixes returning from multiface nmi 
 -Fixed reading clipping values
 -Fixed screensaver
 -Fixed tbblue memory priorities
