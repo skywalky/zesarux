@@ -130,6 +130,8 @@ Un tercer botón que diga “take me there” para cuando sugiere menús, que te
 
 -ayuda teclados  +2, +2a/+3 en spanish
 
+-alguna ventana que muestre volumenes de los dos canales estereo. o quiza wave shape con dos partes: izquierda y derecha
+
 -Ventana ayuda teclado:
 * que se pudiera hacer sin multiplicar por zoom_gui? asi en next, cpc, ql etc no se verian el doble de grande
 * al iniciar emulador, si la ventana se ha guardado en background, siempre arranca por defecto inicialmente como spectrum48, y al pulsar

@@ -342,6 +342,8 @@ Al mover raton hace cosas raras. Tambien en el menu de tbblue
 Refresco de Tbblue para curses , stdout y simpletext en caso de:
 -rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
 
+-Aviso al descargar sd oficiales de Next: que diga que puede que usen nuevas features que aún no estén implementadas. Que en caso de error, usen la imagen incluida 
+
 -Salir de CP/M deja el modo tiles activo
 
 -cambiar de maquina no tbblue a tbblue provoca que no funcione divmmc
