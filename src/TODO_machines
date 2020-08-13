@@ -338,7 +338,6 @@ This strange thing "CASHE MEMORY"
 -Activar el kempston mouse entra en conflicto con el editor de basic. 
 Al mover raton hace cosas raras. Tambien en el menu de tbblue
 
--tools/tile editor: no se ve bien?
 
 Refresco de Tbblue para curses , stdout y simpletext en caso de:
 -rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
@@ -380,8 +379,6 @@ El parchecillo va en core_spectrum.c , aqui:
 +					//int i;
 +					//for (i=0;i<AUDIO_BUFFER_SIZE*2;i++) audio_buffer[i]=0;
 +				}
-
--parece que no aparece correctamente el salvapantallas de NextOS
 
 
 -Agregar turbo spool setting en tbblue -> va relacionado con la funcion de peek_byte turbo que se ve alterada al cambiar 
@@ -451,8 +448,6 @@ Ver registro 2:
 -PIXELUP/DN quiza pueda ir mas alla de coordenada 191
 https://www.specnext.com/forum/viewtopic.php?p=8226#p8226
 
-
--sistema altrom esta reemplazado en siguientes versiones del core fpga por otro metodo!
 
 
 -tbblue: considerar mejor prioridades de capas de memoria, por ejemplo al escribir altrom esta comprobando aparte si esta diviface habilitdo
