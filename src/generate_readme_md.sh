@@ -46,6 +46,11 @@ echo
 cat << _EOF
 __Some screenshots__
 
+ZX Desktop, running multitask windows, on Solarized Dark GUI Style, running ZX Spectrum OverScan demo
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_zxdesktop_multitask.png "ZX Desktop")
+
+
 ZX Spectrum Overscan demo
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_overscan.jpg "Overscan demo")

@@ -554,7 +554,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro
                 },
 
-        {0,"MSX",VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,
+		//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
+        {1,"MSX",VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,
                 0,1,0,0,          //No mostrar cursor,mostrar recuadro,no mostrar rainbow
                 VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para opcion seleccionada
                 VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+6,        //Colores para opcion no disponible
@@ -640,7 +641,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
-	// https://ethanschoonover.com/solarized/. Solo vale en video driver completo por los colores usados
+	// https://ethanschoonover.com/solarized/. Solo vale en video driver completo por los colores usados (primer valor de la estructura)
 	{1,"Solarized Dark",SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,
 
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -659,7 +660,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
 		},
 
-	//Solo vale en video driver completo por los colores usados
+	//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
 	{1,"Solarized Light",SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_base00,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 

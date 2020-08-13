@@ -151,7 +151,7 @@ __FEATURES__
 
 * Supports reducing the screen to 192x144 (0.75 scale)
 
-* Uses its own powerful window environment (ZX Vision) inside the program application window, having the same GUI style on all plattforms
+* Uses its own powerful window environment (ZX Vision) inside the program application window, having the same GUI style on all plattforms. Allows to have an extended display to hold menus and multitask windows (ZX Desktop)
 
 * Can be used with joystick and environments without keyboard, like Raspiboy / Retropie
 
@@ -274,6 +274,11 @@ __FEATURES__
 
 
 __Some screenshots__
+
+ZX Desktop, running multitask windows, on Solarized Dark GUI Style, running ZX Spectrum OverScan demo
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_zxdesktop_multitask.png "ZX Desktop")
+
 
 ZX Spectrum Overscan demo
 
