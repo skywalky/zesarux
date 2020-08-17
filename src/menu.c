@@ -5023,13 +5023,21 @@ void zxvision_restore_windows_on_startup(void)
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente los textos de las ventanas a speech
 
+	//Si ha habido un error y mostramos al final
+	int error_restoring_window=0;
+	int error_restoring_window_index;
+
 	for (i=0;i<total_restore_window_array_elements;i++) {
 		//printf ("Restoring window %s\n",restore_window_array[i]);
 
 		int indice=zxvision_find_known_window(restore_window_array[i]);
 
 		if (indice<0) {
-			debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",restore_window_array[i]);
+			//Si hay error con alguna ventana desconocida, nos guardamos el error para el final
+			//si no, en medio de la restauracion salta esta ventana y ademas no se redimensiona a zxdesktop
+			error_restoring_window=1;
+			error_restoring_window_index=i;
+			//debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",restore_window_array[i]);
 		}
 
 		else {
@@ -5054,6 +5062,11 @@ void zxvision_restore_windows_on_startup(void)
 	}
 
 	zxvision_currently_restoring_windows_on_start=0;
+
+	if (error_restoring_window) {
+		debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",restore_window_array[error_restoring_window_index]);
+	}
+
 
 
 }

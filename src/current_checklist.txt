@@ -16,8 +16,6 @@ echo "Porcentaje=$PERCCOMPLETADO %"
 
 -ejecutar manual_tests.sh
 
--ejecutar ./zesarux --codetests
-
 -ejecutar ./codetests.sh
 
 Drivers video:
@@ -155,8 +153,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar desactivando contended memory en compilacion
 
 
--probar desactivando memptr i pasar z80tests.tap de spectrum. probar activando memptr i pasar z80tests.tap
--probar z80flags.tap. con memptr y --enable-undoc-scfccf son 6 de 152: fallan bit n,a ; bit n,[r,(hl)], ldi, ldd, ldir, lddr
 -probar cpustats
 -probar visualmem, tambien en drivers no graficos como curses, aa, etc
 -probar desactivando cpustats
