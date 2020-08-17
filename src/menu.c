@@ -29796,10 +29796,17 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings,"Snapshot settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Snapshot settings");
 
+#ifdef USE_PTHREADS		
+
+		//De momento todo lo que hay en el menu de Statistics requiere red, y este requiere pthreads
+		//Si no hay threads, tampoco este menu
+
 		menu_add_item_menu(array_menu_settings,"Stat~~istics",MENU_OPCION_NORMAL,menu_settings_statistics,NULL);
 		menu_add_item_menu_shortcut(array_menu_settings,'i');
 		menu_add_item_menu_tooltip(array_menu_settings,"Statistics settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Statistics settings");		
+
+#endif
 
 		menu_add_item_menu(array_menu_settings,"S~~torage",MENU_OPCION_NORMAL,menu_settings_storage,NULL);
 		menu_add_item_menu_shortcut(array_menu_settings,'t');
