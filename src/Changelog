@@ -1,4 +1,4 @@
-Version 9.0 - Turbo Esprit edition. 14 July 2020
+Version 9.0 - Turbo Esprit edition. 17 August 2020
 
 Added new emulated machines: 
 -MSX1 
@@ -76,11 +76,11 @@ Fixed saving "Show CPU usage" setting on footer
 Fixed using tab and backspace keys in curses driver
 Fixed segfaults when using some memory zones and changing machine
 Fixed segfaults when setting breakpoints from config file and machine is QL
-Fixed loading zsf snapshot and ay registers
 Fixed segfaults when changing machines and resizing windows
-Fixed network bug when downloading file and redirection
+Fixed segfaults on Esxdos handler when using a file handler that was a directory
+Fixed loading zsf snapshot and ay registers
+Fixed network bug when downloading file and redirecting to another url
 Fixed Visualmem window size when char size < 8
-Fixed Esxdos handler segfaults when using a file handler that was a directory
 Fixed Accessibility bug reading transparent windows
 
 Fixed ZRCP bugs:
