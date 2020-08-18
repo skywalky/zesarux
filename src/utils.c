@@ -3851,8 +3851,11 @@ int util_write_configfile(void)
   
   
 
-  if (stats_check_updates_enabled.v==0)        ADD_STRING_CONFIG,"--stats-disable-check-updates");
-		
+  if (stats_check_updates_enabled.v==0)                 ADD_STRING_CONFIG,"--stats-disable-check-updates");
+
+  if (stats_check_yesterday_users_enabled.v==0)         ADD_STRING_CONFIG,"--stats-disable-check-yesterday-users");
+
+	
 
 
   if (stats_last_remote_version[0]!=0)       ADD_STRING_CONFIG,"--stats-last-avail-version %s",stats_last_remote_version);

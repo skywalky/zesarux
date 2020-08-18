@@ -17,6 +17,7 @@ Added F key to toggle top cpu speed
 Added F key to pause/unpause tape
 Added setting to rotate output tape when selecting tape that already exists
 Added setting to resample audio output to 1 bit
+Added showing yesterday ZEsarUX users 
 
 
 Improved emulation: use a slightly less cpu on every scanline

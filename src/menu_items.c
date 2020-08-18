@@ -19946,6 +19946,10 @@ void menu_settings_enable_check_updates(MENU_ITEM_PARAMETERS)
 	stats_check_updates_enabled.v ^=1;	
 }
 
+void menu_settings_enable_check_yesterday_users(MENU_ITEM_PARAMETERS)
+{
+	stats_check_yesterday_users_enabled.v ^=1;
+}
 
 void menu_settings_statistics(MENU_ITEM_PARAMETERS)
 {
@@ -19957,6 +19961,13 @@ void menu_settings_statistics(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_settings_enable_check_updates,NULL,"[%c] Check updates",
 					(stats_check_updates_enabled.v ? 'X' : ' ') );
+
+
+			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_settings_enable_check_yesterday_users,NULL,"[%c] Check yesterday users",
+					(stats_check_yesterday_users_enabled.v ? 'X' : ' ') );  
+
+			menu_add_item_menu_tooltip(array_menu_common,"Retrieve ZEsarUX yesterday users");
+			menu_add_item_menu_ayuda(array_menu_common,"Retrieve ZEsarUX yesterday users");
 
 
                 

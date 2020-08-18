@@ -2097,6 +2097,8 @@ printf (
 		"--stats-send-enabled           Enable send statistics\n"
 		"--stats-uuid s                 UUID to send statistics\n"
 		"--stats-disable-check-updates  Disable checking of available ZEsarUX updates\n"
+		"--stats-disable-check-yesterday-users  Disable checking ZEsarUX yesterday users\n"
+
 		"--stats-last-avail-version s   ZEsarUX last available version to download\n"
 		
 		
@@ -7564,6 +7566,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--stats-disable-check-updates")) {
 				stats_check_updates_enabled.v=0;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--stats-disable-check-yesterday-users")) {
+				stats_check_yesterday_users_enabled.v=0;
+			}			
 	
 			else if (!strcmp(argv[puntero_parametro],"--stats-last-avail-version")) {
 				siguiente_parametro_argumento();
@@ -8539,6 +8545,7 @@ init_randomize_noise_value();
 	//Funciones de red en background
 	stats_check_updates();
 	send_stats_server();
+	stats_check_yesterday_users();
 
 	//Restaurar ventanas, si conviene
 	//zxvision_restore_windows_on_startup();	
