@@ -51,7 +51,7 @@ Drivers audio:
 
 ***en dsp, si no se tiene dsp real, se puede probar con aoss (que se oye entrecortado continuo) o en cygwin (que distorsiona)
 OK Mac
-
+ok linux
 
 -probar targets:
 * linux 32 bits
