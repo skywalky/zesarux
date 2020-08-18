@@ -5034,12 +5034,12 @@ int quickload_continue(char *nombre) {
 
         }
 
-	//Cartuchos de MSX
+	//Cartuchos de MSX o SVI
 	else if (
                 !util_compare_file_extension(nombre,"rom")
         ) {
 		//Aqui el autoload da igual. cambiamos siempre a msx si conviene
-                if (!MACHINE_IS_MSX) {
+                if (!MACHINE_IS_MSX && !MACHINE_IS_SVI) {
 			current_machine_type=MACHINE_ID_MSX1;
                         set_machine(NULL);
 
@@ -5049,7 +5049,8 @@ int quickload_continue(char *nombre) {
                           reset_cpu();
                 }
 
-                msx_insert_rom_cartridge(nombre);
+                if (MACHINE_IS_MSX) msx_insert_rom_cartridge(nombre);
+                if (MACHINE_IS_SVI) svi_insert_rom_cartridge(nombre);
 
 
                 return 0;
