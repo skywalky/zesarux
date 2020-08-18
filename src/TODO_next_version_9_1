@@ -91,3 +91,5 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 -ROM zx85 de Daniel incluir   Y zx82?
 
 -campo de fecha en snapshot zsf
+
+-al cambiar por ejemplo de spectrum a z88 y si hay ventanas en background como keyboard help se produce segfault. quiza por ventana fuera de rango
