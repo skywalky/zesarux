@@ -204,8 +204,8 @@ ZEsarUX-version-macos-legacy.dmg.gz
 con comandos:
 Versión sin optimizaciones, sin SSL:
 
-export CFLAGS=
-export LDFLAGS=
+export CFLAGS="-mmacosx-version-min=10.13"
+export LDFLAGS="-mmacosx-version-min=10.13"
 
 ./configure --enable-memptr --enable-visualmem --enable-cpustats --disable-xwindows --disable-sdl --disable-fbdev --disable-caca --disable-aa --disable-curses --disable-sndfile 
 (Habilita drivers video: cocoa, stdout, simpletext y drivers audio: coreaudio. )
@@ -222,8 +222,8 @@ Versión con optimizaciones, sin SSL:
 
 
 
-export CFLAGS="-O3 -mmacosx-version-min=10.13"
-export LDFLAGS="-O3 -mmacosx-version-min=10.13"
+export CFLAGS="-O3"
+export LDFLAGS="-O3"
 
 Al menos poner un 10.x dos versiones inferior al que yo tenga, suponiendo que funcione bien...
 -Use otool -l /path/to/binary and inspect the LC_VERSION_MIN_MACOSX load command; 
