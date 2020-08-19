@@ -22,6 +22,7 @@ Added showing yesterday ZEsarUX users
 
 Improved emulation: use a slightly less cpu on every scanline
 Improved compilation script: allow to set different C compiler
+Improved compiler versions: now all releases are compiled with optimizations, they use lot of less cpu than before
 
 Improved menu:
 -Allow some windows to be running on the background, all at the same time. This makes the menu environment more powerful!

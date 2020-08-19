@@ -95,3 +95,5 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 -al cambiar por ejemplo de spectrum a z88 y si hay ventanas en background como keyboard help se produce segfault. quiza por ventana fuera de rango
 
 -parece que si hay joystick conectado, el splash de Z logo no aparece toda la animacion, se cierra a la primera barra de color
+
+-si ha volcado snapshot cuando hay cpu_panic, que lo diga en ventana de panic y tambien en consola
