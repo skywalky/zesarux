@@ -3780,6 +3780,7 @@ void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,i
 			}
 			*/
 			
+			
 		}
 	}
 }

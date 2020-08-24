@@ -2965,6 +2965,13 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 		destino_x +=ancho_boton/2-EXT_DESKTOP_BUTTONS_ANCHO/2;
 		int destino_y=yinicio+alto_boton/2-EXT_DESKTOP_BUTTONS_ALTO/2;
 
+		//prueba zoom 2
+		/*
+		destino_x=xinicio+ancho_boton*numero_boton;
+		destino_x +=ancho_boton/2-(EXT_DESKTOP_BUTTONS_ANCHO*2)/2;
+		destino_y=yinicio+alto_boton/2-(EXT_DESKTOP_BUTTONS_ALTO*2)/2;
+		*/
+
 		char **puntero_bitmap;
 
 		puntero_bitmap=zxdesktop_buttons_bitmaps[numero_boton];
