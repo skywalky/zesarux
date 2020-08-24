@@ -30154,8 +30154,11 @@ void menu_inicio_handle_button_presses(void)
 	//Para que no vuelva a saltar
 	menu_pressed_zxdesktop_button_which=-1; 
 
+	salir_todos_menus=1;
+
 	switch (pulsado_boton) {
 		case 0:
+			//Nada. Solo abrir el menu
 		break;
 
 		case 1:
@@ -30325,8 +30328,9 @@ void menu_inicio_bucle_main(void)
 		menu_add_item_menu_tooltip(array_menu_principal,"Exit emulator");
 		menu_add_item_menu_ayuda(array_menu_principal,"Exit emulator");
 
-		//Si se habia pulsado boton de zx desktop
-		if (menu_pressed_zxdesktop_button_which>=0) {
+		//Si se habia pulsado boton de zx desktop y boton no es el 0
+		//con boton 0 lo que hacemos es abrir el menu solamente
+		if (menu_pressed_zxdesktop_button_which>0) {
 			menu_inicio_handle_button_presses();
 
 		}
@@ -31044,11 +31048,13 @@ void menu_inicio(void)
 		printf ("Abrir menu normal. mouse left: %d\n",mouse_left);
 
 		//Ver si se ha pulsado en botones de zx desktop
-		if (menu_was_open_by_left_mouse_button.v && zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
-			printf("Se ha pulsado en zona botones con menu cerrado\n");
-		}
-		else {
-			printf ("No pulsado en zona botones con menu cerrado\n");
+		if (menu_was_open_by_left_mouse_button.v) {
+			if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
+				printf("Se ha pulsado en zona botones con menu cerrado\n");
+			}
+			else {
+				printf ("No pulsado en zona botones con menu cerrado\n");
+			}
 		}
 
 		menu_was_open_by_left_mouse_button.v=0;
