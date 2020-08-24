@@ -333,6 +333,9 @@ int menu_abierto=0;
 //Si realmente aparecera el menu
 z80_bit menu_event_open_menu={0};
 
+//Si el menu se ha abierto con boton izquierdo
+z80_bit menu_was_open_by_left_mouse_button={0};
+
 //indica si hay pendiente un mensaje de error por mostrar
 int if_pending_error_message=0;
 
@@ -30188,7 +30191,9 @@ void menu_inicio_handle_button_presses(void)
 		break;
 
 		case 9:
-			menu_windows(0);
+			if (menu_allow_background_windows) {
+				menu_windows(0);
+			}
 		break;
 
 		case 10:
@@ -30376,7 +30381,7 @@ void menu_inicio_bucle_main(void)
 void menu_inicio_bucle(void)
 {
 
-	//printf ("inicio de menu_inicio_bucle\n");
+	printf ("inicio de menu_inicio_bucle\n");
 
 	//Si se ha pulsado el logo Z antes de abrir menu principal
 	//Si no hiciera esto, se abriria menu, y luego se reabriria al cerrarlo, 
@@ -31036,12 +31041,26 @@ void menu_inicio(void)
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		
 		//Abrir menu normal
-		//printf ("Abrir menu normal\n");
+		printf ("Abrir menu normal. mouse left: %d\n",mouse_left);
+
+		//Ver si se ha pulsado en botones de zx desktop
+		if (menu_was_open_by_left_mouse_button.v && zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
+			printf("Se ha pulsado en zona botones con menu cerrado\n");
+		}
+		else {
+			printf ("No pulsado en zona botones con menu cerrado\n");
+		}
+
+		menu_was_open_by_left_mouse_button.v=0;
+
 		menu_inicio_bucle();
 
 	}
 
 	}
+
+
+	menu_was_open_by_left_mouse_button.v=0;
 
 
 	//printf ("salir menu\n");

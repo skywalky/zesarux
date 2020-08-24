@@ -895,6 +895,8 @@ extern int si_valid_char(z80_byte caracter);
 
 extern z80_bit menu_event_open_menu;
 
+extern z80_bit menu_was_open_by_left_mouse_button;
+
 extern int menu_debug_memory_zone;
 
 extern menu_z80_moto_int menu_debug_memory_zone_size;
