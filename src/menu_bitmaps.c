@@ -24,30 +24,30 @@
 
 char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
     //01234567890123456789012345
-    "WWWWWWWWWWWWWWWWWWWWWWWWWW",     //0
-  	"WXXXXXXXXXXXXXXXXXXXXXXXXW",      
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",	
-	"WWWWWWWWWWWWWWWWWXXXXWWWWW",			
-	"                WXXXXW   W",			
-	"                WXXXXW  RW", 		
-	"             WWWWXXXXW RRW",		
-	"            WXXXXWWWW RRRW",		
-	"            WXXXXW   RRRRW",	//10	
-	"            WXXXXW  RRRRYW",		
-	"         WWWWXXXXW RRRRYYW",		
-	"        WXXXXWWWW RRRRYYYW",		
-	"        WXXXXW   RRRRYYYYW",		
-	"        WXXXXW  RRRRYYYYGW",		
-	"     WWWWXXXXW RRRRYYYYGGW",		
-	"    WXXXXWWWW RRRRYYYYGGGW",		
-	"    WXXXXW   RRRRYYYYGGGGW",		
-	"    WXXXXW  RRRRYYYYGGGGCW",		
-	"WWWWWXXXXW RRRRYYYYGGGGCCW",    //20
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",
-	"WWWWWWWWWWWWWWWWWWWWWWWWWW" 		//25
+    "wwwwwwwwwwwwwwwwwwwwwwwwww",     //0
+  	"wxxxxxxxxxxxxxxxxxxxxxxxxw",      
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",	
+	"wwwwwwwwwwwwwwwwwxxxxwwwww",			
+	"                wxxxxw   w",			
+	"                wxxxxw  rw", 		
+	"             wwwwxxxxw rrw",		
+	"            wxxxxwwww rrrw",		
+	"            wxxxxw   rrrrw",	//10	
+	"            wxxxxw  rrrryw",		
+	"         wwwwxxxxw rrrryyw",		
+	"        wxxxxwwww rrrryyyw",		
+	"        wxxxxw   rrrryyyyw",		
+	"        wxxxxw  rrrryyyygw",		
+	"     wwwwxxxxw rrrryyyyggw",		
+	"    wxxxxwwww rrrryyyygggw",		
+	"    wxxxxw   rrrryyyyggggw",		
+	"    wxxxxw  rrrryyyyggggcw",		
+	"wwwwwxxxxw rrrryyyyggggccw",    //20
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",
+	"wwwwwwwwwwwwwwwwwwwwwwwwww" 		//25
 };

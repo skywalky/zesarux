@@ -31144,44 +31144,69 @@ RRRYYY
 
 
 //Retorna color de paleta spectrum segun letra color logo ascii W: white, X: Black, etc
+//en mayusculas es con brillo, sin mayusculas es sin brillo
 int return_color_zesarux_ascii(char c)
 {
+
+	int color;
+
+	int brillo=0;
+
+	if (c>='A' && c<='Z') {
+		brillo=1;
+		c=letra_minuscula(c);
+	}
+
 	switch (c) {
-		//White
-		case 'W':
-			return 7;
-		break;
+
 
 		//Black
-		case 'X':
-			return 0;
+		case 'x':
+			color=0;
 		break;
+
+		//Blue
+		case 'b':
+			color=1;
+		break;		
 
 		//Red
-		case 'R':
-			return 2;
+		case 'r':
+			color=2;
 		break;
 
+		//Magenta
+		case 'm':
+			color=3;
+		break;		
+
 		//Green
-		case 'G':
-			return 4;
+		case 'g':
+			color=4;
 		break;
 
 		//Cyan
-		case 'C':
-			return 5;
+		case 'c':
+			color=5;
 		break;
 
 		//Yellow
-		case 'Y':
-			return 6;
+		case 'y':
+			color=6;
 		break;
+
+		//White
+		case 'w':
+			color=7;
+		break;		
 
 		//Black default
 		default:
-			return 0;
+			color=0;
 		break;
 	}
+
+	return color+brillo*8;
 }
 
 void set_splash_zesarux_logo(void)
