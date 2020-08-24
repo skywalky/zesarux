@@ -105,3 +105,6 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 -cuando hace rearrange cuando se reduce zx desktop, deja las ventanas con un tamaño extraño (quiza muy pegadas a la derecha),
 que hace que al pulsar sobre ellas se redimensionen -> se pegan a la derecha cuando "open menu in zx desktop" activo, y le da un ancho que se sale por la derecha
 culpa del rearrange entonces
+
+
+-//TODO: poner este setting mouse_movido quiza a 0 al abrir siempre el menu

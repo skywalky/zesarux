@@ -9974,7 +9974,10 @@ z80_byte menu_da_todas_teclas(void)
 
 	//no ignorar disparo
 	z80_byte valor_joystick=(puerto_especial_joystick&31)^255;
+	
 	acumulado=acumulado & valor_joystick;
+
+	//printf ("acumulado 0 %d\n",acumulado);
 
 	//contar tambien botones mouse
 	if (si_menu_mouse_activado()) {
@@ -9982,17 +9985,22 @@ z80_byte menu_da_todas_teclas(void)
 		//quiza pareceria que no hay problema en leerlo dos veces, el problema es con la variable mouse_leido,
 		//que al llamarla aqui la segunda vez, siempre dira que el mouse no se ha movido
 
+		//printf("mouse left %d mouse_right %d mouse_movido %d\n",mouse_left,mouse_right,mouse_movido);
+
 		z80_byte valor_botones_mouse=(mouse_left | mouse_right | mouse_movido)^255;
 		acumulado=acumulado & valor_botones_mouse;
 	}
 
+	//printf ("acumulado 00 %d\n",acumulado);
+
 	//Contar también algunas teclas solo menu:
 	z80_byte valor_teclas_menus=(menu_backspace.v|menu_tab.v)^255;
+	//printf("valor_teclas_menus: %d\n",valor_teclas_menus);
 	acumulado=acumulado & valor_teclas_menus;
 
 
 
-  
+	//printf("acumulado: %d\n",acumulado);
 
 	if ( (acumulado&MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA) {
 		//printf ("Retornamos acumulado en menu_da_todas_teclas: %d\n",acumulado);
@@ -18939,7 +18947,9 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+						printf ("antes menu_filesel_chdir\n");
                         menu_filesel_chdir(directorio);
+						printf ("despues menu_filesel_chdir\n");
                 }
 
 				util_get_file_no_directory(quickfile,menu_filesel_posicionar_archivo_nombre);
@@ -18955,8 +18965,14 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
         int ret;
 
+		printf ("antes menu_filesel\n");
+
         ret=menu_filesel("Select File",filtros,quickload_file);
+
+		printf ("despues menu_filesel\n");
+
         //volvemos a directorio inicial
+		
         menu_filesel_chdir(directorio_actual);
 
         if (ret==1) {
@@ -30251,6 +30267,7 @@ void menu_inicio_bucle_main(void)
 		//Si se habia pulsado boton de zx desktop y boton no es el 0
 		//con boton 0 lo que hacemos es abrir el menu solamente
 		if (menu_pressed_zxdesktop_button_which>0) {
+			cls_menu_overlay();
 			menu_inicio_handle_button_presses();
 			printf ("despues menu_inicio_handle_button_presses\n");
 		}
@@ -31070,6 +31087,16 @@ void menu_inicio(void)
 			menu_was_open_by_left_mouse_button.v=0;
 
 			if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
+				//necesario para que no se piense que se está moviendo el raton
+				//Esto es un poco puñetero porque si no lo pongo aqui a 0,
+				//al lanzar por ejemplo smartload se queda al principio esperando que se 
+				//libere el "movimiento" desde menu_espera_no_tecla desde menu_filesel
+				//como no se llama a eventos handle_mouse pues no se pone a 0
+
+				//Esto se ha puesto a 1 antes desde zxvision_if_mouse_in_zlogo_or_buttons_desktop,
+				//indirectamente cuando llama a menu_calculate_mouse_xy_absolute_interface_pixel
+				//TODO: poner este setting mouse_movido quiza a 0 al abrir siempre el menu
+				mouse_movido=0;
 				printf("Se ha pulsado en zona botones con menu cerrado\n");
 			}
 			else {
@@ -33584,7 +33611,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
     //printf ("confirm\n");
 
+	printf ("antes menu_espera_no_tecla en menu filesel\n");
+
 	menu_espera_no_tecla();
+
+	printf ("despues menu_espera_no_tecla en menu filesel\n");
     	
 	zxvision_window ventana_filesel;
 	zxvision_window *ventana;
