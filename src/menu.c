@@ -398,6 +398,8 @@ z80_bit mouse_menu_disabled={0};
 //Se ha pulsado tecla de menu cuando menu esta abierto
 z80_bit menu_pressed_open_menu_while_in_menu={0};
 
+//En que boton se ha pulsado del menu
+int menu_pressed_zxdesktop_button_which=-1;
 
 z80_bit no_close_menu_after_smartload={0};
 
@@ -8493,6 +8495,11 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 			mouse_pixel_y>=0 && mouse_pixel_y<alto_boton
 		) {
 			printf ("Pulsado en zona botones del ext desktop\n");
+
+			//en que boton?
+			int numero_boton=(mouse_pixel_x-xinicio_botones)/ancho_boton;
+			printf("boton pulsado: %d\n",numero_boton);
+			menu_pressed_zxdesktop_button_which=numero_boton;
 
 			return 1;
 		}		
@@ -30136,6 +30143,69 @@ void menu_inicio_pre_retorno_reset_flags(void)
 	menu_event_open_menu.v=0;
 }
 
+void menu_inicio_handle_button_presses(void)
+{
+
+	int pulsado_boton=menu_pressed_zxdesktop_button_which;
+
+	//Para que no vuelva a saltar
+	menu_pressed_zxdesktop_button_which=-1; 
+
+	switch (pulsado_boton) {
+		case 0:
+		break;
+
+		case 1:
+			menu_smartload(0);
+		break;
+
+		case 2:
+			menu_snapshot(0);
+		break;
+
+		case 3:
+			menu_machine_selection(0);
+		break;
+
+		case 4:
+			menu_audio_settings(0);
+		break;
+
+		case 5:
+			menu_display_settings(0);
+		break;
+
+		case 6:
+			menu_storage_settings(0);
+		break;
+
+		case 7:
+			menu_debug_settings(0);
+		break;	
+
+		case 8:
+			menu_network(0);
+		break;
+
+		case 9:
+			menu_windows(0);
+		break;
+
+		case 10:
+			menu_settings(0);
+		break;
+
+		case 11:
+			menu_about(0);
+		break;
+
+		case 12:
+			menu_principal_salir_emulador(0);
+		break;																			
+	}
+
+}
+
 void menu_inicio_bucle_main(void)
 {
 	menu_first_aid("initial_menu");
@@ -30250,6 +30320,13 @@ void menu_inicio_bucle_main(void)
 		menu_add_item_menu_tooltip(array_menu_principal,"Exit emulator");
 		menu_add_item_menu_ayuda(array_menu_principal,"Exit emulator");
 
+		//Si se habia pulsado boton de zx desktop
+		if (menu_pressed_zxdesktop_button_which>=0) {
+			menu_inicio_handle_button_presses();
+
+		}
+
+		else {
 
 		retorno_menu=menu_dibuja_menu(&menu_inicio_opcion_seleccionada,&item_seleccionado,array_menu_principal,"ZEsarUX v." EMULATOR_VERSION );
 
@@ -30288,6 +30365,8 @@ void menu_inicio_bucle_main(void)
 			salir_menu=1;
 		}
 
+		}
+
 	} while (!salir_menu && !salir_todos_menus);
 
 }
@@ -30315,6 +30394,11 @@ void menu_inicio_bucle(void)
 
 	do {
 		reopen_menu=0;
+
+		//Si se ha pulsado en algun boton de menu
+		if (menu_pressed_zxdesktop_button_which>=0) {
+			printf ("Reabrimos menu para boton pulsado %d\n",menu_pressed_zxdesktop_button_which);
+		}
 
 		menu_inicio_bucle_main();
 
