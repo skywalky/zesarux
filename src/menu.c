@@ -2815,7 +2815,7 @@ void menu_draw_ext_desktop_one_button(int xinicio,int yinicio,int ancho_boton,al
 //Retorna geometria de los botones, si punteros no son null
 //ancho, alto boton
 //xfinal_botones: posicion X mas a la derecha del ultimo boton
-void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,int *p_total_botones,int *p_xfinal_botones)
+void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,int *p_total_botones,int *p_inicio_botones,int *p_xfinal_botones)
 {
 	int total_botones=EXT_DESKTOP_TOTAL_BUTTONS;
 
@@ -2847,6 +2847,7 @@ void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,
 	if (p_ancho_boton!=NULL) *p_ancho_boton=ancho_boton;
 	if (p_alto_boton!=NULL) *p_alto_boton=alto_boton;
 	if (p_total_botones!=NULL) *p_total_botones=total_botones;
+	if (p_inicio_botones!=NULL) *p_inicio_botones=xinicio;
 	if (p_xfinal_botones!=NULL) *p_xfinal_botones=xfinal_botones;
 
 }
@@ -2926,7 +2927,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	int xfinal;
 	//xfinal=xinicio+ancho;
 
-	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xfinal);
+	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
 
 	printf("ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
 	ancho_boton,alto_boton,total_botones,xfinal);
@@ -8454,9 +8455,9 @@ void zxvision_handle_mouse_ev_switch_back_wind(zxvision_window *ventana_pulsada)
 			
 }
 
-int zxvision_if_mouse_in_zlogo_desktop(void)
+int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 {
-	//Ver si estamos por la zona del logo en el ext desktop
+	//Ver si estamos por la zona del logo en el ext desktop o de los botones
 	if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() ) {
 		int xlogo,ylogo;
 		menu_ext_desktop_get_logo_coords(&xlogo,&ylogo);
@@ -8479,10 +8480,22 @@ int zxvision_if_mouse_in_zlogo_desktop(void)
 		if (mouse_pixel_x>=xlogo && mouse_pixel_x<xlogo+ancho_logo &&
 			mouse_pixel_y>=ylogo && mouse_pixel_y<xlogo+alto_logo
 		) {
-			//printf ("Pulsado en el logo del ext desktop\n");
+			printf ("Pulsado en el logo del ext desktop\n");
 
 			return 1;
 		}
+
+		//Si esta en zona botones de zx desktop
+		int ancho_boton,alto_boton,total_botones,xinicio_botones,xfinal_botones;
+		menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xinicio_botones,&xfinal_botones);
+
+		if (mouse_pixel_x>=xinicio_botones && mouse_pixel_x<xfinal_botones &&
+			mouse_pixel_y>=0 && mouse_pixel_y<alto_boton
+		) {
+			printf ("Pulsado en zona botones del ext desktop\n");
+
+			return 1;
+		}		
 	}
 	return 0;
 }
@@ -8635,7 +8648,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 			}
 
 			//Ver si hemos pulsado por la zona del logo en el ext desktop
-			else if (zxvision_if_mouse_in_zlogo_desktop()) {
+			else if (zxvision_if_mouse_in_zlogo_or_buttons_desktop()) {
 
 				menu_pressed_open_menu_while_in_menu.v=1;
 				salir_todos_menus=1;
@@ -8909,7 +8922,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);			
 			
-			if (ventana_pulsada!=NULL || zxvision_if_mouse_in_zlogo_desktop()  /*&& !zxvision_keys_event_not_send_to_machine*/) {
+			if (ventana_pulsada!=NULL || zxvision_if_mouse_in_zlogo_or_buttons_desktop()  /*&& !zxvision_keys_event_not_send_to_machine*/) {
 				debug_printf (VERBOSE_DEBUG,"Clicked inside other window or zlogo. Events are not sent to emulated machine");
 				zxvision_keys_event_not_send_to_machine=1;
 				ventana_tipo_activa=1;
