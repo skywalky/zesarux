@@ -3765,20 +3765,6 @@ void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,i
 }
 
 
-//Mete la marca de agua en un bitmap generico
-/*void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho_destino,int color) )
-{
-	int fila,columna;
-
-	for (fila=0;fila<ZESARUX_ASCII_LOGO_ALTO;fila++) {
-		char *texto=zesarux_ascii_logo[fila];
-		for (columna=0;columna<ZESARUX_ASCII_LOGO_ANCHO;columna++) {
-			char caracter=texto[columna];
-
-			if (caracter!=' ') putpixel(destino,x+columna,y+fila,ancho,return_color_zesarux_ascii(caracter));
-		}
-	}
-}*/
 
 void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
 {

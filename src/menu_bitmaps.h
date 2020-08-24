@@ -25,6 +25,15 @@
 
 #define ZESARUX_ASCII_LOGO_ANCHO 26
 #define ZESARUX_ASCII_LOGO_ALTO 26
-extern char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO];
+extern char *zesarux_ascii_logo[];
+
+extern char *bitmap_button_ext_desktop_help[];
+
+extern char **zxdesktop_buttons_bitmaps[];
+
+#define EXT_DESKTOP_TOTAL_BUTTONS 13
+
+#define EXT_DESKTOP_BUTTONS_ANCHO 26
+#define EXT_DESKTOP_BUTTONS_ALTO 26
 
 #endif

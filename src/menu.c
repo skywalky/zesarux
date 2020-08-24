@@ -2812,36 +2812,7 @@ void menu_draw_ext_desktop_one_button(int xinicio,int yinicio,int ancho_boton,al
 
 }
 
-//Prueba boton ayuda
-char *bitmap_button_ext_desktop_help[26]={
-    //01234567890123456789012345
-    "          GGGGGGG         ",     //0
-  	"        GGGGGGGGGG        ",      
-	"     GGGGGGGGGGGGGG       ",		
-	"     GGGGGGGGGGGGGGGG     ",		
-	"   GGGGGGGGGGGGGGGGGG     ",	
-	"   GGGGG       GGGGGGG    ",			
-	"                GGGGGG    ",			
-	"                GGGGGG    ", 		
-	"             GGGGGGGGG    ",		
-	"            GGGGGGGGG     ",		
-	"            GGGGGG        ",	//10	
-	"            GGGGGG        ",		
-	"         GGGGGGGGG        ",		
-	"        GGGGGGGGG         ",		
-	"        GGGGGG            ",		
-	"        GGGGGG            ",		
-	"     GGGGGGGGG            ",		
-	"    GGGGGGGGG             ",		
-	"    GGGGGG                ",		
-	"    GGGGGG                ",		
-	"    GGGGGG                ",    //20
-	"                          ",		
-	"                          ",		
-	"    GGGGGG                ",		
-	"    GGGGGG                ",
-	"    GGGGGG                " 		//25
-};
+
 
 void menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,int alto)
 {
@@ -2851,7 +2822,7 @@ void menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,int alto)
 	0           1          2         3        4           5        6         7       8         9         10        11     12
 	ZEsarUX | Smartload | Machine | Storage | Snapshot | Audio | Network | Debug | Display | Windows | Settings | Help | Exit
 	*/
-	int total_botones=13;
+	int total_botones=EXT_DESKTOP_TOTAL_BUTTONS;
 
 	//Tamanyo fijo
 	//int ancho_boton=EXT_DESKTOP_ANCHO_BOTON;
@@ -2921,22 +2892,32 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 
 
 	//Boton ZEsarUX en primer botón. Centrado
+	/*
 	screen_put_watermark_generic(NULL,xinicio+ancho_boton/2-ZESARUX_ASCII_LOGO_ANCHO/2,yinicio+alto_boton/2-ZESARUX_ASCII_LOGO_ALTO/2
 		,0, menu_draw_ext_desktop_putpixel_bitmap);
 
-	//Prueba boton ayuda
-	int numero_boton=3;
-	int destino_x=xinicio+ancho_boton*numero_boton;
-
-	destino_x +=ancho_boton/2-ZESARUX_ASCII_LOGO_ANCHO/2;
-	int destino_y=yinicio+alto_boton/2-ZESARUX_ASCII_LOGO_ALTO/2;
+*/
 
 
-	screen_put_watermark_generic(NULL,destino_y,destino_y,0,menu_draw_ext_desktop_putpixel_bitmap);
+	//Dibujar botones
+	int numero_boton;
+	for (numero_boton=0;numero_boton<total_botones;numero_boton++) {
+		int destino_x=xinicio+ancho_boton*numero_boton;
+
+		destino_x +=ancho_boton/2-EXT_DESKTOP_BUTTONS_ANCHO/2;
+		int destino_y=yinicio+alto_boton/2-EXT_DESKTOP_BUTTONS_ALTO/2;
+
+		char **puntero_bitmap;
+
+		puntero_bitmap=zxdesktop_buttons_bitmaps[numero_boton];
+
+
+		//screen_put_watermark_generic(NULL,destino_y,destino_y,0,menu_draw_ext_desktop_putpixel_bitmap);
 
 //void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
 
-		screen_put_asciibitmap_generic(bitmap_button_ext_desktop_help,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap);
+		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap);
+	}
 }
 
 
