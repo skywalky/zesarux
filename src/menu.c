@@ -2812,6 +2812,44 @@ void menu_draw_ext_desktop_one_button(int xinicio,int yinicio,int ancho_boton,al
 
 }
 
+//Retorna geometria de los botones, si punteros no son null
+//ancho, alto boton
+//xfinal_botones: posicion X mas a la derecha del ultimo boton
+void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,int *p_total_botones,int *p_xfinal_botones)
+{
+	int total_botones=EXT_DESKTOP_TOTAL_BUTTONS;
+
+	int ancho_zx_desktop=screen_get_ext_desktop_width_zoom();	
+	int xinicio=screen_get_ext_desktop_start_x();
+
+
+	int ancho_boton=ancho_zx_desktop/total_botones;
+
+	//Minimo 32 pixeles
+	if (ancho_boton<32) ancho_boton=32;
+
+	//Maximo 64 pixeles
+	if (ancho_boton>64) ancho_boton=64;
+
+
+	int alto_boton=ancho_boton;	
+
+	int xfinal_ventana=xinicio+ancho_zx_desktop;
+
+	int xfinal_botones=xinicio+total_botones*ancho_boton;
+
+	//no caben todos los botones
+	if (xfinal_botones>xfinal_ventana) {
+		total_botones=ancho_zx_desktop/ancho_boton;
+		xfinal_botones=xinicio+total_botones*ancho_boton;
+	}
+
+	if (p_ancho_boton!=NULL) *p_ancho_boton=ancho_boton;
+	if (p_alto_boton!=NULL) *p_alto_boton=alto_boton;
+	if (p_total_botones!=NULL) *p_total_botones=total_botones;
+	if (p_xfinal_botones!=NULL) *p_xfinal_botones=xfinal_botones;
+
+}
 
 
 void menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,int alto)
@@ -2822,7 +2860,9 @@ void menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,int alto)
 	0           1          2         3        4           5        6         7       8         9         10        11     12
 	ZEsarUX | Smartload | Machine | Storage | Snapshot | Audio | Network | Debug | Display | Windows | Settings | Help | Exit
 	*/
-	int total_botones=EXT_DESKTOP_TOTAL_BUTTONS;
+	int total_botones;
+
+	//total_botones=EXT_DESKTOP_TOTAL_BUTTONS;
 
 	//Tamanyo fijo
 	//int ancho_boton=EXT_DESKTOP_ANCHO_BOTON;
@@ -2868,7 +2908,11 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 };
 	*/
 
-	int ancho_boton=ancho/total_botones;
+	int ancho_boton;
+	int alto_boton;
+
+	/*ancho_boton=ancho/total_botones;
+	
 
 	//Minimo 32 pixeles
 	if (ancho_boton<32) ancho_boton=32;
@@ -2877,16 +2921,24 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	if (ancho_boton>64) ancho_boton=64;
 
 
-	int alto_boton=ancho_boton;	
+	alto_boton=ancho_boton;	*/
 
-	int xfinal=xinicio+ancho;
+	int xfinal;
+	//xfinal=xinicio+ancho;
+
+	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xfinal);
+
+	printf("ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
+	ancho_boton,alto_boton,total_botones,xfinal);
+
+
 
 
 
 	int x;
 	int contador_boton=0;
 
-	for (x=xinicio;x<xfinal && contador_boton<total_botones;x+=ancho_boton,contador_boton++) {
+	for (x=xinicio;contador_boton<total_botones;x+=ancho_boton,contador_boton++) {
 		menu_draw_ext_desktop_one_button(x,yinicio,ancho_boton,alto_boton);
 	}
 
@@ -2925,7 +2977,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 void menu_ext_desktop_get_logo_coords(int *x,int *y)
 {
 
-	int xinicio=screen_get_emulated_display_width_zoom_border_en();
+	int xinicio=screen_get_ext_desktop_start_x();
 	int ancho=screen_get_ext_desktop_width_zoom();
 	int alto=screen_get_emulated_display_height_zoom_border_en();
 
@@ -2967,7 +3019,7 @@ void menu_draw_ext_desktop(void)
 			Y considerando el espacio de coordenadas x e y con zoom
 		*/
 
-		int xinicio=screen_get_emulated_display_width_zoom_border_en();
+		int xinicio=screen_get_ext_desktop_start_x();
 		int yinicio=0;
 
 		int ancho=screen_get_ext_desktop_width_zoom();
