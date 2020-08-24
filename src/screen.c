@@ -31,6 +31,7 @@
 #include "zx8081.h"
 #include "charset.h"
 #include "menu.h"
+#include "menu_bitmaps.h"
 #include "audio.h"
 #include "contend.h"
 #include "ula.h"

@@ -37,6 +37,7 @@
 
 #include "menu.h"
 #include "menu_items.h"
+#include "menu_bitmaps.h"
 #include "screen.h"
 #include "cpu.h"
 #include "debug.h"
@@ -31140,36 +31141,6 @@ RRRYYY
 }
 
 
-
-char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
-    //01234567890123456789012345
-    "WWWWWWWWWWWWWWWWWWWWWWWWWW",     //0
-  	"WXXXXXXXXXXXXXXXXXXXXXXXXW",      
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",	
-	"WWWWWWWWWWWWWWWWWXXXXWWWWW",			
-	"                WXXXXW   W",			
-	"                WXXXXW  RW", 		
-	"             WWWWXXXXW RRW",		
-	"            WXXXXWWWW RRRW",		
-	"            WXXXXW   RRRRW",	//10	
-	"            WXXXXW  RRRRYW",		
-	"         WWWWXXXXW RRRRYYW",		
-	"        WXXXXWWWW RRRRYYYW",		
-	"        WXXXXW   RRRRYYYYW",		
-	"        WXXXXW  RRRRYYYYGW",		
-	"     WWWWXXXXW RRRRYYYYGGW",		
-	"    WXXXXWWWW RRRRYYYYGGGW",		
-	"    WXXXXW   RRRRYYYYGGGGW",		
-	"    WXXXXW  RRRRYYYYGGGGCW",		
-	"WWWWWXXXXW RRRRYYYYGGGGCCW",    //20
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
-	"WXXXXXXXXXXXXXXXXXXXXXXXXW",
-	"WWWWWWWWWWWWWWWWWWWWWWWWWW" 		//25
-};
 
 
 //Retorna color de paleta spectrum segun letra color logo ascii W: white, X: Black, etc

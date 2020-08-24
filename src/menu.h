@@ -949,9 +949,7 @@ extern char snapshot_load_file[];
 extern int menu_char_width;
 
 extern int overlay_usado_screen_array[];
-#define ZESARUX_ASCII_LOGO_ANCHO 26
-#define ZESARUX_ASCII_LOGO_ALTO 26
-extern char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO];
+
 
 extern int return_color_zesarux_ascii(char c);
 
