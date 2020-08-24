@@ -44,7 +44,7 @@ char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
     zesarux_ascii_logo,
     zesarux_ascii_logo,
     zesarux_ascii_logo,  
-    zesarux_ascii_logo, //5
+    bitmap_button_ext_desktop_display, //5
     zesarux_ascii_logo,
     bitmap_button_ext_desktop_debug,
     zesarux_ascii_logo,
@@ -195,30 +195,61 @@ char *bitmap_button_ext_desktop_help[EXT_DESKTOP_BUTTONS_ANCHO]={
 
 char *bitmap_button_ext_desktop_debug[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
-    "                       r  ",     //0
-  	"                      r   ",      
-	"                     r    ",		
-	"                    r     ",		
-	"                   rr     ",	
+    "                      rr  ",     //0
+  	"                     rr   ",      
+	"                    rr    ",		
+	"                   rr     ",		
+	"                  rrr     ",	
 	"           rrrrrrrrr      ",			
-	"        rrrrr      r      ",			
-	"        rrr         r     ", 		
-	"       rr       rr   r    ",		
-	"      rr        rr   r    ",		
-	"      r              r    ",	//10	
-	"      rr             r    ",		
-	"   rrrrr     rr     rr    ",		
-	"  r    rr     rrr   r r   ",		
-	"  r    r rr      rrr  rr  ",		
-	" r     rr  rrrrrrrr     r ",		
-	" r      r               r ",		
-	" r      r      rr        r",		
-	" r     rr   rrrrr        r",		
-	"  rr  rrrrrr   rr         ",		
+	"        rrrrrxxxxxxr      ",			
+	"        rrrxxxxxxxxxr     ", 		
+	"       rrxxxxxxxrrrxxr    ",		
+	"      rrxxxxxxxxrrrxxr    ",		
+	"      rxxxxxxxxxxxxxxr    ",	//10	
+	"      rrxxxxxxxxxxxxxr    ",		
+	"   rrrrrxxxxxrrrxxxxrr    ",		
+	"  rxxxxrrxxxxxrrrrxxrrr   ",		
+	"  rxxxxr rrxxxxxxrrr rrr  ",		
+	" rxxxxxrr  rrrrrrrr    rr ",		
+	" rxxxxxxr              rr ",		
+	" rxxxxxxr      rr       rr",		
+	" rxxxxxrr   rrrrr       rr",		
+	"  rrxxrrrrrr   rr         ",		
 	"  rrrrr                   ",    //20
-	"  r   r                   ",		
-	" r    r                   ",		
-	" r     r                  ",		
-	"r      rr                 ",
-	"r       r                 " 	 //25
+	"  rr  rr                  ",		
+	" rr   rr                  ",		
+	" rr    rr                 ",		
+	"rr     rrr                ",
+	"rr      rr                " 	 //25
+};
+
+
+char *bitmap_button_ext_desktop_display[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",      
+	"RRRRRRRRRRRRRRRRRRRRRRRRRR",		
+	"RrrrrrrrrrrrrrrrrrrrrrrrrR",		
+	"Rr           g          rR",	
+	"Rr         gggg         rR",			
+	"Rr         ggggg        rR",			
+	"Rr         gggg         rR", 		
+	"Rr         gg           rR",		
+	"Rr         gg           rR",		
+	"Rr  xxxxxxxxxxxxxxxxx   rR",	//10	
+	"Rr  xxxxxxxxxxxxxxxxx   rR",		
+	"Rr   xxxxxxxxxxxxxxx    rR",		
+	"Rr    xxxxxxxxxxxxx     rR",		
+	"RrbbbbbbbbbbbbbbbbbbbbbbrR",		
+	"RrBBccccccbbbcccccccccccrR",		
+	"RrBBBBbbbbbbccBBBBBbbbbbrR",		
+	"RrBBBBbbbBBBBcBBBBBBBBBBrR",		
+	"RrBBBBBBBBBBBBBBBBBBBBBBrR",		
+	"RrBBBBBBBBBBBBBBBBBBBBBRrR",		
+	"RrrrrrrrrrrrrrrrrrrrrrrrrR",    //20
+	"RRRRRRRRRRRRRRRRRRRRRRRRRR",		
+	"        RRRRRRRRRR        ",		
+	"       RRRRRRRRRRRR       ",		
+	"      RRRRRRRRRRRRRR      ",
+	"     rrrrrrrrrrrrrrrr     " 	 //25
 };
