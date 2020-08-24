@@ -97,3 +97,11 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 -parece que si hay joystick conectado, el splash de Z logo no aparece toda la animacion, se cierra a la primera barra de color
 
 -si ha volcado snapshot cuando hay cpu_panic, que lo diga en ventana de panic y tambien en consola
+
+-soporte joystick usb para msx, coleco etc
+
+-al cambiar tamanyo zxdesktop, reorganizar ventanas background en vez de cerrarlas (suponiendo que este activo el background -> que la funcion de reorganizar lo detecte si esta activado)
+
+-cuando hace rearrange cuando se reduce zx desktop, deja las ventanas con un tamaño extraño (quiza muy pegadas a la derecha),
+que hace que al pulsar sobre ellas se redimensionen -> se pegan a la derecha cuando "open menu in zx desktop" activo, y le da un ancho que se sale por la derecha
+culpa del rearrange entonces

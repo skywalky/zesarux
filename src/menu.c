@@ -2770,12 +2770,177 @@ void menu_set_menu_abierto(int valor)
         menu_abierto=valor;
 }
 
-
-//Para meter el logo en zona de extended desktop
-void menu_draw_ext_desktop_logo(z80_int *destino GCC_UNUSED,int x,int y,int ancho GCC_UNUSED,int color)
+//Para meter el logo u otros botones en zona de extended desktop
+void menu_draw_ext_desktop_putpixel_bitmap(z80_int *destino GCC_UNUSED,int x,int y,int ancho GCC_UNUSED,int color)
 {
 	scr_putpixel(x,y,color);
 }
+
+
+#define EXT_DESKTOP_ANCHO_BOTON 48
+#define EXT_DESKTOP_ALTO_BOTON 48
+
+void menu_draw_ext_desktop_one_button(int xinicio,int yinicio,int ancho_boton,alto_boton)
+{
+
+	
+
+	int x,y;
+
+	//Rectangulo alrededor. Dejando margen de 1 pixel alrededor sin tocar
+	//Horizontal
+	for (x=xinicio+1;x<xinicio+ancho_boton-1;x++) {
+		scr_putpixel(x,yinicio+1,0);	
+		scr_putpixel(x,yinicio+alto_boton-2,0);	
+	}
+
+	//Vertical
+	for (y=yinicio+1;y<yinicio+alto_boton-1;y++) {
+		scr_putpixel(xinicio+1,y,0);	
+		scr_putpixel(xinicio+ancho_boton-2,y,0);	
+	}
+
+	//Relleno de momento gris
+	for (y=yinicio+2;y<yinicio+alto_boton-2;y++) {	
+		for (x=xinicio+2;x<xinicio+ancho_boton-2;x++) {
+			scr_putpixel(x,y,7);	
+		}
+	}
+
+	
+
+}
+
+//Prueba boton ayuda
+char *bitmap_button_ext_desktop_help[26]={
+    //01234567890123456789012345
+    "          GGGGGGG         ",     //0
+  	"        GGGGGGGGGG        ",      
+	"     GGGGGGGGGGGGGG       ",		
+	"     GGGGGGGGGGGGGGGG     ",		
+	"   GGGGGGGGGGGGGGGGGG     ",	
+	"   GGGGG       GGGGGGG    ",			
+	"                GGGGGG    ",			
+	"                GGGGGG    ", 		
+	"             GGGGGGGGG    ",		
+	"            GGGGGGGGG     ",		
+	"            GGGGGG        ",	//10	
+	"            GGGGGG        ",		
+	"         GGGGGGGGG        ",		
+	"        GGGGGGGGG         ",		
+	"        GGGGGG            ",		
+	"        GGGGGG            ",		
+	"     GGGGGGGGG            ",		
+	"    GGGGGGGGG             ",		
+	"    GGGGGG                ",		
+	"    GGGGGG                ",		
+	"    GGGGGG                ",    //20
+	"                          ",		
+	"                          ",		
+	"    GGGGGG                ",		
+	"    GGGGGG                ",
+	"    GGGGGG                " 		//25
+};
+
+void menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,int alto)
+{
+
+	//TODO
+	/*
+	0           1          2         3        4           5        6         7       8         9         10        11     12
+	ZEsarUX | Smartload | Machine | Storage | Snapshot | Audio | Network | Debug | Display | Windows | Settings | Help | Exit
+	*/
+	int total_botones=13;
+
+	//Tamanyo fijo
+	//int ancho_boton=EXT_DESKTOP_ANCHO_BOTON;
+	//int alto_boton=EXT_DESKTOP_ALTO_BOTON;
+
+	//Tamanyo variable segun tamanyo ZX Desktop. Iconos con contenido 26x26. 
+	//Hay que dejar margen de 6 por cada lado (3 izquierdo, 3 derecho, 3 alto, 3 alto)
+	//Cada 3 pixeles de margen son: fondo-negro(rectangulo)-gris(de dentro boton)
+	//total maximo 32x32 
+	//Ejemplo:
+	/*
+
+char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={ 
+  ................................
+  ################################
+  --------------------------------
+    "WWWWWWWWWWWWWWWWWWWWWWWWWW",     //0
+  	"WXXXXXXXXXXXXXXXXXXXXXXXXW",      
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",	
+	"WWWWWWWWWWWWWWWWWXXXXWWWWW",			
+	"                WXXXXW   W",			
+	"                WXXXXW  RW", 		
+	"             WWWWXXXXW RRW",		
+	"            WXXXXWWWW RRRW",		
+	"            WXXXXW   RRRRW",	//10	
+	"            WXXXXW  RRRRYW",		
+	"         WWWWXXXXW RRRRYYW",		
+	"        WXXXXWWWW RRRRYYYW",		
+	"        WXXXXW   RRRRYYYYW",		
+	"        WXXXXW  RRRRYYYYGW",		
+	"     WWWWXXXXW RRRRYYYYGGW",		
+	"    WXXXXWWWW RRRRYYYYGGGW",		
+	"    WXXXXW   RRRRYYYYGGGGW",		
+	"    WXXXXW  RRRRYYYYGGGGCW",		
+	"WWWWWXXXXW RRRRYYYYGGGGCCW",    //20
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWW" 		//25
+};
+	*/
+
+	int ancho_boton=ancho/total_botones;
+
+	//Minimo 32 pixeles
+	if (ancho_boton<32) ancho_boton=32;
+
+	//Maximo 64 pixeles
+	if (ancho_boton>64) ancho_boton=64;
+
+
+	int alto_boton=ancho_boton;	
+
+	int xfinal=xinicio+ancho;
+
+
+
+	int x;
+	int contador_boton=0;
+
+	for (x=xinicio;x<xfinal && contador_boton<total_botones;x+=ancho_boton,contador_boton++) {
+		menu_draw_ext_desktop_one_button(x,yinicio,ancho_boton,alto_boton);
+	}
+
+
+	//Boton ZEsarUX en primer botón. Centrado
+	screen_put_watermark_generic(NULL,xinicio+ancho_boton/2-ZESARUX_ASCII_LOGO_ANCHO/2,yinicio+alto_boton/2-ZESARUX_ASCII_LOGO_ALTO/2
+		,0, menu_draw_ext_desktop_putpixel_bitmap);
+
+	//Prueba boton ayuda
+	int numero_boton=3;
+	int destino_x=xinicio+ancho_boton*numero_boton;
+
+	destino_x +=ancho_boton/2-ZESARUX_ASCII_LOGO_ANCHO/2;
+	int destino_y=yinicio+alto_boton/2-ZESARUX_ASCII_LOGO_ALTO/2;
+
+
+	screen_put_watermark_generic(NULL,destino_y,destino_y,0,menu_draw_ext_desktop_putpixel_bitmap);
+
+//void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
+
+		screen_put_asciibitmap_generic(bitmap_button_ext_desktop_help,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap);
+}
+
+
+
+
 
 //Retorna posicion del logo de ZEsarUX en el extended desktop
 void menu_ext_desktop_get_logo_coords(int *x,int *y)
@@ -2896,8 +3061,11 @@ void menu_draw_ext_desktop(void)
 		menu_ext_desktop_get_logo_coords(&xfinal,&yfinal);
 
 		//El ancho y el puntero dan igual, no los vamos a usar
-		screen_put_watermark_generic(NULL,xfinal,yfinal,0, menu_draw_ext_desktop_logo);
+		screen_put_watermark_generic(NULL,xfinal,yfinal,0, menu_draw_ext_desktop_putpixel_bitmap);
 	}
+
+	//Dibujar botones
+	menu_draw_ext_desktop_buttons(xinicio,yinicio,ancho,alto);
 	
 }
 
@@ -31008,30 +31176,37 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 int return_color_zesarux_ascii(char c)
 {
 	switch (c) {
+		//White
 		case 'W':
 			return 7;
 		break;
 
+		//Black
 		case 'X':
 			return 0;
 		break;
 
+		//Red
 		case 'R':
 			return 2;
 		break;
 
+		//Green
 		case 'G':
 			return 4;
 		break;
 
+		//Cyan
 		case 'C':
 			return 5;
 		break;
 
+		//Yellow
 		case 'Y':
 			return 6;
 		break;
 
+		//Black default
 		default:
 			return 0;
 		break;

@@ -10380,6 +10380,7 @@ void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS)
 void menu_ext_desk_settings_custom_width(MENU_ITEM_PARAMETERS)
 {
 
+	int reorganize_windows=0;
 
 	char string_width[5];
 
@@ -10394,6 +10395,9 @@ void menu_ext_desk_settings_custom_width(MENU_ITEM_PARAMETERS)
 		debug_printf (VERBOSE_ERR,"Invalid value");
 		return;
 	}
+
+
+	if (valor<screen_ext_desktop_width) reorganize_windows=1;
 
 	screen_ext_desktop_width=valor;
 
@@ -10419,7 +10423,13 @@ void menu_ext_desk_settings_custom_width(MENU_ITEM_PARAMETERS)
 	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
 
 	//Cerrar ventamas y olvidar geometria ventanas
-	zxvision_window_delete_all_windows_and_clear_geometry();
+	//zxvision_window_delete_all_windows_and_clear_geometry();
+
+	//Reorganizar ventanas solo si conviene (cuando tamaño pasa a ser menor)
+	if (reorganize_windows)	zxvision_rearrange_background_windows();
+
+	//Conveniente esto para borrar "restos" de ventanas
+	cls_menu_overlay();
 
 
 }
@@ -10436,6 +10446,8 @@ void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 	screen_end_pantalla_save_overlay(&previous_function,&menu_antes);
 
 
+	int reorganize_windows=0;
+
 
 	//Cambio ancho
 	//screen_ext_desktop_width *=2;
@@ -10448,7 +10460,10 @@ void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 
 
 	if (screen_ext_desktop_width>=1024 && screen_ext_desktop_width<2048) screen_ext_desktop_width=2048;
-	else if (screen_ext_desktop_width>=2048) screen_ext_desktop_width=128;
+	else if (screen_ext_desktop_width>=2048) {
+		screen_ext_desktop_width=128;
+		reorganize_windows=1;
+	}
 	else screen_ext_desktop_width +=128;
         
 
@@ -10462,7 +10477,13 @@ void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 
 
 	//Cerrar ventamas y olvidar geometria ventanas
-	zxvision_window_delete_all_windows_and_clear_geometry();
+	//zxvision_window_delete_all_windows_and_clear_geometry();
+
+	//Reorganizar ventanas solo si conviene (cuando tamaño pasa a ser menor)
+	if (reorganize_windows) zxvision_rearrange_background_windows();	
+
+	//Conveniente esto para borrar "restos" de ventanas
+	cls_menu_overlay();
 
 }
 
