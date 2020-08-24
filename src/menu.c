@@ -2912,10 +2912,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 		puntero_bitmap=zxdesktop_buttons_bitmaps[numero_boton];
 
 
-		//screen_put_watermark_generic(NULL,destino_y,destino_y,0,menu_draw_ext_desktop_putpixel_bitmap);
-
-//void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
-
+		
 		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap);
 	}
 }
@@ -30111,26 +30108,23 @@ void menu_inicio_bucle_main(void)
 
 					);
 
+
+		menu_add_item_menu(array_menu_principal,"S~~napshot",MENU_OPCION_NORMAL,menu_snapshot,NULL);
+		menu_add_item_menu_shortcut(array_menu_principal,'n');
+		menu_add_item_menu_tooltip(array_menu_principal,"Load or save snapshots");
+		menu_add_item_menu_ayuda(array_menu_principal,"Load or save different snapshot images. Snapshot images are loaded or saved at once");
+
+
 		if (setting_machine_selection_by_name.v==0) {
 			menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection,NULL);
 		}
 		else {
 			menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection_by_name,NULL);
 		}
-
 		menu_add_item_menu_shortcut(array_menu_principal,'m');
 		menu_add_item_menu_tooltip(array_menu_principal,"Change active machine");
 		menu_add_item_menu_ayuda(array_menu_principal,"You can switch to another machine. It also resets the machine");
 
-		menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,menu_storage_settings,NULL,"S~~torage");
-		menu_add_item_menu_shortcut(array_menu_principal,'t');
-		menu_add_item_menu_tooltip(array_menu_principal,"Select storage mediums, like tape, MMC, IDE, etc");
-		menu_add_item_menu_ayuda(array_menu_principal,"Select storage mediums, like tape, MMC, IDE, etc");		
-
-		menu_add_item_menu(array_menu_principal,"S~~napshot",MENU_OPCION_NORMAL,menu_snapshot,NULL);
-		menu_add_item_menu_shortcut(array_menu_principal,'n');
-		menu_add_item_menu_tooltip(array_menu_principal,"Load or save snapshots");
-		menu_add_item_menu_ayuda(array_menu_principal,"Load or save different snapshot images. Snapshot images are loaded or saved at once");
 
 		menu_add_item_menu(array_menu_principal,"~~Audio",MENU_OPCION_NORMAL,menu_audio_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'a');
@@ -30138,20 +30132,28 @@ void menu_inicio_bucle_main(void)
 		menu_add_item_menu_ayuda(array_menu_principal,"Audio related actions");
 
 
-		menu_add_item_menu(array_menu_principal,"Netw~~ork",MENU_OPCION_NORMAL,menu_network,NULL);
-		menu_add_item_menu_shortcut(array_menu_principal,'o');
-		menu_add_item_menu_tooltip(array_menu_principal,"Network related actions");
-		menu_add_item_menu_ayuda(array_menu_principal,"Network related actions");
+		menu_add_item_menu(array_menu_principal,"~~Display",MENU_OPCION_NORMAL,menu_display_settings,NULL);
+		menu_add_item_menu_shortcut(array_menu_principal,'d');
+		menu_add_item_menu_tooltip(array_menu_principal,"Display related actions");
+		menu_add_item_menu_ayuda(array_menu_principal,"Display related actions");		
+
+
+		menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,menu_storage_settings,NULL,"S~~torage");
+		menu_add_item_menu_shortcut(array_menu_principal,'t');
+		menu_add_item_menu_tooltip(array_menu_principal,"Select storage mediums, like tape, MMC, IDE, etc");
+		menu_add_item_menu_ayuda(array_menu_principal,"Select storage mediums, like tape, MMC, IDE, etc");
+
 
 		menu_add_item_menu(array_menu_principal,"D~~ebug",MENU_OPCION_NORMAL,menu_debug_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'e');
 		menu_add_item_menu_tooltip(array_menu_principal,"Debug tools");
 		menu_add_item_menu_ayuda(array_menu_principal,"Tools to debug the machine");
 
-		menu_add_item_menu(array_menu_principal,"~~Display",MENU_OPCION_NORMAL,menu_display_settings,NULL);
-		menu_add_item_menu_shortcut(array_menu_principal,'d');
-		menu_add_item_menu_tooltip(array_menu_principal,"Display related actions");
-		menu_add_item_menu_ayuda(array_menu_principal,"Display related actions");
+
+		menu_add_item_menu(array_menu_principal,"Netw~~ork",MENU_OPCION_NORMAL,menu_network,NULL);
+		menu_add_item_menu_shortcut(array_menu_principal,'o');
+		menu_add_item_menu_tooltip(array_menu_principal,"Network related actions");
+		menu_add_item_menu_ayuda(array_menu_principal,"Network related actions");
 
 
 		if (menu_allow_background_windows) {
@@ -30161,14 +30163,16 @@ void menu_inicio_bucle_main(void)
 			menu_add_item_menu_ayuda(array_menu_principal,"Window management");
 		}
 
+
+		menu_add_item_menu(array_menu_principal,"",MENU_OPCION_SEPARADOR,NULL,NULL);		
+
+
 		menu_add_item_menu(array_menu_principal,"Sett~~ings",MENU_OPCION_NORMAL,menu_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'i');
 		menu_add_item_menu_tooltip(array_menu_principal,"General Settings");
 		menu_add_item_menu_ayuda(array_menu_principal,"General Settings");
 
-		
-
-		menu_add_item_menu(array_menu_principal,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			
 		menu_add_item_menu(array_menu_principal,"He~~lp...",MENU_OPCION_NORMAL,menu_about,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'l');
 		menu_add_item_menu_tooltip(array_menu_principal,"Help menu");
@@ -30212,20 +30216,7 @@ void menu_inicio_bucle_main(void)
 			
 		}
 
-		//printf ("Opcion seleccionada: %d\n",menu_inicio_opcion_seleccionada);
-		//printf ("Tipo opcion: %d\n",item_seleccionado.tipo_opcion);
-		//printf ("Retorno menu: %d\n",retorno_menu);
 
-		//opcion numero 11: ESC back
-		//item_seleccionado.tipo_opcion&MENU_OPCION_ESC
-
-		/*
-		if (retorno_menu!=MENU_RETORNO_ESC && menu_inicio_opcion_seleccionada==11) {
-			printf ("opcion 11\n");
-			salir_menu=1;
-		}
-		if (retorno_menu==MENU_RETORNO_ESC) salir_menu=1;
-		*/
 
 		if (retorno_menu==MENU_RETORNO_ESC || (item_seleccionado.tipo_opcion & MENU_OPCION_ESC) == MENU_OPCION_ESC) {
 			//printf ("opcion ESC o pulsado ESC\n");

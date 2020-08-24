@@ -38,7 +38,7 @@ char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
     
 };
 
-
+//Usado en watermark y en botones
 char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
     //01234567890123456789012345
     "wwwwwwwwwwwwwwwwwwwwwwwwww",     //0
@@ -70,33 +70,73 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 };
 
 
-//Prueba boton ayuda
+//Iconos con contenido 26x26. 
+	//Hay que dejar margen de 6 por cada lado (3 izquierdo, 3 derecho, 3 alto, 3 alto)
+	//Cada 3 pixeles de margen son: fondo-negro(rectangulo)-gris(de dentro boton)
+	//total maximo 32x32 
+	//Ejemplo:
+	/*
+
+char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={ 
+  ................................
+  ################################
+  --------------------------------
+    "WWWWWWWWWWWWWWWWWWWWWWWWWW",     //0
+  	"WXXXXXXXXXXXXXXXXXXXXXXXXW",      
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",	
+	"WWWWWWWWWWWWWWWWWXXXXWWWWW",			
+	"                WXXXXW   W",			
+	"                WXXXXW  RW", 		
+	"             WWWWXXXXW RRW",		
+	"            WXXXXWWWW RRRW",		
+	"            WXXXXW   RRRRW",	//10	
+	"            WXXXXW  RRRRYW",		
+	"         WWWWXXXXW RRRRYYW",		
+	"        WXXXXWWWW RRRRYYYW",		
+	"        WXXXXW   RRRRYYYYW",		
+	"        WXXXXW  RRRRYYYYGW",		
+	"     WWWWXXXXW RRRRYYYYGGW",		
+	"    WXXXXWWWW RRRRYYYYGGGW",		
+	"    WXXXXW   RRRRYYYYGGGGW",		
+	"    WXXXXW  RRRRYYYYGGGGCW",		
+	"WWWWWXXXXW RRRRYYYYGGGGCCW",    //20
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWW" 		//25
+};
+	*/
+
+//Boton ayuda
 char *bitmap_button_ext_desktop_help[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
-    "          GGGGGGG         ",     //0
-  	"        GGGGGGGGGG        ",      
-	"     GGGGGGGGGGGGGG       ",		
-	"     GGGGGGGGGGGGGGGG     ",		
-	"   GGGGGGGGGGGGGGGGGG     ",	
-	"   GGGGG       GGGGGGG    ",			
-	"                GGGGGG    ",			
-	"                GGGGGG    ", 		
-	"             GGGGGGGGG    ",		
-	"            GGGGGGGGG     ",		
-	"            GGGGGG        ",	//10	
-	"            GGGGGG        ",		
-	"         GGGGGGGGG        ",		
-	"        GGGGGGGGG         ",		
-	"        GGGGGG            ",		
-	"        GGGGGG            ",		
-	"     GGGGGGGGG            ",		
-	"    GGGGGGGGG             ",		
-	"    GGGGGG                ",		
-	"    GGGGGG                ",		
-	"    GGGGGG                ",    //20
+    "          ggggggg         ",     //0
+  	"        gggggggggg        ",      
+	"     gggggggggggggg       ",		
+	"     gggggggggggggggg     ",		
+	"   gggggggggggggggggg     ",	
+	"   ggggg       ggggggg    ",			
+	"                gggggg    ",			
+	"                gggggg    ", 		
+	"             ggggggggg    ",		
+	"            ggggggggg     ",		
+	"            gggggg        ",	//10	
+	"            gggggg        ",		
+	"         ggggggggg        ",		
+	"        ggggggggg         ",		
+	"        gggggg            ",		
+	"        gggggg            ",		
+	"     ggggggggg            ",		
+	"    ggggggggg             ",		
+	"    gggggg                ",		
+	"    gggggg                ",		
+	"    gggggg                ",    //20
 	"                          ",		
 	"                          ",		
-	"    GGGGGG                ",		
-	"    GGGGGG                ",
-	"    GGGGGG                " 		//25
+	"    gggggg                ",		
+	"    gggggg                ",
+	"    gggggg                " 		//25
 };
