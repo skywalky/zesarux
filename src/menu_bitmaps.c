@@ -21,19 +21,36 @@
 
 #include "menu_bitmaps.h"
 
+/*
+0 ZEsarUX
+1 Smartload
+2 Snapshot 
+3 Machine
+4 Audio
+5 Display
+6 Storage
+7 Debug
+8 Network
+9 Windows
+
+10 Settings
+11 Help
+12 Exit
+
+*/
 char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
     zesarux_ascii_logo,
-    bitmap_button_ext_desktop_help,
+    zesarux_ascii_logo,
     zesarux_ascii_logo,
     zesarux_ascii_logo,
     zesarux_ascii_logo,  
     zesarux_ascii_logo, //5
     zesarux_ascii_logo,
-    zesarux_ascii_logo,
+    bitmap_button_ext_desktop_debug,
     zesarux_ascii_logo,
     zesarux_ascii_logo,
     zesarux_ascii_logo, //10
-    zesarux_ascii_logo,
+    bitmap_button_ext_desktop_help,
     zesarux_ascii_logo //12
     
 };
@@ -110,6 +127,40 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 };
 	*/
 
+/*
+Template
+char *bitmap_button_ext_desktop_xxxxx[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",      
+	"                          ",		
+	"                          ",		
+	"                          ",	
+	"                          ",			
+	"                          ",			
+	"                          ", 		
+	"                          ",		
+	"                          ",		
+	"                          ",	//10	
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",    //20
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",
+	"                          " 	 //25
+};
+
+*/
+
 //Boton ayuda
 char *bitmap_button_ext_desktop_help[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
@@ -139,4 +190,35 @@ char *bitmap_button_ext_desktop_help[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"    gggggg                ",		
 	"    gggggg                ",
 	"    gggggg                " 		//25
+};
+
+
+char *bitmap_button_ext_desktop_debug[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                       r  ",     //0
+  	"                      r   ",      
+	"                     r    ",		
+	"                    r     ",		
+	"                   rr     ",	
+	"           rrrrrrrrr      ",			
+	"        rrrrr      r      ",			
+	"        rrr         r     ", 		
+	"       rr       rr   r    ",		
+	"      rr        rr   r    ",		
+	"      r              r    ",	//10	
+	"      rr             r    ",		
+	"   rrrrr     rr     rr    ",		
+	"  r    rr     rrr   r r   ",		
+	"  r    r rr      rrr  rr  ",		
+	" r     rr  rrrrrrrr     r ",		
+	" r      r               r ",		
+	" r      r      rr        r",		
+	" r     rr   rrrrr        r",		
+	"  rr  rrrrrr   rr         ",		
+	"  rrrrr                   ",    //20
+	"  r   r                   ",		
+	" r    r                   ",		
+	" r     r                  ",		
+	"r      rr                 ",
+	"r       r                 " 	 //25
 };
