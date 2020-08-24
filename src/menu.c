@@ -2786,7 +2786,7 @@ void menu_draw_ext_desktop_putpixel_bitmap(z80_int *destino GCC_UNUSED,int x,int
 #define EXT_DESKTOP_ANCHO_BOTON 48
 #define EXT_DESKTOP_ALTO_BOTON 48
 
-void menu_draw_ext_desktop_one_button(int xinicio,int yinicio,int ancho_boton,alto_boton)
+void menu_draw_ext_desktop_one_button(int xinicio,int yinicio,int ancho_boton,int alto_boton)
 {
 
 	
@@ -3089,6 +3089,7 @@ void menu_draw_ext_desktop(void)
 
 
 	//Agregamos logo ZEsarUX en esquina inferior derecha, con margen, solo si menu esta abierto
+	/*
 	if (menu_abierto) {
 		int xfinal;
 		int yfinal;
@@ -3100,6 +3101,7 @@ void menu_draw_ext_desktop(void)
 		//El ancho y el puntero dan igual, no los vamos a usar
 		screen_put_watermark_generic(NULL,xfinal,yfinal,0, menu_draw_ext_desktop_putpixel_bitmap);
 	}
+	*/
 
 	//Dibujar botones
 	menu_draw_ext_desktop_buttons(xinicio,yinicio,ancho,alto);
@@ -8464,17 +8466,24 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 {
 	//Ver si estamos por la zona del logo en el ext desktop o de los botones
 	if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() ) {
-		int xlogo,ylogo;
-		menu_ext_desktop_get_logo_coords(&xlogo,&ylogo);
 
 		int mouse_pixel_x,mouse_pixel_y;
-
-
 		menu_calculate_mouse_xy_absolute_interface_pixel(&mouse_pixel_x,&mouse_pixel_y);
 
 		//multiplicamos por zoom
 		mouse_pixel_x *=zoom_x;
-		mouse_pixel_y *=zoom_y;
+		mouse_pixel_y *=zoom_y;		
+
+		/*
+		int xlogo,ylogo;
+		menu_ext_desktop_get_logo_coords(&xlogo,&ylogo);
+
+		
+
+
+		
+
+
 
 		//tamaño del logo
 		int ancho_logo=ZESARUX_ASCII_LOGO_ANCHO;
@@ -8489,6 +8498,7 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 
 			return 1;
 		}
+		*/
 
 		//Si esta en zona botones de zx desktop
 		int ancho_boton,alto_boton,total_botones,xinicio_botones,xfinal_botones;
@@ -30154,7 +30164,7 @@ void menu_inicio_handle_button_presses(void)
 	//Para que no vuelva a saltar
 	menu_pressed_zxdesktop_button_which=-1; 
 
-	salir_todos_menus=1;
+	
 
 	switch (pulsado_boton) {
 		case 0:
@@ -30162,7 +30172,9 @@ void menu_inicio_handle_button_presses(void)
 		break;
 
 		case 1:
+			printf("antes smartload\n");
 			menu_smartload(0);
+			printf("despues smartload\n");
 		break;
 
 		case 2:
@@ -30212,6 +30224,8 @@ void menu_inicio_handle_button_presses(void)
 		break;																			
 	}
 
+	salir_todos_menus=1;
+
 }
 
 void menu_inicio_bucle_main(void)
@@ -30233,6 +30247,15 @@ void menu_inicio_bucle_main(void)
 
 
 	do {
+
+		//Si se habia pulsado boton de zx desktop y boton no es el 0
+		//con boton 0 lo que hacemos es abrir el menu solamente
+		if (menu_pressed_zxdesktop_button_which>0) {
+			menu_inicio_handle_button_presses();
+			printf ("despues menu_inicio_handle_button_presses\n");
+		}
+
+		else {		
 
 		if (strcmp(scr_driver_name,"xwindows")==0 || strcmp(scr_driver_name,"sdl")==0 || strcmp(scr_driver_name,"caca")==0 || strcmp(scr_driver_name,"fbdev")==0 || strcmp(scr_driver_name,"cocoa")==0 || strcmp(scr_driver_name,"curses")==0) f_functions=1;
 		else f_functions=0;
@@ -30328,14 +30351,7 @@ void menu_inicio_bucle_main(void)
 		menu_add_item_menu_tooltip(array_menu_principal,"Exit emulator");
 		menu_add_item_menu_ayuda(array_menu_principal,"Exit emulator");
 
-		//Si se habia pulsado boton de zx desktop y boton no es el 0
-		//con boton 0 lo que hacemos es abrir el menu solamente
-		if (menu_pressed_zxdesktop_button_which>0) {
-			menu_inicio_handle_button_presses();
 
-		}
-
-		else {
 
 		retorno_menu=menu_dibuja_menu(&menu_inicio_opcion_seleccionada,&item_seleccionado,array_menu_principal,"ZEsarUX v." EMULATOR_VERSION );
 
@@ -30377,6 +30393,8 @@ void menu_inicio_bucle_main(void)
 		}
 
 	} while (!salir_menu && !salir_todos_menus);
+
+	printf ("Fin menu_inicio_bucle_main\n");
 
 }
 
@@ -31049,6 +31067,8 @@ void menu_inicio(void)
 
 		//Ver si se ha pulsado en botones de zx desktop
 		if (menu_was_open_by_left_mouse_button.v) {
+			menu_was_open_by_left_mouse_button.v=0;
+
 			if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
 				printf("Se ha pulsado en zona botones con menu cerrado\n");
 			}
@@ -31057,7 +31077,7 @@ void menu_inicio(void)
 			}
 		}
 
-		menu_was_open_by_left_mouse_button.v=0;
+		
 
 		menu_inicio_bucle();
 
