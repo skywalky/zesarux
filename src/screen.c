@@ -3752,7 +3752,7 @@ void screen_generic_putpixel_no_rainbow_watermark(z80_int *destino GCC_UNUSED,in
 
 
 //Mete un bitmap en formato ascii en un bitmap generico
-void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,int ancho_orig, int alto_orig, int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho_destino,int color) )
+void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,int ancho_orig, int alto_orig, int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho_destino,int color), int zoom)
 {
 	int fila,columna;
 
@@ -3764,7 +3764,16 @@ void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,i
 		for (columna=0;columna<ancho_orig;columna++) {
 			char caracter=texto[columna];
 
-			if (caracter!=' ') putpixel(destino,x+columna,y+fila,ancho_destino,return_color_zesarux_ascii(caracter));
+			if (caracter!=' ') {
+				int color_pixel=return_color_zesarux_ascii(caracter);
+
+				int zx,zy;
+				for (zx=0;zx<zoom;zx++) {
+					for (zy=0;zy<zoom;zy++) {
+						putpixel(destino,x+columna*zoom+zx,y+fila*zoom+zy,ancho_destino,color_pixel);
+					}
+				}
+			}
 
 			
 
@@ -3789,7 +3798,7 @@ void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,i
 
 void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
 {
-		screen_put_asciibitmap_generic(zesarux_ascii_logo,destino,x,y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, ancho_destino,putpixel);
+		screen_put_asciibitmap_generic(zesarux_ascii_logo,destino,x,y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, ancho_destino,putpixel,1);
 }
 
 void screen_get_offsets_watermark_position(int position,int ancho, int alto, int *x, int *y)

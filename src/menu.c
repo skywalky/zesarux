@@ -2786,36 +2786,6 @@ void menu_draw_ext_desktop_putpixel_bitmap(z80_int *destino GCC_UNUSED,int x,int
 #define EXT_DESKTOP_ANCHO_BOTON 48
 #define EXT_DESKTOP_ALTO_BOTON 48
 
-void menu_draw_ext_desktop_one_button(int xinicio,int yinicio,int ancho_boton,int alto_boton)
-{
-
-	
-
-	int x,y;
-
-	//Rectangulo alrededor. Dejando margen de 1 pixel alrededor sin tocar
-	//Horizontal
-	for (x=xinicio+1;x<xinicio+ancho_boton-1;x++) {
-		scr_putpixel(x,yinicio+1,0);	
-		scr_putpixel(x,yinicio+alto_boton-2,0);	
-	}
-
-	//Vertical
-	for (y=yinicio+1;y<yinicio+alto_boton-1;y++) {
-		scr_putpixel(xinicio+1,y,0);	
-		scr_putpixel(xinicio+ancho_boton-2,y,0);	
-	}
-
-	//Relleno de momento gris
-	for (y=yinicio+2;y<yinicio+alto_boton-2;y++) {	
-		for (x=xinicio+2;x<xinicio+ancho_boton-2;x++) {
-			scr_putpixel(x,y,7);	
-		}
-	}
-
-	
-
-}
 
 //Retorna geometria de los botones, si punteros no son null
 //ancho, alto boton
@@ -2857,6 +2827,190 @@ void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,
 
 }
 
+
+void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
+{
+
+	int ancho_boton;
+	int alto_boton;
+
+
+	int xfinal;
+
+
+	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL);
+
+	//printf("ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
+	//ancho_boton,alto_boton,total_botones,xfinal);
+
+
+	int nivel_zoom=1;
+
+	//Si hay espacio para meter iconos con zoom 2
+	//6 pixeles de margen
+	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
+
+
+		int xinicio=screen_get_ext_desktop_start_x();
+
+		xinicio +=contador_boton*ancho_boton;
+		int yinicio=0;	
+
+	int x,y;
+
+	//Rectangulo alrededor. Dejando margen de 1 pixel alrededor sin tocar
+	//Horizontal
+
+	int color_recuadro=0;
+	int color_relleno=7;
+
+	if (pulsado) color_recuadro=7;
+
+	for (x=xinicio+1;x<xinicio+ancho_boton-1;x++) {
+		scr_putpixel(x,yinicio+1,color_recuadro);	
+		scr_putpixel(x,yinicio+alto_boton-2,color_recuadro);	
+	}
+
+	//Vertical
+	for (y=yinicio+1;y<yinicio+alto_boton-1;y++) {
+		scr_putpixel(xinicio+1,y,color_recuadro);	
+		scr_putpixel(xinicio+ancho_boton-2,y,color_recuadro);	
+	}
+
+	//Relleno de momento gris
+	for (y=yinicio+2;y<yinicio+alto_boton-2;y++) {	
+		for (x=xinicio+2;x<xinicio+ancho_boton-2;x++) {
+			scr_putpixel(x,y,color_relleno);	
+		}
+	}
+
+	
+
+}
+
+
+		
+
+
+//Dibujar un boton con su bitmap, con efecto pulsado si/no
+void menu_draw_ext_desktop_one_button_bitmap(int numero_boton,int pulsado)
+{
+
+	int total_botones;
+
+	
+	//Tamanyo fijo
+	//int ancho_boton=EXT_DESKTOP_ANCHO_BOTON;
+	//int alto_boton=EXT_DESKTOP_ALTO_BOTON;
+
+	//Tamanyo variable segun tamanyo ZX Desktop. Iconos con contenido 26x26. 
+	//Hay que dejar margen de 6 por cada lado (3 izquierdo, 3 derecho, 3 alto, 3 alto)
+	//Cada 3 pixeles de margen son: fondo-negro(rectangulo)-gris(de dentro boton)
+	//total maximo 32x32 
+	//Ejemplo:
+	/*
+
+char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={ 
+  ................................
+  ################################
+  --------------------------------
+    "WWWWWWWWWWWWWWWWWWWWWWWWWW",     //0
+  	"WXXXXXXXXXXXXXXXXXXXXXXXXW",      
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",	
+	"WWWWWWWWWWWWWWWWWXXXXWWWWW",			
+	"                WXXXXW   W",			
+	"                WXXXXW  RW", 		
+	"             WWWWXXXXW RRW",		
+	"            WXXXXWWWW RRRW",		
+	"            WXXXXW   RRRRW",	//10	
+	"            WXXXXW  RRRRYW",		
+	"         WWWWXXXXW RRRRYYW",		
+	"        WXXXXWWWW RRRRYYYW",		
+	"        WXXXXW   RRRRYYYYW",		
+	"        WXXXXW  RRRRYYYYGW",		
+	"     WWWWXXXXW RRRRYYYYGGW",		
+	"    WXXXXWWWW RRRRYYYYGGGW",		
+	"    WXXXXW   RRRRYYYYGGGGW",		
+	"    WXXXXW  RRRRYYYYGGGGCW",		
+	"WWWWWXXXXW RRRRYYYYGGGGCCW",    //20
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",		
+	"WXXXXXXXXXXXXXXXXXXXXXXXXW",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWW" 		//25
+};
+	*/
+
+	int ancho_boton;
+	int alto_boton;
+
+		int xinicio=screen_get_ext_desktop_start_x();
+		int yinicio=0;
+
+		int ancho=screen_get_ext_desktop_width_zoom();
+		int alto=screen_get_emulated_display_height_zoom_border_en();		
+
+	int xfinal;
+
+	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
+
+	printf("ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
+	ancho_boton,alto_boton,total_botones,xfinal);
+
+
+	int nivel_zoom=1;
+
+	//Si hay espacio para meter iconos con zoom 2
+	//6 pixeles de margen
+	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
+
+
+	int x;
+	int contador_boton=0;
+
+
+
+
+
+	//Dibujar un boton
+
+
+	if (numero_boton<total_botones) {
+	//for (numero_boton=0;numero_boton<total_botones;numero_boton++) {
+		
+
+		int medio_boton_x=ancho_boton/2;
+		int medio_boton_y=alto_boton/2;
+
+		int destino_x=xinicio+ancho_boton*numero_boton;
+		destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
+
+		int destino_y=yinicio;
+		destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
+
+		
+
+		char **puntero_bitmap;
+
+		puntero_bitmap=zxdesktop_buttons_bitmaps[numero_boton];
+
+
+		if (pulsado) {
+			destino_x+=2;
+			destino_y+=2;
+		}
+		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
+	}
+}
+
+
+void menu_draw_ext_desktop_dibujar_boton_pulsado(int boton)
+{
+	menu_draw_ext_desktop_one_button_background(boton,1);
+	menu_draw_ext_desktop_one_button_bitmap(boton,1);
+}
 
 void menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,int alto)
 {
@@ -2917,20 +3071,9 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	int ancho_boton;
 	int alto_boton;
 
-	/*ancho_boton=ancho/total_botones;
-	
-
-	//Minimo 32 pixeles
-	if (ancho_boton<32) ancho_boton=32;
-
-	//Maximo 64 pixeles
-	if (ancho_boton>64) ancho_boton=64;
-
-
-	alto_boton=ancho_boton;	*/
 
 	int xfinal;
-	//xfinal=xinicio+ancho;
+
 
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
 
@@ -2938,14 +3081,18 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	ancho_boton,alto_boton,total_botones,xfinal);
 
 
+	int nivel_zoom=1;
 
+	//Si hay espacio para meter iconos con zoom 2
+	//6 pixeles de margen
+	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
 
 	int x;
 	int contador_boton=0;
 
 	for (x=xinicio;contador_boton<total_botones;x+=ancho_boton,contador_boton++) {
-		menu_draw_ext_desktop_one_button(x,yinicio,ancho_boton,alto_boton);
+		menu_draw_ext_desktop_one_button_background(contador_boton,0);
 	}
 
 
@@ -2960,17 +3107,74 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	//Dibujar botones
 	int numero_boton;
 	for (numero_boton=0;numero_boton<total_botones;numero_boton++) {
+
+		menu_draw_ext_desktop_one_button_bitmap(numero_boton,0); 
+		
+
+	}
+}
+
+
+
+
+/*
+void old_delete_menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,int alto)
+{
+
+
+	int total_botones;
+
+
+
+
+	int ancho_boton;
+	int alto_boton;
+
+
+
+	int xfinal;
+	//xfinal=xinicio+ancho;
+
+	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
+
+	printf("ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
+	ancho_boton,alto_boton,total_botones,xfinal);
+
+
+	int nivel_zoom=1;
+
+	//Si hay espacio para meter iconos con zoom 2
+	//6 pixeles de margen
+	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
+
+
+	int x;
+	int contador_boton=0;
+
+	for (x=xinicio;contador_boton<total_botones;x+=ancho_boton,contador_boton++) {
+		menu_draw_ext_desktop_one_button_background(x,yinicio,ancho_boton,alto_boton);
+	}
+
+
+
+
+
+	//Dibujar botones
+	int numero_boton;
+	for (numero_boton=0;numero_boton<total_botones;numero_boton++) {
+		
+
+		int medio_boton_x=ancho_boton/2;
+		int medio_boton_y=alto_boton/2;
+
 		int destino_x=xinicio+ancho_boton*numero_boton;
+		destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
 
-		destino_x +=ancho_boton/2-EXT_DESKTOP_BUTTONS_ANCHO/2;
-		int destino_y=yinicio+alto_boton/2-EXT_DESKTOP_BUTTONS_ALTO/2;
+		int destino_y=yinicio;
+		destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
 
-		//prueba zoom 2
-		/*
-		destino_x=xinicio+ancho_boton*numero_boton;
-		destino_x +=ancho_boton/2-(EXT_DESKTOP_BUTTONS_ANCHO*2)/2;
-		destino_y=yinicio+alto_boton/2-(EXT_DESKTOP_BUTTONS_ALTO*2)/2;
-		*/
+
+		
 
 		char **puntero_bitmap;
 
@@ -2978,12 +3182,12 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 
 
 		
-		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap);
+		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
 	}
 }
 
 
-
+*/
 
 
 //Retorna posicion del logo de ZEsarUX en el extended desktop
@@ -8676,6 +8880,8 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			//Ver si hemos pulsado por la zona del logo en el ext desktop
 			else if (zxvision_if_mouse_in_zlogo_or_buttons_desktop()) {
+
+				menu_draw_ext_desktop_dibujar_boton_pulsado(menu_pressed_zxdesktop_button_which);
 
 				menu_pressed_open_menu_while_in_menu.v=1;
 				salir_todos_menus=1;
@@ -30762,7 +30968,25 @@ void menu_inicio_reset_emulated_keys(void)
 void menu_inicio(void)
 {
 
-	//printf ("inicio menu_inicio\n");
+	printf ("inicio menu_inicio\n");
+
+	//Comprobar si se ha pulsado un boton para colorearlo
+	if (mouse_left) {
+		if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
+			printf("Pulsado en un boton\n");
+
+			//Dibujamos de otro color ese boton
+			//que boton=menu_pressed_zxdesktop_button_which
+
+			menu_draw_ext_desktop_dibujar_boton_pulsado(menu_pressed_zxdesktop_button_which);
+
+		}
+	}
+
+				//Esto se ha puesto a 1 antes desde zxvision_if_mouse_in_zlogo_or_buttons_desktop,
+				//indirectamente cuando llama a menu_calculate_mouse_xy_absolute_interface_pixel
+				
+				mouse_movido=0;	
 
 	//Pulsado boton salir del emulador, en drivers xwindows, sdl, etc, en casos con menu desactivado, sale del todo
 	if (menu_button_exit_emulator.v && (menu_desactivado.v || menu_desactivado_andexit.v)
@@ -30825,7 +31049,7 @@ void menu_inicio(void)
 	}
 
 
-	//printf ("before menu_espera_no_tecla\n");
+	printf ("after menu_inicio_reset_emulated_keys\n");
 
 	//Si se ha pulsado tecla de OSD keyboard, al llamar a espera_no_tecla, se abrira osd y no conviene.
 	
@@ -30872,6 +31096,8 @@ void menu_inicio(void)
 
 	//Establecemos variable de salida de todos menus a 0
 	salir_todos_menus=0;
+
+	printf ("inicio menu_inicio2\n");
 
 
 	//Si first aid al inicio
@@ -31100,10 +31326,12 @@ void menu_inicio(void)
 				//libere el "movimiento" desde menu_espera_no_tecla desde menu_filesel
 				//como no se llama a eventos handle_mouse pues no se pone a 0
 
+				
 				//Esto se ha puesto a 1 antes desde zxvision_if_mouse_in_zlogo_or_buttons_desktop,
 				//indirectamente cuando llama a menu_calculate_mouse_xy_absolute_interface_pixel
-				//TODO: poner este setting mouse_movido quiza a 0 al abrir siempre el menu
-				mouse_movido=0;
+				
+				mouse_movido=0;	
+
 				printf("Se ha pulsado en zona botones con menu cerrado\n");
 			}
 			else {

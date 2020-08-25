@@ -47,7 +47,7 @@ char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
     bitmap_button_ext_desktop_display, //5
     zesarux_ascii_logo,
     bitmap_button_ext_desktop_debug,
-    zesarux_ascii_logo,
+    bitmap_button_ext_desktop_network,
     zesarux_ascii_logo,
     zesarux_ascii_logo, //10
     bitmap_button_ext_desktop_help,
@@ -245,7 +245,7 @@ char *bitmap_button_ext_desktop_display[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"RrBBBBbbbbbbccBBBBBbbbbbrR",		
 	"RrBBBBbbbBBBBcBBBBBBBBBBrR",		
 	"RrBBBBBBBBBBBBBBBBBBBBBBrR",		
-	"RrBBBBBBBBBBBBBBBBBBBBBRrR",		
+	"RrBBBBBBBBBBBBBBBBBBBBBBrR",		
 	"RrrrrrrrrrrrrrrrrrrrrrrrrR",    //20
 	"RRRRRRRRRRRRRRRRRRRRRRRRRR",		
 	"        RRRRRRRRRR        ",		
@@ -253,3 +253,36 @@ char *bitmap_button_ext_desktop_display[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"      RRRRRRRRRRRRRR      ",
 	"     rrrrrrrrrrrrrrrr     " 	 //25
 };
+
+
+
+char *bitmap_button_ext_desktop_network[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "    x                x    ",     //0
+  	"   xx   x        x   xx   ",      
+	"  xx   xx        xx   xx  ",		
+	"  xx   x    xx    x   xx  ",		
+	" xx   xx   xxxx   xx   xx ",	
+	" xx   xx   xxxx   xx   xx ",			
+	" xx   xx    xx    xx   xx ",			
+	" xx    x          x    xx ",			
+  	"   xx  xx        xx  xx   ",		
+	"   xx   x   xx   x   xx   ",		
+	"    xx      xx      xx    ",	//10	
+	"     x     xxxx     x     ",		
+	"           xxxx           ",		
+	"           x  x           ",		
+	"           x  x           ",		
+	"          xx  xx          ",		
+	"          x    x          ",		
+	"         xx    xx         ",		
+	"         xxx  xxx         ",		
+	"         xx xx xx         ",		
+	"        xx  xx  xx        ",    //20
+	"        xx x  x xx        ",		
+	"       xx x    x xx       ",		
+	"       xxx      xxx       ",		
+	"      xxx        xxx      ",
+	"      xxxxxxxxxxxxxx      " 	 //25
+};
+
