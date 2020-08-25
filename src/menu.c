@@ -406,6 +406,7 @@ int menu_pressed_zxdesktop_button_which=-1;
 
 //Que el siguiente menu se ha abierto desde boton y por tanto hay que ajustar coordenada y
 z80_bit direct_menus_button_pressed={0};
+int direct_menus_button_pressed_which=0;
 
 
 z80_bit no_close_menu_after_smartload={0};
@@ -2844,8 +2845,7 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL);
 
-	//printf("ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
-	//ancho_boton,alto_boton,total_botones,xfinal);
+
 
 
 	int nivel_zoom=1;
@@ -2960,7 +2960,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
 
-	printf("ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
+	printf("draw bitmap ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
 	ancho_boton,alto_boton,total_botones,xfinal);
 
 
@@ -3081,7 +3081,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
 
-	printf("ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
+	printf("draw buttons ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
 	ancho_boton,alto_boton,total_botones,xfinal);
 
 
@@ -3141,8 +3141,7 @@ void old_delete_menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,
 
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
 
-	printf("ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
-	ancho_boton,alto_boton,total_botones,xfinal);
+
 
 
 	int nivel_zoom=1;
@@ -11403,8 +11402,19 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		int ancho_boton;
 		menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL);
 
+		//Ajustar coordenada y
 		int alto_texto=8*menu_gui_zoom*zoom_y;
 		y=(alto_boton/alto_texto)+1;
+
+		//Ajustar coordenada x
+		int origen_x=menu_get_origin_x_zxdesktop_aux(1);
+
+		int offset_x=direct_menus_button_pressed_which*ancho_boton;
+		int ancho_texto=menu_char_width*menu_gui_zoom*zoom_x;
+		x=origen_x+(offset_x/ancho_texto);
+
+		//Reajustar x por si se ha salido
+		if (x+ancho>scr_get_menu_width()) x=scr_get_menu_width()-ancho;
 	}
 
 	int ancho_visible=ancho;
@@ -30407,13 +30417,15 @@ void menu_inicio_handle_button_presses(void)
 
 	int pulsado_boton=menu_pressed_zxdesktop_button_which;
 
-	//Para que no vuelva a saltar
-	menu_pressed_zxdesktop_button_which=-1; 
+
 
 	//Avisar que se abren menus desde botones directo, para cambiar coordenada x,y
 	direct_menus_button_pressed.v=1;
+	direct_menus_button_pressed_which=menu_pressed_zxdesktop_button_which;
 
-	
+
+	//Para que no vuelva a saltar
+	menu_pressed_zxdesktop_button_which=-1; 	
 
 	switch (pulsado_boton) {
 		case 0:
