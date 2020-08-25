@@ -1738,6 +1738,7 @@ printf (
 		"--zxdesktop-fill-type n         ZX Desktop fill type (0,1 or 2)\n"
 		"--zxdesktop-fill-solid-color n  ZX Desktop fill solid color on fill type 0 (0-15)\n"
 		"--zxdesktop-new-items           Try to place new menu items on the ZX Desktop space\n"
+		"--zxdesktop-disable-buttons     Disable ZX Desktop direct access buttons\n"
 
 				
 
@@ -5277,6 +5278,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-new-items")) {
 				screen_ext_desktop_place_menu=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-disable-buttons")) {
+				menu_zxdesktop_buttons_enabled.v=0;
+			} 
 
 
 

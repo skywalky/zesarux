@@ -3360,6 +3360,8 @@ int util_write_configfile(void)
                           
   if (screen_ext_desktop_place_menu)          ADD_STRING_CONFIG,"--zxdesktop-new-items");                   
 
+  if (menu_zxdesktop_buttons_enabled.v==0)    ADD_STRING_CONFIG,"--zxdesktop-disable-buttons");                   
+
 
   if (autoframeskip.v==0)                     ADD_STRING_CONFIG,"--disable-autoframeskip");
   if (no_cambio_parametros_maquinas_lentas.v) ADD_STRING_CONFIG,"--nochangeslowparameters");
