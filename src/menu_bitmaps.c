@@ -48,7 +48,7 @@ char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
     zesarux_ascii_logo,
     bitmap_button_ext_desktop_debug,
     bitmap_button_ext_desktop_network,
-    zesarux_ascii_logo,
+    bitmap_button_ext_desktop_windows,
     zesarux_ascii_logo, //10
     bitmap_button_ext_desktop_help,
     zesarux_ascii_logo //12
@@ -334,9 +334,9 @@ char *bitmap_button_ext_desktop_snapshot[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"bbbbbbbbbbb    bbbbbbbbbbb",		
 	"bbbbbbbbbb      bbbbbbbbbb",		
 	"bbbWWbbbb        bbbbbbbbb",	//10	
-	"bbbWWbbb          bbbbbbbb",		
-	"bbbbbbbb          bbbbbbbb",		
-	"bbbbbbb            bbbbbbb",		
+	"bbbWWbbb   xx     bbbbbbbb",		
+	"bbbbbbbb  x       bbbbbbbb",		
+	"bbbbbbb   x        bbbbbbb",		
 	"bbbbbbb            bbbbbbb",		
 	"bbbbbbb            bbbbbbb",		
 	"bbbbbbbb          bbbbbbbb",		
@@ -350,3 +350,36 @@ char *bitmap_button_ext_desktop_snapshot[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"                          ",
 	"                          " 	 //25
 };
+
+
+
+char *bitmap_button_ext_desktop_windows[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "          xxxxxx          ",     //0
+  	"        xxxxxxxxxx        ",      
+	"       xxYYYxxYYYxx       ",		
+	"       xxYYYxxYYYxx       ",		
+	"      xxYYYYxxYYYYxx      ",	
+	"      xxYYYYxxYYYYxx      ",			
+	"      xxxxxxxxxxxxxx      ",			
+	"      xxxxxxxxxxxxxx      ", 		
+	"      xxYYYYxxYYYYxx      ",		
+	"      xxYYYYxxYYYYxx      ",		
+	"      xxYYYYxxYYYYxx      ",	//10	
+	"      xxYYYYxxYYYYxx      ",		
+	"      xxYYYYxxYYYYxx      ",		
+	"      xxxxxxxxxxxxxx      ",		
+	"      xxxxxxxxxxxxxx      ",		
+	"      xxYYYYxxYYYYxx      ",		
+	"      xxYYYYxxYYYYxx      ",		
+	"      xxYYYYxxYYYYxx      ",		
+	"      xxYYYYxxYYYYxx      ",		
+	"      xxYYYYxxYYYYxx      ",		
+	"      xxxxxxxxxxxxxx      ",    //20
+	"      xxxxxxxxxxxxxx      ",		
+	"                          ",		
+	"                          ",		
+	"     xxxxxxxxxxxxxxxx     ",
+	"     xxxxxxxxxxxxxxxx     " 	 //25
+};
+
