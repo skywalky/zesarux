@@ -10509,6 +10509,11 @@ void menu_ext_desk_settings_placemenu(MENU_ITEM_PARAMETERS)
 	screen_ext_desktop_place_menu ^=1;	
 }
 
+void menu_ext_desk_settings_direct_buttons(MENU_ITEM_PARAMETERS)
+{
+	menu_zxdesktop_buttons_enabled.v ^=1;
+}
+
 void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_ext_desktop_settings;
@@ -10536,6 +10541,8 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_placemenu,NULL,"[%c] Open Menu on ZX Desktop",(screen_ext_desktop_place_menu ? 'X' : ' ' ) );
 			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
 			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
+
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_direct_buttons,NULL,"[%c] Direct access buttons",(menu_zxdesktop_buttons_enabled.v ? 'X' : ' ' ) );
 
 		}
 		

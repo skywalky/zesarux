@@ -408,6 +408,8 @@ int menu_pressed_zxdesktop_button_which=-1;
 z80_bit direct_menus_button_pressed={0};
 int direct_menus_button_pressed_which=0;
 
+z80_bit menu_zxdesktop_buttons_enabled={1};
+
 
 z80_bit no_close_menu_after_smartload={0};
 
@@ -2960,8 +2962,8 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
 
-	printf("draw bitmap ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
-	ancho_boton,alto_boton,total_botones,xfinal);
+	//printf("draw bitmap ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
+	//ancho_boton,alto_boton,total_botones,xfinal);
 
 
 	int nivel_zoom=1;
@@ -3081,8 +3083,8 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
 
-	printf("draw buttons ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
-	ancho_boton,alto_boton,total_botones,xfinal);
+	//printf("draw buttons ancho_boton %d alto_boton %d total_botones %d xfinal %d\n",
+	//ancho_boton,alto_boton,total_botones,xfinal);
 
 
 	int nivel_zoom=1;
@@ -3317,8 +3319,10 @@ void menu_draw_ext_desktop(void)
 	}
 	*/
 
-	//Dibujar botones
-	menu_draw_ext_desktop_buttons(xinicio,yinicio,ancho,alto);
+	//Dibujar botones si están activados (por defecto)
+	if (menu_zxdesktop_buttons_enabled.v) {
+		menu_draw_ext_desktop_buttons(xinicio,yinicio,ancho,alto);
+	}
 	
 }
 
@@ -8714,22 +8718,25 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 		}
 		*/
 
-		//Si esta en zona botones de zx desktop
-		int ancho_boton,alto_boton,total_botones,xinicio_botones,xfinal_botones;
-		menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xinicio_botones,&xfinal_botones);
+		//Si esta en zona botones de zx desktop. Y si estan habilitados
 
-		if (mouse_pixel_x>=xinicio_botones && mouse_pixel_x<xfinal_botones &&
-			mouse_pixel_y>=0 && mouse_pixel_y<alto_boton
-		) {
-			printf ("Pulsado en zona botones del ext desktop\n");
+		if (menu_zxdesktop_buttons_enabled.v) {
+			int ancho_boton,alto_boton,total_botones,xinicio_botones,xfinal_botones;
+			menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xinicio_botones,&xfinal_botones);
 
-			//en que boton?
-			int numero_boton=(mouse_pixel_x-xinicio_botones)/ancho_boton;
-			printf("boton pulsado: %d\n",numero_boton);
-			menu_pressed_zxdesktop_button_which=numero_boton;
+			if (mouse_pixel_x>=xinicio_botones && mouse_pixel_x<xfinal_botones &&
+				mouse_pixel_y>=0 && mouse_pixel_y<alto_boton
+			) {
+				printf ("Pulsado en zona botones del ext desktop\n");
 
-			return 1;
-		}		
+				//en que boton?
+				int numero_boton=(mouse_pixel_x-xinicio_botones)/ancho_boton;
+				printf("boton pulsado: %d\n",numero_boton);
+				menu_pressed_zxdesktop_button_which=numero_boton;
+
+				return 1;
+			}	
+		}	
 	}
 	return 0;
 }

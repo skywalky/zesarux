@@ -1025,6 +1025,8 @@ extern int menu_center_y(void);
 
 extern z80_bit no_close_menu_after_smartload;
 
+extern z80_bit menu_zxdesktop_buttons_enabled;
+
 extern void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) );
 extern void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) );
 extern void menu_uncompress_zip_progress(char *zip_file,char *dest_dir);
