@@ -404,6 +404,10 @@ z80_bit menu_pressed_open_menu_while_in_menu={0};
 //En que boton se ha pulsado del menu
 int menu_pressed_zxdesktop_button_which=-1;
 
+//Que el siguiente menu se ha abierto desde boton y por tanto hay que ajustar coordenada y
+z80_bit direct_menus_button_pressed={0};
+
+
 z80_bit no_close_menu_after_smartload={0};
 
 
@@ -11389,6 +11393,19 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	x=menu_center_x()-ancho/2;
 	y=menu_center_y()-alto/2;
+
+	//Si se abre desde botones de menu
+	if (direct_menus_button_pressed.v) {
+		direct_menus_button_pressed.v=0;
+		printf ("Menu opened from direct buttons\n");
+
+		int alto_boton;
+		int ancho_boton;
+		menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL);
+
+		int alto_texto=8*menu_gui_zoom*zoom_y;
+		y=(alto_boton/alto_texto)+1;
+	}
 
 	int ancho_visible=ancho;
 	int alto_visible=alto;
@@ -30392,6 +30409,9 @@ void menu_inicio_handle_button_presses(void)
 
 	//Para que no vuelva a saltar
 	menu_pressed_zxdesktop_button_which=-1; 
+
+	//Avisar que se abren menus desde botones directo, para cambiar coordenada x,y
+	direct_menus_button_pressed.v=1;
 
 	
 
