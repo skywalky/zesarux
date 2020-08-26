@@ -19212,11 +19212,11 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
         int ret;
 
-		printf ("antes menu_filesel\n");
+		//printf ("antes menu_filesel\n");
 
-        ret=menu_filesel("Select File",filtros,quickload_file);
+        ret=menu_filesel("Smart load",filtros,quickload_file);
 
-		printf ("despues menu_filesel\n");
+		//printf ("despues menu_filesel\n");
 
         //volvemos a directorio inicial
 		
