@@ -42,7 +42,7 @@ char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
     zesarux_ascii_logo,
     bitmap_button_ext_desktop_smartload,
     bitmap_button_ext_desktop_snapshot,
-    zesarux_ascii_logo,
+    bitmap_button_ext_desktop_machine,
     bitmap_button_ext_desktop_audio,  
     bitmap_button_ext_desktop_display, //5
     bitmap_button_ext_desktop_storage,
@@ -477,6 +477,39 @@ char *bitmap_button_ext_desktop_settings[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"   xxx      xxx      xxx  ",
 	"   xxx      xxx      xxx  " 	 //25
 };
+
+
+
+char *bitmap_button_ext_desktop_machine[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "          xxx             ",     //0
+  	"         xxxxx            ",      
+	"        xx   xx           ",		
+	"             xx           ",		
+	"            xx            ",	
+	"           xx             ",			
+	"           xx             ",			
+	"                          ", 		
+	"           xx             ",		
+	"           xx             ",		
+	"                          ",	//10	
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxwwxwxwwxwwxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxwwxwwxwwxwwxwwxwwxwwwxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxwwxwwxwwxwwxwwxwwxwwxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxwxxr",    //20
+	"xxxxwwxwwxwwxwwxwwxwwxwxry",		
+	"xxxxxxxxxxxxxxxxxxxxxxxryg",		
+	"xxxxxxwwxwwwwwwwwxwwxxrygb",		
+	"xxxxxxxxxxxxxxxxxxxxxrygbx",
+	" xxxxxxxxxxxxxxxxxxxrygbx " 	 //25
+};
+
 
 /*
 Template
