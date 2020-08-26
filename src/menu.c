@@ -30494,6 +30494,11 @@ void menu_inicio_handle_button_presses(void)
 
 	salir_todos_menus=1;
 
+	//Y decir que el siguiente menu ya no se abre desde boton y por tanto no se posiciona debajo del boton
+	//Esto ya se hace desde menu_dibuja_menu siempre, pero en el caso de smartload por ejemplo no abre un menu,
+	//y por tanto se quedaria este flag activo y a la siguiente ventana se abriria debajo del boton
+	direct_menus_button_pressed.v=0;
+
 }
 
 void menu_inicio_bucle_main(void)
