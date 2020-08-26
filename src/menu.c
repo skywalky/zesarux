@@ -30474,9 +30474,7 @@ void menu_inicio_handle_button_presses(void)
 		break;
 
 		case 9:
-			if (menu_allow_background_windows) {
-				menu_windows(0);
-			}
+			menu_windows(0);
 		break;
 
 		case 10:
