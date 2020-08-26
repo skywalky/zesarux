@@ -40,7 +40,7 @@
 */
 char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
     zesarux_ascii_logo,
-    zesarux_ascii_logo,
+    bitmap_button_ext_desktop_smartload,
     bitmap_button_ext_desktop_snapshot,
     zesarux_ascii_logo,
     bitmap_button_ext_desktop_audio,  
@@ -417,7 +417,35 @@ char *bitmap_button_ext_desktop_storage[EXT_DESKTOP_BUTTONS_ANCHO]={
 
 
 
-
+char *bitmap_button_ext_desktop_smartload[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                x         ",     //0
+  	"           x    x     x   ",      
+	"            x   x    x    ",		
+	"             x      x     ",		
+	"               xxxx       ",	
+	"             xx    xx     ",			
+	"            x        x    ",			
+	"            x    x   x    ", 		
+	"           x    x     x   ",		
+	"        xx x   x      x xx",		
+	"           x  xxxxx   x   ",	//10	
+	"           x     x    x   ",		
+	"            x   x    x    ",		
+	"            x  x     x    ",		
+	"             x      x     ",		
+	" xxxxx       x      x     ",		
+	"x     x      xx    xx     ",		
+	"x xxx x       x    x      ",		
+	"x     x  xxxx x    x      ",		
+	"x     x    xx xxxxxx      ",		
+	"x xxx x   x x             ",    //20
+	"x     x  x  x xxxxxx      ",		
+	"x     x x     xxxxxx      ",		
+	"x xxx x                   ",		
+	"x     x        xxxx       ",
+	" xxxxx         xxxx       " 	 //25
+};
 
 /*
 Template
