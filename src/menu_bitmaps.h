@@ -30,6 +30,7 @@ extern char *zesarux_ascii_logo[];
 extern char *bitmap_button_ext_desktop_snapshot[];
 extern char *bitmap_button_ext_desktop_audio[];
 extern char *bitmap_button_ext_desktop_display[];
+extern char *bitmap_button_ext_desktop_storage[];
 extern char *bitmap_button_ext_desktop_help[];
 extern char *bitmap_button_ext_desktop_debug[];
 extern char *bitmap_button_ext_desktop_network[];
