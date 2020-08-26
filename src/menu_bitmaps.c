@@ -49,7 +49,7 @@ char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
     bitmap_button_ext_desktop_debug,
     bitmap_button_ext_desktop_network,
     bitmap_button_ext_desktop_windows,
-    zesarux_ascii_logo, //10
+    bitmap_button_ext_desktop_settings, //10
     bitmap_button_ext_desktop_help,
     bitmap_button_ext_desktop_exit //12
     
@@ -424,20 +424,20 @@ char *bitmap_button_ext_desktop_smartload[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"            x   x    x    ",		
 	"             x      x     ",		
 	"               xxxx       ",	
-	"             xx    xx     ",			
-	"            x        x    ",			
-	"            x    x   x    ", 		
-	"           x    x     x   ",		
-	"        xx x   x      x xx",		
-	"           x  xxxxx   x   ",	//10	
-	"           x     x    x   ",		
-	"            x   x    x    ",		
-	"            x  x     x    ",		
-	"             x      x     ",		
-	" xxxxx       x      x     ",		
-	"x     x      xx    xx     ",		
-	"x xxx x       x    x      ",		
-	"x     x  xxxx x    x      ",		
+	"             xxyyyyxx     ",			
+	"            xyyyyyyyyx    ",			
+	"            xyyyyxyyyx    ", 		
+	"           xyyyyxyyyyyx   ",		
+	"        xx xyyyxyyyyyyx xx",		
+	"           xyyxxxxxyyyx   ",	//10	
+	"           xyyyyyxyyyyx   ",		
+	"            xyyyxyyyyx    ",		
+	"            xyyxyyyyyx    ",		
+	"             xyyyyyyx     ",		
+	" xxxxx       xyyyyyyx     ",		
+	"x     x      xxyyyyxx     ",		
+	"x xxx x       xyyyyx      ",		
+	"x     x  xxxx xyyyyx      ",		
 	"x     x    xx xxxxxx      ",		
 	"x xxx x   x x             ",    //20
 	"x     x  x  x xxxxxx      ",		
@@ -445,6 +445,37 @@ char *bitmap_button_ext_desktop_smartload[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"x xxx x                   ",		
 	"x     x        xxxx       ",
 	" xxxxx         xxxx       " 	 //25
+};
+
+
+char *bitmap_button_ext_desktop_settings[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "   xxx      xxx      xxx  ",     //0
+  	"   xxx      xxx      xxx  ",      
+	"   xxx      xxx      xxx  ",		
+	"   xxx      xxx      xxx  ",		
+	"   xxx      xxx      xxx  ",	
+	"   xxx      xxx      xxx  ",			
+	"   xxx      xxx      xxx  ",			
+	"            xxx      xxx  ", 		
+	" xxxxxxx    xxx      xxx  ",		
+	" xxxxxxx    xxx      xxx  ",		
+	" xxxxxxx    xxx      xxx  ",	//10	
+	"            xxx      xxx  ",		
+	"   xxx      xxx      xxx  ",		
+	"   xxx      xxx      xxx  ",		
+	"   xxx      xxx           ",		
+	"   xxx      xxx    xxxxxxx",		
+	"   xxx      xxx    xxxxxxx",		
+	"   xxx      xxx    xxxxxxx",		
+	"   xxx                    ",		
+	"   xxx    xxxxxxx    xxx  ",		
+	"   xxx    xxxxxxx    xxx  ",    //20
+	"   xxx    xxxxxxx    xxx  ",		
+	"   xxx               xxx  ",		
+	"   xxx      xxx      xxx  ",		
+	"   xxx      xxx      xxx  ",
+	"   xxx      xxx      xxx  " 	 //25
 };
 
 /*

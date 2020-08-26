@@ -36,6 +36,7 @@ extern char *bitmap_button_ext_desktop_help[];
 extern char *bitmap_button_ext_desktop_debug[];
 extern char *bitmap_button_ext_desktop_network[];
 extern char *bitmap_button_ext_desktop_windows[];
+extern char *bitmap_button_ext_desktop_settings[];
 extern char *bitmap_button_ext_desktop_exit[];
 
 extern char **zxdesktop_buttons_bitmaps[];
