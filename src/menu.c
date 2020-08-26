@@ -27621,7 +27621,7 @@ current_machine_type=id_maquina;
 											
 }
 
-void menu_machine_selection_for_manufacturer(int fabricante)
+void menu_machine_selection_manufacturer_machines(int fabricante)
 {
 	int i;
 	int *maquinas;
@@ -27656,7 +27656,7 @@ void menu_machine_selection_for_manufacturer(int fabricante)
 
 
 			if (i==0) {
-				//Primer fabricante
+				//Primera maquina
 	                        menu_add_item_menu_inicial_format(&array_menu_machine_selection_por_fabricante,MENU_OPCION_NORMAL,NULL,NULL,"%s",nombre_maquina);
 
 			}
@@ -27730,7 +27730,7 @@ void menu_machine_selection_for_manufacturer(int fabricante)
 }
 
 //Seleccion de maquina por fabricante
-void menu_machine_selection(MENU_ITEM_PARAMETERS)
+void menu_machine_selection_manufacturer(MENU_ITEM_PARAMETERS)
 {
 
 	//Seleccion por fabricante
@@ -27793,7 +27793,7 @@ void menu_machine_selection(MENU_ITEM_PARAMETERS)
                                         //int last_machine_type=machine_type;
 
 
-					menu_machine_selection_for_manufacturer(machine_selection_opcion_seleccionada);
+					menu_machine_selection_manufacturer_machines(machine_selection_opcion_seleccionada);
 
 
 
@@ -30422,6 +30422,17 @@ void menu_inicio_pre_retorno_reset_flags(void)
 	menu_event_open_menu.v=0;
 }
 
+void menu_machine_selection(MENU_ITEM_PARAMETERS)
+{
+	if (setting_machine_selection_by_name.v==0) {
+		menu_machine_selection_manufacturer(0);
+	}
+	else {
+		menu_machine_selection_by_name(0);
+	}
+}
+
+
 void menu_inicio_handle_button_presses(void)
 {
 
@@ -30443,9 +30454,9 @@ void menu_inicio_handle_button_presses(void)
 		break;
 
 		case 1:
-			printf("antes smartload\n");
+			//printf("antes smartload\n");
 			menu_smartload(0);
-			printf("despues smartload\n");
+			//printf("despues smartload\n");
 		break;
 
 		case 2:
@@ -30502,6 +30513,7 @@ void menu_inicio_handle_button_presses(void)
 
 }
 
+
 void menu_inicio_bucle_main(void)
 {
 	menu_first_aid("initial_menu");
@@ -30556,12 +30568,7 @@ void menu_inicio_bucle_main(void)
 		menu_add_item_menu_ayuda(array_menu_principal,"Load or save different snapshot images. Snapshot images are loaded or saved at once");
 
 
-		if (setting_machine_selection_by_name.v==0) {
-			menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection,NULL);
-		}
-		else {
-			menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection_by_name,NULL);
-		}
+		menu_add_item_menu(array_menu_principal,"~~Machine",MENU_OPCION_NORMAL,menu_machine_selection,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'m');
 		menu_add_item_menu_tooltip(array_menu_principal,"Change active machine");
 		menu_add_item_menu_ayuda(array_menu_principal,"You can switch to another machine. It also resets the machine");
