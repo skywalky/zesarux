@@ -11402,7 +11402,10 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	//Si se abre desde botones de menu
 	if (direct_menus_button_pressed.v) {
-		//temp direct_menus_button_pressed.v=0;
+
+		//No lo desactivamos, así todos los menus que se abran dependiendo de este menu, tambien se posicionaran debajo del boton 
+		//direct_menus_button_pressed.v=0;
+
 		printf ("Menu opened from direct buttons\n");
 
 		int alto_boton;
@@ -30493,8 +30496,8 @@ void menu_inicio_handle_button_presses(void)
 	salir_todos_menus=1;
 
 	//Y decir que el siguiente menu ya no se abre desde boton y por tanto no se posiciona debajo del boton
-	//Esto ya se hace desde menu_dibuja_menu siempre, pero en el caso de smartload por ejemplo no abre un menu,
-	//y por tanto se quedaria este flag activo y a la siguiente ventana se abriria debajo del boton
+	//Antes se quitaba el flag tambien en menu_dibuja_menu, pero ya no. Asi conseguimos que todos los menus
+	//que se abran dependiendo del boton, queden debajo de dicho boton
 	direct_menus_button_pressed.v=0;
 
 }
