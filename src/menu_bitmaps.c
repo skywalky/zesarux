@@ -130,33 +130,33 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 
 //Boton ayuda
 char *bitmap_button_ext_desktop_help[EXT_DESKTOP_BUTTONS_ANCHO]={
-    //01234567890123456789012345
-    "          ggggggg         ",     //0
-  	"        gggggggggg        ",      
-	"     gggggggggggggg       ",		
-	"     gggggggggggggggg     ",		
-	"   gggggggggggggggggg     ",	
-	"   ggggg       ggggggg    ",			
-	"                gggggg    ",			
-	"                gggggg    ", 		
-	"             ggggggggg    ",		
-	"            ggggggggg     ",		
-	"            gggggg        ",	//10	
-	"            gggggg        ",		
-	"         ggggggggg        ",		
-	"        ggggggggg         ",		
-	"        gggggg            ",		
-	"        gggggg            ",		
-	"     ggggggggg            ",		
-	"    ggggggggg             ",		
-	"    gggggg                ",		
-	"    gggggg                ",		
-	"    gggggg                ",    //20
-	"                          ",		
-	"                          ",		
-	"    gggggg                ",		
-	"    gggggg                ",
-	"    gggggg                " 		//25
+   //01234567890123456789012345
+    "        bbbbbbbb          ",     //0
+  	"       bbbbbbbbbb         ",      
+	"      bbb      bbb        ",		
+	"     bbb        bbb       ",		
+	"    bbb          bbb      ",	
+	"    bbb          bbb      ",			
+	"    bbb          bbb      ",			
+	"    bbb          bbb      ", 		
+	"                 bbb      ",		
+	"                 bbb      ",		
+	"                bbbb      ",	//10	
+	"               bbbb       ",		
+	"              bbbb        ",		
+	"             bbbb         ",		
+	"            bbbb          ",		
+	"            bbb           ",		
+	"            bbb           ",		
+	"            bbb           ",		
+	"            bbb           ",		
+	"            bbb           ",		
+	"                          ",    //20
+	"             b            ",		
+	"            bbb           ",		
+	"           bbbbb          ",		
+	"            bbb           ",
+	"             b            " 	 //25
 };
 
 
