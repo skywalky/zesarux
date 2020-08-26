@@ -21169,7 +21169,7 @@ void menu_windows(MENU_ITEM_PARAMETERS)
 {
 
 	if (!menu_allow_background_windows) {
-		menu_warn_message("Background windows setting is not enable. You can enable it on Settings-> GUI-> Windows-> Background windows");
+		menu_warn_message("Background windows setting is not enabled. You can enable it on Settings-> GUI-> Windows-> Background windows");
 		return;
 	}
 

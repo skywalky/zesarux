@@ -11402,7 +11402,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 
 	//Si se abre desde botones de menu
 	if (direct_menus_button_pressed.v) {
-		direct_menus_button_pressed.v=0;
+		//temp direct_menus_button_pressed.v=0;
 		printf ("Menu opened from direct buttons\n");
 
 		int alto_boton;
