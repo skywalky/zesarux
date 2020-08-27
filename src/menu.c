@@ -30881,12 +30881,18 @@ void menu_inicio_bucle_main(void)
 
 	do {
 
-		//Si se habia pulsado boton de zx desktop y boton no es el 0
-		//con boton 0 lo que hacemos es abrir el menu solamente
-		if (menu_pressed_zxdesktop_button_which>0 || menu_pressed_zxdesktop_lower_icon_which>=0) {
+
+		if (menu_pressed_zxdesktop_button_which>=0 || menu_pressed_zxdesktop_lower_icon_which>=0) {
 			cls_menu_overlay();
+		//Si se habia pulsado boton de zx desktop y boton no es el 0
+		//con boton 0 lo que hacemos es abrir el menu solamente			
 			if (menu_pressed_zxdesktop_button_which>0) {
 							menu_inicio_handle_button_presses();
+			}
+
+			//Si era 0 es el menu inicio y liberamos el boton
+			else if (menu_pressed_zxdesktop_button_which==0) {
+				menu_pressed_zxdesktop_button_which=-1;
 			}
 
 			else if (menu_pressed_zxdesktop_lower_icon_which>=0) {

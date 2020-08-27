@@ -110,3 +110,5 @@ culpa del rearrange entonces
 
 -ayuda zdesktop / background windows: que ya no esta zlogo y si que hay botones ahora
 -panic al desactivar border en spectrum 128 k con menu abierto y zx desktop con varias ventanas abiertas
+
+-revisar funciones y variables *lower_icon* que sea todo coherente
