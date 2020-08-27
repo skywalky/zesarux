@@ -3126,6 +3126,25 @@ void zxdesktop_lowericon_mmc_accion(void)
 	menu_mmc_divmmc(0);
 }
 
+//Funciones para zxpand
+
+int zxdesktop_lowericon_zxpand_is_visible(void)
+{
+	if (MACHINE_IS_ZX8081) return 1;
+	else return 0;
+}
+
+int zxdesktop_lowericon_zxpand_is_active(void)
+{
+	if (zxpand_enabled.v) return 1;
+	else return 0;
+}
+
+void zxdesktop_lowericon_zxpand_accion(void)
+{
+	menu_zxpand(0);
+}
+
 struct s_zxdesktop_lowericons_info {
 	int (*is_visible)(void);
 	int (*is_active)(void);
@@ -3143,6 +3162,10 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_LOW
 	//MMC
 	{ zxdesktop_lowericon_mmc_is_visible, zxdesktop_lowericon_mmc_is_active, zxdesktop_lowericon_mmc_accion,
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},		
+
+	//ZXPand
+	{ zxdesktop_lowericon_zxpand_is_visible, zxdesktop_lowericon_zxpand_is_active, zxdesktop_lowericon_zxpand_accion,
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},				
 };
 
 

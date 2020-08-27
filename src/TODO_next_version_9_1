@@ -131,7 +131,6 @@ if (MACHINE_IS_SG1000) SG1000 ~~Cartridge");
 
 if (MACHINE_IS_SVI) "SVI ~~Cartridge");
 
-if (MACHINE_IS_ZX8081) ,"ZX~~pand emulation: %s",(zxpand_enabled.v ? "Yes" : "No"));
 
 if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) "~~IDE");
                 
