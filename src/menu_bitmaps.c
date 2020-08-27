@@ -617,33 +617,33 @@ char *bitmap_lowericon_ext_desktop_cassette_inactive[EXT_DESKTOP_BUTTONS_ANCHO]=
 
 
 char *bitmap_lowericon_ext_desktop_mmc_active[EXT_DESKTOP_BUTTONS_ANCHO]={
-    //01234567890123456789012345
-    "                          ",     //0
-  	"                          ",    
-	"                          ",	   
-	"                          ",
-	"                          ",		
-	"                          ",		
-	"                          ",	
-	"                          ",			
-	"                          ",			
-	"                  bbbbbbbb", 		
-	"                 bbbbbbbbb",	//10	
-	"                bbybybybbb",		
-	"               bbbybybybbb",		
-	"              bbybybybybbb",		
-	"              bbybybybybbb",		
-	"              bbybybybybbb",		
-	"              bbybybybybbb",		
-	"              bbybbbbbbbbb",		
-	"              bbbbbbbbbbbb",		
-	"              bbwwwbwwbbb",		
-	"              bbwbbbwbwbbb",	//20	
-	"              bbwwwbwbwbbb",		
-	"              bbbbwbwbwbbb",    
-	"              bbwwwbwwbbbb",		
-	"              bbbbbbbbbbbb",		
-	"              bbbbbbbbbbbb"  //25		
+   //01234567890123456789012345
+    "           wwwwwwwwwwww   ",     //0
+  	"          wbbbbbbbbbbbw   ",    
+	"         wbbbbbbbbbbbbw   ",	   
+	"        wbbbbbbbbbbbbbw   ",
+	"       wbbyybbyybbyybbw   ",		
+	"      wbbbyybbyybbyybbw   ",		
+	"     wbbbbyybbyybbyybbw   ",	
+	"    wbbbbbyybbyybbyybbw   ",			
+	"   wbbbbbbyybbyybbyybbw   ",			
+	"   wbbyybbyybbyybbyybbw   ", 		
+	"   wbbyybbyybbyybbyybbw   ",	//10	
+	"   wbbyybbyybbyybbyybbw   ",		
+	"   wbbyybbyybbyybbyybbw   ",		
+	"   wbbyybbbbbbbbbbbbbbw   ",		
+	"   wbbyybbbbbbbbbbbbbbw   ",		
+	"   wbbbbbbbbbbbbbbbbbbw   ",		
+	"   wbbbbwwwwbbwwwbbbbbw   ",		
+	"   wbbbwbbbbbbwbbwbbbbw   ",		
+	"   wbbbwbbbbbbwbbbwbbbw   ",		
+	"   wbbbbwwwbbbwbbbwbbbw   ",		
+	"   wbbbbbbbwbbwbbbwbbbw   ",	//20	
+	"   wbbbbbbbwbbwbbwbbbbw   ",		
+	"   wbbbwwwwbbbwwwbbbbbw   ",    
+	"   wbbbbbbbbbbbbbbbbbbw   ",		
+	"   wbbbbbbbbbbbbbbbbbbw   ",		
+	"   wwwwwwwwwwwwwwwwwwww   "  //25		
 
 };
 
@@ -654,25 +654,25 @@ char *bitmap_lowericon_ext_desktop_mmc_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
   	"          wxxxxxxxxxxxw   ",    
 	"         wx          xw   ",	   
 	"        wx           xw   ",
-	"       wx            xw   ",		
-	"      wx             xw   ",		
-	"     wx              xw   ",	
-	"    wx               xw   ",			
-	"   wx                xw   ",			
-	"   wx                xw   ", 		
-	"   wx                xw   ",	//10	
+	"       wx xx  xx  xx xw   ",		
+	"      wx  xx  xx  xx xw   ",		
+	"     wx   xx  xx  xx xw   ",	
+	"    wx    xx  xx  xx xw   ",			
+	"   wx     xx  xx  xx xw   ",			
+	"   wx xx  xx  xx  xx xw   ", 		
+	"   wx xx  xx  xx  xx xw   ",	//10	
+	"   wx xx  xx  xx  xx xw   ",		
+	"   wx xx  xx  xx  xx xw   ",		
+	"   wx xx             xw   ",		
+	"   wx xx             xw   ",		
 	"   wx                xw   ",		
-	"   wx                xw   ",		
-	"   wx                xw   ",		
-	"   wx                xw   ",		
-	"   wx                xw   ",		
-	"   wx                xw   ",		
-	"   wx                xw   ",		
-	"   wx                xw   ",		
-	"   wx                xw   ",		
-	"   wx                xw   ",	//20	
-	"   wx                xw   ",		
-	"   wx                xw   ",    
+	"   wx   xxxx  xxx    xw   ",		
+	"   wx  x      x  x   xw   ",		
+	"   wx  x      x   x  xw   ",		
+	"   wx   xxx   x   x  xw   ",		
+	"   wx      x  x   x  xw   ",	//20	
+	"   wx      x  x  x   xw   ",		
+	"   wx  xxxx   xxx    xw   ",    
 	"   wx                xw   ",		
 	"   wxxxxxxxxxxxxxxxxxxw   ",		
 	"   wwwwwwwwwwwwwwwwwwww   "  //25		
