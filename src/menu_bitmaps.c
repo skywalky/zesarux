@@ -553,66 +553,67 @@ char *bitmap_button_ext_desktop_xxxxx[EXT_DESKTOP_BUTTONS_ANCHO]={
 
 char *bitmap_lowericon_ext_desktop_cassette_active[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
-    "                          ",     //0
-  	"                          ",    
-	"                          ",	   
+    "                          ",//0
+  	"                          ",
+	"                          ",	
 	"                          ",
-	" xxxxxxxxxxx              ",		
-	"xxgggggggggxx             ",		
-	"xgggxxxgggggx             ",	
-	"xggxx xxggggx             ",			
-	"xggx   xgggxx             ",			
-	"xggxx xxggxgx             ", 		
-	"xgggxxxggxggx             ",	//10	
-	"xggggggggxggx             ",		
-	"xggg   ggxggx             ",		
-	"xggg   ggxggx             ",		
-	"xggg   ggxggx             ",		
-	"xggg   ggxggx             ",		
-	"xggg   ggxggx             ",		
-	"xggg   ggxggx             ",		
-	"xggggggggxggx             ",		
-	"xgggxxxggxggx             ",		
-	"xggxx xxggxgx             ",	//20	
-	"xggx   xgggxx             ",		
-	"xggxx xxggggx             ",    
-	"xgggxxxgggggx             ",		
-	"xxgggggggggxx             ",		
-	" xxxxxxxxxxx              "  //25		
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxgggxxxggggggggggxxxgggxw",			
+	"wxggxx xxg      gxx xxggxw",		
+	"wxggx   xg      gx   xggxw",	//10	
+	"wxggxx xxg      gxx xxggxw",		
+	"wxgggxxxggggggggggxxxgggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggxxxxxxxxxxggggggxw",		
+	"wxgggggxggggggggggxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxggxggggggggggggggxggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww ",	//20	
+	"                          ",		
+	"                          ",
+	"                          ",		
+	"                          ",		
+	"                          "//25		
 
 };
 
 
 char *bitmap_lowericon_ext_desktop_cassette_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
-    //01234567890123456789012345
+   //01234567890123456789012345
     "                          ",     //0
   	"                          ",    
 	"                          ",	   
 	"                          ",
-	" xxxxxxxxxxx              ",		
-	"xxx       xxx             ",		
-	"xx xxxxx   xx             ",	
-	"xxxxx xxx  xx             ",			
-	"xxxx   xx xxx             ",			
-	"xxxxx xxxxxxx             ", 		
-	"xx xxxxxxxxxx             ",	//10	
-	"xx         xx             ",		
-	"xx         xx             ",		
-	"xx         xx             ",		
-	"xx         xx             ",		
-	"xx         xx             ",		
-	"xx         xx             ",		
-	"xx         xx             ",		
-	"xx         xx             ",		
-	"xx xxxxxxxxxx             ",		
-	"xxxxx xxxxxxx             ",	//20	
-	"xxxx   xx xxx             ",		
-	"xxxxx xxx  xx             ",    
-	"xx xxxxx   xx             ",		
-	"xxx       xxx             ",		
-	" xxxxxxxxxxx              "  //25		
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	"wxx                    xxw",	
+	"wx                      xw",			
+	"wx   xxx          xxx   xw",			
+	"wx  xx xx        xx xx  xw", 		
+	"wx  x   x        x   x  xw",	//10	
+	"wx  xx xx        xx xx  xw",		
+	"wx   xxx          xxx   xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx      xxxxxxxxxx      xw",		
+	"wx     x          x     xw",		
+	"wx    x            x    xw",		
+	"wxx  x              x  xxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww ",	//20	
+	"                          ",		
+	"                          ",    
+	"                          ",		
+	"                          ",		
+	"                          "  //25		
 
 };
+
 
 
 char *bitmap_lowericon_ext_desktop_mmc_active[EXT_DESKTOP_BUTTONS_ANCHO]={
