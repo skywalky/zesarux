@@ -53,4 +53,7 @@ extern char *bitmap_lowericon_ext_desktop_mmc_inactive[];
 #define EXT_DESKTOP_BUTTONS_ANCHO 26
 #define EXT_DESKTOP_BUTTONS_ALTO 26
 
+#define TOTAL_ZXDESKTOP_LOWER_ICONS 2
+
+
 #endif

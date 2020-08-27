@@ -2835,6 +2835,49 @@ void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,
 }
 
 
+//Retorna geometria de los lower icons, si punteros no son null
+//ancho, alto boton
+//xfinal_botones: posicion X mas a la derecha del ultimo boton
+void menu_ext_desktop_lower_icons_get_geometry(int *p_ancho_boton,int *p_alto_boton,int *p_total_botones,int *p_inicio_botones,int *p_xfinal_botones)
+{
+	int total_botones=TOTAL_ZXDESKTOP_LOWER_ICONS;
+
+	int ancho_zx_desktop=screen_get_ext_desktop_width_zoom();	
+	int xinicio=screen_get_ext_desktop_start_x();
+
+
+	int ancho_boton=ancho_zx_desktop/total_botones;
+
+	//Minimo 32 pixeles
+	if (ancho_boton<32) ancho_boton=32;
+
+	//Maximo 64 pixeles
+	if (ancho_boton>64) ancho_boton=64;
+
+
+	int alto_boton=ancho_boton;	
+
+	int xfinal_ventana=xinicio+ancho_zx_desktop;
+
+	int xfinal_botones=xinicio+total_botones*ancho_boton;
+
+	//no caben todos los botones
+	if (xfinal_botones>xfinal_ventana) {
+		total_botones=ancho_zx_desktop/ancho_boton;
+		xfinal_botones=xinicio+total_botones*ancho_boton;
+	}
+
+	if (p_ancho_boton!=NULL) *p_ancho_boton=ancho_boton;
+	if (p_alto_boton!=NULL) *p_alto_boton=alto_boton;
+	if (p_total_botones!=NULL) *p_total_botones=total_botones;
+	if (p_inicio_botones!=NULL) *p_inicio_botones=xinicio;
+	if (p_xfinal_botones!=NULL) *p_xfinal_botones=xfinal_botones;
+
+}
+
+
+
+
 void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 {
 
@@ -3018,13 +3061,7 @@ void menu_draw_ext_desktop_dibujar_boton_pulsado(int boton)
 	menu_draw_ext_desktop_one_button_bitmap(boton,1);
 }
 
-struct s_zxdesktop_lowericons_info {
-	int (*is_visible)(void);
-	int (*is_active)(void);
-	void (*accion)(void);	
-	char **bitmap_active;
-	char **bitmap_inactive;
-};
+
 
 //Funciones para cinta de cassette
 
@@ -3065,10 +3102,14 @@ void zxdesktop_lowericon_mmc_accion(void)
 	//TODO. Ejecucion de la accion del boton
 }
 
+struct s_zxdesktop_lowericons_info {
+	int (*is_visible)(void);
+	int (*is_active)(void);
+	void (*accion)(void);	
+	char **bitmap_active;
+	char **bitmap_inactive;
+};
 
-//if (MACHINE_IS_SPECTRUM) {
-
-#define TOTAL_ZXDESKTOP_LOWER_ICONS 2
 
 struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_LOWER_ICONS]={
 	//cinta
@@ -3088,7 +3129,13 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 {
 
 	
-	int total_botones=TOTAL_ZXDESKTOP_LOWER_ICONS;
+	int total_botones;
+
+	int ancho_boton;
+	int alto_boton;	
+
+	menu_ext_desktop_lower_icons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,NULL);
+
 
 	if (numero_boton>=total_botones) return;
 
@@ -3102,8 +3149,7 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	
 
 
-	int ancho_boton;
-	int alto_boton;
+
 
 	int xinicio=screen_get_ext_desktop_start_x();
 	
@@ -3113,8 +3159,7 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 	int xfinal;
 
-	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,NULL);
-
+	
 
 	int nivel_zoom=1;
 
@@ -3178,7 +3223,10 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 void menu_draw_ext_desktop_lower_icons(void)
 {
 
-	int total_iconos=TOTAL_ZXDESKTOP_LOWER_ICONS;
+	int total_iconos;
+
+
+	menu_ext_desktop_lower_icons_get_geometry(NULL,NULL,&total_iconos,NULL,NULL);
 
 	int i;
 
@@ -8910,6 +8958,27 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 				return 1;
 			}	
 		}	
+
+
+		//Si esta en zona de iconos lower de zx desktop. Y si estan habilitados
+
+		if (menu_zxdesktop_buttons_enabled.v) {
+			int ancho_boton,alto_boton,total_botones,xinicio_botones,xfinal_botones;
+			menu_ext_desktop_lower_icons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xinicio_botones,&xfinal_botones);
+
+			if (mouse_pixel_x>=xinicio_botones && mouse_pixel_x<xfinal_botones &&
+				mouse_pixel_y>=0 && mouse_pixel_y<alto_boton
+			) {
+				printf ("Pulsado en zona botones del ext desktop\n");
+
+				//en que boton?
+				int numero_boton=(mouse_pixel_x-xinicio_botones)/ancho_boton;
+				printf("boton pulsado: %d\n",numero_boton);
+				menu_pressed_zxdesktop_button_which=numero_boton;
+
+				return 1;
+			}	
+		}			
 	}
 	return 0;
 }
