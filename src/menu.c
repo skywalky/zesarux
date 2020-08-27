@@ -3019,70 +3019,70 @@ void menu_draw_ext_desktop_dibujar_boton_pulsado(int boton)
 }
 
 struct s_zxdesktop_lowericons_info {
-	int (*is_visible)(int icon);
-	int (*is_active)(int icon);
+	int (*is_visible)(void);
+	int (*is_active)(void);
+	void (*accion)(void);	
 	char **bitmap_active;
 	char **bitmap_inactive;
 };
 
 //Funciones para cinta de cassette
 
-int zxdesktop_lowericon_cassete_is_visible(int icono)
+int zxdesktop_lowericon_cassete_is_visible(void)
 {
-	//TODO
-	return 1;
+	if (!MACHINE_IS_Z88 && !MACHINE_IS_QL && !MACHINE_IS_CHLOE && !MACHINE_IS_COLECO && !MACHINE_IS_SG1000) return 1;
+	else return 0;
 }
 
-int zxdesktop_lowericon_cassete_is_active(int icono)
+int zxdesktop_lowericon_cassete_is_active(void)
 {
 	if ((tape_loadsave_inserted & TAPE_LOAD_INSERTED)!=0) return 1;
 	else return 0;
 }
 
-#define TOTAL_ZXDESKTOP_LOWER_ICONS 1
+void zxdesktop_lowericon_cassete_accion(void)
+{
+	//TODO. Ejecucion de la accion del boton
+}
+
+
+//Funciones para MMC
+
+int zxdesktop_lowericon_mmc_is_visible(void)
+{
+	if (MACHINE_IS_SPECTRUM) return 1;
+	else return 0;
+}
+
+int zxdesktop_lowericon_mmc_is_active(void)
+{
+	if (mmc_enabled.v) return 1;
+	else return 0;
+}
+
+void zxdesktop_lowericon_mmc_accion(void)
+{
+	//TODO. Ejecucion de la accion del boton
+}
+
+
+//if (MACHINE_IS_SPECTRUM) {
+
+#define TOTAL_ZXDESKTOP_LOWER_ICONS 2
 
 struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_LOWER_ICONS]={
 	//cinta
-	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active, bitmap_button_ext_desktop_storage,bitmap_button_ext_desktop_help}
+	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active,zxdesktop_lowericon_cassete_accion,
+		bitmap_button_ext_desktop_storage,bitmap_button_ext_desktop_help},
+
+	//MMC
+	{ zxdesktop_lowericon_mmc_is_visible, zxdesktop_lowericon_mmc_is_active, zxdesktop_lowericon_mmc_accion,
+		bitmap_button_ext_desktop_storage,bitmap_button_ext_desktop_help},		
 };
 
-int menu_ext_desktop_lower_icon_visible(int icono)
-{
-	//TODO
-	//0=cassette
-	//1=mmc
-	//2=+3 disk
-
-	switch(icono) {
-		case 0:
-			//TODO
-			return 1;
-		break;
-
-		case 1:
-			//TODO
-			return 1;		
-		break;
-
-		case 2:
-			//TODO
-			return 1;		
-		break;
-	}
-	return 0;
-}
-
-int menu_ext_desktop_lower_icon_active(int icono)
-{
-	//TODO
-	//0=cassette
-	//1=mmc
-	//2=+3 disk
-	if ((tape_loadsave_inserted & TAPE_LOAD_INSERTED)!=0) return 1;
-	else return 0;
 
 
-}
+
 
 void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 {
@@ -3093,27 +3093,23 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	if (numero_boton>=total_botones) return;
 
 	//Funcion is visible
-	int (*funcion_is_visible)(int icono);
+	int (*funcion_is_visible)(void);
 
 
 	funcion_is_visible=zdesktop_lowericons_array[numero_boton].is_visible;
 
-	if (!funcion_is_visible(numero_boton)) return;
+	if (!funcion_is_visible()) return;
 	
 
-
-
-			
-	
 
 	int ancho_boton;
 	int alto_boton;
 
-		int xinicio=screen_get_ext_desktop_start_x();
-		
+	int xinicio=screen_get_ext_desktop_start_x();
+	
 
-		int ancho=screen_get_ext_desktop_width_zoom();
-		int alto=screen_get_emulated_display_height_zoom_border_en();		
+	int ancho=screen_get_ext_desktop_width_zoom();
+	int alto=screen_get_emulated_display_height_zoom_border_en();		
 
 	int xfinal;
 
@@ -3134,52 +3130,45 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 	//Dibujar un boton
 
+	
+
+	int medio_boton_x=ancho_boton/2;
+	int medio_boton_y=alto_boton/2;
+
+	int destino_x=xinicio+ancho_boton*numero_boton;
+	destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
+
+	int destino_y=yinicio;
+	destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
 
 	
-	
-		
 
-		int medio_boton_x=ancho_boton/2;
-		int medio_boton_y=alto_boton/2;
+	char **puntero_bitmap;
 
-		int destino_x=xinicio+ancho_boton*numero_boton;
-		destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
 
-		int destino_y=yinicio;
-		destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
-
-		
-
-		char **puntero_bitmap;
-
-		//TODO
-		//Ver si activo o no activo
 
 	//Funcion is visible
-	int (*funcion_is_enabled)(int icono);
+	int (*funcion_is_enabled)(void);
 
 
-	funcion_is_enabled=zdesktop_lowericons_array[numero_boton].is_visible;
-
-	 return;
-
-		if (funcion_is_enabled(numero_boton)) {
-			puntero_bitmap=zdesktop_lowericons_array[numero_boton].bitmap_active;
-		}
-
-		else  {
-			puntero_bitmap=zdesktop_lowericons_array[numero_boton].bitmap_inactive;
-		}		
+	funcion_is_enabled=zdesktop_lowericons_array[numero_boton].is_active;
 
 
-		if (pulsado) {
-			destino_x+=2;
-			destino_y+=2;
-		}
-		//screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
-		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
+	if (funcion_is_enabled()) {
+		puntero_bitmap=zdesktop_lowericons_array[numero_boton].bitmap_active;
+	}
 
+	else  {
+		puntero_bitmap=zdesktop_lowericons_array[numero_boton].bitmap_inactive;
+	}		
+
+
+	if (pulsado) {
+		destino_x+=2;
+		destino_y+=2;
+	}
 	
+	screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
 
 	
 	
@@ -3189,14 +3178,12 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 void menu_draw_ext_desktop_lower_icons(void)
 {
 
-	int total_iconos=2;
+	int total_iconos=TOTAL_ZXDESKTOP_LOWER_ICONS;
 
 	int i;
 
 	for (i=0;i<total_iconos;i++) {
-		if (menu_ext_desktop_lower_icon_visible(i)) {
-			menu_ext_desktop_draw_lower_icon(i,0);
-		}
+		menu_ext_desktop_draw_lower_icon(i,0);
 
 	}
 }
