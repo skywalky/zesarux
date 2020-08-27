@@ -3018,6 +3018,189 @@ void menu_draw_ext_desktop_dibujar_boton_pulsado(int boton)
 	menu_draw_ext_desktop_one_button_bitmap(boton,1);
 }
 
+struct s_zxdesktop_lowericons_info {
+	int (*is_visible)(int icon);
+	int (*is_active)(int icon);
+	char **bitmap_active;
+	char **bitmap_inactive;
+};
+
+//Funciones para cinta de cassette
+
+int zxdesktop_lowericon_cassete_is_visible(int icono)
+{
+	//TODO
+	return 1;
+}
+
+int zxdesktop_lowericon_cassete_is_active(int icono)
+{
+	if ((tape_loadsave_inserted & TAPE_LOAD_INSERTED)!=0) return 1;
+	else return 0;
+}
+
+#define TOTAL_ZXDESKTOP_LOWER_ICONS 1
+
+struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_LOWER_ICONS]={
+	//cinta
+	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active, bitmap_button_ext_desktop_storage,bitmap_button_ext_desktop_help}
+};
+
+int menu_ext_desktop_lower_icon_visible(int icono)
+{
+	//TODO
+	//0=cassette
+	//1=mmc
+	//2=+3 disk
+
+	switch(icono) {
+		case 0:
+			//TODO
+			return 1;
+		break;
+
+		case 1:
+			//TODO
+			return 1;		
+		break;
+
+		case 2:
+			//TODO
+			return 1;		
+		break;
+	}
+	return 0;
+}
+
+int menu_ext_desktop_lower_icon_active(int icono)
+{
+	//TODO
+	//0=cassette
+	//1=mmc
+	//2=+3 disk
+	if ((tape_loadsave_inserted & TAPE_LOAD_INSERTED)!=0) return 1;
+	else return 0;
+
+
+}
+
+void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
+{
+
+	
+	int total_botones=TOTAL_ZXDESKTOP_LOWER_ICONS;
+
+	if (numero_boton>=total_botones) return;
+
+	//Funcion is visible
+	int (*funcion_is_visible)(int icono);
+
+
+	funcion_is_visible=zdesktop_lowericons_array[numero_boton].is_visible;
+
+	if (!funcion_is_visible(numero_boton)) return;
+	
+
+
+
+			
+	
+
+	int ancho_boton;
+	int alto_boton;
+
+		int xinicio=screen_get_ext_desktop_start_x();
+		
+
+		int ancho=screen_get_ext_desktop_width_zoom();
+		int alto=screen_get_emulated_display_height_zoom_border_en();		
+
+	int xfinal;
+
+	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,NULL);
+
+
+	int nivel_zoom=1;
+
+	//Si hay espacio para meter iconos con zoom 2
+	//6 pixeles de margen
+	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
+
+
+	int x;
+	int contador_boton=0;
+
+	int yinicio=alto-alto_boton*nivel_zoom;
+
+	//Dibujar un boton
+
+
+	
+	
+		
+
+		int medio_boton_x=ancho_boton/2;
+		int medio_boton_y=alto_boton/2;
+
+		int destino_x=xinicio+ancho_boton*numero_boton;
+		destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
+
+		int destino_y=yinicio;
+		destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
+
+		
+
+		char **puntero_bitmap;
+
+		//TODO
+		//Ver si activo o no activo
+
+	//Funcion is visible
+	int (*funcion_is_enabled)(int icono);
+
+
+	funcion_is_enabled=zdesktop_lowericons_array[numero_boton].is_visible;
+
+	 return;
+
+		if (funcion_is_enabled(numero_boton)) {
+			puntero_bitmap=zdesktop_lowericons_array[numero_boton].bitmap_active;
+		}
+
+		else  {
+			puntero_bitmap=zdesktop_lowericons_array[numero_boton].bitmap_inactive;
+		}		
+
+
+		if (pulsado) {
+			destino_x+=2;
+			destino_y+=2;
+		}
+		//screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
+		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
+
+	
+
+	
+	
+}
+
+
+void menu_draw_ext_desktop_lower_icons(void)
+{
+
+	int total_iconos=2;
+
+	int i;
+
+	for (i=0;i<total_iconos;i++) {
+		if (menu_ext_desktop_lower_icon_visible(i)) {
+			menu_ext_desktop_draw_lower_icon(i,0);
+		}
+
+	}
+}
+
 void menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,int alto)
 {
 
@@ -3118,6 +3301,9 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 		
 
 	}
+
+	//Dibujar iconos activos de la parte inferior
+	menu_draw_ext_desktop_lower_icons();
 }
 
 
