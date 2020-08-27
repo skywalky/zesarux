@@ -594,9 +594,9 @@ char *bitmap_lowericon_ext_desktop_cassette_inactive[EXT_DESKTOP_BUTTONS_ANCHO]=
 	"wxx                    xxw",	
 	"wx                      xw",			
 	"wx   xxx          xxx   xw",			
-	"wx  xx xx        xx xx  xw", 		
-	"wx  x   x        x   x  xw",	//10	
-	"wx  xx xx        xx xx  xw",		
+	"wx  xxxxx        xxxxx  xw", 		
+	"wx  xxxxx        xxxxx  xw",	//10	
+	"wx  xxxxx        xxxxx  xw",		
 	"wx   xxx          xxx   xw",		
 	"wx                      xw",		
 	"wx                      xw",		
@@ -650,31 +650,31 @@ char *bitmap_lowericon_ext_desktop_mmc_active[EXT_DESKTOP_BUTTONS_ANCHO]={
 
 char *bitmap_lowericon_ext_desktop_mmc_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
-    "                          ",     //0
-  	"                          ",    
-	"                          ",	   
-	"                          ",
-	"                          ",		
-	"                          ",		
-	"                          ",	
-	"                          ",			
-	"                          ",			
-	"                  bbbbbbbb", 		
-	"                 bbbbbbbbb",	//10	
-	"                bbbbbbbbbb",		
-	"               bbbbbbbbbbb",		
-	"              bbbbbbbbbbbb",		
-	"              bbbbbbbbbbbb",		
-	"              bbbbbbbbbbbb",		
-	"              bbbbbbbbbbbb",		
-	"              bbbbbbbbbbbb",		
-	"              bbbbbbbbbbbb",		
-	"              bbwwwbwwbbb",		
-	"              bbwbbbwbwbbb",	//20	
-	"              bbwwwbwbwbbb",		
-	"              bbbbwbwbwbbb",    
-	"              bbwwwbwwbbbb",		
-	"              bbbbbbbbbbbb",		
-	"              bbbbbbbbbbbb"  //25		
+    "           wwwwwwwwwwww   ",     //0
+  	"          wxxxxxxxxxxxw   ",    
+	"         wx          xw   ",	   
+	"        wx           xw   ",
+	"       wx            xw   ",		
+	"      wx             xw   ",		
+	"     wx              xw   ",	
+	"    wx               xw   ",			
+	"   wx                xw   ",			
+	"   wx                xw   ", 		
+	"   wx                xw   ",	//10	
+	"   wx                xw   ",		
+	"   wx                xw   ",		
+	"   wx                xw   ",		
+	"   wx                xw   ",		
+	"   wx                xw   ",		
+	"   wx                xw   ",		
+	"   wx                xw   ",		
+	"   wx                xw   ",		
+	"   wx                xw   ",		
+	"   wx                xw   ",	//20	
+	"   wx                xw   ",		
+	"   wx                xw   ",    
+	"   wx                xw   ",		
+	"   wxxxxxxxxxxxxxxxxxxw   ",		
+	"   wwwwwwwwwwwwwwwwwwww   "  //25		
 
 };
