@@ -3073,11 +3073,11 @@ void zxdesktop_lowericon_mmc_accion(void)
 struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_LOWER_ICONS]={
 	//cinta
 	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active,zxdesktop_lowericon_cassete_accion,
-		bitmap_button_ext_desktop_storage,bitmap_button_ext_desktop_help},
+		bitmap_lowericon_ext_desktop_cassette_active,bitmap_lowericon_ext_desktop_cassette_inactive},
 
 	//MMC
 	{ zxdesktop_lowericon_mmc_is_visible, zxdesktop_lowericon_mmc_is_active, zxdesktop_lowericon_mmc_accion,
-		bitmap_button_ext_desktop_storage,bitmap_button_ext_desktop_help},		
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},		
 };
 
 
@@ -3126,7 +3126,7 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	int x;
 	int contador_boton=0;
 
-	int yinicio=alto-alto_boton*nivel_zoom;
+	int yinicio=alto-alto_boton;
 
 	//Dibujar un boton
 
@@ -3139,7 +3139,7 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
 
 	int destino_y=yinicio;
-	destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
+	//destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
 
 	
 

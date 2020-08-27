@@ -547,3 +547,133 @@ char *bitmap_button_ext_desktop_xxxxx[EXT_DESKTOP_BUTTONS_ANCHO]={
 };
 
 */
+
+
+//Para lower icons
+
+char *bitmap_lowericon_ext_desktop_cassette_active[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",    
+	"                          ",	   
+	"                          ",
+	" xxxxxxxxxxx              ",		
+	"xxgggggggggxx             ",		
+	"xgggxxxgggggx             ",	
+	"xggxx xxggggx             ",			
+	"xggx   xgggxx             ",			
+	"xggxx xxggxgx             ", 		
+	"xgggxxxggxggx             ",	//10	
+	"xggggggggxggx             ",		
+	"xggg   ggxggx             ",		
+	"xggg   ggxggx             ",		
+	"xggg   ggxggx             ",		
+	"xggg   ggxggx             ",		
+	"xggg   ggxggx             ",		
+	"xggg   ggxggx             ",		
+	"xggggggggxggx             ",		
+	"xgggxxxggxggx             ",		
+	"xggxx xxggxgx             ",	//20	
+	"xggx   xgggxx             ",		
+	"xggxx xxggggx             ",    
+	"xgggxxxgggggx             ",		
+	"xxgggggggggxx             ",		
+	" xxxxxxxxxxx              "  //25		
+
+};
+
+
+char *bitmap_lowericon_ext_desktop_cassette_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",    
+	"                          ",	   
+	"                          ",
+	" xxxxxxxxxxx              ",		
+	"xxx       xxx             ",		
+	"xx xxxxx   xx             ",	
+	"xxxxx xxx  xx             ",			
+	"xxxx   xx xxx             ",			
+	"xxxxx xxxxxxx             ", 		
+	"xx xxxxxxxxxx             ",	//10	
+	"xx         xx             ",		
+	"xx         xx             ",		
+	"xx         xx             ",		
+	"xx         xx             ",		
+	"xx         xx             ",		
+	"xx         xx             ",		
+	"xx         xx             ",		
+	"xx         xx             ",		
+	"xx xxxxxxxxxx             ",		
+	"xxxxx xxxxxxx             ",	//20	
+	"xxxx   xx xxx             ",		
+	"xxxxx xxx  xx             ",    
+	"xx xxxxx   xx             ",		
+	"xxx       xxx             ",		
+	" xxxxxxxxxxx              "  //25		
+
+};
+
+
+char *bitmap_lowericon_ext_desktop_mmc_active[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",    
+	"                          ",	   
+	"                          ",
+	"                          ",		
+	"                          ",		
+	"                          ",	
+	"                          ",			
+	"                          ",			
+	"                  bbbbbbbb", 		
+	"                 bbbbbbbbb",	//10	
+	"                bbybybybbb",		
+	"               bbbybybybbb",		
+	"              bbybybybybbb",		
+	"              bbybybybybbb",		
+	"              bbybybybybbb",		
+	"              bbybybybybbb",		
+	"              bbybbbbbbbbb",		
+	"              bbbbbbbbbbbb",		
+	"              bbwwwbwwbbb",		
+	"              bbwbbbwbwbbb",	//20	
+	"              bbwwwbwbwbbb",		
+	"              bbbbwbwbwbbb",    
+	"              bbwwwbwwbbbb",		
+	"              bbbbbbbbbbbb",		
+	"              bbbbbbbbbbbb"  //25		
+
+};
+
+
+char *bitmap_lowericon_ext_desktop_mmc_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",    
+	"                          ",	   
+	"                          ",
+	"                          ",		
+	"                          ",		
+	"                          ",	
+	"                          ",			
+	"                          ",			
+	"                  bbbbbbbb", 		
+	"                 bbbbbbbbb",	//10	
+	"                bbbbbbbbbb",		
+	"               bbbbbbbbbbb",		
+	"              bbbbbbbbbbbb",		
+	"              bbbbbbbbbbbb",		
+	"              bbbbbbbbbbbb",		
+	"              bbbbbbbbbbbb",		
+	"              bbbbbbbbbbbb",		
+	"              bbbbbbbbbbbb",		
+	"              bbwwwbwwbbb",		
+	"              bbwbbbwbwbbb",	//20	
+	"              bbwwwbwbwbbb",		
+	"              bbbbwbwbwbbb",    
+	"              bbwwwbwwbbbb",		
+	"              bbbbbbbbbbbb",		
+	"              bbbbbbbbbbbb"  //25		
+
+};

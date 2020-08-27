@@ -42,6 +42,12 @@ extern char *bitmap_button_ext_desktop_exit[];
 
 extern char **zxdesktop_buttons_bitmaps[];
 
+
+extern char *bitmap_lowericon_ext_desktop_cassette_active[];
+extern char *bitmap_lowericon_ext_desktop_cassette_inactive[];
+extern char *bitmap_lowericon_ext_desktop_mmc_active[];
+extern char *bitmap_lowericon_ext_desktop_mmc_inactive[];
+
 #define EXT_DESKTOP_TOTAL_BUTTONS 13
 
 #define EXT_DESKTOP_BUTTONS_ANCHO 26
