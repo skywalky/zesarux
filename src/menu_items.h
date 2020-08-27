@@ -108,6 +108,7 @@ extern void menu_help_show_keyboard(MENU_ITEM_PARAMETERS);
 
 extern void menu_audio_chip_info(MENU_ITEM_PARAMETERS);
 
+extern void menu_zxpand(MENU_ITEM_PARAMETERS);
 
 #endif
 

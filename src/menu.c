@@ -15832,25 +15832,7 @@ void menu_zxuno_spi_flash_file(MENU_ITEM_PARAMETERS)
 
 
 
-void menu_storage_zxpand_enable(MENU_ITEM_PARAMETERS)
-{
-	if (zxpand_enabled.v) zxpand_disable();
-	else zxpand_enable();
-}
 
-void menu_storage_zxpand_root_dir(MENU_ITEM_PARAMETERS)
-{
-
-	int ret;
-	ret=menu_storage_string_root_dir(zxpand_root_dir);
-
-	//Si sale con ESC
-	if (ret==0) {
-       	//directorio zxpand vacio
-        zxpand_cwd[0]=0;
-	}		
-
-}
 
 
 void menu_timexcart_load(MENU_ITEM_PARAMETERS)
@@ -17480,7 +17462,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}		
 
 
-
+			/*
 		if (MACHINE_IS_ZX8081) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_storage_zxpand_enable,NULL,"ZX~~pand emulation: %s",(zxpand_enabled.v ? "Yes" : "No"));
                         menu_add_item_menu_shortcut(array_menu_storage_settings,'p');
@@ -17501,6 +17483,14 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 					);
 
 			}
+		}
+		*/
+		if (MACHINE_IS_ZX8081) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_zxpand,NULL,"ZX~~pand emulation");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'p');
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"ZXpand emulation");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"ZXpand emulation");
+
 		}
 
 		if (MACHINE_IS_SPECTRUM) {

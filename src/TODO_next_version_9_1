@@ -112,3 +112,46 @@ culpa del rearrange entonces
 -panic al desactivar border en spectrum 128 k con menu abierto y zx desktop con varias ventanas abiertas
 
 -revisar funciones y variables *lower_icon* que sea todo coherente
+
+-Iconos storage:
+
+if (MACHINE_IS_Z88) "Z88 Memory ~~Slots");
+    
+if (MACHINE_IS_QL) "Microdrive&Floppy: %s",
+				
+if (MACHINE_IS_SPECTRUM_P2A_P3)"+3 ~~Disk");
+
+if (MACHINE_IS_TIMEX_TS2068) "Timex ~~Cartridge");
+
+if (MACHINE_IS_MSX) ,"MSX ~~Cartridge");
+
+if (MACHINE_IS_COLECO) ,"Coleco ~~Cartridge");
+
+if (MACHINE_IS_SG1000) SG1000 ~~Cartridge");
+
+if (MACHINE_IS_SVI) "SVI ~~Cartridge");
+
+if (MACHINE_IS_ZX8081) ,"ZX~~pand emulation: %s",(zxpand_enabled.v ? "Yes" : "No"));
+
+if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) "~~IDE");
+                
+if (MACHINE_IS_SPECTRUM) "~~Betadisk");
+    
+if (MACHINE_IS_SPECTRUM) ~~ESXDOS Handler");
+
+if (MACHINE_IS_ZXUNO) "~~ZX-Uno Flash");
+
+if ( (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) && !MACHINE_IS_ZXUNO) "%s D~~andanator",(MACHINE_IS_SPECTRUM ? "ZX" : "CPC")  );
+                
+if (superupgrade_supported_machine() ) "Speccy Superup~~grade");
+                
+if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) NULL,"~~Kartusho");
+
+if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC)"i~~From");
+                
+if (MACHINE_IS_SPECTRUM) "~~HiLow");
+                            
+
+
+
+

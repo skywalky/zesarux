@@ -194,6 +194,7 @@ int ide_divide_opcion_seleccionada=0;
 int display_settings_opcion_seleccionada=0;
 int debug_tsconf_opcion_seleccionada=0;
 int windows_opcion_seleccionada=0;
+int zxpand_opcion_seleccionada=0;
 
 
 //Fin opciones seleccionadas para cada menu
@@ -22852,6 +22853,84 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
  	}
 
 
+
+
+}
+
+void menu_storage_zxpand_enable(MENU_ITEM_PARAMETERS)
+{
+	if (zxpand_enabled.v) zxpand_disable();
+	else zxpand_enable();
+}
+
+void menu_storage_zxpand_root_dir(MENU_ITEM_PARAMETERS)
+{
+
+	int ret;
+	ret=menu_storage_string_root_dir(zxpand_root_dir);
+
+	//Si sale con ESC
+	if (ret==0) {
+       	//directorio zxpand vacio
+        zxpand_cwd[0]=0;
+	}		
+
+} 
+
+
+void menu_zxpand(MENU_ITEM_PARAMETERS)
+{
+
+	
+
+        //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+        menu_item *array_menu_common;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                
+				
+			menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_storage_zxpand_enable,NULL,"ZX~~pand emulation: %s",(zxpand_enabled.v ? "Yes" : "No"));
+                        menu_add_item_menu_shortcut(array_menu_common,'p');
+			menu_add_item_menu_tooltip(array_menu_common,"Enable ZXpand emulation");
+			menu_add_item_menu_ayuda(array_menu_common,"Enable ZXpand emulation");
+
+
+			if (zxpand_enabled.v) {
+				char string_zxpand_root_folder_shown[20];
+				menu_tape_settings_trunc_name(zxpand_root_dir,string_zxpand_root_folder_shown,20);
+
+				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_storage_zxpand_root_dir,NULL,"~~Root dir: %s",string_zxpand_root_folder_shown);
+                        	menu_add_item_menu_shortcut(array_menu_common,'r');
+				menu_add_item_menu_tooltip(array_menu_common,"Sets the root directory for ZXpand filesystem");
+				menu_add_item_menu_ayuda(array_menu_common,"Sets the root directory for ZXpand filesystem. "
+					"Only file and folder names valid for zxpand will be shown:\n"
+					"-Maximum 8 characters for name and 3 for extension\n"
+					"-Files and folders will be shown always in uppercase. Folders which are not uppercase, are shown but can not be accessed\n"
+					);
+
+			}
+		
+
+						
+			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+            menu_add_ESC_item(array_menu_common);
+
+            retorno_menu=menu_dibuja_menu(&zxpand_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZXpand" );
+
+                
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 }
