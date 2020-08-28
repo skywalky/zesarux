@@ -829,7 +829,7 @@ void menu_zxuno_spi_flash(MENU_ITEM_PARAMETERS);
 
 void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS);
 
-
+void menu_msxcart(MENU_ITEM_PARAMETERS);
 
 int menu_inicio_opcion_seleccionada=0;
 int machine_selection_opcion_seleccionada=0;
@@ -3145,6 +3145,49 @@ void zxdesktop_lowericon_zxpand_accion(void)
 	menu_zxpand(0);
 }
 
+
+//Funciones para Cartuchos
+
+int zxdesktop_lowericon_cartridge_is_visible(void)
+{
+	if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000 || MACHINE_IS_SVI) return 1;
+
+	else return 0;
+}
+
+int zxdesktop_lowericon_cartridge_is_active(void)
+{
+	//TODO: flag que indique insertado
+	return 1;
+}
+
+void zxdesktop_lowericon_cartridge_accion(void)
+{
+	menu_msxcart(0);
+}
+
+
+//Funciones para MDV/Floppy QL
+
+int zxdesktop_lowericon_mdv_flp_is_visible(void)
+{
+	if (MACHINE_IS_QL) return 1;
+
+	else return 0;
+}
+
+int zxdesktop_lowericon_mdv_flp_is_active(void)
+{
+	if (ql_microdrive_floppy_emulation) return 1;
+	else return 0;
+}
+
+void zxdesktop_lowericon_mdv_flp_accion(void)
+{
+	menu_ql_mdv_flp(0);
+}
+
+
 struct s_zxdesktop_lowericons_info {
 	int (*is_visible)(void);
 	int (*is_active)(void);
@@ -3165,11 +3208,52 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_LOW
 
 	//ZXPand
 	{ zxdesktop_lowericon_zxpand_is_visible, zxdesktop_lowericon_zxpand_is_active, zxdesktop_lowericon_zxpand_accion,
-		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},				
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},			
+
+	//Cartuchos msx, coleco, svi, sg1000. TODO: iconos
+	{ zxdesktop_lowericon_cartridge_is_visible, zxdesktop_lowericon_cartridge_is_active, zxdesktop_lowericon_cartridge_accion,
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},		
+
+	//MDV/Floppy QL. TODO: iconos
+	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},			
 };
 
 
+//Busca el N elemento dentro del array y que este visible
+//Por ejemplo si los primeros 3 elementos están visibles/no:
+//visible-novisible-visible
+//Al ir a buscar el segundo elemento (parametro=1) se saltara el novisible y retornara el tercero visible
+//esto es para evitar huecos al dibujarlos en pantalla
+//Retorna <0 si no lo encuentra
+int zxdesktop_lowericon_find_index(int icono)
+{
+	int total_botones;
+	menu_ext_desktop_lower_icons_get_geometry(NULL,NULL,&total_botones,NULL,NULL,NULL);
 
+	if (icono>=total_botones || icono<0) return -1;
+
+	int i;
+
+	int i_enabled=0;
+
+	for (i=0;i<total_botones;i++) {
+		int (*funcion_is_visible)(void);
+		funcion_is_visible=zdesktop_lowericons_array[i].is_visible;
+
+		if (funcion_is_visible()) {
+			if (i_enabled==icono) {
+				printf("buscando %d encontrado indice %d\n",icono,i);
+				return i;
+			}
+
+			i_enabled++;
+		}
+	}
+
+	return -1;
+
+}
 
 
 void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
@@ -3190,6 +3274,16 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 	if (numero_boton>=total_botones) return;
 
+
+	//Buscar el indice dentro del array de botones
+	int indice_array;
+
+	indice_array=zxdesktop_lowericon_find_index(numero_boton);
+
+	if (indice_array<0) return;
+
+
+	/* esto ya se comprueba desde zxdesktop_lowericon_find_index
 	//Funcion is visible
 	int (*funcion_is_visible)(void);
 
@@ -3197,7 +3291,7 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	funcion_is_visible=zdesktop_lowericons_array[numero_boton].is_visible;
 
 	if (!funcion_is_visible()) return;
-	
+	*/
 
 
 
@@ -3247,15 +3341,15 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	int (*funcion_is_enabled)(void);
 
 
-	funcion_is_enabled=zdesktop_lowericons_array[numero_boton].is_active;
+	funcion_is_enabled=zdesktop_lowericons_array[indice_array].is_active;
 
 
 	if (funcion_is_enabled()) {
-		puntero_bitmap=zdesktop_lowericons_array[numero_boton].bitmap_active;
+		puntero_bitmap=zdesktop_lowericons_array[indice_array].bitmap_active;
 	}
 
 	else  {
-		puntero_bitmap=zdesktop_lowericons_array[numero_boton].bitmap_inactive;
+		puntero_bitmap=zdesktop_lowericons_array[indice_array].bitmap_inactive;
 	}		
 
 
@@ -9038,8 +9132,13 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 				int numero_boton=(mouse_pixel_x-xinicio_botones)/ancho_boton;
 				printf("boton pulsado: %d\n",numero_boton);
 
+				//Buscar indice array
+				int indice_array=zxdesktop_lowericon_find_index(numero_boton);
 
-	//Ver si el boton esta activo
+				if (indice_array>=0) {
+
+					/* Esto ya lo hace desde zxdesktop_lowericon_find_index
+				//Ver si el boton esta activo
 								//Funcion is visible
 				int (*funcion_is_visible)(void);
 
@@ -9047,6 +9146,7 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 				funcion_is_visible=zdesktop_lowericons_array[numero_boton].is_visible;
 
 				if (funcion_is_visible()) {
+						*/
 
 						printf ("boton esta visible\n");
 
@@ -9058,6 +9158,7 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 				else {
 					printf ("boton NO esta visible\n");
 				}
+				
 			}	
 		}			
 	}
@@ -16914,25 +17015,7 @@ int menu_storage_string_root_dir(char *string_root_dir)
 }
 
 
-void menu_ql_microdrive_floppy(MENU_ITEM_PARAMETERS)
-{
-	ql_microdrive_floppy_emulation ^=1;
-}
 
-void menu_ql_mdv1(MENU_ITEM_PARAMETERS)
-{
-	menu_storage_string_root_dir(ql_mdv1_root_dir);
-}
-
-void menu_ql_mdv2(MENU_ITEM_PARAMETERS)
-{
-	menu_storage_string_root_dir(ql_mdv2_root_dir);
-}
-
-void menu_ql_flp1(MENU_ITEM_PARAMETERS)
-{
-	menu_storage_string_root_dir(ql_flp1_root_dir);
-}
 
 
 void menu_storage_esxdos_traps_emulation(MENU_ITEM_PARAMETERS)
@@ -17409,6 +17492,9 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 		else if (MACHINE_IS_QL) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_mdv_flp,NULL,"Microdrive & Floppy");
+			
+			/*
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_microdrive_floppy,NULL,"Microdrive&Floppy: %s",
 				(ql_microdrive_floppy_emulation ? "Yes" : "No") );
 
@@ -17424,6 +17510,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 					menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_mdv2,NULL,"Mdv2 root dir: %s",string_ql_mdv2_root_dir_shown);
 					menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_flp1,NULL,"Flp1 root dir: %s",string_ql_flp1_root_dir_shown);
 				}
+			*/
 
 		}
 
@@ -30771,6 +30858,14 @@ void menu_inicio_handle_lower_icon_presses(void)
 
         if (pulsado_boton>=total_botones) return;
 
+		//Ver indice del array
+
+		int indice_array=zxdesktop_lowericon_find_index(pulsado_boton);
+
+		if (indice_array<0) return;
+
+		/* Esto ya lo hace desde zxdesktop_lowericon_find_index
+
         //Funcion is visible
         int (*funcion_is_visible)(void);
 
@@ -30778,13 +30873,14 @@ void menu_inicio_handle_lower_icon_presses(void)
         funcion_is_visible=zdesktop_lowericons_array[pulsado_boton].is_visible;
 
         if (!funcion_is_visible()) return;
+		*/
 
 //Ejecutar accion
 
         void (*funcion_accion)(void);
 
 
-        funcion_accion=zdesktop_lowericons_array[pulsado_boton].accion;
+        funcion_accion=zdesktop_lowericons_array[indice_array].accion;
 
 		funcion_accion();
 	

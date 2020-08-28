@@ -195,6 +195,7 @@ int display_settings_opcion_seleccionada=0;
 int debug_tsconf_opcion_seleccionada=0;
 int windows_opcion_seleccionada=0;
 int zxpand_opcion_seleccionada=0;
+int ql_mdv_flp_opcion_seleccionada=0;
 
 
 //Fin opciones seleccionadas para cada menu
@@ -22891,7 +22892,7 @@ void menu_zxpand(MENU_ITEM_PARAMETERS)
 
                 
 				
-			menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_storage_zxpand_enable,NULL,"ZX~~pand emulation: %s",(zxpand_enabled.v ? "Yes" : "No"));
+			menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_storage_zxpand_enable,NULL,"[%c] ZX~~pand emulation",(zxpand_enabled.v ? 'X' : ' ') );
                         menu_add_item_menu_shortcut(array_menu_common,'p');
 			menu_add_item_menu_tooltip(array_menu_common,"Enable ZXpand emulation");
 			menu_add_item_menu_ayuda(array_menu_common,"Enable ZXpand emulation");
@@ -22919,6 +22920,79 @@ void menu_zxpand(MENU_ITEM_PARAMETERS)
             menu_add_ESC_item(array_menu_common);
 
             retorno_menu=menu_dibuja_menu(&zxpand_opcion_seleccionada,&item_seleccionado,array_menu_common,"ZXpand" );
+
+                
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+}
+
+void menu_ql_microdrive_floppy(MENU_ITEM_PARAMETERS)
+{
+	ql_microdrive_floppy_emulation ^=1;
+}
+
+void menu_ql_mdv1(MENU_ITEM_PARAMETERS)
+{
+	menu_storage_string_root_dir(ql_mdv1_root_dir);
+}
+
+void menu_ql_mdv2(MENU_ITEM_PARAMETERS)
+{
+	menu_storage_string_root_dir(ql_mdv2_root_dir);
+}
+
+void menu_ql_flp1(MENU_ITEM_PARAMETERS)
+{
+	menu_storage_string_root_dir(ql_flp1_root_dir);
+}
+
+
+void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
+{
+
+	
+
+        //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+        menu_item *array_menu_common;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                
+				
+
+            menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_ql_microdrive_floppy,NULL,"[%c] Microdrive&Floppy",
+                    (ql_microdrive_floppy_emulation ? 'X' : ' ') );
+
+                    if (ql_microdrive_floppy_emulation) {
+                            char string_ql_mdv1_root_dir_shown[13];
+                            char string_ql_mdv2_root_dir_shown[13];
+                            char string_ql_flp1_root_dir_shown[13];
+                            menu_tape_settings_trunc_name(ql_mdv1_root_dir,string_ql_mdv1_root_dir_shown,13);
+                            menu_tape_settings_trunc_name(ql_mdv2_root_dir,string_ql_mdv2_root_dir_shown,13);
+                            menu_tape_settings_trunc_name(ql_flp1_root_dir,string_ql_flp1_root_dir_shown,13);
+
+                            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_mdv1,NULL,"Mdv1 root dir: %s",string_ql_mdv1_root_dir_shown);
+                            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_mdv2,NULL,"Mdv2 root dir: %s",string_ql_mdv2_root_dir_shown);
+                            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_flp1,NULL,"Flp1 root dir: %s",string_ql_flp1_root_dir_shown);
+                    }
+
+						
+			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+            menu_add_ESC_item(array_menu_common);
+
+            retorno_menu=menu_dibuja_menu(&ql_mdv_flp_opcion_seleccionada,&item_seleccionado,array_menu_common,"Microdrive & Floppy" );
 
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
