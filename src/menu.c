@@ -2967,6 +2967,70 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 }
 
 
+void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int pulsado)
+{
+
+	int ancho_boton;
+	int alto_boton;
+
+
+	int xfinal;
+
+	int yinicio; //=0;	
+
+
+	menu_ext_desktop_lower_icons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL,&yinicio);
+
+
+
+
+	int nivel_zoom=1;
+
+	//Si hay espacio para meter iconos con zoom 2
+	//6 pixeles de margen
+	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
+
+
+		int xinicio=screen_get_ext_desktop_start_x();
+
+		xinicio +=contador_boton*ancho_boton;
+		
+
+	int x,y;
+
+	//Rectangulo alrededor. Dejando margen de 1 pixel alrededor sin tocar
+	//Horizontal
+
+	int color_recuadro=0;
+	int color_relleno=7;
+
+	if (pulsado) color_recuadro=7;
+
+	for (x=xinicio+1;x<xinicio+ancho_boton-1;x++) {
+		scr_putpixel(x,yinicio+1,color_recuadro);	
+		scr_putpixel(x,yinicio+alto_boton-2,color_recuadro);	
+	}
+
+	//Vertical
+	for (y=yinicio+1;y<yinicio+alto_boton-1;y++) {
+		scr_putpixel(xinicio+1,y,color_recuadro);	
+		scr_putpixel(xinicio+ancho_boton-2,y,color_recuadro);	
+	}
+
+	//Relleno de momento gris
+	//No queremos rellleno para estos botones. solo el recuadro
+	/*
+	for (y=yinicio+2;y<yinicio+alto_boton-2;y++) {	
+		for (x=xinicio+2;x<xinicio+ancho_boton-2;x++) {
+			scr_putpixel(x,y,color_relleno);	
+		}
+	}
+	*/
+
+	
+
+}
+
 		
 
 
@@ -3259,6 +3323,10 @@ int zxdesktop_lowericon_find_index(int icono)
 void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 {
 
+	//Nota: en los botones superiores el background se dibuja al principio para todos
+	//mientras que en estos lower icons se dibuja cada background con su icono asociado
+	//Quiza habria que estandarizar esto
+	menu_draw_ext_desktop_one_lower_icon_background(numero_boton,pulsado);
 	
 	int total_botones;
 
@@ -3328,7 +3396,7 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	int destino_x=xinicio+ancho_boton*numero_boton;
 	destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
 
-	int destino_y=yinicio;
+	int destino_y=yinicio+3*nivel_zoom; //3 de margen
 	//destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
 
 	
