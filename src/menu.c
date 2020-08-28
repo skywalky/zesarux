@@ -3323,10 +3323,7 @@ int zxdesktop_lowericon_find_index(int icono)
 void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 {
 
-	//Nota: en los botones superiores el background se dibuja al principio para todos
-	//mientras que en estos lower icons se dibuja cada background con su icono asociado
-	//Quiza habria que estandarizar esto
-	menu_draw_ext_desktop_one_lower_icon_background(numero_boton,pulsado);
+
 	
 	int total_botones;
 
@@ -3362,7 +3359,10 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	*/
 
 
-
+	//Nota: en los botones superiores el background se dibuja al principio para todos
+	//mientras que en estos lower icons se dibuja cada background con su icono asociado
+	//Quiza habria que estandarizar esto
+	menu_draw_ext_desktop_one_lower_icon_background(numero_boton,pulsado);
 
 	int xinicio=screen_get_ext_desktop_start_x();
 	
