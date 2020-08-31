@@ -49,6 +49,8 @@ extern char *bitmap_lowericon_ext_desktop_mmc_active[];
 extern char *bitmap_lowericon_ext_desktop_mmc_inactive[];
 extern char *bitmap_lowericon_ext_desktop_z88_active[];
 extern char *bitmap_lowericon_ext_desktop_z88_inactive[];
+extern char *bitmap_lowericon_ext_desktop_mdv_active[];
+extern char *bitmap_lowericon_ext_desktop_mdv_inactive[];
 
 #define EXT_DESKTOP_TOTAL_BUTTONS 13
 
