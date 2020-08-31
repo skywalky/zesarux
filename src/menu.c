@@ -2842,13 +2842,42 @@ void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,
 //xfinal_botones: posicion X mas a la derecha del ultimo boton
 void menu_ext_desktop_lower_icons_get_geometry(int *p_ancho_boton,int *p_alto_boton,int *p_total_botones,int *p_xinicio_botones,int *p_xfinal_botones,int *p_yinicio_botones)
 {
-	int total_botones=TOTAL_ZXDESKTOP_LOWER_ICONS;
+
+	//int total_botones=TOTAL_ZXDESKTOP_MAX_LOWER_ICONS;
+
+	//Considerar los botones que estan visibles solamente para la geometria, no todos los posibles
+
+
+	int total_botones=0;
+
+
+	int i;
+
+
+	for (i=0;i<TOTAL_ZXDESKTOP_MAX_LOWER_ICONS;i++) {
+		int (*funcion_is_visible)(void);
+		funcion_is_visible=zdesktop_lowericons_array[i].is_visible;
+
+		if (funcion_is_visible()) {
+			total_botones++;
+		}
+	}
+
+	printf ("total iconos visibles: %d\n",total_botones);
 
 	int ancho_zx_desktop=screen_get_ext_desktop_width_zoom();	
 	int xinicio=screen_get_ext_desktop_start_x();
 
 
-	int ancho_boton=ancho_zx_desktop/total_botones;
+	int ancho_boton;
+
+	if (total_botones==0) {
+		//evitar división por cero
+		ancho_boton=32;
+	}
+	else {
+		ancho_boton=ancho_zx_desktop/total_botones;
+	}
 
 	//Minimo 32 pixeles
 	if (ancho_boton<32) ancho_boton=32;
@@ -2895,6 +2924,8 @@ void menu_ext_desktop_lower_icons_get_geometry(int *p_ancho_boton,int *p_alto_bo
 	int alto_zx_desktop=screen_get_emulated_display_height_zoom_border_en();	
 	int yinicio=alto_zx_desktop-alto_boton;
 
+	printf ("alto_boton: %d alto_zx_desktop: %d yinicio: %d\n",alto_boton,alto_zx_desktop,yinicio);
+
 	if (p_ancho_boton!=NULL) *p_ancho_boton=ancho_boton;
 	if (p_alto_boton!=NULL) *p_alto_boton=alto_boton;
 	if (p_total_botones!=NULL) *p_total_botones=total_botones;
@@ -2920,6 +2951,7 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL);
 
 
+	printf ("upper icons background. ancho boton: %d alto boton: %d\n",ancho_boton,alto_boton);
 
 
 	int nivel_zoom=1;
@@ -2982,6 +3014,7 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 	menu_ext_desktop_lower_icons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL,&yinicio);
 
 
+	printf ("lower icons background. ancho boton: %d alto boton: %d\n",ancho_boton,alto_boton);
 
 
 	int nivel_zoom=1;
@@ -2990,6 +3023,7 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 	//6 pixeles de margen
 	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
+	printf ("zoom lower icons background: %d\n",nivel_zoom);
 
 		int xinicio=screen_get_ext_desktop_start_x();
 
@@ -3252,16 +3286,10 @@ void zxdesktop_lowericon_mdv_flp_accion(void)
 }
 
 
-struct s_zxdesktop_lowericons_info {
-	int (*is_visible)(void);
-	int (*is_active)(void);
-	void (*accion)(void);	
-	char **bitmap_active;
-	char **bitmap_inactive;
-};
 
 
-struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_LOWER_ICONS]={
+
+struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX_LOWER_ICONS]={
 	//cinta
 	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active,zxdesktop_lowericon_cassete_accion,
 		bitmap_lowericon_ext_desktop_cassette_active,bitmap_lowericon_ext_desktop_cassette_inactive},
@@ -3280,7 +3308,25 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_LOW
 
 	//MDV/Floppy QL. TODO: iconos
 	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},	
+
+	//3 Cartuchos de Z88
+	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},	
+	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},	
+	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},			
+
+	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},	
+	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},		
+
+//prueba
+	//cinta
+	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active,zxdesktop_lowericon_cassete_accion,
+		bitmap_lowericon_ext_desktop_cassette_active,bitmap_lowericon_ext_desktop_cassette_inactive}									
 };
 
 
@@ -3292,8 +3338,8 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_LOW
 //Retorna <0 si no lo encuentra
 int zxdesktop_lowericon_find_index(int icono)
 {
-	int total_botones;
-	menu_ext_desktop_lower_icons_get_geometry(NULL,NULL,&total_botones,NULL,NULL,NULL);
+	//int total_botones;
+	int total_botones=TOTAL_ZXDESKTOP_MAX_LOWER_ICONS;
 
 	if (icono>=total_botones || icono<0) return -1;
 
@@ -3336,8 +3382,11 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 	//printf("yinicio: %d\n",)
 
-
-	if (numero_boton>=total_botones) return;
+	printf ("menu_ext_desktop_draw_lower_icon. numero_boton %d total_botones %d\n",numero_boton,total_botones);
+	if (numero_boton>=total_botones) {
+		printf ("no dibujar\n");
+		return;
+	}
 
 
 	//Buscar el indice dentro del array de botones
@@ -3380,6 +3429,8 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	//6 pixeles de margen
 	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
+	printf ("zoom lower icons: %d\n",nivel_zoom);
+
 
 	int x;
 	int contador_boton=0;
@@ -3396,10 +3447,9 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	int destino_x=xinicio+ancho_boton*numero_boton;
 	destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
 
-	int destino_y=yinicio+3*nivel_zoom; //3 de margen
-	//destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
+	int destino_y=yinicio; //+3*nivel_zoom; //3 de margen
+	destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
 
-	
 
 	char **puntero_bitmap;
 
@@ -3436,10 +3486,8 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 void menu_draw_ext_desktop_lower_icons(void)
 {
 
-	int total_iconos;
+	int total_iconos=TOTAL_ZXDESKTOP_MAX_LOWER_ICONS;
 
-
-	menu_ext_desktop_lower_icons_get_geometry(NULL,NULL,&total_iconos,NULL,NULL,NULL);
 
 	int i;
 
@@ -9188,8 +9236,8 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 		//Si esta en zona de iconos lower de zx desktop. Y si estan habilitados
 
 		if (menu_zxdesktop_buttons_enabled.v) {
-			int ancho_boton,alto_boton,total_botones,xinicio_botones,xfinal_botones,yinicio_botones;
-			menu_ext_desktop_lower_icons_get_geometry(&ancho_boton,&alto_boton,&total_botones,&xinicio_botones,&xfinal_botones,&yinicio_botones);
+			int ancho_boton,alto_boton,xinicio_botones,xfinal_botones,yinicio_botones;
+			menu_ext_desktop_lower_icons_get_geometry(&ancho_boton,&alto_boton,NULL,&xinicio_botones,&xfinal_botones,&yinicio_botones);
 
 			if (mouse_pixel_x>=xinicio_botones && mouse_pixel_x<xfinal_botones &&
 				mouse_pixel_y>=yinicio_botones && mouse_pixel_y<yinicio_botones+alto_boton

@@ -1027,6 +1027,19 @@ extern z80_bit no_close_menu_after_smartload;
 
 extern z80_bit menu_zxdesktop_buttons_enabled;
 
+
+struct s_zxdesktop_lowericons_info {
+	int (*is_visible)(void);
+	int (*is_active)(void);
+	void (*accion)(void);	
+	char **bitmap_active;
+	char **bitmap_inactive;
+};
+
+#define TOTAL_ZXDESKTOP_MAX_LOWER_ICONS 11
+
+extern struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[];
+
 extern void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) );
 extern void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) );
 extern void menu_uncompress_zip_progress(char *zip_file,char *dest_dir);
