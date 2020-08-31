@@ -59,7 +59,7 @@ z80_byte msx_keyboard_table[16]={
 //tipos: rom, ram, vacio
 int msx_memory_slots[4][4];
 
-
+z80_bit msx_cartridge_inserted={0};
 
 const char *msx_string_memory_type_rom="ROM";
 const char *msx_string_memory_type_ram="RAM";
@@ -423,6 +423,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
                 reset_cpu();
         }
 
+    msx_cartridge_inserted.v=1;
 
 }
 
@@ -434,6 +435,8 @@ void msx_empty_romcartridge_space(void)
     for (i=0;i<4;i++) {
         msx_memory_slots[1][i]=MSX_SLOT_MEMORY_TYPE_EMPTY;
     }
+
+    msx_cartridge_inserted.v=0;
 
 }
 
