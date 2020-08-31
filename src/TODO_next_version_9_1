@@ -152,5 +152,5 @@ if (MACHINE_IS_SPECTRUM) "~~HiLow");
                             
 
 
-
+- que al insertar cinta en msx y svi, no se ponga en cpu turbo si esta autoload
 
