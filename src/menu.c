@@ -3498,15 +3498,7 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	if (indice_array<0) return;
 
 
-	/* esto ya se comprueba desde zxdesktop_lowericon_find_index
-	//Funcion is visible
-	int (*funcion_is_visible)(void);
 
-
-	funcion_is_visible=zdesktop_lowericons_array[numero_boton].is_visible;
-
-	if (!funcion_is_visible()) return;
-	*/
 
 
 	//Nota: en los botones superiores el background se dibuja al principio para todos
@@ -9354,16 +9346,7 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 
 				if (indice_array>=0) {
 
-					/* Esto ya lo hace desde zxdesktop_lowericon_find_index
-				//Ver si el boton esta activo
-								//Funcion is visible
-				int (*funcion_is_visible)(void);
-
-
-				funcion_is_visible=zdesktop_lowericons_array[numero_boton].is_visible;
-
-				if (funcion_is_visible()) {
-						*/
+					
 
 						printf ("boton esta visible\n");
 
@@ -31081,16 +31064,7 @@ void menu_inicio_handle_lower_icon_presses(void)
 
 		if (indice_array<0) return;
 
-		/* Esto ya lo hace desde zxdesktop_lowericon_find_index
-
-        //Funcion is visible
-        int (*funcion_is_visible)(void);
-
-
-        funcion_is_visible=zdesktop_lowericons_array[pulsado_boton].is_visible;
-
-        if (!funcion_is_visible()) return;
-		*/
+		
 
 //Ejecutar accion
 
