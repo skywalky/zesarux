@@ -67,7 +67,7 @@ z80_byte svi_keyboard_table[16]={
 //int svi_memory_slots[4][4];
 
 
-
+z80_bit svi_cartridge_inserted={0};
 
 
 const char *svi_string_memory_type_rom="ROM";
@@ -555,6 +555,7 @@ void svi_insert_rom_cartridge(char *filename)
                 reset_cpu();
         }
 
+    svi_cartridge_inserted.v=1;
 
 }
 
@@ -568,6 +569,8 @@ void svi_empty_romcartridge_space(void)
         svi_memory_slots[1][i]=SVI_SLOT_MEMORY_TYPE_EMPTY;
     }
     */
+
+   svi_cartridge_inserted.v=0;
 
 }
 

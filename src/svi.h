@@ -67,6 +67,8 @@ extern void svi_cas_load(void);
 
 extern void svi_get_string_memory_slot(char *buffer_mem_type,char *long_buffer_memory_type, z80_byte slot,z80_byte segment);
 
+extern z80_bit svi_cartridge_inserted;
+
 
 
 #endif
