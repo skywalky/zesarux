@@ -831,6 +831,9 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS);
 
 void menu_msxcart(MENU_ITEM_PARAMETERS);
 
+void menu_z88_slot_insert(MENU_ITEM_PARAMETERS);
+
+
 int menu_inicio_opcion_seleccionada=0;
 int machine_selection_opcion_seleccionada=0;
 int machine_selection_por_fabricante_opcion_seleccionada=0;
@@ -3286,7 +3289,51 @@ void zxdesktop_lowericon_mdv_flp_accion(void)
 }
 
 
+// Funciones para cartuchos Z88
 
+int zxdesktop_lowericon_z88_cart_is_visible(void)
+{
+	if (MACHINE_IS_Z88) return 1;
+
+	else return 0;
+}
+
+int zxdesktop_lowericon_z88_cart_N_is_active(int slot)
+{
+	if (z88_memory_slots[slot].size!=0) return 1;
+	else return 0;
+}
+
+int zxdesktop_lowericon_z88_cart_1_is_active(void)
+{
+	return zxdesktop_lowericon_z88_cart_N_is_active(1);
+}
+
+int zxdesktop_lowericon_z88_cart_2_is_active(void)
+{
+	return zxdesktop_lowericon_z88_cart_N_is_active(2);
+}
+
+int zxdesktop_lowericon_z88_cart_3_is_active(void)
+{
+	return zxdesktop_lowericon_z88_cart_N_is_active(3);
+}
+
+void zxdesktop_lowericon_z88_cart_1_accion(void)
+{
+	menu_z88_slot_insert(1);
+}
+
+void zxdesktop_lowericon_z88_cart_2_accion(void)
+{
+	menu_z88_slot_insert(2);
+}
+
+
+void zxdesktop_lowericon_z88_cart_3_accion(void)
+{
+	menu_z88_slot_insert(3);
+}
 
 
 struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX_LOWER_ICONS]={
@@ -3311,17 +3358,16 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},	
 
 	//3 Cartuchos de Z88
-	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
+	{ zxdesktop_lowericon_z88_cart_is_visible, zxdesktop_lowericon_z88_cart_1_is_active, zxdesktop_lowericon_z88_cart_1_accion,
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},	
-	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
+
+	{ zxdesktop_lowericon_z88_cart_is_visible, zxdesktop_lowericon_z88_cart_2_is_active, zxdesktop_lowericon_z88_cart_2_accion,
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},	
-	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
+
+	{ zxdesktop_lowericon_z88_cart_is_visible, zxdesktop_lowericon_z88_cart_3_is_active, zxdesktop_lowericon_z88_cart_3_accion,
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},			
 
-	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
-		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},	
-	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
-		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},		
+
 
 //prueba
 	//cinta
