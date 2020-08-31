@@ -113,6 +113,8 @@ culpa del rearrange entonces
 
 -revisar funciones y variables *lower_icon* que sea todo coherente
 
+-crash al cambiar a maquina mk14 por ejemplo si hay ventanas de menu abiertas
+
 -Iconos storage:
 
 if (MACHINE_IS_Z88) "Z88 Memory ~~Slots");

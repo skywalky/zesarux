@@ -514,40 +514,6 @@ char *bitmap_button_ext_desktop_machine[EXT_DESKTOP_BUTTONS_ANCHO]={
 };
 
 
-/*
-Template
-char *bitmap_button_ext_desktop_xxxxx[EXT_DESKTOP_BUTTONS_ANCHO]={
-    //01234567890123456789012345
-    "                          ",     //0
-  	"                          ",      
-	"                          ",		
-	"                          ",		
-	"                          ",	
-	"                          ",			
-	"                          ",			
-	"                          ", 		
-	"                          ",		
-	"                          ",		
-	"                          ",	//10	
-	"                          ",		
-	"                          ",		
-	"                          ",		
-	"                          ",		
-	"                          ",		
-	"                          ",		
-	"                          ",		
-	"                          ",		
-	"                          ",		
-	"                          ",    //20
-	"                          ",		
-	"                          ",		
-	"                          ",		
-	"                          ",
-	"                          " 	 //25
-};
-
-*/
-
 
 //Para lower icons
 
@@ -678,3 +644,100 @@ char *bitmap_lowericon_ext_desktop_mmc_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"   wwwwwwwwwwwwwwwwwwww   "  //25		
 
 };
+
+
+char *bitmap_lowericon_ext_desktop_z88_active[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+	"wwwwwwwwwwwwwwwwwwwwwwwwww", //0
+    "wxxxxxxxxxxxxxxxxxxxxxxxxw",     
+  	"w xwwwwwwwwwwwwwwwwwwwwx w",      
+	"wxxwwxxxwxwwwxxxwxxxwwwxxw",		
+	"w xwwxwwwxwwwxwxwwxwwwwx w",		
+	"wxxwwxxxwxwwwxwxwwxwwwwxxw",	
+	"w xwwwwxwxwwwxwxwwxwwwwx w",			
+	"wxxwwxxxwxxxwxxxwwxwwwwxxw",			
+	"w xwwwwwwwwwwwwwwwwwwwwx w", 		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",  //10		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",   //20 
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxwwwwwwwwwwwwwwwwwwwwxxw",
+	"wwwwwwwwwwwwwwwwwwwwwwwwww" 	 //25
+};
+
+
+char *bitmap_lowericon_ext_desktop_z88_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+	"wwwwwwwwwwwwwwwwwwwwwwwwww", //0
+    "wxxxxxxxxxxxxxxxxxxxxxxxxw",     
+  	"w x                    x w",      
+	"wxx  xxx x   xxx xxx   xxw",		
+	"w x  x   x   x x  x    x w",		
+	"wxx  xxx x   x x  x    xxw",	
+	"w x    x x   x x  x    x w",			
+	"wxx  xxx xxx xxx  x    xxw",			
+	"w x                    x w", 		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wx                      xw",  //10		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",   //20 
+	"wx                      xw",		
+	"wx                      xw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxwwwwwwwwwwwwwwwwwwwwxxw",
+	"wwwwwwwwwwwwwwwwwwwwwwwwww" 	 //25
+};
+
+/*
+Template
+char *bitmap_button_ext_desktop_xxxxx[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",      
+	"                          ",		
+	"                          ",		
+	"                          ",	
+	"                          ",			
+	"                          ",			
+	"                          ", 		
+	"                          ",		
+	"                          ",		
+	"                          ",	//10	
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",    //20
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",
+	"                          " 	 //25
+};
+
+*/
+
