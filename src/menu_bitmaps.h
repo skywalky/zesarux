@@ -55,6 +55,8 @@ extern char *bitmap_lowericon_ext_desktop_msx_cart_active[];
 extern char *bitmap_lowericon_ext_desktop_msx_cart_inactive[];
 extern char *bitmap_lowericon_ext_desktop_svi_active[];
 extern char *bitmap_lowericon_ext_desktop_svi_inactive[];
+extern char *bitmap_lowericon_ext_desktop_coleco_active[];
+extern char *bitmap_lowericon_ext_desktop_coleco_inactive[];
 
 #define EXT_DESKTOP_TOTAL_BUTTONS 13
 

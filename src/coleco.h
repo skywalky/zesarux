@@ -29,6 +29,8 @@ extern z80_byte *coleco_vram_memory;
 
 extern z80_byte coleco_read_vram_byte(z80_int address);
 
+extern z80_bit coleco_cartridge_inserted;
+
 
 
 extern z80_byte *coleco_return_segment_address(z80_int direccion,int *tipo);

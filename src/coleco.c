@@ -53,6 +53,8 @@ const char *coleco_string_memory_type_rom="ROM";
 const char *coleco_string_memory_type_ram="RAM";
 const char *coleco_string_memory_type_empty="EMPTY";
 
+z80_bit coleco_cartridge_inserted={0};
+
 char *coleco_get_string_memory_type(int tipo)
 {
     		
@@ -269,6 +271,7 @@ When the system finds a header, it selects the ROM slot only on the memory page 
                 reset_cpu();
         }
 
+    coleco_cartridge_inserted.v=1;
 
 }
 
@@ -282,6 +285,8 @@ void coleco_empty_romcartridge_space(void)
     for (i=0x2000;i<65536;i++) {
         memoria_spectrum[i]=0;
     }
+
+    coleco_cartridge_inserted.v=0;
 
 }
 
