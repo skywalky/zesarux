@@ -971,7 +971,7 @@ char *bitmap_lowericon_ext_desktop_sg1000_active[EXT_DESKTOP_BUTTONS_ANCHO]={
 	" wxxxxxxxxxxxxxxxxxxxxxxw ",	//10	
 	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
 	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
-	"  wx wwwwwwwwwwwwwwww xw  ",		
+	"  wxxwwwwwwwwwwwwwwwwxxw  ",		
 	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
 	"  wxxxxxxxxxxBxxBxxBxxxw  ",		
 	"  wxxxxxxxxxxxBxBxxBBxxw  ",		
