@@ -53,6 +53,8 @@ const char *sg1000_string_memory_type_rom="ROM";
 const char *sg1000_string_memory_type_ram="RAM";
 const char *sg1000_string_memory_type_empty="EMPTY";
 
+z80_bit sg1000_cartridge_inserted={0};
+
 char *sg1000_get_string_memory_type(int tipo)
 {
     		
@@ -205,6 +207,8 @@ void sg1000_insert_rom_cartridge(char *filename)
             reset_cpu();
     }
 
+    sg1000_cartridge_inserted.v=1;
+
 
 }
 
@@ -217,6 +221,8 @@ void sg1000_empty_romcartridge_space(void)
     for (i=0;i<65536;i++) {
         memoria_spectrum[i]=0;
     }
+
+    sg1000_cartridge_inserted.v=0;
 }
 
 

@@ -29,6 +29,7 @@ extern z80_byte *sg1000_vram_memory;
 
 extern z80_byte sg1000_read_vram_byte(z80_int address);
 
+extern z80_bit sg1000_cartridge_inserted;
 
 
 extern z80_byte *sg1000_return_segment_address(z80_int direccion,int *tipo);

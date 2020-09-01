@@ -3306,8 +3306,8 @@ int zxdesktop_lowericon_cartridge_sg1000_is_visible(void)
 
 int zxdesktop_lowericon_cartridge_sg1000_is_active(void)
 {
-	//TODO: flag que indique insertado
-	return 1;
+	if (sg1000_cartridge_inserted.v) return 1;
+	else return 0;
 }
 
 
@@ -3403,7 +3403,7 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 		bitmap_lowericon_ext_desktop_coleco_active,bitmap_lowericon_ext_desktop_coleco_inactive},	
 
 	{ zxdesktop_lowericon_cartridge_sg1000_is_visible, zxdesktop_lowericon_cartridge_sg1000_is_active, zxdesktop_lowericon_cartridge_accion,
-		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},										
+		bitmap_lowericon_ext_desktop_sg1000_active,bitmap_lowericon_ext_desktop_sg1000_inactive},										
 
 	//MDV/Floppy QL.
 	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
