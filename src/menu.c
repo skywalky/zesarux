@@ -2861,7 +2861,14 @@ void menu_ext_desktop_lower_icons_get_geometry(int *p_ancho_boton,int *p_alto_bo
 		int (*funcion_is_visible)(void);
 		funcion_is_visible=zdesktop_lowericons_array[i].is_visible;
 
-		if (funcion_is_visible()) {
+		int visible=funcion_is_visible();
+
+//Para poder forzar visibilidad de iconos para debug		
+#ifdef FORCE_VISIBLE_ALL_LOWER_ICONS
+	visible=1;
+#endif	
+		if (visible) {		
+
 			total_botones++;
 		}
 	}
@@ -3452,7 +3459,14 @@ int zxdesktop_lowericon_find_index(int icono)
 		int (*funcion_is_visible)(void);
 		funcion_is_visible=zdesktop_lowericons_array[i].is_visible;
 
-		if (funcion_is_visible()) {
+		int visible=funcion_is_visible();
+
+//Para poder forzar visibilidad de iconos para debug	
+#ifdef FORCE_VISIBLE_ALL_LOWER_ICONS
+	visible=1;
+#endif	
+
+		if (visible) {
 			if (i_enabled==icono) {
 				printf("buscando %d encontrado indice %d\n",icono,i);
 				return i;
@@ -3554,8 +3568,18 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 	funcion_is_enabled=zdesktop_lowericons_array[indice_array].is_active;
 
+	int is_enabled=funcion_is_enabled();
 
-	if (funcion_is_enabled()) {
+#ifdef FORCE_DISABLED_ALL_LOWER_ICONS
+	is_enabled=0;
+#endif
+
+#ifdef FORCE_ENABLED_ALL_LOWER_ICONS
+	is_enabled=1;
+#endif
+
+
+	if (is_enabled) {
 		puntero_bitmap=zdesktop_lowericons_array[indice_array].bitmap_active;
 	}
 
