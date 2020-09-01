@@ -778,14 +778,13 @@ char *bitmap_lowericon_ext_desktop_msx_cart_active[EXT_DESKTOP_BUTTONS_ANCHO]={
   	"                          ",      
 	"                          ",		
 	"                          ",		
-	"                          ",	
 	"wwwwwwwwwwwwwwwwwwwwwwwwww",			
 	"wxxxxxxxxxxxxxxxxxxxxxxxxw",			
 	"wxxccccccccccccccccccccxxw", 		
 	"wxxccccccccccccccccccccxxw",		
 	"wxxcxcxxxcxcxccxccxxcxcxxw",		
-	"wxxcxxcxxcxcxcxcxcxxcccxxw",	//10	
-	"wxxcxccxxcxxxcxxxcxxcxcxxw",		
+	"wxxcxxcxxcxcxcxcxcxxcccxxw",	
+	"wxxcxccxxcxxxcxxxcxxcxcxxw",   //10			
 	"wxxcxccxxcxcxcxcxcxxcxcxxw",		
 	"wxxcxxcxxcxcxcxcxcxxcxcxxw",		
 	"wxxcxcxxxcxcxcxcxcxxcxcxxw",		
@@ -794,8 +793,9 @@ char *bitmap_lowericon_ext_desktop_msx_cart_active[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"wxxxxxxxxxwwwwwwwxxxxxxxxw",		
 	"wx xxxxxxxxxwwwxxxxxxxxxxw",		
 	"wxxxxxxxxxxxxwxxxxxxxxxxxw",		
-	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    //20
-	"wwwwwwwwwwwwwwwwwwwwwwwwww",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    
+	"wwwwwwwwwwwwwwwwwwwwwwwwww",  //20
+	"                          ",				
 	"                          ",		
 	"                          ",		
 	"                          ",
@@ -808,14 +808,13 @@ char *bitmap_lowericon_ext_desktop_msx_cart_inactive[EXT_DESKTOP_BUTTONS_ANCHO]=
   	"                          ",      
 	"                          ",		
 	"                          ",		
-	"                          ",	
 	"wwwwwwwwwwwwwwwwwwwwwwwwww",			
 	"wxxxxxxxxxxxxxxxxxxxxxxxxw",			
 	"wx                      xw", 		
 	"wx                      xw",		
 	"wx  x xxx x x  x  xx x  xw",		
-	"wx  xx xx x x x x xx    xw",	//10	
-	"wx  x  xx xxx xxx xx x  xw",		
+	"wx  xx xx x x x x xx    xw",	
+	"wx  x  xx xxx xxx xx x  xw",	//10		
 	"wx  x  xx x x x x xx x  xw",		
 	"wx  xx xx x x x x xx x  xw",		
 	"wx  x xxx x x x x xx x  xw",		
@@ -824,10 +823,11 @@ char *bitmap_lowericon_ext_desktop_msx_cart_inactive[EXT_DESKTOP_BUTTONS_ANCHO]=
 	"wxx       xxxxxxx       xw",		
 	"wx x        xxx         xw",		
 	"wxx          x          xw",		
-	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    //20
-	"wwwwwwwwwwwwwwwwwwwwwwwwww",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    
+	"wwwwwwwwwwwwwwwwwwwwwwwwww",	//20	
 	"                          ",		
-	"                          ",		
+	"                          ",	
+	"                          ",			
 	"                          ",
 	"                          " 	 //25
 };
