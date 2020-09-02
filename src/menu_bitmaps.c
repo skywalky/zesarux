@@ -1138,6 +1138,65 @@ char *bitmap_lowericon_ext_desktop_betadisk_inactive[EXT_DESKTOP_BUTTONS_ANCHO]=
 	"  wwwwwwwwwwwwwwwwwwwwww  " 	 //25
 };
 
+char *bitmap_lowericon_ext_desktop_cart_timex_active[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"     wwwwwwwwwwwwwwww     ",      
+	"    wxxxxxxxxxxxxxxxxw    ",		
+	"   wxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxxxx            xxxxw  ",	
+	"  wxxx              xxxw  ",			
+	"  wxxx              xxxw  ",			
+	"  wxxxx            xxxxw  ", 		
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxwwwwwwwwwwwwwwwwwwxw  ",	//10	
+	"  wxwxxxwxwxwxwxxwxwxwxw  ",
+	"  wxwwxwwxwxxxwxwwwxwwxw  ",		
+	"  wxwwxwwxwxwxwxxwxwxwxw  ",		
+	"  wxwwwwwwwwwwwwwwwwwwxw  ",		
+	"  wxwxxwxwxxwxxwxwwxxwxw  ",		
+	"  wxwxwwxwxxwxwwxwwxwwxw  ",		
+	"  wxwwxwxwxxwxxwxxwxwwxw  ",		
+	"  wxwwwwwwwwwwwwwwwwwwxw  ",		
+	"  wxwrrrrwwggggwwccccwxw  ",		
+	"  wxwrrrrwwggggwwccccwxw  ",	//20	
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wwwxxxxxxxxxxxxxxxxwww  ",		
+	"    wxxxxxxxxxxxxxxxxw    ",		
+	"    wxxxxxxxxxxxxxxxxw    ",
+	"    wwwwwwwwwwwwwwwwww    " 	 //25
+};
+
+char *bitmap_lowericon_ext_desktop_cart_timex_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
+     //01234567890123456789012345
+    "                          ",     //0
+  	"     wwwwwwwwwwwwwwww     ",      
+	"    wxxxxxxxxxxxxxxxxw    ",		
+	"   wx                xw   ",		
+	"  wx   xxxxxxxxxxxx   xw  ",	
+	"  wx  xxxxxxxxxxxxxx  xw  ",			
+	"  wx  xxxxxxxxxxxxxx  xw  ",			
+	"  wx   xxxxxxxxxxxx   xw  ", 		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",	//10	
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",    //20
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wwwxxxxxxxxxxxxxxxxwww  ",		
+	"    wxxxxxxxxxxxxxxxxw    ",		
+	"    wxxxxxxxxxxxxxxxxw    ",
+	"    wwwwwwwwwwwwwwwwww    " 	 //25
+};
 
 /*
 Template

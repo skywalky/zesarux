@@ -837,6 +837,8 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS);
 
 void menu_betadisk(MENU_ITEM_PARAMETERS);
 
+void menu_timexcart(MENU_ITEM_PARAMETERS);
+
 
 int menu_inicio_opcion_seleccionada=0;
 int machine_selection_opcion_seleccionada=0;
@@ -3297,8 +3299,28 @@ void zxdesktop_lowericon_zxpand_accion(void)
 	menu_zxpand(0);
 }
 
+//Funciones para Cartuchos TS 2068
 
-//Funciones para Cartuchos
+int zxdesktop_lowericon_cart_timex_is_visible(void)
+{
+	if (MACHINE_IS_TIMEX_TS2068) return 1;
+
+	else return 0;
+}
+
+int zxdesktop_lowericon_cart_timex_is_active(void)
+{
+	if (timex_cartridge_inserted.v) return 1;
+	else return 0;
+}
+
+void zxdesktop_lowericon_cart_timex_accion(void)
+{
+	menu_timexcart(0);
+}
+
+
+//Funciones para Cartuchos MSX, Coleco, SVI, SG1000
 
 void zxdesktop_lowericon_cartridge_accion(void)
 {
@@ -3451,7 +3473,7 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 	{ zxdesktop_lowericon_zxpand_is_visible, zxdesktop_lowericon_zxpand_is_active, zxdesktop_lowericon_zxpand_accion,
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},			
 
-	//Cartuchos msx, coleco, svi, sg1000. TODO: iconos
+	//Cartuchos msx, coleco, svi, sg1000
 	{ zxdesktop_lowericon_cartridge_msx_is_visible, zxdesktop_lowericon_cartridge_msx_is_active, zxdesktop_lowericon_cartridge_accion,
 		bitmap_lowericon_ext_desktop_msx_cart_active,bitmap_lowericon_ext_desktop_msx_cart_inactive},	
 
@@ -3462,7 +3484,11 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 		bitmap_lowericon_ext_desktop_coleco_active,bitmap_lowericon_ext_desktop_coleco_inactive},	
 
 	{ zxdesktop_lowericon_cartridge_sg1000_is_visible, zxdesktop_lowericon_cartridge_sg1000_is_active, zxdesktop_lowericon_cartridge_accion,
-		bitmap_lowericon_ext_desktop_sg1000_active,bitmap_lowericon_ext_desktop_sg1000_inactive},										
+		bitmap_lowericon_ext_desktop_sg1000_active,bitmap_lowericon_ext_desktop_sg1000_inactive},	
+
+	//Cartuchos Timex TS2068	
+	{ zxdesktop_lowericon_cart_timex_is_visible, zxdesktop_lowericon_cart_timex_is_active, zxdesktop_lowericon_cart_timex_accion,
+		bitmap_lowericon_ext_desktop_cart_timex_active,bitmap_lowericon_ext_desktop_cart_timex_inactive},										
 
 	//MDV/Floppy QL.
 	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
@@ -3480,12 +3506,6 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 
 
 
-//prueba
-	//cinta
-	/*
-	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active,zxdesktop_lowericon_cassete_accion,
-		bitmap_lowericon_ext_desktop_cassette_active,bitmap_lowericon_ext_desktop_cassette_inactive}
-	*/
 
 };
 

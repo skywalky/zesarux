@@ -128,21 +128,11 @@ if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) "~~IDE");
                 
 
     
-if (MACHINE_IS_SPECTRUM) ~~ESXDOS Handler");
-
-if (MACHINE_IS_ZXUNO) "~~ZX-Uno Flash");
-
-if ( (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) && !MACHINE_IS_ZXUNO) "%s D~~andanator",(MACHINE_IS_SPECTRUM ? "ZX" : "CPC")  );
-                
-if (superupgrade_supported_machine() ) "Speccy Superup~~grade");
-                
-if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) NULL,"~~Kartusho");
-
-if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC)"i~~From");
-                
-if (MACHINE_IS_SPECTRUM) "~~HiLow");
-                            
+                           
 
 
 - que al insertar cinta en msx y svi, no se ponga en cpu turbo si esta autoload
 
+- bios zxuno, no hace update desde la mmc. condiciones de compilacion en la bios para ZEsarUX:
+
+http://svn.zxuno.com/svn/zxuno/firmware/firmware.asm
