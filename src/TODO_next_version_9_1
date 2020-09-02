@@ -119,15 +119,9 @@ culpa del rearrange entonces
 
 
 
-if (MACHINE_IS_TIMEX_TS2068) "Timex ~~Cartridge");
-
-
-
-
 if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) "~~IDE");
                 
-
-    
+   
                            
 
 
