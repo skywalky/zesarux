@@ -6,7 +6,7 @@ Improved ZX Desktop:
 -Reordered menu items
 -Windows are not closed when changing ZX Desktop size
 
-
+Fixed segfaults when changing machines and having ZX Desktop windows opened
 
 
 Version 9.0 - Turbo Esprit edition. 17 August 2020
