@@ -833,6 +833,8 @@ void menu_msxcart(MENU_ITEM_PARAMETERS);
 
 void menu_z88_slot_insert(MENU_ITEM_PARAMETERS);
 
+void menu_plusthreedisk(MENU_ITEM_PARAMETERS);
+
 
 int menu_inicio_opcion_seleccionada=0;
 int machine_selection_opcion_seleccionada=0;
@@ -3214,6 +3216,26 @@ void zxdesktop_lowericon_cassete_accion(void)
 	menu_tape_settings(0);
 }
 
+//Funciones para floppy +3
+
+
+int zxdesktop_lowericon_plus3_flp_is_visible(void)
+{
+	if (MACHINE_IS_SPECTRUM_P2A_P3) return 1;
+	else return 0;
+}
+
+int zxdesktop_lowericon_plus3_flp_is_active(void)
+{
+	if (dskplusthree_emulation.v) return 1;
+	else return 0;
+}
+
+void zxdesktop_lowericon_plus3_flp_accion(void)
+{
+	menu_plusthreedisk(0);
+}
+
 
 //Funciones para MMC
 
@@ -3390,6 +3412,10 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 	//cinta
 	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active,zxdesktop_lowericon_cassete_accion,
 		bitmap_lowericon_ext_desktop_cassette_active,bitmap_lowericon_ext_desktop_cassette_inactive},
+
+	//floppy +3
+	{ zxdesktop_lowericon_plus3_flp_is_visible, zxdesktop_lowericon_plus3_flp_is_active,zxdesktop_lowericon_plus3_flp_accion,
+		bitmap_lowericon_ext_desktop_plus3_flp_active,bitmap_lowericon_ext_desktop_plus3_flp_inactive},		
 
 	//MMC
 	{ zxdesktop_lowericon_mmc_is_visible, zxdesktop_lowericon_mmc_is_active, zxdesktop_lowericon_mmc_accion,

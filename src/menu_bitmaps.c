@@ -1017,6 +1017,67 @@ char *bitmap_lowericon_ext_desktop_sg1000_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
 };
 
 
+char *bitmap_lowericon_ext_desktop_plus3_flp_active[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "  wwwwwwwwwwwwwwwwwwwwww  ",     //0
+  	"  wxxxx xxxxxxxxxxxxxxxw  ",      
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxx xxxxxxwwxxxxxx xxw  ",		
+	"  wxxxxxxxxxwwxxxxxxxxxw  ",	
+	"  wxxxxxxxxxwwxxxxxxxxxw  ",			
+	"  wxxxxxxxxxwwxxxxxxxxxw  ",			
+	"  wxxxxxxxxxwwxxxxxxxxxw  ", 		
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxxxxxxxxxWWxxxxxxxxxw  ",	//10	
+	"  wxxxxxxxxWWWWxxxxxxxxw  ",		
+	"  wxxxxxxxxWWWWxxxxxxxxw  ",		
+	"  wxxxxxxxxxWWxxxxxxxxxw  ",		
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",			
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxxxRRRRRRRRRRRRRRxxxw  ",		
+	"  wxxRRWWRWRWWRRWRWRRxxw  ",		
+	"  wxxRRRRRRRRRRRRRRRRxxw  ",	//20	
+	"  wxxWWWWWWWWWWWWWWWWxxw  ",    
+	"  wxxWWWWWWWWWWWWWWWWxxw  ",		
+	"  wxxxxxxxxxxxxxxxxxxxxw  ",		
+	"  wxxwwwwwwwwwwwwwwwwxxw  ",		
+	"  wxxwwwwwwwwwwwwwwwwxxw  " 	 //25
+};
+
+char *bitmap_lowericon_ext_desktop_plus3_flp_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "  wwwwwwwwwwwwwwwwwwwwww  ",    //0
+  	"  wxxxxwxxxxxxxxxxxxxxxw  ",      
+	"  wx                  xw  ",		
+	"  wx x      xx      x xw  ",		
+	"  wx        xx        xw  ",	
+	"  wx        xx        xw  ",			
+	"  wx        xx        xw  ",			
+	"  wx        xx        xw  ", 		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx        xx        xw  ",	//10	
+	"  wx       x  x       xw  ",		
+	"  wx       x  x       xw  ",		
+	"  wx        xx        xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx                  xw  ",		
+	"  wx  xxxxxxxxxxxxxx  xw  ",		
+	"  wx x              x xw  ",		
+	"  wx x              x xw  ",    //20
+	"  wx x              x xw  ",		
+	"  wx x              x xw  ",		
+	"  wx x              x xw  ",		
+	"  wx x              x xw  ",
+	"  wxxxxxxxxxxxxxxxxxxxxw  " 	 //25
+};
+
+
 /*
 Template
 char *bitmap_button_ext_desktop_xxxxx[EXT_DESKTOP_BUTTONS_ANCHO]={

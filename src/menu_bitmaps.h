@@ -60,6 +60,9 @@ extern char *bitmap_lowericon_ext_desktop_coleco_inactive[];
 extern char *bitmap_lowericon_ext_desktop_sg1000_active[];
 extern char *bitmap_lowericon_ext_desktop_sg1000_inactive[];
 
+extern char *bitmap_lowericon_ext_desktop_plus3_flp_active[];
+extern char *bitmap_lowericon_ext_desktop_plus3_flp_inactive[];
+
 #define EXT_DESKTOP_TOTAL_BUTTONS 13
 
 #define EXT_DESKTOP_BUTTONS_ANCHO 26
