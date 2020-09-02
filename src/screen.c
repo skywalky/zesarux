@@ -2039,6 +2039,7 @@ int alto_layer_menu_machine=0;
 
 z80_int *buffer_layer_machine=NULL;
 z80_int *buffer_layer_menu=NULL;
+int tamanyo_memoria_buffer_layer_menu=0;
 
 
 //Especie de semaforo que indica:
@@ -2116,18 +2117,21 @@ void scr_reallocate_layers_menu(int ancho,int alto)
 		//printf ("Liberando buffer_layer_menu\n");
 		free(buffer_layer_menu);
 		buffer_layer_menu=NULL;
+		tamanyo_memoria_buffer_layer_menu=0;
 	}
 
 
 	//printf ("despues si liberar buffer_layer_menu\n");
 
 	//Asignar
-	int size_layers=ancho_layer_menu_machine*alto_layer_menu_machine*sizeof(z80_int);
+	int numero_elementos=ancho_layer_menu_machine*alto_layer_menu_machine;
+	int size_layers=numero_elementos*sizeof(z80_int);
 
 	//printf ("Asignando layer tamanyo %d\n",size_layers);
 
 	buffer_layer_machine=malloc(size_layers);
 	buffer_layer_menu=malloc(size_layers);
+	tamanyo_memoria_buffer_layer_menu=numero_elementos;
 
 
 	//printf ("despues buffer_layer_machine %p buffer_layer_menu %p\n",buffer_layer_machine,buffer_layer_menu);
@@ -2179,12 +2183,22 @@ void scr_putpixel_layer_menu_no_zoom(int x,int y,int color)
 												int ydestino=yzoom;
                         //scr_putpixel(xzoom+zx,yzoom+zy,color);
 												if (buffer_layer_menu==NULL) {
-													printf ("scr_putpixel_layer_menu NULL\n"); //?????
+													//printf ("scr_putpixel_layer_menu NULL\n"); //?????
 												}
-												else buffer_layer_menu[ydestino*ancho_layer_menu_machine+xdestino]=color;
+												else {
+													//Proteger que no se salga de rango
+													int offset=ydestino*ancho_layer_menu_machine+xdestino;
 
-												//Y hacer mix
-												screen_putpixel_mix_layers(xdestino,ydestino);   
+													if (offset<tamanyo_memoria_buffer_layer_menu) {
+													
+														buffer_layer_menu[offset]=color;
+
+														//Y hacer mix
+														screen_putpixel_mix_layers(xdestino,ydestino); 														
+													}
+												}
+
+												  
                 
         
 }
@@ -2204,12 +2218,23 @@ void scr_putpixel_layer_menu(int x,int y,int color)
 												int ydestino=yzoom+zy;
                         //scr_putpixel(xzoom+zx,yzoom+zy,color);
 												if (buffer_layer_menu==NULL) {
-													printf ("scr_putpixel_layer_menu NULL\n"); //?????
+													//printf ("scr_putpixel_layer_menu NULL\n"); //?????
 												}
-												else buffer_layer_menu[ydestino*ancho_layer_menu_machine+xdestino]=color;
+												else {
+													//Proteger que no se salga de rango
+													int offset=ydestino*ancho_layer_menu_machine+xdestino;
 
-												//Y hacer mix
-												screen_putpixel_mix_layers(xdestino,ydestino);   
+													if (offset<tamanyo_memoria_buffer_layer_menu) {
+													
+														buffer_layer_menu[offset]=color;
+
+														//Y hacer mix
+														screen_putpixel_mix_layers(xdestino,ydestino); 
+													}
+
+												}
+
+												  
                 }
         }
 }

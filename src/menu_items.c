@@ -4765,6 +4765,9 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	//printf("despues util_find_window_geometry\n");
 
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Waveform");
+
+	//printf("despues zxvision_new_window_nocheck_staticsize\n");
+
 	ventana->can_be_backgrounded=1;	
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"waveform");

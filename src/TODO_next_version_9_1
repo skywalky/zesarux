@@ -130,3 +130,18 @@ if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) "~~IDE");
 - bios zxuno, no hace update desde la mmc. condiciones de compilacion en la bios para ZEsarUX:
 
 http://svn.zxuno.com/svn/zxuno/firmware/firmware.asm
+
+
+-crash al cambiar de maquina. Ejemplo:
+
+spectrum. abrir ventana sound wave 
+cambio a maquina z88. peta
+
+Quiza es culpa de zxvision_new_window_nocheck_staticsize?
+no, es porque salta directamente el overlay y peta en scr_putpixel_gui_zoom
+
+habria que controlar limites de putpixel en scr_putpixel_layer_menu y scr_putpixel_layer_menu_no_zoom
+->controlados limites
+Quiza habria que hacer un rechequeo de tamaños ventanas al conmutar maquina? y al reducir Desktop?
+Puede que controlar los limites de pixeles sea lo mejor, asi aunque las ventanas sean mas grandes, el pixel nunca
+saldra fuera y generaria segfault
