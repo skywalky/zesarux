@@ -3212,6 +3212,7 @@ int zxdesktop_lowericon_cassete_is_visible(void)
 int zxdesktop_lowericon_cassete_is_active(void)
 {
 	if ((tape_loadsave_inserted & TAPE_LOAD_INSERTED)!=0) return 1;
+	else if (realtape_inserted.v) return 1;
 	else return 0;
 }
 
