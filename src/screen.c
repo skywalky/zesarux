@@ -2172,31 +2172,32 @@ void scr_init_layers_menu(void)
 
 void scr_putpixel_layer_menu_no_zoom(int x,int y,int color)
 {
-	        int xzoom=x;
-        int yzoom=y;
-
-			
-
+	int xzoom=x;
+	int yzoom=y;
 
       
-												int xdestino=xzoom;
-												int ydestino=yzoom;
-                        //scr_putpixel(xzoom+zx,yzoom+zy,color);
-												if (buffer_layer_menu==NULL) {
-													//printf ("scr_putpixel_layer_menu NULL\n"); //?????
-												}
-												else {
-													//Proteger que no se salga de rango
-													int offset=ydestino*ancho_layer_menu_machine+xdestino;
+	int xdestino=xzoom;
+	int ydestino=yzoom;
+	//scr_putpixel(xzoom+zx,yzoom+zy,color);
+	if (buffer_layer_menu==NULL) {
+		//printf ("scr_putpixel_layer_menu NULL\n"); //?????
+	}
+	else {
+		//Proteger que no se salga de rango
+		int offset=ydestino*ancho_layer_menu_machine+xdestino;
 
-													if (offset<tamanyo_memoria_buffer_layer_menu) {
-													
-														buffer_layer_menu[offset]=color;
+		if (offset<tamanyo_memoria_buffer_layer_menu) {
+		
+			buffer_layer_menu[offset]=color;
 
-														//Y hacer mix
-														screen_putpixel_mix_layers(xdestino,ydestino); 														
-													}
-												}
+			//Y hacer mix
+			screen_putpixel_mix_layers(xdestino,ydestino); 														
+		}
+
+		else {
+			//printf ("fuera de rango %d %d\n",xdestino,ydestino);
+		}
+	}
 
 												  
                 
@@ -2205,38 +2206,41 @@ void scr_putpixel_layer_menu_no_zoom(int x,int y,int color)
 
 void scr_putpixel_layer_menu(int x,int y,int color)
 {
-	        int xzoom=x*zoom_x;
-        int yzoom=y*zoom_y;
+	int xzoom=x*zoom_x;
+	int yzoom=y*zoom_y;
 
-				int zx,zy;
+	int zx,zy;
 
 
-        //Escalado a zoom indicado
-        for (zx=0;zx<zoom_x;zx++) {
-                for (zy=0;zy<zoom_y;zy++) {
-												int xdestino=xzoom+zx;
-												int ydestino=yzoom+zy;
-                        //scr_putpixel(xzoom+zx,yzoom+zy,color);
-												if (buffer_layer_menu==NULL) {
-													//printf ("scr_putpixel_layer_menu NULL\n"); //?????
-												}
-												else {
-													//Proteger que no se salga de rango
-													int offset=ydestino*ancho_layer_menu_machine+xdestino;
+	//Escalado a zoom indicado
+	for (zx=0;zx<zoom_x;zx++) {
+		for (zy=0;zy<zoom_y;zy++) {
+			int xdestino=xzoom+zx;
+			int ydestino=yzoom+zy;
+			//scr_putpixel(xzoom+zx,yzoom+zy,color);
+			if (buffer_layer_menu==NULL) {
+				//printf ("scr_putpixel_layer_menu NULL\n"); //?????
+			}
+			else {
+				//Proteger que no se salga de rango
+				int offset=ydestino*ancho_layer_menu_machine+xdestino;
 
-													if (offset<tamanyo_memoria_buffer_layer_menu) {
-													
-														buffer_layer_menu[offset]=color;
+				if (offset<tamanyo_memoria_buffer_layer_menu) {
+				
+					buffer_layer_menu[offset]=color;
 
-														//Y hacer mix
-														screen_putpixel_mix_layers(xdestino,ydestino); 
-													}
+					//Y hacer mix
+					screen_putpixel_mix_layers(xdestino,ydestino); 
+				}
+				else {
+					//printf ("fuera de rango %d %d\n",xdestino,ydestino);
+				}
 
-												}
+			}
 
-												  
-                }
-        }
+											
+		}
+	}
 }
 
 void scr_redraw_machine_layer(void)
