@@ -2961,7 +2961,7 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 	int alto_boton;
 
 
-	int xfinal;
+	
 
 
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL);
@@ -3022,7 +3022,7 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 	int alto_boton;
 
 
-	int xfinal;
+	//int xfinal;
 
 	int yinicio; //=0;	
 
@@ -3052,7 +3052,7 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 	//Horizontal
 
 	int color_recuadro=0;
-	int color_relleno=7;
+	//int color_relleno=7;
 
 	if (pulsado) color_recuadro=7;
 
@@ -3141,8 +3141,8 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 		int xinicio=screen_get_ext_desktop_start_x();
 		int yinicio=0;
 
-		int ancho=screen_get_ext_desktop_width_zoom();
-		int alto=screen_get_emulated_display_height_zoom_border_en();		
+		//int ancho=screen_get_ext_desktop_width_zoom();
+		//int alto=screen_get_emulated_display_height_zoom_border_en();		
 
 	int xfinal;
 
@@ -3159,8 +3159,8 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
 
-	int x;
-	int contador_boton=0;
+	//int x;
+	//int contador_boton=0;
 
 
 
@@ -3595,10 +3595,10 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	int xinicio=screen_get_ext_desktop_start_x();
 	
 
-	int ancho=screen_get_ext_desktop_width_zoom();
-	int alto=screen_get_emulated_display_height_zoom_border_en();		
+	//int ancho=screen_get_ext_desktop_width_zoom();
+	//int alto=screen_get_emulated_display_height_zoom_border_en();		
 
-	int xfinal;
+	//int xfinal;
 
 	
 
@@ -3611,8 +3611,8 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	printf ("zoom lower icons: %d\n",nivel_zoom);
 
 
-	int x;
-	int contador_boton=0;
+	//int x;
+	//int contador_boton=0;
 
 	//int yinicio=alto-alto_boton;
 
@@ -3698,7 +3698,7 @@ void menu_draw_ext_desktop_dibujar_boton_or_lower_icon_pulsado(void)
 	if (menu_pressed_zxdesktop_lower_icon_which>=0) menu_ext_desktop_draw_lower_icon(menu_pressed_zxdesktop_lower_icon_which,1);
 }
 
-void menu_draw_ext_desktop_buttons(int xinicio,int yinicio,int ancho,int alto)
+void menu_draw_ext_desktop_buttons(int xinicio)
 {
 
 	//TODO
@@ -4004,7 +4004,7 @@ void menu_draw_ext_desktop(void)
 
 	//Dibujar botones si están activados (por defecto)
 	if (menu_zxdesktop_buttons_enabled.v) {
-		menu_draw_ext_desktop_buttons(xinicio,yinicio,ancho,alto);
+		menu_draw_ext_desktop_buttons(xinicio);
 	}
 	
 }
