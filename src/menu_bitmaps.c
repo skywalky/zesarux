@@ -791,7 +791,7 @@ char *bitmap_lowericon_ext_desktop_msx_cart_active[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"wxxccccccccccccccccccccxxw",		
 	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
 	"wxxxxxxxxxwwwwwwwxxxxxxxxw",		
-	"wx xxxxxxxxxwwwxxxxxxxxxxw",		
+	"wxx xxxxxxxxwwwxxxxxxxxxxw",		
 	"wxxxxxxxxxxxxwxxxxxxxxxxxw",		
 	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    
 	"wwwwwwwwwwwwwwwwwwwwwwwwww",  //20
@@ -820,9 +820,9 @@ char *bitmap_lowericon_ext_desktop_msx_cart_inactive[EXT_DESKTOP_BUTTONS_ANCHO]=
 	"wx  x xxx x x x x xx x  xw",		
 	"wx                      xw",		
 	"wx                      xw",		
-	"wxx       xxxxxxx       xw",		
+	"wx        xxxxxxx       xw",		
 	"wx x        xxx         xw",		
-	"wxx          x          xw",		
+	"wx           x          xw",		
 	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    
 	"wwwwwwwwwwwwwwwwwwwwwwwwww",	//20	
 	"                          ",		
