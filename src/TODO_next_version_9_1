@@ -118,8 +118,6 @@ culpa del rearrange entonces
 -Iconos storage:
 
 
-				
-if (MACHINE_IS_SPECTRUM_P2A_P3)"+3 ~~Disk");
 
 if (MACHINE_IS_TIMEX_TS2068) "Timex ~~Cartridge");
 
@@ -128,7 +126,7 @@ if (MACHINE_IS_TIMEX_TS2068) "Timex ~~Cartridge");
 
 if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) "~~IDE");
                 
-if (MACHINE_IS_SPECTRUM) "~~Betadisk");
+
     
 if (MACHINE_IS_SPECTRUM) ~~ESXDOS Handler");
 
