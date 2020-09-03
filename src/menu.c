@@ -3281,6 +3281,25 @@ void zxdesktop_lowericon_mmc_accion(void)
 	menu_mmc_divmmc(0);
 }
 
+//Funciones para IDE
+
+int zxdesktop_lowericon_ide_is_visible(void)
+{
+	if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) return 1;
+	else return 0;
+}
+
+int zxdesktop_lowericon_ide_is_active(void)
+{
+	if (ide_enabled.v) return 1;
+	else return 0;
+}
+
+void zxdesktop_lowericon_ide_accion(void)
+{
+	menu_ide_divide(0);
+}
+
 //Funciones para zxpand
 
 int zxdesktop_lowericon_zxpand_is_visible(void)
@@ -3469,6 +3488,10 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 	//MMC
 	{ zxdesktop_lowericon_mmc_is_visible, zxdesktop_lowericon_mmc_is_active, zxdesktop_lowericon_mmc_accion,
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},		
+
+	//IDE
+	{ zxdesktop_lowericon_ide_is_visible, zxdesktop_lowericon_ide_is_active, zxdesktop_lowericon_ide_accion,
+		bitmap_lowericon_ext_desktop_ide_active,bitmap_lowericon_ext_desktop_ide_inactive},				
 
 	//ZXPand
 	{ zxdesktop_lowericon_zxpand_is_visible, zxdesktop_lowericon_zxpand_is_active, zxdesktop_lowericon_zxpand_accion,
