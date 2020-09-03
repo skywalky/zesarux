@@ -218,8 +218,8 @@ Before running configure script, please set:
 
 export CFLAGS=-DHAIKU_OS
 
-You need to run configure with setting (at least): --disable-pthreads
-(because it doesn't find some network functions, so disabling pthreads also disable networking)
+You need to run configure with setting (at least): --disable-networking
+(because it doesn't find some network functions)
 
 If you want to compile ZEsarUX on Haiku with SDL support:
 

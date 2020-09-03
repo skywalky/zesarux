@@ -52,6 +52,7 @@ show_help()
 	echo "--disable-coreaudio          Disable Coreaudio Mac OS X audio"
 	echo "--disable-sndfile            Disable sndfile functions"
         echo "--disable-pthreads           Disable using posix threads"
+        echo "--disable-networking         Disable networking functions"
 	echo "--disable-cocoa              Disable Cocoa Mac OS X native GUI"
 	echo "--disable-linuxrealjoystick  Disable linux real joystick support"
 	echo "--enable-memptr              Enable MEMPTR emulation"
@@ -120,6 +121,7 @@ OPTIONWINDOWSRESOURCE=""
 #OPTIONOBJSSL="enabled"
 OPTIONOBJSSL=""
 OPTIONPTHREADS="enabled"
+OPTIONNETWORKING="enabled"
 OPTIONSNDFILE="enabled"
 OPTIONXEXT="enabled"
 OPTIONXVIDMODE="enabled"
@@ -241,6 +243,10 @@ while [ $# -gt 0 ]; do
 
 	--disable-pthreads)
         OPTIONPTHREADS=""
+	;;
+
+	--disable-networking)
+        OPTIONNETWORKING=""
 	;;
 
         --disable-linuxrealjoystick)
@@ -2015,14 +2021,23 @@ cat >> compileoptions.h << _EOF
 _EOF
 COMPILE_VARIABLES="$COMPILE_VARIABLES USE_PTHREADS"
 
+
 else
+
 #si no hay pthreads, tampoco habra networking
+OPTIONNETWORKING=""
+
+fi
+
+
+if [ "$OPTIONNETWORKING" == "" ]; then
 cat >> compileoptions.h << _EOF
 #define NETWORKING_DISABLED
 _EOF
 COMPILE_VARIABLES="$COMPILE_VARIABLES NETWORKING_DISABLED"
 
 fi
+
 
 
 if [ "$OPTIONCOCOA" != "" ]; then
@@ -2371,6 +2386,14 @@ fi
 echo -n " SSL support: "
 
 if [ "$OPTIONOBJSSL" == "" ]; then
+        echo "no"
+else
+        echo "yes"
+fi
+
+echo -n " Networking support: "
+
+if [ "$OPTIONNETWORKING" == "" ]; then
         echo "no"
 else
         echo "yes"
