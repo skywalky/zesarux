@@ -86,21 +86,15 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 
 - meter en extras de docs Benchmark legacy tbblue: de momento está en el código, en el menú como comentarios
 
--Opción en menú para descargar los extras
-
 -ROM zx85 de Daniel incluir   Y zx82?
 
 -campo de fecha en snapshot zsf
 
--al cambiar por ejemplo de spectrum a z88 y si hay ventanas en background como keyboard help se produce segfault. quiza por ventana fuera de rango
-
 -parece que si hay joystick conectado, el splash de Z logo no aparece toda la animacion, se cierra a la primera barra de color
 
--si ha volcado snapshot cuando hay cpu_panic, que lo diga en ventana de panic y tambien en consola
+-si ha volcado snapshot cuando hay cpu_panic, que lo diga en ventana de panic y tambien en consola: ya lo dice
 
 -soporte joystick usb para msx, coleco etc
-
--al cambiar tamanyo zxdesktop, reorganizar ventanas background en vez de cerrarlas (suponiendo que este activo el background -> que la funcion de reorganizar lo detecte si esta activado)
 
 -cuando hace rearrange cuando se reduce zx desktop, deja las ventanas con un tamaño extraño (quiza muy pegadas a la derecha),
 que hace que al pulsar sobre ellas se redimensionen -> se pegan a la derecha cuando "open menu in zx desktop" activo, y le da un ancho que se sale por la derecha
@@ -109,15 +103,14 @@ culpa del rearrange entonces
 
 
 -ayuda zdesktop / background windows: que ya no esta zlogo y si que hay botones ahora
--panic al desactivar border en spectrum 128 k con menu abierto y zx desktop con varias ventanas abiertas
 
 -revisar funciones y variables *lower_icon* que sea todo coherente
 
--crash al cambiar a maquina mk14 por ejemplo si hay ventanas de menu abiertas
                       
 
-
 - que al insertar cinta en msx y svi, no se ponga en cpu turbo si esta autoload
+
+
 
 - bios zxuno, no hace update desde la mmc. condiciones de compilacion en la bios para ZEsarUX:
 
@@ -138,17 +131,4 @@ Quiza habria que hacer un rechequeo de tamaños ventanas al conmutar maquina? y 
 Puede que controlar los limites de pixeles sea lo mejor, asi aunque las ventanas sean mas grandes, el pixel nunca
 saldra fuera y generaria segfault
 
--opcion / setting compilacion para desactivar funciones de networking
-Variable que indique si esta permitido o no, se desactiva con command line setting. Y por compilacion , viene por un #ifdef, del estilo
-:
 
-#ifdef NETWORKING_DISABLED
-z80_bit networking_enabled={0};
-#else
-z80_bit networking_enabled={1};
-#endif
-
-en compilacion tambien, si no hay soporte de threads, tambien debe definir NETWORKING_DISABLED
-
-el tema es que puede pasar que no haya funciones de red (como en haiku) y por tanto ni se pueda compilar
-Por tanto no puede ser una variable , sino un #define de compilacion

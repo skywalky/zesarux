@@ -1,5 +1,7 @@
 Version 9.1 - xxx edition. 21 August 2020
 
+Added compile setting to disable networking functions
+
 Improved ZX Desktop: 
 -Added direct buttons
 -Added devices icons
@@ -7,6 +9,8 @@ Improved ZX Desktop:
 -Windows are not closed when changing ZX Desktop size
 
 Fixed segfaults when changing machines and having ZX Desktop windows opened
+
+
 
 
 Version 9.0 - Turbo Esprit edition. 17 August 2020

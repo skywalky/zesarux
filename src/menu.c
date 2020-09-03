@@ -2879,7 +2879,7 @@ void menu_ext_desktop_lower_icons_get_geometry(int *p_ancho_boton,int *p_alto_bo
 		}
 	}
 
-	printf ("total iconos visibles: %d\n",total_botones);
+	//printf ("total iconos visibles: %d\n",total_botones);
 
 	int ancho_zx_desktop=screen_get_ext_desktop_width_zoom();	
 	int xinicio=screen_get_ext_desktop_start_x();
@@ -2940,7 +2940,7 @@ void menu_ext_desktop_lower_icons_get_geometry(int *p_ancho_boton,int *p_alto_bo
 	int alto_zx_desktop=screen_get_emulated_display_height_zoom_border_en();	
 	int yinicio=alto_zx_desktop-alto_boton;
 
-	printf ("alto_boton: %d alto_zx_desktop: %d yinicio: %d\n",alto_boton,alto_zx_desktop,yinicio);
+	//printf ("alto_boton: %d alto_zx_desktop: %d yinicio: %d\n",alto_boton,alto_zx_desktop,yinicio);
 
 	if (p_ancho_boton!=NULL) *p_ancho_boton=ancho_boton;
 	if (p_alto_boton!=NULL) *p_alto_boton=alto_boton;
@@ -2967,7 +2967,7 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 	menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL);
 
 
-	printf ("upper icons background. ancho boton: %d alto boton: %d\n",ancho_boton,alto_boton);
+	//printf ("upper icons background. ancho boton: %d alto boton: %d\n",ancho_boton,alto_boton);
 
 
 	int nivel_zoom=1;
@@ -3030,7 +3030,7 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 	menu_ext_desktop_lower_icons_get_geometry(&ancho_boton,&alto_boton,NULL,NULL,NULL,&yinicio);
 
 
-	printf ("lower icons background. ancho boton: %d alto boton: %d\n",ancho_boton,alto_boton);
+	//printf ("lower icons background. ancho boton: %d alto boton: %d\n",ancho_boton,alto_boton);
 
 
 	int nivel_zoom=1;
@@ -3039,7 +3039,7 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 	//6 pixeles de margen
 	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
-	printf ("zoom lower icons background: %d\n",nivel_zoom);
+	//printf ("zoom lower icons background: %d\n",nivel_zoom);
 
 		int xinicio=screen_get_ext_desktop_start_x();
 
@@ -3564,7 +3564,7 @@ int zxdesktop_lowericon_find_index(int icono)
 
 		if (visible) {
 			if (i_enabled==icono) {
-				printf("buscando %d encontrado indice %d\n",icono,i);
+				//printf("buscando %d encontrado indice %d\n",icono,i);
 				return i;
 			}
 
@@ -3593,9 +3593,9 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 	//printf("yinicio: %d\n",)
 
-	printf ("menu_ext_desktop_draw_lower_icon. numero_boton %d total_botones %d\n",numero_boton,total_botones);
+	//printf ("menu_ext_desktop_draw_lower_icon. numero_boton %d total_botones %d\n",numero_boton,total_botones);
 	if (numero_boton>=total_botones) {
-		printf ("no dibujar\n");
+		//printf ("no dibujar\n");
 		return;
 	}
 
@@ -3609,8 +3609,6 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 
 
-
-
 	//Nota: en los botones superiores el background se dibuja al principio para todos
 	//mientras que en estos lower icons se dibuja cada background con su icono asociado
 	//Quiza habria que estandarizar esto
@@ -3618,11 +3616,6 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 	int xinicio=screen_get_ext_desktop_start_x();
 	
-
-	//int ancho=screen_get_ext_desktop_width_zoom();
-	//int alto=screen_get_emulated_display_height_zoom_border_en();		
-
-	//int xfinal;
 
 	
 
@@ -3632,13 +3625,9 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	//6 pixeles de margen
 	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
-	printf ("zoom lower icons: %d\n",nivel_zoom);
+	//printf ("zoom lower icons: %d\n",nivel_zoom);
 
 
-	//int x;
-	//int contador_boton=0;
-
-	//int yinicio=alto-alto_boton;
 
 	//Dibujar un boton
 
@@ -31728,12 +31717,12 @@ void menu_inicio_reset_emulated_keys(void)
 void menu_inicio(void)
 {
 
-	printf ("inicio menu_inicio\n");
+	//printf ("inicio menu_inicio\n");
 
 	//Comprobar si se ha pulsado un boton para colorearlo
 	if (mouse_left) {
 		if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
-			printf("Pulsado en un boton\n");
+			//printf("Pulsado en un boton\n");
 
 			//Dibujamos de otro color ese boton
 			//que boton=menu_pressed_zxdesktop_button_which
@@ -31810,7 +31799,7 @@ void menu_inicio(void)
 	}
 
 
-	printf ("after menu_inicio_reset_emulated_keys\n");
+	//printf ("after menu_inicio_reset_emulated_keys\n");
 
 	//Si se ha pulsado tecla de OSD keyboard, al llamar a espera_no_tecla, se abrira osd y no conviene.
 	
@@ -31858,7 +31847,7 @@ void menu_inicio(void)
 	//Establecemos variable de salida de todos menus a 0
 	salir_todos_menus=0;
 
-	printf ("inicio menu_inicio2\n");
+	//printf ("inicio menu_inicio2\n");
 
 
 	//Si first aid al inicio
@@ -32074,7 +32063,7 @@ void menu_inicio(void)
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		
 		//Abrir menu normal
-		printf ("Abrir menu normal. mouse left: %d\n",mouse_left);
+		//printf ("Abrir menu normal. mouse left: %d\n",mouse_left);
 
 		//Ver si se ha pulsado en botones de zx desktop
 		if (menu_was_open_by_left_mouse_button.v) {
@@ -32093,10 +32082,10 @@ void menu_inicio(void)
 				
 				mouse_movido=0;	
 
-				printf("Se ha pulsado en zona botones con menu cerrado\n");
+				//printf("Se ha pulsado en zona botones con menu cerrado\n");
 			}
 			else {
-				printf ("No pulsado en zona botones con menu cerrado\n");
+				//printf ("No pulsado en zona botones con menu cerrado\n");
 			}
 		}
 
