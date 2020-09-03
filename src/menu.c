@@ -3685,8 +3685,9 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 
 	if (pulsado) {
-		destino_x+=2;
-		destino_y+=2;
+		//Solo desplazado 1 pixel cuando se pulsa
+		destino_x+=1;
+		destino_y+=1;
 	}
 	
 	screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);

@@ -114,15 +114,7 @@ culpa del rearrange entonces
 -revisar funciones y variables *lower_icon* que sea todo coherente
 
 -crash al cambiar a maquina mk14 por ejemplo si hay ventanas de menu abiertas
-
--Iconos storage:
-
-
-
-if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) "~~IDE");
-                
-   
-                           
+                      
 
 
 - que al insertar cinta en msx y svi, no se ponga en cpu turbo si esta autoload
