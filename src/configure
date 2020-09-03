@@ -2014,6 +2014,14 @@ cat >> compileoptions.h << _EOF
 #define USE_PTHREADS
 _EOF
 COMPILE_VARIABLES="$COMPILE_VARIABLES USE_PTHREADS"
+
+else
+#si no hay pthreads, tampoco habra networking
+cat >> compileoptions.h << _EOF
+#define NETWORKING_DISABLED
+_EOF
+COMPILE_VARIABLES="$COMPILE_VARIABLES NETWORKING_DISABLED"
+
 fi
 
 

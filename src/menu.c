@@ -17093,7 +17093,7 @@ void menu_timexcart(MENU_ITEM_PARAMETERS)
 
 
 
-#ifdef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 
 
 // Para el thread de descompresion de zip
@@ -30960,7 +30960,7 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings,"Snapshot settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Snapshot settings");
 
-#ifdef USE_PTHREADS		
+#ifndef NETWORKING_DISABLED	
 
 		//De momento todo lo que hay en el menu de Statistics requiere red, y este requiere pthreads
 		//Si no hay threads, tampoco este menu

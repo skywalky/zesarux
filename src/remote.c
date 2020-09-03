@@ -70,7 +70,7 @@ z80_bit remote_calling_end_emulator={0};
 
 
 
-#ifdef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 
 #include <pthread.h>
 #include <sys/types.h>

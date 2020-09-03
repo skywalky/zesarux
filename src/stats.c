@@ -178,8 +178,8 @@ pthread_t thread_send_stats_server;
 
 void send_stats_server(void)
 {
-	//Si no hay pthreads, no hacerlo
-	#ifdef USE_PTHREADS
+	//Si no hay pthreads/networking, no hacerlo
+	#ifndef NETWORKING_DISABLED
 	//Inicializar thread
 
 	if (pthread_create( &thread_send_stats_server, NULL, &send_stats_server_pthread, NULL) ) {
@@ -291,8 +291,8 @@ pthread_t thread_check_updates;
 
 void stats_check_updates(void)
 {
-	//Si no hay pthreads, no hacerlo
-	#ifdef USE_PTHREADS
+	//Si no hay pthreads/networking, no hacerlo
+	#ifndef NETWORKING_DISABLED
 	//Inicializar thread
 
 	if (pthread_create( &thread_check_updates, NULL, &stats_check_updates_pthread, NULL) ) {
@@ -372,8 +372,8 @@ pthread_t thread_check_yesterday_users;
 
 void stats_check_yesterday_users(void)
 {
-	//Si no hay pthreads, no hacerlo
-	#ifdef USE_PTHREADS
+	//Si no hay pthreads/pthreads, no hacerlo
+	#ifndef NETWORKING_DISABLED
 	//Inicializar thread
 
 	if (pthread_create( &thread_check_yesterday_users, NULL, &stats_check_yesterday_users_pthread, NULL) ) {

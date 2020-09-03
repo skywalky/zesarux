@@ -219,7 +219,7 @@ void z_disconnect_ssl(int indice_tabla)
 
 
  
-#ifdef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 
 
 //Si se envia CR despues de cada sentencia de escritura

@@ -149,3 +149,6 @@ z80_bit networking_enabled={1};
 #endif
 
 en compilacion tambien, si no hay soporte de threads, tambien debe definir NETWORKING_DISABLED
+
+el tema es que puede pasar que no haya funciones de red (como en haiku) y por tanto ni se pueda compilar
+Por tanto no puede ser una variable , sino un #define de compilacion

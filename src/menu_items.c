@@ -844,7 +844,7 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);		
 
 
-#ifdef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_configuration_remoteproto,NULL,"[%c] ZRCP Remote protocol",(remote_protocol_enabled.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Enables or disables ZEsarUX remote command protocol (ZRCP)");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Enables or disables ZEsarUX remote command protocol (ZRCP)");
@@ -19028,7 +19028,7 @@ void *menu_menu_zsock_http_thread_function(void *entrada)
 
 	//menu_zsock_http_thread_running=1; 
 
-#ifdef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 
 	debug_printf (VERBOSE_DEBUG,"Starting zsock http thread. Host=%s Url=%s",
 								((struct menu_zsock_http_struct *)entrada)->host,
@@ -19094,7 +19094,7 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 	parametros.redirect_url[0]=0;	
 
 
-#ifdef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 
 	//Inicializar thread
 	debug_printf (VERBOSE_DEBUG,"Initializing thread menu_menu_zsock_http_thread_function");
@@ -19153,7 +19153,7 @@ void *menu_download_file_thread_function(void *entrada)
 
 	//download_wos_thread_running=1; 
 
-#ifdef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 
 	debug_printf (VERBOSE_DEBUG,"Starting download content thread. Host=%s Url=%s",
 	((struct download_wos_struct *)entrada)->host,
@@ -19200,7 +19200,7 @@ int menu_download_file(char *host,char *url,char *archivo_temp,int ssl_use,int e
 	parametros.return_code=404;
 
 
-#ifdef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 
 	//Inicializar thread
 
@@ -19885,7 +19885,7 @@ void menu_network(MENU_ITEM_PARAMETERS)
 				"Available for ZX-Uno, TBBlue and ZX Evolution TSConf");
 			
 
-#ifdef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 			menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng,NULL,"Z~~ENG");
 			menu_add_item_menu_shortcut(array_menu_common,'e');
 			menu_add_item_menu_tooltip(array_menu_common,"Setup ZEsarUX Network Gaming");
@@ -20447,7 +20447,7 @@ void menu_storage_mmc_autoconfigure_tbblue(MENU_ITEM_PARAMETERS)
 	int tipo_imagen;
 	
 //Si no hay phreads, solo se puede usar la opcion local
-#ifndef USE_PTHREADS
+#ifndef NETWORKING_DISABLED
 	tipo_imagen=1;
 #else
 	tipo_imagen=menu_simple_two_choices("SD Image type","Included or download?","Use included in ZEsarUX","Download from official repo");
