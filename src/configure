@@ -2402,8 +2402,8 @@ fi
 
 echo -n " Remote command protocol support: "
 
-if [ "$OPTIONPTHREADS" == "" ]; then
-        echo "no. It needs Pthreads support"
+if [ "$OPTIONNETWORKING" == "" ]; then
+        echo "no. It needs networking support"
 else
         echo "yes"
 fi
