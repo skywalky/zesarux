@@ -9352,11 +9352,11 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 			if (mouse_pixel_x>=xinicio_botones && mouse_pixel_x<xfinal_botones &&
 				mouse_pixel_y>=0 && mouse_pixel_y<alto_boton
 			) {
-				printf ("Pulsado en zona botones del ext desktop\n");
+				//printf ("Pulsado en zona botones del ext desktop\n");
 
 				//en que boton?
 				int numero_boton=(mouse_pixel_x-xinicio_botones)/ancho_boton;
-				printf("boton pulsado: %d\n",numero_boton);
+				//printf("boton pulsado: %d\n",numero_boton);
 				menu_pressed_zxdesktop_button_which=numero_boton;
 
 				return 1;
@@ -9373,11 +9373,11 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 			if (mouse_pixel_x>=xinicio_botones && mouse_pixel_x<xfinal_botones &&
 				mouse_pixel_y>=yinicio_botones && mouse_pixel_y<yinicio_botones+alto_boton
 			) {
-				printf ("Pulsado en zona lower icons del ext desktop\n");
+				//printf ("Pulsado en zona lower icons del ext desktop\n");
 
 				//en que boton?
 				int numero_boton=(mouse_pixel_x-xinicio_botones)/ancho_boton;
-				printf("boton pulsado: %d\n",numero_boton);
+				//printf("boton pulsado: %d\n",numero_boton);
 
 				//Buscar indice array
 				int indice_array=zxdesktop_lowericon_find_index(numero_boton);
@@ -9386,7 +9386,7 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 
 					
 
-						printf ("boton esta visible\n");
+						//printf ("boton esta visible\n");
 
 
 						menu_pressed_zxdesktop_lower_icon_which=numero_boton;
@@ -9394,7 +9394,7 @@ int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 						return 1;
 				}
 				else {
-					printf ("boton NO esta visible\n");
+					//printf ("boton NO esta visible\n");
 				}
 				
 			}	
@@ -31373,7 +31373,7 @@ void menu_inicio_bucle_main(void)
 
 	} while (!salir_menu && !salir_todos_menus);
 
-	printf ("Fin menu_inicio_bucle_main\n");
+	//printf ("Fin menu_inicio_bucle_main\n");
 
 }
 
@@ -31382,7 +31382,7 @@ void menu_inicio_bucle_main(void)
 void menu_inicio_bucle(void)
 {
 
-	printf ("inicio de menu_inicio_bucle\n");
+	//printf ("inicio de menu_inicio_bucle\n");
 
 	//Si se ha pulsado el logo Z antes de abrir menu principal
 	//Si no hiciera esto, se abriria menu, y luego se reabriria al cerrarlo, 
@@ -31403,7 +31403,7 @@ void menu_inicio_bucle(void)
 
 		//Si se ha pulsado en algun boton de menu
 		if (menu_pressed_zxdesktop_button_which>=0 || menu_pressed_zxdesktop_lower_icon_which>=0) {
-			printf ("Reabrimos menu para boton pulsado %d lower icon %d\n",menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which);
+			//printf ("Reabrimos menu para boton pulsado %d lower icon %d\n",menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which);
 		}
 
 		menu_inicio_bucle_main();
