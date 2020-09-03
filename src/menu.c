@@ -12068,7 +12068,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 		//No lo desactivamos, así todos los menus que se abran dependiendo de este menu, tambien se posicionaran debajo del boton 
 		//direct_menus_button_pressed.v=0;
 
-		printf ("Menu opened from direct buttons\n");
+		//printf ("Menu opened from direct buttons\n");
 
 		int alto_boton;
 		int ancho_boton;
@@ -19762,7 +19762,7 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
 	menu_first_aid("smartload");
 
-        char *filtros[34];
+        char *filtros[35];
 
         filtros[0]="zx";
         filtros[1]="sp";
@@ -19817,7 +19817,9 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
 	filtros[32]="sg";
 
-	filtros[33]=0;
+	filtros[33]="cas";
+
+	filtros[34]=0;
 
 
         //guardamos directorio actual
@@ -19835,9 +19837,9 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-						printf ("antes menu_filesel_chdir\n");
+						//printf ("antes menu_filesel_chdir\n");
                         menu_filesel_chdir(directorio);
-						printf ("despues menu_filesel_chdir\n");
+						//printf ("despues menu_filesel_chdir\n");
                 }
 
 				util_get_file_no_directory(quickfile,menu_filesel_posicionar_archivo_nombre);
@@ -31236,7 +31238,7 @@ void menu_inicio_bucle_main(void)
 			else if (menu_pressed_zxdesktop_lower_icon_which>=0) {
 				menu_inicio_handle_lower_icon_presses();
 			}
-			printf ("despues menu_inicio_handle_button_presses\n");
+			//printf ("despues menu_inicio_handle_button_presses\n");
 		}
 
 		else {		
@@ -34596,11 +34598,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
     //printf ("confirm\n");
 
-	printf ("antes menu_espera_no_tecla en menu filesel\n");
+	//printf ("antes menu_espera_no_tecla en menu filesel\n");
 
 	menu_espera_no_tecla();
 
-	printf ("despues menu_espera_no_tecla en menu filesel\n");
+	//printf ("despues menu_espera_no_tecla en menu filesel\n");
     	
 	zxvision_window ventana_filesel;
 	zxvision_window *ventana;

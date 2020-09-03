@@ -586,6 +586,7 @@ void cpu_core_loop_svi(void)
 
 		if (svi_cas_load_detect() ) {
 			//printf ("Load\n");
+			draw_tape_text();
 			svi_cas_load();
 		}
 

@@ -10229,6 +10229,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_MSX) {
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_msx_loading_stripes,NULL,"[%c] Loading stripes", (msx_loading_stripes.v ? 'X' : ' ') );	
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Simulates loading border stripes when loading from real tape");
+			menu_add_item_menu_ayuda(array_menu_settings_display,"Simulates loading border stripes when loading from real tape");
 		}		
 
 		menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_ocr_23606,NULL,"[%c] OCR Alternate chars", (ocr_settings_not_look_23606.v==0 ? 'X' : ' ') );

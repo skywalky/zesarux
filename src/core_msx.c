@@ -585,6 +585,7 @@ void cpu_core_loop_msx(void)
 		//gestionar_autoload_msx();
 
 		if (msx_cas_load_detect() ) {
+			draw_tape_text();
 			msx_cas_load();
 		}
 

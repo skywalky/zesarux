@@ -409,7 +409,7 @@ int tap_open(void)
 		reset_cpu();
 
 		//Activamos top speed si conviene
-		if (fast_autoload.v) {
+		if (fast_autoload.v && !MACHINE_IS_MSX) {
                         debug_printf (VERBOSE_INFO,"Set top speed");
                         top_speed_timer.v=1;
                 }

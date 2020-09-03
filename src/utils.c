@@ -4627,6 +4627,7 @@ int quickload_valid_extension(char *nombre) {
     || !util_compare_file_extension(nombre,"col")
     || !util_compare_file_extension(nombre,"sg")
     || !util_compare_file_extension(nombre,"sc")
+    || !util_compare_file_extension(nombre,"cas")
 	) {
 		return 1;
 	}
@@ -4846,6 +4847,30 @@ int quickload_continue(char *nombre) {
 
                 return 0;
         }
+
+	//cintas de msx
+        else if (
+                   !util_compare_file_extension(nombre,"cas")
+              
+
+        ) {
+
+		//Aqui el autoload da igual. cambiamos siempre a cpc si conviene
+                if (!MACHINE_IS_MSX) {
+			current_machine_type=MACHINE_ID_MSX1;
+                        set_machine(NULL);
+
+                                //establecer parametros por defecto. Incluido quitar slots de memoria
+                           set_machine_params();
+
+                          reset_cpu();
+                }                
+
+		insert_tape_cmdline(nombre);
+		tape_init();
+
+                return 0;
+        }        
 
 
 	//wav, smp y pzx suponemos real audio tape Spectrum
