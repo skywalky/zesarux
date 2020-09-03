@@ -587,54 +587,14 @@ void cpu_core_loop_coleco(void)
 	
 
 
-		//Gestionar autoload. TODO
-		//gestionar_autoload_coleco();
 
-		if (0) {}
-
-			/*
-		if (tap_load_detect()) {
-			//si estamos en pausa, no hacer nada
-			if (!tape_pause) {
-				audio_playing.v=0;
-
-				draw_tape_text();
-
-				tap_load();
-				all_interlace_scr_refresca_pantalla();
-
-				//audio_playing.v=1;
-				timer_reset();
-			}
-
-			else {
-				core_coleco_store_rainbow_current_atributes();
-				//generamos nada. como si fuera un NOP
-				contend_read( reg_pc, 4 );
-
-			}
-		}
-
-		else if (tap_save_detect()) {
-			audio_playing.v=0;
-
-			draw_tape_text();
-
-			tap_save();
-			//audio_playing.v=1;
-			timer_reset();
-		}
-
-		*/
-
-		else {
 			if (esperando_tiempo_final_t_estados.v==0) {
 				//TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_coleco_ciclo_fetch);
 				core_coleco_ciclo_fetch();
 				//TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_coleco_ciclo_fetch);
             }
 
-        }
+        
 
 
 
