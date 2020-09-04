@@ -3843,7 +3843,8 @@ void menu_ext_desktop_get_logo_coords(int *x,int *y)
 //1=barras diagonales de colores
 //2=punteado blanco/negro
 int menu_ext_desktop_fill=1;
-int menu_ext_desktop_fill_solid_color=0;
+int menu_ext_desktop_fill_first_color=0;
+int menu_ext_desktop_fill_second_color=7;
 
 void menu_draw_ext_desktop(void)
 {
@@ -3879,7 +3880,7 @@ void menu_draw_ext_desktop(void)
 		//Color solido
 		if (menu_ext_desktop_fill==0) {
 
-			int color=menu_ext_desktop_fill_solid_color;
+			int color=menu_ext_desktop_fill_first_color;
 
 			for (y=yinicio;y<yinicio+alto;y++) {
 				for (x=xinicio;x<xinicio+ancho;x++) {
@@ -3920,7 +3921,7 @@ void menu_draw_ext_desktop(void)
 				for (x=xinicio;x<xinicio+ancho;x++) {
 
 					int suma=x+y;
-					color=(suma & 1 ? 0 : 15);
+					color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
 
 					scr_putpixel(x,y,color);
 				}
@@ -3940,7 +3941,7 @@ void menu_draw_ext_desktop(void)
 					int suma=(x/32)+(y/32);
 
 					//Blanco 7 para que no sea tan brillante
-					color=(suma & 1 ? 0 : 7);
+					color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
 
 					scr_putpixel(x,y,color);
 				}
@@ -3960,7 +3961,7 @@ void menu_draw_ext_desktop(void)
 					int suma=(x/32)*(y/32);
 
 					//Blanco 7 para que no sea tan brillante
-					color=(suma & 1 ? 0 : 7);
+					color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
 
 					scr_putpixel(x,y,color);
 				}

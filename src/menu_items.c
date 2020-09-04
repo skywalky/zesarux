@@ -10502,13 +10502,19 @@ void menu_ext_desk_settings_filltype(MENU_ITEM_PARAMETERS)
 
 void menu_ext_desk_settings_fillcolor(MENU_ITEM_PARAMETERS)
 {
-	menu_ext_desktop_fill_solid_color++;
-	if (menu_ext_desktop_fill_solid_color==16) menu_ext_desktop_fill_solid_color=0;
+	menu_ext_desktop_fill_first_color++;
+	if (menu_ext_desktop_fill_first_color==16) menu_ext_desktop_fill_first_color=0;
+}
+
+void menu_ext_desk_settings_fillcolor_second(MENU_ITEM_PARAMETERS)
+{
+	menu_ext_desktop_fill_second_color++;
+	if (menu_ext_desktop_fill_second_color==16) menu_ext_desktop_fill_second_color=0;
 }
 
 /*
 int menu_ext_desktop_fill=1;
-int menu_ext_desktop_fill_solid_color=1;
+int menu_ext_desktop_fill_first_color=1;
 */
 
 void menu_ext_desk_settings_placemenu(MENU_ITEM_PARAMETERS)
@@ -10541,10 +10547,13 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_custom_width,NULL,"Custom Width");
 
 			char fill_type_name[32];
+			int seleccion_primary=0;
+			int seleccion_secondary=0;
 			switch (menu_ext_desktop_fill) {
 				//solid, rainbow, punteado, ajedrez
 				case 0:
 					strcpy(fill_type_name,"Solid");
+					seleccion_primary=1;
 				break;
 
 				case 1:
@@ -10553,14 +10562,20 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 				case 2:
 					strcpy(fill_type_name,"Dots");
+					seleccion_primary=1;
+					seleccion_secondary=1;
 				break;
 
 				case 3:
 					strcpy(fill_type_name,"Chess");
+					seleccion_primary=1;
+					seleccion_secondary=1;					
 				break;
 
 				case 4:
 					strcpy(fill_type_name,"Grid");
+					seleccion_primary=1;
+					seleccion_secondary=1;					
 				break;				
 
 				case 5:
@@ -10574,9 +10589,15 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			}
 
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%s] Fill type",fill_type_name);
-			if (menu_ext_desktop_fill==0) {
-				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%2d] Fill Color",menu_ext_desktop_fill_solid_color);
+			
+			if (seleccion_primary) {
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%2d] Primary Fill Color",menu_ext_desktop_fill_first_color);
 			}
+
+			if (seleccion_secondary) {
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor_second,NULL,"[%2d] Secondary Fill Color",menu_ext_desktop_fill_second_color);
+			}
+			
 
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_placemenu,NULL,"[%c] Open Menu on ZX Desktop",(screen_ext_desktop_place_menu ? 'X' : ' ' ) );
 			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");

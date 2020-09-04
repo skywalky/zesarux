@@ -1736,7 +1736,8 @@ printf (
 		"--enable-zxdesktop              Enable ZX Desktop space\n"
 		"--zxdesktop-width n             ZX Desktop width\n"
 		"--zxdesktop-fill-type n         ZX Desktop fill type (0,1,2,3,4 or 5)\n"
-		"--zxdesktop-fill-solid-color n  ZX Desktop fill solid color on fill type 0 (0-15)\n"
+		"--zxdesktop-fill-primary-color n    ZX Desktop primary fill color (0-15)\n"
+		"--zxdesktop-fill-secondary-color n  ZX Desktop secondary fill color (0-15)\n"
 		"--zxdesktop-new-items           Try to place new menu items on the ZX Desktop space\n"
 		"--zxdesktop-disable-buttons     Disable ZX Desktop direct access buttons\n"
 
@@ -5262,16 +5263,31 @@ int parse_cmdline_options(void) {
 				menu_ext_desktop_fill=valor;
 			}		
 
-			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-fill-solid-color")) {
+			//Deprecated --zxdesktop-fill-solid-color
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-fill-solid-color") ||
+					!strcmp(argv[puntero_parametro],"--zxdesktop-fill-primary-color")
+			
+			) {
 				siguiente_parametro_argumento();
 				int valor=parse_string_to_number(argv[puntero_parametro]);
 
 				if (valor<0 || valor>15) {
-					printf ("Invalid value for ZX Desktop fill solid color on fill type 0\n");
+					printf ("Invalid value for ZX Desktop primary fill solid color\n");
 					exit(1);
 				}
-				menu_ext_desktop_fill_solid_color=valor;
-			}				
+				menu_ext_desktop_fill_first_color=valor;
+			}		
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-fill-secondary-color")) {
+				siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+
+				if (valor<0 || valor>15) {
+					printf ("Invalid value for ZX Desktop seconday fill solid color\n");
+					exit(1);
+				}
+				menu_ext_desktop_fill_second_color=valor;
+			}						
 
 
 

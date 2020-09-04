@@ -3353,7 +3353,8 @@ int util_write_configfile(void)
 
 
                                               ADD_STRING_CONFIG,"--zxdesktop-fill-type %d",menu_ext_desktop_fill);
-                                              ADD_STRING_CONFIG,"--zxdesktop-fill-solid-color %d",menu_ext_desktop_fill_solid_color);
+                                              ADD_STRING_CONFIG,"--zxdesktop-fill-primary-color %d",menu_ext_desktop_fill_first_color);
+                                              ADD_STRING_CONFIG,"--zxdesktop-fill-secondary-color %d",menu_ext_desktop_fill_second_color);
 				
 
 
