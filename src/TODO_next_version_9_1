@@ -130,5 +130,12 @@ habria que controlar limites de putpixel en scr_putpixel_layer_menu y scr_putpix
 Quiza habria que hacer un rechequeo de tamaños ventanas al conmutar maquina? y al reducir Desktop?
 Puede que controlar los limites de pixeles sea lo mejor, asi aunque las ventanas sean mas grandes, el pixel nunca
 saldra fuera y generaria segfault
+O bien en cada sitio donde se puede redimensionar la imagen (creo que habia un sitio comun donde se cerraba el driver de video y se abria) hacer un rearrange de ventanas. El tema de los limites de pixeles ya esta corregido, no deberian haber mas segfaults desde ahora. Pero un rearrange controlado evitaria tener ventanas que escriben raro (aunque sin segfaults) y quedaria mas limpio todo
 
 -probar carga msx, coleco, svi, sg1000 con cinta y cartucho
+
+-footer del zxdesktop
+
+-redraws de zxdesktop al inicio del emulador y en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
+
+-revisar fill type y color defecto. quiza color solido y un color que no moleste

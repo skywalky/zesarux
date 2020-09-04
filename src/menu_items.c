@@ -10497,7 +10497,7 @@ void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 void menu_ext_desk_settings_filltype(MENU_ITEM_PARAMETERS)
 {
 	menu_ext_desktop_fill++;
-	if (menu_ext_desktop_fill==3) menu_ext_desktop_fill=0;
+	if (menu_ext_desktop_fill==6) menu_ext_desktop_fill=0;
 }
 
 void menu_ext_desk_settings_fillcolor(MENU_ITEM_PARAMETERS)
@@ -10540,7 +10540,40 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_custom_width,NULL,"Custom Width");
 
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%2d] Fill type",menu_ext_desktop_fill);
+			char fill_type_name[32];
+			switch (menu_ext_desktop_fill) {
+				//solid, rainbow, punteado, ajedrez
+				case 0:
+					strcpy(fill_type_name,"Solid");
+				break;
+
+				case 1:
+					strcpy(fill_type_name,"Rainbow");
+				break;
+
+				case 2:
+					strcpy(fill_type_name,"Dots");
+				break;
+
+				case 3:
+					strcpy(fill_type_name,"Chess");
+				break;
+
+				case 4:
+					strcpy(fill_type_name,"Grid");
+				break;				
+
+				case 5:
+					strcpy(fill_type_name,"Random");
+				break;		
+
+				default:
+					strcpy(fill_type_name,"Unknown");
+				break;
+
+			}
+
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%s] Fill type",fill_type_name);
 			if (menu_ext_desktop_fill==0) {
 				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%2d] Fill Color",menu_ext_desktop_fill_solid_color);
 			}

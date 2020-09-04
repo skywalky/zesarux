@@ -1735,7 +1735,7 @@ printf (
 
 		"--enable-zxdesktop              Enable ZX Desktop space\n"
 		"--zxdesktop-width n             ZX Desktop width\n"
-		"--zxdesktop-fill-type n         ZX Desktop fill type (0,1 or 2)\n"
+		"--zxdesktop-fill-type n         ZX Desktop fill type (0,1,2,3,4 or 5)\n"
 		"--zxdesktop-fill-solid-color n  ZX Desktop fill solid color on fill type 0 (0-15)\n"
 		"--zxdesktop-new-items           Try to place new menu items on the ZX Desktop space\n"
 		"--zxdesktop-disable-buttons     Disable ZX Desktop direct access buttons\n"
@@ -5255,7 +5255,7 @@ int parse_cmdline_options(void) {
 				siguiente_parametro_argumento();
 				int valor=parse_string_to_number(argv[puntero_parametro]);
 
-				if (valor<0 || valor>2) {
+				if (valor<0 || valor>5) {
 					printf ("Invalid value for ZX Desktop fill type\n");
 					exit(1);
 				}

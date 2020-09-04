@@ -3052,7 +3052,7 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 	//Horizontal
 
 	int color_recuadro=0;
-	//int color_relleno=7;
+	int color_relleno=7;
 
 	if (pulsado) color_recuadro=7;
 
@@ -3067,15 +3067,15 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 		scr_putpixel(xinicio+ancho_boton-2,y,color_recuadro);	
 	}
 
-	//Relleno de momento gris
-	//No queremos rellleno para estos botones. solo el recuadro
-	/*
+	//Se rellena solo cuando se pulsa el botón
+	if (pulsado) {
 	for (y=yinicio+2;y<yinicio+alto_boton-2;y++) {	
 		for (x=xinicio+2;x<xinicio+ancho_boton-2;x++) {
 			scr_putpixel(x,y,color_relleno);	
 		}
 	}
-	*/
+	}
+	
 
 	
 
@@ -3674,9 +3674,9 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 
 
 	if (pulsado) {
-		//Solo desplazado 1 pixel cuando se pulsa
-		destino_x+=1;
-		destino_y+=1;
+		//desplazado 2 pixel cuando se pulsa
+		destino_x+=2;
+		destino_y+=2;
 	}
 	
 	screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
@@ -3889,7 +3889,7 @@ void menu_draw_ext_desktop(void)
 
 		}			
 		
-		//Rayas diagonales de colores
+		//Rayas diagonales de colores		
 		if (menu_ext_desktop_fill==1) {
 
 			int grueso_lineas=8*zoom_x*menu_gui_zoom; //Para que coincida el color con rainbow de titulo de ventanas
@@ -3927,6 +3927,66 @@ void menu_draw_ext_desktop(void)
 			}
 
 		}	
+
+		//ajedrez
+		if (menu_ext_desktop_fill==3) {
+
+			int color;
+
+			for (y=yinicio;y<yinicio+alto;y++) {
+				for (x=xinicio;x<xinicio+ancho;x++) {
+
+					//Tamaño de 32x32 cada cuadrado
+					int suma=(x/32)+(y/32);
+
+					//Blanco 7 para que no sea tan brillante
+					color=(suma & 1 ? 0 : 7);
+
+					scr_putpixel(x,y,color);
+				}
+			}
+
+		}		
+
+		//grid
+		if (menu_ext_desktop_fill==4) {
+
+			int color;
+
+			for (y=yinicio;y<yinicio+alto;y++) {
+				for (x=xinicio;x<xinicio+ancho;x++) {
+
+					//Tamaño de 32x32 cada cuadrado
+					int suma=(x/32)*(y/32);
+
+					//Blanco 7 para que no sea tan brillante
+					color=(suma & 1 ? 0 : 7);
+
+					scr_putpixel(x,y,color);
+				}
+			}
+
+		}	
+
+		//Random	
+		if (menu_ext_desktop_fill==5) {
+
+			for (y=yinicio;y<yinicio+alto;y++) {
+
+
+				for (x=xinicio;x<xinicio+ancho;x++) {
+
+					ay_randomize(0);
+
+					//randomize_noise es valor de 16 bits. sacar uno de 8 bits
+					int color=value_16_to_8h(randomize_noise[0]) % EMULATOR_TOTAL_PALETTE_COLOURS;
+
+					scr_putpixel(x,y,color);
+
+				}
+			}
+
+		}					
 
 
 	//Agregamos logo ZEsarUX en esquina inferior derecha, con margen, solo si menu esta abierto
