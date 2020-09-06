@@ -1423,6 +1423,12 @@ z80_byte *contend_table_no_mreq;
                 //no tiene memoria contended
                 return;
     }
+    
+    if (MACHINE_IS_MK14) {
+                //no tiene memoria contended
+                return;
+    }
+    
 
         if (MACHINE_IS_CHLOE) {
                 //Como 48k
