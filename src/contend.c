@@ -1406,16 +1406,6 @@ z80_byte *contend_table_no_mreq;
   if (MACHINE_IS_TSCONF) {
                 //no tiene memoria contended
                 return;
-/*
-    //128k
-                timings=contend_patron_65432100;
-
-    //Empieza en 14365 con 65432100, esto poniendo offset_time=-1
-                //offset_time=-1;
-
-    offset_time=3; //6,5,4,3,2,1,0,0 pattern starts at 14361 segun http://www.worldofspectrum.org/faq/reference/128kreference.htm
-                offset_patron=-1;*/
-
 
   }
 
@@ -1525,23 +1515,12 @@ z80_byte *contend_table_no_mreq;
 
 	//TODO cpc464. de momento sin contend y no inicializamos tabla porque sino se sale de testados y se sale de la tabla
 	if (MACHINE_IS_CPC_464 || MACHINE_IS_CPC_4128) {
-                timings=contend_patron_no_contend;
-                offset_time=0;
-                offset_patron=0;
-
-                //printf ("timings: %d [0]: %d\n",timings,timings[0]);
-
 		return;
 
         }
 
 	//TODO msx, coleco y sg1000. de momento sin contend y no inicializamos tabla porque sino se sale de testados y se sale de la tabla
 	if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000 || MACHINE_IS_SVI) {
-                timings=contend_patron_no_contend;
-                offset_time=0;
-                offset_patron=0;
-
-                //printf ("timings: %d [0]: %d\n",timings,timings[0]);
 
 		return;
 
@@ -1549,11 +1528,6 @@ z80_byte *contend_table_no_mreq;
 
 //TODO sam coupe. de momento sin contend y no inicializamos tabla porque sino se sale de testados y se sale de la tabla
 	if (MACHINE_IS_SAM) {
-                timings=contend_patron_no_contend;
-                offset_time=0;
-                offset_patron=0;
-
-                //printf ("timings: %d [0]: %d\n",timings,timings[0]);
 
 		return;
 
@@ -1564,11 +1538,6 @@ z80_byte *contend_table_no_mreq;
 
         //TODO QL. de momento sin contend y no inicializamos tabla porque sino se sale de testados y se sale de la tabla
         if (MACHINE_IS_QL) {
-                      timings=contend_patron_no_contend;
-                      offset_time=0;
-                      offset_patron=0;
-
-                      //printf ("timings: %d [0]: %d\n",timings,timings[0]);
 
           return;
 
