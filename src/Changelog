@@ -10,7 +10,7 @@ Improved ZX Desktop:
 -Added new ZX Desktop fill types: Chess, Grid, Random
 
 Fixed segfaults when changing machines and having ZX Desktop windows opened
-
+Fixed easter egg anc cyrillic characters
 
 
 

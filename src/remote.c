@@ -2573,6 +2573,8 @@ void easter_egg_star_wars_write_line(char *texto,int longitud_texto,int x,int y,
 	z80_byte buffer_final[MAX_ANCHO_LINEAS_GENERIC_MESSAGE];
 
 	int longitud_final=util_convert_utf_charset(texto,buffer_final,longitud_texto);
+	//Al final el texto convertido desde utf ocupara menos en pantalla en caso de haber caracteres de mas de 1 byte
+	//y como formatea el texto antes por cada linea, habran lineas bastante vacias cuando haya caracteres utf
 
   //for (;longitud_texto;longitud_texto--) {
 	  int i=0;

@@ -226,8 +226,6 @@ incluso con $NNNN
 -Estadísticas de uso:
 -uso medio de cpu?
 
-- easter egg acknowledgements no salen caracteres cirilicos
-
 -sumas md5 que ya no se usan de autoselect. Ver si hay archivos .config alternativos para todo esto
 
 -porque en algunos cores nested, debug_nested_core_call_previous se llama al principio y otros al final?
