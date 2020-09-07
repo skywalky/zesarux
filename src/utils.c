@@ -18171,3 +18171,69 @@ void util_rotate_file(char *filename,int archivos)
 
 
 }
+
+
+
+//Convertir una string de origen a caracteres charset, sustituyendo graficos en cirilicos 
+int util_convert_utf_charset(char *origen,z80_byte *final,int longitud_texto)
+{
+        int longitud_final=0;
+
+        int era_utf=0;
+
+        z80_byte letra;
+
+        while (longitud_texto>0) {
+
+                letra=*origen;
+                origen++;
+
+            if (era_utf) {
+                letra=menu_escribe_texto_convert_utf(era_utf,letra);
+                era_utf=0;
+
+                //Caracter final utf
+                *final=letra;
+
+            }
+
+
+            //Si no, ver si entra un prefijo utf
+            else {
+                //printf ("letra: %02XH\n",letra);
+                //Prefijo utf
+                            if (menu_es_prefijo_utf(letra)) {
+                                    era_utf=letra;
+                    //printf ("activado utf\n");
+                            }
+
+                else {
+                    //Caracter normal
+                *final=letra;
+
+                }
+            }
+
+
+        
+
+        //if (x>=32) {
+        //  printf ("Escribiendo caracter [%c] en x: %d\n",letra,x);
+        //}
+
+
+        if (!era_utf) {
+                                final++;
+
+                longitud_final++;
+
+        }
+
+
+        longitud_texto--;
+
+        }
+
+
+        return longitud_final;
+}
