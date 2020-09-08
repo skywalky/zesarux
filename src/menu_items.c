@@ -10631,11 +10631,11 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%s] Fill type",fill_type_name);
 			
 			if (seleccion_primary) {
-				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%2d] Primary Fill Color",menu_ext_desktop_fill_first_color);
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%s] Primary Fill Color",spectrum_colour_names[menu_ext_desktop_fill_first_color]);
 			}
 
 			if (seleccion_secondary) {
-				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor_second,NULL,"[%2d] Secondary Fill Color",menu_ext_desktop_fill_second_color);
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor_second,NULL,"[%s] Secondary Fill Color",spectrum_colour_names[menu_ext_desktop_fill_second_color]);
 			}
 
 			

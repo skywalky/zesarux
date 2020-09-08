@@ -911,4 +911,6 @@ extern void util_rotate_file(char *filename,int archivos);
 
 extern int util_convert_utf_charset(char *origen,z80_byte *final,int longitud_texto);
 
+extern const char *spectrum_colour_names[];
+
 #endif

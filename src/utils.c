@@ -18258,3 +18258,22 @@ int util_convert_utf_charset(char *origen,z80_byte *final,int longitud_texto)
 
         return longitud_final;
 }
+
+const char *spectrum_colour_names[16]={
+        "Black",
+        "Blue",
+        "Red",
+        "Magenta",
+        "Green",
+        "Cyan",
+        "Yellow",
+        "White",
+        "Black",
+        "BrightBlue",
+        "BrightRed",
+        "BrightMagenta",
+        "BrightGreen",
+        "BrightCyan",
+        "BrightYellow",
+        "BrightWhite",        
+};
