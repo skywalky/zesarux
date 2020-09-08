@@ -3844,9 +3844,12 @@ void menu_ext_desktop_get_logo_coords(int *x,int *y)
 //0=color solido
 //1=barras diagonales de colores
 //2=punteado blanco/negro
+//3=ajedrez
+//4=Grid
+//5=Random
 int menu_ext_desktop_fill=1;
-int menu_ext_desktop_fill_first_color=0;
-int menu_ext_desktop_fill_second_color=7;
+int menu_ext_desktop_fill_first_color=5;
+int menu_ext_desktop_fill_second_color=13;
 
 
 z80_bit menu_ext_desktop_transparent_upper_icons={0};
