@@ -9,6 +9,8 @@ Improved ZX Desktop:
 -Windows are not closed when changing ZX Desktop size
 -Added new ZX Desktop fill types: Chess, Grid, Random
 
+Improved loading .pok files: increased maximum pokes from 100 to 49152 pokes
+
 Fixed segfaults when changing machines and having ZX Desktop windows opened
 Fixed easter egg anc cyrillic characters
 

@@ -10704,7 +10704,13 @@ z80_byte valor_orig;
 
 	//int indice_accion=0;
 
-	char *lineas[MAX_LINEAS_POK_FILE];
+	//char *lineas[MAX_LINEAS_POK_FILE];
+
+        char **lineas;
+
+        lineas=malloc(sizeof(char *) * MAX_LINEAS_POK_FILE);
+
+        if (lineas==NULL) cpu_panic("Can not allocate memory for pok file reading");
 
 	char ultimo_nombre_poke[MAX_LENGTH_LINE_POKE_FILE+1]="";
 
@@ -10791,6 +10797,7 @@ z80_byte valor_orig;
 		//printf ("\n");
 	}
 
+        free(lineas);
 
 	//return lineas_leidas;
 	return destino;
@@ -10803,7 +10810,15 @@ int util_parse_pok_file(char *file,struct s_pokfile **tabla_pokes)
 {
 	char *mem;
 
-	mem=malloc(65536);
+        int max_size=(MAX_LINEAS_POK_FILE*MAX_LENGTH_LINE_POKE_FILE)-1; //1 para el 0 del final 
+        
+
+        if (get_file_size(file) > max_size) {
+                debug_printf (VERBOSE_ERR,"File too large");
+                return 0;    
+        }
+
+	mem=malloc(max_size);
 
 
                 FILE *ptr_pok;
@@ -10815,7 +10830,7 @@ int util_parse_pok_file(char *file,struct s_pokfile **tabla_pokes)
                 }
 
 
-                int leidos=fread(mem,1,65535,ptr_pok);
+                int leidos=fread(mem,1,max_size,ptr_pok);
 
 		//Fin de texto
 		mem[leidos]=0;
@@ -10841,7 +10856,7 @@ int util_poke(z80_byte banco,z80_int direccion,z80_byte valor)
 	//Si estamos en maquina 48k
 	if (MACHINE_IS_SPECTRUM_16_48) {
 		if (banco<8) {
-			debug_printf (VERBOSE_ERR,"This poke is for a 128k machine and we are not in 128k machine");
+			debug_printf (VERBOSE_ERR,"This poke is for a 128k machine and we are not in 128k machine (poke bank: %d)",banco);
 			return -1;
 		}
 

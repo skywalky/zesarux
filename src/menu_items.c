@@ -438,13 +438,21 @@ void menu_debug_poke_pok_file(MENU_ITEM_PARAMETERS)
 
         ret=menu_filesel("Select POK File",filtros,pokfile);
 
+	
 	//contenido
 	//MAX_LINEAS_POK_FILE es maximo de lineas de pok file
 	//normalmente la tabla de pokes sera menor que el numero de lineas en el archivo .pok
-	struct s_pokfile tabla_pokes[MAX_LINEAS_POK_FILE];
+	//struct s_pokfile tabla_pokes[MAX_LINEAS_POK_FILE];
+	struct s_pokfile *tabla_pokes;
+	tabla_pokes=malloc(sizeof(struct s_pokfile)*MAX_LINEAS_POK_FILE);	
 
 	//punteros
-	struct s_pokfile *punteros_pokes[MAX_LINEAS_POK_FILE];
+	//struct s_pokfile *punteros_pokes[MAX_LINEAS_POK_FILE];
+	struct s_pokfile **punteros_pokes;
+	punteros_pokes=malloc(sizeof(struct s_pokfile *)*MAX_LINEAS_POK_FILE);
+
+
+	if (tabla_pokes==NULL || punteros_pokes==NULL) cpu_panic("Can not allocate memory for poke table");
 
 	int i;
 	for (i=0;i<MAX_LINEAS_POK_FILE;i++) punteros_pokes[i]=&tabla_pokes[i];
@@ -576,6 +584,9 @@ void menu_debug_poke_pok_file(MENU_ITEM_PARAMETERS)
 
 
         }
+
+	free(tabla_pokes);
+	free(punteros_pokes);
 
 }
 

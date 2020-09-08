@@ -464,7 +464,9 @@ extern char external_tool_unrar[];
 
 extern void convert_relative_to_absolute(char *relative_path,char *final_path);
 
-#define MAX_LINEAS_POK_FILE 100
+//Mas de 48kb de pokes no tiene sentido
+#define MAX_LINEAS_POK_FILE 49152
+
 #define MAX_LENGTH_LINE_POKE_FILE 90
 
 struct s_pokfile
