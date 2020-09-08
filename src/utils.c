@@ -4862,8 +4862,8 @@ int quickload_continue(char *nombre) {
 
         ) {
 
-		//Aqui el autoload da igual. cambiamos siempre a cpc si conviene
-                if (!MACHINE_IS_MSX) {
+		//Aqui el autoload da igual. cambiamos siempre a msx si conviene
+                if (!MACHINE_IS_MSX && !MACHINE_IS_SVI) {
 			current_machine_type=MACHINE_ID_MSX1;
                         set_machine(NULL);
 
