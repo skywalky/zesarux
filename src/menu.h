@@ -150,6 +150,9 @@ extern void normal_overlay_texto_menu(void);
 extern int si_menu_mouse_en_ventana(void);
 extern void menu_calculate_mouse_xy(void);
 
+extern unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned char caracter);
+extern int menu_es_prefijo_utf(z80_byte caracter);
+
 extern void menu_ventana_draw_vertical_perc_bar(int x,int y,int ancho,int alto,int porcentaje,int estilo_invertido);
 extern void menu_ventana_draw_horizontal_perc_bar(int x,int y,int ancho,int alto,int porcentaje,int estilo_invertido);
 
@@ -844,7 +847,8 @@ extern int menu_ext_desktop_fill;
 extern int menu_ext_desktop_fill_first_color;
 extern int menu_ext_desktop_fill_second_color;
 
-
+extern z80_bit menu_ext_desktop_transparent_lower_icons;
+extern z80_bit menu_ext_desktop_transparent_upper_icons;
 
 
 #define ESTILO_GUI_PAPEL_NORMAL (definiciones_estilos_gui[estilo_gui_activo].papel_normal)

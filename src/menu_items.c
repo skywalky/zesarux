@@ -10538,6 +10538,17 @@ void menu_ext_desk_settings_direct_buttons(MENU_ITEM_PARAMETERS)
 	menu_zxdesktop_buttons_enabled.v ^=1;
 }
 
+void menu_ext_desk_settings_upper_transparent(MENU_ITEM_PARAMETERS)
+{
+	menu_ext_desktop_transparent_upper_icons.v ^=1;
+}
+
+void menu_ext_desk_settings_lower_transparent(MENU_ITEM_PARAMETERS)
+{
+	menu_ext_desktop_transparent_lower_icons.v ^=1;
+}
+
+
 void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_ext_desktop_settings;
@@ -10599,6 +10610,24 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 			}
 
+
+			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			
+
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_placemenu,NULL,"[%c] Open Menu on ZX Desktop",(screen_ext_desktop_place_menu ? 'X' : ' ' ) );
+			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
+			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
+
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_direct_buttons,NULL,"[%c] Direct access buttons",(menu_zxdesktop_buttons_enabled.v ? 'X' : ' ' ) );
+
+			if (menu_zxdesktop_buttons_enabled.v) {
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_upper_transparent,NULL,"[%c] Transparent upper buttons",(menu_ext_desktop_transparent_upper_icons.v ? 'X' : ' ' ) );
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_transparent,NULL,"[%c] Transparent lower buttons",(menu_ext_desktop_transparent_lower_icons.v ? 'X' : ' ' ) );
+			}
+
+			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_SEPARADOR,NULL,NULL,"--Background--");
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%s] Fill type",fill_type_name);
 			
 			if (seleccion_primary) {
@@ -10608,13 +10637,8 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			if (seleccion_secondary) {
 				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor_second,NULL,"[%2d] Secondary Fill Color",menu_ext_desktop_fill_second_color);
 			}
+
 			
-
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_placemenu,NULL,"[%c] Open Menu on ZX Desktop",(screen_ext_desktop_place_menu ? 'X' : ' ' ) );
-			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
-			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
-
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_direct_buttons,NULL,"[%c] Direct access buttons",(menu_zxdesktop_buttons_enabled.v ? 'X' : ' ' ) );
 
 		}
 		

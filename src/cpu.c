@@ -1733,13 +1733,15 @@ printf (
 		"--watermark-position n     Where to put watermark. 0: Top left, 1: Top right. 2: Bottom left. 3: Bottom right\n"
 
 
-		"--enable-zxdesktop              Enable ZX Desktop space\n"
-		"--zxdesktop-width n             ZX Desktop width\n"
-		"--zxdesktop-fill-type n         ZX Desktop fill type (0,1,2,3,4 or 5)\n"
-		"--zxdesktop-fill-primary-color n    ZX Desktop primary fill color (0-15)\n"
-		"--zxdesktop-fill-secondary-color n  ZX Desktop secondary fill color (0-15)\n"
-		"--zxdesktop-new-items           Try to place new menu items on the ZX Desktop space\n"
-		"--zxdesktop-disable-buttons     Disable ZX Desktop direct access buttons\n"
+		"--enable-zxdesktop                     Enable ZX Desktop space\n"
+		"--zxdesktop-width n                    ZX Desktop width\n"
+		"--zxdesktop-fill-type n                ZX Desktop fill type (0,1,2,3,4 or 5)\n"
+		"--zxdesktop-fill-primary-color n       ZX Desktop primary fill color (0-15)\n"
+		"--zxdesktop-fill-secondary-color n     ZX Desktop secondary fill color (0-15)\n"
+		"--zxdesktop-new-items                  Try to place new menu items on the ZX Desktop space\n"
+		"--zxdesktop-disable-buttons            Disable ZX Desktop direct access buttons\n"
+		"--zxdesktop-transparent-upper-buttons  Make ZX Desktop upper buttons transparent\n"
+		"--zxdesktop-transparent-lower-buttons  Make ZX Desktop lower buttons transparent\n"
 
 				
 
@@ -5299,7 +5301,13 @@ int parse_cmdline_options(void) {
 				menu_zxdesktop_buttons_enabled.v=0;
 			} 
 
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-transparent-upper-buttons")) {
+				menu_ext_desktop_transparent_upper_icons.v=1;
+			}
 
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-transparent-lower-buttons")) {
+				menu_ext_desktop_transparent_lower_icons.v=1;
+			}		
 
 
 			else if (!strcmp(argv[puntero_parametro],"--watermark-position")) {

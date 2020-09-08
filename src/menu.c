@@ -3003,10 +3003,12 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 		scr_putpixel(xinicio+ancho_boton-2,y,color_recuadro);	
 	}
 
-	//Relleno de momento gris
-	for (y=yinicio+2;y<yinicio+alto_boton-2;y++) {	
-		for (x=xinicio+2;x<xinicio+ancho_boton-2;x++) {
-			scr_putpixel(x,y,color_relleno);	
+	//Se rellena solo cuando se pulsa el botón o cuando no hay transparencia
+	if (pulsado || menu_ext_desktop_transparent_upper_icons.v==0) {
+		for (y=yinicio+2;y<yinicio+alto_boton-2;y++) {	
+			for (x=xinicio+2;x<xinicio+ancho_boton-2;x++) {
+				scr_putpixel(x,y,color_relleno);	
+			}
 		}
 	}
 
@@ -3067,13 +3069,13 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 		scr_putpixel(xinicio+ancho_boton-2,y,color_recuadro);	
 	}
 
-	//Se rellena solo cuando se pulsa el botón
-	if (pulsado) {
-	for (y=yinicio+2;y<yinicio+alto_boton-2;y++) {	
-		for (x=xinicio+2;x<xinicio+ancho_boton-2;x++) {
-			scr_putpixel(x,y,color_relleno);	
+	//Se rellena solo cuando se pulsa el botón o cuando no hay transparencia
+	if (pulsado || menu_ext_desktop_transparent_lower_icons.v==0) {
+		for (y=yinicio+2;y<yinicio+alto_boton-2;y++) {	
+			for (x=xinicio+2;x<xinicio+ancho_boton-2;x++) {
+				scr_putpixel(x,y,color_relleno);	
+			}
 		}
-	}
 	}
 	
 
@@ -3845,6 +3847,11 @@ void menu_ext_desktop_get_logo_coords(int *x,int *y)
 int menu_ext_desktop_fill=1;
 int menu_ext_desktop_fill_first_color=0;
 int menu_ext_desktop_fill_second_color=7;
+
+
+z80_bit menu_ext_desktop_transparent_upper_icons={0};
+z80_bit menu_ext_desktop_transparent_lower_icons={0};
+
 
 void menu_draw_ext_desktop(void)
 {
