@@ -1901,7 +1901,7 @@ if [ "$OPTIONOBJPCSPEAKER" != "" ]; then
 
 cat >> Makefile << _EOF
 audiopcspeaker.o: audiopcspeaker.c audiopcspeaker.h cpu.h audio.h compileoptions.h debug.h settings.h
-        \$(CC) \$(CFLAGS) -c audiopcspeaker.c
+	 \$(CC) \$(CFLAGS) -c audiopcspeaker.c
 
 _EOF
 
