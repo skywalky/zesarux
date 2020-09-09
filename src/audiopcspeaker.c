@@ -42,7 +42,7 @@
 #ifdef USE_PTHREADS
 #include <pthread.h>
 
-     pthread_t thread1;
+     pthread_t audiopcspeaker_thread1;
 
 #endif
 
@@ -89,12 +89,12 @@ int audiopcspeaker_init(void)
 int audiopcspeaker_thread_finish(void)
 {
 
-	if (thread1!=0) {
+	if (audiopcspeaker_thread1!=0) {
 		debug_printf (VERBOSE_DEBUG,"Ending audiopcspeaker thread");
-		int s=pthread_cancel(thread1);
+		int s=pthread_cancel(audiopcspeaker_thread1);
 		if (s != 0) debug_printf (VERBOSE_DEBUG,"Error cancelling pthread pcspeaker");
 
-		thread1=0;
+		audiopcspeaker_thread1=0;
 	}
 
 	//Pausa de 0.1 segundo
@@ -240,7 +240,7 @@ Bit 0    Effect
 	return NULL;
 } 
 
-pthread_t thread1=0;
+pthread_t audiopcspeaker_thread1=0;
 
 void audiopcspeaker_send_frame(char *buffer)
 {
@@ -253,9 +253,9 @@ void audiopcspeaker_send_frame(char *buffer)
 	}
 
 
-	if (thread1==0) {
+	if (audiopcspeaker_thread1==0) {
 		buffer_playback_pcspeaker=buffer;
-     	if (pthread_create( &thread1, NULL, &audiopcspeaker_enviar_audio, NULL) ) {
+     	if (pthread_create( &audiopcspeaker_thread1, NULL, &audiopcspeaker_enviar_audio, NULL) ) {
                 cpu_panic("Can not create audiopcspeaker pthread");
         }      
 	}
