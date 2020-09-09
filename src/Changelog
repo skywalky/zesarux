@@ -1,6 +1,7 @@
 Version 9.1 - xxx edition. 21 August 2020
 
 Added compile setting to disable networking functions
+Added pc speaker audio driver
 
 Improved ZX Desktop: 
 -Added direct buttons
