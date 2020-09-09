@@ -147,13 +147,15 @@ char *buffer_playback_pcspeaker;
 
 char last_audio_sample=0;
 
-
+int audiopcspeaker_esperando_frame=0;
 
 void *audiopcspeaker_enviar_audio(void *nada)
 {
 
 
 	while (1) {
+
+		audiopcspeaker_esperando_frame=1;
 
 
 		//Establecer el buffer de reproduccion
@@ -229,6 +231,15 @@ Bit 0    Effect
 				usleep(1000);
 		}
 
+		//Esperamos a que llegue el siguiente frame de sonido , si es que no ha llegado ya
+		//TODO: esto deberia ser una variable atomica, pero la probabilidad que se modifique 
+		//en esta funcion y en audiopcspeaker_send_frame a la vez es casi nula
+		//ademas si se pierde un frame, entrara el siguiente
+		while (audiopcspeaker_esperando_frame) {
+			//100 microsegundos
+			usleep(100);
+		}
+
 	}
 
 
@@ -260,7 +271,7 @@ void audiopcspeaker_send_frame(char *buffer)
         }      
 	}
 
-
+	audiopcspeaker_esperando_frame=0;
 	
 }
 
