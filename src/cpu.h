@@ -335,6 +335,8 @@ extern int num_scr_driver_array;
 extern driver_struct audio_driver_array[];
 extern int num_audio_driver_array;
 
+extern char *driver_audio;
+
 #define MAX_SCR_INIT 10
 #define MAX_AUDIO_INIT 10
 

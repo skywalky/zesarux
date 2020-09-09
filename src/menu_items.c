@@ -1304,7 +1304,6 @@ void menu_audio_resample_1bit(MENU_ITEM_PARAMETERS)
 
 
 
-#ifdef COMPILE_PCSPEAKER
 
 void menu_pcspeaker_wait_time(MENU_ITEM_PARAMETERS)
 {
@@ -1328,7 +1327,7 @@ void menu_pcspeaker_wait_time(MENU_ITEM_PARAMETERS)
 
 }
 
-#endif		
+	
 
 
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
@@ -1519,13 +1518,15 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_change_audio_driver,NULL,"    C~~hange Audio Driver");
 				menu_add_item_menu_shortcut(array_menu_settings_audio,'h');
 
-	#ifdef COMPILE_PCSPEAKER
+
+			if (!strcmp(driver_audio,"pcspeaker")) {
 				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_pcspeaker_wait_time,NULL,"[%2d] Wait time (microseconds)",audiopcspeaker_tiempo_espera);
 				menu_add_item_menu_tooltip(array_menu_settings_audio,"Wait time between every audio byte sent");
 				menu_add_item_menu_ayuda(array_menu_settings_audio,"Wait time between every audio byte sent. Values between 0 and 64 microseconds. "
 										"It is supposed that if you have fast machine, you need to increase the value. If you have slow machine, decrease it");
+			}				
 	
-	#endif			
+
 
 
 
