@@ -52,7 +52,7 @@ unsigned int requested, ioctl_format, ioctl_channels, ioctl_rate;
 
 #define BASE_SOUND_FRAG_PWR     6
 
-static char const * const default_device = "/dev/input/by-path/platform-pcspkr-event-spkr";
+//static char const * const default_device = "/dev/input/by-path/platform-pcspkr-event-spkr";
 
 int audiopcspeaker_init(void)
 {
