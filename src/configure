@@ -913,7 +913,7 @@ _EOF
 	# Solo para linux. Antes de esta comprobacion me podria saltar la compilacion de prueba
 	# pero lo hago para no liarlo mas y asi se parece a otras detecciones de drivers
 	# ademas necesita pthreads
-        if [ $RESULTCODE != 0 ] || [ "$SISTEMA" != "Linux" ] || [ "$OPTIONPTHREADS" == ""]; then
+        if [ $RESULTCODE != 0 ] || [ "$SISTEMA" != "Linux" ] || [ "$OPTIONPTHREADS" == "" ]; then
                 echo "not found"
                 OPTIONOBJPCSPEAKER=""
         else
