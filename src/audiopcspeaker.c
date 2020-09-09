@@ -172,6 +172,8 @@ void *audiopcspeaker_enviar_audio(void *nada)
 
 		int len=AUDIO_BUFFER_SIZE;
 
+		len--; //TODO: por lo que sea, hay 1 byte de menos...
+
 		int ofs=0;
 
 
