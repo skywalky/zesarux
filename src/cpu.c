@@ -176,6 +176,10 @@
 #include "audiodsp.h"
 #endif
 
+#ifdef COMPILE_PCSPEAKER
+#include "audiopcspeaker.h"
+#endif
+
 #ifdef COMPILE_SDL
 #include "audiosdl.h"
 #endif
@@ -2327,6 +2331,21 @@ int set_audiodriver_dsp(void) {
 
                 }
 #endif
+
+
+#ifdef COMPILE_PCSPEAKER
+int set_audiodriver_pcspeaker(void) {
+                        audio_init=audiopcspeaker_init;
+                        audio_send_frame=audiopcspeaker_send_frame;
+			audio_thread_finish=audiopcspeaker_thread_finish;
+			audio_end=audiopcspeaker_end;
+			audio_get_buffer_info=audiopcspeaker_get_buffer_info;
+			return 0;
+
+                }
+#endif
+
+
 
 #ifdef COMPILE_SDL
 int set_audiodriver_sdl(void) {
@@ -5068,6 +5087,14 @@ void main_init_audio(void)
                 add_audio_init_array("dsp",audiodsp_init,set_audiodriver_dsp);
                 if (!strcmp(driver_audio,"dsp")) {
                         set_audiodriver_dsp();
+
+                }
+#endif
+
+#ifdef COMPILE_PCSPEAKER
+                add_audio_init_array("pcspeaker",audiopcspeaker_init,set_audiodriver_pcspeaker);
+                if (!strcmp(driver_audio,"pcspeaker")) {
+                        set_audiodriver_pcspeaker();
 
                 }
 #endif

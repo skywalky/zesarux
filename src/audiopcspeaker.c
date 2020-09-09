@@ -147,7 +147,7 @@ char *buffer_playback_pcspeaker;
 
 char last_audio_sample=0;
 
-int audiodsp_tiempo_espera=8;
+int audiopcspeaker_tiempo_espera=8;
 
 void *audiopcspeaker_enviar_audio(void *nada)
 {
@@ -206,7 +206,7 @@ Bit 0    Effect
 
 			last_audio_sample=current_audio_sample;
 
-			int tiempo_espera=audiodsp_tiempo_espera;
+			int tiempo_espera=audiopcspeaker_tiempo_espera;
 
 			//Si cambia el altavoz
 			if (last_valor_puerto!=final_valor_puerto) {
