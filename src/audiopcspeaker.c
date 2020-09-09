@@ -203,7 +203,7 @@ Bit 0    Effect
 			}
 
 			//Si es menor , enviar 0
-			else if (current_audio_sample<last_audio_sample)
+			else if (current_audio_sample<last_audio_sample) {
 				// altavoz a 0
 
 				bit_final_speaker=0;
