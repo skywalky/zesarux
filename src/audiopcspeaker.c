@@ -46,11 +46,11 @@
 
 #endif
 
-int ptr_audiopcspeaker;
+//int ptr_audiopcspeaker;
 
-unsigned int requested, ioctl_format, ioctl_channels, ioctl_rate;
+//unsigned int requested, ioctl_format, ioctl_channels, ioctl_rate;
 
-#define BASE_SOUND_FRAG_PWR     6
+//#define BASE_SOUND_FRAG_PWR     6
 
 //static char const * const default_device = "/dev/input/by-path/platform-pcspkr-event-spkr";
 
