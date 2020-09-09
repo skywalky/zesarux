@@ -149,6 +149,10 @@ char last_audio_sample=0;
 
 int audiopcspeaker_esperando_frame=0;
 
+
+//Ultimo valor.
+z80_byte bit_anterior_speaker=0;
+
 void *audiopcspeaker_enviar_audio(void *nada)
 {
 
@@ -184,9 +188,9 @@ Bit 0    Effect
 		z80_byte valor_puerto_original=inb(0x61);
 		valor_puerto_original &=(255-2-1);
 
-		//Ultimo valor. de momento meterlo a un valor que no sea igual
-		z80_byte last_valor_puerto=valor_puerto_original ^255;
-		z80_byte final_valor_puerto;
+
+
+		z80_byte bit_final_speaker;
 		for (;len>=0;len--) {
 			
 			char current_audio_sample=buffer_playback_pcspeaker[ofs];
@@ -195,15 +199,20 @@ Bit 0    Effect
 			if (current_audio_sample>last_audio_sample) {
 				// altavoz a 1
 
-				final_valor_puerto=valor_puerto_original | 2;
+				bit_final_speaker=2;
 			}
 
-			//Si es menor o igual, enviar 0
-			else {
+			//Si es menor , enviar 0
+			else if (current_audio_sample<last_audio_sample)
 				// altavoz a 0
 
-				final_valor_puerto=valor_puerto_original;
+				bit_final_speaker=0;
 
+			}
+
+			//Si es igual, dejar el mismo valor anterior
+			else {
+				bit_final_speaker=bit_anterior_speaker;
 			}
 
 			last_audio_sample=current_audio_sample;
@@ -211,14 +220,14 @@ Bit 0    Effect
 			int tiempo_espera=audiopcspeaker_tiempo_espera;
 
 			//Si cambia el altavoz
-			if (last_valor_puerto!=final_valor_puerto) {
-				outb(final_valor_puerto,0x61);
+			if (bit_anterior_speaker!=bit_final_speaker) {
+				outb(valor_puerto_original | bit_final_speaker,0x61);
 				tiempo_espera--; //se supone que el out tarda 1 microsegundo
 			}
 
 			if (tiempo_espera>0) usleep(tiempo_espera);
 
-			last_valor_puerto=final_valor_puerto;
+			bit_anterior_speaker=bit_final_speaker;
 
 			ofs++;
 			//stereo. Pasamos del otro canal directamente
