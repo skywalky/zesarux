@@ -262,7 +262,7 @@ extern int audiodac_set_type(char *texto);
 
 extern void audiodac_set_custom_port(z80_byte valor);
 
-
+extern int audiopcspeaker_tiempo_espera;
 
 struct s_audiobuffer_stats
 {

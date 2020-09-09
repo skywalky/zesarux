@@ -29,6 +29,6 @@ extern void audiopcspeaker_end(void);
 extern int audiopcspeaker_thread_finish(void);
 extern void audiopcspeaker_send_frame(char *buffer);
 extern void audiopcspeaker_get_buffer_info (int *buffer_size,int *current_size);
-extern int audiopcspeaker_tiempo_espera;
+
 
 #endif

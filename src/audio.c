@@ -305,6 +305,11 @@ int buffer_beeper[MAX_BEEPER_ARRAY_LENGTH];
 int beeper_real_enabled=1;
 
 
+//Setting para pcspeaker. Lo pongo aquí asi es una variable siempre compilada, y se puede tener un setting
+//de linea de comandos, aunque no esté compilado
+//Tiempo de espera en microsegundos entre cada envio de byte de audio
+int audiopcspeaker_tiempo_espera=8;
+
 
 
 #ifdef USE_SNDFILE

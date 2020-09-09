@@ -147,7 +147,7 @@ char *buffer_playback_pcspeaker;
 
 char last_audio_sample=0;
 
-int audiopcspeaker_tiempo_espera=8;
+
 
 void *audiopcspeaker_enviar_audio(void *nada)
 {

@@ -1594,6 +1594,11 @@ printf (
 		"--disable-silencedetector  Disable silence detector. Silence detector is disabled by default\n"
 
 
+#ifdef COMPILE_PCSPEAKER
+		"--pcspeaker-wait-time      Wait time between every audio byte sent. Values between 0 and 64 microseconds\n"
+#endif
+
+
 
 #ifdef COMPILE_ALSA
 		"--alsaperiodsize n         Alsa audio periodsize multiplier (2 or 4). Default 2. Lower values reduce latency but can increase cpu usage\n"
@@ -7094,6 +7099,18 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--disable-silencedetector")) {
 				silence_detector_setting.v=0;
 			}
+
+			//Setting de pcspeaker siempre compilado, simplemente si no esta, no sale en la ayuda
+			else if (!strcmp(argv[puntero_parametro],"--pcspeaker-wait-time")) {
+				siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<0 || valor>64) {
+					printf ("Invalid wait time value. Must be between 0 and 64\n");
+					exit(1);
+				}
+				audiopcspeaker_tiempo_espera=valor;
+			}
+			
 
 
 #ifdef COMPILE_ALSA
