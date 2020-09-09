@@ -1373,6 +1373,10 @@ void cpu_help(void)
         printf ("dsp ");
 #endif
 
+#ifdef COMPILE_PCSPEAKER
+        printf ("pcspeaker ");
+#endif
+
 #ifdef COMPILE_COREAUDIO
         printf ("coreaudio ");
 #endif
@@ -5662,6 +5666,10 @@ int parse_cmdline_options(void) {
 
 #ifdef COMPILE_DSP
                                 if (!strcmp(driver_audio,"dsp")) driveraook=1;
+#endif
+
+#ifdef COMPILE_PCSPEAKER
+                                if (!strcmp(driver_audio,"pcspeaker")) driveraook=1;
 #endif
 
 #ifdef COMPILE_SDL
