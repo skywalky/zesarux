@@ -1519,7 +1519,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_shortcut(array_menu_settings_audio,'h');
 
 
-			if (!strcmp(driver_audio,"pcspeaker")) {
+			if (!strcmp(audio_driver_name,"pcspeaker")) {
 				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_pcspeaker_wait_time,NULL,"[%2d] Wait time (microseconds)",audiopcspeaker_tiempo_espera);
 				menu_add_item_menu_tooltip(array_menu_settings_audio,"Wait time between every audio byte sent");
 				menu_add_item_menu_ayuda(array_menu_settings_audio,"Wait time between every audio byte sent. Values between 0 and 64 microseconds. "
