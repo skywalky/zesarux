@@ -114,6 +114,11 @@
 #include "audioalsa.h"
 #endif
 
+
+#ifdef COMPILE_PCSPEAKER
+#include "audiopcspeaker.h"
+#endif
+
  
 #if defined(__APPLE__)
 	#include <sys/syslimits.h>
