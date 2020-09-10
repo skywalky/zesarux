@@ -5266,7 +5266,7 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,int indice,int 
 	char texto[MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH+1]; 
 	//Le doy 1 byte mas. Por si acaso alguien llama aqui sin contar el byte 0 del final y la lia...
 
-        if (!strcmp(scr_driver_name,"stdout")) {
+        if (!strcmp(scr_new_driver_name,"stdout")) {
 		printf ("%s\n",texto_entrada);
 		scrstdout_menu_print_speech_macro (texto_entrada);
 		return;
@@ -5353,7 +5353,7 @@ void menu_escribe_linea_opcion(int indice,int opcion_actual,int opcion_activada,
 
 	char texto[64];
 
-        if (!strcmp(scr_driver_name,"stdout")) {
+        if (!strcmp(scr_new_driver_name,"stdout")) {
 		printf ("%s\n",texto_entrada);
 		scrstdout_menu_print_speech_macro (texto_entrada);
 		return;
@@ -5422,7 +5422,7 @@ void menu_escribe_linea_opcion(int indice,int opcion_actual,int opcion_activada,
 void menu_escribe_linea_opcion_tabulado_zxvision(zxvision_window *ventana,int indice,int opcion_actual,int opcion_activada,char *texto,int x,int y)
 {
 
-        if (!strcmp(scr_driver_name,"stdout")) {
+        if (!strcmp(scr_new_driver_name,"stdout")) {
                 printf ("%s\n",texto);
                 scrstdout_menu_print_speech_macro (texto);
                 return;
@@ -5698,7 +5698,7 @@ void menu_dibuja_ventana_franja_arcoiris_oscuro(int x, int y, int ancho,int indi
 		}
 
              //en caso de curses o caca, hacerlo con lineas de colores
-                if (!strcmp(scr_driver_name,"curses") || !strcmp(scr_driver_name,"caca") ) {
+                if (!strcmp(scr_new_driver_name,"curses") || !strcmp(scr_new_driver_name,"caca") ) {
 
 
                                 putchar_menu_overlay(x+ancho-5,y,'/',cr[0],ESTILO_GUI_PAPEL_TITULO);
@@ -5763,7 +5763,7 @@ void menu_dibuja_ventana_franja_arcoiris_trozo(int x, int y, int ancho,int franj
 	        }
 
 		//en caso de curses o caca, hacerlo con lineas de colores
-	        if (!strcmp(scr_driver_name,"curses") || !strcmp(scr_driver_name,"caca") ) {
+	        if (!strcmp(scr_new_driver_name,"curses") || !strcmp(scr_new_driver_name,"caca") ) {
         	        //putchar_menu_overlay(x+ancho-6,y,'/',cr[0],ESTILO_GUI_PAPEL_TITULO);
                 	//putchar_menu_overlay(x+ancho-5,y,'/',cr[1],ESTILO_GUI_PAPEL_TITULO);
 	                //putchar_menu_overlay(x+ancho-4,y,'/',cr[2],ESTILO_GUI_PAPEL_TITULO);
@@ -5946,7 +5946,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 	if (!no_dibuja_ventana_muestra_pending_error_message) menu_muestra_pending_error_message();
 	
 	//En el caso de stdout, solo escribimos el texto
-        if (!strcmp(scr_driver_name,"stdout")) {
+        if (!strcmp(scr_new_driver_name,"stdout")) {
                 printf ("%s\n",titulo);
 		scrstdout_menu_print_speech_macro(titulo);
 		printf ("------------------------\n\n");
@@ -7295,7 +7295,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	//int linea_cursor=0;
 
 	//En caso de stdout, es mas simple, mostrar texto y esperar tecla
-    if (!strcmp(scr_driver_name,"stdout")) {
+    if (!strcmp(scr_new_driver_name,"stdout")) {
 		//printf ("%d\n",strlen(texto));
 
 
@@ -7313,7 +7313,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
     }
 
 	//En caso de simpletext, solo mostrar texto sin esperar tecla
-	if (!strcmp(scr_driver_name,"simpletext")) {
+	if (!strcmp(scr_new_driver_name,"simpletext")) {
                 printf ("-%s-\n",titulo);
                 printf ("\n");
                 printf ("%s\n",texto);
@@ -8583,7 +8583,7 @@ int zxvision_coords_in_front_window(zxvision_window *w,int x,int y)
 void zxvision_draw_window_contents(zxvision_window *w)
 {
 
-	if (!strcmp(scr_driver_name,"stdout")) {
+	if (!strcmp(scr_new_driver_name,"stdout")) {
 		zxvision_draw_window_contents_stdout(w);
 		return;
 	}
@@ -10623,7 +10623,7 @@ int si_menu_mouse_en_ventana(void)
 int menu_allows_mouse(void)
 {
 	//Primero, fbdev no permite raton
-	if (!strcmp(scr_driver_name,"fbdev")) return 0;
+	if (!strcmp(scr_new_driver_name,"fbdev")) return 0;
 
 	//Luego, el resto de los drivers completos (xwindows, sdl, cocoa, ...)
 
@@ -12051,7 +12051,7 @@ int menu_dibuja_menu(int *opcion_inicial,menu_item *item_seleccionado,menu_item 
 	//Primera vez decir selected item. Luego solo el nombre del item
 	menu_active_item_primera_vez=1;
 
-    if (!strcmp(scr_driver_name,"stdout") ) {
+    if (!strcmp(scr_new_driver_name,"stdout") ) {
 
 		//Para que se envie a speech
 		//TODO: el texto se muestra dos veces en consola: 
@@ -13169,20 +13169,20 @@ int menu_cond_zx8081_no_realvideo(void)
 
 int menu_cond_curses(void)
 {
-	if (!strcmp(scr_driver_name,"curses")) return 1;
+	if (!strcmp(scr_new_driver_name,"curses")) return 1;
 	return 0;
 }
 
 int menu_cond_stdout(void)
 {
-        if (!strcmp(scr_driver_name,"stdout")) return 1;
+        if (!strcmp(scr_new_driver_name,"stdout")) return 1;
 
         return 0;
 }
 
 int menu_cond_simpletext(void)
 {
-        if (!strcmp(scr_driver_name,"simpletext")) return 1;
+        if (!strcmp(scr_new_driver_name,"simpletext")) return 1;
 
         return 0;
 }
@@ -13193,7 +13193,7 @@ int menu_cond_simpletext(void)
 int menu_cond_no_stdout(void)
 {
         //esto solo se permite en drivers xwindows, caca, aa, curses. NO en stdout
-        if (!strcmp(scr_driver_name,"stdout")) return 0;
+        if (!strcmp(scr_new_driver_name,"stdout")) return 0;
         return 1;
 }
 */
@@ -13201,8 +13201,8 @@ int menu_cond_no_stdout(void)
 int menu_cond_no_curses_no_stdout(void)
 {
         //esto solo se permite en drivers xwindows, caca, aa. NO en curses ni stdout
-        if (!strcmp(scr_driver_name,"curses")) return 0;
-        if (!strcmp(scr_driver_name,"stdout")) return 0;
+        if (!strcmp(scr_new_driver_name,"curses")) return 0;
+        if (!strcmp(scr_new_driver_name,"stdout")) return 0;
 	return 1;
 }
 
@@ -18887,7 +18887,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 
 		//Soporte para Azerty keyboard
 
-		if (!strcmp(scr_driver_name,"xwindows")) {
+		if (!strcmp(scr_new_driver_name,"xwindows")) {
 			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_azerty,NULL,"[%c] ~~Azerty keyboard",(azerty_keyboard.v ? 'X' : ' ') );
 			menu_add_item_menu_shortcut(array_menu_keyboard_settings,'a');
 			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Enables azerty keyboard");
@@ -18914,7 +18914,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 		);
 
 #ifdef COMPILE_SDL
-		if (!strcmp(scr_driver_name,"sdl")) {
+		if (!strcmp(scr_new_driver_name,"sdl")) {
 			menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_sdl_raw_read,NULL,"[%c] SDL Raw keyboard",
 				(sdl_raw_keyboard_read.v ? 'X' : ' ') );
 			menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Read the keyboard using raw mode. Needed for ZX Recreated to work");
@@ -18942,7 +18942,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_IS_Z88 || MACHINE_IS_CPC || chloe_keyboard.v || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI)  {
 			//keymap solo hace falta con xwindows y sdl. fbdev y cocoa siempre leen en raw como teclado english
-			if (!strcmp(scr_driver_name,"xwindows")  || !strcmp(scr_driver_name,"sdl") ) {
+			if (!strcmp(scr_new_driver_name,"xwindows")  || !strcmp(scr_new_driver_name,"sdl") ) {
 				if (MACHINE_IS_Z88) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Z88 K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
 				else if (MACHINE_IS_CPC) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"CPC K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
 				else if (MACHINE_IS_SAM) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"SAM K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
@@ -26065,7 +26065,7 @@ void menu_change_video_driver_get(void)
 {
 	int i;
         for (i=0;i<num_scr_driver_array;i++) {
-		if (!strcmp(scr_driver_name,scr_driver_array[i].driver_name)) {
+		if (!strcmp(scr_new_driver_name,scr_driver_array[i].driver_name)) {
 			num_menu_scr_driver=i;
 			num_previo_menu_scr_driver=i;
 			return;
@@ -26130,7 +26130,7 @@ screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
                 }
 
 		else {
-			debug_printf(VERBOSE_ERR,"Can not set video driver. Restoring to previous driver %s",scr_driver_name);
+			debug_printf(VERBOSE_ERR,"Can not set video driver. Restoring to previous driver %s",scr_new_driver_name);
 			menu_change_video_driver_get();
 
 
@@ -26159,7 +26159,7 @@ screen_restart_pantalla_restore_overlay(previous_function,menu_antes);
 	menu_init_footer();
 
 
-	if (!strcmp(scr_driver_name,"aa")) {
+	if (!strcmp(scr_new_driver_name,"aa")) {
 		menu_generic_message_format("Warning","Remember that on aa video driver, menu is opened with %s",openmenu_key_message);
 	}
 
@@ -26589,7 +26589,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_window_settings,'b');
 		}
 
-		if (!strcmp(scr_driver_name,"xwindows")  || !strcmp(scr_driver_name,"sdl") || !strcmp(scr_driver_name,"cocoa") ) {
+		if (!strcmp(scr_new_driver_name,"xwindows")  || !strcmp(scr_new_driver_name,"sdl") || !strcmp(scr_new_driver_name,"cocoa") ) {
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"[%c] ~~Mouse pointer", (mouse_pointer_shown.v==1 ? 'X' : ' ') );
 			menu_add_item_menu_shortcut(array_menu_window_settings,'m');
 		}
@@ -27064,7 +27064,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'w');
 
 		//Con driver cocoa, no permitimos cambiar a otro driver
-		if (strcmp(scr_driver_name,"cocoa")) {
+		if (strcmp(scr_new_driver_name,"cocoa")) {
 			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_change_video_driver,menu_change_video_driver_cond,"Change Video Driver");
 		}
 
@@ -29212,7 +29212,7 @@ int menu_confirm_yesno_texto(char *texto_ventana,char *texto_interior)
 	//printf ("confirm\n");
 
         //En caso de stdout, es mas simple, mostrar texto y esperar tecla
-        if (!strcmp(scr_driver_name,"stdout")) {
+        if (!strcmp(scr_new_driver_name,"stdout")) {
 		char buffer_texto[256];
                 printf ("%s\n%s\n",texto_ventana,texto_interior);
 
@@ -29580,7 +29580,7 @@ void zxvision_menu_generic_message_setting(char *titulo, const char *texto, char
 	
 	zxvision_generic_message_tooltip(titulo , lineas_agregar , 0, 0, 0, NULL, 1, "%s", texto);
 	
-	if (!strcmp(scr_driver_name,"stdout")) {
+	if (!strcmp(scr_new_driver_name,"stdout")) {
 		printf ("%s\n",texto_opcion);
 		scrstdout_menu_print_speech_macro (texto_opcion);
 		printf("Enable or disable setting? 0 or 1?\n");
@@ -29686,7 +29686,7 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 {
 
     //En caso de stdout, es mas simple, mostrar texto y esperar texto
-	if (!strcmp(scr_driver_name,"stdout")) {
+	if (!strcmp(scr_new_driver_name,"stdout")) {
 		printf ("%s\n",titulo);
 		scrstdout_menu_print_speech_macro(titulo);
 
@@ -30015,7 +30015,7 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 		"%s"
 		"%s"
 		,
-		scr_driver_name,string_video_drivers,audio_new_driver_name,string_audio_drivers,
+		scr_new_driver_name,string_video_drivers,audio_new_driver_name,string_audio_drivers,
 		directorio_actual,
 
 #if defined(__APPLE__)
@@ -31314,7 +31314,7 @@ void menu_inicio_bucle_main(void)
 
 		else {		
 
-		if (strcmp(scr_driver_name,"xwindows")==0 || strcmp(scr_driver_name,"sdl")==0 || strcmp(scr_driver_name,"caca")==0 || strcmp(scr_driver_name,"fbdev")==0 || strcmp(scr_driver_name,"cocoa")==0 || strcmp(scr_driver_name,"curses")==0) f_functions=1;
+		if (strcmp(scr_new_driver_name,"xwindows")==0 || strcmp(scr_new_driver_name,"sdl")==0 || strcmp(scr_new_driver_name,"caca")==0 || strcmp(scr_new_driver_name,"fbdev")==0 || strcmp(scr_new_driver_name,"cocoa")==0 || strcmp(scr_new_driver_name,"curses")==0) f_functions=1;
 		else f_functions=0;
 
 
@@ -31883,13 +31883,13 @@ void menu_inicio(void)
 	//printf ("after menu_espera_no_tecla\n");
 
 
-        if (!strcmp(scr_driver_name,"stdout")) {
+        if (!strcmp(scr_new_driver_name,"stdout")) {
 		//desactivar menu multitarea con stdout
 		menu_multitarea=0;
         }
 
 	//simpletext no soporta menu
-        if (!strcmp(scr_driver_name,"simpletext")) {
+        if (!strcmp(scr_new_driver_name,"simpletext")) {
 		printf ("Can not open menu: simpletext video driver does not support menu.\n");
 		menu_inicio_pre_retorno();
 		return;
@@ -32189,7 +32189,7 @@ void menu_inicio(void)
 //Escribe bloque de cuadrado de color negro  
 void set_splash_zesarux_logo_put_space(int x,int y)
 {
-	if (!strcmp(scr_driver_name,"aa")) {
+	if (!strcmp(scr_new_driver_name,"aa")) {
 		putchar_menu_overlay(x,y,'X',7,0);
 	}
 	else putchar_menu_overlay(x,y,' ',7,0);
@@ -32515,8 +32515,8 @@ void set_splash_text(void)
 
 	//Enviar texto de bienvenida tambien a speech
 	//stdout y simpletext no
-	if (!strcmp(scr_driver_name,"stdout")) return;
-	if (!strcmp(scr_driver_name,"simpletext")) return;
+	if (!strcmp(scr_new_driver_name,"stdout")) return;
+	if (!strcmp(scr_new_driver_name,"simpletext")) return;
 
 	textspeech_print_speech(texto_welcome);
 	textspeech_print_speech(texto_edition);
@@ -34632,7 +34632,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 {
 
 	//En el caso de stdout es mucho mas simple
-    if (!strcmp(scr_driver_name,"stdout")) {
+    if (!strcmp(scr_new_driver_name,"stdout")) {
 		printf ("%s :\n",titulo);
 		scrstdout_menu_print_speech_macro(titulo);
 		scanf("%s",archivo);

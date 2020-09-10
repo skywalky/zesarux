@@ -240,7 +240,7 @@ int gunstick_view_white(void)
 
 //Si curses
 #ifdef COMPILE_CURSES
-	if (!strcmp(scr_driver_name,"curses")) {
+	if (!strcmp(scr_new_driver_name,"curses")) {
 		return (scrcurses_return_gunstick_view_white() );
 	}
 #endif

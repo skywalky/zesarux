@@ -737,7 +737,7 @@ scr_z88_cpc_load_keymap=scrcaca_z88_cpc_load_keymap;
 scr_detectedchar_print=scrcaca_detectedchar_print;
 
 //Esto debe estar al final, para que funcione correctamente desde menu, cuando se selecciona un driver, y no va, que pueda volver al anterior
-scr_driver_name="caca";
+scr_set_driver_name("caca");
 
 return 0;
 

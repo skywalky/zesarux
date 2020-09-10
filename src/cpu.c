@@ -386,7 +386,7 @@ void do_fallback_video(void)
 		funcion_init=scr_driver_array[i].funcion_init;
 		funcion_set=scr_driver_array[i].funcion_set;
 		if ( (funcion_init()) ==0) {
-			debug_printf(VERBOSE_DEBUG,"Ok video driver i:%d %s",i,scr_driver_name);
+			debug_printf(VERBOSE_DEBUG,"Ok video driver i:%d %s",i,scr_new_driver_name);
 			funcion_set();
 			return;
 		}
@@ -4101,7 +4101,7 @@ void set_menu_gui_zoom(void)
 {
 	//Ajustar zoom del gui. por defecto 1
 	menu_gui_zoom=1;
-	//printf ("calling set_menu_gui_zoom. driver: %s\n",scr_driver_name);
+	//printf ("calling set_menu_gui_zoom. driver: %s\n",scr_new_driver_name);
 
 	if (si_complete_video_driver() ) {
 		if (MACHINE_IS_QL || MACHINE_IS_TSCONF || MACHINE_IS_CPC || MACHINE_IS_PRISM || MACHINE_IS_SAM || MACHINE_IS_TBBLUE) menu_gui_zoom=2;
@@ -8048,7 +8048,7 @@ inverse_video.v=0;
 kempston_mouse_emulation.v=0;
 
 
-scr_driver_name="";
+scr_set_driver_name("");
 audio_set_driver_name("");
 
 transaction_log_filename[0]=0;

@@ -910,9 +910,9 @@ void debug_printf (int debuglevel, const char * format , ...)
 			//en el caso de simpletext y null, no aparecera ventana igualmente, pero el error ya se vera por consola
 			//en stdout si que "dibuja" la ventana por consola, para que se envie a speech
         	if (
-				//!strcmp(scr_driver_name,"stdout") ||
-        		!strcmp(scr_driver_name,"simpletext") ||
-        		!strcmp(scr_driver_name,"null") 
+				//!strcmp(scr_new_driver_name,"stdout") ||
+        		!strcmp(scr_new_driver_name,"simpletext") ||
+        		!strcmp(scr_new_driver_name,"null") 
 			)
 			{
 				//nada

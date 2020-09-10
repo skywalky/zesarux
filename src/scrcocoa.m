@@ -2713,7 +2713,7 @@ int scrcocoa_init (void) {
 
         //Otra inicializacion necesaria
         //Esto debe estar al final, para que funcione correctamente desde menu, cuando se selecciona un driver, y no va, que pueda volver al anterior
-        scr_driver_name="cocoa";
+        scr_set_driver_name("cocoa");
 
 	scr_z88_cpc_load_keymap();
 

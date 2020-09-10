@@ -276,7 +276,7 @@ int scrstdout_init (void){
 	//textspeech_also_send_menu.v=1;
 	
 	
-	scr_driver_name="stdout";
+	scr_set_driver_name("stdout");
 	
 	screen_stdout_driver=1;
 	

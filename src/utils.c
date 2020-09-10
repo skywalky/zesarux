@@ -3398,7 +3398,7 @@ int util_write_configfile(void)
 
   if (simulate_screen_zx8081.v)               ADD_STRING_CONFIG,"--videozx8081 %d",umbral_simulate_screen_zx8081);
                                               ADD_STRING_CONFIG,"--ao %s",audio_new_driver_name);
-                                              ADD_STRING_CONFIG,"--vo %s",scr_driver_name);
+                                              ADD_STRING_CONFIG,"--vo %s",scr_new_driver_name);
   if (noautoload.v)                           ADD_STRING_CONFIG,"--noautoload");
 
   if (fast_autoload.v)			      ADD_STRING_CONFIG,"--fastautoload");
@@ -6308,7 +6308,7 @@ void util_set_reset_key_convert_recreated_yesno(enum util_teclas tecla,int press
 				//Liberar todas teclas de puertos en caso de driver cocoa
 				//Esto sucede porque esto es tecla cmd y en cocoa,
 				//cuando se libera cmd, no se envian liberacion de otras teclas pulsadas
-				if (strcmp(scr_driver_name,"cocoa")==0) {
+				if (strcmp(scr_new_driver_name,"cocoa")==0) {
 					//printf ("Liberando todas teclas en driver cocoa\n");
 					chloe_keyboard_pressed_tecla=UTIL_KEY_NONE;
 					chloe_keyboard_pressed_tecla_ascii=0;

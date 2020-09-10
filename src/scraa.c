@@ -795,7 +795,7 @@ scr_detectedchar_print=scraa_detectedchar_print;
 
 
 //Esto debe estar al final, para que funcione correctamente desde menu, cuando se selecciona un driver, y no va, que pueda volver al anterior
-scr_driver_name="aa";
+scr_set_driver_name("aa");
 return 0;
 
 }

@@ -196,7 +196,7 @@ int scrsimpletext_init (void){
 
 	
 	
-	scr_driver_name="simpletext";
+	scr_set_driver_name("simpletext");
 	
 	screen_simpletext_driver=1;
 	

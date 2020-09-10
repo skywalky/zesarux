@@ -9328,7 +9328,7 @@ int menu_display_settings_disp_zx8081_spectrum(void)
 {
 
 	//esto solo en spectrum y si el driver no es curses y si no hay rainbow
-	if (!strcmp(scr_driver_name,"curses")) return 0;
+	if (!strcmp(scr_new_driver_name,"curses")) return 0;
 	if (rainbow_enabled.v==1) return 0;
 
 	return !menu_cond_zx8081();
@@ -9394,7 +9394,7 @@ void menu_display_autodetect_wrx(MENU_ITEM_PARAMETERS)
 
 int menu_display_aa_cond(void)
 {
-        if (!strcmp(scr_driver_name,"aa")) return 1;
+        if (!strcmp(scr_new_driver_name,"aa")) return 1;
 
         else return 0;
 }
@@ -9526,7 +9526,7 @@ void menu_vofile_fps(MENU_ITEM_PARAMETERS)
 
 int menu_display_curses_cond(void)
 {
-	if (!strcmp(scr_driver_name,"curses")) return 1;
+	if (!strcmp(scr_new_driver_name,"curses")) return 1;
 
 	else return 0;
 }

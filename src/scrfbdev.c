@@ -2120,7 +2120,7 @@ int scrfbdev_init (void){
 
 	//printf("%dx%d, %d bpp fbdev_screensize: %ld\n", fbdev_ancho,fbdev_alto, bpp, fbdev_screensize );
 	//Esto debe estar al final, para que funcione correctamente desde menu, cuando se selecciona un driver, y no va, que pueda volver al anterior
-	scr_driver_name="fbdev";
+	scr_set_driver_name("fbdev");
 
 	scr_z88_cpc_load_keymap();
 

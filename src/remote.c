@@ -4617,7 +4617,7 @@ void interpreta_comando(char *comando,int misocket)
 
 
 	else if (!strcmp(comando_sin_parametros,"get-video-driver")) {
-                escribir_socket (misocket,scr_driver_name);
+                escribir_socket (misocket,scr_new_driver_name);
 	}
 
 #ifdef EMULATE_VISUALMEM

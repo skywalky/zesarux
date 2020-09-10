@@ -157,7 +157,8 @@ void (*scr_putchar_zx8081) (int x,int y, z80_byte caracter);
 int scr_tiene_colores=0;
 
 //nombre del driver: aa, null, xwindows, etc. inicializado por cada driver en init
-char *scr_driver_name;
+//renombrado a _new_ para evitar posible error de segfault
+char scr_new_driver_name[100];
 
 void scr_tsconf_putpixel_zx_mode(int x,int y,unsigned color);
 void scr_refresca_border_tsconf_cont(void);
@@ -241,6 +242,12 @@ z80_byte umbral_simulate_screen_zx8081=4;
 
 //Dice que no hay que hacer fadeout al salir. Se activa desde Mac os x cocoa driver
 z80_bit no_fadeout_exit={0};
+
+
+void scr_set_driver_name(char *nombre)
+{
+	strcpy(scr_new_driver_name,nombre);
+}
 
 //colores usados para el fondo cuando hay menu/overlay activo
 //int spectrum_colortable_oscuro[EMULATOR_TOTAL_PALETTE_COLOURS];
@@ -623,10 +630,10 @@ int if_store_scanline_interlace(int y)
 //Retorna 1 si el driver grafico es completo
 int si_complete_video_driver(void)
 {
-        if (!strcmp(scr_driver_name,"xwindows")) return 1;
-        if (!strcmp(scr_driver_name,"sdl")) return 1;
-        if (!strcmp(scr_driver_name,"fbdev")) return 1;
-        if (!strcmp(scr_driver_name,"cocoa")) return 1;
+        if (!strcmp(scr_new_driver_name,"xwindows")) return 1;
+        if (!strcmp(scr_new_driver_name,"sdl")) return 1;
+        if (!strcmp(scr_new_driver_name,"fbdev")) return 1;
+        if (!strcmp(scr_new_driver_name,"cocoa")) return 1;
         return 0;
 }
 
@@ -635,14 +642,14 @@ int si_complete_video_driver(void)
 int si_normal_menu_video_driver(void)
 {
 
-	//printf ("video driver: %s\n",scr_driver_name);
+	//printf ("video driver: %s\n",scr_new_driver_name);
 
 	if (si_complete_video_driver() ) return 1;
 
 	//curses, aa, caca, pero ningun otro (ni stdout, ni simpletext, ni null... )
-        if (!strcmp(scr_driver_name,"curses")) return 1;
-        if (!strcmp(scr_driver_name,"aa")) return 1;
-        if (!strcmp(scr_driver_name,"caca")) return 1;
+        if (!strcmp(scr_new_driver_name,"curses")) return 1;
+        if (!strcmp(scr_new_driver_name,"aa")) return 1;
+        if (!strcmp(scr_new_driver_name,"caca")) return 1;
         return 0;
 }
 
@@ -8395,7 +8402,7 @@ void screen_set_colour_normal(int index, int colour)
 
 #ifdef COMPILE_AA
         //para aalib, tiene su propia paleta que hay que actualizar
-        if (!strcmp(scr_driver_name,"aa")) {
+        if (!strcmp(scr_new_driver_name,"aa")) {
                 scraa_setpalette(index,(colour >> 16) & 0xFF, (colour >> 8) & 0xFF, (colour) & 0xFF );
         }
 #endif
@@ -8919,13 +8926,13 @@ Bit 6 GRN1 most  significant bit of green.
 
 #ifdef COMPILE_CURSES
 		//Si driver curses, su paleta es diferente
-		if (!strcmp(scr_driver_name,"curses")) scrcurses_inicializa_colores();
+		if (!strcmp(scr_new_driver_name,"curses")) scrcurses_inicializa_colores();
 #endif
 
 
 //#ifdef COMPILE_AA
 //		//Si driver aa, reinicializar paleta
-//		if (!strcmp(scr_driver_name,"aa")) scraa_inicializa_colores();
+//		if (!strcmp(scr_new_driver_name,"aa")) scraa_inicializa_colores();
 //#endif
 
 
@@ -8985,12 +8992,12 @@ void scr_fadeout(void)
 
 
 	//en stdout, simpletext y null no hacerlo
-	if (!strcmp(scr_driver_name,"stdout"))  return;
-	if (!strcmp(scr_driver_name,"simpletext"))  return;
-	if (!strcmp(scr_driver_name,"null"))  return;
+	if (!strcmp(scr_new_driver_name,"stdout"))  return;
+	if (!strcmp(scr_new_driver_name,"simpletext"))  return;
+	if (!strcmp(scr_new_driver_name,"null"))  return;
 
 	//en aalib va muy lento y no se por que. no hacerlo
-	if (!strcmp(scr_driver_name,"aa"))  return;
+	if (!strcmp(scr_new_driver_name,"aa"))  return;
 
 	//Si tiene gigascreen, quitar, sino hace un efecto extranyo
 	disable_gigascreen();
@@ -9052,7 +9059,7 @@ void scr_fadeout(void)
 			//en el caso de aalib usa una paleta diferente
 #ifdef COMPILE_AA
                 //Si driver aa, reinicializar paleta
-                if (!strcmp(scr_driver_name,"aa")) scraa_inicializa_colores();
+                if (!strcmp(scr_new_driver_name,"aa")) scraa_inicializa_colores();
 		//scraa_setpalette (i, r,g,b);
 #endif
 
@@ -9062,7 +9069,7 @@ void scr_fadeout(void)
                 }
 
 #ifdef COMPILE_CURSES
-		if (!strcmp(scr_driver_name,"curses")) {
+		if (!strcmp(scr_new_driver_name,"curses")) {
 			int bucle_curses;
 			for (bucle_curses=0;bucle_curses<incremento_color_curses;bucle_curses++) {
 				scrcurses_fade_color(color_curses++);
@@ -9950,7 +9957,7 @@ void screen_z88_draw_lower_screen(void)
 	set_z88_putpixel_zoom_function();
 
 #ifdef COMPILE_CURSES
-	if (!strcmp(scr_driver_name,"curses")) {
+	if (!strcmp(scr_new_driver_name,"curses")) {
 		scrcurses_z88_draw_lower_screen();
 		return;
 	}

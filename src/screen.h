@@ -153,7 +153,9 @@ extern z80_bit ocr_settings_not_look_23606;
 #define WINDOW_FOOTER_PAPER (ESTILO_GUI_PAPEL_NORMAL)
 #define WINDOW_FOOTER_INK (ESTILO_GUI_TINTA_NORMAL)
 
-extern char *scr_driver_name;
+extern char scr_new_driver_name[];
+
+extern void scr_set_driver_name(char *nombre);
 
 extern z80_bit texto_artistico;
 extern int umbral_arttext;
