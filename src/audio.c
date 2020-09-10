@@ -72,7 +72,8 @@ char *audio_buffer_two;
 char audio_buffer_one_assigned[AUDIO_BUFFER_SIZE*2];  //Doble porque es estereo
 char audio_buffer_two_assigned[AUDIO_BUFFER_SIZE*2];  //Doble porque es estereo
 
-char *audio_driver_name;
+//Renombro variable a _new_ para corregir un error de código
+char audio_new_driver_name[100];
 
 //Si el driver de audio soporta stereo. En teoria lo soportan todos, se pone de momento como transicion 
 //del sistema mono a stereo, hasta que no esten todos los drivers
@@ -148,6 +149,12 @@ char audio_tone_generator_get(void)
 
 	//no se deberia llegar aqui
 	return 0;
+}
+
+
+void audio_set_driver_name(char *nombre)
+{
+	strcpy(audio_new_driver_name,nombre);
 }
 
 
@@ -1134,7 +1141,7 @@ int set_audiodriver_null(void) {
 //Ha fallado el init del driver de audio y hacemos fallback a null
 void fallback_audio_null(void)
 {
-	debug_printf (VERBOSE_ERR,"Error using audio output driver %s. Fallback to null",audio_driver_name);
+	debug_printf (VERBOSE_ERR,"Error using audio output driver %s. Fallback to null",audio_new_driver_name);
 	set_audiodriver_null();
 	audio_init();
 }

@@ -412,7 +412,7 @@ void do_fallback_audio(void)
                 funcion_init=audio_driver_array[i].funcion_init;
                 funcion_set=audio_driver_array[i].funcion_set;
                 if ( (funcion_init()) ==0) {
-                        debug_printf (VERBOSE_DEBUG,"Ok audio driver i:%d %s",i,audio_driver_name);
+                        debug_printf (VERBOSE_DEBUG,"Ok audio driver i:%d %s",i,audio_new_driver_name);
                         funcion_set();
                         return;
                 }
@@ -8049,7 +8049,7 @@ kempston_mouse_emulation.v=0;
 
 
 scr_driver_name="";
-audio_driver_name="";
+audio_set_driver_name("");
 
 transaction_log_filename[0]=0;
 

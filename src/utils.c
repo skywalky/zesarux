@@ -3397,7 +3397,7 @@ int util_write_configfile(void)
   if (mem128_multiplicador!=1)                ADD_STRING_CONFIG,"--128kmem %d",mem128_multiplicador*128);
 
   if (simulate_screen_zx8081.v)               ADD_STRING_CONFIG,"--videozx8081 %d",umbral_simulate_screen_zx8081);
-                                              ADD_STRING_CONFIG,"--ao %s",audio_driver_name);
+                                              ADD_STRING_CONFIG,"--ao %s",audio_new_driver_name);
                                               ADD_STRING_CONFIG,"--vo %s",scr_driver_name);
   if (noautoload.v)                           ADD_STRING_CONFIG,"--noautoload");
 

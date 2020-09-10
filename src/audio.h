@@ -73,7 +73,9 @@ extern char *audio_buffer_playback;
 
 extern z80_bit audio_noreset_audiobuffer_full;
 
-extern char *audio_driver_name;
+extern char audio_new_driver_name[];
+
+extern void audio_set_driver_name(char *nombre);
 
 extern char *audio_buffer_one;
 extern char *audio_buffer_two;

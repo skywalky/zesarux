@@ -30015,7 +30015,7 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 		"%s"
 		"%s"
 		,
-		scr_driver_name,string_video_drivers,audio_driver_name,string_audio_drivers,
+		scr_driver_name,string_video_drivers,audio_new_driver_name,string_audio_drivers,
 		directorio_actual,
 
 #if defined(__APPLE__)

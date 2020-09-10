@@ -948,8 +948,8 @@ void menu_change_audio_driver_get(void)
 {
         int i;
         for (i=0;i<num_audio_driver_array;i++) {
-		//printf ("actual: %s buscado: %s indice: %d\n",audio_driver_name,audio_driver_array[i].driver_name,i);
-                if (!strcmp(audio_driver_name,audio_driver_array[i].driver_name)) {
+		//printf ("actual: %s buscado: %s indice: %d\n",audio_new_driver_name,audio_driver_array[i].driver_name,i);
+                if (!strcmp(audio_new_driver_name,audio_driver_array[i].driver_name)) {
                         num_menu_audio_driver=i;
                         num_previo_menu_audio_driver=i;
 			return;
@@ -983,7 +983,7 @@ void menu_change_audio_driver_apply(MENU_ITEM_PARAMETERS)
                 }
 
                 else {
-                        debug_printf(VERBOSE_ERR,"Can not set audio driver. Restoring to previous driver %s",audio_driver_name);
+                        debug_printf(VERBOSE_ERR,"Can not set audio driver. Restoring to previous driver %s",audio_new_driver_name);
 			menu_change_audio_driver_get();
 
                         //Restaurar audio driver
@@ -1520,7 +1520,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_shortcut(array_menu_settings_audio,'h');
 
 
-			if (!strcmp(audio_driver_name,"pcspeaker")) {
+			if (!strcmp(audio_new_driver_name,"pcspeaker")) {
 				menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_pcspeaker_wait_time,NULL,"[%2d] PC Speaker Wait time",audiopcspeaker_tiempo_espera);
 				menu_add_item_menu_tooltip(array_menu_settings_audio,"Wait time between every audio byte sent, in microseconds");
 				menu_add_item_menu_ayuda(array_menu_settings_audio,"Wait time between every audio byte sent, in microseconds. Values between 0 and 64 microseconds. "
