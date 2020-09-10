@@ -127,6 +127,4 @@ O bien en cada sitio donde se puede redimensionar la imagen (creo que habia un s
 
 -redraws de zxdesktop al inicio del emulador y en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
 
--revisar fill type y color defecto. quiza color solido y un color que no moleste
-
 -Quizá autocalibrado del tiempo entre bytes de pc speaker. Según lo que ha tardado en 1 segundo y lo que debería haber tardado. Quizá problema de que salgan decimales en el sleep final...
