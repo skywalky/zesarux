@@ -1460,10 +1460,11 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"Real beeper produces beeper sound more realistic but uses a bit more cpu. Needs beeper enabled (or vsync sound on zx80/81)");
 		}
 
+		menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
 
 		if (MACHINE_IS_SPECTRUM) {
-			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"[%c] Audio ~~filter ROM SAVE",(output_beep_filter_on_rom_save.v ? 'X' : ' '));
-			menu_add_item_menu_shortcut(array_menu_settings_audio,'f');
+			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_filter_on_rom_save,NULL,"[%c] ROM SAVE filter",(output_beep_filter_on_rom_save.v ? 'X' : ' '));
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Apply filter on ROM save routines");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"It detects when on ROM save routines and alter audio output to use only "
 					"the MIC bit of the FEH port");
@@ -1481,14 +1482,14 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 				if (output_beep_filter_alter_volume.v) {
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_volume,NULL,"[%d] Volume",output_beep_filter_volume);
+					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beep_volume,NULL,"[%d] Beeper volume",output_beep_filter_volume);
 				}
 			}
 
 		}
 
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_resample_1bit,NULL,"[%c] 1 bit resample",(audio_resample_1bit.v ? 'X' : ' '));
+		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_resample_1bit,NULL,"[%c] 1 bit filter",(audio_resample_1bit.v ? 'X' : ' '));
 		menu_add_item_menu_tooltip(array_menu_settings_audio,"Resample audio output to 1 bit only");
 		menu_add_item_menu_ayuda(array_menu_settings_audio,"Resample audio output to 1 bit only");
 		

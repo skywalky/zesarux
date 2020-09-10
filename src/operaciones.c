@@ -7886,21 +7886,14 @@ void set_value_beeper (int v)
 
   else {
 
-	//Si salida resample 1bit. Para que solo oscile entre dos valores
-	if (audio_resample_1bit.v) {
-		value_beeper=( v ? +127 : -128);  
-	}
-
-	else {
 
 
-		//Por defecto el sonido se genera en negativo y de ahi oscila
+	//Por defecto el sonido se genera en negativo y de ahi oscila
 
-		//temp normal en fuse
-		value_beeper = -beeper_ampl[3] + beeper_ampl[v]*2;
+	//temp normal en fuse
+	value_beeper = -beeper_ampl[3] + beeper_ampl[v]*2;
 
-
-	}
+	
 
   }
 
