@@ -904,6 +904,7 @@ if [ "$OPTIONOBJPCSPEAKER" != "" ]; then
 #include <sys/io.h>
 int main () {
 int a=inb(0x61);
+a++;
 return 0;
 }
 _EOF
