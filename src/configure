@@ -903,6 +903,7 @@ if [ "$OPTIONOBJPCSPEAKER" != "" ]; then
         cat > $TEMPFILE << _EOF
 #include <sys/io.h>
 int main () {
+int a=inb(0x61);
 return 0;
 }
 _EOF
