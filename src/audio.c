@@ -2113,10 +2113,55 @@ char old_audio_change_top_speed_sound(char sonido)
 char left_channel_before_1bit_process=0;
 char right_channel_before_1bit_process=0;
 
-//Ultimos valores enviados a los dos canales cuando hay el resample de 1 bit activado
+//Ultimos valores enviados a los dos canales despues de pasar por el resample de 1 bit
 char left_channel_after_1bit_process=0;
 char right_channel_after_1bit_process=0;
 
+void audio_function_resample_1bit(char *p_valor_sonido_izquierdo,char *p_valor_sonido_derecho)
+{
+
+	char valor_sonido_izquierdo,valor_sonido_derecho;
+
+	valor_sonido_izquierdo=*p_valor_sonido_izquierdo;
+	valor_sonido_derecho=*p_valor_sonido_derecho;
+
+	int volumen_resample=64;
+
+
+
+	char inicial_valor_sonido_izquierdo,inicial_valor_sonido_derecho;
+
+	inicial_valor_sonido_izquierdo=valor_sonido_izquierdo;
+	inicial_valor_sonido_derecho=valor_sonido_derecho;
+
+	//Si la onda "sube", es +1
+	if (valor_sonido_izquierdo>left_channel_before_1bit_process) valor_sonido_izquierdo=+volumen_resample;
+	//Si la onda "baja", es -1
+	else if (valor_sonido_izquierdo<left_channel_before_1bit_process) valor_sonido_izquierdo=-volumen_resample;
+	//Si la onda esta igual, damos valor anterior
+	else valor_sonido_izquierdo=left_channel_after_1bit_process;
+
+
+	//Lo mismo para el canal derecho
+	if (valor_sonido_derecho>right_channel_before_1bit_process) valor_sonido_derecho=+volumen_resample;
+	else if (valor_sonido_derecho<right_channel_before_1bit_process) valor_sonido_derecho=-volumen_resample;
+	else valor_sonido_derecho=right_channel_after_1bit_process;
+
+
+	//Guardamos valores pre-procesado
+	left_channel_before_1bit_process=inicial_valor_sonido_izquierdo;
+	right_channel_before_1bit_process=inicial_valor_sonido_derecho;
+
+	//Guardamos valores post-procesado
+	left_channel_after_1bit_process=valor_sonido_izquierdo;
+	right_channel_after_1bit_process=valor_sonido_derecho;		
+
+
+	//Guardamos los resultados en los punteros
+	*p_valor_sonido_izquierdo=valor_sonido_izquierdo;
+	*p_valor_sonido_derecho=valor_sonido_derecho;		
+	
+}
 
 void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_derecho)
 {
@@ -2127,39 +2172,9 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 
 	if (audio_resample_1bit.v) {
 
-		int volumen_resample=64;
-
-		
-
-		char inicial_valor_sonido_izquierdo,inicial_valor_sonido_derecho;
-
-		inicial_valor_sonido_izquierdo=valor_sonido_izquierdo;
-		inicial_valor_sonido_derecho=valor_sonido_derecho;
-
-		//Si la onda "sube", es +1
-		if (valor_sonido_izquierdo>left_channel_before_1bit_process) valor_sonido_izquierdo=+volumen_resample;
-		//Si la onda "baja", es -1
-		else if (valor_sonido_izquierdo<left_channel_before_1bit_process) valor_sonido_izquierdo=-volumen_resample;
-		//Si la onda esta igual, damos valor anterior
-		else valor_sonido_izquierdo=left_channel_after_1bit_process;
-
-		
-
-		if (valor_sonido_derecho>right_channel_before_1bit_process) valor_sonido_derecho=+volumen_resample;
-		else if (valor_sonido_derecho<right_channel_before_1bit_process) valor_sonido_derecho=-volumen_resample;
-		else valor_sonido_derecho=right_channel_after_1bit_process;
-
-		
-
-
-		left_channel_before_1bit_process=inicial_valor_sonido_izquierdo;
-		right_channel_before_1bit_process=inicial_valor_sonido_derecho;
-
-		left_channel_after_1bit_process=valor_sonido_izquierdo;
-		right_channel_after_1bit_process=valor_sonido_derecho;		
+		audio_function_resample_1bit(&valor_sonido_izquierdo,&valor_sonido_derecho);
 
 		//printf ("%d %d\n",valor_sonido_izquierdo,valor_sonido_derecho);
-
 		
 	}
 
