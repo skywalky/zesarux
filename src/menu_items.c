@@ -20583,7 +20583,7 @@ void menu_storage_mmc_autoconfigure_tbblue(MENU_ITEM_PARAMETERS)
 	int tipo_imagen;
 	
 //Si no hay phreads, solo se puede usar la opcion local
-#ifndef NETWORKING_DISABLED
+#ifdef NETWORKING_DISABLED
 	tipo_imagen=1;
 #else
 	tipo_imagen=menu_simple_two_choices("SD Image type","Included or download?","Use included in ZEsarUX","Download from official repo");
