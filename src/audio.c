@@ -2109,6 +2109,13 @@ char old_audio_change_top_speed_sound(char sonido)
 	return sonido;
 }
 
+//Ultimos valores recibidos a los dos canales antes de pasar por el resample a 1 bit
+char left_channel_before_1bit_process=0;
+char right_channel_before_1bit_process=0;
+
+//Ultimos valores enviados a los dos canales cuando hay el resample de 1 bit activado
+char left_channel_after_1bit_process=0;
+char right_channel_after_1bit_process=0;
 
 
 void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_derecho)
@@ -2122,11 +2129,38 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 
 		int volumen_resample=64;
 
-		if (valor_sonido_izquierdo>0) valor_sonido_izquierdo=+volumen_resample;
-		else valor_sonido_izquierdo=-volumen_resample;
+		
 
-		if (valor_sonido_derecho>0) valor_sonido_derecho=+volumen_resample;
-		else valor_sonido_derecho=-volumen_resample;
+		char inicial_valor_sonido_izquierdo,inicial_valor_sonido_derecho;
+
+		inicial_valor_sonido_izquierdo=valor_sonido_izquierdo;
+		inicial_valor_sonido_derecho=valor_sonido_derecho;
+
+		//Si la onda "sube", es +1
+		if (valor_sonido_izquierdo>left_channel_before_1bit_process) valor_sonido_izquierdo=+volumen_resample;
+		//Si la onda "baja", es -1
+		else if (valor_sonido_izquierdo<left_channel_before_1bit_process) valor_sonido_izquierdo=-volumen_resample;
+		//Si la onda esta igual, damos valor anterior
+		else valor_sonido_izquierdo=left_channel_after_1bit_process;
+
+		
+
+		if (valor_sonido_derecho>right_channel_before_1bit_process) valor_sonido_derecho=+volumen_resample;
+		else if (valor_sonido_derecho<right_channel_before_1bit_process) valor_sonido_derecho=-volumen_resample;
+		else valor_sonido_derecho=right_channel_after_1bit_process;
+
+		
+
+
+		left_channel_before_1bit_process=inicial_valor_sonido_izquierdo;
+		right_channel_before_1bit_process=inicial_valor_sonido_derecho;
+
+		left_channel_after_1bit_process=valor_sonido_izquierdo;
+		right_channel_after_1bit_process=valor_sonido_derecho;		
+
+		//printf ("%d %d\n",valor_sonido_izquierdo,valor_sonido_derecho);
+
+		
 	}
 
 	audio_buffer[audio_buffer_indice]=valor_sonido_izquierdo;
