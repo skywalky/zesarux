@@ -2818,10 +2818,10 @@ void menu_ext_desktop_buttons_get_geometry(int *p_ancho_boton,int *p_alto_boton,
 	int ancho_boton=ancho_zx_desktop/total_botones;
 
 	//Minimo 32 pixeles
-	if (ancho_boton<32) ancho_boton=32;
+	if (ancho_boton<EXT_DESKTOP_BUTTONS_TOTAL_SIZE) ancho_boton=EXT_DESKTOP_BUTTONS_TOTAL_SIZE;
 
 	//Maximo 64 pixeles
-	if (ancho_boton>64) ancho_boton=64;
+	if (ancho_boton>EXT_DESKTOP_BUTTONS_TOTAL_SIZE*2) ancho_boton=EXT_DESKTOP_BUTTONS_TOTAL_SIZE*2;	
 
 
 	int alto_boton=ancho_boton;	
@@ -2895,10 +2895,10 @@ void menu_ext_desktop_lower_icons_get_geometry(int *p_ancho_boton,int *p_alto_bo
 	}
 
 	//Minimo 32 pixeles
-	if (ancho_boton<32) ancho_boton=32;
+	if (ancho_boton<EXT_DESKTOP_BUTTONS_TOTAL_SIZE) ancho_boton=EXT_DESKTOP_BUTTONS_TOTAL_SIZE;
 
 	//Maximo 64 pixeles
-	if (ancho_boton>64) ancho_boton=64;
+	if (ancho_boton>EXT_DESKTOP_BUTTONS_TOTAL_SIZE*2) ancho_boton=EXT_DESKTOP_BUTTONS_TOTAL_SIZE*2;
 
 
 	int alto_boton=ancho_boton;	
@@ -10515,7 +10515,7 @@ void zxvision_rearrange_background_windows(void)
 
 	//Si hay botones parte superior zxdesktop, origen_y lo incrementamos
 	if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() && menu_zxdesktop_buttons_enabled.v) {
-		origen_y=4;
+		origen_y=EXT_DESKTOP_BUTTONS_TOTAL_SIZE/8;
 	}
 
 	//Y de ahi para arriba
