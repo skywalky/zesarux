@@ -268,7 +268,7 @@ Bit 0    Effect
 			ofs++;
 		}
          
-		int tiempo_pasado_ms=audiopcspealer_tiempo_final();
+		int tiempo_pasado_ms=audiopcspeaker_tiempo_final();
 
 		printf("tiempo_pasado: %d\n",tiempo_pasado_ms);
 
