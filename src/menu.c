@@ -10515,7 +10515,7 @@ void zxvision_rearrange_background_windows(void)
 
 	//Si hay botones parte superior zxdesktop, origen_y lo incrementamos
 	if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() && menu_zxdesktop_buttons_enabled.v) {
-		origen_y=64;
+		origen_y=4;
 	}
 
 	//Y de ahi para arriba
