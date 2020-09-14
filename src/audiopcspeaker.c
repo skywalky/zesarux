@@ -270,7 +270,7 @@ Bit 0    Effect
          
 		int tiempo_pasado_ms=audiopcspeakertiempo_final();
 
-		printf("tiempo_pasado: %d\n",tiempo_pasado_ms);
+		printf("tiempo_pasado: %d ideal: %d\n",tiempo_pasado_ms,20*FRAMES_VECES_BUFFER_AUDIO);
 
 		while (audio_playing.v==0 || silence_detection_counter==SILENCE_DETECTION_MAX) {
 				//1 ms
