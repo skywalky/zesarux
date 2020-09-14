@@ -152,8 +152,9 @@ Por drivers:
 - curses: con ventana ay piano en background, al ir a Smartload se mezcla texto de ventana ay piano en Smartload
 
 
-
 - curses: en menú no aparece carácter “.” (Punto)
+
+-Permitir ZX desktop en curses? Cuidado porque igual intenta usar putpixel para dibujar las franjas de colores por defecto del fondo de ZX desktop
 
 
 

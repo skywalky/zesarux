@@ -357,6 +357,7 @@ echo Initial LDFLAGS=$INITIALLDFLAGS >>$LOGFILE
 CFLAGS="$CFLAGS -Wall -Wextra -fsigned-char"
 #CFLAGS="$CFLAGS -Wunused-but-set-parameter -Wunused-but-set-variable -Wundef -Wuninitialized -Wunknown-pragmas -Wno-pragmas -Wunreachable-code -Wunused -Wunused-function -Wunused-label -Wunused-parameter -Wunused-value -Wunused-variable -Wunused-but-set-parameter -Wunused-but-set-variable"
 #CFLAGS="$CFLAGS -Wall -Wunused -Wunused-parameter "
+# -Wno-format-overflow para que no muestre avisos en Linux tipo: note: ‘sprintf’ output 3 or more bytes (assuming 8193) into a destination of size 4096
 
 #Comprobaciones
 echo -n "Checking Operating system ... "

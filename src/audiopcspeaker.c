@@ -29,6 +29,7 @@
 
 
 #include <sys/io.h>
+#include <sys/time.h>
 
 
 
@@ -143,6 +144,37 @@ beep_freq(0);
 }
 */
 
+
+struct timeval audiopcspeakertimer_antes, audiopcspeakertimer_ahora;
+
+//Para calcular tiempos funciones. Iniciar contador antes
+void audiopcspeakertiempo_inicial(void)
+{
+
+        gettimeofday(&audiopcspeakertimer_antes, NULL);
+
+}
+
+//Para calcular tiempos funciones. Contar contador despues e imprimir tiempo por pantalla
+int audiopcspeakertiempo_final(void)
+{
+
+        long audiopcspeakertimer_mtime, audiopcspeakertimer_seconds, audiopcspeakertimer_useconds;    
+
+        gettimeofday(&audiopcspeakertimer_ahora, NULL);
+
+        audiopcspeakertimer_seconds  = audiopcspeakertimer_ahora.tv_sec  - audiopcspeakertimer_antes.tv_sec;
+        audiopcspeakertimer_useconds = audiopcspeakertimer_ahora.tv_usec - audiopcspeakertimer_antes.tv_usec;
+
+        audiopcspeakertimer_mtime = ((audiopcspeakertimer_seconds) * 1000 + audiopcspeakertimer_useconds/1000.0) + 0.5;
+
+        //printf("Elapsed time: %ld milliseconds\n\r", audiopcspeakertimer_mtime);
+
+	return audiopcspeakertimer_mtime;
+}
+
+
+
 char *buffer_playback_pcspeaker;
 
 char last_audio_sample=0;
@@ -173,6 +205,8 @@ void *audiopcspeaker_enviar_audio(void *nada)
 		int len=AUDIO_BUFFER_SIZE;
 
 		int ofs=0;
+
+		audiopcspeaker_tiempo_inicial();
 
 
 		//Valor de referencia
@@ -234,6 +268,9 @@ Bit 0    Effect
 			ofs++;
 		}
          
+		int tiempo_pasado_ms=audiopcspealer_tiempo_final();
+
+		printf("tiempo_pasado: %d\n",tiempo_pasado_ms);
 
 		while (audio_playing.v==0 || silence_detection_counter==SILENCE_DETECTION_MAX) {
 				//1 ms
