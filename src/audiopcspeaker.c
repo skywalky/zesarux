@@ -206,7 +206,7 @@ void *audiopcspeaker_enviar_audio(void *nada)
 
 		int ofs=0;
 
-		audiopcspeaker_tiempo_inicial();
+		audiopcspeakertiempo_inicial();
 
 
 		//Valor de referencia
@@ -268,7 +268,7 @@ Bit 0    Effect
 			ofs++;
 		}
          
-		int tiempo_pasado_ms=audiopcspeaker_tiempo_final();
+		int tiempo_pasado_ms=audiopcspeakertiempo_final();
 
 		printf("tiempo_pasado: %d\n",tiempo_pasado_ms);
 
