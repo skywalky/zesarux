@@ -181,6 +181,25 @@ char last_audio_sample=0;
 
 int audiopcspeaker_esperando_frame=0;
 
+int audiopcspeaker_calibrando_tiempo_espera=0;
+
+void audiopcspeaker_calibrate_tiempo_espera(void)
+{
+	audio_playing.v==0;
+
+	//Esperar que se vaya a bucle de espera
+	usleep(1000000);
+
+	//Y activar calibracion
+
+	audiopcspeaker_calibrando_tiempo_espera=1;
+
+	//Empezamos con wait 0
+	audiopcspeaker_tiempo_espera=0;
+
+	audio_playing.v=1;
+}
+
 
 //Ultimo valor.
 z80_byte bit_anterior_speaker=0;
@@ -270,7 +289,34 @@ Bit 0    Effect
          
 		int tiempo_pasado_ms=audiopcspeakertiempo_final();
 
-		printf("tiempo_pasado: %d ideal: %d\n",tiempo_pasado_ms,20*FRAMES_VECES_BUFFER_AUDIO);
+		if (audiopcspeaker_calibrando_tiempo_espera) {
+			int ideal_time=20*FRAMES_VECES_BUFFER_AUDIO; //20 ms*frames
+			printf("Calibrating. Wait time: %d Elapsed time: %d ms ideal: %d ms\n",audiopcspeaker_tiempo_espera,tiempo_pasado_ms,20*FRAMES_VECES_BUFFER_AUDIO);
+
+			//Si se pasa
+			if (tiempo_pasado_ms>ideal_time) {
+				//Nos quedamos con valor anterior
+				audiopcspeaker_tiempo_espera--;
+				if (audiopcspeaker_tiempo_espera<0) audiopcspeaker_tiempo_espera=0;
+
+				audiopcspeaker_calibrando_tiempo_espera=0;
+
+				printf("End calibration. Wait time parameter: %d\n",audiopcspeaker_tiempo_espera);
+
+			}
+
+			else {
+				//Seguimos probando
+				audiopcspeaker_tiempo_espera++;
+				if (audiopcspeaker_tiempo_espera>64) {
+					audiopcspeaker_tiempo_espera=64;
+					audiopcspeaker_calibrando_tiempo_espera=0;
+
+					printf("End calibration, reached limit. Wait time parameter: %d\n",audiopcspeaker_tiempo_espera);
+				}
+
+			}
+		}
 
 		while (audio_playing.v==0 || silence_detection_counter==SILENCE_DETECTION_MAX) {
 				//1 ms
