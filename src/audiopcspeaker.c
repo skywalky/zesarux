@@ -172,8 +172,6 @@ void *audiopcspeaker_enviar_audio(void *nada)
 
 		int len=AUDIO_BUFFER_SIZE;
 
-		len--; //TODO: por lo que sea, hay 1 byte de menos...
-
 		int ofs=0;
 
 
@@ -193,7 +191,7 @@ Bit 0    Effect
 
 
 		z80_byte bit_final_speaker;
-		for (;len>=0;len--) {
+		for (;len>0;len--) {
 			
 			char current_audio_sample=buffer_playback_pcspeaker[ofs];
 			

@@ -2210,11 +2210,11 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 	if (audio_buffer_indice<limite_buffer_audio-2) {
 		audio_buffer_indice+=2;
 	}
-	else {
-		printf ("NO. %d %d\n",audio_buffer_indice,limite_buffer_audio-2);
-		printf("ultimos: %d %d\n",audio_buffer[audio_buffer_indice],audio_buffer[audio_buffer_indice+1]);
-		printf("anteriores: %d %d\n",audio_buffer[audio_buffer_indice-2],audio_buffer[audio_buffer_indice-1]);
-	}
+	//else {
+	//	printf ("NO. %d %d\n",audio_buffer_indice,limite_buffer_audio-2);
+	//	printf("ultimos: %d %d\n",audio_buffer[audio_buffer_indice],audio_buffer[audio_buffer_indice+1]);
+	//	printf("anteriores: %d %d\n",audio_buffer[audio_buffer_indice-2],audio_buffer[audio_buffer_indice-1]);
+	//}
 
 }
 
