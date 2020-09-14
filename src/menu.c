@@ -2801,8 +2801,7 @@ void menu_draw_ext_desktop_putpixel_bitmap(z80_int *destino GCC_UNUSED,int x,int
 }
 
 
-//#define EXT_DESKTOP_ANCHO_BOTON 48
-//#define EXT_DESKTOP_ALTO_BOTON 48
+
 
 
 //Retorna geometria de los botones, si punteros no son null
@@ -3094,8 +3093,7 @@ void menu_draw_ext_desktop_one_button_bitmap(int numero_boton,int pulsado)
 
 	
 	//Tamanyo fijo
-	//int ancho_boton=EXT_DESKTOP_ANCHO_BOTON;
-	//int alto_boton=EXT_DESKTOP_ALTO_BOTON;
+
 
 	//Tamanyo variable segun tamanyo ZX Desktop. Iconos con contenido 26x26. 
 	//Hay que dejar margen de 6 por cada lado (3 izquierdo, 3 derecho, 3 alto, 3 alto)
@@ -3727,8 +3725,7 @@ void menu_draw_ext_desktop_buttons(int xinicio)
 	//total_botones=EXT_DESKTOP_TOTAL_BUTTONS;
 
 	//Tamanyo fijo
-	//int ancho_boton=EXT_DESKTOP_ANCHO_BOTON;
-	//int alto_boton=EXT_DESKTOP_ALTO_BOTON;
+
 
 	//Tamanyo variable segun tamanyo ZX Desktop. Iconos con contenido 26x26. 
 	//Hay que dejar margen de 6 por cada lado (3 izquierdo, 3 derecho, 3 alto, 3 alto)
