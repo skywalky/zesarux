@@ -125,3 +125,5 @@ O bien en cada sitio donde se puede redimensionar la imagen (creo que habia un s
 
 
 -redraws de zxdesktop al inicio del emulador y en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
+
+-en maquinas tsconf y tbblue por ejemplo, si hay ventanas abiertas, se entra a ZEsarUX, aparecen las ventanas sin refrescar y no se borran
