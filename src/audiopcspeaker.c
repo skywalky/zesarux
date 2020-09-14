@@ -185,7 +185,7 @@ int audiopcspeaker_calibrando_tiempo_espera=0;
 
 void audiopcspeaker_calibrate_tiempo_espera(void)
 {
-	audio_playing.v==0;
+	audio_playing.v=0;
 
 	//Esperar que se vaya a bucle de espera
 	usleep(1000000);
