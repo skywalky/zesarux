@@ -291,7 +291,7 @@ Bit 0    Effect
 
 		if (audiopcspeaker_calibrando_tiempo_espera) {
 			int ideal_time=20*FRAMES_VECES_BUFFER_AUDIO; //20 ms*frames
-			printf("Calibrating. Wait time: %d Elapsed time: %d ms ideal: %d ms\n",audiopcspeaker_tiempo_espera,tiempo_pasado_ms,20*FRAMES_VECES_BUFFER_AUDIO);
+			debug_printf(VERBOSE_INFO,"Calibrating. Wait time: %d Elapsed time: %d ms ideal: %d ms",audiopcspeaker_tiempo_espera,tiempo_pasado_ms,20*FRAMES_VECES_BUFFER_AUDIO);
 
 			//Si se pasa
 			if (tiempo_pasado_ms>ideal_time) {
@@ -301,7 +301,7 @@ Bit 0    Effect
 
 				audiopcspeaker_calibrando_tiempo_espera=0;
 
-				printf("End calibration. Wait time parameter: %d\n",audiopcspeaker_tiempo_espera);
+				debug_printf(VERBOSE_INFO,"End calibration. Wait time parameter: %d",audiopcspeaker_tiempo_espera);
 
 			}
 
@@ -312,7 +312,7 @@ Bit 0    Effect
 					audiopcspeaker_tiempo_espera=64;
 					audiopcspeaker_calibrando_tiempo_espera=0;
 
-					printf("End calibration, reached limit. Wait time parameter: %d\n",audiopcspeaker_tiempo_espera);
+					debug_printf(VERBOSE_INFO,"End calibration, reached limit. Wait time parameter: %d",audiopcspeaker_tiempo_espera);
 				}
 
 			}

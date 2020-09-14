@@ -1335,6 +1335,7 @@ void menu_pcspeaker_auto_calibrate_wait_time(MENU_ITEM_PARAMETERS)
 #ifdef COMPILE_PCSPEAKER
 	audiopcspeaker_calibrate_tiempo_espera();
 #endif
+	salir_todos_menus=1;
 
 }
 
