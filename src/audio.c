@@ -2207,7 +2207,12 @@ void audio_send_stereo_sample(char valor_sonido_izquierdo,char valor_sonido_dere
 	audio_buffer[audio_buffer_indice]=valor_sonido_izquierdo;
 	audio_buffer[audio_buffer_indice+1]=valor_sonido_derecho;
 
-	if (audio_buffer_indice<limite_buffer_audio-2) audio_buffer_indice+=2;
+	if (audio_buffer_indice<limite_buffer_audio-2) {
+		audio_buffer_indice+=2;
+	}
+	else {
+		printf ("NO. %d %d\n",audio_buffer_indice,limite_buffer_audio-2);
+	}
 
 }
 
