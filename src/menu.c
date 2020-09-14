@@ -2801,8 +2801,8 @@ void menu_draw_ext_desktop_putpixel_bitmap(z80_int *destino GCC_UNUSED,int x,int
 }
 
 
-#define EXT_DESKTOP_ANCHO_BOTON 48
-#define EXT_DESKTOP_ALTO_BOTON 48
+//#define EXT_DESKTOP_ANCHO_BOTON 48
+//#define EXT_DESKTOP_ALTO_BOTON 48
 
 
 //Retorna geometria de los botones, si punteros no son null
@@ -3864,20 +3864,38 @@ void menu_draw_ext_desktop_footer(void)
 
 	// De momento solo dibujarlo en color de fondo y ya 
 	int x,y;
-		int xinicio=screen_get_ext_desktop_start_x();
-		int yinicio=screen_get_emulated_display_height_zoom_border_en();
+	int xinicio=screen_get_ext_desktop_start_x();
+	int yinicio=screen_get_emulated_display_height_zoom_border_en();
 
-		int ancho=screen_get_ext_desktop_width_zoom();
-		int alto=WINDOW_FOOTER_SIZE*zoom_y;
+	int ancho=screen_get_ext_desktop_width_zoom();
+	int alto=WINDOW_FOOTER_SIZE*zoom_y;
 
-			int color=WINDOW_FOOTER_PAPER;
+		int color=WINDOW_FOOTER_PAPER;
 
-			for (y=yinicio;y<yinicio+alto;y++) {
-				for (x=xinicio;x<xinicio+ancho;x++) {
-					scr_putpixel(x,y,color);
+		for (y=yinicio;y<yinicio+alto;y++) {
+			for (x=xinicio;x<xinicio+ancho;x++) {
+				scr_putpixel(x,y,color);
 
-				}
-			}		
+			}
+		}		
+
+	//Meter logo en parte derecha. Siempre que quepa en alto
+	/*
+	if (alto>=ZESARUX_ASCII_LOGO_ALTO) {
+		int xlogo;
+		int ylogo;
+		xlogo=xinicio+ancho-ZESARUX_ASCII_LOGO_ANCHO-ZESARUX_WATERMARK_LOGO_MARGIN;
+		ylogo=yinicio+alto-ZESARUX_ASCII_LOGO_ALTO-ZESARUX_WATERMARK_LOGO_MARGIN;
+
+		//menu_ext_desktop_get_logo_coords(&xfinal,&yfinal);
+
+		//El ancho y el puntero dan igual, no los vamos a usar
+		screen_put_watermark_generic(NULL,xlogo,ylogo,0, menu_draw_ext_desktop_putpixel_bitmap);
+	}
+	*/
+	
+	
+
 
 }
 
@@ -10497,6 +10515,11 @@ void zxvision_rearrange_background_windows(void)
 	if (ventana==NULL) return;
 
 	int origen_y=0;
+
+	//Si hay botones parte superior zxdesktop, origen_y lo incrementamos
+	if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() && menu_zxdesktop_buttons_enabled.v) {
+		origen_y=64;
+	}
 
 	//Y de ahi para arriba
 	int x=origen_x;
