@@ -2175,6 +2175,8 @@ void scr_init_layers_menu(void)
 
 	scr_reallocate_layers_menu(ancho,alto);
 
+	//printf("alto: %d\n",alto);
+
 }
 
 void scr_putpixel_layer_menu_no_zoom(int x,int y,int color)

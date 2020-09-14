@@ -3855,6 +3855,32 @@ int menu_ext_desktop_fill_second_color=13;
 z80_bit menu_ext_desktop_transparent_upper_icons={0};
 z80_bit menu_ext_desktop_transparent_lower_icons={0};
 
+void menu_draw_ext_desktop_footer(void)
+{
+	if (!menu_footer) return;
+
+
+	debug_printf(VERBOSE_DEBUG,"Drawing zxdesktop footer");
+
+	// De momento solo dibujarlo en color de fondo y ya 
+	int x,y;
+		int xinicio=screen_get_ext_desktop_start_x();
+		int yinicio=screen_get_emulated_display_height_zoom_border_en();
+
+		int ancho=screen_get_ext_desktop_width_zoom();
+		int alto=WINDOW_FOOTER_SIZE*zoom_y;
+
+			int color=WINDOW_FOOTER_PAPER;
+
+			for (y=yinicio;y<yinicio+alto;y++) {
+				for (x=xinicio;x<xinicio+ancho;x++) {
+					scr_putpixel(x,y,color);
+
+				}
+			}		
+
+}
+
 
 void menu_draw_ext_desktop(void)
 {
@@ -4019,6 +4045,9 @@ void menu_draw_ext_desktop(void)
 	if (menu_zxdesktop_buttons_enabled.v) {
 		menu_draw_ext_desktop_buttons(xinicio);
 	}
+
+	//Dibujar footer del zxdesktop
+	menu_draw_ext_desktop_footer();
 	
 }
 

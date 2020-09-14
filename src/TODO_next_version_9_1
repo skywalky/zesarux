@@ -123,8 +123,5 @@ Puede que controlar los limites de pixeles sea lo mejor, asi aunque las ventanas
 saldra fuera y generaria segfault
 O bien en cada sitio donde se puede redimensionar la imagen (creo que habia un sitio comun donde se cerraba el driver de video y se abria) hacer un rearrange de ventanas. El tema de los limites de pixeles ya esta corregido, no deberian haber mas segfaults desde ahora. Pero un rearrange controlado evitaria tener ventanas que escriben raro (aunque sin segfaults) y quedaria mas limpio todo
 
--footer del zxdesktop
 
 -redraws de zxdesktop al inicio del emulador y en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
-
--Quizá autocalibrado del tiempo entre bytes de pc speaker. Según lo que ha tardado en 1 segundo y lo que debería haber tardado. Quizá problema de que salgan decimales en el sleep final...
