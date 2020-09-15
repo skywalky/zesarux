@@ -8443,7 +8443,14 @@ init_randomize_noise_value();
 	framescreen_saltar=0;
 
 
-	if (opcion_no_welcome_message.v==0) set_welcome_message();
+	if (opcion_no_welcome_message.v==0) {
+		set_welcome_message();
+	}
+
+	else {
+		//Cuando hay splash, la propia funcion set_welcome_message llama a cls_menu_overlay y esta llama a menu_draw_ext_desktop
+		menu_draw_ext_desktop();
+	}
 
 
 

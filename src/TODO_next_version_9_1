@@ -124,6 +124,5 @@ saldra fuera y generaria segfault
 O bien en cada sitio donde se puede redimensionar la imagen (creo que habia un sitio comun donde se cerraba el driver de video y se abria) hacer un rearrange de ventanas. El tema de los limites de pixeles ya esta corregido, no deberian haber mas segfaults desde ahora. Pero un rearrange controlado evitaria tener ventanas que escriben raro (aunque sin segfaults) y quedaria mas limpio todo
 
 
--redraws de zxdesktop al inicio del emulador y en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
+-redraws de zxdesktop en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
 
--en maquinas tsconf y tbblue por ejemplo, si hay ventanas abiertas, se entra a ZEsarUX, aparecen las ventanas sin refrescar y no se borran

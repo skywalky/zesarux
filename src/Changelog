@@ -17,6 +17,7 @@ Improved 1 bit resample audio filter
 Fixed segfaults when changing machines and having ZX Desktop windows opened
 Fixed easter egg anc cyrillic characters
 Fixed segfaults when initializing audio and video drivers
+Fixed rendering ZX Desktop on startup
 
 
 Version 9.0 - Turbo Esprit edition. 17 August 2020
