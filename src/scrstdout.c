@@ -230,19 +230,19 @@ int scrstdout_init (void){
 	
 	
 	//Mismos mensajes de bienvenida a traves de filtro texto
-	if (opcion_no_splash.v==0) scrstdout_textspeech_filter_welcome_message();
+	if (opcion_no_welcome_message.v==0) scrstdout_textspeech_filter_welcome_message();
 	
 	
 	if (textspeech_filter_program!=NULL) {
 		char *mensaje_stop="You can stop listening to menu entries by pressing ENTER.";
 		printf("%s\n",mensaje_stop);
-		if (opcion_no_splash.v==0) textspeech_print_speech(mensaje_stop);
+		if (opcion_no_welcome_message.v==0) textspeech_print_speech(mensaje_stop);
 
 		char *mensaje_stoptext="Write 'stoptext' to cancel pending filter texts";
 		printf ("%s\n",mensaje_stoptext);
 		
 		//Mismo mensaje de stoptext a traves de filtro texto
-		if (opcion_no_splash.v==0) textspeech_print_speech(mensaje_stoptext);
+		if (opcion_no_welcome_message.v==0) textspeech_print_speech(mensaje_stoptext);
 	}
 	
 	scr_debug_registers=scrstdout_debug_registers;

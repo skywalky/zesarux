@@ -6244,6 +6244,7 @@ void zxvision_restore_windows_on_startup(void)
 	//no lo desactiva
 	//Si no hicieramos esto, al restaurar ventanas y, no siempre, se quedan las ventanas abiertas,
 	//sin dibujar el contenido, pero con los marcos y titulo visible, aunque el menu está cerrado
+	//quiza sucede cuando la maquina al arrancar es tsconf o cualquier otra que no tiene el tamaño de ventana standard de spectrum
 	if (!antes_menu_overlay_activo) {
 		menu_overlay_activo=0;
 	}

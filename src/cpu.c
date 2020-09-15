@@ -5137,7 +5137,7 @@ void main_init_audio(void)
 }
 
 char *param_custom_romfile=NULL;
-z80_bit opcion_no_splash;
+z80_bit opcion_no_welcome_message;
 
 
 z80_bit command_line_zx8081_vsync_sound={0};
@@ -6780,7 +6780,7 @@ int parse_cmdline_options(void) {
 			}							
 
 			else if (!strcmp(argv[puntero_parametro],"--nowelcomemessage")) {
-                                opcion_no_splash.v=1;
+                                opcion_no_welcome_message.v=1;
 			}
 
 
@@ -8007,7 +8007,7 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 	//tape_save_inserted.v=0;
 
 	menu_splash_text_active.v=0;
-	opcion_no_splash.v=0;
+	opcion_no_welcome_message.v=0;
 	spec_smp_memory=NULL;
 
 	autoselect_snaptape_options.v=1;
@@ -8443,7 +8443,7 @@ init_randomize_noise_value();
 	framescreen_saltar=0;
 
 
-	if (opcion_no_splash.v==0) set_splash_text();
+	if (opcion_no_welcome_message.v==0) set_splash_text();
 
 
 

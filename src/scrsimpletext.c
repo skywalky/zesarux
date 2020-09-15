@@ -169,7 +169,7 @@ int scrsimpletext_init (void){
 	
 	
 	//Mismos mensajes de bienvenida a traves de filtro texto
-	if (opcion_no_splash.v==0) scrsimpletext_textspeech_filter_welcome_message();
+	if (opcion_no_welcome_message.v==0) scrsimpletext_textspeech_filter_welcome_message();
 	
 	
 	scr_debug_registers=scrsimpletext_debug_registers;
