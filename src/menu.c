@@ -6192,6 +6192,12 @@ void zxvision_restore_windows_on_startup(void)
 	int error_restoring_window=0;
 	int error_restoring_window_index;
 
+	//Guardar valores funciones anteriores
+	int antes_menu_overlay_activo=menu_overlay_activo;
+
+	//printf("zxvision_restore_windows_on_startup: menu_overlay_activo: %d\n",menu_overlay_activo);
+
+
 	for (i=0;i<total_restore_window_array_elements;i++) {
 		//printf ("Restoring window %s\n",restore_window_array[i]);
 
@@ -6232,7 +6238,15 @@ void zxvision_restore_windows_on_startup(void)
 		debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",restore_window_array[error_restoring_window_index]);
 	}
 
+	//printf ("End restoring windows\n");
 
+	//Si antes no estaba activo, ponerlo a 0. El cambio a normal_overlay_texto_menu que se hace en el bucle
+	//no lo desactiva
+	//Si no hicieramos esto, al restaurar ventanas y, no siempre, se quedan las ventanas abiertas,
+	//sin dibujar el contenido, pero con los marcos y titulo visible, aunque el menu está cerrado
+	if (!antes_menu_overlay_activo) {
+		menu_overlay_activo=0;
+	}
 
 }
 

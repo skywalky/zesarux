@@ -8628,8 +8628,14 @@ init_randomize_noise_value();
 	send_stats_server();
 	stats_check_yesterday_users();
 
+
+	//printf("menu abierto: %d menu_overlay_activo: %d\n",menu_abierto,menu_overlay_activo);
+
+
 	//Restaurar ventanas, si conviene
 	//zxvision_restore_windows_on_startup();	
+
+	//printf("menu abierto: %d menu_overlay_activo: %d\n",menu_abierto,menu_overlay_activo);
 
 	//Inicio bucle de emulacion
 
