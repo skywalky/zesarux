@@ -352,8 +352,11 @@ if (menu_overlay_activo) {
                 menu_overlay_function();
                 }
 
-La función de overlay que dibuja texto es : normal_overlay_menu
+La función de overlay que dibuja texto es : normal_overlay_texto_menu
 Las ventanas que hacen dibujado de pixel, como waveform, cambian este overlay para llamar a sus funciones internas 
+
+En normal_overlay_texto_menu se dibuja el texto de las ventanas, y también se llama a las funciones de overlay
+de las ventanas en background (si es que está habilitado el background de ventanas)
 
 
 
