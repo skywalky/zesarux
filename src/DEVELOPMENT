@@ -340,6 +340,21 @@ la siguiente, que no usa threads, tendra dlls adicionales en esa carpeta y se co
 Nota: se podria compilar en 64 bits, pero SDL 1.2 solo tiene version 32 bits
 Nota: pasar antes antivirus al exe y al dll por si acaso
 
+—————
+
+Sobre menu y overlay:
+
+menu_overlay_activo indica que hay un overlay sobre el render normal de la máquina emulada. Esto puede ser el menú pero también mensajes de splash, logo de bienvenida, botón joystick numselect etc
+
+Para mostrar ese overlay es muy simple: cada driver de vídeo tiene esta parte de código, después de haber hecho refresco de la máquina emulada:
+
+if (menu_overlay_activo) {
+                menu_overlay_function();
+                }
+
+La función de overlay que dibuja texto es : normal_overlay_menu
+Las ventanas que hacen dibujado de pixel, como waveform, cambian este overlay para llamar a sus funciones internas 
+
 
 
 --------------
