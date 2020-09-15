@@ -8443,7 +8443,7 @@ init_randomize_noise_value();
 	framescreen_saltar=0;
 
 
-	if (opcion_no_welcome_message.v==0) set_splash_text();
+	if (opcion_no_welcome_message.v==0) set_welcome_message();
 
 
 

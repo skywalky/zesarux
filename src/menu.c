@@ -31969,7 +31969,7 @@ void menu_inicio(void)
 
 	//quitar splash text por si acaso
 	menu_splash_segundos=1;
-	reset_splash_text();
+	reset_welcome_message();
 
 
 	cls_menu_overlay();
@@ -32531,7 +32531,7 @@ void set_splash_zesarux_logo(void)
 	set_splash_zesarux_logo_paso(splash_zesarux_logo_paso);
 }
 
-void set_splash_text(void)
+void set_welcome_message(void)
 {
 	cls_menu_overlay();
 	char texto_welcome[40];
@@ -32607,7 +32607,7 @@ void menu_tell_if_realjoystick_detected(void)
 			}				
 }
 
-void reset_splash_text(void)
+void reset_welcome_message(void)
 {
 	if (menu_splash_text_active.v==1) {
 

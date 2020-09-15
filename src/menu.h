@@ -671,8 +671,8 @@ extern void menu_footer_bottom_line(void);
 
 extern void menu_inicio(void);
 
-extern void set_splash_text(void);
-extern void reset_splash_text(void);
+extern void set_welcome_message(void);
+extern void reset_welcome_message(void);
 extern z80_bit menu_splash_text_active;
 extern int menu_splash_segundos;
 extern z80_byte menu_da_todas_teclas(void);

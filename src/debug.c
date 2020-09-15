@@ -746,7 +746,7 @@ void cpu_panic(char *mensaje)
 		if (si_complete_video_driver() ) {
 			//quitar splash text por si acaso
 			menu_splash_segundos=1;
-			reset_splash_text();
+			reset_welcome_message();
 
 
 			//cls_menu_overlay();

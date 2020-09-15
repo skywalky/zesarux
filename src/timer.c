@@ -644,7 +644,7 @@ void timer_check_interrupt(void)
 
 
                                 //resetear texto splash
-                                reset_splash_text();
+                                reset_welcome_message();
 
 			
 
