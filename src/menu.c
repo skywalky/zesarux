@@ -25942,7 +25942,7 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
 
 	//printf ("--despues de restore overlay\n");
 
-	debug_printf (VERBOSE_DEBUG,"Rearrange windows after changing border settings");
+	debug_printf (VERBOSE_DEBUG,"Rearrange zxvision windows after changing border settings");
 	zxvision_rearrange_background_windows();
 	
 }
