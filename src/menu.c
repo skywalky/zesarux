@@ -21364,14 +21364,25 @@ After these 6 bytes, the data for the block comes.
 
     			debug_printf (VERBOSE_INFO,"Block id: %u Size: %u",block_id,block_lenght);
 
-    			sprintf(buffer_texto,"Id: %u (%s) Size: %u",block_id,zsf_get_block_id_name(block_id),block_lenght);
+    			sprintf(buffer_texto,"Id: %2u (%s) Size: %u",block_id,zsf_get_block_id_name(block_id),block_lenght);
     			indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
     			bytes_to_load -=6;
     			bytes_to_load -=block_lenght;
 
-
+				//Saltar la cabecera del bloque
     			indice_zsf +=6;
+
+				//Mas info si el campo es de fecha
+				if (block_id==ZSF_DATETIME) {
+    				sprintf(buffer_texto,"        %d/%02d/%02d %02d:%02d",
+						value_8_to_16(zsf_file_memory[indice_zsf+3],zsf_file_memory[indice_zsf+2]),zsf_file_memory[indice_zsf+1],
+						zsf_file_memory[indice_zsf+0],zsf_file_memory[indice_zsf+4],zsf_file_memory[indice_zsf+5]);
+
+    				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);					
+				}
+
+				//Saltar la longitud del bloque
     			indice_zsf +=block_lenght;
 
 	}
@@ -25930,6 +25941,9 @@ void menu_interface_border(MENU_ITEM_PARAMETERS)
 	screen_restart_pantalla_restore_overlay(previous_function,menu_antes);	
 
 	//printf ("--despues de restore overlay\n");
+
+	debug_printf (VERBOSE_DEBUG,"Rearrange windows after changing border settings");
+	zxvision_rearrange_background_windows();
 	
 }
 

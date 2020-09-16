@@ -35,6 +35,9 @@
 #include "cpu.h"
 #include "debug.h"
 #include "operaciones.h"
+
+#include "snap_zsf.h"
+
 #include "zx8081.h"
 #include "mem128.h"
 #include "ay38912.h"
@@ -82,39 +85,7 @@
         #include <sys/syslimits.h>
 #endif
 
-#define ZSF_NOOP_ID 0
-#define ZSF_MACHINEID 1
-#define ZSF_Z80_REGS_ID 2
-#define ZSF_MOTO_REGS_ID 3
-#define ZSF_RAMBLOCK 4
-#define ZSF_SPEC128_MEMCONF 5
-#define ZSF_SPEC128_RAMBLOCK 6
-#define ZSF_AYCHIP 7
-#define ZSF_ULA 8
-#define ZSF_ULAPLUS 9
-#define ZSF_ZXUNO_RAMBLOCK 10
-#define ZSF_ZXUNO_CONF 11
-#define ZSF_ZX8081_CONF 12
-#define ZSF_ZXEVO_NVRAM 13
-#define ZSF_TSCONF_RAMBLOCK 14
-#define ZSF_TSCONF_CONF 15
-#define ZSF_DIVIFACE_CONF 16
-#define ZSF_DIVIFACE_MEM 17
-#define ZSF_CPC_RAMBLOCK 18
-#define ZSF_CPC_CONF 19
-#define ZSF_PENTAGON_CONF 20
-#define ZSF_TBBLUE_RAMBLOCK 21
-#define ZSF_TBBLUE_CONF 22
-#define ZSF_TBBLUE_PALETTES 23
-#define ZSF_TBBLUE_SPRITES 24
-#define ZSF_TIMEX 25
-#define ZSF_MSX_MEMBLOCK 26
-#define ZSF_MSX_CONF 27
-#define ZSF_MSX_VRAM 28
-#define ZSF_GENERIC_LINEAR_MEM 29
-#define ZSF_VDP_9918A_CONF 30
-#define ZSF_SNCHIP 31
-#define ZSF_SVI_CONF 32
+
 
 
 int zsf_force_uncompressed=0; //Si forzar bloques no comprimidos
@@ -435,6 +406,13 @@ Byte fields:
 1: svi_ppi_register_b
 2: svi_ppi_register_c
 
+-Block ID 33: ZSF_DATETIME
+Date and time of ZSF file
+0: day
+1: month
+2,3: year
+4: hour
+5: minute
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -448,7 +426,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 33
+#define MAX_ZSF_BLOCK_ID_NAMES 34
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -484,6 +462,7 @@ char *zsf_block_id_names[]={
   "ZSF_VDP_9918A_CONF",
   "ZSF_SNCHIP",
   "ZSF_SVI_CONF",
+  "ZSF_DATETIME",
 
   "Unknown"  //Este siempre al final
 };
@@ -1360,6 +1339,21 @@ Byte fields:
  
 }
 
+void load_zsf_datetime(z80_byte *header)
+{
+
+
+			//Fecha. Solo para informacion. No se usa para nada mas
+			char buffer_fecha[64];
+			sprintf(buffer_fecha,"Snapshot saved on: %d/%02d/%02d %02d:%02d ",
+          value_8_to_16(header[3],header[2]),header[1],header[0],header[4],header[5]);
+			debug_printf(VERBOSE_INFO,buffer_fecha);
+
+      //printf("%s\n",buffer_fecha);
+
+ 
+}
+
 
 void load_zsf_vdp_9918a_conf(z80_byte *header)
 {
@@ -1868,7 +1862,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_SVI_CONF:
         load_zsf_svi_conf(block_data);
-      break;                         
+      break;      
+
+      case ZSF_DATETIME:
+        load_zsf_datetime(block_data);
+      break;                             
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -2009,6 +2007,28 @@ void save_zsf_snapshot_file_mem(char *filename,z80_byte *destination_memory,int 
   //First save machine ID
   z80_byte save_machine_id=current_machine_type;
   zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, &save_machine_id,ZSF_MACHINEID, 1); 
+
+  //Save date time
+  z80_byte datetime_buffer[6];
+  		//fecha grabacion
+		time_t tiempo = time(NULL);
+		struct tm tm = *localtime(&tiempo);
+
+		//printf("now: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+		datetime_buffer[0]=tm.tm_mday;
+		datetime_buffer[1]=tm.tm_mon+1;
+
+		z80_int year;
+		year=tm.tm_year + 1900;
+
+		datetime_buffer[2]=value_16_to_8l(year);
+		datetime_buffer[3]=value_16_to_8h(year);
+
+		datetime_buffer[4]=tm.tm_hour;
+		datetime_buffer[5]=tm.tm_min;
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, datetime_buffer,ZSF_DATETIME, 6); 
 
 
 

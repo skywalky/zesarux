@@ -4129,6 +4129,11 @@ void post_set_machine_no_rom_load_reopen_window(void)
 		debug_printf (VERBOSE_INFO,"Reopening window so current machine is different and may have different window size");
 		//printf ("Reopening window so current machine is different and may have different window size\n");
 		post_set_mach_reopen_screen();
+
+		//Rearrange de ventanas en segundo plano, por si la maquina actual es una ventana de ZEsarUX mas pequeña 
+		//y se saldrian las ventanas zxvision de rango
+		debug_printf (VERBOSE_DEBUG,"Rearrange windows so current machine is different and may have different window size");
+		zxvision_rearrange_background_windows();
 		return;		
 	}
 }

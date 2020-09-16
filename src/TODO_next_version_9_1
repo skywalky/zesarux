@@ -94,11 +94,6 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 
 -soporte joystick usb para msx, coleco etc
 
--cuando hace rearrange cuando se reduce zx desktop, deja las ventanas con un tamaño extraño (quiza muy pegadas a la derecha),
-que hace que al pulsar sobre ellas se redimensionen -> se pegan a la derecha cuando "open menu in zx desktop" activo, y le da un ancho que se sale por la derecha
-culpa del rearrange entonces
-
-
 
 -ayuda zdesktop / background windows: que ya no esta zlogo y si que hay botones ahora
 
@@ -106,22 +101,6 @@ culpa del rearrange entonces
 - bios zxuno, no hace update desde la mmc. condiciones de compilacion en la bios para ZEsarUX:
 
 http://svn.zxuno.com/svn/zxuno/firmware/firmware.asm
-
-
--crash al cambiar de maquina. Ejemplo:
-
-spectrum. abrir ventana sound wave 
-cambio a maquina z88. peta
-
-Quiza es culpa de zxvision_new_window_nocheck_staticsize?
-no, es porque salta directamente el overlay y peta en scr_putpixel_gui_zoom
-
-habria que controlar limites de putpixel en scr_putpixel_layer_menu y scr_putpixel_layer_menu_no_zoom
-->controlados limites
-Quiza habria que hacer un rechequeo de tamaños ventanas al conmutar maquina? y al reducir Desktop?
-Puede que controlar los limites de pixeles sea lo mejor, asi aunque las ventanas sean mas grandes, el pixel nunca
-saldra fuera y generaria segfault
-O bien en cada sitio donde se puede redimensionar la imagen (creo que habia un sitio comun donde se cerraba el driver de video y se abria) hacer un rearrange de ventanas. El tema de los limites de pixeles ya esta corregido, no deberian haber mas segfaults desde ahora. Pero un rearrange controlado evitaria tener ventanas que escriben raro (aunque sin segfaults) y quedaria mas limpio todo
 
 
 -redraws de zxdesktop en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro

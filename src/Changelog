@@ -2,6 +2,7 @@ Version 9.1 - xxx edition. 21 August 2020
 
 Added compile setting to disable networking functions
 Added pc speaker audio driver (for Linux only)
+Added date & time field info to ZSF snapshots
 
 Improved ZX Desktop: 
 -Added direct buttons
@@ -18,6 +19,7 @@ Fixed segfaults when changing machines and having ZX Desktop windows opened
 Fixed easter egg anc cyrillic characters
 Fixed segfaults when initializing audio and video drivers
 Fixed rendering ZX Desktop on startup
+Fixed arranging ZX Vision windows when changing machine or disabling border
 
 
 Version 9.0 - Turbo Esprit edition. 17 August 2020

@@ -10448,6 +10448,8 @@ void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS)
 	//Cerrar ventamas y olvidar geometria ventanas
 	zxvision_window_delete_all_windows_and_clear_geometry();
 
+	cls_menu_overlay();
+
 
 }
 

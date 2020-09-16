@@ -1,21 +1,15 @@
 --- ZX Desktop
 
---Redimensionar ventana redibuja el zxdesktop?
-
-
 --Posibles efectos para fondo ZX Desktop:
 ---Efecto de ZX Desktop barras colores animado?
 ---Imagen. BMP?
 ---Miniatura de pantalla spectrum
 ---Imagen. SCR
 ---Degradado vertical usando alguna tabla de colores concreta ya existente
----Botones o iconos pulsables 
 ---Anaglifo usando segunda pantalla o extensión Desktop 
 --Fbdev debe permitir ZX Desktop?
 --sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
--Cambio de tipo de máquina no borra ZX Desktop. Quizá falta un cls?
-Falla también sin ZX Desktop?
 
 --- FIN ZX Desktop
 
@@ -54,8 +48,6 @@ O esta considerando mal el mostrar barras desplazamiento: quizá deberían salir
 
 -Visualmem mmc read/write en Windows no muestra bien posicion (siempre a 0). Probablemente porque es 32 bits y no gestiona bien
 valores long int
-
--Mostrar info en menu network de descargas, commits etc
 
 -Tema gui configurable todos sus elementos: fuentes, colores etc 
 
@@ -126,7 +118,10 @@ Un tercer botón que diga “take me there” para cuando sugiere menús, que te
 
 -tecla para poder cerrar todos los menus y volver a emulacion (como F5+ESC). Desaparecen las ventanas en background pero no las cierra realmente
 
--Poder ver ventanas en background con menú cerrado
+-Poder ver ventanas en background con menú cerrado:
+esto se podria hacer poniendo menu_overlay_activo=1 y que en normal_overlay_texto_menu permita redibujado con el menu cerrado
+No se si serviria de mucho, al final es como abrir el menu, pulsar en ventana de maquina emulada: el menu sigue abierto,
+el foco en la maquina emulada, y se ven todas las ventanas de background
 
 -ayuda teclados  +2, +2a/+3 en spanish
 
