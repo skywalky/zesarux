@@ -13157,7 +13157,7 @@ void menu_add_item_menu_inicial_format(menu_item **p,int tipo_opcion,t_menu_func
 
 }
 
-char *string_esc_go_back="ESC always go back to the previous menu, or return back to the emulated machine if you are in main menu";
+char *string_esc_go_back="ESC always goes back to the previous menu, or return back to the emulated machine if you are in main menu";
 
 //Agrega item de ESC normalmente.  En caso de aalib y consola es con tecla TAB
 void menu_add_ESC_item(menu_item *array_menu_item)

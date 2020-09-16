@@ -3,11 +3,6 @@
 -Que algunas tareas como store scanline se hagan en thread aparte. Problema: que la mayoria de datos de ese scanline
 pueden variar mientras se está ejecutando el thread con el loop del siguiente scanline
 
--A veces en Mac, si lanzado con ao null, al perder el foco de la ventana se para la emulacion
-probado con:
-
-./zesarux --noconfigfile --ao null --zoom 1 --realvideo extras/media/spectrum/rainbow/over128.z80 &
-Parece que no sucede en la 8.1
 
 -Meter file browser zxuno en imagen zxuno mmc
 
@@ -88,8 +83,6 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 
 -ROM zx85 de Daniel incluir   Y zx82?
 
--campo de fecha en snapshot zsf
-
 -parece que si hay joystick conectado, el splash de Z logo no aparece toda la animacion, se cierra a la primera barra de color
 
 -soporte joystick usb para msx, coleco etc
@@ -102,6 +95,34 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 
 http://svn.zxuno.com/svn/zxuno/firmware/firmware.asm
 
+-Teclas extendidas msx con Windows/sdl no se leen. Pasa igual que QL, cpc etc?
+Caso 0 default no está haciendo para QL, Msx y svi. Será ese el error?
+
 
 -redraws de zxdesktop en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
 
+-Agregar screenshots versiones anteriores 
+
+-Ventanas con contadores de rendimiento y estado, tipo kms/h y cosas así
+Ver ejemplos de grafana
+Por ejemplo uno circular con aguja que indique el volumen de la señal de salida
+Otro el uso de cpu
+Etc
+
+Quizá ventana con vistas configurables. Poder agregar diferentes sensores numéricos con diferente estilo:
+-kms/h
+-vumeter
+-gráfica con tiempo en la horizontal
+-valor instantáneo
+Poder indicar tiempo de refresco 
+
+Centralizarlo en una función que tenga sensores, que retorne máximo y mínimo valor posible. Y nombre de sensores 
+
+Nombre de esa ventana?
+ZX Graph
+ZEsarUX graph
+Emu Graph
+Emu view
+Emu sensors
+ZEsarUX sensors
+Etc... 
