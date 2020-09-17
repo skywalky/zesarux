@@ -6031,7 +6031,7 @@ int parse_cmdline_options(void) {
 				siguiente_parametro_argumento();
 
 				if (menu_define_key_function(valor,argv[puntero_parametro])) {
-					printf ("Invalid action\n");
+					printf ("Invalid f-function action: %s\n",argv[puntero_parametro]);
 					exit(1);
 				}
 

@@ -199,7 +199,10 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"Pause",F_FUNCION_PAUSE},
 	{"TopSpeed",F_FUNCION_TOPSPEED},
 	{"ExitEmulator",F_FUNCION_EXITEMULATOR},
-	{"BackgroundWindow",F_FUNCION_BACKGROUND_WINDOW}
+	{"BackgroundWindow",F_FUNCION_BACKGROUND_WINDOW},
+
+	//Para el usuario, mejor esta descripcion
+	{"ShowBackgroundWindows",F_FUNCION_OVERLAY_WINDOWS}
 };
 
 //Funciones de teclas F mapeadas. Desde F1 hasta F15
@@ -329,6 +332,13 @@ z80_bit menu_invert_mouse_scroll={0};
 //indica que se ha pulsado ESC y por tanto debe aparecer el menu, o gestion de breakpoints, osd, etc
 //y tambien, la lectura de puertos de teclado (254) no devuelve nada
 int menu_abierto=0;
+
+//Si se tiene overlay menu aunque este con menu cerrado. De momento solo accesible mediante tecla F
+//de F_FUNCION_OVERLAY_WINDOWS
+//Nota: logicamente cualquier mensaje de splash (por ejemplo cambio de modo ulaplus)
+//ara saltar el mensaje splash y al cabo de unos segundos, desactivara overlay y se ocultara todo el overlay
+//Esto NO abre el menu, solo deja el overlay de menu activo
+int overlay_visible_when_menu_closed=0;
 
 //Si realmente aparecera el menu
 z80_bit menu_event_open_menu={0};
@@ -4681,7 +4691,10 @@ void normal_overlay_texto_menu(void)
 
 	//Dibujar ventanas en background pero solo si menu está abierto, esto evita que aparezcan las ventanas cuando hay un 
 	//mensaje de splash y el menú está cerrado
-	if (menu_allow_background_windows && menu_abierto) {
+	if (menu_allow_background_windows && 
+	  (menu_abierto || overlay_visible_when_menu_closed)
+	) {
+		//printf("redrawing windows on normal_overlay\n");
 		//Conservar estado de tecla pulsada o no para el speech
 		int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
 		menu_draw_background_windows_overlay_after_normal();
@@ -31674,6 +31687,16 @@ menu_init_footer hace falta pues el layer de menu se borra y se queda negro en l
 	//Redibujar ext desktop, para que no se vea el logo (logo solo aparece si menu abierto)
 	menu_draw_ext_desktop();
 
+	//Si salimos de menu y se ha pulsado dicha tecla F para activar la función, volver con menu overlay activo
+	if (overlay_visible_when_menu_closed) {
+		menu_overlay_activo=1;
+
+		//Y redibujamos las ventanas, para que se vean los titulos sobretodo (pues los overlay en background no redibujan los titulos)
+		//decir que ventana principal no esta activa, para indicar que están todas en background
+		ventana_tipo_activa=0;
+		zxvision_redraw_all_windows();
+	}
+
 }
 
 void menu_process_f_function_pause(void)
@@ -31815,6 +31838,25 @@ void menu_process_f_functions_by_action(int accion)
 
 		case F_FUNCION_EXITEMULATOR:
 			end_emulator();
+		break;
+
+		case F_FUNCION_OVERLAY_WINDOWS:
+			//Solo permitido si esta el setting de background windows
+			if (!menu_allow_background_windows) {
+                menu_error_message("Background windows setting is not enabled. You can enable it on Settings-> GUI-> Windows-> Background windows");
+        	}
+			else { 
+				//Solo si opcion esta desactivada
+				//Y solo desde el menu. Aunque para llegar aqui se abre el menu, con lo que el check es redundante
+				if (!overlay_visible_when_menu_closed && menu_abierto) {
+					overlay_visible_when_menu_closed=1;
+					debug_printf(VERBOSE_INFO,"Enabling ShowBackgroundWindows");
+				}
+				//Al lanzar menu de inicio siempre se pone overlay_visible_when_menu_closed=0,
+				//por lo que al llegar aqui siempre estar a 0 y se activara
+				//Por tanto para activar hay que pulsar la tecla F asociada,
+				//pero para desactivarlo hay que pulsar cualquier otra tecla F (y no la misma, o se reactivaria)
+			}
 		break;
 
 
@@ -31988,6 +32030,7 @@ void menu_inicio(void)
 
 	cls_menu_overlay();
     set_menu_overlay_function(normal_overlay_texto_menu);
+	overlay_visible_when_menu_closed=0;
 
 
 	//Y refrescar footer. Hacer esto para que redibuje en pantalla y no en layer de mezcla de menu
