@@ -344,9 +344,11 @@ Nota: pasar antes antivirus al exe y al dll por si acaso
 
 Sobre menu y overlay:
 
-menu_overlay_activo indica que hay un overlay sobre el render normal de la máquina emulada. Esto puede ser el menú pero también mensajes de splash, logo de bienvenida, botón joystick numselect etc
+menu_overlay_activo indica que hay un overlay sobre el render normal de la máquina emulada. 
+Esto puede ser el menú pero también mensajes de splash, logo de bienvenida, botón joystick numselect etc
 
-Para mostrar ese overlay es muy simple: cada driver de vídeo tiene esta parte de código, después de haber hecho refresco de la máquina emulada:
+Para mostrar ese overlay es muy simple: cada driver de vídeo tiene esta parte de código, 
+después de haber hecho refresco de la máquina emulada:
 
 if (menu_overlay_activo) {
                 menu_overlay_function();
@@ -358,7 +360,7 @@ Las ventanas que hacen dibujado de pixel, como waveform, cambian este overlay pa
 En normal_overlay_texto_menu se dibuja el texto de las ventanas, y también se llama a las funciones de overlay
 de las ventanas en background (si es que está habilitado el background de ventanas)
 
-
+Con la F-funcion F_FUNCION_OVERLAY_WINDOWS, se activa el dibujado de ventanas en background con el menu cerrado
 
 --------------
 
