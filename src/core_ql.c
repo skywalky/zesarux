@@ -133,6 +133,31 @@ void cpu_core_loop_ql(void)
                 // 100000 is usually a good value to start at, then work from there.
 
                 // Note that I am not emulating the correct clock speed!
+                z80_byte byte_primero=peek_byte_z80_moto(get_pc_register());
+                z80_byte byte_segundo=peek_byte_z80_moto(get_pc_register()+1);
+
+                if (byte_primero==0x4E && ((byte_segundo & 0xF0)==0x40) ) {
+                        z80_byte trap_number=byte_segundo & 0xF;
+                        //printf("Trap %d en %x\n",trap_number,get_pc_register());
+
+                        if (ql_last_trap==4) {
+                                ql_previous_trap_was_4=1;
+                        }
+                        else {
+                                ql_previous_trap_was_4=0;
+                        }
+
+                        ql_last_trap=trap_number;
+                }
+
+                //if (get_pc_register()==0x79ca) {
+                //        printf ("%x %x\n",byte_primero,byte_segundo);
+                //}
+
+		//	if (REG_IR==0x4E44) {
+		//		printf("Possible Trap 4 en %x\n",get_pc_register());
+		//	}
+
                 m68k_execute(1);
 
 

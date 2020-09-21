@@ -98,7 +98,9 @@ void ql_footer_mdflp_operating(void)
 	generic_footertext_print_operating("MDFLP");
 }
 
+z80_byte ql_last_trap=0;
 
+int ql_previous_trap_was_4={0};
 
 //adicionales
 int ql_pressed_backspace=0;
@@ -2017,6 +2019,20 @@ int leidos=1;
 }
 
 
+/*
+Llamadas al sistema que han pasado antes por un trap4 y que usan punteros, se les suma A6
+En este caso aplica a A1 pero podria aplicar a cualquier otro puntero
+*/
+unsigned int ql_get_a1_after_trap_4(void)
+{
+	if (ql_previous_trap_was_4) {
+				return m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+	}
+	else {
+		return m68k_get_reg(NULL,M68K_REG_A1);
+	}
+}
+
 void ql_rom_traps(void)
 {
 
@@ -2550,6 +2566,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
     if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x45 && ql_microdrive_floppy_emulation) {
         debug_printf (VERBOSE_PARANOID,"FS.MDINF. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
+		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
+
         //Si canal es el mio ficticio 100
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0 ) {
@@ -2584,7 +2602,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           //A1 end of medium name  (entrada: A1 ptr to 10 byte buffer)
 
           unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
-          unsigned int puntero=reg_a1+m68k_get_reg(NULL,M68K_REG_A6);
+          unsigned int puntero=ql_get_a1_after_trap_4();
 
           reg_a1 +=10;
           m68k_set_reg(M68K_REG_A1,reg_a1);
@@ -2612,6 +2630,10 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 	//Trap 3 IO.FLINE
     if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x2 && ql_microdrive_floppy_emulation) {
+		
+		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
+
+
         debug_printf (VERBOSE_PARANOID,"IO.FLINE. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH",
         		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6) );
 
@@ -2683,7 +2705,18 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	ql_restore_d_registers(pre_io_fline_d,7);
           	ql_restore_a_registers(pre_io_fline_a,6);
 
-          	unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+          	unsigned int puntero_destino;
+
+			/*
+			If the very same job that calls the IO.FLINE trap has not issued a TRAP #4 directly before, 
+			a1 is the absolute target load address, and will be updated after the call to the end of used buffer area.
+
+			If, however, the last TRAP issued by the job in question directly before the IO.FLINE trap was a TRAP #4, 
+			the address is (a6,a1), and a1 will be updated relatively (i.e. only incremented by the amount of bytes read).
+
+			*/
+
+				puntero_destino=ql_get_a1_after_trap_4();
 
 
           	debug_printf (VERBOSE_DEBUG,"IO.FLINE - Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH",
@@ -2733,6 +2766,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
         		m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
 
+		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
+
         //Si canal es el mio ficticio 100
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0 ) {
@@ -2771,7 +2806,12 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	ql_restore_d_registers(pre_io_sstrg_d,7);
           	ql_restore_a_registers(pre_io_sstrg_a,6);
 
-          	unsigned int puntero_origen=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+          	unsigned int puntero_origen;
+
+			
+			puntero_origen=ql_get_a1_after_trap_4();
+			
+
 
 
           	debug_printf (VERBOSE_PARANOID,"IO.SSTRG - restoreg registers. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%08XH",
