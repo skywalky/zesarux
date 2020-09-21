@@ -111,6 +111,10 @@ extern int ql_previous_trap_was_4;
 //operation not complete
 #define QDOS_ERROR_CODE_NC -1
 
+
+//buffer overflow
+#define QDOS_ERROR_CODE_BO -5
+
 //channel not open
 #define QDOS_ERROR_CODE_NO -6
 

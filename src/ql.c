@@ -1932,8 +1932,9 @@ int ql_si_ruta_mdv_flp(char *texto)
 //Leer archivo linea a linea. Retorna bytes leidos, y valor de retorno. 
 //Si hay eof, se debe retornar solo el eof y sin bytes leidos
 
-unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,unsigned int *valor_retorno)
+unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,unsigned int *valor_retorno,unsigned int longitud_buffer)
 {
+
 
 	FILE *ptr_archivo;
 
@@ -1979,9 +1980,17 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 			salir=1;
 		}
 
+		if (total_leidos>=longitud_buffer) {
+			//printf("Overrun\n");
+			*valor_retorno=QDOS_ERROR_CODE_BO;
+			return total_leidos;
+		}
+
 		if (!salir) {
 
 			//printf ("Escribiendo byte %d (%c) direccion %XH\n",bytes_leidos,(bytes_leidos>32 && bytes_leidos<128 ? bytes_leidos : '.'),puntero_destino);
+			//printf("%c",(bytes_leidos>=32 && bytes_leidos<=126 ? bytes_leidos : '.'));
+
 
 			ql_writebyte(puntero_destino++,bytes_leidos);
 			total_leidos++;
@@ -1990,8 +1999,10 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 
 		//Si salto de linea, salir
 		if (bytes_leidos==10) salir=1;
-	}
 
+	}
+	
+	//printf("\nEND ql_read_io_fline\n");
 
 	return total_leidos;
 	
@@ -2531,7 +2542,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           //ql_get_file_header(ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1));
 
           //TODO completar esto
-          ql_get_file_header(indice_canal,m68k_get_reg(NULL,M68K_REG_A1));
+          ql_get_file_header(indice_canal,ql_get_a1_after_trap_4() );
 
           //ql_get_file_header(ql_nombre_archivo_load,131072); //131072=pantalla
 
@@ -2634,9 +2645,9 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
 
 
-        debug_printf (VERBOSE_PARANOID,"IO.FLINE. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH",
-        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6) );
-
+        debug_printf (VERBOSE_PARANOID,"IO.FLINE. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%d",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6)
+				,m68k_get_reg(NULL,M68K_REG_D2) );
 
         //Si canal es el segundo ficticio 100
         /*if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
@@ -2691,7 +2702,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	NC not complete
           	NO channel not open
           	EF end of file
-          	B0 buffer overflow (fetch line only)
+          	BO buffer overflow (fetch line only)
 
           	*/
 
@@ -2727,7 +2738,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
                   
 
           	unsigned int valor_retorno;
-          	unsigned int leidos=ql_read_io_fline(indice_canal,puntero_destino,&valor_retorno);
+			
+          	unsigned int leidos=ql_read_io_fline(indice_canal,puntero_destino,&valor_retorno,m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
 
           	
 
@@ -2740,7 +2752,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	//printf ("Leidos: %d\n",leidos);
           	m68k_set_reg(M68K_REG_D1,leidos);
 
-  	
+	  	
 
         	
           
@@ -2793,7 +2805,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	NC not complete
           	NO channel not open
           	EF end of file
-          	B0 buffer overflow (fetch line only)
+          	BO buffer overflow (fetch line only)
 
           	*/
 
@@ -2905,7 +2917,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
             //int longitud=get_file_size(ql_nombre_archivo_load);
         	FILE *ptr_file;
         	ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;
-            ql_load_binary_file(ptr_file,m68k_get_reg(NULL,M68K_REG_A1),longitud);
+            ql_load_binary_file(ptr_file,ql_get_a1_after_trap_4(),longitud);
 
 
 
