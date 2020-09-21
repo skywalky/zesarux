@@ -1747,8 +1747,11 @@ void ql_get_file_header(unsigned int indice_canal,unsigned int destino)
   ql_writebyte(destino+2,(tamanyo>>8)&255);
   ql_writebyte(destino+3,tamanyo&255);
 
-  //Tipo
+  //Tipo. TODO
   ql_writebyte(destino+5,0); //ejecutable 1
+
+  //temp prueba
+  //ql_writebyte(destino+6,1);
 
   //printf("Nombre: %s\n",qltraps_fopen_files[indice_canal].ql_file_name);
 
