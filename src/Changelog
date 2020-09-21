@@ -18,6 +18,7 @@ Improved 1 bit resample audio filter
 
 Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes
 Fixed using QL system calls and A6 pointer offset used after previous Trap was not 4
+Fixed QL system call FS.HEADR
 Fixed segfaults when changing machines and having ZX Desktop windows opened
 Fixed easter egg anc cyrillic characters
 Fixed segfaults when initializing audio and video drivers

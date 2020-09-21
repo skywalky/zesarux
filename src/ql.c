@@ -1750,14 +1750,22 @@ void ql_get_file_header(unsigned int indice_canal,unsigned int destino)
   //Tipo
   ql_writebyte(destino+5,0); //ejecutable 1
 
-  //Nombre. de momento me lo invento para ir rapido
-  ql_writebyte(destino+0xe,0); //longitud nombre en big endian
-  ql_writebyte(destino+0xf,4); //longitud nombre en big endian
+  //printf("Nombre: %s\n",qltraps_fopen_files[indice_canal].ql_file_name);
 
-  ql_writebyte(destino+0x10,'p');
-  ql_writebyte(destino+0x11,'e');
-  ql_writebyte(destino+0x12,'p');
-  ql_writebyte(destino+0x13,'e');
+  int longitud=strlen(qltraps_fopen_files[indice_canal].ql_file_name);
+
+  //Nombre. 
+  ql_writebyte(destino+0xe,0); //longitud nombre en big endian
+  ql_writebyte(destino+0xf,longitud); //longitud nombre en big endian
+
+  //ql_writebyte(destino+0x10,'p');
+  //ql_writebyte(destino+0x11,'e');
+  //ql_writebyte(destino+0x12,'p');
+  //ql_writebyte(destino+0x13,'e');
+
+  for (i=0;i<longitud;i++) {
+	  ql_writebyte(destino+0x10+i,qltraps_fopen_files[indice_canal].ql_file_name[i]);
+  }
 
   //Falta el "default size of the data space for the program" ?
 
