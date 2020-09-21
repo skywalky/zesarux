@@ -1981,7 +1981,7 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 		}
 
 		if (total_leidos>=longitud_buffer) {
-			//printf("Overrun\n");
+			//printf("Overflow\n");
 			*valor_retorno=QDOS_ERROR_CODE_BO;
 			return total_leidos;
 		}
@@ -2033,6 +2033,27 @@ int leidos=1;
 /*
 Llamadas al sistema que han pasado antes por un trap4 y que usan punteros, se les suma A6
 En este caso aplica a A1 pero podria aplicar a cualquier otro puntero
+
+
+https://qlforum.co.uk/viewtopic.php?f=3&t=2230
+
+"
+Because of this complicated floating BASIC areas, the system cannot simply hand an absolute pointer to any system 
+call that wants one (like the buffer address for IO.FLINE). QDOS works around this by introducing TRAP #4, 
+which is basically a switch - The next system call after a TRAP #4 is instructed to interpret anything that 
+is a pointer as relative to a6. Let's assume a6 is $30000 and an IO.FLINE trap is issued without a TRAP #4 
+before, with A1 containing $20000, the system will use $20000 as a target load address. If, however, a TRAP #4 
+has been issued before an IO.FLINE call, the system will load to (a6, a1), thus at absolute address $50000. 
+Thus, pointers in traps have to be interpreted according to this switch (which is per-job and re-set after 
+the next TRAP #1, 2, or 3).
+"
+
+So, short answer to your question after all this explanation:
+
+If the very same job that calls the IO.FLINE trap has not issued a TRAP #4 directly before, a1 is the absolute target load address, and will be updated after the call to the end of used buffer area.
+If, however, the last TRAP issued by the job in question directly before the IO.FLINE trap was a TRAP #4, the address is 
+(a6,a1),   and a1 will be updated relatively (i.e. only incremented by the amount of bytes read).
+
 */
 unsigned int ql_get_a1_after_trap_4(void)
 {
