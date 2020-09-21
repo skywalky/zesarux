@@ -31694,6 +31694,9 @@ menu_init_footer hace falta pues el layer de menu se borra y se queda negro en l
 		//Y redibujamos las ventanas, para que se vean los titulos sobretodo (pues los overlay en background no redibujan los titulos)
 		//decir que ventana principal no esta activa, para indicar que están todas en background
 		ventana_tipo_activa=0;
+
+		generic_footertext_print_operating("BKWIND");
+
 		zxvision_redraw_all_windows();
 	}
 
