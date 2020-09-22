@@ -23097,6 +23097,9 @@ void menu_ql_microdrive_floppy(MENU_ITEM_PARAMETERS)
 void menu_ql_mdv1(MENU_ITEM_PARAMETERS)
 {
 	menu_storage_string_root_dir(ql_mdv1_root_dir);
+
+	//Copiar misma ruta a flp1
+	if (ql_flp1_follow_mdv1.v) strcpy(ql_flp1_root_dir,ql_mdv1_root_dir);
 }
 
 void menu_ql_mdv2(MENU_ITEM_PARAMETERS)
@@ -23109,6 +23112,16 @@ void menu_ql_flp1(MENU_ITEM_PARAMETERS)
 	menu_storage_string_root_dir(ql_flp1_root_dir);
 }
 
+
+void menu_ql_replace_underscore(MENU_ITEM_PARAMETERS)
+{
+	ql_replace_underscore_dot.v ^=1;
+}
+
+void menu_ql_flp1_follow_mdv1(MENU_ITEM_PARAMETERS)
+{
+	ql_flp1_follow_mdv1.v ^=1;
+}
 
 void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
 {
@@ -23138,6 +23151,15 @@ void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
                             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_mdv1,NULL,"Mdv1 root dir: %s",string_ql_mdv1_root_dir_shown);
                             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_mdv2,NULL,"Mdv2 root dir: %s",string_ql_mdv2_root_dir_shown);
                             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_flp1,NULL,"Flp1 root dir: %s",string_ql_flp1_root_dir_shown);
+
+							menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_replace_underscore,NULL,"[%c] Replace _ to . in filename",
+                    (ql_replace_underscore_dot.v ? 'X' : ' ') );
+
+							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_flp1_follow_mdv1,NULL,"[%c] FLP1 path follows MDV1",
+                    (ql_flp1_follow_mdv1.v ? 'X' : ' ') );
                     }
 
 						

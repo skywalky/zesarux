@@ -11,6 +11,7 @@
 #include "menu.h"
 #include "operaciones.h"
 #include "screen.h"
+#include "settings.h"
 
 
 #if defined(__APPLE__)
@@ -1903,7 +1904,12 @@ void ql_split_path_device_name(char *ql_path, char *ql_device, char *ql_file)
 
   for (;ql_path[i];i++,destino++) {
     c=letra_minuscula(ql_path[i]);
+
+	if (ql_replace_underscore_dot.v) {
     if (c=='_') c='.'; //TODO: Deberia hacer eso solo para la primera _ desde la derecha
+	}
+
+
     ql_file[destino]=c;
   }
 
@@ -2934,13 +2940,13 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	//Mostrar parte del mensaje enviado en SSTRG
           	//unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
           	char buffer_mensaje[256];
-          	int longitud=m68k_get_reg(NULL,M68K_REG_D2);
+          	int longitud=m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF;
           	if (longitud>32) longitud=32;
 
           	int i=0;
           	char byte_leido;
 
-          	while (longitud) {
+          	while (longitud>=0) {
           		byte_leido=ql_readbyte(puntero_origen);
           		if (byte_leido>=32 && byte_leido<=126) {
           			buffer_mensaje[i]=byte_leido;
@@ -3001,7 +3007,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	//Mostrar parte del mensaje enviado en SSTRG
           	//unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
           	char buffer_mensaje[256];
-          	int longitud=m68k_get_reg(NULL,M68K_REG_D2);
+          	int longitud=m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF;
           	if (longitud>32) longitud=32;
 
 			//printf ("Debugging message sent. longitud=%d\n",longitud);
@@ -3009,7 +3015,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           	int i=0;
           	char byte_leido;
 
-          	while (longitud) {
+          	while (longitud>=0) {
           		byte_leido=ql_readbyte(puntero_origen);
           		if (byte_leido>=32 && byte_leido<=126) {
           			buffer_mensaje[i]=byte_leido;
