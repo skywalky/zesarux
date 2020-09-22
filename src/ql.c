@@ -1946,6 +1946,7 @@ int ql_si_ruta_mdv_flp(char *texto)
 unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,unsigned int *valor_retorno,unsigned int longitud_buffer)
 {
 
+	//printf("longitud buffer: %d\n",longitud_buffer);
 
 	FILE *ptr_archivo;
 
@@ -1987,20 +1988,31 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 		int bytes_leidos=fgetc(ptr_archivo);
 		//Si negativo, asumimos final de fichero
 		if (bytes_leidos<0) {
+			//printf("\nEOF\n");
 			qltraps_fopen_files[canal].next_eof_ptr_io_fline=1;
 			salir=1;
 		}
 
-		if (total_leidos>=longitud_buffer) {
-			//printf("Overflow\n");
-			*valor_retorno=QDOS_ERROR_CODE_BO;
-			return total_leidos;
-		}
-
 		if (!salir) {
 
+		if (total_leidos>=longitud_buffer) {
+			//printf("\nOverflow\n");
+			*valor_retorno=QDOS_ERROR_CODE_BO;
+
+			//ese byte esta fuera de buffer y no se retornara. "Rebobinar" puntero lectura 1 byte
+			fseek(ptr_archivo,-1,SEEK_CUR);
+
+			return total_leidos;
+		}			
+
+
 			//printf ("Escribiendo byte %d (%c) direccion %XH\n",bytes_leidos,(bytes_leidos>32 && bytes_leidos<128 ? bytes_leidos : '.'),puntero_destino);
-			//printf("%c",(bytes_leidos>=32 && bytes_leidos<=126 ? bytes_leidos : '.'));
+			//if (bytes_leidos>=32 && bytes_leidos<=126) {
+			//	printf("%c",(bytes_leidos>=32 && bytes_leidos<=126 ? bytes_leidos : '.'));
+			//}
+			//else {
+			//	printf("-%02XH-",bytes_leidos);
+			//}
 
 
 			ql_writebyte(puntero_destino++,bytes_leidos);
