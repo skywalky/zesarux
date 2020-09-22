@@ -1933,12 +1933,6 @@ int ql_si_ruta_mdv_flp(char *texto)
   return 0;
 }
 
-//int temp_fs_line=0;
-
-
-
-//FILE *ptr_io_fline=NULL;
-//int next_eof_ptr_io_fline=0;
 
 //Leer archivo linea a linea. Retorna bytes leidos, y valor de retorno. 
 //Si hay eof, se debe retornar solo el eof y sin bytes leidos
@@ -1961,22 +1955,7 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 	//Por defecto
 	*valor_retorno=0;
 
-	//Si no esta abierto el archivo, abrir
-	/*if (ptr_io_fline==NULL) {
-		debug_printf (VERBOSE_PARANOID,"Loading file at address %08XH",ql_full_path_load,puntero_destino);
-		ptr_io_fline=fopen(ql_full_path_load,"rb");
 
-		if (ptr_io_fline==NULL) {
-			debug_printf(VERBOSE_PARANOID,"Error opening file %s",ql_full_path_load);
-          		//Retornar Not complete (NC)
-
-			*valor_retorno=-1;
-			return 0; //bytes leidos 0
-     		
-		}
-
-		next_eof_ptr_io_fline=0;
-	}*/
 
 	ptr_archivo=qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix;
 
@@ -1995,15 +1974,15 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 
 		if (!salir) {
 
-		if (total_leidos>=longitud_buffer) {
-			//printf("\nOverflow\n");
-			*valor_retorno=QDOS_ERROR_CODE_BO;
+			if (total_leidos>=longitud_buffer) {
+				//printf("\nOverflow\n");
+				*valor_retorno=QDOS_ERROR_CODE_BO;
 
-			//ese byte esta fuera de buffer y no se retornara. "Rebobinar" puntero lectura 1 byte
-			fseek(ptr_archivo,-1,SEEK_CUR);
+				//ese byte esta fuera de buffer y no se retornara. "Rebobinar" puntero lectura 1 byte
+				fseek(ptr_archivo,-1,SEEK_CUR);
 
-			return total_leidos;
-		}			
+				return total_leidos;
+			}			
 
 
 			//printf ("Escribiendo byte %d (%c) direccion %XH\n",bytes_leidos,(bytes_leidos>32 && bytes_leidos<128 ? bytes_leidos : '.'),puntero_destino);
