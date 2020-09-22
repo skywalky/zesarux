@@ -1729,6 +1729,24 @@ void ql_get_file_header(unsigned int indice_canal,unsigned int destino)
   Ejecutable quiere decir binario??
   Si es un basic, es tipo 0?
 
+  Segun http://www.dilwyn.me.uk/gen/pcqlxfer/index.html
+  Las cabeceras de los archivos de QL se pierden cuando se descomprimen de un zip:
+
+"
+  If the zip file contains a QL executable (a program you can EXEC), DO NOT unzip it in Windows. 
+  It won't work. Not at all. Windows doesn't understand QL file headers and these are lost totally 
+  and irretrievably by Windows. You can usually tell when you copy it to a QL and find that when you try to 
+  EXEC a program it stops with a 'bad parameter' or similar error when the QL realises there is no executable 
+  file header and no dataspace information.
+"
+
+Por tanto lo unico que podemos hacer aqui es adivinar el contenido
+
+Mas info:
+
+https://qlforum.co.uk/viewtopic.php?t=113
+
+
   */
 
   debug_printf(VERBOSE_DEBUG,"Returning header for file on address %05XH",destino);
@@ -1786,15 +1804,26 @@ void core_ql_trap_three(void)
 
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
     case 0x2:
-      debug_printf(VERBOSE_PARANOID,"Trap 3: IO.FLINE. fetch a line of bytes");
+      debug_printf(VERBOSE_PARANOID,"Trap 3: IO.FLINE. fetch a line of bytes terminated by ASCII LF (10)");
       	      //Guardar registros
       ql_store_a_registers(pre_io_fline_a,7);
       ql_store_d_registers(pre_io_fline_d,7);
     break;
 
+	case 0x3:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.FSTRG. fetch a string of bytes");
+      	      //Guardar registros
+      ql_store_a_registers(pre_io_fline_a,7);
+      ql_store_d_registers(pre_io_fline_d,7);	  
+	break;
+
     case 0x4:
       debug_printf (VERBOSE_PARANOID,"Trap 3: IO.EDLIN");
     break;
+
+    case 0x5:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.SBYTE");
+    break;	
 
     case 0x7:
       debug_printf (VERBOSE_PARANOID,"Trap 3: IO.SSTRG");
@@ -1933,9 +1962,11 @@ int ql_si_ruta_mdv_flp(char *texto)
   return 0;
 }
 
+int temp_conta_dir=0;
 
 //Leer archivo linea a linea. Retorna bytes leidos, y valor de retorno. 
 //Si hay eof, se debe retornar solo el eof y sin bytes leidos
+
 
 unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,unsigned int *valor_retorno,unsigned int longitud_buffer)
 {
@@ -1956,6 +1987,26 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 	*valor_retorno=0;
 
 
+	//Intento de hacer que funcione un "dir mdv1_"
+	//Como se define cada entrada de directorio? Ni idea, he estado haciendo pruebas
+
+	/*
+	printf("Archivo: %s es_dispositivo: %d\n",qltraps_fopen_files[canal].ql_file_name,qltraps_fopen_files[canal].es_dispositivo);
+	if (!strcasecmp("mdv1_",qltraps_fopen_files[canal].ql_file_name) && temp_conta_dir<10) {
+		//prueba ruta mdv1. TODO mdv2, flp1
+		printf("Returning directory entry\n");
+		char *entrada_directorio="\x00\x05Hola\x0a";
+		int i;
+		int longitud=strlen(entrada_directorio);
+		for (i=0;i<longitud;i++) {
+			ql_writebyte(puntero_destino++,entrada_directorio[i]);
+
+			//Para fijar un limite de archivos
+			temp_conta_dir++;
+			return longitud;
+		}
+	}
+	*/
 
 	ptr_archivo=qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix;
 
@@ -1986,12 +2037,16 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 
 
 			//printf ("Escribiendo byte %d (%c) direccion %XH\n",bytes_leidos,(bytes_leidos>32 && bytes_leidos<128 ? bytes_leidos : '.'),puntero_destino);
-			//if (bytes_leidos>=32 && bytes_leidos<=126) {
-			//	printf("%c",(bytes_leidos>=32 && bytes_leidos<=126 ? bytes_leidos : '.'));
-			//}
-			//else {
-			//	printf("-%02XH-",bytes_leidos);
-			//}
+			
+			/*
+			if (bytes_leidos>=32 && bytes_leidos<=126) {
+				printf("%c",(bytes_leidos>=32 && bytes_leidos<=126 ? bytes_leidos : '.'));
+			}
+			else {
+				printf("-%02XH-",bytes_leidos);
+			}
+			*/
+			
 
 
 			ql_writebyte(puntero_destino++,bytes_leidos);
@@ -1999,8 +2054,8 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 
 		}
 
-		//Si salto de linea, salir
-		if (bytes_leidos==10) salir=1;
+		//Si salto de linea y funcion IO.FLINE, salir
+		if (m68k_get_reg(NULL,M68K_REG_D0)==0x2 && bytes_leidos==10) salir=1;
 
 	}
 	
@@ -2066,6 +2121,145 @@ unsigned int ql_get_a1_after_trap_4(void)
 		return m68k_get_reg(NULL,M68K_REG_A1);
 	}
 }
+
+
+void handle_trap_io_fline(void) 
+{
+		
+		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
+
+		if (m68k_get_reg(NULL,M68K_REG_D0)==0x2) {
+        debug_printf (VERBOSE_PARANOID,"IO.FLINE. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%d",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6)
+				,m68k_get_reg(NULL,M68K_REG_D2) );
+		}
+		else {
+			debug_printf (VERBOSE_PARANOID,"IO.FSTRG. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%d",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6)
+				,m68k_get_reg(NULL,M68K_REG_D2) );
+		}
+
+        //Si canal es el segundo ficticio 100
+        /*if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
+        	debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from second microdrive channel (just \"mdv\") with EOF");
+        	m68k_set_reg(M68K_REG_D0,-10);
+          	debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
+          	m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
+
+          	return;
+        }*/
+
+        //Si canal es el mio ficticio 100
+        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        if (indice_canal>=0) {
+
+        	
+        	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
+
+
+        	//Si es un dispositivo entero
+        	if (qltraps_fopen_files[indice_canal].es_dispositivo) {
+        		debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from full device channel (just \"%s\") with EOF",
+        			qltraps_fopen_files[indice_canal].ql_file_name);
+
+        		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
+          		debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
+          		m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
+      			return;
+        	}
+
+        	 //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();
+
+
+          	/*
+          	D0=$2 IO.FLINE fetch a line of characters terminated by ASCII <LF> ($A)
+			D0=$3 IO.FSTRG fetch a string of bytes
+          	*/
+
+          	/*
+          	Entrada:
+          	D2.W length of buffer
+          	D3.W timeout
+          	A0 channel ID
+          	A1 base of buffer
+
+          	Salida:
+          	D1.W nr. of bytes fetched
+          	A1 updated ptr to buffer
+
+          	Errores:
+          	NC not complete
+          	NO channel not open
+          	EF end of file
+          	BO buffer overflow (fetch line only)
+
+          	*/
+
+        	//Dudas!! Donde se guarda los datos leidos? En A1+A6??
+        	//Registro de salida A1 a donde debe apuntar??
+        	//unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+
+        	//O a A1 a secas
+        	//depende de si se ha llamado trap4 o no
+
+          	ql_restore_d_registers(pre_io_fline_d,7);
+          	ql_restore_a_registers(pre_io_fline_a,6);
+
+          	unsigned int puntero_destino;
+
+			/*
+			If the very same job that calls the IO.FLINE trap has not issued a TRAP #4 directly before, 
+			a1 is the absolute target load address, and will be updated after the call to the end of used buffer area.
+
+			If, however, the last TRAP issued by the job in question directly before the IO.FLINE trap was a TRAP #4, 
+			the address is (a6,a1), and a1 will be updated relatively (i.e. only incremented by the amount of bytes read).
+
+			*/
+
+				puntero_destino=ql_get_a1_after_trap_4();
+
+
+          	debug_printf (VERBOSE_DEBUG,"IO.FLINE - Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH max length: %d",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
+        		m68k_get_reg(NULL,M68K_REG_A6),puntero_destino, m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
+
+
+                  
+
+          	unsigned int valor_retorno;
+			
+          	unsigned int leidos=ql_read_io_fline(indice_canal,puntero_destino,&valor_retorno,m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
+
+          	
+
+          	m68k_set_reg(M68K_REG_D0,valor_retorno);
+
+          	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
+          	registro_a1 +=leidos;
+          	m68k_set_reg(M68K_REG_A1,registro_a1);
+
+          	//printf ("Leidos: %d\n",leidos);
+          	m68k_set_reg(M68K_REG_D1,leidos);
+
+	  	
+
+        	
+          
+          //Volver de ese trap
+          m68k_set_reg(M68K_REG_PC,0x5e);
+          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+          reg_a7 +=12;
+          m68k_set_reg(M68K_REG_A7,reg_a7);
+
+
+         
+
+
+
+        }
+}
+
 
 void ql_rom_traps(void)
 {
@@ -2664,133 +2858,14 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 	//Trap 3 IO.FLINE
     if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x2 && ql_microdrive_floppy_emulation) {
+		handle_trap_io_fline();
 		
-		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
+    }
 
-
-        debug_printf (VERBOSE_PARANOID,"IO.FLINE. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%d",
-        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6)
-				,m68k_get_reg(NULL,M68K_REG_D2) );
-
-        //Si canal es el segundo ficticio 100
-        /*if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
-        	debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from second microdrive channel (just \"mdv\") with EOF");
-        	m68k_set_reg(M68K_REG_D0,-10);
-          	debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
-          	m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
-
-          	return;
-        }*/
-
-        //Si canal es el mio ficticio 100
-        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
-        if (indice_canal>=0) {
-
-        	
-        	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
-
-
-        	//Si es un dispositivo entero
-        	if (qltraps_fopen_files[indice_canal].es_dispositivo) {
-        		debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from full device channel (just \"%s\") with EOF",
-        			qltraps_fopen_files[indice_canal].ql_file_name);
-
-        		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
-          		debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
-          		m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
-      			return;
-        	}
-
-        	 //Indicar actividad en md flp
-        	ql_footer_mdflp_operating();
-
-
-          	/*
-          	D0=$2 IO.FLINE fetch a line of characters terminated by ASCII <LF> ($A)
-		D0=$3 IO.FSTRG fetch a string of bytes
-          	*/
-
-          	/*
-          	Entrada:
-          	D2.W length of buffer
-          	D3.W timeout
-          	A0 channel ID
-          	A1 base of buffer
-
-          	Salida:
-          	D1.W nr. of bytes fetched
-          	A1 updated ptr to buffer
-
-          	Errores:
-          	NC not complete
-          	NO channel not open
-          	EF end of file
-          	BO buffer overflow (fetch line only)
-
-          	*/
-
-        	//Dudas!! Donde se guarda los datos leidos? En A1+A6??
-        	//Registro de salida A1 a donde debe apuntar??
-        	//unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
-
-        	//O a A1 a secas
-        	//depende de si se ha llamado trap4 o no
-
-          	ql_restore_d_registers(pre_io_fline_d,7);
-          	ql_restore_a_registers(pre_io_fline_a,6);
-
-          	unsigned int puntero_destino;
-
-			/*
-			If the very same job that calls the IO.FLINE trap has not issued a TRAP #4 directly before, 
-			a1 is the absolute target load address, and will be updated after the call to the end of used buffer area.
-
-			If, however, the last TRAP issued by the job in question directly before the IO.FLINE trap was a TRAP #4, 
-			the address is (a6,a1), and a1 will be updated relatively (i.e. only incremented by the amount of bytes read).
-
-			*/
-
-				puntero_destino=ql_get_a1_after_trap_4();
-
-
-          	debug_printf (VERBOSE_DEBUG,"IO.FLINE - Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH max length: %d",
-        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
-        		m68k_get_reg(NULL,M68K_REG_A6),puntero_destino, m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
-
-
-                  
-
-          	unsigned int valor_retorno;
-			
-          	unsigned int leidos=ql_read_io_fline(indice_canal,puntero_destino,&valor_retorno,m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
-
-          	
-
-          	m68k_set_reg(M68K_REG_D0,valor_retorno);
-
-          	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
-          	registro_a1 +=leidos;
-          	m68k_set_reg(M68K_REG_A1,registro_a1);
-
-          	//printf ("Leidos: %d\n",leidos);
-          	m68k_set_reg(M68K_REG_D1,leidos);
-
-	  	
-
-        	
-          
-          //Volver de ese trap
-          m68k_set_reg(M68K_REG_PC,0x5e);
-          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-          reg_a7 +=12;
-          m68k_set_reg(M68K_REG_A7,reg_a7);
-
-
-         
-
-
-
-        }
+	//Trap 3 IO.FSTRG
+    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x3 && ql_microdrive_floppy_emulation) {
+		handle_trap_io_fline();
+		
     }
 
 
