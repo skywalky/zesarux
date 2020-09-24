@@ -29875,11 +29875,11 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"-");
 		menu_add_item_menu_tabulado(array_menu_common,1,0);
 
-		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"12345");
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,texto);
 		menu_add_item_menu_tabulado(array_menu_common,3,0);			
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"+");
-		menu_add_item_menu_tabulado(array_menu_common,10,0);	
+		menu_add_item_menu_tabulado(array_menu_common,3+max_length+1,0);	
 		
 
 
@@ -29888,10 +29888,15 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 			
 			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
 					//llamamos por valor de funcion
-					if (item_seleccionado.menu_funcion!=NULL) {
+					/*if (item_seleccionado.menu_funcion!=NULL) {
 							//printf ("actuamos por funcion\n");
 							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
 							
+					}
+					*/
+
+					if (comun_opcion_seleccionada==1) {
+						zxvision_scanf(&ventana,texto,max_length,max_length,3,0);
 					}
 			}
 
