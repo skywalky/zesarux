@@ -26387,7 +26387,7 @@ void menu_interface_zoom(MENU_ITEM_PARAMETERS)
         sprintf (string_zoom,"%d",zoom_x);
 
 
-        menu_ventana_scanf("Window Zoom",string_zoom,2);
+        menu_ventana_scanf_numero("Window Zoom",string_zoom,2);
 
         temp_zoom=parse_string_to_number(string_zoom);
 
@@ -29833,6 +29833,74 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 
 }
 
+
+void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
+{
+
+	int ancho_ventana=32;
+	int alto_ventana=7;
+
+
+	int xventana=menu_center_x()-ancho_ventana/2;
+	int yventana=menu_center_y()-alto_ventana/2;
+
+	zxvision_window ventana;
+
+	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+                                                        ancho_ventana-1,alto_ventana-2,titulo);
+
+	//Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+	menu_item *array_menu_common;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+	//El foco en el numero
+	int comun_opcion_seleccionada=1;
+
+
+	//Donde van los bloques
+
+	int inicio_bloque_x=8;
+	int inicio_bloque_y=2;
+	int ancho_bloque=6;
+
+	int linea=inicio_bloque_y;
+	
+
+
+	do {
+
+
+		
+		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"-");
+		menu_add_item_menu_tabulado(array_menu_common,1,0);
+
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"12345");
+		menu_add_item_menu_tabulado(array_menu_common,3,0);			
+
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"+");
+		menu_add_item_menu_tabulado(array_menu_common,10,0);	
+		
+
+
+		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window management");
+
+			
+			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+					//llamamos por valor de funcion
+					if (item_seleccionado.menu_funcion!=NULL) {
+							//printf ("actuamos por funcion\n");
+							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+							
+					}
+			}
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+                                //En caso de menus tabulados, es responsabilidad de este de liberar ventana
+                zxvision_destroy_window(&ventana);	
+}
 
 void menu_about_read_file(char *title,char *aboutfile)
 {

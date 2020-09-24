@@ -572,6 +572,7 @@ typedef struct s_menu_item menu_item;
 
 
 extern void menu_ventana_scanf(char *titulo,char *texto,int max_length);
+extern void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length);
 extern int menu_filesel(char *titulo,char *filtros[],char *archivo);
 extern int zxvision_menu_filesel(char *titulo,char *filtros[],char *archivo);
 
