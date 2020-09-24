@@ -29881,7 +29881,8 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"+");
 		menu_add_item_menu_tabulado(array_menu_common,3+max_length+1,0);	
 		
-
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"<OK>");
+		menu_add_item_menu_tabulado(array_menu_common,1,2);	
 
 		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window management");
 
@@ -29895,9 +29896,22 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 					}
 					*/
 
+					if (comun_opcion_seleccionada==0) {
+						int numero=parse_string_to_number(texto);
+						numero--;
+						sprintf(texto,"%d",numero);
+					}				
+
 					if (comun_opcion_seleccionada==1) {
 						zxvision_scanf(&ventana,texto,max_length,max_length,3,0);
 					}
+
+					if (comun_opcion_seleccionada==2) {
+						int numero=parse_string_to_number(texto);
+						numero++;
+						sprintf(texto,"%d",numero);
+					}				
+
 			}
 
     } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
