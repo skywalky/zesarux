@@ -32,7 +32,10 @@ archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
 -tema mayusculas/ minusculas en ql solo funciona directo en mac... que pasa con windows? y mac?
 
 
--implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta
+-implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta.
+Problema que en esos archivos objetos se ha perdido la cabecera de 64 bytes (en los zip viene incluida pero al descomprimir se pierde)
+
+
 
 
 
