@@ -133,5 +133,10 @@ Etc...
 https://foro.speccy.org/viewtopic.php?t=1502
 
 
--campos de input numero que tengan un boton -/+ para incrementar/disminuir
-Se puede hacer con items de tipo tabulado (creo)
+-menu_ventana_scanf_numero
+* que entre directamente a editar numero
+* que pulsando en -+ ok responda aunque este editando numero: hacemos que scanf sale si pulsado fuera de zona edición,
+pero solo cuando editamos numero
+* incrementos con salto configurables. parametro adicional
+* incrementos que detecten limites inferior/mayor. parametros adicionales
+* Otro parámetro que diga si resetea al pasar umbrales mayor/menor

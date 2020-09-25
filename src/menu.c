@@ -7003,7 +7003,8 @@ void menu_scanf_cursor_derecha(char *texto,int *pos_cursor_x,int *offset_string,
 //devuelve cadena de texto desde teclado
 //max_length contando caracter 0 del final, es decir, para un texto de 4 caracteres, debemos especificar max_length=5
 //ejemplo, si el array es de 50, se le debe pasar max_length a 50
-int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length,int max_length_shown,int x,int y)
+//volver_si_fuera_foco dice si vuelve al pulsar en linea de edicion pero mas a la izquierda o derecha de esa zona
+int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length,int max_length_shown,int x,int y,int volver_si_fuera_foco)
 {
 
 
@@ -7053,6 +7054,7 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 		//printf ("Despues de espera tecla\n");
 		tecla=zxvision_common_getkey_refresh();	
 		//printf ("tecla leida=%d\n",tecla);
+		int mouse_left_estaba_pulsado=mouse_left;
 		menu_espera_no_tecla();
 
 
@@ -7143,6 +7145,32 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 			offset_string=0;
 			pos_cursor_x=0;
 	
+		}
+
+		//Si pulsado boton
+		//printf ("mouse_left: %d\n",mouse_left_estaba_pulsado);
+		if (volver_si_fuera_foco && tecla==0 && mouse_left_estaba_pulsado) {			
+			//printf ("Pulsado boton izquierdo en zxvision_scanf\n");
+
+			//Si se pulsa mas alla de la zona de edicion
+			//printf("mouse_x %d mouse_y %d x %d y %d\n",menu_mouse_x,menu_mouse_y,x,y);
+
+			
+
+			int mouse_y_ventana=menu_mouse_y-1;
+
+			//printf("mouse_x %d mouse_y_ventana %d x %d y %d max_length_shown %d\n",menu_mouse_x,mouse_y_ventana,x,y,max_length_shown);
+
+			if (mouse_y_ventana==y && 
+			
+				(menu_mouse_x>=x+max_length_shown || menu_mouse_x<x)
+			 
+			){
+				//printf("Pulsado mas a la derecha de la zona de edicion\n");
+
+				//Como si fuera enter , para volver
+				tecla=13;
+			}
 		}
 
 
@@ -24018,7 +24046,27 @@ void menu_debug_special_nmi(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_testeo_scanf_numero(MENU_ITEM_PARAMETERS)
+{
 
+        char string_zoom[2];
+	int temp_zoom;
+
+
+	//comprobaciones previas para no petar el sprintf
+	if (zoom_x>9 || zoom_x<1) zoom_x=1;
+
+        sprintf (string_zoom,"%d",zoom_x);
+
+
+        menu_ventana_scanf_numero("Window Zoom",string_zoom,2);
+
+        temp_zoom=parse_string_to_number(string_zoom);
+
+
+	menu_generic_message_format("Test","Value %d",temp_zoom);
+
+}
 
 
 void menu_run_mantransfer(MENU_ITEM_PARAMETERS)
@@ -25533,6 +25581,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 					"instead ZEsarUX will only work if the cpu is in IM1 mode (and not IM2)");
 	}
 
+	//testeo
+	menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_testeo_scanf_numero,NULL,"Test scanf number");
 
 		/* De momento desactivado
 		if (MACHINE_IS_SPECTRUM) {
@@ -26387,7 +26437,8 @@ void menu_interface_zoom(MENU_ITEM_PARAMETERS)
         sprintf (string_zoom,"%d",zoom_x);
 
 
-        menu_ventana_scanf_numero("Window Zoom",string_zoom,2);
+        //menu_ventana_scanf_numero("Window Zoom",string_zoom,2);
+		menu_ventana_scanf("Window Zoom",string_zoom,2);
 
         temp_zoom=parse_string_to_number(string_zoom);
 
@@ -29820,7 +29871,7 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 	zxvision_draw_window(&ventana);
 
 
-	zxvision_scanf(&ventana,texto,max_length,scanf_ancho-2,1,0);
+	zxvision_scanf(&ventana,texto,max_length,scanf_ancho-2,1,0,0);
 
 	//menu_scanf(texto,max_length,scanf_ancho-2,scanf_x+1,scanf_y+1);
 	//int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,int y)
@@ -29870,21 +29921,41 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 
 	do {
 
+		int max_input_visible=ancho_ventana-2-2-2; //2 laterales, 2 de los botones, y 2 de espacios entre botones
+		if (max_length<max_input_visible) max_input_visible=max_length;
+
+		int x_boton_menos=1;
+		int x_texto_input=x_boton_menos+2;
+		int x_boton_mas=x_texto_input+max_input_visible+1;
+		int x_boton_ok=1;
+
+		//Escribir primero numero
+
+		//Borrar linea entera
+		zxvision_print_string_defaults_fillspc(&ventana,x_boton_menos,0,"");
+
+		//Escribir - +
+		zxvision_print_string_defaults(&ventana,x_boton_menos,0,"-");
+		zxvision_print_string_defaults(&ventana,x_boton_mas,0,"+");
+
+		//Escribir numero
+		zxvision_print_string_defaults(&ventana,x_texto_input,0,texto);
 
 		
 		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"-");
-		menu_add_item_menu_tabulado(array_menu_common,1,0);
+		menu_add_item_menu_tabulado(array_menu_common,x_boton_menos,0);
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,texto);
-		menu_add_item_menu_tabulado(array_menu_common,3,0);			
+		menu_add_item_menu_tabulado(array_menu_common,x_texto_input,0);			
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"+");
-		menu_add_item_menu_tabulado(array_menu_common,3+max_length+1,0);	
+		menu_add_item_menu_tabulado(array_menu_common,x_boton_mas,0);	
 		
-		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"<OK>");
-		menu_add_item_menu_tabulado(array_menu_common,1,2);	
+		//Cuenta como si fuera ESC
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL,"<OK>");
+		menu_add_item_menu_tabulado(array_menu_common,x_boton_ok,2);	
 
-		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Window management");
+		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,titulo);
 
 			
 			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
@@ -29903,7 +29974,11 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 					}				
 
 					if (comun_opcion_seleccionada==1) {
-						zxvision_scanf(&ventana,texto,max_length,max_length,3,0);
+						zxvision_scanf(&ventana,texto,max_length,max_length,3,0,1);
+						//menu_espera_no_tecla();
+
+						//Cambiar la opcion seleccionada a la del OK
+						comun_opcion_seleccionada=3;
 					}
 
 					if (comun_opcion_seleccionada==2) {
@@ -35040,7 +35115,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				else {
 
 
-				tecla=zxvision_scanf(ventana,filesel_nombre_archivo_seleccionado,PATH_MAX,ancho_mostrado,7,1);
+				tecla=zxvision_scanf(ventana,filesel_nombre_archivo_seleccionado,PATH_MAX,ancho_mostrado,7,1,0);
 				//); //6 ocupa el texto "File: "
 
 				if (tecla==15) {
