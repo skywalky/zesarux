@@ -24090,12 +24090,17 @@ void menu_testeo_scanf_numero(MENU_ITEM_PARAMETERS)
         sprintf (string_zoom,"%d",zoom_x);
 
 
-        menu_ventana_scanf_numero("Number test",string_zoom,3);
+        int retorno=menu_ventana_scanf_numero("Number test",string_zoom,3,+2,0,9,0);
+		if (retorno<0) {
+			menu_warn_message("Pulsado ESC");
+		}
+		else {
 
-        temp_zoom=parse_string_to_number(string_zoom);
+			temp_zoom=parse_string_to_number(string_zoom);
 
 
-	menu_generic_message_format("Test","Value %d",temp_zoom);
+			menu_generic_message_format("Test","Value %d",temp_zoom);
+		}
 
 }
 
@@ -29920,7 +29925,7 @@ void menu_ventana_scanf_number_aux(zxvision_window *ventana,char *texto,int max_
 	zxvision_scanf(ventana,texto,max_length,max_length,x_texto_input,0,1);
 }
 
-void menu_ventana_scanf_number_print_buttons(zxvision_window *ventana,char *texto,int x_boton_menos,int x_boton_mas,int x_texto_input,int x_boton_ok)
+void menu_ventana_scanf_number_print_buttons(zxvision_window *ventana,char *texto,int x_boton_menos,int x_boton_mas,int x_texto_input,int x_boton_ok,int x_boton_cancel)
 {
 			//Borrar linea entera
 		zxvision_print_string_defaults_fillspc(ventana,x_boton_menos,0,"");
@@ -29933,12 +29938,15 @@ void menu_ventana_scanf_number_print_buttons(zxvision_window *ventana,char *text
 		zxvision_print_string_defaults(ventana,x_texto_input,0,texto);
 
 		zxvision_print_string_defaults(ventana,x_boton_ok,2,"<OK>");	
+
+		zxvision_print_string_defaults(ventana,x_boton_cancel,2,"<Cancel>");	
 }
 
+//busca donde apunta el mouse y retorna opcion seleccionada
 int menu_ventana_scanf_number_ajust_cursor_mouse(menu_item *m,int posicion_raton_x,int posicion_raton_y)
 {
 
-	printf ("buscando en %d,%d\n",posicion_raton_x,posicion_raton_y);
+	//printf ("buscando en %d,%d\n",posicion_raton_x,posicion_raton_y);
 
 	menu_item *buscar_tabulado;
 	int linea_buscada;
@@ -29951,24 +29959,31 @@ int menu_ventana_scanf_number_ajust_cursor_mouse(menu_item *m,int posicion_raton
 		//Buscar por coincidencia de coordenada x,y
 		if (buscar_tabulado->tipo_opcion!=MENU_OPCION_SEPARADOR) {
 			linea_seleccionada=linea_buscada;
-			printf("encontrada opcion en %d\n",linea_buscada);
+			//printf("encontrada opcion en %d\n",linea_buscada);
 			//redibuja_ventana=1;
 			//menu_tooltip_counter=0;
 		}
 	}
 	else {
-		printf ("item no encontrado\n");
+		//printf ("item no encontrado\n");
 	}
 
 	return linea_seleccionada;
 }
 
+/*
+max_length: maxima longitud, contando caracter 0 del final
+minimo: valor minimo admitido
+maximo: valor maximo admitido
+circular: si al pasar umbral, se resetea al otro umbral
+*/
 
-void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
+//Retorna -1 si pulsado ESC
+int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int incremento,int minimo,int maximo,int circular)
 {
 
 	int ancho_ventana=32;
-	int alto_ventana=7;
+	int alto_ventana=5;
 
 
 	int xventana=menu_center_x()-ancho_ventana/2;
@@ -30003,9 +30018,10 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 	int x_texto_input=x_boton_menos+2;
 	int x_boton_mas=x_texto_input+max_input_visible+1;
 	int x_boton_ok=1;	
+	int x_boton_cancel=x_boton_ok+5;
 
 	//Dibujar texto interior
-	menu_ventana_scanf_number_print_buttons(&ventana,texto,x_boton_menos,x_boton_mas,x_texto_input,x_boton_ok);
+	menu_ventana_scanf_number_print_buttons(&ventana,texto,x_boton_menos,x_boton_mas,x_texto_input,x_boton_ok,x_boton_cancel);
 
 	//Dibujar ventana antes de scanf
 	zxvision_draw_window(&ventana);
@@ -30014,9 +30030,10 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 	//Entramos primero editando el numero
 	menu_ventana_scanf_number_aux(&ventana,texto,max_length,x_texto_input);
 
+	//Cambiar la opcion seleccionada a la del OK, al pulsar enter
+	comun_opcion_seleccionada=3;	
 
 
-	
 
 	//Decir que habra que ajustar raton segun posicion mouse actual
 	int debe_ajustar_cursor_segun_mouse=1;
@@ -30029,7 +30046,7 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 		//Escribir primero numero
 
 		//Dibujar texto interior
-		menu_ventana_scanf_number_print_buttons(&ventana,texto,x_boton_menos,x_boton_mas,x_texto_input,x_boton_ok);
+		menu_ventana_scanf_number_print_buttons(&ventana,texto,x_boton_menos,x_boton_mas,x_texto_input,x_boton_ok,x_boton_cancel);
 
 		
 		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"-");
@@ -30041,9 +30058,11 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"+");
 		menu_add_item_menu_tabulado(array_menu_common,x_boton_mas,0);	
 		
-		//Cuenta como si fuera ESC
-		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL,"<OK>");
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"<OK>");
 		menu_add_item_menu_tabulado(array_menu_common,x_boton_ok,2);	
+
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL,"<Cancel>");
+		menu_add_item_menu_tabulado(array_menu_common,x_boton_cancel,2);	
 
 
 		//Antes de abrir el menu, ajustar la opcion seleccionada cuando ha salido del input de numero
@@ -30051,7 +30070,7 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 		if (debe_ajustar_cursor_segun_mouse) {
 			debe_ajustar_cursor_segun_mouse=0;
 			int opcion_sel=menu_ventana_scanf_number_ajust_cursor_mouse(array_menu_common,menu_mouse_x,menu_mouse_y-1);		
-			printf("opcion seleccionada: %d\n",opcion_sel);
+			//printf("opcion seleccionada: %d\n",opcion_sel);
 			if (opcion_sel>=0) {
 				comun_opcion_seleccionada=opcion_sel;
 			}
@@ -30061,19 +30080,40 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 
 			
 			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-					//llamamos por valor de funcion
-					/*if (item_seleccionado.menu_funcion!=NULL) {
-							//printf ("actuamos por funcion\n");
-							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-							
-					}
-					*/
+				
 
-					if (comun_opcion_seleccionada==0) {
+					//botones menos y mas
+					if (comun_opcion_seleccionada==0 || comun_opcion_seleccionada==2) {
+
 						int numero=parse_string_to_number(texto);
-						numero--;
-						sprintf(texto,"%d",numero);
-					}				
+
+						if (comun_opcion_seleccionada==0) {							
+							numero-=incremento;
+							if (numero<minimo) {
+								if (circular) {
+									numero=maximo;
+								}
+								else {
+									numero=minimo;
+								}
+							}
+						}	
+
+						if (comun_opcion_seleccionada==2) {
+							numero+=incremento;
+
+							if (numero>maximo) {
+								if (circular) {
+									numero=minimo;
+								}
+								else {
+									numero=maximo;
+								}
+							}							
+						}	
+
+						sprintf(texto,"%d",numero);	
+					}							
 
 					if (comun_opcion_seleccionada==1) {
 						menu_ventana_scanf_number_aux(&ventana,texto,max_length,x_texto_input);
@@ -30087,19 +30127,19 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 						debe_ajustar_cursor_segun_mouse=1;
 					}
 
-					if (comun_opcion_seleccionada==2) {
-						int numero=parse_string_to_number(texto);
-						numero++;
-						sprintf(texto,"%d",numero);
-					}				
+			
 
 			}
 
-    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && comun_opcion_seleccionada<3);
 
 
-                                //En caso de menus tabulados, es responsabilidad de este de liberar ventana
-                zxvision_destroy_window(&ventana);	
+    //En caso de menus tabulados, es responsabilidad de este de liberar ventana
+    zxvision_destroy_window(&ventana);	
+
+	if (comun_opcion_seleccionada==4 || retorno_menu==MENU_RETORNO_ESC) return -1; //Pulsado Cancel
+
+	else return 0;
 }
 
 void menu_about_read_file(char *title,char *aboutfile)

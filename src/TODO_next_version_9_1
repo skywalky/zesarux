@@ -133,7 +133,3 @@ Etc...
 https://foro.speccy.org/viewtopic.php?t=1502
 
 
--menu_ventana_scanf_numero
-* incrementos con salto configurables. parametro adicional
-* incrementos que detecten limites inferior/mayor. parametros adicionales
-* Otro parámetro que diga si resetea al pasar umbrales mayor/menor
