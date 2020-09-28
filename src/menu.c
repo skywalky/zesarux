@@ -30031,7 +30031,7 @@ int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int increm
 	menu_ventana_scanf_number_aux(&ventana,texto,max_length,x_texto_input);
 
 	//Cambiar la opcion seleccionada a la del OK, al pulsar enter
-	comun_opcion_seleccionada=3;	
+	//comun_opcion_seleccionada=3;	
 
 
 
@@ -30069,6 +30069,11 @@ int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int increm
 		//y a que boton apunta el mouse
 		if (debe_ajustar_cursor_segun_mouse) {
 			debe_ajustar_cursor_segun_mouse=0;
+
+			//Asumimos que esta en OK
+			//Cambiar la opcion seleccionada a la del OK, al pulsar enter
+			comun_opcion_seleccionada=3;
+
 			int opcion_sel=menu_ventana_scanf_number_ajust_cursor_mouse(array_menu_common,menu_mouse_x,menu_mouse_y-1);		
 			//printf("opcion seleccionada: %d\n",opcion_sel);
 			if (opcion_sel>=0) {
@@ -30120,8 +30125,7 @@ int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int increm
 						//zxvision_scanf(&ventana,texto,max_length,max_length,x_texto_input,0,1);
 						//menu_espera_no_tecla();
 
-						//Cambiar la opcion seleccionada a la del OK, al pulsar enter
-						comun_opcion_seleccionada=3;
+
 
 						//Pero ajustar el mouse si apunta a alguna opcion
 						debe_ajustar_cursor_segun_mouse=1;
