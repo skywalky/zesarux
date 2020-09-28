@@ -1093,7 +1093,10 @@ void menu_audio_volume(MENU_ITEM_PARAMETERS)
         sprintf (string_perc,"%d",audiovolume);
 
 
-        menu_ventana_scanf("Volume in %",string_perc,4);
+        //menu_ventana_scanf("Volume in %",string_perc,4);
+		int retorno=menu_ventana_scanf_numero("Volume in %",string_perc,4,20,0,100,0);
+
+		if (retorno<0) return;
 
         int v=parse_string_to_number(string_perc);
 

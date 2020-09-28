@@ -30148,6 +30148,8 @@ int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int increm
     //En caso de menus tabulados, es responsabilidad de este de liberar ventana
     zxvision_destroy_window(&ventana);	
 
+	cls_menu_overlay();
+
 	if (comun_opcion_seleccionada==4 || retorno_menu==MENU_RETORNO_ESC) return -1; //Pulsado Cancel
 
 	else return 0;
