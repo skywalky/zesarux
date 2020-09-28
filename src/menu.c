@@ -7196,6 +7196,12 @@ int zxvision_scanf(zxvision_window *ventana,char *string,unsigned int max_length
 				//Como si fuera enter , para volver
 				tecla=13;
 			}
+
+			//O si se pulsa en coordenada y por debajo de input pero dentro de ventana
+			if (mouse_y_ventana>y && mouse_y_ventana<y+ventana->visible_height-1) {
+				//printf("pulsado por debajo coordenada Y\n");
+				tecla=13;
+			}
 		}
 
 
@@ -10682,7 +10688,7 @@ menu_item *menu_retorna_item(menu_item *m,int i)
 }
 
 
-//Retorna el item i
+//Retorna el item i segun posicion x,y del mouse
 menu_item *menu_retorna_item_tabulado_xy(menu_item *m,int x,int y,int *linea_buscada)
 {
 
@@ -29929,6 +29935,34 @@ void menu_ventana_scanf_number_print_buttons(zxvision_window *ventana,char *text
 		zxvision_print_string_defaults(ventana,x_boton_ok,2,"<OK>");	
 }
 
+int menu_ventana_scanf_number_ajust_cursor_mouse(menu_item *m,int posicion_raton_x,int posicion_raton_y)
+{
+
+	printf ("buscando en %d,%d\n",posicion_raton_x,posicion_raton_y);
+
+	menu_item *buscar_tabulado;
+	int linea_buscada;
+
+	buscar_tabulado=menu_retorna_item_tabulado_xy(m,posicion_raton_x,posicion_raton_y,&linea_buscada);
+
+	int linea_seleccionada=-1;
+
+	if (buscar_tabulado!=NULL) {
+		//Buscar por coincidencia de coordenada x,y
+		if (buscar_tabulado->tipo_opcion!=MENU_OPCION_SEPARADOR) {
+			linea_seleccionada=linea_buscada;
+			printf("encontrada opcion en %d\n",linea_buscada);
+			//redibuja_ventana=1;
+			//menu_tooltip_counter=0;
+		}
+	}
+	else {
+		printf ("item no encontrado\n");
+	}
+
+	return linea_seleccionada;
+}
+
 
 void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 {
@@ -29981,6 +30015,13 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 	menu_ventana_scanf_number_aux(&ventana,texto,max_length,x_texto_input);
 
 
+
+	
+
+	//Decir que habra que ajustar raton segun posicion mouse actual
+	int debe_ajustar_cursor_segun_mouse=1;
+
+
 	do {
 
 
@@ -30003,6 +30044,18 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 		//Cuenta como si fuera ESC
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL,"<OK>");
 		menu_add_item_menu_tabulado(array_menu_common,x_boton_ok,2);	
+
+
+		//Antes de abrir el menu, ajustar la opcion seleccionada cuando ha salido del input de numero
+		//y a que boton apunta el mouse
+		if (debe_ajustar_cursor_segun_mouse) {
+			debe_ajustar_cursor_segun_mouse=0;
+			int opcion_sel=menu_ventana_scanf_number_ajust_cursor_mouse(array_menu_common,menu_mouse_x,menu_mouse_y-1);		
+			printf("opcion seleccionada: %d\n",opcion_sel);
+			if (opcion_sel>=0) {
+				comun_opcion_seleccionada=opcion_sel;
+			}
+		}
 
 		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,titulo);
 
@@ -30029,6 +30082,9 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 
 						//Cambiar la opcion seleccionada a la del OK
 						comun_opcion_seleccionada=3;
+
+						//Pero ajustar el mouse si apunta a alguna opcion
+						debe_ajustar_cursor_segun_mouse=1;
 					}
 
 					if (comun_opcion_seleccionada==2) {
