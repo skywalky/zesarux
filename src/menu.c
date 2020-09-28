@@ -29929,6 +29929,8 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 
 void menu_ventana_scanf_number_aux(zxvision_window *ventana,char *texto,int max_length,int x_texto_input)
 {
+	//En entrada de texto no validamos el maximo y minimo. Eso lo tiene que seguir haciendo la funcion que llama a menu_ventana_scanf_numero
+	//Si que se controla al pulsar botones de + y -
 	zxvision_scanf(ventana,texto,max_length,max_length,x_texto_input,0,1);
 }
 
@@ -29983,6 +29985,10 @@ max_length: maxima longitud, contando caracter 0 del final
 minimo: valor minimo admitido
 maximo: valor maximo admitido
 circular: si al pasar umbral, se resetea al otro umbral
+
+En entrada de texto no validamos el maximo y minimo. Eso lo tiene que seguir haciendo la funcion que llama a menu_ventana_scanf_numero
+Si que se controla al pulsar botones de + y -
+	
 */
 
 //Retorna -1 si pulsado ESC
