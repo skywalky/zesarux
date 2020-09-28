@@ -96,7 +96,13 @@ z80_byte ql_keyboard_table[8]={
 
 void ql_footer_mdflp_operating(void)
 {
-	generic_footertext_print_operating("MDFLP");
+	generic_footertext_print_operating("MDVFLP");
+
+	//Y poner icono en inverso
+	if (!zxdesktop_icon_mdv_flp_inverse) {
+			zxdesktop_icon_mdv_flp_inverse=1;
+			menu_draw_ext_desktop();
+	}		
 }
 
 z80_byte ql_last_trap=0;
@@ -2563,6 +2569,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         if (!es_dispositivo) {
 
+			ql_footer_mdflp_operating();			
+
    	     ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file);
 
         	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
@@ -2607,9 +2615,6 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
 	if (!es_dispositivo) {
-		
-		
-	
 		//Indicar file handle
 		FILE *archivo;
 		archivo=fopen(ql_nombrecompleto,"rb");

@@ -202,6 +202,12 @@ void zxpand_footer_print_zxpand_operating(void)
 {
 
 	generic_footertext_print_operating("ZXPAND");
+
+	//Y poner icono en inverso
+	if (!zxdesktop_icon_zxpand_inverse) {
+			zxdesktop_icon_zxpand_inverse=1;
+			menu_draw_ext_desktop();
+	}		
 }
 
 void zxpand_footer_zxpand_operating(void)

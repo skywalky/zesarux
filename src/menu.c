@@ -3203,7 +3203,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 			destino_x+=2;
 			destino_y+=2;
 		}
-		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
+		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom,0);
 	}
 }
 
@@ -3481,62 +3481,73 @@ void zxdesktop_lowericon_z88_cart_3_accion(void)
 	menu_z88_slot_insert(3);
 }
 
+//Para iconos que no alteran su inverso, apuntar a aqui
+int zxdesktop_common_icon_no_inverse=0;
+
+//Variables que indican actividad de ese icono (se dibujan en color inverso)
+int zxdesktop_icon_tape_inverse=0;
+int zxdesktop_icon_mmc_inverse=0;
+int zxdesktop_icon_plus3_inverse=0;
+int zxdesktop_icon_betadisk_inverse=0;
+int zxdesktop_icon_ide_inverse=0;
+int zxdesktop_icon_zxpand_inverse=0;
+int zxdesktop_icon_mdv_flp_inverse=0;
 
 struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX_LOWER_ICONS]={
 	//cinta
 	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active,zxdesktop_lowericon_cassete_accion,
-		bitmap_lowericon_ext_desktop_cassette_active,bitmap_lowericon_ext_desktop_cassette_inactive},
+		bitmap_lowericon_ext_desktop_cassette_active,bitmap_lowericon_ext_desktop_cassette_inactive,&zxdesktop_icon_tape_inverse},
 
 	//floppy +3
 	{ zxdesktop_lowericon_plus3_flp_is_visible, zxdesktop_lowericon_plus3_flp_is_active,zxdesktop_lowericon_plus3_flp_accion,
-		bitmap_lowericon_ext_desktop_plus3_flp_active,bitmap_lowericon_ext_desktop_plus3_flp_inactive},		
+		bitmap_lowericon_ext_desktop_plus3_flp_active,bitmap_lowericon_ext_desktop_plus3_flp_inactive,&zxdesktop_icon_plus3_inverse},		
 
 	//betadisk
 	{ zxdesktop_lowericon_betadisk_is_visible, zxdesktop_lowericon_betadisk_is_active,zxdesktop_lowericon_betadisk_accion,
-		bitmap_lowericon_ext_desktop_betadisk_active,bitmap_lowericon_ext_desktop_betadisk_inactive},			
+		bitmap_lowericon_ext_desktop_betadisk_active,bitmap_lowericon_ext_desktop_betadisk_inactive,&zxdesktop_icon_betadisk_inverse},			
 
 	//MMC
 	{ zxdesktop_lowericon_mmc_is_visible, zxdesktop_lowericon_mmc_is_active, zxdesktop_lowericon_mmc_accion,
-		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},		
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive,&zxdesktop_icon_mmc_inverse},		
 
 	//IDE
 	{ zxdesktop_lowericon_ide_is_visible, zxdesktop_lowericon_ide_is_active, zxdesktop_lowericon_ide_accion,
-		bitmap_lowericon_ext_desktop_ide_active,bitmap_lowericon_ext_desktop_ide_inactive},				
+		bitmap_lowericon_ext_desktop_ide_active,bitmap_lowericon_ext_desktop_ide_inactive,&zxdesktop_icon_ide_inverse},				
 
 	//ZXPand
 	{ zxdesktop_lowericon_zxpand_is_visible, zxdesktop_lowericon_zxpand_is_active, zxdesktop_lowericon_zxpand_accion,
-		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive},			
+		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive,&zxdesktop_icon_zxpand_inverse},			
 
 	//Cartuchos msx, coleco, svi, sg1000
 	{ zxdesktop_lowericon_cartridge_msx_is_visible, zxdesktop_lowericon_cartridge_msx_is_active, zxdesktop_lowericon_cartridge_accion,
-		bitmap_lowericon_ext_desktop_msx_cart_active,bitmap_lowericon_ext_desktop_msx_cart_inactive},	
+		bitmap_lowericon_ext_desktop_msx_cart_active,bitmap_lowericon_ext_desktop_msx_cart_inactive,&zxdesktop_common_icon_no_inverse},	
 
 	{ zxdesktop_lowericon_cartridge_svi_is_visible, zxdesktop_lowericon_cartridge_svi_is_active, zxdesktop_lowericon_cartridge_accion,
-		bitmap_lowericon_ext_desktop_svi_active,bitmap_lowericon_ext_desktop_svi_inactive},				
+		bitmap_lowericon_ext_desktop_svi_active,bitmap_lowericon_ext_desktop_svi_inactive,&zxdesktop_common_icon_no_inverse},				
 
 	{ zxdesktop_lowericon_cartridge_coleco_is_visible, zxdesktop_lowericon_cartridge_coleco_is_active, zxdesktop_lowericon_cartridge_accion,
-		bitmap_lowericon_ext_desktop_coleco_active,bitmap_lowericon_ext_desktop_coleco_inactive},	
+		bitmap_lowericon_ext_desktop_coleco_active,bitmap_lowericon_ext_desktop_coleco_inactive,&zxdesktop_common_icon_no_inverse},	
 
 	{ zxdesktop_lowericon_cartridge_sg1000_is_visible, zxdesktop_lowericon_cartridge_sg1000_is_active, zxdesktop_lowericon_cartridge_accion,
-		bitmap_lowericon_ext_desktop_sg1000_active,bitmap_lowericon_ext_desktop_sg1000_inactive},	
+		bitmap_lowericon_ext_desktop_sg1000_active,bitmap_lowericon_ext_desktop_sg1000_inactive,&zxdesktop_common_icon_no_inverse},	
 
 	//Cartuchos Timex TS2068	
 	{ zxdesktop_lowericon_cart_timex_is_visible, zxdesktop_lowericon_cart_timex_is_active, zxdesktop_lowericon_cart_timex_accion,
-		bitmap_lowericon_ext_desktop_cart_timex_active,bitmap_lowericon_ext_desktop_cart_timex_inactive},										
+		bitmap_lowericon_ext_desktop_cart_timex_active,bitmap_lowericon_ext_desktop_cart_timex_inactive,&zxdesktop_common_icon_no_inverse},										
 
 	//MDV/Floppy QL.
 	{ zxdesktop_lowericon_mdv_flp_is_visible, zxdesktop_lowericon_mdv_flp_is_active, zxdesktop_lowericon_mdv_flp_accion,
-		bitmap_lowericon_ext_desktop_mdv_active,bitmap_lowericon_ext_desktop_mdv_inactive},	
+		bitmap_lowericon_ext_desktop_mdv_active,bitmap_lowericon_ext_desktop_mdv_inactive,&zxdesktop_icon_mdv_flp_inverse},	
 
 	//3 Cartuchos de Z88. 
 	{ zxdesktop_lowericon_z88_cart_is_visible, zxdesktop_lowericon_z88_cart_1_is_active, zxdesktop_lowericon_z88_cart_1_accion,
-		bitmap_lowericon_ext_desktop_z88_active,bitmap_lowericon_ext_desktop_z88_inactive},	
+		bitmap_lowericon_ext_desktop_z88_active,bitmap_lowericon_ext_desktop_z88_inactive,&zxdesktop_common_icon_no_inverse},	
 
 	{ zxdesktop_lowericon_z88_cart_is_visible, zxdesktop_lowericon_z88_cart_2_is_active, zxdesktop_lowericon_z88_cart_2_accion,
-		bitmap_lowericon_ext_desktop_z88_active,bitmap_lowericon_ext_desktop_z88_inactive},	
+		bitmap_lowericon_ext_desktop_z88_active,bitmap_lowericon_ext_desktop_z88_inactive,&zxdesktop_common_icon_no_inverse},	
 
 	{ zxdesktop_lowericon_z88_cart_is_visible, zxdesktop_lowericon_z88_cart_3_is_active, zxdesktop_lowericon_z88_cart_3_accion,
-		bitmap_lowericon_ext_desktop_z88_active,bitmap_lowericon_ext_desktop_z88_inactive},			
+		bitmap_lowericon_ext_desktop_z88_active,bitmap_lowericon_ext_desktop_z88_inactive,&zxdesktop_common_icon_no_inverse},			
 
 
 
@@ -3673,9 +3684,19 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	is_enabled=1;
 #endif
 
+	//Ver si icono se dibuja en color inverso solo cuando esta el icono activo
+	int inverso=0;
+
 
 	if (is_enabled) {
 		puntero_bitmap=zdesktop_lowericons_array[indice_array].bitmap_active;
+
+		int *puntero_a_inverso;
+
+		puntero_a_inverso=zdesktop_lowericons_array[indice_array].icon_is_inverse;
+		if (*puntero_a_inverso) {
+			inverso=1;		
+		}
 	}
 
 	else  {
@@ -3683,13 +3704,17 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	}		
 
 
+
+
+
 	if (pulsado) {
 		//desplazado 2 pixel cuando se pulsa
 		destino_x+=2;
 		destino_y+=2;
 	}
+
 	
-	screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom);
+	screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom,inverso);
 
 	
 	

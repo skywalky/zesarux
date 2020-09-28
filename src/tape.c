@@ -147,6 +147,12 @@ void draw_tape_text(void)
 		else {
                         //menu_footer_activity("TAPE");
                         generic_footertext_print_operating("TAPE");
+
+                        //Y poner icono de cinta en inverso
+                        if (!zxdesktop_icon_tape_inverse) {
+                                zxdesktop_icon_tape_inverse=1;
+                                menu_draw_ext_desktop();
+                        }
 		}
 
 }
@@ -173,6 +179,9 @@ void eject_tape_load(void)
 {
 	tape_loadsave_inserted = tape_loadsave_inserted & (255 - TAPE_LOAD_INSERTED);
         //tape_load_inserted.v=0;
+
+        //Actualizar zxdesktop. Para refrescar iconos de cinta y que aparezca como expulsado
+        menu_draw_ext_desktop();
 }
 
 void eject_tape_save(void)

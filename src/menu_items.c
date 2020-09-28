@@ -16945,7 +16945,7 @@ void menu_ay_partitura_putpixel_nota(z80_int *destino GCC_UNUSED,int x,int y,int
 
 void menu_ay_partitura_dibujar_sost(int x,int y)
 {
-	screen_put_asciibitmap_generic(pentagrama_sost,NULL,x,y,PENTAGRAMA_SOST_ANCHO,PENTAGRAMA_SOST_ALTO,0,menu_ay_partitura_putpixel_nota,1);
+	screen_put_asciibitmap_generic(pentagrama_sost,NULL,x,y,PENTAGRAMA_SOST_ANCHO,PENTAGRAMA_SOST_ALTO,0,menu_ay_partitura_putpixel_nota,1,0);
 }
 
 //duraciones notas
@@ -17126,7 +17126,7 @@ void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duraci
 
 
 
-	screen_put_asciibitmap_generic(bitmap_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota,1);
+	screen_put_asciibitmap_generic(bitmap_nota,NULL,x,y,PENTAGRAMA_NOTA_ANCHO,PENTAGRAMA_NOTA_ALTO,0,menu_ay_partitura_putpixel_nota,1,0);
 	
 
 	//PENTAGRAMA_NOTA_LARGO_PALITO
@@ -17163,7 +17163,7 @@ void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duraci
 	//Si hay que dibujar puntillo
 	if (aysheet_tipo_nota_tienepuntillo(tipo_nota_duracion)) {
 		screen_put_asciibitmap_generic(pentagrama_puntillo,NULL,x+PENTAGRAMA_NOTA_ANCHO+1,y+PENTAGRAMA_NOTA_ALTO/2+1,
-				PENTAGRAMA_PUNTILLO_ANCHO,PENTAGRAMA_PUNTILLO_ALTO,0,menu_ay_partitura_putpixel_nota,1);
+				PENTAGRAMA_PUNTILLO_ANCHO,PENTAGRAMA_PUNTILLO_ALTO,0,menu_ay_partitura_putpixel_nota,1,0);
 	}
 
 
@@ -17173,7 +17173,7 @@ void menu_ay_partitura_dibujar_nota(int x,int y,int incremento_palito,int duraci
 
 void meny_ay_partitura_dibujar_clavesol(int x,int y)
 {
-	screen_put_asciibitmap_generic(pentagrama_clave_sol,NULL,x,y,PENTAGRAMA_CLAVE_SOL_ANCHO,PENTAGRAMA_CLAVE_SOL_ALTO,0,menu_ay_partitura_putpixel_nota,1);	
+	screen_put_asciibitmap_generic(pentagrama_clave_sol,NULL,x,y,PENTAGRAMA_CLAVE_SOL_ANCHO,PENTAGRAMA_CLAVE_SOL_ALTO,0,menu_ay_partitura_putpixel_nota,1,0);	
 }
 
 

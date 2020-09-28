@@ -3790,7 +3790,7 @@ void screen_generic_putpixel_no_rainbow_watermark(z80_int *destino GCC_UNUSED,in
 
 
 //Mete un bitmap en formato ascii en un bitmap generico
-void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,int ancho_orig, int alto_orig, int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho_destino,int color), int zoom)
+void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,int ancho_orig, int alto_orig, int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho_destino,int color), int zoom,int inverso)
 {
 	int fila,columna;
 
@@ -3804,6 +3804,13 @@ void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,i
 
 			if (caracter!=' ') {
 				int color_pixel=return_color_zesarux_ascii(caracter);
+
+				if (inverso) {
+					//Se supone que el color esta entre 0 y 15 pero por si acaso
+					if (color_pixel>=0 && color_pixel<=15) {
+						color_pixel=15-color_pixel;
+					}
+				}
 
 				int zx,zy;
 				for (zx=0;zx<zoom;zx++) {
@@ -3836,7 +3843,7 @@ void screen_put_asciibitmap_generic(char **origen,z80_int *destino,int x,int y,i
 
 void screen_put_watermark_generic(z80_int *destino,int x,int y,int ancho_destino, void (*putpixel) (z80_int *destino,int x,int y,int ancho,int color) )
 {
-		screen_put_asciibitmap_generic(zesarux_ascii_logo,destino,x,y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, ancho_destino,putpixel,1);
+		screen_put_asciibitmap_generic(zesarux_ascii_logo,destino,x,y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, ancho_destino,putpixel,1,0);
 }
 
 void screen_get_offsets_watermark_position(int position,int ancho, int alto, int *x, int *y)
@@ -14485,6 +14492,18 @@ void generic_footertext_print_operating(char *s)
 void delete_generic_footertext(void)
 {
 	menu_delete_footer_activity();
+
+	//Redibujar zxdesktop para redibujar iconos, para poner a normal los que se hayan puesto en inverso (con actividad)
+	//Poner iconos en normal, sin inverso
+	zxdesktop_icon_tape_inverse=0;
+	zxdesktop_icon_mmc_inverse=0;
+	zxdesktop_icon_plus3_inverse=0;
+	zxdesktop_icon_betadisk_inverse=0;
+	zxdesktop_icon_ide_inverse=0;
+	zxdesktop_icon_zxpand_inverse=0;
+	zxdesktop_icon_mdv_flp_inverse=0;
+
+	menu_draw_ext_desktop();
 }
 
 

@@ -6,8 +6,8 @@ Added date & time field info to ZSF snapshots
 Added F-key function to show windows in background without having to open the menu
 
 Improved ZX Desktop: 
--Added direct buttons
--Added devices icons
+-Added direct buttons, to access menu items
+-Added devices buttons/icons, to show device activity and device configuration
 -Reordered menu items
 -Windows are not closed when changing ZX Desktop size
 -Added new ZX Desktop fill types: Chess, Grid, Random
