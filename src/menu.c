@@ -26474,12 +26474,19 @@ void menu_interface_zoom(MENU_ITEM_PARAMETERS)
 
 
         //menu_ventana_scanf_numero("Window Zoom",string_zoom,2);
-		menu_ventana_scanf("Window Zoom",string_zoom,2);
+		//menu_ventana_scanf("Window Zoom",string_zoom,2);
 
-        temp_zoom=parse_string_to_number(string_zoom);
+		int retorno=menu_ventana_scanf_numero("Window Zoom",string_zoom,2,+1,1,9,0);
+		if (retorno>=0) {
+	        temp_zoom=parse_string_to_number(string_zoom);
 
 
-	screen_set_window_zoom(temp_zoom);
+			screen_set_window_zoom(temp_zoom);
+		}
+
+		//else {
+		//	printf("pulsado ESC\n");
+		//}
 
 }
 
