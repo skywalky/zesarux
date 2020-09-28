@@ -135,6 +135,14 @@ void draw_tape_text_top_speed(void)
         generic_footertext_print_operating("TSPEED");
 }
 
+void draw_tape_icon_activity(void)
+{
+        if (!zxdesktop_icon_tape_inverse) {
+                zxdesktop_icon_tape_inverse=1;
+                menu_draw_ext_desktop();
+        }      
+}
+
 void draw_tape_text(void)
 {
 
@@ -149,10 +157,7 @@ void draw_tape_text(void)
                         generic_footertext_print_operating("TAPE");
 
                         //Y poner icono de cinta en inverso
-                        if (!zxdesktop_icon_tape_inverse) {
-                                zxdesktop_icon_tape_inverse=1;
-                                menu_draw_ext_desktop();
-                        }
+                        draw_tape_icon_activity();
 		}
 
 }
@@ -1874,6 +1879,9 @@ void realtape_print_footer(void)
 
 	//color inverso
 	menu_putstring_footer(0,2,buffer_texto,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
+
+        //Y poner icono de cinta en inverso
+        draw_tape_icon_activity();        
 }
 
 void realtape_delete_footer(void)
@@ -1881,6 +1889,10 @@ void realtape_delete_footer(void)
                            //01234567890123456789012345678901
   menu_putstring_footer(0,2,"                                ",WINDOW_FOOTER_INK,WINDOW_FOOTER_PAPER);
   menu_footer_bottom_line();
+
+
+        //Quitar footer y icono en inverso
+        delete_generic_footertext();  
 }
 
 void realtape_get_byte(void)
