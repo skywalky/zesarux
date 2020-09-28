@@ -30080,7 +30080,7 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 						//zxvision_scanf(&ventana,texto,max_length,max_length,x_texto_input,0,1);
 						//menu_espera_no_tecla();
 
-						//Cambiar la opcion seleccionada a la del OK
+						//Cambiar la opcion seleccionada a la del OK, al pulsar enter
 						comun_opcion_seleccionada=3;
 
 						//Pero ajustar el mouse si apunta a alguna opcion
