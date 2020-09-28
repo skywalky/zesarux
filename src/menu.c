@@ -24074,7 +24074,7 @@ void menu_debug_special_nmi(MENU_ITEM_PARAMETERS)
 void menu_testeo_scanf_numero(MENU_ITEM_PARAMETERS)
 {
 
-        char string_zoom[2];
+        char string_zoom[3];
 	int temp_zoom;
 
 
@@ -24084,7 +24084,7 @@ void menu_testeo_scanf_numero(MENU_ITEM_PARAMETERS)
         sprintf (string_zoom,"%d",zoom_x);
 
 
-        menu_ventana_scanf_numero("Window Zoom",string_zoom,2);
+        menu_ventana_scanf_numero("Number test",string_zoom,3);
 
         temp_zoom=parse_string_to_number(string_zoom);
 
@@ -29909,6 +29909,26 @@ void menu_ventana_scanf(char *titulo,char *texto,int max_length)
 
 }
 
+void menu_ventana_scanf_number_aux(zxvision_window *ventana,char *texto,int max_length,int x_texto_input)
+{
+	zxvision_scanf(ventana,texto,max_length,max_length,x_texto_input,0,1);
+}
+
+void menu_ventana_scanf_number_print_buttons(zxvision_window *ventana,char *texto,int x_boton_menos,int x_boton_mas,int x_texto_input,int x_boton_ok)
+{
+			//Borrar linea entera
+		zxvision_print_string_defaults_fillspc(ventana,x_boton_menos,0,"");
+
+		//Escribir - +
+		zxvision_print_string_defaults(ventana,x_boton_menos,0,"-");
+		zxvision_print_string_defaults(ventana,x_boton_mas,0,"+");
+
+		//Escribir numero
+		zxvision_print_string_defaults(ventana,x_texto_input,0,texto);
+
+		zxvision_print_string_defaults(ventana,x_boton_ok,2,"<OK>");	
+}
+
 
 void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 {
@@ -29936,35 +29956,39 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 
 	//Donde van los bloques
 
-	int inicio_bloque_x=8;
-	int inicio_bloque_y=2;
-	int ancho_bloque=6;
+	//int inicio_bloque_x=8;
+	//int inicio_bloque_y=2;
+	//int ancho_bloque=6;
 
-	int linea=inicio_bloque_y;
+	//int linea=inicio_bloque_y;
+
+	int max_input_visible=ancho_ventana-2-2-2; //2 laterales, 2 de los botones, y 2 de espacios entre botones
+	if (max_length<max_input_visible) max_input_visible=max_length;
+
+	int x_boton_menos=1;
+	int x_texto_input=x_boton_menos+2;
+	int x_boton_mas=x_texto_input+max_input_visible+1;
+	int x_boton_ok=1;	
+
+	//Dibujar texto interior
+	menu_ventana_scanf_number_print_buttons(&ventana,texto,x_boton_menos,x_boton_mas,x_texto_input,x_boton_ok);
+
+	//Dibujar ventana antes de scanf
+	zxvision_draw_window(&ventana);
+	zxvision_draw_window_contents(&ventana);
 	
+	//Entramos primero editando el numero
+	menu_ventana_scanf_number_aux(&ventana,texto,max_length,x_texto_input);
 
 
 	do {
 
-		int max_input_visible=ancho_ventana-2-2-2; //2 laterales, 2 de los botones, y 2 de espacios entre botones
-		if (max_length<max_input_visible) max_input_visible=max_length;
 
-		int x_boton_menos=1;
-		int x_texto_input=x_boton_menos+2;
-		int x_boton_mas=x_texto_input+max_input_visible+1;
-		int x_boton_ok=1;
 
 		//Escribir primero numero
 
-		//Borrar linea entera
-		zxvision_print_string_defaults_fillspc(&ventana,x_boton_menos,0,"");
-
-		//Escribir - +
-		zxvision_print_string_defaults(&ventana,x_boton_menos,0,"-");
-		zxvision_print_string_defaults(&ventana,x_boton_mas,0,"+");
-
-		//Escribir numero
-		zxvision_print_string_defaults(&ventana,x_texto_input,0,texto);
+		//Dibujar texto interior
+		menu_ventana_scanf_number_print_buttons(&ventana,texto,x_boton_menos,x_boton_mas,x_texto_input,x_boton_ok);
 
 		
 		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"-");
@@ -29999,7 +30023,8 @@ void menu_ventana_scanf_numero(char *titulo,char *texto,int max_length)
 					}				
 
 					if (comun_opcion_seleccionada==1) {
-						zxvision_scanf(&ventana,texto,max_length,max_length,3,0,1);
+						menu_ventana_scanf_number_aux(&ventana,texto,max_length,x_texto_input);
+						//zxvision_scanf(&ventana,texto,max_length,max_length,x_texto_input,0,1);
 						//menu_espera_no_tecla();
 
 						//Cambiar la opcion seleccionada a la del OK
