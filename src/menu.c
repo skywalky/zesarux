@@ -18744,7 +18744,11 @@ void menu_cpu_speed(MENU_ITEM_PARAMETERS)
 
         sprintf (string_speed,"%d",porcentaje_velocidad_emulador);
 
-        menu_ventana_scanf("Emulator Speed (%)",string_speed,5);
+        //menu_ventana_scanf("Emulator Speed (%)",string_speed,5);
+
+		int ret=menu_ventana_scanf_numero("Emulator Speed (%)",string_speed,5,25,1,9999,0);
+
+		if (ret<0) return;
 
         porcentaje_velocidad_emulador=parse_string_to_number(string_speed);
         if (porcentaje_velocidad_emulador<1 || porcentaje_velocidad_emulador>9999) porcentaje_velocidad_emulador=100;
@@ -26429,7 +26433,29 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 void menu_interface_frameskip(MENU_ITEM_PARAMETERS)
 {
 
-        menu_hardware_advanced_input_value(0,49,"Frameskip",&frameskip);
+    //menu_hardware_advanced_input_value(0,49,"Frameskip",&frameskip);
+
+	int valor;
+
+        char string_value[3];
+
+        sprintf (string_value,"%d",frameskip);
+
+
+        //menu_ventana_scanf("Frameskip",string_value,3);
+		int ret=menu_ventana_scanf_numero("Frameskip",string_value,3,+1,0,49,0);
+
+		if (ret<0) return;
+
+        valor=parse_string_to_number(string_value);
+
+	if (valor<0 || valor>49) {
+		debug_printf (VERBOSE_ERR,"Value out of range. Minimum: 0 Maximum: 49");
+		return;
+	}
+
+	frameskip=valor;
+
 }
 
 void menu_interface_show_splash_texts(MENU_ITEM_PARAMETERS)

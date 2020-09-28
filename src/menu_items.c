@@ -9304,7 +9304,11 @@ void menu_display_osd_word_kb_length(MENU_ITEM_PARAMETERS)
 
         sprintf (string_length,"%d",adventure_keyboard_key_length);
 
-        menu_ventana_scanf("Length? (10-100)",string_length,4);
+        //menu_ventana_scanf("Length? (10-100)",string_length,4);
+
+		int ret=menu_ventana_scanf_numero("Length? (10-100)",string_length,4,+10,10,100,0);
+
+		if (ret<0) return;
 
         int valor=parse_string_to_number(string_length);
 	if (valor<10 || valor>100) {
