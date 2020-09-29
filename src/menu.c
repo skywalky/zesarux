@@ -19106,17 +19106,6 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 				//char *realmachine_keymap_strings_types[]
 				menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"K~~eymap [%s]",realmachine_keymap_strings_types[z88_cpc_keymap_type]);
 
-				/*
-				if (MACHINE_IS_Z88) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Z88 K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_CPC) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"CPC K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_SAM) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"SAM K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_QL) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"QL K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_MSX) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"MSX K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				else if (MACHINE_IS_SVI) menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"SVI K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-
-				else menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"Chloe K~~eymap [%s]",(z88_cpc_keymap_type == 1 ? "Spanish" : "Default" ));
-				*/
-
 				menu_add_item_menu_shortcut(array_menu_keyboard_settings,'e');
 				menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Keyboard Layout");
 				menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Used on Z88, CPC, Sam, QL, MSX, SVI and Chloe machines, needed to map symbol keys. "
@@ -19124,10 +19113,8 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 						"be mapped always to the English keyboard on the emulated machine, to the absolute positions of the keys. "
 						"You have two physical keyboard choices: Default (English) and Spanish"
 						"\n"
-						"Note: Seems Windows version need this setting (usually) to be set to Default (please don't ask me why)"
-						
+						"Note: Seems Windows version need this setting (usually) to be set to Default (please don't ask me why)"						
 						);
-
 			}
 		}
 
