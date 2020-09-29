@@ -95,8 +95,7 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 
 http://svn.zxuno.com/svn/zxuno/firmware/firmware.asm
 
--Teclas extendidas msx con Windows/sdl no se leen. Pasa igual que QL, cpc etc?
-Caso 0 default no está haciendo para QL, Msx y svi. Será ese el error?
+
 
 
 -redraws de zxdesktop en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
