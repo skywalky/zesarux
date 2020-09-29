@@ -1863,10 +1863,12 @@ printf (
 		"--printerbitmapfile f      Sends printer output to image file. Supported formats: pbm, txt\n"
 		"--printertextfile f        Sends printer output to text file using OCR method. Printer output is saved to a text file using OCR method to guess text.\n"
 		"--redefinekey src dest     Redefine key scr to be key dest. You can write maximum 10 redefined keys\n"
-                "                           Key must be ascii character numbers or a character included in escaped quotes, like: 97 (for 'a') or \\'q\\'\n"
-                "                           (the escaped quotes are used only in command line; on configuration file, they are normal quotes '')\n"
+        "                           Key must be ascii character numbers or a character included in escaped quotes, like: 97 (for 'a') or \\'q\\'\n"
+        "                           (the escaped quotes are used only in command line; on configuration file, they are normal quotes '')\n"
 
-                "--recreatedzx              Enable support for Recreated ZX Spectrum Keyboard\n"
+        "--recreatedzx              Enable support for Recreated ZX Spectrum Keyboard\n"
+
+		"--keymap n                 Which kind of physical keyboard you have. Default 0 (English) or 1 (Spanish)\n"
 
 
 		);
@@ -5995,6 +5997,18 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--recreatedzx")) {
 				recreated_zx_keyboard_support.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--keymap")) {
+				siguiente_parametro_argumento();
+                int valor=atoi(argv[puntero_parametro]);
+                if (valor<0 || valor>1) {
+               		printf ("Invalid Keymap value\n");
+                    exit(1);
+                }
+                z88_cpc_keymap_type=valor;
+			}
+
+			
 
 			else if (!strcmp(argv[puntero_parametro],"--enablekempstonmouse")) {
 				kempston_mouse_emulation.v=1;

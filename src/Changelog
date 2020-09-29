@@ -4,6 +4,7 @@ Added compile setting to disable networking functions
 Added pc speaker audio driver (for Linux only)
 Added date & time field info to ZSF snapshots
 Added F-key function to show windows in background without having to open the menu
+Added configuration & command line setting to save keymap type
 
 Improved ZX Desktop: 
 -Added direct buttons, to access menu items
