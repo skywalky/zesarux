@@ -577,6 +577,8 @@ extern int z88_cpc_keymap_type;
 
 extern z80_bit chloe_keyboard;
 
+extern char *realmachine_keymap_strings_types[];
+
 extern unsigned int debug_t_estados_parcial;
 
 #define MAX_CPU_TURBO_SPEED 16

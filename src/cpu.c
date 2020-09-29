@@ -618,6 +618,11 @@ z80_bit allow_write_rom={0};
 //1=spanish
 int z88_cpc_keymap_type=0;
 
+char *realmachine_keymap_strings_types[]={
+	"Default",
+	"Spanish"
+};
+
 //Modo turbo. 1=normal. 2=7 Mhz, 3=14 Mhz, etc
 int cpu_turbo_speed=1;
 
