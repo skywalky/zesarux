@@ -1106,7 +1106,7 @@ void scrxwindows_z88_cpc_load_keymap(void)
 
 		default:
 			//0 o default
-			if (MACHINE_IS_Z88 || MACHINE_IS_SAM) {
+			if (MACHINE_IS_Z88 || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI)  {
 				scrxwindows_keymap_z88_cpc_minus=XK_minus;
 				scrxwindows_keymap_z88_cpc_equal=XK_equal;
 				scrxwindows_keymap_z88_cpc_backslash=XK_backslash;

@@ -16,7 +16,7 @@ Improved ZX Desktop:
 Improved loading .pok files: increased maximum pokes from 100 to 49152 pokes
 Improved 1 bit resample audio filter 
 
-Fixed reading keys on SDL driver with default keymap and machines QL, MSX and Spectravideo
+Fixed reading keys on SDL and X11 drivers with default keymap and machines QL, MSX and Spectravideo
 
 Fixed QL bugs:
 -Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes
