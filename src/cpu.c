@@ -4132,6 +4132,8 @@ void post_set_machine_no_rom_load_reopen_window(void)
 {
 	set_menu_gui_zoom();
 
+	//printf ("last: %d current: %d\n",last_machine_type,current_machine_type);
+
 	if (last_machine_type!=255 && last_machine_type!=current_machine_type) {
 		debug_printf (VERBOSE_INFO,"Reopening window so current machine is different and may have different window size");
 		//printf ("Reopening window so current machine is different and may have different window size\n");
