@@ -11,6 +11,7 @@ Improved ZX Desktop:
 -Reordered menu items
 -Windows are not closed when changing ZX Desktop size
 -Added new ZX Desktop fill types: Chess, Grid, Random
+-Improved input number windows: added buttons to increase/decrease values
 
 Improved loading .pok files: increased maximum pokes from 100 to 49152 pokes
 Improved 1 bit resample audio filter 

@@ -14934,10 +14934,26 @@ void menu_z88_slots(MENU_ITEM_PARAMETERS)
 
 
 //Retorna 0 si ok
-//Retorna -1 si fuera de rango
+//Retorna -1 si no hay cambio de variable
 //Modifica valor de variable
 int menu_hardware_advanced_input_value(int minimum,int maximum,char *texto,int *variable)
 {
+	
+	int variable_copia;
+	variable_copia=*variable;
+
+	menu_ventana_scanf_numero_enhanced(texto,&variable_copia,4,+1,minimum,maximum,1);
+
+	if (variable_copia==(*variable)) {
+		//printf("no hay cambios\n");
+		return -1;
+	}
+
+	else {
+		*variable=variable_copia;
+		return 0;
+	}
+	/*
 
 	int valor;
 
@@ -14957,6 +14973,7 @@ int menu_hardware_advanced_input_value(int minimum,int maximum,char *texto,int *
 
 	*variable=valor;
 	return 0;
+	*/
 
 
 }
