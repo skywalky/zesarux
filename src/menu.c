@@ -19116,7 +19116,11 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Used on Z88, CPC, Sam and Chloe machines, needed to map symbol keys. "
 						"You must indicate here which kind of physical keyboard you have. The keyboard will "
 						"be mapped always to a Z88/CPC/Sam/Chloe English keyboard, to the absolute positions of the keys. "
-						"You have two physical keyboard choices: Default (English) and Spanish");
+						"You have two physical keyboard choices: Default (English) and Spanish"
+						"\n"
+						"Note: Seems Windows version need this setting (usually) to be set to Default"
+						
+						);
 
 			}
 		}
