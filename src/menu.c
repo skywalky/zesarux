@@ -18739,7 +18739,9 @@ void menu_hardware_sam_ram(MENU_ITEM_PARAMETERS)
 
 void menu_cpu_speed(MENU_ITEM_PARAMETERS)
 {
+	menu_ventana_scanf_numero_enhanced("Emulator Speed (%)",&porcentaje_velocidad_emulador,5,+25,1,9999,0);
 
+	/*
         char string_speed[5];
 
         sprintf (string_speed,"%d",porcentaje_velocidad_emulador);
@@ -18752,6 +18754,7 @@ void menu_cpu_speed(MENU_ITEM_PARAMETERS)
 
         porcentaje_velocidad_emulador=parse_string_to_number(string_speed);
         if (porcentaje_velocidad_emulador<1 || porcentaje_velocidad_emulador>9999) porcentaje_velocidad_emulador=100;
+	*/
 
 	set_emulator_speed();
 
@@ -26434,6 +26437,8 @@ void menu_interface_frameskip(MENU_ITEM_PARAMETERS)
 {
 
     //menu_hardware_advanced_input_value(0,49,"Frameskip",&frameskip);
+	menu_ventana_scanf_numero_enhanced("Frameskip",&frameskip,3,+1,0,49,0);
+	/*
 
 	int valor;
 
@@ -26455,6 +26460,7 @@ void menu_interface_frameskip(MENU_ITEM_PARAMETERS)
 	}
 
 	frameskip=valor;
+	*/
 
 }
 
@@ -30021,6 +30027,14 @@ Si que se controla al pulsar botones de + y -
 int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int incremento,int minimo,int maximo,int circular)
 {
 
+    //En caso de stdout, es mas simple, mostrar texto y esperar texto
+	//Lo gestiona la propia rutina de menu_ventana_scanf
+	if (!strcmp(scr_new_driver_name,"stdout")) {
+		menu_ventana_scanf(titulo,texto,max_length);
+		return 0;
+	}
+
+
 	int ancho_ventana=32;
 	int alto_ventana=5;
 
@@ -30185,6 +30199,37 @@ int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int increm
 	if (comun_opcion_seleccionada==4 || retorno_menu==MENU_RETORNO_ESC) return -1; //Pulsado Cancel
 
 	else return 0;
+}
+
+//Similar a menu_ventana_scanf_numero pero evita tener que crear el buffer de char temporal
+//Y ademas muestra error si limites se exceden
+void menu_ventana_scanf_numero_enhanced(char *titulo,int *variable,int max_length,int incremento,int minimo,int maximo,int circular)
+{
+
+	//Asignar memoria para el buffer
+	char *buf_texto;
+
+	buf_texto=malloc(max_length);
+	if (buf_texto==NULL) cpu_panic("Can not allocate memory for input text");
+
+	sprintf(buf_texto,"%d",*variable);
+
+	int ret=menu_ventana_scanf_numero(titulo,buf_texto,max_length,incremento,minimo,maximo,circular);
+	if (ret>=0) {
+
+		int numero=parse_string_to_number(buf_texto);
+
+		if (numero<minimo || numero>maximo) {
+			debug_printf(VERBOSE_ERR,"Out of range. Allowed range: minimum: %d maximum: %d",minimo,maximo);
+		}
+		else {
+			*variable=numero;
+		}
+	}
+
+	//printf("liberando memoria\n");
+	free(buf_texto);
+	
 }
 
 void menu_about_read_file(char *title,char *aboutfile)

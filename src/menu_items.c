@@ -1088,6 +1088,9 @@ void menu_audio_beeper_real (MENU_ITEM_PARAMETERS)
 
 void menu_audio_volume(MENU_ITEM_PARAMETERS)
 {
+	menu_ventana_scanf_numero_enhanced("Volume in %",&audiovolume,4,+20,0,100,0);
+
+/*
         char string_perc[4];
 
         sprintf (string_perc,"%d",audiovolume);
@@ -1106,6 +1109,7 @@ void menu_audio_volume(MENU_ITEM_PARAMETERS)
 	}
 
 	audiovolume=v;
+*/
 }
 
 void menu_audio_ay_chip(MENU_ITEM_PARAMETERS)
@@ -9299,7 +9303,9 @@ void menu_display_emulate_zx8081display_spec(MENU_ITEM_PARAMETERS)
 
 void menu_display_osd_word_kb_length(MENU_ITEM_PARAMETERS)
 {
+	menu_ventana_scanf_numero_enhanced("Length? (10-100)",&adventure_keyboard_key_length,4,+10,10,100,0);
 
+/*
 	char string_length[4];
 
         sprintf (string_length,"%d",adventure_keyboard_key_length);
@@ -9318,6 +9324,7 @@ void menu_display_osd_word_kb_length(MENU_ITEM_PARAMETERS)
 	else {
 		adventure_keyboard_key_length=valor;
 	}
+	*/
 
 }
 
@@ -9390,8 +9397,12 @@ void menu_display_zx8081_wrx(MENU_ITEM_PARAMETERS)
 
 void menu_display_x_offset(MENU_ITEM_PARAMETERS)
 {
-	offset_zx8081_t_coordx +=8;
-        if (offset_zx8081_t_coordx>=30*8) offset_zx8081_t_coordx=-30*8;
+
+	//offset_zx8081_t_coordx +=8;
+    //    if (offset_zx8081_t_coordx>=30*8) offset_zx8081_t_coordx=-30*8;
+
+	menu_ventana_scanf_numero_enhanced("X offset",&offset_zx8081_t_coordx,5,+8,-30*8,30*8,1);
+
 }
 
 
