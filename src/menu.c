@@ -19103,7 +19103,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_Z88 || MACHINE_IS_CPC || chloe_keyboard.v || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI)  {
 			//keymap solo hace falta con xwindows y sdl. fbdev y cocoa siempre leen en raw como teclado english
 			if (!strcmp(scr_new_driver_name,"xwindows")  || !strcmp(scr_new_driver_name,"sdl") ) {
-				//char *realmachine_keymap_strings_types[]
+				
 				menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_keymap_z88_cpc,NULL,"K~~eymap [%s]",realmachine_keymap_strings_types[z88_cpc_keymap_type]);
 
 				menu_add_item_menu_shortcut(array_menu_keyboard_settings,'e');
