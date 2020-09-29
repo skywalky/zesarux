@@ -203,8 +203,6 @@ Solo afecta a chloe
 
 -output save filter
 Activado de rainbow, timex y ulaplus de chloe genera algún error si se arranca con chloe desde línea de comandos?
--revisar chloe keymap en windows y otros
-pasa lo mismo en Z88 y windows
 -Chloe y curses, con Chloe keyboard, da problemas en menu (no lee letras)
 
 -------------
@@ -569,7 +567,6 @@ http://velesoft.speccy.cz/sam_zx128.htm
 --machine cpc464 en aa,caca en consola de texto real da segmentation fault
 -dibujado de border cuando pantalla es menor de lo habitual, temporal, no va bien en casos como paperboy. Esto seria mejor para solucionarlo implementar realvideo
 -debug i/o ports
--teclas cpc y keymap para otros drivers. ahora solo esta para cocoa y xwindows y sdl y fbdev
 -Que pasa con keymap y otras teclas de cpc en drivers que no soportan keymap
 -Hardware scroll no va fino
 -Paginación de memoria cpc en la función por defecto array que tenga: 0,1,2,3
