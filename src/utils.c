@@ -3434,6 +3434,7 @@ int util_write_configfile(void)
   //if (screen_bw_no_multitask_menu.v==0)       ADD_STRING_CONFIG,"--disablebw-no-multitask");
 
   get_machine_config_name_by_number(buffer_temp,current_machine_type);
+    printf("machine al grabar: %s\n",buffer_temp);
   if (buffer_temp[0]!=0) {
                                               ADD_STRING_CONFIG,"--machine %s",buffer_temp);
   }
@@ -10104,8 +10105,64 @@ void customconfig_help(void)
 	);
 }
 
+//Nombres cortos de maquinas y sus id
+struct s_machines_short_names_id {
+        char machine_name[32];
+        int machine_id;
+};
+
+//Finaliza con machine_id -1
+struct s_machines_short_names_id machines_short_names_id[]={
+   {"16k",0},
+   {"48k",1},
+   {"48ks",20},
+   {"Inves",2},
+   {"TK90X",3},
+   {"TK90XS",4},
+   {"TK95",5},
+   {"128k",6},
+   {"128ks",7},
+   {"P2",8},
+   {"P2F",9},
+   {"P2S",10},
+   {"P2A40",11},
+   {"P2A41",12},
+   {"P2AS",13},
+   {"ZXUNO",14},
+   {"Chloe140",15},
+   {"Chloe280",16},
+   {"TS2068",17},
+   {"Prism",18},
+   {"TBBlue",19},
+   {"Pentagon",21},
+   {"Chrome",MACHINE_ID_CHROME},
+   {"BaseConf",MACHINE_ID_BASECONF},
+   {"TSConf",MACHINE_ID_TSCONF},
+   {"P340",MACHINE_ID_SPECTRUM_P3_40},
+   {"P341",MACHINE_ID_SPECTRUM_P3_41},
+   {"P3S",MACHINE_ID_SPECTRUM_P3_SPA},
+   {"ZX80",120},
+   {"ZX81",121},
+   {"ACE",122},
+   {"Z88",130},
+   {"CPC464",MACHINE_ID_CPC_464},
+   {"CPC4128",MACHINE_ID_CPC_4128},
+   {"SAM",150},
+   {"QL",160},
+   {"MK14",MACHINE_ID_MK14_STANDARD},
+
+   {"MSX1",MACHINE_ID_MSX1},
+   {"COLECO",MACHINE_ID_COLECO},
+   {"SG1000",MACHINE_ID_SG1000},
+   {"SVI318",MACHINE_ID_SVI_318},
+   {"SVI328",MACHINE_ID_SVI_328},
+
+   //Fin
+   {"",-1}
+};
+
 //Devuelve -1 si desconocida
-int get_machine_id_by_name(char *machine_name)
+int old_get_machine_id_by_name(char *machine_name)
 {
 
   int return_machine;
@@ -10160,7 +10217,26 @@ int get_machine_id_by_name(char *machine_name)
 	return return_machine;
 }
 
+//Devuelve -1 si desconocida
+int get_machine_id_by_name(char *machine_name)
+{
 
+        int i=0;
+
+        while (machines_short_names_id[i].machine_id>=0) {
+
+                if (!strcasecmp(machines_short_names_id[i].machine_name,machine_name)) {
+                        return machines_short_names_id[i].machine_id;
+                }
+
+                i++;
+        }
+
+        //no encontrado
+        debug_printf (VERBOSE_ERR,"Unknown machine %s",machine_name);
+        return -1;
+
+}
 
 //Devuelve 0 si ok
 int set_machine_type_by_name(char *machine_name)
@@ -10175,9 +10251,29 @@ int set_machine_type_by_name(char *machine_name)
 	return 0;
 }
 
-
 //Esta es la funcion inversa de la anterior. Devuelve "" si no se sabe numero de maquina
 void get_machine_config_name_by_number(char *machine_name,int machine_number)
+{
+
+        int i=0;
+
+        while (machines_short_names_id[i].machine_id>=0) {
+
+                if (machine_number==machines_short_names_id[i].machine_id) {
+                        strcpy(machine_name,machines_short_names_id[i].machine_name);
+                        return;
+                }
+
+                i++;
+        }
+
+        //no encontrado
+        machine_name[0]=0;
+}
+
+
+//Esta es la funcion inversa de la anterior. Devuelve "" si no se sabe numero de maquina
+void old_get_machine_config_name_by_number(char *machine_name,int machine_number)
 {
 
 switch (machine_number) {
