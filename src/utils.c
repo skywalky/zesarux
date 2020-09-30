@@ -10125,6 +10125,7 @@ struct s_machines_short_names_id machines_short_names_id[]={
    {"P2",8},
    {"P2F",9},
    {"P2S",10},
+
    {"P2A40",11},
    {"P2A41",12},
    {"P2AS",13},
@@ -10134,6 +10135,7 @@ struct s_machines_short_names_id machines_short_names_id[]={
    {"TS2068",17},
    {"Prism",18},
    {"TBBlue",19},
+
    {"Pentagon",21},
    {"Chrome",MACHINE_ID_CHROME},
    {"BaseConf",MACHINE_ID_BASECONF},
@@ -10144,6 +10146,7 @@ struct s_machines_short_names_id machines_short_names_id[]={
    {"ZX80",120},
    {"ZX81",121},
    {"ACE",122},
+
    {"Z88",130},
    {"CPC464",MACHINE_ID_CPC_464},
    {"CPC4128",MACHINE_ID_CPC_4128},
@@ -10161,61 +10164,6 @@ struct s_machines_short_names_id machines_short_names_id[]={
    {"",-1}
 };
 
-//Devuelve -1 si desconocida
-int old_get_machine_id_by_name(char *machine_name)
-{
-
-  int return_machine;
-                                if (!strcmp(machine_name,"16k")) return_machine=0;
-                                else if (!strcasecmp(machine_name,"48k")) return_machine=1;
-                                else if (!strcasecmp(machine_name,"48ks")) return_machine=20;
-                                else if (!strcasecmp(machine_name,"Inves")) return_machine=2;
-                                else if (!strcasecmp(machine_name,"TK90X")) return_machine=3;
-                                else if (!strcasecmp(machine_name,"TK90XS")) return_machine=4;
-                                else if (!strcasecmp(machine_name,"TK95")) return_machine=5;
-                                else if (!strcasecmp(machine_name,"128k")) return_machine=6;
-                                else if (!strcasecmp(machine_name,"128ks")) return_machine=7;
-                                else if (!strcasecmp(machine_name,"P2")) return_machine=8;
-                                else if (!strcasecmp(machine_name,"P2F")) return_machine=9;
-                                else if (!strcasecmp(machine_name,"P2S")) return_machine=10;
-                                else if (!strcasecmp(machine_name,"P2A40")) return_machine=11;
-                                else if (!strcasecmp(machine_name,"P2A41")) return_machine=12;
-                                else if (!strcasecmp(machine_name,"P2AS")) return_machine=13;
-                                else if (!strcasecmp(machine_name,"ZXUNO")) return_machine=14;
-                                else if (!strcasecmp(machine_name,"Chloe140")) return_machine=15;
-                                else if (!strcasecmp(machine_name,"Chloe280")) return_machine=16;
-                                else if (!strcasecmp(machine_name,"TS2068")) return_machine=17;
-                                else if (!strcasecmp(machine_name,"Prism")) return_machine=18;
-                                else if (!strcasecmp(machine_name,"TBBlue")) return_machine=19;
-                                else if (!strcasecmp(machine_name,"Pentagon")) return_machine=21;
-                                else if (!strcasecmp(machine_name,"Chrome")) return_machine=MACHINE_ID_CHROME;
-                                else if (!strcasecmp(machine_name,"BaseConf")) return_machine=MACHINE_ID_BASECONF;
-                                else if (!strcasecmp(machine_name,"TSConf")) return_machine=MACHINE_ID_TSCONF;
-                                else if (!strcasecmp(machine_name,"P340")) return_machine=MACHINE_ID_SPECTRUM_P3_40;
-                                else if (!strcasecmp(machine_name,"P341")) return_machine=MACHINE_ID_SPECTRUM_P3_41;
-                                else if (!strcasecmp(machine_name,"P3S")) return_machine=MACHINE_ID_SPECTRUM_P3_SPA;
-                                else if (!strcasecmp(machine_name,"ZX80")) return_machine=120;
-                                else if (!strcasecmp(machine_name,"ZX81")) return_machine=121;
-                                else if (!strcasecmp(machine_name,"ACE")) return_machine=122;
-                                else if (!strcasecmp(machine_name,"Z88")) return_machine=130;
-                                else if (!strcasecmp(machine_name,"CPC464")) return_machine=MACHINE_ID_CPC_464;
-                                else if (!strcasecmp(machine_name,"CPC4128")) return_machine=MACHINE_ID_CPC_4128;
-                                else if (!strcasecmp(machine_name,"SAM")) return_machine=150;
-                                else if (!strcasecmp(machine_name,"QL")) return_machine=160;
-                                else if (!strcasecmp(machine_name,"MK14")) return_machine=MACHINE_ID_MK14_STANDARD;
-                                
-                                else if (!strcasecmp(machine_name,"MSX1")) return_machine=MACHINE_ID_MSX1;
-                                else if (!strcasecmp(machine_name,"COLECO")) return_machine=MACHINE_ID_COLECO;
-                                else if (!strcasecmp(machine_name,"SG1000")) return_machine=MACHINE_ID_SG1000;
-                                else if (!strcasecmp(machine_name,"SVI318")) return_machine=MACHINE_ID_SVI_318;
-                                else if (!strcasecmp(machine_name,"SVI328")) return_machine=MACHINE_ID_SVI_328;
-                                else {
-                                        debug_printf (VERBOSE_ERR,"Unknown machine %s",machine_name);
-                                        return_machine=-1;
-                                }
-
-	return return_machine;
-}
 
 //Devuelve -1 si desconocida
 int get_machine_id_by_name(char *machine_name)
@@ -10271,168 +10219,6 @@ void get_machine_config_name_by_number(char *machine_name,int machine_number)
         machine_name[0]=0;
 }
 
-
-//Esta es la funcion inversa de la anterior. Devuelve "" si no se sabe numero de maquina
-void old_get_machine_config_name_by_number(char *machine_name,int machine_number)
-{
-
-switch (machine_number) {
-case 0:
-strcpy(machine_name,"16k");
-break;
-
-case 1:
-strcpy(machine_name,"48k");
-break;
-
-case 20:
-strcpy(machine_name,"48ks");
-break;
-
-case 2:
-strcpy(machine_name,"Inves");
-break;
-
-case 3:
-strcpy(machine_name,"TK90X");
-break;
-
-case 4:
-strcpy(machine_name,"TK90XS");
-break;
-
-case 5:
-strcpy(machine_name,"TK95");
-break;
-
-case 6:
-strcpy(machine_name,"128k");
-break;
-
-case 7:
-strcpy(machine_name,"128ks");
-break;
-
-case 8:
-strcpy(machine_name,"P2");
-break;
-
-case 9:
-strcpy(machine_name,"P2F");
-break;
-
-case 10:
-strcpy(machine_name,"P2S");
-break;
-
-case 11:
-strcpy(machine_name,"P2A40");
-break;
-
-case 12:
-strcpy(machine_name,"P2A41");
-break;
-
-case 13:
-strcpy(machine_name,"P2AS");
-break;
-
-case 14:
-strcpy(machine_name,"ZXUNO");
-break;
-
-case 15:
-strcpy(machine_name,"Chloe140");
-break;
-
-case 16:
-strcpy(machine_name,"Chloe280");
-break;
-
-case 17:
-strcpy(machine_name,"TS2068");
-break;
-
-case 18:
-strcpy(machine_name,"Prism");
-break;
-
-case 19:
-strcpy(machine_name,"TBBlue");
-break;
-
-case 21:
-strcpy(machine_name,"Pentagon");
-break;
-
-case MACHINE_ID_CHROME:
-strcpy(machine_name,"Chrome");
-break;
-
-case MACHINE_ID_TSCONF:
-strcpy(machine_name,"TSConf");
-break;
-
-case MACHINE_ID_BASECONF:
-strcpy(machine_name,"BaseConf");
-break;
-
-case MACHINE_ID_SPECTRUM_P3_40:
-strcpy(machine_name,"P340");
-break;
-
-case MACHINE_ID_SPECTRUM_P3_41:
-strcpy(machine_name,"P341");
-break;
-
-case MACHINE_ID_SPECTRUM_P3_SPA:
-strcpy(machine_name,"P3S");
-break;
-
-case 120:
-strcpy(machine_name,"ZX80");
-break;
-
-case 121:
-strcpy(machine_name,"ZX81");
-break;
-
-case 122:
-strcpy(machine_name,"ACE");
-break;
-
-case 130:
-strcpy(machine_name,"Z88");
-break;
-
-case MACHINE_ID_CPC_464:
-strcpy(machine_name,"CPC464");
-break;
-
-case MACHINE_ID_CPC_4128:
-strcpy(machine_name,"CPC4128");
-break;
-
-case 150:
-strcpy(machine_name,"SAM");
-break;
-
-case 160:
-strcpy(machine_name,"QL");
-break;
-
-case MACHINE_ID_MK14_STANDARD:
-strcpy(machine_name,"MK14");
-break;
-
-default:
-machine_name[0]=0;
-break;
-
-}
-
-
-}
 
 
 //Alternativa a scandir para sistemas Mingw, que no implementan dicha funcion
