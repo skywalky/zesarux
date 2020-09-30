@@ -10557,7 +10557,7 @@ void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_
 void zxvision_rearrange_background_windows(void)
 {
 
-	printf("rearrange windows\n");
+	//printf("rearrange windows\n");
 	//debug_exec_show_backtrace();
 
 	//Por si acaso 

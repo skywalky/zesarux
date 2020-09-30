@@ -3434,7 +3434,7 @@ int util_write_configfile(void)
   //if (screen_bw_no_multitask_menu.v==0)       ADD_STRING_CONFIG,"--disablebw-no-multitask");
 
   get_machine_config_name_by_number(buffer_temp,current_machine_type);
-    printf("machine al grabar: %s\n",buffer_temp);
+
   if (buffer_temp[0]!=0) {
                                               ADD_STRING_CONFIG,"--machine %s",buffer_temp);
   }
