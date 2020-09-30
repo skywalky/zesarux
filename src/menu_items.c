@@ -4318,6 +4318,9 @@ void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 		ventana->can_be_backgrounded=1;
 		//indicar nombre del grabado de geometria
 		strcpy(ventana->geometry_name,"tsconftbbluetilenav");
+
+		//Permitir hotkeys desde raton
+		ventana->can_mouse_send_hotkeys=1;			
 		
 		//Leyenda inferior
 		//zxvision_print_string_defaults_fillspc(ventana,1,1,"-----");
