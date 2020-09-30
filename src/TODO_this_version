@@ -1,4 +1,4 @@
---------Para la próxima versión 9.1:
+--------Para esta versión 9.1:
 
 -Que algunas tareas como store scanline se hagan en thread aparte. Problema: que la mayoria de datos de ese scanline
 pueden variar mientras se está ejecutando el thread con el loop del siguiente scanline
@@ -17,6 +17,8 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
  ejemplo: ./zesarux --realtape tetris2.pzx
 
  -Cuando haya fat driver, poder descargar cp/m dentro de la imagen mmc de TBBlue 
+
+ -Quizá file utilities que pueda navegar dentro de archivos mmc. Usando librería fat
 
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
