@@ -65,22 +65,30 @@ int temporal_parpadeo_ql;
 void ql_chapuza_parpadeo_cursor(void)
 {
 
+        if (ql_simular_parpadeo_cursor.v==0) return;
+        
                                 //SV_FSTAT $AA word flashing cursor status
                                               
                         z80_byte parpadeo=peek_byte_z80_moto(0x280aa);
                         z80_byte parpadeo2=peek_byte_z80_moto(0x280ab);
-                        //printf("parpade: %02X%02XH\n",parpadeo,parpadeo2);
-
+                        //printf("parpadeo: %02X%02XH\n",parpadeo,parpadeo2);
+                        
                         temporal_parpadeo_ql++;
                         if ((temporal_parpadeo_ql % 16)==0) {
+
+                                //Solo lo hago en estos casos y no siempre,
+                                //para que no cambie cuando esta el boot y el test ram
+                                //porque entonces el test ram fallaria
                                 if (parpadeo==0 && parpadeo2==0x0C) {
+                                        //printf("invertir parpadeo\n");
                                         parpadeo2=0x00;
                                 }
                                 else if (parpadeo==0 && parpadeo2==0x00) {
+                                        //printf("invertir parpadeo\n");
                                         parpadeo2=0x0C;
                                 }
                                 //parpadeo ^=0x4E;
-                                poke_byte_z80_moto(0x280aa,parpadeo);
+                                //poke_byte_z80_moto(0x280aa,parpadeo);
                                 poke_byte_z80_moto(0x280ab,parpadeo2);
                         }
 }

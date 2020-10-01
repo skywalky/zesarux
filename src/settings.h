@@ -89,6 +89,8 @@ extern z80_bit setting_machine_selection_by_name;
 
 extern z80_bit ql_replace_underscore_dot;
 
+extern z80_bit ql_simular_parpadeo_cursor;
+
 extern z80_bit ql_flp1_follow_mdv1;
 
 #endif

@@ -32,7 +32,8 @@ void FrameInt(void)
     }
 }
 
-De momento yo he hecho una chapucilla para hacer parpadear el cursor, aunque NO estoy generando interrupciones de timer (en teoria)
+De momento yo he hecho una chapucilla para hacer parpadear el cursor, 
+aunque genero trap 2, que es la que supuestamente llama el timer de 50 Hz, pero solo con eso no parpadearia el cursor
 
 
 -Intento interceptar funciones de lectura de sectores de microdrive. MD.READ. aparentemente tiene que saltar desde la direccion
