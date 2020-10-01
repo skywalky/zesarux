@@ -8,6 +8,32 @@
 http://www.rwapadventures.com/ql_wiki/index.php?title=Sinclair%20QL%20Home%20Computer&lang=en
 -Mirar uqlx a ver cómo hace el load 
 
+-interrupciones de timer. Ver como lo hace uqlx:
+
+"
+Q: How do you manage the 50 hz interrupt of the 8049 and the Keyboard interrupt?
+
+A: First: I don't emulate the keyboard interrupt. Anyway the keyboard is polled by QDOS every 50th of second via the IPC commands 1 (test IPC status) and 8 (read characters from the IPC keyboard buffer). As for the 50Hz interrupt, I have a timer which sets some variables every 20ms. These variables cause an interrupt 2 exception: pendingInterrupt=2; *((uw8*)theROM+0x280a0l)=16; extraFlag=true; nInst2=nInst; nInst=0; Before this, however, the routine checks if interrupt are enabled and if so set the interrupt mask (=8). It also disables further 50Hz interrupts. When the QDOS I2 handler is called, it reads from an hw register the interrupt mask and the value 8 tells it that the cause of the interrupt was the 50hz interrupt. When the QDOS handler has completed, it reenables the interrupts by writing to an hardware register.
+"
+
+Ver funcion de uqlx:
+
+void FrameInt(void)
+{
+  if((intReg&8)!=0) /* controlla che sia abilitato */
+    {
+      theInt=8;
+      intReg^=8;
+      pendingInterrupt=2;
+      *((uw8*)theROM+0x280a0l)=16;
+      extraFlag=true;
+      nInst2=nInst;
+      nInst=0;
+    }
+}
+
+De momento yo he hecho una chapucilla para hacer parpadear el cursor, aunque NO estoy generando interrupciones de timer (en teoria)
+
 
 -Intento interceptar funciones de lectura de sectores de microdrive. MD.READ. aparentemente tiene que saltar desde la direccion
 525CH pero ahi no parece saltar nunca,

@@ -26,6 +26,7 @@ Fixed QL bugs:
 -Fixed system call FS.HEADR
 -Fixed system call IO.FSTRG
 -Fixed possible hang calling IO.SSTRG
+-Fixed cursor flashing
 
 Fixed segfaults when changing machines and having ZX Desktop windows opened
 Fixed easter egg anc cyrillic characters

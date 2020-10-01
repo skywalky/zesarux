@@ -59,6 +59,31 @@ extern unsigned char ql_pc_intr;
 
 int refresca=0;
 
+int temporal_parpadeo_ql;
+
+
+void ql_chapuza_parpadeo_cursor(void)
+{
+
+                                //SV_FSTAT $AA word flashing cursor status
+                                              
+                        z80_byte parpadeo=peek_byte_z80_moto(0x280aa);
+                        z80_byte parpadeo2=peek_byte_z80_moto(0x280ab);
+                        //printf("parpade: %02X%02XH\n",parpadeo,parpadeo2);
+
+                        temporal_parpadeo_ql++;
+                        if ((temporal_parpadeo_ql % 16)==0) {
+                                if (parpadeo==0 && parpadeo2==0x0C) {
+                                        parpadeo2=0x00;
+                                }
+                                else if (parpadeo==0 && parpadeo2==0x00) {
+                                        parpadeo2=0x0C;
+                                }
+                                //parpadeo ^=0x4E;
+                                poke_byte_z80_moto(0x280aa,parpadeo);
+                                poke_byte_z80_moto(0x280ab,parpadeo2);
+                        }
+}
 
 //bucle principal de ejecucion de la cpu de jupiter ace
 void cpu_core_loop_ql(void)
@@ -291,8 +316,18 @@ pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
 
       //Sirve para algo esto????
 			ql_pc_intr |=31;
+
+                        //No estoy seguro si esto son las interrupciones que genera el timer o no
+                        //Esto acaba generando llamadas a leer PC_INTR		Interrupt register
 			m68k_set_irq(2);
-			//Esto acaba generando llamadas a leer PC_INTR		Interrupt register
+			
+
+                        //Chapuza para hacer parpadear el cursor
+                        //Cuando se generen interrupciones de timer correctas no hara falta esto
+                        ql_chapuza_parpadeo_cursor();
+                        
+                       
+
 
 
                                 //Final de instrucciones ejecutadas en un frame de pantalla

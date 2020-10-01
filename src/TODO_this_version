@@ -135,3 +135,31 @@ https://foro.speccy.org/viewtopic.php?t=1502
 
 
 -combinacion de teclas para conmutar entre ventanas
+
+-parpadeo cursor status
+
+SV_FSTAT $AA word flashing cursor status
+
+Ver en uqlx:
+
+void FrameInt(void)
+{
+  if((intReg&8)!=0) /* controlla che sia abilitato */
+    {
+      theInt=8;
+      intReg^=8;
+      pendingInterrupt=2;
+      *((uw8*)theROM+0x280a0l)=16;
+      extraFlag=true;
+      nInst2=nInst;
+      nInst=0;
+    }
+}
+
+y en la doc de uqlx:
+
+Q: How do you manage the 50 hz interrupt of the 8049 and the Keyboard interrupt?
+
+
+
+-opcion simulacion cursor ql desactivable por setting (pero por defecto activo). probar con programas basic
