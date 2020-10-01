@@ -66,7 +66,7 @@ void ql_chapuza_parpadeo_cursor(void)
 {
 
         if (ql_simular_parpadeo_cursor.v==0) return;
-        
+
                                 //SV_FSTAT $AA word flashing cursor status
                                               
                         z80_byte parpadeo=peek_byte_z80_moto(0x280aa);
@@ -331,7 +331,8 @@ pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
 			
 
                         //Chapuza para hacer parpadear el cursor
-                        //Cuando se generen interrupciones de timer correctas no hara falta esto
+                        //Se supone que el trap 2 que llamamos justo antes deberia hacer parpadear el cursor
+                        //pero no lo hace, a saber por que...
                         ql_chapuza_parpadeo_cursor();
                         
                        
