@@ -201,6 +201,7 @@ z80_bit setting_mostrar_ay_piano_grafico={1};
 int kempston_mouse_factor_sensibilidad=1;
 
 z80_bit ql_replace_underscore_dot={1};
+z80_bit ql_replace_underscore_dot_only_one={1};
 
 z80_bit ql_flp1_follow_mdv1={0};
 

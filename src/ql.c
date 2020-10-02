@@ -1908,18 +1908,36 @@ void ql_split_path_device_name(char *ql_path, char *ql_device, char *ql_file)
   i=iorig+1;
   int destino=0;
 
+	//Lo paso a minusculas a destino
   for (;ql_path[i];i++,destino++) {
     c=letra_minuscula(ql_path[i]);
-
-	if (ql_replace_underscore_dot.v) {
-    if (c=='_') c='.'; //TODO: Deberia hacer eso solo para la primera _ desde la derecha
-	}
-
 
     ql_file[destino]=c;
   }
 
   ql_file[destino]=0;
+
+  
+
+	//Y en destino, cambio las "_", empezando desde el final, y solo quitando una "_" dependiendo de setting
+	if (ql_replace_underscore_dot.v) {
+
+		i=strlen(ql_file)-1;
+		int salir=0;
+
+		for (;i>=0 && !salir;i--) {
+			c=ql_file[i];
+			if (c=='_') {
+				c='.';
+				ql_file[i]=c;
+				if (ql_replace_underscore_dot_only_one.v) salir=1;
+			}
+		}
+	}
+  
+
+
+
 
   debug_printf(VERBOSE_DEBUG,"Source path: %s Device: %s File: %s",ql_path,ql_device,ql_file);
 }

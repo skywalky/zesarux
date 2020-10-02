@@ -163,3 +163,12 @@ Q: How do you manage the 50 hz interrupt of the 8049 and the Keyboard interrupt?
 
 
 -opcion simulacion cursor ql desactivable por setting (pero por defecto activo). probar con programas basic
+
+-QL. editor.zip tiene el TK_TOOLKIT? se queda residente?
+miniview.zip usa: TK2_EXT
+estan en subcarpeta editview/
+
+-calculo de core_cpu_timer_frame_media en cada core_* que esté en todos los cores y ademas mejor en una funcion comun (realmente dos: inicio de frame y final de frame)
+
+
+-tecla ESC QL?

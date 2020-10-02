@@ -261,6 +261,14 @@ void cpu_core_loop_ql(void)
 
 				t_scanline=0;
 
+				core_cpu_timer_frame_difftime=timer_stats_diference_time(&core_cpu_timer_frame_antes,&core_cpu_timer_frame_despues);
+
+				//printf ("tiempo transcurrido: %ld microsec\n",tiempo_timer_difftime);
+				//media de tiempo
+				core_cpu_timer_frame_media=(core_cpu_timer_frame_media+core_cpu_timer_frame_difftime)/2;
+				//printf ("tiempo medio transcurrido: %ld microsec\n",core_cpu_timer_frame_media);
+
+
                                 //Parche para maquinas que no generan 312 lineas, porque si enviamos menos sonido se escuchara un click al final
                                 //Es necesario que cada frame de pantalla contenga 312 bytes de sonido
 				//Igualmente en la rutina de envio_audio se vuelve a comprobar que todo el sonido a enviar
@@ -379,6 +387,9 @@ pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
                         esperando_tiempo_final_t_estados.v=0;
                         interlaced_numero_frame++;
                         //printf ("%d\n",interlaced_numero_frame);
+
+			//Para calcular lo que se tarda en ejecutar todo un frame
+			timer_stats_current_time(&core_cpu_timer_frame_antes);                        
                 }
 
 
