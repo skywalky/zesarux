@@ -1990,10 +1990,28 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 						//Si era sprite relativo
 						if (relative_sprite) {
 							//printf("Using the last anchor values\n");
-							sprite_x +=anchor_x;
-							sprite_y +=anchor_y;
-							palette_offset +=anchor_palette_offset;
-							index_pattern +=anchor_index_pattern;
+							sprite_x=(sprite_x+anchor_x) & 0xFF;
+							sprite_y=(sprite_y+anchor_y) & 0xFF;
+							/*
+							If the relative sprite has its PR bit set in sprite attribute 2, 
+							then the anchor’s palette offset is added to the relative sprite’s to determine the active 
+							palette offset for the relative sprite. Otherwise the relative sprite uses its own palette 
+							offset as usual.
+
+							If the relative sprite has its PO bit set in sprite attribute 4, then the anchor’s pattern 
+							number is added to the relative sprite’s to determine the pattern used for display. Otherwise 
+							the relative sprite uses its own pattern number as usual. The intention is to supply a method 
+							to easily animate a large sprite by manipulating the pattern number in the anchor.
+							*/
+							//P P P P XM YM R X8/PR
+							if (tbsprite_sprites[conta_sprites][2]&1) {
+								palette_offset=(palette_offset+anchor_palette_offset)& 0xF0;
+							}
+
+							//0 1 N6 X X Y Y PO
+							if (tbsprite_sprites[conta_sprites][4]&1) {
+								index_pattern=(index_pattern+anchor_index_pattern)&63;
+							}
 						}
 
 						else {
