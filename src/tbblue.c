@@ -1975,9 +1975,6 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 						//Si y==32-> y=32+48-32=32+16=48
 						//Si y==0 -> y=48-32=16
 
-						z80_byte mirror_x=tbsprite_sprites[conta_sprites][2]&8;
-						//[2] 3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
-						z80_byte mirror_y=tbsprite_sprites[conta_sprites][2]&4;
 
 						//3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
 						//Offset paleta se lee tal cual sin rotar valor
@@ -2021,6 +2018,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 							anchor_palette_offset=palette_offset;
 							anchor_index_pattern=index_pattern;
 						}
+
+						z80_byte mirror_x=tbsprite_sprites[conta_sprites][2]&8;
+						//[2] 3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
+						z80_byte mirror_y=tbsprite_sprites[conta_sprites][2]&4;						
 
 						//Si coordenada y esta en margen y sprite activo
 						int diferencia=y-sprite_y;
