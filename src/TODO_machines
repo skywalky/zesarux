@@ -452,7 +452,6 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 -reloj deberia salir en nextos, ya que implementa el chip de reloj. Aparece pero con valor 000
 -probar que pasa cuando llega a mas de MAX_SPRITES_PER_LINE (100) sprites en linea tbblue
--Sincronizar bits de joystick de puerto config2
 -no dejar aumentar memoria divmmc mas de 128kb, pues tbblue no tiene mas que eso. sino, se accederia a memoria mas alla del divmmc
 
 -para emulacion de +3e, la sd se utiliza la sd secundaria. emular segunda SD????

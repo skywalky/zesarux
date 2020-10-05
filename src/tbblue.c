@@ -1876,6 +1876,15 @@ void tbsprite_do_overlay(void)
 
 				int total_sprites=0;
 
+			int sprite_visible;
+
+		int anchor_x;
+		int anchor_y;
+		z80_byte anchor_palette_offset;
+		z80_byte anchor_index_pattern;
+		int anchor_visible;
+
+		anchor_x=anchor_y=anchor_palette_offset=anchor_index_pattern=anchor_visible=0;
 
         for (conta_sprites=0;conta_sprites<TBBLUE_MAX_SPRITES && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {
 					int sprite_x;
@@ -1907,9 +1916,52 @@ void tbsprite_do_overlay(void)
 
 If the display of the sprites on the border is disabled, the coordinates of the sprites range from (32,32) to (287,223).
 */
+					int relative_sprite=0;
+
+					sprite_visible=tbsprite_sprites[conta_sprites][3]&128;
+
+							if (tbsprite_sprites[conta_sprites][3] & 64) {
+								//Pattern es de 5 bytes
+								
+
+								//Relative sprites
+								//H N6 T X X Y Y Y8
+								//{H,N6} must not equal {0,1} as this combination is used to indicate a relative sprite.
+								if ((tbsprite_sprites[conta_sprites][4] & 128+64)==128+64) {
+
+									relative_sprite=1;
+
+									//printf ("Relative sprite number %d\n",conta_sprites);
+									/*
+									The sprite module records the following information from the anchor:
+
+									Anchor.visible
+									Anchor.X
+									Anchor.Y
+									Anchor.palette_offset
+									Anchor.N (pattern number)
+									Anchor.H (indicates if the sprite uses 4-bit patterns)
+									*/
+
+									sprite_visible=anchor_visible;
+								}
+
+								else {
+									//No es relativo. Guardar la visibilidad del ultimo anchor
+									anchor_visible=sprite_visible;
+								}
+
+							}
+
+
 
 					//Si sprite visible
-					if (tbsprite_sprites[conta_sprites][3]&128) {
+					
+					
+					if (sprite_visible) {
+
+	
+
 						sprite_x=tbsprite_sprites[conta_sprites][0] | ((tbsprite_sprites[conta_sprites][2]&1)<<8);
 
 						//printf ("sprite %d x: %d \n",conta_sprites,sprite_x);
@@ -1932,8 +1984,27 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 						z80_byte palette_offset=(tbsprite_sprites[conta_sprites][2]) & 0xF0;
 
 						index_pattern=tbsprite_sprites[conta_sprites][3]&63;
-						//Si coordenada y esta en margen y sprite activo
+						
 
+
+						//Si era sprite relativo
+						if (relative_sprite) {
+							//printf("Using the last anchor values\n");
+							sprite_x=anchor_x;
+							sprite_y=anchor_y;
+							palette_offset=anchor_palette_offset;
+							index_pattern=anchor_index_pattern;
+						}
+
+						else {
+							//Guardamos estos valores como el ultimo anchor
+							anchor_x=sprite_x;
+							anchor_y=sprite_y;
+							anchor_palette_offset=palette_offset;
+							anchor_index_pattern=index_pattern;
+						}
+
+						//Si coordenada y esta en margen y sprite activo
 						int diferencia=y-sprite_y;
 
 
@@ -2053,8 +2124,6 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 								if (tbsprite_sprites[conta_sprites][4] & 128) sprite_es_4bpp=1;
 
 								if (tbsprite_sprites[conta_sprites][4] & 64) offset_4bpp_N6=1;
-
-								
 
 								//TODO: Y8
 							}
