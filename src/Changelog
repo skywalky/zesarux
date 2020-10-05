@@ -20,6 +20,7 @@ Improved ZRCP: Added MMU information to cpu-history command
 
 Fixed reading keys on SDL and X11 drivers with default keymap and machines QL, MSX and Spectravideo
 Fixed restoring machine to msx, coleco, sg1000 and svi
+Fixed showing last core frame time in Core Statistics window
 
 Fixed QL bugs:
 -Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes
