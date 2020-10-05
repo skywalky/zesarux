@@ -2322,7 +2322,7 @@ void reset_extended_stack(void)
 //IMPORTANTE: Aqui se define el tamaño del los registros en binario en la estructura
 //Si se modifica dicho tamaño, actualizar este valor
 
-#define CPU_HISTORY_REGISTERS_SIZE 34
+#define CPU_HISTORY_REGISTERS_SIZE 50
 
 //Dado un puntero z80_byte, con contenido de registros en binario, retorna valores registros
 //Registros 16 bits guardados en little endian
@@ -2332,7 +2332,8 @@ void cpu_history_regs_bin_to_string(z80_byte *p,char *destino)
 	//Nota: funcion print_registers escribe antes BC que AF. Aqui ponemos AF antes, que es mas lógico
   sprintf (destino,"PC=%02x%02x SP=%02x%02x AF=%02x%02x BC=%02x%02x HL=%02x%02x DE=%02x%02x IX=%02x%02x IY=%02x%02x "
   				   "AF'=%02x%02x BC'=%02x%02x HL'=%02x%02x DE'=%02x%02x "
-				   "I=%02x R=%02x IM%d IFF%c%c (PC)=%02x%02x%02x%02x (SP)=%02x%02x",
+				   "I=%02x R=%02x IM%d IFF%c%c (PC)=%02x%02x%02x%02x (SP)=%02x%02x "
+				   "MMU=%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
   p[1],p[0], 	//pc
   p[3],p[2], 	//sp
   p[5],p[4], 	//af
@@ -2352,7 +2353,10 @@ void cpu_history_regs_bin_to_string(z80_byte *p,char *destino)
   //contenido (pc) 4 bytes
   p[28],p[29],p[30],p[31],
   //contenido (sp) 2 bytes
-  p[33],p[32]
+  p[33],p[32],
+  //MMU. Las paginas de debug_paginas_memoria_mapeadas, son valores de 16 bits escritas en Little Endian
+  p[35],p[34], p[37],p[36], p[39],p[38], p[41],p[40],
+  p[43],p[42], p[45],p[44], p[47],p[46], p[49],p[48]
   );
 }
 
@@ -2432,7 +2436,17 @@ void cpu_history_regs_to_bin(z80_byte *p)
     p[31]=peek_byte_no_time_no_change_mra(reg_pc+3);
 
     p[32]=peek_byte_no_time_no_change_mra(reg_sp);
-    p[33]=peek_byte_no_time_no_change_mra(reg_sp+1);	
+    p[33]=peek_byte_no_time_no_change_mra(reg_sp+1);
+
+	//MMU. Desde p34
+	int i;
+
+	for (i=0;i<8;i++) {
+		//Low byte
+		p[34+i*2]=value_16_to_8l(debug_paginas_memoria_mapeadas[i]);		
+		//High byte
+		p[34+i*2+1]=value_16_to_8h(debug_paginas_memoria_mapeadas[i]);		
+	}	
 
  
 }
