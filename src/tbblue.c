@@ -2294,11 +2294,13 @@ void tbblue_set_ram_page(z80_byte segment)
 	z80_byte tbblue_register=80+segment;
 	z80_byte reg_value=tbblue_registers[tbblue_register];
 
+	//Guardar el valor tal cual, antes de ver si la pagina excede el limite
+	debug_paginas_memoria_mapeadas[segment]=reg_value;		
+
 	//tbblue_memory_paged[segment]=tbblue_ram_memory_pages[page];
 	reg_value=tbblue_get_limit_sram_page(reg_value);
 	tbblue_memory_paged[segment]=tbblue_ram_memory_pages[reg_value];
 
-	debug_paginas_memoria_mapeadas[segment]=reg_value;
 }
 
 
@@ -2307,9 +2309,12 @@ void tbblue_set_rom_page_no_255(z80_byte segment)
         z80_byte tbblue_register=80+segment;
         z80_byte reg_value=tbblue_registers[tbblue_register];
 
+	//Guardar el valor tal cual, antes de ver si la pagina excede el limite
+	debug_paginas_memoria_mapeadas[segment]=reg_value;			
+
 	reg_value=tbblue_get_limit_sram_page(reg_value);
 	tbblue_memory_paged[segment]=tbblue_ram_memory_pages[reg_value];
-	debug_paginas_memoria_mapeadas[segment]=reg_value;
+
 }
 
 int tbblue_get_altrom(void)
@@ -2467,6 +2472,10 @@ void tbblue_set_rom_page(z80_byte segment,z80_byte page)
 	z80_byte reg_value=tbblue_registers[tbblue_register];
 
 	if (reg_value==255) {
+
+		//Guardar el valor tal cual, antes de ver si la pagina excede el limite
+		debug_paginas_memoria_mapeadas[segment]=DEBUG_PAGINA_MAP_ES_ROM+page;
+
 		page=tbblue_get_limit_sram_page(page);
 
 		//Si esta altrom en read
@@ -2492,7 +2501,7 @@ void tbblue_set_rom_page(z80_byte segment,z80_byte page)
 		else tbblue_memory_paged[segment]=tbblue_rom_memory_pages[page];
 
 
-		debug_paginas_memoria_mapeadas[segment]=DEBUG_PAGINA_MAP_ES_ROM+page;
+		
 	}
 	else {
 		tbblue_set_rom_page_no_255(segment);
