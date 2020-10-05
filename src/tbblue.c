@@ -1990,10 +1990,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 						//Si era sprite relativo
 						if (relative_sprite) {
 							//printf("Using the last anchor values\n");
-							sprite_x=anchor_x;
-							sprite_y=anchor_y;
-							palette_offset=anchor_palette_offset;
-							index_pattern=anchor_index_pattern;
+							sprite_x +=anchor_x;
+							sprite_y +=anchor_y;
+							palette_offset +=anchor_palette_offset;
+							index_pattern +=anchor_index_pattern;
 						}
 
 						else {
