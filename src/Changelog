@@ -30,6 +30,9 @@ Fixed QL bugs:
 -Fixed possible hang calling IO.SSTRG
 -Fixed cursor flashing
 
+Fixed TBBlue bugs:
+-Added emulation of tbblue joystick type (register 5)
+
 Fixed segfaults when changing machines and having ZX Desktop windows opened
 Fixed easter egg and cyrillic characters
 Fixed segfaults when initializing audio and video drivers

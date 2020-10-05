@@ -44,6 +44,7 @@
 #include "uartbridge.h"
 #include "chardevice.h"
 #include "settings.h"
+#include "joystick.h"
 
 #define TBBLUE_MAX_SRAM_8KB_BLOCKS 224
 
@@ -3730,6 +3731,83 @@ Writes immediately change the current mmu mapping as if by port write
 	tbblue_registers[142] |=8;
 }
 
+
+void tbblue_set_joystick_1_mode(void)
+{
+
+	z80_byte joystick_mode=((tbblue_registers[5] >>6) & 3 ) | ((tbblue_registers[5] >> 1) & 4) ;
+
+	//printf("joystick mode: %d\n",joystick_mode);
+
+	/*
+
+	0x05 (05) => Peripheral 1 Setting
+(R/W)
+  bits 7:6 = Joystick 1 mode (LSB)
+  bits 5:4 = Joystick 2 mode (LSB)
+  bit 3 = Joystick 1 mode (MSB)
+  bit 2 = 50/60 Hz mode (0 = 50Hz, 1 = 60Hz, Pentagon is always 50Hz)
+  bit 1 = Joystick 2 mode (MSB)
+  bit 0 = Enable scandoubler (1 = enabled)
+Joystick modes:
+  000 = Sinclair 2 (12345)
+  001 = Kempston 1 (port 0x1F)
+  010 = Cursor (56780)
+  011 = Sinclair 1 (67890)
+  100 = Kempston 2 (port 0x37)
+  101 = MD 1 (3 or 6 button joystick port 0x1F)
+  110 = MD 2 (3 or 6 button joystick port 0x37)
+  111 = I/O Mode
+Both joysticks are placed in I/O Mode if either is set to I/O Mode. The underlying
+joystick type is not changed and reads of this register will continue to return
+the last joystick type. Whether the joystick is in io mode or not is invisible
+but this state can be cleared either through reset or by re-writing the register
+with joystick type not equal to 111. Recovery time for a normal joystick read after
+leaving I/O Mode is at most 64 scan lines.
+
+	*/
+
+	//TODO: que es I/O Mode ???
+
+	//Solo hacemos caso a estos:
+
+/*
+  000 = Sinclair 2 (12345)
+  001 = Kempston 1 (port 0x1F)
+  010 = Cursor (56780)
+  011 = Sinclair 1 (67890)
+  100 = Kempston 2 (port 0x37)
+  */
+
+ //cualquier otro, dejarlo como estaba
+
+ switch (joystick_mode) {
+	 case 0:
+	 	joystick_emulation=JOYSTICK_SINCLAIR_2;
+		debug_printf(VERBOSE_DEBUG,"Setting joystick 1 emulation to Sinclair 2");
+	 break;
+
+	 case 1:
+	 case 4:
+	 	joystick_emulation=JOYSTICK_KEMPSTON;
+		debug_printf(VERBOSE_DEBUG,"Setting joystick 1 emulation to Kempston");
+	 break;
+
+	 case 2:
+	 	joystick_emulation=JOYSTICK_CURSOR_WITH_SHIFT;
+		debug_printf(VERBOSE_DEBUG,"Setting joystick 1 emulation to Cursor");
+	 break;
+
+	 case 3:
+	 	joystick_emulation=JOYSTICK_SINCLAIR_1;
+		debug_printf(VERBOSE_DEBUG,"Setting joystick 1 emulation to Sinclair 1");
+	 break;
+
+ }
+
+
+}
+
 	
 //tbblue_last_register
 //void tbblue_set_value_port(z80_byte value)
@@ -3901,6 +3979,20 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 		case 5:
 			if ((last_register_5&4)!=(value&4)) tbblue_splash_monitor_mode();
+
+			//joystick 1 mode
+			/*
+			  bits 7:6 = Joystick 1 mode (LSB)
+  			bits 5:4 = Joystick 2 mode (LSB)
+  			bit 3 = Joystick 1 mode (MSB)
+  			bit 2 = 50/60 Hz mode (0 = 50Hz, 1 = 60Hz, Pentagon is always 50Hz)
+  			bit 1 = Joystick 2 mode (MSB)
+  			bit 0 = Enable scandoubler (1 = enabled)
+			*/
+
+			if ((last_register_5&(8+64+128))!=(value&(8+64+128))) {
+				tbblue_set_joystick_1_mode();
+			}
 		
 		break;
 
