@@ -1927,7 +1927,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 								//Relative sprites
 								//H N6 T X X Y Y Y8
 								//{H,N6} must not equal {0,1} as this combination is used to indicate a relative sprite.
-								if ((tbsprite_sprites[conta_sprites][4] & 128+64)==128+64) {
+								if ((tbsprite_sprites[conta_sprites][4] & 128+64)==64) {
 
 									relative_sprite=1;
 
@@ -1944,6 +1944,8 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 									*/
 
 									sprite_visible=anchor_visible;
+
+									//printf("visible: %d\n",sprite_visible);
 								}
 
 								else {
