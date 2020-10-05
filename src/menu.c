@@ -19300,7 +19300,7 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_hardware_settings,'s');
 
 			if (kempston_mouse_emulation.v) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_kempston_mouse_sensibilidad,NULL,"    Mouse Sensitivity: %d",kempston_mouse_factor_sensibilidad);
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_kempston_mouse_sensibilidad,NULL,"[%2d] Mouse Sensitivity",kempston_mouse_factor_sensibilidad);
 			}
 
 		}
@@ -34925,6 +34925,10 @@ char *first_aid_string_backgroundwindows="You can enable background windows and 
 		"Go to Settings-> GUI-> Windows settings-> Background windows to enable it";
 
 
+int first_aid_no_tbblue_download_sd_bugs=0;
+char *first_aid_string_tbblue_download_sd_bugs="In case of glitches or bugs, maybe the official image uses features not emulated in ZEsarUX yet. "
+		"If it's that the case, use the included tbblue sd image in ZEsarUX";
+
 
 void menu_first_aid_init(void)
 {
@@ -34938,6 +34942,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("no_ssl_wos",&first_aid_no_ssl_wos,first_aid_string_no_ssl_wos,0);
 	menu_first_aid_add("realjoystick_detected",&first_aid_no_realjoystick_detected,first_aid_string_realjoystick_detected,0);
 	menu_first_aid_add("sg1000_boot",&first_aid_no_sg1000_boot,first_aid_string_sg1000_boot,0);
+	menu_first_aid_add("tbblue_download_sd_bug",&first_aid_no_tbblue_download_sd_bugs,first_aid_string_tbblue_download_sd_bugs,0);
 
 	//Items que se disparan en startup
 	menu_first_aid_add("startup_aid",&first_aid_no_startup_aid,first_aid_string_startup_aid,1);

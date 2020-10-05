@@ -20490,6 +20490,7 @@ void menu_storage_divmmc_diviface_total_ram(MENU_ITEM_PARAMETERS)
 void menu_storage_mmc_download_tbblue(void)
 {
 
+	menu_first_aid("tbblue_download_sd_bug");
 
 	//http://www.zxspectrumnext.online/cspect/tbbluemmc-32mb.zip
 
