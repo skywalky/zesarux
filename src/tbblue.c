@@ -1827,33 +1827,33 @@ void tbsprite_do_overlay(void)
 
 		if (!tbblue_if_sprites_enabled() ) return;
 
-				//printf ("tbblue sprite chip activo\n");
+		//printf ("tbblue sprite chip activo\n");
 
 
         //int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
         int y=t_scanline_draw; //0..63 es border (8 no visibles)
 
-				int border_no_visible=screen_indice_inicio_pant-TBBLUE_SPRITE_BORDER;
+		int border_no_visible=screen_indice_inicio_pant-TBBLUE_SPRITE_BORDER;
 
-				y -=border_no_visible;
+		y -=border_no_visible;
 
-				//Ejemplo: scanline_draw=32 (justo donde se ve sprites). border_no_visible=64-32 =32
-				//y=y-32 -> y=0
-
-
-				//Situamos el 0 32 pixeles por encima de dentro de pantalla, tal cual como funcionan las cordenadas de sprite de tbblue
+		//Ejemplo: scanline_draw=32 (justo donde se ve sprites). border_no_visible=64-32 =32
+		//y=y-32 -> y=0
 
 
-				//Calculos exclusivos para puntero buffer rainbow
-		    int rainbowy=t_scanline_draw-screen_invisible_borde_superior;
-		    if (border_enabled.v==0) rainbowy=rainbowy-screen_borde_superior;
+		//Situamos el 0 32 pixeles por encima de dentro de pantalla, tal cual como funcionan las cordenadas de sprite de tbblue
+
+
+		//Calculos exclusivos para puntero buffer rainbow
+		int rainbowy=t_scanline_draw-screen_invisible_borde_superior;
+		if (border_enabled.v==0) rainbowy=rainbowy-screen_borde_superior;
 		 
 
-				//Aqui tenemos el y=0 arriba del todo del border
+		//Aqui tenemos el y=0 arriba del todo del border
 
         //Bucle para cada sprite
         int conta_sprites;
-				z80_byte index_pattern;
+		z80_byte index_pattern;
 
 		int i;
 		//int offset_pattern;
@@ -1861,22 +1861,22 @@ void tbsprite_do_overlay(void)
 		z80_byte sprites_over_border=tbblue_registers[21]&2;
 
 
-				int rangoxmin, rangoxmax;
+		int rangoxmin, rangoxmax;
 
-				if (sprites_over_border) {
-					rangoxmin=0;
-					rangoxmax=TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER-1;
-				}
+		if (sprites_over_border) {
+			rangoxmin=0;
+			rangoxmax=TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER-1;
+		}
 
-				else {
-					rangoxmin=TBBLUE_SPRITE_BORDER;
-					rangoxmax=TBBLUE_SPRITE_BORDER+255;
-				}
+		else {
+			rangoxmin=TBBLUE_SPRITE_BORDER;
+			rangoxmax=TBBLUE_SPRITE_BORDER+255;
+		}
 
 
-				int total_sprites=0;
+		int total_sprites=0;
 
-			int sprite_visible;
+		int sprite_visible;
 
 		int anchor_x;
 		int anchor_y;
@@ -1959,8 +1959,6 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 					
 					
 					if (sprite_visible) {
-
-	
 
 						sprite_x=tbsprite_sprites[conta_sprites][0] | ((tbsprite_sprites[conta_sprites][2]&1)<<8);
 
