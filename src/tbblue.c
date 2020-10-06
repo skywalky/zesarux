@@ -1883,8 +1883,9 @@ void tbsprite_do_overlay(void)
 		z80_byte anchor_palette_offset;
 		z80_byte anchor_index_pattern;
 		int anchor_visible;
+		int anchor_sprite_es_4bpp;
 
-		anchor_x=anchor_y=anchor_palette_offset=anchor_index_pattern=anchor_visible=0;
+		anchor_x=anchor_y=anchor_palette_offset=anchor_index_pattern=anchor_visible=anchor_sprite_es_4bpp=0;
 
         for (conta_sprites=0;conta_sprites<TBBLUE_MAX_SPRITES && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {
 					int sprite_x;
@@ -1991,7 +1992,11 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 						index_pattern=tbsprite_sprites[conta_sprites][3]&63;
 						
-
+						//Sprite Attribute 4
+						//0 1 N6 X X Y Y PO
+						//TODO: solo para relative composite sprite, no unified
+						z80_byte sprite_zoom_x=(tbsprite_sprites[conta_sprites][4] >> 3)&3;
+						z80_byte sprite_zoom_y=(tbsprite_sprites[conta_sprites][4] >> 1)&3;
 
 						//Si era sprite relativo
 						if (relative_sprite) {
@@ -2028,12 +2033,14 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 							anchor_index_pattern=index_pattern;
 						}
 
+
+
 						z80_byte mirror_x=tbsprite_sprites[conta_sprites][2]&8;
 						//[2] 3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
 						z80_byte mirror_y=tbsprite_sprites[conta_sprites][2]&4;						
 
 						//Si coordenada y esta en margen y sprite activo
-						int diferencia=y-sprite_y;
+						int diferencia=(y-sprite_y)>>sprite_zoom_y;
 
 
 						int rangoymin, rangoymax;
@@ -2149,9 +2156,46 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 							if (tbsprite_sprites[conta_sprites][3] & 64) {
 								//Pattern es de 5 bytes
-								if (tbsprite_sprites[conta_sprites][4] & 128) sprite_es_4bpp=1;
 
-								if (tbsprite_sprites[conta_sprites][4] & 64) offset_4bpp_N6=1;
+								//En caso de anchor:
+								//H N6 T X X Y Y Y8
+								//H = 1 if the sprite pattern is 4-bit
+								//N6 = 7th pattern bit if the sprite pattern is 4-bit
+
+								
+
+								if (!relative_sprite) {
+
+									if (tbsprite_sprites[conta_sprites][4] & 128) sprite_es_4bpp=1;
+
+									if (sprite_es_4bpp) {
+										if (tbsprite_sprites[conta_sprites][4] & 64) offset_4bpp_N6=1;
+									}
+
+									anchor_sprite_es_4bpp=sprite_es_4bpp;
+								}
+
+								else {
+
+
+									//En caso de relative sprites, el valor de H viene del anchor
+									/*
+									B. Relative Sprite, Composite Type
+									0 1 N6 X X Y Y PO
+									C. Relative Sprite, Unified Type
+									0 1 N6 0 0 0 0 PO
+
+									Ver que el bit N6 se desplaza respecto a cuando es un anchor
+									*/
+
+									sprite_es_4bpp=anchor_sprite_es_4bpp;
+
+									if (sprite_es_4bpp) {
+										if (tbsprite_sprites[conta_sprites][4] & 32) offset_4bpp_N6=1;
+									}
+
+									
+								}
 
 								//TODO: Y8
 							}
@@ -2160,10 +2204,17 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 								z80_byte index_color;
 
 								if (sprite_es_4bpp) {
+									//printf("es 4bpp\n");
 									index_color=tbsprite_do_overlay_get_pattern_xy_4bpp(index_pattern,offset_4bpp_N6,sx,sy);
+
+									//index_color +=7;
 								}
 								else {
+									//printf("es 8 bpp\n");
+									//printf("pattern %d\n",index_pattern);
 									index_color=tbsprite_do_overlay_get_pattern_xy_8bpp(index_pattern,sx,sy);
+
+									//index_color +=2;
 								}
 
 									//Si index de color es transparente, no hacer nada
@@ -2177,6 +2228,8 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 								sx=sx+incx;
 								sy=sy+incy;
 
+								int sumar_x=1<<sprite_zoom_x;
+
 
 								if (index_color!=tbblue_registers[75]) {
 
@@ -2184,12 +2237,21 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 								index_color +=palette_offset;
 
 								//printf ("index color: %d\n",index_color);
+								//printf ("palette offset: %d\n",palette_offset);
 								
 
-								tbsprite_put_color_line(sprite_x,index_color,rangoxmin,rangoxmax);
+								if (sprite_zoom_x==0) {
+									tbsprite_put_color_line(sprite_x,index_color,rangoxmin,rangoxmax);
+								}
+								else {
+									int zz=0;
+									for (zz=0;zz<sumar_x;zz++) {
+										tbsprite_put_color_line(sprite_x+zz,index_color,rangoxmin,rangoxmax);
+									}
+								}
 
 								}
-								sprite_x++;
+								sprite_x+=sumar_x;
 
 
 							}
