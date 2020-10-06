@@ -169,6 +169,4 @@ estan en subcarpeta editview/
 
 -sonido en QL
 
--tbblue composite sprites: revisar cambios de parametros cuando B. Relative Sprite, Composite Type y C. Relative Sprite, Unified Type
-Ejemplo: Y8 = Ninth bit of the sprite’s Y coordinate
-*sprite zoom x,y ok
+-En ventana sprite navigator Tbblue, indicar parámetros de sprite relativo etc
