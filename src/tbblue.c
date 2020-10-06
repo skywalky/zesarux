@@ -1887,6 +1887,8 @@ void tbsprite_do_overlay(void)
 
 		anchor_x=anchor_y=anchor_palette_offset=anchor_index_pattern=anchor_visible=anchor_sprite_es_4bpp=0;
 
+		int sprite_has_5_bytes;
+
         for (conta_sprites=0;conta_sprites<TBBLUE_MAX_SPRITES && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {
 					int sprite_x;
 					int sprite_y;
@@ -1921,7 +1923,9 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 					sprite_visible=tbsprite_sprites[conta_sprites][3]&128;
 
-							if (tbsprite_sprites[conta_sprites][3] & 64) {
+					sprite_has_5_bytes=tbsprite_sprites[conta_sprites][3] & 64;
+
+							if (sprite_has_5_bytes) {
 								//Pattern es de 5 bytes
 								
 
@@ -1977,6 +1981,15 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 						//printf ("sprite %d x: %d \n",conta_sprites,sprite_x);
 
 						sprite_y=tbsprite_sprites[conta_sprites][1];
+
+						if (sprite_has_5_bytes && !relative_sprite) {
+							//Sprite Attribute 4
+							//A. Extended Anchor Sprite
+							//H N6 T X X Y Y Y8
+							//Y8 = Ninth bit of the sprite’s Y coordinate
+
+							sprite_y |= ((tbsprite_sprites[conta_sprites][4]&1)<<8);
+						}
 
 						//Posicionamos esa y teniendo en cuenta que nosotros contamos 0 arriba del todo del border en cambio sprites aqui
 						//Considera y=32 dentro de pantalla y y=0..31 en el border
