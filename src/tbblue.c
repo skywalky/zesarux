@@ -1862,16 +1862,40 @@ void tbsprite_do_overlay(void)
 
 
 		int rangoxmin, rangoxmax;
+		int rangoymin, rangoymax;
 
 		if (sprites_over_border) {
 			rangoxmin=0;
 			rangoxmax=TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER-1;
+			rangoymin=0;
+			rangoymax=TBBLUE_SPRITE_BORDER+192+TBBLUE_SPRITE_BORDER-1;			
+
+			if (tbblue_registers[21]&0x20) {
+					// sprite clipping "over border" enabled, double the X coordinate of clip window
+					rangoxmin=2*clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][0];
+					rangoxmax=2*clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][1]+1;
+					rangoymin=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][2];
+					rangoymax=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][3];
+					if (rangoxmax > TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER-1) {
+						// clamp rangoxmax to 319
+						rangoxmax = TBBLUE_SPRITE_BORDER+256+TBBLUE_SPRITE_BORDER-1;
+					}
+			}
 		}
 
 		else {
-			rangoxmin=TBBLUE_SPRITE_BORDER;
-			rangoxmax=TBBLUE_SPRITE_BORDER+255;
+			// take clip window coordinates, but limit them to [0,0]->[255,191] (and offset them +32,+32)
+			rangoxmin=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][0] + TBBLUE_SPRITE_BORDER;
+			rangoxmax=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][1] + TBBLUE_SPRITE_BORDER-1;
+			rangoymin=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][2] + TBBLUE_SPRITE_BORDER;
+			rangoymax=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][3] + TBBLUE_SPRITE_BORDER-1;
+			if (rangoymax > TBBLUE_SPRITE_BORDER+192-1) {
+				// clamp rangoymax to 32+191 (bottom edge of PAPER)
+				rangoymax = TBBLUE_SPRITE_BORDER+192-1;
+			}
 		}
+
+		if (y<rangoymin || y>rangoymax) return;
 
 
 		int total_sprites=0;
@@ -2016,6 +2040,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 							//printf("Using the last anchor values\n");
 							sprite_x=(sprite_x+anchor_x) & 0xFF;
 							sprite_y=(sprite_y+anchor_y) & 0xFF;
+
 							/*
 							If the relative sprite has its PR bit set in sprite attribute 2, 
 							then the anchor’s palette offset is added to the relative sprite’s to determine the active 
@@ -2040,13 +2065,15 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 						else {
 							//Guardamos estos valores como el ultimo anchor
+							//if (sprite_x > 512-128) sprite_x -= 512;                // -127 .. +384 (cover 8x scaleX)
+
 							anchor_x=sprite_x;
 							anchor_y=sprite_y;
 							anchor_palette_offset=palette_offset;
 							anchor_index_pattern=index_pattern;
 						}
 
-
+						//printf("x: %d\n",sprite_x);
 
 						z80_byte mirror_x=tbsprite_sprites[conta_sprites][2]&8;
 						//[2] 3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.

@@ -21,6 +21,8 @@ Improved ZRCP: Added MMU information to cpu-history command
 Improved TBBlue emulation:
 -Added emulation of tbblue joystick type (register 5)
 -Added sprite zoom emulation
+-Added relative sprites emulation
+-Added sprite clipping emulation
 
 Fixed reading keys on SDL and X11 drivers with default keymap and machines QL, MSX and Spectravideo
 Fixed restoring machine to msx, coleco, sg1000 and svi
