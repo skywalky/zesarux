@@ -366,6 +366,7 @@ Quiza deberia leer el kempston solo por 1f o 3f??
 Refresco de Tbblue para curses , stdout y simpletext en caso de:
 -rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
 
+-Multiface: Nextreg 0x0A selects multiface version from 1, 128 v87.12, 128 v87.2 or +3
 
 -Salir de CP/M deja el modo tiles activo
 

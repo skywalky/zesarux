@@ -2038,6 +2038,9 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 						//Si era sprite relativo
 						if (relative_sprite) {
 							//printf("Using the last anchor values\n");
+
+							//No estoy seguro de estos AND 0xFF
+							//Pero si los quito, el test de SpritRel.sna se ve peor
 							sprite_x=(sprite_x+anchor_x) & 0xFF;
 							sprite_y=(sprite_y+anchor_y) & 0xFF;
 
