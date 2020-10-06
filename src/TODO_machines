@@ -445,7 +445,7 @@ https://specnext.dev/wiki/Next_Memory_Bank_Select
 
 
 
--atributos extendidos sprites (quinto byte) zoom, composite etc
+-atributos extendidos sprites (quinto byte): unified sprites
 
 -Soporte ulaplus en Next
 	
