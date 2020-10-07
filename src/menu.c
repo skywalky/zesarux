@@ -35239,8 +35239,9 @@ void menu_filesel_overlay_draw_preview(void)
 		int alto_ventana=menu_filesel_overlay_window->visible_height-2;		
 
 
-		int xorigen=0;
-		int yorigen=0;
+		//Se dibuja algo desplazado
+		int xorigen=20;
+		int yorigen=4;
 
 		//Sumar scroll ventana
 		xorigen +=menu_filesel_overlay_window->offset_x;
