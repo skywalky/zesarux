@@ -5308,7 +5308,7 @@ int parse_cmdline_options(void) {
 				siguiente_parametro_argumento();
 				int valor=parse_string_to_number(argv[puntero_parametro]);
 
-				if (valor<0 || valor>5) {
+				if (valor<0 || valor>MENU_MAX_EXT_DESKTOP_FILL_NUMBER) {
 					printf ("Invalid value for ZX Desktop fill type\n");
 					exit(1);
 				}

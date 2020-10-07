@@ -3875,10 +3875,11 @@ void menu_ext_desktop_get_logo_coords(int *x,int *y)
 //Tipo de rellenado de extended desktop:
 //0=color solido
 //1=barras diagonales de colores
-//2=punteado blanco/negro
-//3=ajedrez
-//4=Grid
-//5=Random
+//2=barras diagonales de colores que se mueven
+//3=punteado blanco/negro
+//4=ajedrez
+//5=Grid
+//6=Random
 int menu_ext_desktop_fill=1;
 int menu_ext_desktop_fill_first_color=5;
 int menu_ext_desktop_fill_second_color=13;
@@ -3886,6 +3887,9 @@ int menu_ext_desktop_fill_second_color=13;
 
 z80_bit menu_ext_desktop_transparent_upper_icons={0};
 z80_bit menu_ext_desktop_transparent_lower_icons={0};
+
+int menu_ext_desktop_fill_rainbow_counter;
+
 
 void menu_draw_ext_desktop_footer(void)
 {
@@ -3976,19 +3980,22 @@ void menu_draw_ext_desktop(void)
 
 		}			
 		
-		//Rayas diagonales de colores		
-		if (menu_ext_desktop_fill==1) {
+		//Rayas diagonales de colores, fijas o movibles		
+		if (menu_ext_desktop_fill==1 || menu_ext_desktop_fill==2) {
 
 			int grueso_lineas=8*zoom_x*menu_gui_zoom; //Para que coincida el color con rainbow de titulo de ventanas
  			int total_colores=5;
 
 			int contador_color;
 
+			//En el caso de barras fijas, offset es 0
+			if (menu_ext_desktop_fill==1) menu_ext_desktop_fill_rainbow_counter=0;
+
 			for (y=yinicio;y<yinicio+alto;y++) {
 				contador_color=y; //Para dar un aspecto de rayado
 
 				for (x=xinicio;x<xinicio+ancho;x++) {
-					int indice_color=(contador_color/grueso_lineas) % total_colores;
+					int indice_color=((contador_color/grueso_lineas)+menu_ext_desktop_fill_rainbow_counter) % total_colores;
 					int color=screen_colores_rainbow_nobrillo[indice_color]; 
 					scr_putpixel(x,y,color);
 
@@ -3996,10 +4003,12 @@ void menu_draw_ext_desktop(void)
 				}
 			}
 
+			menu_ext_desktop_fill_rainbow_counter++;
+
 		}
 
 		//punteado
-		if (menu_ext_desktop_fill==2) {
+		if (menu_ext_desktop_fill==3) {
 
 			int color;
 
@@ -4016,7 +4025,7 @@ void menu_draw_ext_desktop(void)
 		}	
 
 		//ajedrez
-		if (menu_ext_desktop_fill==3) {
+		if (menu_ext_desktop_fill==4) {
 
 			int color;
 
@@ -4036,7 +4045,7 @@ void menu_draw_ext_desktop(void)
 		}		
 
 		//grid
-		if (menu_ext_desktop_fill==4) {
+		if (menu_ext_desktop_fill==5) {
 
 			int color;
 
@@ -4056,7 +4065,7 @@ void menu_draw_ext_desktop(void)
 		}	
 
 		//Random	
-		if (menu_ext_desktop_fill==5) {
+		if (menu_ext_desktop_fill==6) {
 
 			for (y=yinicio;y<yinicio+alto;y++) {
 

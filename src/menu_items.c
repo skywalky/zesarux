@@ -10598,7 +10598,7 @@ void menu_ext_desk_settings_width(MENU_ITEM_PARAMETERS)
 void menu_ext_desk_settings_filltype(MENU_ITEM_PARAMETERS)
 {
 	menu_ext_desktop_fill++;
-	if (menu_ext_desktop_fill==6) menu_ext_desktop_fill=0;
+	if (menu_ext_desktop_fill>MENU_MAX_EXT_DESKTOP_FILL_NUMBER) menu_ext_desktop_fill=0;
 }
 
 void menu_ext_desk_settings_fillcolor(MENU_ITEM_PARAMETERS)
@@ -10673,24 +10673,28 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 				break;
 
 				case 2:
+					strcpy(fill_type_name,"RainbowAlive");
+				break;				
+
+				case 3:
 					strcpy(fill_type_name,"Dots");
 					seleccion_primary=1;
 					seleccion_secondary=1;
 				break;
 
-				case 3:
+				case 4:
 					strcpy(fill_type_name,"Chess");
 					seleccion_primary=1;
 					seleccion_secondary=1;					
 				break;
 
-				case 4:
+				case 5:
 					strcpy(fill_type_name,"Grid");
 					seleccion_primary=1;
 					seleccion_secondary=1;					
 				break;				
 
-				case 5:
+				case 6:
 					strcpy(fill_type_name,"Random");
 				break;		
 
