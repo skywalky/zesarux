@@ -35217,6 +35217,9 @@ void menu_filesel_overlay_assign_memory_preview(int width,int height)
 	menu_filesel_overlay_last_preview_memory=malloc(total_mem);
 
 	if (menu_filesel_overlay_last_preview_memory==NULL) cpu_panic("Cannot allocate memory for image preview");
+
+	menu_filesel_overlay_last_preview_width=width;
+	menu_filesel_overlay_last_preview_height=height;
 }
 
 
@@ -35241,16 +35244,22 @@ void menu_filesel_overlay_draw_preview(void)
 		int xorigen=0;
 		int yorigen=0;
 
+		//Sumar scroll ventana
+		xorigen +=menu_filesel_overlay_window->offset_x;
+		yorigen +=menu_filesel_overlay_window->offset_y;
+
+
 		ancho_ventana *=menu_char_width;
 		alto_ventana *=8;
 		xorigen *=menu_char_width;
-		//yorigen *=8;
+		yorigen *=8;
+
 
 		int x,y;
 		int contador=0;
 
-		for (x=0;x<ancho_ventana;x++) {
-			for (y=0;y<alto_ventana;y++) {
+		for (x=0;x<menu_filesel_overlay_last_preview_width;x++) {
+			for (y=0;y<menu_filesel_overlay_last_preview_height;y++) {
 				int color=menu_filesel_overlay_last_preview_memory[contador].color;
 				contador++;
 
@@ -35259,6 +35268,16 @@ void menu_filesel_overlay_draw_preview(void)
 				zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+y,0);
 			}
 		}
+}
+
+//Renderizar preview en memoria del archivo seleccionado
+void menu_filesel_overlay_render_preview_in_memory(void)
+{
+
+	//para probar
+	menu_filesel_overlay_assign_memory_preview(256,192);
+
+	//de momento nada mas
 }
 
 //Overlay para mostrar los previews
@@ -35281,6 +35300,7 @@ void menu_filesel_overlay(void)
 
 	//Y 2 veces por segundo, renderizar preview en memoria si conviene
 
+		menu_filesel_overlay_render_preview_in_memory();
 
 	}
 }
@@ -35382,7 +35402,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		int ret=menu_filesel_readdir();
 		if (ret) {
 			//Error leyendo directorio
-   
+			//restauramos modo normal de texto de menu
+     		set_menu_overlay_function(normal_overlay_texto_menu);
 			cls_menu_overlay();
 			menu_espera_no_tecla();
 			menu_filesel_chdir(filesel_directorio_inicial);
@@ -35403,6 +35424,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 			//Guardar anteriores tamaños ventana
 			menu_filesel_save_params_window(ventana);
 
+			//restauramos modo normal de texto de menu
+     		set_menu_overlay_function(normal_overlay_texto_menu);
 
 			zxvision_destroy_window(ventana);
 		}
@@ -35514,6 +35537,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				//ESC
                 if (tecla==2) {
                 	menu_filesel_exist_ESC();
+					//restauramos modo normal de texto de menu
+     				set_menu_overlay_function(normal_overlay_texto_menu);
+
 					zxvision_destroy_window(ventana);
                     return 0;
 				}
@@ -35576,6 +35602,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_filesel_free_mem();
 
 						//return menu_avisa_si_extension_no_habitual(filtros,archivo);
+						//restauramos modo normal de texto de menu
+			     		set_menu_overlay_function(normal_overlay_texto_menu);
+
 						cls_menu_overlay();
 						zxvision_destroy_window(ventana);
 						last_filesused_insert(archivo);
@@ -35586,6 +35615,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						else {
 							//Extension no conocida. No modificar variable archivo
 							//printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
+							//restauramos modo normal de texto de menu
+     						set_menu_overlay_function(normal_overlay_texto_menu);
+
 							cls_menu_overlay();
 							zxvision_destroy_window(ventana);
 							return 0;
@@ -35721,6 +35753,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//printf ("salimos con ESC. nombre directorio: %s\n",archivo);
                         menu_filesel_exist_ESC();
 
+						//restauramos modo normal de texto de menu
+			     		set_menu_overlay_function(normal_overlay_texto_menu);
+
 						zxvision_destroy_window(ventana);
                         return 0;
 
@@ -35738,6 +35773,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                 if (item_seleccionado==NULL) {
                                                         //Esto pasa en las carpetas vacias, como /home en Mac OS
                                                                         menu_filesel_exist_ESC();
+																		//restauramos modo normal de texto de menu
+																		set_menu_overlay_function(normal_overlay_texto_menu);
+
+
 																		zxvision_destroy_window(ventana);
                                                                         return 0;
 
@@ -35780,6 +35819,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						if (item_seleccionado==NULL) {
 							//Esto pasa en las carpetas vacias, como /home en Mac OS
                                                                         menu_filesel_exist_ESC();
+																		//restauramos modo normal de texto de menu
+     																	set_menu_overlay_function(normal_overlay_texto_menu);
+
 																		zxvision_destroy_window(ventana);
                                                                         return 0;
 
@@ -35836,6 +35878,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 								if (menu_filesel_uncompress(item_seleccionado->d_name,tmpdir) ) {
 									menu_filesel_exist_ESC();
+									//restauramos modo normal de texto de menu
+     								set_menu_overlay_function(normal_overlay_texto_menu);
+
 									zxvision_destroy_window(ventana);
 									return 0;
 								}
@@ -35868,6 +35913,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									//Guardar anteriores tamaños ventana
 									menu_filesel_save_params_window(ventana);
 
+									//restauramos modo normal de texto de menu
+									set_menu_overlay_function(normal_overlay_texto_menu);
+
 									cls_menu_overlay();
 									zxvision_destroy_window(ventana);
 									last_filesused_insert(archivo);
@@ -35878,6 +35926,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                     else {
                                                         //Extension no conocida. No modificar variable archivo
                                                         //printf ("Unknown extension. Do not modify archivo. Contents: %s\n",archivo);
+
+														//restauramos modo normal de texto de menu
+														set_menu_overlay_function(normal_overlay_texto_menu);
+
 														cls_menu_overlay();
 														zxvision_destroy_window(ventana);
                                                         return 0;
@@ -35917,6 +35969,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                                         menu_filesel_free_mem();
 
                                                                         //return menu_avisa_si_extension_no_habitual(filtros,archivo);
+
+																		//restauramos modo normal de texto de menu
+																		set_menu_overlay_function(normal_overlay_texto_menu);
+
+
                                                                         cls_menu_overlay();
                                                                         zxvision_destroy_window(ventana);
                                                                         return 1;
@@ -36092,6 +36149,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                                 menu_espera_no_tecla();
                                                 menu_filesel_chdir(filesel_directorio_inicial);
 						menu_filesel_free_mem();
+
+						//restauramos modo normal de texto de menu
+						set_menu_overlay_function(normal_overlay_texto_menu);
+
+
 						zxvision_destroy_window(ventana);
                                                 return 0;
                                 }
