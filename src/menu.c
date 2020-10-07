@@ -35316,6 +35316,86 @@ void menu_filesel_preview_reduce_monochome(int *buffer_intermedio,int ancho, int
 
 }
 
+
+//Reduce una imagen de un buffer , color, a la mitad con destino en preview
+void menu_filesel_preview_reduce_scr_color(int *buffer_intermedio,int ancho, int alto)
+{
+
+
+	int x,y;
+
+	int offset_final=0;
+
+
+
+	for (y=0;y<alto;y+=2) {
+		for (x=0;x<ancho;x+=2) {
+
+			int offset_orig;
+			offset_orig=y*ancho+x;
+			int color1=buffer_intermedio[offset_orig];
+
+			offset_orig=y*ancho+x+1;
+			int color2=buffer_intermedio[offset_orig];
+
+			offset_orig=(y*ancho+1)+x;
+			int color3=buffer_intermedio[offset_orig];
+
+			offset_orig=(y*ancho+1)+x+1;
+			int color4=buffer_intermedio[offset_orig];
+
+	int color_final1=color1;
+	int color_final2=-1;
+
+	int veces_color_final1=0;
+	int veces_color_final2=0;			
+
+			if (color1==color_final1) {
+				veces_color_final1++;
+			}
+			else {
+				color_final2=color1;
+				veces_color_final2++;
+			}
+
+			if (color2==color_final1) {
+				veces_color_final1++;
+			}
+			else {
+				color_final2=color2;
+				veces_color_final2++;
+			}
+
+			if (color3==color_final1) {
+				veces_color_final1++;
+			}
+			else {
+				color_final2=color3;
+				veces_color_final2++;
+			}
+
+			if (color4==color_final1) {
+				veces_color_final1++;
+			}
+			else {
+				color_final2=color4;
+				veces_color_final2++;
+			}									
+
+			int color_final;
+
+			if (veces_color_final1>veces_color_final2) color_final=color_final1;
+			else color_final=color_final2;
+
+			menu_filesel_overlay_last_preview_memory[offset_final++].color=color_final;
+
+		}
+	}
+
+
+}
+
+
 //Renderizar preview en memoria del archivo seleccionado
 void menu_filesel_overlay_render_preview_in_memory(void)
 {
@@ -35347,6 +35427,17 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
                       printf("Renderizando..............\n");  
 
+					  //buffer lectura archivo
+					  z80_byte *buf_pantalla;
+
+					  buf_pantalla=malloc(6912);
+
+					  if (buf_pantalla==NULL) cpu_panic("Can not allocate buffer for screen read");
+
+					  fread(buf_pantalla,1,6912,ptr_scrfile);
+
+					  fclose(ptr_scrfile);
+
 
 
 						//Asignamos primero buffer intermedio
@@ -35369,7 +35460,9 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 						for (y=0;y<192;y++) {
 							for (x=0;x<32;x++) {
 								z80_byte leido;
-								fread(&leido,1,1,ptr_scrfile);
+								int pos_pixel=y*32+x;
+								//fread(&leido,1,1,ptr_scrfile);
+								leido=buf_pantalla[pos_pixel];
 
 								int xdestino,ydestino;
 
@@ -35378,12 +35471,30 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 								offset_lectura++;
 
+								int tinta;
+								int papel;
+
+								z80_byte atributo;
+
+								int pos_attr=(ydestino/8)*32+(xdestino/8);
+
+								atributo=buf_pantalla[6144+pos_attr];
+
+								tinta=(atributo)&7;
+								papel=(atributo>>3)&7;
+
+								if (atributo & 64) {
+									tinta +=8;
+									papel +=8;
+								}
+
 								for (bit_counter=0;bit_counter<8;bit_counter++) {
 									
 
+									
 
 									//de momento solo 0 o 1
-									int color=(leido & 128 ? 1 : 0);
+									int color=(leido & 128 ? tinta : papel);
 
 									int offset=ydestino*256+xdestino+bit_counter;
 									//menu_filesel_overlay_last_preview_memory[offset].color=color;
@@ -35395,11 +35506,13 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 						}
 
 
-                        fclose(ptr_scrfile);
+                        free(buf_pantalla);
 
 					menu_filesel_overlay_assign_memory_preview(128,96);							
 
-					menu_filesel_preview_reduce_monochome(buffer_intermedio,256,192);
+					//menu_filesel_preview_reduce_monochome(buffer_intermedio,256,192);
+
+					menu_filesel_preview_reduce_scr_color(buffer_intermedio,256,192);
 
 					free(buffer_intermedio);
 
