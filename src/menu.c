@@ -35256,16 +35256,92 @@ void menu_filesel_overlay_draw_preview(void)
 		int x,y;
 		int contador=0;
 
-		for (x=0;x<menu_filesel_overlay_last_preview_width;x++) {
-			for (y=0;y<menu_filesel_overlay_last_preview_height;y++) {
+		for (y=0;y<menu_filesel_overlay_last_preview_height;y++) {
+			for (x=0;x<menu_filesel_overlay_last_preview_width;x++) {
+			
 				int color=menu_filesel_overlay_last_preview_memory[contador].color;
 				contador++;
 
 				//Por si acaso comprobar rangos
 				if (color<0 || color>=EMULATOR_TOTAL_PALETTE_COLOURS) color=0;
-				zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+y,0);
+				zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+y,color);
 			}
 		}
+}
+
+
+//Reduce una imagen en el preview, monocroma, a la mitad
+//Entrada: colores son 0  o 1
+//Salida: colores son 7 o 0
+void menu_filesel_preview_reduce_monochome(void)
+{
+
+//int menu_filesel_overlay_last_preview_width=0;
+//int menu_filesel_overlay_last_preview_height=0;
+
+	//Asignamos primero buffer intermedio
+	int *buffer_intermedio;
+
+	int ancho=menu_filesel_overlay_last_preview_width;
+	int alto=menu_filesel_overlay_last_preview_height;
+
+	int ancho_final=ancho/2;
+	int alto_final=alto/2;
+
+	int elementos=ancho_final*alto_final;
+
+	buffer_intermedio=malloc(sizeof(int)*elementos);
+
+	if (buffer_intermedio==NULL)  cpu_panic("Cannot allocate memory for reduce buffer");
+
+
+	int x,y;
+
+	for (y=0;y<alto;y+=2) {
+		for (x=0;x<ancho;x+=2) {
+
+			int offset_orig;
+			offset_orig=y*ancho+x;
+			int color1=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+
+			offset_orig=y*ancho+x+1;
+			int color2=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+
+			offset_orig=(y*ancho+1)+x;
+			int color3=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+
+			offset_orig=(y*ancho+1)+x+1;
+			int color4=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+
+			int suma=color1+color2+color3+color4;
+
+			//maximo sera 4
+
+			int color_final=(suma>=2 ? 0 : 7);
+
+			int offset_final=y*ancho_final+x/2;
+
+			buffer_intermedio[offset_final]=color_final;
+
+		}
+	}
+
+	//Y ahora pasamos del buffer intermedio a la memoria del preview
+	int offset=0;
+	for (y=0;y<alto_final;y++) {
+		for (x=0;x<ancho_final;x++) {	
+			menu_filesel_overlay_last_preview_memory[offset].color=buffer_intermedio[offset];
+			
+			offset++;
+		}
+	}
+
+	//Y cambiamos tamaño.
+	menu_filesel_overlay_last_preview_width=ancho_final;
+	menu_filesel_overlay_last_preview_height=alto_final;	
+
+
+	free(buffer_intermedio);
 }
 
 //Renderizar preview en memoria del archivo seleccionado
@@ -35291,11 +35367,12 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
                 if (!ptr_scrfile) {
                         //debug_printf (VERBOSE_ERR,"Unable to open Screen file");
+					
                 }
 
                 else {
 
-                        
+                      printf("Renderizando..............\n");  
                         
 
 						int x,y,bit_counter;
@@ -35304,12 +35381,23 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 							for (x=0;x<32;x++) {
 								z80_byte leido;
 								fread(&leido,1,1,ptr_scrfile);
+
+								z80_int offset_lectura=y*32+x;
+
+								int xdestino,ydestino;
+
+								//esta funcion no es muy rapida pero....
+								util_spectrumscreen_get_xy(offset_lectura,&xdestino,&ydestino);
+
 								for (bit_counter=0;bit_counter<8;bit_counter++) {
 									//De momento a lo bruto
-									int offset=y*256+x*8+bit_counter;
 
 
-									menu_filesel_overlay_last_preview_memory[offset].color=leido & 128;
+									//de momento solo 0 o 1
+									int color=(leido & 128 ? 1 : 0);
+
+									int offset=ydestino*256+xdestino+bit_counter;
+									menu_filesel_overlay_last_preview_memory[offset].color=color;
 									leido=leido << 1;
 								}
 							}
@@ -35318,6 +35406,43 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
                         fclose(ptr_scrfile);
 
+					menu_filesel_preview_reduce_monochome();
+
+					//Y ahora lo que vamos a hacer realmente es reducir esa imagen a 128x96
+					/*
+					for (y=0;y<192;y+=2) {
+						for (x=0;x<256;x+=2) {
+
+							int offset_orig;
+							offset_orig=y*256+x;
+							int color1=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+
+							offset_orig=y*256+x+1;
+							int color2=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+
+							offset_orig=(y*256+1)+x;
+							int color3=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+
+							offset_orig=(y*256+1)+x+1;
+							int color4=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+
+							int suma=color1+color2+color3+color4;
+
+							//maximo sera 4
+
+							int color_final=(suma>=2 ? 0 : 7);
+
+							int offset_final=(y/2)*256+x/2;
+
+							menu_filesel_overlay_last_preview_memory[offset_final].color=color_final;
+
+						}
+					}
+					*/
+
+					//Y cambiamos tamaño.
+					//int menu_filesel_overlay_last_preview_width=128;
+					//int menu_filesel_overlay_last_preview_height=96;
                 }
 
 
