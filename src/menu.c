@@ -35189,8 +35189,6 @@ int menu_filesel_overlay_valor_contador_segundo_anterior;
 //Estructura de memoria para mostrar previews. coordenadas, color
 
 struct s_filesel_preview_mem {
-	int x;
-	int y;
 	int color;
 };
 
@@ -35278,6 +35276,54 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	menu_filesel_overlay_assign_memory_preview(256,192);
 
 	//de momento nada mas
+	printf("File: %s\n",filesel_nombre_archivo_seleccionado);
+
+	//TODO: no renderizar si el archivo seleccionado era el mismo
+
+
+	//Si es scr
+	if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"scr")) {
+		printf("es pantalla\n");
+
+		//Leemos el archivo en memoria
+				FILE *ptr_scrfile;
+                ptr_scrfile=fopen(filesel_nombre_archivo_seleccionado,"rb");
+
+                if (!ptr_scrfile) {
+                        //debug_printf (VERBOSE_ERR,"Unable to open Screen file");
+                }
+
+                else {
+
+                        
+                        
+
+						int x,y,bit_counter;
+
+						for (y=0;y<192;y++) {
+							for (x=0;x<32;x++) {
+								z80_byte leido;
+								fread(&leido,1,1,ptr_scrfile);
+								for (bit_counter=0;bit_counter<8;bit_counter++) {
+									//De momento a lo bruto
+									int offset=y*256+x*8+bit_counter;
+
+
+									menu_filesel_overlay_last_preview_memory[offset].color=leido & 128;
+									leido=leido << 1;
+								}
+							}
+						}
+
+
+                        fclose(ptr_scrfile);
+
+                }
+
+
+
+	}
+
 }
 
 //Overlay para mostrar los previews
