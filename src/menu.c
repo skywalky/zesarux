@@ -35277,15 +35277,6 @@ void menu_filesel_overlay_draw_preview(void)
 void menu_filesel_preview_reduce_monochome(int *buffer_intermedio,int ancho, int alto)
 {
 
-//int menu_filesel_overlay_last_preview_width=0;
-//int menu_filesel_overlay_last_preview_height=0;
-
-
-
-	int ancho_final=ancho/2;
-	int alto_final=alto/2;
-
-
 
 	int x,y;
 
@@ -35322,24 +35313,7 @@ void menu_filesel_preview_reduce_monochome(int *buffer_intermedio,int ancho, int
 		}
 	}
 
-/*
-	//Y ahora pasamos del buffer intermedio a la memoria del preview
-	int offset=0;
-	for (y=0;y<alto_final;y++) {
-		for (x=0;x<ancho_final;x++) {	
-			menu_filesel_overlay_last_preview_memory[offset].color=buffer_intermedio[offset];
-			
-			offset++;
-		}
-	}
 
-	//Y cambiamos tamaño.
-	menu_filesel_overlay_last_preview_width=ancho_final;
-	menu_filesel_overlay_last_preview_height=alto_final;	
-
-
-	free(buffer_intermedio);
-	*/
 }
 
 //Renderizar preview en memoria del archivo seleccionado
@@ -35375,18 +35349,18 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 
 
-	//Asignamos primero buffer intermedio
-	int *buffer_intermedio;
+						//Asignamos primero buffer intermedio
+						int *buffer_intermedio;
 
-	int ancho=256;
-	int alto=192;
+						int ancho=256;
+						int alto=192;
 
 
-	int elementos=ancho*alto;
+						int elementos=ancho*alto;
 
-	buffer_intermedio=malloc(sizeof(int)*elementos);
+						buffer_intermedio=malloc(sizeof(int)*elementos);
 
-	if (buffer_intermedio==NULL)  cpu_panic("Cannot allocate memory for reduce buffer");					  
+						if (buffer_intermedio==NULL)  cpu_panic("Cannot allocate memory for reduce buffer");					  
                         
 
 						int x,y,bit_counter;
@@ -35423,8 +35397,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
                         fclose(ptr_scrfile);
 
-		//para probar
-		menu_filesel_overlay_assign_memory_preview(128,96);							
+					menu_filesel_overlay_assign_memory_preview(128,96);							
 
 					menu_filesel_preview_reduce_monochome(buffer_intermedio,256,192);
 
