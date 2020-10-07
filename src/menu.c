@@ -779,6 +779,9 @@ char filesel_nombre_archivo_seleccionado[PATH_MAX];
 //Si mostrar en filesel utilidades de archivos
 z80_bit menu_filesel_show_utils={0};
 
+//Si mostrar en filesel previews de archivos
+z80_bit menu_filesel_show_previews={0};
+
 //Si no caben todos los archivos en pantalla y por tanto se muestra "*" a la derecha
 int filesel_no_cabe_todo;
 
@@ -35178,6 +35181,14 @@ void menu_filesel_save_params_window(zxvision_window *ventana)
 }
 
 
+zxvision_window *menu_filesel_overlay_window;
+
+//Overlay para mostrar los previews
+void menu_filesel_overlay(void)
+{
+	printf("overlay\n");
+}
+
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
 //Si seleccionado archivo, lo guarda en variable *archivo
 //Si sale con ESC, devuelve en menu_filesel_last_directory_seen ultimo directorio
@@ -35329,6 +35340,13 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		}
 
 		zxvision_draw_window(ventana);
+
+
+		//Overlay para los previews
+		if (menu_filesel_show_previews.v) {
+			menu_filesel_overlay_window=ventana;
+			set_menu_overlay_function(menu_filesel_overlay);
+		}
 
 		zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
 		zxvision_menu_filesel_print_text_contents(ventana);
