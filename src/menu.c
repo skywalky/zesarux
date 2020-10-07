@@ -35226,7 +35226,7 @@ void menu_filesel_overlay_draw_preview(void)
 	//No hay imagen asignada?
 	if (menu_filesel_overlay_last_preview_memory==NULL) return;	
 
-	//Por si acaso otra comprobacion
+	//Pero tiene tamanyo?
 	if (menu_filesel_overlay_last_preview_width<=0 || menu_filesel_overlay_last_preview_height<=0) return;
 
 
@@ -35297,6 +35297,8 @@ void menu_filesel_preview_reduce_monochome(void)
 
 	int x,y;
 
+	int offset_final=0;
+
 	for (y=0;y<alto;y+=2) {
 		for (x=0;x<ancho;x+=2) {
 
@@ -35317,11 +35319,11 @@ void menu_filesel_preview_reduce_monochome(void)
 
 			//maximo sera 4
 
-			int color_final=(suma>=2 ? 0 : 7);
+			int color_final=(suma>2 ? 0 : 7);
 
-			int offset_final=y*ancho_final+x/2;
+			//int offset_final=(y/2)*ancho_final+x/2;
 
-			buffer_intermedio[offset_final]=color_final;
+			buffer_intermedio[offset_final++]=color_final;
 
 		}
 	}
@@ -35348,8 +35350,7 @@ void menu_filesel_preview_reduce_monochome(void)
 void menu_filesel_overlay_render_preview_in_memory(void)
 {
 
-	//para probar
-	menu_filesel_overlay_assign_memory_preview(256,192);
+
 
 	//de momento nada mas
 	printf("File: %s\n",filesel_nombre_archivo_seleccionado);
@@ -35360,6 +35361,9 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	//Si es scr
 	if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"scr")) {
 		printf("es pantalla\n");
+
+		//para probar
+		menu_filesel_overlay_assign_memory_preview(256,192);		
 
 		//Leemos el archivo en memoria
 				FILE *ptr_scrfile;
@@ -35377,17 +35381,18 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 						int x,y,bit_counter;
 
+						z80_int offset_lectura=0;
 						for (y=0;y<192;y++) {
 							for (x=0;x<32;x++) {
 								z80_byte leido;
 								fread(&leido,1,1,ptr_scrfile);
 
-								z80_int offset_lectura=y*32+x;
-
 								int xdestino,ydestino;
 
 								//esta funcion no es muy rapida pero....
 								util_spectrumscreen_get_xy(offset_lectura,&xdestino,&ydestino);
+
+								offset_lectura++;
 
 								for (bit_counter=0;bit_counter<8;bit_counter++) {
 									//De momento a lo bruto
@@ -35447,6 +35452,13 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 
 
+	}
+
+
+	else {
+		//Cualquier otra cosa, liberar preview
+		menu_filesel_overlay_last_preview_width=0;
+		menu_filesel_overlay_last_preview_height=0;
 	}
 
 }
