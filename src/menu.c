@@ -35271,29 +35271,20 @@ void menu_filesel_overlay_draw_preview(void)
 }
 
 
-//Reduce una imagen en el preview, monocroma, a la mitad
+//Reduce una imagen de un buffer , monocroma, a la mitad con destino en preview
 //Entrada: colores son 0  o 1
 //Salida: colores son 7 o 0
-void menu_filesel_preview_reduce_monochome(void)
+void menu_filesel_preview_reduce_monochome(int *buffer_intermedio,int ancho, int alto)
 {
 
 //int menu_filesel_overlay_last_preview_width=0;
 //int menu_filesel_overlay_last_preview_height=0;
 
-	//Asignamos primero buffer intermedio
-	int *buffer_intermedio;
 
-	int ancho=menu_filesel_overlay_last_preview_width;
-	int alto=menu_filesel_overlay_last_preview_height;
 
 	int ancho_final=ancho/2;
 	int alto_final=alto/2;
 
-	int elementos=ancho_final*alto_final;
-
-	buffer_intermedio=malloc(sizeof(int)*elementos);
-
-	if (buffer_intermedio==NULL)  cpu_panic("Cannot allocate memory for reduce buffer");
 
 
 	int x,y;
@@ -35305,16 +35296,16 @@ void menu_filesel_preview_reduce_monochome(void)
 
 			int offset_orig;
 			offset_orig=y*ancho+x;
-			int color1=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+			int color1=buffer_intermedio[offset_orig];
 
 			offset_orig=y*ancho+x+1;
-			int color2=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+			int color2=buffer_intermedio[offset_orig];
 
 			offset_orig=(y*ancho+1)+x;
-			int color3=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+			int color3=buffer_intermedio[offset_orig];
 
 			offset_orig=(y*ancho+1)+x+1;
-			int color4=menu_filesel_overlay_last_preview_memory[offset_orig].color;
+			int color4=buffer_intermedio[offset_orig];
 
 			int suma=color1+color2+color3+color4;
 
@@ -35324,11 +35315,14 @@ void menu_filesel_preview_reduce_monochome(void)
 
 			//int offset_final=(y/2)*ancho_final+x/2;
 
-			buffer_intermedio[offset_final++]=color_final;
+			//buffer_intermedio[offset_final++]=color_final;
+
+			menu_filesel_overlay_last_preview_memory[offset_final++].color=color_final;
 
 		}
 	}
 
+/*
 	//Y ahora pasamos del buffer intermedio a la memoria del preview
 	int offset=0;
 	for (y=0;y<alto_final;y++) {
@@ -35345,6 +35339,7 @@ void menu_filesel_preview_reduce_monochome(void)
 
 
 	free(buffer_intermedio);
+	*/
 }
 
 //Renderizar preview en memoria del archivo seleccionado
@@ -35363,8 +35358,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"scr")) {
 		printf("es pantalla\n");
 
-		//para probar
-		menu_filesel_overlay_assign_memory_preview(256,192);		
+	
 
 		//Leemos el archivo en memoria
 				FILE *ptr_scrfile;
@@ -35378,6 +35372,21 @@ void menu_filesel_overlay_render_preview_in_memory(void)
                 else {
 
                       printf("Renderizando..............\n");  
+
+
+
+	//Asignamos primero buffer intermedio
+	int *buffer_intermedio;
+
+	int ancho=256;
+	int alto=192;
+
+
+	int elementos=ancho*alto;
+
+	buffer_intermedio=malloc(sizeof(int)*elementos);
+
+	if (buffer_intermedio==NULL)  cpu_panic("Cannot allocate memory for reduce buffer");					  
                         
 
 						int x,y,bit_counter;
@@ -35396,14 +35405,16 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 								offset_lectura++;
 
 								for (bit_counter=0;bit_counter<8;bit_counter++) {
-									//De momento a lo bruto
+									
 
 
 									//de momento solo 0 o 1
 									int color=(leido & 128 ? 1 : 0);
 
 									int offset=ydestino*256+xdestino+bit_counter;
-									menu_filesel_overlay_last_preview_memory[offset].color=color;
+									//menu_filesel_overlay_last_preview_memory[offset].color=color;
+
+									buffer_intermedio[offset]=color;
 									leido=leido << 1;
 								}
 							}
@@ -35412,7 +35423,12 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
                         fclose(ptr_scrfile);
 
-					menu_filesel_preview_reduce_monochome();
+		//para probar
+		menu_filesel_overlay_assign_memory_preview(128,96);							
+
+					menu_filesel_preview_reduce_monochome(buffer_intermedio,256,192);
+
+					free(buffer_intermedio);
 
 					//Y ahora lo que vamos a hacer realmente es reducir esa imagen a 128x96
 					/*

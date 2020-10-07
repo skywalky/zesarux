@@ -170,3 +170,6 @@ estan en subcarpeta editview/
 -sonido en QL
 
 -En ventana sprite navigator Tbblue, indicar parámetros de sprite relativo etc
+
+-Mejorar los previews de filesel: que seria mejor, primero render a tamaño entero en buffer intermedio
+y luego pasar a buffer preview? seria lo mas logico
