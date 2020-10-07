@@ -780,7 +780,7 @@ char filesel_nombre_archivo_seleccionado[PATH_MAX];
 z80_bit menu_filesel_show_utils={0};
 
 //Si mostrar en filesel previews de archivos
-z80_bit menu_filesel_show_previews={0};
+z80_bit menu_filesel_show_previews={1};
 
 //Si no caben todos los archivos en pantalla y por tanto se muestra "*" a la derecha
 int filesel_no_cabe_todo;
@@ -35183,10 +35183,106 @@ void menu_filesel_save_params_window(zxvision_window *ventana)
 
 zxvision_window *menu_filesel_overlay_window;
 
+int menu_filesel_overlay_valor_contador_segundo_anterior;
+
+
+//Estructura de memoria para mostrar previews. coordenadas, color
+
+struct s_filesel_preview_mem {
+	int x;
+	int y;
+	int color;
+};
+
+//Datos del ultimo preview mostrado
+
+int menu_filesel_overlay_last_preview_width=0;
+int menu_filesel_overlay_last_preview_height=0;
+
+//Puntero a la previsualizacion
+struct s_filesel_preview_mem *menu_filesel_overlay_last_preview_memory=NULL;
+
+
+void menu_filesel_overlay_assign_memory_preview(int width,int height)
+{
+
+	//Liberar si conviene
+	if (menu_filesel_overlay_last_preview_memory==NULL) free(menu_filesel_overlay_last_preview_memory);
+
+
+	int elementos=width*height;
+
+	int total_mem=elementos*sizeof(struct s_filesel_preview_mem);
+
+	menu_filesel_overlay_last_preview_memory=malloc(total_mem);
+
+	if (menu_filesel_overlay_last_preview_memory==NULL) cpu_panic("Cannot allocate memory for image preview");
+}
+
+
+void menu_filesel_overlay_draw_preview(void)
+{
+	//No hay imagen asignada?
+	if (menu_filesel_overlay_last_preview_memory==NULL) return;	
+
+	//Por si acaso otra comprobacion
+	if (menu_filesel_overlay_last_preview_width<=0 || menu_filesel_overlay_last_preview_height<=0) return;
+
+
+		printf("putpixel preview\n");
+
+		//zxvision_putpixel
+        //Ancho de zona waveform variable segun el tamanyo de ventana
+        int ancho_ventana=menu_filesel_overlay_window->visible_width-1;
+
+		int alto_ventana=menu_filesel_overlay_window->visible_height-2;		
+
+
+		int xorigen=0;
+		int yorigen=0;
+
+		ancho_ventana *=menu_char_width;
+		alto_ventana *=8;
+		xorigen *=menu_char_width;
+		//yorigen *=8;
+
+		int x,y;
+		int contador=0;
+
+		for (x=0;x<ancho_ventana;x++) {
+			for (y=0;y<alto_ventana;y++) {
+				int color=menu_filesel_overlay_last_preview_memory[contador].color;
+				contador++;
+
+				//Por si acaso comprobar rangos
+				if (color<0 || color>=EMULATOR_TOTAL_PALETTE_COLOURS) color=0;
+				zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+y,0);
+			}
+		}
+}
+
 //Overlay para mostrar los previews
 void menu_filesel_overlay(void)
 {
-	printf("overlay\n");
+	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+	
+	if (1) {
+	//esto hara ejecutar esto 2 veces por segundo
+		printf("overlay\n");
+
+
+		menu_filesel_overlay_draw_preview();
+
+	}
+
+	if ( ((contador_segundo%500) == 0 && menu_filesel_overlay_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+		menu_filesel_overlay_valor_contador_segundo_anterior=contador_segundo;
+
+	//Y 2 veces por segundo, renderizar preview en memoria si conviene
+
+
+	}
 }
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
@@ -35342,10 +35438,14 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 		zxvision_draw_window(ventana);
 
 
-		//Overlay para los previews
-		if (menu_filesel_show_previews.v) {
-			menu_filesel_overlay_window=ventana;
-			set_menu_overlay_function(menu_filesel_overlay);
+		//Overlay para los previews. Siempre que tengamos video driver completo
+        if (si_complete_video_driver() ) {
+                
+			if (menu_filesel_show_previews.v) {
+				menu_filesel_overlay_window=ventana;
+				set_menu_overlay_function(menu_filesel_overlay);
+			}
+
 		}
 
 		zxvision_menu_filesel_print_filters(ventana,filesel_filtros);
