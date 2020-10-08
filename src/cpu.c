@@ -1835,6 +1835,7 @@ printf (
 printf (
 		"\n"
 		"--hide-dirs                Do not show directories on file selector menus\n"
+		"--no-file-previews         Do not show file previews on file selector menus\n"
 		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
 		"--setmachinebyname         Select machine by name instead of manufacturer\n"
 		"--disablemenu              Disable menu\n"
@@ -5784,6 +5785,11 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--hide-dirs")) {
 				menu_filesel_hide_dirs.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--no-file-previews")) {
+				menu_filesel_show_previews.v=0;
+			}
+
 
 			else if (!strcmp(argv[puntero_parametro],"--disablemenumouse")) {
 				mouse_menu_disabled.v=1;
