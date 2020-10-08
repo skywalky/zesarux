@@ -3825,7 +3825,7 @@ int util_write_configfile(void)
 
   if (menu_filesel_hide_dirs.v)         ADD_STRING_CONFIG,"--hide-dirs");
 
-  if (menu_filesel_show_previews.v==0)         ADD_STRING_CONFIG,"ADD_STRING_CONFIG,");
+  if (menu_filesel_show_previews.v==0)         ADD_STRING_CONFIG,"--no-file-previews");
 			
   if (menu_desactivado.v)                     ADD_STRING_CONFIG,"--disablemenu");
 
