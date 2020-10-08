@@ -780,7 +780,7 @@ char filesel_nombre_archivo_seleccionado[PATH_MAX];
 z80_bit menu_filesel_show_utils={0};
 
 //Si mostrar en filesel previews de archivos
-z80_bit menu_filesel_show_previews={0};
+z80_bit menu_filesel_show_previews={1};
 
 //Si no caben todos los archivos en pantalla y por tanto se muestra "*" a la derecha
 int filesel_no_cabe_todo;
@@ -35276,20 +35276,30 @@ void menu_filesel_overlay_draw_preview(void)
 			}
 		}
 
-		//Prueba ponerle sombreado
+		//ponerle sombreado
 		//TODO: que el color dependa del tema
 		//inicio en 4 para que salga desplazado
 
+		int offset_sombra=4;
+
+		int grosor_sombra=4;
+
 		//Vertical
-		for (y=4;y<menu_filesel_overlay_last_preview_height;y++) {
-			zxvision_putpixel(menu_filesel_overlay_window,xorigen+menu_filesel_overlay_last_preview_width,yorigen+y,7);
-			zxvision_putpixel(menu_filesel_overlay_window,xorigen+menu_filesel_overlay_last_preview_width+1,yorigen+y,7);
+		for (y=offset_sombra;y<menu_filesel_overlay_last_preview_height+grosor_sombra;y++) {
+			int i;
+			for (i=0;i<grosor_sombra;i++) 
+			{
+				zxvision_putpixel(menu_filesel_overlay_window,xorigen+menu_filesel_overlay_last_preview_width+i,yorigen+y,7);
+			}
 		}
 
 		//Horizontal
-		for (x=4;x<menu_filesel_overlay_last_preview_width+2;x++) {
-			zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+menu_filesel_overlay_last_preview_height,7);
-			zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+menu_filesel_overlay_last_preview_height+1,7);
+		for (x=offset_sombra;x<menu_filesel_overlay_last_preview_width+grosor_sombra;x++) {
+			int i;
+			for (i=0;i<grosor_sombra;i++) 
+			{
+				zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+menu_filesel_overlay_last_preview_height+i,7);
+			}
 		}		
 }
 
