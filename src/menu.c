@@ -35233,7 +35233,7 @@ void menu_filesel_overlay_draw_preview(void)
 	if (menu_filesel_overlay_last_preview_width<=0 || menu_filesel_overlay_last_preview_height<=0) return;
 
 
-		printf("putpixel preview\n");
+		//printf("putpixel preview\n");
 
 		//zxvision_putpixel
         //Ancho de zona waveform variable segun el tamanyo de ventana
@@ -35530,6 +35530,8 @@ void menu_filesel_preview_render_scr(char *archivo_scr)
 }
 
 
+char menu_filesel_last_preview_file[PATH_MAX]="";
+
 //Renderizar preview en memoria del archivo seleccionado
 void menu_filesel_overlay_render_preview_in_memory(void)
 {
@@ -35538,6 +35540,14 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//de momento nada mas
 	printf("File: %s\n",filesel_nombre_archivo_seleccionado);
+
+	if (!strcmp(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado)) {
+		printf("Archivo es el mismo que antes, no hacer nada\n");
+	}
+
+	printf("Renderizar archivo\n");
+
+	strcpy(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado);
 
 	//TODO: no renderizar si el archivo seleccionado era el mismo
 
@@ -35733,8 +35743,8 @@ void menu_filesel_overlay(void)
 
 	
 	if (1) {
-	//esto hara ejecutar esto 2 veces por segundo
-		printf("overlay\n");
+
+		//printf("overlay\n");
 
 
 		menu_filesel_overlay_draw_preview();
