@@ -13450,90 +13450,90 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
                 if (longitud_final>=0) {
 
-		z80_byte tipo_bloque=255;
+                        z80_byte tipo_bloque=255;
 
-		//Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
-		z80_byte flag=copia_puntero[2];
+                        //Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
+                        z80_byte flag=copia_puntero[2];
 
-		//printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
+                        //printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
 
-		int longitud_segun_cabecera=-1;
+                        int longitud_segun_cabecera=-1;
 
-		if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
-			if (tzxfile==NULL) sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
+                        if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
+                                if (tzxfile==NULL) sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
 
-			tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
+                                tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
 
-			//printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
+                                //printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
 
-			//Longitud segun cabecera
-			longitud_segun_cabecera=value_8_to_16(copia_puntero[15],copia_puntero[14]);
-		
-		}
-		else {
-			char extension_agregar[10];
-			extension_agregar[0]=0; //Por defecto
-
-                        int era_pantalla=0;
-
-			//Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0	
-			if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
-				//Corresponde. Agregar extensiones bas o scr segun el caso
-				if (previo_tipo_bloque==0) {
-					//Basic
-					strcpy(extension_agregar,".bas");
-				}
-
-				if (previo_tipo_bloque==3 && longitud_final==6912) {
-					//Screen
-                                        strcpy(extension_agregar,".scr");
-
-                                        era_pantalla=1;
-                                }
-			}
-
-			if (tzxfile==NULL) {
-                                sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdir,filenumber,longitud_final,extension_agregar);
-
-                                if (era_pantalla) {
-                                        //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
-                                        //usado en los previews
-                                        char buff_preview_scr[PATH_MAX];
-                                        sprintf(buff_preview_scr,"%s/%s",tempdir,MENU_SCR_INFO_FILE_NAME);
-
-                                        //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
-                                        util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
-                                }                                
+                                //Longitud segun cabecera
+                                longitud_segun_cabecera=value_8_to_16(copia_puntero[15],copia_puntero[14]);
+                        
                         }
-		}
+                        else {
+                                char extension_agregar[10];
+                                extension_agregar[0]=0; //Por defecto
+
+                                int era_pantalla=0;
+
+                                //Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0	
+                                if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
+                                        //Corresponde. Agregar extensiones bas o scr segun el caso
+                                        if (previo_tipo_bloque==0) {
+                                                //Basic
+                                                strcpy(extension_agregar,".bas");
+                                        }
+
+                                        if (previo_tipo_bloque==3 && longitud_final==6912) {
+                                                //Screen
+                                                strcpy(extension_agregar,".scr");
+
+                                                era_pantalla=1;
+                                        }
+                                }
+
+                                if (tzxfile==NULL) {
+                                        sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdir,filenumber,longitud_final,extension_agregar);
+
+                                        if (era_pantalla) {
+                                                //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
+                                                //usado en los previews
+                                                char buff_preview_scr[PATH_MAX];
+                                                sprintf(buff_preview_scr,"%s/%s",tempdir,MENU_SCR_INFO_FILE_NAME);
+
+                                                //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
+                                                util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
+                                        }                                
+                                }
+                        }
 
 
-                if (tzxfile==NULL) {
-		        //Generar bloque con datos, saltando los dos de cabecera y el flag
-		        util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
-                }
+                        if (tzxfile==NULL) {
+                                //Generar bloque con datos, saltando los dos de cabecera y el flag
+                                util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+                        }
 
-                //Convertir a tzx
-                else {
-                        //Generar bloque con datos. TZX ID 10h, word pausa de 500ms, longitud
-                        z80_byte buffer_tzx[5];
-                        buffer_tzx[0]=0x10;
-                        buffer_tzx[1]=244;
-                        buffer_tzx[2]=1;
+                        //Convertir a tzx
+                        else {
+                                //Generar bloque con datos. TZX ID 10h, word pausa de 500ms, longitud
+                                z80_byte buffer_tzx[5];
+                                buffer_tzx[0]=0x10;
+                                buffer_tzx[1]=244;
+                                buffer_tzx[2]=1;
 
-                        fwrite(buffer_tzx,1,3,ptr_tzxfile);
+                                fwrite(buffer_tzx,1,3,ptr_tzxfile);
 
-                        //Meter datos tal cual de tap: longitud, flag, datos, crc
-                        fwrite(copia_puntero,1,longitud_bloque,ptr_tzxfile);
+                                //Meter datos tal cual de tap: longitud, flag, datos, crc
+                                fwrite(copia_puntero,1,longitud_bloque,ptr_tzxfile);
 
 
-                }                
+                        }                
 
-		filenumber++;
+                        filenumber++;
 
-		previo_flag=flag;
-		previo_longitud_segun_cabecera=longitud_segun_cabecera;
-		previo_tipo_bloque=tipo_bloque;
+                        previo_flag=flag;
+                        previo_longitud_segun_cabecera=longitud_segun_cabecera;
+                        previo_tipo_bloque=tipo_bloque;
 
                 }
 	}
