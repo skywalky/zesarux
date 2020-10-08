@@ -35268,6 +35268,22 @@ void menu_filesel_overlay_draw_preview(void)
 				zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+y,color);
 			}
 		}
+
+		//Prueba ponerle sombreado
+		//TODO: que el color dependa del tema
+		//inicio en 4 para que salga desplazado
+
+		//Vertical
+		for (y=4;y<menu_filesel_overlay_last_preview_height;y++) {
+			zxvision_putpixel(menu_filesel_overlay_window,xorigen+menu_filesel_overlay_last_preview_width,yorigen+y,7);
+			zxvision_putpixel(menu_filesel_overlay_window,xorigen+menu_filesel_overlay_last_preview_width+1,yorigen+y,7);
+		}
+
+		//Horizontal
+		for (x=4;x<menu_filesel_overlay_last_preview_width+2;x++) {
+			zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+menu_filesel_overlay_last_preview_height,7);
+			zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+menu_filesel_overlay_last_preview_height+1,7);
+		}		
 }
 
 
