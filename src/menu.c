@@ -35242,9 +35242,48 @@ void menu_filesel_overlay_draw_preview(void)
 		int alto_ventana=menu_filesel_overlay_window->visible_height-2;		
 
 
-		//Se dibuja algo desplazado
-		int xorigen=20;
-		int yorigen=4;
+		//Preview pegar a la derecha
+		int xorigen=ancho_ventana-menu_filesel_overlay_last_preview_width/8;
+
+		//Restar barra desplazamiento, texto <dir> y mas margen
+		xorigen=xorigen-1-5-3;
+
+
+		int yorigen;
+
+
+		/*
+		int zxvision_get_filesel_alto_dir(zxvision_window *ventana)
+{
+	return ventana->visible_height - ventana->upper_margin - ventana->lower_margin - 2;
+}
+
+cursor:
+filesel_linea_seleccionada   
+
+alto:
+zxvision_get_filesel_alto_dir(ventana)-1
+		*/
+
+		//Con esto se clavaria justo en el cursor
+		//yorigen=menu_filesel_overlay_window->upper_margin+filesel_linea_seleccionada;
+
+		int alto_zona_dir=zxvision_get_filesel_alto_dir(menu_filesel_overlay_window)-1;
+
+		//Si cursor esta por arriba
+		if (filesel_linea_seleccionada<alto_zona_dir/2) {
+			//El preview esta abajo
+			yorigen=alto_zona_dir-menu_filesel_overlay_last_preview_height/8;
+		}
+
+		else {
+			//Si no, arriba
+			yorigen=0;
+		}
+
+
+		//Sumar zona de cabeceras
+		yorigen +=menu_filesel_overlay_window->upper_margin;
 
 		//TODO: ubicarlo en una posicion que no moleste:
 		//hacia la derecha, y en vertical, que este por debajo del cursor o por arriba del cursor, dependiendo
@@ -35964,6 +36003,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 			//printf ("\nReleer directorio\n");
 			//printf ("cursor_line: %d filesel_linea_seleccionada: %d filesel_archivo_seleccionado %d\n",
 			//	ventana->cursor_line,filesel_linea_seleccionada,filesel_archivo_seleccionado);
+
+			//printf("filesel_linea_seleccionada: %d\n",filesel_linea_seleccionada);
 
 
 			//printf ("(FILESEL_ALTO-10): %d zxvision_get_filesel_alto_dir: %d\n",(FILESEL_ALTO-10),zxvision_get_filesel_alto_dir(ventana) );
