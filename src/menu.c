@@ -35271,9 +35271,9 @@ zxvision_get_filesel_alto_dir(ventana)-1
 		int alto_zona_dir=zxvision_get_filesel_alto_dir(menu_filesel_overlay_window)-1;
 
 		//Si cursor esta por arriba
-		if (filesel_linea_seleccionada<alto_zona_dir/2) {
+		if (filesel_linea_seleccionada<=alto_zona_dir/2+1) {
 			//El preview esta abajo
-			yorigen=alto_zona_dir-menu_filesel_overlay_last_preview_height/8;
+			yorigen=alto_zona_dir-menu_filesel_overlay_last_preview_height/8+1;
 		}
 
 		else {
@@ -35285,9 +35285,8 @@ zxvision_get_filesel_alto_dir(ventana)-1
 		//Sumar zona de cabeceras
 		yorigen +=menu_filesel_overlay_window->upper_margin;
 
-		//TODO: ubicarlo en una posicion que no moleste:
-		//hacia la derecha, y en vertical, que este por debajo del cursor o por arriba del cursor, dependiendo
-		//del cursor donde esté
+		//Y ver que no se salga por la izquierda por ejemplo
+		//TODO
 
 		//Sumar scroll ventana
 		xorigen +=menu_filesel_overlay_window->offset_x;
@@ -35313,6 +35312,21 @@ zxvision_get_filesel_alto_dir(ventana)-1
 				if (color<0 || color>=EMULATOR_TOTAL_PALETTE_COLOURS) color=0;
 				zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+y,color);
 			}
+		}
+
+		//Le pongo recuadro en el mismo tamaño del preview
+		int color_recuadro=ESTILO_GUI_TINTA_NORMAL;
+
+		//Horizontal
+		for (x=0;x<menu_filesel_overlay_last_preview_width;x++) {
+			zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen,color_recuadro);
+			zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+menu_filesel_overlay_last_preview_height-1,color_recuadro);
+		}
+
+		//Vertical
+		for (y=0;y<menu_filesel_overlay_last_preview_height;y++) {
+			zxvision_putpixel(menu_filesel_overlay_window,xorigen,yorigen+y,color_recuadro);
+			zxvision_putpixel(menu_filesel_overlay_window,xorigen+menu_filesel_overlay_last_preview_width-1,yorigen+y,color_recuadro);
 		}
 
 		//ponerle sombreado
