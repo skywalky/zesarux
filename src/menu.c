@@ -27169,6 +27169,11 @@ void menu_setting_select_machine_by_name(MENU_ITEM_PARAMETERS)
 	setting_machine_selection_by_name.v ^=1;
 }
 
+void menu_setting_filesel_previews(MENU_ITEM_PARAMETERS)
+{
+	menu_filesel_show_previews.v ^=1;
+}
+
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_interface_settings;
@@ -27284,6 +27289,12 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Hide directories from file selector menus");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Hide directories from file selector menus. "
 								"Useful on demo environments and you don't want the user to be able to navigate the filesystem");
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_previews,NULL,"[%c] Show file previews",
+			(menu_filesel_show_previews.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Show file previews in the file selector");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Show file previews for .scr, .tap, .tzx, etc...");
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"    GUI ~~style [%s]",
