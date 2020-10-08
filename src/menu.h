@@ -129,6 +129,7 @@ typedef struct s_zxvision_window zxvision_window;
 #define MENU_TOTAL_MAPPED_PALETTES 17
 
 #define MENU_LAST_DIR_FILE_NAME "zesarux_last_dir.txt"
+#define MENU_SCR_INFO_FILE_NAME "zesarux_scr_info.txt"
 
 extern int menu_overlay_activo;
 extern void (*menu_overlay_function)(void);

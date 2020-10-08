@@ -5478,7 +5478,6 @@ int lee_archivo(char *nombre,char *buffer,int max_longitud)
 
 }
 
-
 /*
 void util_set_reset_key_msx_keymap(enum util_teclas_msx_keymap tecla,int pressrelease)
 {
@@ -13668,6 +13667,8 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 			char extension_agregar[10];
 			extension_agregar[0]=0; //Por defecto
 
+                        int era_pantalla=0;
+
 			//Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0	
 			if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
 				//Corresponde. Agregar extensiones bas o scr segun el caso
@@ -13679,10 +13680,25 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 				if (previo_tipo_bloque==3 && longitud_final==6912) {
 					//Screen
                                         strcpy(extension_agregar,".scr");
+
+                                        era_pantalla=1;
+
                                 }
 			}
 
-			if (tapfile==NULL) sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
+			if (tapfile==NULL) {
+                                sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
+
+                                if (era_pantalla) {
+                                        //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
+                                        //usado en los previews
+                                        char buff_preview_scr[PATH_MAX];
+                                        sprintf(buff_preview_scr,"%s/%s",tempdirectory,MENU_SCR_INFO_FILE_NAME);
+
+                                        //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla 
+                                        util_save_file(buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
+                                }
+                        }
 		}
 
 

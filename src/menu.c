@@ -19730,6 +19730,9 @@ int menu_file_filter(const char *name,char *filtros[])
 	//El archivo MENU_LAST_DIR_FILE_NAME zesarux_last_dir.txt usado para abrir archivos comprimidos, no lo mostrare nunca
 	if (!strcmp(name,MENU_LAST_DIR_FILE_NAME)) return 0;
 
+	//Archivo usado para indicar que archivo es la pantalla del juego. Usado en previews de tap, tzx etc
+	if (!strcmp(name,MENU_SCR_INFO_FILE_NAME)) return 0;
+
 	util_get_file_extension((char *) name,extension);
 
 	char *f;
@@ -35243,6 +35246,10 @@ void menu_filesel_overlay_draw_preview(void)
 		int xorigen=20;
 		int yorigen=4;
 
+		//TODO: ubicarlo en una posicion que no moleste:
+		//hacia la derecha, y en vertical, que este por debajo del cursor o por arriba del cursor, dependiendo
+		//del cursor donde esté
+
 		//Sumar scroll ventana
 		xorigen +=menu_filesel_overlay_window->offset_x;
 		yorigen +=menu_filesel_overlay_window->offset_y;
@@ -35404,6 +35411,124 @@ void menu_filesel_preview_reduce_scr_color(int *buffer_intermedio,int ancho, int
 
 }
 
+void menu_filesel_preview_render_scr(char *archivo_scr)
+{
+			printf("es pantalla\n");
+
+	
+
+		//Leemos el archivo en memoria
+
+
+		printf("Renderizando..............\n");  
+
+		//buffer lectura archivo
+		z80_byte *buf_pantalla;
+
+		buf_pantalla=malloc(6912);
+
+		if (buf_pantalla==NULL) cpu_panic("Can not allocate buffer for screen read");
+
+		int leidos=lee_archivo(archivo_scr,(char *)buf_pantalla,6912);
+
+		if (leidos<=0) return;
+
+		//fread(buf_pantalla,1,6912,ptr_scrfile);
+
+		//fclose(ptr_scrfile);
+
+
+
+		//Asignamos primero buffer intermedio
+		int *buffer_intermedio;
+
+		int ancho=256;
+		int alto=192;
+
+
+		int elementos=ancho*alto;
+
+		buffer_intermedio=malloc(sizeof(int)*elementos);
+
+		if (buffer_intermedio==NULL)  cpu_panic("Cannot allocate memory for reduce buffer");					  
+		
+
+		int x,y,bit_counter;
+
+		z80_int offset_lectura=0;
+		for (y=0;y<192;y++) {
+			for (x=0;x<32;x++) {
+				z80_byte leido;
+				int offset_orig=screen_addr_table[y*32+x];
+				//fread(&leido,1,1,ptr_scrfile);
+				leido=buf_pantalla[offset_orig];
+
+				//int xdestino,ydestino;
+
+				//esta funcion no es muy rapida pero....
+				//util_spectrumscreen_get_xy(offset_lectura,&xdestino,&ydestino);
+
+				offset_lectura++;
+
+				int offset_destino=y*256+x*8;
+
+				int tinta;
+				int papel;
+
+				z80_byte atributo;
+
+				int pos_attr;
+
+				//pos_attr=(ydestino/8)*32+(xdestino/8);
+
+				pos_attr=6144+((y/8)*32)+x;
+				//printf("%d\n",pos_attr);
+
+				atributo=buf_pantalla[pos_attr];
+
+				//atributo=56;
+
+				tinta=(atributo)&7;
+				papel=(atributo>>3)&7;
+
+				if (atributo & 64) {
+					tinta +=8;
+					papel +=8;
+				}
+
+				
+
+				for (bit_counter=0;bit_counter<8;bit_counter++) {
+					
+					//de momento solo 0 o 1
+					int color=(leido & 128 ? tinta : papel);
+
+					
+					//menu_filesel_overlay_last_preview_memory[offset].color=color;
+
+					buffer_intermedio[offset_destino+bit_counter]=color;
+					leido=leido << 1;
+				}
+			}
+		}
+		
+
+
+		free(buf_pantalla);
+
+		//Reducir a 128x96
+		menu_filesel_overlay_assign_memory_preview(128,96);							
+
+		//menu_filesel_preview_reduce_monochome(buffer_intermedio,256,192);
+
+		menu_filesel_preview_reduce_scr_color(buffer_intermedio,256,192);
+
+		free(buffer_intermedio);
+
+
+
+}
+
 
 //Renderizar preview en memoria del archivo seleccionado
 void menu_filesel_overlay_render_preview_in_memory(void)
@@ -35416,9 +35541,65 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//TODO: no renderizar si el archivo seleccionado era el mismo
 
+	//Si es tap o tzx
+	// 
+	if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tap") ||
+		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tzx") 
+	
+	) {
+	
+		char tmpdir[PATH_MAX];
+
+		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
+		menu_filesel_mkdir(tmpdir);
+
+		int retorno=1;
+
+        if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tap") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a tap file");
+        	    retorno=util_extract_tap(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
+        }
+
+        else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tzx") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a tzx file");
+                retorno=util_extract_tzx(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
+        }
+
+		if (retorno!=0) {
+			//ERROR
+			return;
+		}
+
+		//Ver si hay archivo que indica pantalla
+
+		char archivo_info_pantalla[PATH_MAX];
+
+		sprintf(archivo_info_pantalla,"%s/%s",tmpdir,MENU_SCR_INFO_FILE_NAME);
+
+		if (si_existe_archivo(archivo_info_pantalla)) {
+			printf("HAY PANTALLA--------------- \n");
+
+			char buf_archivo_scr[PATH_MAX];
+
+			lee_archivo(archivo_info_pantalla,buf_archivo_scr,PATH_MAX-1);
+
+			printf ("PANTALLA:     %s\n",buf_archivo_scr);
+
+			menu_filesel_preview_render_scr(buf_archivo_scr);
+		}
+
+		else {
+			printf("NO HAY PANTALLA****************\n");
+
+			//liberar preview
+			menu_filesel_overlay_last_preview_width=0;
+			menu_filesel_overlay_last_preview_height=0;			
+		}
+	}
+
 
 	//Si es scr
-	if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"scr")) {
+	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"scr")) {
 		printf("es pantalla\n");
 
 	
