@@ -35315,7 +35315,7 @@ zxvision_get_filesel_alto_dir(ventana)-1
 		}
 
 		//Le pongo recuadro en el mismo tamaño del preview
-		int color_recuadro=ESTILO_GUI_TINTA_NORMAL;
+		int color_recuadro=ESTILO_GUI_PAPEL_TITULO;
 
 		//Horizontal
 		for (x=0;x<menu_filesel_overlay_last_preview_width;x++) {
@@ -35330,19 +35330,20 @@ zxvision_get_filesel_alto_dir(ventana)-1
 		}
 
 		//ponerle sombreado
-		//TODO: que el color dependa del tema
-		//inicio en 4 para que salga desplazado
 
 		int offset_sombra=4;
 
 		int grosor_sombra=4;
+
+		int color_sombra=7;
+		//TODO: quizar buscar mejor color o hacerlo dependiendo del tema
 
 		//Vertical
 		for (y=offset_sombra;y<menu_filesel_overlay_last_preview_height+grosor_sombra;y++) {
 			int i;
 			for (i=0;i<grosor_sombra;i++) 
 			{
-				zxvision_putpixel(menu_filesel_overlay_window,xorigen+menu_filesel_overlay_last_preview_width+i,yorigen+y,7);
+				zxvision_putpixel(menu_filesel_overlay_window,xorigen+menu_filesel_overlay_last_preview_width+i,yorigen+y,color_sombra);
 			}
 		}
 
@@ -35351,7 +35352,7 @@ zxvision_get_filesel_alto_dir(ventana)-1
 			int i;
 			for (i=0;i<grosor_sombra;i++) 
 			{
-				zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+menu_filesel_overlay_last_preview_height+i,7);
+				zxvision_putpixel(menu_filesel_overlay_window,xorigen+x,yorigen+menu_filesel_overlay_last_preview_height+i,color_sombra);
 			}
 		}		
 }

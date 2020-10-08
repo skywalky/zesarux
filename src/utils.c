@@ -13496,9 +13496,11 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
                                                 //Screen
                                                 strcpy(extension_agregar,".scr");
 
-                                                era_pantalla=1;
+                                                
                                         }
                                 }
+
+                                if (longitud_final==6912) era_pantalla=1;
 
                                 if (tzxfile==NULL) {
                                         sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdir,filenumber,longitud_final,extension_agregar);
@@ -13710,10 +13712,11 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 					//Screen
                                         strcpy(extension_agregar,".scr");
 
-                                        era_pantalla=1;
 
                                 }
 			}
+
+                        if (longitud_final==6912) era_pantalla=1;
 
 			if (tapfile==NULL) {
                                 sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
