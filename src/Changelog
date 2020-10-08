@@ -24,7 +24,7 @@ Improved TBBlue emulation:
 -Added relative sprites emulation
 -Added sprite clipping emulation
 
-Improved File Browser: added previews for screens (on .scr, .tap, .tzx)
+Improved File Browser: added previews for screens (on .scr, .tap, .tzx, .pzx)
 
 Fixed reading keys on SDL and X11 drivers with default keymap and machines QL, MSX and Spectravideo
 Fixed restoring machine to msx, coleco, sg1000 and svi

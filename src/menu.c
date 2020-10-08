@@ -35629,10 +35629,11 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//TODO: no renderizar si el archivo seleccionado era el mismo
 
-	//Si es tap o tzx
+	//Si es tap o tzx o pzx
 	// 
 	if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tap") ||
-		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tzx") 
+		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tzx") ||
+		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") 
 	
 	) {
 	
@@ -35652,6 +35653,11 @@ void menu_filesel_overlay_render_preview_in_memory(void)
                 debug_printf (VERBOSE_DEBUG,"Is a tzx file");
                 retorno=util_extract_tzx(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
         }
+
+        else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a pzx file");
+                retorno=util_extract_pzx(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
+        }		
 
 		if (retorno!=0) {
 			//ERROR
