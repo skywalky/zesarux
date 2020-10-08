@@ -13437,6 +13437,7 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 	while(total_mem>0) {
 		z80_byte *copia_puntero=puntero_lectura;
 		longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
+                //printf("longitud bloque: %d\n",longitud_bloque);
 		total_mem-=longitud_bloque;
 		puntero_lectura +=longitud_bloque;
 		//debug_printf (VERBOSE_DEBUG,"Tape browser. Block: %s",buffer_texto);
@@ -13446,6 +13447,8 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
 		char buffer_temp_file[PATH_MAX];
 		int longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
+
+                if (longitud_final>=0) {
 
 		z80_byte tipo_bloque=255;
 
@@ -13531,6 +13534,8 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 		previo_flag=flag;
 		previo_longitud_segun_cabecera=longitud_segun_cabecera;
 		previo_tipo_bloque=tipo_bloque;
+
+                }
 	}
 
 

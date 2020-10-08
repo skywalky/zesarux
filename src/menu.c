@@ -780,7 +780,7 @@ char filesel_nombre_archivo_seleccionado[PATH_MAX];
 z80_bit menu_filesel_show_utils={0};
 
 //Si mostrar en filesel previews de archivos
-z80_bit menu_filesel_show_previews={1};
+z80_bit menu_filesel_show_previews={0};
 
 //Si no caben todos los archivos en pantalla y por tanto se muestra "*" a la derecha
 int filesel_no_cabe_todo;
@@ -35543,6 +35543,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	if (!strcmp(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado)) {
 		printf("Archivo es el mismo que antes, no hacer nada\n");
+		return;
 	}
 
 	printf("Renderizar archivo\n");
