@@ -35331,56 +35331,49 @@ void menu_filesel_preview_reduce_scr_color(int *buffer_intermedio,int ancho, int
 	for (y=0;y<alto;y+=2) {
 		for (x=0;x<ancho;x+=2) {
 
+			int colores_cuadricula[4];
+
+			//Sacar los 4 colores de la cuadricula de 2x2
 			int offset_orig;
 			offset_orig=y*ancho+x;
-			int color1=buffer_intermedio[offset_orig];
+			colores_cuadricula[0]=buffer_intermedio[offset_orig];
 
 			offset_orig=y*ancho+x+1;
-			int color2=buffer_intermedio[offset_orig];
+			colores_cuadricula[1]=buffer_intermedio[offset_orig];
 
 			offset_orig=(y*ancho+1)+x;
-			int color3=buffer_intermedio[offset_orig];
+			colores_cuadricula[2]=buffer_intermedio[offset_orig];
 
 			offset_orig=(y*ancho+1)+x+1;
-			int color4=buffer_intermedio[offset_orig];
+			colores_cuadricula[3]=buffer_intermedio[offset_orig];
 
-	int color_final1=color1;
-	int color_final2=-1;
 
-	int veces_color_final1=0;
-	int veces_color_final2=0;			
 
-			if (color1==color_final1) {
-				veces_color_final1++;
-			}
-			else {
-				color_final2=color1;
-				veces_color_final2++;
-			}
+			//Dado que partimos de una pantalla de spectrum, en una cuadricula de 2x2 habran como mucho 2 colores diferentes
+			//Ver cual de los dos se repite mas
 
-			if (color2==color_final1) {
-				veces_color_final1++;
-			}
-			else {
-				color_final2=color2;
-				veces_color_final2++;
-			}
+			//Asumimos el primer color, para simplificar la comparacion mas abajo
+			int color_final1=colores_cuadricula[0];
+			//Segundo color inicialmente a nada valido
+			int color_final2=-1;
 
-			if (color3==color_final1) {
-				veces_color_final1++;
-			}
-			else {
-				color_final2=color3;
-				veces_color_final2++;
-			}
+			int veces_color_final1=0;
+			int veces_color_final2=0;		
 
-			if (color4==color_final1) {
-				veces_color_final1++;
+			int i;
+
+			for (i=0;i<3;i++) {	
+
+				if (colores_cuadricula[i]==color_final1) {
+					veces_color_final1++;
+				}
+				else {
+					color_final2=colores_cuadricula[i];
+					veces_color_final2++;
+				}
+
 			}
-			else {
-				color_final2=color4;
-				veces_color_final2++;
-			}									
+									
 
 			int color_final;
 
@@ -35415,143 +35408,113 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	
 
 		//Leemos el archivo en memoria
-				FILE *ptr_scrfile;
-                ptr_scrfile=fopen(filesel_nombre_archivo_seleccionado,"rb");
 
-                if (!ptr_scrfile) {
-                        //debug_printf (VERBOSE_ERR,"Unable to open Screen file");
+
+		printf("Renderizando..............\n");  
+
+		//buffer lectura archivo
+		z80_byte *buf_pantalla;
+
+		buf_pantalla=malloc(6912);
+
+		if (buf_pantalla==NULL) cpu_panic("Can not allocate buffer for screen read");
+
+		int leidos=lee_archivo(filesel_nombre_archivo_seleccionado,(char *)buf_pantalla,6912);
+
+		if (leidos<=0) return;
+
+		//fread(buf_pantalla,1,6912,ptr_scrfile);
+
+		//fclose(ptr_scrfile);
+
+
+
+		//Asignamos primero buffer intermedio
+		int *buffer_intermedio;
+
+		int ancho=256;
+		int alto=192;
+
+
+		int elementos=ancho*alto;
+
+		buffer_intermedio=malloc(sizeof(int)*elementos);
+
+		if (buffer_intermedio==NULL)  cpu_panic("Cannot allocate memory for reduce buffer");					  
+		
+
+		int x,y,bit_counter;
+
+		z80_int offset_lectura=0;
+		for (y=0;y<192;y++) {
+			for (x=0;x<32;x++) {
+				z80_byte leido;
+				int offset_orig=screen_addr_table[y*32+x];
+				//fread(&leido,1,1,ptr_scrfile);
+				leido=buf_pantalla[offset_orig];
+
+				//int xdestino,ydestino;
+
+				//esta funcion no es muy rapida pero....
+				//util_spectrumscreen_get_xy(offset_lectura,&xdestino,&ydestino);
+
+				offset_lectura++;
+
+				int offset_destino=y*256+x*8;
+
+				int tinta;
+				int papel;
+
+				z80_byte atributo;
+
+				int pos_attr;
+
+				//pos_attr=(ydestino/8)*32+(xdestino/8);
+
+				pos_attr=6144+((y/8)*32)+x;
+				//printf("%d\n",pos_attr);
+
+				atributo=buf_pantalla[pos_attr];
+
+				//atributo=56;
+
+				tinta=(atributo)&7;
+				papel=(atributo>>3)&7;
+
+				if (atributo & 64) {
+					tinta +=8;
+					papel +=8;
+				}
+
+				
+
+				for (bit_counter=0;bit_counter<8;bit_counter++) {
 					
-                }
+					//de momento solo 0 o 1
+					int color=(leido & 128 ? tinta : papel);
 
-                else {
+					
+					//menu_filesel_overlay_last_preview_memory[offset].color=color;
 
-                      printf("Renderizando..............\n");  
-
-					  //buffer lectura archivo
-					  z80_byte *buf_pantalla;
-
-					  buf_pantalla=malloc(6912);
-
-					  if (buf_pantalla==NULL) cpu_panic("Can not allocate buffer for screen read");
-
-					  fread(buf_pantalla,1,6912,ptr_scrfile);
-
-					  fclose(ptr_scrfile);
+					buffer_intermedio[offset_destino+bit_counter]=color;
+					leido=leido << 1;
+				}
+			}
+		}
+		
 
 
+		free(buf_pantalla);
 
-						//Asignamos primero buffer intermedio
-						int *buffer_intermedio;
+		//Reducir a 128x96
+		menu_filesel_overlay_assign_memory_preview(128,96);							
 
-						int ancho=256;
-						int alto=192;
+		//menu_filesel_preview_reduce_monochome(buffer_intermedio,256,192);
 
+		menu_filesel_preview_reduce_scr_color(buffer_intermedio,256,192);
 
-						int elementos=ancho*alto;
+		free(buffer_intermedio);
 
-						buffer_intermedio=malloc(sizeof(int)*elementos);
-
-						if (buffer_intermedio==NULL)  cpu_panic("Cannot allocate memory for reduce buffer");					  
-                        
-
-						int x,y,bit_counter;
-
-						z80_int offset_lectura=0;
-						for (y=0;y<192;y++) {
-							for (x=0;x<32;x++) {
-								z80_byte leido;
-								int pos_pixel=y*32+x;
-								//fread(&leido,1,1,ptr_scrfile);
-								leido=buf_pantalla[pos_pixel];
-
-								int xdestino,ydestino;
-
-								//esta funcion no es muy rapida pero....
-								util_spectrumscreen_get_xy(offset_lectura,&xdestino,&ydestino);
-
-								offset_lectura++;
-
-								int tinta;
-								int papel;
-
-								z80_byte atributo;
-
-								int pos_attr=(ydestino/8)*32+(xdestino/8);
-
-								atributo=buf_pantalla[6144+pos_attr];
-
-								tinta=(atributo)&7;
-								papel=(atributo>>3)&7;
-
-								if (atributo & 64) {
-									tinta +=8;
-									papel +=8;
-								}
-
-								for (bit_counter=0;bit_counter<8;bit_counter++) {
-									
-
-									
-
-									//de momento solo 0 o 1
-									int color=(leido & 128 ? tinta : papel);
-
-									int offset=ydestino*256+xdestino+bit_counter;
-									//menu_filesel_overlay_last_preview_memory[offset].color=color;
-
-									buffer_intermedio[offset]=color;
-									leido=leido << 1;
-								}
-							}
-						}
-
-
-                        free(buf_pantalla);
-
-					menu_filesel_overlay_assign_memory_preview(128,96);							
-
-					//menu_filesel_preview_reduce_monochome(buffer_intermedio,256,192);
-
-					menu_filesel_preview_reduce_scr_color(buffer_intermedio,256,192);
-
-					free(buffer_intermedio);
-
-					//Y ahora lo que vamos a hacer realmente es reducir esa imagen a 128x96
-					/*
-					for (y=0;y<192;y+=2) {
-						for (x=0;x<256;x+=2) {
-
-							int offset_orig;
-							offset_orig=y*256+x;
-							int color1=menu_filesel_overlay_last_preview_memory[offset_orig].color;
-
-							offset_orig=y*256+x+1;
-							int color2=menu_filesel_overlay_last_preview_memory[offset_orig].color;
-
-							offset_orig=(y*256+1)+x;
-							int color3=menu_filesel_overlay_last_preview_memory[offset_orig].color;
-
-							offset_orig=(y*256+1)+x+1;
-							int color4=menu_filesel_overlay_last_preview_memory[offset_orig].color;
-
-							int suma=color1+color2+color3+color4;
-
-							//maximo sera 4
-
-							int color_final=(suma>=2 ? 0 : 7);
-
-							int offset_final=(y/2)*256+x/2;
-
-							menu_filesel_overlay_last_preview_memory[offset_final].color=color_final;
-
-						}
-					}
-					*/
-
-					//Y cambiamos tamaño.
-					//int menu_filesel_overlay_last_preview_width=128;
-					//int menu_filesel_overlay_last_preview_height=96;
-                }
 
 
 
