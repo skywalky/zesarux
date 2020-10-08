@@ -35297,7 +35297,9 @@ zxvision_get_filesel_alto_dir(ventana)-1
 		yorigen +=menu_filesel_overlay_window->upper_margin;
 
 		//Y ver que no se salga por la izquierda por ejemplo
-		//TODO
+		if (xorigen<0 || yorigen<0) return;
+
+		//TODO ver que quepa entero
 
 		//Sumar scroll ventana
 		xorigen +=menu_filesel_overlay_window->offset_x;
