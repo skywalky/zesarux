@@ -35817,20 +35817,23 @@ void menu_filesel_overlay(void)
 {
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
+	//El overlay de la pantalla siempre
 	
-	if (1) {
 
 		//printf("overlay\n");
 
 
 		menu_filesel_overlay_draw_preview();
 
-	}
+	
 
-	if ( ((contador_segundo%500) == 0 && menu_filesel_overlay_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+	//Y el procesado de nueva preview no tan seguido
+	//esto hara ejecutar esto 5 veces por segundo
+	if ( ((contador_segundo%200) == 0 && menu_filesel_overlay_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 		menu_filesel_overlay_valor_contador_segundo_anterior=contador_segundo;
 
-	//Y 2 veces por segundo, renderizar preview en memoria si conviene
+		//renderizar preview en memoria si conviene
 
 		menu_filesel_overlay_render_preview_in_memory();
 
