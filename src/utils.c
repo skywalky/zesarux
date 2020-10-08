@@ -13438,6 +13438,14 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 		z80_byte *copia_puntero=puntero_lectura;
 		longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
                 //printf("longitud bloque: %d\n",longitud_bloque);
+                //printf("nombre: %s\n",buffer_texto);
+
+                //Eliminar posibles / del nombre
+                int i;
+                for (i=0;buffer_texto[i];i++) {
+                        if (buffer_texto[i]=='/') buffer_texto[i]=' ';
+                }
+
 		total_mem-=longitud_bloque;
 		puntero_lectura +=longitud_bloque;
 		//debug_printf (VERBOSE_DEBUG,"Tape browser. Block: %s",buffer_texto);

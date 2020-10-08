@@ -44,6 +44,8 @@ Fixed easter egg and cyrillic characters
 Fixed segfaults when initializing audio and video drivers
 Fixed rendering ZX Desktop on startup
 Fixed arranging ZX Vision windows when changing machine or disabling border
+Fixed panic screen extracting tap when invalid block
+Fixed open error when extracting tap with Spectrum names with '/'
 
 
 
