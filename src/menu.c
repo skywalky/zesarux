@@ -21048,7 +21048,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 
 //Retorna el offset al dsk segun la pista y sector dados (ambos desde 0...)
 //-1 si no se encuentra
-int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar)
+int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar,int longitud_dsk)
 {
 
 /*
@@ -21087,8 +21087,26 @@ sectores van alternados:
 
 		for (sector=0;sector<sectores_en_pista;sector++) {
 			int offset_tabla_sector=sector*8; 
-			z80_byte pista_id=dsk_memoria[iniciopista+offset_tabla_sector]; //Leemos pista id
-			z80_byte sector_id=dsk_memoria[iniciopista+offset_tabla_sector+2]; //Leemos c1, c2, etc
+
+			//printf("before getting pista_id sumando %d %d\n",iniciopista,offset_tabla_sector);
+
+			int offset_leer_dsk;
+
+			offset_leer_dsk=iniciopista+offset_tabla_sector;
+			//Validar offset
+			if (offset_leer_dsk>=longitud_dsk) return -1;
+
+			z80_byte pista_id=dsk_memoria[offset_leer_dsk]; //Leemos pista id
+			//printf("before getting sector_id\n");
+
+
+			//Validar offset
+			offset_leer_dsk=iniciopista+offset_tabla_sector+2;
+			if (offset_leer_dsk>=longitud_dsk) return -1;
+
+
+			z80_byte sector_id=dsk_memoria[offset_leer_dsk]; //Leemos c1, c2, etc
+			//printf("after getting sector_id\n");
 
 			//debug_printf(VERBOSE_DEBUG,"%02X ",sector_id);
 
@@ -21102,6 +21120,7 @@ sectores van alternados:
 		                int offset=iniciopista_orig+256;
 
                 		//int iniciopista=traps_plus3dos_getoff_start_track(pista);
+						//printf("returning ok\n");
 		                return offset+512*sector;
 			}
 
@@ -21116,6 +21135,7 @@ sectores van alternados:
 	debug_printf(VERBOSE_DEBUG,"Not found sector %d/%d",pista_buscar,sector_buscar);	
 	
 	//retornamos offset fuera de rango
+	//printf("returning -1\n");
 	return -1;
 
 
@@ -21144,14 +21164,16 @@ void menu_dsk_getoff_block(z80_byte *dsk_file_memory,int longitud_dsk,int bloque
 			//int offset=pista*4864+sector_en_pista*512;
 
 
-
-			*offset1=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,pista,sector_en_pista);
+			//printf("before getting offset1\n");
+			*offset1=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,pista,sector_en_pista,longitud_dsk);
 
 			sector_total++;
 			pista=sector_total/9; //9 sectores por pista
 			sector_en_pista=sector_total % 9;			
 
-			*offset2=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,pista,sector_en_pista);
+			//printf("before getting offset2\n");
+			*offset2=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,pista,sector_en_pista,longitud_dsk);
+			//printf("after getting offset2\n");
 
 }
 
@@ -21171,7 +21193,7 @@ int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_dsk)
 
 
 
-                        return menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,0,0);
+                        return menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,0,0,longitud_dsk);
 
 }
 
@@ -21197,6 +21219,8 @@ void menu_file_dsk_browser_show(char *filename)
 		debug_printf(VERBOSE_ERR,"Unable to assign memory");
 		return;
 	}
+
+	int longitud_dsk=bytes_to_load;
 	
 	//Leemos archivo dsk
         FILE *ptr_file_dsk_browser;
@@ -21330,7 +21354,7 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 			//printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
             int total_pistas=bytes_to_load/4864;
 
-            puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0);
+            puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0,longitud_dsk);
 
 			if (puntero==-1) {
 		                //printf ("Filesystem track/sector not found. Guessing it\n");
@@ -33717,6 +33741,26 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                 } 
         }		
 
+		else if (!util_compare_file_extension(archivo,"sna")) {
+                char *opciones[]={
+					"SNA to SCR",
+                        NULL};
+
+        int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.scr",directorio,archivo);
+								util_convert_sna_to_scr(fullpath,archivo_destino);
+                        break;
+
+ 
+                } 
+        }			
+
 
         else if (!util_compare_file_extension(archivo,"hdf")) {
                 char *opciones[]={
@@ -35629,11 +35673,13 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//TODO: no renderizar si el archivo seleccionado era el mismo
 
-	//Si es tap o tzx o pzx
+	//Si es tap o tzx o pzx o trd
 	// 
 	if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tap") ||
 		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tzx") ||
-		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") 
+		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") ||
+		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"trd") ||
+		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"dsk") 
 	
 	) {
 	
@@ -35658,6 +35704,16 @@ void menu_filesel_overlay_render_preview_in_memory(void)
                 debug_printf (VERBOSE_DEBUG,"Is a pzx file");
                 retorno=util_extract_pzx(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
         }		
+
+        else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"trd") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a trd file");
+                retorno=util_extract_trd(filesel_nombre_archivo_seleccionado,tmpdir);
+        }		
+
+        else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"dsk") ) {
+                debug_printf (VERBOSE_DEBUG,"Is a dsk file");
+                retorno=util_extract_dsk(filesel_nombre_archivo_seleccionado,tmpdir);
+        }				
 
 		if (retorno!=0) {
 			//ERROR
@@ -35696,120 +35752,27 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"scr")) {
 		printf("es pantalla\n");
 
-	
-
-		//Leemos el archivo en memoria
-
-
-		printf("Renderizando..............\n");  
-
-		//buffer lectura archivo
-		z80_byte *buf_pantalla;
-
-		buf_pantalla=malloc(6912);
-
-		if (buf_pantalla==NULL) cpu_panic("Can not allocate buffer for screen read");
-
-		int leidos=lee_archivo(filesel_nombre_archivo_seleccionado,(char *)buf_pantalla,6912);
-
-		if (leidos<=0) return;
-
-		//fread(buf_pantalla,1,6912,ptr_scrfile);
-
-		//fclose(ptr_scrfile);
-
-
-
-		//Asignamos primero buffer intermedio
-		int *buffer_intermedio;
-
-		int ancho=256;
-		int alto=192;
-
-
-		int elementos=ancho*alto;
-
-		buffer_intermedio=malloc(sizeof(int)*elementos);
-
-		if (buffer_intermedio==NULL)  cpu_panic("Cannot allocate memory for reduce buffer");					  
-		
-
-		int x,y,bit_counter;
-
-		z80_int offset_lectura=0;
-		for (y=0;y<192;y++) {
-			for (x=0;x<32;x++) {
-				z80_byte leido;
-				int offset_orig=screen_addr_table[y*32+x];
-				//fread(&leido,1,1,ptr_scrfile);
-				leido=buf_pantalla[offset_orig];
-
-				//int xdestino,ydestino;
-
-				//esta funcion no es muy rapida pero....
-				//util_spectrumscreen_get_xy(offset_lectura,&xdestino,&ydestino);
-
-				offset_lectura++;
-
-				int offset_destino=y*256+x*8;
-
-				int tinta;
-				int papel;
-
-				z80_byte atributo;
-
-				int pos_attr;
-
-				//pos_attr=(ydestino/8)*32+(xdestino/8);
-
-				pos_attr=6144+((y/8)*32)+x;
-				//printf("%d\n",pos_attr);
-
-				atributo=buf_pantalla[pos_attr];
-
-				//atributo=56;
-
-				tinta=(atributo)&7;
-				papel=(atributo>>3)&7;
-
-				if (atributo & 64) {
-					tinta +=8;
-					papel +=8;
-				}
-
-				
-
-				for (bit_counter=0;bit_counter<8;bit_counter++) {
-					
-					//de momento solo 0 o 1
-					int color=(leido & 128 ? tinta : papel);
-
-					
-					//menu_filesel_overlay_last_preview_memory[offset].color=color;
-
-					buffer_intermedio[offset_destino+bit_counter]=color;
-					leido=leido << 1;
-				}
-			}
-		}
-		
-
-
-		free(buf_pantalla);
-
-		//Reducir a 128x96
-		menu_filesel_overlay_assign_memory_preview(128,96);							
-
-		//menu_filesel_preview_reduce_monochome(buffer_intermedio,256,192);
-
-		menu_filesel_preview_reduce_scr_color(buffer_intermedio,256,192);
-
-		free(buffer_intermedio);
-
-
-
+		menu_filesel_preview_render_scr(filesel_nombre_archivo_seleccionado);
 
 	}
+
+	//Si es sna
+	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"sna")) {
+		printf("es snapshot sna\n");
+
+		char tmpdir[PATH_MAX];
+
+		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
+		menu_filesel_mkdir(tmpdir);	
+
+		char tmpfile[PATH_MAX];	
+		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
+
+		util_convert_sna_to_scr(filesel_nombre_archivo_seleccionado,tmpfile);
+
+		menu_filesel_preview_render_scr(tmpfile);
+
+	}	
 
 
 	else {

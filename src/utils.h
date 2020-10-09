@@ -729,6 +729,8 @@ extern unsigned int util_if_open_just_menu_counter;
 extern unsigned int util_if_open_just_menu_initial_counter;
 extern void util_convert_scr_sprite(z80_byte *origen,z80_byte *destino);
 
+extern int util_convert_sna_to_scr(char *filename,char *archivo_destino);
+
 extern int util_get_absolute(int valor);
 
 extern int util_get_sign(int valor);

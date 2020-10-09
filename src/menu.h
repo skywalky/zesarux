@@ -995,7 +995,7 @@ extern void menu_dsk_getoff_block(z80_byte *dsk_file_memory,int longitud_dsk,int
 
 extern int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_dsk);
 
-extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar);
+extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar,int longitud_dsk);
 
 extern int menu_decae_ajusta_valor_volumen(int valor_decae,int valor_volumen);
 

@@ -14194,6 +14194,60 @@ z80_byte *memoria;
 
 }
 
+int util_convert_sna_to_scr(char *filename,char *archivo_destino)
+{
+        //snapshot a SCR
+
+
+        z80_byte sna_48k_header[SNA_48K_HEADER_SIZE];
+
+
+        FILE *ptr_snafile;
+
+        int filesize=get_file_size(filename);
+
+       		
+
+        if (filesize==49179 || filesize==131103 || filesize==147487) {
+
+                int leidos;
+
+                //Load File
+                ptr_snafile=fopen(filename,"rb");
+                if (ptr_snafile==NULL) {
+                        debug_printf(VERBOSE_ERR,"Error opening %s",filename);
+                        return 1;
+                }
+
+                //48k y 128k tienen misma cabecera al principio
+                leidos=fread(sna_48k_header,1,SNA_48K_HEADER_SIZE,ptr_snafile);
+                
+
+
+                //Leer byte a byte y pasarlo a archivo destino
+
+                FILE *ptr_destination_file;
+                ptr_destination_file=fopen(archivo_destino,"wb");
+
+                        if (!ptr_destination_file) {
+                                debug_printf (VERBOSE_ERR,"Can not open %s",archivo_destino);
+                                return 1;
+                }      
+
+                int i;
+
+                for (i=0;i<6912;i++) {
+                        z80_byte byte_leido;
+                        fread(&byte_leido,1,1,ptr_snafile);
+                        fwrite(&byte_leido,1,1,ptr_destination_file);
+                }   
+
+                fclose(ptr_snafile);
+                fclose(ptr_destination_file);
+        }
+
+        return 0; 
+}
 
 //Realmente lo que hacemos es copiar el .p en .baszx81 con un offset , saltando datos iniciales para situarnos en el programa basic
 int util_extract_p(char *filename,char *tempdir)
@@ -14423,6 +14477,16 @@ int util_extract_trd(char *filename,char *tempdir)
 
                         //grabar archivo
                         sprintf (buffer_temp_file,"%s/%s",tempdir,buffer_texto);
+
+                        if (longitud_final==6912) {
+                                //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
+                                //usado en los previews
+                                char buff_preview_scr[PATH_MAX];
+                                sprintf(buff_preview_scr,"%s/%s",tempdir,MENU_SCR_INFO_FILE_NAME);
+
+                                //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
+                                util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
+                        }
 		
            
                         util_save_file(&trd_file_memory[offset],longitud_final,buffer_temp_file);
@@ -14462,6 +14526,8 @@ int util_extract_dsk(char *filename,char *tempdir)  {
 		debug_printf(VERBOSE_ERR,"Unable to assign memory");
 		return 0;
 	}
+
+        int longitud_dsk=bytes_to_load;
 	
 	//Leemos archivo dsk
         FILE *ptr_file_dsk_browser;
@@ -14580,6 +14646,9 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 TODO. supuestamente entradas del directorio pueden ocupar 4 sectores. Actualmente solo hago 1
 */
 
+        //printf("puntero: %d\n",puntero);
+
+
 	if (puntero==-1) {
 		//printf ("Filesystem track/sector 0/0 not found. Guessing it\n");
 		//no encontrado. probar con lo habitual
@@ -14591,9 +14660,9 @@ TODO. supuestamente entradas del directorio pueden ocupar 4 sectores. Actualment
 			//printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
                         int total_pistas=bytes_to_load/4864;
 
-                        puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0);
+                        puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0,longitud_dsk);
 
-			//printf ("puntero: %d\n",puntero);
+			//printf ("puntero after menu_dsk_getoff_track_sector: %d\n",puntero);
 
 			if (puntero==-1) {
 		                //printf ("Filesystem track/sector 1/0 not found. Guessing it\n");
@@ -14625,8 +14694,12 @@ en que empieza en 1300H. Porque??
 
 	for (i=0;i<max_entradas_dsk;i++) {
 
+                //printf("entrada %d\n",i);
+
                 z80_byte file_is_deleted=dsk_file_memory[puntero-1];
 		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
+
+                //printf("after menu_file_mmc_browser_show_file\n");
 
 		if (buffer_texto[0]!='?') {
                 if (file_is_deleted==0xE5) debug_printf (VERBOSE_DEBUG,"File %s is deleted. Skipping",buffer_texto);
@@ -14634,6 +14707,8 @@ en que empieza en 1300H. Porque??
 			//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 			debug_printf (VERBOSE_DEBUG,"File %s",buffer_texto);
+
+                        //printf("puntero: %d\n",puntero);
 
 			z80_byte continuation_marker=dsk_file_memory[puntero+12-1]; //-1 porque empezamos el puntero en primera posicion
 
@@ -14643,6 +14718,8 @@ en que empieza en 1300H. Porque??
 			int bloque;
 
 			bloque=dsk_file_memory[puntero+15];
+
+                        //printf("after dsk_file_memory[puntero+15];\n");
 
 			//Este bloque indica el primer bloque de 1k del archivo. Esta ubicado en el principio de cada entrada de archivo+16
 			//(aqui hay 15 porque ya empezamos desplazados en 1 - 0x201)
@@ -14660,7 +14737,16 @@ en que empieza en 1300H. Porque??
 			do {
 			
 				int offset1,offset2;
+
+                                //printf("before menu_dsk_getoff_block\n");
 				menu_dsk_getoff_block(dsk_file_memory,bytes_to_load,bloque,&offset1,&offset2);
+
+                                //printf("offset1 %d offset2 %d\n",offset1,offset2);
+
+                                if (offset1<0 || offset2<0) {
+                                        debug_printf(VERBOSE_DEBUG,"Error reading dsk offset block");
+                                        return 0; //TODO: O retornar error? 
+                                }
 
 				//Sacar longitud real, de cabecera plus3dos. Solo el primer sector contiene cabecera plus3dos y la primera entrada del archivo,
 				//por tanto el primer sector contiene 512-128=384 datos, mientras que los siguientes,
@@ -14677,7 +14763,11 @@ en que empieza en 1300H. Porque??
 					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
 					//printf ("Escribiendo sector 2\n");
 
+                                        //printf("destino_en_buffer_temp 1 %d\n",destino_en_buffer_temp);
+
 					destino_en_buffer_temp +=512;
+
+                                        //printf("after memcpy 1\n");
 
 
 				}
@@ -14685,11 +14775,15 @@ en que empieza en 1300H. Porque??
 				else {
 
 					//Los dos sectores
+                                        //printf("destino_en_buffer_temp 2 %d\n",destino_en_buffer_temp);
+
 					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset1],512);
 					destino_en_buffer_temp +=512;
 
 					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
 					destino_en_buffer_temp +=512;
+
+                                        //printf("after memcpy 2\n");
 				}
 
 			
@@ -14727,11 +14821,24 @@ Byte 12
 			if (continuation_marker==0) {
                                 int longitud_final=longitud_en_bloques;
 
+                                //printf("longitud_final: %d\n",longitud_final);
+
                                 //En este caso, se ha grabado el archivo inicial y se sabe la longitud real segun cabecera plus3dos
                                 //si resulta que la longitud en bloques a guardar ahora es mayor que la cabecera, reducir
                                 if (longitud_final>longitud_real_archivo) longitud_final=longitud_real_archivo;
 				debug_printf (VERBOSE_DEBUG,"File entry is the first. Saving %d bytes on file",longitud_final);
 				util_save_file(buffer_temp,longitud_final,buffer_nombre_destino);
+
+
+                                if (longitud_final==6912) {
+                                        //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
+                                        //usado en los previews
+                                        char buff_preview_scr[PATH_MAX];
+                                        sprintf(buff_preview_scr,"%s/%s",tempdir,MENU_SCR_INFO_FILE_NAME);
+
+                                        //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
+                                        util_save_file((z80_byte *)buffer_nombre_destino,strlen(buffer_nombre_destino)+1,buff_preview_scr);
+                                }                                
 			}
 			
 			else {

@@ -5,6 +5,7 @@ Added pc speaker audio driver (for Linux only)
 Added date & time field info to ZSF snapshots
 Added F-key function to show windows in background without having to open the menu
 Added configuration & command line setting to save keymap type
+Added SNA to SCR file converter
 
 Improved ZX Desktop: 
 -Added direct buttons, to access menu items
@@ -24,7 +25,7 @@ Improved TBBlue emulation:
 -Added relative sprites emulation
 -Added sprite clipping emulation
 
-Improved File Browser: added previews for screens (on .scr, .tap, .tzx, .pzx)
+Improved File Browser: added previews for screens (on .scr, .tap, .tzx, .pzx, .trd, .dsk, .sna)
 
 Fixed reading keys on SDL and X11 drivers with default keymap and machines QL, MSX and Spectravideo
 Fixed restoring machine to msx, coleco, sg1000 and svi
