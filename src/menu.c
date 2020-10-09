@@ -35298,10 +35298,10 @@ void menu_filesel_overlay_draw_preview(void)
 
 
 		//Preview pegar a la derecha
-		int xorigen=ancho_ventana-menu_filesel_overlay_last_preview_width/8;
+		int xorigen=ancho_ventana-menu_filesel_overlay_last_preview_width/menu_char_width;
 
 		//Restar barra desplazamiento, texto <dir> y mas margen
-		xorigen=xorigen-1-5-3;
+		xorigen=xorigen-1-5-1;
 
 
 		int yorigen;
