@@ -14319,8 +14319,8 @@ void util_convert_p_to_scr_putchar(z80_byte caracter,int x,int y,z80_byte *panta
 
         int inverso=0;
 
-        if (caracter & 64) {
-                caracter -=64;
+        if (caracter & 128) {
+                caracter -=128;
                 inverso=1;
         }
 
