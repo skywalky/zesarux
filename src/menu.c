@@ -35721,12 +35721,15 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	strcpy(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado);
 
 	//Creamos carpeta temporal por si no existe
-		char tmpdir[PATH_MAX];
+	char tmpdir[PATH_MAX];
 
-		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
-		menu_filesel_mkdir(tmpdir);	
+	sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
+	menu_filesel_mkdir(tmpdir);	
 
-	//TODO: no renderizar si el archivo seleccionado era el mismo
+	//Definimos tmpfile_scr para los que convierten snapshot directo a scr
+	char tmpfile_scr[PATH_MAX];	
+	sprintf (tmpfile_scr,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);	
+
 
 	//Si es tap o tzx o pzx o trd
 	// 
@@ -35739,7 +35742,6 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	) {
 	
 
-
 		//Ver si hay archivo que indica pantalla
 		char archivo_info_pantalla[PATH_MAX];
 		sprintf(archivo_info_pantalla,"%s/%s",tmpdir,MENU_SCR_INFO_FILE_NAME);
@@ -35749,37 +35751,37 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 			printf("Archivo SCR no existe. Extraer\n");
 
 
-		int retorno=1;
+			int retorno=1;
 
-        if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tap") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a tap file");
-        	    retorno=util_extract_tap(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
-        }
+			if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tap") ) {
+					debug_printf (VERBOSE_DEBUG,"Is a tap file");
+					retorno=util_extract_tap(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
+			}
 
-        else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tzx") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a tzx file");
-                retorno=util_extract_tzx(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
-        }
+			else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tzx") ) {
+					debug_printf (VERBOSE_DEBUG,"Is a tzx file");
+					retorno=util_extract_tzx(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
+			}
 
-        else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a pzx file");
-                retorno=util_extract_pzx(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
-        }		
+			else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") ) {
+					debug_printf (VERBOSE_DEBUG,"Is a pzx file");
+					retorno=util_extract_pzx(filesel_nombre_archivo_seleccionado,tmpdir,NULL);
+			}		
 
-        else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"trd") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a trd file");
-                retorno=util_extract_trd(filesel_nombre_archivo_seleccionado,tmpdir);
-        }		
+			else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"trd") ) {
+					debug_printf (VERBOSE_DEBUG,"Is a trd file");
+					retorno=util_extract_trd(filesel_nombre_archivo_seleccionado,tmpdir);
+			}		
 
-        else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"dsk") ) {
-                debug_printf (VERBOSE_DEBUG,"Is a dsk file");
-                retorno=util_extract_dsk(filesel_nombre_archivo_seleccionado,tmpdir);
-        }				
+			else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"dsk") ) {
+					debug_printf (VERBOSE_DEBUG,"Is a dsk file");
+					retorno=util_extract_dsk(filesel_nombre_archivo_seleccionado,tmpdir);
+			}				
 
-		if (retorno!=0) {
-			//ERROR
-			return;
-		}
+			if (retorno!=0) {
+				//ERROR
+				return;
+			}
 
 		}
 
@@ -35825,15 +35827,12 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 
 
-		char tmpfile[PATH_MAX];	
-		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
-
 		//Si no existe preview
-		if (!si_existe_archivo(tmpfile)) {
-			util_convert_sna_to_scr(filesel_nombre_archivo_seleccionado,tmpfile);
+		if (!si_existe_archivo(tmpfile_scr)) {
+			util_convert_sna_to_scr(filesel_nombre_archivo_seleccionado,tmpfile_scr);
 		}
 
-		menu_filesel_preview_render_scr(tmpfile);
+		menu_filesel_preview_render_scr(tmpfile_scr);
 
 	}	
 
@@ -35842,16 +35841,12 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		printf("es snapshot sp\n");
 
 
-
-		char tmpfile[PATH_MAX];	
-		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
-
 		//Si no existe preview
-		if (!si_existe_archivo(tmpfile)) {
-			util_convert_sp_to_scr(filesel_nombre_archivo_seleccionado,tmpfile);
+		if (!si_existe_archivo(tmpfile_scr)) {
+			util_convert_sp_to_scr(filesel_nombre_archivo_seleccionado,tmpfile_scr);
 		}
 
-		menu_filesel_preview_render_scr(tmpfile);
+		menu_filesel_preview_render_scr(tmpfile_scr);
 
 	}	
 
@@ -35860,15 +35855,12 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		printf("es snapshot z80\n");
 
 
-		char tmpfile[PATH_MAX];	
-		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
-
 		//Si no existe preview
-		if (!si_existe_archivo(tmpfile)) {
-			util_convert_z80_to_scr(filesel_nombre_archivo_seleccionado,tmpfile);
+		if (!si_existe_archivo(tmpfile_scr)) {
+			util_convert_z80_to_scr(filesel_nombre_archivo_seleccionado,tmpfile_scr);
 		}
 
-		menu_filesel_preview_render_scr(tmpfile);
+		menu_filesel_preview_render_scr(tmpfile_scr);
 
 	}		
 
