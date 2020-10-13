@@ -35720,6 +35720,12 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	strcpy(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado);
 
+	//Creamos carpeta temporal por si no existe
+		char tmpdir[PATH_MAX];
+
+		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
+		menu_filesel_mkdir(tmpdir);	
+
 	//TODO: no renderizar si el archivo seleccionado era el mismo
 
 	//Si es tap o tzx o pzx o trd
@@ -35732,10 +35738,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	
 	) {
 	
-		char tmpdir[PATH_MAX];
 
-		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
-		menu_filesel_mkdir(tmpdir);
 
 		//Ver si hay archivo que indica pantalla
 		char archivo_info_pantalla[PATH_MAX];
@@ -35820,10 +35823,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"sna")) {
 		printf("es snapshot sna\n");
 
-		char tmpdir[PATH_MAX];
 
-		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
-		menu_filesel_mkdir(tmpdir);	
 
 		char tmpfile[PATH_MAX];	
 		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
@@ -35841,10 +35841,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"sp")) {
 		printf("es snapshot sp\n");
 
-		char tmpdir[PATH_MAX];
 
-		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
-		menu_filesel_mkdir(tmpdir);	
 
 		char tmpfile[PATH_MAX];	
 		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
@@ -35862,10 +35859,6 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"z80")) {
 		printf("es snapshot z80\n");
 
-		char tmpdir[PATH_MAX];
-
-		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
-		menu_filesel_mkdir(tmpdir);	
 
 		char tmpfile[PATH_MAX];	
 		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
