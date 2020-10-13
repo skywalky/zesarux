@@ -171,4 +171,7 @@ estan en subcarpeta editview/
 
 -En ventana sprite navigator Tbblue, indicar parámetros de sprite relativo etc
 
--file previews: que detecte si lo seleccionado es un archivo realmente (y no directorio por ejemplo)
+-file previews: 
+* que detecte si lo seleccionado es un archivo realmente (y no directorio por ejemplo)
+* no muestra la correspondiente preview si multitask esta a off
+* previews de .zsf
