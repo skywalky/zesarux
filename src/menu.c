@@ -35750,8 +35750,14 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	//Creamos carpeta temporal por si no existe
 	char tmpdir[PATH_MAX];
 
-	sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
-	menu_filesel_mkdir(tmpdir);	
+	//Carpeta temporal debe ser distinta del nombre del archivo
+	//por si a alguien le da por hacer preview de un archivo de esa misma carpeta temporal
+	//que eso sucede por ejemplo al descargar juegos del online browser en zx81
+	sprintf (tmpdir,"%s/%s_previewdir",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
+	//sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
+
+	//Crear carpeta solo cuando va a haber un preview
+	//menu_filesel_mkdir(tmpdir);	
 
 	//Definimos tmpfile_scr para los que convierten snapshot directo a scr
 	char tmpfile_scr[PATH_MAX];	
@@ -35768,6 +35774,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	
 	) {
 	
+		menu_filesel_mkdir(tmpdir);
 
 		//Ver si hay archivo que indica pantalla
 		char archivo_info_pantalla[PATH_MAX];
@@ -35852,7 +35859,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"sna")) {
 		printf("es snapshot sna\n");
 
-
+		menu_filesel_mkdir(tmpdir);
 
 		//Si no existe preview
 		if (!si_existe_archivo(tmpfile_scr)) {
@@ -35867,6 +35874,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"sp")) {
 		printf("es snapshot sp\n");
 
+		menu_filesel_mkdir(tmpdir);
 
 		//Si no existe preview
 		if (!si_existe_archivo(tmpfile_scr)) {
@@ -35881,6 +35889,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"z80")) {
 		printf("es snapshot z80\n");
 
+		menu_filesel_mkdir(tmpdir);
 
 		//Si no existe preview
 		if (!si_existe_archivo(tmpfile_scr)) {
@@ -35895,6 +35904,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"p")) {
 		printf("es snapshot p\n");
 
+		menu_filesel_mkdir(tmpdir);
 
 		//Si no existe preview
 		if (!si_existe_archivo(tmpfile_scr)) {
