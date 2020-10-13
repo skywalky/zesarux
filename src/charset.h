@@ -22,6 +22,7 @@
 #ifndef CHARSET_H
 #define CHARSET_H
 
+extern unsigned char char_set_zx81_no_ascii[];
 
 extern unsigned char *char_set;
 extern unsigned char char_set_spectrum[];

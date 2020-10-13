@@ -735,6 +735,8 @@ extern int util_convert_sp_to_scr(char *filename,char *archivo_destino);
 
 extern int util_convert_z80_to_scr(char *filename,char *archivo_destino);
 
+extern int util_convert_p_to_scr(char *filename,char *archivo_destino);
+
 extern int util_get_absolute(int valor);
 
 extern int util_get_sign(int valor);

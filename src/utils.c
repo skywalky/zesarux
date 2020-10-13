@@ -111,6 +111,7 @@
 #include "coleco.h"
 #include "sg1000.h"
 #include "svi.h"
+#include "charset.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -14299,6 +14300,213 @@ int util_convert_sp_to_scr(char *filename,char *archivo_destino)
         return 0;
 
 }
+
+
+void util_convert_p_to_scr_putchar(z80_byte caracter,int x,int y,z80_byte *pantalla_destino)
+{
+
+        //Validar origen
+        if (y<0 || x<0 || y>23 || x>32) {
+                //printf ("x o y fuera de rango\n");
+                return;
+        }
+
+        //printf ("x %d y %d car %d\n",x,y,caracter);
+
+        z80_int direccion=screen_addr_table[(y*8*32)+x];
+
+        //direccion +=x;
+
+        int inverso=0;
+
+        if (caracter & 64) {
+                caracter -=64;
+                inverso=1;
+        }
+
+
+        int scanline;
+
+        int offset_caracter=caracter*8;
+        
+
+        for (scanline=0;scanline<8;scanline++) {
+                //Validar origen
+                if (offset_caracter>=512) {
+                        //printf("offset caracter %d fuera de rango\n",caracter);
+                        return;
+                }
+
+                z80_byte byte_leido=char_set_zx81_no_ascii[offset_caracter++];
+
+                //Validar destino
+                if (direccion>=6912) {
+                        //printf("offset destino %d fuera de rango\n",direccion);
+                        return;
+                }
+
+                if (inverso) byte_leido ^=255;
+
+                //printf ("destino %d byte %d\n",direccion,byte_leido);
+
+                pantalla_destino[direccion]=byte_leido;
+        
+
+                direccion +=256;
+
+
+        }
+}
+
+int util_convert_p_to_scr(char *filename,char *archivo_destino)
+{
+        //snapshot .P a SCR
+        z80_byte *buffer_lectura;
+
+        long int bytes_to_load=get_file_size(filename);
+
+        if (bytes_to_load<20) return 1; //Tamaño muy pequeño
+
+        buffer_lectura=malloc(bytes_to_load);
+
+        if (buffer_lectura==NULL) cpu_panic("Can not allocate memory for snapshot reading");
+
+
+        FILE *ptr_pfile;
+
+
+
+        int leidos;
+
+        //Load File
+        ptr_pfile=fopen(filename,"rb");
+        if (ptr_pfile==NULL) {
+                debug_printf(VERBOSE_ERR,"Error opening %s",filename);
+                return 1;
+        }
+
+        leidos=fread(buffer_lectura,1,bytes_to_load,ptr_pfile);
+        
+
+        fclose(ptr_pfile);
+
+//        //puntero pantalla en DFILE
+        /*
+        video_pointer=peek_word_no_time(0x400C);
+
+
+        y snap se carga en:
+
+        puntero_inicio=memoria_spectrum+0x4009;
+
+        por tanto desde el offset de un .p file es en la posicion 3
+
+        Luego restar a eso 9 bytes
+
+
+        el primer byte es 118 . saltarlo
+        */
+       z80_int video_pointer=buffer_lectura[3]+256*buffer_lectura[4];
+
+       video_pointer -=9;
+
+       video_pointer -=0x4000;
+
+       //char_set_zx81_no_ascii
+
+       //Asignamos 6912 bytes para la pantalla
+        z80_byte *buffer_pantalla;
+
+        buffer_pantalla=malloc(6912);
+
+        if (buffer_pantalla==NULL) cpu_panic("Can not allocate memory for snapshot reading");       
+
+        //Pixeles a 0. Atributos a papel 7, tinta 0, brillo 1
+        int i;
+
+        for (i=0;i<6144;i++) {
+                buffer_pantalla[i]=0;
+        }
+        
+        for (;i<6912;i++) {
+                buffer_pantalla[i]=56+64;
+        }
+
+
+       //se supone que el primer byte es 118 . saltarlo
+        video_pointer++;
+        int y=0;
+        int x=0;
+        z80_byte caracter;
+        while (y<24) {
+                //printf ("y: %d\n",y);
+
+                //Ver rango
+                if (video_pointer>=bytes_to_load) return 1;
+
+                caracter=buffer_lectura[video_pointer++];
+                if (caracter==118) {
+                        //rellenar con espacios hasta final de linea. Dado que ya hemos borrado el buffer de pantalla a 0 , esto no hace falta
+                                /*for (;x<32;x++) {
+                                        printf (" ");
+                                        util_convert_p_to_scr_putchar(' ' ,x,y,buffer_pantalla);
+					//puntero_printchar_caracter(' ');
+                                }*/
+                                y++;
+
+                          
+
+                                //printf ("\n");
+				//puntero_printchar_caracter('\n');
+
+
+                                x=0;
+                }
+                else {
+                        z80_bit inverse;
+
+			
+			
+                        util_convert_p_to_scr_putchar(caracter,x,y,buffer_pantalla);
+                        
+                        //caracter=da_codigo81(caracter,&inverse);
+                        //printf ("%c",caracter);
+			
+                        x++;
+
+                        if (x==32) {
+                                //Ver rango
+                                if (video_pointer>=bytes_to_load) return 1;
+
+                                if (buffer_lectura[video_pointer]!=118) {
+                                        //debug_printf (VERBOSE_DEBUG,"End of line %d is not 118 opcode. Is: 0x%x",y,memoria_spectrum[video_pointer]);
+								}
+                                //saltamos el HALT que debe haber en el caso de linea con 32 caracteres
+                                video_pointer++;
+                                x=0;
+                                y++;
+
+
+                                //printf ("\n");
+				//puntero_printchar_caracter('\n');
+
+                        }
+
+                }
+
+
+    }
+
+        //Grabar pantalla
+        util_save_file(buffer_pantalla,6912,archivo_destino);
+
+        free(buffer_pantalla);
+        free(buffer_lectura);
+
+        return 0;
+
+}
+
 
 
 int util_convert_z80_to_scr(char *filename,char *archivo_destino)

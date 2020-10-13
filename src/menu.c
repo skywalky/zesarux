@@ -33668,6 +33668,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                 char *opciones[]={
                         "P to RWA",
 			"P to WAV",
+			"P to SCR",
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
@@ -33685,6 +33686,12 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                                 sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
                                 convert_any_to_wav(fullpath,archivo_destino);
                         break;
+
+                        case 2:
+                                sprintf(archivo_destino,"%s/%s.scr",directorio,archivo);
+								util_convert_p_to_scr(fullpath,archivo_destino);
+                        break;
+
 
                 }
         }
@@ -33800,7 +33807,27 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
  
                 } 
-        }			
+        }		
+
+		else if (!util_compare_file_extension(archivo,"p")) {
+                char *opciones[]={
+					"P to SCR",
+                        NULL};
+
+        int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.scr",directorio,archivo);
+								util_convert_p_to_scr(fullpath,archivo_destino);
+                        break;
+
+ 
+                } 
+        }				
 
 
         else if (!util_compare_file_extension(archivo,"hdf")) {
@@ -35858,6 +35885,20 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		//Si no existe preview
 		if (!si_existe_archivo(tmpfile_scr)) {
 			util_convert_z80_to_scr(filesel_nombre_archivo_seleccionado,tmpfile_scr);
+		}
+
+		menu_filesel_preview_render_scr(tmpfile_scr);
+
+	}		
+
+	//Si es P
+	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"p")) {
+		printf("es snapshot p\n");
+
+
+		//Si no existe preview
+		if (!si_existe_archivo(tmpfile_scr)) {
+			util_convert_p_to_scr(filesel_nombre_archivo_seleccionado,tmpfile_scr);
 		}
 
 		menu_filesel_preview_render_scr(tmpfile_scr);
