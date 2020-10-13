@@ -14249,6 +14249,207 @@ int util_convert_sna_to_scr(char *filename,char *archivo_destino)
         return 0; 
 }
 
+
+int util_convert_sp_to_scr(char *filename,char *archivo_destino)
+{
+        //snapshot sp a SCR
+
+
+        z80_byte sp_header[SP_HEADER_SIZE];
+
+
+        FILE *ptr_spfile;
+
+
+
+        int leidos;
+
+        //Load File
+        ptr_spfile=fopen(filename,"rb");
+        if (ptr_spfile==NULL) {
+                debug_printf(VERBOSE_ERR,"Error opening %s",filename);
+                return 1;
+        }
+
+        leidos=fread(sp_header,1,SP_HEADER_SIZE,ptr_spfile);
+        
+
+
+        //Leer byte a byte y pasarlo a archivo destino
+
+        FILE *ptr_destination_file;
+        ptr_destination_file=fopen(archivo_destino,"wb");
+
+                if (!ptr_destination_file) {
+                        debug_printf (VERBOSE_ERR,"Can not open %s",archivo_destino);
+                        return 1;
+        }      
+
+        int i;
+
+        for (i=0;i<6912;i++) {
+                z80_byte byte_leido;
+                fread(&byte_leido,1,1,ptr_spfile);
+                fwrite(&byte_leido,1,1,ptr_destination_file);
+        }   
+
+        fclose(ptr_spfile);
+        fclose(ptr_destination_file);
+
+        return 0;
+
+}
+
+
+int util_convert_z80_to_scr(char *filename,char *archivo_destino)
+{
+        //snapshot z80 a SCR
+
+	z80_byte z80_header[Z80_MAIN_HEADER_SIZE];
+
+	//Cabecera adicional
+	
+	z80_byte z80_header_adicional[Z80_AUX_HEADER_SIZE];
+
+	//Cabecera de cada bloque de datos en version 2 o 3
+	z80_byte z80_header_bloque[3];
+
+        z80_byte *buffer_lectura;
+        buffer_lectura=malloc(1024*1024); //1 MB, mas que suficiente
+        if (buffer_lectura==NULL) cpu_panic("Can not allocate memory for snapshot read");
+
+        z80_byte *buffer_destino;
+        buffer_destino=malloc(1024*1024); //1 MB, mas que suficiente
+        if (buffer_destino==NULL) cpu_panic("Can not allocate memory for snapshot read");
+
+
+        FILE *ptr_z80file;
+
+        z80_int direccion_destino;
+
+
+
+        int leidos;
+
+        //Load File
+        ptr_z80file=fopen(filename,"rb");
+        if (ptr_z80file==NULL) {
+                debug_printf(VERBOSE_ERR,"Error opening %s",filename);
+                return 1;
+        }
+
+        leidos=fread(z80_header,1,Z80_MAIN_HEADER_SIZE,ptr_z80file);
+        
+
+
+  
+
+        int comprimido;
+        comprimido=(z80_header[12]>>5)&1;
+
+        if (z80_header[6]==0 && z80_header[7]==0) {
+                
+
+                //Z80 version 2 o 3
+
+                //leemos longitud de la cabecera adicional
+                leidos=fread(z80_header_adicional,1,2,ptr_z80file);
+                z80_int long_cabecera_adicional=value_8_to_16(z80_header_adicional[1],z80_header_adicional[0]);
+                if (long_cabecera_adicional!= 23 && long_cabecera_adicional!= 54 && long_cabecera_adicional!= 55) {
+                        debug_printf(VERBOSE_DEBUG,"Header with %d bytes unknown",long_cabecera_adicional);
+                        //printf("Header with %d bytes unknown\n",long_cabecera_adicional);
+                        return 1;
+                        
+                }       
+
+                else {
+                        /*if (long_cabecera_adicional==23) {
+                                printf(".Z80 version 2 detected\n");
+                                //z80_version=2;
+                        }
+                        else {
+                                printf(".Z80 version 3 detected\n");
+                                //z80_version=3;
+                        }
+                        */
+
+                        //leemos esa cabecera adicional
+                        debug_printf(VERBOSE_DEBUG,"Reading %d bytes of additional header",long_cabecera_adicional);
+                        leidos=fread(&z80_header_adicional[2],1,long_cabecera_adicional,ptr_z80file);                                
+                        
+
+                        int salir=0;
+
+                        z80_byte numerobloque;
+                        //z80_byte valor_puerto_32765;
+                        z80_int longitudbloque;                        
+
+                        do {
+
+                        //leer datos
+                        //cabecera del bloque de 16kb
+                        leidos=fread(z80_header_bloque,1,3,ptr_z80file);
+                        comprimido=1;
+                        printf("leidos: %d\n",leidos);
+                        if (leidos>0) {
+                                numerobloque=z80_header_bloque[2];
+                                longitudbloque=value_8_to_16(z80_header_bloque[1],z80_header_bloque[0]);
+                                if (longitudbloque==65535) {
+                                        //If length=0xffff, data is 16384 bytes long and not compressed
+                                        longitudbloque=16384;
+                                        comprimido=0;
+                                }
+
+                                
+                                debug_printf(VERBOSE_DEBUG,"Reading %d bytes of data block %d",longitudbloque,numerobloque);
+                                leidos=fread(buffer_lectura,1,longitudbloque,ptr_z80file);
+                                direccion_destino=0;
+                                load_z80_snapshot_bytes(buffer_lectura,leidos,direccion_destino,comprimido,buffer_destino);
+
+
+
+                                if (numerobloque==5+3) {
+                                        //Pagina 5. La de la pantalla. No hace falta leer mas
+                                        salir=1;
+                                }
+                        }
+
+                        } while (leidos>0 && !salir);
+                }
+
+        }
+
+        else {
+                leidos=fread(buffer_lectura,1,65536,ptr_z80file);
+                //printf ("despues de carga\n");
+                debug_printf(VERBOSE_DEBUG,"Read %d bytes of data",leidos);
+                //printf ("despues de debug_printf\n");
+
+                //z80_byte byte_leido;
+
+                direccion_destino=0;
+
+                load_z80_snapshot_bytes(buffer_lectura,leidos,direccion_destino,comprimido,buffer_destino);                
+        }
+
+
+
+
+        //Grabar 6912 bytes a archivo destino
+        util_save_file(buffer_destino,6912,archivo_destino);
+
+
+        fclose(ptr_z80file);
+
+        free(buffer_lectura);
+        free(buffer_destino);
+
+        return 0;
+
+}
+
+
+
 //Realmente lo que hacemos es copiar el .p en .baszx81 con un offset , saltando datos iniciales para situarnos en el programa basic
 int util_extract_p(char *filename,char *tempdir)
 {

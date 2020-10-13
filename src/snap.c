@@ -1864,7 +1864,7 @@ void load_sp_snapshot_bytes_48k(z80_byte *buffer_lectura,int leidos,z80_int dire
 void load_sp_snapshot(char *archivo)
 {
 
-	#define SP_HEADER_SIZE 38
+	
         //Cabecera
         z80_byte sp_header[SP_HEADER_SIZE];
 
@@ -2672,10 +2672,19 @@ void load_z80_snapshot_common_registers(z80_byte *header)
 
 }
 
-
+void load_z80_snapshot_bytes_poke(z80_int direccion_destino,z80_byte valor,z80_byte *puntero_memoria)
+{
+	if (puntero_memoria==NULL) {
+		poke_byte_no_time(direccion_destino,valor);
+	}
+	else {
+		puntero_memoria[direccion_destino]=valor;
+	}
+}
 
 //Bucle de lectura de datos de Z80
-void load_z80_snapshot_bytes(z80_byte *buffer_lectura,int leidos,z80_int direccion_destino,int comprimido)
+//Vale tanto para cargar en maquina emulada como para un puntero de memoria (dependiendo de si puntero_memoria es NULL o no)
+void load_z80_snapshot_bytes(z80_byte *buffer_lectura,int leidos,z80_int direccion_destino,int comprimido,z80_byte *puntero_memoria)
 {
 			int si_ed=0;
 			z80_byte byte_leido;
@@ -2693,15 +2702,20 @@ void load_z80_snapshot_bytes(z80_byte *buffer_lectura,int leidos,z80_int direcci
                                                 //printf ("bloque repeticion. byte: %d veces: %d\n",byte_repetir,byte_veces);
                                                 leidos -=2;
 
-                                                if (leidos>0) for (;byte_veces;byte_veces--) poke_byte_no_time(direccion_destino++,byte_repetir);
+                                                if (leidos>0) for (;byte_veces;byte_veces--) {
+													//poke_byte_no_time(direccion_destino++,byte_repetir);
+													load_z80_snapshot_bytes_poke(direccion_destino++,byte_repetir,puntero_memoria);
+												}
                                                 else debug_printf(VERBOSE_INFO,"It seems end of block. Don't do byte repetition");
                                                 //TODO: The block is terminated by an end marker, 00 ED ED 00.
                                         }
 
                                         //siguiente no era ED. pokeamos los dos
                                         else {
-                                                poke_byte_no_time(direccion_destino++,0xED);
-                                                poke_byte_no_time(direccion_destino++,byte_leido);
+                                                //poke_byte_no_time(direccion_destino++,0xED);
+												load_z80_snapshot_bytes_poke(direccion_destino++,0xED,puntero_memoria);
+                                                //poke_byte_no_time(direccion_destino++,byte_leido);
+												load_z80_snapshot_bytes_poke(direccion_destino++,byte_leido,puntero_memoria);
                                         }
                                         si_ed=0;
                                 }
@@ -2711,7 +2725,8 @@ void load_z80_snapshot_bytes(z80_byte *buffer_lectura,int leidos,z80_int direcci
                                                 si_ed=1;
                                         }
                                         else {
-                                                poke_byte_no_time(direccion_destino++,byte_leido);
+                                                //poke_byte_no_time(direccion_destino++,byte_leido);
+												load_z80_snapshot_bytes_poke(direccion_destino++,byte_leido,puntero_memoria);
                                         }
                                 }
                                 //printf ("fin bucle leidos: %d byte leido: %d direccion: %d\n",leidos,byte_leido,direccion_destino);
@@ -2913,10 +2928,12 @@ Addr:	last state             Registers
 void load_z80_snapshot(char *archivo)
 {
 	//Cabecera comun para todas versiones
-	z80_byte z80_header[30];
+
+	z80_byte z80_header[Z80_MAIN_HEADER_SIZE];
 
 	//Cabecera adicional
-	z80_byte z80_header_adicional[57];
+	
+	z80_byte z80_header_adicional[Z80_AUX_HEADER_SIZE];
 
 	//Cabecera de cada bloque de datos en version 2 o 3
 	z80_byte z80_header_bloque[3];
@@ -2946,9 +2963,9 @@ void load_z80_snapshot(char *archivo)
         }
 
 	//if (ptr_z80file) {
-		leidos=fread(z80_header,1,30,ptr_z80file);
-		if (leidos!=30) {
-			debug_printf(VERBOSE_ERR,"Error reading 30 bytes of header");
+		leidos=fread(z80_header,1,Z80_MAIN_HEADER_SIZE,ptr_z80file);
+		if (leidos!=Z80_MAIN_HEADER_SIZE) {
+			debug_printf(VERBOSE_ERR,"Error reading %d bytes of header",Z80_MAIN_HEADER_SIZE);
 			return;
 		}
 
@@ -3006,6 +3023,13 @@ void load_z80_snapshot(char *archivo)
 						if (modify_hardware) current_machine_type=0;
 
 					break;
+
+					/*case 2:
+						//Samram. Aunque hay snapshots mal generados de 3.00 a 3.02 de 128k
+						//128k
+						current_machine_type=6;
+						//if (modify_hardware) current_machine_type=8;					
+					break;*/
 
 					case 3:
 						if (z80_version==2) {
@@ -3143,6 +3167,7 @@ if (long_cabecera_adicional>25) {
 			z80_byte numerobloque;
 			z80_byte valor_puerto_32765;
 			z80_int longitudbloque;
+			//printf("current machine type: %d\n",current_machine_type);
 			do {
 
 			//leer datos
@@ -3173,38 +3198,54 @@ if (long_cabecera_adicional>25) {
 							direccion_destino=16384;
 						break;
 
+						case 0:
+							//Carga en rom. lo ignoramos
+						break;
+
 						default:
-							debug_printf(VERBOSE_ERR,"Z80 snapshot page number %d unknown");
+							debug_printf(VERBOSE_ERR,"Z80 snapshot page number %d unknown",numerobloque);
 							return;
 						break;
 					}
 					debug_printf(VERBOSE_INFO,"Reading %d bytes of data at %d address",longitudbloque,direccion_destino);
 					leidos=fread(buffer_lectura,1,longitudbloque,ptr_z80file);
-					load_z80_snapshot_bytes(buffer_lectura,leidos,direccion_destino,comprimido);
+
+					if (numerobloque!=0) {
+						//0 es cargar rom. ignoramos
+						load_z80_snapshot_bytes(buffer_lectura,leidos,direccion_destino,comprimido,NULL);
+					}
 
 
 				}
 				else {
+					//printf("leyendo bloque %d maquina 128k\n",numerobloque);
 					//maquinas de 128k
-					if (numerobloque<3 || numerobloque>10) {
+					if ((numerobloque<3 || numerobloque>10) && numerobloque!=0) {
                                                         debug_printf(VERBOSE_ERR,"Page number %d unsupported");
                                                         return;
 					}
 
-					numerobloque=numerobloque-3;
-					//
-					//puerto_32765=(puerto_32765&(255-7));
-					//puerto_32765=puerto_32765 | numerobloque;
-					//mem_page_ram_128k();
+					int orig_numerobloque=numerobloque;
 
-					//Paginamos la RAM correspondiente y leemos bloque de 16kb en la pagina 49152-65535
+					if (orig_numerobloque!=0) {
+						numerobloque=numerobloque-3;
+						//
+						//puerto_32765=(puerto_32765&(255-7));
+						//puerto_32765=puerto_32765 | numerobloque;
+						//mem_page_ram_128k();
 
-					valor_puerto_32765=(puerto_32765&(255-7));
-					out_port_spectrum_no_time(32765,valor_puerto_32765 | numerobloque);
+						//Paginamos la RAM correspondiente y leemos bloque de 16kb en la pagina 49152-65535
+
+						valor_puerto_32765=(puerto_32765&(255-7));
+						out_port_spectrum_no_time(32765,valor_puerto_32765 | numerobloque);
+					}
 
 					debug_printf(VERBOSE_INFO,"Reading %d bytes of data at 49152 address page number %d",longitudbloque,numerobloque);
 					leidos=fread(buffer_lectura,1,longitudbloque,ptr_z80file);
-                                        load_z80_snapshot_bytes(buffer_lectura,leidos,49152,comprimido);
+
+					if (orig_numerobloque!=0) {
+                    	load_z80_snapshot_bytes(buffer_lectura,leidos,49152,comprimido,NULL);
+					}
 
 				}
 			}
@@ -3254,7 +3295,7 @@ if (long_cabecera_adicional>25) {
 
 			direccion_destino=16384;
 
-			load_z80_snapshot_bytes(buffer_lectura,leidos,direccion_destino,comprimido);
+			load_z80_snapshot_bytes(buffer_lectura,leidos,direccion_destino,comprimido,NULL);
 
 
 		}

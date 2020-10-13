@@ -33762,6 +33762,47 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
         }			
 
 
+		else if (!util_compare_file_extension(archivo,"sp")) {
+                char *opciones[]={
+					"SP to SCR",
+                        NULL};
+
+        int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.scr",directorio,archivo);
+								util_convert_sp_to_scr(fullpath,archivo_destino);
+                        break;
+
+ 
+                } 
+        }	
+
+		else if (!util_compare_file_extension(archivo,"z80")) {
+                char *opciones[]={
+					"Z80 to SCR",
+                        NULL};
+
+        int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.scr",directorio,archivo);
+								util_convert_z80_to_scr(fullpath,archivo_destino);
+                        break;
+
+ 
+                } 
+        }			
+
+
         else if (!util_compare_file_extension(archivo,"hdf")) {
                 char *opciones[]={
                         "HDF to IDE",
@@ -35536,6 +35577,14 @@ void menu_filesel_preview_render_scr(char *archivo_scr)
 {
 			printf("es pantalla\n");
 
+	//Si no existe archivo, liberar preview
+	if (!si_existe_archivo(archivo_scr)) {
+		printf("Archivo SCR %s no existe\n",archivo_scr);
+		menu_filesel_overlay_last_preview_width=0;
+		menu_filesel_overlay_last_preview_height=0;
+		return;	
+	}
+
 	
 
 		//Leemos el archivo en memoria
@@ -35688,6 +35737,15 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
 		menu_filesel_mkdir(tmpdir);
 
+		//Ver si hay archivo que indica pantalla
+		char archivo_info_pantalla[PATH_MAX];
+		sprintf(archivo_info_pantalla,"%s/%s",tmpdir,MENU_SCR_INFO_FILE_NAME);
+
+		if (!si_existe_archivo(archivo_info_pantalla)) {
+			//Archivo scr no existe. Extraer
+			printf("Archivo SCR no existe. Extraer\n");
+
+
 		int retorno=1;
 
         if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tap") ) {
@@ -35720,11 +35778,13 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 			return;
 		}
 
+		}
+
+		else {
+			printf("Archivo SCR YA existia\n");
+		}
+
 		//Ver si hay archivo que indica pantalla
-
-		char archivo_info_pantalla[PATH_MAX];
-
-		sprintf(archivo_info_pantalla,"%s/%s",tmpdir,MENU_SCR_INFO_FILE_NAME);
 
 		if (si_existe_archivo(archivo_info_pantalla)) {
 			printf("HAY PANTALLA--------------- \n");
@@ -35768,11 +35828,56 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		char tmpfile[PATH_MAX];	
 		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
 
-		util_convert_sna_to_scr(filesel_nombre_archivo_seleccionado,tmpfile);
+		//Si no existe preview
+		if (!si_existe_archivo(tmpfile)) {
+			util_convert_sna_to_scr(filesel_nombre_archivo_seleccionado,tmpfile);
+		}
 
 		menu_filesel_preview_render_scr(tmpfile);
 
 	}	
+
+	//Si es sp
+	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"sp")) {
+		printf("es snapshot sp\n");
+
+		char tmpdir[PATH_MAX];
+
+		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
+		menu_filesel_mkdir(tmpdir);	
+
+		char tmpfile[PATH_MAX];	
+		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
+
+		//Si no existe preview
+		if (!si_existe_archivo(tmpfile)) {
+			util_convert_sp_to_scr(filesel_nombre_archivo_seleccionado,tmpfile);
+		}
+
+		menu_filesel_preview_render_scr(tmpfile);
+
+	}	
+
+	//Si es z80
+	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"z80")) {
+		printf("es snapshot z80\n");
+
+		char tmpdir[PATH_MAX];
+
+		sprintf (tmpdir,"%s/%s",get_tmpdir_base(),filesel_nombre_archivo_seleccionado);
+		menu_filesel_mkdir(tmpdir);	
+
+		char tmpfile[PATH_MAX];	
+		sprintf (tmpfile,"%s/%s.scr",tmpdir,filesel_nombre_archivo_seleccionado);
+
+		//Si no existe preview
+		if (!si_existe_archivo(tmpfile)) {
+			util_convert_z80_to_scr(filesel_nombre_archivo_seleccionado,tmpfile);
+		}
+
+		menu_filesel_preview_render_scr(tmpfile);
+
+	}		
 
 
 	else {

@@ -75,7 +75,14 @@ extern void snap_dump_zsf_on_cpu_panic(void);
 
 extern void snapshot_get_date_time_string_human(char *texto);
 
+extern void load_z80_snapshot_bytes(z80_byte *buffer_lectura,int leidos,z80_int direccion_destino,int comprimido,z80_byte *puntero_memoria);
+
 #define SNA_48K_HEADER_SIZE 27
 #define SNA_128K_HEADER_SIZE 4
+
+#define SP_HEADER_SIZE 38
+
+#define Z80_MAIN_HEADER_SIZE 30
+#define Z80_AUX_HEADER_SIZE 57
 
 #endif
