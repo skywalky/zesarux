@@ -14390,7 +14390,7 @@ int util_convert_z80_to_scr(char *filename,char *archivo_destino)
                         //cabecera del bloque de 16kb
                         leidos=fread(z80_header_bloque,1,3,ptr_z80file);
                         comprimido=1;
-                        printf("leidos: %d\n",leidos);
+                        //printf("leidos: %d\n",leidos);
                         if (leidos>0) {
                                 numerobloque=z80_header_bloque[2];
                                 longitudbloque=value_8_to_16(z80_header_bloque[1],z80_header_bloque[0]);
