@@ -14406,11 +14406,18 @@ int util_convert_p_to_scr(char *filename,char *archivo_destino)
 
         el primer byte es 118 . saltarlo
         */
-       z80_int video_pointer=buffer_lectura[3]+256*buffer_lectura[4];
 
-       video_pointer -=9;
+       int normal_snapshot_load_addr=0x4009;
 
-       video_pointer -=0x4000;
+       int offset_puntero=0x400C-normal_snapshot_load_addr;
+
+       z80_int video_pointer=buffer_lectura[offset_puntero]+256*buffer_lectura[offset_puntero+1];
+
+       //Nota: parece que los snapshot de zx80 (.o) no guardan nunca la pantalla, por lo que un conversor de .o a .scr no tiene sentido
+       //aunque en ese caso bastaria con poner ormal_snapshot_load_addr=0x4000
+
+
+       video_pointer -=normal_snapshot_load_addr;
 
        //char_set_zx81_no_ascii
 
