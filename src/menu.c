@@ -35406,13 +35406,13 @@ zxvision_get_filesel_alto_dir(ventana)-1
         //printf("ventana ancho %d alto %d\n",ancho_ventana,alto_ventana);
 
         if (ancho_ventana<31) {
-            debug_printf(VERBOSE_DEBUG,"Fileselector width size too small: %d",ancho_ventana);
+            //debug_printf(VERBOSE_DEBUG,"Fileselector width size too small: %d",ancho_ventana);
             return;
         }
 
         //En caso de tener un ancho no muy grande, desplazamos el preview a la derecha quitando el margen
         if (ancho_ventana<38) {
-            debug_printf(VERBOSE_DEBUG,"Setting preview to the right as we have a small window\n");
+            //debug_printf(VERBOSE_DEBUG,"Setting preview to the right as we have a small window");
             xorigen=xorigen+margen_x_coord-1; //-1 de la barra de progreso
         }
         
