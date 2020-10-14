@@ -36431,6 +36431,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//printf ("salimos con ESC. nombre directorio: %s\n",archivo);
                         menu_filesel_exist_ESC();
 
+                        //Guardamos geometria al pulsar Escape
+                        menu_filesel_save_params_window(ventana);
+
 						//restauramos modo normal de texto de menu
 			     		set_menu_overlay_function(normal_overlay_texto_menu);
 
