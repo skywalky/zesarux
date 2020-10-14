@@ -656,6 +656,8 @@ extern int get_file_type_from_stat(struct stat *f);
 
 extern int get_file_type_from_name(char *nombre);
 
+extern int file_is_directory(char *nombre);
+
 extern int get_file_date_from_name(char *nombre,int *hora,int *minuto,int *segundo,int *dia,int *mes,int *anyo);
 
 extern int get_file_date_from_stat(struct stat *buf_stat,int *hora,int *minuto,int *segundo,int *dia,int *mes,int *anyo);

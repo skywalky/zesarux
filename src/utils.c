@@ -10274,6 +10274,18 @@ int si_ruta_absoluta(char *ruta)
 
 }
 
+//Retorna tipo de archivo segun valor d_type
+//0: desconocido
+//1: archivo normal (o symbolic link)
+//2: directorio
+
+
+int get_file_type_from_stat(struct stat *f)
+{
+  if (f->st_mode & S_IFDIR) return 2;
+  else return 1;
+}
+
 
 //0 desconocido o inexistente
 //1 normal
@@ -10293,6 +10305,11 @@ return get_file_type_from_stat(&buf_stat);
           }
 }
 
+int file_is_directory(char *nombre)
+{
+    if (get_file_type_from_name(nombre)==2) return 1;
+    else return 0;
+}
 
 //Retorna fecha de un archivo en valores de punteros
 //Devuelve 1 si error
@@ -10341,34 +10358,24 @@ int get_file_date_from_stat(struct stat *buf_stat,int *hora,int *minuto,int *seg
 //anyo tal cual: 2017, etc
 int get_file_date_from_name(char *nombre,int *hora,int *minuto,int *segundo,int *dia,int *mes,int *anyo)
 {
-  struct stat buf_stat;
+    struct stat buf_stat;
 
-          if (stat(nombre, &buf_stat)!=0) {
-                  debug_printf(VERBOSE_INFO,"Unable to get status of file %s",nombre);
-return 1;
-          }
-
-
-          get_file_date_from_stat(&buf_stat,hora,minuto,segundo,dia,mes,anyo);
+    if (stat(nombre, &buf_stat)!=0) {
+        debug_printf(VERBOSE_INFO,"Unable to get status of file %s",nombre);
+        return 1;
+    }
 
 
-          return 0;
+    get_file_date_from_stat(&buf_stat,hora,minuto,segundo,dia,mes,anyo);
+
+
+    return 0;
 
 
 }
 
 
-//Retorna tipo de archivo segun valor d_type
-//0: desconocido
-//1: archivo normal (o symbolic link)
-//2: directorio
 
-
-int get_file_type_from_stat(struct stat *f)
-{
-  if (f->st_mode & S_IFDIR) return 2;
-  else return 1;
-}
 
 
 //Retorna tipo de archivo segun valor d_type
