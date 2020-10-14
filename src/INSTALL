@@ -236,7 +236,6 @@ When running ZEsarUX with SDL, you probably need to set before:
 export LIBRARY_PATH=/boot/system/lib/:$LIBRARY_PATH
 
 
-By the way, on File selector menus, all files are treated as regular files (so no directories). This is a known bug
 Please don't ask me about Haiku help, I'm not an expert on this OS ;)
 
 

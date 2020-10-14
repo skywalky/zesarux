@@ -14332,9 +14332,9 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
         block_id=value_8_to_16(block_header[1],block_header[0]);
         unsigned int block_lenght_zsf=block_header[2]+(block_header[3]*256)+(block_header[4]*65536)+(block_header[5]*16777216);
 
-        //debug_printf (VERBOSE_INFO,"Block id: %u (%s) Length: %u",block_id,zsf_get_block_id_name(block_id),block_lenght_zsf);
+        debug_printf (VERBOSE_INFO,"Block id: %u (%s) Length: %u",block_id,zsf_get_block_id_name(block_id),block_lenght_zsf);
 
-        printf ("Block id: %u (%s) Length: %u\n",block_id,zsf_get_block_id_name(block_id),block_lenght_zsf);
+        //printf ("Block id: %u (%s) Length: %u\n",block_id,zsf_get_block_id_name(block_id),block_lenght_zsf);
 
         z80_byte *block_data;
 
@@ -14487,44 +14487,20 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
             break;
         }
 
-        //switch for every possible block id
-        /*
-        switch(block_id)
-        {
+        
+        //TODO Quedarian los posibles bloques de memoria de spectrum:
+        //case ZSF_ZXUNO_RAMBLOCK:
+        
 
+        //case ZSF_TSCONF_RAMBLOCK:
+        
 
-        case ZSF_ZXUNO_RAMBLOCK:
-        load_zsf_zxuno_snapshot_block_data(block_data,block_lenght);
-        break;
+        //case ZSF_CPC_RAMBLOCK:
+        
 
+        //case ZSF_TBBLUE_RAMBLOCK:
+        
 
-
-
-        case ZSF_TSCONF_RAMBLOCK:
-        load_zsf_tsconf_snapshot_block_data(block_data,block_lenght);
-        break;
-
-
-
-        case ZSF_CPC_RAMBLOCK:
-        load_zsf_cpc_snapshot_block_data(block_data,block_lenght);
-        break;   
-
-
-        case ZSF_TBBLUE_RAMBLOCK:
-        load_zsf_tbblue_snapshot_block_data(block_data,block_lenght);
-        break;    
-
-
-
-
-
-        default:
-        debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
-        break;
-
-        }
-        */
 
         if (block_lenght_zsf) free(block_data);
 

@@ -19935,13 +19935,7 @@ primer_filesel_item=NULL;
 
 		strcpy(item->d_name,nombreactual->d_name);
 
-/*
-#ifdef HAIKU_OS
-		item->d_type=1; //Asumimos siempre tipo archivo regular
-#else
-		item->d_type=nombreactual->d_type;
-#endif
-*/
+
 		item->next=NULL;
 
 		//primer item
@@ -35598,11 +35592,11 @@ void menu_filesel_preview_reduce_scr_color(int *buffer_intermedio,int ancho, int
 
 void menu_filesel_preview_render_scr(char *archivo_scr)
 {
-			printf("es pantalla\n");
+			//printf("es pantalla\n");
 
 	//Si no existe archivo, liberar preview
 	if (!si_existe_archivo(archivo_scr)) {
-		printf("Archivo SCR %s no existe\n",archivo_scr);
+		debug_printf(VERBOSE_DEBUG,"File SCR %s does not exist",archivo_scr);
 		menu_filesel_overlay_last_preview_width=0;
 		menu_filesel_overlay_last_preview_height=0;
 		return;	
@@ -35613,7 +35607,7 @@ void menu_filesel_preview_render_scr(char *archivo_scr)
 		//Leemos el archivo en memoria
 
 
-		printf("Renderizando..............\n");  
+		debug_printf(VERBOSE_DEBUG,"Rendering SCR");  
 
 		//buffer lectura archivo
 		z80_byte *buf_pantalla;
@@ -35732,27 +35726,26 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 
 	//de momento nada mas
-	printf("File: %s\n",filesel_nombre_archivo_seleccionado);
+	debug_printf(VERBOSE_DEBUG,"Preview File: %s",filesel_nombre_archivo_seleccionado);
 
 	if (!strcmp(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado)) {
-		printf("Archivo es el mismo que antes, no hacer nada\n");
+		debug_printf(VERBOSE_DEBUG,"File is the same as before. Do not do anything");
 		return;
 	}    
 
     strcpy(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado);
-    
+
 
     if (file_is_directory(filesel_nombre_archivo_seleccionado)) {
-        printf("Archivo es un directorio, no hacer nada\n");
+        debug_printf(VERBOSE_DEBUG,"File is a directory, do not do anything");
         //Pero quitar la posible preview anterior
-        //liberar preview
         menu_filesel_overlay_last_preview_width=0;
         menu_filesel_overlay_last_preview_height=0;	        
         return;
     }
 
 
-	printf("Renderizar archivo\n");
+	debug_printf(VERBOSE_DEBUG,"Rendering file preview");
 
 	
 
@@ -35791,7 +35784,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 		if (!si_existe_archivo(archivo_info_pantalla)) {
 			//Archivo scr no existe. Extraer
-			printf("Archivo SCR no existe. Extraer\n");
+			debug_printf(VERBOSE_DEBUG,"File SCR does not exist. Extracting");
 
 
 			int retorno=1;
@@ -35829,25 +35822,26 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		}
 
 		else {
-			printf("Archivo SCR YA existia\n");
+			debug_printf(VERBOSE_DEBUG,"SCR file already exists");
 		}
 
 		//Ver si hay archivo que indica pantalla
 
 		if (si_existe_archivo(archivo_info_pantalla)) {
-			printf("HAY PANTALLA--------------- \n");
+			//printf("HAY PANTALLA--------------- \n");
 
 			char buf_archivo_scr[PATH_MAX];
 
 			lee_archivo(archivo_info_pantalla,buf_archivo_scr,PATH_MAX-1);
 
-			printf ("PANTALLA:     %s\n",buf_archivo_scr);
+			//printf ("PANTALLA:     %s\n",buf_archivo_scr);
 
 			menu_filesel_preview_render_scr(buf_archivo_scr);
 		}
 
 		else {
-			printf("NO HAY PANTALLA****************\n");
+			//printf("NO HAY PANTALLA****************\n");
+            debug_printf(VERBOSE_DEBUG,"There is no SCR file");
 
 			//liberar preview
 			menu_filesel_overlay_last_preview_width=0;
@@ -35858,7 +35852,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//Si es scr
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"scr")) {
-		printf("es pantalla\n");
+		debug_printf(VERBOSE_DEBUG,"File is a scr screen");
 
 		menu_filesel_preview_render_scr(filesel_nombre_archivo_seleccionado);
 
@@ -35866,7 +35860,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//Si es sna
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"sna")) {
-		printf("es snapshot sna\n");
+		debug_printf(VERBOSE_DEBUG,"File is a sna snapshot");
 
 		menu_filesel_mkdir(tmpdir);
 
@@ -35881,7 +35875,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//Si es sp
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"sp")) {
-		printf("es snapshot sp\n");
+		debug_printf(VERBOSE_DEBUG,"File is a sp snapshot");
 
 		menu_filesel_mkdir(tmpdir);
 
@@ -35896,7 +35890,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//Si es z80
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"z80")) {
-		printf("es snapshot z80\n");
+		debug_printf(VERBOSE_DEBUG,"File is a z80 snapshot");
 
 		menu_filesel_mkdir(tmpdir);
 
@@ -35911,7 +35905,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//Si es P
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"p")) {
-		printf("es snapshot p\n");
+		debug_printf(VERBOSE_DEBUG,"File is a p snapshot");
 
 		menu_filesel_mkdir(tmpdir);
 
@@ -35926,7 +35920,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//Si es ZSF
 	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"zsf")) {
-		printf("es snapshot zsf\n");
+		debug_printf(VERBOSE_DEBUG,"File is a zsf snapshot");
 
 		menu_filesel_mkdir(tmpdir);
 
