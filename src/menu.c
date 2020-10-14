@@ -27308,7 +27308,8 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_previews,NULL,"[%c] Show file previews",
 			(menu_filesel_show_previews.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Show file previews in the file selector");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Show file previews for .scr, .tap, .tzx, etc...");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Show file previews for .scr, .tap, .tzx, etc...\n"
+                            "Note that the fileselector window must be big enough to hold that preview, if not, it will not be shown");
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"    GUI ~~style [%s]",
