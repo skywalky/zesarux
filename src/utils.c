@@ -10386,7 +10386,7 @@ int get_file_date_from_name(char *nombre,int *hora,int *minuto,int *segundo,int 
 //En Linux solo se usa d_type
 //En Windows solo se usa nombre, y luego se obtiene st_mode
 
-int get_file_type(int d_type, char *nombre)
+int old_get_file_type(int d_type, char *nombre)
 {
 /*
        lowing macro constants for the value returned in d_type:
@@ -10476,6 +10476,63 @@ Esto aparece en archivos descargados de internet
         return 0;
 
 #endif
+
+}
+
+
+
+//Retorna tipo de archivo segun valor d_type
+//Funcion nueva que usa st_mode en vez de d_type. d_type no valia para Windows ni para Haiku
+//0: desconocido
+//1: archivo normal (o symbolic link)
+//2: directorio
+//Entrada: d_type, nombre archivo. requisito es que el archivo se encuentre en directorio actual
+//En Linux solo se usa d_type
+//En Windows solo se usa nombre, y luego se obtiene st_mode
+
+int get_file_type(int d_type, char *nombre)
+{
+/*
+       lowing macro constants for the value returned in d_type:
+
+       DT_BLK      This is a block device.
+
+       DT_CHR      This is a character device.
+
+       DT_DIR      This is a directory.
+
+       DT_FIFO     This is a named pipe (FIFO).
+
+       DT_LNK      This is a symbolic link.
+
+       DT_REG      This is a regular file.
+
+       DT_SOCK     This is a UNIX domain socket.
+
+       DT_UNKNOWN  The file type is unknown.
+
+*/
+
+
+
+    //TODO: d_type no lo estamos usando. Se podria eliminar su uso
+
+
+
+    struct stat buf_stat;
+
+    if (stat(nombre, &buf_stat)==0) {
+		debug_printf (VERBOSE_DEBUG,"Name: %s st_mode: %d constants: S_IFDIR: %d",nombre,buf_stat.st_mode,S_IFDIR);
+
+		if (buf_stat.st_mode & S_IFDIR) return 2;
+		else return 1;
+	}
+
+
+	//desconocido
+    return 0;
+
+
 
 }
 
