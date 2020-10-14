@@ -35736,6 +35736,10 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
     if (file_is_directory(filesel_nombre_archivo_seleccionado)) {
         printf("Archivo es un directorio, no hacer nada\n");
+        //Pero quitar la posible preview anterior
+        //liberar preview
+        menu_filesel_overlay_last_preview_width=0;
+        menu_filesel_overlay_last_preview_height=0;	        
         return;
     }
 
