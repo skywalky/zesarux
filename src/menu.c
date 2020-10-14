@@ -35949,15 +35949,6 @@ void menu_filesel_overlay(void)
 {
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
-	//El overlay de la pantalla siempre
-	
-
-		//printf("overlay\n");
-
-
-		menu_filesel_overlay_draw_preview();
-
-	
 
 
 	//Y el procesado de nueva preview no tan seguido
@@ -35970,6 +35961,11 @@ void menu_filesel_overlay(void)
 		menu_filesel_overlay_render_preview_in_memory();
 
 	}
+
+
+
+	//El overlay de la pantalla siempre
+    menu_filesel_overlay_draw_preview();    
 }
 
 //Retorna 1 si seleccionado archivo. Retorna 0 si sale con ESC
