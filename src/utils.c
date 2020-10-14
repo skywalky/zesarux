@@ -5378,88 +5378,6 @@ int get_file_lines(char *filename)
 }
 
 
-//0 desconocido o inexistente
-//1 normal
-//2 directorio
-int get_file_type_from_name(char *nombre)
-{
-  struct stat buf_stat;
-
-          if (stat(nombre, &buf_stat)!=0) {
-                  debug_printf(VERBOSE_INFO,"Unable to get status of file %s",nombre);
-return 0;
-          }
-
-          else {
-//printf ("file size: %ld\n",buf_stat.st_size);
-return get_file_type_from_stat(&buf_stat);
-          }
-}
-
-
-//Retorna fecha de un archivo en valores de punteros
-//Devuelve 1 si error
-//anyo tal cual: 2017, etc
-int get_file_date_from_stat(struct stat *buf_stat,int *hora,int *minuto,int *segundo,int *dia,int *mes,int *anyo)
-{
-
-
-
-          struct tm *foo;
-
-#if defined(__APPLE__)
-          struct timespec *d;
-          d=&buf_stat->st_mtimespec;
-          //foo = gmtime((const time_t *)d);
-          foo = localtime((const time_t *)d);
-#else
-          struct time_t *d;
-          d=&buf_stat->st_mtime;
-          //foo = gmtime((const time_t *)d);
-          foo = localtime((const time_t *)d);
-#endif
-
-//printf("Year: %d\n", foo->tm_year);
-//printf("Month: %d\n", foo->tm_mon);
-//printf("Day: %d\n", foo->tm_mday);
-//printf("Hour: %d\n", foo->tm_hour);
-//printf("Minute: %d\n", foo->tm_min);
-//printf("Second: %d\n", foo->tm_sec);
-
-*hora=foo->tm_hour;
-*minuto=foo->tm_min;
-*segundo=foo->tm_sec;
-
-*dia=foo->tm_mday;
-*mes=foo->tm_mon+1;
-*anyo=foo->tm_year+1900;
-
-          return 0;
-
-
-}
-
-//Retorna fecha de un archivo en valores de punteros
-//Devuelve 1 si error
-//anyo tal cual: 2017, etc
-int get_file_date_from_name(char *nombre,int *hora,int *minuto,int *segundo,int *dia,int *mes,int *anyo)
-{
-  struct stat buf_stat;
-
-          if (stat(nombre, &buf_stat)!=0) {
-                  debug_printf(VERBOSE_INFO,"Unable to get status of file %s",nombre);
-return 1;
-          }
-
-
-          get_file_date_from_stat(&buf_stat,hora,minuto,segundo,dia,mes,anyo);
-
-
-          return 0;
-
-
-}
-
 
 //Retorna -1 si hay algun error
 //retorna bytes leidos si ok
@@ -10355,6 +10273,90 @@ int si_ruta_absoluta(char *ruta)
 #endif
 
 }
+
+
+//0 desconocido o inexistente
+//1 normal
+//2 directorio
+int get_file_type_from_name(char *nombre)
+{
+  struct stat buf_stat;
+
+          if (stat(nombre, &buf_stat)!=0) {
+                  debug_printf(VERBOSE_INFO,"Unable to get status of file %s",nombre);
+return 0;
+          }
+
+          else {
+//printf ("file size: %ld\n",buf_stat.st_size);
+return get_file_type_from_stat(&buf_stat);
+          }
+}
+
+
+//Retorna fecha de un archivo en valores de punteros
+//Devuelve 1 si error
+//anyo tal cual: 2017, etc
+int get_file_date_from_stat(struct stat *buf_stat,int *hora,int *minuto,int *segundo,int *dia,int *mes,int *anyo)
+{
+
+
+
+          struct tm *foo;
+
+#if defined(__APPLE__)
+          struct timespec *d;
+          d=&buf_stat->st_mtimespec;
+          //foo = gmtime((const time_t *)d);
+          foo = localtime((const time_t *)d);
+#else
+          struct time_t *d;
+          d=&buf_stat->st_mtime;
+          //foo = gmtime((const time_t *)d);
+          foo = localtime((const time_t *)d);
+#endif
+
+//printf("Year: %d\n", foo->tm_year);
+//printf("Month: %d\n", foo->tm_mon);
+//printf("Day: %d\n", foo->tm_mday);
+//printf("Hour: %d\n", foo->tm_hour);
+//printf("Minute: %d\n", foo->tm_min);
+//printf("Second: %d\n", foo->tm_sec);
+
+*hora=foo->tm_hour;
+*minuto=foo->tm_min;
+*segundo=foo->tm_sec;
+
+*dia=foo->tm_mday;
+*mes=foo->tm_mon+1;
+*anyo=foo->tm_year+1900;
+
+          return 0;
+
+
+}
+
+//Retorna fecha de un archivo en valores de punteros
+//Devuelve 1 si error
+//anyo tal cual: 2017, etc
+int get_file_date_from_name(char *nombre,int *hora,int *minuto,int *segundo,int *dia,int *mes,int *anyo)
+{
+  struct stat buf_stat;
+
+          if (stat(nombre, &buf_stat)!=0) {
+                  debug_printf(VERBOSE_INFO,"Unable to get status of file %s",nombre);
+return 1;
+          }
+
+
+          get_file_date_from_stat(&buf_stat,hora,minuto,segundo,dia,mes,anyo);
+
+
+          return 0;
+
+
+}
+
 
 //Retorna tipo de archivo segun valor d_type
 //0: desconocido
