@@ -25671,7 +25671,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 	}
 
 	//testeo
-	menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_testeo_scanf_numero,NULL,"Test scanf number");
+	//menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_testeo_scanf_numero,NULL,"Test scanf number");
 
 		/* De momento desactivado
 		if (MACHINE_IS_SPECTRUM) {
@@ -33164,11 +33164,11 @@ void reset_welcome_message(void)
 	}
 }
 
-#define FILESEL_ANCHO 30
-#define FILESEL_INICIAL_ANCHO 30
+
+#define FILESEL_INICIAL_ANCHO 32
 #define FILESEL_MAX_ANCHO OVERLAY_SCREEN_MAX_WIDTH
 
-#define FILESEL_INICIAL_ALTO 23
+#define FILESEL_INICIAL_ALTO 24
 
 #define FILESEL_INICIAL_X (menu_center_x()-FILESEL_INICIAL_ANCHO/2)
 #define FILESEL_INICIAL_Y (menu_center_y()-FILESEL_INICIAL_ALTO/2)
@@ -34806,7 +34806,7 @@ int menu_filesel_set_cursor_at_mouse(zxvision_window *ventana)
 
                             //Si esta en la zona derecha de selector de porcentaje no hacer nada
                             
-                            //if (menu_mouse_x==FILESEL_ANCHO-1) return 0;
+                            
 							if (menu_mouse_x==(ventana->visible_width)-1) return 0;
 							
 
@@ -35359,7 +35359,8 @@ void menu_filesel_overlay_draw_preview(void)
 		int xorigen=ancho_ventana-menu_filesel_overlay_last_preview_width/menu_char_width;
 
 		//Restar barra desplazamiento, texto <dir> y mas margen
-		xorigen=xorigen-1-5-1;
+        int margen_x_coord=7;
+		xorigen=xorigen-margen_x_coord;
 
 
 		int yorigen;
@@ -35401,7 +35402,20 @@ zxvision_get_filesel_alto_dir(ventana)-1
 		//Y ver que no se salga por la izquierda por ejemplo
 		if (xorigen<0 || yorigen<0) return;
 
-		//TODO ver que quepa entero
+		//ver que haya un tamaño suficiente de ventana
+        //printf("ventana ancho %d alto %d\n",ancho_ventana,alto_ventana);
+
+        if (ancho_ventana<31) {
+            debug_printf(VERBOSE_DEBUG,"Fileselector width size too small: %d",ancho_ventana);
+            return;
+        }
+
+        //En caso de tener un ancho no muy grande, desplazamos el preview a la derecha quitando el margen
+        if (ancho_ventana<38) {
+            debug_printf(VERBOSE_DEBUG,"Setting preview to the right as we have a small window\n");
+            xorigen=xorigen+margen_x_coord-1; //-1 de la barra de progreso
+        }
+        
 
 		//Sumar scroll ventana
 		xorigen +=menu_filesel_overlay_window->offset_x;
