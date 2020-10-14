@@ -10487,10 +10487,9 @@ Esto aparece en archivos descargados de internet
 //1: archivo normal (o symbolic link)
 //2: directorio
 //Entrada: d_type, nombre archivo. requisito es que el archivo se encuentre en directorio actual
-//En Linux solo se usa d_type
-//En Windows solo se usa nombre, y luego se obtiene st_mode
 
-int get_file_type(int d_type, char *nombre)
+
+int get_file_type(char *nombre)
 {
 /*
        lowing macro constants for the value returned in d_type:

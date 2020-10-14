@@ -1620,11 +1620,9 @@ void zxpand_COM_DirectoryRead(void)
 
 	//if (get_file_type(zxpand_dp->d_type,zxpand_dp->d_name)==2) {
 
-#ifdef HAIKU_OS
-	if (0) { //Asumimos siempre tipo archivo regular
-#else
-	if (get_file_type(zxpand_dp->d_type,nombre_final)==2) {
-#endif
+
+	if (get_file_type(nombre_final)==2) {
+
 
 
 		//meter flags directorio y nombre entre <>

@@ -454,7 +454,7 @@ extern void string_a_minusculas(char *origen, char *destino);
 
 extern int si_ruta_absoluta(char *ruta);
 
-extern int get_file_type(int d_type, char *nombre);
+extern int get_file_type(char *nombre);
 
 extern char external_tool_sox[];
 //extern char external_tool_unzip[];

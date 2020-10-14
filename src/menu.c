@@ -749,7 +749,7 @@ int ventana_tipo_activa=1;
 struct s_filesel_item{
 	//struct dirent *d;
 	char d_name[PATH_MAX];
-        unsigned char  d_type;
+        //unsigned char  d_type;
 
         //siguiente item
         struct s_filesel_item *next;
@@ -19827,12 +19827,8 @@ int menu_file_filter(const char *name,char *filtros[])
 int menu_filesel_filter_func(const struct dirent *d)
 {
 
-#ifdef HAIKU_OS
-	int tipo_archivo=1; //Asumimos siempre tipo archivo regular
-#else
 
-	int tipo_archivo=get_file_type(d->d_type,(char *)d->d_name);
-#endif
+	int tipo_archivo=get_file_type((char *)d->d_name);
 
 
 	//si es directorio, ver si empieza con . y segun el filtro activo
@@ -19846,10 +19842,10 @@ int menu_filesel_filter_func(const struct dirent *d)
 	//Si no es archivo ni link, no ok
 
 	if (tipo_archivo  == 0) {
-#ifdef HAIKU_OS
-#else
-		debug_printf (VERBOSE_DEBUG,"Item is not a directory, file or link. Type: %d",d->d_type);
-#endif
+
+
+		debug_printf (VERBOSE_DEBUG,"Item is not a directory, file or link");
+
 		return 0;
 	}
 
@@ -19939,13 +19935,13 @@ primer_filesel_item=NULL;
 
 		strcpy(item->d_name,nombreactual->d_name);
 
-
+/*
 #ifdef HAIKU_OS
 		item->d_type=1; //Asumimos siempre tipo archivo regular
 #else
 		item->d_type=nombreactual->d_type;
 #endif
-
+*/
 		item->next=NULL;
 
 		//primer item
@@ -33352,7 +33348,7 @@ int menu_util_file_is_compressed(char *filename)
 }
 
 //obtiene linea a escribir con nombre de archivo + carpeta
-void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,unsigned int max_length_shown)
+void menu_filesel_print_file_get(char *buffer, char *s,unsigned int max_length_shown)
 {
 	unsigned int i;
 
@@ -33385,7 +33381,7 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
 	if (s[0]==' ' && s[1]==0) test_dir=0;
 
 	if (test_dir) {
-	        if (get_file_type(d_type,s) == 2 && i>=5) {
+	        if (get_file_type(s) == 2 && i>=5) {
         	        buffer[i-1]='>';
                 	buffer[i-2]='r';
 	                buffer[i-3]='i';
@@ -33411,14 +33407,14 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned char  d_type,uns
 //Margen de 8 lineas (4+4) de leyendas
 #define ZXVISION_FILESEL_INITIAL_MARGIN 8
 
-void zxvision_menu_filesel_print_file(zxvision_window *ventana,char *s,unsigned char  d_type,unsigned int max_length_shown,int y)
+void zxvision_menu_filesel_print_file(zxvision_window *ventana,char *s,unsigned int max_length_shown,int y)
 {
 
         char buffer[PATH_MAX];
 
 
 
-        menu_filesel_print_file_get(buffer, s, d_type, max_length_shown);
+        menu_filesel_print_file_get(buffer, s, max_length_shown);
 
 
 	zxvision_print_string_defaults_fillspc(ventana,1,y+ZXVISION_FILESEL_INITIAL_MARGIN,buffer);	
@@ -34610,7 +34606,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 		//Solo hacer esto si es visible en pantalla
 		if (i<mostrados_en_pantalla) {
 		
-		zxvision_menu_filesel_print_file(ventana,p->d_name,p->d_type,(ventana->total_width)-2,i);
+		zxvision_menu_filesel_print_file(ventana,p->d_name,(ventana->total_width)-2,i);
 		
 
 		//if (filesel_linea_seleccionada==i) {
@@ -34640,12 +34636,12 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 	                                if (menu_active_item_primera_vez) {
 						
 
-        	                                sprintf (texto_opcion_activa,"Selected item: %s %s",p->d_name,(get_file_type(p->d_type,p->d_name) == 2 ? "directory" : ""));
+        	                                sprintf (texto_opcion_activa,"Selected item: %s %s",p->d_name,(get_file_type(p->d_name) == 2 ? "directory" : ""));
                 	                        menu_active_item_primera_vez=0;
                         	        }
 
                                 	else {
-	                                        sprintf (texto_opcion_activa,"%s %s",p->d_name,(get_file_type(p->d_type,p->d_name) == 2 ? "directory" : ""));
+	                                        sprintf (texto_opcion_activa,"%s %s",p->d_name,(get_file_type(p->d_name) == 2 ? "directory" : ""));
         	                        }
 
 				}
@@ -36448,7 +36444,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
                                                 }
 
-						if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)==2) {
+						if (get_file_type(item_seleccionado->d_name)==2) {
 							debug_printf(VERBOSE_INFO,"Can't expand directories");
 						}
 
@@ -36493,7 +36489,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 						}
 
-						if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)==2) {
+						if (get_file_type(item_seleccionado->d_name)==2) {
 							debug_printf (VERBOSE_DEBUG,"Is a directory. Change");
 							char *directorio_a_cambiar;
 
@@ -36673,7 +36669,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								if (tecla=='I') file_utils_info_file(file_utils_file_selected);
 
 								//Si no es directorio
-								if (get_file_type(item_seleccionado->d_type,item_seleccionado->d_name)!=2) {
+								if (get_file_type(item_seleccionado->d_name)!=2) {
 									//unimos directorio y nombre archivo
 									//getcwd(file_utils_file_selected,PATH_MAX);
 									//sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);
