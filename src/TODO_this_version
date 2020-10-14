@@ -174,4 +174,4 @@ estan en subcarpeta editview/
 -file previews: 
 * que detecte si lo seleccionado es un archivo realmente (y no directorio por ejemplo)
 * no muestra la correspondiente preview si multitask esta a off
-* previews de .zsf
+* previews de .zsf: de momento solo bloque simple (ZSF_RAMBLOCK usado en 48k??)

@@ -33810,6 +33810,25 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
         }		
 
 
+		else if (!util_compare_file_extension(archivo,"zsf")) {
+                char *opciones[]={
+					"ZSF to SCR",
+                        NULL};
+
+        int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.scr",directorio,archivo);
+								util_convert_zsf_to_scr(fullpath,archivo_destino);
+                        break;
+
+ 
+                } 
+        }	
 
         else if (!util_compare_file_extension(archivo,"hdf")) {
                 char *opciones[]={
@@ -35895,6 +35914,21 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		menu_filesel_preview_render_scr(tmpfile_scr);
 
 	}		
+
+	//Si es ZSF
+	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"zsf")) {
+		printf("es snapshot zsf\n");
+
+		menu_filesel_mkdir(tmpdir);
+
+		//Si no existe preview
+		if (!si_existe_archivo(tmpfile_scr)) {
+			util_convert_zsf_to_scr(filesel_nombre_archivo_seleccionado,tmpfile_scr);
+		}
+
+		menu_filesel_preview_render_scr(tmpfile_scr);
+
+	}			
 
 
 	else {

@@ -112,6 +112,7 @@
 #include "sg1000.h"
 #include "svi.h"
 #include "charset.h"
+#include "snap_zsf.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -14302,6 +14303,280 @@ int util_convert_sp_to_scr(char *filename,char *archivo_destino)
 }
 
 
+
+int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
+//,z80_byte *origin_memory,int longitud_memoria,int load_fast_mode)
+{
+
+    FILE *ptr_zsf_file;
+
+
+    ptr_zsf_file=fopen(filename,"rb");
+    if (!ptr_zsf_file) {
+        debug_printf (VERBOSE_DEBUG,"Error reading snapshot file %s",filename);
+        return 1;
+    }
+
+
+    //Verificar que la cabecera inicial coincide
+    //zsf_magic_header
+
+    char buffer_magic_header[256];
+
+    int longitud_magic=strlen(zsf_magic_header);
+
+
+
+    int leidos=fread(buffer_magic_header,1,longitud_magic,ptr_zsf_file);
+
+    if (leidos!=longitud_magic) {
+        debug_printf (VERBOSE_DEBUG,"Invalid ZSF file, small magic header");
+        fclose(ptr_zsf_file);
+        return 1;
+    }
+
+
+    //Comparar texto
+    buffer_magic_header[longitud_magic]=0;
+
+    if (strcmp(buffer_magic_header,zsf_magic_header)) {
+        debug_printf (VERBOSE_DEBUG,"Invalid ZSF file, invalid magic header");
+        fclose(ptr_zsf_file);
+        return 1;
+    }
+
+
+    z80_byte block_header[6];
+
+    //Read blocks
+    //while (!feof(ptr_zsf_file)) {
+
+    int salir=0;
+
+    while (!feof(ptr_zsf_file) && !salir) {
+        //Read header block
+        unsigned int leidos;
+
+        leidos=fread(block_header,1,6,ptr_zsf_file);
+
+
+        if (leidos==0) break; //End while
+
+        if (leidos!=6) {
+            debug_printf(VERBOSE_DEBUG,"Error reading snapshot file. Read: %u Expected: 6",leidos);
+            return 1;
+        }
+
+        z80_int block_id;
+        block_id=value_8_to_16(block_header[1],block_header[0]);
+        unsigned int block_lenght_zsf=block_header[2]+(block_header[3]*256)+(block_header[4]*65536)+(block_header[5]*16777216);
+
+        //debug_printf (VERBOSE_INFO,"Block id: %u (%s) Length: %u",block_id,zsf_get_block_id_name(block_id),block_lenght_zsf);
+
+        printf ("Block id: %u (%s) Length: %u\n",block_id,zsf_get_block_id_name(block_id),block_lenght_zsf);
+
+        z80_byte *block_data;
+
+        //Evitar bloques de longitud cero
+        //Por si acaso inicializar a algo
+        z80_byte buffer_nothing;
+        block_data=&buffer_nothing;
+
+
+        if (block_lenght_zsf) {
+            block_data=malloc(block_lenght_zsf);
+
+            if (block_data==NULL) cpu_panic("Can not allocate memory for zsf convert");
+
+            //Read block data
+            leidos=fread(block_data,1,block_lenght_zsf,ptr_zsf_file);
+
+
+            if (leidos!=block_lenght_zsf) {
+                debug_printf(VERBOSE_DEBUG,"Error reading snapshot file. Read: %u Expected: %u",leidos,block_lenght_zsf);
+                return 1;
+            }
+        }
+
+        
+        z80_byte block_flags;
+        z80_int block_start;
+        
+        int block_lenght;
+        
+
+        z80_byte ram_page;    
+
+        int longitud_original=block_lenght_zsf;
+
+        int i;
+
+        switch(block_id) {
+            case ZSF_RAMBLOCK:
+                /*
+                A ram binary block
+                Byte Fields:
+                0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where 
+                YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+                1,2: Block start address
+                3,4: Block lenght (if 0, means 65536. Value 0 only used on Inves)
+                5 and next bytes: data bytes
+                */
+
+                //Ya tenemos pantalla
+                salir=1;
+
+                i=0;
+                block_flags=block_data[i];
+
+                //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 5 bytes
+                
+
+                i++;
+                block_start=value_8_to_16(block_data[i+1],block_data[i]);
+                i +=2;
+                block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+                i+=2;
+
+                if (block_lenght==0) block_lenght=65536;
+
+                debug_printf (VERBOSE_DEBUG,"Block start: %d Length: %d Compressed: %s Length_source: %d",block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+                //printf ("Block start: %d Length: %d Compressed: %d Length_source: %d\n",block_start,block_lenght,block_flags&1,longitud_original);
+
+
+                longitud_original -=5;
+
+                //Asignamos memoria temporal para el bloque
+                z80_byte *buffer_memoria;
+
+                //Por si acaso, el doble de lo que en teoria se necesita
+                buffer_memoria=malloc(block_lenght*2);
+
+                if (buffer_memoria==NULL) cpu_panic("Can not allocate memory for zsf convert");
+
+
+                load_zsf_snapshot_block_data_addr(&block_data[i],buffer_memoria,block_lenght,longitud_original,block_flags&1);
+
+                util_save_file(buffer_memoria,6912,archivo_destino);
+
+                free(buffer_memoria);
+
+
+            break;
+
+            case ZSF_SPEC128_RAMBLOCK:
+                /*
+                -Block ID 6: ZSF_SPEC128_RAMBLOCK
+                A ram binary block for a spectrum 128, p2 or p2a machine
+                Byte Fields:
+                0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+                YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+                1,2: Block start address (currently unused)
+                3,4: Block lenght
+                5: ram block id (0..7) for a spectrum 128k for example
+                6 and next bytes: data bytes
+                */
+
+
+
+                //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 5 bytes
+                
+
+                i=0;
+                block_flags=block_data[i];
+
+                //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 5 bytes
+
+                i++;
+                block_start=value_8_to_16(block_data[i+1],block_data[i]);
+                i +=2;
+                block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+                i+=2;
+
+                ram_page=block_data[i];
+                i++;
+
+                if (ram_page==5) {
+                    //Ya tenemos pantalla
+                    salir=1;
+
+                    //Asignamos memoria temporal para el bloque
+                    z80_byte *buffer_memoria;
+
+                    //Por si acaso, el doble de lo que en teoria se necesita
+                    buffer_memoria=malloc(block_lenght*2);
+
+                    if (buffer_memoria==NULL) cpu_panic("Can not allocate memory for zsf convert");                
+
+                    debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Length: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+                    longitud_original -=6;
+
+
+                    load_zsf_snapshot_block_data_addr(&block_data[i],buffer_memoria,block_lenght,longitud_original,block_flags&1);
+
+                    util_save_file(buffer_memoria,6912,archivo_destino);
+
+                    free(buffer_memoria);                
+                }
+
+
+
+            break;
+        }
+
+        //switch for every possible block id
+        /*
+        switch(block_id)
+        {
+
+
+        case ZSF_ZXUNO_RAMBLOCK:
+        load_zsf_zxuno_snapshot_block_data(block_data,block_lenght);
+        break;
+
+
+
+
+        case ZSF_TSCONF_RAMBLOCK:
+        load_zsf_tsconf_snapshot_block_data(block_data,block_lenght);
+        break;
+
+
+
+        case ZSF_CPC_RAMBLOCK:
+        load_zsf_cpc_snapshot_block_data(block_data,block_lenght);
+        break;   
+
+
+        case ZSF_TBBLUE_RAMBLOCK:
+        load_zsf_tbblue_snapshot_block_data(block_data,block_lenght);
+        break;    
+
+
+
+
+
+        default:
+        debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
+        break;
+
+        }
+        */
+
+        if (block_lenght_zsf) free(block_data);
+
+    }
+
+    fclose(ptr_zsf_file);
+
+    return 0;
+
+}
+
+
+
 void util_convert_p_to_scr_putchar(z80_byte caracter,int x,int y,z80_byte *pantalla_destino)
 {
 
@@ -14470,7 +14745,7 @@ int util_convert_p_to_scr(char *filename,char *archivo_destino)
                                 x=0;
                 }
                 else {
-                        z80_bit inverse;
+                        //z80_bit inverse;
 
 			
 			
