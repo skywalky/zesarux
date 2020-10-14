@@ -35734,6 +35734,11 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	//de momento nada mas
 	printf("File: %s\n",filesel_nombre_archivo_seleccionado);
 
+	if (!strcmp(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado)) {
+		printf("Archivo es el mismo que antes, no hacer nada\n");
+		return;
+	}    
+
     if (file_is_directory(filesel_nombre_archivo_seleccionado)) {
         printf("Archivo es un directorio, no hacer nada\n");
         //Pero quitar la posible preview anterior
@@ -35743,10 +35748,6 @@ void menu_filesel_overlay_render_preview_in_memory(void)
         return;
     }
 
-	if (!strcmp(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado)) {
-		printf("Archivo es el mismo que antes, no hacer nada\n");
-		return;
-	}
 
 	printf("Renderizar archivo\n");
 
