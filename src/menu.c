@@ -35739,6 +35739,9 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		return;
 	}    
 
+    strcpy(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado);
+    
+
     if (file_is_directory(filesel_nombre_archivo_seleccionado)) {
         printf("Archivo es un directorio, no hacer nada\n");
         //Pero quitar la posible preview anterior
@@ -35751,7 +35754,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	printf("Renderizar archivo\n");
 
-	strcpy(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado);
+	
 
 	//Creamos carpeta temporal por si no existe
 	char tmpdir[PATH_MAX];
