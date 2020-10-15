@@ -785,7 +785,7 @@ kbdr_cmd equ    9       keyboard direct read
 
 }
 
-void ql_simulate_sound(int frecuencia)
+void ql_simulate_sound(z80_byte pitch1)
 {
     			//de momento solo tonos
 			z80_byte valor_mixer=255;
@@ -807,6 +807,10 @@ void ql_simulate_sound(int frecuencia)
             //Tono
             //RO � Ajuste fino del tono, canal A
             //R1 � Ajuste aproximado del tono, canal A- (4 bits)
+            //En AY: valor mas alto en el chip, frecuencia mas alta
+            //igual que ql: pitch       0,255: pitch 1 is high, 255 is low
+
+    z80_byte frecuencia=pitch1;
 
 	out_port_ay(65533,0);
 	out_port_ay(49149,(frecuencia << 4) & 0xF0); //Aqui los 4 bits bajos
@@ -882,8 +886,9 @@ void ql_debug_show_sound_parameters(void)
     printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
     pitch1,pitch2,interval_steps,duration,step_in_pitch,wrap,randomness_of_step,fuziness);
 
+    ql_simulate_sound(pitch1);
 
-    sleep (5);
+    //sleep (5);
 }
 
 void ql_write_ipc(unsigned char Data)
