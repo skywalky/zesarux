@@ -12,6 +12,7 @@
 #include "operaciones.h"
 #include "screen.h"
 #include "settings.h"
+#include "ay38912.h"
 
 
 #if defined(__APPLE__)
@@ -784,6 +785,35 @@ kbdr_cmd equ    9       keyboard direct read
 
 }
 
+void ql_simulate_sound(int frecuencia)
+{
+    			//de momento solo tonos
+			z80_byte valor_mixer=255;
+
+
+			valor_mixer &=(255-1); //Canal 0 tono
+			
+			//printf ("set mixer chip ay 0. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
+
+			ay_chip_selected=0;
+			out_port_ay(65533,7);
+			out_port_ay(49149,valor_mixer);
+
+            //volumen
+
+            out_port_ay(65533,8);
+			out_port_ay(49149,15);
+
+            //Tono
+            //RO � Ajuste fino del tono, canal A
+            //R1 � Ajuste aproximado del tono, canal A- (4 bits)
+
+	out_port_ay(65533,0);
+	out_port_ay(49149,(frecuencia << 4) & 0xF0); //Aqui los 4 bits bajos
+
+	out_port_ay(65533,1);
+	out_port_ay(49149,(frecuencia>>4) & 0xF );  //Y aqui los 4 bits altos          
+}
 
 //8 bloques de 4 bits. MSB first
 z80_byte ql_ipc_sound_command_buffer[8*2];
@@ -808,14 +838,16 @@ void ql_debug_show_sound_parameters(void)
 
     8 bits pitch 1
     8 bits pitch 2
-    16 bits  interval between steps
+    16 bits  interval between steps (grad_x)
     16 bits duration
-    4 bits step in pitch
+    4 bits step in pitch (grad_y)
     4 bits wrap
     4 bits randomness of step
     4 bits fuzziness
 
     no reply
+
+    Para aproximar, cada "duration" es un scanline
 
 
     */
@@ -831,13 +863,27 @@ void ql_debug_show_sound_parameters(void)
 
     pitch1=(ql_ipc_sound_command_buffer[0]<<4)|ql_ipc_sound_command_buffer[1];
     pitch2=(ql_ipc_sound_command_buffer[2]<<4)|ql_ipc_sound_command_buffer[3];
-    interval_steps=(ql_ipc_sound_command_buffer[4]<<12)|(ql_ipc_sound_command_buffer[5]<<8)|(ql_ipc_sound_command_buffer[6]<<4)|ql_ipc_sound_command_buffer[7];
+
+    //OJO a como se ordena esto:
+    interval_steps=(ql_ipc_sound_command_buffer[6]<<12)|(ql_ipc_sound_command_buffer[7]<<8)|
+                    (ql_ipc_sound_command_buffer[4]<<4)|ql_ipc_sound_command_buffer[5];
+
+
+    //OJO a como se ordena esto:
+    duration=(ql_ipc_sound_command_buffer[10]<<12)|(ql_ipc_sound_command_buffer[11]<<8)|
+            (ql_ipc_sound_command_buffer[8]<<4)|ql_ipc_sound_command_buffer[9];
+
+    step_in_pitch=ql_ipc_sound_command_buffer[12];
+    wrap=ql_ipc_sound_command_buffer[13];
+    randomness_of_step=ql_ipc_sound_command_buffer[14];
+    fuziness=ql_ipc_sound_command_buffer[15];
+             
 
     printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
     pitch1,pitch2,interval_steps,duration,step_in_pitch,wrap,randomness_of_step,fuziness);
 
 
-    sleep (10);
+    sleep (5);
 }
 
 void ql_write_ipc(unsigned char Data)
