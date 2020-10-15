@@ -235,9 +235,11 @@ void cpu_core_loop_ql(void)
 
                         audio_valor_enviar_sonido=0;
 
-                        audio_valor_enviar_sonido +=da_output_ay();
+                        //Usando simulacion por AY
+                        //audio_valor_enviar_sonido +=da_output_ay();
 
-
+                        //Usando emulacion del chip intel
+                        audio_valor_enviar_sonido +=ql_audio_da_output();
 
 
                         if (realtape_inserted.v && realtape_playing.v) {

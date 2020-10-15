@@ -785,6 +785,14 @@ kbdr_cmd equ    9       keyboard direct read
 
 }
 
+z80_int ql_current_sound_duration=0;
+
+z80_byte ql_audio_pitch=0;
+z80_byte ql_audio_pitch_counter=0;
+int ql_audio_output_bit=0;
+int ql_audio_playing=0;
+
+
 void ql_stop_sound(void)
 {
     			//de momento solo tonos
@@ -797,9 +805,26 @@ void ql_stop_sound(void)
 			ay_chip_selected=0;
 			out_port_ay(65533,7);
 			out_port_ay(49149,valor_mixer);    
+
+            ql_audio_playing=0;
 }
 
-z80_int ql_current_sound_duration=0;
+
+
+
+char ql_audio_da_output(void)
+{
+    ql_audio_pitch_counter--;
+    if (ql_audio_pitch_counter==0) {
+        ql_audio_pitch_counter=ql_audio_pitch;
+        ql_audio_output_bit ^=1;
+    }
+
+    if (!ql_audio_playing) return 0;
+
+    return ql_audio_output_bit * 30;
+}
+
 
 void ql_simulate_sound(z80_byte pitch1,z80_int duration)
 {
@@ -907,6 +932,10 @@ void ql_debug_show_sound_parameters(void)
 
     ql_simulate_sound(pitch1,duration);
 
+
+    ql_audio_pitch=ql_audio_pitch_counter=pitch1;
+    ql_audio_playing=1;
+
     //sleep (5);
 }
 
@@ -988,8 +1017,8 @@ ipc..wp equ     6       return state of p26, currently not connected
 							//printf ("Valor a retornar: %d\n",ql_ipc_last_nibble_to_read[0]&15);
 
                             //Bit de beeping
-                            if (ql_current_sound_duration!=0) ql_ipc_last_nibble_to_read[1] |=2;
-                            else ql_ipc_last_nibble_to_read[1] &=(255-2);
+                            if (ql_audio_playing) ql_ipc_last_nibble_to_read[0] |=2;
+                            else ql_ipc_last_nibble_to_read[0] &=(255-2);
 
 
 							//sleep(1);
