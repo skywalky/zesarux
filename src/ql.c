@@ -784,6 +784,62 @@ kbdr_cmd equ    9       keyboard direct read
 
 }
 
+
+//8 bloques de 4 bits. MSB first
+z80_byte ql_ipc_sound_command_buffer[8*2];
+
+
+void ql_debug_show_sound_parameters(void) 
+{
+							
+    /*
+    BEEP syntax:
+
+    duration    -32768,32768: duration in units of 72 microseconds. duration of 0 will run the sound until terminated by another beep command
+    pitch       0,255: pitch 1 is high, 255 is low
+    pitch2      0,255: a second pitch level between which the sound will "bounce"
+    grad_x      -32768,32767: time interval between pitch steps
+    grad_y      -8,7: size of each step. grad_x and grad_y control the rate at which the pitch bounces between levels
+    wrap        0,15: will force the sound to wrap around the specified number of times. if wrap is equal to 15 the sound will grap around forever
+    fuzzy       0,15: defined the amount of fuzziness to be added to the sound
+    random      0,15: defined the amount of randomness to be added to the sound
+
+    Formato del mensaje ipc:
+
+    8 bits pitch 1
+    8 bits pitch 2
+    16 bits  interval between steps
+    16 bits duration
+    4 bits step in pitch
+    4 bits wrap
+    4 bits randomness of step
+    4 bits fuzziness
+
+    no reply
+
+
+    */
+
+    z80_byte pitch1;
+    z80_byte pitch2;
+    z80_int interval_steps;
+    z80_int duration;
+    z80_byte step_in_pitch;
+    z80_byte wrap;
+    z80_byte randomness_of_step;
+    z80_byte fuziness;
+
+    pitch1=(ql_ipc_sound_command_buffer[0]<<4)|ql_ipc_sound_command_buffer[1];
+    pitch2=(ql_ipc_sound_command_buffer[2]<<4)|ql_ipc_sound_command_buffer[3];
+    interval_steps=(ql_ipc_sound_command_buffer[4]<<12)|(ql_ipc_sound_command_buffer[5]<<8)|(ql_ipc_sound_command_buffer[6]<<4)|ql_ipc_sound_command_buffer[7];
+
+    printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
+    pitch1,pitch2,interval_steps,duration,step_in_pitch,wrap,randomness_of_step,fuziness);
+
+
+    sleep (10);
+}
+
 void ql_write_ipc(unsigned char Data)
 {
 	/*
@@ -802,7 +858,7 @@ void ql_write_ipc(unsigned char Data)
 	if ((Data&13)!=12) return;
 
 	int bitdato=(Data>>1)&1;
-	//printf ("Escribiendo bit ipc: %d\n",bitdato);
+	//printf ("Escribiendo bit ipc: %d. bits enviados: %d\n",bitdato,ql_ipc_last_write_bits_enviados);
 	ql_ipc_last_write_value=ql_ipc_last_write_value<<1;
 	ql_ipc_last_write_value |=bitdato;
 	ql_ipc_last_write_bits_enviados++;
@@ -903,7 +959,10 @@ ipc..wp equ     6       return state of p26, currently not connected
 * 4 bits fuziness (none unless msb is set)
 */
 							debug_printf (VERBOSE_PARANOID,"ipc command 10 inso_cmd initiate sound process");
-							//ql_estado_ipc=QL_STATUS_IPC_WRITING; Mejor lo desactivo porque si no se queda en estado writing y no sale de ahi
+                            printf ("ipc command 10 inso_cmd initiate sound process\n");
+							//sleep(5);
+                            
+                            ql_estado_ipc=QL_STATUS_IPC_WRITING; //Mejor lo desactivo porque si no se queda en estado writing y no sale de ahi
 						break;
 
 						//baud_cmd
@@ -955,13 +1014,49 @@ ipc..wp equ     6       return state of p26, currently not connected
 
 						case 10:
 							debug_printf (VERBOSE_PARANOID,"parameter sound %d: %d",ql_ipc_bytes_received,ql_ipc_last_command_parameter);
+
+                            printf ("parameter sound %d: %d\n",ql_ipc_bytes_received,ql_ipc_last_command_parameter);
+                            ql_ipc_sound_command_buffer[ql_ipc_bytes_received]=ql_ipc_last_command_parameter;
+
 							ql_ipc_bytes_received++;
-							if (ql_ipc_bytes_received>=8) {
+                            ql_ipc_last_write_bits_enviados=0;
+                            //sleep(1);
+
+                            //16 bytes (o sea, cada byte me lleva 4 bits efectivos, en total: 8 bytes efectivos)
+							if (ql_ipc_bytes_received>=16) {
 								debug_printf (VERBOSE_PARANOID,"End receiving ipc parameters");
 								ql_estado_ipc=QL_STATUS_IPC_IDLE;
-								ql_ipc_last_write_bits_enviados=0;
+								//ql_ipc_last_write_bits_enviados=0;
 								ql_ipc_bytes_received=0;
+                                //sleep(10);
+
+                                ql_debug_show_sound_parameters();
 							}
+                            /*
+                            BEEP syntax:
+                            duration    -32768,32768: duration in units of 72 microseconds. duration of 0 will run the sound until terminated by another beep command
+                            pitch       0,255: pitch 1 is high, 255 is low
+                            pitch2      0,255: a second pitch level between which the sound will "bounce"
+                            grad_x      -32768,32767: time interval between pitch steps
+                            grad_y      -8,7: size of each step. grad_x and grad_y control the rate at which the pitch bounces between levels
+                            wrap        0,15: will force the sound to wrap around the specified number of times. if wrap is equal to 15 the sound will grap around forever
+                            fuzzy       0,15: defined the amount of fuzziness to be added to the sound
+                            random      0,15: defined the amount of randomness to be added to the sound
+
+                            Formato del mensaje ipc:
+                            8 bits pitch 1
+                            8 bits pitch2
+                            16 bits  interval between steps
+                            16 bits duration
+                            4 bits step in pitch
+                            4 bits wrap
+                            4 bits randomness of step
+                            4 bits fuzziness
+
+                            no reply
+
+
+                            */
 						break;
 
 						case 13:
