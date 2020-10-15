@@ -787,8 +787,13 @@ kbdr_cmd equ    9       keyboard direct read
 
 z80_int ql_current_sound_duration=0;
 
-z80_byte ql_audio_pitch=0;
-z80_byte ql_audio_pitch_counter=0;
+//z80_byte ql_audio_pitch=0;
+//z80_byte ql_audio_pitch_counter=0;
+
+z80_int ql_audio_pitch=0;
+z80_int ql_audio_pitch_counter=0;
+
+
 int ql_audio_output_bit=0;
 int ql_audio_playing=0;
 
@@ -933,7 +938,13 @@ void ql_debug_show_sound_parameters(void)
     ql_simulate_sound(pitch1,duration);
 
 
-    ql_audio_pitch=ql_audio_pitch_counter=pitch1;
+    ql_audio_pitch=pitch1;
+
+    //Ajuste a ojo dividir entre 1.5
+    ql_audio_pitch=(ql_audio_pitch*2)/3;
+
+    ql_audio_pitch_counter=ql_audio_pitch;
+
     ql_audio_playing=1;
 
     //sleep (5);
