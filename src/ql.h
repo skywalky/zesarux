@@ -95,6 +95,8 @@ extern int ql_pulsado_tecla(void);
 
 extern void ql_rom_traps(void);
 
+extern z80_int ql_current_sound_duration;
+
 
 extern void qltraps_init_fopen_files_array(void);
 

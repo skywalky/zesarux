@@ -219,6 +219,16 @@ void cpu_core_loop_ql(void)
 
 			t_scanline++;
 
+            //Decrementamos contador sonido si conviene
+            //Si es 0, dejarlo tal cual
+            if (ql_current_sound_duration!=0) {
+                ql_current_sound_duration--;
+                if (ql_current_sound_duration==0) {
+                    //Silenciar
+                    printf("stop sound\n");
+                    ql_stop_sound();
+                }
+            }
 
 
                         //Envio sonido

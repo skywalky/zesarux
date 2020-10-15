@@ -785,7 +785,23 @@ kbdr_cmd equ    9       keyboard direct read
 
 }
 
-void ql_simulate_sound(z80_byte pitch1)
+void ql_stop_sound(void)
+{
+    			//de momento solo tonos
+			z80_byte valor_mixer=255;
+
+
+		
+			//printf ("set mixer chip ay 0. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
+
+			ay_chip_selected=0;
+			out_port_ay(65533,7);
+			out_port_ay(49149,valor_mixer);    
+}
+
+z80_int ql_current_sound_duration=0;
+
+void ql_simulate_sound(z80_byte pitch1,z80_int duration)
 {
     			//de momento solo tonos
 			z80_byte valor_mixer=255;
@@ -816,7 +832,10 @@ void ql_simulate_sound(z80_byte pitch1)
 	out_port_ay(49149,(frecuencia << 4) & 0xF0); //Aqui los 4 bits bajos
 
 	out_port_ay(65533,1);
-	out_port_ay(49149,(frecuencia>>4) & 0xF );  //Y aqui los 4 bits altos          
+	out_port_ay(49149,(frecuencia>>4) & 0xF );  //Y aqui los 4 bits altos     
+
+
+    ql_current_sound_duration=duration;     
 }
 
 //8 bloques de 4 bits. MSB first
@@ -886,7 +905,7 @@ void ql_debug_show_sound_parameters(void)
     printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
     pitch1,pitch2,interval_steps,duration,step_in_pitch,wrap,randomness_of_step,fuziness);
 
-    ql_simulate_sound(pitch1);
+    ql_simulate_sound(pitch1,duration);
 
     //sleep (5);
 }
@@ -967,6 +986,11 @@ ipc..wp equ     6       return state of p26, currently not connected
 							//if ((puerto_49150&1)) ql_ipc_last_nibble_to_read[0]=4;
 
 							//printf ("Valor a retornar: %d\n",ql_ipc_last_nibble_to_read[0]&15);
+
+                            //Bit de beeping
+                            if (ql_current_sound_duration!=0) ql_ipc_last_nibble_to_read[1] |=2;
+                            else ql_ipc_last_nibble_to_read[1] &=(255-2);
+
 
 							//sleep(1);
 

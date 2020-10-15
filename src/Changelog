@@ -10,6 +10,7 @@ Added SP to SCR file converter
 Added Z80 to SCR file converter
 Added P to SCR file converter
 Added ZSF to SCR file converter
+Added experimental emulation of QL sound
 
 Improved ZX Desktop: 
 -Added direct buttons, to access menu items
