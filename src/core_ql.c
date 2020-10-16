@@ -48,6 +48,7 @@
 #include "m68k.h"
 #include "ula.h"
 #include "settings.h"
+#include "ql_i8049.h"
 
 
 
@@ -219,16 +220,9 @@ void cpu_core_loop_ql(void)
 
 			t_scanline++;
 
-            //Decrementamos contador sonido si conviene
-            //Si es 0, dejarlo tal cual
-            if (ql_current_sound_duration!=0) {
-                ql_current_sound_duration--;
-                if (ql_current_sound_duration==0) {
-                    //Silenciar
-                    printf("stop sound\n");
-                    ql_stop_sound();
-                }
-            }
+           
+
+
 
 
                         //Envio sonido
@@ -238,7 +232,7 @@ void cpu_core_loop_ql(void)
                         //Usando simulacion por AY
                         //audio_valor_enviar_sonido +=da_output_ay();
 
-                        //Usando emulacion del chip intel
+                        //Usando emulacion del chip intel 
                         audio_valor_enviar_sonido +=ql_audio_da_output();
 
 
@@ -262,7 +256,9 @@ void cpu_core_loop_ql(void)
                         audio_send_mono_sample(audio_valor_enviar_sonido);
 
 
-                        ay_chip_siguiente_ciclo();
+                        //ay_chip_siguiente_ciclo();
+
+                        ql_audio_next_cycle();
 
 			//se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
 			//esperar para ver si se ha generado una interrupcion 1/50

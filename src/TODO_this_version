@@ -171,3 +171,8 @@ estan en subcarpeta editview/
 
 -En ventana sprite navigator Tbblue, indicar parámetros de sprite relativo etc
 
+-ql: comportamiento extraño al abrir canales que usan archivos de disco:
+
+ejemplo en el mago y linea 17, 21. quiza es al cerrar dispositivo (close #)
+
+-ql: numeros random parece que no los saca bien. Creo que viene del chip intel. Probar con el mago

@@ -27,6 +27,10 @@
 typedef unsigned char z80_byte;
 typedef unsigned short z80_int;
 
+//Tipos propios para motorola, para intentar evitar z80_
+typedef unsigned char moto_byte;
+typedef unsigned short moto_int;
+
 #define QL_MEM_LIMIT ((1024*256)-1)
 //#define QL_MEM_LIMIT ((1024*1024)-1)
 
