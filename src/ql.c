@@ -14,6 +14,7 @@
 #include "settings.h"
 #include "ay38912.h"
 #include "ql_i8049.h"
+#include "ql_zx8302.h"
 
 
 #if defined(__APPLE__)
@@ -772,6 +773,16 @@ void core_ql_trap_three(void)
       ql_store_a_registers(pre_io_sstrg_a,7);
       ql_store_d_registers(pre_io_sstrg_d,7);
     break;
+    
+
+    case 0xB:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: SD.CHENQ");
+    break;	    
+
+
+    case 0xF:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: SO.CURS");
+    break;	    
 
     case 0x45:
     	debug_printf (VERBOSE_PARANOID,"Trap 3: FS.MDINF");
@@ -1399,7 +1410,7 @@ PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A
   //Pero, si lo hacemos asi, si no habilitamos emulacion de micro&floppy, al pasar del menu de inicio (F1,F2) buscara el archivo BOOT, y como no salta el
   //trap, se queda bloqueado
 
-    if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==1) {
+    if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==1 /*&& ql_microdrive_floppy_emulation*/) {
       //en A0
       char ql_nombre_archivo_load[255];
       int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);

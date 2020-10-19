@@ -22,5 +22,9 @@
 #ifndef QL_ZX8302_H
 #define QL_ZX8302_H
 
+#include "ql.h"
+
+extern moto_byte ql_zx8032_readbyte(unsigned int Address);
+extern void ql_zx8032_write(unsigned int Address, unsigned char Data);
 
 #endif
