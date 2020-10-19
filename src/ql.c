@@ -1619,8 +1619,9 @@ PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A
   //Nota: lo normal seria que no hagamos este trap a no ser que se habilite emulacion de ql_microdrive_floppy_emulation.
   //Pero, si lo hacemos asi, si no habilitamos emulacion de micro&floppy, al pasar del menu de inicio (F1,F2) buscara el archivo BOOT, y como no salta el
   //trap, se queda bloqueado
+  //Mas adelante en este caso comprobamos si esta habilitada emulacion de microdrive
 
-    if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==1 /*&& ql_microdrive_floppy_emulation*/) {
+    if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==1) {
       //en A0
       char ql_nombre_archivo_load[255];
       int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);
@@ -1743,6 +1744,15 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         if (!es_dispositivo) {
 
 			ql_footer_mdflp_operating();			
+
+            //Si no hay root folder, directamente decimos que no se encuentra archivo
+            if (!ql_microdrive_floppy_emulation) {
+          		debug_printf(VERBOSE_DEBUG,"Microdrive emulation not enabled");
+          		//Retornar Not found (NF)
+          		m68k_set_reg(M68K_REG_D0,-7);
+          		return;                
+            }
+
 
    	     ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
 
