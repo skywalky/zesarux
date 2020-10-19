@@ -31,7 +31,7 @@ char ql_flp1_root_dir[PATH_MAX]="";
 unsigned char *memoria_ql;
 unsigned char ql_mc_stat;
 
-unsigned char ql_pc_intr;
+
 
 int ql_microdrive_floppy_emulation=0;
 
@@ -40,7 +40,6 @@ int ql_microdrive_floppy_emulation=0;
 
 
 
-unsigned char temp_pcintr;
 
 void ql_load_binary_file(FILE *ptr_file,unsigned int direccion, unsigned int longitud);
 
@@ -67,50 +66,6 @@ z80_byte ql_last_trap=0;
 int ql_previous_trap_was_4={0};
 
 
-void ql_debug_port(unsigned int Address)
-{
-	return;
-	switch (Address) {
-		case 0x18000:
-		printf ("	PC_CLOCK		Real-time clock (Long word)\n\n");
-		break;
-
-		case 0x18002:
-		printf ("	PC_TCTRL		Transmit control register\n\n");
-		break;
-
-		case 0x18003:
-		printf ("	PC_IPCWR		IPC port - write only\n\n");
-		break;
-
-		case 0x18020:
-		printf ("	PC_IPCRD		IPC port - read only\n");
-		printf ("	PC_MCTRL		Microdrive control register - write only\n\n");
-		break;
-
-		case 0x18021:
-		printf ("	PC_INTR		Interrupt register\n\n");
-		//usleep(20000);
-		break;
-
-		case 0x18022:
-		printf ("	PC_TDATA		Transmit register - write only\n");
-		printf ("	PC_TRAK1		Read microdrive track 1\n\n");
-		break;
-
-		case 0x18023:
-		printf ("	PC_TRAK2		Read microdrive track 2\n\n");
-		break;
-
-		case 0x18063:
-		printf ("	MC_STAT		Master chip status register\n\n");
-		break;
-
-		default:
-		printf ("Unknown i/o port %08XH\n",Address);
-		break;
-	}
-}
 
 
 
@@ -119,151 +74,6 @@ void ql_debug_port(unsigned int Address)
 
 
 
-
-
-
-
-
-
-unsigned char ql_lee_puerto(unsigned int Address)
-{
-
- 
-
-	unsigned char valor_retorno=0;
-
-	//temporal
-	//return 255;
-
-	switch (Address) {
-
-		case 	0x18020:
-			//printf ("Leyendo IPC. PC=%06XH\n",get_pc_register());
-			//temp
-			//return 0;
-			return ql_read_ipc();
-
-		break;
-
-
-		case 0x18021:
-			//printf ("Read PC_INTR		Interrupt register. Value: %02XH\n\n",ql_pc_intr);
-
-
-                        //temp solo al pulsar enter
-                        ////puerto_49150    db              255  ; H                J         K      L    Enter ;6
-                        //if ((puerto_49150&1)==0) {
-/*
-* read addresses
-pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
-pc.intre equ    1<<4    external interrupt register
-pc.intrf equ    1<<3    frame interrupt register
-pc.intrt equ    1<<2    transmit interrupt register
-pc.intri equ    1<<1    interface interrupt register
-pc.intrg equ    1<<0    gap interrupt register
-*/
-
-/*
-Esto se lee en la rom asi:
-L00352 MOVEM.L D7/A5-A6,-(A7)       *#: ext2int entry
-XL00352 EQU L00352
-       MOVEA.L A7,A5
-       MOVEA.L #$00028000,A6
-       MOVE.B  $00018021,D7
-       LSR.B   #1,D7
-       BCS     L02ABC
-       LSR.B   #1,D7
-       BCS     L02CCC               * 8049 interrupt
-
-	Por tanto la 8049 interrupt se interpreta cuando bit 1 activo
-*/
-
-			ql_pc_intr=0;
-			//if ((puerto_49150&1)==0) ql_pc_intr |=2;
-			if (ql_pulsado_tecla() ) {
-				//debug_printf (VERBOSE_DEBUG,"Read PC_INTR pressed key");
-				ql_pc_intr |=2;
-			}
-			//printf ("------------Retornando %d\n",ql_pc_intr);
-		//	return ql_pc_intr;
-			return 134; //Con pruebas, acabo viendo que retornar este valor acaba provocando lectura de teclado
-
-			temp_pcintr++;
-			//printf ("------------Retornando %d\n",temp_pcintr);
-			return temp_pcintr;
-			//if ((puerto_49150&1)==0) ql_pc_intr |=31;
-			if (ql_pulsado_tecla() ) ql_pc_intr |=31;
-			//usleep(5000000);
-			//sleep(1);
-			return ql_pc_intr;
-			//return 31;
-
-			//}
-
-			//else return 255;
-			//return 255;
-		break;
-
-	}
-
-
-	return valor_retorno;
-}
-
-void ql_out_port(unsigned int Address, unsigned char Data)
-{
-
-	int anterior_video_mode;
-
-	switch (Address) {
-
-  	case    0x18003:
-			//printf ("Escribiendo IPC. Valor: %02XH PC=%06XH\n",Data,get_pc_register() );
-			ql_write_ipc(Data);
-
-		break;
-
-		case 0x18020:
-			//printf ("Writing on 18020H - Microdrive control register - write. Data: %02XH\n",Data);
-		break;
-
-		case 0x18021:
-		  //printf ("Escribiendo pc_intr. Valor: %02XH\n",Data);
-/*
-*pc_intr equ    $18021  7..5 masks and 4..0 to clear interrupt
-*/
-
-//Es una mascara??
-			ql_pc_intr=ql_pc_intr&(Data^255);
-
-			ql_pc_intr=Data;
-
-			//sleep(5);
-		break;
-
-		case 0x18063:
-			//MC_STAT		Master chip status register
-			anterior_video_mode=(ql_mc_stat>>3)&1;
-
-			ql_mc_stat=Data;
-
-			int video_mode=(ql_mc_stat>>3)&1;
-
-			if (video_mode!=anterior_video_mode) {
-				//0=512x256
-				//1=256x256
-				/*
-					0 = 4 colour (mode 4) =512x256
-				  1 = 8 colour (mode 8) =256x256
-				*/
-				if (video_mode==0) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting mode 4 512x256");
-				else screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Setting mode 8 256x256");
-			}
-
-		break;
-	}
-
-}
 
 
 
@@ -274,19 +84,8 @@ void ql_writebyte(unsigned int Address, unsigned char Data)
 	Address&=QL_MEM_LIMIT;
 
 	if (Address>=0x18000 && Address<=0x1BFFF) {
-
-		if (Address==0x18003) {
-                //printf ("writing i/o %X value %X\n",Address,Data);
-								ql_ipc_reading_bit_ready=0;
-								ql_debug_port(Address);
-								//sleep(1);
-		}
-		else {
-			ql_debug_port(Address);
-		}
-
-		ql_out_port(Address,Data);
-
+        ql_zx8032_write(Address,Data);
+    
 
 #ifdef EMULATE_VISUALMEM
 		//Escribimos en visualmem a partir de direccion 18000H
@@ -318,20 +117,10 @@ unsigned char ql_readbyte(unsigned int Address)
 	Address&=QL_MEM_LIMIT;
 
 	if (Address>=0x18000 && Address<=0x1BFFF) {
+        
 
-		if (Address==0x18020) {
-	    //printf ("Reading i/o %X\n",Address);
-			ql_debug_port(Address);
-			//sleep(1);
-		}
+		unsigned char valor=ql_zx8032_readbyte(Address);
 
-
-		else {
-			ql_debug_port(Address);
-		}
-
-
-		unsigned char valor=ql_lee_puerto(Address);
 		//printf ("return value: %02XH\n",valor);
 #ifdef EMULATE_VISUALMEM
                 //Escribimos en visualmem a partir de direccion 18000H

@@ -162,6 +162,15 @@ long timer_stats_diference_time(struct timeval *tiempo_antes, struct timeval *ti
 	return difftime;
 }
 
+long timer_get_current_seconds(void)
+{
+    struct timeval struct_tiempo_ahora;
+
+    timer_stats_current_time(&struct_tiempo_ahora);
+
+    return struct_tiempo_ahora.tv_sec;
+}
+
 
 void timer_sleep(int milisec)
 {

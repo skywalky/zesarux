@@ -80,4 +80,6 @@ extern void timer_toggle_top_speed_timer(void);
 extern void timer_get_elapsed_core_frame_pre(void);
 extern void timer_get_elapsed_core_frame_post(void);
 
+extern long timer_get_current_seconds(void);
+
 #endif

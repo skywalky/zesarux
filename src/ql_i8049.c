@@ -1067,6 +1067,11 @@ ipc..wp equ     6       return state of p26, currently not connected
                             ql_estado_ipc=QL_STATUS_IPC_WRITING; //Mejor lo desactivo porque si no se queda en estado writing y no sale de ahi
 						break;
 
+                        case 11:
+                            //kiso_cmd equ    11      immediately stop sound generation
+                            ql_stop_sound();
+                        break;
+
 						//baud_cmd
 						case 13:
 						/*
@@ -1080,14 +1085,24 @@ ipc..wp equ     6       return state of p26, currently not connected
 						ql_estado_ipc=QL_STATUS_IPC_WRITING;
 						break;
 
+                        case 14:
+                        //La rom no parece hacer uso de este comando, ni con rnd ni con randomise. Sera otro bug de la rom?
+                        //Para randomise utiliza el RTC
+                        //rand_cmd equ    14      random number generator, returns a sixteen bit number.
+                            printf("IPC write. status idle. command rand_cmd\n");
+
+                        break;
+
 
 						case 15:
 							//El que se acaba enviando para leer del puerto ipc. No hacer nada
 						break;
 
-						default:
-							//debug_printf (VERBOSE_ERR,"Write ipc command %d. Not implemented",ql_ipc_last_command);
-						break;
+                        default:
+                            printf("IPC write. status idle. unhandled command: %d\n",ql_ipc_last_command);
+
+                        break;                        
+
 					}
 				break;
 
@@ -1165,6 +1180,19 @@ ipc..wp equ     6       return state of p26, currently not connected
 							ql_estado_ipc=QL_STATUS_IPC_IDLE;
 							//Fin de parametros de comando. Establecer baud rate y dejar status a idle de nuevo para que la siguiente escritura se interprete como comando inicial
 						break;
+
+                        case 14:
+                        //rand_cmd equ    14      random number generator, returns a sixteen bit number.
+                            printf("IPC write. status writing. command rand_cmd\n");
+
+                        break;
+
+
+                        default:
+                            printf("IPC write. status writing. unhandled command: %d\n",ql_ipc_last_command);
+
+                        break;                        
+
 					}
 			break;
 			}

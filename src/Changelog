@@ -43,6 +43,7 @@ Fixed QL bugs:
 -Fixed system call IO.FSTRG
 -Fixed possible hang calling IO.SSTRG
 -Fixed cursor flashing
+-Fixed RTC emulation
 
 
 Fixed segfaults when changing machines and having ZX Desktop windows opened
