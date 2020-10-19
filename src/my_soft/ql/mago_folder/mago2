@@ -1,5 +1,5 @@
 2 gra=RESPR(64):LBYTES mdv1_Udg,gra:MERGE mdv1_Ruidos:udg=RESPR(200):LBYTES mdv1_mago_udg,udg+2
-3 MISTake  RANDOMISE:Ruido 4:Presentaciñn:PON_MANe
+3 RANDOMISE:Ruido 4:Presentacion:PON_MANe
 4 REPeat Partida
 5 DIM pu(jg):ju=0:pa=0:REPeat Juegos
 6 DIM p$(100):d=RND(99):ma=99:mi=0:REPeat pp
@@ -12,7 +12,7 @@
 13 FOR n=3TO 4+jg:CLOSE#n
 14 OPEN#1;scr_512X256a0X0:OPEN#2;scr_512X256a0X0:FOR n=0TO 2:PAPER#n;0:CLS#n
 15 LRUN mdv1_BOOT
-16 MISTake  DEFine PROCedure Presentaciñn:PAPER 0:CLS
+16 DEFine PROCedure Presentacion:PAPER 0:CLS
 17 OPEN#3;scr_450X20a32X236:PAPER#3;0:INK#3;7,4,3:CSIZE#3;1,1:PRINT#3;"  Oscar Hernåndez Baâñ  ";:PAPER#3;4,0,1:INK#3;7:PRINT#3;"Micro Byt Solftware";:PAPER#3;0:PRINT#3;"  ";:UNDER#3;1:PRINT#3;"26-05-88":CLOSE#3:Pantalla
 18 OPEN#3;scr_164X191a32X45:PAPER#3;0:INK#3;7:CLS#3:BORDER#3;3,2,4,1:CALL gra,3,udg,128,22:AT#3;15,13:PRINT#3;"êë":CURSOR#3;72,159:OVER#3;1:PRINT#3;"îíìï";:OVER#3;0:AT#3;17,1:PRINT#3;"INSTRUCCIONES (S/N) ?"
 19 REPeat Tecla:a$=INKEY$(-1):Ruido 2:IF a$=="S" OR a$=="N"THEN EXIT Tecla
@@ -135,11 +135,11 @@
 136 =4:a$="GANASTE "&ju$(ju,1TO MIDe_a(ju$(ju,1TO)))&" ....... ¥ QUIERES JUGAR OTRA VEZ ? ."
 137 =3:a$="OS HE GANADO A TODOS ...... ¥ QUEREIS PERDER OTRA VEZ ? ."
 138 END SELect 
-139 MISTake  n=1:m=-5:REPeat Tìtulo
+139 n=1:m=-5:REPeat Titulo
 140 PAN#10;16:IF n<=LEN(a$)THEN AT#10;0,0:PRINT#10;a$(n)
 141 IF m>=1THEN PAN#11;-16:AT#11;0,9:PRINT#11;a$(m)
-142 MISTake  BEEP 1000,CODE(a$):IF m=LEN(a$)THEN EXIT Tìtulo
-143 MISTake  PAUSE 7:n=n+1:m=m+1:END REPeat Tìtulo
+142 BEEP 1000,CODE(a$):IF m=LEN(a$)THEN EXIT Titulo
+143 PAUSE 7:n=n+1:m=m+1:END REPeat Titulo
 144 REPeat Tecla:a$=INKEY$(-1):Ruido 2:IF a$=="S"OR a$=="N"THEN EXIT Tecla
 145 CLOSE#10:CLOSE#11
 146 RETurn a$:END DEFine 
