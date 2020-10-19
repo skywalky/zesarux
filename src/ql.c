@@ -1883,11 +1883,14 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
         //Tiene pinta que el canal son los 16 bits inferiores
-    	debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) & 0xFFFF );
+    	//debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) & 0xFFFF );
+
+
+        debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",pre_io_close_a[0] & 0xFFFF );
 
   
       	//Si canal es el mio ficticio 
-       	int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0) & 0xFFFF);
+       	int indice_canal=qltraps_find_open_file(pre_io_close_a[0] & 0xFFFF);
 
         if (indice_canal>=0  ) {
         	debug_printf (VERBOSE_DEBUG,"Closing file/device %s",qltraps_fopen_files[indice_canal].ql_file_name);
