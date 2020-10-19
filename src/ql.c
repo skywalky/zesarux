@@ -1879,40 +1879,18 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
     //IO.CLOSE
-    if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==2) {
+    if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==2 && ql_microdrive_floppy_emulation) {
 
 
     	ql_restore_d_registers(pre_io_close_d,7);
         ql_restore_a_registers(pre_io_close_a,6);
 
-    	debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
+        //Tiene pinta que el canal son los 16 bits inferiores
+    	debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) & 0xFFFF );
 
-    	//Si canal es el segundo ficticio 
-        /*if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
-      		debug_printf (VERBOSE_DEBUG,"Returning IO.CLOSE from our second microdrive channel without error");
-
-       	 	ql_restore_d_registers(pre_io_close_d,7);
-        	ql_restore_a_registers(pre_io_close_a,6);
-       
-
-
-        	//Volver de ese trap
-        	m68k_set_reg(M68K_REG_PC,0x5e);
-        	//Ajustar stack para volver
-        	int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-        	reg_a7 +=12;
-        	m68k_set_reg(M68K_REG_A7,reg_a7);
-
-
-        	//No error.
-        	m68k_set_reg(M68K_REG_D0,0);
-
-        	return;
-
-
-       }*/
+  
       	//Si canal es el mio ficticio 
-       	int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+       	int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0) & 0xFFFF);
 
         if (indice_canal>=0  ) {
         	debug_printf (VERBOSE_DEBUG,"Closing file/device %s",qltraps_fopen_files[indice_canal].ql_file_name);
