@@ -41,6 +41,7 @@ Fixed QL bugs:
 -Fixed using QL system calls and A6 pointer offset used after previous Trap was not 4
 -Fixed system call FS.HEADR
 -Fixed system call IO.FSTRG
+-Fixed system call IO.EDLIN
 -Fixed possible hang calling IO.SSTRG
 -Fixed cursor flashing
 -Fixed RTC emulation

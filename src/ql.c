@@ -761,6 +761,9 @@ void core_ql_trap_three(void)
 
     case 0x4:
       debug_printf (VERBOSE_PARANOID,"Trap 3: IO.EDLIN");
+      	      //Guardar registros
+      ql_store_a_registers(pre_io_fline_a,7);
+      ql_store_d_registers(pre_io_fline_d,7);	      
     break;
 
     case 0x5:
@@ -781,7 +784,7 @@ void core_ql_trap_three(void)
 
 
     case 0xF:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: SO.CURS");
+      debug_printf (VERBOSE_PARANOID,"Trap 3: SD.CURS");
     break;	    
 
     case 0x45:
@@ -1042,6 +1045,76 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 }
 
 
+//Leer archivo linea a linea. Retorna bytes leidos, y valor de retorno. 
+//Si hay eof, se debe retornar solo el eof y sin bytes leidos
+
+
+unsigned int ql_read_io_edlin(unsigned int canal,unsigned int puntero_destino,unsigned int *valor_retorno,unsigned int longitud_buffer)
+{
+
+	//printf("longitud buffer: %d\n",longitud_buffer);
+
+	FILE *ptr_archivo;
+
+	//Si habia final de fichero, retornar solo eso
+	if (qltraps_fopen_files[canal].next_eof_ptr_io_fline) {
+		debug_printf (VERBOSE_PARANOID,"Returning eof");
+		qltraps_fopen_files[canal].next_eof_ptr_io_fline=0;
+		*valor_retorno=-10;
+		return 0;
+	}
+
+	//Por defecto
+	*valor_retorno=0;
+
+
+
+	ptr_archivo=qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix;
+
+	unsigned int total_leidos=0;
+	//Ir leyendo hasta codigo 10 o final de fichero
+	int salir=0;
+
+	while (!salir) {
+		int bytes_leidos=fgetc(ptr_archivo);
+		//Si negativo, asumimos final de fichero
+		if (bytes_leidos<0) {
+			//printf("\nEOF\n");
+			qltraps_fopen_files[canal].next_eof_ptr_io_fline=1;
+			salir=1;
+		}
+
+		if (!salir) {
+
+			if (total_leidos>=longitud_buffer) {
+				//printf("\nOverflow\n");
+				*valor_retorno=QDOS_ERROR_CODE_BO;
+
+				//ese byte esta fuera de buffer y no se retornara. "Rebobinar" puntero lectura 1 byte
+				fseek(ptr_archivo,-1,SEEK_CUR);
+
+				return total_leidos;
+			}			
+
+
+			ql_writebyte(puntero_destino++,bytes_leidos);
+			total_leidos++;
+
+		}
+
+		//Si salto de linea, salir
+		if (bytes_leidos==10) salir=1;
+
+	}
+	
+	//printf("\nEND ql_read_io_fline\n");
+
+	return total_leidos;
+	
+
+}
+
+
 void ql_load_binary_file(FILE *ptr_file,unsigned int valor_leido_direccion, unsigned int valor_leido_longitud)
 {
 
@@ -1230,6 +1303,137 @@ void handle_trap_io_fline(void)
 
          
 
+
+
+        }
+}
+
+
+
+void handle_trap_io_edlin(void) 
+{
+		
+		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
+
+		if (m68k_get_reg(NULL,M68K_REG_D0)==0x2) {
+        debug_printf (VERBOSE_PARANOID,"IO.EDLIN. Channel ID=%d End of line: A1=%08XH A3=%08XH A6=%08XH D2=%d",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),m68k_get_reg(NULL,M68K_REG_A6)
+				,m68k_get_reg(NULL,M68K_REG_D2) );
+		}
+	
+
+        //Si canal es de los mios
+        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        if (indice_canal>=0) {
+
+        	
+        	debug_printf (VERBOSE_PARANOID,"Returning IO.EDLIN from our microdrive channel without error. EXPERIMENTAL!!!");
+
+
+        	//Si es un dispositivo entero
+        	if (qltraps_fopen_files[indice_canal].es_dispositivo) {
+        		debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from full device channel (just \"%s\") with EOF",
+        			qltraps_fopen_files[indice_canal].ql_file_name);
+
+        		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
+          		debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
+          		m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
+      			return;
+        	}
+
+        	 //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();
+
+
+          	/*
+          	D0=$2 IO.FLINE fetch a line of characters terminated by ASCII <LF> ($A)
+			D0=$3 IO.FSTRG fetch a string of bytes
+          	*/
+
+          	/*
+          	Entrada:
+            D1 cursor/line length 
+            D2.W length of buffer 
+            D3.W timeout
+            A0 channel ID
+            A1 pointer to end of line
+            
+          	Salida:
+          	D1 cursor/line length
+            D2 preserved
+            D3 preserved
+
+            A0 preserved
+            A1 pointer to end of line
+            A2 preserved
+            A3 preserved
+
+
+          	Errores:
+          	NC not complete
+          	NO channel not open
+          	BO buffer overflow 
+
+          	*/
+
+        	//Dudas!! Donde se guarda los datos leidos? En A1+A6??
+        	//Registro de salida A1 a donde debe apuntar??
+        	//unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+
+        	//O a A1 a secas
+        	//depende de si se ha llamado trap4 o no
+
+          	ql_restore_d_registers(pre_io_fline_d,7);
+          	ql_restore_a_registers(pre_io_fline_a,6);
+
+          	unsigned int puntero_destino;
+
+			/*
+			If the very same job that calls the IO.FLINE trap has not issued a TRAP #4 directly before, 
+			a1 is the absolute target load address, and will be updated after the call to the end of used buffer area.
+
+			If, however, the last TRAP issued by the job in question directly before the IO.FLINE trap was a TRAP #4, 
+			the address is (a6,a1), and a1 will be updated relatively (i.e. only incremented by the amount of bytes read).
+
+			*/
+
+				puntero_destino=ql_get_a1_after_trap_4();
+
+
+          	debug_printf (VERBOSE_DEBUG,"IO.EDLIN - Channel ID=%d End of line: A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH max length: %d",
+        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
+        		m68k_get_reg(NULL,M68K_REG_A6),puntero_destino, m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
+
+
+                  
+
+          	unsigned int valor_retorno;
+			
+          	unsigned int leidos=ql_read_io_edlin(indice_canal,puntero_destino,&valor_retorno,m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
+
+          	
+
+          	m68k_set_reg(M68K_REG_D0,valor_retorno);
+
+          	unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
+          	registro_a1 +=leidos;
+          	m68k_set_reg(M68K_REG_A1,registro_a1);
+
+          	//printf ("Leidos: %d\n",leidos);
+          	m68k_set_reg(M68K_REG_D1,leidos);
+
+	  	
+
+        	
+          
+          //Volver de ese trap
+          m68k_set_reg(M68K_REG_PC,0x5e);
+          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+          reg_a7 +=12;
+          m68k_set_reg(M68K_REG_A7,reg_a7);
+
+
+    
 
 
         }
@@ -1842,6 +2046,11 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 		
     }
 
+	//Trap 3 IO.EDLIN
+    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x4 && ql_microdrive_floppy_emulation) {
+		handle_trap_io_edlin();
+		
+    }
 
 
 //Trap 3 IO.SSTRG
