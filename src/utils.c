@@ -113,6 +113,8 @@
 #include "svi.h"
 #include "charset.h"
 #include "snap_zsf.h"
+#include "ql_qdos_handler.h"
+#include "ql_i8049.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;

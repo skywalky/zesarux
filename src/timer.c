@@ -54,6 +54,7 @@
 #include "betadisk.h"
 #include "pd765.h"
 #include "settings.h"
+#include "ql_i8049.h"
 
 #include "autoselectoptions.h"
 

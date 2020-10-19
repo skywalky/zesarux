@@ -19,34 +19,42 @@
 
 */
 
-#ifndef QL_I8049_H
-#define QL_I8049_H
+#ifndef QL_QDOS_HANDLER_H
+#define QL_QDOS_HANDLER_H
 
 #include "ql.h"
 
-extern int ql_ipc_reading_bit_ready;
-
-extern unsigned char ql_read_ipc(void);
-extern void ql_write_ipc(unsigned char Data); 
-extern char ql_audio_da_output(void);
-extern void ql_audio_next_cycle(void);
-
-extern void ql_ipc_reset(void);
-
-extern void qltraps_init_fopen_files_array(void);
-
-extern moto_int ql_current_sound_duration;
-
-extern int ql_mantenido_pulsada_tecla;
-extern int ql_mantenido_pulsada_tecla_timer;
-
-extern int ql_pressed_backspace;
-
-extern int ql_pulsado_tecla(void);
-
-extern z80_byte ql_keyboard_table[];
+#define QLTRAPS_MAX_OPEN_FILES 3
+#define QLTRAPS_START_FILE_NUMBER 32
 
 
+//operation not complete
+#define QDOS_ERROR_CODE_NC -1
 
+
+//buffer overflow
+#define QDOS_ERROR_CODE_BO -5
+
+//channel not open
+#define QDOS_ERROR_CODE_NO -6
+
+
+//file or device not found
+#define QDOS_ERROR_CODE_NF -7
+
+//end of file
+#define QDOS_ERROR_CODE_EF -10
+
+extern void ql_rom_traps(void);
+
+extern char ql_mdv1_root_dir[];
+extern char ql_mdv2_root_dir[];
+extern char ql_flp1_root_dir[];
+
+extern int ql_microdrive_floppy_emulation;
+
+extern z80_byte ql_last_trap;
+
+extern int ql_previous_trap_was_4;
 
 #endif

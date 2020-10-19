@@ -49,6 +49,7 @@
 #include "ula.h"
 #include "settings.h"
 #include "ql_i8049.h"
+#include "ql_qdos_handler.h"
 
 
 

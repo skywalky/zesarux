@@ -124,6 +124,8 @@
 #include "sn76489an.h"
 #include "vdp_9918a.h"
 #include "svi.h"
+#include "ql_qdos_handler.h"
+#include "ql_i8049.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"

@@ -109,6 +109,7 @@
 #include "sg1000.h"
 #include "sn76489an.h"
 #include "svi.h"
+#include "ql_qdos_handler.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"

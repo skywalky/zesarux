@@ -17971,23 +17971,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		else if (MACHINE_IS_QL) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_mdv_flp,NULL,"Microdrive & Floppy");
 			
-			/*
-			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_microdrive_floppy,NULL,"Microdrive&Floppy: %s",
-				(ql_microdrive_floppy_emulation ? "Yes" : "No") );
 
-				if (ql_microdrive_floppy_emulation) {
-					char string_ql_mdv1_root_dir_shown[13];
-					char string_ql_mdv2_root_dir_shown[13];
-					char string_ql_flp1_root_dir_shown[13];
-					menu_tape_settings_trunc_name(ql_mdv1_root_dir,string_ql_mdv1_root_dir_shown,13);
-					menu_tape_settings_trunc_name(ql_mdv2_root_dir,string_ql_mdv2_root_dir_shown,13);
-					menu_tape_settings_trunc_name(ql_flp1_root_dir,string_ql_flp1_root_dir_shown,13);
-
-					menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_mdv1,NULL,"Mdv1 root dir: %s",string_ql_mdv1_root_dir_shown);
-					menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_mdv2,NULL,"Mdv2 root dir: %s",string_ql_mdv2_root_dir_shown);
-					menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ql_flp1,NULL,"Flp1 root dir: %s",string_ql_flp1_root_dir_shown);
-				}
-			*/
 
 		}
 

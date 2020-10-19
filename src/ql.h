@@ -36,12 +36,7 @@ typedef unsigned short moto_int;
 
 extern  unsigned char *memoria_ql;
 
-extern int ql_microdrive_floppy_emulation;
 
-
-extern char ql_mdv1_root_dir[];
-extern char ql_mdv2_root_dir[];
-extern char ql_flp1_root_dir[];
 
 extern unsigned char (*ql_readbyte_no_ports_function)(unsigned int Address);
 extern unsigned char ql_readbyte_no_ports_vacio(unsigned int Address);
@@ -74,7 +69,8 @@ extern unsigned char ql_mc_stat;
 extern unsigned char ql_readbyte_no_ports(unsigned int Address);
 extern void ql_writebyte_no_ports(unsigned int Address,unsigned char valor);
 extern void ql_writebyte(unsigned int Address, unsigned char Data);
-extern void ql_ipc_reset(void);
+extern unsigned char ql_readbyte(unsigned int Address);
+
 
 //Funciones legacy solo para interceptar posibles llamadas a poke, peek etc en caso de motorola
 //la mayoria de estas vienen del menu, lo ideal es que en el menu se usen peek_byte_z80_moto , etc
@@ -86,50 +82,19 @@ extern z80_byte lee_puerto_legacy_ql(z80_byte h,z80_byte l);
 extern void out_port_legacy_ql(z80_int puerto,z80_byte value);
 extern z80_byte fetch_opcode_legacy_ql(void);
 
-extern z80_byte ql_keyboard_table[];
+//extern z80_byte ql_keyboard_table[];
 
 //extern int ql_ultima_tecla;
 
-extern int ql_mantenido_pulsada_tecla;
-extern int ql_mantenido_pulsada_tecla_timer;
-
-extern int ql_pressed_backspace;
-
-extern int ql_pulsado_tecla(void);
-
-extern void ql_rom_traps(void);
-
-extern z80_int ql_current_sound_duration;
 
 
-extern void qltraps_init_fopen_files_array(void);
+
 
 extern void motorola_get_flags_string(char *texto);
 
-extern z80_byte ql_last_trap;
-
-extern int ql_previous_trap_was_4;
-
-#define QLTRAPS_MAX_OPEN_FILES 3
-#define QLTRAPS_START_FILE_NUMBER 32
 
 
-//operation not complete
-#define QDOS_ERROR_CODE_NC -1
 
-
-//buffer overflow
-#define QDOS_ERROR_CODE_BO -5
-
-//channel not open
-#define QDOS_ERROR_CODE_NO -6
-
-
-//file or device not found
-#define QDOS_ERROR_CODE_NF -7
-
-//end of file
-#define QDOS_ERROR_CODE_EF -10
 
 
 #endif
