@@ -41,6 +41,7 @@ Fixed QL bugs:
 -Fixed system call FS.HEADR
 -Fixed system call IO.FSTRG
 -Fixed system call IO.EDLIN
+-Fixed system call IO.FCLOSE
 -Fixed possible hang calling IO.SSTRG
 -Fixed cursor flashing
 -Fixed RTC emulation

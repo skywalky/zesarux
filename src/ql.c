@@ -1882,9 +1882,6 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
     if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==2 && ql_microdrive_floppy_emulation) {
 
 
-    	ql_restore_d_registers(pre_io_close_d,7);
-        ql_restore_a_registers(pre_io_close_a,6);
-
         //Tiene pinta que el canal son los 16 bits inferiores
     	debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) & 0xFFFF );
 
@@ -1894,6 +1891,9 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         if (indice_canal>=0  ) {
         	debug_printf (VERBOSE_DEBUG,"Closing file/device %s",qltraps_fopen_files[indice_canal].ql_file_name);
+
+    	    ql_restore_d_registers(pre_io_close_d,7);
+            ql_restore_a_registers(pre_io_close_a,6);            
 
         	//Si no es dispositivo, fclose
         	if (!qltraps_fopen_files[indice_canal].es_dispositivo) {
