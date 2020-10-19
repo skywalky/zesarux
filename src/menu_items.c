@@ -23149,6 +23149,7 @@ void menu_ql_flp1(MENU_ITEM_PARAMETERS)
 }
 
 
+/*
 void menu_ql_replace_underscore(MENU_ITEM_PARAMETERS)
 {
 	ql_replace_underscore_dot.v ^=1;
@@ -23159,6 +23160,8 @@ void menu_ql_replace_underscore_only_one(MENU_ITEM_PARAMETERS)
 {
 	ql_replace_underscore_dot_only_one.v ^=1;
 }
+*/
+
 
 void menu_ql_flp1_follow_mdv1(MENU_ITEM_PARAMETERS)
 {
@@ -23197,6 +23200,7 @@ void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
 							menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
+                            /*
 							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_replace_underscore,NULL,"[%c] Replace _ to . in filename",
                     			(ql_replace_underscore_dot.v ? 'X' : ' ') );
  
@@ -23204,6 +23208,7 @@ void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
 								menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_replace_underscore_only_one,NULL,"[%c] Replace only the extension",
                     				(ql_replace_underscore_dot_only_one.v ? 'X' : ' ') );
 							}
+                            */
 
 
 							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_flp1_follow_mdv1,NULL,"[%c] FLP1 path follows MDV1",

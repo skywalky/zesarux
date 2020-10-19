@@ -829,7 +829,7 @@ void core_ql_trap_three(void)
 }
 
 //Dado una ruta de QL tipo mdv1_programa , retorna mdv1 y programa por separados
-void ql_split_path_device_name(char *ql_path, char *ql_device, char *ql_file)
+void ql_split_path_device_name(char *ql_path, char *ql_device, char *ql_file,int replace_underscore_dot,int replace_underscore_dot_only_one)
 {
   //Buscar hasta _
   int i;
@@ -867,8 +867,8 @@ void ql_split_path_device_name(char *ql_path, char *ql_device, char *ql_file)
 
   
 
-	//Y en destino, cambio las "_", empezando desde el final, y solo quitando una "_" dependiendo de setting
-	if (ql_replace_underscore_dot.v) {
+	//Y en destino, cambio las "_", empezando desde el final, y solo quitando una "_" dependiendo de replace_underscore_dot_only_one
+	if (replace_underscore_dot) {
 
 		i=strlen(ql_file)-1;
 		int salir=0;
@@ -878,7 +878,7 @@ void ql_split_path_device_name(char *ql_path, char *ql_device, char *ql_file)
 			if (c=='_') {
 				c='.';
 				ql_file[i]=c;
-				if (ql_replace_underscore_dot_only_one.v) salir=1;
+				if (replace_underscore_dot_only_one) salir=1;
 			}
 		}
 	}
@@ -1345,10 +1345,7 @@ void handle_trap_io_edlin(void)
         	ql_footer_mdflp_operating();
 
 
-          	/*
-          	D0=$2 IO.FLINE fetch a line of characters terminated by ASCII <LF> ($A)
-			D0=$3 IO.FSTRG fetch a string of bytes
-          	*/
+       
 
           	/*
           	Entrada:
@@ -1373,6 +1370,15 @@ void handle_trap_io_edlin(void)
           	NC not complete
           	NO channel not open
           	BO buffer overflow 
+
+            NOTA: !! A1 dice que va el puntero a final de linea, PERO lo trato igual que IO.FLINE (base buffer) y parece funcionar
+            Para probar esto, por ejemplo:
+            OPEN_IN#5;mdv1_Mago_dat:FOR n=1TO 28:INPUT#5;a$
+            Y tiene que leer cada linea separada por codigo 10 (LF)
+
+            NOTA2: Supuestamente la documentacion dice:
+            Edit a line of characters (console driver only)
+            Pero como se ve, se usa en INPUT#...., no solo en console driver (a no ser que console driver sea tambien un INPUT#)
 
           	*/
 
@@ -1738,16 +1744,32 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 			ql_footer_mdflp_operating();			
 
-   	     ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file);
+   	     ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
 
         	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
 
 
         //Para siguientes io.fline
         //ptr_io_fline=NULL;
+        	if (!si_existe_archivo(ql_nombrecompleto)) {
+          		debug_printf(VERBOSE_DEBUG,"File %s not found. Trying changing last _ to .",ql_nombrecompleto);
+   	     
+                ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,1,1);
+
+        	    ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+        	}
 
         	if (!si_existe_archivo(ql_nombrecompleto)) {
-          		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
+          		debug_printf(VERBOSE_DEBUG,"File %s not found. Trying changing all _ to .",ql_nombrecompleto);
+   	     
+                ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,1,0);
+
+        	    ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+        	}            
+
+
+        	if (!si_existe_archivo(ql_nombrecompleto)) {
+          		debug_printf(VERBOSE_DEBUG,"File %s not found",ql_nombrecompleto);
           		//Retornar Not found (NF)
           		m68k_set_reg(M68K_REG_D0,-7);
           		return;
