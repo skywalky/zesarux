@@ -107,7 +107,7 @@
 #include "sn76489an.h"
 #include "sg1000.h"
 #include "svi.h"
-
+#include "ql_qdos_handler.h"
 
 
 #if defined(__APPLE__)

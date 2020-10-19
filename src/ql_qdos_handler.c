@@ -43,6 +43,9 @@
         #include <sys/syslimits.h>
 #endif
 
+/*
+Functions to handle QDOS calls
+*/
 
 char ql_mdv1_root_dir[PATH_MAX]="";
 char ql_mdv2_root_dir[PATH_MAX]="";
