@@ -175,6 +175,8 @@ estan en subcarpeta editview/
 
 -ql: numeros random parece que no los saca bien. Creo que viene del chip intel. Probar con el mago
 
+-ql: corregir io.open en boot
+
 -ql: revisar llamadas como:
 
 
