@@ -914,51 +914,53 @@ B9 	15804.264 	2.2
 //sacamos la lista con: cat audio.c|sed 's/\..*//'|awk '{printf "\{\"%s\",%s\},\n",$1,$2}'
 
 nota_musical tabla_notas_musicales[MAX_NOTAS_MUSICALES]={
-{"C0",16,-1},
-{"C#0",17,-1},
-{"D0",18,-1},
-{"D#0",19,-1},
-{"E0",20,-1},
-{"F0",21,-1},
-{"F#0",23,-1},
-{"G0",24,-1},
-{"G#0",25,-1},
-{"A0",27,-1},
-{"A#0",29,-1},
-{"B0",30,-1},
-{"C1",32,-1},
-{"C#1",34,-1},
-{"D1",36,-1},
-{"D#1",38,-1},
-{"E1",41,-1},
-{"F1",43,-1},
-{"F#1",46,-1},
-{"G1",49,-1},
-{"G#1",51,-1},
-{"A1",55,-1},
-{"A#1",58,-1},
-{"B1",61,-1},
-{"C2",65,-1},
-{"C#2",69,-1},
-{"D2",73,-1},
-{"D#2",77,-1},
-{"E2",82,-1},
-{"F2",87,-1},
-{"F#2",92,-1},
-{"G2",98,-1},
-{"G#2",103,-1},
-{"A2",110,-1},
-{"A#2",116,-1},
-{"B2",123,-1},
-{"C3",130,-1},
-{"C#3",138,-1},
-{"D3",146,-1},
-{"D#3",155,-1},
-{"E3",164,-1},
-{"F3",174,-1},
-{"F#3",185,-1},
-{"G3",196,-1},
-{"G#3",207,-1},
+{"C0",16,206},
+{"C#0",17,203},
+{"D0",18,199},
+{"D#0",19,196},
+{"E0",20,192},
+{"F0",21,188},
+{"F#0",23,184},
+{"G0",24,180},
+{"G#0",25,176},
+{"A0",27,172},
+{"A#0",29,169},
+{"B0",30,165},
+{"C1",32,162},
+{"C#1",34,158},
+{"D1",36,154},
+{"D#1",38,150},
+{"E1",41,146},
+{"F1",43,142},
+{"F#1",46,138},
+{"G1",49,135},
+{"G#1",51,131},
+{"A1",55,128},
+{"A#1",58,124},
+{"B1",61,120},
+{"C2",65,116},
+{"C#2",69,112},
+{"D2",73,108},
+{"D#2",77,104},
+{"E2",82,101},
+{"F2",87,97},
+{"F#2",92,94},
+{"G2",98,90},
+{"G#2",103,86},
+{"A2",110,82},
+{"A#2",116,78},
+{"B2",123,74},
+{"C3",130,70},
+{"C#3",138,67},
+{"D3",146,63},
+{"D#3",155,60},
+{"E3",164,56},
+{"F3",174,53},
+{"F#3",185,50},
+{"G3",196,47},
+{"G#3",207,44},
+
+//Desde aqui en adelante son valores reales para pitch QL. Los anteriores son deducidos
 {"A3",220,41},
 {"A#3",233,38},
 {"B3",246,36},
@@ -969,26 +971,28 @@ nota_musical tabla_notas_musicales[MAX_NOTAS_MUSICALES]={
 {"D#4",311,26},
 {"E4",329,24},
 
-{"F4",349,-1},
-{"F#4",369,-1},
-{"G4",392,-1},
-{"G#4",415,-1},
-{"A4",440,-1},
-{"A#4",466,-1},
-{"B4",493,-1},
-{"C5",523,-1},
-{"C#5",554,-1},
-{"D5",587,-1},
-{"D#5",622,-1},
-{"E5",659,-1},
-{"F5",698,-1},
-{"F#5",739,-1},
-{"G5",783,-1},
-{"G#5",830,-1},
-{"A5",880,-1},
-{"A#5",932,-1},
-{"B5",987,-1},
-{"C6",1046,-1},
+{"F4",349,22},
+{"F#4",369,20},
+{"G4",392,19},
+{"G#4",415,17},
+{"A4",440,15},
+{"A#4",466,14},
+{"B4",493,12},
+{"C5",523,11},
+{"C#5",554,10},
+{"D5",587,9},
+{"D#5",622,8},
+{"E5",659,7},
+{"F5",698,6},
+{"F#5",739,5},
+{"G5",783,4},
+{"G#5",830,3},
+{"A5",880,2},
+{"A#5",932,1},
+{"B5",987,1},
+{"C6",1046,0},
+
+//Fin valores pitch QL
 {"C#6",1108,-1},
 {"D6",1174,-1},
 {"D#6",1244,-1},
@@ -1037,6 +1041,103 @@ nota_musical tabla_notas_musicales[MAX_NOTAS_MUSICALES]={
 {"A#9",14917,-1},
 {"B9",15804,-1}
 };
+
+/*
+
+Nota para la tabla de pitch de QL
+
+Sabemos que un C4 es 33 de pitch, y tenemos todos estos valores reales:
+
+1510 IF p$="A":p=41
+1512 IF p$="AS":p=38
+1514 IF p$="B":p=36
+1516 IF p$="C":p=33
+1518 IF p$="CS":p=31
+1520 IF p$="D":p=28
+1522 IF p$="DS":p=26
+1524 IF p$="E":p=24
+1526 IF p$="F":p=22
+1528 IF p$="FS":p=20
+1530 IF p$="G":p=19
+1532 IF p$="GS":p=17
+1534 IF p$="a":p=15
+1536 IF p$="as":p=14
+1538 IF p$="b":p=12
+1540 IF p$="c":p=11
+1542 IF p$="cs":p=10
+1544 IF p$="d":p=9
+1546 IF p$="ds":p=8
+1548 IF p$="e":p=7
+1550 IF p$="f":p=6
+1552 IF p$="fs":p=5
+1554 IF p$="g":p=4
+1556 IF p$="gs":p=3
+
+Luego vemos los incrementos, desde pitch 3 hacia arriba y parece haber una relación:
+
+Pitch Incremento_al_siguiente:
+
+3  1
+4  1
+5  1
+6  1
+7  1
+8  1
+9  1
+10 1
+11 1
+12 1
+
+14 2
+15 1
+17 2
+19 2
+20 1
+22 2
+24 2
+26 2
+28 2
+
+31 3
+33 2
+36 3
+38 2
+41 3
+
+Si Miramos el segundo bloque y tercero, podemos ver bloques de 9 notas, con incrementos en el segundo bloque de 2 (casi siempre) y de 3 (casi siempre) en el tecer bloque 
+Dado que no sabemos la tabla real, sacamos nuestras deducciones así:
+
+44 3
+47 3
+50 3
+53 3
+
+El cuarto bloque seria de 9 notas igualmente, sumando 4 en todos, excepto 3 en el segundo y cuarta nota.
+Y lo mismo para quinto bloque: sumar 5 en todos excepto 4 en segundo y cuarta nota
+Con este procedimiento int ql_guess_all_notes sacamos los valores por pantalla
+Esta funcion no la uso, solo la use una vez para rellenar la tabla de notas musicales
+
+
+*/
+
+void ql_guess_all_notes(void)
+{
+            int pitch=56;
+        int incremento=4;
+        int i=0;
+
+        int j=0;
+
+        for (i=0;i<8;i++) {
+
+                for (j=0;j<9;j++) {
+                        printf("%d\n",pitch);
+
+                        if (j==1 || j==3) pitch=pitch+(incremento-1);
+                        else pitch=pitch+incremento;
+                }
+        }
+}
 
 //Para si hay que retornar una nota desconocida;
 char *unknown_nota_musical="XX";
