@@ -234,5 +234,8 @@ estan en subcarpeta editview/
 
 -Probar Filesel en Windows 
 
--QL pause no siempre lo hace. en mago por ejemplo no va. en composer tampoco. Parece que desactivan algo de las interrupciones
-Revisar ql_zx8032_write y ql_pc_intr. es una mascara
+
+-ql notas con G y F# acaban teniendo misma frecuencia efectiva. probar con playscale
+es problema de esto:
+ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
+que acaba generando mismo valor entero
