@@ -284,15 +284,39 @@ void ql_zx8032_write(unsigned int Address, unsigned char Data)
 		break;
 
 		case 0x18021:
+/*
+$18021 WRITE Interrupt mask and clear
+
+Controls interrupt masking and clears interrupt bits once the relevant interrupt source has been serviced. Based on the Minerva sources, the interrupts are edge triggered and should be cleared by writing an appropriate bit with 1.
+Since this register also contains 3 interrupt enable bits, but is write only, a copy of the data written needs to be kept in the SV_INTR system variable so that the proper enable bits can be appended to the clear interrupt bits when writing this register.
+In any case, 8 bits are implemented:
+
+0..4 clear the interrupt when written with 1.
+The bit assignments correspond to the ones when the register is read:
+0 = gap, 1 = interface, 2=transmit, 3=frame, 4=external
+
+5 = gap mask, enables the gap interrupt if written as 1.
+6 = interface mask, enables the interface interrupt if written as 1.
+7 = transmit mask, enables the transmit interrupt if written
+
+*/
 		  printf ("Escribiendo pc_intr. Valor: %02XH\n",Data);
 /*
 *pc_intr equ    $18021  7..5 masks and 4..0 to clear interrupt
 */
 
-//Es una mascara??
-			ql_pc_intr=ql_pc_intr&(Data^255);
+            //Invertimos bits. Asi lo que se quiera poner a 0, entraba como 1
+            Data ^=255;
 
-			ql_pc_intr=Data;
+            //Y no tocamos los 3 bits superiores
+            Data |=(128+64+32);
+
+            ql_pc_intr &=Data;
+
+
+			//ql_pc_intr=ql_pc_intr&(Data^255);
+
+			//ql_pc_intr=Data;
 
 			//sleep(5);
 		break;
@@ -417,6 +441,22 @@ pc.intrf equ    1<<3    frame interrupt register
 pc.intrt equ    1<<2    transmit interrupt register
 pc.intri equ    1<<1    interface interrupt register
 pc.intrg equ    1<<0    gap interrupt register
+
+$18021 WRITE Interrupt mask and clear
+
+Controls interrupt masking and clears interrupt bits once the relevant interrupt source has been serviced. Based on the Minerva sources, the interrupts are edge triggered and should be cleared by writing an appropriate bit with 1.
+Since this register also contains 3 interrupt enable bits, but is write only, a copy of the data written needs to be kept in the SV_INTR system variable so that the proper enable bits can be appended to the clear interrupt bits when writing this register.
+In any case, 8 bits are implemented:
+
+0..4 clear the interrupt when written with 1.
+The bit assignments correspond to the ones when the register is read:
+0 = gap, 1 = interface, 2=transmit, 3=frame, 4=external
+
+5 = gap mask, enables the gap interrupt if written as 1.
+6 = interface mask, enables the interface interrupt if written as 1.
+7 = transmit mask, enables the transmit interrupt if written
+
+
 */
 
 /*

@@ -38,6 +38,7 @@ Improved QL emulation:
 Fixed QL bugs:
 -Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes
 -Fixed using QL system calls and A6 pointer offset used after previous Trap was not 4
+-Fixed frame interrupt
 -Fixed system call FS.HEADR
 -Fixed system call IO.FSTRG
 -Fixed system call IO.EDLIN
