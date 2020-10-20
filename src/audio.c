@@ -1228,6 +1228,35 @@ int get_note_index_from_ql_pitch(int pitch)
 
 }
 
+int get_note_frequency_from_ql_pitch(int pitch)
+{
+    int indice=get_note_index_from_ql_pitch(pitch);
+
+    //Esto no deberia suceder ya, pero por si acaso
+    if (indice<0) return 1;
+
+    //Si no es el pitch exacto, hacer una media con el anterior. Siempre que no sea el primer elemento
+    if (pitch==tabla_notas_musicales[indice].ql_beep_pitch) return tabla_notas_musicales[indice].frecuencia;
+
+    //No es exacto
+    //Es el primero? Volver tal cual
+    if (indice==0) return tabla_notas_musicales[indice].frecuencia;
+
+
+    //Hacer media
+    //printf("Hacemos media\n");
+
+    int frecuencia_actual=tabla_notas_musicales[indice].frecuencia;
+    int frecuencia_anterior=tabla_notas_musicales[indice-1].frecuencia;
+
+    int diferencia=frecuencia_actual-frecuencia_anterior;
+    int media=diferencia/2;
+
+    int frecuencia_final=frecuencia_anterior+media;
+
+    return frecuencia_final;
+}
+
 //devuelve nombre nota, segun su indice (igual que el pitch)
 char *get_note_name_by_index(int index)
 {

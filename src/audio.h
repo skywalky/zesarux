@@ -157,6 +157,7 @@ extern char *get_note_name(int frecuencia);
 extern int get_mid_number_note(char *str);
 extern void get_note_values(char *texto,int *nota_final,int *si_sostenido,int *octava);
 extern char *get_note_name_by_index(int index);
+extern int get_note_frequency_from_ql_pitch(int pitch);
 extern int get_note_frequency_by_index(int index);
 extern int get_note_index_from_ql_pitch(int pitch);
 extern int set_audiodriver_null(void);

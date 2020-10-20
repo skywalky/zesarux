@@ -941,12 +941,25 @@ void ql_ipc_set_sound_parameters(void)
 
     ql_current_sound_duration=ql_audio_duration;    
 
-    ql_audio_pitch_counter_initial=ql_audio_pitch1;
+    //ql_audio_pitch_counter_initial=ql_audio_pitch1;
 
-    //Ajuste a ojo dividir entre 1.5. Solo si es mayor que 2
-    if (ql_audio_pitch_counter_initial>2) {
-        ql_audio_pitch_counter_initial=(ql_audio_pitch_counter_initial*2)/3;
+    //Calculamos ql_audio_pitch_counter_initial
+    int frecuencia=get_note_frequency_from_ql_pitch(ql_audio_pitch1);
+
+    printf("frecuencia: %d\n",frecuencia);
+
+    //Para 7800 hz (15600/2), contador valdra 1
+    //Para 3900 Hz, contador valdra 2
+
+    if (frecuencia==0) {
+        //Esto no deberia pasar, pero por si acaso para evitar division por 0
+        ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2);
     }
+    else {
+        ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
+    }
+
+    printf("contador: %d\n",ql_audio_pitch_counter_initial);
 
     ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;
 

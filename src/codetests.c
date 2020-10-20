@@ -1382,11 +1382,8 @@ void codetests_get_note_table_ql(void)
     int i;
 
     for (i=0;i<256;i++) {
-        int index=get_note_index_from_ql_pitch(i);
-        printf ("ql pitch: %3d index: %d\n",i,index);
-        if (index>=0) {
-            printf (" Nota: %s Frecuencia: %5d Hz\n",get_note_name_by_index(index),get_note_frequency_by_index(index));
-        }
+        int frecuencia=get_note_frequency_from_ql_pitch(i);
+        printf ("ql pitch: %3d frecuencia: %d\n",i,frecuencia);
 
     }
 
