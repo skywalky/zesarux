@@ -400,7 +400,7 @@ moto_byte ql_zx8032_readbyte(unsigned int Address)
 
             int rotar_bits=reverse_offset*8;
 
-            printf("RTC. Address: %0X Rotar %d\n",Address,rotar_bits);
+            //printf("RTC. Address: %0X Rotar %d\n",Address,rotar_bits);
 
             moto_byte valor_retorno=(timer_seconds>>rotar_bits) & 0xFF;
 

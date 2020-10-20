@@ -836,8 +836,8 @@ char ql_audio_da_output(void)
 }
 
 
-void ql_simulate_sound(unsigned char pitch1,moto_int duration)
-{
+//void ql_simulate_sound(unsigned char pitch1,moto_int duration)
+//{
     			//de momento solo tonos
                 /*
 			unsigned char valor_mixer=255;
@@ -874,7 +874,7 @@ void ql_simulate_sound(unsigned char pitch1,moto_int duration)
 */
 
  
-}
+//}
 
 //8 bloques de 4 bits. MSB first
 unsigned char ql_ipc_sound_command_buffer[8*2];
