@@ -4722,7 +4722,13 @@ void debug_get_ioports(char *stats_buffer)
 					sprintf (buf_linea,"%02X:  %02X\n",i,vdp_9918a_registers[i]);
 					sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
 			}		
-	}	  	  
+	}	 
+
+    if (MACHINE_IS_QL) {
+        int value_rtc=(ql_zx8032_readbyte(0x18000)<<24) | (ql_zx8032_readbyte(0x18001)<<16) | (ql_zx8032_readbyte(0x18002)<<8) | ql_zx8032_readbyte(0x18003);
+  		sprintf (buf_linea,"PC_CLOCK: %0d\n",value_rtc);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	        
+    } 	  
 
           stats_buffer[index_buffer]=0;
 

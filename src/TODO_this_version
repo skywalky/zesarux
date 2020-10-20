@@ -197,3 +197,39 @@ estan en subcarpeta editview/
             ql_restore_a_registers(pre_io_close_a,6);    
 
     Ese A0 se puede haber sobreescrito....
+
+- Entrada faq QL revisar
+
+- Save, sbytes para QL
+
+-ZSF soporte para QL
+
+-ZENG soporte para QL
+
+-Hay una llamada qdos para desactivar parpadeo cursor. Algo así como sd.cursor. Hacer que mi simulación cursor tenga en cuenta esto
+
+-pc_clock equ    $18000 
+ en escritura
+
+ -Agregar ipc
+
+
+*rand_cmd equ    14      random number generator, returns a sixteen bit number.
+
+-Timer en alguna direccion del zx8302? en el que se basa el comando pause
+
+-Convertir scr a txt
+
+-Ventana debug I/o port que refresque continuamente y permita ir a background
+
+-Debug I/o ports con los puertos/direcciones del QL 
+
+-Idea: en vez de tener la imagen Mmc, que tenga los archivos que contiene y cree el Mmc copiándolos 
+
+-Archivos binarios qdos con cabecera desde qlay
+
+-Selección carpeta microdrive QL conviene ver archivos? Es el filtro nofiles. Y en otros similares de carpeta?
+
+-QL: Poder usar el mixer para desactivar fuzziness, randomness etc 
+
+-Probar Filesel en Windows 

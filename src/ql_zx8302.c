@@ -284,7 +284,7 @@ void ql_zx8032_write(unsigned int Address, unsigned char Data)
 		break;
 
 		case 0x18021:
-		  //printf ("Escribiendo pc_intr. Valor: %02XH\n",Data);
+		  printf ("Escribiendo pc_intr. Valor: %02XH\n",Data);
 /*
 *pc_intr equ    $18021  7..5 masks and 4..0 to clear interrupt
 */
@@ -403,6 +403,8 @@ moto_byte ql_zx8032_readbyte(unsigned int Address)
 		case 0x18021:
 			//printf ("Read PC_INTR		Interrupt register. Value: %02XH\n\n",ql_pc_intr);
 
+            printf ("Read PC_INTR		Interrupt register.\n\n");
+
 
                         //temp solo al pulsar enter
                         ////puerto_49150    db              255  ; H                J         K      L    Enter ;6
@@ -432,12 +434,13 @@ XL00352 EQU L00352
 	Por tanto la 8049 interrupt se interpreta cuando bit 1 activo
 */
 
-			ql_pc_intr=0;
+			//ql_pc_intr=0;
 			//if ((puerto_49150&1)==0) ql_pc_intr |=2;
 			if (ql_pulsado_tecla() ) {
 				//debug_printf (VERBOSE_DEBUG,"Read PC_INTR pressed key");
-				ql_pc_intr |=2;
+				//ql_pc_intr |=2;
 			}
+            return ql_pc_intr;
 			//printf ("------------Retornando %d\n",ql_pc_intr);
 		//	return ql_pc_intr;
 			return 134; //Con pruebas, acabo viendo que retornar este valor acaba provocando lectura de teclado

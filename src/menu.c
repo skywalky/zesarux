@@ -13459,7 +13459,12 @@ void menu_debug_ioports(MENU_ITEM_PARAMETERS)
 
 	debug_get_ioports(stats_buffer);
 
-  menu_generic_message("IO Ports",stats_buffer);
+    char titulo_ventana[33];
+
+    if (CPU_IS_MOTOROLA) strcpy(titulo_ventana,"IO Addresses");
+    else strcpy(titulo_ventana,"IO Ports");
+
+  menu_generic_message(titulo_ventana,stats_buffer);
 
 }
 
@@ -25483,6 +25488,11 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_cpu_transaction_log,NULL,"~~CPU Transaction Log");
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'c');
 		}
+
+		if (CPU_IS_MOTOROLA) {
+			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_ioports,NULL,"Debug ~~I/O Addresses");
+			menu_add_item_menu_shortcut(array_menu_debug_settings,'i');        
+        }
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE) {
 			if (MACHINE_IS_TSCONF) menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx,NULL,"~~TSConf");
