@@ -63,7 +63,7 @@ int refresca=0;
 
 int temporal_parpadeo_ql;
 
-
+/*
 void ql_chapuza_parpadeo_cursor(void)
 {
 
@@ -94,6 +94,7 @@ void ql_chapuza_parpadeo_cursor(void)
                                 poke_byte_z80_moto(0x280ab,parpadeo2);
                         }
 }
+*/
 
 //bucle principal de ejecucion de la cpu de jupiter ace
 void cpu_core_loop_ql(void)
@@ -347,7 +348,7 @@ pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
                         //Chapuza para hacer parpadear el cursor
                         //Se supone que el trap 2 que llamamos justo antes deberia hacer parpadear el cursor
                         //pero no lo hace, a saber por que...
-                        ql_chapuza_parpadeo_cursor();
+                        //ql_chapuza_parpadeo_cursor();
                         
                        
 

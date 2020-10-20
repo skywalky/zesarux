@@ -242,7 +242,7 @@ z80_bit vdp_9918a_unlimited_sprites_line={0};
 z80_bit msx_loading_stripes={0};
 
 //Simular parpadeo cursor QL
-z80_bit ql_simular_parpadeo_cursor={1};
+//z80_bit ql_simular_parpadeo_cursor={1};
 
 
 //Reduccion ruido
