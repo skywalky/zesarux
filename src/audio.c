@@ -1210,10 +1210,7 @@ int get_note_index_from_ql_pitch(int pitch)
             //dado que los valores de pitch en la tabla van decrementando a medida que avanzamos
             if (valor_tabla<=pitch) {
 
-                //Si diferencia muy grande, decir no encontrado
-                int diferencia=pitch-valor_tabla;
-                if (diferencia>10) return -1;
-                else return i;
+                return i;
 
               
             }
@@ -1233,7 +1230,10 @@ int get_note_frequency_from_ql_pitch(int pitch)
     int indice=get_note_index_from_ql_pitch(pitch);
 
     //Esto no deberia suceder ya, pero por si acaso
-    if (indice<0) return 1;
+    if (indice<0) {
+        //printf("indice < 0\n");
+        return 1;
+    }
 
     //Si no es el pitch exacto, hacer una media con el anterior. Siempre que no sea el primer elemento
     if (pitch==tabla_notas_musicales[indice].ql_beep_pitch) return tabla_notas_musicales[indice].frecuencia;
