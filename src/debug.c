@@ -95,6 +95,7 @@
 #include "core_svi.h"
 #include "svi.h"
 #include "vdp_9918a.h"
+#include "ql_zx8302.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -4727,10 +4728,17 @@ void debug_get_ioports(char *stats_buffer)
     if (MACHINE_IS_QL) {
         int value_rtc=(ql_zx8032_readbyte(0x18000)<<24) | (ql_zx8032_readbyte(0x18001)<<16) | (ql_zx8032_readbyte(0x18002)<<8) | ql_zx8032_readbyte(0x18003);
   		sprintf (buf_linea,"PC_CLOCK: %0d\n",value_rtc);
-  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	        
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	    
+
+        sprintf (buf_linea,"PC_INTR: %02X\n",ql_pc_intr);
+        sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	    
+
+        sprintf (buf_linea,"MC_STAT: %02X\n",ql_mc_stat);
+        sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);        
     } 	  
 
-          stats_buffer[index_buffer]=0;
+
+    stats_buffer[index_buffer]=0;
 
 }
 

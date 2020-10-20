@@ -55,6 +55,7 @@
 #include "vdp_9918a.h"
 #include "msx.h"
 #include "coleco.h"
+#include "ql_zx8302.h"
 
 //Incluimos estos dos para la funcion de fade out
 #ifdef COMPILE_XWINDOWS

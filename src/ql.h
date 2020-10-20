@@ -64,7 +64,7 @@ extern unsigned char ql_readbyte_no_ports_vacio(unsigned int Address);
 #define m68k_write_memory_16 SetMemW
 #define m68k_write_memory_32 SetMemL
 
-extern unsigned char ql_mc_stat;
+
 
 extern unsigned char ql_readbyte_no_ports(unsigned int Address);
 extern void ql_writebyte_no_ports(unsigned int Address,unsigned char valor);

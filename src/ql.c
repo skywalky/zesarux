@@ -46,7 +46,7 @@
 
 
 unsigned char *memoria_ql;
-unsigned char ql_mc_stat;
+
 
 
 

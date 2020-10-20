@@ -202,8 +202,9 @@ pc.intrg equ    1<<0    gap interrupt register
 */
 
 
-unsigned char temp_pcintr;
+//unsigned char temp_pcintr;
 unsigned char ql_pc_intr;
+unsigned char ql_mc_stat;
 
 
 void ql_debug_port(unsigned int Address)
@@ -300,7 +301,7 @@ The bit assignments correspond to the ones when the register is read:
 7 = transmit mask, enables the transmit interrupt if written
 
 */
-		  printf ("Escribiendo pc_intr. Valor: %02XH\n",Data);
+		  //printf ("Escribiendo pc_intr. Valor: %02XH\n",Data);
 /*
 *pc_intr equ    $18021  7..5 masks and 4..0 to clear interrupt
 */
@@ -313,12 +314,6 @@ The bit assignments correspond to the ones when the register is read:
 
             ql_pc_intr &=Data;
 
-
-			//ql_pc_intr=ql_pc_intr&(Data^255);
-
-			//ql_pc_intr=Data;
-
-			//sleep(5);
 		break;
 
 		case 0x18063:
@@ -427,7 +422,7 @@ moto_byte ql_zx8032_readbyte(unsigned int Address)
 		case 0x18021:
 			//printf ("Read PC_INTR		Interrupt register. Value: %02XH\n\n",ql_pc_intr);
 
-            printf ("Read PC_INTR		Interrupt register.\n\n");
+            //printf ("Read PC_INTR		Interrupt register.\n\n");
 
 
                         //temp solo al pulsar enter
@@ -474,31 +469,9 @@ XL00352 EQU L00352
 	Por tanto la 8049 interrupt se interpreta cuando bit 1 activo
 */
 
-			//ql_pc_intr=0;
-			//if ((puerto_49150&1)==0) ql_pc_intr |=2;
-			if (ql_pulsado_tecla() ) {
-				//debug_printf (VERBOSE_DEBUG,"Read PC_INTR pressed key");
-				//ql_pc_intr |=2;
-			}
+
             return ql_pc_intr;
-			//printf ("------------Retornando %d\n",ql_pc_intr);
-		//	return ql_pc_intr;
-			return 134; //Con pruebas, acabo viendo que retornar este valor acaba provocando lectura de teclado
-
-			temp_pcintr++;
-			//printf ("------------Retornando %d\n",temp_pcintr);
-			return temp_pcintr;
-			//if ((puerto_49150&1)==0) ql_pc_intr |=31;
-			if (ql_pulsado_tecla() ) ql_pc_intr |=31;
-			//usleep(5000000);
-			//sleep(1);
-			return ql_pc_intr;
-			//return 31;
-
-			//}
-
-			//else return 255;
-			//return 255;
+			
 		break;
 
 	}
