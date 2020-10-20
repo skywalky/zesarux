@@ -1185,7 +1185,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 						case 10:
 							debug_printf (VERBOSE_PARANOID,"parameter sound %d: %d",ql_ipc_bytes_received,ql_ipc_last_command_parameter);
 
-                            printf ("parameter sound %d: %d\n",ql_ipc_bytes_received,ql_ipc_last_command_parameter);
+                            //printf ("parameter sound %d: %d\n",ql_ipc_bytes_received,ql_ipc_last_command_parameter);
                             ql_ipc_sound_command_buffer[ql_ipc_bytes_received]=ql_ipc_last_command_parameter;
 
 							ql_ipc_bytes_received++;
