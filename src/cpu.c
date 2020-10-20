@@ -1210,6 +1210,7 @@ util_stats_init();
 		//printf ("Reg PC QL: %08XH\n",pc);
 		//sleep(2);
 		ql_ipc_reset();
+        ql_stop_sound();
 		qltraps_init_fopen_files_array();
 	}
 
@@ -3031,6 +3032,7 @@ void set_machine_params(void)
 		//defaults
 		ay_chip_present.v=0;
 		sn_chip_present.v=0;
+        i8049_chip_present=0;
 
 		if (!MACHINE_IS_Z88) {
 			//timer_sleep_machine=original_timer_sleep_machine=20000;
@@ -4063,6 +4065,8 @@ You don't need timings for H/V sync =)
 
 							//Hagamoslo mas lento
 								screen_testados_linea=80;
+
+            i8049_chip_present=1;
 		break;
 
 

@@ -10,7 +10,6 @@ Added SP to SCR file converter
 Added Z80 to SCR file converter
 Added P to SCR file converter
 Added ZSF to SCR file converter
-Added experimental emulation of QL sound
 
 Improved ZX Desktop: 
 -Added direct buttons, to access menu items
@@ -33,6 +32,7 @@ Improved TBBlue emulation:
 Improved File Browser: added previews for screens (on .scr, .tap, .tzx, .pzx, .trd, .dsk, .sna, .sp, .z80, .p, .zsf)
 
 Improved QL emulation:
+-Added sound emulation
 -Guessing of file name extension
 
 Fixed QL bugs:

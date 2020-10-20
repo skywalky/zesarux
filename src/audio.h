@@ -144,6 +144,7 @@ struct s_nota_musical
 {
         char nombre[4];
 	int frecuencia; //aunque tiene decimales, para lo que necesitamos no hacen falta
+    int ql_beep_pitch; //Valor de pitch asociado al sonido de QL. Valor negativo si no tiene relación
 };
 
 typedef struct s_nota_musical nota_musical;
@@ -155,6 +156,9 @@ typedef struct s_nota_musical nota_musical;
 extern char *get_note_name(int frecuencia);
 extern int get_mid_number_note(char *str);
 extern void get_note_values(char *texto,int *nota_final,int *si_sostenido,int *octava);
+extern char *get_note_name_by_index(int index);
+extern int get_note_frequency_by_index(int index);
+extern int get_note_index_from_ql_pitch(int pitch);
 extern int set_audiodriver_null(void);
 extern void fallback_audio_null(void);
 extern void audio_empty_buffer(void);

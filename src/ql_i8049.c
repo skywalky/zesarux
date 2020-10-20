@@ -28,6 +28,7 @@
 #include "ql.h"
 #include "debug.h"
 #include "utils.h"
+#include "audio.h"
 
 
 /*
@@ -83,17 +84,54 @@ int ql_ipc_last_nibble_to_read_index=0;
 int ql_ipc_last_nibble_to_read_length=1;
 
 
+// Parametros de sonido
+int i8049_chip_present=0;
+
 moto_int ql_current_sound_duration=0;
 
 //unsigned char ql_audio_pitch=0;
-//unsigned char ql_audio_pitch_counter=0;
+//unsigned char ql_audio_pitch_counter_current=0;
 
-moto_int ql_audio_pitch=0;
-moto_int ql_audio_pitch_counter=0;
+    /*
+    Formato del mensaje ipc:
+
+    8 bits pitch 1
+    8 bits pitch 2
+    16 bits  interval between steps (grad_x)
+    16 bits duration
+    4 bits step in pitch (grad_y)
+    4 bits wrap
+    4 bits randomness of step
+    4 bits fuzziness
+
+    no reply
+
+    Para aproximar, cada "duration" es un scanline
+
+
+    */
+
+unsigned char ql_audio_pitch1;
+unsigned char ql_audio_pitch2;
+moto_int ql_audio_interval_steps;
+moto_int ql_audio_duration;
+unsigned char ql_audio_step_in_pitch;
+unsigned char ql_audio_wrap;
+unsigned char ql_audio_randomness_of_step;
+unsigned char ql_audio_fuziness;
+
+
+//Estos dos modificados para usar como contadores
+moto_int ql_audio_pitch_counter_initial=0;
+moto_int ql_audio_pitch_counter_current=0;
+// Fin Parametros de sonido
 
 
 int ql_audio_output_bit=0;
 int ql_audio_playing=0;
+
+//TODO
+const int ql_i8049_sound_chip_frequency=11000;
 
 
 
@@ -763,18 +801,7 @@ int ql_return_ascii_key_pressed(void)
 
 void ql_stop_sound(void)
 {
-    			//de momento solo tonos
-			//unsigned char valor_mixer=255;
 
-
-		
-			//printf ("set mixer chip ay 0. tonos: %02XH ruidos: %02XH final: %02XH\n",mixer_tonos,mixer_ruido,valor_mixer);
-
-            /*
-			ay_chip_selected=0;
-			out_port_ay(65533,7);
-			out_port_ay(49149,valor_mixer);    
-            */
             ql_audio_playing=0;
 }
 
@@ -797,9 +824,9 @@ void ql_audio_next_cycle(void)
 
 char ql_audio_da_output(void)
 {
-    ql_audio_pitch_counter--;
-    if (ql_audio_pitch_counter==0) {
-        ql_audio_pitch_counter=ql_audio_pitch;
+    ql_audio_pitch_counter_current--;
+    if (ql_audio_pitch_counter_current==0) {
+        ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;
         ql_audio_output_bit ^=1;
     }
 
@@ -886,55 +913,68 @@ void ql_ipc_set_sound_parameters(void)
 
     */
 
-    unsigned char pitch1;
-    unsigned char pitch2;
-    moto_int interval_steps;
-    moto_int duration;
-    unsigned char step_in_pitch;
-    unsigned char wrap;
-    unsigned char randomness_of_step;
-    unsigned char fuziness;
 
-    pitch1=(ql_ipc_sound_command_buffer[0]<<4)|ql_ipc_sound_command_buffer[1];
-    pitch2=(ql_ipc_sound_command_buffer[2]<<4)|ql_ipc_sound_command_buffer[3];
+    ql_audio_pitch1=(ql_ipc_sound_command_buffer[0]<<4)|ql_ipc_sound_command_buffer[1];
+    ql_audio_pitch2=(ql_ipc_sound_command_buffer[2]<<4)|ql_ipc_sound_command_buffer[3];
 
     //OJO a como se ordena esto:
-    interval_steps=(ql_ipc_sound_command_buffer[6]<<12)|(ql_ipc_sound_command_buffer[7]<<8)|
+    ql_audio_interval_steps=(ql_ipc_sound_command_buffer[6]<<12)|(ql_ipc_sound_command_buffer[7]<<8)|
                     (ql_ipc_sound_command_buffer[4]<<4)|ql_ipc_sound_command_buffer[5];
 
 
     //OJO a como se ordena esto:
-    duration=(ql_ipc_sound_command_buffer[10]<<12)|(ql_ipc_sound_command_buffer[11]<<8)|
+    ql_audio_duration=(ql_ipc_sound_command_buffer[10]<<12)|(ql_ipc_sound_command_buffer[11]<<8)|
             (ql_ipc_sound_command_buffer[8]<<4)|ql_ipc_sound_command_buffer[9];
 
-    step_in_pitch=ql_ipc_sound_command_buffer[12];
-    wrap=ql_ipc_sound_command_buffer[13];
-    randomness_of_step=ql_ipc_sound_command_buffer[14];
-    fuziness=ql_ipc_sound_command_buffer[15];
+    ql_audio_step_in_pitch=ql_ipc_sound_command_buffer[12];
+    ql_audio_wrap=ql_ipc_sound_command_buffer[13];
+    ql_audio_randomness_of_step=ql_ipc_sound_command_buffer[14];
+    ql_audio_fuziness=ql_ipc_sound_command_buffer[15];
              
 
     printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
-    pitch1,pitch2,interval_steps,duration,step_in_pitch,wrap,randomness_of_step,fuziness);
+    ql_audio_pitch1,ql_audio_pitch2,ql_audio_interval_steps,ql_audio_duration,
+    ql_audio_step_in_pitch,ql_audio_wrap,ql_audio_randomness_of_step,ql_audio_fuziness);
 
-    ql_simulate_sound(pitch1,duration);
+    //ql_simulate_sound(ql_audio_pitch1,ql_audio_duration);
 
 
-    ql_current_sound_duration=duration;    
+    ql_current_sound_duration=ql_audio_duration;    
 
-    ql_audio_pitch=pitch1;
+    ql_audio_pitch_counter_initial=ql_audio_pitch1;
 
     //Ajuste a ojo dividir entre 1.5. Solo si es mayor que 2
-    if (ql_audio_pitch>2) {
-        ql_audio_pitch=(ql_audio_pitch*2)/3;
+    if (ql_audio_pitch_counter_initial>2) {
+        ql_audio_pitch_counter_initial=(ql_audio_pitch_counter_initial*2)/3;
     }
 
-    ql_audio_pitch_counter=ql_audio_pitch;
+    ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;
 
     ql_audio_playing=1;
 
     //sleep (5);
 }
 
+int ql_ipc_get_frecuency_sound_value(int pitch)
+{
+    //ql_audio_pitch
+
+    //Cada scanline, se decrementa el contador. Por tanto, son 15600 hz de base
+    
+    //No deberia ser 0 nunca, pero por si acaso
+    if (pitch==0) return FRECUENCIA_SONIDO;
+
+    int frecuencia=FRECUENCIA_SONIDO/pitch/2;
+
+    return frecuencia;
+}
+
+
+int ql_ipc_get_frecuency_sound_pitch1(void)
+{
+
+    return ql_ipc_get_frecuency_sound_value(ql_audio_pitch_counter_initial);
+}
 
 
 void ql_write_ipc(unsigned char Data)

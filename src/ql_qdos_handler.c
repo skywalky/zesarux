@@ -1320,6 +1320,7 @@ PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A
   //Pero, si lo hacemos asi, si no habilitamos emulacion de micro&floppy, al pasar del menu de inicio (F1,F2) buscara el archivo BOOT, y como no salta el
   //trap, se queda bloqueado
   //Mas adelante en este caso comprobamos si esta habilitada emulacion de microdrive
+  //Ademas cualquier load desde microdrive (con ql_microdrive_floppy_emulation desactivado) se quedaria colgado si no lo interceptamos 
 
     if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==1) {
       //en A0

@@ -110,6 +110,7 @@
 #include "sn76489an.h"
 #include "svi.h"
 #include "ql_qdos_handler.h"
+#include "ql_i8049.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -1046,7 +1047,7 @@ int menu_cond_ay_chip(void)
 
 int menu_cond_ay_or_sn_chip(void)
 {
-	if (ay_chip_present.v || sn_chip_present.v) return 1;
+	if (ay_chip_present.v || sn_chip_present.v || i8049_chip_present ) return 1;
 	else return 0;
 }
 
@@ -2740,6 +2741,78 @@ M1-M0= mode bits:
 
 	}
 
+    else if (i8049_chip_present) {
+        total_chips=1;
+
+            int volumen_pitch1;
+
+            if (ql_audio_playing) volumen_pitch1=15;
+            else volumen_pitch1=0;
+
+      		vol_A[0]=volumen_pitch1;
+
+
+			//Controlar limites, dado que las variables entran sin inicializar
+			if (ayregisters_previo_valor_volume_A[0]>16) ayregisters_previo_valor_volume_A[0]=16;
+
+			
+
+			ayregisters_previo_valor_volume_A[0]=menu_decae_ajusta_valor_volumen(ayregisters_previo_valor_volume_A[0],vol_A[0]);
+
+
+
+			z80_byte volumen_canal;
+
+			volumen_canal=volumen_pitch1;
+			menu_string_volumen(volumen,volumen_canal,ayregisters_previo_valor_volume_A[0]);
+			sprintf (textovolumen,"Volume: %s",volumen);
+			//menu_escribe_linea_opcion(linea++,-1,1,textovolumen);
+			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
+
+
+        int freq_a=ql_ipc_get_frecuency_sound_pitch1();
+
+        sprintf (textotono,"Freq 1:  %3s %7d Hz",get_note_name(freq_a),freq_a);
+        //menu_escribe_linea_opcion(linea++,-1,1,textotono);
+        zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);    
+
+        
+    /*
+    Formato del mensaje ipc:
+
+    8 bits pitch 1
+    8 bits pitch 2
+    16 bits  interval between steps (grad_x)
+    16 bits duration
+    4 bits step in pitch (grad_y)
+    4 bits wrap
+    4 bits randomness of step
+    4 bits fuzziness
+
+
+*/      
+
+        zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,"");
+
+        //Nota: imprimo todos con %5d para que esten alineados, independientemente si son valores de 4, 8 o 16 bis
+        sprintf (textotono,"Pitch1:         %5d",ql_audio_pitch1);
+        zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);       
+        sprintf (textotono,"Pitch2:         %5d",ql_audio_pitch2);
+        zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);  
+        sprintf (textotono,"Interval steps: %5d",ql_audio_interval_steps);
+        zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);            
+        sprintf (textotono,"Duration:       %5d",ql_audio_duration);
+        zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);            
+        sprintf (textotono,"Step in pitch:  %5d",ql_audio_step_in_pitch);
+        zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);
+        sprintf (textotono,"Wrap:           %5d",ql_audio_wrap);
+        zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);
+        sprintf (textotono,"Randomness:     %5d",ql_audio_randomness_of_step);
+        zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);
+        sprintf (textotono,"Fuziness:       %5d",ql_audio_fuziness);
+        zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);
+            
+    }
 
 	else {
 
@@ -17447,6 +17520,12 @@ void menu_ay_partitura_overlay(void)
 				freq_c=sn_retorna_frecuencia(2);
 			}
 
+			else if (i8049_chip_present) {
+				freq_a=ql_ipc_get_frecuency_sound_pitch1();
+				freq_b=0;
+				freq_c=0;
+			}            
+
 			else {
 
 				freq_a=ay_retorna_frecuencia(0,menu_ay_partitura_chip);
@@ -17470,6 +17549,18 @@ void menu_ay_partitura_overlay(void)
 				if ((sn_chip_registers[8] & 15)==15) nota_c[0]=0;
 
 			}
+
+			else if (i8049_chip_present) {
+                if (!ql_audio_playing) {
+                    nota_a[0]=0;
+
+                }
+
+                //Los otros dos canales, nada
+                nota_b[0]=0;
+                nota_c[0]=0;                
+			}
+
 			else {
 				if (ay_3_8912_registros[menu_ay_partitura_chip][7]&1 || ay_3_8912_registros[menu_ay_partitura_chip][8]==0) nota_a[0]=0;
 				if (ay_3_8912_registros[menu_ay_partitura_chip][7]&2 || ay_3_8912_registros[menu_ay_partitura_chip][9]==0) nota_b[0]=0;
@@ -18448,6 +18539,14 @@ void menu_audio_chip_info(MENU_ITEM_PARAMETERS)
 		max_freq=sn_retorna_frecuencia_valor_registro(0,0);
 		min_freq=sn_retorna_frecuencia_valor_registro(255,255);
 	}
+
+	else if (i8049_chip_present) {
+		//Chip 8049 del QL
+		chip_frequency=ql_i8049_sound_chip_frequency;
+		max_freq=ql_ipc_get_frecuency_sound_value(1);
+		min_freq=ql_ipc_get_frecuency_sound_value(255);
+	}
+
 	else {
 		//Chip AY
 		chip_frequency=ay_chip_frequency;
@@ -18461,6 +18560,15 @@ void menu_audio_chip_info(MENU_ITEM_PARAMETERS)
 		menu_generic_message_format("Audio Chip Info","Audio Chip: Texas Instruments SN76489AN\nFrequency: %d Hz\n"
 									"Min Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz\n"
 									"3 Tone Channels, 1 Noise Channel",
+			chip_frequency,min_freq,max_freq
+		);
+	}
+
+	else if (i8049_chip_present) {
+		//8049 del QL
+		menu_generic_message_format("Audio Chip Info","Audio Chip: Intel 8049\nFrequency: %d Hz\n"
+									"Min Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz\n"
+									"2 PseudoTone Channels, Noise Effects",
 			chip_frequency,min_freq,max_freq
 		);
 	}
@@ -21976,6 +22084,8 @@ void menu_ay_pianokeyboard_overlay(void)
 
 	if (sn_chip_present.v) total_chips=1;
 
+    if (i8049_chip_present) total_chips=1;
+
 
 
 	//if (total_chips>2) total_chips=2;
@@ -21996,6 +22106,13 @@ void menu_ay_pianokeyboard_overlay(void)
 				freq_b=sn_retorna_frecuencia(1);
 				freq_c=sn_retorna_frecuencia(2);			
 			}
+
+
+			else if (i8049_chip_present) {
+				freq_a=ql_ipc_get_frecuency_sound_pitch1();
+				freq_b=0;
+				freq_c=0;			
+			}            
 
 			else {
 				freq_a=ay_retorna_frecuencia(0,chip);
@@ -22018,6 +22135,16 @@ void menu_ay_pianokeyboard_overlay(void)
 				if ((sn_chip_registers[7] & 15)==15) nota_b[0]=0;
 				if ((sn_chip_registers[8] & 15)==15) nota_c[0]=0;				
 			}
+
+			else if (i8049_chip_present) {
+                if (!ql_audio_playing) {
+                    nota_a[0]=0;
+                }
+
+                //Los otros dos canales, nada
+                nota_b[0]=0;
+                nota_c[0]=0;                               
+			}            
 
 			else {
 				if (ay_3_8912_registros[chip][7]&1 || ay_3_8912_registros[chip][8]==0) nota_a[0]=0;

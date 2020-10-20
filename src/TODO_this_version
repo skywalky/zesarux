@@ -170,6 +170,8 @@ estan en subcarpeta editview/
 
 -En ventana sprite navigator Tbblue, indicar parámetros de sprite relativo etc
 
+-ql: al buscar frecuencia de un pitch, si pitch esta entre dos, sacar la frecuencia media
+
 
 -ql: revisar llamadas como:
 

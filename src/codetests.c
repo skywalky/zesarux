@@ -1375,6 +1375,22 @@ void codetests_tbblue_set_ram_blocks(void)
 	}
 
 }
+ 
+
+void codetests_get_note_table_ql(void)
+{
+    int i;
+
+    for (i=0;i<256;i++) {
+        int index=get_note_index_from_ql_pitch(i);
+        printf ("ql pitch: %3d index: %d\n",i,index);
+        if (index>=0) {
+            printf (" Nota: %s Frecuencia: %5d Hz\n",get_note_name_by_index(index),get_note_frequency_by_index(index));
+        }
+
+    }
+
+}
 
 void codetests_main(int main_argc,char *main_argv[])
 {
@@ -1417,9 +1433,9 @@ void codetests_main(int main_argc,char *main_argv[])
 
 	//codetests_open_sockets_infinite();
 	
-	printf ("\nRunning zsock http tests\n");
-	init_network_tables();
-	codetests_http();
+	//printf ("\nRunning zsock http tests\n");
+	//init_network_tables();
+	//codetests_http();
 
 	//printf ("\nRunning zsock https tests\n");
 	//init_network_tables();
@@ -1456,6 +1472,9 @@ void codetests_main(int main_argc,char *main_argv[])
 
 	printf ("\nRunning code tests tbblue_set_ram_blocks\n");
 	codetests_tbblue_set_ram_blocks();
+
+    printf("\nRunning get note table ql test\n");
+    codetests_get_note_table_ql();
 
 
 	//printf ("\nRunning getting background F-key\n");
