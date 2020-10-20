@@ -338,6 +338,10 @@ pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
       //Sirve para algo esto????
 			//ql_pc_intr |=31;
 
+            //hace que se lea tecla desde menu. Aunque con el 8 ya es suficiente
+            //ql_pc_intr |=2;
+
+            //frame. hace parpadear pantalla
             ql_pc_intr |=8;
 
                         //No estoy seguro si esto son las interrupciones que genera el timer o no
@@ -346,8 +350,6 @@ pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
 			
 
                         //Chapuza para hacer parpadear el cursor
-                        //Se supone que el trap 2 que llamamos justo antes deberia hacer parpadear el cursor
-                        //pero no lo hace, a saber por que...
                         //ql_chapuza_parpadeo_cursor();
                         
                        

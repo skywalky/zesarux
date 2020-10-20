@@ -233,3 +233,5 @@ estan en subcarpeta editview/
 -QL: Poder usar el mixer para desactivar fuzziness, randomness etc 
 
 -Probar Filesel en Windows 
+
+-QL pause no siempre lo hace. en mago por ejemplo no va. en composer tampoco. Parece que desactivan algo de las interrupciones
