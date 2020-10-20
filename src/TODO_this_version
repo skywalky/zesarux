@@ -235,3 +235,4 @@ estan en subcarpeta editview/
 -Probar Filesel en Windows 
 
 -QL pause no siempre lo hace. en mago por ejemplo no va. en composer tampoco. Parece que desactivan algo de las interrupciones
+Revisar ql_zx8032_write y ql_pc_intr. es una mascara
