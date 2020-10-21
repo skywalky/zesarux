@@ -505,6 +505,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
         //05  byte        file type
         //06  8 bytes     file type-dependent information
 
+        //O sea saltamos los 4 primeros, que ya hemos puesto un poco antes
         int i;
         for (i=0;i<10;i++) {
             moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header[20+4+i];
