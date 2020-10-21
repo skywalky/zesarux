@@ -464,7 +464,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
         moto_byte buffer_cabecera_leida[QL_MAX_FILE_HEADER_LENGTH];
         FILE *ptr_file;
         ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;      
-        fread(buffer_cabecera_leida,1,QL_MAX_FILE_HEADER_LENGTH,ptr_file);
+        fread(buffer_cabecera_leida,1,tiene_cabecera,ptr_file);
 
         //Valores usados de esa cabecera,desde el offset 20:
         //there are 10 bytes with the values present in bytes 4 to 13 of the 64 bytes QDOS header.

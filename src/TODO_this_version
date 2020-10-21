@@ -255,6 +255,6 @@ que acaba generando mismo valor entero
 Quiza lo mejor es que, al abrir archivo para lectura:
 si tiene cabecera, se lee siempre en un campo de la estructura de array de archivos abiertos
 (leemos un trozo de archivo y luego se avanza (o se rebobina) puntero para dejarlo justo despues de la cabecera)
-si llama a HEADR, lo lee de ahi
+si llama a HEADR, lo lee de ahi OK
 
 Al abrir para grabar, solo lo agrega cuando se llama a HEADS
