@@ -315,6 +315,43 @@ void core_ql_trap_two(void)
 }
 
 
+/*
+Llamadas al sistema que han pasado antes por un trap4 y que usan punteros, se les suma A6
+En este caso aplica a A1 pero podria aplicar a cualquier otro puntero
+
+
+https://qlforum.co.uk/viewtopic.php?f=3&t=2230
+
+"
+Because of this complicated floating BASIC areas, the system cannot simply hand an absolute pointer to any system 
+call that wants one (like the buffer address for IO.FLINE). QDOS works around this by introducing TRAP #4, 
+which is basically a switch - The next system call after a TRAP #4 is instructed to interpret anything that 
+is a pointer as relative to a6. Let's assume a6 is $30000 and an IO.FLINE trap is issued without a TRAP #4 
+before, with A1 containing $20000, the system will use $20000 as a target load address. If, however, a TRAP #4 
+has been issued before an IO.FLINE call, the system will load to (a6, a1), thus at absolute address $50000. 
+Thus, pointers in traps have to be interpreted according to this switch (which is per-job and re-set after 
+the next TRAP #1, 2, or 3).
+"
+
+So, short answer to your question after all this explanation:
+
+If the very same job that calls the IO.FLINE trap has not issued a TRAP #4 directly before, a1 is the absolute target load address, and will be updated after the call to the end of used buffer area.
+If, however, the last TRAP issued by the job in question directly before the IO.FLINE trap was a TRAP #4, the address is 
+(a6,a1),   and a1 will be updated relatively (i.e. only incremented by the amount of bytes read).
+
+*/
+unsigned int ql_get_a1_after_trap_4(void)
+{
+	if (ql_previous_trap_was_4) {
+				return m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
+	}
+	else {
+		return m68k_get_reg(NULL,M68K_REG_A1);
+	}
+}
+
+
+
 char *ql_qdos_header_magic="]!QDOS File Header";
 
 //Dice si archivo tiene cabecera QDOS valida o no
@@ -515,6 +552,88 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
 
 }
+
+
+void ql_put_file_header(unsigned int indice_canal,unsigned int destino)
+{
+ 
+
+  debug_printf(VERBOSE_DEBUG,"Writing header for file on address %05XH",destino);
+
+  //Con mi cabecera pequeña de 30 es suficiente
+  //QL_POSSIBLE_HEADER_LENGTH_ONE
+  moto_byte buffer_header[QL_POSSIBLE_HEADER_LENGTH_ONE];
+
+  //Inicializamos cabecera a 0
+  int i;
+  for (i=0;i<QL_POSSIBLE_HEADER_LENGTH_ONE;i++) buffer_header[i]=0;
+
+  //Metemos magic
+  int longitud_magic=strlen(ql_qdos_header_magic);
+
+  memcpy(buffer_header,ql_qdos_header_magic,longitud_magic);
+
+/*
+OFFSET LENGTH(bytes)       CONTENT
+0      18                  “]!QDOS File Header“
+18     1                   0 (reserved)
+19     1                   total length_of_header, in 16 bit words
+20 length_of_header*2-20   QDOS INFO
+
+The first 18 bytes are there to detect whether the header is present (ID string).
+
+The headers Q-emuLator supports can be 30 bytes or 44 bytes long (the value of the corresponding byte at offset 19 is either 15 or 22). 
+In the first case, there are 10 bytes with the values present in bytes 4 to 13 of the 64 bytes QDOS header. 
+
+  
+  Sobre cabeceras del QDOS:
+
+
+  pagina 38 qltm.pdf. 7.0 Directory Device Drivers
+  Each file is assumed to have a 64-byte header (the logical beginning of file is set to byte 64, not byte zero). 
+  This header should be formatted as follows:
+
+  00  long        file length
+  04  byte        file access key (not yet implemented - currently always zero)
+  05  byte        file type
+  06  8 bytes     file type-dependent information
+  */
+
+
+    //Indicar longitud
+    buffer_header[19]=QL_POSSIBLE_HEADER_LENGTH_ONE/2;    
+
+    //Y luego ya la info que nos llega
+
+
+
+          unsigned int reg_a1=ql_get_a1_after_trap_4();    
+          //mostrar algunos bytes
+          printf("Writing qdos header\n");
+          
+          for (i=0;i<10;i++) {
+              unsigned int offset=reg_a1+4+i;
+              moto_byte byte_leido;
+              byte_leido=peek_byte_z80_moto(offset);
+              buffer_header[20+i]=byte_leido;
+
+              printf ("%02XH ",byte_leido);
+          }      
+
+          printf("\n");
+
+
+    //Y escribir dicha cabecera
+        FILE *ptr_file;
+        ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;      
+        fread(buffer_header,1,QL_POSSIBLE_HEADER_LENGTH_ONE,ptr_file);
+
+
+
+
+
+}
+
 
 void core_ql_trap_three(void)
 {
@@ -936,40 +1055,7 @@ int leidos=1;
 }
 
 
-/*
-Llamadas al sistema que han pasado antes por un trap4 y que usan punteros, se les suma A6
-En este caso aplica a A1 pero podria aplicar a cualquier otro puntero
 
-
-https://qlforum.co.uk/viewtopic.php?f=3&t=2230
-
-"
-Because of this complicated floating BASIC areas, the system cannot simply hand an absolute pointer to any system 
-call that wants one (like the buffer address for IO.FLINE). QDOS works around this by introducing TRAP #4, 
-which is basically a switch - The next system call after a TRAP #4 is instructed to interpret anything that 
-is a pointer as relative to a6. Let's assume a6 is $30000 and an IO.FLINE trap is issued without a TRAP #4 
-before, with A1 containing $20000, the system will use $20000 as a target load address. If, however, a TRAP #4 
-has been issued before an IO.FLINE call, the system will load to (a6, a1), thus at absolute address $50000. 
-Thus, pointers in traps have to be interpreted according to this switch (which is per-job and re-set after 
-the next TRAP #1, 2, or 3).
-"
-
-So, short answer to your question after all this explanation:
-
-If the very same job that calls the IO.FLINE trap has not issued a TRAP #4 directly before, a1 is the absolute target load address, and will be updated after the call to the end of used buffer area.
-If, however, the last TRAP issued by the job in question directly before the IO.FLINE trap was a TRAP #4, the address is 
-(a6,a1),   and a1 will be updated relatively (i.e. only incremented by the amount of bytes read).
-
-*/
-unsigned int ql_get_a1_after_trap_4(void)
-{
-	if (ql_previous_trap_was_4) {
-				return m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
-	}
-	else {
-		return m68k_get_reg(NULL,M68K_REG_A1);
-	}
-}
 
 
 void handle_trap_io_fline(void) 
@@ -1787,7 +1873,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           //Forzamos meter cabecera en espacio de memoria de pantalla a ver que pasa
           //ql_get_file_header(ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1));
 
-          //TODO completar esto
+          
           ql_get_file_header(indice_canal,ql_get_a1_after_trap_4() );
 
           //ql_get_file_header(ql_nombre_archivo_load,131072); //131072=pantalla
@@ -1895,11 +1981,14 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0 ) {
 
-        	//TODO completar. No estamos haciendo nada
+        	
 
 
         	ql_restore_d_registers(pre_fs_heads_d,7);
           	ql_restore_a_registers(pre_fs_heads_a,6);
+
+            //ql_qdos_save_header(indice_canal);
+            ql_put_file_header(indice_canal,ql_get_a1_after_trap_4() );
 
 
             //Return
