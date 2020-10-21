@@ -109,6 +109,9 @@ struct s_qltraps_fopen {
         char debug_name[PATH_MAX];
         char debug_fullpath[PATH_MAX];
 
+        //Si tiene cabecera al abrirlo. se guardara en file_header
+        int has_header_on_read;
+
         //The headers ZEsarUX supports can be 30 bytes or 44 bytes long
         moto_byte file_header[QL_MAX_FILE_HEADER_LENGTH];        
 };

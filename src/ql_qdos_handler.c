@@ -493,15 +493,11 @@ https://qlforum.co.uk/viewtopic.php?t=113
   ql_writebyte(destino+3,tamanyo&255);
 
   //Ver si tiene cabecera el archivo
-  int tiene_cabecera=ql_if_file_has_header(indice_canal);
+  if (qltraps_fopen_files[indice_canal].has_header_on_read) {
 
-  if (tiene_cabecera) {
-      //Leemos esa cabecera
+      //Leemos esa cabecera, que ya tenemos en la estructura de archivos abiertos
         printf("Returning header with some of values from file header\n");
-        moto_byte buffer_cabecera_leida[QL_MAX_FILE_HEADER_LENGTH];
-        FILE *ptr_file;
-        ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;      
-        fread(buffer_cabecera_leida,1,tiene_cabecera,ptr_file);
+
 
         //Valores usados de esa cabecera,desde el offset 20:
         //there are 10 bytes with the values present in bytes 4 to 13 of the 64 bytes QDOS header.
@@ -511,7 +507,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
         int i;
         for (i=0;i<10;i++) {
-            moto_byte byte_leido=buffer_cabecera_leida[20+4+i];
+            moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header[20+4+i];
             unsigned int destino_cabecera=destino+5+i;
             printf("Setting offset %02d value %02XH\n",i,byte_leido);
 
@@ -626,7 +622,7 @@ In the first case, there are 10 bytes with the values present in bytes 4 to 13 o
     //Y escribir dicha cabecera
         FILE *ptr_file;
         ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;      
-        fread(buffer_header,1,QL_POSSIBLE_HEADER_LENGTH_ONE,ptr_file);
+        fwrite(buffer_header,1,QL_POSSIBLE_HEADER_LENGTH_ONE,ptr_file);
 
 
 
@@ -1726,7 +1722,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 	qltraps_fopen_files[canal].es_dispositivo=es_dispositivo;
 
-
+    //Asumimos que no tiene cabecera al leerlo
+    qltraps_fopen_files[canal].has_header_on_read=0;
 
 	if (!es_dispositivo) {
 		//Indicar file handle
@@ -1736,7 +1733,10 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         if (file_mode==2 || file_mode==3) {
             archivo=fopen(ql_nombrecompleto,"wb");
         }
-		else archivo=fopen(ql_nombrecompleto,"rb");
+		else {
+            archivo=fopen(ql_nombrecompleto,"rb");
+        }
+
 		if (archivo==NULL) {
         		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
 	  		//Retornar Not found (NF)
@@ -1746,6 +1746,35 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
 		qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix=archivo;
+
+
+        if (file_mode!=2 && file_mode!=3) {
+            //Leemos cabecera si es que tiene
+            //Ver si tiene cabecera el archivo, en el caso de abrir para lectura
+            //Y la guardamos en nuestra estructura de archivos
+            int tiene_cabecera=ql_if_file_has_header(canal);
+
+            if (tiene_cabecera) {
+                qltraps_fopen_files[canal].has_header_on_read=1;
+
+                //Leemos esa cabecera
+                    printf("Reading QDOS file header\n");
+
+                    fread(qltraps_fopen_files[canal].file_header,1,tiene_cabecera,archivo);
+
+                    int i;
+                    for (i=0;i<tiene_cabecera;i++) {
+                        moto_byte byte_leido=qltraps_fopen_files[canal].file_header[i];
+
+                        if (byte_leido>=32 && byte_leido<=126) printf ("%c",byte_leido);
+                        else printf(" %02XH ",byte_leido);
+                    }
+                    printf("\n");
+
+
+            }
+        }   
+
 
 		//Le hacemos un stat
 		if (stat(ql_nombrecompleto, &qltraps_fopen_files[canal].last_file_buf_stat)!=0) {
