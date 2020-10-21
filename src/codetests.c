@@ -1377,17 +1377,53 @@ void codetests_tbblue_set_ram_blocks(void)
 }
  
 
+/*
+extern float aproximate_frequency_from_ql_pitch(int pitch);
+
 void codetests_get_note_table_ql(void)
 {
     int i;
+    int columna=0;
 
     for (i=0;i<256;i++) {
         int frecuencia=get_note_frequency_from_ql_pitch(i);
-        printf ("ql pitch: %3d frecuencia: %d\n",i,frecuencia);
+        if (frecuencia==-1) {
+            //Obtener mediante aproximacion
+            float frecuencia_float=aproximate_frequency_from_ql_pitch(i);
+            //printf ("aprox ql pitch: %3d frecuencia: %f\n",i,frecuencia_float);
+
+            //Aproximar frecuencia. Si mayor *.5-> *+1
+            int entero_frecuencia=frecuencia_float;
+            //printf("entero: %d\n",entero_frecuencia);
+
+            float resta=frecuencia_float-entero_frecuencia;
+            if (resta>0.5) entero_frecuencia++;
+            //printf("entero rounded: %d\n",entero_frecuencia);
+
+            //printf ("aprox ql pitch: %3d frecuencia: %f rounded: %d\n",i,frecuencia_float,entero_frecuencia);
+
+            printf("%f,",frecuencia_float);
+            //printf("%d,",entero_frecuencia);
+
+        }
+        else {
+            printf ("%d,",frecuencia);
+        }            
+
+            columna++;
+
+            if (columna==10) {
+                printf("\n");
+                columna=0;
+            }
+
 
     }
 
+    printf("\n");
+
 }
+*/
 
 void codetests_main(int main_argc,char *main_argv[])
 {
@@ -1470,8 +1506,8 @@ void codetests_main(int main_argc,char *main_argv[])
 	printf ("\nRunning code tests tbblue_set_ram_blocks\n");
 	codetests_tbblue_set_ram_blocks();
 
-    printf("\nRunning get note table ql test\n");
-    codetests_get_note_table_ql();
+    //printf("\nRunning get note table ql test\n");
+    //codetests_get_note_table_ql();
 
 
 	//printf ("\nRunning getting background F-key\n");

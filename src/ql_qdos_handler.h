@@ -24,7 +24,15 @@
 
 #include "ql.h"
 
-#define QLTRAPS_MAX_OPEN_FILES 3
+#include <dirent.h>
+#if defined(__APPLE__)
+        #include <sys/syslimits.h>
+#endif
+
+#include "utils.h"
+
+
+#define QLTRAPS_MAX_OPEN_FILES 20
 #define QLTRAPS_START_FILE_NUMBER 32
 
 
@@ -56,5 +64,55 @@ extern int ql_microdrive_floppy_emulation;
 extern z80_byte ql_last_trap;
 
 extern int ql_previous_trap_was_4;
+
+#define QL_POSSIBLE_HEADER_LENGTH_ONE 30
+#define QL_POSSIBLE_HEADER_LENGTH_TWO 44
+#define QL_MAX_FILE_HEADER_LENGTH QL_POSSIBLE_HEADER_LENGTH_TWO
+
+struct s_qltraps_fopen {
+
+        /* Para archivos */
+        FILE *qltraps_last_open_file_handler_unix;
+        //z80_byte temp_qltraps_last_open_file_handler;
+
+        //Usado al hacer fstat
+        struct stat last_file_buf_stat;
+
+
+        /* Para directorios */
+        //usados al leer directorio
+        //z80_byte qltraps_handler_filinfo_fattrib;
+        struct dirent *qltraps_handler_dp;
+        DIR *qltraps_handler_dfd; //    =NULL;
+        //ultimo directorio leido al listar archivos
+        char qltraps_handler_last_dir_open[PATH_MAX];
+
+        //para telldir
+        unsigned int contador_directorio;
+
+        //para io.file. indica que la siguiente lectura debe retornar eof
+        int next_eof_ptr_io_fline;
+
+        //Indica que se ha abierto el dispositivo entero "mdv1_", "mdv2_",etc. Se usa en dir mdv1_
+        int es_dispositivo;
+
+        char ql_file_name[1024];
+
+
+        /* Comun */
+        //Indica a 1 que el archivo/directorio esta abierto. A 0 si no
+        moto_bit open_file;
+
+        moto_bit is_a_directory;
+
+        //Usado solo por debug de ZRCP:
+        char debug_name[PATH_MAX];
+        char debug_fullpath[PATH_MAX];
+
+        //The headers ZEsarUX supports can be 30 bytes or 44 bytes long
+        moto_byte file_header[QL_MAX_FILE_HEADER_LENGTH];        
+};
+
+extern struct s_qltraps_fopen qltraps_fopen_files[];
 
 #endif

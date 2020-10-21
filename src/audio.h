@@ -144,7 +144,7 @@ struct s_nota_musical
 {
         char nombre[4];
 	int frecuencia; //aunque tiene decimales, para lo que necesitamos no hacen falta
-    int ql_beep_pitch; //Valor de pitch asociado al sonido de QL. Valor negativo si no tiene relación
+    //int ql_beep_pitch; //Valor de pitch asociado al sonido de QL. Valor negativo si no tiene relación
 };
 
 typedef struct s_nota_musical nota_musical;

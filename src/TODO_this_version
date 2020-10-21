@@ -200,13 +200,16 @@ estan en subcarpeta editview/
 
 - Entrada faq QL revisar
 
-- Save, sbytes para QL
+- Save ok ql
+- sbytes ok ql
+
+-mejorar los traps qdos
+*agrupar por trap 1,2,3 etc
+*...
 
 -ZSF soporte para QL
 
 -ZENG soporte para QL
-
--Hay una llamada qdos para desactivar parpadeo cursor. Algo así como sd.cursor. Hacer que mi simulación cursor tenga en cuenta esto
 
 -pc_clock equ    $18000 
  en escritura
@@ -239,3 +242,19 @@ estan en subcarpeta editview/
 es problema de esto:
 ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
 que acaba generando mismo valor entero
+
+-QL llamadas HEADS, HEADR. Leer y Grabar cabecera correspondiente
+
+
+-Sobre cabeceras:
+* al abrir archivo para lectura, el puntero de lectura avanza hasta despues de la cabecera
+* solo se lee la cabecera al llamar a HEADR
+* al abrir archivo para grabar, solo se mete cabecera si se llama a HEADS. suponemos que se llama justo despues del open,
+* por tanto lo escribimos y salimos
+
+Quiza lo mejor es que, al abrir archivo para lectura:
+si tiene cabecera, se lee siempre en un campo de la estructura de array de archivos abiertos
+(leemos un trozo de archivo y luego se avanza (o se rebobina) puntero para dejarlo justo despues de la cabecera)
+si llama a HEADR, lo lee de ahi
+
+Al abrir para grabar, solo lo agrega cuando se llama a HEADS

@@ -11,6 +11,9 @@ Added Z80 to SCR file converter
 Added P to SCR file converter
 Added ZSF to SCR file converter
 
+Added ZRCP commands:
+-qdos-get-open-files: to get open files from QL QDOS
+
 Improved ZX Desktop: 
 -Added direct buttons, to access menu items
 -Added devices buttons/icons, to show device activity and device configuration
@@ -39,6 +42,9 @@ Fixed QL bugs:
 -Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes
 -Fixed using QL system calls and A6 pointer offset used after previous Trap was not 4
 -Fixed frame interrupt
+
+-Fixed system call FS.SAVE
+-Fixed system call FS.HEADS
 -Fixed system call FS.HEADR
 -Fixed system call IO.FSTRG
 -Fixed system call IO.EDLIN

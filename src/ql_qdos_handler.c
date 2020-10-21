@@ -72,42 +72,7 @@ void ql_footer_mdflp_operating(void)
 	}		
 }
 
-struct s_qltraps_fopen {
 
-        /* Para archivos */
-        FILE *qltraps_last_open_file_handler_unix;
-        //z80_byte temp_qltraps_last_open_file_handler;
-
-        //Usado al hacer fstat
-        struct stat last_file_buf_stat;
-
-
-        /* Para directorios */
-        //usados al leer directorio
-        //z80_byte qltraps_handler_filinfo_fattrib;
-        struct dirent *qltraps_handler_dp;
-        DIR *qltraps_handler_dfd; //    =NULL;
-        //ultimo directorio leido al listar archivos
-        char qltraps_handler_last_dir_open[PATH_MAX];
-
-        //para telldir
-        unsigned int contador_directorio;
-
-        //para io.file. indica que la siguiente lectura debe retornar eof
-        int next_eof_ptr_io_fline;
-
-        //Indica que se ha abierto el dispositivo entero "mdv1_", "mdv2_",etc. Se usa en dir mdv1_
-        int es_dispositivo;
-
-        char ql_file_name[1024];
-
-
-        /* Comun */
-        //Indica a 1 que el archivo/directorio esta abierto. A 0 si no
-        z80_bit open_file;
-
-        z80_bit is_a_directory;
-};
 
 struct s_qltraps_fopen qltraps_fopen_files[QLTRAPS_MAX_OPEN_FILES];
 
@@ -251,10 +216,14 @@ unsigned int pre_fs_headr_d[8];
 unsigned int pre_fs_load_a[8];
 unsigned int pre_fs_load_d[8];
 
+unsigned int pre_fs_save_a[8];
+unsigned int pre_fs_save_d[8];
 
 unsigned int pre_fs_mdinf_a[8];
 unsigned int pre_fs_mdinf_d[8];
 
+unsigned int pre_fs_heads_a[8];
+unsigned int pre_fs_heads_d[8];
 
 unsigned int pre_io_fline_a[8];
 unsigned int pre_io_fline_d[8];
@@ -318,8 +287,9 @@ void core_ql_trap_two(void)
 
   //Ver pagina 173. 18.14 Trap Keys
 
-  debug_printf (VERBOSE_PARANOID,"Trap 1. D0=%02XH A0=%08XH A1=%08XH PC=%05XH is : ",
-    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_PC));
+  debug_printf (VERBOSE_PARANOID,"Trap 1. D0=%02XH A0=%08XH A1=%08XH D3=%08XH PC=%05XH is : ",
+    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_D3),
+    m68k_get_reg(NULL,M68K_REG_PC));
 
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
 
@@ -344,11 +314,89 @@ void core_ql_trap_two(void)
 
 }
 
+
+char *ql_qdos_header_magic="]!QDOS File Header";
+
+//Dice si archivo tiene cabecera QDOS valida o no
+//Retorna >0 si existe, y su longitud total
+//Retorna 0 si no existe
+int ql_if_file_has_header(unsigned int indice_canal)
+{
+    FILE *ptr_file;
+    ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;
+
+    moto_byte buffer[QL_MAX_FILE_HEADER_LENGTH];
+
+    //Leemos
+    fread(buffer,1,QL_MAX_FILE_HEADER_LENGTH,ptr_file);
+
+    //Mover puntero de lectura al principio de nuevo
+    fseek(ptr_file, 0, SEEK_SET);
+
+    //Ponemos 0 al final del magic de la cabecera y comparamos
+    int longitud_magic=strlen(ql_qdos_header_magic);
+
+    if (!memcmp(ql_qdos_header_magic,buffer,longitud_magic)) {
+        printf("Archivo tiene cabecera\n");
+
+        //Obtener longitud
+        int header_length=buffer[19]*2;
+
+        if (header_length==QL_POSSIBLE_HEADER_LENGTH_ONE || header_length==QL_POSSIBLE_HEADER_LENGTH_TWO) {
+            printf ("Y longitud cabecera es valida\n");
+            return header_length;
+        }
+        else {
+            printf("Pero longitud cabecera no es valida\n");
+        }
+    }
+    else {
+        printf("Archivo NO tiene cabecera\n");
+    }
+
+    return 0;
+
+}
+
 void ql_get_file_header(unsigned int indice_canal,unsigned int destino)
 {
+    /*
+
+    Sobre cabeceras en archivos de datos generados por emulador:
+
+QL files have a special piece of information associated with them, called the ‘QDOS file header’. 
+The header stores such information as the file name and whether the file is an executable program.
+
+Q-emuLator for Windows stores part of the header at the beginning of files. 
+The header is present only when it is useful, ie. only if it contains non-default information.
+
+The header has the following format:
+CÓDIGO: SELECCIONAR TODO
+OFFSET LENGTH(bytes)       CONTENT
+0      18                  “]!QDOS File Header“
+18     1                   0 (reserved)
+19     1                   total length_of_header, in 16 bit words
+20 length_of_header*2-20   QDOS INFO
+
+The first 18 bytes are there to detect whether the header is present (ID string).
+
+The headers Q-emuLator supports can be 30 bytes or 44 bytes long (the value of the corresponding byte at offset 19 is either 15 or 22). 
+In the first case, there are 10 bytes with the values present in bytes 4 to 13 of the 64 bytes QDOS header. 
+In the second case the same piece of information is followed by 14 bytes containing a microdrive sector header, 
+useful for emulating microdrive protection schemes. Additional header information (file length, name, dates) is obtained
+directly from the file through the host file system.
+  
+    */
+
+
+
   /*
-  pagina 38. 7.0 Directory Device Drivers
-  Each file is assumed to have a 64-byte header (the logical beginning of file is set to byte 64, not byte zero). This header should be formatted as follows:
+  Sobre cabeceras del QDOS:
+
+
+  pagina 38 qltm.pdf. 7.0 Directory Device Drivers
+  Each file is assumed to have a 64-byte header (the logical beginning of file is set to byte 64, not byte zero). 
+  This header should be formatted as follows:
 
   00  long        file length
   04  byte        file access key (not yet implemented - currently always zero)
@@ -396,6 +444,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
   int i;
   for (i=0;i<64;i++) ql_writebyte(destino+i,0);
 
+
   //unsigned int tamanyo=get_file_size(nombre);
 
 	unsigned int tamanyo=qltraps_fopen_files[indice_canal].last_file_buf_stat.st_size;
@@ -406,8 +455,41 @@ https://qlforum.co.uk/viewtopic.php?t=113
   ql_writebyte(destino+2,(tamanyo>>8)&255);
   ql_writebyte(destino+3,tamanyo&255);
 
-  //Tipo. TODO
-  ql_writebyte(destino+5,0); //ejecutable 1
+  //Ver si tiene cabecera el archivo
+  int tiene_cabecera=ql_if_file_has_header(indice_canal);
+
+  if (tiene_cabecera) {
+      //Leemos esa cabecera
+        printf("Returning header with some of values from file header\n");
+        moto_byte buffer_cabecera_leida[QL_MAX_FILE_HEADER_LENGTH];
+        FILE *ptr_file;
+        ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;      
+        fread(buffer_cabecera_leida,1,QL_MAX_FILE_HEADER_LENGTH,ptr_file);
+
+        //Valores usados de esa cabecera,desde el offset 20:
+        //there are 10 bytes with the values present in bytes 4 to 13 of the 64 bytes QDOS header.
+        //  04  byte        file access key (not yet implemented - currently always zero)
+        //05  byte        file type
+        //06  8 bytes     file type-dependent information
+
+        int i;
+        for (i=0;i<10;i++) {
+            moto_byte byte_leido=buffer_cabecera_leida[20+4+i];
+            unsigned int destino_cabecera=destino+5+i;
+            printf("Setting offset %02d value %02XH\n",i,byte_leido);
+
+
+            ql_writebyte(destino_cabecera,byte_leido);
+        }
+
+  }
+
+    else {
+    //Tipo. TODO
+    ql_writebyte(destino+5,0); //ejecutable 1
+
+
+    }
 
   //temp prueba
   //ql_writebyte(destino+6,1);
@@ -494,8 +576,14 @@ void core_ql_trap_three(void)
       ql_store_d_registers(pre_fs_mdinf_d,7);
     break;
 
-    
-    break;
+    case 0x46:
+    	debug_printf (VERBOSE_PARANOID,"Trap 3: FS.HEADS");
+
+    	      //Guardar registros
+      ql_store_a_registers(pre_fs_heads_a,7);
+      ql_store_d_registers(pre_fs_heads_d,7);
+    break;    
+
 
     case 0x47:
       debug_printf (VERBOSE_PARANOID,"Trap 3: FS.HEADR");
@@ -519,6 +607,20 @@ void core_ql_trap_three(void)
 
 
     break;
+
+    case 0x49:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: FS.SAVE. Length: %d Channel: %d Address: %05XH"
+          ,m68k_get_reg(NULL,M68K_REG_D2),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1)  );
+      //D2.L length of file. A0 channellD. A1 base address for load
+
+      //ql_debug_force_breakpoint("En FS.LOAD");
+
+      //Guardar registros
+      ql_store_a_registers(pre_fs_save_a,7);
+      ql_store_d_registers(pre_fs_save_d,7);
+
+
+    break;    
 
     default:
       debug_printf (VERBOSE_PARANOID,"Trap 3: unknown");
@@ -1314,6 +1416,13 @@ command@cpu-step> cs
 PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A2: 00006906 A3: 00000670 A4: 00000012 A5: 0002846E A6: 00028000 A7: 0002846E D0: 00000001 D1: FFFFFFFF D2: 00000058 D3: 00000001 D4: 00000001 D5: 00000000 D6: 00000000 D7: 0000007F
 032B4 subq.b  #1, D0
 
+D3.L: code:
+0 old (exclusive) file or device
+1 old (shared) file
+2 new (exclusive) file
+3 new (overwrite) file
+4 open directory
+
 */
 
   //Nota: lo normal seria que no hagamos este trap a no ser que se habilite emulacion de ql_microdrive_floppy_emulation.
@@ -1372,6 +1481,8 @@ PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A
       		es_dispositivo=1;
       	}
       }
+
+      moto_byte file_mode;
       
 
       if (hacer_trap) {
@@ -1455,9 +1566,27 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
             }
 
 
+
+
    	     ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
 
         	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+
+            //Ver modo archivo
+            file_mode=m68k_get_reg(NULL,M68K_REG_D3);
+            printf("File mode: %d\n",file_mode);
+            /*
+            D3.L: code:
+0 old (exclusive) file or device
+1 old (shared) file
+2 new (exclusive) file
+3 new (overwrite) file
+4 open directory
+            */
+
+           //Si modo es 2 o 3, no ver si existe
+           if (file_mode!=2 && file_mode!=3) {
+
 
 
         //Para siguientes io.fline
@@ -1485,12 +1614,11 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           		m68k_set_reg(M68K_REG_D0,-7);
           		return;
         	}
+
+           }
 	}
 
         
-
-	//Metemos channel id (A0) inventado
-	//m68k_set_reg(M68K_REG_A0,QL_ID_CANAL_INVENTADO_MICRODRIVE);
 
 	//Obtenemos canal disponible
 	int canal=qltraps_find_free_fopen();
@@ -1517,7 +1645,12 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 	if (!es_dispositivo) {
 		//Indicar file handle
 		FILE *archivo;
-		archivo=fopen(ql_nombrecompleto,"rb");
+
+        //Si modo es escritura
+        if (file_mode==2 || file_mode==3) {
+            archivo=fopen(ql_nombrecompleto,"wb");
+        }
+		else archivo=fopen(ql_nombrecompleto,"rb");
 		if (archivo==NULL) {
         		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
 	  		//Retornar Not found (NF)
@@ -1538,6 +1671,10 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 	//Indicamos en array que esta abierto
 	qltraps_fopen_files[canal].open_file.v=1;
+
+                //Y poner nombres para debug
+                strcpy(qltraps_fopen_files[canal].debug_name,ql_nombre_archivo_load);
+                strcpy(qltraps_fopen_files[canal].debug_fullpath,ql_nombrecompleto);    
 
 	
 
@@ -1746,6 +1883,59 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
     }
 
 
+    //Trap 3 FS.HEADS. Se usa con sbytes: hace io.open y luego llama aqui
+    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x46 && ql_microdrive_floppy_emulation) {
+        debug_printf (VERBOSE_PARANOID,"FS.HEADS. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
+
+        
+
+		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
+
+        //Si canal es el mio ficticio 100
+        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        if (indice_canal>=0 ) {
+
+        	//TODO completar. No estamos haciendo nada
+
+
+        	ql_restore_d_registers(pre_fs_heads_d,7);
+          	ql_restore_a_registers(pre_fs_heads_a,6);
+
+
+            //Return
+            //D1.W length of header set
+            //A1 end of header def
+
+            printf("Returning from FS.HEADS with no error\n");
+
+            m68k_set_reg(M68K_REG_D1,14);
+
+          unsigned int reg_a1=ql_get_a1_after_trap_4();    
+          //mostrar algunos bytes
+          printf("Begin header\n");
+          int i=0;
+          for (i=0;i<64;i++) {
+              printf ("%02XH ",peek_byte_z80_moto(reg_a1+i));
+          }      
+          printf("End header\n");
+          reg_a1 +=14;
+          m68k_set_reg(M68K_REG_A1,reg_a1);            
+        	
+          
+          //Volver de ese trap
+          m68k_set_reg(M68K_REG_PC,0x5e);
+          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+          reg_a7 +=12;
+          m68k_set_reg(M68K_REG_A7,reg_a7);
+
+          //No error.
+          m68k_set_reg(M68K_REG_D0,0);
+
+
+        }
+    }
+
+
 
 
 	//Trap 3 IO.FLINE
@@ -1828,13 +2018,27 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         
 
+
+          	
+          	int longitud=m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF;
+
+            //Grabar los datos en disco
+        	FILE *ptr_file;
+        	ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;
+            int i=0;
+            for (i=0;i<longitud;i++) {
+                moto_byte byte_leido;
+                byte_leido=peek_byte_z80_moto(puntero_origen+i);
+                fwrite(&byte_leido,1,1,ptr_file);
+            }
+            
+
           	//Mostrar parte del mensaje enviado en SSTRG
           	//unsigned int puntero_destino=m68k_get_reg(NULL,M68K_REG_A1)+m68k_get_reg(NULL,M68K_REG_A6);
-          	char buffer_mensaje[256];
-          	int longitud=m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF;
+            char buffer_mensaje[256];
           	if (longitud>32) longitud=32;
 
-          	int i=0;
+          	i=0;
           	char byte_leido;
 
           	while (longitud>=0) {
@@ -1985,6 +2189,66 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         }
     }
+
+  //FS.SAVE
+    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x49 && ql_microdrive_floppy_emulation) {
+        debug_printf (VERBOSE_PARANOID,"FS.SAVE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
+
+        //Si canal es el mio ficticio 100
+        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        if (indice_canal>=0 ) {
+
+          ql_restore_d_registers(pre_fs_save_d,7);
+          ql_restore_a_registers(pre_fs_save_a,6);
+
+          unsigned int longitud=m68k_get_reg(NULL,M68K_REG_D2);
+
+
+            debug_printf (VERBOSE_PARANOID,"Saving file from address %05XH with length: %d",m68k_get_reg(NULL,M68K_REG_A1),longitud);
+            //void load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
+
+             //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();
+
+            //Grabar los datos en disco
+        	FILE *ptr_file;
+        	ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;
+            //ql_load_binary_file(ptr_file,ql_get_a1_after_trap_4(),longitud);
+
+            unsigned int puntero_origen=ql_get_a1_after_trap_4();
+
+            int i=0;
+            for (i=0;i<longitud;i++) {
+                moto_byte byte_leido;
+                byte_leido=peek_byte_z80_moto(puntero_origen+i);
+                fwrite(&byte_leido,1,1,ptr_file);
+            }
+
+
+          //Volver de ese trap
+          m68k_set_reg(M68K_REG_PC,0x5e);
+          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+          reg_a7 +=12;
+          m68k_set_reg(M68K_REG_A7,reg_a7);
+
+          //No error.
+          m68k_set_reg(M68K_REG_D0,0);
+
+          //m68k_set_reg(M68K_REG_D0,-7);
+
+
+          //Decimos que A1 es A1 top address after load
+          unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
+          reg_a1 +=longitud;
+          m68k_set_reg(M68K_REG_A1,reg_a1);
+
+
+          //Le decimos en A1 que la cabecera esta en la memoria de pantalla
+          //m68k_set_reg(M68K_REG_A1,131072);
+
+        }
+    }
+
 
 
 }

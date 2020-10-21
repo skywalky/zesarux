@@ -59,6 +59,7 @@
 #include "snap_zsf.h"
 #include "autoselectoptions.h"
 #include "zeng.h"
+#include "ql_qdos_handler.h"
 
 
 
@@ -753,6 +754,8 @@ struct s_items_ayuda items_ayuda[]={
 	{"noop",NULL,NULL,"This command does nothing"},
 	{"print-footer",NULL,"message","Prints message on footer"},
 	{"put-snapshot",NULL,NULL,"Puts a zsf snapshot from console. Contents must be hexadecimal characters without spaces"}, 
+{"qdos-get-open-files","|qlgof",NULL,"Gets a list of open files and directories on the QL QDOS handler"},
+
   {"quit","|exit|logout",NULL,"Closes connection"},
 	{"read-memory",NULL,"[address] [length]","Dumps memory at address. "
 																				"It not specify address, dumps all memory for current memory zone: 64 KB for mapped memory on Z80, 16 kb for Spectrum 48KB ROM, etc. "
@@ -2247,6 +2250,23 @@ void remote_esxdos_gof(int misocket)
 			}
 			else {
 				escribir_socket_format(misocket,"%d (file) Name: %s Full Path: %s\n",i,esxdos_fopen_files[i].debug_name,esxdos_fopen_files[i].debug_fullpath);
+			}
+		}
+	}
+
+}
+
+void remote_qdos_gof(int misocket)
+{
+	int i;
+
+	for (i=0;i<QLTRAPS_MAX_OPEN_FILES;i++) {
+		if (qltraps_fopen_files[i].open_file.v) {
+			if (qltraps_fopen_files[i].is_a_directory.v) {
+				escribir_socket_format(misocket,"%d (dir) Name: %s\n",i,qltraps_fopen_files[i].qltraps_handler_last_dir_open);
+			}
+			else {
+				escribir_socket_format(misocket,"%d (file) Name: %s Full Path: %s\n",i,qltraps_fopen_files[i].debug_name,qltraps_fopen_files[i].debug_fullpath);
 			}
 		}
 	}
@@ -4174,7 +4194,6 @@ void interpreta_comando(char *comando,int misocket)
   }
 
 
-
   else if (!strcmp(comando_sin_parametros,"evaluate") || !strcmp(comando_sin_parametros,"e")) {
     if (parametros[0]==0) {
       escribir_socket(misocket,"Error. No expression");
@@ -4892,6 +4911,12 @@ void interpreta_comando(char *comando,int misocket)
 		}
 
 	}	
+
+
+	else if (!strcmp(comando_sin_parametros,"qdos-get-open-files") || !strcmp(comando_sin_parametros,"qlgof")) {
+		if (!MACHINE_IS_QL) escribir_socket(misocket,"Error. Machine is not QL");
+		else remote_qdos_gof(misocket);
+  }
 
 	else if (!strcmp(comando_sin_parametros,"read-memory")) {
 		unsigned int inicio=0;

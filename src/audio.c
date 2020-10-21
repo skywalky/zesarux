@@ -914,230 +914,135 @@ B9 	15804.264 	2.2
 //sacamos la lista con: cat audio.c|sed 's/\..*//'|awk '{printf "\{\"%s\",%s\},\n",$1,$2}'
 
 nota_musical tabla_notas_musicales[MAX_NOTAS_MUSICALES]={
-{"C0",16,-1},
-{"C#0",17,-1},
-{"D0",18,-1},
-{"D#0",19,-1},
-{"E0",20,-1},
-{"F0",21,-1},
-{"F#0",23,-1},
-{"G0",24,-1},
-{"G#0",25,-1},
-{"A0",27,-1},
-{"A#0",29,-1},
-{"B0",30,-1},
-{"C1",32,-1},
-{"C#1",34,-1},
-{"D1",36,-1},
-{"D#1",38,-1},
-{"E1",41,255}, //inventado este
-{"F1",43,252}, //De aqui hasta el A3 esta obtenido de playscale
-{"F#1",46,237},
-{"G1",49,223},
-{"G#1",51,210},
-{"A1",55,198},
-{"A#1",58,186},
-{"B1",61,175},
-{"C2",65,164},
-{"C#2",69,155},
-{"D2",73,145},
-{"D#2",77,137},
-{"E2",82,128},
-{"F2",87,121},
-{"F#2",92,113},
-{"G2",98,106},
-{"G#2",103,100},
-{"A2",110,93},
-{"A#2",116,88},
-{"B2",123,82},
-{"C3",130,77},
-{"C#3",138,72},
-{"D3",146,67},
-{"D#3",155,63},
-{"E3",164,59},
-{"F3",174,55},
-{"F#3",185,51},
-{"G3",196,48},
-{"G#3",207,45},
+{"C0",16},
+{"C#0",17},
+{"D0",18},
+{"D#0",19},
+{"E0",20},
+{"F0",21},
+{"F#0",23},
+{"G0",24},
+{"G#0",25},
+{"A0",27},
+{"A#0",29},
+{"B0",30},
+{"C1",32},
+{"C#1",34},
+{"D1",36},
+{"D#1",38},
+{"E1",41}, 
+{"F1",43}, 
+{"F#1",46},
+{"G1",49},
+{"G#1",51},
+{"A1",55},
+{"A#1",58},
+{"B1",61},
+{"C2",65},
+{"C#2",69},
+{"D2",73},
+{"D#2",77},
+{"E2",82},
+{"F2",87},
+{"F#2",92},
+{"G2",98},
+{"G#2",103},
+{"A2",110},
+{"A#2",116},
+{"B2",123},
+{"C3",130},
+{"C#3",138},
+{"D3",146},
+{"D#3",155},
+{"E3",164},
+{"F3",174},
+{"F#3",185},
+{"G3",196},
+{"G#3",207},
 
-//Desde aqui en adelante son valores reales para pitch QL. Los anteriores son obtenidos desde playscale
-{"A3",220,41},
-{"A#3",233,38},
-{"B3",246,36},
 
-{"C4",261,33},
-{"C#4",277,31},
-{"D4",293,28},
-{"D#4",311,26},
-{"E4",329,24},
+{"A3",220},
+{"A#3",233},
+{"B3",246},
 
-{"F4",349,22},
-{"F#4",369,20},
-{"G4",392,19},
-{"G#4",415,17},
-{"A4",440,15},
-{"A#4",466,14},
-{"B4",493,12},
-{"C5",523,11},
-{"C#5",554,10},
-{"D5",587,9},
-{"D#5",622,8},
-{"E5",659,7},
-{"F5",698,6},
-{"F#5",739,5},
-{"G5",783,4},
-{"G#5",830,3},
-{"A5",880,2},
-{"A#5",932,1},
-{"B5",987,1},
-{"C6",1046,0},
+{"C4",261},
+{"C#4",277},
+{"D4",293},
+{"D#4",311},
+{"E4",329},
 
-//Fin valores pitch QL
-{"C#6",1108,-1},
-{"D6",1174,-1},
-{"D#6",1244,-1},
-{"E6",1318,-1},
-{"F6",1396,-1},
-{"F#6",1479,-1},
-{"G6",1567,-1},
-{"G#6",1661,-1},
-{"A6",1760,-1},
-{"A#6",1864,-1},
-{"B6",1975,-1},
-{"C7",2093,-1},
-{"C#7",2217,-1},
-{"D7",2349,-1},
-{"D#7",2489,-1},
-{"E7",2637,-1},
-{"F7",2793,-1},
-{"F#7",2959,-1},
-{"G7",3135,-1},
-{"G#7",3322,-1},
-{"A7",3520,-1},
-{"A#7",3729,-1},
-{"B7",3951,-1},
-{"C8",4186,-1},
-{"C#8",4434,-1},
-{"D8",4698,-1},
-{"D#8",4978,-1},
-{"E8",5274,-1},
-{"F8",5587,-1},
-{"F#8",5919,-1},
-{"G8",6271,-1},
-{"G#8",6644,-1},
-{"A8",7040,-1},
-{"A#8",7458,-1},
-{"B8",7902,-1},
-{"C9",8372,-1},
-{"C#9",8869,-1},
-{"D9",9397,-1},
-{"D#9",9956,-1},
-{"E9",10548,-1},
-{"F9",11175,-1},
-{"F#9",11839,-1},
-{"G9",12543,-1},
-{"G#9",13289,-1},
-{"A9",14080,-1},
-{"A#9",14917,-1},
-{"B9",15804,-1}
+{"F4",349},
+{"F#4",369},
+{"G4",392},
+{"G#4",415},
+{"A4",440},
+{"A#4",466},
+{"B4",493},
+{"C5",523},
+{"C#5",554},
+{"D5",587},
+{"D#5",622},
+{"E5",659},
+{"F5",698},
+{"F#5",739},
+{"G5",783},
+{"G#5",830},
+{"A5",880},
+{"A#5",932},
+{"B5",987},
+{"C6",1046},
+
+{"C#6",1108},
+{"D6",1174},
+{"D#6",1244},
+{"E6",1318},
+{"F6",1396},
+{"F#6",1479},
+{"G6",1567},
+{"G#6",1661},
+{"A6",1760},
+{"A#6",1864},
+{"B6",1975},
+{"C7",2093},
+{"C#7",2217},
+{"D7",2349},
+{"D#7",2489},
+{"E7",2637},
+{"F7",2793},
+{"F#7",2959},
+{"G7",3135},
+{"G#7",3322},
+{"A7",3520},
+{"A#7",3729},
+{"B7",3951},
+{"C8",4186},
+{"C#8",4434},
+{"D8",4698},
+{"D#8",4978},
+{"E8",5274},
+{"F8",5587},
+{"F#8",5919},
+{"G8",6271},
+{"G#8",6644},
+{"A8",7040},
+{"A#8",7458},
+{"B8",7902},
+{"C9",8372},
+{"C#9",8869},
+{"D9",9397},
+{"D#9",9956},
+{"E9",10548},
+{"F9",11175},
+{"F#9",11839},
+{"G9",12543},
+{"G#9",13289},
+{"A9",14080},
+{"A#9",14917},
+{"B9",15804}
 };
 
-/*
-
-Nota para la tabla de pitch de QL
-
-Sabemos que un C4 es 33 de pitch, y tenemos todos estos valores reales:
-
-1510 IF p$="A":p=41
-1512 IF p$="AS":p=38
-1514 IF p$="B":p=36
-1516 IF p$="C":p=33
-1518 IF p$="CS":p=31
-1520 IF p$="D":p=28
-1522 IF p$="DS":p=26
-1524 IF p$="E":p=24
-1526 IF p$="F":p=22
-1528 IF p$="FS":p=20
-1530 IF p$="G":p=19
-1532 IF p$="GS":p=17
-1534 IF p$="a":p=15
-1536 IF p$="as":p=14
-1538 IF p$="b":p=12
-1540 IF p$="c":p=11
-1542 IF p$="cs":p=10
-1544 IF p$="d":p=9
-1546 IF p$="ds":p=8
-1548 IF p$="e":p=7
-1550 IF p$="f":p=6
-1552 IF p$="fs":p=5
-1554 IF p$="g":p=4
-1556 IF p$="gs":p=3
-
-Luego vemos los incrementos, desde pitch 3 hacia arriba y parece haber una relación:
-
-Pitch Incremento_al_siguiente:
-
-3  1
-4  1
-5  1
-6  1
-7  1
-8  1
-9  1
-10 1
-11 1
-12 1
-
-14 2
-15 1
-17 2
-19 2
-20 1
-22 2
-24 2
-26 2
-28 2
-
-31 3
-33 2
-36 3
-38 2
-41 3
-
-Si Miramos el segundo bloque y tercero, podemos ver bloques de 9 notas, con incrementos en el segundo bloque de 2 (casi siempre) y de 3 (casi siempre) en el tecer bloque 
-Dado que no sabemos la tabla real, sacamos nuestras deducciones así:
-
-44 3
-47 3
-50 3
-53 3
-
-El cuarto bloque seria de 9 notas igualmente, sumando 4 en todos, excepto 3 en el segundo y cuarta nota.
-Y lo mismo para quinto bloque: sumar 5 en todos excepto 4 en segundo y cuarta nota
-Con este procedimiento int ql_guess_all_notes sacamos los valores por pantalla
-Esta funcion no la uso, solo la use una vez para rellenar la tabla de notas musicales
 
 
-*/
-
-void ql_guess_all_notes(void)
-{
-            int pitch=56;
-        int incremento=4;
-        int i=0;
-
-        int j=0;
-
-        for (i=0;i<8;i++) {
-
-                for (j=0;j<9;j++) {
-                        printf("%d\n",pitch);
-
-                        if (j==1 || j==3) pitch=pitch+(incremento-1);
-                        else pitch=pitch+incremento;
-                }
-        }
-}
 
 //Para si hay que retornar una nota desconocida;
 char *unknown_nota_musical="XX";
@@ -1196,6 +1101,7 @@ char *get_note_name(int frecuencia)
 //Devuelve indice a nota de la que mas se aproxime segun pitch de entrada QL
 //devuelve nombre nota, segun su frecuencia se aproxime lo maximo
 //-1 si no se encuentra
+/*
 int get_note_index_from_ql_pitch(int pitch)
 {
 
@@ -1210,7 +1116,8 @@ int get_note_index_from_ql_pitch(int pitch)
             //dado que los valores de pitch en la tabla van decrementando a medida que avanzamos
             if (valor_tabla<=pitch) {
 
-                return i;
+                if (valor_tabla==pitch) return i;
+                else return -1;
 
               
             }
@@ -1224,7 +1131,19 @@ int get_note_index_from_ql_pitch(int pitch)
     return -1;
 
 }
+*/
+/*
+float aproximate_frequency_from_ql_pitch(int pitch)
+{
+    int a=11447;
+    float b=10.6;
+    float f=a/(pitch+b-0.5);
 
+    return f;
+}
+*/
+
+/*
 int get_note_frequency_from_ql_pitch(int pitch)
 {
     int indice=get_note_index_from_ql_pitch(pitch);
@@ -1232,7 +1151,7 @@ int get_note_frequency_from_ql_pitch(int pitch)
     //Esto no deberia suceder ya, pero por si acaso
     if (indice<0) {
         //printf("indice < 0\n");
-        return 1;
+        return -1;
     }
 
     //Si no es el pitch exacto, hacer una media con el anterior. Siempre que no sea el primer elemento
@@ -1256,6 +1175,7 @@ int get_note_frequency_from_ql_pitch(int pitch)
 
     return frecuencia_final;
 }
+*/
 
 //devuelve nombre nota, segun su indice (igual que el pitch)
 char *get_note_name_by_index(int index)
