@@ -625,7 +625,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
   if (qltraps_fopen_files[indice_canal].has_header_on_read) {
 
       //Leemos esa cabecera, que ya tenemos en la estructura de archivos abiertos
-        printf("Returning header with some of values from file header\n");
+        printf("Returning header (QDOS magic) with some of values from file header\n");
 
 
         //Valores usados de esa cabecera,desde el offset 20:
@@ -685,6 +685,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
   }  
 
     else {
+        printf("Returnig header but file has no header\n");
         //Tipo. 
         ql_writebyte(destino+5,1); //ejecutable 1
 
@@ -1359,14 +1360,10 @@ void handle_trap_fs_headr(void)
     //Si canal es el mio ficticio 100
     int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
     if (indice_canal>=0 ) {
-        //Devolver cabecera. Se supone que el sistema operativo debe asignar espacio para la cabecera? Posiblemente si.
-        //Forzamos meter cabecera en espacio de memoria de pantalla a ver que pasa
-        //ql_get_file_header(ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1));
 
         
         ql_get_file_header(indice_canal,ql_get_a1_after_trap_4() );
-
-        //ql_get_file_header(ql_nombre_archivo_load,131072); //131072=pantalla
+        
 
         ql_restore_d_registers(pre_fs_headr_d,7);
         ql_restore_a_registers(pre_fs_headr_a,6);
