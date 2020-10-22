@@ -1383,6 +1383,7 @@ void handle_trap_fs_headr(void)
         //Decimos que A1 es A1 top of read buffer
         unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
         reg_a1 +=64;
+        //reg_a1 +=14; 
         m68k_set_reg(M68K_REG_A1,reg_a1);
 
 
