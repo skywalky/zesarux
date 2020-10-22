@@ -243,7 +243,6 @@ es problema de esto:
 ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
 que acaba generando mismo valor entero
 
--en ventana debug mostrar registros a4-a7 d4-d7 si es suficientemente grande
 
 -QL opcion para mdv1,mdv2,flp read only
 

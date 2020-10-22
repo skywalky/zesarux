@@ -589,7 +589,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
   if (qltraps_fopen_files[indice_canal].has_header_on_read) {
 
       //Leemos esa cabecera, que ya tenemos en la estructura de archivos abiertos
-        printf("Returning header with some of values from file header\n");
+        //printf("Returning header with some of values from file header\n");
 
 
         //Valores usados de esa cabecera,desde el offset 20:
@@ -603,7 +603,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
         for (i=0;i<10;i++) {
             moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header[20+4+i];
             unsigned int destino_cabecera=destino+5+i;
-            printf("Setting offset %02d value %02XH\n",i,byte_leido);
+            //printf("Setting offset %02d value %02XH\n",i,byte_leido);
 
 
             ql_writebyte(destino_cabecera,byte_leido);
@@ -2244,13 +2244,13 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
                 qltraps_fopen_files[canal].has_header_on_read=1;
 
                 //Leemos esa cabecera
-                    printf("Reading QDOS file header\n");
+                    //printf("Reading QDOS file header\n");
 
                     fread(qltraps_fopen_files[canal].file_header,1,tiene_cabecera,archivo);
 
 
                     //Debug escribir cabecera
-
+                    /*
                     int i;
                     for (i=0;i<tiene_cabecera;i++) {
                         moto_byte byte_leido=qltraps_fopen_files[canal].file_header[i];
@@ -2259,7 +2259,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
                         else printf(" %02XH ",byte_leido);
                     }
                     printf("\n");
-                    
+                    */
+
 
 
             }

@@ -37,6 +37,7 @@ Improved File Browser: added previews for screens (on .scr, .tap, .tzx, .pzx, .t
 Improved QL emulation:
 -Added sound emulation
 -Guessing of file name extension
+-Show all registers on Debug CPU window
 
 Fixed QL bugs:
 -Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes

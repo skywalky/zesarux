@@ -13227,24 +13227,58 @@ void menu_debug_get_memory_pages(char *s)
 			case 8:
 				 sprintf (textoregistros,"A3 %08X",m68k_get_reg(NULL, M68K_REG_A3) );
 			break;
-
-			//No me caben tantos registros en esta vista... meto 4 de A y 4 de D
-
+            
 			case 9:
-				sprintf (textoregistros,"D0 %08X",m68k_get_reg(NULL, M68K_REG_D0) );
-                        break;
+				 sprintf (textoregistros,"A4 %08X",m68k_get_reg(NULL, M68K_REG_A4) );
+			break;
 
 			case 10:
-				sprintf (textoregistros,"D1 %08X",m68k_get_reg(NULL, M68K_REG_D1) );
-                        break;
+				 sprintf (textoregistros,"A5 %08X",m68k_get_reg(NULL, M68K_REG_A5) );
+			break;
 
 			case 11:
-				sprintf (textoregistros,"D2 %08X",m68k_get_reg(NULL, M68K_REG_D2) );
-                        break;
+				 sprintf (textoregistros,"A6 %08X",m68k_get_reg(NULL, M68K_REG_A6) );
+			break;
 
 			case 12:
+				 sprintf (textoregistros,"A7 %08X",m68k_get_reg(NULL, M68K_REG_A7) );
+			break;
+
+
+            //Estos solo para Motorola
+
+			case 13:
+				sprintf (textoregistros,"D0 %08X",m68k_get_reg(NULL, M68K_REG_D0) );
+            break;
+
+			case 14:
+				sprintf (textoregistros,"D1 %08X",m68k_get_reg(NULL, M68K_REG_D1) );
+            break;
+
+			case 15:
+				sprintf (textoregistros,"D2 %08X",m68k_get_reg(NULL, M68K_REG_D2) );
+            break;
+
+			case 16:
 				sprintf (textoregistros,"D3 %08X",m68k_get_reg(NULL, M68K_REG_D3) );
-                        break;
+            break;
+
+			case 17:
+				sprintf (textoregistros,"D4 %08X",m68k_get_reg(NULL, M68K_REG_D4) );
+            break;
+
+			case 18:
+				sprintf (textoregistros,"D5 %08X",m68k_get_reg(NULL, M68K_REG_D5) );
+            break;
+
+			case 19:
+				sprintf (textoregistros,"D6 %08X",m68k_get_reg(NULL, M68K_REG_D6) );
+            break;
+
+			case 20:
+				sprintf (textoregistros,"D7 %08X",m68k_get_reg(NULL, M68K_REG_D7) );
+            break;            
+            
 
 		}
 	}
@@ -13380,24 +13414,24 @@ void menu_debug_registers_adjust_ptr_on_follow(void)
 void menu_debug_registros_parte_derecha(int linea,char *buffer_linea,int columna_registros,int mostrar_separador)
 {
 
-char buffer_registros[33];
-                                        if (menu_debug_registers_subview_type!=3) {
+    char buffer_registros[33];
+    if (menu_debug_registers_subview_type!=3) {
 
-                                                //Quitar el 0 del final
-                                                int longitud=strlen(buffer_linea);
-                                                buffer_linea[longitud]=32;
+            //Quitar el 0 del final
+            int longitud=strlen(buffer_linea);
+            buffer_linea[longitud]=32;
 
-                                                //Muestra el registro que le corresponde para esta linea
-                                                menu_debug_show_register_line(linea,buffer_registros);
+            //Muestra el registro que le corresponde para esta linea
+            menu_debug_show_register_line(linea,buffer_registros);
 
 
-                                                //En QL se pega siempre el opcode con los registros. meter espacio
-                                                if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
+            //En QL se pega siempre el opcode con los registros. meter espacio
+            if (CPU_IS_MOTOROLA) buffer_linea[columna_registros-1]=' ';
 
-                                                //Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador para quitar el color seleccionado
-                                                if (mostrar_separador) sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
-												else sprintf(&buffer_linea[columna_registros],"%s",buffer_registros);
-                                        }
+            //Agregar registro que le corresponda. Columna 19 normalmente. Con el || del separador para quitar el color seleccionado
+            if (mostrar_separador) sprintf(&buffer_linea[columna_registros],"||%s",buffer_registros);
+            else sprintf(&buffer_linea[columna_registros],"%s",buffer_registros);
+    }
 }
 
 int menu_debug_registers_print_registers(zxvision_window *w,int linea)
@@ -13704,7 +13738,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 				//Posicion fija para la columna de watches
 				int columna_watches=20;		
 
-				int terminador=0; //Si se ha llegado a algun terminador de linea						
+				int terminador=0; //Si se ha llegado a algun terminador de linea	
 
 				for (i=0;i<total_lineas_debug;i++) {
 

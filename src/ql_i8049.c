@@ -884,7 +884,10 @@ void ql_audio_next_cycle(void)
     //Decrementamos contador sonido si conviene
     //Si es 0, dejarlo tal cual
     if (ql_current_sound_duration!=0) {
+
         ql_current_sound_duration--;
+        silence_detection_counter=0;
+        
         if (ql_current_sound_duration==0) {
             //Silenciar
             //printf("stop sound\n");
