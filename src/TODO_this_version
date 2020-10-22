@@ -242,6 +242,9 @@ estan en subcarpeta editview/
 es problema de esto:
 ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
 que acaba generando mismo valor entero
+Chip de sonido QL se debería hacer como el AY o el SN, para evitar ciertas frecuencias que se repiten
+Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness etc) de momento lo dejo como está
+
 
 
 -QL opcion para mdv1,mdv2,flp read only
@@ -251,5 +254,3 @@ que acaba generando mismo valor entero
 *si pulsar mas de 1 segundo, devolver tecla con repeticiones
 *ver traps de qdos y ipc afectado en esto
 
-
--beeper silence en QL? esta haciendo algo?

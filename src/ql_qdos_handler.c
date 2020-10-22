@@ -467,7 +467,7 @@ int ql_if_file_has_header(unsigned int indice_canal)
     int longitud_magic=strlen(ql_qdos_header_magic);
 
     if (!memcmp(ql_qdos_header_magic,buffer,longitud_magic)) {
-        debug_printf(VERBOSE_DEBUG,"File has header");
+        debug_printf(VERBOSE_DEBUG,"File has QDOS extended header");
 
         //Obtener longitud
         int header_length=buffer[19]*2;
@@ -481,7 +481,47 @@ int ql_if_file_has_header(unsigned int indice_canal)
         }
     }
     else {
-        debug_printf(VERBOSE_DEBUG,"File has no header");
+        //Puede que haya cabecera sin magic, tipo chess_exe
+        /*
+ }
+
+    else {
+        //Tipo. 
+        ql_writebyte(destino+5,1); //ejecutable 1
+
+        //Y leemos tal cual del archivo los primeros 64-6 bytes
+        //Ejemplo del QL chess:
+        /*
+        00000000  60 00 00 1a 00 00 4a fb  00 12 50 73 69 6f 6e 20  |`.....J...Psion |
+        00000010  43 68 65 73 73 20 56 32  2e 30 32 51 41 fa 01 b6  |Chess V2.02QA...|
+        00000020  20 08 42 00 22 40 45 fa  00 30 24 89 30 3c 82 a5  | .B."@E..0$.0<..|
+        00000030  47 fa 01 a2 49 fa 01 36  97 cc 26 0b 91 c3 93 c3  |G...I..6..&.....|
+
+        Vemos que esos datos estan empezando a partir del offset 6
+
+            00  long        file length
+            04  byte        file access key (not yet implemented - currently always zero)
+            05  byte        file type
+            06  8 bytes     file type-dependent information
+            0E  2+36 bytes  filename
+            34 long         reserved for update date (not yet implemented)
+            38 long         reserved for reference date (not yet implemented)
+            3c long         reserved for backup date (not yet implemented)
+        */
+
+       //Buscamos el 4a fb
+        if (buffer[6]==0x4a && buffer[7]==0xfb) {
+            printf("Has normal QDOS header");
+
+            int header_length=QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC;
+            return header_length;
+        }
+
+        else {
+            debug_printf(VERBOSE_DEBUG,"File has no header");
+        }
+
+
     }
 
     return 0;
@@ -609,30 +649,31 @@ https://qlforum.co.uk/viewtopic.php?t=113
             ql_writebyte(destino_cabecera,byte_leido);
         }
 
+
+        //printf("Nombre: %s\n",qltraps_fopen_files[indice_canal].ql_file_name);
+
+        int longitud=strlen(qltraps_fopen_files[indice_canal].ql_file_name);
+
+        //Nombre. 
+        ql_writebyte(destino+0xe,0); //longitud nombre en big endian
+        ql_writebyte(destino+0xf,longitud); //longitud nombre en big endian
+
+
+        for (i=0;i<longitud;i++) {
+            ql_writebyte(destino+0x10+i,qltraps_fopen_files[indice_canal].ql_file_name[i]);
+        }        
+
   }
 
     else {
-    //Tipo. TODO
-    ql_writebyte(destino+5,0); //ejecutable 1
+        //Tipo. 
+        ql_writebyte(destino+5,1); //ejecutable 1
 
 
     }
 
 
-  //printf("Nombre: %s\n",qltraps_fopen_files[indice_canal].ql_file_name);
 
-  int longitud=strlen(qltraps_fopen_files[indice_canal].ql_file_name);
-
-  //Nombre. 
-  ql_writebyte(destino+0xe,0); //longitud nombre en big endian
-  ql_writebyte(destino+0xf,longitud); //longitud nombre en big endian
-
-
-  for (i=0;i<longitud;i++) {
-	  ql_writebyte(destino+0x10+i,qltraps_fopen_files[indice_canal].ql_file_name[i]);
-  }
-
-  //Falta el "default size of the data space for the program" ?
 
 
 }
@@ -2246,7 +2287,24 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
                 //Leemos esa cabecera
                     //printf("Reading QDOS file header\n");
 
-                    fread(qltraps_fopen_files[canal].file_header,1,tiene_cabecera,archivo);
+                    //Si cabecera es sin magic, leer especial
+                    if (tiene_cabecera==QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC) {
+                        /*
+                        del archivo nos faltan los 6 primeros
+                                    00  long        file length
+            04  byte        file access key (not yet implemented - currently always zero)
+            05  byte        file type
+            06  8 bytes     file type-dependent information
+                        Tenemos a partir del offset 06
+                        */
+
+                       //Saltamos los 20 de magic y los 6 que no tenemos
+                       fread(&qltraps_fopen_files[canal].file_header[20+6],1,tiene_cabecera,archivo);
+                    }
+
+                    else {
+                        fread(qltraps_fopen_files[canal].file_header,1,tiene_cabecera,archivo);
+                    }
 
 
                     //Debug escribir cabecera

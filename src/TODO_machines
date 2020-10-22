@@ -2,7 +2,7 @@
 --- QL ---
 
 *cpu stats: quiza no porque hay mas instrucciones que z80....
--Soporte microdrive / floppy QL
+-Soporte microdrive / floppy QL real
 -Que QL, cuando busque un archivo, lo haga todo en minusculas y tambien todo en mayusculas
 -Soft QL
 http://www.rwapadventures.com/ql_wiki/index.php?title=Sinclair%20QL%20Home%20Computer&lang=en
@@ -50,12 +50,6 @@ Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spa
 
 
 
--solo cambiar en la ruta de archivos de ql, la primera _ empezando por la derecha es un ".", sin tener en cuenta logicamente el mdv1_
-Necesario?? si se pone ruta entre comillas no hay que cambiar los . en el basic por _
-casos antonimos:
-archivo se llama mouse_bin y hace lbytes mdv1_mouse_bin  -> lo raro
-archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
-
 -tema mayusculas/ minusculas en ql solo funciona directo en mac... que pasa con windows? y mac?
 
 
@@ -63,12 +57,13 @@ archivo se llama spacepods.bas y hace lbytes mdv1_spacepods_bas -> lo normal
 Problema que en esos archivos objetos se ha perdido la cabecera de 64 bytes (en los zip viene incluida pero al descomprimir se pierde)
 
 
+-Chip de sonido QL se debería hacer como el AY o el SN, para evitar ciertas frecuencias que se repiten
+Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness etc) de momento lo dejo como está
 
 
 
 -get-stack-backtrace para motorola. hay que tener uno para el user stack (usp) y el otro para el stack de (sp)
 
--sonido y otros comandos parece que a veces dejan el ipc en estado inconsistente. Quiza tambien por eso algunos juegos, como el spacepods, se cuelga despues de una partida
 
 -debug y otros items de menu preparados para QL. condiciones peek/poke de debug en QL no funcionan en teoria
 -funciones peek, poke punteros a funciones legacy. luego con el tiempo hacer que las de ql llamen a las que sean correspondientes
@@ -80,7 +75,6 @@ Quizá no funciona bien en ql en el momento que se activa debug
 NO. Dado que no usa peek byte y poke normales sino que tiene funciones propias a las que no le afecta el nested de peek y poke. 
 Solo le afecta el nested del core cpu
 
--parpadeo de cursor
 -resolucion esta ok pero tamanyo pantalla deberia ser 4:3. hacer escalado chungo...
 
 -algunos archivos de juegos vienen con QDOS file header:
