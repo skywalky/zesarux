@@ -615,6 +615,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
 	unsigned int tamanyo=qltraps_fopen_files[indice_canal].last_file_buf_stat.st_size;
 
   //Guardar tamanyo big endian
+  //TODO: deberia restar el tamano de la cabecera: de la que tiene firma Magic o la que no tiene?
   ql_writebyte(destino+0,(tamanyo>>24)&255);
   ql_writebyte(destino+1,(tamanyo>>16)&255);
   ql_writebyte(destino+2,(tamanyo>>8)&255);
@@ -668,9 +669,9 @@ https://qlforum.co.uk/viewtopic.php?t=113
       //Nos faltan los 6 primeros
         int i;
         for (i=0;i<QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC;i++) {
-            moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header[i];
+            moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header_nomagic[i];
             unsigned int destino_cabecera=destino+6+i;
-            printf("Setting offset %02d value %02XH\n",i,byte_leido);
+            printf("Setting add %0XH value %02XH\n",destino_cabecera,byte_leido);
 
 
             ql_writebyte(destino_cabecera,byte_leido);
@@ -2319,7 +2320,6 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
                         Tenemos a partir del offset 06
                         */
 
-                       //Saltamos los 20 de magic y los 6 que no tenemos
                        fread(qltraps_fopen_files[canal].file_header_nomagic,1,tiene_cabecera,archivo);
                     }
 

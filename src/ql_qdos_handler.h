@@ -68,12 +68,14 @@ extern int ql_previous_trap_was_4;
 #define QL_POSSIBLE_HEADER_LENGTH_ONE 30
 #define QL_POSSIBLE_HEADER_LENGTH_TWO 44
 
+#define QL_MAX_FILE_HEADER_LENGTH QL_POSSIBLE_HEADER_LENGTH_TWO
+
 #define QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC (64-6)
 
-//#define QL_MAX_FILE_HEADER_LENGTH QL_POSSIBLE_HEADER_LENGTH_TWO
+
 
 //64-6 cuando no hay magic
-#define QL_MAX_FILE_HEADER_LENGTH QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC
+//#define QL_MAX_FILE_HEADER_LENGTH QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC
 
 struct s_qltraps_fopen {
 
@@ -125,7 +127,7 @@ struct s_qltraps_fopen {
         moto_byte file_header[QL_MAX_FILE_HEADER_LENGTH+100]; //+100 temporal        
 
         //The headers ZEsarUX supports can be 30 bytes or 44 bytes long
-        moto_byte file_header_nomagic[QL_MAX_FILE_HEADER_LENGTH+100]; //+100 temporal                
+        moto_byte file_header_nomagic[QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC]; //+100 temporal                
 };
 
 extern struct s_qltraps_fopen qltraps_fopen_files[];
