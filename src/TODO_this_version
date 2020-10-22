@@ -254,3 +254,11 @@ Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness 
 *si pulsar mas de 1 segundo, devolver tecla con repeticiones
 *ver traps de qdos y ipc afectado en esto
 
+-probar exec con cabecera estandard
+chess_exe
+games/Fives
+einstein
+k&g
+locricket
+
+-abrir menu deja teclado raro? probar con spaceinv o spook por ejemplo
