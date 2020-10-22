@@ -482,12 +482,7 @@ int ql_if_file_has_header(unsigned int indice_canal)
     }
     else {
         //Puede que haya cabecera sin magic, tipo chess_exe
-        /*
- }
-
-    else {
-        //Tipo. 
-        ql_writebyte(destino+5,1); //ejecutable 1
+        
 
         //Y leemos tal cual del archivo los primeros 64-6 bytes
         //Ejemplo del QL chess:
@@ -511,7 +506,7 @@ int ql_if_file_has_header(unsigned int indice_canal)
 
        //Buscamos el 4a fb
         if (buffer[6]==0x4a && buffer[7]==0xfb) {
-            printf("Has normal QDOS header");
+            printf("Has normal QDOS header\n");
 
             int header_length=QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC;
             return header_length;
@@ -629,7 +624,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
   if (qltraps_fopen_files[indice_canal].has_header_on_read) {
 
       //Leemos esa cabecera, que ya tenemos en la estructura de archivos abiertos
-        //printf("Returning header with some of values from file header\n");
+        printf("Returning header with some of values from file header\n");
 
 
         //Valores usados de esa cabecera,desde el offset 20:
@@ -643,12 +638,12 @@ https://qlforum.co.uk/viewtopic.php?t=113
         for (i=0;i<10;i++) {
             moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header[20+4+i];
             unsigned int destino_cabecera=destino+5+i;
-            //printf("Setting offset %02d value %02XH\n",i,byte_leido);
+            printf("Setting offset %02d value %02XH\n",i,byte_leido);
 
 
             ql_writebyte(destino_cabecera,byte_leido);
         }
-
+ 
 
         //printf("Nombre: %s\n",qltraps_fopen_files[indice_canal].ql_file_name);
 
@@ -664,6 +659,29 @@ https://qlforum.co.uk/viewtopic.php?t=113
         }        
 
   }
+
+  //Ver si tiene cabecera el archivo
+  else if (qltraps_fopen_files[indice_canal].has_header_no_magic_on_read) {
+
+      printf("Returning header with some of values from file header. NO MAGIC\n");
+
+      //Nos faltan los 6 primeros
+        int i;
+        for (i=0;i<QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC;i++) {
+            moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header[i];
+            unsigned int destino_cabecera=destino+6+i;
+            printf("Setting offset %02d value %02XH\n",i,byte_leido);
+
+
+            ql_writebyte(destino_cabecera,byte_leido);
+        }
+ 
+
+
+        //Tipo. 
+        ql_writebyte(destino+5,1); //ejecutable 1         
+
+  }  
 
     else {
         //Tipo. 
@@ -2251,6 +2269,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
     //Asumimos que no tiene cabecera al leerlo
     qltraps_fopen_files[canal].has_header_on_read=0;
+    qltraps_fopen_files[canal].has_header_no_magic_on_read=0;
 
 	if (!es_dispositivo) {
 		//Indicar file handle
@@ -2282,13 +2301,15 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
             int tiene_cabecera=ql_if_file_has_header(canal);
 
             if (tiene_cabecera) {
-                qltraps_fopen_files[canal].has_header_on_read=1;
+                
 
                 //Leemos esa cabecera
                     //printf("Reading QDOS file header\n");
 
                     //Si cabecera es sin magic, leer especial
                     if (tiene_cabecera==QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC) {
+
+                        qltraps_fopen_files[canal].has_header_no_magic_on_read=1;
                         /*
                         del archivo nos faltan los 6 primeros
                                     00  long        file length
@@ -2299,10 +2320,11 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
                         */
 
                        //Saltamos los 20 de magic y los 6 que no tenemos
-                       fread(&qltraps_fopen_files[canal].file_header[20+6],1,tiene_cabecera,archivo);
+                       fread(qltraps_fopen_files[canal].file_header_nomagic,1,tiene_cabecera,archivo);
                     }
 
                     else {
+                        qltraps_fopen_files[canal].has_header_on_read=1;
                         fread(qltraps_fopen_files[canal].file_header,1,tiene_cabecera,archivo);
                     }
 

@@ -118,8 +118,14 @@ struct s_qltraps_fopen {
         //Si tiene cabecera al abrirlo. se guardara en file_header
         int has_header_on_read;
 
+        //Si tiene cabecera sin magic abrirlo. se guardara en file_header_nomagic
+        int has_header_no_magic_on_read;        
+
         //The headers ZEsarUX supports can be 30 bytes or 44 bytes long
         moto_byte file_header[QL_MAX_FILE_HEADER_LENGTH+100]; //+100 temporal        
+
+        //The headers ZEsarUX supports can be 30 bytes or 44 bytes long
+        moto_byte file_header_nomagic[QL_MAX_FILE_HEADER_LENGTH+100]; //+100 temporal                
 };
 
 extern struct s_qltraps_fopen qltraps_fopen_files[];
