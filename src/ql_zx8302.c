@@ -210,6 +210,8 @@ unsigned char ql_mc_stat;
 void ql_debug_port(unsigned int Address)
 {
 	return;
+
+
 	switch (Address) {
 		case 0x18000:
 		printf ("	PC_CLOCK		Real-time clock (Long word)\n\n");
@@ -259,22 +261,12 @@ void ql_debug_port(unsigned int Address)
 void ql_zx8032_write(unsigned int Address, unsigned char Data)
 {
 	
-		if (Address==0x18003) {
-                //printf ("writing i/o %X value %X\n",Address,Data);
-								ql_ipc_reading_bit_ready=0;
-								ql_debug_port(Address);
-								//sleep(1);
-		}
-		else {
-			ql_debug_port(Address);
-		}
-
 
 	int anterior_video_mode;
 
 	switch (Address) {
 
-  	case    0x18003:
+  	    case 0x18003:
 			//printf ("Escribiendo IPC. Valor: %02XH PC=%06XH\n",Data,get_pc_register() );
 			ql_write_ipc(Data);
 
@@ -344,24 +336,9 @@ The bit assignments correspond to the ones when the register is read:
 moto_byte ql_zx8032_readbyte(unsigned int Address)
 {
 
-	if (Address==0x18020) {
-	    //printf ("Reading i/o %X\n",Address);
-			ql_debug_port(Address);
-			//sleep(1);
-		}
-
-
-		else {
-			ql_debug_port(Address);
-		}
-
-
-
 
 	unsigned char valor_retorno=0;
 
-	//temporal
-	//return 255;
 
     long timer_seconds;
 

@@ -246,3 +246,11 @@ que acaba generando mismo valor entero
 -en ventana debug mostrar registros a4-a7 d4-d7 si es suficientemente grande
 
 -QL opcion para mdv1,mdv2,flp read only
+
+-QL mejorar teclado y repeticiones:
+*si pulsar menos de 1 segundo, devolver esa tecla y ninguna mas en ese segundo
+*si pulsar mas de 1 segundo, devolver tecla con repeticiones
+*ver traps de qdos y ipc afectado en esto
+
+
+-beeper silence en QL? esta haciendo algo?

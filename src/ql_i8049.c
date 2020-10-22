@@ -89,27 +89,25 @@ int i8049_chip_present=0;
 
 moto_int ql_current_sound_duration=0;
 
-//unsigned char ql_audio_pitch=0;
-//unsigned char ql_audio_pitch_counter_current=0;
 
-    /*
-    Formato del mensaje ipc:
+/*
+Formato del mensaje ipc de enviar sonido:
 
-    8 bits pitch 1
-    8 bits pitch 2
-    16 bits  interval between steps (grad_x)
-    16 bits duration
-    4 bits step in pitch (grad_y)
-    4 bits wrap
-    4 bits randomness of step
-    4 bits fuzziness
+8 bits pitch 1
+8 bits pitch 2
+16 bits  interval between steps (grad_x)
+16 bits duration
+4 bits step in pitch (grad_y)
+4 bits wrap
+4 bits randomness of step
+4 bits fuzziness
 
-    no reply
+no reply
 
-    Para aproximar, cada "duration" es un scanline
+Para aproximar, cada "duration" es un scanline
 
 
-    */
+*/
 
 unsigned char ql_audio_pitch1;
 unsigned char ql_audio_pitch2;
@@ -130,8 +128,7 @@ moto_int ql_audio_pitch_counter_current=0;
 int ql_audio_output_bit=0;
 int ql_audio_playing=0;
 
-//TODO
-const int ql_i8049_sound_chip_frequency=11000;
+const int ql_i8049_sound_chip_frequency=11000000;
 
 
 
@@ -421,7 +418,7 @@ void ql_ipc_write_ipc_teclado(void)
 	int fila;
 
 
-int i;
+    int i;
 	//Si tecla no pulsada
 	//if ((puerto_49150&1)) {
 	if (!ql_pulsado_tecla()) {
@@ -429,70 +426,73 @@ int i;
 	}
 
 
-ql_return_columna_fila_puertos(&columna,&fila);
-int tecla_shift=0;
-int tecla_control=0;
-int tecla_alt=0;
+    ql_return_columna_fila_puertos(&columna,&fila);
+    int tecla_shift=0;
+    int tecla_control=0;
+    int tecla_alt=0;
 
 
-if ( (columna>=0 && fila>=0) || ql_pressed_backspace) {
-	if (ql_mantenido_pulsada_tecla==0 || (ql_mantenido_pulsada_tecla==1 && ql_mantenido_pulsada_tecla_timer>=50) )  {
-		if (ql_mantenido_pulsada_tecla==0) {
-			ql_mantenido_pulsada_tecla=1;
-			ql_mantenido_pulsada_tecla_timer=0;
-		}
+    if ( (columna>=0 && fila>=0) || ql_pressed_backspace) {
+        
+        if (ql_mantenido_pulsada_tecla==0 || (ql_mantenido_pulsada_tecla==1 && ql_mantenido_pulsada_tecla_timer>=50) )  {
+            if (ql_mantenido_pulsada_tecla==0) {
+                ql_mantenido_pulsada_tecla=1;
+                ql_mantenido_pulsada_tecla_timer=0;
+            }
 
 
-		if (ql_pressed_backspace) {
-			//CTRL + flecha izquierda
-			tecla_control=1;
-			// 6|   Ret   Left     Up    Esc  Right      \  Space   Down
-			fila=6;
-			columna=1;
+            if (ql_pressed_backspace) {
+                //CTRL + flecha izquierda
+                tecla_control=1;
+                // 6|   Ret   Left     Up    Esc  Right      \  Space   Down
+                fila=6;
+                columna=1;
 
-		}
+            }
 
-		//printf ("------fila %d columna %d\n",fila,columna);
-		unsigned char byte_tecla=((fila&7)<<3) | (columna&7);
-
-
-
-		ql_ipc_last_nibble_to_read[2]=(byte_tecla>>4)&15;
-		ql_ipc_last_nibble_to_read[3]=(byte_tecla&15);
-
-		if ((ql_keyboard_table[7]&1)==0) tecla_shift=1;
-		if ((ql_keyboard_table[7]&2)==0) tecla_control=1;
-		if ((ql_keyboard_table[7]&4)==0) tecla_alt=1;
+            //printf ("------fila %d columna %d\n",fila,columna);
+            unsigned char byte_tecla=((fila&7)<<3) | (columna&7);
 
 
-		ql_ipc_last_nibble_to_read[1]=0;  //lsca
-		if (tecla_shift) ql_ipc_last_nibble_to_read[1] |=4;
-		if (tecla_control) ql_ipc_last_nibble_to_read[1] |=2;
-		if (tecla_alt) ql_ipc_last_nibble_to_read[1] |=1;
+
+            ql_ipc_last_nibble_to_read[2]=(byte_tecla>>4)&15;
+            ql_ipc_last_nibble_to_read[3]=(byte_tecla&15);
+
+            if ((ql_keyboard_table[7]&1)==0) tecla_shift=1;
+            if ((ql_keyboard_table[7]&2)==0) tecla_control=1;
+            if ((ql_keyboard_table[7]&4)==0) tecla_alt=1;
 
 
-	}
-	else {
-		//debug_printf (VERBOSE_PARANOID,"Repeating key");
-		ql_ipc_last_nibble_to_read[0]=ql_ipc_last_nibble_to_read[1]=ql_ipc_last_nibble_to_read[2]=ql_ipc_last_nibble_to_read[3]=ql_ipc_last_nibble_to_read[4]=ql_ipc_last_nibble_to_read[5]=0;
-	}
-}
-else {
-	//debug_printf (VERBOSE_PARANOID,"Unknown key");
-	ql_mantenido_pulsada_tecla=0;
-	ql_ipc_last_nibble_to_read[0]=ql_ipc_last_nibble_to_read[1]=ql_ipc_last_nibble_to_read[2]=ql_ipc_last_nibble_to_read[3]=ql_ipc_last_nibble_to_read[4]=0;
-}
+            ql_ipc_last_nibble_to_read[1]=0;  //lsca
+            if (tecla_shift) ql_ipc_last_nibble_to_read[1] |=4;
+            if (tecla_control) ql_ipc_last_nibble_to_read[1] |=2;
+            if (tecla_alt) ql_ipc_last_nibble_to_read[1] |=1;
 
 
-				ql_ipc_last_nibble_to_read_mascara=8;
-				ql_ipc_last_nibble_to_read_index=0;
-				ql_ipc_last_nibble_to_read_length=5; //5;
+        }
+        else {
+            //debug_printf (VERBOSE_PARANOID,"Repeating key");
+            ql_ipc_last_nibble_to_read[0]=ql_ipc_last_nibble_to_read[1]=ql_ipc_last_nibble_to_read[2]=ql_ipc_last_nibble_to_read[3]=ql_ipc_last_nibble_to_read[4]=ql_ipc_last_nibble_to_read[5]=0;
+        }
+    }
 
-					//printf ("Ultimo pc_intr: %d\n",temp_pcintr);
 
-				for (i=0;i<ql_ipc_last_nibble_to_read_length;i++) {
-					//debug_printf (VERBOSE_PARANOID,"Return IPC values:[%d] = %02XH",i,ql_ipc_last_nibble_to_read[i]);
-				}
+    else {
+        //debug_printf (VERBOSE_PARANOID,"Unknown key");
+        ql_mantenido_pulsada_tecla=0;
+        ql_ipc_last_nibble_to_read[0]=ql_ipc_last_nibble_to_read[1]=ql_ipc_last_nibble_to_read[2]=ql_ipc_last_nibble_to_read[3]=ql_ipc_last_nibble_to_read[4]=0;
+    }
+
+
+    ql_ipc_last_nibble_to_read_mascara=8;
+    ql_ipc_last_nibble_to_read_index=0;
+    ql_ipc_last_nibble_to_read_length=5; //5;
+
+        //printf ("Ultimo pc_intr: %d\n",temp_pcintr);
+
+    for (i=0;i<ql_ipc_last_nibble_to_read_length;i++) {
+        //debug_printf (VERBOSE_PARANOID,"Return IPC values:[%d] = %02XH",i,ql_ipc_last_nibble_to_read[i]);
+    }
 
 }
 
@@ -503,14 +503,14 @@ else {
 void ql_ipc_write_ipc_read_keyrow(int row)
 {
 
-/*
-kbdr_cmd equ    9       keyboard direct read
-* kbdr_cmd requires one nibble which selects the row to be read.
-* The top bit of this is ignored (at least on standard IPC's...).
-* It responds with a byte whose bits indicate which of the up to eight keys on
-* the specified row of the keyrow table are held down. */
+    /*
+    kbdr_cmd equ    9       keyboard direct read
+    * kbdr_cmd requires one nibble which selects the row to be read.
+    * The top bit of this is ignored (at least on standard IPC's...).
+    * It responds with a byte whose bits indicate which of the up to eight keys on
+    * the specified row of the keyrow table are held down. */
 
-//De momento nada
+    //De momento nada
 
 	//unsigned char temp_resultado=0;
 
@@ -539,11 +539,11 @@ kbdr_cmd equ    9       keyboard direct read
 
 	debug_printf (VERBOSE_PARANOID,"Reading ipc command 9: read keyrow. row %d returning %02XH",row,resultado_row);
 
-		ql_ipc_last_nibble_to_read[0]=(resultado_row>>4)&15;
-		ql_ipc_last_nibble_to_read[1]=resultado_row&15;
-			ql_ipc_last_nibble_to_read_mascara=8;
-			ql_ipc_last_nibble_to_read_index=0;
-			ql_ipc_last_nibble_to_read_length=2;
+    ql_ipc_last_nibble_to_read[0]=(resultado_row>>4)&15;
+    ql_ipc_last_nibble_to_read[1]=resultado_row&15;
+    ql_ipc_last_nibble_to_read_mascara=8;
+    ql_ipc_last_nibble_to_read_index=0;
+    ql_ipc_last_nibble_to_read_length=2;
 
 
 }
@@ -571,24 +571,15 @@ unsigned char ql_read_ipc(void)
 {
 
 
-//Temporal
-//temp_read_ipc ^=64;
 
 	unsigned char valor_retorno=0;
 
-	//printf ("Valor temporal reading ipc: %d\n",ql_ipc_last_nibble_to_read[0]);
-/*
-        ql_ipc_last_nibble_to_read_index;
-        ql_ipc_last_nibble_to_read_length;
-*/
 
 	//Ir alternando valor retornado
 	if (ql_ipc_reading_bit_ready==0) {
 		ql_ipc_reading_bit_ready=1;
 		return 0;
 	}
-
-	//else ql_ipc_reading_bit_ready=0;
 
 
 
@@ -608,15 +599,9 @@ unsigned char ql_read_ipc(void)
 		if (ql_ipc_last_nibble_to_read_index>=ql_ipc_last_nibble_to_read_length) ql_ipc_last_nibble_to_read_index=0; //Si llega al final, dar la vuelta
 		//if (ql_ipc_last_nibble_to_read_index>=ql_ipc_last_nibble_to_read_length) ql_ipc_last_nibble_to_read_index=ql_ipc_last_nibble_to_read_length; //dejarlo al final
 	}
-	//Para no perder nunca el valor. Rotamos mascara
 
-
-	//if (ql_ipc_last_nibble_to_read_index>1) sleep(2);
-
-	//if (valor_retorno) sleep(1);
 
 	return valor_retorno;
-	//return 0;  //De momento eso
 
 
 
@@ -625,6 +610,8 @@ unsigned char ql_read_ipc(void)
 * of the data, once again waiting for bit 6 at pc_ipcrd to go to zero, and
 * then reading bit 7 there as the data bit. The data is received msb first.
 */
+
+
 }
 
 
@@ -646,23 +633,8 @@ int ql_pulsado_tecla(void)
 
 	if (acumulado==255) return 0;
 	return 1;
-	/*
 
-	acumulado=menu_da_todas_teclas();
-
-
-					//Hay tecla pulsada
-					if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
-						return 1;
-					}
-	return 0;*/
 }
-
-//unsigned char temp_stat_cmd;
-//unsigned char temp_contador_tecla_pulsada;
-
-//int temp_columna=0;
-
 
 
 
@@ -828,14 +800,6 @@ void ql_return_fila_columna_tecla(int tecla,int *columna,int *fila)
 	*fila=f;
 }
 
-/*
-89l6ihverantyd
-
-
-*/
-
-
-
 
 
 //Retorna caracter ascii segun tecla pulsada en ql_keyboard_table
@@ -910,23 +874,23 @@ int ql_return_ascii_key_pressed(void)
 void ql_stop_sound(void)
 {
 
-            ql_audio_playing=0;
+    ql_audio_playing=0;
 }
 
 
 void ql_audio_next_cycle(void)
 {
 
-            //Decrementamos contador sonido si conviene
-            //Si es 0, dejarlo tal cual
-            if (ql_current_sound_duration!=0) {
-                ql_current_sound_duration--;
-                if (ql_current_sound_duration==0) {
-                    //Silenciar
-                    printf("stop sound\n");
-                    ql_stop_sound();
-                }
-            }
+    //Decrementamos contador sonido si conviene
+    //Si es 0, dejarlo tal cual
+    if (ql_current_sound_duration!=0) {
+        ql_current_sound_duration--;
+        if (ql_current_sound_duration==0) {
+            //Silenciar
+            //printf("stop sound\n");
+            ql_stop_sound();
+        }
+    }
 }
 
 
@@ -1040,9 +1004,9 @@ void ql_ipc_set_sound_parameters(void)
     ql_audio_fuziness=ql_ipc_sound_command_buffer[15];
              
 
-    printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
-    ql_audio_pitch1,ql_audio_pitch2,ql_audio_interval_steps,ql_audio_duration,
-    ql_audio_step_in_pitch,ql_audio_wrap,ql_audio_randomness_of_step,ql_audio_fuziness);
+    //printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
+    //ql_audio_pitch1,ql_audio_pitch2,ql_audio_interval_steps,ql_audio_duration,
+    //ql_audio_step_in_pitch,ql_audio_wrap,ql_audio_randomness_of_step,ql_audio_fuziness);
 
     //ql_simulate_sound(ql_audio_pitch1,ql_audio_duration);
 
@@ -1057,7 +1021,7 @@ void ql_ipc_set_sound_parameters(void)
     //Es una tabla de 256 elementos. Dado que ql_audio_pitch1 es variable de 8 bits, no hay peligro de salirnos de la tabla
     int frecuencia=ql_pitch_frequency_table[ql_audio_pitch1];
 
-    printf("frecuencia: %d\n",frecuencia);
+    //printf("frecuencia: %d\n",frecuencia);
 
     //Para 7800 hz (15600/2), contador valdra 1
     //Para 3900 Hz, contador valdra 2
@@ -1070,13 +1034,13 @@ void ql_ipc_set_sound_parameters(void)
         ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
     }
 
-    printf("contador: %d\n",ql_audio_pitch_counter_initial);
+    //printf("contador: %d\n",ql_audio_pitch_counter_initial);
 
     ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;
 
     ql_audio_playing=1;
 
-    //sleep (5);
+
 }
 
 int ql_ipc_get_frecuency_sound_value(int pitch)
@@ -1103,6 +1067,9 @@ int ql_ipc_get_frecuency_sound_pitch1(void)
 
 void ql_write_ipc(unsigned char Data)
 {
+
+    ql_ipc_reading_bit_ready=0;
+
 	/*
 	* Commands and data are sent msb first, by writing a byte containg %11x0 to
 	* location pc_ipcwr ($18023), where the "x" is one data bit. Bit 6 at location
@@ -1123,7 +1090,9 @@ void ql_write_ipc(unsigned char Data)
 	ql_ipc_last_write_value=ql_ipc_last_write_value<<1;
 	ql_ipc_last_write_value |=bitdato;
 	ql_ipc_last_write_bits_enviados++;
+
 	if (ql_ipc_last_write_bits_enviados==4) {
+
 			switch (ql_estado_ipc) {
 			  case QL_STATUS_IPC_IDLE:
 					ql_ipc_last_command=ql_ipc_last_write_value&15;
@@ -1143,6 +1112,8 @@ void ql_write_ipc(unsigned char Data)
 						case 1:
 /*
 stat_cmd equ    1       report input status
+
+
 * returns a byte, the bits of which are:
 ipc..kb equ     0       set if data available in keyboard buffer, or key held
 ipc..so equ     1       set if sound is still being generated
@@ -1159,31 +1130,46 @@ ipc..wp equ     6       return state of p26, currently not connected
 
 							//Decir tecla pulsada
 
-							//temp
-							//temp_stat_cmd++;
-							//ql_ipc_last_nibble_to_read[0]=temp_stat_cmd;
 							ql_ipc_last_nibble_to_read[0]=15; //Devolver valor entre 8 y 15 implica que acabara leyendo el teclado
-						        ql_ipc_last_nibble_to_read_mascara=8;
-						        ql_ipc_last_nibble_to_read_index=0;
-						        ql_ipc_last_nibble_to_read_length=1;
+
+                            ql_ipc_last_nibble_to_read_mascara=8;
+                            ql_ipc_last_nibble_to_read_index=0;
+                            ql_ipc_last_nibble_to_read_length=1;
 
 
 							//Si tecla no pulsada
 							if (!ql_pulsado_tecla()) ql_ipc_last_nibble_to_read[0]=4;
 
-							else {
-								//debug_printf (VERBOSE_DEBUG,"Write ipc command 1: Report input status pressed key");
-							}
-							//if ((puerto_49150&1)) ql_ipc_last_nibble_to_read[0]=4;
 
-							//printf ("Valor a retornar: %d\n",ql_ipc_last_nibble_to_read[0]&15);
+                            //Nuevo metodo
+                            ql_ipc_last_nibble_to_read[0]=0;
+
+                            /*
+                            ipc..kb equ     0       set if data available in keyboard buffer, or key held
+                                            3       set if key held down
+                            */
+                            if (ql_pulsado_tecla()) {
+                                ql_ipc_last_nibble_to_read[0] |=1;
+
+                                //Duda de la diferencia entre estos dos bits
+                                ql_ipc_last_nibble_to_read[0] |=8;
+                            }
+
+                            //tecla shift
+                            // bit              2       set if kbd shift setting has changed, with key held
+                            if ((ql_keyboard_table[7]&1)==0) {
+                                //printf("pressed shift\n");
+                                ql_ipc_last_nibble_to_read[0] |=4;
+                            }
+
+                            //Fin Nuevo metodo
 
                             //Bit de beeping
                             if (ql_audio_playing) ql_ipc_last_nibble_to_read[0] |=2;
                             else ql_ipc_last_nibble_to_read[0] &=(255-2);
 
 
-							//sleep(1);
+                            //printf("ipc command stat_cmd\n");
 
 						break;
 
@@ -1225,7 +1211,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 * 4 bits fuziness (none unless msb is set)
 */
 							debug_printf (VERBOSE_PARANOID,"ipc command 10 inso_cmd initiate sound process");
-                            printf ("ipc command 10 inso_cmd initiate sound process\n");
+                            //printf ("ipc command 10 inso_cmd initiate sound process\n");
 							//sleep(5);
                             
                             ql_estado_ipc=QL_STATUS_IPC_WRITING; //Mejor lo desactivo porque si no se queda en estado writing y no sale de ahi
@@ -1246,7 +1232,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 * The actual clock rate is supplied from the PC to the IPC, but this command is
 * also needed in the IPC for timing out transfers!
 						*/
-						ql_estado_ipc=QL_STATUS_IPC_WRITING;
+						    ql_estado_ipc=QL_STATUS_IPC_WRITING;
 						break;
 
                         case 14:
@@ -1275,6 +1261,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 				ql_ipc_last_command_parameter=ql_ipc_last_write_value&15;
 				//printf ("Parametro recibido de ultimo comando %d: %d\n",ql_ipc_last_command,ql_ipc_last_command_parameter);
 				//Segun ultimo comando
+
 					switch (ql_ipc_last_command) {
 						case 9:
 						/*
@@ -1360,7 +1347,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 					}
 			break;
 			}
-			//sleep(2);
+			
 	}
 
 

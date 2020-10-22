@@ -92,17 +92,8 @@ extern z80_byte lee_puerto_legacy_ql(z80_byte h,z80_byte l);
 extern void out_port_legacy_ql(z80_int puerto,z80_byte value);
 extern z80_byte fetch_opcode_legacy_ql(void);
 
-//extern z80_byte ql_keyboard_table[];
-
-//extern int ql_ultima_tecla;
-
-
-
-
 
 extern void motorola_get_flags_string(char *texto);
-
-
 
 
 

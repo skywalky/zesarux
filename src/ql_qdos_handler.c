@@ -55,6 +55,9 @@ int ql_microdrive_floppy_emulation=0;
 
 
 
+void ql_post_trap_two(void);
+void ql_post_trap_three(void);
+
 z80_byte ql_last_trap=0;
 
 int ql_previous_trap_was_4=0;
@@ -76,10 +79,7 @@ void ql_footer_mdflp_operating(void)
 
 struct s_qltraps_fopen qltraps_fopen_files[QLTRAPS_MAX_OPEN_FILES];
 
-//char ql_nombre_archivo_load[255];
 
-//#define QLTRAPS_MAX_OPEN_FILES 64
-//#define QLTRAPS_START_FILE_NUMBER 32
 
 void qltraps_init_fopen_files_array(void)
 {
@@ -109,27 +109,6 @@ int qltraps_find_open_file(unsigned int channel)
 	else return -1;
 }
 
-//Si el id del canal del fichero esta abierto por nuestro gestor de traps de ql
-/*int old_qltrap_if_file_open(unsigned int channel)
-{
-	debug_printf(VERBOSE_DEBUG,"Lets see if file %d has been opened by the emulator traps",channel);
-
-	//Ver primero si el id del canal esta en el rango
-
-	if (!qltrap_if_file_in_range(channel)) {
-		debug_printf(VERBOSE_DEBUG,"File %d is out of range of ql traps",channel);
-		return 0;
-	}
-
-	if (channel==OLD_QL_ID_CANAL_INVENTADO_MICRODRIVE) {
-		debug_printf(VERBOSE_DEBUG,"File %d has been opened by the emulator traps",channel);
-		return 1;
-	}
-	else {
-		debug_printf(VERBOSE_DEBUG,"File %d has NOT been opened by the emulator traps",channel);
-		return 0;
-	}
-}*/
 
 
 //Retorna contador a array de estructura de archivo vacio. Retorna -1 si no hay
@@ -201,6 +180,8 @@ void core_ql_trap_one(void)
 
 }
 
+
+//Para almacenar los registros previos a la gestión del trap
 unsigned int pre_io_open_a[8];
 unsigned int pre_io_open_d[8];
 
@@ -283,7 +264,6 @@ void ql_restore_d_registers(unsigned int *origen, int ultimo)
 void core_ql_trap_two(void)
 {
 
-  //int reg_a0;
 
   //Ver pagina 173. 18.14 Trap Keys
 
@@ -312,6 +292,119 @@ void core_ql_trap_two(void)
 
     }
 
+}
+
+void core_ql_trap_three(void)
+{
+
+//Ver pagina 173. 18.14 Trap Keys
+
+  debug_printf (VERBOSE_PARANOID,"Trap 3. D0=%02XH A0=%08XH A1=%08XH A6=%08XH PC=%05XH is : ",
+    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),
+    m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_PC));
+
+  switch(m68k_get_reg(NULL,M68K_REG_D0)) {
+    case 0x2:
+      debug_printf(VERBOSE_PARANOID,"Trap 3: IO.FLINE. fetch a line of bytes terminated by ASCII LF (10)");
+      	      //Guardar registros
+      ql_store_a_registers(pre_io_fline_a,7);
+      ql_store_d_registers(pre_io_fline_d,7);
+    break;
+
+	case 0x3:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.FSTRG. fetch a string of bytes");
+      	      //Guardar registros
+      ql_store_a_registers(pre_io_fline_a,7);
+      ql_store_d_registers(pre_io_fline_d,7);	  
+	break;
+
+    case 0x4:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.EDLIN");
+      	      //Guardar registros
+      ql_store_a_registers(pre_io_fline_a,7);
+      ql_store_d_registers(pre_io_fline_d,7);	      
+    break;
+
+    case 0x5:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.SBYTE");
+    break;	
+
+    case 0x7:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.SSTRG");
+      //Guardar registros
+      ql_store_a_registers(pre_io_sstrg_a,7);
+      ql_store_d_registers(pre_io_sstrg_d,7);
+    break;
+    
+
+    case 0xB:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: SD.CHENQ");
+    break;	    
+
+
+    case 0xF:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: SD.CURS");
+    break;	    
+
+    case 0x45:
+        debug_printf (VERBOSE_PARANOID,"Trap 3: FS.MDINF");
+
+        //Guardar registros
+        ql_store_a_registers(pre_fs_mdinf_a,7);
+        ql_store_d_registers(pre_fs_mdinf_d,7);
+    break;
+
+    case 0x46:
+    	debug_printf (VERBOSE_PARANOID,"Trap 3: FS.HEADS");
+
+    	      //Guardar registros
+      ql_store_a_registers(pre_fs_heads_a,7);
+      ql_store_d_registers(pre_fs_heads_d,7);
+    break;    
+
+
+    case 0x47:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: FS.HEADR");
+      //Guardar registros
+      ql_store_a_registers(pre_fs_headr_a,7);
+      ql_store_d_registers(pre_fs_headr_d,7);
+
+
+    break;
+
+    case 0x48:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: FS.LOAD. Length: %d Channel: %d Address: %05XH"
+          ,m68k_get_reg(NULL,M68K_REG_D2),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1)  );
+      //D2.L length of file. A0 channellD. A1 base address for load
+
+      //ql_debug_force_breakpoint("En FS.LOAD");
+
+      //Guardar registros
+      ql_store_a_registers(pre_fs_load_a,7);
+      ql_store_d_registers(pre_fs_load_d,7);
+
+
+    break;
+
+    case 0x49:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: FS.SAVE. Length: %d Channel: %d Address: %05XH"
+          ,m68k_get_reg(NULL,M68K_REG_D2),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1)  );
+      //D2.L length of file. A0 channellD. A1 base address for load
+
+      //ql_debug_force_breakpoint("En FS.LOAD");
+
+      //Guardar registros
+      ql_store_a_registers(pre_fs_save_a,7);
+      ql_store_d_registers(pre_fs_save_d,7);
+
+
+    break;    
+
+    default:
+      debug_printf (VERBOSE_PARANOID,"Trap 3: unknown");
+    break;
+
+  }
 }
 
 
@@ -374,21 +467,21 @@ int ql_if_file_has_header(unsigned int indice_canal)
     int longitud_magic=strlen(ql_qdos_header_magic);
 
     if (!memcmp(ql_qdos_header_magic,buffer,longitud_magic)) {
-        printf("Archivo tiene cabecera\n");
+        debug_printf(VERBOSE_DEBUG,"File has header");
 
         //Obtener longitud
         int header_length=buffer[19]*2;
 
         if (header_length==QL_POSSIBLE_HEADER_LENGTH_ONE || header_length==QL_POSSIBLE_HEADER_LENGTH_TWO) {
-            printf ("Y longitud cabecera es valida\n");
+            debug_printf(VERBOSE_DEBUG,"And header lenght is valid");
             return header_length;
         }
         else {
-            printf("Pero longitud cabecera no es valida\n");
+            debug_printf(VERBOSE_DEBUG,"But header is invalid");
         }
     }
     else {
-        printf("Archivo NO tiene cabecera\n");
+        debug_printf(VERBOSE_DEBUG,"File has no header");
     }
 
     return 0;
@@ -525,8 +618,6 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
     }
 
-  //temp prueba
-  //ql_writebyte(destino+6,1);
 
   //printf("Nombre: %s\n",qltraps_fopen_files[indice_canal].ql_file_name);
 
@@ -536,10 +627,6 @@ https://qlforum.co.uk/viewtopic.php?t=113
   ql_writebyte(destino+0xe,0); //longitud nombre en big endian
   ql_writebyte(destino+0xf,longitud); //longitud nombre en big endian
 
-  //ql_writebyte(destino+0x10,'p');
-  //ql_writebyte(destino+0x11,'e');
-  //ql_writebyte(destino+0x12,'p');
-  //ql_writebyte(destino+0x13,'e');
 
   for (i=0;i<longitud;i++) {
 	  ql_writebyte(destino+0x10+i,qltraps_fopen_files[indice_canal].ql_file_name[i]);
@@ -604,26 +691,26 @@ In the first case, there are 10 bytes with the values present in bytes 4 to 13 o
 
 
 
-          unsigned int reg_a1=ql_get_a1_after_trap_4();    
-          //mostrar algunos bytes
-          printf("Writing qdos header\n");
-          
-          for (i=0;i<10;i++) {
-              unsigned int offset=reg_a1+4+i;
-              moto_byte byte_leido;
-              byte_leido=peek_byte_z80_moto(offset);
-              buffer_header[20+i]=byte_leido;
+    unsigned int reg_a1=ql_get_a1_after_trap_4();    
+    //mostrar algunos bytes
+    printf("Writing qdos header\n");
+    
+    for (i=0;i<10;i++) {
+        unsigned int offset=reg_a1+4+i;
+        moto_byte byte_leido;
+        byte_leido=peek_byte_z80_moto(offset);
+        buffer_header[20+i]=byte_leido;
 
-              printf ("%02XH ",byte_leido);
-          }      
+        printf ("%02XH ",byte_leido);
+    }      
 
-          printf("\n");
+    printf("\n");
 
 
     //Y escribir dicha cabecera
-        FILE *ptr_file;
-        ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;      
-        fwrite(buffer_header,1,QL_POSSIBLE_HEADER_LENGTH_ONE,ptr_file);
+    FILE *ptr_file;
+    ptr_file=qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix;      
+    fwrite(buffer_header,1,QL_POSSIBLE_HEADER_LENGTH_ONE,ptr_file);
 
 
 
@@ -632,118 +719,7 @@ In the first case, there are 10 bytes with the values present in bytes 4 to 13 o
 }
 
 
-void core_ql_trap_three(void)
-{
 
-//Ver pagina 173. 18.14 Trap Keys
-
-  debug_printf (VERBOSE_PARANOID,"Trap 3. D0=%02XH A0=%08XH A1=%08XH A6=%08XH PC=%05XH is : ",
-    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),
-    m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_PC));
-
-  switch(m68k_get_reg(NULL,M68K_REG_D0)) {
-    case 0x2:
-      debug_printf(VERBOSE_PARANOID,"Trap 3: IO.FLINE. fetch a line of bytes terminated by ASCII LF (10)");
-      	      //Guardar registros
-      ql_store_a_registers(pre_io_fline_a,7);
-      ql_store_d_registers(pre_io_fline_d,7);
-    break;
-
-	case 0x3:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.FSTRG. fetch a string of bytes");
-      	      //Guardar registros
-      ql_store_a_registers(pre_io_fline_a,7);
-      ql_store_d_registers(pre_io_fline_d,7);	  
-	break;
-
-    case 0x4:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.EDLIN");
-      	      //Guardar registros
-      ql_store_a_registers(pre_io_fline_a,7);
-      ql_store_d_registers(pre_io_fline_d,7);	      
-    break;
-
-    case 0x5:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.SBYTE");
-    break;	
-
-    case 0x7:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: IO.SSTRG");
-      //Guardar registros
-      ql_store_a_registers(pre_io_sstrg_a,7);
-      ql_store_d_registers(pre_io_sstrg_d,7);
-    break;
-    
-
-    case 0xB:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: SD.CHENQ");
-    break;	    
-
-
-    case 0xF:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: SD.CURS");
-    break;	    
-
-    case 0x45:
-    	debug_printf (VERBOSE_PARANOID,"Trap 3: FS.MDINF");
-
-    	      //Guardar registros
-      ql_store_a_registers(pre_fs_mdinf_a,7);
-      ql_store_d_registers(pre_fs_mdinf_d,7);
-    break;
-
-    case 0x46:
-    	debug_printf (VERBOSE_PARANOID,"Trap 3: FS.HEADS");
-
-    	      //Guardar registros
-      ql_store_a_registers(pre_fs_heads_a,7);
-      ql_store_d_registers(pre_fs_heads_d,7);
-    break;    
-
-
-    case 0x47:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: FS.HEADR");
-      //Guardar registros
-      ql_store_a_registers(pre_fs_headr_a,7);
-      ql_store_d_registers(pre_fs_headr_d,7);
-
-
-    break;
-
-    case 0x48:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: FS.LOAD. Length: %d Channel: %d Address: %05XH"
-          ,m68k_get_reg(NULL,M68K_REG_D2),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1)  );
-      //D2.L length of file. A0 channellD. A1 base address for load
-
-      //ql_debug_force_breakpoint("En FS.LOAD");
-
-      //Guardar registros
-      ql_store_a_registers(pre_fs_load_a,7);
-      ql_store_d_registers(pre_fs_load_d,7);
-
-
-    break;
-
-    case 0x49:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: FS.SAVE. Length: %d Channel: %d Address: %05XH"
-          ,m68k_get_reg(NULL,M68K_REG_D2),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1)  );
-      //D2.L length of file. A0 channellD. A1 base address for load
-
-      //ql_debug_force_breakpoint("En FS.LOAD");
-
-      //Guardar registros
-      ql_store_a_registers(pre_fs_save_a,7);
-      ql_store_d_registers(pre_fs_save_d,7);
-
-
-    break;    
-
-    default:
-      debug_printf (VERBOSE_PARANOID,"Trap 3: unknown");
-    break;
-
-  }
-}
 
 //Dado una ruta de QL tipo mdv1_programa , retorna mdv1 y programa por separados
 void ql_split_path_device_name(char *ql_path, char *ql_device, char *ql_file,int replace_underscore_dot,int replace_underscore_dot_only_one)
@@ -801,10 +777,7 @@ void ql_split_path_device_name(char *ql_path, char *ql_device, char *ql_file,int
 	}
   
 
-
-
-
-  debug_printf(VERBOSE_DEBUG,"Source path: %s Device: %s File: %s",ql_path,ql_device,ql_file);
+    debug_printf(VERBOSE_DEBUG,"Source path: %s Device: %s File: %s",ql_path,ql_device,ql_file);
 }
 
 //Dado un device y un nombre de archivo, retorna ruta a archivo en filesystem final
@@ -857,7 +830,7 @@ int ql_si_ruta_mdv_flp(char *texto)
   return 0;
 }
 
-int temp_conta_dir=0;
+//int temp_conta_dir=0;
 
 //Leer archivo linea a linea. Retorna bytes leidos, y valor de retorno. 
 //Si hay eof, se debe retornar solo el eof y sin bytes leidos
@@ -1035,20 +1008,18 @@ unsigned int ql_read_io_edlin(unsigned int canal,unsigned int puntero_destino,un
 void ql_load_binary_file(FILE *ptr_file,unsigned int valor_leido_direccion, unsigned int valor_leido_longitud)
 {
 
+    int leidos=1;
 
-
-
-int leidos=1;
-                                                z80_byte byte_leido;
-                                                while (valor_leido_longitud>0 && leidos>0) {
-                                                        leidos=fread(&byte_leido,1,1,ptr_file);
-                                                        if (leidos>0) {
-                                                                //poke_byte_no_time(valor_leido_direccion,byte_leido);
-                                                                poke_byte_z80_moto(valor_leido_direccion,byte_leido);
-                                                                valor_leido_direccion++;
-                                                                valor_leido_longitud--;
-                                                        }
-                                                }
+    z80_byte byte_leido;
+    while (valor_leido_longitud>0 && leidos>0) {
+            leidos=fread(&byte_leido,1,1,ptr_file);
+            if (leidos>0) {
+                    //poke_byte_no_time(valor_leido_direccion,byte_leido);
+                    poke_byte_z80_moto(valor_leido_direccion,byte_leido);
+                    valor_leido_direccion++;
+                    valor_leido_longitud--;
+            }
+    }
 }
 
 
@@ -1071,17 +1042,9 @@ void handle_trap_io_fline(void)
 				,m68k_get_reg(NULL,M68K_REG_D2) );
 		}
 
-        //Si canal es el segundo ficticio 100
-        /*if (m68k_get_reg(NULL,M68K_REG_A0)==QL_ID_CANAL_INVENTADO_2_MICRODRIVE) {
-        	debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from second microdrive channel (just \"mdv\") with EOF");
-        	m68k_set_reg(M68K_REG_D0,-10);
-          	debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
-          	m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
 
-          	return;
-        }*/
 
-        //Si canal es el mio ficticio 100
+        //Si canal es de los mios
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0) {
 
@@ -1149,7 +1112,7 @@ void handle_trap_io_fline(void)
 
 			*/
 
-				puntero_destino=ql_get_a1_after_trap_4();
+            puntero_destino=ql_get_a1_after_trap_4();
 
 
           	debug_printf (VERBOSE_DEBUG,"IO.FLINE - Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH max length: %d",
@@ -1287,7 +1250,7 @@ void handle_trap_io_edlin(void)
 
 			*/
 
-				puntero_destino=ql_get_a1_after_trap_4();
+            puntero_destino=ql_get_a1_after_trap_4();
 
 
           	debug_printf (VERBOSE_DEBUG,"IO.EDLIN - Channel ID=%d End of line: A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH max length: %d",
@@ -1329,678 +1292,113 @@ void handle_trap_io_edlin(void)
         }
 }
 
-
-
-void ql_rom_traps(void)
+void handle_trap_fs_headr(void)
 {
+    debug_printf (VERBOSE_PARANOID,"FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
+    //Si canal es el mio ficticio 100
+    int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+    if (indice_canal>=0 ) {
+        //Devolver cabecera. Se supone que el sistema operativo debe asignar espacio para la cabecera? Posiblemente si.
+        //Forzamos meter cabecera en espacio de memoria de pantalla a ver que pasa
+        //ql_get_file_header(ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1));
 
+        
+        ql_get_file_header(indice_canal,ql_get_a1_after_trap_4() );
 
+        //ql_get_file_header(ql_nombre_archivo_load,131072); //131072=pantalla
 
-    //Traps de intercepcion de teclado
-    //F1 y F2 iniciales
-    /*
-    Para parar y simular F1:
-
-sb 2 pc=4AF6H
-set-register pc=4AF8H  (saltamos el trap 3)
-set-register D1=E8H    (devolvemos tecla f1)
-(o para simular F2: set-register D1=ECH)
-  */
-
-    //Si pulsado F1 o F2
-    //Trap ya no hace falta. Esto era necesario cuando la lectura de teclado no funcionaba y esta era la unica manera de simular F1 o F2
-    /*
-    if ( get_pc_register()==0x4af6 &&
-        ((ql_keyboard_table[0]&2)==0 || (ql_keyboard_table[0]&8)==0)
-        )     {
-
-
-          debug_printf(VERBOSE_DEBUG,"QL Trap ROM: Read F1 or F2");
-
-      //Saltar el trap 3
-      m68k_set_reg(M68K_REG_PC,0x4AF8);
-
-      //Si F1
-      if ((ql_keyboard_table[0]&2)==0) m68k_set_reg(M68K_REG_D1,0xE8);
-      //Pues sera F2
-      else m68k_set_reg(M68K_REG_D1,0xEC);
-
-    }
-*/
-
-
-
-    //Saltar otro trap que hace mdv1 boot
-    /*
-    04B4C trap    #$2
-04B4E tst.l   D0
-04B50 rts
-
-
-TRAP #2 D0=$1
-Open a channel
-IO.OPEN
-
-
-A0=00004BE4 :
-
-L04BE4 DC.W    $0009
-       DC.B    'MDV1_BOOT'
-       DC.B    $00
-
-
-saltamos ese trap
-set-register pc=04B50h
-
-    */
-    //TODO: saltar esta llamada de manera mas elegante
-    /*if ( get_pc_register()==0x04B4C) {
-      debug_printf(VERBOSE_DEBUG,"QL Trap ROM: Skipping MDV1 boot");
-      m68k_set_reg(M68K_REG_PC,0x04B50);
-    }*/
-
-
-    /* Lectura de tecla */
-    if (get_pc_register()==0x02D40) {
-      //Decir que hay una tecla pulsada
-      //Temp solo cuando se pulsa enter
-      //if ((puerto_49150&1)==0) {
-      if (ql_pulsado_tecla()) {
-        //debug_printf(VERBOSE_DEBUG,"QL Trap ROM: Tell one key pressed");
-        m68k_set_reg(M68K_REG_D7,0x01);
-      }
-      else {
-        //printf ("no tecla pulsada\n");
-        ql_mantenido_pulsada_tecla=0;
-      }
-    }
-
-    //Decir 1 tecla pulsada
-    if (get_pc_register()==0x02E6A) {
-      //if ((puerto_49150&1)==0) {
-      if (ql_pulsado_tecla()) {
-        //debug_printf(VERBOSE_DEBUG,"QL Trap ROM: Tell 1 key pressed");
-        m68k_set_reg(M68K_REG_D1,1);
-        //L02E6A MOVE.B  D1,D5         * d1=d5=d4 : number of bytes in buffer
-      }
-      else {
-        m68k_set_reg(M68K_REG_D1,0); //0 teclas pulsadas
-      }
-    }
-
-
-
-/*
-Info rapida de como funcionan los traps:
-Detectar primero si se llama a trap 1, 2 o 3 , y llamar a core_ql_trap_one, two o three segun detectado
-En esas funciones , cuando es alguna funcion de qdos que estamos gestionando, se guardan los registros A y D del Motorola, para su posterior uso
-
-Esos traps en la rom acaban saltando a unas direcciones mas altas, y son las que posteriormente intercepto, 
-con la funcion exacta del qdos, como ejemplo:
-
-
-//Trap2, IO.OPEN
-if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==1) {
-
-Cuando salta ahi, los registros A y D se han modificado algunos desde que he detectado el trap, por eso los guardo antes.
-Cuando se detecta la funcion exacta del qdos, como este con D0=1, restauro los registros que tenia salvados antes para obtener 
-las variables de entrada (tal y como entraban al principio del trap). Con esos registros restaurados ya se qué hace la llamada a qdos.
-Se realiza la función adecuada a esa llamada: abrir fichero, cerrar, leer, etc
-
-Para volver del trap despues de haberlo interceptado, cambio el registro pc a una instruccion rte que hau en 53H de la rom
-Ajusto también el stack de salida para que vuelva tal cual deberia del trap inicial (digamos que evito algun push y algun salto)
-Y el registro D0 siempre contiene el codigo de error/ok de retorno del trap
-Con esto ya se vuelve del trap: un tanto chapucero pero funciona
-
-Esto probado con la rom ql_js.rom, con otras, es probable que falle.
-
-*/
-
-
-
-    if (get_pc_register()==0x0031e) {
-      core_ql_trap_one();
-    }
-
-
-
-
-
-//00324 bsr     336
-//Interceptar trap 2
-/*
-trap 2 salta a:
-00324 bsr     336
-*/
-  if (get_pc_register()==0x00324) {
-    core_ql_trap_two();
-  }
-
-
-
-    //Interceptar trap 3
-    /*
-    trap 3 salta a:
-    0032A bsr     336
-    */
-    if (get_pc_register()==0x0032a) {
-      core_ql_trap_three();
-    }
-
-
-
-
-
-    //Interceptar trap 2, con d0=1, cuando ya sabemos la direccion
-    //IO.OPEN
-/*
-command@cpu-step> cs
-PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A2: 00006906 A3: 00000670 A4: 00000012 A5: 0002846E A6: 00028000 A7: 0002846E D0: 00000001 D1: FFFFFFFF D2: 00000058 D3: 00000001 D4: 00000001 D5: 00000000 D6: 00000000 D7: 0000007F
-032B4 subq.b  #1, D0
-
-D3.L: code:
-0 old (exclusive) file or device
-1 old (shared) file
-2 new (exclusive) file
-3 new (overwrite) file
-4 open directory
-
-*/
-
-  //Nota: lo normal seria que no hagamos este trap a no ser que se habilite emulacion de ql_microdrive_floppy_emulation.
-  //Pero, si lo hacemos asi, si no habilitamos emulacion de micro&floppy, al pasar del menu de inicio (F1,F2) buscara el archivo BOOT, y como no salta el
-  //trap, se queda bloqueado
-  //Mas adelante en este caso comprobamos si esta habilitada emulacion de microdrive
-  //Ademas cualquier load desde microdrive (con ql_microdrive_floppy_emulation desactivado) se quedaria colgado si no lo interceptamos 
-
-    if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==1) {
-      //en A0
-      char ql_nombre_archivo_load[255];
-      int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);
-      int longitud_nombre=peek_byte_z80_moto(reg_a0)*256+peek_byte_z80_moto(reg_a0+1);
-      reg_a0 +=2;
-      debug_printf (VERBOSE_PARANOID,"Length channel name: %d",longitud_nombre);
-
-      char c;
-      int i=0;
-      for (;longitud_nombre;longitud_nombre--) {
-        c=peek_byte_z80_moto(reg_a0++);
-        ql_nombre_archivo_load[i++]=c;
-        //printf ("%c",c);
-      }
-      //printf ("\n");
-      ql_nombre_archivo_load[i++]=0;
-
-
-      debug_printf (VERBOSE_PARANOID,"Channel name: %s",ql_nombre_archivo_load);
-      
-
-
-
-       
-
-
-      //Hacer que si es mdv1_ ... volver
-
-      //A7=0002846EH
-      //A7=0002847AH
-      //Incrementar A7 en 12
-      //set-register pc=5eh. apunta a un rte
-
-      int es_dispositivo=0;
-
-      int hacer_trap=0;
-
-
-      if (ql_si_ruta_mdv_flp(ql_nombre_archivo_load)) hacer_trap=1;
-
-      if (!hacer_trap) {
-      	if (
-      		ql_si_ruta_parametro(ql_nombre_archivo_load,"mdv") ||
-      		ql_si_ruta_parametro(ql_nombre_archivo_load,"flp")
-      	    ) {
-      		hacer_trap=1;
-      		es_dispositivo=1;
-      	}
-      }
-
-      moto_byte file_mode;
-      
-
-      if (hacer_trap) {
-
-        debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv1, mdv2 or flp1");
-
-        //ql_debug_force_breakpoint("En IO.OPEN");
-
-/*
-069CC movea.l A1, A0                              |L069CC MOVEA.L A1,A0
-069CE move.w  (A6,A1.l), -(A7)                    |       MOVE.W  $00(A6,A1.L),-(A7)
-069D2 trap    #$4                                 |       TRAP    #$04
->069D4 trap    #$2                                 |       TRAP    #$02
-069D6 moveq   #$3, D3                             |       MOVEQ   #$03,D3
-069D8 add.w   (A7)+, D3                           |       ADD.W   (A7)+,D3
-069DA bclr    #$0, D3                             |       BCLR    #$00,D3
-069DE add.l   D3, ($58,A6)                        |       ADD.L   D3,$0058(A6)
-
-Es ese trap 2 el que se llama al hacer lbytes mdv...
-
-Y entra asi:
-command@cpu-step> run
-Running until a breakpoint, menu opening or other event
-PC: 069D4 SP: 3FFC0 USP: 3FFC0 SR: 0000 :
-
-A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6: 0003F068 A7: 0003FFC0 D0: 00000001 D1: FFFFFFFF D2: 00000058 D3: 00000001 D4: 00000001 D5: 00000000 D6: 00000000 D7: 00000000
-069D4 trap    #$2
-
-*/
-
-        //D2,D3,A2,A3 se tienen que preservar, segun dice el trap.
-        //Segun la info general de los traps, tambien se deben guardar de D4 a D7 y A4 a A6. Directamente guardo todos los D y A excepto A7
-
-        ql_restore_d_registers(pre_io_open_d,7);
-        ql_restore_a_registers(pre_io_open_a,6);
-        //ql_restore_a_registers(pre_io_open_a,7);
-
-
+        ql_restore_d_registers(pre_fs_headr_d,7);
+        ql_restore_a_registers(pre_fs_headr_a,6);
 
         //Volver de ese trap
         m68k_set_reg(M68K_REG_PC,0x5e);
-        //Ajustar stack para volver
-        int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+        unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
         reg_a7 +=12;
         m68k_set_reg(M68K_REG_A7,reg_a7);
-
-
-
-
-
-        //Como decir no error
-        /*
-        pg 11 qltm.pdf
-        When the TRAP operation is complete, control is returned to the program at the location following the TRAP instruction,
-        with an error key in all 32 bits of D0. This key is set to zero if the operation has been completed successfully,
-        and is set to a negative number for any of the system-defined errors (see section 17.1 for a list of the meanings
-        of the possible error codes). The key may also be set to a positive number, in which case that number is a pointer
-        to an error string, relative to address $8000. The string is in the usual Qdos form of a word giving the length of
-        the string, followed by the characters.
-        */
-
 
         //No error.
         m68k_set_reg(M68K_REG_D0,0);
 
-        char ql_io_open_device[PATH_MAX];
-        char ql_io_open_file[PATH_MAX];
+        //D1.W length of header read. A1 top of read buffer
+        m68k_set_reg(M68K_REG_D1,64);
 
-        char ql_nombrecompleto[PATH_MAX];
-
-        if (!es_dispositivo) {
-
-			ql_footer_mdflp_operating();			
-
-            //Si no hay root folder, directamente decimos que no se encuentra archivo
-            if (!ql_microdrive_floppy_emulation) {
-          		debug_printf(VERBOSE_DEBUG,"Microdrive emulation not enabled");
-          		//Retornar Not found (NF)
-          		m68k_set_reg(M68K_REG_D0,-7);
-          		return;                
-            }
+        //Decimos que A1 es A1 top of read buffer
+        unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
+        reg_a1 +=64;
+        m68k_set_reg(M68K_REG_A1,reg_a1);
 
 
+    }
+}
 
 
-   	     ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
+void handle_trap_fs_mdinf(void)
+{
+    debug_printf (VERBOSE_PARANOID,"FS.MDINF. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
-        	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+    //printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
 
-            //Ver modo archivo
-            file_mode=m68k_get_reg(NULL,M68K_REG_D3);
-            printf("File mode: %d\n",file_mode);
-            /*
-            D3.L: code:
-0 old (exclusive) file or device
-1 old (shared) file
-2 new (exclusive) file
-3 new (overwrite) file
-4 open directory
-            */
+    //Si canal es el mio ficticio 100
+    int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+    if (indice_canal>=0 ) {
 
-           //Si modo es 2 o 3, no ver si existe
-           if (file_mode!=2 && file_mode!=3) {
+        //printf ("Mi canal MDINF\n");
 
 
+        ql_restore_d_registers(pre_fs_mdinf_d,7);
+        ql_restore_a_registers(pre_fs_mdinf_a,6);
 
-        //Para siguientes io.fline
-        //ptr_io_fline=NULL;
-        	if (!si_existe_archivo(ql_nombrecompleto)) {
-          		debug_printf(VERBOSE_DEBUG,"File %s not found. Trying changing last _ to .",ql_nombrecompleto);
-   	     
-                ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,1,1);
-
-        	    ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
-        	}
-
-        	if (!si_existe_archivo(ql_nombrecompleto)) {
-          		debug_printf(VERBOSE_DEBUG,"File %s not found. Trying changing all _ to .",ql_nombrecompleto);
-   	     
-                ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,1,0);
-
-        	    ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
-        	}            
-
-
-        	if (!si_existe_archivo(ql_nombrecompleto)) {
-          		debug_printf(VERBOSE_DEBUG,"File %s not found",ql_nombrecompleto);
-          		//Retornar Not found (NF)
-          		m68k_set_reg(M68K_REG_D0,-7);
-          		return;
-        	}
-
-           }
-	}
+        //Retornamos :
+        //D1.L empty/good sectors. The number of empty sectors is in the most significant word (msw) of D1, 
+        //the total available on the medium is in the least significant word (lsw). A sector is 512 bytes.
+        //de momento ,MDV files in QLAY format. Thee files must be exactly 174930 bytes 174930/512->aprox 341
+        m68k_set_reg(M68K_REG_D1,341); //0 sectores libres, 341 sectores ocupados
 
         
-
-	//Obtenemos canal disponible
-	int canal=qltraps_find_free_fopen();
-	if (canal<0) {
-		//No hay disponibles. Error.
-  		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_NC);
-  		return;
-	}
-
-	//Se ha retornado indice al array. Canal sera sumando 
-	m68k_set_reg(M68K_REG_A0,canal+QLTRAPS_START_FILE_NUMBER);
-
-
-	//Resetear eof 
-	qltraps_fopen_files[canal].next_eof_ptr_io_fline=0;
-
-
-	strcpy(qltraps_fopen_files[canal].ql_file_name,ql_nombre_archivo_load);
-
-	qltraps_fopen_files[canal].es_dispositivo=es_dispositivo;
-
-    //Asumimos que no tiene cabecera al leerlo
-    qltraps_fopen_files[canal].has_header_on_read=0;
-
-	if (!es_dispositivo) {
-		//Indicar file handle
-		FILE *archivo;
-
-        //Si modo es escritura
-        if (file_mode==2 || file_mode==3) {
-            archivo=fopen(ql_nombrecompleto,"wb");
-        }
-		else {
-            archivo=fopen(ql_nombrecompleto,"rb");
-        }
-
-		if (archivo==NULL) {
-        		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
-	  		//Retornar Not found (NF)
-  			m68k_set_reg(M68K_REG_D0,-7);
-  			return;
-		}
-
-
-		qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix=archivo;
-
-
-        if (file_mode!=2 && file_mode!=3) {
-            //Leemos cabecera si es que tiene
-            //Ver si tiene cabecera el archivo, en el caso de abrir para lectura
-            //Y la guardamos en nuestra estructura de archivos
-            int tiene_cabecera=ql_if_file_has_header(canal);
-
-            if (tiene_cabecera) {
-                qltraps_fopen_files[canal].has_header_on_read=1;
-
-                //Leemos esa cabecera
-                    printf("Reading QDOS file header\n");
-
-                    fread(qltraps_fopen_files[canal].file_header,1,tiene_cabecera,archivo);
-
-                    int i;
-                    for (i=0;i<tiene_cabecera;i++) {
-                        moto_byte byte_leido=qltraps_fopen_files[canal].file_header[i];
-
-                        if (byte_leido>=32 && byte_leido<=126) printf ("%c",byte_leido);
-                        else printf(" %02XH ",byte_leido);
-                    }
-                    printf("\n");
-
-
-            }
-        }   
-
-
-		//Le hacemos un stat
-		if (stat(ql_nombrecompleto, &qltraps_fopen_files[canal].last_file_buf_stat)!=0) {
-			debug_printf (VERBOSE_DEBUG,"QLTRAPS handler: Unable to get status of file %s",ql_nombrecompleto);
-		}
-
-	}
-
-
-	//Indicamos en array que esta abierto
-	qltraps_fopen_files[canal].open_file.v=1;
-
-                //Y poner nombres para debug
-                strcpy(qltraps_fopen_files[canal].debug_name,ql_nombre_archivo_load);
-                strcpy(qltraps_fopen_files[canal].debug_fullpath,ql_nombrecompleto);    
-
-	
-
-        //D1= Job ID. TODO. Parece que da error "error in expression" porque no se asigna un job id valido?
-        //Parece que D1 entra con -1, que quiere decir "the channel will be associated with the current job"
-        //m68k_set_reg(M68K_REG_D1,0); //Valor de D1 inventado. Da igual, tambien fallara
-        /*
-
-        */
-
-        return;
-
-      }
-
-
-      //Aqui se llama despues de hacer "load" de programa basic, hace IO.FLINE y luego hace IO.OPEN de "mdv" sin mas
-      /*if (ql_si_ruta_parametro(ql_nombre_archivo_load,"mdv")) {
-
-        debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv");
-
-        ql_restore_d_registers(pre_io_open_d,7);
-        ql_restore_a_registers(pre_io_open_a,6);
-        //ql_restore_a_registers(pre_io_open_a,7);
-
-
-
+        
         //Volver de ese trap
         m68k_set_reg(M68K_REG_PC,0x5e);
-        //Ajustar stack para volver
-        int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+        unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
         reg_a7 +=12;
         m68k_set_reg(M68K_REG_A7,reg_a7);
-        
 
         //No error.
         m68k_set_reg(M68K_REG_D0,0);
 
+        //D1.W length of header read. A1 top of read buffer
+        //m68k_set_reg(M68K_REG_D1,64);
 
-        //Metemos channel id (A0) inventado. TODO: quiza otro canal diferente para estos casos??
-        m68k_set_reg(M68K_REG_A0,QL_ID_CANAL_INVENTADO_2_MICRODRIVE);
+        //Devolver medium name
+        //A1 end of medium name  (entrada: A1 ptr to 10 byte buffer)
 
-        
+        unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
+        unsigned int puntero=ql_get_a1_after_trap_4();
 
-        return;
+        reg_a1 +=10;
+        m68k_set_reg(M68K_REG_A1,reg_a1);
 
-      }*/
-
-    }
-
-
-
-    //IO.CLOSE
-    if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==2 && ql_microdrive_floppy_emulation) {
-
-
-        //Tiene pinta que el canal son los 16 bits inferiores
-    	//debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) & 0xFFFF );
-
-
-        debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",pre_io_close_a[0] & 0xFFFF );
-
-  
-      	//Si canal es el mio ficticio 
-       	int indice_canal=qltraps_find_open_file(pre_io_close_a[0] & 0xFFFF);
-
-        if (indice_canal>=0  ) {
-        	debug_printf (VERBOSE_DEBUG,"Closing file/device %s",qltraps_fopen_files[indice_canal].ql_file_name);
-
-    	    ql_restore_d_registers(pre_io_close_d,7);
-            ql_restore_a_registers(pre_io_close_a,6);            
-
-        	//Si no es dispositivo, fclose
-        	if (!qltraps_fopen_files[indice_canal].es_dispositivo) {
-        		fclose(qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix);
-        	}
-
-        	//Liberar ese item del array
-        	qltraps_fopen_files[indice_canal].open_file.v=0;
-
-
-        	//Volver de ese trap
-        	m68k_set_reg(M68K_REG_PC,0x5e);
-        	//Ajustar stack para volver
-        	int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-        	reg_a7 +=12;
-        	m68k_set_reg(M68K_REG_A7,reg_a7);
-
-
-        	//No error.
-        	m68k_set_reg(M68K_REG_D0,0);
-
-
-       }
-
-    }
-
-
-
-
-
-
-    //Quiza Trap 3 FS.HEADR acaba saltando a 0337C move.l  A0, D7
-    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x47 && ql_microdrive_floppy_emulation) {
-        debug_printf (VERBOSE_PARANOID,"FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
-
-        //Si canal es el mio ficticio 100
-        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
-        if (indice_canal>=0 ) {
-          //Devolver cabecera. Se supone que el sistema operativo debe asignar espacio para la cabecera? Posiblemente si.
-          //Forzamos meter cabecera en espacio de memoria de pantalla a ver que pasa
-          //ql_get_file_header(ql_full_path_load,m68k_get_reg(NULL,M68K_REG_A1));
-
-          
-          ql_get_file_header(indice_canal,ql_get_a1_after_trap_4() );
-
-          //ql_get_file_header(ql_nombre_archivo_load,131072); //131072=pantalla
-
-          ql_restore_d_registers(pre_fs_headr_d,7);
-          ql_restore_a_registers(pre_fs_headr_a,6);
-
-          //Volver de ese trap
-          m68k_set_reg(M68K_REG_PC,0x5e);
-          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-          reg_a7 +=12;
-          m68k_set_reg(M68K_REG_A7,reg_a7);
-
-          //No error.
-          m68k_set_reg(M68K_REG_D0,0);
-
-          //D1.W length of header read. A1 top of read buffer
-          m68k_set_reg(M68K_REG_D1,64);
-
-          //Decimos que A1 es A1 top of read buffer
-          unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
-          reg_a1 +=64;
-          m68k_set_reg(M68K_REG_A1,reg_a1);
-
-
-          //Le decimos en A1 que la cabecera esta en la memoria de pantalla
-          //m68k_set_reg(M68K_REG_A1,131072);
-
-        }
-    }
-
-    //Trap 3 FS.MDINF 
-    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x45 && ql_microdrive_floppy_emulation) {
-        debug_printf (VERBOSE_PARANOID,"FS.MDINF. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
-
-		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
-
-        //Si canal es el mio ficticio 100
-        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
-        if (indice_canal>=0 ) {
-
-        	//printf ("Mi canal MDINF\n");
-
-
-        	ql_restore_d_registers(pre_fs_mdinf_d,7);
-          	ql_restore_a_registers(pre_fs_mdinf_a,6);
-
-        	//Retornamos :
-        	//D1.L empty/good sectors. The number of empty sectors is in the most significant word (msw) of D1, 
-        	//the total available on the medium is in the least significant word (lsw). A sector is 512 bytes.
-        	//de momento ,MDV files in QLAY format. Thee files must be exactly 174930 bytes 174930/512->aprox 341
-        	m68k_set_reg(M68K_REG_D1,341); //0 sectores libres, 341 sectores ocupados
-
-        	
-          
-          //Volver de ese trap
-          m68k_set_reg(M68K_REG_PC,0x5e);
-          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-          reg_a7 +=12;
-          m68k_set_reg(M68K_REG_A7,reg_a7);
-
-          //No error.
-          m68k_set_reg(M68K_REG_D0,0);
-
-          //D1.W length of header read. A1 top of read buffer
-          //m68k_set_reg(M68K_REG_D1,64);
-
-          //Devolver medium name
-          //A1 end of medium name  (entrada: A1 ptr to 10 byte buffer)
-
-          unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
-          unsigned int puntero=ql_get_a1_after_trap_4();
-
-          reg_a1 +=10;
-          m68k_set_reg(M68K_REG_A1,reg_a1);
-
-          ql_writebyte(puntero++,'Z');
-          ql_writebyte(puntero++,'E');
-          ql_writebyte(puntero++,'s');
-          ql_writebyte(puntero++,'a');
-          ql_writebyte(puntero++,'r'); //5
-          ql_writebyte(puntero++,'U');
-          ql_writebyte(puntero++,'X');
-          ql_writebyte(puntero++,'M');
-          ql_writebyte(puntero++,'D');
-          ql_writebyte(puntero++,' '); //10
+        ql_writebyte(puntero++,'Z');
+        ql_writebyte(puntero++,'E');
+        ql_writebyte(puntero++,'s');
+        ql_writebyte(puntero++,'a');
+        ql_writebyte(puntero++,'r'); //5
+        ql_writebyte(puntero++,'U');
+        ql_writebyte(puntero++,'X');
+        ql_writebyte(puntero++,'M');
+        ql_writebyte(puntero++,'D');
+        ql_writebyte(puntero++,' '); //10
 
 
 
 
 
         }
-    }
+}
 
 
-    //Trap 3 FS.HEADS. Se usa con sbytes: hace io.open y luego llama aqui
-    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x46 && ql_microdrive_floppy_emulation) {
+void handle_trap_fs_heads(void)
+{
         debug_printf (VERBOSE_PARANOID,"FS.HEADS. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         
@@ -2052,32 +1450,11 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
         }
-    }
+}
 
 
-
-
-	//Trap 3 IO.FLINE
-    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x2 && ql_microdrive_floppy_emulation) {
-		handle_trap_io_fline();
-		
-    }
-
-	//Trap 3 IO.FSTRG
-    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x3 && ql_microdrive_floppy_emulation) {
-		handle_trap_io_fline();
-		
-    }
-
-	//Trap 3 IO.EDLIN
-    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x4 && ql_microdrive_floppy_emulation) {
-		handle_trap_io_edlin();
-		
-    }
-
-
-//Trap 3 IO.SSTRG
-    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x7 && ql_microdrive_floppy_emulation) {
+void handle_trap_io_sstrg(void)
+{
         debug_printf (VERBOSE_PARANOID,"IO.SSTRG. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%08XH",
         		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
         		m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
@@ -2253,12 +1630,11 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           
 
 		}
-    }
+}
 
 
-
-    //FS.LOAD
-    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x48 && ql_microdrive_floppy_emulation) {
+void handle_trap_fs_load(void)
+{
         debug_printf (VERBOSE_PARANOID,"FS.LOAD. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
@@ -2307,10 +1683,11 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           //m68k_set_reg(M68K_REG_A1,131072);
 
         }
-    }
+}
 
-  //FS.SAVE
-    if (get_pc_register()==0x0337C && m68k_get_reg(NULL,M68K_REG_D0)==0x49 && ql_microdrive_floppy_emulation) {
+
+void handle_trap_fs_save(void)
+{
         debug_printf (VERBOSE_PARANOID,"FS.SAVE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
@@ -2362,13 +1739,614 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
           m68k_set_reg(M68K_REG_A1,reg_a1);
 
 
-          //Le decimos en A1 que la cabecera esta en la memoria de pantalla
-          //m68k_set_reg(M68K_REG_A1,131072);
 
         }
+}
+
+void ql_rom_traps(void)
+{
+
+
+
+
+    //Traps de intercepcion de teclado
+    //F1 y F2 iniciales
+    /*
+    Para parar y simular F1:
+
+sb 2 pc=4AF6H
+set-register pc=4AF8H  (saltamos el trap 3)
+set-register D1=E8H    (devolvemos tecla f1)
+(o para simular F2: set-register D1=ECH)
+  */
+
+    //Si pulsado F1 o F2
+    //Trap ya no hace falta. Esto era necesario cuando la lectura de teclado no funcionaba y esta era la unica manera de simular F1 o F2
+    /*
+    if ( get_pc_register()==0x4af6 &&
+        ((ql_keyboard_table[0]&2)==0 || (ql_keyboard_table[0]&8)==0)
+        )     {
+
+
+          debug_printf(VERBOSE_DEBUG,"QL Trap ROM: Read F1 or F2");
+
+      //Saltar el trap 3
+      m68k_set_reg(M68K_REG_PC,0x4AF8);
+
+      //Si F1
+      if ((ql_keyboard_table[0]&2)==0) m68k_set_reg(M68K_REG_D1,0xE8);
+      //Pues sera F2
+      else m68k_set_reg(M68K_REG_D1,0xEC);
+
+    }
+*/
+
+
+
+    //Saltar otro trap que hace mdv1 boot
+    /*
+    04B4C trap    #$2
+04B4E tst.l   D0
+04B50 rts
+
+
+TRAP #2 D0=$1
+Open a channel
+IO.OPEN
+
+
+A0=00004BE4 :
+
+L04BE4 DC.W    $0009
+       DC.B    'MDV1_BOOT'
+       DC.B    $00
+
+
+saltamos ese trap
+set-register pc=04B50h
+
+    */
+    //TODO: saltar esta llamada de manera mas elegante
+    /*if ( get_pc_register()==0x04B4C) {
+      debug_printf(VERBOSE_DEBUG,"QL Trap ROM: Skipping MDV1 boot");
+      m68k_set_reg(M68K_REG_PC,0x04B50);
+    }*/
+
+
+    //Decir 1 tecla pulsada. Se supone que este trap no deberia hacer falta si se gestionase del todo bien el ipc
+    if (get_pc_register()==0x02D40) {
+      //Decir que hay una tecla pulsada
+
+      if (ql_pulsado_tecla()) {
+        //debug_printf(VERBOSE_DEBUG,"QL Trap ROM: Tell one key pressed");
+        m68k_set_reg(M68K_REG_D7,0x01);
+      }
+      else {
+        //printf ("no tecla pulsada\n");
+        ql_mantenido_pulsada_tecla=0;
+      }
+    }
+
+    //Decir 1 tecla pulsada. Se supone que este trap no deberia hacer falta si se gestionase del todo bien el ipc
+    if (get_pc_register()==0x02E6A) {
+      
+      if (ql_pulsado_tecla()) {
+        //debug_printf(VERBOSE_DEBUG,"QL Trap ROM: Tell 1 key pressed");
+        m68k_set_reg(M68K_REG_D1,1);
+        //L02E6A MOVE.B  D1,D5         * d1=d5=d4 : number of bytes in buffer
+      }
+      else {
+        m68k_set_reg(M68K_REG_D1,0); //0 teclas pulsadas
+      }
     }
 
 
 
+/*
+Info rapida de como funcionan los traps:
+Detectar primero si se llama a trap 1, 2 o 3 , y llamar a core_ql_trap_one, two o three segun detectado
+En esas funciones , cuando es alguna funcion de qdos que estamos gestionando, se guardan los registros A y D del Motorola, para su posterior uso
+
+Esos traps en la rom acaban saltando a unas direcciones mas altas, y son las que posteriormente intercepto, 
+con la funcion exacta del qdos, como ejemplo:
+
+
+//Trap2, IO.OPEN
+if (get_pc_register()==0x032B4 && m68k_get_reg(NULL,M68K_REG_D0)==1) {
+
+Cuando salta ahi, los registros A y D se han modificado algunos desde que he detectado el trap, por eso los guardo antes.
+Cuando se detecta la funcion exacta del qdos, como este con D0=1, restauro los registros que tenia salvados antes para obtener 
+las variables de entrada (tal y como entraban al principio del trap). Con esos registros restaurados ya se qué hace la llamada a qdos.
+Se realiza la función adecuada a esa llamada: abrir fichero, cerrar, leer, etc
+
+Para volver del trap despues de haberlo interceptado, cambio el registro pc a una instruccion rte que hau en 53H de la rom
+Ajusto también el stack de salida para que vuelva tal cual deberia del trap inicial (digamos que evito algun push y algun salto)
+Y el registro D0 siempre contiene el codigo de error/ok de retorno del trap
+Con esto ya se vuelve del trap: un tanto chapucero pero funciona
+
+Esto probado con la rom ql_js.rom, con otras, es probable que falle.
+
+*/
+
+
+
+    if (get_pc_register()==0x0031e) {
+        core_ql_trap_one();
+    }
+
+
+
+//00324 bsr     336
+//Interceptar trap 2
+/*
+trap 2 salta a:
+00324 bsr     336
+*/
+    if (get_pc_register()==0x00324) {
+        core_ql_trap_two();
+    }
+
+
+
+    //Interceptar trap 3
+    /*
+    trap 3 salta a:
+    0032A bsr     336
+    */
+    if (get_pc_register()==0x0032a) {
+        core_ql_trap_three();
+    }
+
+
+    if (get_pc_register()==0x032B4) ql_post_trap_two();
+
+
+    if (get_pc_register()==0x0337C) ql_post_trap_three();
+
 }
 
+
+void ql_post_trap_three(void)
+{
+
+    //Rutinas de post trap 3
+
+    if (!ql_microdrive_floppy_emulation) return;
+
+    switch(m68k_get_reg(NULL,M68K_REG_D0)) {
+
+        //Trap 3 IO.FLINE
+        case 0x2:
+            handle_trap_io_fline();   
+        break;
+
+        //Trap 3 IO.FSTRG
+        case 0x3:
+            handle_trap_io_fline();           
+        break;
+
+        //Trap 3 IO.EDLIN
+        case 0x4:
+            handle_trap_io_edlin();       
+        break;
+
+        //Trap 3 IO.SSTRG
+        case 0x7:
+            handle_trap_io_sstrg();
+        break;
+
+        //Trap 3 FS.MDINF 
+        case 0x45:
+            handle_trap_fs_mdinf();     
+        break;
+
+        //Trap 3 FS.HEADS. Se usa con sbytes: hace io.open y luego llama aqui
+        case 0x46:
+            handle_trap_fs_heads();
+        break;
+
+        //Quiza Trap 3 FS.HEADR acaba saltando a 0337C move.l  A0, D7
+        case 0x47:
+            handle_trap_fs_headr();
+        break;
+
+        //Trap 3. FS.LOAD
+        case 0x48:
+            handle_trap_fs_load();
+        break;
+
+        //Trap 3. FS.SAVE
+        case 0x49:
+            handle_trap_fs_save();
+        break;
+
+    }
+
+}
+
+
+
+
+
+
+
+
+void  ql_post_trap_two(void)
+{
+
+    //Rutinas de post trap 2
+
+
+    //Interceptar trap 2, con d0=1, cuando ya sabemos la direccion
+    //IO.OPEN
+/*
+command@cpu-step> cs
+PC: 032B4 SP: 2846E USP: 3FFC0 SR: 2000 :  S         A0: 0003FDEE A1: 0003EE00 A2: 00006906 A3: 00000670 A4: 00000012 A5: 0002846E A6: 00028000 A7: 0002846E D0: 00000001 D1: FFFFFFFF D2: 00000058 D3: 00000001 D4: 00000001 D5: 00000000 D6: 00000000 D7: 0000007F
+032B4 subq.b  #1, D0
+
+D3.L: code:
+0 old (exclusive) file or device
+1 old (shared) file
+2 new (exclusive) file
+3 new (overwrite) file
+4 open directory
+
+*/
+
+  //Nota: lo normal seria que no hagamos este trap a no ser que se habilite emulacion de ql_microdrive_floppy_emulation.
+  //Pero, si lo hacemos asi, si no habilitamos emulacion de micro&floppy, al pasar del menu de inicio (F1,F2) buscara el archivo BOOT, y como no salta el
+  //trap, se queda bloqueado
+  //Mas adelante en este caso comprobamos si esta habilitada emulacion de microdrive
+  //Ademas cualquier load desde microdrive (con ql_microdrive_floppy_emulation desactivado) se quedaria colgado si no lo interceptamos 
+
+    if (m68k_get_reg(NULL,M68K_REG_D0)==1) {
+      //en A0
+      char ql_nombre_archivo_load[255];
+      int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);
+      int longitud_nombre=peek_byte_z80_moto(reg_a0)*256+peek_byte_z80_moto(reg_a0+1);
+      reg_a0 +=2;
+      debug_printf (VERBOSE_PARANOID,"Length channel name: %d",longitud_nombre);
+
+      char c;
+      int i=0;
+      for (;longitud_nombre;longitud_nombre--) {
+        c=peek_byte_z80_moto(reg_a0++);
+        ql_nombre_archivo_load[i++]=c;
+        //printf ("%c",c);
+      }
+      //printf ("\n");
+      ql_nombre_archivo_load[i++]=0;
+
+
+      debug_printf (VERBOSE_PARANOID,"Channel name: %s",ql_nombre_archivo_load);
+      
+
+
+
+       
+
+
+      //Hacer que si es mdv1_ ... volver
+
+      //A7=0002846EH
+      //A7=0002847AH
+      //Incrementar A7 en 12
+      //set-register pc=5eh. apunta a un rte
+
+      int es_dispositivo=0;
+
+      int hacer_trap=0;
+
+
+      if (ql_si_ruta_mdv_flp(ql_nombre_archivo_load)) hacer_trap=1;
+
+      if (!hacer_trap) {
+      	if (
+      		ql_si_ruta_parametro(ql_nombre_archivo_load,"mdv") ||
+      		ql_si_ruta_parametro(ql_nombre_archivo_load,"flp")
+      	    ) {
+      		hacer_trap=1;
+      		es_dispositivo=1;
+      	}
+      }
+
+      moto_byte file_mode;
+      
+
+      if (hacer_trap) {
+
+        debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv1, mdv2 or flp1");
+
+        //ql_debug_force_breakpoint("En IO.OPEN");
+
+/*
+069CC movea.l A1, A0                              |L069CC MOVEA.L A1,A0
+069CE move.w  (A6,A1.l), -(A7)                    |       MOVE.W  $00(A6,A1.L),-(A7)
+069D2 trap    #$4                                 |       TRAP    #$04
+>069D4 trap    #$2                                 |       TRAP    #$02
+069D6 moveq   #$3, D3                             |       MOVEQ   #$03,D3
+069D8 add.w   (A7)+, D3                           |       ADD.W   (A7)+,D3
+069DA bclr    #$0, D3                             |       BCLR    #$00,D3
+069DE add.l   D3, ($58,A6)                        |       ADD.L   D3,$0058(A6)
+
+Es ese trap 2 el que se llama al hacer lbytes mdv...
+
+Y entra asi:
+command@cpu-step> run
+Running until a breakpoint, menu opening or other event
+PC: 069D4 SP: 3FFC0 USP: 3FFC0 SR: 0000 :
+
+A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6: 0003F068 A7: 0003FFC0 D0: 00000001 D1: FFFFFFFF D2: 00000058 D3: 00000001 D4: 00000001 D5: 00000000 D6: 00000000 D7: 00000000
+069D4 trap    #$2
+
+*/
+
+        //D2,D3,A2,A3 se tienen que preservar, segun dice el trap.
+        //Segun la info general de los traps, tambien se deben guardar de D4 a D7 y A4 a A6. Directamente guardo todos los D y A excepto A7
+
+        ql_restore_d_registers(pre_io_open_d,7);
+        ql_restore_a_registers(pre_io_open_a,6);
+        //ql_restore_a_registers(pre_io_open_a,7);
+
+
+
+        //Volver de ese trap
+        m68k_set_reg(M68K_REG_PC,0x5e);
+        //Ajustar stack para volver
+        int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+        reg_a7 +=12;
+        m68k_set_reg(M68K_REG_A7,reg_a7);
+
+
+
+
+
+        //Como decir no error
+        /*
+        pg 11 qltm.pdf
+        When the TRAP operation is complete, control is returned to the program at the location following the TRAP instruction,
+        with an error key in all 32 bits of D0. This key is set to zero if the operation has been completed successfully,
+        and is set to a negative number for any of the system-defined errors (see section 17.1 for a list of the meanings
+        of the possible error codes). The key may also be set to a positive number, in which case that number is a pointer
+        to an error string, relative to address $8000. The string is in the usual Qdos form of a word giving the length of
+        the string, followed by the characters.
+        */
+
+
+        //No error.
+        m68k_set_reg(M68K_REG_D0,0);
+
+        char ql_io_open_device[PATH_MAX];
+        char ql_io_open_file[PATH_MAX];
+
+        char ql_nombrecompleto[PATH_MAX];
+
+        if (!es_dispositivo) {
+
+			ql_footer_mdflp_operating();			
+
+            //Si no hay root folder, directamente decimos que no se encuentra archivo
+            if (!ql_microdrive_floppy_emulation) {
+          		debug_printf(VERBOSE_DEBUG,"Microdrive emulation not enabled");
+          		//Retornar Not found (NF)
+          		m68k_set_reg(M68K_REG_D0,-7);
+          		return;                
+            }
+
+
+
+
+   	     ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
+
+        	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+
+            //Ver modo archivo
+            file_mode=m68k_get_reg(NULL,M68K_REG_D3);
+            //printf("File mode: %d\n",file_mode);
+            /*
+            D3.L: code:
+0 old (exclusive) file or device
+1 old (shared) file
+2 new (exclusive) file
+3 new (overwrite) file
+4 open directory
+            */
+
+           //Si modo es 2 o 3, no ver si existe
+           if (file_mode!=2 && file_mode!=3) {
+
+
+
+        //Para siguientes io.fline
+        //ptr_io_fline=NULL;
+        	if (!si_existe_archivo(ql_nombrecompleto)) {
+          		debug_printf(VERBOSE_DEBUG,"File %s not found. Trying changing last _ to .",ql_nombrecompleto);
+   	     
+                ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,1,1);
+
+        	    ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+        	}
+
+        	if (!si_existe_archivo(ql_nombrecompleto)) {
+          		debug_printf(VERBOSE_DEBUG,"File %s not found. Trying changing all _ to .",ql_nombrecompleto);
+   	     
+                ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,1,0);
+
+        	    ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+        	}            
+
+
+        	if (!si_existe_archivo(ql_nombrecompleto)) {
+          		debug_printf(VERBOSE_DEBUG,"File %s not found",ql_nombrecompleto);
+          		//Retornar Not found (NF)
+          		m68k_set_reg(M68K_REG_D0,-7);
+          		return;
+        	}
+
+           }
+	}
+
+        
+
+	//Obtenemos canal disponible
+	int canal=qltraps_find_free_fopen();
+	if (canal<0) {
+		//No hay disponibles. Error.
+  		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_NC);
+  		return;
+	}
+
+	//Se ha retornado indice al array. Canal sera sumando 
+	m68k_set_reg(M68K_REG_A0,canal+QLTRAPS_START_FILE_NUMBER);
+
+
+	//Resetear eof 
+	qltraps_fopen_files[canal].next_eof_ptr_io_fline=0;
+
+
+	strcpy(qltraps_fopen_files[canal].ql_file_name,ql_nombre_archivo_load);
+
+	qltraps_fopen_files[canal].es_dispositivo=es_dispositivo;
+
+    //Asumimos que no tiene cabecera al leerlo
+    qltraps_fopen_files[canal].has_header_on_read=0;
+
+	if (!es_dispositivo) {
+		//Indicar file handle
+		FILE *archivo;
+
+        //Si modo es escritura
+        if (file_mode==2 || file_mode==3) {
+            archivo=fopen(ql_nombrecompleto,"wb");
+        }
+		else {
+            archivo=fopen(ql_nombrecompleto,"rb");
+        }
+
+		if (archivo==NULL) {
+        		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
+	  		//Retornar Not found (NF)
+  			m68k_set_reg(M68K_REG_D0,-7);
+  			return;
+		}
+
+
+		qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix=archivo;
+
+
+        if (file_mode!=2 && file_mode!=3) {
+            //Leemos cabecera si es que tiene
+            //Ver si tiene cabecera el archivo, en el caso de abrir para lectura
+            //Y la guardamos en nuestra estructura de archivos
+            int tiene_cabecera=ql_if_file_has_header(canal);
+
+            if (tiene_cabecera) {
+                qltraps_fopen_files[canal].has_header_on_read=1;
+
+                //Leemos esa cabecera
+                    printf("Reading QDOS file header\n");
+
+                    fread(qltraps_fopen_files[canal].file_header,1,tiene_cabecera,archivo);
+
+
+                    //Debug escribir cabecera
+
+                    int i;
+                    for (i=0;i<tiene_cabecera;i++) {
+                        moto_byte byte_leido=qltraps_fopen_files[canal].file_header[i];
+
+                        if (byte_leido>=32 && byte_leido<=126) printf ("%c",byte_leido);
+                        else printf(" %02XH ",byte_leido);
+                    }
+                    printf("\n");
+                    
+
+
+            }
+        }   
+
+
+		//Le hacemos un stat
+		if (stat(ql_nombrecompleto, &qltraps_fopen_files[canal].last_file_buf_stat)!=0) {
+			debug_printf (VERBOSE_DEBUG,"QLTRAPS handler: Unable to get status of file %s",ql_nombrecompleto);
+		}
+
+	}
+
+
+	//Indicamos en array que esta abierto
+	qltraps_fopen_files[canal].open_file.v=1;
+
+                //Y poner nombres para debug
+                strcpy(qltraps_fopen_files[canal].debug_name,ql_nombre_archivo_load);
+                strcpy(qltraps_fopen_files[canal].debug_fullpath,ql_nombrecompleto);    
+
+	
+
+        //D1= Job ID. TODO. Parece que da error "error in expression" porque no se asigna un job id valido?
+        //Parece que D1 entra con -1, que quiere decir "the channel will be associated with the current job"
+        //m68k_set_reg(M68K_REG_D1,0); //Valor de D1 inventado. Da igual, tambien fallara
+        /*
+
+        */
+
+        return;
+
+      }
+
+
+
+
+    }
+
+
+
+
+
+    //IO.CLOSE
+    if (m68k_get_reg(NULL,M68K_REG_D0)==2 && ql_microdrive_floppy_emulation) {
+
+
+        //Tiene pinta que el canal son los 16 bits inferiores
+    	//debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) & 0xFFFF );
+
+
+        debug_printf (VERBOSE_DEBUG,"IO.CLOSE. Channel ID=%d",pre_io_close_a[0] & 0xFFFF );
+
+  
+      	//Si canal es el mio ficticio 
+       	int indice_canal=qltraps_find_open_file(pre_io_close_a[0] & 0xFFFF);
+
+        if (indice_canal>=0  ) {
+        	debug_printf (VERBOSE_DEBUG,"Closing file/device %s",qltraps_fopen_files[indice_canal].ql_file_name);
+
+    	    ql_restore_d_registers(pre_io_close_d,7);
+            ql_restore_a_registers(pre_io_close_a,6);            
+
+        	//Si no es dispositivo, fclose
+        	if (!qltraps_fopen_files[indice_canal].es_dispositivo) {
+        		fclose(qltraps_fopen_files[indice_canal].qltraps_last_open_file_handler_unix);
+        	}
+
+        	//Liberar ese item del array
+        	qltraps_fopen_files[indice_canal].open_file.v=0;
+
+
+        	//Volver de ese trap
+        	m68k_set_reg(M68K_REG_PC,0x5e);
+        	//Ajustar stack para volver
+        	int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+        	reg_a7 +=12;
+        	m68k_set_reg(M68K_REG_A7,reg_a7);
+
+
+        	//No error.
+        	m68k_set_reg(M68K_REG_D0,0);
+
+
+       }
+
+    }
+
+
+}

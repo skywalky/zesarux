@@ -18570,10 +18570,10 @@ void menu_audio_chip_info(MENU_ITEM_PARAMETERS)
 
 	else if (i8049_chip_present) {
 		//8049 del QL
-		menu_generic_message_format("Audio Chip Info","Audio Chip: Intel 8049\nFrequency: %d Hz\n"
+		menu_generic_message_format("Audio Chip Info","Audio Chip: Intel 8049\nFrequency: %d MHz\n"
 									"Min Tone Frequency: %d Hz\nMax Tone Frequency: %d Hz\n"
 									"2 PseudoTone Channels, Noise Effects",
-			chip_frequency,min_freq,max_freq
+			chip_frequency/1000000,min_freq,max_freq
 		);
 	}
 
