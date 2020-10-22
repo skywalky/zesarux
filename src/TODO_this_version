@@ -256,9 +256,14 @@ Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness 
 
 -probar exec con cabecera estandard
 chess_exe
-games/Fives
+games/Fives -> ideal 
+->despues de FS.HEADR, D3 debe ser memoria a asignar y lo saca de primeros 4 bytes de la cabecera->no tiene mucho sentido
+
+
 einstein
 k&g
 locricket
 
 -abrir menu deja teclado raro? probar con spaceinv o spook por ejemplo
+
+-HEADR retornar siempre 14 bytes solo 

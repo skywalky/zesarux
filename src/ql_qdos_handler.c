@@ -132,8 +132,9 @@ void core_ql_trap_one(void)
 
   //Ver pagina 173. 18.14 Trap Keys
 
-  debug_printf (VERBOSE_PARANOID,"Trap 1. D0=%02XH D1=%02XH A0=%08XH A1=%08XH A6=%08XH PC=%05XH is : ",
-    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_D1),m68k_get_reg(NULL,M68K_REG_A0),
+  debug_printf (VERBOSE_PARANOID,"Trap 1. D0=%02XH D1=%02XH D2=%02XH D3=%02XH A0=%08XH A1=%08XH A6=%08XH PC=%05XH is : ",
+    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_D1),m68k_get_reg(NULL,M68K_REG_D2),
+    m68k_get_reg(NULL,M68K_REG_D3),m68k_get_reg(NULL,M68K_REG_A0),
     m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_PC));
 
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
@@ -607,7 +608,9 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
   //Inicializamos cabecera a 0
   int i;
-  for (i=0;i<64;i++) ql_writebyte(destino+i,0);
+  //for (i=0;i<64;i++) ql_writebyte(destino+i,0);
+
+  for (i=0;i<14;i++) ql_writebyte(destino+i,0);
 
 
   //unsigned int tamanyo=get_file_size(nombre);
@@ -620,6 +623,8 @@ https://qlforum.co.uk/viewtopic.php?t=113
   ql_writebyte(destino+1,(tamanyo>>16)&255);
   ql_writebyte(destino+2,(tamanyo>>8)&255);
   ql_writebyte(destino+3,tamanyo&255);
+
+  printf("poniendo tamanyo %d en offset %X\n",tamanyo,destino);
 
   //Ver si tiene cabecera el archivo
   if (qltraps_fopen_files[indice_canal].has_header_on_read) {
@@ -667,8 +672,11 @@ https://qlforum.co.uk/viewtopic.php?t=113
       printf("Returning header with some of values from file header. NO MAGIC\n");
 
       //Nos faltan los 6 primeros
+
+      //int longitud_copiar=QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC;
+      int longitud_copiar=14-6;
         int i;
-        for (i=0;i<QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC;i++) {
+        for (i=0;i<longitud_copiar;i++) {
             moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header_nomagic[i];
             unsigned int destino_cabecera=destino+6+i;
             printf("Setting add %0XH value %02XH\n",destino_cabecera,byte_leido);
@@ -680,7 +688,11 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
 
         //Tipo. 
-        ql_writebyte(destino+5,1); //ejecutable 1         
+        ql_writebyte(destino+5,1); //ejecutable 1     
+
+
+        //?????
+        //ql_writebyte(destino+4,1);       
 
   }  
 
@@ -1361,13 +1373,16 @@ void handle_trap_fs_headr(void)
     int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
     if (indice_canal>=0 ) {
 
-        
-        ql_get_file_header(indice_canal,ql_get_a1_after_trap_4() );
-        
-
         ql_restore_d_registers(pre_fs_headr_d,7);
         ql_restore_a_registers(pre_fs_headr_a,6);
 
+        printf("Length buffer: %d\n",m68k_get_reg(NULL,M68K_REG_D2)&0xFFFF);
+        printf("Base buffer: %X\n",ql_get_a1_after_trap_4());
+
+        
+        ql_get_file_header(indice_canal,ql_get_a1_after_trap_4() );
+        
+        
         //Volver de ese trap
         m68k_set_reg(M68K_REG_PC,0x5e);
         unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
@@ -1377,13 +1392,20 @@ void handle_trap_fs_headr(void)
         //No error.
         m68k_set_reg(M68K_REG_D0,0);
 
+        int longitud=14;
+
         //D1.W length of header read. A1 top of read buffer
-        m68k_set_reg(M68K_REG_D1,64);
+        m68k_set_reg(M68K_REG_D1,longitud);
 
         //Decimos que A1 es A1 top of read buffer
-        unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
-        reg_a1 +=64;
+        unsigned int reg_a1=ql_get_a1_after_trap_4(); //m68k_get_reg(NULL,M68K_REG_A1);
+        reg_a1 +=longitud;
         //reg_a1 +=14; 
+        printf ("Retornando A1 con %X\n",reg_a1);
+
+        //temp
+        //Parece que es final de cabecera + 256. por que??? no se, obtenido mediante depuracion
+        reg_a1=14+256;
         m68k_set_reg(M68K_REG_A1,reg_a1);
 
 
