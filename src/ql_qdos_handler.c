@@ -63,6 +63,9 @@ z80_byte ql_last_trap=0;
 int ql_previous_trap_was_4=0;
 
 
+//Parametro que deducimos cuando el archivo ejecutable no tiene cabecera
+moto_int ql_task_default_data_size=8192;
+
 
 void ql_footer_mdflp_operating(void)
 {
@@ -146,6 +149,10 @@ void core_ql_trap_one(void)
       case 0x01:
         debug_printf (VERBOSE_PARANOID,"Trap 1: MT.CJOB");
       break;
+
+      case 0x0A:
+        debug_printf (VERBOSE_PARANOID,"Trap 1: MT.ACTIV");
+      break;      
 
       case 0x0C:
         debug_printf (VERBOSE_PARANOID,"Trap 1: MT.ALLOC");
@@ -482,40 +489,26 @@ int ql_if_file_has_header(unsigned int indice_canal)
         }
     }
     else {
-        //Puede que haya cabecera sin magic, tipo chess_exe
+        //Esto no es deteccion de cabecera, esto es para detectar
+        //que es un archivo SIN cabecera, pero con la info tipica de un QDOS task
+        //Ejemplo del QL chess (chess_exe)
         
 
-        //Y leemos tal cual del archivo los primeros 64-6 bytes
-        //Ejemplo del QL chess:
         /*
         00000000  60 00 00 1a 00 00 4a fb  00 12 50 73 69 6f 6e 20  |`.....J...Psion |
         00000010  43 68 65 73 73 20 56 32  2e 30 32 51 41 fa 01 b6  |Chess V2.02QA...|
         00000020  20 08 42 00 22 40 45 fa  00 30 24 89 30 3c 82 a5  | .B."@E..0$.0<..|
         00000030  47 fa 01 a2 49 fa 01 36  97 cc 26 0b 91 c3 93 c3  |G...I..6..&.....|
 
-        Vemos que esos datos estan empezando a partir del offset 6
 
-            00  long        file length
-            04  byte        file access key (not yet implemented - currently always zero)
-            05  byte        file type
-            06  8 bytes     file type-dependent information
-            0E  2+36 bytes  filename
-            34 long         reserved for update date (not yet implemented)
-            38 long         reserved for reference date (not yet implemented)
-            3c long         reserved for backup date (not yet implemented)
         */
 
-       //Buscamos el 4a fb
-        if (buffer[6]==0x4a && buffer[7]==0xfb) {
-            printf("Has normal QDOS header\n");
 
-            int header_length=QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC;
-            return header_length;
-        }
 
-        else {
-            debug_printf(VERBOSE_DEBUG,"File has no header");
-        }
+       if (buffer[6]==0x4a && buffer[7]==0xfb) {
+           //Para indentificar. No es un header que busquemos realmente
+            printf("Has QDOS task header (and NO file header)\n");
+       }
 
 
     }
@@ -617,6 +610,48 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
 	unsigned int tamanyo=qltraps_fopen_files[indice_canal].last_file_buf_stat.st_size;
 
+    //temporal para decirle que pasamos de los 64-6 bytes iniciales del archivo
+
+/*
+    En la llamada a EXEC del QDOS, llama a FS.HEADR y luego:
+
+    //Comparar que tipo sea ejecucion
+        CMPI.B  #$01,-$09(A6,A1.L)
+       BNE     L06990
+
+
+       MOVEQ   #$01,D0
+       MOVEQ   #-$01,D1
+    //Leer longitud archivo (primeros 0-3 bytes cabecera)
+       MOVE.L  -$0E(A6,A1.L),D2
+    //Leer los primeros 4 bytes de file type-dependent information
+       MOVE.L  -$08(A6,A1.L),D3
+       SUBA.L  A1,A1
+       MOVEM.L D2/A0/A3,-(A7)
+
+    //Nota: Estos -$0E(A6,A1.L),D2 se supone que lee la direccion:
+    //A6+A1-0eH, y el contenido lo guarda en D2
+
+    
+    //Llamar a MT.CJOB
+    //En este:
+    D2.L length of code (bytes)
+    D3.L length of data space AO 
+    A1 start address or 0
+
+       TRAP    #$01
+
+    //Ese trap no inicia la tarea, sino que la asigna:
+
+    This trap allocates space in the transient program area, 
+    and sets up a job entry in the scheduler tables. This does not invoke the job and the only initialisation 
+    is that two words of 0 are put on the stack. The program itself would normally be loaded, by another job, 
+    into the space allocated, after this system call. The stack pointer saved in the job control area points 
+    initially to two zero words on the stack (at the highest addresses in the job's data area); if channels are 
+    to be opened for the job, or a command string is to be passed to the job, then this can be done before the job is activated.
+    If D1 is negative, the new job is independent, otherwise it is owned by the calling job.    
+*/
+
   //Guardar tamanyo big endian
   //TODO: deberia restar el tamano de la cabecera: de la que tiene firma Magic o la que no tiene?
   ql_writebyte(destino+0,(tamanyo>>24)&255);
@@ -625,6 +660,28 @@ https://qlforum.co.uk/viewtopic.php?t=113
   ql_writebyte(destino+3,tamanyo&255);
 
   printf("poniendo tamanyo %d en offset %X\n",tamanyo,destino);
+
+  //Y nos inventamos los primers 4 bytes del file type-dependent information
+  //Que es el tamaño de los datos
+  //Ponemos arbitrariamente 8192
+  //Ya se sobreescribira si hace falta
+    //06 tenemos : 00 00 20 00 = 8192
+
+
+    printf("assuming default data size: %d\n",ql_task_default_data_size);
+
+    //ql_writebyte(destino+8,32);
+  ql_writebyte(destino+6,(ql_task_default_data_size>>24)&255);
+  ql_writebyte(destino+7,(ql_task_default_data_size>>16)&255);
+  ql_writebyte(destino+8,(ql_task_default_data_size>>8)&255);
+  ql_writebyte(destino+9,ql_task_default_data_size&255);    
+
+    //Tipo. Asumimos siempre ejecutable 1
+    ql_writebyte(destino+5,1); //ejecutable 1  
+
+    
+
+
 
   //Ver si tiene cabecera el archivo
   if (qltraps_fopen_files[indice_canal].has_header_on_read) {
@@ -666,40 +723,11 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
   }
 
-  //Ver si tiene cabecera el archivo
-  else if (qltraps_fopen_files[indice_canal].has_header_no_magic_on_read) {
 
-      printf("Returning header with some of values from file header. NO MAGIC\n");
-
-      //Nos faltan los 6 primeros
-
-      //int longitud_copiar=QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC;
-      int longitud_copiar=14-6;
-        int i;
-        for (i=0;i<longitud_copiar;i++) {
-            moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header_nomagic[i];
-            unsigned int destino_cabecera=destino+6+i;
-            printf("Setting add %0XH value %02XH\n",destino_cabecera,byte_leido);
-
-
-            ql_writebyte(destino_cabecera,byte_leido);
-        }
- 
-
-
-        //Tipo. 
-        ql_writebyte(destino+5,1); //ejecutable 1     
-
-
-        //?????
-        //ql_writebyte(destino+4,1);       
-
-  }  
 
     else {
-        printf("Returnig header but file has no header\n");
-        //Tipo. 
-        ql_writebyte(destino+5,1); //ejecutable 1
+        printf("Returning header but file has no header\n");
+
 
 
     }
@@ -1367,7 +1395,9 @@ void handle_trap_io_edlin(void)
 
 void handle_trap_fs_headr(void)
 {
-    debug_printf (VERBOSE_PARANOID,"FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
+    //debug_printf (VERBOSE_PARANOID,"FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
+
+    debug_printf (VERBOSE_DEBUG,"FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
     //Si canal es el mio ficticio 100
     int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
@@ -1377,7 +1407,7 @@ void handle_trap_fs_headr(void)
         ql_restore_a_registers(pre_fs_headr_a,6);
 
         printf("Length buffer: %d\n",m68k_get_reg(NULL,M68K_REG_D2)&0xFFFF);
-        printf("Base buffer: %X\n",ql_get_a1_after_trap_4());
+        printf("Base buffer: %X  (A1=%4XH)\n",ql_get_a1_after_trap_4(),m68k_get_reg(NULL,M68K_REG_A1));
 
         
         ql_get_file_header(indice_canal,ql_get_a1_after_trap_4() );
@@ -1398,16 +1428,13 @@ void handle_trap_fs_headr(void)
         m68k_set_reg(M68K_REG_D1,longitud);
 
         //Decimos que A1 es A1 top of read buffer
-        unsigned int reg_a1=ql_get_a1_after_trap_4(); //m68k_get_reg(NULL,M68K_REG_A1);
+        
+        //A1 retorna tal cual como entraba (sin sumar posible A6) y sumar la longitud 14
+        unsigned int reg_a1;
+        reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
         reg_a1 +=longitud;
-        //reg_a1 +=14; 
         printf ("Retornando A1 con %X\n",reg_a1);
-
-        //temp
-        //Parece que es final de cabecera + 256. por que??? no se, obtenido mediante depuracion
-        reg_a1=14+256;
         m68k_set_reg(M68K_REG_A1,reg_a1);
-
 
     }
 }
@@ -2327,26 +2354,11 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
                 //Leemos esa cabecera
                     //printf("Reading QDOS file header\n");
 
-                    //Si cabecera es sin magic, leer especial
-                    if (tiene_cabecera==QL_POSSIBLE_HEADER_LENGTH_NO_MAGIC) {
-
-                        qltraps_fopen_files[canal].has_header_no_magic_on_read=1;
-                        /*
-                        del archivo nos faltan los 6 primeros
-                                    00  long        file length
-            04  byte        file access key (not yet implemented - currently always zero)
-            05  byte        file type
-            06  8 bytes     file type-dependent information
-                        Tenemos a partir del offset 06
-                        */
-
-                       fread(qltraps_fopen_files[canal].file_header_nomagic,1,tiene_cabecera,archivo);
-                    }
-
-                    else {
-                        qltraps_fopen_files[canal].has_header_on_read=1;
-                        fread(qltraps_fopen_files[canal].file_header,1,tiene_cabecera,archivo);
-                    }
+ 
+                    
+                    qltraps_fopen_files[canal].has_header_on_read=1;
+                    fread(qltraps_fopen_files[canal].file_header,1,tiene_cabecera,archivo);
+                
 
 
                     //Debug escribir cabecera

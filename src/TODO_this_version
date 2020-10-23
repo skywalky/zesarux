@@ -266,4 +266,13 @@ locricket
 
 -abrir menu deja teclado raro? probar con spaceinv o spook por ejemplo
 
--HEADR retornar siempre 14 bytes solo 
+-4 bytes primeros de un archivo sin cabecera, que ponemos un 8192, que sea parametrizable desde menu 
+
+
+-juegos funcionan ql:
+catchjack.zip
+bullshot.zip
+trek1/2
+fred(aunque creo que es basic)
+
+-Funciones QL que usan disco, que activen footer/icono de actividad microdrive
