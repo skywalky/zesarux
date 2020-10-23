@@ -652,14 +652,14 @@ https://qlforum.co.uk/viewtopic.php?t=113
     If D1 is negative, the new job is independent, otherwise it is owned by the calling job.    
 */
 
-  //Guardar tamanyo big endian
-  //TODO: deberia restar el tamano de la cabecera: de la que tiene firma Magic o la que no tiene?
-  ql_writebyte(destino+0,(tamanyo>>24)&255);
-  ql_writebyte(destino+1,(tamanyo>>16)&255);
-  ql_writebyte(destino+2,(tamanyo>>8)&255);
-  ql_writebyte(destino+3,tamanyo&255);
+    //Guardar tamanyo big endian
+    //TODO: deberia restar el tamano de la cabecera: de la que tiene firma Magic o la que no tiene?
+    ql_writebyte(destino+0,(tamanyo>>24)&255);
+    ql_writebyte(destino+1,(tamanyo>>16)&255);
+    ql_writebyte(destino+2,(tamanyo>>8)&255);
+    ql_writebyte(destino+3,tamanyo&255);
 
-  printf("poniendo tamanyo %d en offset %X\n",tamanyo,destino);
+    printf("poniendo tamanyo %d en offset %X\n",tamanyo,destino);
 
   //Y nos inventamos los primers 4 bytes del file type-dependent information
   //Que es el tamaño de los datos
@@ -670,17 +670,15 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
     printf("assuming default data size: %d\n",ql_task_default_data_size);
 
-    //ql_writebyte(destino+8,32);
-  ql_writebyte(destino+6,(ql_task_default_data_size>>24)&255);
-  ql_writebyte(destino+7,(ql_task_default_data_size>>16)&255);
-  ql_writebyte(destino+8,(ql_task_default_data_size>>8)&255);
-  ql_writebyte(destino+9,ql_task_default_data_size&255);    
+    ql_writebyte(destino+6,(ql_task_default_data_size>>24)&255);
+    ql_writebyte(destino+7,(ql_task_default_data_size>>16)&255);
+    ql_writebyte(destino+8,(ql_task_default_data_size>>8)&255);
+    ql_writebyte(destino+9,ql_task_default_data_size&255);    
 
     //Tipo. Asumimos siempre ejecutable 1
     ql_writebyte(destino+5,1); //ejecutable 1  
 
     
-
 
 
   //Ver si tiene cabecera el archivo
@@ -727,12 +725,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
     else {
         printf("Returning header but file has no header\n");
-
-
-
     }
-
-
 
 
 
