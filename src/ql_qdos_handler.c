@@ -1117,8 +1117,38 @@ void ql_load_binary_file(FILE *ptr_file,unsigned int valor_leido_direccion, unsi
 }
 
 
+void ql_qdos_set_return_no_error(void)
+{
 
 
+    //Como decir no error
+    /*
+    pg 11 qltm.pdf
+    When the TRAP operation is complete, control is returned to the program at the location following the TRAP instruction,
+    with an error key in all 32 bits of D0. This key is set to zero if the operation has been completed successfully,
+    and is set to a negative number for any of the system-defined errors (see section 17.1 for a list of the meanings
+    of the possible error codes). The key may also be set to a positive number, in which case that number is a pointer
+    to an error string, relative to address $8000. The string is in the usual Qdos form of a word giving the length of
+    the string, followed by the characters.
+    */
+
+
+    //No error.
+    m68k_set_reg(M68K_REG_D0,0);    
+}
+
+void ql_qdos_return_from_trap(void)
+{
+    //Volver de ese trap
+    //en direccion 0x5E hay un "RTE": Return from exception
+    //Serviria cualquier otra dirección con RTE
+    m68k_set_reg(M68K_REG_PC,0x5e);
+
+    //Ajustar stack para volver. Saltamos 3 long words 
+    unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
+    reg_a7 +=12;
+    m68k_set_reg(M68K_REG_A7,reg_a7);    
+}
 
 void handle_trap_io_fline(void) 
 {
@@ -1142,6 +1172,8 @@ void handle_trap_io_fline(void)
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0) {
 
+        	//Indicar actividad en md flp
+        	ql_footer_mdflp_operating();
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
 
@@ -1156,9 +1188,6 @@ void handle_trap_io_fline(void)
           		m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
       			return;
         	}
-
-        	 //Indicar actividad en md flp
-        	ql_footer_mdflp_operating();
 
 
           	/*
@@ -1215,7 +1244,6 @@ void handle_trap_io_fline(void)
 
 
                   
-
           	unsigned int valor_retorno;
 			
           	unsigned int leidos=ql_read_io_fline(indice_canal,puntero_destino,&valor_retorno,m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
@@ -1232,17 +1260,9 @@ void handle_trap_io_fline(void)
           	m68k_set_reg(M68K_REG_D1,leidos);
 
 	  	
-
-        	
-          
+        
           //Volver de ese trap
-          m68k_set_reg(M68K_REG_PC,0x5e);
-          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-          reg_a7 +=12;
-          m68k_set_reg(M68K_REG_A7,reg_a7);
-
-
-         
+          ql_qdos_return_from_trap();
 
 
 
@@ -1267,6 +1287,8 @@ void handle_trap_io_edlin(void)
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0) {
 
+        	 //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.EDLIN from our microdrive channel without error. EXPERIMENTAL!!!");
 
@@ -1282,11 +1304,6 @@ void handle_trap_io_edlin(void)
       			return;
         	}
 
-        	 //Indicar actividad en md flp
-        	ql_footer_mdflp_operating();
-
-
-       
 
           	/*
           	Entrada:
@@ -1370,17 +1387,10 @@ void handle_trap_io_edlin(void)
           	m68k_set_reg(M68K_REG_D1,leidos);
 
 	  	
-
-        	
           
           //Volver de ese trap
-          m68k_set_reg(M68K_REG_PC,0x5e);
-          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-          reg_a7 +=12;
-          m68k_set_reg(M68K_REG_A7,reg_a7);
+          ql_qdos_return_from_trap();
 
-
-    
 
 
         }
@@ -1396,6 +1406,9 @@ void handle_trap_fs_headr(void)
     int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
     if (indice_canal>=0 ) {
 
+        //Indicar actividad en md flp
+        ql_footer_mdflp_operating();        
+
         ql_restore_d_registers(pre_fs_headr_d,7);
         ql_restore_a_registers(pre_fs_headr_a,6);
 
@@ -1407,13 +1420,10 @@ void handle_trap_fs_headr(void)
         
         
         //Volver de ese trap
-        m68k_set_reg(M68K_REG_PC,0x5e);
-        unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-        reg_a7 +=12;
-        m68k_set_reg(M68K_REG_A7,reg_a7);
+        ql_qdos_return_from_trap();
 
         //No error.
-        m68k_set_reg(M68K_REG_D0,0);
+        ql_qdos_set_return_no_error();
 
         int longitud=14;
 
@@ -1443,6 +1453,9 @@ void handle_trap_fs_mdinf(void)
     int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
     if (indice_canal>=0 ) {
 
+        //Indicar actividad en md flp
+        ql_footer_mdflp_operating();        
+
         //printf ("Mi canal MDINF\n");
 
 
@@ -1458,13 +1471,10 @@ void handle_trap_fs_mdinf(void)
         
         
         //Volver de ese trap
-        m68k_set_reg(M68K_REG_PC,0x5e);
-        unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-        reg_a7 +=12;
-        m68k_set_reg(M68K_REG_A7,reg_a7);
+        ql_qdos_return_from_trap();
 
         //No error.
-        m68k_set_reg(M68K_REG_D0,0);
+        ql_qdos_set_return_no_error();
 
         //D1.W length of header read. A1 top of read buffer
         //m68k_set_reg(M68K_REG_D1,64);
@@ -1490,9 +1500,6 @@ void handle_trap_fs_mdinf(void)
         ql_writebyte(puntero++,' '); //10
 
 
-
-
-
         }
 }
 
@@ -1509,7 +1516,8 @@ void handle_trap_fs_heads(void)
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0 ) {
 
-        	
+             //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();        	
 
 
         	ql_restore_d_registers(pre_fs_heads_d,7);
@@ -1540,13 +1548,10 @@ void handle_trap_fs_heads(void)
         	
           
           //Volver de ese trap
-          m68k_set_reg(M68K_REG_PC,0x5e);
-          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-          reg_a7 +=12;
-          m68k_set_reg(M68K_REG_A7,reg_a7);
+          ql_qdos_return_from_trap();
 
           //No error.
-          m68k_set_reg(M68K_REG_D0,0);
+          ql_qdos_set_return_no_error();
 
 
         }
@@ -1565,10 +1570,10 @@ void handle_trap_io_sstrg(void)
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0 ) {
 
+            //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();     
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.SSTRG from our microdrive channel without error");
-
-
 
 
           	/*
@@ -1590,8 +1595,7 @@ void handle_trap_io_sstrg(void)
 
           	*/
 
-        	
-        	
+        	    	
 
         	//O a A1 a secas
         	//depende de si se ha llamado trap4 o no
@@ -1606,16 +1610,12 @@ void handle_trap_io_sstrg(void)
 			
 
 
-
           	debug_printf (VERBOSE_PARANOID,"IO.SSTRG - restoreg registers. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%08XH",
         		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
         		m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
 
 
-        
-
-
-          	
+                	
           	int longitud=m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF;
 
             //Grabar los datos en disco
@@ -1670,17 +1670,10 @@ void handle_trap_io_sstrg(void)
 
 
         	  //No error. 
-          	m68k_set_reg(M68K_REG_D0,0);
-
-  	
-
-        	
-          
+          	ql_qdos_set_return_no_error();
+         
           //Volver de ese trap
-          m68k_set_reg(M68K_REG_PC,0x5e);
-          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-          reg_a7 +=12;
-          m68k_set_reg(M68K_REG_A7,reg_a7);
+          ql_qdos_return_from_trap();
 
 
 
@@ -1741,6 +1734,9 @@ void handle_trap_fs_load(void)
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0 ) {
 
+            //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();            
+
           ql_restore_d_registers(pre_fs_load_d,7);
           ql_restore_a_registers(pre_fs_load_a,6);
 
@@ -1750,8 +1746,6 @@ void handle_trap_fs_load(void)
             debug_printf (VERBOSE_PARANOID,"Loading file at address %05XH with length: %d",m68k_get_reg(NULL,M68K_REG_A1),longitud);
             //void load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
 
-             //Indicar actividad en md flp
-        	ql_footer_mdflp_operating();
 
             //longitud la saco del propio archivo, ya que no me llega bien de momento pues no retornaba bien fs.headr
             //int longitud=get_file_size(ql_nombre_archivo_load);
@@ -1762,13 +1756,10 @@ void handle_trap_fs_load(void)
 
 
           //Volver de ese trap
-          m68k_set_reg(M68K_REG_PC,0x5e);
-          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-          reg_a7 +=12;
-          m68k_set_reg(M68K_REG_A7,reg_a7);
+          ql_qdos_return_from_trap();
 
           //No error.
-          m68k_set_reg(M68K_REG_D0,0);
+          ql_qdos_set_return_no_error();
 
           //m68k_set_reg(M68K_REG_D0,-7);
 
@@ -1779,8 +1770,6 @@ void handle_trap_fs_load(void)
           m68k_set_reg(M68K_REG_A1,reg_a1);
 
 
-          //Le decimos en A1 que la cabecera esta en la memoria de pantalla
-          //m68k_set_reg(M68K_REG_A1,131072);
 
         }
 }
@@ -1794,6 +1783,9 @@ void handle_trap_fs_save(void)
         int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
         if (indice_canal>=0 ) {
 
+            //Indicar actividad en md flp
+            ql_footer_mdflp_operating();            
+
           ql_restore_d_registers(pre_fs_save_d,7);
           ql_restore_a_registers(pre_fs_save_a,6);
 
@@ -1803,8 +1795,7 @@ void handle_trap_fs_save(void)
             debug_printf (VERBOSE_PARANOID,"Saving file from address %05XH with length: %d",m68k_get_reg(NULL,M68K_REG_A1),longitud);
             //void load_binary_file(char *binary_file_load,int valor_leido_direccion,int valor_leido_longitud)
 
-             //Indicar actividad en md flp
-        	ql_footer_mdflp_operating();
+
 
             //Grabar los datos en disco
         	FILE *ptr_file;
@@ -1822,22 +1813,17 @@ void handle_trap_fs_save(void)
 
 
           //Volver de ese trap
-          m68k_set_reg(M68K_REG_PC,0x5e);
-          unsigned int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-          reg_a7 +=12;
-          m68k_set_reg(M68K_REG_A7,reg_a7);
+          ql_qdos_return_from_trap();
 
           //No error.
-          m68k_set_reg(M68K_REG_D0,0);
+          ql_qdos_set_return_no_error();
 
-          //m68k_set_reg(M68K_REG_D0,-7);
 
 
           //Decimos que A1 es A1 top address after load
           unsigned int reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
           reg_a1 +=longitud;
           m68k_set_reg(M68K_REG_A1,reg_a1);
-
 
 
         }
@@ -1998,10 +1984,14 @@ trap 2 salta a:
     }
 
 
-    if (get_pc_register()==0x032B4) ql_post_trap_two();
+    if (get_pc_register()==0x032B4) {
+        ql_post_trap_two();
+    }
 
 
-    if (get_pc_register()==0x0337C) ql_post_trap_three();
+    if (get_pc_register()==0x0337C) {
+        ql_post_trap_three();
+    }
 
 }
 
@@ -2067,10 +2057,6 @@ void ql_post_trap_three(void)
 
 
 
-
-
-
-
 void  ql_post_trap_two(void)
 {
 
@@ -2123,15 +2109,9 @@ D3.L: code:
 
 
 
-       
-
-
       //Hacer que si es mdv1_ ... volver
 
-      //A7=0002846EH
-      //A7=0002847AH
-      //Incrementar A7 en 12
-      //set-register pc=5eh. apunta a un rte
+
 
       int es_dispositivo=0;
 
@@ -2189,32 +2169,12 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
         //ql_restore_a_registers(pre_io_open_a,7);
 
 
-
         //Volver de ese trap
-        m68k_set_reg(M68K_REG_PC,0x5e);
-        //Ajustar stack para volver
-        int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-        reg_a7 +=12;
-        m68k_set_reg(M68K_REG_A7,reg_a7);
-
-
-
-
-
-        //Como decir no error
-        /*
-        pg 11 qltm.pdf
-        When the TRAP operation is complete, control is returned to the program at the location following the TRAP instruction,
-        with an error key in all 32 bits of D0. This key is set to zero if the operation has been completed successfully,
-        and is set to a negative number for any of the system-defined errors (see section 17.1 for a list of the meanings
-        of the possible error codes). The key may also be set to a positive number, in which case that number is a pointer
-        to an error string, relative to address $8000. The string is in the usual Qdos form of a word giving the length of
-        the string, followed by the characters.
-        */
+        ql_qdos_return_from_trap();
 
 
         //No error.
-        m68k_set_reg(M68K_REG_D0,0);
+        ql_qdos_set_return_no_error();
 
         char ql_io_open_device[PATH_MAX];
         char ql_io_open_file[PATH_MAX];
@@ -2223,7 +2183,6 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         if (!es_dispositivo) {
 
-			ql_footer_mdflp_operating();			
 
             //Si no hay root folder, directamente decimos que no se encuentra archivo
             if (!ql_microdrive_floppy_emulation) {
@@ -2234,9 +2193,10 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
             }
 
 
+            //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();
 
-
-   	     ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
+   	        ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
 
         	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
 
@@ -2424,6 +2384,9 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
        	int indice_canal=qltraps_find_open_file(pre_io_close_a[0] & 0xFFFF);
 
         if (indice_canal>=0  ) {
+            //Indicar actividad en md flp
+        	ql_footer_mdflp_operating();
+
         	debug_printf (VERBOSE_DEBUG,"Closing file/device %s",qltraps_fopen_files[indice_canal].ql_file_name);
 
     	    ql_restore_d_registers(pre_io_close_d,7);
@@ -2439,15 +2402,11 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 
         	//Volver de ese trap
-        	m68k_set_reg(M68K_REG_PC,0x5e);
-        	//Ajustar stack para volver
-        	int reg_a7=m68k_get_reg(NULL,M68K_REG_A7);
-        	reg_a7 +=12;
-        	m68k_set_reg(M68K_REG_A7,reg_a7);
+        	ql_qdos_return_from_trap();
 
 
         	//No error.
-        	m68k_set_reg(M68K_REG_D0,0);
+        	ql_qdos_set_return_no_error();
 
 
        }

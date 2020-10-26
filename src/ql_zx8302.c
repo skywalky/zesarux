@@ -369,6 +369,14 @@ moto_byte ql_zx8032_readbyte(unsigned int Address)
             */
 
             timer_seconds=timer_get_current_seconds();
+
+            //En QL: Time starts at 00:00 1 January 1961
+            //En Unix, empieza en 1970
+            //Hay que sumar los segundos entre esas dos fechas
+
+            //Son 283.996.800 segundos
+            timer_seconds += 283996800;
+
             int offset_byte=Address-0x18000;
 
             //MSB. Primer byte es el mas significativo (rotar 24 bits derecha)
