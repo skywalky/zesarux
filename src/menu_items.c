@@ -23431,6 +23431,8 @@ void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
                     (ql_microdrive_floppy_emulation ? 'X' : ' ') );
 
                     if (ql_microdrive_floppy_emulation) {
+                            menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                            
                             char string_ql_mdv1_root_dir_shown[28];
                             char string_ql_mdv2_root_dir_shown[28];
                             char string_ql_flp1_root_dir_shown[28];

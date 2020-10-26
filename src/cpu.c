@@ -2021,6 +2021,9 @@ printf (
 		"--ql-mdv1-root-dir p       Set QL mdv1 root directory\n"
 		"--ql-mdv2-root-dir p       Set QL mdv2 root directory\n"
 		"--ql-flp1-root-dir p       Set QL flp1 root directory\n"
+        "--ql-mdv1-read-only        Mark mdv1 as read only\n"
+        "--ql-mdv2-read-only        Mark mdv2 as read only\n"
+        "--ql-flp1-read-only        Mark flp1 as read only\n"
 
 
 
@@ -6569,7 +6572,17 @@ int parse_cmdline_options(void) {
 			}
 
 
+            else if (!strcmp(argv[puntero_parametro],"--ql-mdv1-read-only")) {
+                ql_device_mdv1_readonly=1;
+            }
 
+            else if (!strcmp(argv[puntero_parametro],"--ql-mdv2-read-only")) {
+                ql_device_mdv2_readonly=1;
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--ql-flp1-read-only")) {
+                ql_device_flp1_readonly=1;
+            }
 
 
 

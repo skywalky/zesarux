@@ -2147,6 +2147,7 @@ D3.L: code:
       int hacer_trap=0;
 
 
+        //Si tiene prefijo mdv1, mdv2 o flp1
       if (ql_si_ruta_mdv_flp(ql_nombre_archivo_load)) hacer_trap=1;
 
       if (!hacer_trap) {
@@ -2164,7 +2165,7 @@ D3.L: code:
 
       if (hacer_trap) {
 
-        debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv1, mdv2 or flp1");
+        //debug_printf (VERBOSE_PARANOID,"Returning from trap without opening anything because file is mdv1, mdv2 or flp1");
 
         //ql_debug_force_breakpoint("En IO.OPEN");
 
@@ -2312,6 +2313,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
             //Ver si ese device esta permitido escribir (ql_io_open_device)
             if (ql_qdos_check_device_readonly(ql_io_open_device)) {
                 //Retornar error not complete (no hay error de read only)
+                debug_printf(VERBOSE_DEBUG,"Device %s is set as read only",ql_io_open_device);
                 m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_NC);
                 return;
             }
