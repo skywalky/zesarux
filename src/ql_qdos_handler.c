@@ -214,8 +214,12 @@ unsigned int pre_fs_mdinf_d[8];
 unsigned int pre_fs_heads_a[8];
 unsigned int pre_fs_heads_d[8];
 
-unsigned int pre_io_fline_a[8];
-unsigned int pre_io_fline_d[8];
+unsigned int pre_io_fline_fstrg_a[8];
+unsigned int pre_io_fline_fstrg_d[8];
+
+unsigned int pre_io_edlin_a[8];
+unsigned int pre_io_edlin_d[8];
+
 
 void ql_store_a_registers(unsigned int *destino, int ultimo)
 {
@@ -315,22 +319,22 @@ void core_ql_trap_three(void)
     case 0x2:
       debug_printf(VERBOSE_PARANOID,"Trap 3: IO.FLINE. fetch a line of bytes terminated by ASCII LF (10)");
       	      //Guardar registros
-      ql_store_a_registers(pre_io_fline_a,7);
-      ql_store_d_registers(pre_io_fline_d,7);
+      ql_store_a_registers(pre_io_fline_fstrg_a,7);
+      ql_store_d_registers(pre_io_fline_fstrg_d,7);
     break;
 
 	case 0x3:
       debug_printf (VERBOSE_PARANOID,"Trap 3: IO.FSTRG. fetch a string of bytes");
       	      //Guardar registros
-      ql_store_a_registers(pre_io_fline_a,7);
-      ql_store_d_registers(pre_io_fline_d,7);	  
+      ql_store_a_registers(pre_io_fline_fstrg_a,7);
+      ql_store_d_registers(pre_io_fline_fstrg_d,7);	  
 	break;
 
     case 0x4:
       debug_printf (VERBOSE_PARANOID,"Trap 3: IO.EDLIN");
       	      //Guardar registros
-      ql_store_a_registers(pre_io_fline_a,7);
-      ql_store_d_registers(pre_io_fline_d,7);	      
+      ql_store_a_registers(pre_io_edlin_a,7);
+      ql_store_d_registers(pre_io_edlin_d,7);	      
     break;
 
     case 0x5:
@@ -1154,7 +1158,7 @@ void ql_qdos_return_from_trap(void)
     m68k_set_reg(M68K_REG_A7,reg_a7);    
 }
 
-void handle_trap_io_fline(void) 
+void handle_trap_io_fline_fstrg(void) 
 {
 		
 		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
@@ -1174,7 +1178,7 @@ void handle_trap_io_fline(void)
 
         //Si canal es de los mios
         //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
-        int indice_canal=qltraps_find_open_file(pre_io_fline_a[0] & 0xFFFF);
+        int indice_canal=qltraps_find_open_file(pre_io_fline_fstrg_a[0] & 0xFFFF);
         if (indice_canal>=0) {
 
         	//Indicar actividad en md flp
@@ -1226,8 +1230,8 @@ void handle_trap_io_fline(void)
         	//O a A1 a secas
         	//depende de si se ha llamado trap4 o no
 
-          	ql_restore_d_registers(pre_io_fline_d,7);
-          	ql_restore_a_registers(pre_io_fline_a,6);
+          	ql_restore_d_registers(pre_io_fline_fstrg_d,7);
+          	ql_restore_a_registers(pre_io_fline_fstrg_a,6);
 
           	unsigned int puntero_destino;
 
@@ -1352,8 +1356,8 @@ void handle_trap_io_edlin(void)
         	//O a A1 a secas
         	//depende de si se ha llamado trap4 o no
 
-          	ql_restore_d_registers(pre_io_fline_d,7);
-          	ql_restore_a_registers(pre_io_fline_a,6);
+          	ql_restore_d_registers(pre_io_edlin_d,7);
+          	ql_restore_a_registers(pre_io_edlin_a,6);
 
           	unsigned int puntero_destino;
 
@@ -2037,12 +2041,12 @@ void ql_post_trap_three(void)
 
         //Trap 3 IO.FLINE
         case 0x2:
-            handle_trap_io_fline();   
+            handle_trap_io_fline_fstrg();   
         break;
 
         //Trap 3 IO.FSTRG
         case 0x3:
-            handle_trap_io_fline();           
+            handle_trap_io_fline_fstrg();           
         break;
 
         //Trap 3 IO.EDLIN
