@@ -53,6 +53,7 @@ Fixed QL bugs:
 -Fixed possible hang calling IO.SSTRG
 -Fixed cursor flashing
 -Fixed RTC emulation
+-Fixed reading keyboard when menu open
 
 Fixed reading keys on SDL and X11 drivers with default keymap and machines QL, MSX and Spectravideo
 Fixed restoring machine to msx, coleco, sg1000 and svi

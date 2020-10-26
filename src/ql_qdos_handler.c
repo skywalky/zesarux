@@ -659,7 +659,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
     ql_writebyte(destino+2,(tamanyo>>8)&255);
     ql_writebyte(destino+3,tamanyo&255);
 
-    printf("poniendo tamanyo %d en offset %X\n",tamanyo,destino);
+    //printf("poniendo tamanyo %d en offset %X\n",tamanyo,destino);
 
   //Y nos inventamos los primers 4 bytes del file type-dependent information
   //Que es el tamaño de los datos
@@ -668,7 +668,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
     //06 tenemos : 00 00 20 00 = 8192
 
 
-    printf("assuming default data size: %d\n",ql_task_default_data_size);
+    //printf("assuming default data size: %d\n",ql_task_default_data_size);
 
     ql_writebyte(destino+6,(ql_task_default_data_size>>24)&255);
     ql_writebyte(destino+7,(ql_task_default_data_size>>16)&255);
@@ -685,7 +685,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
   if (qltraps_fopen_files[indice_canal].has_header_on_read) {
 
       //Leemos esa cabecera, que ya tenemos en la estructura de archivos abiertos
-        printf("Returning header (QDOS magic) with some of values from file header\n");
+        debug_printf(VERBOSE_DEBUG,"Returning header (QDOS magic) with some of values from file header");
 
 
         //Valores usados de esa cabecera,desde el offset 20:
@@ -724,7 +724,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
 
     else {
-        printf("Returning header but file has no header\n");
+        debug_printf(VERBOSE_DEBUG,"Returning header but file has no header. Guessing some values");
     }
 
 
@@ -1412,8 +1412,10 @@ void handle_trap_fs_headr(void)
         ql_restore_d_registers(pre_fs_headr_d,7);
         ql_restore_a_registers(pre_fs_headr_a,6);
 
-        printf("Length buffer: %d\n",m68k_get_reg(NULL,M68K_REG_D2)&0xFFFF);
-        printf("Base buffer: %X  (A1=%4XH)\n",ql_get_a1_after_trap_4(),m68k_get_reg(NULL,M68K_REG_A1));
+        //printf("Length buffer: %d\n",m68k_get_reg(NULL,M68K_REG_D2)&0xFFFF);
+        //printf("Base buffer: %X  (A1=%4XH)\n",ql_get_a1_after_trap_4(),m68k_get_reg(NULL,M68K_REG_A1));
+
+        //TODO: asumimos siempre meter 14 bytes de cabecera, aunque se hayan pedido menos
 
         
         ql_get_file_header(indice_canal,ql_get_a1_after_trap_4() );
@@ -1436,7 +1438,7 @@ void handle_trap_fs_headr(void)
         unsigned int reg_a1;
         reg_a1=m68k_get_reg(NULL,M68K_REG_A1);
         reg_a1 +=longitud;
-        printf ("Retornando A1 con %X\n",reg_a1);
+        //printf ("Retornando A1 con %X\n",reg_a1);
         m68k_set_reg(M68K_REG_A1,reg_a1);
 
     }

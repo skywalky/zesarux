@@ -11393,7 +11393,7 @@ initialised at $30000 to take advantage of this dual- screen feature: the presen
 Bits 0,2,4,5 and 6 of the display control register should never be set to anything other than zero, as they are
 reserved and may have unpredictable results in future versions of the QL hardware.
 */
-					//En modo 256x256 hay parpadeo
+            //En modo 256x256 hay parpadeo
 
 
             byte_leido_h=*memoria_pantalla_ql;
@@ -11458,10 +11458,8 @@ const int ql_colortable_original[8]={
 
             if (video_mode==0) {
 
-                //color2=0;
                 int npixel;
-                //byte_leido_h=15;
-                //byte_leido_l=0;
+
                 for (npixel=7;npixel>=0;npixel--) {
                     //G7 G6 G5 G4 G3 G2 G1 G0			R7 R6 R5 R4 R3 R2 R1 R0		512-pixel
 

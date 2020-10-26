@@ -510,11 +510,6 @@ void ql_ipc_write_ipc_read_keyrow(int row)
     * It responds with a byte whose bits indicate which of the up to eight keys on
     * the specified row of the keyrow table are held down. */
 
-    //De momento nada
-
-	//unsigned char temp_resultado=0;
-
-	//if (ql_pulsado_tecla()) temp_resultado++;
 	unsigned char resultado_row;
 
 	resultado_row=ql_keyboard_table[row&7] ^ 255;
@@ -535,7 +530,8 @@ void ql_ipc_write_ipc_read_keyrow(int row)
 	Por ejemplo, para leer si se pulsa Space, tenemos que leer row 1, y ver luego si bit 6 está a 1 (40H)
 	*/
 
-	if (zxvision_key_not_sent_emulated_mach() )  resultado_row=255;
+    //Si menu abierto, no tecla pulsada
+	if (zxvision_key_not_sent_emulated_mach() )  resultado_row=0;
 
 	debug_printf (VERBOSE_PARANOID,"Reading ipc command 9: read keyrow. row %d returning %02XH",row,resultado_row);
 
