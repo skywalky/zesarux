@@ -225,7 +225,8 @@ total_palette_colours total_palette_colours_array[TOTAL_PALETAS_COLORES]={
 	{"Sam Coupe","Sam 128 colour palette",SAM_INDEX_FIRST_COLOR,SAM_TOTAL_PALETTE_COLOURS},
 	{"TBBlue RGB9","TBBlue 512 colour palette",RGB9_INDEX_FIRST_COLOR,RGB9_TOTAL_PALETTE_COLOURS},
 	{"TSConf","TSConf 15 bit palette",TSCONF_INDEX_FIRST_COLOR,TSCONF_TOTAL_PALETTE_COLOURS},
-	{"VDP9918A","16 colour standard",VDP_9918_INDEX_FIRST_COLOR,VDP_9918_TOTAL_PALETTE_COLOURS}
+	{"VDP9918A","16 colour standard",VDP_9918_INDEX_FIRST_COLOR,VDP_9918_TOTAL_PALETTE_COLOURS},
+    {"QL","8 colour",QL_INDEX_FIRST_COLOR,QL_TOTAL_PALETTE_COLOURS}
 };
 
 
@@ -367,6 +368,19 @@ const int vdp9918_colortable_original[16]={
 };
 
 
+
+
+//colores para QL
+const int ql_colortable_original[8]={
+0x000000, //Negro
+0x0000ff, //Azul
+0xff0000, //Rojo
+0xff00ff, //Magenta
+0x00ff00, //Verde
+0x00ffff, //Cyan
+0xffff00, //Amarillo
+0xffffff  //Blanco
+};
 
 
 //Tabla con colores para tema de GUI Solarized. 
@@ -8664,6 +8678,13 @@ G  G   R   R   B   B
 					screen_set_colour_normal(VDP_9918_INDEX_FIRST_COLOR+i,(r<<16)|(g<<8)|b);					
 				}
 
+				//Colores QL
+				for (i=0;i<QL_TOTAL_PALETTE_COLOURS;i++) {
+					valorgris=i*16;
+					VALOR_GRIS_A_R_G_B
+					screen_set_colour_normal(QL_INDEX_FIRST_COLOR+i,(r<<16)|(g<<8)|b);					
+				}                
+
 
 
 		}
@@ -8848,6 +8869,11 @@ Bit 6 GRN1 most  significant bit of green.
 				for (i=0;i<VDP_9918_TOTAL_PALETTE_COLOURS;i++) {
 					screen_set_colour_normal(VDP_9918_INDEX_FIRST_COLOR+i,vdp9918_colortable_original[i]);
 				}
+
+				//Colores QL
+				for (i=0;i<QL_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(QL_INDEX_FIRST_COLOR+i,ql_colortable_original[i]);
+				}                
 
 
 		}
@@ -11275,22 +11301,9 @@ void screen_text_repinta_pantalla_ace(void)
 void ql_putpixel_zoom(int x,int y,unsigned int color)
 {
 
-        int dibujar=0;
+        scr_putpixel_zoom(x,y,QL_INDEX_FIRST_COLOR+color);
+        scr_putpixel_zoom(x,y+1,QL_INDEX_FIRST_COLOR+color);
 
-        //if (x>255) dibujar=1;
-        //else if (y>191) dibujar=1;
-        if (scr_ver_si_refrescar_por_menu_activo(x/8,y/8)) dibujar=1;
-
-
-				//temp
-				//dibujar=1;
-
-				//if (x>256) printf ("x: %d y: %d",x,y);
-				//TODO ajustar a paleta QL
-        if (dibujar) {
-                scr_putpixel_zoom(x,y,color);
-                scr_putpixel_zoom(x,y+1,color );
-        }
 }
 
 
@@ -11345,6 +11358,7 @@ Bit	Purpose
     int flashing_color;
 
     for (y=0;y<total_alto;y++){
+        //Al principio de cada linea, flash es siempre 0
         int ql_linea_flashing=0;
         for (x=0;x<total_ancho;) {
             
@@ -11393,24 +11407,26 @@ reserved and may have unpredictable results in future versions of the QL hardwar
                 int npixel;
                 for (npixel=7;npixel>=0;npixel-=2) {
 
-//G3 F3 G2 F2 G1 F1 G0 F0                 R3 B3 R2 B2 R1 B1 R0 B0         256-pixel
+                    //G3 F3 G2 F2 G1 F1 G0 F0                 R3 B3 R2 B2 R1 B1 R0 B0         256-pixel
 
-                    //TODO:esto se puede mejorar
+                    
                     green=((byte_leido_h)>>npixel)&1;
                     red=((byte_leido_l)>>npixel)&1;
                     blue=((byte_leido_l)>>(npixel-1))&1;
                                                                         
 
-						//Temp convertir a color spectrum
 /*
-0x000000,  //negro
-0x0000C0,  //azul
-0xC00000,  //rojo
-0xC000C0,  //magenta
-0x00C000,  //verde
-0x00C0C0,  //cyan
-0xC0C000,  //amarillo
-0xC0C0C0,  //blanco
+//colores para QL
+const int ql_colortable_original[8]={
+0x000000, //Negro
+0x0000ff, //Azul
+0xff0000, //Rojo
+0xff00ff, //Magenta
+0x00ff00, //Verde
+0x00ffff, //Cyan
+0xffff00, //Amarillo
+0xffffff  //Blanco
+};
 */
 
                     color1=green*4+red*2+blue;	// GRB
@@ -11418,7 +11434,6 @@ reserved and may have unpredictable results in future versions of the QL hardwar
 
                     if (ql_linea_flashing && estado_parpadeo.v) {
                         color1=flashing_color;
-                        //printf ("estado parpadeo: %d\n",estado_parpadeo.v);
                     }
 
           			ql_putpixel_zoom(x++,y*2,color1);
@@ -11427,9 +11442,6 @@ reserved and may have unpredictable results in future versions of the QL hardwar
                     //Ver si cambia valor bit flash
                     int bit_flashing=((byte_leido_h)>>(npixel-1))&1;
                     if (bit_flashing) {
-                        //printf("Flashing active bit on x: %d y: %d npixel: %d\n",x,y,npixel);
-                        //Pausa de momento para avisarnos que hay el cursor de inicio parpadeando...
-                        //sleep(2);
                         ql_linea_flashing ^=1;
                         flashing_color=color1;
                     }
@@ -11451,11 +11463,9 @@ reserved and may have unpredictable results in future versions of the QL hardwar
                 //byte_leido_h=15;
                 //byte_leido_l=0;
                 for (npixel=7;npixel>=0;npixel--) {
-//G7 G6 G5 G4 G3 G2 G1 G0			R7 R6 R5 R4 R3 R2 R1 R0		512-pixel
+                    //G7 G6 G5 G4 G3 G2 G1 G0			R7 R6 R5 R4 R3 R2 R1 R0		512-pixel
 
-                    //TODO: esto se puede mejorar
-
-
+                    
                     green=((byte_leido_h))&128;
                     red=((byte_leido_l))&128;
 
