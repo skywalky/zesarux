@@ -229,9 +229,7 @@ estan en subcarpeta editview/
 
 -Idea: en vez de tener la imagen Mmc, que tenga los archivos que contiene y cree el Mmc copiándolos 
 
--Archivos binarios qdos con cabecera desde qlay
 
--QL: Poder usar el mixer para desactivar fuzziness, randomness etc 
 
 -Probar Filesel en Windows 
 
@@ -243,9 +241,7 @@ que acaba generando mismo valor entero
 Chip de sonido QL se debería hacer como el AY o el SN, para evitar ciertas frecuencias que se repiten
 Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness etc) de momento lo dejo como está
 
-
-
--QL opcion para mdv1,mdv2,flp read only
+-QL: Poder usar el mixer para desactivar fuzziness, randomness etc 
 
 -QL mejorar teclado y repeticiones:
 *si pulsar menos de 1 segundo, devolver esa tecla y ninguna mas en ese segundo

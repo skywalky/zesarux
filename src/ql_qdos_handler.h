@@ -53,11 +53,18 @@
 //end of file
 #define QDOS_ERROR_CODE_EF -10
 
+//file error
+#define QDOS_ERROR_CODE_FE -16
+
 extern void ql_rom_traps(void);
 
 extern char ql_mdv1_root_dir[];
 extern char ql_mdv2_root_dir[];
 extern char ql_flp1_root_dir[];
+
+extern int ql_device_mdv1_readonly;
+extern int ql_device_mdv2_readonly;
+extern int ql_device_flp1_readonly;
 
 extern int ql_microdrive_floppy_emulation;
 

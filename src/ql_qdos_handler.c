@@ -1840,6 +1840,24 @@ void handle_trap_fs_save(void)
         }
 }
 
+int ql_device_mdv1_readonly=0;
+int ql_device_mdv2_readonly=0;
+int ql_device_flp1_readonly=0;
+
+int ql_qdos_check_device_readonly(char *device)
+{
+    //Ver si ese device es read only
+    //printf("device: %s\n",device);
+
+    if (!strcasecmp(device,"mdv1")) return ql_device_mdv1_readonly;
+    if (!strcasecmp(device,"mdv2")) return ql_device_mdv2_readonly;
+    if (!strcasecmp(device,"flp1")) return ql_device_flp1_readonly;
+
+    //Cualquier otra cosa, asumimos read only
+    return 1;
+
+}
+
 void ql_rom_traps(void)
 {
 
@@ -2209,6 +2227,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
    	        ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
 
+            //printf("device: %s\n",ql_io_open_device);
+
         	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
 
             //Ver modo archivo
@@ -2289,7 +2309,15 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
         //Si modo es escritura
         if (file_mode==2 || file_mode==3) {
+            //Ver si ese device esta permitido escribir (ql_io_open_device)
+            if (ql_qdos_check_device_readonly(ql_io_open_device)) {
+                //Retornar error not complete (no hay error de read only)
+                m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_NC);
+                return;
+            }
+
             archivo=fopen(ql_nombrecompleto,"wb");
+
         }
 		else {
             archivo=fopen(ql_nombrecompleto,"rb");

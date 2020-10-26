@@ -23381,7 +23381,7 @@ void menu_ql_flp1_follow_mdv1(MENU_ITEM_PARAMETERS)
 void menu_ql_data_size_headerless(MENU_ITEM_PARAMETERS)
 {
     char string_zoom[6];
-    int temp_zoom;
+    //int temp_zoom;
 
 
 
@@ -23396,6 +23396,22 @@ void menu_ql_data_size_headerless(MENU_ITEM_PARAMETERS)
         ql_task_default_data_size=parse_string_to_number(string_zoom);
     }
 }
+
+void menu_ql_mdv1_readonly(MENU_ITEM_PARAMETERS)
+{
+    ql_device_mdv1_readonly ^= 1;
+}
+
+void menu_ql_mdv2_readonly(MENU_ITEM_PARAMETERS)
+{
+    ql_device_mdv2_readonly ^= 1;
+}
+
+void menu_ql_flp1_readonly(MENU_ITEM_PARAMETERS)
+{
+    ql_device_flp1_readonly ^= 1;
+}
+
 
 void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
 {
@@ -23424,14 +23440,23 @@ void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
 
                             menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"Mdv1 root dir:");
                             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_mdv1,NULL,"[%s]",string_ql_mdv1_root_dir_shown);
+                            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_mdv1_readonly,NULL,"[%c] Read only",
+                                (ql_device_mdv1_readonly ? 'X' : ' ') );                            
+
                             menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
 
                             menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"Mdv2 root dir:");
                             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_mdv2,NULL,"[%s]",string_ql_mdv2_root_dir_shown);
+                            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_mdv2_readonly,NULL,"[%c] Read only",
+                                (ql_device_mdv2_readonly ? 'X' : ' ') ); 
                             menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+  
 
                             menu_add_item_menu_format(array_menu_common,MENU_OPCION_SEPARADOR,NULL,NULL,"Flp1 root dir:");
                             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_flp1,NULL,"[%s]",string_ql_flp1_root_dir_shown);
+                            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_flp1_readonly,NULL,"[%c] Read only",
+                                (ql_device_flp1_readonly ? 'X' : ' ') );   
 
 							menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
