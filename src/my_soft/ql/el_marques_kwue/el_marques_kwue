@@ -2,7 +2,7 @@
 20 MODE 8:CLS:CLS#2
 30 CLS:CLS#0:CLEAR:AT#0;0,0:INPUT #0;"´Quieres ver el reloj (S/N)?";a$
 40 IF a$=="N" THEN GO TO 70
-50 MISTake  IF a$=="S" THEN EXEC mdv1_reloj:reloj:SDATE a‰o,mes,dia,hora,minuto,segundo:GO TO 70
+50 IF a$=="S" THEN EXEC mdv1_reloj:reloj:SDATE anyo,mes,dia,hora,minuto,segundo:GO TO 70
 60 GO TO 30
 70 CLEAR:PAPER #0;4:INK #0;7:CLS:CLS#0:AT #0;0,0:PRINT#0;"AUTOR:DAVID HERNANDEZ 1989,1992"
 80 inicializar:PAPER 2:CLS
