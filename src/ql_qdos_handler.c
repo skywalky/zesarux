@@ -699,7 +699,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
         for (i=0;i<10;i++) {
             moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header[20+4+i];
             unsigned int destino_cabecera=destino+5+i;
-            printf("Setting offset %02d value %02XH\n",i,byte_leido);
+            //printf("Setting offset %02d value %02XH\n",i,byte_leido);
 
 
             ql_writebyte(destino_cabecera,byte_leido);
@@ -785,10 +785,13 @@ In the first case, there are 10 bytes with the values present in bytes 4 to 13 o
 
 
 
-    unsigned int reg_a1=ql_get_a1_after_trap_4();    
-    //mostrar algunos bytes
-    printf("Writing qdos header\n");
+   
     
+    //printf("Writing qdos header\n");
+    
+    /*
+    //mostrar algunos bytes
+     unsigned int reg_a1=ql_get_a1_after_trap_4();    
     for (i=0;i<10;i++) {
         unsigned int offset=reg_a1+4+i;
         moto_byte byte_leido;
@@ -799,6 +802,7 @@ In the first case, there are 10 bytes with the values present in bytes 4 to 13 o
     }      
 
     printf("\n");
+    */
 
 
     //Y escribir dicha cabecera
@@ -1533,18 +1537,23 @@ void handle_trap_fs_heads(void)
             //D1.W length of header set
             //A1 end of header def
 
-            printf("Returning from FS.HEADS with no error\n");
+            //printf("Returning from FS.HEADS with no error\n");
 
             m68k_set_reg(M68K_REG_D1,14);
 
+            //mostrar algunos bytes
           unsigned int reg_a1=ql_get_a1_after_trap_4();    
-          //mostrar algunos bytes
+
+
+          /*
           printf("Begin header\n");
           int i=0;
           for (i=0;i<64;i++) {
               printf ("%02XH ",peek_byte_z80_moto(reg_a1+i));
           }      
           printf("End header\n");
+          */ 
+
           reg_a1 +=14;
           m68k_set_reg(M68K_REG_A1,reg_a1);            
         	
