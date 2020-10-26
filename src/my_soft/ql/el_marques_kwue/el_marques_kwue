@@ -314,4 +314,4 @@
 18030 IF OPCION$=="N" THEN NEW
 18040 GO TO 18010
 18050 END DEFine volver_a_jugar
-19500 MISTake  DEFine PROCedure reloj:INPUT#0;"A‰o:";a‰o:INPUT#0;"mes:";mes:INPUT#0;"dia:";dia:INPUT#0;"hora:";hora:INPUT#0;"minutos:";minuto:INPUT#0;"segundos:";segundo:END DEFine reloj
+19500 DEFine PROCedure reloj:INPUT#0;"A‰o:";anyo:INPUT#0;"mes:";mes:INPUT#0;"dia:";dia:INPUT#0;"hora:";hora:INPUT#0;"minutos:";minuto:INPUT#0;"segundos:";segundo:END DEFine reloj
