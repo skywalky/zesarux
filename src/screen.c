@@ -11316,50 +11316,38 @@ Bit	Purpose
 
 */
 
-	z80_byte mc_stat=ql_mc_stat;
-	int video_mode=(mc_stat>>3)&1;
-	//printf ("mc_stat: %02XH video_mode: %d\n",mc_stat,video_mode);
+    z80_byte mc_stat=ql_mc_stat;
+    int video_mode=(mc_stat>>3)&1;
+    //printf ("mc_stat: %02XH video_mode: %d\n",mc_stat,video_mode);
 
 
 
-	int total_alto;
-	int total_ancho;
-	int x,y;
+    int total_alto;
+    int total_ancho;
+    int x,y;
 
-	unsigned int color1;
-	//unsigned int color2;
+    unsigned int color1;
+    //unsigned int color2;
 
-	z80_byte green,red,blue;
+    z80_byte green,red,blue;
 
-	z80_byte byte_leido_h,byte_leido_l;
+    z80_byte byte_leido_h,byte_leido_l;
 
-	unsigned char *memoria_pantalla_ql;
+    unsigned char *memoria_pantalla_ql;
 
-	memoria_pantalla_ql=&memoria_ql[0x20000 + ((mc_stat & 0x80) << 8)];
+    memoria_pantalla_ql=&memoria_ql[0x20000 + ((mc_stat & 0x80) << 8)];
 
-	//int temp_cuenta=0;
 
-/*
-//temp prueba mover offset pantalla
-memoria_pantalla_ql=&memoria_ql[temp_offset_ql_pan];
-temp_offset_cuando++;
-if (temp_offset_cuando==40) {
 
-	temp_offset_ql_pan +=8192;
-	if (temp_offset_ql_pan>262144-32768) temp_offset_ql_pan=131072;
-	temp_offset_cuando=0;
-}
-*/
+    total_alto=256;
+    total_ancho=512;
 
-		total_alto=256;
-		total_ancho=512;
+    int flashing_color;
 
-		int flashing_color;
-
-		for (y=0;y<total_alto;y++){
-			int ql_linea_flashing=0;
-			for (x=0;x<total_ancho;) {
-				//printf ("x: %d\n",x);
+    for (y=0;y<total_alto;y++){
+        int ql_linea_flashing=0;
+        for (x=0;x<total_ancho;) {
+            
 /*
 In 512-pixel mode, two bits per pixel are used, and the GREEN and BLUE signals are tied together, giving a choice of four colours:
 black, white, green and red. On a monochrome screen, this will translate as a four level greyscale.
@@ -11394,24 +11382,24 @@ reserved and may have unpredictable results in future versions of the QL hardwar
 					//En modo 256x256 hay parpadeo
 
 
-					byte_leido_h=*memoria_pantalla_ql;
-					memoria_pantalla_ql++;
+            byte_leido_h=*memoria_pantalla_ql;
+            memoria_pantalla_ql++;
 
-					byte_leido_l=*memoria_pantalla_ql;
-					memoria_pantalla_ql++;
+            byte_leido_l=*memoria_pantalla_ql;
+            memoria_pantalla_ql++;
 
-					if (video_mode==1) {
+            if (video_mode==1) {
 
-   							int npixel;
+                int npixel;
                 for (npixel=7;npixel>=0;npixel-=2) {
 
 //G3 F3 G2 F2 G1 F1 G0 F0                 R3 B3 R2 B2 R1 B1 R0 B0         256-pixel
 
-                                                                //esto se puede mejorar
-                  green=((byte_leido_h)>>npixel)&1;
-                  red=((byte_leido_l)>>npixel)&1;
-									blue=((byte_leido_l)>>(npixel-1))&1;
-                                                                        //color1=red*4+green*2+blue; //RGB
+                    //TODO:esto se puede mejorar
+                    green=((byte_leido_h)>>npixel)&1;
+                    red=((byte_leido_l)>>npixel)&1;
+                    blue=((byte_leido_l)>>(npixel-1))&1;
+                                                                        
 
 						//Temp convertir a color spectrum
 /*
@@ -11425,68 +11413,68 @@ reserved and may have unpredictable results in future versions of the QL hardwar
 0xC0C0C0,  //blanco
 */
 
-								color1=green*4+red*2+blue;	// GRB
-								//printf ("estado parpadeo: %d\n",estado_parpadeo.v);
+                    color1=green*4+red*2+blue;	// GRB
+                    //printf ("estado parpadeo: %d\n",estado_parpadeo.v);
 
-								if (ql_linea_flashing && estado_parpadeo.v) {
-									color1=flashing_color;
-									//printf ("estado parpadeo: %d\n",estado_parpadeo.v);
-								}
+                    if (ql_linea_flashing && estado_parpadeo.v) {
+                        color1=flashing_color;
+                        //printf ("estado parpadeo: %d\n",estado_parpadeo.v);
+                    }
 
           			ql_putpixel_zoom(x++,y*2,color1);
           			ql_putpixel_zoom(x++,y*2,color1);
 
-								//Ver si cambia valor bit flash
-								int bit_flashing=((byte_leido_h)>>(npixel-1))&1;
-								if (bit_flashing) {
-									//printf("Flashing active bit on x: %d y: %d npixel: %d\n",x,y,npixel);
-									//Pausa de momento para avisarnos que hay el cursor de inicio parpadeando...
-									//sleep(2);
-									ql_linea_flashing ^=1;
-									flashing_color=color1;
-								}
+                    //Ver si cambia valor bit flash
+                    int bit_flashing=((byte_leido_h)>>(npixel-1))&1;
+                    if (bit_flashing) {
+                        //printf("Flashing active bit on x: %d y: %d npixel: %d\n",x,y,npixel);
+                        //Pausa de momento para avisarnos que hay el cursor de inicio parpadeando...
+                        //sleep(2);
+                        ql_linea_flashing ^=1;
+                        flashing_color=color1;
+                    }
 
-          }
-
-
-
-					}
-
-					//Al arrancar, esta mc_stat=2A=0010 1010 -> modo 4 colores
-					//512x256. 4 colours per pixel (2 bits per byte)
+                }
 
 
-					if (video_mode==0) {
 
-							//color2=0;
-							int npixel;
-							//byte_leido_h=15;
-							//byte_leido_l=0;
-							for (npixel=7;npixel>=0;npixel--) {
+            }
+
+            //Al arrancar, esta mc_stat=2A=0010 1010 -> modo 4 colores
+            //512x256. 4 colours per pixel (2 bits per byte)
+
+
+            if (video_mode==0) {
+
+                //color2=0;
+                int npixel;
+                //byte_leido_h=15;
+                //byte_leido_l=0;
+                for (npixel=7;npixel>=0;npixel--) {
 //G7 G6 G5 G4 G3 G2 G1 G0			R7 R6 R5 R4 R3 R2 R1 R0		512-pixel
 
-								//esto se puede mejorar
+                    //TODO: esto se puede mejorar
 
 
-									green=((byte_leido_h))&128;
-									red=((byte_leido_l))&128;
+                    green=((byte_leido_h))&128;
+                    red=((byte_leido_l))&128;
 
-									byte_leido_h=byte_leido_h<<1;
-									byte_leido_l=byte_leido_l<<1;
+                    byte_leido_h=byte_leido_h<<1;
+                    byte_leido_l=byte_leido_l<<1;
 
-									if (green==0 && red==0) color1=0;
-									else if (green && red==0) color1=4;
-									else if (green==0 && red) color1=2;
-									else color1=7;
+                    if (green==0 && red==0) color1=0;
+                    else if (green && red==0) color1=4;
+                    else if (green==0 && red) color1=2;
+                    else color1=7;
 
-									ql_putpixel_zoom(x++,y*2,color1);
+                    ql_putpixel_zoom(x++,y*2,color1);
 
-					}
+                }
 
-				}
+            }
 
-			}
-		}
+        }
+    }
 }
 
 
