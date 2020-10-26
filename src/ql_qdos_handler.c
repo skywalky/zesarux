@@ -1293,7 +1293,8 @@ void handle_trap_io_edlin(void)
 	
 
         //Si canal es de los mios
-        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        int indice_canal=qltraps_find_open_file(pre_io_edlin_a[0] & 0xFFFF);
         if (indice_canal>=0) {
 
         	 //Indicar actividad en md flp
@@ -1412,7 +1413,8 @@ void handle_trap_fs_headr(void)
     debug_printf (VERBOSE_DEBUG,"FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
     //Si canal es el mio ficticio 100
-    int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+    //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+    int indice_canal=qltraps_find_open_file(pre_fs_headr_a[0] & 0xFFFF);
     if (indice_canal>=0 ) {
 
         //Indicar actividad en md flp
@@ -1461,7 +1463,8 @@ void handle_trap_fs_mdinf(void)
     //printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
 
     //Si canal es el mio ficticio 100
-    int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+    //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+    int indice_canal=qltraps_find_open_file(pre_fs_mdinf_a[0] & 0xFFFF);
     if (indice_canal>=0 ) {
 
         //Indicar actividad en md flp
@@ -1524,7 +1527,8 @@ void handle_trap_fs_heads(void)
 		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
 
         //Si canal es el mio ficticio 100
-        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        int indice_canal=qltraps_find_open_file(pre_fs_heads_a[0] & 0xFFFF);
         if (indice_canal>=0 ) {
 
              //Indicar actividad en md flp
@@ -1583,7 +1587,8 @@ void handle_trap_io_sstrg(void)
 		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
 
         //Si canal es el mio ficticio 100
-        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        int indice_canal=qltraps_find_open_file(pre_io_sstrg_a[0] & 0xFFFF);
         if (indice_canal>=0 ) {
 
             //Indicar actividad en md flp
@@ -1747,7 +1752,8 @@ void handle_trap_fs_load(void)
         debug_printf (VERBOSE_PARANOID,"FS.LOAD. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
-        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        int indice_canal=qltraps_find_open_file(pre_fs_load_a[0] & 0xFFFF);
         if (indice_canal>=0 ) {
 
             //Indicar actividad en md flp
@@ -1796,7 +1802,8 @@ void handle_trap_fs_save(void)
         debug_printf (VERBOSE_PARANOID,"FS.SAVE. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
         //Si canal es el mio ficticio 100
-        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        int indice_canal=qltraps_find_open_file(pre_fs_save_a[0] & 0xFFFF);
         if (indice_canal>=0 ) {
 
             //Indicar actividad en md flp
