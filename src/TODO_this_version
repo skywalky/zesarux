@@ -136,6 +136,19 @@ https://foro.speccy.org/viewtopic.php?t=1502
 
 -combinacion de teclas para conmutar entre ventanas
 
+-Convertir scr a txt
+
+-Idea: en vez de tener la imagen Mmc, que tenga los archivos que contiene y cree el Mmc copiándolos 
+
+
+-Probar Filesel en Windows 
+
+
+-En ventana sprite navigator Tbblue, indicar parámetros de sprite relativo etc
+
+-Ventana debug I/o port que refresque continuamente y permita ir a background
+
+
 
 SV_FSTAT $AA word flashing cursor status
 
@@ -166,9 +179,6 @@ estan en subcarpeta editview/
 
 -tecla ESC QL?
 
--sonido en QL
-
--En ventana sprite navigator Tbblue, indicar parámetros de sprite relativo etc
 
 -ql: al buscar frecuencia de un pitch, si pitch esta entre dos, sacar la frecuencia media
 
@@ -200,19 +210,10 @@ estan en subcarpeta editview/
 
 - Entrada faq QL revisar
 
-- Save ok ql
-- sbytes ok ql
-
--mejorar los traps qdos
-*agrupar por trap 1,2,3 etc
-*...
 
 -ZSF soporte para QL
 
 -ZENG soporte para QL
-
--pc_clock equ    $18000 
- en escritura
 
  -Agregar ipc
 
@@ -221,17 +222,10 @@ estan en subcarpeta editview/
 
 -Timer en alguna direccion del zx8302? en el que se basa el comando pause
 
--Convertir scr a txt
 
--Ventana debug I/o port que refresque continuamente y permita ir a background
+
 
 -Debug I/o ports con los puertos/direcciones del QL 
-
--Idea: en vez de tener la imagen Mmc, que tenga los archivos que contiene y cree el Mmc copiándolos 
-
-
-
--Probar Filesel en Windows 
 
 
 -ql notas con G y F# acaban teniendo misma frecuencia efectiva. probar con playscale

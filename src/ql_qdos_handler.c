@@ -1173,7 +1173,8 @@ void handle_trap_io_fline(void)
 
 
         //Si canal es de los mios
-        int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
+        int indice_canal=qltraps_find_open_file(pre_io_fline_a[0] & 0xFFFF);
         if (indice_canal>=0) {
 
         	//Indicar actividad en md flp
