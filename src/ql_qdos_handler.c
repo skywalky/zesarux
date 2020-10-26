@@ -1198,6 +1198,8 @@ void handle_trap_io_fline_fstrg(void)
       			return;
         	}
 
+          	ql_restore_d_registers(pre_io_fline_fstrg_d,7);
+          	ql_restore_a_registers(pre_io_fline_fstrg_a,6);
 
           	/*
           	D0=$2 IO.FLINE fetch a line of characters terminated by ASCII <LF> ($A)
@@ -1230,8 +1232,7 @@ void handle_trap_io_fline_fstrg(void)
         	//O a A1 a secas
         	//depende de si se ha llamado trap4 o no
 
-          	ql_restore_d_registers(pre_io_fline_fstrg_d,7);
-          	ql_restore_a_registers(pre_io_fline_fstrg_a,6);
+
 
           	unsigned int puntero_destino;
 
@@ -1314,6 +1315,8 @@ void handle_trap_io_edlin(void)
       			return;
         	}
 
+          	ql_restore_d_registers(pre_io_edlin_d,7);
+          	ql_restore_a_registers(pre_io_edlin_a,6);
 
           	/*
           	Entrada:
@@ -1357,8 +1360,7 @@ void handle_trap_io_edlin(void)
         	//O a A1 a secas
         	//depende de si se ha llamado trap4 o no
 
-          	ql_restore_d_registers(pre_io_edlin_d,7);
-          	ql_restore_a_registers(pre_io_edlin_a,6);
+
 
           	unsigned int puntero_destino;
 
@@ -1596,6 +1598,8 @@ void handle_trap_io_sstrg(void)
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.SSTRG from our microdrive channel without error");
 
+          	ql_restore_d_registers(pre_io_sstrg_d,7);
+          	ql_restore_a_registers(pre_io_sstrg_a,6);
 
           	/*
           	Entrada:
@@ -1621,8 +1625,7 @@ void handle_trap_io_sstrg(void)
         	//O a A1 a secas
         	//depende de si se ha llamado trap4 o no
 
-          	ql_restore_d_registers(pre_io_sstrg_d,7);
-          	ql_restore_a_registers(pre_io_sstrg_a,6);
+
 
           	unsigned int puntero_origen;
 
