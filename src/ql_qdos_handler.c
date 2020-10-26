@@ -2132,7 +2132,8 @@ D3.L: code:
     if (m68k_get_reg(NULL,M68K_REG_D0)==1) {
       //en A0
       char ql_nombre_archivo_load[255];
-      int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);
+      //int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);
+      int reg_a0=pre_io_open_a[0];
       int longitud_nombre=peek_byte_z80_moto(reg_a0)*256+peek_byte_z80_moto(reg_a0+1);
       reg_a0 +=2;
       debug_printf (VERBOSE_PARANOID,"Length channel name: %d",longitud_nombre);

@@ -183,30 +183,7 @@ estan en subcarpeta editview/
 -ql: al buscar frecuencia de un pitch, si pitch esta entre dos, sacar la frecuencia media
 
 
--ql: revisar llamadas como:
 
-
-     	//Si canal es el mio ficticio 
-       	int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0) & 0xFFFF);
-
-        if (indice_canal>=0  ) {
-        	debug_printf (VERBOSE_DEBUG,"Closing file/device %s",qltraps_fopen_files[indice_canal].ql_file_name);
-
-
-
-            Ver ejemplo de io.close:
-
-
-                 	//Si canal es el mio ficticio 
-       	int indice_canal=qltraps_find_open_file(pre_io_close_a[0] & 0xFFFF);
-
-        if (indice_canal>=0  ) {
-        	debug_printf (VERBOSE_DEBUG,"Closing file/device %s",qltraps_fopen_files[indice_canal].ql_file_name);
-
-    	    ql_restore_d_registers(pre_io_close_d,7);
-            ql_restore_a_registers(pre_io_close_a,6);    
-
-    Ese A0 se puede haber sobreescrito....
 
 - Entrada faq QL revisar
 
