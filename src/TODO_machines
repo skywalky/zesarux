@@ -8,6 +8,13 @@
 http://www.rwapadventures.com/ql_wiki/index.php?title=Sinclair%20QL%20Home%20Computer&lang=en
 -Mirar uqlx a ver cómo hace el load 
 
+-QL mejorar teclado y repeticiones:
+*si pulsar menos de 1 segundo, devolver esa tecla y ninguna mas en ese segundo
+*si pulsar mas de 1 segundo, devolver tecla con repeticiones
+*ver traps de qdos y ipc afectado en esto
+
+
+
 -interrupciones de timer. Ver como lo hace uqlx:
 
 "
@@ -32,9 +39,6 @@ void FrameInt(void)
     }
 }
 
-De momento yo he hecho una chapucilla para hacer parpadear el cursor, 
-aunque genero trap 2, que es la que supuestamente llama el timer de 50 Hz, pero solo con eso no parpadearia el cursor
-
 
 -Intento interceptar funciones de lectura de sectores de microdrive. MD.READ. aparentemente tiene que saltar desde la direccion
 525CH pero ahi no parece saltar nunca,
@@ -52,9 +56,6 @@ Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spa
 
 -tema mayusculas/ minusculas en ql solo funciona directo en mac... que pasa con windows? y mac?
 
-
--implementar exec_mdv1_... mismo ejemplo con cueshell, va a   Returning header for file on address 00100H y ahi peta.
-Problema que en esos archivos objetos se ha perdido la cabecera de 64 bytes (en los zip viene incluida pero al descomprimir se pierde)
 
 
 -Chip de sonido QL se debería hacer como el AY o el SN, para evitar ciertas frecuencias que se repiten

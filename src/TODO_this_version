@@ -180,10 +180,6 @@ estan en subcarpeta editview/
 -tecla ESC QL?
 
 
--ql: al buscar frecuencia de un pitch, si pitch esta entre dos, sacar la frecuencia media
-
-
-
 
 - Entrada faq QL revisar
 
@@ -208,10 +204,7 @@ Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness 
 
 -QL: Poder usar el mixer para desactivar fuzziness, randomness etc 
 
--QL mejorar teclado y repeticiones:
-*si pulsar menos de 1 segundo, devolver esa tecla y ninguna mas en ese segundo
-*si pulsar mas de 1 segundo, devolver tecla con repeticiones
-*ver traps de qdos y ipc afectado en esto
+-cuando una tecla F no esta como default, no la envia a maquina emulada: ejemplo MSX F2, QL F5
 
 
 -juegos funcionan ql:

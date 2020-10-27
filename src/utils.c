@@ -7423,7 +7423,11 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                         case UTIL_KEY_F5:
 
                                 if (pressrelease) {
-					if (util_if_open_just_menu() )  menu_fire_event_open_menu();
+					                    if (util_if_open_just_menu() )  {
+                                            //printf("Disparar evento abrir menu\n");
+                                            menu_fire_event_open_menu();
+                                        }
+                                        //printf("Pulsado F5\n");
                                         ql_keyboard_table[0] &= (255-32); //Caso especial F5 y QL
 
                                         msx_keyboard_table[7] &= (255-2);
