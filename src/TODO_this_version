@@ -173,13 +173,6 @@ y en la doc de uqlx:
 Q: How do you manage the 50 hz interrupt of the 8049 and the Keyboard interrupt?
 
 
--QL. editor.zip tiene el TK_TOOLKIT? se queda residente?
-miniview.zip usa: TK2_EXT
-estan en subcarpeta editview/
-
--tecla ESC QL?
-
-
 
 - Entrada faq QL revisar
 

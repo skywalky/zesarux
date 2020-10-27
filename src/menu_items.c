@@ -23380,7 +23380,7 @@ void menu_ql_flp1_follow_mdv1(MENU_ITEM_PARAMETERS)
 
 void menu_ql_data_size_headerless(MENU_ITEM_PARAMETERS)
 {
-    char string_zoom[6];
+    char string_zoom[7];
     //int temp_zoom;
 
 
@@ -23391,9 +23391,10 @@ void menu_ql_data_size_headerless(MENU_ITEM_PARAMETERS)
     //menu_ventana_scanf_numero("Window Zoom",string_zoom,2);
             //menu_ventana_scanf("Window Zoom",string_zoom,2);
 
-    int retorno=menu_ventana_scanf_numero("Data size",string_zoom,6,+4096,4096,65536,1);
+    int retorno=menu_ventana_scanf_numero("Data size",string_zoom,7,+4096,0,131072,1);
     if (retorno>=0) {
-        ql_task_default_data_size=parse_string_to_number(string_zoom);
+        if (retorno<0 || retorno>131072) debug_printf(VERBOSE_DEBUG,"Invalid value. Must be in range (0-131072)");
+        else ql_task_default_data_size=parse_string_to_number(string_zoom);
     }
 }
 

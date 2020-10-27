@@ -64,7 +64,7 @@ int ql_previous_trap_was_4=0;
 
 
 //Parametro que deducimos cuando el archivo ejecutable no tiene cabecera
-moto_int ql_task_default_data_size=8192;
+moto_long ql_task_default_data_size=8192;
 
 
 void ql_footer_mdflp_operating(void)
@@ -735,7 +735,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
     //printf("assuming default data size: %d\n",ql_task_default_data_size);
     
-    unsigned int leido_data_size=(ql_readbyte(destino+6)<<24)|(ql_readbyte(destino+7)<<16)|(ql_readbyte(destino+8)<<16)|(ql_readbyte(destino+9));
+    unsigned int leido_data_size=(ql_readbyte(destino+6)<<24)|(ql_readbyte(destino+7)<<16)|(ql_readbyte(destino+8)<<8)|(ql_readbyte(destino+9));
     debug_printf(VERBOSE_DEBUG,"Final data size: %d",leido_data_size);
 
     

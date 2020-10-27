@@ -62,11 +62,9 @@ Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spa
 Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness etc) de momento lo dejo como está
 
 
-
 -get-stack-backtrace para motorola. hay que tener uno para el user stack (usp) y el otro para el stack de (sp)
 
 
--debug y otros items de menu preparados para QL. condiciones peek/poke de debug en QL no funcionan en teoria
 -funciones peek, poke punteros a funciones legacy. luego con el tiempo hacer que las de ql llamen a las que sean correspondientes
 -en ql , funciones peek , poke etc desde menu, disassemble y otros sitios no deben tener en cuenta direcciones que son i/o mapeadas
 
@@ -96,9 +94,6 @@ http://www.dilwyn.me.uk/downloads.html
 
 -util z80 moto poke pokea en motorola pero sin protección de escritura en rom
 
-
--ql:Convertir nombre ql a nombre disco. Solo cambiar la última _ por ., para poder cargar juegos que tengan una _ en su nombre  
-Esta ya?
 
 -Mdv dos formatos
 
