@@ -1231,7 +1231,8 @@ void qltraps_dir(void)
 
 
     //temmp
-    registro_a1=ql_get_a1_after_trap_4(); 
+    //registro_a1=ql_get_a1_after_trap_4(); 
+    //registro_a1 +=longitud_entrada;
 
     m68k_set_reg(M68K_REG_A1,registro_a1); 
 
@@ -1260,6 +1261,7 @@ void handle_trap_io_fline_fstrg(void)
 				,m68k_get_reg(NULL,M68K_REG_D2) );
 		}
 
+        printf("PC=%X D0 %X\n",get_pc_register(),m68k_get_reg(NULL,M68K_REG_D0));
 
 
         //Si canal es de los mios
