@@ -1261,7 +1261,7 @@ void handle_trap_io_fline_fstrg(void)
 				,m68k_get_reg(NULL,M68K_REG_D2) );
 		}
 
-        printf("PC=%X D0 %X\n",get_pc_register(),m68k_get_reg(NULL,M68K_REG_D0));
+        //printf("PC=%X D0 %X\n",get_pc_register(),m68k_get_reg(NULL,M68K_REG_D0));
 
 
         //Si canal es de los mios
@@ -1288,8 +1288,8 @@ void handle_trap_io_fline_fstrg(void)
           		m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
 
                 //temporal pruebas
-                printf("Hacer dir\n");
-                qltraps_dir();
+                //printf("Hacer dir\n");
+                //qltraps_dir();
 
       			return;
         	}
