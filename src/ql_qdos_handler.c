@@ -2192,6 +2192,7 @@ D3.L: code:
           hacer_trap=1;
       }
 
+        /* esto en teoria ya no sirve 
       if (!hacer_trap) {
       	if (
       		ql_si_ruta_parametro(ql_nombre_archivo_load,"mdv") ||
@@ -2202,6 +2203,23 @@ D3.L: code:
       		es_dispositivo=1;
       	}
       }
+      */
+
+     //Ver si ruta es tal cual mdv1_,mdv2_ o flp1_ que indica que se abre el dispositivo entero
+     if (
+         !strcasecmp(ql_nombre_archivo_load,"mdv1_") ||
+         !strcasecmp(ql_nombre_archivo_load,"mdv2_") ||
+         !strcasecmp(ql_nombre_archivo_load,"flp1_") 
+     )
+     {
+            printf("hacer trap y es dispositivo\n");
+
+            //Se supone que hacer_trap ya se ha activado en la comprobacion anterior, pero por si acaso
+            
+      		hacer_trap=1;
+      		es_dispositivo=1;         
+     }
+
 
       moto_byte file_mode;
       
