@@ -187,7 +187,9 @@ __FEATURES__
 
 * Emulates ZX Spectrum MMC Interfaces: ZXMMC, DivMMC. Support for raw (.mmc) files and hdf files
 
-* Emulates ZX Spectrum IDE Interface: DivIDE, 8-bit simple 
+* Emulates ZX Spectrum IDE Interface: DivIDE, 8-bit simple
+
+* Emulates ZX Spectrum ESXDOS file access using files from your computer
 
 * Emulates Sam Coupe IDE Interface: Atom Lite
 
@@ -202,6 +204,8 @@ __FEATURES__
 * Emulates DataDrive HiLow (beta)
 
 * Handles RAM, EPROM, Intel Flash and Hybrid (RAM+EPROM) cards on Z88
+
+* Handles QL microdrive/floppy file access using files from your computer. Allows reading Q-emuLator file headers. Allows EXECuting files without headers
 
 * Handles compressed formats zip (with internal decompressor), and tar, rar, gz through external utilities
 

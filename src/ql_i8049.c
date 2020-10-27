@@ -55,13 +55,14 @@ The IPC utilises a data bus, two 8-bit I/O ports and some control lines to contr
 #define QL_STATUS_IPC_WRITING 1
 
 //Valores que me invento para gestionar pulsaciones de teclas no ascii
+/*
 #define QL_KEYCODE_F1 256
 #define QL_KEYCODE_F2 257
 #define QL_KEYCODE_UP 258
 #define QL_KEYCODE_DOWN 259
 #define QL_KEYCODE_LEFT 260
 #define QL_KEYCODE_RIGHT 261
-
+*/
 
 unsigned char ql_ipc_last_write_value=0;
 
@@ -713,6 +714,7 @@ struct x_tabla_columna_fila ql_col_fil_letras[]={
 
 
 //Returna fila y columna para una tecla dada.
+/*
 void ql_return_fila_columna_tecla(int tecla,int *columna,int *fila)
 {
 	int c;
@@ -795,7 +797,7 @@ void ql_return_fila_columna_tecla(int tecla,int *columna,int *fila)
 	*columna=c;
 	*fila=f;
 }
-
+*/
 
 
 //Retorna caracter ascii segun tecla pulsada en ql_keyboard_table
