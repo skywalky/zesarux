@@ -714,14 +714,16 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
         int longitud=strlen(qltraps_fopen_files[indice_canal].ql_file_name);
 
-        //Nombre. 
+        //Nombre. Esto solo se deberia escribir si longitud pedida > 14
+        /*
         ql_writebyte(destino+0xe,0); //longitud nombre en big endian
         ql_writebyte(destino+0xf,longitud); //longitud nombre en big endian
 
 
         for (i=0;i<longitud;i++) {
             ql_writebyte(destino+0x10+i,qltraps_fopen_files[indice_canal].ql_file_name[i]);
-        }        
+        } 
+        */       
 
   }
 
