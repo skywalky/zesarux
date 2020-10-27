@@ -23391,7 +23391,7 @@ void menu_ql_data_size_headerless(MENU_ITEM_PARAMETERS)
     if (retorno>=0) {
         int valor=parse_string_to_number(string_data_size);
 
-        if (valor<0 || valor>131072) debug_printf(VERBOSE_DEBUG,"Invalid value. Must be in range (0-131072)");
+        if (valor<0 || valor>131072) debug_printf(VERBOSE_ERR,"Invalid value. Must be in range (0-131072)");
         else ql_task_default_data_size=valor;
     }
 }

@@ -2187,13 +2187,17 @@ D3.L: code:
 
 
         //Si tiene prefijo mdv1, mdv2 o flp1
-      if (ql_si_ruta_mdv_flp(ql_nombre_archivo_load)) hacer_trap=1;
+      if (ql_si_ruta_mdv_flp(ql_nombre_archivo_load)) {
+          printf("hacer trap\n");
+          hacer_trap=1;
+      }
 
       if (!hacer_trap) {
       	if (
       		ql_si_ruta_parametro(ql_nombre_archivo_load,"mdv") ||
       		ql_si_ruta_parametro(ql_nombre_archivo_load,"flp")
       	    ) {
+            printf("hacer trap y es dispositivo\n");
       		hacer_trap=1;
       		es_dispositivo=1;
       	}
@@ -2337,6 +2341,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
 	strcpy(qltraps_fopen_files[canal].ql_file_name,ql_nombre_archivo_load);
 
+    printf("io open es dispositivo: %d\n",es_dispositivo);
 	qltraps_fopen_files[canal].es_dispositivo=es_dispositivo;
 
     //Asumimos que no tiene cabecera al leerlo
@@ -2346,6 +2351,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 	if (!es_dispositivo) {
 		//Indicar file handle
 		FILE *archivo;
+
+        printf("ql_nombrecompleto: %s\n",ql_nombrecompleto);
 
         //Si modo es escritura
         if (file_mode==2 || file_mode==3) {
@@ -2363,6 +2370,8 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 		else {
             archivo=fopen(ql_nombrecompleto,"rb");
         }
+
+        printf("archivo pointer: %p\n",archivo);
 
 		if (archivo==NULL) {
         		debug_printf(VERBOSE_PARANOID,"File %s not found",ql_nombrecompleto);
