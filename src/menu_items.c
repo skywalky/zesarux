@@ -23380,21 +23380,19 @@ void menu_ql_flp1_follow_mdv1(MENU_ITEM_PARAMETERS)
 
 void menu_ql_data_size_headerless(MENU_ITEM_PARAMETERS)
 {
-    char string_zoom[7];
-    //int temp_zoom;
+    char string_data_size[7];
+
+
+    sprintf (string_data_size,"%d",ql_task_default_data_size);
 
 
 
-    sprintf (string_zoom,"%d",ql_task_default_data_size);
-
-
-    //menu_ventana_scanf_numero("Window Zoom",string_zoom,2);
-            //menu_ventana_scanf("Window Zoom",string_zoom,2);
-
-    int retorno=menu_ventana_scanf_numero("Data size",string_zoom,7,+4096,0,131072,1);
+    int retorno=menu_ventana_scanf_numero("Data size",string_data_size,7,+4096,0,131072,1);
     if (retorno>=0) {
-        if (retorno<0 || retorno>131072) debug_printf(VERBOSE_DEBUG,"Invalid value. Must be in range (0-131072)");
-        else ql_task_default_data_size=parse_string_to_number(string_zoom);
+        int valor=parse_string_to_number(string_data_size);
+
+        if (valor<0 || valor>131072) debug_printf(VERBOSE_DEBUG,"Invalid value. Must be in range (0-131072)");
+        else ql_task_default_data_size=valor;
     }
 }
 
@@ -23478,7 +23476,7 @@ void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
 							menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_flp1_follow_mdv1,NULL,"[%c] FLP1 path follows MDV1",
                     (ql_flp1_follow_mdv1.v ? 'X' : ' ') );
 
-                            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_data_size_headerless,NULL,"[%5d] Data size for headerless exe",
+                            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_ql_data_size_headerless,NULL,"[%6d] Data size for headerless exe",
                                 ql_task_default_data_size);
 
                     }
