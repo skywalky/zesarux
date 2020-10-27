@@ -511,7 +511,7 @@ int ql_if_file_has_header(unsigned int indice_canal)
 
        if (buffer[6]==0x4a && buffer[7]==0xfb) {
            //Para indentificar. No es un header que busquemos realmente
-            printf("Has QDOS task header (and NO file header)\n");
+            debug_printf(VERBOSE_DEBUG,"Has QDOS task header (and NO file header)");
        }
 
 
@@ -701,8 +701,8 @@ https://qlforum.co.uk/viewtopic.php?t=113
         //O sea saltamos los 4 primeros, que ya hemos puesto un poco antes
         int i;
         for (i=0;i<10;i++) {
-            moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header[20+4+i];
-            unsigned int destino_cabecera=destino+5+i;
+            moto_byte byte_leido=qltraps_fopen_files[indice_canal].file_header[20+i];
+            unsigned int destino_cabecera=destino+4+i;
             //printf("Setting offset %02d value %02XH\n",i,byte_leido);
 
 
@@ -731,8 +731,12 @@ https://qlforum.co.uk/viewtopic.php?t=113
         debug_printf(VERBOSE_DEBUG,"Returning header but file has no header. Guessing some values");
     }
 
+    //printf("assuming default data size: %d\n",ql_task_default_data_size);
+    
+    unsigned int leido_data_size=(ql_readbyte(destino+6)<<24)|(ql_readbyte(destino+7)<<16)|(ql_readbyte(destino+8)<<16)|(ql_readbyte(destino+9));
+    debug_printf(VERBOSE_DEBUG,"Final data size: %d",leido_data_size);
 
-
+    
 }
 
 
@@ -2028,6 +2032,9 @@ trap 2 salta a:
     }
 
 
+
+
+
     if (get_pc_register()==0x032B4) {
         ql_post_trap_two();
     }
@@ -2132,11 +2139,25 @@ D3.L: code:
     if (m68k_get_reg(NULL,M68K_REG_D0)==1) {
       //en A0
       char ql_nombre_archivo_load[255];
-      //int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);
-      int reg_a0=pre_io_open_a[0];
+      int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);
+
+      //Aunque no entiendo aun, hay veces que A0 no entra bien cuando se guarda en pre_io_open_a[0]
+      //int reg_a0=pre_io_open_a[0];
+      //Haciendo: a=respr(10000): lbytes mdv1_ext,a -> mete a0=a1=f8ah y en esa f8ah no hay nada con sentido
+      //Pero cuando entramos aquí en pc=0x032B4, A0 está bien. raro raro...
+      //Es mas, justo antes de llamar a ese trap, los registros estan asi mal
+
+	//if (ql_previous_trap_was_4) {
+	//			reg_a0 += m68k_get_reg(NULL,M68K_REG_A6);
+	//}
+
+      debug_printf (VERBOSE_PARANOID,"Pointer to file name: %X",reg_a0);
       int longitud_nombre=peek_byte_z80_moto(reg_a0)*256+peek_byte_z80_moto(reg_a0+1);
       reg_a0 +=2;
       debug_printf (VERBOSE_PARANOID,"Length channel name: %d",longitud_nombre);
+
+      //comprobar limite
+      if (longitud_nombre>254) longitud_nombre=254;
 
       char c;
       int i=0;
@@ -2250,7 +2271,7 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
             //Ver modo archivo
             file_mode=m68k_get_reg(NULL,M68K_REG_D3);
-            //printf("File mode: %d\n",file_mode);
+            debug_printf(VERBOSE_DEBUG,"File mode: %d",file_mode);
             /*
             D3.L: code:
 0 old (exclusive) file or device

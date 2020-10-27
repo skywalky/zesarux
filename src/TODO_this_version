@@ -197,12 +197,6 @@ estan en subcarpeta editview/
 
 *rand_cmd equ    14      random number generator, returns a sixteen bit number.
 
--Timer en alguna direccion del zx8302? en el que se basa el comando pause
-
-
-
-
--Debug I/o ports con los puertos/direcciones del QL 
 
 
 -ql notas con G y F# acaban teniendo misma frecuencia efectiva. probar con playscale
@@ -234,6 +228,7 @@ graphics/tron
 psion chess (chess_exec)
 games/Fives 
 
-squidgy tiene cabecera qdos. parece que no la detecta bien?
+squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y luego lo quiere abrir...
 
--Funciones QL que usan disco, que activen footer/icono de actividad microdrive
+
+-ordenar directorios arriba en filesel? Pero entonces al pulsar una letra y buscar... a donde ira?
