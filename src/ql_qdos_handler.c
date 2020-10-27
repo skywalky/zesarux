@@ -1164,6 +1164,86 @@ void ql_qdos_return_from_trap(void)
     m68k_set_reg(M68K_REG_A7,reg_a7);    
 }
 
+int temp_conta=0;
+
+void qltraps_dir(void)
+{
+
+    temp_conta++;
+    if (temp_conta>10) {
+        //Fin 
+        m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
+        m68k_set_reg(M68K_REG_D1,0);  //0 byte leido 
+        ql_qdos_return_from_trap();
+
+        return;       
+    }
+
+    int longitud_entrada=10;
+
+
+
+    unsigned int puntero=ql_get_a1_after_trap_4();
+    printf("Escribiendo entrada directorio en %X, length buffer: %d\n",puntero,m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
+
+    //de momento poner a 0
+    int longitud_buffer=m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF;
+    int i;
+    for (i=0;i<longitud_buffer;i++) ql_writebyte(puntero+i,0);
+
+    //Asumimos que pide:
+    /*
+        00  long        file length
+        04  byte        file access key (not yet implemented - currently always zero)
+        05  byte        file type
+        06  8 bytes     file type-dependent information
+        0E  2+36 bytes  filename
+        34 long         reserved for update date (not yet implemented)
+        38 long         reserved for reference date (not yet implemented)
+        3c long         reserved for backup date (not yet implemented)
+    */
+
+    //file length. invento
+    ql_writebyte(puntero,0);
+    ql_writebyte(puntero+1,0);
+    ql_writebyte(puntero+2,16);
+    ql_writebyte(puntero+3,0);
+
+    //file type executable
+    ql_writebyte(puntero+5,1);
+
+    puntero +=0x0E;
+
+    ql_writebyte(puntero++,0);
+    ql_writebyte(puntero++,8);
+    ql_writebyte(puntero++,'A');
+    ql_writebyte(puntero++,'r');
+    ql_writebyte(puntero++,'c');
+    ql_writebyte(puntero++,'h');
+    ql_writebyte(puntero++,'i'); 
+    ql_writebyte(puntero++,'v');
+    ql_writebyte(puntero++,'o');
+    ql_writebyte(puntero++,32);
+
+
+    unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
+    registro_a1 +=longitud_entrada;
+
+
+    //temmp
+    registro_a1=ql_get_a1_after_trap_4(); 
+
+    m68k_set_reg(M68K_REG_A1,registro_a1); 
+
+
+
+
+    ql_qdos_set_return_no_error();
+    m68k_set_reg(M68K_REG_D1,longitud_entrada);       
+
+    ql_qdos_return_from_trap();
+}
+
 void handle_trap_io_fline_fstrg(void) 
 {
 		
@@ -1192,8 +1272,11 @@ void handle_trap_io_fline_fstrg(void)
         	
         	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
 
+          	ql_restore_d_registers(pre_io_fline_fstrg_d,7);
+          	ql_restore_a_registers(pre_io_fline_fstrg_a,6);            
 
-        	//Si es un dispositivo entero
+
+        	//Si es un dispositivo entero, estamos haciendo un dir 
         	if (qltraps_fopen_files[indice_canal].es_dispositivo) {
         		debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from full device channel (just \"%s\") with EOF",
         			qltraps_fopen_files[indice_canal].ql_file_name);
@@ -1201,11 +1284,15 @@ void handle_trap_io_fline_fstrg(void)
         		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
           		debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
           		m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
+
+                //temporal pruebas
+                printf("Hacer dir\n");
+                qltraps_dir();
+
       			return;
         	}
 
-          	ql_restore_d_registers(pre_io_fline_fstrg_d,7);
-          	ql_restore_a_registers(pre_io_fline_fstrg_a,6);
+
 
           	/*
           	D0=$2 IO.FLINE fetch a line of characters terminated by ASCII <LF> ($A)
@@ -2215,7 +2302,7 @@ D3.L: code:
             printf("hacer trap y es dispositivo\n");
 
             //Se supone que hacer_trap ya se ha activado en la comprobacion anterior, pero por si acaso
-            
+
       		hacer_trap=1;
       		es_dispositivo=1;         
      }
