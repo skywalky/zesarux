@@ -1053,7 +1053,10 @@ moto_int ql_get_audio_interval_steps_random(void)
 
     printf("Adding random %d to step (max %d value random: %d)\n",step_add_random,ql_audio_randomness_of_step,valor_random);
 
-    return ql_audio_grad_x+step_add_random;
+
+    //Le agregamos valor de fuzzy tambien. TODO: no se si esta es la correcta interpretacion de esta variable
+
+    return ql_audio_grad_x+step_add_random+ql_audio_fuziness;
 
     
 }
