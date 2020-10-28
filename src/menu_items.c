@@ -18583,6 +18583,33 @@ void menu_i8049_mixer_grad_x(MENU_ITEM_PARAMETERS)
     ql_sound_feature_grad_x_enabled ^=1; 
 }
 
+void menu_i8049_mixer_grad_y(MENU_ITEM_PARAMETERS)
+{
+    ql_sound_feature_grad_y_enabled ^=1; 
+}
+
+void menu_i8049_mixer_wrap(MENU_ITEM_PARAMETERS)
+{
+    ql_sound_feature_wrap_enabled ^=1; 
+}
+
+
+void menu_i8049_mixer_fuzzy(MENU_ITEM_PARAMETERS)
+{
+    ql_sound_feature_fuzzy_enabled ^=1; 
+}
+
+
+void menu_i8049_mixer_random(MENU_ITEM_PARAMETERS)
+{
+    ql_sound_feature_random_enabled ^=1; 
+}
+
+void menu_i8049_mixer_stop_sound(MENU_ITEM_PARAMETERS)
+{
+    ql_stop_sound();
+}
+
 void menu_i8049_mixer(MENU_ITEM_PARAMETERS)
 {
     menu_item *array_menu_common;
@@ -18607,6 +18634,17 @@ void menu_i8049_mixer(MENU_ITEM_PARAMETERS)
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_i8049_mixer_grad_x,NULL,"[%c] Grad_x", (ql_sound_feature_grad_x_enabled ? 'X' : ' '));
 
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_i8049_mixer_grad_y,NULL,"[%c] Grad_y", (ql_sound_feature_grad_y_enabled ? 'X' : ' '));
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_i8049_mixer_wrap,NULL,"[%c] Wrap", (ql_sound_feature_wrap_enabled ? 'X' : ' '));
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_i8049_mixer_fuzzy,NULL,"[%c] Fuzzy", (ql_sound_feature_fuzzy_enabled ? 'X' : ' '));
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_i8049_mixer_random,NULL,"[%c] Random", (ql_sound_feature_random_enabled ? 'X' : ' '));
+
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_i8049_mixer_stop_sound,NULL,"    Stop sound");
 
 
         menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);

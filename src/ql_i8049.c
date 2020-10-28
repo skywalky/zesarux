@@ -1102,10 +1102,13 @@ void ql_audio_switch_pitches(void)
    //beep duration, pitch, pitch2, grad_x, grad_y, wrap, fuzzy, random
 
    //TODO: que significa grad_x negativo???
-   //TODO: grad_x is in multiple units of 72 microseconds for each note. Dado que ql_audio_switch_pitches puede ejecutarse mas tarde
+   // grad_x is in multiple units of 72 microseconds for each note. Dado que ql_audio_switch_pitches puede ejecutarse mas tarde
    //que 72 microsegundos, hay que tener un contador para esto en ql_audio_next_cycle
 
-   //TODO: segun grad_y negativo o positivo, hay que hacer al inicio del sonido que se empiece en uno u otro pitch
+   //: segun grad_y negativo o positivo, hay que hacer al inicio del sonido que se empiece en uno u otro pitch
+
+   //Reaplicar cambios en el mixer
+   ql_adjust_audio_settings_with_mixer();
 
    //Si pitch2, o grad_x, o grad_y es 0, no hacer cambios 
    if (!ql_audio_pitch2 || !ql_audio_grad_x || !ql_audio_grad_y) return;
