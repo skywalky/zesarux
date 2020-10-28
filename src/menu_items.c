@@ -1493,7 +1493,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			if (beeper_enabled.v) mostrar_real_beeper=1;
 		}
 
-		if (mostrar_real_beeper) {
+		if (mostrar_real_beeper && !MACHINE_IS_QL) {
 
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper_real,NULL,"[%c] Real ~~Beeper",(beeper_real_enabled==1 ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_settings_audio,'b');
