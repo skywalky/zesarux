@@ -1454,7 +1454,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
     menu_add_item_menu(array_menu_settings_audio,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-		if (!MACHINE_IS_ZX8081) {
+		if (!MACHINE_IS_ZX8081 && !MACHINE_IS_QL) {
 
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_beeper,NULL,"[%c] Beepe~~r",(beeper_enabled.v==1 ? 'X' : ' '));
 			menu_add_item_menu_shortcut(array_menu_settings_audio,'r');
@@ -1573,9 +1573,10 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 
-
+            if (ay_chip_present.v) {
 					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_midi_output,audio_midi_available,"AY to ~~MIDI Output");
 					menu_add_item_menu_tooltip(array_menu_settings_audio,"Direct AY music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.");
+            
 
 
 #ifdef COMPILE_ALSA
@@ -1594,7 +1595,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 					menu_add_item_menu_shortcut(array_menu_settings_audio,'m');
 		
-
+            }
 
 
 
