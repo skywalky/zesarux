@@ -893,6 +893,16 @@ void ql_stop_sound(void)
 moto_int ql_get_counter_from_pitch(moto_byte pitch)
 {
 
+    //Le suma fuziness
+    /*
+    int aux_pitch=pitch;
+
+    aux_pitch +=ql_audio_fuziness;
+
+    //Si no se sale del rango de 8 bits
+    if (aux_pitch<256) pitch = aux_pitch;
+    */
+
     //Es una tabla de 256 elementos. Dado que ql_audio_pitch1 es variable de 8 bits, no hay peligro de salirnos de la tabla
     int frecuencia=ql_pitch_frequency_table[pitch];
 
@@ -907,8 +917,9 @@ moto_int ql_get_counter_from_pitch(moto_byte pitch)
         //Esto no deberia pasar, pero por si acaso para evitar division por 0
         return (FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2);
     }
+    //no estoy seguro que fuziness debe aplicar aqui
     else {
-        return (FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
+        return ql_audio_fuziness+(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
     }
 }
 
@@ -1036,7 +1047,7 @@ moto_int ql_get_audio_interval_steps_random(void)
         //Random just randomises the steps 
         //Retornar el steps aplicando random
     //Si random 0, nada
-    if (ql_audio_randomness_of_step==0) return ql_audio_grad_x+ql_audio_fuziness;
+    if (ql_audio_randomness_of_step==0) return ql_audio_grad_x;
 
 
     //Valor random entre 1 y 15, y ver que total no excede 32768
@@ -1056,7 +1067,7 @@ moto_int ql_get_audio_interval_steps_random(void)
 
     //Le agregamos valor de fuzzy tambien. TODO: no se si esta es la correcta interpretacion de esta variable
 
-    return ql_audio_grad_x+step_add_random+ql_audio_fuziness;
+    return ql_audio_grad_x+step_add_random;
 
     
 }
