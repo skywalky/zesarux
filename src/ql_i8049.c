@@ -1025,7 +1025,7 @@ moto_int ql_get_audio_interval_steps_random(void)
 
     int step_add_random=valor_random % (ql_audio_randomness_of_step+1);
 
-    printf("Adding random %d to step\n",step_add_random);
+    printf("Adding random %d to step (max %d)\n",step_add_random,ql_audio_randomness_of_step);
 
     return ql_audio_interval_steps+step_add_random;
 
