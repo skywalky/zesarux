@@ -30,6 +30,9 @@
 #include "utils.h"
 #include "audio.h"
 
+//Para usar funcion random
+#include "ay38912.h"
+
 
 /*
 
@@ -1003,6 +1006,32 @@ void ql_audio_switch_pitches_init(void)
 
 }
 
+moto_int ql_get_audio_interval_steps_random(void)
+{
+        //Random just randomises the steps 
+        //Retornar el steps aplicando random
+    //Si random 0, nada
+    if (ql_audio_randomness_of_step==0) return ql_audio_interval_steps;
+
+
+    //Valor random entre 1 y 15, y ver que total no excede 32768
+    if (ql_audio_interval_steps>32000) return ql_audio_interval_steps;
+    
+
+  ay_randomize(0);
+
+  //valor_random es valor de 16 bits
+  int valor_random=randomize_noise[0];    
+
+    int step_add_random=valor_random % (ql_audio_randomness_of_step+1);
+
+    printf("Adding random %d to step\n",step_add_random);
+
+    return ql_audio_interval_steps+step_add_random;
+
+    
+}
+
 //Modifica el pitch, si conviene, cuando pitch2 no es 0
 void ql_audio_switch_pitches(void)
 {
@@ -1056,7 +1085,10 @@ void ql_audio_switch_pitches(void)
    if (!ql_audio_pitch2 || !ql_audio_interval_steps || !ql_audio_step_in_pitch) return;
 
     //Ver si hay que cambiar la nota en curso
-    if (ql_audio_next_cycle_counter>=ql_audio_interval_steps) {
+
+    //Random just randomises the steps 
+
+    if (ql_audio_next_cycle_counter>=ql_get_audio_interval_steps_random() ) {
         //ql_audio_next_cycle_counter -=ql_audio_interval_steps; //restamos en vez de poner a 0 para que sea tiempo acumulativo
 
         ql_audio_next_cycle_counter =0;
