@@ -13728,8 +13728,14 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_chip_info,menu_cond_ay_or_sn_chip,"Audio Chip Info");
 					
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY Mi~~xer");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'x');					
+                    if (MACHINE_IS_QL) {
+					    menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_i8049_mixer,menu_cond_i8049_chip,"i8049 Mi~~xer");
+					    menu_add_item_menu_shortcut(array_menu_audio_settings,'x');		
+                    }
+                    else {
+					    menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY Mi~~xer");
+					    menu_add_item_menu_shortcut(array_menu_audio_settings,'x');					
+                    }
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_ayplayer,NULL,"AY ~~Player");
 					menu_add_item_menu_tooltip(array_menu_audio_settings,"Opens the .ay file player menu");

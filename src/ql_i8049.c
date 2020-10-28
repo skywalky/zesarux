@@ -115,9 +115,9 @@ Para aproximar, cada "duration" es un scanline
 
 unsigned char ql_audio_pitch1;
 unsigned char ql_audio_pitch2;
-moto_int ql_audio_interval_steps;
+moto_int ql_audio_grad_x;
 moto_int ql_audio_duration;
-unsigned char ql_audio_step_in_pitch;
+unsigned char ql_audio_grad_y;
 unsigned char ql_audio_wrap;
 unsigned char ql_audio_randomness_of_step;
 unsigned char ql_audio_fuziness;
@@ -924,16 +924,41 @@ moto_byte ql_audio_switch_pitch_current_pitch;
 int ql_audio_next_cycle_counter=0;
 
 //incremento entre notas
-int signed_ql_audio_step_in_pitch;
+int signed_ql_audio_grad_y;
 
 //Conteo de cuantas veces ha hecho "wrap"
 int ql_audio_wrap_counter=0;
+
+
+//Settings para activar/desactivar features de sonido desde menu
+int ql_sound_feature_pitch2_enabled=1;
+int ql_sound_feature_grad_x_enabled=1;
+int ql_sound_feature_grad_y_enabled=1;
+int ql_sound_feature_wrap_enabled=1;
+int ql_sound_feature_fuzzy_enabled=1;
+int ql_sound_feature_random_enabled=1;
+
+
+void ql_adjust_audio_settings_with_mixer(void)
+{
+    if (!ql_sound_feature_pitch2_enabled) ql_audio_pitch2=0;
+    if (!ql_sound_feature_grad_x_enabled) ql_audio_grad_x=0;
+    if (!ql_sound_feature_grad_y_enabled) ql_audio_grad_y=0;
+
+    if (!ql_sound_feature_wrap_enabled) ql_audio_wrap=0;
+    if (!ql_sound_feature_fuzzy_enabled) ql_audio_fuziness=0;
+    if (!ql_sound_feature_random_enabled) ql_audio_randomness_of_step=0;
+
+}
+
+
+
 
 //Inicialización de los procesos de cambio entre dos pitches
 void ql_audio_switch_pitches_init(void)
 {
     //Si pitch2, o grad_x, o grad_y es 0, no hacer cambios 
-    if (!ql_audio_pitch2 || !ql_audio_interval_steps || !ql_audio_step_in_pitch) {
+    if (!ql_audio_pitch2 || !ql_audio_grad_x || !ql_audio_grad_y) {
 
         ql_audio_pitch_counter_initial=ql_get_counter_from_pitch(ql_audio_pitch1);
 
@@ -947,7 +972,7 @@ void ql_audio_switch_pitches_init(void)
 
 
     //    //grad_y
-    //ql_audio_step_in_pitch
+    //ql_audio_grad_y
     //-8,7: range is -8 to 7 where step 1 to 7 scales downwards high to low pitch and -8 to 0 starts the sequence
 
     //Ver en cual de los dos pitch empezamos
@@ -964,8 +989,8 @@ void ql_audio_switch_pitches_init(void)
 
     //convertir grad_y a algo con signo
 
-    if (ql_audio_step_in_pitch<=7) {
-        signed_ql_audio_step_in_pitch=ql_audio_step_in_pitch;
+    if (ql_audio_grad_y<=7) {
+        signed_ql_audio_grad_y=ql_audio_grad_y;
     }
     else {
         //-1=15
@@ -974,10 +999,10 @@ void ql_audio_switch_pitches_init(void)
         //-6=10 
         //-7=9
         //-8=8
-       signed_ql_audio_step_in_pitch=-16+ql_audio_step_in_pitch;
+       signed_ql_audio_grad_y=-16+ql_audio_grad_y;
     }
 
-    printf("higher pitch: %d lower pitch: %d signed_grad_y: %d\n",higher_pitch,lower_pitch,signed_ql_audio_step_in_pitch);
+    printf("higher pitch: %d lower pitch: %d signed_grad_y: %d\n",higher_pitch,lower_pitch,signed_ql_audio_grad_y);
 
     ql_audio_switch_pitch_array[0]=higher_pitch;
     ql_audio_switch_pitch_array[1]=lower_pitch;
@@ -985,11 +1010,11 @@ void ql_audio_switch_pitches_init(void)
     
 
     //Incremento positivo, bajar de high to low
-    if (signed_ql_audio_step_in_pitch>=0) ql_audio_switch_pitch_current_index=0; //empieza en high
+    if (signed_ql_audio_grad_y>=0) ql_audio_switch_pitch_current_index=0; //empieza en high
     else ql_audio_switch_pitch_current_index=1; //empieza en low
 
     //Realmente si bajamos, seria signo negativo. Si subimos, es positivo. por tanto invertir lo que nos ha llegado
-    signed_ql_audio_step_in_pitch =-signed_ql_audio_step_in_pitch;
+    signed_ql_audio_grad_y =-signed_ql_audio_grad_y;
 
 
 
@@ -1011,11 +1036,11 @@ moto_int ql_get_audio_interval_steps_random(void)
         //Random just randomises the steps 
         //Retornar el steps aplicando random
     //Si random 0, nada
-    if (ql_audio_randomness_of_step==0) return ql_audio_interval_steps;
+    if (ql_audio_randomness_of_step==0) return ql_audio_grad_x;
 
 
     //Valor random entre 1 y 15, y ver que total no excede 32768
-    if (ql_audio_interval_steps>32000) return ql_audio_interval_steps;
+    if (ql_audio_grad_x>32000) return ql_audio_grad_x;
     
 
   ay_randomize(0);
@@ -1023,11 +1048,12 @@ moto_int ql_get_audio_interval_steps_random(void)
   //valor_random es valor de 16 bits
   int valor_random=randomize_noise[0];    
 
-    int step_add_random=valor_random % (ql_audio_randomness_of_step+1);
 
-    printf("Adding random %d to step (max %d)\n",step_add_random,ql_audio_randomness_of_step);
+    int step_add_random=valor_random % ql_audio_randomness_of_step;
 
-    return ql_audio_interval_steps+step_add_random;
+    printf("Adding random %d to step (max %d value random: %d)\n",step_add_random,ql_audio_randomness_of_step,valor_random);
+
+    return ql_audio_grad_x+step_add_random;
 
     
 }
@@ -1082,14 +1108,14 @@ void ql_audio_switch_pitches(void)
    //TODO: segun grad_y negativo o positivo, hay que hacer al inicio del sonido que se empiece en uno u otro pitch
 
    //Si pitch2, o grad_x, o grad_y es 0, no hacer cambios 
-   if (!ql_audio_pitch2 || !ql_audio_interval_steps || !ql_audio_step_in_pitch) return;
+   if (!ql_audio_pitch2 || !ql_audio_grad_x || !ql_audio_grad_y) return;
 
     //Ver si hay que cambiar la nota en curso
 
     //Random just randomises the steps 
 
     if (ql_audio_next_cycle_counter>=ql_get_audio_interval_steps_random() ) {
-        //ql_audio_next_cycle_counter -=ql_audio_interval_steps; //restamos en vez de poner a 0 para que sea tiempo acumulativo
+        //ql_audio_next_cycle_counter -=ql_audio_grad_x; //restamos en vez de poner a 0 para que sea tiempo acumulativo
 
         ql_audio_next_cycle_counter =0;
         printf("Next note\n");
@@ -1098,13 +1124,13 @@ void ql_audio_switch_pitches(void)
         //tenemos ql_audio_switch_pitch_current_pitch nota actual
         //    ql_audio_switch_pitch_array[0]=higher_pitch;
         // ql_audio_switch_pitch_array[1]=lower_pitch;
-        //Y incremento en signed_ql_audio_step_in_pitch
+        //Y incremento en signed_ql_audio_grad_y
         
 
-        ql_audio_switch_pitch_current_pitch += signed_ql_audio_step_in_pitch;
+        ql_audio_switch_pitch_current_pitch += signed_ql_audio_grad_y;
 
         //Ver si subimos o bajamos
-        if (signed_ql_audio_step_in_pitch>=0) {
+        if (signed_ql_audio_grad_y>=0) {
             //Ver si nos pasamos
             if (ql_audio_switch_pitch_current_pitch>=ql_audio_switch_pitch_array[0]) {
                 //Sobrepasado limite. 
@@ -1116,7 +1142,7 @@ void ql_audio_switch_pitches(void)
                 ql_audio_wrap_counter++;
                 if (ql_audio_wrap_counter>=ql_audio_wrap && ql_audio_wrap!=15) {
                     printf("reached maximum wraps. do not change anymore\n");
-                    ql_audio_pitch2=ql_audio_interval_steps=ql_audio_step_in_pitch=0;
+                    ql_audio_pitch2=ql_audio_grad_x=ql_audio_grad_y=0;
                 }
                 else {
                     ql_audio_switch_pitch_current_pitch=ql_audio_switch_pitch_array[1];
@@ -1135,7 +1161,7 @@ void ql_audio_switch_pitches(void)
                 ql_audio_wrap_counter++;
                 if (ql_audio_wrap_counter>=ql_audio_wrap && ql_audio_wrap!=15) {
                     printf("reached maximum wraps. do not change anymore\n");
-                    ql_audio_pitch2=ql_audio_interval_steps=ql_audio_step_in_pitch=0;
+                    ql_audio_pitch2=ql_audio_grad_x=ql_audio_grad_y=0;
                 }
                 else {
                     ql_audio_switch_pitch_current_pitch=ql_audio_switch_pitch_array[0];
@@ -1286,7 +1312,7 @@ void ql_ipc_set_sound_parameters(void)
 
     //OJO a como se ordena esto:
     //grad_x
-    ql_audio_interval_steps=(ql_ipc_sound_command_buffer[6]<<12)|(ql_ipc_sound_command_buffer[7]<<8)|
+    ql_audio_grad_x=(ql_ipc_sound_command_buffer[6]<<12)|(ql_ipc_sound_command_buffer[7]<<8)|
                     (ql_ipc_sound_command_buffer[4]<<4)|ql_ipc_sound_command_buffer[5];
 
 
@@ -1295,16 +1321,19 @@ void ql_ipc_set_sound_parameters(void)
             (ql_ipc_sound_command_buffer[8]<<4)|ql_ipc_sound_command_buffer[9];
 
     //grad_y
-    ql_audio_step_in_pitch=ql_ipc_sound_command_buffer[12];
+    ql_audio_grad_y=ql_ipc_sound_command_buffer[12];
 
     ql_audio_wrap=ql_ipc_sound_command_buffer[13];
     ql_audio_randomness_of_step=ql_ipc_sound_command_buffer[14];
     ql_audio_fuziness=ql_ipc_sound_command_buffer[15];
+
+
+    ql_adjust_audio_settings_with_mixer();
              
 
     printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
-    ql_audio_pitch1,ql_audio_pitch2,ql_audio_interval_steps,ql_audio_duration,
-    ql_audio_step_in_pitch,ql_audio_wrap,ql_audio_randomness_of_step,ql_audio_fuziness);
+    ql_audio_pitch1,ql_audio_pitch2,ql_audio_grad_x,ql_audio_duration,
+    ql_audio_grad_y,ql_audio_wrap,ql_audio_randomness_of_step,ql_audio_fuziness);
 
     //ql_simulate_sound(ql_audio_pitch1,ql_audio_duration);
 

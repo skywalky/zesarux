@@ -204,6 +204,8 @@ int windows_opcion_seleccionada=0;
 int zxpand_opcion_seleccionada=0;
 int ql_mdv_flp_opcion_seleccionada=0;
 
+int i8049_mixer_opcion_seleccionada=0;
+
 
 //Fin opciones seleccionadas para cada menu
 
@@ -1043,6 +1045,11 @@ void menu_change_audio_driver(MENU_ITEM_PARAMETERS)
 int menu_cond_ay_chip(void)
 {
 	return ay_chip_present.v;
+}
+
+int menu_cond_i8049_chip(void)
+{
+	return i8049_chip_present;
 }
 
 int menu_cond_ay_or_sn_chip(void)
@@ -2772,9 +2779,11 @@ M1-M0= mode bits:
 
         int freq_a=ql_ipc_get_frecuency_sound_current_pitch();
 
-        sprintf (textotono,"Freq 1:  %3s %7d Hz",get_note_name(freq_a),freq_a);
+        sprintf (textotono,"Frequency: %3s %7d Hz",get_note_name(freq_a),freq_a);
         //menu_escribe_linea_opcion(linea++,-1,1,textotono);
-        zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);    
+        zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);   
+
+        zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,(ql_audio_playing ? "Playing" : "Stopped") );
 
         
     /*
@@ -2799,11 +2808,11 @@ M1-M0= mode bits:
         zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);       
         sprintf (textotono,"Pitch2:         %5d",ql_audio_pitch2);
         zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);  
-        sprintf (textotono,"Interval steps: %5d",ql_audio_interval_steps);
+        sprintf (textotono,"Interval steps: %5d",ql_audio_grad_x);
         zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);            
         sprintf (textotono,"Duration:       %5d",ql_audio_duration);
         zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);            
-        sprintf (textotono,"Step in pitch:  %5d",ql_audio_step_in_pitch);
+        sprintf (textotono,"Step in pitch:  %5d",ql_audio_grad_y);
         zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);
         sprintf (textotono,"Wrap:           %5d",ql_audio_wrap);
         zxvision_print_string_defaults_fillspc(menu_ay_registers_overlay_window,1,linea++,textotono);
@@ -18563,6 +18572,64 @@ menu_item *array_menu_ay_mixer;
 	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);	
 }
 
+
+void menu_i8049_mixer_pitch2(MENU_ITEM_PARAMETERS)
+{
+    ql_sound_feature_pitch2_enabled ^=1; 
+}
+
+void menu_i8049_mixer_grad_x(MENU_ITEM_PARAMETERS)
+{
+    ql_sound_feature_grad_x_enabled ^=1; 
+}
+
+void menu_i8049_mixer(MENU_ITEM_PARAMETERS)
+{
+    menu_item *array_menu_common;
+    menu_item item_seleccionado;
+    int retorno_menu;
+
+
+
+
+    do {
+/*
+    if (!ql_sound_feature_pitch2_enabled) ql_audio_pitch2=0;
+    if (!ql_sound_feature_grad_x_enabled) ql_audio_grad_x=0;
+    if (!ql_sound_feature_grad_y_enabled) ql_audio_grad_y=0;
+
+    if (!ql_sound_feature_wrap_enabled) ql_audio_wrap=0;
+    if (!ql_sound_feature_fuzzy_enabled) ql_audio_fuziness=0;
+    if (!ql_sound_feature_random_enabled) ql_audio_randomness_of_step=0;
+    */
+
+        menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_i8049_mixer_pitch2,NULL,"[%c] Pitch 2", (ql_sound_feature_pitch2_enabled ? 'X' : ' '));
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_i8049_mixer_grad_x,NULL,"[%c] Grad_x", (ql_sound_feature_grad_x_enabled ? 'X' : ' '));
+
+
+
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+
+        menu_add_ESC_item(array_menu_common);
+
+        retorno_menu=menu_dibuja_menu(&i8049_mixer_opcion_seleccionada,&item_seleccionado,array_menu_common,"i8049 mixer" );
+
+
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+            }
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);	
+}
 
 
 void menu_audio_chip_info(MENU_ITEM_PARAMETERS)

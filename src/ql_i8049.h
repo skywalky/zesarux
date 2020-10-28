@@ -61,11 +61,19 @@ extern void ql_stop_sound(void);
 
 extern unsigned char ql_audio_pitch1;
 extern unsigned char ql_audio_pitch2;
-extern moto_int ql_audio_interval_steps;
+extern moto_int ql_audio_grad_x;
 extern moto_int ql_audio_duration;
-extern unsigned char ql_audio_step_in_pitch;
+extern unsigned char ql_audio_grad_y;
 extern unsigned char ql_audio_wrap;
 extern unsigned char ql_audio_randomness_of_step;
 extern unsigned char ql_audio_fuziness;
+
+
+extern int ql_sound_feature_pitch2_enabled;
+extern int ql_sound_feature_grad_x_enabled;
+extern int ql_sound_feature_grad_y_enabled;
+extern int ql_sound_feature_wrap_enabled;
+extern int ql_sound_feature_fuzzy_enabled;
+extern int ql_sound_feature_random_enabled;
 
 #endif

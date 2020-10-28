@@ -19,6 +19,7 @@
 190 IF BEEPING THEN GO TO 190
 200 PRINT "sound wrap forever with random"
 210 BEEP duration,50,40,2000,-5,15,0,15
-220 STOP
-230 DEFine PROCedure grabar : SAVE mdv1_testsound
-240 END DEFine 
+220 IF BEEPING THEN GO TO 220
+230 STOP
+240 DEFine PROCedure grabar : SAVE mdv1_testsound
+250 END DEFine 

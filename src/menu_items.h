@@ -32,6 +32,7 @@ extern void menu_zxvision_test(MENU_ITEM_PARAMETERS);
 extern void menu_mem_breakpoints(MENU_ITEM_PARAMETERS);
 extern int menu_cond_ay_chip(void);
 extern int menu_cond_ay_or_sn_chip(void);
+extern int menu_cond_i8049_chip(void);
 extern int last_debug_poke_dir;
 extern void menu_debug_poke(MENU_ITEM_PARAMETERS);
 extern void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS);
@@ -75,6 +76,7 @@ extern void menu_record_mid(MENU_ITEM_PARAMETERS);
 
 extern void menu_direct_midi_output(MENU_ITEM_PARAMETERS);
 extern void menu_ay_mixer(MENU_ITEM_PARAMETERS);
+extern void menu_i8049_mixer(MENU_ITEM_PARAMETERS);
 extern void menu_uartbridge(MENU_ITEM_PARAMETERS);
 extern void menu_network(MENU_ITEM_PARAMETERS);
 extern void menu_settings_statistics(MENU_ITEM_PARAMETERS);
