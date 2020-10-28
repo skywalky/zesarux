@@ -1036,7 +1036,7 @@ moto_int ql_get_audio_interval_steps_random(void)
         //Random just randomises the steps 
         //Retornar el steps aplicando random
     //Si random 0, nada
-    if (ql_audio_randomness_of_step==0) return ql_audio_grad_x;
+    if (ql_audio_randomness_of_step==0) return ql_audio_grad_x+ql_audio_fuziness;
 
 
     //Valor random entre 1 y 15, y ver que total no excede 32768
@@ -1060,6 +1060,8 @@ moto_int ql_get_audio_interval_steps_random(void)
 
     
 }
+
+
 
 //Modifica el pitch, si conviene, cuando pitch2 no es 0
 void ql_audio_switch_pitches(void)
