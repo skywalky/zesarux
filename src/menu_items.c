@@ -1355,6 +1355,11 @@ void menu_pcspeaker_auto_calibrate_wait_time(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_audio_i8049_chip_present(MENU_ITEM_PARAMETERS)
+{
+    i8049_chip_present ^= 1;
+}
+
 
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
 {
@@ -1369,21 +1374,23 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_volume,NULL,"    Output ~~Volume [%d%%]", audiovolume);
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'v');
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"[%c] A~~utoenable AY Chip",(autoenable_ay_chip.v==1 ? 'X' : ' '));
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'u');
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip automatically when it is needed");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"This option is usefor for example on Spectrum 48k games that uses AY Chip "
-					"and for some ZX80/81 games that also uses it (Bi-Pak ZON-X81, but not Quicksilva QS Sound board)");		
+        if (!MACHINE_IS_QL) {
+            menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"[%c] A~~utoenable AY Chip",(autoenable_ay_chip.v==1 ? 'X' : ' '));
+            menu_add_item_menu_shortcut(array_menu_settings_audio,'u');
+            menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip automatically when it is needed");
+            menu_add_item_menu_ayuda(array_menu_settings_audio,"This option is usefor for example on Spectrum 48k games that uses AY Chip "
+                        "and for some ZX80/81 games that also uses it (Bi-Pak ZON-X81, but not Quicksilva QS Sound board)");		
 
-		menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip,NULL,"[%c] ~~AY Chip", (ay_chip_present.v==1 ? 'X' : ' '));
-		menu_add_item_menu_shortcut(array_menu_settings_audio,'a');
-		menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip on this machine");
-		menu_add_item_menu_ayuda(array_menu_settings_audio,"It enables the AY Chip for the machine, by activating the following hardware:\n"
-					"-Normal AY Chip for Spectrum\n"
-					"-Fuller audio box for Spectrum\n"
-					"-Quicksilva QS Sound board on ZX80/81\n"
-					"-Bi-Pak ZON-X81 Sound on ZX80/81\n"
-			);
+            menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip,NULL,"[%c] ~~AY Chip", (ay_chip_present.v==1 ? 'X' : ' '));
+            menu_add_item_menu_shortcut(array_menu_settings_audio,'a');
+            menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip on this machine");
+            menu_add_item_menu_ayuda(array_menu_settings_audio,"It enables the AY Chip for the machine, by activating the following hardware:\n"
+                        "-Normal AY Chip for Spectrum\n"
+                        "-Fuller audio box for Spectrum\n"
+                        "-Quicksilva QS Sound board on ZX80/81\n"
+                        "-Bi-Pak ZON-X81 Sound on ZX80/81\n"
+                );
+
 
 
 
@@ -1392,6 +1399,14 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_settings_audio,'c');
 			menu_add_item_menu_tooltip(array_menu_settings_audio,"Total number of AY Chips");
 			menu_add_item_menu_ayuda(array_menu_settings_audio,"Total number of AY Chips");
+
+        }
+
+            else {
+                menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_i8049_chip_present,NULL,"[%c] i8049 sound chip", (i8049_chip_present ? 'X' : ' '));
+            }
+
+
 
 
 		if (si_complete_video_driver() ) {

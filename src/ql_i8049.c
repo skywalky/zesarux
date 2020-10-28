@@ -1188,6 +1188,8 @@ void ql_audio_next_cycle(void)
 
     if (!ql_audio_playing) return;
 
+    if (!i8049_chip_present) return;
+
     ql_audio_next_cycle_counter++;
 
     //Contador para el pitch, para conmutar valor altavoz
@@ -1219,6 +1221,8 @@ char ql_audio_da_output(void)
 {
 
     if (!ql_audio_playing) return 0;
+
+    if (!i8049_chip_present) return 0;
 
     silence_detection_counter=0;
 
