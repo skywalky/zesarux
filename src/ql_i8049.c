@@ -923,6 +923,9 @@ int ql_audio_next_cycle_counter=0;
 //incremento entre notas
 int signed_ql_audio_step_in_pitch;
 
+//Conteo de cuantas veces ha hecho "wrap"
+int ql_audio_wrap_counter=0;
+
 //Inicialización de los procesos de cambio entre dos pitches
 void ql_audio_switch_pitches_init(void)
 {
@@ -1008,7 +1011,8 @@ void ql_audio_switch_pitches(void)
     pitch2      0,255: a second pitch level between which the sound will "bounce"
     grad_x      -32768,32767: time interval between pitch steps
     grad_y      -8,7: size of each step. grad_x and grad_y control the rate at which the pitch bounces between levels
-    wrap        0,15: will force the sound to wrap around the specified number of times. if wrap is equal to 15 the sound will grap around forever    
+    wrap        0,15: will force the sound to wrap around the specified number of times. if wrap is equal to 15 the sound 
+                will grap around forever    
     */
 
    /*
@@ -1023,6 +1027,16 @@ void ql_audio_switch_pitches(void)
 
     A Harmonic without a Time Interval (grad_x) and/or Pitch Step (grad_y) has no affect. Adding a Pitch step of 1 when Harmonic and Time Interval are both 0 
     identifies the pitch as a high zero. Harmonic plus a Pitch step with Time Interval 0 just changes Main Pitch to the Harmonic.
+
+    Wraps
+    Wraps repeat the sequence of harmonics produced by the pitch_1, pitch_2, grad_x, grad_y parameters a number of times. 
+    Zero continues the bounce affect of the harmonic. Increasing values 1 to 7 creates scaling high to low for the number of Wraps. 
+    Scaling 8 to 15 creates Wraps from low to high.
+
+
+    Fuzzy & Random
+    Fuzzy decreases the purity of the pitch, Random just randomises the steps until little of the original sequence is evident. 
+    Both of these have a range 0 to 15, zero has no effect and the active range is more like 8 to 15. Increasing the fuz    
 
     */
 
@@ -1058,17 +1072,33 @@ void ql_audio_switch_pitches(void)
         if (signed_ql_audio_step_in_pitch>=0) {
             //Ver si nos pasamos
             if (ql_audio_switch_pitch_current_pitch>=ql_audio_switch_pitch_array[0]) {
-                //Sobrepasado limite. TODO. de momento parar
-                printf("Reached upper limit. stop\n");
-                ql_audio_playing=0;
+                //Sobrepasado limite. 
+                printf("Reached upper limit.\n");
+                printf("wrap counter: %d\n",ql_audio_wrap_counter);
+
+                //No tengo claro que la funcion de wrap sea esta
+
+                ql_audio_wrap_counter++;
+                if (ql_audio_wrap_counter>=ql_audio_wrap && ql_audio_wrap!=15) {
+                    printf("reached maximum wraps. do not change anymore\n");
+                    ql_audio_pitch2=ql_audio_interval_steps=ql_audio_step_in_pitch=0;
+                }
             }
         }
         else {
             //Ver si nos pasamos por debajo
             if (ql_audio_switch_pitch_current_pitch<=ql_audio_switch_pitch_array[1]) {
                 //Sobrepasado limite. TODO
-                printf("Reached lower limit. stop\n");
-                ql_audio_playing=0;
+                printf("Reached lower limit.\n");
+                printf("wrap counter: %d\n",ql_audio_wrap_counter);
+
+                //No tengo claro que la funcion de wrap sea esta
+
+                ql_audio_wrap_counter++;
+                if (ql_audio_wrap_counter>=ql_audio_wrap && ql_audio_wrap!=15) {
+                    printf("reached maximum wraps. do not change anymore\n");
+                    ql_audio_pitch2=ql_audio_interval_steps=ql_audio_step_in_pitch=0;
+                }
             }
         }
 
@@ -1250,6 +1280,7 @@ void ql_ipc_set_sound_parameters(void)
     ql_audio_switch_pitches_init();
 
     ql_audio_next_cycle_counter=0;
+    ql_audio_wrap_counter=0;
 
     ql_audio_playing=1;
 

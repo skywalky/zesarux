@@ -1,6 +1,9 @@
 10 BEEP 10000,50
 20 PAUSE 50
-30 BEEP 10000,50,30,1000,3
+21 REMark sound with no wrap
+30 BEEP 30000,50,30,3000,-5
+31 REMark sound wrap 6 times
+40 BEEP 30000,50,30,3000,-5,6
 999 STOP
 9998 DEFine PROCedure grabar : SAVE mdv1_testsound
 9999 END DEFine 
