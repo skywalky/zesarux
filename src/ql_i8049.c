@@ -909,6 +909,20 @@ moto_int ql_get_counter_from_pitch(moto_byte pitch)
     }
 }
 
+int ql_audio_switch_pitch_current_index=0;
+
+//0=high pitch, 1=low pitch
+moto_byte ql_audio_switch_pitch_array[2];
+
+//Current pitch
+moto_byte ql_audio_switch_pitch_current_pitch;
+
+//Veces llamadas a ql_audio_next_cycle
+int ql_audio_next_cycle_counter=0;
+
+//incremento entre notas
+int signed_ql_audio_step_in_pitch;
+
 //Inicialización de los procesos de cambio entre dos pitches
 void ql_audio_switch_pitches_init(void)
 {
@@ -943,7 +957,7 @@ void ql_audio_switch_pitches_init(void)
     }
 
     //convertir grad_y a algo con signo
-    int signed_ql_audio_step_in_pitch;
+
     if (ql_audio_step_in_pitch<=7) {
         signed_ql_audio_step_in_pitch=ql_audio_step_in_pitch;
     }
@@ -957,7 +971,32 @@ void ql_audio_switch_pitches_init(void)
        signed_ql_audio_step_in_pitch=-16+ql_audio_step_in_pitch;
     }
 
-    printf("higher pitch: %d lower pitch: %d signed_grad_y: %d\n",signed_ql_audio_step_in_pitch);
+    printf("higher pitch: %d lower pitch: %d signed_grad_y: %d\n",higher_pitch,lower_pitch,signed_ql_audio_step_in_pitch);
+
+    ql_audio_switch_pitch_array[0]=higher_pitch;
+    ql_audio_switch_pitch_array[1]=lower_pitch;
+
+    
+
+    //Incremento positivo, bajar de high to low
+    if (signed_ql_audio_step_in_pitch>=0) ql_audio_switch_pitch_current_index=0; //empieza en high
+    else ql_audio_switch_pitch_current_index=1; //empieza en low
+
+    //Realmente si bajamos, seria signo negativo. Si subimos, es positivo. por tanto invertir lo que nos ha llegado
+    signed_ql_audio_step_in_pitch =-signed_ql_audio_step_in_pitch;
+
+
+
+    ql_audio_switch_pitch_current_pitch=ql_audio_switch_pitch_array[ql_audio_switch_pitch_current_index];
+
+    printf("final_pitch: %d\n",ql_audio_switch_pitch_current_pitch);
+
+
+    ql_audio_pitch_counter_initial=ql_get_counter_from_pitch(ql_audio_switch_pitch_current_pitch);
+
+
+    ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;   
+
 
 }
 
@@ -999,12 +1038,57 @@ void ql_audio_switch_pitches(void)
    //Si pitch2, o grad_x, o grad_y es 0, no hacer cambios 
    if (!ql_audio_pitch2 || !ql_audio_interval_steps || !ql_audio_step_in_pitch) return;
 
+    //Ver si hay que cambiar la nota en curso
+    if (ql_audio_next_cycle_counter>=ql_audio_interval_steps) {
+        //ql_audio_next_cycle_counter -=ql_audio_interval_steps; //restamos en vez de poner a 0 para que sea tiempo acumulativo
+
+        ql_audio_next_cycle_counter =0;
+        printf("Next note\n");
+
+        //cambiar nota
+        //tenemos ql_audio_switch_pitch_current_pitch nota actual
+        //    ql_audio_switch_pitch_array[0]=higher_pitch;
+        // ql_audio_switch_pitch_array[1]=lower_pitch;
+        //Y incremento en signed_ql_audio_step_in_pitch
+        
+
+        ql_audio_switch_pitch_current_pitch += signed_ql_audio_step_in_pitch;
+
+        //Ver si subimos o bajamos
+        if (signed_ql_audio_step_in_pitch>=0) {
+            //Ver si nos pasamos
+            if (ql_audio_switch_pitch_current_pitch>=ql_audio_switch_pitch_array[0]) {
+                //Sobrepasado limite. TODO. de momento parar
+                printf("Reached upper limit. stop\n");
+                ql_audio_playing=0;
+            }
+        }
+        else {
+            //Ver si nos pasamos por debajo
+            if (ql_audio_switch_pitch_current_pitch<=ql_audio_switch_pitch_array[1]) {
+                //Sobrepasado limite. TODO
+                printf("Reached lower limit. stop\n");
+                ql_audio_playing=0;
+            }
+        }
+
+        printf("current pitch: %d\n",ql_audio_switch_pitch_current_pitch);
+
+        ql_audio_pitch_counter_initial=ql_get_counter_from_pitch(ql_audio_switch_pitch_current_pitch);
+
+
+        ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;   
+    }
 
 }
 
 
 void ql_audio_next_cycle(void)
 {
+
+    if (!ql_audio_playing) return;
+
+    ql_audio_next_cycle_counter++;
 
     //Contador para el pitch, para conmutar valor altavoz
     ql_audio_pitch_counter_current--;
@@ -1164,6 +1248,8 @@ void ql_ipc_set_sound_parameters(void)
 
 
     ql_audio_switch_pitches_init();
+
+    ql_audio_next_cycle_counter=0;
 
     ql_audio_playing=1;
 
