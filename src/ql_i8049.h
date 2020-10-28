@@ -46,7 +46,7 @@ extern int ql_pulsado_tecla(void);
 
 extern z80_byte ql_keyboard_table[];
 
-extern int ql_ipc_get_frecuency_sound_pitch1(void);
+extern int ql_ipc_get_frecuency_sound_current_pitch(void);
 
 extern int i8049_chip_present;
 

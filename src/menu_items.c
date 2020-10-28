@@ -2770,7 +2770,7 @@ M1-M0= mode bits:
 			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textovolumen);
 
 
-        int freq_a=ql_ipc_get_frecuency_sound_pitch1();
+        int freq_a=ql_ipc_get_frecuency_sound_current_pitch();
 
         sprintf (textotono,"Freq 1:  %3s %7d Hz",get_note_name(freq_a),freq_a);
         //menu_escribe_linea_opcion(linea++,-1,1,textotono);
@@ -17559,7 +17559,7 @@ void menu_ay_partitura_overlay(void)
 			}
 
 			else if (i8049_chip_present) {
-				freq_a=ql_ipc_get_frecuency_sound_pitch1();
+				freq_a=ql_ipc_get_frecuency_sound_current_pitch();
 				freq_b=0;
 				freq_c=0;
 			}            
@@ -22147,7 +22147,7 @@ void menu_ay_pianokeyboard_overlay(void)
 
 
 			else if (i8049_chip_present) {
-				freq_a=ql_ipc_get_frecuency_sound_pitch1();
+				freq_a=ql_ipc_get_frecuency_sound_current_pitch();
 				freq_b=0;
 				freq_c=0;			
 			}            

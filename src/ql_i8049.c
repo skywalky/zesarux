@@ -88,7 +88,7 @@ int ql_ipc_last_nibble_to_read_length=1;
 // Parametros de sonido
 int i8049_chip_present=0;
 
-moto_int ql_current_sound_duration=0;
+
 
 
 /*
@@ -120,14 +120,26 @@ unsigned char ql_audio_randomness_of_step;
 unsigned char ql_audio_fuziness;
 
 
-//Estos dos modificados para usar como contadores
+//Estos dos modificados para usar como contadores de la frecuencia
 moto_int ql_audio_pitch_counter_initial=0;
 moto_int ql_audio_pitch_counter_current=0;
+
+//Bit 0/1 del sonido en ejecucion
+int ql_audio_output_bit=0;
+
+
+//Duracion actual del sonido, se va decrementando
+moto_int ql_current_sound_duration=0;
+
+
+//Si hay sonido produciendose
+int ql_audio_playing=0;
+
+
 // Fin Parametros de sonido
 
 
-int ql_audio_output_bit=0;
-int ql_audio_playing=0;
+
 
 const int ql_i8049_sound_chip_frequency=11000000;
 
@@ -875,17 +887,141 @@ void ql_stop_sound(void)
     ql_audio_playing=0;
 }
 
+moto_int ql_get_counter_from_pitch(moto_byte pitch)
+{
+
+    //Es una tabla de 256 elementos. Dado que ql_audio_pitch1 es variable de 8 bits, no hay peligro de salirnos de la tabla
+    int frecuencia=ql_pitch_frequency_table[pitch];
+
+    //printf("frecuencia: %d\n",frecuencia);
+
+    
+
+    //Para 7800 hz (15600/2), contador valdra 1
+    //Para 3900 Hz, contador valdra 2
+
+    if (frecuencia==0) {
+        //Esto no deberia pasar, pero por si acaso para evitar division por 0
+        return (FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2);
+    }
+    else {
+        return (FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
+    }
+}
+
+//Inicialización de los procesos de cambio entre dos pitches
+void ql_audio_switch_pitches_init(void)
+{
+    //Si pitch2, o grad_x, o grad_y es 0, no hacer cambios 
+    if (!ql_audio_pitch2 || !ql_audio_interval_steps || !ql_audio_step_in_pitch) {
+
+        ql_audio_pitch_counter_initial=ql_get_counter_from_pitch(ql_audio_pitch1);
+
+
+    //printf("contador: %d\n",ql_audio_pitch_counter_initial);
+
+        ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;
+
+        return;
+    }
+
+
+    //    //grad_y
+    //ql_audio_step_in_pitch
+    //-8,7: range is -8 to 7 where step 1 to 7 scales downwards high to low pitch and -8 to 0 starts the sequence
+
+    //Ver en cual de los dos pitch empezamos
+     moto_byte lower_pitch,higher_pitch;
+
+    if (ql_audio_pitch1>ql_audio_pitch2) {
+        higher_pitch=ql_audio_pitch1;
+        lower_pitch=ql_audio_pitch2;
+    }
+    else {
+        higher_pitch=ql_audio_pitch2;
+        lower_pitch=ql_audio_pitch1;     
+    }
+
+    //convertir grad_y a algo con signo
+    int signed_ql_audio_step_in_pitch;
+    if (ql_audio_step_in_pitch<=7) {
+        signed_ql_audio_step_in_pitch=ql_audio_step_in_pitch;
+    }
+    else {
+        //-1=15
+        //-2=14
+        //....
+        //-6=10 
+        //-7=9
+        //-8=8
+       signed_ql_audio_step_in_pitch=-16+ql_audio_step_in_pitch;
+    }
+
+    printf("higher pitch: %d lower pitch: %d signed_grad_y: %d\n",signed_ql_audio_step_in_pitch);
+
+}
+
+//Modifica el pitch, si conviene, cuando pitch2 no es 0
+void ql_audio_switch_pitches(void)
+{
+    /*
+    pitch       0,255: pitch 1 is high, 255 is low
+    pitch2      0,255: a second pitch level between which the sound will "bounce"
+    grad_x      -32768,32767: time interval between pitch steps
+    grad_y      -8,7: size of each step. grad_x and grad_y control the rate at which the pitch bounces between levels
+    wrap        0,15: will force the sound to wrap around the specified number of times. if wrap is equal to 15 the sound will grap around forever    
+    */
+
+   /*
+   Harmonic
+    The second pitch (pitch_2), I will refer to as the Harmonic, add a Time Interval (grad_x) and a Pitch Step (grad_y), 
+    they create a sequence of sound variations ordered by the time duration and number of steps between the main pitch and second pitch.
+
+    The Time Interval (grad_x) again is in multiple units of 72 microseconds for each note in the sequence. 
+
+    The Pitch Step (grad_y) range is -8 to 7 where step 1 to 7 scales downwards high to low pitch and -8 to 0 starts the sequence 
+    scaling upwards from low to a higher pitch. From then on the sequence bounces between the two pitches. 
+
+    A Harmonic without a Time Interval (grad_x) and/or Pitch Step (grad_y) has no affect. Adding a Pitch step of 1 when Harmonic and Time Interval are both 0 
+    identifies the pitch as a high zero. Harmonic plus a Pitch step with Time Interval 0 just changes Main Pitch to the Harmonic.
+
+    */
+
+   //Comando beep:
+   //beep duration, pitch, pitch2, grad_x, grad_y, wrap, fuzzy, random
+
+   //TODO: que significa grad_x negativo???
+   //TODO: grad_x is in multiple units of 72 microseconds for each note. Dado que ql_audio_switch_pitches puede ejecutarse mas tarde
+   //que 72 microsegundos, hay que tener un contador para esto en ql_audio_next_cycle
+
+   //TODO: segun grad_y negativo o positivo, hay que hacer al inicio del sonido que se empiece en uno u otro pitch
+
+   //Si pitch2, o grad_x, o grad_y es 0, no hacer cambios 
+   if (!ql_audio_pitch2 || !ql_audio_interval_steps || !ql_audio_step_in_pitch) return;
+
+
+}
+
 
 void ql_audio_next_cycle(void)
 {
 
-    //Decrementamos contador sonido si conviene
+    //Contador para el pitch, para conmutar valor altavoz
+    ql_audio_pitch_counter_current--;
+    if (ql_audio_pitch_counter_current==0) {
+        ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;
+        ql_audio_output_bit ^=1;
+
+        ql_audio_switch_pitches();
+    }
+
+
+    //Contador de la duracion del sonido
     //Si es 0, dejarlo tal cual
     if (ql_current_sound_duration!=0) {
 
         ql_current_sound_duration--;
-        silence_detection_counter=0;
-        
+                
         if (ql_current_sound_duration==0) {
             //Silenciar
             //printf("stop sound\n");
@@ -897,15 +1033,16 @@ void ql_audio_next_cycle(void)
 
 char ql_audio_da_output(void)
 {
-    ql_audio_pitch_counter_current--;
-    if (ql_audio_pitch_counter_current==0) {
-        ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;
-        ql_audio_output_bit ^=1;
-    }
 
     if (!ql_audio_playing) return 0;
 
-    return ql_audio_output_bit * 30;
+    silence_detection_counter=0;
+
+    const int amplitud_onda=50;
+
+    if (ql_audio_output_bit) return amplitud_onda;
+    else return -amplitud_onda;
+
 }
 
 
@@ -949,6 +1086,8 @@ char ql_audio_da_output(void)
  
 //}
 
+
+
 //8 bloques de 4 bits. MSB first
 unsigned char ql_ipc_sound_command_buffer[8*2];
 
@@ -991,6 +1130,7 @@ void ql_ipc_set_sound_parameters(void)
     ql_audio_pitch2=(ql_ipc_sound_command_buffer[2]<<4)|ql_ipc_sound_command_buffer[3];
 
     //OJO a como se ordena esto:
+    //grad_x
     ql_audio_interval_steps=(ql_ipc_sound_command_buffer[6]<<12)|(ql_ipc_sound_command_buffer[7]<<8)|
                     (ql_ipc_sound_command_buffer[4]<<4)|ql_ipc_sound_command_buffer[5];
 
@@ -999,15 +1139,17 @@ void ql_ipc_set_sound_parameters(void)
     ql_audio_duration=(ql_ipc_sound_command_buffer[10]<<12)|(ql_ipc_sound_command_buffer[11]<<8)|
             (ql_ipc_sound_command_buffer[8]<<4)|ql_ipc_sound_command_buffer[9];
 
+    //grad_y
     ql_audio_step_in_pitch=ql_ipc_sound_command_buffer[12];
+
     ql_audio_wrap=ql_ipc_sound_command_buffer[13];
     ql_audio_randomness_of_step=ql_ipc_sound_command_buffer[14];
     ql_audio_fuziness=ql_ipc_sound_command_buffer[15];
              
 
-    //printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
-    //ql_audio_pitch1,ql_audio_pitch2,ql_audio_interval_steps,ql_audio_duration,
-    //ql_audio_step_in_pitch,ql_audio_wrap,ql_audio_randomness_of_step,ql_audio_fuziness);
+    printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
+    ql_audio_pitch1,ql_audio_pitch2,ql_audio_interval_steps,ql_audio_duration,
+    ql_audio_step_in_pitch,ql_audio_wrap,ql_audio_randomness_of_step,ql_audio_fuziness);
 
     //ql_simulate_sound(ql_audio_pitch1,ql_audio_duration);
 
@@ -1019,25 +1161,9 @@ void ql_ipc_set_sound_parameters(void)
     //Calculamos ql_audio_pitch_counter_initial
     //int frecuencia=get_note_frequency_from_ql_pitch(ql_audio_pitch1);
 
-    //Es una tabla de 256 elementos. Dado que ql_audio_pitch1 es variable de 8 bits, no hay peligro de salirnos de la tabla
-    int frecuencia=ql_pitch_frequency_table[ql_audio_pitch1];
 
-    //printf("frecuencia: %d\n",frecuencia);
 
-    //Para 7800 hz (15600/2), contador valdra 1
-    //Para 3900 Hz, contador valdra 2
-
-    if (frecuencia==0) {
-        //Esto no deberia pasar, pero por si acaso para evitar division por 0
-        ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2);
-    }
-    else {
-        ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
-    }
-
-    //printf("contador: %d\n",ql_audio_pitch_counter_initial);
-
-    ql_audio_pitch_counter_current=ql_audio_pitch_counter_initial;
+    ql_audio_switch_pitches_init();
 
     ql_audio_playing=1;
 
@@ -1059,7 +1185,9 @@ int ql_ipc_get_frecuency_sound_value(int pitch)
 }
 
 
-int ql_ipc_get_frecuency_sound_pitch1(void)
+//Retorna la frecuencia del sonido que se esta produciendo ahora
+//NO es necesariamente pitch1 o pitch2, porque si pitch2 es diferente de 0, el sonido oscilara entre pitch1 y pitch2
+int ql_ipc_get_frecuency_sound_current_pitch(void)
 {
 
     return ql_ipc_get_frecuency_sound_value(ql_audio_pitch_counter_initial);

@@ -1168,6 +1168,13 @@ int temp_conta=0;
 
 void qltraps_dir(void)
 {
+    /*
+    Cuando hace dir mdv1_
+
+    1) IO.OPEN dispositivo "mdv1_"
+    2) FS.MDINF para obtener nombre microdrive
+    3) IO.FSTRG. D2=64 (Channel ID=32 Base of buffer A1=00000100H A3=00000668H A6=00028000H). Hasta que se retorne EOF 
+    */
 
     temp_conta++;
     if (temp_conta>10) {
@@ -1179,7 +1186,7 @@ void qltraps_dir(void)
         return;       
     }
 
-    int longitud_entrada=10;
+    int longitud_entrada=64;
 
 
 
@@ -1272,7 +1279,7 @@ void handle_trap_io_fline_fstrg(void)
         	//Indicar actividad en md flp
         	ql_footer_mdflp_operating();
         	
-        	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE from our microdrive channel without error");
+        	debug_printf (VERBOSE_PARANOID,"Returning IO.FLINE/IO.FSTRG from our microdrive channel without error");
 
           	ql_restore_d_registers(pre_io_fline_fstrg_d,7);
           	ql_restore_a_registers(pre_io_fline_fstrg_a,6);            
