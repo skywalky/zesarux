@@ -1,9 +1,22 @@
-10 BEEP 10000,50
-20 PAUSE 50
-21 REMark sound with no wrap
-30 BEEP 30000,50,30,3000,-5
-31 REMark sound wrap 6 times
-40 BEEP 30000,50,30,3000,-5,6
-999 STOP
-9998 DEFine PROCedure grabar : SAVE mdv1_testsound
-9999 END DEFine 
+10 CLS
+20 LET duration=15600*2
+30 PRINT "simple sound"
+40 BEEP duration,50
+50 PAUSE 90
+60 IF BEEPING THEN GO TO 60
+70 PRINT "sound with no wrap"
+80 BEEP duration,50,30,3000,-5
+90 IF BEEPING THEN GO TO 90
+100 PRINT "sound wrap 6 times"
+110 BEEP duration,50,30,3000,-5,6
+120 IF BEEPING THEN GO TO 120
+130 PRINT "sound wrap 6 times and enough to hear"
+140 BEEP duration,50,40,2000,-5,6
+150 PAUSE 50
+160 IF BEEPING THEN GO TO 160
+170 PRINT "sound wrap forever"
+180 BEEP duration,50,40,2000,-5,15
+190 IF BEEPING THEN GO TO 190
+200 STOP
+210 DEFine PROCedure grabar : SAVE mdv1_testsound
+220 END DEFine 

@@ -1013,6 +1013,8 @@ void ql_audio_switch_pitches(void)
     grad_y      -8,7: size of each step. grad_x and grad_y control the rate at which the pitch bounces between levels
     wrap        0,15: will force the sound to wrap around the specified number of times. if wrap is equal to 15 the sound 
                 will grap around forever    
+    fuzzy       0,15: defined the amount of fuzziness to be added to the sound
+    random      0,15: defined the amount of randomness to be added to the sound                
     */
 
    /*
@@ -1036,7 +1038,8 @@ void ql_audio_switch_pitches(void)
 
     Fuzzy & Random
     Fuzzy decreases the purity of the pitch, Random just randomises the steps until little of the original sequence is evident. 
-    Both of these have a range 0 to 15, zero has no effect and the active range is more like 8 to 15. Increasing the fuz    
+    Both of these have a range 0 to 15, zero has no effect and the active range is more like 8 to 15. 
+    Increasing the fuzzy range as said before blurs the pitch to a buzz.
 
     */
 
@@ -1083,6 +1086,9 @@ void ql_audio_switch_pitches(void)
                     printf("reached maximum wraps. do not change anymore\n");
                     ql_audio_pitch2=ql_audio_interval_steps=ql_audio_step_in_pitch=0;
                 }
+                else {
+                    ql_audio_switch_pitch_current_pitch=ql_audio_switch_pitch_array[1];
+                }
             }
         }
         else {
@@ -1098,6 +1104,9 @@ void ql_audio_switch_pitches(void)
                 if (ql_audio_wrap_counter>=ql_audio_wrap && ql_audio_wrap!=15) {
                     printf("reached maximum wraps. do not change anymore\n");
                     ql_audio_pitch2=ql_audio_interval_steps=ql_audio_step_in_pitch=0;
+                }
+                else {
+                    ql_audio_switch_pitch_current_pitch=ql_audio_switch_pitch_array[0];
                 }
             }
         }
