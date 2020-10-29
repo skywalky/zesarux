@@ -145,48 +145,50 @@ void core_ql_trap_one(void)
     m68k_get_reg(NULL,M68K_REG_D3),m68k_get_reg(NULL,M68K_REG_A0),
     m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_PC));
 
+    //En principio mostramos con VERBOSE_PARANOID traps que no gestionamos, 
+    //y VERBOSE_DEBUG traps que gestionamos
+
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
 
       case 0x00:
-        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.INF");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.INF");
       break;
 
       case 0x01:
-        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.CJOB");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.CJOB");
       break;
 
       case 0x0A:
-        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.ACTIV");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ACTIV");
       break;      
 
       case 0x0C:
-        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.ALLOC");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ALLOC");
       break;  
 
       case 0x0D:
-        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.LNKFR");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.LNKFR");
       break;      
 
       case 0x10:
-        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.DMODE");
-        //ql_debug_force_breakpoint("despues DMODE");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.DMODE");
       break;
 
       case 0x11:
-        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.IPCOM");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.IPCOM");
       break;
 
       case 0x16:
-        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.ALBAS allocate BASIC area");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ALBAS allocate BASIC area");
       break;
 
       case 0x17:
-        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.REBAS release BASIC area");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.REBAS release BASIC area");
       break;
 
 
       default:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: Unhandled call");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: Unknown call");
       break;
 
     }
@@ -288,6 +290,9 @@ void core_ql_trap_two(void)
     m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_D3),
     m68k_get_reg(NULL,M68K_REG_PC));
 
+    //En principio mostramos con VERBOSE_PARANOID traps que no gestionamos, 
+    //y VERBOSE_DEBUG traps que gestionamos
+
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
 
       case 1:
@@ -320,6 +325,10 @@ void core_ql_trap_three(void)
     m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),
     m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_PC));
 
+
+    //En principio mostramos con VERBOSE_PARANOID traps que no gestionamos, 
+    //y VERBOSE_DEBUG traps que gestionamos    
+
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
     case 0x2:
       debug_printf(VERBOSE_DEBUG,"QDOS handler: Trap 3: IO.FLINE. fetch a line of bytes terminated by ASCII LF (10)");
@@ -343,7 +352,7 @@ void core_ql_trap_three(void)
     break;
 
     case 0x5:
-      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: IO.SBYTE");
+      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: IO.SBYTE");
     break;	
 
     case 0x7:
@@ -355,12 +364,12 @@ void core_ql_trap_three(void)
     
 
     case 0xB:
-      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: SD.CHENQ");
+      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: SD.CHENQ");
     break;	    
 
 
     case 0xF:
-      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: SD.CURS");
+      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: SD.CURS");
     break;	    
 
     case 0x45:
