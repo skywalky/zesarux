@@ -1428,7 +1428,7 @@ void handle_trap_io_fline_fstrg(void)
             puntero_destino=ql_get_a1_after_trap_4();
 
 
-          	debug_printf (VERBOSE_DEBUG,"QDOS handler: IO.FLINE - Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH max length: %d",
+          	debug_printf (VERBOSE_PARANOID,"QDOS handler: IO.FLINE - Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH max length: %d",
         		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
         		m68k_get_reg(NULL,M68K_REG_A6),puntero_destino, m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
 
@@ -1554,7 +1554,7 @@ void handle_trap_io_edlin(void)
             puntero_destino=ql_get_a1_after_trap_4();
 
 
-          	debug_printf (VERBOSE_DEBUG,"QDOS handler: IO.EDLIN - Channel ID=%d End of line: A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH max length: %d",
+          	debug_printf (VERBOSE_PARANOID,"QDOS handler: IO.EDLIN - Channel ID=%d End of line: A1=%08XH A3=%08XH A6=%08XH dest pointer: %08XH max length: %d",
         		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
         		m68k_get_reg(NULL,M68K_REG_A6),puntero_destino, m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
 
@@ -1590,7 +1590,7 @@ void handle_trap_fs_headr(void)
 {
     //debug_printf (VERBOSE_PARANOID,"FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
-    debug_printf (VERBOSE_DEBUG,"QDOS handler: FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
+    debug_printf (VERBOSE_PARANOID,"QDOS handler: FS.HEADR. Channel ID=%d",m68k_get_reg(NULL,M68K_REG_A0) );
 
     //Si canal es el mio ficticio 100
     //int indice_canal=qltraps_find_open_file(m68k_get_reg(NULL,M68K_REG_A0));
@@ -1761,8 +1761,8 @@ void handle_trap_fs_heads(void)
 void handle_trap_io_sstrg(void)
 {
         debug_printf (VERBOSE_PARANOID,"QDOS handler: IO.SSTRG. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%08XH",
-        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
-        		m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
+        m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
+        m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
 
 		//printf("last trap = %d previous was trap4: %d\n",ql_last_trap,ql_previous_trap_was_4);
 
@@ -1813,8 +1813,8 @@ void handle_trap_io_sstrg(void)
 
 
           	debug_printf (VERBOSE_PARANOID,"QDOS handler: IO.SSTRG - restoreg registers. Channel ID=%d Base of buffer A1=%08XH A3=%08XH A6=%08XH D2=%08XH",
-        		m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
-        		m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
+            m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A3),
+            m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_D2) );
 
 
                 	

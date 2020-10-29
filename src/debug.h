@@ -139,11 +139,12 @@ extern void breakpoints_disable(void);
 #define VERBOSE_DEBUG  3
 #define VERBOSE_PARANOID  4
 
-#define VERBOSE_MESSAGE_ERR "Error: "
-#define VERBOSE_MESSAGE_WARN "Warning: "
-#define VERBOSE_MESSAGE_INFO "Info: "
-#define VERBOSE_MESSAGE_DEBUG "Debug: "
-#define VERBOSE_MESSAGE_PARANOID "Paranoid: "
+//Igualados por la derecha asi salen mensajes alineados
+#define VERBOSE_MESSAGE_ERR         "Error:    "
+#define VERBOSE_MESSAGE_WARN        "Warning:  "
+#define VERBOSE_MESSAGE_INFO        "Info:     "
+#define VERBOSE_MESSAGE_DEBUG       "Debug:    "
+#define VERBOSE_MESSAGE_PARANOID    "Paranoid: "
 
 #define DEBUG_MAX_MESSAGE_LENGTH 1024
 
