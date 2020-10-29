@@ -1315,7 +1315,7 @@ int esxdos_handler_readdir_no_valido(char *s)
 	//Si longitud mayor que 12 (8 nombre, punto, 3 extension)
 	//if (strlen(s)>12) return 0;
 
-	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: checking is name %s is valid",s);
+	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: checking if name %s is valid",s);
 
 
 	char extension[NAME_MAX];

@@ -1166,31 +1166,65 @@ void ql_qdos_return_from_trap(void)
 
 int temp_conta=0;
 
+
+//comprobaciones de nombre de archivos en directorio
+int qltraps_dir_aux_readdir_no_valido(char *s)
+{
+
+	//Si longitud mayor que 12 (8 nombre, punto, 3 extension)
+	//if (strlen(s)>12) return 0;
+
+	printf("QDOS handler: checking if name %s is valid\n",s);
+
+
+	//char extension[NAME_MAX];
+	//char nombre[NAME_MAX];
+
+	//util_get_file_extension(s,extension);
+	//util_get_file_without_extension(s,nombre);
+
+    //Si nombre . o ..
+    if (!strcmp(s,".") || !strcmp(s,"..")) return 0;
+
+
+	//si hay letras minusculas
+	//int i;
+	//for (i=0;s[i];i++) {
+	//	if (s[i]>='a' && s[i]<'z') return 0;
+	//}
+
+
+
+	return 1;
+
+}
+
+
 //Retorna 0 si no hay mas archivos
 //Retorna 1 si ok
 int qltraps_dir_aux_readdir(int indice_canal)
 {
-	//do {
+	do {
 
-	qltraps_fopen_files[indice_canal].qltraps_handler_dp = readdir(qltraps_fopen_files[indice_canal].qltraps_handler_dfd);
+        qltraps_fopen_files[indice_canal].qltraps_handler_dp = readdir(qltraps_fopen_files[indice_canal].qltraps_handler_dfd);
 
-	if (qltraps_fopen_files[indice_canal].qltraps_handler_dp == NULL) {
-
-
-		//temp closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
-		//temp esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
-		printf ("No more files on readdir\n");
+        if (qltraps_fopen_files[indice_canal].qltraps_handler_dp == NULL) {
 
 
-		//no hay mas archivos
-		//reg_a=0;
-		//esxdos_handler_no_error_uncarry();
-		//esxdos_handler_old_return_call();
-		return 0;
-	}
+            //temp closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
+            //temp esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
+            printf ("No more files on readdir\n");
 
 
-	//} while(!esxdos_handler_readdir_no_valido(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name));
+            //no hay mas archivos
+            //reg_a=0;
+            //esxdos_handler_no_error_uncarry();
+            //esxdos_handler_old_return_call();
+            return 0;
+        }
+
+
+	} while(!qltraps_dir_aux_readdir_no_valido(qltraps_fopen_files[indice_canal].qltraps_handler_dp->d_name));
 
 	return 1;
 }
