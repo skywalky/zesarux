@@ -712,7 +712,7 @@ https://qlforum.co.uk/viewtopic.php?t=113
 
         //printf("Nombre: %s\n",qltraps_fopen_files[indice_canal].ql_file_name);
 
-        int longitud=strlen(qltraps_fopen_files[indice_canal].ql_file_name);
+        //int longitud=strlen(qltraps_fopen_files[indice_canal].ql_file_name);
 
         //Nombre. Esto solo se deberia escribir si longitud pedida > 14
         /*
@@ -1130,6 +1130,10 @@ void ql_load_binary_file(FILE *ptr_file,unsigned int valor_leido_direccion, unsi
     }
 }
 
+void ql_dos_set_error(int number)
+{
+    m68k_set_reg(M68K_REG_D0,number);
+}
 
 void ql_qdos_set_return_no_error(void)
 {
@@ -1148,7 +1152,7 @@ void ql_qdos_set_return_no_error(void)
 
 
     //No error.
-    m68k_set_reg(M68K_REG_D0,0);    
+    ql_dos_set_error(0);    
 }
 
 void ql_qdos_return_from_trap(void)
@@ -1171,28 +1175,12 @@ int temp_conta=0;
 int qltraps_dir_aux_readdir_no_valido(char *s)
 {
 
-	//Si longitud mayor que 12 (8 nombre, punto, 3 extension)
-	//if (strlen(s)>12) return 0;
 
 	printf("QDOS handler: checking if name %s is valid\n",s);
 
 
-	//char extension[NAME_MAX];
-	//char nombre[NAME_MAX];
-
-	//util_get_file_extension(s,extension);
-	//util_get_file_without_extension(s,nombre);
-
     //Si nombre . o ..
     if (!strcmp(s,".") || !strcmp(s,"..")) return 0;
-
-
-	//si hay letras minusculas
-	//int i;
-	//for (i=0;s[i];i++) {
-	//	if (s[i]>='a' && s[i]<'z') return 0;
-	//}
-
 
 
 	return 1;
@@ -1211,15 +1199,9 @@ int qltraps_dir_aux_readdir(int indice_canal)
         if (qltraps_fopen_files[indice_canal].qltraps_handler_dp == NULL) {
 
 
-            //temp closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
-            //temp esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
             printf ("No more files on readdir\n");
 
 
-            //no hay mas archivos
-            //reg_a=0;
-            //esxdos_handler_no_error_uncarry();
-            //esxdos_handler_old_return_call();
             return 0;
         }
 
@@ -1233,26 +1215,29 @@ int qltraps_dir_aux_readdir(int indice_canal)
 void qltraps_dir(int indice_canal)
 {
 
-/*
-if (qltraps_fopen_files[indice_canal].qltraps_handler_dfd==NULL) {
-	esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
-	esxdos_handler_old_return_call();
-	return;
-}
+    //Si no esta abierto el directorio
+
+    if (qltraps_fopen_files[indice_canal].qltraps_handler_dfd==NULL) {
+        printf ("Error from qltraps_dir. Directory not open\n");
+        ql_dos_set_error(QDOS_ERROR_CODE_NC);
+        ql_qdos_return_from_trap();
+
+        return;
+    }
 
 	//Si no es un directorio, error
 	if (qltraps_fopen_files[indice_canal].is_a_directory.v==0) {
-		printf ("Error from qltraps_dir. Handler %d is not a directory",indice_canal);
-		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
-		esxdos_handler_old_return_call();
+		printf ("Error from qltraps_dir. Handler %d is not a directory\n",indice_canal);
+        ql_dos_set_error(QDOS_ERROR_CODE_NC);
+        ql_qdos_return_from_trap();
 		return;
 	}	
-    */
+    
 
    	if (!qltraps_dir_aux_readdir(indice_canal)) {
 		//no hay mas archivos
 		printf("Returning no more files to readdir\n");
-        m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
+        ql_dos_set_error(QDOS_ERROR_CODE_EF);
         m68k_set_reg(M68K_REG_D1,0);  //0 byte leido 
         ql_qdos_return_from_trap();
 
@@ -1268,23 +1253,14 @@ if (qltraps_fopen_files[indice_canal].qltraps_handler_dfd==NULL) {
     2) FS.MDINF para obtener nombre microdrive
     3) IO.FSTRG. D2=64 (Channel ID=32 Base of buffer A1=00000100H A3=00000668H A6=00028000H). Hasta que se retorne EOF 
     */
-   /*
-    temp_conta++;
-    if (temp_conta>10) {
-        //Fin 
-        m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
-        m68k_set_reg(M68K_REG_D1,0);  //0 byte leido 
-        ql_qdos_return_from_trap();
-
-        return;       
-    }*/
-
+   
+    //Lo que ocupa una entrada de directorio
     int longitud_entrada=64;
 
 
 
     unsigned int puntero=ql_get_a1_after_trap_4();
-    //unsigned int puntero=m68k_get_reg(NULL,M68K_REG_A1);
+
     printf("Escribiendo entrada directorio en %X, length buffer: %d\n",puntero,m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
 
     //de momento poner a 0
@@ -1304,47 +1280,36 @@ if (qltraps_fopen_files[indice_canal].qltraps_handler_dfd==NULL) {
         3c long         reserved for backup date (not yet implemented)
     */
 
-    //file length. invento
+    //file length. me lo invento
     ql_writebyte(puntero,0);
     ql_writebyte(puntero+1,0);
     ql_writebyte(puntero+2,16);
     ql_writebyte(puntero+3,0);
 
-    //file type executable
-    ql_writebyte(puntero+5,1);
+    //file type normal
+    ql_writebyte(puntero+5,0);
 
     puntero +=0x0E;
 
-    int longitud_nombre=0;
+    int longitud_nombre=strlen(qltraps_fopen_files[indice_canal].qltraps_handler_dp->d_name);
 
-    //qltraps_fopen_files[indice_canal].qltraps_handler_dp->d_name
+
 
     //int i;
-    for (i=0;i<36 && qltraps_fopen_files[indice_canal].qltraps_handler_dp->d_name[i];i++) {
+    for (i=0;i<36 && i<longitud_nombre;i++) {
         ql_writebyte(puntero+2+i,qltraps_fopen_files[indice_canal].qltraps_handler_dp->d_name[i]);
 
-        longitud_nombre++;
     }
 
+    //16 bytes MSB. Pero siempre menor que 255
     ql_writebyte(puntero++,0);
     ql_writebyte(puntero++,longitud_nombre);
-    /*ql_writebyte(puntero++,'A');
-    ql_writebyte(puntero++,'r');
-    ql_writebyte(puntero++,'c');
-    ql_writebyte(puntero++,'h');
-    ql_writebyte(puntero++,'i'); 
-    ql_writebyte(puntero++,'v');
-    ql_writebyte(puntero++,'o');
-    ql_writebyte(puntero++,'1');*/
 
 
     unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
     registro_a1 +=longitud_entrada;
 
 
-    //temmp
-    //registro_a1=ql_get_a1_after_trap_4(); 
-    //registro_a1 +=longitud_entrada;
 
     m68k_set_reg(M68K_REG_A1,registro_a1); 
 
@@ -2048,7 +2013,7 @@ void handle_trap_fs_save(void)
 
             unsigned int puntero_origen=ql_get_a1_after_trap_4();
 
-            int i=0;
+            unsigned int i=0;
             for (i=0;i<longitud;i++) {
                 moto_byte byte_leido;
                 byte_leido=peek_byte_z80_moto(puntero_origen+i);
