@@ -1166,8 +1166,67 @@ void ql_qdos_return_from_trap(void)
 
 int temp_conta=0;
 
-void qltraps_dir(void)
+//Retorna 0 si no hay mas archivos
+//Retorna 1 si ok
+int qltraps_dir_aux_readdir(int indice_canal)
 {
+	//do {
+
+	qltraps_fopen_files[indice_canal].qltraps_handler_dp = readdir(qltraps_fopen_files[indice_canal].qltraps_handler_dfd);
+
+	if (qltraps_fopen_files[indice_canal].qltraps_handler_dp == NULL) {
+
+
+		//temp closedir(esxdos_fopen_files[file_handler].esxdos_handler_dfd);
+		//temp esxdos_fopen_files[file_handler].esxdos_handler_dfd=NULL;
+		printf ("No more files on readdir\n");
+
+
+		//no hay mas archivos
+		//reg_a=0;
+		//esxdos_handler_no_error_uncarry();
+		//esxdos_handler_old_return_call();
+		return 0;
+	}
+
+
+	//} while(!esxdos_handler_readdir_no_valido(esxdos_fopen_files[file_handler].esxdos_handler_dp->d_name));
+
+	return 1;
+}
+
+
+void qltraps_dir(int indice_canal)
+{
+
+/*
+if (qltraps_fopen_files[indice_canal].qltraps_handler_dfd==NULL) {
+	esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+	esxdos_handler_old_return_call();
+	return;
+}
+
+	//Si no es un directorio, error
+	if (qltraps_fopen_files[indice_canal].is_a_directory.v==0) {
+		printf ("Error from qltraps_dir. Handler %d is not a directory",indice_canal);
+		esxdos_handler_error_carry(ESXDOS_ERROR_EBADF);
+		esxdos_handler_old_return_call();
+		return;
+	}	
+    */
+
+   	if (!qltraps_dir_aux_readdir(indice_canal)) {
+		//no hay mas archivos
+		printf("Returning no more files to readdir\n");
+        m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
+        m68k_set_reg(M68K_REG_D1,0);  //0 byte leido 
+        ql_qdos_return_from_trap();
+
+        return;      
+
+	
+	}
+
     /*
     Cuando hace dir mdv1_
 
@@ -1175,7 +1234,7 @@ void qltraps_dir(void)
     2) FS.MDINF para obtener nombre microdrive
     3) IO.FSTRG. D2=64 (Channel ID=32 Base of buffer A1=00000100H A3=00000668H A6=00028000H). Hasta que se retorne EOF 
     */
-
+   /*
     temp_conta++;
     if (temp_conta>10) {
         //Fin 
@@ -1184,13 +1243,14 @@ void qltraps_dir(void)
         ql_qdos_return_from_trap();
 
         return;       
-    }
+    }*/
 
     int longitud_entrada=64;
 
 
 
     unsigned int puntero=ql_get_a1_after_trap_4();
+    //unsigned int puntero=m68k_get_reg(NULL,M68K_REG_A1);
     printf("Escribiendo entrada directorio en %X, length buffer: %d\n",puntero,m68k_get_reg(NULL,M68K_REG_D2) & 0xFFFF);
 
     //de momento poner a 0
@@ -1221,16 +1281,27 @@ void qltraps_dir(void)
 
     puntero +=0x0E;
 
+    int longitud_nombre=0;
+
+    //qltraps_fopen_files[indice_canal].qltraps_handler_dp->d_name
+
+    //int i;
+    for (i=0;i<36 && qltraps_fopen_files[indice_canal].qltraps_handler_dp->d_name[i];i++) {
+        ql_writebyte(puntero+2+i,qltraps_fopen_files[indice_canal].qltraps_handler_dp->d_name[i]);
+
+        longitud_nombre++;
+    }
+
     ql_writebyte(puntero++,0);
-    ql_writebyte(puntero++,8);
-    ql_writebyte(puntero++,'A');
+    ql_writebyte(puntero++,longitud_nombre);
+    /*ql_writebyte(puntero++,'A');
     ql_writebyte(puntero++,'r');
     ql_writebyte(puntero++,'c');
     ql_writebyte(puntero++,'h');
     ql_writebyte(puntero++,'i'); 
     ql_writebyte(puntero++,'v');
     ql_writebyte(puntero++,'o');
-    ql_writebyte(puntero++,32);
+    ql_writebyte(puntero++,'1');*/
 
 
     unsigned int registro_a1=m68k_get_reg(NULL,M68K_REG_A1);
@@ -1290,13 +1361,24 @@ void handle_trap_io_fline_fstrg(void)
         		debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from full device channel (just \"%s\") with EOF",
         			qltraps_fopen_files[indice_canal].ql_file_name);
 
-        		m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
-          		debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
-          		m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
+        		//m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
+          		//debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
+          		//m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
 
                 //temporal pruebas
                 //printf("Hacer dir\n");
-                //qltraps_dir();
+
+                
+                if (!ql_microdrive_floppy_emulation) {
+                    printf("Microdrive emulation not enabled\n");
+                    //Retornar Not found (NF)
+                    //m68k_set_reg(M68K_REG_D0,-7);
+
+                    //Volver sin mas
+                    return;                
+                }
+
+                qltraps_dir(indice_canal);
 
       			return;
         	}
@@ -2457,6 +2539,36 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
 
     printf("io open es dispositivo: %d\n",es_dispositivo);
 	qltraps_fopen_files[canal].es_dispositivo=es_dispositivo;
+
+    if (es_dispositivo) {
+
+                if (!ql_microdrive_floppy_emulation) {
+                    printf("Microdrive emulation not enabled\n");
+                    //Retornar Not found (NF)
+                    //m68k_set_reg(M68K_REG_D0,-7);
+
+                    //Volver sin mas
+                    return;                
+                }        
+
+        //Se abre directorio
+
+   	        ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
+
+            //printf("device: %s\n",ql_io_open_device);
+
+        	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+
+        	qltraps_fopen_files[canal].qltraps_handler_dfd = opendir(ql_nombrecompleto);
+
+            if (qltraps_fopen_files[canal].qltraps_handler_dfd == NULL) {
+                printf("Can't open directory %s\n",ql_nombrecompleto);
+
+                //error
+                m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_NC);
+                return;
+            }
+    }
 
     //Asumimos que no tiene cabecera al leerlo
     qltraps_fopen_files[canal].has_header_on_read=0;
