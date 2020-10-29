@@ -135,65 +135,7 @@ int qltraps_find_free_fopen(void)
 }
 
 
-void core_ql_trap_one(void)
-{
 
-  //Ver pagina 173. 18.14 Trap Keys
-
-  debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1. D0=%02XH D1=%02XH D2=%02XH D3=%02XH A0=%08XH A1=%08XH A6=%08XH PC=%05XH is : ",
-    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_D1),m68k_get_reg(NULL,M68K_REG_D2),
-    m68k_get_reg(NULL,M68K_REG_D3),m68k_get_reg(NULL,M68K_REG_A0),
-    m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_PC));
-
-    //En principio mostramos con VERBOSE_PARANOID traps que no gestionamos, 
-    //y VERBOSE_DEBUG traps que gestionamos
-
-  switch(m68k_get_reg(NULL,M68K_REG_D0)) {
-
-      case 0x00:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.INF");
-      break;
-
-      case 0x01:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.CJOB");
-      break;
-
-      case 0x0A:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ACTIV");
-      break;      
-
-      case 0x0C:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ALLOC");
-      break;  
-
-      case 0x0D:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.LNKFR");
-      break;      
-
-      case 0x10:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.DMODE");
-      break;
-
-      case 0x11:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.IPCOM");
-      break;
-
-      case 0x16:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ALBAS allocate BASIC area");
-      break;
-
-      case 0x17:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.REBAS release BASIC area");
-      break;
-
-
-      default:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: Unknown call");
-      break;
-
-    }
-
-}
 
 
 //Para almacenar los registros previos a la gestión del trap
@@ -279,6 +221,67 @@ void ql_restore_d_registers(unsigned int *origen, int ultimo)
   if (ultimo>=7) m68k_set_reg(M68K_REG_D7,origen[7]);
 }
 
+void core_ql_trap_one(void)
+{
+
+  //Ver pagina 173. 18.14 Trap Keys
+
+  debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1. D0=%02XH D1=%02XH D2=%02XH D3=%02XH A0=%08XH A1=%08XH A6=%08XH PC=%05XH is : ",
+    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_D1),m68k_get_reg(NULL,M68K_REG_D2),
+    m68k_get_reg(NULL,M68K_REG_D3),m68k_get_reg(NULL,M68K_REG_A0),
+    m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_A6),m68k_get_reg(NULL,M68K_REG_PC));
+
+    //En principio mostramos con VERBOSE_PARANOID traps que no gestionamos, 
+    //y VERBOSE_DEBUG traps que gestionamos
+
+  switch(m68k_get_reg(NULL,M68K_REG_D0)) {
+
+      case 0x00:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.INF");
+      break;
+
+      case 0x01:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.CJOB");
+      break;
+
+      case 0x0A:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ACTIV");
+      break;      
+
+      case 0x0C:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ALLOC");
+      break;  
+
+      case 0x0D:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.LNKFR");
+      break;      
+
+      case 0x10:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.DMODE");
+      break;
+
+      case 0x11:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.IPCOM");
+      break;
+
+      case 0x16:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ALBAS allocate BASIC area");
+      break;
+
+      case 0x17:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.REBAS release BASIC area");
+      break;
+
+
+      default:
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: Unknown call : %02XH",m68k_get_reg(NULL,M68K_REG_D0));
+      break;
+
+    }
+
+}
+
+
 
 void core_ql_trap_two(void)
 {
@@ -309,7 +312,7 @@ void core_ql_trap_two(void)
       break;
 
       default:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 2. Unhandled call");
+        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 2. Unknown call : %02XH",m68k_get_reg(NULL,M68K_REG_D0));
       break;
 
     }
@@ -427,7 +430,7 @@ void core_ql_trap_three(void)
     break;    
 
     default:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: unhandled call");
+      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: Unknown call : %02XH",m68k_get_reg(NULL,M68K_REG_D0));
     break;
 
   }
