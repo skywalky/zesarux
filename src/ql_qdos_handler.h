@@ -120,7 +120,7 @@ struct s_qltraps_fopen {
         //Indica a 1 que el archivo/directorio esta abierto. A 0 si no
         moto_bit open_file;
 
-        moto_bit is_a_directory;
+        //moto_bit is_a_directory;
 
         //Usado solo por debug de ZRCP:
         char debug_name[PATH_MAX];

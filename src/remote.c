@@ -2262,7 +2262,7 @@ void remote_qdos_gof(int misocket)
 
 	for (i=0;i<QLTRAPS_MAX_OPEN_FILES;i++) {
 		if (qltraps_fopen_files[i].open_file.v) {
-			if (qltraps_fopen_files[i].is_a_directory.v) {
+			if (qltraps_fopen_files[i].es_dispositivo) {
 				escribir_socket_format(misocket,"%d (dir) Name: %s\n",i,qltraps_fopen_files[i].qltraps_handler_last_dir_open);
 			}
 			else {

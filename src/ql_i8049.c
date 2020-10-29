@@ -549,7 +549,7 @@ void ql_ipc_write_ipc_read_keyrow(int row)
     //Si menu abierto, no tecla pulsada
 	if (zxvision_key_not_sent_emulated_mach() )  resultado_row=0;
 
-	debug_printf (VERBOSE_PARANOID,"Reading ipc command 9: read keyrow. row %d returning %02XH",row,resultado_row);
+	debug_printf (VERBOSE_PARANOID,"i8049: Reading ipc command 9: read keyrow. row %d returning %02XH",row,resultado_row);
 
     ql_ipc_last_nibble_to_read[0]=(resultado_row>>4)&15;
     ql_ipc_last_nibble_to_read[1]=resultado_row&15;
@@ -926,7 +926,7 @@ moto_int ql_get_counter_from_pitch(moto_byte pitch)
 int ql_audio_switch_pitch_current_index=0;
 
 //0=high pitch, 1=low pitch
-moto_byte ql_audio_switch_pitch_array[2];
+moto_byte ql_audio_switch_pitch_array[2]; 
 
 //Current pitch
 moto_byte ql_audio_switch_pitch_current_pitch;
@@ -1013,7 +1013,9 @@ void ql_audio_switch_pitches_init(void)
        signed_ql_audio_grad_y=-16+ql_audio_grad_y;
     }
 
-    printf("higher pitch: %d lower pitch: %d signed_grad_y: %d\n",higher_pitch,lower_pitch,signed_ql_audio_grad_y);
+    //printf("i8049: higher pitch: %d lower pitch: %d signed_grad_y: %d\n",higher_pitch,lower_pitch,signed_ql_audio_grad_y);
+
+   
 
     ql_audio_switch_pitch_array[0]=higher_pitch;
     ql_audio_switch_pitch_array[1]=lower_pitch;
@@ -1031,7 +1033,7 @@ void ql_audio_switch_pitches_init(void)
 
     ql_audio_switch_pitch_current_pitch=ql_audio_switch_pitch_array[ql_audio_switch_pitch_current_index];
 
-    printf("final_pitch: %d\n",ql_audio_switch_pitch_current_pitch);
+    //printf("final_pitch: %d\n",ql_audio_switch_pitch_current_pitch);
 
 
     ql_audio_pitch_counter_initial=ql_get_counter_from_pitch(ql_audio_switch_pitch_current_pitch);
@@ -1062,7 +1064,7 @@ moto_int ql_get_audio_interval_steps_random(void)
 
     int step_add_random=valor_random % ql_audio_randomness_of_step;
 
-    printf("Adding random %d to step (max %d value random: %d)\n",step_add_random,ql_audio_randomness_of_step,valor_random);
+    //printf("Adding random %d to step (max %d value random: %d)\n",step_add_random,ql_audio_randomness_of_step,valor_random);
 
     return ql_audio_grad_x+step_add_random;
 
@@ -1132,7 +1134,7 @@ void ql_audio_switch_pitches(void)
         //ql_audio_next_cycle_counter -=ql_audio_grad_x; //restamos en vez de poner a 0 para que sea tiempo acumulativo
 
         ql_audio_next_cycle_counter =0;
-        printf("Next note\n");
+        debug_printf(VERBOSE_PARANOID,"i8049: Next note in step");
 
         //cambiar nota
         //tenemos ql_audio_switch_pitch_current_pitch nota actual
@@ -1148,14 +1150,14 @@ void ql_audio_switch_pitches(void)
             //Ver si nos pasamos
             if (ql_audio_switch_pitch_current_pitch>=ql_audio_switch_pitch_array[0]) {
                 //Sobrepasado limite. 
-                printf("Reached upper limit.\n");
-                printf("wrap counter: %d\n",ql_audio_wrap_counter);
+                //printf("Reached upper limit.\n");
+                //printf("wrap counter: %d\n",ql_audio_wrap_counter);
 
                 //No tengo claro que la funcion de wrap sea esta
 
                 ql_audio_wrap_counter++;
                 if (ql_audio_wrap_counter>=ql_audio_wrap && ql_audio_wrap!=15) {
-                    printf("reached maximum wraps. do not change anymore\n");
+                    //printf("reached maximum wraps. do not change anymore\n");
                     ql_audio_pitch2=ql_audio_grad_x=ql_audio_grad_y=0;
                 }
                 else {
@@ -1167,14 +1169,14 @@ void ql_audio_switch_pitches(void)
             //Ver si nos pasamos por debajo
             if (ql_audio_switch_pitch_current_pitch<=ql_audio_switch_pitch_array[1]) {
                 //Sobrepasado limite. TODO
-                printf("Reached lower limit.\n");
-                printf("wrap counter: %d\n",ql_audio_wrap_counter);
+                //printf("Reached lower limit.\n");
+                //printf("wrap counter: %d\n",ql_audio_wrap_counter);
 
                 //No tengo claro que la funcion de wrap sea esta
 
                 ql_audio_wrap_counter++;
                 if (ql_audio_wrap_counter>=ql_audio_wrap && ql_audio_wrap!=15) {
-                    printf("reached maximum wraps. do not change anymore\n");
+                    //printf("reached maximum wraps. do not change anymore\n");
                     ql_audio_pitch2=ql_audio_grad_x=ql_audio_grad_y=0;
                 }
                 else {
@@ -1183,7 +1185,7 @@ void ql_audio_switch_pitches(void)
             }
         }
 
-        printf("current pitch: %d\n",ql_audio_switch_pitch_current_pitch);
+        //printf("current pitch: %d\n",ql_audio_switch_pitch_current_pitch);
 
         ql_audio_pitch_counter_initial=ql_get_counter_from_pitch(ql_audio_switch_pitch_current_pitch);
 
@@ -1349,9 +1351,9 @@ void ql_ipc_set_sound_parameters(void)
     ql_adjust_audio_settings_with_mixer();
              
 
-    printf("pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d\n",
-    ql_audio_pitch1,ql_audio_pitch2,ql_audio_grad_x,ql_audio_duration,
-    ql_audio_grad_y,ql_audio_wrap,ql_audio_randomness_of_step,ql_audio_fuziness);
+    debug_printf(VERBOSE_PARANOID,"i8049: setting sound: pitch1 %d pitch2 %d interval_steps %d duration %d step_in_pitch %d wrap %d randomness_of_step %d fuziness %d",
+        ql_audio_pitch1,ql_audio_pitch2,ql_audio_grad_x,ql_audio_duration,
+        ql_audio_grad_y,ql_audio_wrap,ql_audio_randomness_of_step,ql_audio_fuziness);
 
     //ql_simulate_sound(ql_audio_pitch1,ql_audio_duration);
 
@@ -1544,7 +1546,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 * 4 bits randomness (none unless msb is set)
 * 4 bits fuziness (none unless msb is set)
 */
-							debug_printf (VERBOSE_PARANOID,"ipc command 10 inso_cmd initiate sound process");
+							debug_printf (VERBOSE_PARANOID,"i8049: ipc command 10 inso_cmd initiate sound process");
                             //printf ("ipc command 10 inso_cmd initiate sound process\n");
 							//sleep(5);
                             
@@ -1573,7 +1575,7 @@ ipc..wp equ     6       return state of p26, currently not connected
                         //La rom no parece hacer uso de este comando, ni con rnd ni con randomise. Sera otro bug de la rom?
                         //Para randomise utiliza el RTC
                         //rand_cmd equ    14      random number generator, returns a sixteen bit number.
-                            printf("IPC write. status idle. command rand_cmd\n");
+                            //printf("i8049: IPC write. status idle. command rand_cmd\n");
 
                         break;
 
@@ -1583,7 +1585,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 						break;
 
                         default:
-                            printf("IPC write. status idle. unhandled command: %d\n",ql_ipc_last_command);
+                            printf("i8049: IPC write. status idle. unhandled command: %d\n",ql_ipc_last_command);
 
                         break;                        
 
@@ -1615,7 +1617,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 
 
 						case 10:
-							debug_printf (VERBOSE_PARANOID,"parameter sound %d: %d",ql_ipc_bytes_received,ql_ipc_last_command_parameter);
+							debug_printf (VERBOSE_PARANOID,"i8049: parameter sound %d: %d",ql_ipc_bytes_received,ql_ipc_last_command_parameter);
 
                             //printf ("parameter sound %d: %d\n",ql_ipc_bytes_received,ql_ipc_last_command_parameter);
                             ql_ipc_sound_command_buffer[ql_ipc_bytes_received]=ql_ipc_last_command_parameter;
@@ -1626,7 +1628,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 
                             //16 bytes (o sea, cada byte me lleva 4 bits efectivos, en total: 8 bytes efectivos)
 							if (ql_ipc_bytes_received>=16) {
-								debug_printf (VERBOSE_PARANOID,"End receiving ipc parameters");
+								debug_printf (VERBOSE_PARANOID,"i8049: End receiving ipc parameters");
 								ql_estado_ipc=QL_STATUS_IPC_IDLE;
 								//ql_ipc_last_write_bits_enviados=0;
 								ql_ipc_bytes_received=0;
@@ -1668,13 +1670,13 @@ ipc..wp equ     6       return state of p26, currently not connected
 
                         case 14:
                         //rand_cmd equ    14      random number generator, returns a sixteen bit number.
-                            printf("IPC write. status writing. command rand_cmd\n");
+                            printf("i8049: IPC write. status writing. command rand_cmd\n");
 
                         break;
 
 
                         default:
-                            printf("IPC write. status writing. unhandled command: %d\n",ql_ipc_last_command);
+                            printf("i8049: IPC write. status writing. unhandled command: %d\n",ql_ipc_last_command);
 
                         break;                        
 

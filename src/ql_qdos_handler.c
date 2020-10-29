@@ -47,6 +47,7 @@
 Functions to handle QDOS calls
 */
 
+//Parametros de config
 char ql_mdv1_root_dir[PATH_MAX]="";
 char ql_mdv2_root_dir[PATH_MAX]="";
 char ql_flp1_root_dir[PATH_MAX]="";
@@ -55,16 +56,20 @@ int ql_microdrive_floppy_emulation=0;
 
 
 
+//Parametro que deducimos cuando el archivo ejecutable no tiene cabecera
+moto_long ql_task_default_data_size=8192;
+
+int ql_device_mdv1_readonly=0;
+int ql_device_mdv2_readonly=0;
+int ql_device_flp1_readonly=0;
+//Fin Parametros de config
+
 void ql_post_trap_two(void);
 void ql_post_trap_three(void);
 
 z80_byte ql_last_trap=0;
 
 int ql_previous_trap_was_4=0;
-
-
-//Parametro que deducimos cuando el archivo ejecutable no tiene cabecera
-moto_long ql_task_default_data_size=8192;
 
 
 void ql_footer_mdflp_operating(void)
@@ -1226,8 +1231,8 @@ void qltraps_dir(int indice_canal)
     }
 
 	//Si no es un directorio, error
-	if (qltraps_fopen_files[indice_canal].is_a_directory.v==0) {
-		printf ("Error from qltraps_dir. Handler %d is not a directory\n",indice_canal);
+	if (qltraps_fopen_files[indice_canal].es_dispositivo==0) {
+		printf ("Error from qltraps_dir. Handler %d is not a device\n",indice_canal);
         ql_dos_set_error(QDOS_ERROR_CODE_NC);
         ql_qdos_return_from_trap();
 		return;
@@ -1357,16 +1362,8 @@ void handle_trap_io_fline_fstrg(void)
 
         	//Si es un dispositivo entero, estamos haciendo un dir 
         	if (qltraps_fopen_files[indice_canal].es_dispositivo) {
-        		debug_printf (VERBOSE_DEBUG,"Returning IO.FLINE from full device channel (just \"%s\") with EOF",
-        			qltraps_fopen_files[indice_canal].ql_file_name);
-
-        		//m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_EF);
-          		//debug_printf (VERBOSE_DEBUG,"IO.FLINE - returning EOF");
-          		//m68k_set_reg(M68K_REG_D1,0);  //0 byte leido
-
-                //temporal pruebas
-                //printf("Hacer dir\n");
-
+                printf("Reading directory %s\n",qltraps_fopen_files[indice_canal].ql_file_name);
+        		
                 
                 if (!ql_microdrive_floppy_emulation) {
                     printf("Microdrive emulation not enabled\n");
@@ -2038,9 +2035,7 @@ void handle_trap_fs_save(void)
         }
 }
 
-int ql_device_mdv1_readonly=0;
-int ql_device_mdv2_readonly=0;
-int ql_device_flp1_readonly=0;
+
 
 int ql_qdos_check_device_readonly(char *device)
 {
@@ -2550,13 +2545,16 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
                     return;                
                 }        
 
-        //Se abre directorio
+
 
    	        ql_split_path_device_name(ql_nombre_archivo_load,ql_io_open_device,ql_io_open_file,0,0);
 
             //printf("device: %s\n",ql_io_open_device);
 
         	ql_return_full_path(ql_io_open_device,ql_io_open_file,ql_nombrecompleto);
+
+            //Se abre directorio
+            printf("Opening directory %s\n",ql_nombrecompleto);
 
         	qltraps_fopen_files[canal].qltraps_handler_dfd = opendir(ql_nombrecompleto);
 
