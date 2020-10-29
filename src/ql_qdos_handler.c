@@ -148,40 +148,40 @@ void core_ql_trap_one(void)
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
 
       case 0x00:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.INF");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.INF");
       break;
 
       case 0x01:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.CJOB");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.CJOB");
       break;
 
       case 0x0A:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ACTIV");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.ACTIV");
       break;      
 
       case 0x0C:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ALLOC");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.ALLOC");
       break;  
 
       case 0x0D:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.LNKFR");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.LNKFR");
       break;      
 
       case 0x10:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.DMODE");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.DMODE");
         //ql_debug_force_breakpoint("despues DMODE");
       break;
 
       case 0x11:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.IPCOM");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.IPCOM");
       break;
 
       case 0x16:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.ALBAS allocate BASIC area");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.ALBAS allocate BASIC area");
       break;
 
       case 0x17:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1: MT.REBAS release BASIC area");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 1: MT.REBAS release BASIC area");
       break;
 
 
@@ -291,14 +291,14 @@ void core_ql_trap_two(void)
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
 
       case 1:
-        debug_printf(VERBOSE_PARANOID,"QDOS handler: Trap 2. IO.OPEN");
+        debug_printf(VERBOSE_DEBUG,"QDOS handler: Trap 2. IO.OPEN");
         //Open a channel. IO.OPEN Guardo todos registros A y D yo internamente de D2,D3,A2,A3 para restaurarlos despues de que se hace el trap de microdrive
         ql_store_a_registers(pre_io_open_a,7);
         ql_store_d_registers(pre_io_open_d,7);
       break;
 
       case 2:
-        debug_printf(VERBOSE_PARANOID,"QDOS handler: Trap 2. IO.CLOSE");
+        debug_printf(VERBOSE_DEBUG,"QDOS handler: Trap 2. IO.CLOSE");
         ql_store_a_registers(pre_io_close_a,7);
         ql_store_d_registers(pre_io_close_d,7);
       break;
@@ -322,32 +322,32 @@ void core_ql_trap_three(void)
 
   switch(m68k_get_reg(NULL,M68K_REG_D0)) {
     case 0x2:
-      debug_printf(VERBOSE_PARANOID,"QDOS handler: Trap 3: IO.FLINE. fetch a line of bytes terminated by ASCII LF (10)");
+      debug_printf(VERBOSE_DEBUG,"QDOS handler: Trap 3: IO.FLINE. fetch a line of bytes terminated by ASCII LF (10)");
       	      //Guardar registros
       ql_store_a_registers(pre_io_fline_fstrg_a,7);
       ql_store_d_registers(pre_io_fline_fstrg_d,7);
     break;
 
 	case 0x3:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: IO.FSTRG. fetch a string of bytes");
+      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: IO.FSTRG. fetch a string of bytes");
       	      //Guardar registros
       ql_store_a_registers(pre_io_fline_fstrg_a,7);
       ql_store_d_registers(pre_io_fline_fstrg_d,7);	  
 	break;
 
     case 0x4:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: IO.EDLIN");
+      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: IO.EDLIN");
       	      //Guardar registros
       ql_store_a_registers(pre_io_edlin_a,7);
       ql_store_d_registers(pre_io_edlin_d,7);	      
     break;
 
     case 0x5:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: IO.SBYTE");
+      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: IO.SBYTE");
     break;	
 
     case 0x7:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: IO.SSTRG");
+      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: IO.SSTRG");
       //Guardar registros
       ql_store_a_registers(pre_io_sstrg_a,7);
       ql_store_d_registers(pre_io_sstrg_d,7);
@@ -355,16 +355,16 @@ void core_ql_trap_three(void)
     
 
     case 0xB:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: SD.CHENQ");
+      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: SD.CHENQ");
     break;	    
 
 
     case 0xF:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: SD.CURS");
+      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: SD.CURS");
     break;	    
 
     case 0x45:
-        debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: FS.MDINF");
+        debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: FS.MDINF");
 
         //Guardar registros
         ql_store_a_registers(pre_fs_mdinf_a,7);
@@ -372,7 +372,7 @@ void core_ql_trap_three(void)
     break;
 
     case 0x46:
-    	debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: FS.HEADS");
+    	debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: FS.HEADS");
 
     	      //Guardar registros
       ql_store_a_registers(pre_fs_heads_a,7);
@@ -381,7 +381,7 @@ void core_ql_trap_three(void)
 
 
     case 0x47:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: FS.HEADR");
+      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: FS.HEADR");
       //Guardar registros
       ql_store_a_registers(pre_fs_headr_a,7);
       ql_store_d_registers(pre_fs_headr_d,7);
@@ -390,7 +390,7 @@ void core_ql_trap_three(void)
     break;
 
     case 0x48:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: FS.LOAD. Length: %d Channel: %d Address: %05XH"
+      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: FS.LOAD. Length: %d Channel: %d Address: %05XH"
           ,m68k_get_reg(NULL,M68K_REG_D2),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1)  );
       //D2.L length of file. A0 channellD. A1 base address for load
 
@@ -404,7 +404,7 @@ void core_ql_trap_three(void)
     break;
 
     case 0x49:
-      debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 3: FS.SAVE. Length: %d Channel: %d Address: %05XH"
+      debug_printf (VERBOSE_DEBUG,"QDOS handler: Trap 3: FS.SAVE. Length: %d Channel: %d Address: %05XH"
           ,m68k_get_reg(NULL,M68K_REG_D2),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1)  );
       //D2.L length of file. A0 channellD. A1 base address for load
 
