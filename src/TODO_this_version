@@ -195,7 +195,7 @@ que acaba generando mismo valor entero
 Chip de sonido QL se debería hacer como el AY o el SN, para evitar ciertas frecuencias que se repiten
 Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness etc) de momento lo dejo como está
 
--QL: Poder usar el mixer para desactivar fuzziness, randomness etc 
+
 
 -cuando una tecla F no esta como default, no la envia a maquina emulada: ejemplo MSX F2, QL F5
 

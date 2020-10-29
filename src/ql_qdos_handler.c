@@ -980,26 +980,7 @@ unsigned int ql_read_io_fline(unsigned int canal,unsigned int puntero_destino,un
 	*valor_retorno=0;
 
 
-	//Intento de hacer que funcione un "dir mdv1_"
-	//Como se define cada entrada de directorio? Ni idea, he estado haciendo pruebas
 
-	/*
-	printf("Archivo: %s es_dispositivo: %d\n",qltraps_fopen_files[canal].ql_file_name,qltraps_fopen_files[canal].es_dispositivo);
-	if (!strcasecmp("mdv1_",qltraps_fopen_files[canal].ql_file_name) && temp_conta_dir<10) {
-		//prueba ruta mdv1. TODO mdv2, flp1
-		printf("Returning directory entry\n");
-		char *entrada_directorio="\x00\x05Hola\x0a";
-		int i;
-		int longitud=strlen(entrada_directorio);
-		for (i=0;i<longitud;i++) {
-			ql_writebyte(puntero_destino++,entrada_directorio[i]);
-
-			//Para fijar un limite de archivos
-			temp_conta_dir++;
-			return longitud;
-		}
-	}
-	*/
 
 	ptr_archivo=qltraps_fopen_files[canal].qltraps_last_open_file_handler_unix;
 
@@ -1196,9 +1177,10 @@ int qltraps_dir_aux_readdir_no_valido(char *s)
 	debug_printf(VERBOSE_PARANOID,"QDOS handler: checking if name %s is valid",s);
 
 
-    //Si nombre . o ..
-    if (!strcmp(s,".") || !strcmp(s,"..")) return 0;
+    //Si nombre . o .. o zesarux_last_dir.txt
+    if (!strcmp(s,".") || !strcmp(s,"..") || !strcmp(s,MENU_LAST_DIR_FILE_NAME)) return 0;
 
+    //TODO ocultar subdirectorios
 
 	return 1;
 
@@ -1672,7 +1654,8 @@ void handle_trap_fs_mdinf(void)
         //D1.L empty/good sectors. The number of empty sectors is in the most significant word (msw) of D1, 
         //the total available on the medium is in the least significant word (lsw). A sector is 512 bytes.
         //de momento ,MDV files in QLAY format. Thee files must be exactly 174930 bytes 174930/512->aprox 341
-        m68k_set_reg(M68K_REG_D1,341); //0 sectores libres, 341 sectores ocupados
+        m68k_set_reg(M68K_REG_D1,32*65536+341); //32 sectores libres, 341 sectores ocupados
+        //Por qué 32 sectores libres? Nada, por probar, porque no diga 0 simplemente
 
         
         
