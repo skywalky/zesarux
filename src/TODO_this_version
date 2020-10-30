@@ -219,3 +219,6 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 
 -ordenar directorios arriba en filesel? Pero entonces al pulsar una letra y buscar... a donde ira?
 
+-Opción para que al salir del menú se active background window. Como si pulsase F15 siempre automáticamente al cerrar menú
+
+-Gestión de teclado QL quizá sufre de lectura de teclas desde emulación (que va a ráfagas cada frame de pantalla). Gestionarlo mejor todo desde timer?
