@@ -23648,11 +23648,13 @@ void menu_debug_unnamed_console_overlay(void)
         for (x=0;x<DEBUG_UNNAMED_CONSOLE_WIDTH;x++) {
             //printf("%c",*puntero);
 
-            zxvision_print_char_defaults(ventana,x+1,y,*puntero);
+            zxvision_print_char_defaults(ventana,x+1,y+2,*puntero);
             puntero++;
         }
         //printf("\n");
     }
+
+
 
     zxvision_draw_window_contents(ventana);
 
@@ -23683,7 +23685,8 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
         alto=18;
     }    
 
-    zxvision_new_window(ventana,x,y,ancho,alto,DEBUG_UNNAMED_CONSOLE_WIDTH,DEBUG_UNNAMED_CONSOLE_HEIGHT,"Debug console");
+    //DEBUG_UNNAMED_CONSOLE_HEIGHT+2 porque hay dos lineas de leyenda superior
+    zxvision_new_window(ventana,x,y,ancho,alto,DEBUG_UNNAMED_CONSOLE_WIDTH,DEBUG_UNNAMED_CONSOLE_HEIGHT+2,"Debug console");
   
     //Ajustar el scroll al maximo, para entrar y mostrar las ultimas lineas
 
@@ -23692,14 +23695,17 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
 
     int linea_scroll=debug_unnamed_console_current_y;
 
-    linea_scroll -=(alto-2);
+    //-4 para asegurarnos que siempre vaya por debajo
+    linea_scroll -=(alto-4);
     if (linea_scroll<0) linea_scroll=0;
     zxvision_set_offset_y_or_maximum(ventana,linea_scroll);
 
     
 
     ventana->can_be_backgrounded=1;
-    //ventana->lower_margin=;
+    ventana->upper_margin=2;
+    //Permitir hotkeys desde raton
+    ventana->can_mouse_send_hotkeys=1;	
 
     //indicar nombre del grabado de geometria
     strcpy(ventana->geometry_name,"debugconsole");    
@@ -23722,9 +23728,27 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
 
     z80_byte tecla;
     do {
-            tecla=zxvision_common_getkey_refresh();
-            zxvision_handle_cursors_pgupdn(ventana,tecla);
-            //printf ("tecla: %d\n",tecla);
+
+        //Forzar a mostrar atajos
+        z80_bit antes_menu_writing_inverse_color;
+        antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+        menu_writing_inverse_color.v=1;		
+
+        //Y linea leyenda
+        char buffer_leyenda[32];
+        sprintf(buffer_leyenda,"[%d] Verbose ~~level",verbose_level);
+        zxvision_print_string_defaults(ventana,1,0,buffer_leyenda);
+
+        //Restaurar comportamiento atajos
+        menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;        
+
+
+
+        tecla=zxvision_common_getkey_refresh();
+        zxvision_handle_cursors_pgupdn(ventana,tecla);
+
+        if (tecla=='l') menu_debug_verbose(0);
+        //printf ("tecla: %d\n",tecla);
     } while (tecla!=2 && tecla!=3);
 
 	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background

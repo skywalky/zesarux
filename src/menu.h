@@ -63,7 +63,9 @@ struct s_zxvision_window {
 	int visible_width,visible_height;
 	int x,y;
 
+    //las primeras posiciones especificadas aqui seran de upper margin
 	int upper_margin;
+    //las siguientes seran de lower margin
 	int lower_margin;
 
 	//char *text_margin[20]; //Hasta 20 lineas de texto que se usan como texto que no se mueve. La ultima finaliza con 0
