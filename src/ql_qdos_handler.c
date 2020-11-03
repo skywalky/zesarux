@@ -1176,7 +1176,7 @@ void ql_qdos_return_from_trap(void)
     m68k_set_reg(M68K_REG_A7,reg_a7);    
 }
 
-int temp_conta=0;
+//int temp_conta=0;
 
 
 //comprobaciones de nombre de archivos en directorio
