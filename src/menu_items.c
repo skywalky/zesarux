@@ -23692,7 +23692,7 @@ void menu_debug_unnamed_console_overlay(void)
     int pos=menu_debug_unnamed_console_indicador_actividad_contador % max;
     menu_debug_unnamed_console_indicador_actividad_contador++;
 
-    sprintf(mensaje_dest,"New messages %c",mensaje[pos]);
+    sprintf(mensaje_dest,"[New messages %c]",mensaje[pos]);
 
     zxvision_print_string_defaults_fillspc(ventana,1,1,mensaje_dest);
 
