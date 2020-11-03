@@ -23661,9 +23661,13 @@ void menu_debug_unnamed_console_overlay(void)
 }
 
 
+zxvision_window zxvision_window_unnamed_console;
+
 void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
 {
-    zxvision_window ventana;
+
+    zxvision_window *ventana;
+    ventana=&zxvision_window_unnamed_console;    
 
     int x,y,ancho,alto;
 
@@ -23674,22 +23678,22 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
         alto=18;
     }    
 
-    zxvision_new_window(&ventana,x,y,ancho,alto,DEBUG_UNNAMED_CONSOLE_WIDTH,DEBUG_UNNAMED_CONSOLE_HEIGHT,"Debug console");
+    zxvision_new_window(ventana,x,y,ancho,alto,DEBUG_UNNAMED_CONSOLE_WIDTH,DEBUG_UNNAMED_CONSOLE_HEIGHT,"Debug console");
   
     //Ajustar el scroll al maximo, para entrar y mostrar las ultimas lineas
 
     //Con esto llegara mas alla del limite
     //dado que DEBUG_UNNAMED_CONSOLE_HEIGHT es mas de lo que se puede bajar, pues se resta siempre lo que cabe en pantalla
-    zxvision_set_offset_y_or_maximum(&ventana,DEBUG_UNNAMED_CONSOLE_HEIGHT);
+    zxvision_set_offset_y_or_maximum(ventana,DEBUG_UNNAMED_CONSOLE_HEIGHT);
 
-    zxvision_draw_window(&ventana);
+    zxvision_draw_window(ventana);
 
     //indicar nombre del grabado de geometria
-    strcpy(ventana.geometry_name,"debugconsole");    
+    strcpy(ventana->geometry_name,"debugconsole");    
 
 
 
-    menu_debug_unnamed_console_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+    menu_debug_unnamed_console_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
                                                 
     //Cambiamos funcion overlay de texto de menu
@@ -23699,7 +23703,7 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     z80_byte tecla;
     do {
             tecla=zxvision_common_getkey_refresh();
-            zxvision_handle_cursors_pgupdn(&ventana,tecla);
+            zxvision_handle_cursors_pgupdn(ventana,tecla);
             //printf ("tecla: %d\n",tecla);
     } while (tecla!=2 && tecla!=3);
 
@@ -23710,7 +23714,7 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     cls_menu_overlay();
 
     //Grabar geometria ventana
-    util_add_window_geometry_compact(&ventana);    
+    util_add_window_geometry_compact(ventana);    
 
-    zxvision_destroy_window(&ventana);
+    zxvision_destroy_window(ventana);
 }
