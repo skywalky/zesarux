@@ -10,6 +10,7 @@ Added SP to SCR file converter
 Added Z80 to SCR file converter
 Added P to SCR file converter
 Added ZSF to SCR file converter
+Added debug console as a menu window
 
 Added ZRCP commands:
 -qdos-get-open-files: to get open files from QL QDOS

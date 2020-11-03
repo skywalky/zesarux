@@ -6193,6 +6193,7 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"tsconftbbluetilenav",menu_debug_tsconf_tbblue_msx_tilenav},
 	{"debugcpu",menu_debug_registers},
 	{"helpshowkeyboard",menu_help_show_keyboard},
+    {"debugconsole",menu_debug_unnamed_console},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };

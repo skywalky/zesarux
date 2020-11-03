@@ -23669,6 +23669,11 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     zxvision_window *ventana;
     ventana=&zxvision_window_unnamed_console;    
 
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);    
+
     int x,y,ancho,alto;
 
     if (!util_find_window_geometry("debugconsole",&x,&y,&ancho,&alto)) {
@@ -23686,19 +23691,28 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     //dado que DEBUG_UNNAMED_CONSOLE_HEIGHT es mas de lo que se puede bajar, pues se resta siempre lo que cabe en pantalla
     zxvision_set_offset_y_or_maximum(ventana,DEBUG_UNNAMED_CONSOLE_HEIGHT);
 
-    zxvision_draw_window(ventana);
+    
+
+    ventana->can_be_backgrounded=1;
 
     //indicar nombre del grabado de geometria
     strcpy(ventana->geometry_name,"debugconsole");    
 
-
+    zxvision_draw_window(ventana);
 
     menu_debug_unnamed_console_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
                                                 
     //Cambiamos funcion overlay de texto de menu
     //Se establece a la de funcion de onda + texto
-    set_menu_overlay_function(menu_debug_unnamed_console_overlay);    
+    set_menu_overlay_function(menu_debug_unnamed_console_overlay);   
+
+    //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+    //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+    if (zxvision_currently_restoring_windows_on_start) {
+        //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+        return;
+    }     
 
     z80_byte tecla;
     do {
@@ -23706,6 +23720,10 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
             zxvision_handle_cursors_pgupdn(ventana,tecla);
             //printf ("tecla: %d\n",tecla);
     } while (tecla!=2 && tecla!=3);
+
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	//(siempre que esta funcion tenga overlay realmente)
+	zxvision_set_window_overlay_from_current(ventana);    
 
     //restauramos modo normal de texto de menu
      set_menu_overlay_function(normal_overlay_texto_menu);
@@ -23716,5 +23734,12 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     //Grabar geometria ventana
     util_add_window_geometry_compact(ventana);    
 
-    zxvision_destroy_window(ventana);
+	if (tecla==3) {
+		//zxvision_ay_registers_overlay
+		zxvision_message_put_window_background();
+	}
+
+	else {
+		zxvision_destroy_window(ventana);		
+ 	}
 }
