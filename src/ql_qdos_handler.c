@@ -145,6 +145,9 @@ unsigned int pre_io_open_d[8];
 unsigned int pre_io_close_a[8];
 unsigned int pre_io_close_d[8];
 
+unsigned int pre_io_delet_a[8];
+unsigned int pre_io_delet_d[8];
+
 unsigned int pre_io_sstrg_a[8];
 unsigned int pre_io_sstrg_d[8];
 
@@ -289,8 +292,8 @@ void core_ql_trap_two(void)
 
   //Ver pagina 173. 18.14 Trap Keys
 
-  debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 1. D0=%02XH A0=%08XH A1=%08XH D3=%08XH PC=%05XH is : ",
-    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_D3),
+  debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 2. D0=%02XH D1=%02XH A0=%08XH A1=%08XH D3=%08XH PC=%05XH is : ",
+    m68k_get_reg(NULL,M68K_REG_D0),m68k_get_reg(NULL,M68K_REG_D1),m68k_get_reg(NULL,M68K_REG_A0),m68k_get_reg(NULL,M68K_REG_A1),m68k_get_reg(NULL,M68K_REG_D3),
     m68k_get_reg(NULL,M68K_REG_PC));
 
     //En principio mostramos con VERBOSE_PARANOID traps que no gestionamos, 
@@ -310,6 +313,13 @@ void core_ql_trap_two(void)
         ql_store_a_registers(pre_io_close_a,7);
         ql_store_d_registers(pre_io_close_d,7);
       break;
+
+      case 4:
+        debug_printf(VERBOSE_DEBUG,"QDOS handler: Trap 2. IO.DELET");
+        ql_store_a_registers(pre_io_delet_a,7);
+        ql_store_d_registers(pre_io_delet_d,7);
+      break;
+
 
       default:
         debug_printf (VERBOSE_PARANOID,"QDOS handler: Trap 2. Unknown call : %02XH",m68k_get_reg(NULL,M68K_REG_D0));
@@ -2716,6 +2726,150 @@ A0: 00000D88 A1: 00000D88 A2: 00006906 A3: 00000668 A4: 00000012 A5: 00000670 A6
        }
 
     }
+
+    //IO.DELET
+    if (m68k_get_reg(NULL,M68K_REG_D0)==4) {
+      //en A0
+      char ql_nombre_archivo_delet[255];
+      int reg_a0=m68k_get_reg(NULL,M68K_REG_A0);
+
+      //Aunque no entiendo aun, hay veces que A0 no entra bien cuando se guarda en pre_io_open_a[0]
+      //int reg_a0=pre_io_open_a[0];
+      //Haciendo: a=respr(10000): lbytes mdv1_ext,a -> mete a0=a1=f8ah y en esa f8ah no hay nada con sentido
+      //Pero cuando entramos aquí en pc=0x032B4, A0 está bien. raro raro...
+      //Es mas, justo antes de llamar a ese trap, los registros estan asi mal
+
+	//if (ql_previous_trap_was_4) {
+	//			reg_a0 += m68k_get_reg(NULL,M68K_REG_A6);
+	//}
+
+      debug_printf (VERBOSE_PARANOID,"QDOS handler: Pointer to file name: %X",reg_a0);
+      int longitud_nombre=peek_byte_z80_moto(reg_a0)*256+peek_byte_z80_moto(reg_a0+1);
+      reg_a0 +=2;
+      debug_printf (VERBOSE_PARANOID,"QDOS handler: Length channel name: %d",longitud_nombre);
+
+      //comprobar limite
+      if (longitud_nombre>254) longitud_nombre=254;
+
+      char c;
+      int i=0;
+      for (;longitud_nombre;longitud_nombre--) {
+        c=peek_byte_z80_moto(reg_a0++);
+        ql_nombre_archivo_delet[i++]=c;
+        //printf ("%c",c);
+      }
+      //printf ("\n");
+      ql_nombre_archivo_delet[i++]=0;
+
+
+      debug_printf (VERBOSE_PARANOID,"QDOS handler: Channel name: %s",ql_nombre_archivo_delet);
+      
+
+
+
+
+        //Si tiene prefijo mdv1, mdv2 o flp1
+      if (ql_si_ruta_mdv_flp(ql_nombre_archivo_delet)) {
+          
+    
+        ql_restore_d_registers(pre_io_delet_d,7);
+        ql_restore_a_registers(pre_io_delet_a,6);
+        //ql_restore_a_registers(pre_io_open_a,7);
+
+
+        //Volver de ese trap
+        ql_qdos_return_from_trap();
+
+
+        //No error.
+        ql_qdos_set_return_no_error();
+
+        char ql_io_delet_device[PATH_MAX];
+        char ql_io_delet_file[PATH_MAX];
+
+        char ql_nombrecompleto[PATH_MAX];
+
+        
+
+
+        //Si no hay root folder, directamente decimos que no se encuentra archivo
+        if (!ql_microdrive_floppy_emulation) {
+            debug_printf(VERBOSE_DEBUG,"QDOS handler: Microdrive emulation not enabled");
+            //Retornar Not found (NF)
+            m68k_set_reg(M68K_REG_D0,-7);
+            return;                
+        }
+
+
+        //Indicar actividad en md flp
+        ql_footer_mdflp_operating();
+
+        ql_split_path_device_name(ql_nombre_archivo_delet,ql_io_delet_device,ql_io_delet_file,0,0);
+
+        //printf("device: %s\n",ql_io_delet_device);
+
+        ql_return_full_path(ql_io_delet_device,ql_io_delet_file,ql_nombrecompleto);
+
+        
+        
+
+
+        if (!si_existe_archivo(ql_nombrecompleto)) {
+            debug_printf(VERBOSE_DEBUG,"QDOS handler: File %s not found. Trying changing last _ to .",ql_nombrecompleto);
+        
+            ql_split_path_device_name(ql_nombre_archivo_delet,ql_io_delet_device,ql_io_delet_file,1,1);
+
+            ql_return_full_path(ql_io_delet_device,ql_io_delet_file,ql_nombrecompleto);
+        }
+
+        if (!si_existe_archivo(ql_nombrecompleto)) {
+            debug_printf(VERBOSE_DEBUG,"QDOS handler: File %s not found. Trying changing all _ to .",ql_nombrecompleto);
+        
+            ql_split_path_device_name(ql_nombre_archivo_delet,ql_io_delet_device,ql_io_delet_file,1,0);
+
+            ql_return_full_path(ql_io_delet_device,ql_io_delet_file,ql_nombrecompleto);
+        }            
+
+
+        if (!si_existe_archivo(ql_nombrecompleto)) {
+            debug_printf(VERBOSE_DEBUG,"QDOS handler: File %s not found",ql_nombrecompleto);
+            //Retornar Not found (NF)
+            m68k_set_reg(M68K_REG_D0,-7);
+            return;
+        }
+
+        
+
+
+        //Ver si ese device esta permitido escribir (ql_io_delet_device)
+        if (ql_qdos_check_device_readonly(ql_io_delet_device)) {
+            //Retornar error not complete (no hay error de read only)
+            debug_printf(VERBOSE_DEBUG,"QDOS handler: Device %s is set as read only",ql_io_delet_device);
+            m68k_set_reg(M68K_REG_D0,QDOS_ERROR_CODE_NC);
+            return;
+        }
+
+        debug_printf (VERBOSE_DEBUG,"Deleting file %s",ql_nombrecompleto);
+        util_delete(ql_nombrecompleto);                
+
+    
+
+     
+
+	}
+
+
+
+    return;
+
+    }
+
+
+
+
+    
+
+
 
 
 }
