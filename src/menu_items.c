@@ -23646,12 +23646,12 @@ void menu_debug_unnamed_console_overlay(void)
     //DEBUG_UNNAMED_CONSOLE_WIDTH*DEBUG_UNNAMED_CONSOLE_HEIGHT
     for (y=0;y<DEBUG_UNNAMED_CONSOLE_HEIGHT;y++) {
         for (x=0;x<DEBUG_UNNAMED_CONSOLE_WIDTH;x++) {
-            printf("%c",*puntero);
+            //printf("%c",*puntero);
 
-            zxvision_print_char_defaults(ventana,x,y,*puntero);
+            zxvision_print_char_defaults(ventana,x+1,y,*puntero);
             puntero++;
         }
-        printf("\n");
+        //printf("\n");
     }
 
     zxvision_draw_window_contents(ventana);
@@ -23688,12 +23688,18 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     //Ajustar el scroll al maximo, para entrar y mostrar las ultimas lineas
 
     //Con esto llegara mas alla del limite
-    //dado que DEBUG_UNNAMED_CONSOLE_HEIGHT es mas de lo que se puede bajar, pues se resta siempre lo que cabe en pantalla
-    zxvision_set_offset_y_or_maximum(ventana,DEBUG_UNNAMED_CONSOLE_HEIGHT);
+    //dado que debug_unnamed_console_current_y, si esta al maximo, es mas de lo que se puede bajar
+
+    int linea_scroll=debug_unnamed_console_current_y;
+
+    linea_scroll -=(alto-2);
+    if (linea_scroll<0) linea_scroll=0;
+    zxvision_set_offset_y_or_maximum(ventana,linea_scroll);
 
     
 
     ventana->can_be_backgrounded=1;
+    //ventana->lower_margin=;
 
     //indicar nombre del grabado de geometria
     strcpy(ventana->geometry_name,"debugconsole");    
