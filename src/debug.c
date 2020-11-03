@@ -842,6 +842,109 @@ void debug_printf_sem_init(void)
 	z_atomic_reset(&debug_printf_semaforo);
 }
 
+
+//Funciones de consola debug adicional en entorno gráfico
+//muestra lo mismo que debug_printf en consola de texto por ejemplo
+//de momento se llama: unnamed_console
+
+char *debug_unnamed_console_memory_pointer=NULL;
+int debug_unnamed_console_current_x=0;
+int debug_unnamed_console_current_y=0;
+
+
+void debug_unnamed_console_init(void)
+{
+    int total_mem=DEBUG_UNNAMED_CONSOLE_WIDTH*DEBUG_UNNAMED_CONSOLE_HEIGHT;
+
+    debug_unnamed_console_memory_pointer=malloc(total_mem);
+
+    if (debug_unnamed_console_memory_pointer==NULL) cpu_panic("Can not allocate memory for unnamed console");
+
+    //Inicializar coordenadas
+    debug_unnamed_console_current_x=debug_unnamed_console_current_y=0;
+
+    //Escribir espacios
+    int i;
+    for (i=0;i<total_mem;i++) debug_unnamed_console_memory_pointer[i]=' ';
+
+}
+
+void debug_unnamed_console_scroll(void)
+{
+
+    int x,y;
+
+    for (y=0;y<DEBUG_UNNAMED_CONSOLE_HEIGHT-1;y++) {
+        for (x=0;x<DEBUG_UNNAMED_CONSOLE_WIDTH;x++) {
+            int offset_linea_debajo=(y+1)*DEBUG_UNNAMED_CONSOLE_WIDTH+x;
+            char c=debug_unnamed_console_memory_pointer[offset_linea_debajo];
+
+            int offset_linea_actual=y*DEBUG_UNNAMED_CONSOLE_WIDTH+x;
+            debug_unnamed_console_memory_pointer[offset_linea_actual]=c;
+        }
+    }
+
+    //Y meter ultima linea con espacios
+    for (x=0;x<DEBUG_UNNAMED_CONSOLE_WIDTH;x++) {
+        int offset_linea_actual=y*DEBUG_UNNAMED_CONSOLE_WIDTH+x;
+        debug_unnamed_console_memory_pointer[offset_linea_actual]=' ';
+    }        
+}
+
+void debug_unnamed_console_new_line(void)
+{
+
+    debug_unnamed_console_current_x=0;
+
+    if (debug_unnamed_console_current_y<DEBUG_UNNAMED_CONSOLE_HEIGHT-1) {
+        debug_unnamed_console_current_y++;
+    }
+    else {
+        debug_unnamed_console_scroll();
+    }
+}
+
+
+//Escribir caracter en posicion cursor
+void debug_unnamed_console_printchar(char c)
+{
+
+    //Si no esta inicializado
+    if (debug_unnamed_console_memory_pointer==NULL) return;
+
+    if (c==10) {
+        //siguiente linea
+        debug_unnamed_console_new_line();
+        return;
+    }
+
+    if (c<32 || c>126) c='?';
+
+    int offset=(debug_unnamed_console_current_y*DEBUG_UNNAMED_CONSOLE_WIDTH)+debug_unnamed_console_current_x;
+
+    debug_unnamed_console_memory_pointer[offset]=c;
+
+    debug_unnamed_console_current_x++;
+
+    if (debug_unnamed_console_current_x>=DEBUG_UNNAMED_CONSOLE_WIDTH) {
+        debug_unnamed_console_new_line();
+    }
+
+}
+
+
+void debug_unnamed_console_print(char *s)
+{
+    while (*s) {
+        debug_unnamed_console_printchar(*s);
+        s++;
+    }
+
+    //Y salto de linea
+    debug_unnamed_console_printchar('\n');
+}
+
+
 void debug_printf (int debuglevel, const char * format , ...)
 {
 	//Adquirir lock
@@ -904,6 +1007,10 @@ void debug_printf (int debuglevel, const char * format , ...)
 		//En esos casos puede ser necesario que el mensaje salga tal cual en consola, con scroll, aunque se desplace toda la interfaz
 		//pero ayudara a que se vean los mensajes
 		if (debug_always_show_messages_in_console.v) printf ("%s\n",buffer_final);
+
+
+        //Y mostrarlo tambien en la unnamed_console
+        debug_unnamed_console_print(buffer_final);
 
     	//Hacer aparecer menu, siempre que el driver no sea null ni.. porque no inicializado tambien? no inicializado
     	if (debuglevel==VERBOSE_ERR) {

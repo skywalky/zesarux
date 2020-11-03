@@ -23623,3 +23623,23 @@ void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
 
 
 }
+
+
+void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
+{
+    //temp
+
+    int x,y;
+    char *puntero;
+
+    puntero=debug_unnamed_console_memory_pointer;
+
+    //DEBUG_UNNAMED_CONSOLE_WIDTH*DEBUG_UNNAMED_CONSOLE_HEIGHT
+    for (y=0;y<DEBUG_UNNAMED_CONSOLE_HEIGHT;y++) {
+        for (x=0;x<DEBUG_UNNAMED_CONSOLE_WIDTH;x++) {
+            printf("%c",*puntero);
+            puntero++;
+        }
+        printf("\n");
+    }
+}

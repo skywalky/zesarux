@@ -148,6 +148,13 @@ extern void breakpoints_disable(void);
 
 #define DEBUG_MAX_MESSAGE_LENGTH 1024
 
+#define DEBUG_UNNAMED_CONSOLE_WIDTH 80
+#define DEBUG_UNNAMED_CONSOLE_HEIGHT 200
+
+extern char *debug_unnamed_console_memory_pointer;
+extern int debug_unnamed_console_current_x;
+extern int debug_unnamed_console_current_y;
+
 
 extern void machine_emulate_memory_refresh_debug_counter(void);
 

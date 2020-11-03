@@ -25534,6 +25534,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 			}			
 		}		
 
+        menu_add_item_menu(array_menu_debug_settings,"Debug console",MENU_OPCION_NORMAL,menu_debug_unnamed_console,NULL);
+
 
 		menu_add_item_menu(array_menu_debug_settings,"He~~xadecimal Editor",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'x');

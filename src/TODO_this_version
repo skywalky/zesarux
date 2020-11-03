@@ -214,6 +214,10 @@ graphics/tron
 psion chess (chess_exec)
 games/Fives 
 
+Ya conocidos:
+spook
+spacepods
+
 squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y luego lo quiere abrir...
 
 
@@ -228,7 +232,11 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 
 -QL Sbytes funciona?
 
+
+
 -First aid de f keys. Cuando se pulse una f por primera vez
+
+-Si se mueve ratón a zona redimensionado ventana, que la ventana cambie la esquina inferior derecha 
 
 -Debug console en ventana gráfica 
 Se inicializa al principio de todo
