@@ -23665,19 +23665,29 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
 {
     zxvision_window ventana;
 
-    int ancho=DEBUG_UNNAMED_CONSOLE_WIDTH;
-    int alto=DEBUG_UNNAMED_CONSOLE_HEIGHT;
+    int x,y,ancho,alto;
 
-    zxvision_new_window(&ventana,0,0,30,15,ancho,alto,"Debug console");
+    if (!util_find_window_geometry("debugconsole",&x,&y,&ancho,&alto)) {
+        x=menu_origin_x();
+        y=0;
+        ancho=32;
+        alto=18;
+    }    
 
+    zxvision_new_window(&ventana,x,y,ancho,alto,DEBUG_UNNAMED_CONSOLE_WIDTH,DEBUG_UNNAMED_CONSOLE_HEIGHT,"Debug console");
+  
+    //Ajustar el scroll al maximo, para entrar y mostrar las ultimas lineas
 
-    
+    //Con esto llegara mas alla del limite
+    //dado que DEBUG_UNNAMED_CONSOLE_HEIGHT es mas de lo que se puede bajar, pues se resta siempre lo que cabe en pantalla
+    zxvision_set_offset_y_or_maximum(&ventana,DEBUG_UNNAMED_CONSOLE_HEIGHT);
 
     zxvision_draw_window(&ventana);
 
-    //menu_debug_unnamed_console_print(&ventana);
+    //indicar nombre del grabado de geometria
+    strcpy(ventana.geometry_name,"debugconsole");    
 
-    //zxvision_draw_window_contents(&ventana);
+
 
     menu_debug_unnamed_console_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
@@ -23698,6 +23708,9 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
 
     
     cls_menu_overlay();
+
+    //Grabar geometria ventana
+    util_add_window_geometry_compact(&ventana);    
 
     zxvision_destroy_window(&ventana);
 }
