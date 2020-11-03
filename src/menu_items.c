@@ -23648,6 +23648,7 @@ void menu_debug_unnamed_console_overlay(void)
         for (x=0;x<DEBUG_UNNAMED_CONSOLE_WIDTH;x++) {
             //printf("%c",*puntero);
 
+            //Empieza en x+1 para dejar 1 caracter margen izquierda
             zxvision_print_char_defaults(ventana,x+1,y+2,*puntero);
             puntero++;
         }
@@ -23686,7 +23687,8 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     }    
 
     //DEBUG_UNNAMED_CONSOLE_HEIGHT+2 porque hay dos lineas de leyenda superior
-    zxvision_new_window(ventana,x,y,ancho,alto,DEBUG_UNNAMED_CONSOLE_WIDTH,DEBUG_UNNAMED_CONSOLE_HEIGHT+2,"Debug console");
+    //DEBUG_UNNAMED_CONSOLE_WIDTH+1 porque damos 1 espacio con margen por la izquierda
+    zxvision_new_window(ventana,x,y,ancho,alto,DEBUG_UNNAMED_CONSOLE_WIDTH+1,DEBUG_UNNAMED_CONSOLE_HEIGHT+2,"Debug console");
   
     //Ajustar el scroll al maximo, para entrar y mostrar las ultimas lineas
 
@@ -23747,7 +23749,11 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
         tecla=zxvision_common_getkey_refresh();
         zxvision_handle_cursors_pgupdn(ventana,tecla);
 
-        if (tecla=='l') menu_debug_verbose(0);
+        if (tecla=='l') {
+            menu_debug_verbose(0);
+            debug_unnamed_console_modified=1;
+        }
+
         //printf ("tecla: %d\n",tecla);
     } while (tecla!=2 && tecla!=3);
 
