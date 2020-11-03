@@ -9136,6 +9136,18 @@ void zxvision_print_string_defaults(zxvision_window *w,int x,int y,char *texto)
 
 }
 
+//Imprimir 1 caracter
+void zxvision_print_char_defaults(zxvision_window *w,int x,int y,char c)
+{
+
+    char buffer[2];
+
+    buffer[0]=c;
+    buffer[1]=0;
+
+    zxvision_print_string_defaults(w,x,y,buffer);
+}
+
 void zxvision_fill_width_spaces(zxvision_window *w,int y)
 {
 	overlay_screen caracter_aux;

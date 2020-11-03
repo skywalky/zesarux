@@ -850,6 +850,7 @@ void debug_printf_sem_init(void)
 char *debug_unnamed_console_memory_pointer=NULL;
 int debug_unnamed_console_current_x=0;
 int debug_unnamed_console_current_y=0;
+int debug_unnamed_console_modified=0;
 
 
 void debug_unnamed_console_init(void)
@@ -911,6 +912,9 @@ void debug_unnamed_console_printchar(char c)
 
     //Si no esta inicializado
     if (debug_unnamed_console_memory_pointer==NULL) return;
+
+    //decir que se ha modificado
+    debug_unnamed_console_modified=1;
 
     if (c==10) {
         //siguiente linea

@@ -23625,9 +23625,18 @@ void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
+zxvision_window *menu_debug_unnamed_console_overlay_window;
+
+void menu_debug_unnamed_console_overlay(void)
 {
-    //temp
+
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+    if (!debug_unnamed_console_modified) return;
+
+    zxvision_window *ventana;
+
+    ventana=menu_debug_unnamed_console_overlay_window;
 
     int x,y;
     char *puntero;
@@ -23638,8 +23647,57 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     for (y=0;y<DEBUG_UNNAMED_CONSOLE_HEIGHT;y++) {
         for (x=0;x<DEBUG_UNNAMED_CONSOLE_WIDTH;x++) {
             printf("%c",*puntero);
+
+            zxvision_print_char_defaults(ventana,x,y,*puntero);
             puntero++;
         }
         printf("\n");
     }
+
+    zxvision_draw_window_contents(ventana);
+
+    //Decir que no se ha modificado 
+    debug_unnamed_console_modified=0;
+}
+
+
+void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
+{
+    zxvision_window ventana;
+
+    int ancho=DEBUG_UNNAMED_CONSOLE_WIDTH;
+    int alto=DEBUG_UNNAMED_CONSOLE_HEIGHT;
+
+    zxvision_new_window(&ventana,0,0,30,15,ancho,alto,"Debug console");
+
+
+    
+
+    zxvision_draw_window(&ventana);
+
+    //menu_debug_unnamed_console_print(&ventana);
+
+    //zxvision_draw_window_contents(&ventana);
+
+    menu_debug_unnamed_console_overlay_window=&ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+                                                
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de onda + texto
+    set_menu_overlay_function(menu_debug_unnamed_console_overlay);    
+
+    z80_byte tecla;
+    do {
+            tecla=zxvision_common_getkey_refresh();
+            zxvision_handle_cursors_pgupdn(&ventana,tecla);
+            //printf ("tecla: %d\n",tecla);
+    } while (tecla!=2 && tecla!=3);
+
+    //restauramos modo normal de texto de menu
+     set_menu_overlay_function(normal_overlay_texto_menu);
+
+    
+    cls_menu_overlay();
+
+    zxvision_destroy_window(&ventana);
 }
