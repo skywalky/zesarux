@@ -238,11 +238,3 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 
 -Si se mueve ratón a zona redimensionado ventana, que la ventana cambie la esquina inferior derecha 
 
--Debug console en ventana gráfica 
-Se inicializa al principio de todo
-
-Tamaño fijo: de ancho x alto
-
-Luego ventana muestra siempre parte final (tener en cuenta última línea escrita: siempre será igual a alto-1 cuando ya esté haciendo scroll)
-
-Ventana refresca siempre que hay cambios. Mantener flag cada vez que mete cambio. Borrar flag al redibujar

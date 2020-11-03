@@ -23627,16 +23627,42 @@ void menu_ql_mdv_flp(MENU_ITEM_PARAMETERS)
 
 zxvision_window *menu_debug_unnamed_console_overlay_window;
 
+
+int menu_debug_unnamed_console_indicador_actividad_contador=0;
+
+int menu_debug_unnamed_console_indicador_actividad_visible=0;
+
 void menu_debug_unnamed_console_overlay(void)
 {
 
     if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
-    if (!debug_unnamed_console_modified) return;
-
     zxvision_window *ventana;
 
-    ventana=menu_debug_unnamed_console_overlay_window;
+    ventana=menu_debug_unnamed_console_overlay_window;    
+    int refrescar_borrado_contador=0;
+
+    //Ver si hay que borrar contador actividad
+    if (menu_debug_unnamed_console_indicador_actividad_visible>0) {
+        menu_debug_unnamed_console_indicador_actividad_visible--;
+        if (menu_debug_unnamed_console_indicador_actividad_visible==0) {
+            //Borrar contador actividad
+            //printf("---------BORRAR contador actividad\n");
+            zxvision_print_string_defaults_fillspc(ventana,1,1,"");
+
+            refrescar_borrado_contador=1;
+        }
+    }
+
+    if (!debug_unnamed_console_modified) {
+        //Si no hay mensajes, ver si hay que refrescar porque se ha borrado el contador de actividad
+        if (refrescar_borrado_contador) {
+            //printf("---Refrescar antes de salir sin escribir\n");
+            zxvision_draw_window_contents(ventana);
+        }
+        return;
+    }
+
 
     int x,y;
     char *puntero;
@@ -23655,7 +23681,20 @@ void menu_debug_unnamed_console_overlay(void)
         //printf("\n");
     }
 
+    //Mostrar indicador actividad. Para que diga que hay mensajes nuevos
+    //mantener durante 50 frames (1 segundo visible) despues de ultimo mensaje
+    menu_debug_unnamed_console_indicador_actividad_visible=50;
+    char *mensaje="|/-\\";
 
+    int max=strlen(mensaje);
+    char mensaje_dest[32];
+
+    int pos=menu_debug_unnamed_console_indicador_actividad_contador % max;
+    menu_debug_unnamed_console_indicador_actividad_contador++;
+
+    sprintf(mensaje_dest,"New messages %c",mensaje[pos]);
+
+    zxvision_print_string_defaults_fillspc(ventana,1,1,mensaje_dest);
 
     zxvision_draw_window_contents(ventana);
 
