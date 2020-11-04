@@ -23652,6 +23652,23 @@ int menu_debug_unnamed_console_indicador_actividad_contador=0;
 
 int menu_debug_unnamed_console_indicador_actividad_visible=0;
 
+
+void menu_debug_unnamed_console_show_legend(zxvision_window *ventana)
+{
+        //Forzar a mostrar atajos
+        z80_bit antes_menu_writing_inverse_color;
+        antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+        menu_writing_inverse_color.v=1;		
+
+        //Y linea leyenda
+        char buffer_leyenda[32];
+        sprintf(buffer_leyenda,"[%d] Verbose ~~level",verbose_level);
+        zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_leyenda);
+
+        //Restaurar comportamiento atajos
+        menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;     
+}
+
 void menu_debug_unnamed_console_overlay(void)
 {
 
@@ -23730,6 +23747,10 @@ void menu_debug_unnamed_console_overlay(void)
     sprintf(mensaje_dest,"[New messages %c]",mensaje[pos]);
 
     zxvision_print_string_defaults_fillspc(ventana,1,1,mensaje_dest);
+
+    //Mostar la leyenda tambien aqui, para cuando refresca en segundo plano,
+    //porque a veces se redibujan las ventanas pero solo se llama al overlay, y no a la funcion principal 
+    menu_debug_unnamed_console_show_legend(ventana);
 
     zxvision_draw_window_contents(ventana);
 
@@ -23812,19 +23833,8 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     z80_byte tecla;
     do {
 
-        //Forzar a mostrar atajos
-        z80_bit antes_menu_writing_inverse_color;
-        antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-        menu_writing_inverse_color.v=1;		
-
-        //Y linea leyenda
-        char buffer_leyenda[32];
-        sprintf(buffer_leyenda,"[%d] Verbose ~~level",verbose_level);
-        zxvision_print_string_defaults(ventana,1,0,buffer_leyenda);
-
-        //Restaurar comportamiento atajos
-        menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;        
-
+        
+        menu_debug_unnamed_console_show_legend(ventana);
 
 
         tecla=zxvision_common_getkey_refresh();

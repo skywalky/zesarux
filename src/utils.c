@@ -3378,6 +3378,9 @@ int util_write_configfile(void)
   if (no_cambio_parametros_maquinas_lentas.v) ADD_STRING_CONFIG,"--nochangeslowparameters");
   if (ventana_fullscreen)                     ADD_STRING_CONFIG,"--fullscreen");
   if (verbose_level)                          ADD_STRING_CONFIG,"--verbose %d",verbose_level);
+
+  if (debug_unnamed_console_enabled.v==0)     ADD_STRING_CONFIG,"--disable-debug-console-win");
+
   if (debug_always_show_messages_in_console.v) ADD_STRING_CONFIG,"--verbose-always-console");
   if (windows_no_disable_console.v)           ADD_STRING_CONFIG,"--nodisableconsole");
   if (porcentaje_velocidad_emulador!=100)     ADD_STRING_CONFIG,"--cpuspeed %d",porcentaje_velocidad_emulador);
