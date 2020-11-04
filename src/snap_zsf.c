@@ -78,6 +78,7 @@
 #include "sn76489an.h"
 #include "svi.h"
 #include "m68k.h"
+#include "ql_zx8302.h"
 
 
 #include "autoselectoptions.h"
@@ -426,6 +427,14 @@ Byte Fields:
 5: ram block id 
 6 and next bytes: data bytes
 
+-Block ID 15: ZSF_QL_CONF
+Ports and internal registers of QL
+Byte fields:
+
+0: unsigned char ql_pc_intr;
+1: unsigned char ql_mc_stat;
+
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -477,6 +486,7 @@ char *zsf_block_id_names[]={
   "ZSF_SVI_CONF",
   "ZSF_DATETIME",
   "ZSF_QL_RAMBLOCK",
+  "ZSF_QL_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -1650,6 +1660,25 @@ Byte fields:
   //ulaplus_set_extended_mode(zxuno_ports[0x40]);
 }
 
+void load_zsf_ql_conf(z80_byte *header)
+{
+/*
+-Block ID 15: ZSF_QL_CONF
+Ports and internal registers of QL
+Byte fields:
+
+0: unsigned char ql_pc_intr;
+1: unsigned char ql_mc_stat;
+
+*/
+
+  ql_pc_intr=header[0];
+  ql_mc_stat=header[1];
+
+
+
+}
+
 
 int load_zsf_eof(FILE *ptr_zsf_file,int longitud_memoria)
 {
@@ -1950,7 +1979,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_QL_RAMBLOCK:
         load_zsf_ql_snapshot_block_data(block_data,block_lenght);
-      break;                           
+      break;      
+
+      case ZSF_QL_CONF:
+        load_zsf_ql_conf(block_data);
+      break;                          
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -3454,6 +3487,28 @@ Byte Fields:
 
 
   if (MACHINE_IS_QL) {
+
+   z80_byte qlconfblock[2];
+
+/*
+-Block ID 15: ZSF_QL_CONF
+Ports and internal registers of QL machine
+Byte fields:
+
+0: unsigned char ql_pc_intr;
+1: unsigned char ql_mc_stat;
+
+*/    
+    qlconfblock[0]=ql_pc_intr;
+    qlconfblock[1]=ql_mc_stat;
+
+
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, qlconfblock,ZSF_QL_CONF, 2);
+
+
+
+
 
    int longitud_ram=16384;
 
