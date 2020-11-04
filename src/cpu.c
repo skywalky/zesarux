@@ -1439,12 +1439,13 @@ void cpu_help_expert(void)
 		"Debugging\n"
 		"---------\n"
 		"\n"
-		"--verbose n                Verbose level n (0=only errors, 1=warning and errors, 2=info, warning and errors, 3=debug, 4=lots of messages)\n"
-		"--verbose-always-console   Always show messages in console (using simple printf) additionally to the default video driver, interesting in some cases as curses, aa or caca video drivers\n"
-		"--debugregisters           Debug CPU Registers on text console\n"
-	    "--showcompileinfo          Show compilation information\n"
-		"--debugconfigfile          Debug parsing of configuration file (and .config files). This parameter must be the first and it's ignored if written on config file\n"
-		"--testconfig               Test configuration and exit without starting emulator\n"
+		"--verbose n                 Verbose level n (0=only errors, 1=warning and errors, 2=info, warning and errors, 3=debug, 4=lots of messages)\n"
+        "--disable-debug-console-win Disable debug console window\n"
+		"--verbose-always-console    Always show messages in console (using simple printf) additionally to the default video driver, interesting in some cases as curses, aa or caca video drivers\n"
+		"--debugregisters            Debug CPU Registers on text console\n"
+	    "--showcompileinfo           Show compilation information\n"
+		"--debugconfigfile           Debug parsing of configuration file (and .config files). This parameter must be the first and it's ignored if written on config file\n"
+		"--testconfig                Test configuration and exit without starting emulator\n"
 
 
 
@@ -5423,6 +5424,12 @@ int parse_cmdline_options(void) {
 					printf ("Invalid Verbose level\n");
 					exit(1);
 				}
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--disable-debug-console-win")) {
+                //Por defecto esta habilitado, por tanto lo desactivamos
+                debug_unnamed_console_end();
+                debug_unnamed_console_enabled.v=0;
             }
 
             else if (!strcmp(argv[puntero_parametro],"--verbose-always-console")) {

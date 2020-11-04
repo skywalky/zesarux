@@ -23657,14 +23657,24 @@ void menu_debug_unnamed_console_overlay(void)
 
     if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
+ 
 
-    //Revisar aqui tambien si no esta inicializado el puntero,
-    //por si esta la ventana en background y a alguien le da por desactivar el debug console
-    if (debug_unnamed_console_memory_pointer==NULL || debug_unnamed_console_enabled.v==0) return;
+
 
     zxvision_window *ventana;
 
-    ventana=menu_debug_unnamed_console_overlay_window;    
+    ventana=menu_debug_unnamed_console_overlay_window;   
+
+
+    //Revisar aqui tambien si no esta inicializado el puntero,
+    //por si esta la ventana en background y a alguien le da por desactivar el debug console
+    if (debug_unnamed_console_memory_pointer==NULL || debug_unnamed_console_enabled.v==0) {
+        zxvision_print_string_defaults_fillspc(ventana,1,0,"Debug console is not enabled. Enable it on Settings->Debug");
+        zxvision_draw_window_contents(ventana);
+        return;
+    }   
+
+
     int refrescar_borrado_contador=0;
 
     //Ver si hay que borrar contador actividad
@@ -23737,10 +23747,7 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
             return;
     }*/
 
-    if (debug_unnamed_console_memory_pointer==NULL || debug_unnamed_console_enabled.v==0) {
-        menu_error_message("Debug console is not enabled. Enable it on Settings->Debug");
-        return;
-    }
+
 
 
     zxvision_window *ventana;

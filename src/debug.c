@@ -859,6 +859,8 @@ void debug_unnamed_console_init(void)
 
     if (debug_unnamed_console_enabled.v==0) return;
 
+    printf("on debug_unnamed_console_init\n");
+
     int total_mem=DEBUG_UNNAMED_CONSOLE_WIDTH*DEBUG_UNNAMED_CONSOLE_HEIGHT;
 
     debug_unnamed_console_memory_pointer=malloc(total_mem);
@@ -876,7 +878,9 @@ void debug_unnamed_console_init(void)
 
 void debug_unnamed_console_end(void)
 {
+    printf("on debug_unnamed_console_end\n");
     if (debug_unnamed_console_memory_pointer!=NULL) {
+        printf("unalloc debug_unnamed_console_memory_pointer\n");
         free (debug_unnamed_console_memory_pointer);
         debug_unnamed_console_memory_pointer=NULL;
     }
