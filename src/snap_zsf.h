@@ -57,6 +57,7 @@
 #define ZSF_SNCHIP 31
 #define ZSF_SVI_CONF 32
 #define ZSF_DATETIME 33
+#define ZSF_QL_RAMBLOCK 34
 
 extern void load_zsf_snapshot(char *filename);
 extern void save_zsf_snapshot(char *filename);

@@ -77,6 +77,7 @@
 #include "sg1000.h"
 #include "sn76489an.h"
 #include "svi.h"
+#include "m68k.h"
 
 
 #include "autoselectoptions.h"
@@ -414,6 +415,18 @@ Date and time of ZSF file
 4: hour
 5: minute
 
+
+-Block ID 34: ZSF_QL_RAMBLOCK
+A ram binary block for a QL, of 16kb
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: ram block id 
+6 and next bytes: data bytes
+
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -426,7 +439,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 34
+#define MAX_ZSF_BLOCK_ID_NAMES 35
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -463,6 +476,7 @@ char *zsf_block_id_names[]={
   "ZSF_SNCHIP",
   "ZSF_SVI_CONF",
   "ZSF_DATETIME",
+  "ZSF_QL_RAMBLOCK",
 
   "Unknown"  //Este siempre al final
 };
@@ -614,6 +628,38 @@ void load_zsf_snapshot_z80_regs(z80_byte *header)
         if (im_mode==1) im_mode=2;
 
         iff1.v=iff2.v=header[26] &1;
+}
+
+
+void load_zsf_snapshot_moto_regs(z80_byte *header)
+{
+
+    int i=0;
+
+    m68k_set_reg(M68K_REG_PC,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_SP,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_USP,util_read_long_value(&header[i])); i+=4;
+    m68k_set_reg(M68K_REG_SR,util_read_long_value(&header[i]));  i+=4;
+
+    m68k_set_reg(M68K_REG_A0,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_A1,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_A2,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_A3,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_A4,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_A5,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_A6,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_A7,util_read_long_value(&header[i]));  i+=4;
+
+    m68k_set_reg(M68K_REG_D0,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_D1,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_D2,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_D3,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_D4,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_D5,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_D6,util_read_long_value(&header[i]));  i+=4;
+    m68k_set_reg(M68K_REG_D7,util_read_long_value(&header[i]));  i+=4;
+
+
 }
 
 
@@ -1004,6 +1050,36 @@ void load_zsf_tsconf_snapshot_block_data(z80_byte *block_data,int longitud_origi
 
 
   load_zsf_snapshot_block_data_addr(&block_data[i],tsconf_ram_mem_table[ram_page],block_lenght,longitud_original,block_flags&1);
+
+}
+
+
+void load_zsf_ql_snapshot_block_data(z80_byte *block_data,int longitud_original)
+{
+
+
+
+  int i=0;
+  z80_byte block_flags=block_data[i];
+
+  //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 5 bytes
+
+  i++;
+  z80_int block_start=value_8_to_16(block_data[i+1],block_data[i]);
+  i +=2;
+  z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+  i+=2;
+
+  z80_byte ram_page=block_data[i];
+  i++;
+
+  debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Length: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+  longitud_original -=6;
+
+
+  load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_ql[0x20000+ram_page*16384],block_lenght,longitud_original,block_flags&1);
 
 }
 
@@ -1747,6 +1823,10 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
         load_zsf_snapshot_z80_regs(block_data);
       break;
 
+      case ZSF_MOTO_REGS_ID:
+        load_zsf_snapshot_moto_regs(block_data);
+      break;      
+
       case ZSF_RAMBLOCK:
         load_zsf_snapshot_block_data(block_data,block_lenght);
       break;
@@ -1866,7 +1946,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_DATETIME:
         load_zsf_datetime(block_data);
-      break;                             
+      break;        
+
+      case ZSF_QL_RAMBLOCK:
+        load_zsf_ql_snapshot_block_data(block_data,block_lenght);
+      break;                           
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -1891,7 +1975,48 @@ void load_zsf_snapshot(char *filename)
 }
 
 
-void save_zsf_snapshot_cpuregs(FILE *ptr,z80_byte **destination_memory,int *longitud_total)
+
+
+void save_zsf_snapshot_moto_cpuregs(FILE *ptr,z80_byte **destination_memory,int *longitud_total)
+{
+
+    //(4 + 8 + 8)*4=80
+
+    z80_byte header[80];
+
+    int i=0;
+ 
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_PC));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_SP));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_USP)); i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_SR));  i+=4;
+
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_A0));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_A1));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_A2));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_A3));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_A4));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_A5));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_A6));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_A7));  i+=4;
+
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_D0));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_D1));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_D2));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_D3));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_D4));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_D5));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_D6));  i+=4;
+    util_write_long_value(&header[i],m68k_get_reg(NULL, M68K_REG_D7));  i+=4;
+
+
+
+    zsf_write_block(ptr, destination_memory, longitud_total, header,ZSF_MOTO_REGS_ID, 80);
+
+}
+
+
+void save_zsf_snapshot_z80_cpuregs(FILE *ptr,z80_byte **destination_memory,int *longitud_total)
 {
 
   z80_byte header[27];
@@ -1941,6 +2066,9 @@ void save_zsf_snapshot_cpuregs(FILE *ptr,z80_byte **destination_memory,int *long
   zsf_write_block(ptr, destination_memory, longitud_total, header,ZSF_Z80_REGS_ID, 27);
 
 }
+
+
+
 
 //Guarda en destino el bloque de memoria comprimido, siempre que salga a cuenta comprimirlo. 
 //Si ocupa mas que el original, lo guardara comprimido
@@ -2034,14 +2162,14 @@ void save_zsf_snapshot_file_mem(char *filename,z80_byte *destination_memory,int 
 
   //Save cpu registers. Z80 or Moto or MK14
   if (CPU_IS_MOTOROLA) {
-    //TODO
+    save_zsf_snapshot_moto_cpuregs(ptr_zsf_file,&destination_memory,longitud_total);
   }
   else if (CPU_IS_SCMP) {
     //TODO
   }
 
   else {
-    save_zsf_snapshot_cpuregs(ptr_zsf_file,&destination_memory,longitud_total);
+    save_zsf_snapshot_z80_cpuregs(ptr_zsf_file,&destination_memory,longitud_total);
   }
 
 
@@ -3323,6 +3451,61 @@ Byte Fields:
  }
  
  //DIVMMC/DIVIDE memoria. En caso de maquinas que no son zxuno o tbblue o prism (dado que estas paginan memoria divmmc en su espacio de ram)
+
+
+  if (MACHINE_IS_QL) {
+
+   int longitud_ram=16384;
+
+  
+   //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
+  if (compressed_ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+  /*
+
+-ZSF_QL_RAMBLOCK
+A ram binary block for a ql
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: ram block id 
+6 and next bytes: data bytes
+  */
+
+    //128kb , desde 20000-3FFFF)
+  int paginas=128/16;
+  z80_int ram_page; //porque pagina puede ir de 0 a 255, y cuando llega a 256 acabamos el bucle for
+
+  for (ram_page=0;ram_page<paginas;ram_page++) {
+
+    compressed_ramblock[0]=0;
+    compressed_ramblock[1]=value_16_to_8l(16384);
+    compressed_ramblock[2]=value_16_to_8h(16384);
+    compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+    compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+    compressed_ramblock[5]=ram_page;
+
+    int si_comprimido;
+    int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_ql[0x20000+ram_page*16384],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+    if (si_comprimido) compressed_ramblock[0]|=1;
+
+    debug_printf(VERBOSE_DEBUG,"Saving ZSF_QL_RAMBLOCK ram page: %d length: %d",ram_page,longitud_bloque);
+
+    //Store block to file
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_QL_RAMBLOCK, longitud_bloque+6);
+
+  }
+
+  free(compressed_ramblock);
+
+  }
+
 
 
   //test meter un NOOP

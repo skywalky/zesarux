@@ -177,7 +177,7 @@ Q: How do you manage the 50 hz interrupt of the 8049 and the Keyboard interrupt?
 - Entrada faq QL revisar
 
 
--ZSF soporte para QL
+
 
 -ZENG soporte para QL
 
@@ -228,8 +228,6 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 -Gestión de teclado QL quizá sufre de lectura de teclas desde emulación (que va a ráfagas cada frame de pantalla). Gestionarlo mejor todo desde timer?
 
 
--Ql delete file 
-
 -QL Sbytes funciona?
 
 
@@ -239,3 +237,6 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 -Si se mueve ratón a zona redimensionado ventana, que la ventana cambie la esquina inferior derecha 
 
 -help de verbose level decir que consola tambien sale en ventana
+
+
+-ZSF soporte para QL

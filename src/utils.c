@@ -18978,3 +18978,19 @@ const char *spectrum_colour_names[16]={
         "BrightYellow",
         "BrightWhite",        
 };
+
+
+//Guardar en la posicion indicada el valor de 32 bits, little endian
+void util_write_long_value(z80_byte *destino,unsigned int valor)
+{
+    destino[0]=valor         & 0xFF;
+    destino[1]=(valor >> 8)  & 0xFF;
+    destino[2]=(valor >> 16) & 0xFF;
+    destino[3]=(valor >> 24) & 0xFF;
+}
+
+//Lee de la posicion indicada el valor de 32 bits, little endian
+unsigned int util_read_long_value(z80_byte *origen)
+{
+    return (origen[0])|(origen[1]<<8)|(origen[2]<<16)|(origen[3]<<24);
+}

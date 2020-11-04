@@ -925,4 +925,7 @@ extern int util_convert_utf_charset(char *origen,z80_byte *final,int longitud_te
 
 extern const char *spectrum_colour_names[];
 
+extern void util_write_long_value(z80_byte *destino,unsigned int valor);
+extern unsigned int util_read_long_value(z80_byte *origen);
+
 #endif
