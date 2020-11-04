@@ -239,4 +239,6 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 -help de verbose level decir que consola tambien sale en ventana
 
 
--ZSF soporte para QL
+-ZSF soporte para QL: falta r
+*registros hardware: modo video, etc
+*quiza qldos handler? demasiado complicado: archivos abiertos, punteros FILE ,etc 

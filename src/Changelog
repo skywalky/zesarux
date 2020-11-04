@@ -39,6 +39,7 @@ Improved QL emulation:
 -Added sound emulation
 -Guessing of file name extension
 -Show all registers on Debug CPU window
+-Support ZSF snapshot
 
 Fixed QL bugs:
 -Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes
