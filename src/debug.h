@@ -156,7 +156,7 @@ extern int debug_unnamed_console_current_x;
 extern int debug_unnamed_console_current_y;
 extern void debug_unnamed_console_init(void);
 extern int debug_unnamed_console_modified;
-
+extern z80_bit debug_unnamed_console_enabled;
 
 extern void machine_emulate_memory_refresh_debug_counter(void);
 

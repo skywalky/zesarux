@@ -784,6 +784,21 @@ void menu_debug_settings_visualmem_grafico(MENU_ITEM_PARAMETERS)
 	setting_mostrar_visualmem_grafico.v ^=1;
 }
 
+void menu_debug_unnamed_console_enable(MENU_ITEM_PARAMETERS)
+{
+
+    if (debug_unnamed_console_enabled.v) {
+        debug_unnamed_console_end();
+        debug_unnamed_console_enabled.v=0;
+    }
+
+    else {
+        debug_unnamed_console_enabled.v=1;
+        debug_unnamed_console_init();
+    }
+
+}
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -844,7 +859,12 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose,NULL,"[%d] Verbose ~~level",verbose_level);
-		menu_add_item_menu_shortcut(array_menu_settings_debug,'l');		
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'l');	
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_unnamed_console_enable,NULL,"[%c] Enable debug console window",
+			( debug_unnamed_console_enabled.v ? 'X' : ' ') );    
+        menu_add_item_menu_tooltip(array_menu_settings_debug,"Enables debug console window, it will be visible on Debug->Debug console menu");
+        menu_add_item_menu_ayuda(array_menu_settings_debug,"Enables debug console window, it will be visible on Debug->Debug console menu");
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose_always_console,NULL,"[%c] Always verbose console",
 			( debug_always_show_messages_in_console.v ? 'X' : ' ') );
@@ -23637,6 +23657,11 @@ void menu_debug_unnamed_console_overlay(void)
 
     if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
+
+    //Revisar aqui tambien si no esta inicializado el puntero,
+    //por si esta la ventana en background y a alguien le da por desactivar el debug console
+    if (debug_unnamed_console_memory_pointer==NULL || debug_unnamed_console_enabled.v==0) return;
+
     zxvision_window *ventana;
 
     ventana=menu_debug_unnamed_console_overlay_window;    
@@ -23707,6 +23732,16 @@ zxvision_window zxvision_window_unnamed_console;
 
 void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
 {
+    /*if (!menu_multitarea) {
+            menu_warn_message("This menu item needs multitask enabled");
+            return;
+    }*/
+
+    if (debug_unnamed_console_memory_pointer==NULL || debug_unnamed_console_enabled.v==0) {
+        menu_error_message("Debug console is not enabled. Enable it on Settings->Debug");
+        return;
+    }
+
 
     zxvision_window *ventana;
     ventana=&zxvision_window_unnamed_console;    

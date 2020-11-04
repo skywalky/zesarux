@@ -852,9 +852,13 @@ int debug_unnamed_console_current_x=0;
 int debug_unnamed_console_current_y=0;
 int debug_unnamed_console_modified=0;
 
+z80_bit debug_unnamed_console_enabled={1};
 
 void debug_unnamed_console_init(void)
 {
+
+    if (debug_unnamed_console_enabled.v==0) return;
+
     int total_mem=DEBUG_UNNAMED_CONSOLE_WIDTH*DEBUG_UNNAMED_CONSOLE_HEIGHT;
 
     debug_unnamed_console_memory_pointer=malloc(total_mem);
@@ -868,6 +872,14 @@ void debug_unnamed_console_init(void)
     int i;
     for (i=0;i<total_mem;i++) debug_unnamed_console_memory_pointer[i]=' ';
 
+}
+
+void debug_unnamed_console_end(void)
+{
+    if (debug_unnamed_console_memory_pointer!=NULL) {
+        free (debug_unnamed_console_memory_pointer);
+        debug_unnamed_console_memory_pointer=NULL;
+    }
 }
 
 void debug_unnamed_console_scroll(void)
