@@ -73,6 +73,8 @@ extern z80_bit tbblue_autoconfigure_sd_asked;
 
 extern int menu_allow_background_windows;
 
+extern int always_force_overlay_visible_when_menu_closed;
+
 extern z80_bit tbblue_store_scanlines;
 
 extern z80_bit tbblue_store_scanlines_border;

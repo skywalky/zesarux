@@ -3731,8 +3731,9 @@ int util_write_configfile(void)
   if (menu_invert_mouse_scroll.v)             ADD_STRING_CONFIG,"--invert-menu-mouse-scroll");
 
   if (menu_allow_background_windows)          ADD_STRING_CONFIG,"--allow-background-windows");
-                     
 
+  if (always_force_overlay_visible_when_menu_closed) ADD_STRING_CONFIG,"--allow-background-windows-closed-menu");
+ 			         
                                               ADD_STRING_CONFIG,"--menu-mix-method \"%s\"",screen_menu_mix_methods_strings[screen_menu_mix_method]);
 
 

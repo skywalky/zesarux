@@ -340,8 +340,7 @@ int menu_abierto=0;
 //Esto NO abre el menu, solo deja el overlay de menu activo
 int overlay_visible_when_menu_closed=0;
 
-//Forzar siempre overlay_visible_when_menu_closed al cerrar el menu
-int always_force_overlay_visible_when_menu_closed=0;
+
 
 //Si realmente aparecera el menu
 z80_bit menu_event_open_menu={0};

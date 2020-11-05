@@ -255,6 +255,9 @@ z80_bit msx_loading_noise_reduction={0};
 //Si permitimos o no ventanas en background al pulsar F6
 int menu_allow_background_windows=0;
 
+//Forzar siempre overlay_visible_when_menu_closed al cerrar el menu
+int always_force_overlay_visible_when_menu_closed=0;
+
 //Reabrir ventanas al iniciar el emulador 
 z80_bit menu_reopen_background_windows_on_start={0};
 
