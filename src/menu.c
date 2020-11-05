@@ -340,6 +340,9 @@ int menu_abierto=0;
 //Esto NO abre el menu, solo deja el overlay de menu activo
 int overlay_visible_when_menu_closed=0;
 
+//Forzar siempre overlay_visible_when_menu_closed al cerrar el menu
+int always_force_overlay_visible_when_menu_closed=0;
+
 //Si realmente aparecera el menu
 z80_bit menu_event_open_menu={0};
 
@@ -26847,7 +26850,10 @@ void menu_interface_reopen_background_windows_on_start(MENU_ITEM_PARAMETERS)
 }
 
 
-
+void menu_interface_allow_background_windows_always_force(MENU_ITEM_PARAMETERS)
+{
+    always_force_overlay_visible_when_menu_closed ^=1;
+}
 
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
@@ -26976,6 +26982,12 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			"- Close all windows: go to menu Display->Close all Windows, or disable this Background windows setting\n"
 			"- Rearrange and Reduce windows: go to menu Display"	
 		);
+
+        if (menu_allow_background_windows && menu_multitarea) {
+           menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows_always_force,NULL,"[%c]  Even with menu closed",(always_force_overlay_visible_when_menu_closed ? 'X' : ' ') ); 
+           menu_add_item_menu_tooltip(array_menu_window_settings,"Shows background window even with menu closed");
+           menu_add_item_menu_ayuda(array_menu_window_settings,"Shows background window even with menu closed");
+        }
 
 		if (menu_allow_background_windows && menu_multitarea && save_configuration_file_on_exit.v) {
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_reopen_background_windows_on_start,NULL,"[%c] Reopen windows on start",(menu_reopen_background_windows_on_start.v ? 'X' : ' ') );
@@ -32159,6 +32171,12 @@ menu_init_footer hace falta pues el layer de menu se borra y se queda negro en l
 	menu_draw_ext_desktop();
 
 	//Si salimos de menu y se ha pulsado dicha tecla F para activar la función, volver con menu overlay activo
+
+    //O si siempre se fuerza
+    if (menu_allow_background_windows && menu_multitarea) {
+        if (always_force_overlay_visible_when_menu_closed) overlay_visible_when_menu_closed=1;
+    }
+    
 	if (overlay_visible_when_menu_closed) {
 		menu_overlay_activo=1;
 
