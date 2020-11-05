@@ -3979,9 +3979,11 @@ leaving I/O Mode is at most 64 scan lines.
   010 = Cursor (56780)
   011 = Sinclair 1 (67890)
   100 = Kempston 2 (port 0x37)
+  101 = MD 1 (3 or 6 button joystick port 0x1F) (como si fuera kempston)
   */
 
  //cualquier otro, dejarlo como estaba
+ //printf ("joy mode: %d\n",joystick_mode);
 
  switch (joystick_mode) {
 	 case 0:
@@ -3991,6 +3993,7 @@ leaving I/O Mode is at most 64 scan lines.
 
 	 case 1:
 	 case 4:
+     case 5:
 	 	joystick_emulation=JOYSTICK_KEMPSTON;
 		debug_printf(VERBOSE_DEBUG,"Setting joystick 1 emulation to Kempston");
 	 break;
@@ -4004,6 +4007,10 @@ leaving I/O Mode is at most 64 scan lines.
 	 	joystick_emulation=JOYSTICK_SINCLAIR_1;
 		debug_printf(VERBOSE_DEBUG,"Setting joystick 1 emulation to Sinclair 1");
 	 break;
+
+     default:
+        debug_printf(VERBOSE_DEBUG,"Unemulated joystick mode: %d",joystick_mode);
+    break;
 
  }
 
@@ -4193,7 +4200,9 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 			*/
 
 			if ((last_register_5&(8+64+128))!=(value&(8+64+128))) {
+                //printf("antes: %d\n",last_register_5&(8+64+128));
 				tbblue_set_joystick_1_mode();
+                //printf("despues: %d\n",value&(8+64+128));
 			}
 		
 		break;
