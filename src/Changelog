@@ -3,7 +3,6 @@ Version 9.1 - Toi Acid Game edition. 05 November 2020
 Added compile setting to disable networking functions
 Added pc speaker audio driver (for Linux only)
 Added date & time field info to ZSF snapshots
-Added F-key function to show windows in background without having to open the menu
 Added configuration & command line setting to save keymap type
 Added SNA to SCR file converter
 Added SP to SCR file converter
@@ -22,6 +21,7 @@ Improved ZX Desktop:
 -Windows are not closed when changing ZX Desktop size
 -Added new ZX Desktop fill types: RainbowAlive, Chess, Grid, Random
 -Improved input number windows: added buttons to increase/decrease values
+-Now backgrounded windows can be seen even with menu closed (added a setting and also a F-key)
 
 Improved loading .pok files: increased maximum pokes from 100 to 49152 pokes
 Improved 1 bit resample audio filter 
@@ -54,6 +54,7 @@ Fixed QL bugs:
 -Fixed system call IO.FCLOSE
 -Fixed system call IO.DELET
 -Fixed possible hang calling IO.SSTRG
+-Fixed listing (dir) call
 -Fixed cursor flashing
 -Fixed RTC emulation
 -Fixed reading keyboard when menu open
