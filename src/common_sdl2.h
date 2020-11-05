@@ -24,12 +24,12 @@
 
 #include "cpu.h"
 
-z80_bit audiosdl_inicializado;
-z80_bit scrsdl_inicializado;
+extern z80_bit audiosdl_inicializado;
+extern z80_bit scrsdl_inicializado;
 
 
-int commonsdl_init(void);
-void commonsdl_end(void);
+extern int commonsdl_init(void);
+extern void commonsdl_end(void);
 
 
 #endif

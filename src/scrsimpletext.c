@@ -68,8 +68,6 @@ int simpletext_x_position=0;
 #define MAX_LINES_BUFFER 50
 
 
-//buffer de comando introducido
-char buffer_tecla_comando[256];
 
 
 void scrsimpletext_putpixel_final_rgb(int x GCC_UNUSED,int y GCC_UNUSED,unsigned int color_rgb GCC_UNUSED)

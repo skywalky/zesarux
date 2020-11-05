@@ -49,10 +49,10 @@
 aa_context *context;
 aa_renderparams *rparams;
 int scraa_fast=1;
-int imgwidth,imgheight;
+int scraa_imgwidth,scraa_imgheight;
 
-int totalrealwidth;
-int totalrealheight;
+int scraa_totalrealwidth;
+int scraa_totalrealheight;
 int paleta[EMULATOR_TOTAL_PALETTE_COLOURS];
 unsigned char *framebuffer_aa;
 
@@ -141,14 +141,14 @@ void scraa_putpixel(int x,int y,unsigned int color)
 
 
 	//Escalar a la pantalla real mostrada
-        x=x*imgwidth/totalrealwidth;
-        y=y*imgheight/totalrealheight;
+        x=x*scraa_imgwidth/scraa_totalrealwidth;
+        y=y*scraa_imgheight/scraa_totalrealheight;
 
-	//printf ("x: %d y: %d color: %d colorpaleta: %d imgwidth: %d \n",x,y,color,paleta[color],imgwidth);
+	//printf ("x: %d y: %d color: %d colorpaleta: %d scraa_imgwidth: %d \n",x,y,color,paleta[color],scraa_imgwidth);
 
 	//Nota: vigilar si x o y se salen de rango, genera segmentation fault
 
-	framebuffer_aa[y*imgwidth+x]=paleta[color];
+	framebuffer_aa[y*scraa_imgwidth+x]=paleta[color];
 
 }
 
@@ -329,13 +329,13 @@ void scraa_refresca_pantalla(void)
 
 	//Espacio para footer
 	if (scraa_fast) {
-		//aa_fastrender(context, 0,0,imgwidth,imgheight-20);
-		aa_fastrender(context, 0,0,imgwidth,imgheight);
-		//aa_fastrender(context, 0,0,imgwidth,aa_imgheight(context)-30);
+		//aa_fastrender(context, 0,0,scraa_imgwidth,scraa_imgheight-20);
+		aa_fastrender(context, 0,0,scraa_imgwidth,scraa_imgheight);
+		//aa_fastrender(context, 0,0,scraa_imgwidth,aa_scraa_imgheight(context)-30);
 	}
 
 	else {
-		aa_render(context,rparams, 0,0,imgwidth,imgheight );
+		aa_render(context,rparams, 0,0,scraa_imgwidth,scraa_imgheight );
 	}
 
 
@@ -594,22 +594,22 @@ void scraa_get_image_params(void)
 {
 
 
-	imgwidth=aa_imgwidth(context);
-	imgheight=aa_imgheight(context);
+	scraa_imgwidth=aa_scraa_imgwidth(context);
+	scraa_imgheight=aa_scraa_imgheight(context);
 
 
-zoom_x=1+imgwidth/screen_get_emulated_display_width_no_zoom_border_en();
-zoom_y=1+imgheight/screen_get_emulated_display_height_no_zoom_border_en();
+zoom_x=1+scraa_imgwidth/screen_get_emulated_display_width_no_zoom_border_en();
+zoom_y=1+scraa_imgheight/screen_get_emulated_display_height_no_zoom_border_en();
 
 
 
 set_putpixel_zoom();
 
-totalrealwidth=screen_get_emulated_display_width_zoom_border_en();
-totalrealheight=screen_get_emulated_display_height_zoom_border_en(); //+scraa_font_height*3;
+scraa_totalrealwidth=screen_get_emulated_display_width_zoom_border_en();
+scraa_totalrealheight=screen_get_emulated_display_height_zoom_border_en(); //+scraa_font_height*3;
 
 
-debug_printf (VERBOSE_INFO,"aawidth: %d aaheight: %d totalrealwidth: %d totalrealheight: %d zoom_x: %d zoom_y: %d",imgwidth,imgheight,totalrealwidth,totalrealheight,zoom_x,zoom_y);
+debug_printf (VERBOSE_INFO,"aawidth: %d aaheight: %d scraa_totalrealwidth: %d scraa_totalrealheight: %d zoom_x: %d zoom_y: %d",scraa_imgwidth,scraa_imgheight,scraa_totalrealwidth,scraa_totalrealheight,zoom_x,zoom_y);
 framebuffer_aa = aa_image (context);
 
 

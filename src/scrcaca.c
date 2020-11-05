@@ -41,10 +41,10 @@
 #include "sg1000.h"
 #include "svi.h"
 
-int imgwidth,imgheight;
+int scrcaca_imgwidth,scrcaca_imgheight;
 
-int totalrealwidth;
-int totalrealheight;
+int scrcaca_totalrealwidth;
+int scrcaca_totalrealheight;
 unsigned char *framebuffer_caca=NULL;
 
     cucul_canvas_t *cv; caca_display_t *dp; caca_event_t ev;
@@ -162,7 +162,7 @@ void scrcaca_putpixel(int x,int y,unsigned int color)
 	//printf ("x: %d y: %d color: %d   ",x,y,color);
 
 
-	int offset=y*totalrealwidth*depth+x*depth;
+	int offset=y*scrcaca_totalrealwidth*depth+x*depth;
 
 	int r,g,b;
 
@@ -322,9 +322,9 @@ void scrcaca_refresca_pantalla(void)
 	}        
 
 
-	//printf ("caca_dither_bitmap imgwidth=%d imgheight=%d\n",imgwidth,imgheight);
-    //caca_dither_bitmap(cv, 0, 0, imgwidth,imgheight, dither, framebuffer_caca);
-    caca_dither_bitmap(cv, 0, 0, imgwidth,imgheight, dither, framebuffer_caca);
+	//printf ("caca_dither_bitmap scrcaca_imgwidth=%d scrcaca_imgheight=%d\n",scrcaca_imgwidth,scrcaca_imgheight);
+    //caca_dither_bitmap(cv, 0, 0, scrcaca_imgwidth,scrcaca_imgheight, dither, framebuffer_caca);
+    caca_dither_bitmap(cv, 0, 0, scrcaca_imgwidth,scrcaca_imgheight, dither, framebuffer_caca);
 
 if (caca_last_message_shown_timer) {
 	caca_last_message_shown_timer--;
@@ -511,13 +511,13 @@ int pressrelease=1;
 	//TODO: el RESIZE no lo recibo.... lo hago para cuando se pasa el raton por encima
 	case CACA_EVENT_MOUSE_MOTION:
 		scrcaca_resize();
-		    imgwidth = caca_get_canvas_width(cv);
-		    imgheight = caca_get_canvas_height(cv);
+		    scrcaca_imgwidth = caca_get_canvas_width(cv);
+		    scrcaca_imgheight = caca_get_canvas_height(cv);
 		    mouse_x=cev.data.mouse.x;
 		    mouse_y=cev.data.mouse.y;
 
-	            gunstick_x=mouse_x*totalrealwidth/imgwidth;
-		    gunstick_y=mouse_y*totalrealheight/imgheight;
+	            gunstick_x=mouse_x*scrcaca_totalrealwidth/scrcaca_imgwidth;
+		    gunstick_y=mouse_y*scrcaca_totalrealheight/scrcaca_imgheight;
 
 
 		    kempston_mouse_x=gunstick_x;
@@ -596,23 +596,23 @@ void scrcaca_get_image_params(void)
 {
 
 //tamanyo de la ventana caca
-    imgwidth = caca_get_canvas_width(cv);
-    imgheight = caca_get_canvas_height(cv);
+    scrcaca_imgwidth = caca_get_canvas_width(cv);
+    scrcaca_imgheight = caca_get_canvas_height(cv);
 
-//printf ("%d / %d = %d\n",imgwidth,(ANCHO_PANTALLA+LEFT_BORDER_NO_ZOOM*2*border_enabled.v),imgwidth/(ANCHO_PANTALLA+LEFT_BORDER_NO_ZOOM*2*border_enabled.v));
+//printf ("%d / %d = %d\n",scrcaca_imgwidth,(ANCHO_PANTALLA+LEFT_BORDER_NO_ZOOM*2*border_enabled.v),scrcaca_imgwidth/(ANCHO_PANTALLA+LEFT_BORDER_NO_ZOOM*2*border_enabled.v));
 
 /*if (MACHINE_IS_Z88) {
-zoom_x=1+imgwidth/640;
-zoom_y=1+imgheight/(ALTO_PANTALLA+TOP_BORDER_NO_ZOOM+BOTTOM_BORDER_NO_ZOOM);
+zoom_x=1+scrcaca_imgwidth/640;
+zoom_y=1+scrcaca_imgheight/(ALTO_PANTALLA+TOP_BORDER_NO_ZOOM+BOTTOM_BORDER_NO_ZOOM);
 }
 else {
-zoom_x=1+imgwidth/(ANCHO_PANTALLA+LEFT_BORDER_NO_ZOOM*2*border_enabled.v);
-zoom_y=1+imgheight/(ALTO_PANTALLA+TOP_BORDER_NO_ZOOM*border_enabled.v+BOTTOM_BORDER_NO_ZOOM*border_enabled.v);
+zoom_x=1+scrcaca_imgwidth/(ANCHO_PANTALLA+LEFT_BORDER_NO_ZOOM*2*border_enabled.v);
+zoom_y=1+scrcaca_imgheight/(ALTO_PANTALLA+TOP_BORDER_NO_ZOOM*border_enabled.v+BOTTOM_BORDER_NO_ZOOM*border_enabled.v);
 }
 */
 
-zoom_x=1+imgwidth/screen_get_emulated_display_width_no_zoom_border_en();
-zoom_y=1+imgheight/screen_get_emulated_display_height_no_zoom_border_en();
+zoom_x=1+scrcaca_imgwidth/screen_get_emulated_display_width_no_zoom_border_en();
+zoom_y=1+scrcaca_imgheight/screen_get_emulated_display_height_no_zoom_border_en();
 
 
 
@@ -620,19 +620,19 @@ set_putpixel_zoom();
 
 /*
 if (MACHINE_IS_Z88) {
-totalrealwidth=640*zoom_x;
-totalrealheight=ALTO_PANTALLA*zoom_y+TOP_BORDER+BOTTOM_BORDER;
+scrcaca_totalrealwidth=640*zoom_x;
+scrcaca_totalrealheight=ALTO_PANTALLA*zoom_y+TOP_BORDER+BOTTOM_BORDER;
 }
 else {
-totalrealwidth=ANCHO_PANTALLA*zoom_x+LEFT_BORDER*2*border_enabled.v;
-totalrealheight=ALTO_PANTALLA*zoom_y+TOP_BORDER*border_enabled.v+BOTTOM_BORDER*border_enabled.v;
+scrcaca_totalrealwidth=ANCHO_PANTALLA*zoom_x+LEFT_BORDER*2*border_enabled.v;
+scrcaca_totalrealheight=ALTO_PANTALLA*zoom_y+TOP_BORDER*border_enabled.v+BOTTOM_BORDER*border_enabled.v;
 }
 */
 
-totalrealwidth=screen_get_emulated_display_width_zoom_border_en();
-totalrealheight=screen_get_emulated_display_height_zoom_border_en();
+scrcaca_totalrealwidth=screen_get_emulated_display_width_zoom_border_en();
+scrcaca_totalrealheight=screen_get_emulated_display_height_zoom_border_en();
 
-debug_printf (VERBOSE_INFO,"cacawidth: %d cacaheight: %d totalrealwidth: %d totalrealheight: %d zoom_x: %d zoom_y: %d",imgwidth,imgheight,totalrealwidth,totalrealheight,zoom_x,zoom_y);
+debug_printf (VERBOSE_INFO,"cacawidth: %d cacaheight: %d scrcaca_totalrealwidth: %d scrcaca_totalrealheight: %d zoom_x: %d zoom_y: %d",scrcaca_imgwidth,scrcaca_imgheight,scrcaca_totalrealwidth,scrcaca_totalrealheight,zoom_x,zoom_y);
 
 
     caca_free_dither(dither);
@@ -641,8 +641,8 @@ debug_printf (VERBOSE_INFO,"cacawidth: %d cacaheight: %d totalrealwidth: %d tota
 //A diferencia de aalib, con cacalib tratamos con el tamanyo real que deseamos
 //Luego al repintar la pantalla se hace sobre el tamanyo virtual de texto caca
 
-    dither = caca_create_dither(bpp, totalrealwidth, totalrealheight,
-                                depth * totalrealwidth,
+    dither = caca_create_dither(bpp, scrcaca_totalrealwidth, scrcaca_totalrealheight,
+                                depth * scrcaca_totalrealwidth,
                                 rmask, gmask, bmask, amask);
     if (dither == NULL) {
         cpu_panic ("vo caca: caca_create_dither failed!\n");
@@ -657,7 +657,7 @@ debug_printf (VERBOSE_INFO,"cacawidth: %d cacaheight: %d totalrealwidth: %d tota
 if (framebuffer_caca!=NULL) free(framebuffer_caca);
 
 //asignamos memoria
-framebuffer_caca = malloc (totalrealwidth*depth*totalrealheight);
+framebuffer_caca = malloc (scrcaca_totalrealwidth*depth*scrcaca_totalrealheight);
 
 
 }

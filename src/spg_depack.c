@@ -227,7 +227,7 @@ z80_int dehrust(z80_byte* dst, z80_byte* src, int size)
 		z80_byte *from;
 		z80_byte *to;
 		z80_byte bitstream;
-		int bitcount;
+		int spg_depack_bitcount;
 
 
 		void deMLZ(z80_byte *dst, z80_byte *src)
@@ -244,7 +244,7 @@ z80_int dehrust(z80_byte* dst, z80_byte* src, int size)
 		void init_bitstream(void)
 		{
 			bitstream = get_byte();
-			bitcount = 8;
+			spg_depack_bitcount = 8;
 		}
 
 
@@ -272,7 +272,7 @@ z80_int dehrust(z80_byte* dst, z80_byte* src, int size)
 
 			while (count--)
 			{
-				if (bitcount--)
+				if (spg_depack_bitcount--)
 				{
 					bits <<= 1;
 					bits |= 1 & (bitstream >> 7);
