@@ -60,6 +60,18 @@ Paranoid: File /Users/chernandezba/Documents/ZEsarUX/zesarux/extras/media/ql/spa
 
 -Chip de sonido QL se debería hacer como el AY o el SN, para evitar ciertas frecuencias que se repiten
 Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness etc) de momento lo dejo como está
+-ql notas con G y F# acaban teniendo misma frecuencia efectiva. probar con playscale
+es problema de esto:
+ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
+que acaba generando mismo valor entero
+Chip de sonido QL se debería hacer como el AY o el SN, para evitar ciertas frecuencias que se repiten
+Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness etc) de momento lo dejo como está
+
+
+-Agregar ipc
+
+
+*rand_cmd equ    14      random number generator, returns a sixteen bit number.
 
 
 -get-stack-backtrace para motorola. hay que tener uno para el user stack (usp) y el otro para el stack de (sp)

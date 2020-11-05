@@ -177,25 +177,9 @@ Q: How do you manage the 50 hz interrupt of the 8049 and the Keyboard interrupt?
 - Entrada faq QL revisar
 
 
-
-
 -ZENG soporte para QL
 
- -Agregar ipc
-
-
-*rand_cmd equ    14      random number generator, returns a sixteen bit number.
-
-
-
--ql notas con G y F# acaban teniendo misma frecuencia efectiva. probar con playscale
-es problema de esto:
-ql_audio_pitch_counter_initial=(FRECUENCIA_CONSTANTE_NORMAL_SONIDO/2)/frecuencia;
-que acaba generando mismo valor entero
-Chip de sonido QL se debería hacer como el AY o el SN, para evitar ciertas frecuencias que se repiten
-Pero dado que aún no se los otros parámetros cómo funcionan (step, fuzziness etc) de momento lo dejo como está
-
-
+ 
 
 -cuando una tecla F no esta como default, no la envia a maquina emulada: ejemplo MSX F2, QL F5
 
@@ -220,15 +204,14 @@ spacepods
 
 squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y luego lo quiere abrir...
 
+-QL: Gestión de teclado QL quizá sufre de lectura de teclas desde emulación (que va a ráfagas cada frame de pantalla). Gestionarlo mejor todo desde timer?
+
+
 
 -ordenar directorios arriba en filesel? Pero entonces al pulsar una letra y buscar... a donde ira?
 
 -Opción para que al salir del menú se active background window. Como si pulsase F15 siempre automáticamente al cerrar menú
 
--Gestión de teclado QL quizá sufre de lectura de teclas desde emulación (que va a ráfagas cada frame de pantalla). Gestionarlo mejor todo desde timer?
-
-
--QL Sbytes funciona?
 
 
 
@@ -239,5 +222,3 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 -help de verbose level decir que consola tambien sale en ventana
 
 
--ZSF soporte para QL: falta: 
-*quiza qldos handler? demasiado complicado: archivos abiertos, punteros FILE ,etc 
