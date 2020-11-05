@@ -594,8 +594,8 @@ void scraa_get_image_params(void)
 {
 
 
-	scraa_imgwidth=aa_scraa_imgwidth(context);
-	scraa_imgheight=aa_scraa_imgheight(context);
+	scraa_imgwidth=aa_imgwidth(context);
+	scraa_imgheight=aa_imgheight(context);
 
 
 zoom_x=1+scraa_imgwidth/screen_get_emulated_display_width_no_zoom_border_en();
