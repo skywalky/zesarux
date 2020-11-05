@@ -5966,6 +5966,15 @@ int zxvision_window_can_be_backgrounded(zxvision_window *w)
 	else return 0;
 }
 
+//Retorna el caracter que indica que una ventana esta en background
+char zxvision_get_character_backgrounded_window(void)
+{
+
+    //Si estamos redibujando con menu cerrado, para indicar que no se interactua directamente con esa ventana
+    if (overlay_visible_when_menu_closed) return '/';
+
+    else return '!';
+}
 
 void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window *w)
 {
@@ -5975,7 +5984,7 @@ void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window 
 			if (zxvision_window_can_be_backgrounded(w)) {
 				if (ventana_tipo_activa) {
 					//Boton de background, con ventana activa
-					putchar_menu_overlay(x+ancho-2,y,'!',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+					putchar_menu_overlay(x+ancho-2,y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 				}
 
 				else {
@@ -5984,7 +5993,7 @@ void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window 
 					if (w->overlay_function!=NULL) {
 						//printf ("boton background\n");
 						//zxvision_print_char_simple(zxvision_current_window,ancho-2,0,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO,1,'!');
-						putchar_menu_overlay_parpadeo(x+ancho-2,y,'!',ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,1);
+						putchar_menu_overlay_parpadeo(x+ancho-2,y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,1);
 					}
 				}
 				
@@ -9878,7 +9887,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					if (last_x_mouse_clicked==w->visible_width-2 && w->can_be_backgrounded && menu_allow_background_windows) {
 						mouse_pressed_background_window=1;
 						//Mostrar boton background pulsado
-						putchar_menu_overlay(w->x+w->visible_width-2,w->y,'!',ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);						
+						putchar_menu_overlay(w->x+w->visible_width-2,w->y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);						
 					}			
 
 
@@ -26968,10 +26977,15 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			"When a window is on the background, its contents are updated continuosly.\n"
 
 			"Windows that can be put on background have an exclamation mark (!) "
-			"on the right of its title. When the window is on background, the excamation mark will blink.\n"
+			"on the right of its title. When the window is on background, the exclamation mark will blink.\n"
+            "But that exclamation mark will become a '/' if the menu is closed and the window is still on the background, "
+            "to warn you to open the menu before you can interact with windows. "
+            "\n"
+            "\n"
 
 			"Press left button mouse on the exclamation mark or press F6 to put that window on the background. "
 			"Some examples of these windows are AY Registers, Audio Waveform, or AY Sheet.\n"
+            "\n"
 
 			"Windows on the background can not be moved, resized or closed directly using your mouse, "
 			"neither you can interact with that window, but you can:\n"
