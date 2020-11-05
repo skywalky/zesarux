@@ -484,7 +484,7 @@ void scrsdl_z88_cpc_load_keymap(void)
         switch (z88_cpc_keymap_type) {
 
                 case 1:
-			if (MACHINE_IS_Z88 || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI) {
+			if (MACHINE_IS_Z88 || MACHINE_IS_SAM || MACHINE_IS_QL || MACHINE_IS_MSX || MACHINE_IS_SVI) {
 	                        scrsdl_keymap_z88_cpc_minus=SDLK_QUOTE;
         	                scrsdl_keymap_z88_cpc_equal=SDLK_TECLA_EQUAL;
                 	        scrsdl_keymap_z88_cpc_backslash=SDLK_TECLA_BACKSLASH;
