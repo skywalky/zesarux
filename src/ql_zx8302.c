@@ -202,7 +202,6 @@ pc.intrg equ    1<<0    gap interrupt register
 */
 
 
-//unsigned char temp_pcintr;
 unsigned char ql_pc_intr;
 unsigned char ql_mc_stat;
 
