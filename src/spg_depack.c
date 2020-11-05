@@ -1,3 +1,9 @@
+/*
+
+SPG compress / uncompress routines from UnrealSpeccy emulator. See file licenses/LICENSE_unrealspeccy
+
+*/
+
 #include "cpu.h"
 //------------------- DeHrust --------------------------
 
