@@ -26979,21 +26979,17 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			"Windows that can be put on background have an exclamation mark (!) "
 			"on the right of its title. When the window is on background, the exclamation mark will blink.\n"
             "But that exclamation mark will become a '/' if the menu is closed and the window is still on the background, "
-            "to warn you to open the menu before you can interact with windows. "
+            "to warn you to open the menu before you can interact with the windows. "
             "\n"
             "\n"
 
-			"Press left button mouse on the exclamation mark or press F6 to put that window on the background. "
+			"Press left button mouse on the exclamation mark, or press F6, or just select another window to put that window on the background. "
 			"Some examples of these windows are AY Registers, Audio Waveform, or AY Sheet.\n"
             "\n"
 
-			"Windows on the background can not be moved, resized or closed directly using your mouse, "
-			"neither you can interact with that window, but you can:\n"
-			"- Recover the window to the foreground: just go to the menu where the window appears, and select it again, "
-			"for example, go to Audio menu and select Waveform to recover an Audio Waveform window from the background\n"
-			"- Close or move to the top: go to menu Display->Window management\n"
-			"- Close all windows: go to menu Display->Close all Windows, or disable this Background windows setting\n"
-			"- Rearrange and Reduce windows: go to menu Display"	
+			"Windows on the background can be moved, resized or closed directly using your mouse. \n"
+            "You can also rearrange all windows, resize, or move some to the top, for example, on menu Windows. "
+	
 		);
 
         if (menu_allow_background_windows && menu_multitarea) {
