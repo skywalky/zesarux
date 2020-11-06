@@ -9,10 +9,6 @@ Added SP to SCR file converter
 Added Z80 to SCR file converter
 Added P to SCR file converter
 Added ZSF to SCR file converter
-Added debug console as a menu window
-
-Added ZRCP commands:
--qdos-get-open-files: to get open files from QL QDOS
 
 Improved ZX Desktop: 
 -Added direct buttons, to access menu items
@@ -24,8 +20,15 @@ Improved ZX Desktop:
 -Now backgrounded windows can be seen even with menu closed (added a setting and also a F-key)
 
 Improved loading .pok files: increased maximum pokes from 100 to 49152 pokes
-Improved 1 bit resample audio filter 
-Improved ZRCP: Added MMU information to cpu-history command
+Improved 1 bit resample audio filter
+
+Improved ZRCP: 
+-Added MMU information to cpu-history and get-registers commands
+-Added ZRCP command qdos-get-open-files: to get open files from QL QDOS
+
+Improved debugging:
+-Added debug console as a menu window
+-Added MMU information when viewing cpu registers on terminal console
 
 Improved TBBlue emulation:
 -Added emulation of tbblue joystick type (register 5)
@@ -39,11 +42,11 @@ Improved QL emulation:
 -Added sound emulation
 -Guessing of file name extension
 -Show all registers on Debug CPU window
--Support ZSF snapshot
+-Support ZSF snapshots
 
 Fixed QL bugs:
 -Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes
--Fixed loading executable files
+-Fixed loading executable files, can even exec/exec_w files without QDOS header
 -Fixed using QL system calls and A6 pointer offset used after previous Trap was not 4
 -Fixed frame interrupt
 -Fixed system call FS.SAVE
