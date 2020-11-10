@@ -29,6 +29,7 @@
 #include "debug.h"
 #include "utils.h"
 #include "operaciones.h"
+#include "contend.h"
 
 z80_bit gs_enabled={0};
 
@@ -168,7 +169,7 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 void gs_out_port(z80_int puerto,z80_byte value)
 {
     //Solo los 4 bits inferiores
-    puerto &=0xf;
+    value &=0xf;
 
     switch(puerto) {
         case 0:
@@ -187,6 +188,20 @@ z80_byte gs_fetch_opcode(void)
 }
 
 
+void gs_contend_read(z80_int direccion,int time)
+{
+    t_estados += time;
+}
+void gs_contend_read_no_mreq(z80_int direccion,int time)
+{
+    t_estados += time;
+}
+
+void gs_contend_write_no_mreq(z80_int direccion,int time)
+{
+    t_estados += time;
+}
+
 
 void gs_init_peek_poke_etc(void)
 {
@@ -197,6 +212,9 @@ void gs_init_peek_poke_etc(void)
     general_sound_z80_cpu.lee_puerto=gs_lee_puerto;
     general_sound_z80_cpu.out_port=gs_out_port;
     general_sound_z80_cpu.fetch_opcode=fetch_opcode;
+    general_sound_z80_cpu.contend_read=gs_contend_read;
+    general_sound_z80_cpu.contend_read_no_mreq=gs_contend_read_no_mreq;
+    general_sound_z80_cpu.contend_write_no_mreq=gs_contend_write_no_mreq;
 }
 
 void gs_init_memory_tables(void)
@@ -351,6 +369,10 @@ void gs_save_machine_state(struct gs_machine_state *m)
     m->lee_puerto=lee_puerto;
     m->out_port=out_port;
     m->fetch_opcode=fetch_opcode;
+    m->contend_read=contend_read;
+    m->contend_read_no_mreq=contend_read_no_mreq;
+    m->contend_write_no_mreq=contend_write_no_mreq;
+
 }
 
 
@@ -406,6 +428,17 @@ void gs_restore_machine_state(struct gs_machine_state *m)
     lee_puerto=m->lee_puerto;
     out_port=m->out_port;
     fetch_opcode=m->fetch_opcode;
+
+    contend_read=m->contend_read;
+    contend_read_no_mreq=m->contend_read_no_mreq;
+    contend_write_no_mreq=m->contend_write_no_mreq;
+
+/*
+    void (*contend_read)(z80_int direccion,int time);
+    void (*contend_read_no_mreq)(z80_int direccion,int time);
+    void (*contend_write_no_mreq)(z80_int direccion,int time);
+    */
+
 }
 
 

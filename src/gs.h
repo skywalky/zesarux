@@ -67,7 +67,9 @@ struct gs_machine_state {
     z80_byte (*lee_puerto)(z80_byte puerto_h,z80_byte puerto_l);
     void (*out_port)(z80_int puerto,z80_byte value);
     z80_byte (*fetch_opcode)(void);
-
+    void (*contend_read)(z80_int direccion,int time);
+    void (*contend_read_no_mreq)(z80_int direccion,int time);
+    void (*contend_write_no_mreq)(z80_int direccion,int time);
 };
 
 #endif
