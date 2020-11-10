@@ -202,6 +202,8 @@ void gs_poke_byte(z80_int dir,z80_byte valor)
 //#define gs->pb3_gs gs_port3_from_gs
 //#define gs->pbb_zx gs_command_register
 
+z80_byte gs_rp0,gs_vol1;
+
 z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 {
     //Solo los 4 bits inferiores
@@ -219,8 +221,8 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 		case 8: break;
 		case 9: break;
 
-		//case 10: if (gs->rp0 & 0x01) gs_state_register &= 0x7f; else gs_state_register |= 0x80; break;
-		//case 11: if (gs->vol1 & 0x20) gs_state_register |= 1; else gs_state_register &= 0xfe; break;
+		case 10: if (gs_rp0 & 0x01) gs_state_register &= 0x7f; else gs_state_register |= 0x80; break;
+		case 11: if (gs_vol1 & 0x20) gs_state_register |= 1; else gs_state_register &= 0xfe; break;
 	}
 
     return 255;
@@ -265,18 +267,18 @@ void gs_out_port(z80_int puerto,z80_byte value)
 		case 9: gs->vol4 = value & 0x3f;
 			break;
             */
-            /*
-		case 10: if (gs->rp0 & 0x01)
+            
+		case 10: if (gs_rp0 & 0x01)
 				gs_state_register &= 0x7f;
 			else
 				gs_state_register |= 0x80;
 			break;
-		case 11: if (gs->vol1 & 0x20)
+		case 11: if (gs_vol1 & 0x20)
 				gs_state_register |= 1;
 			else
 				gs_state_register &= 0xfe;
 			break;    
-            */    
+            
     }
     
 }
@@ -599,7 +601,9 @@ void gs_run_scanline_cycles(void)
 				if (im_mode==0 || im_mode==1) {
 					cpu_common_jump_im01();
 				}   
-                
+                else {
+                    printf("IM 2----------\n");
+                }
 
                //NMI
 				/*
