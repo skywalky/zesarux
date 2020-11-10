@@ -56,6 +56,11 @@ struct gs_machine_state normal_z80_cpu;
 //Estado de la Z80 del general sound
 struct gs_machine_state general_sound_z80_cpu;
 
+z80_byte gs_command_register;
+z80_byte gs_data_register;
+z80_byte gs_state_register;
+
+z80_byte gs_port3_from_gs;
 
 void gs_set_memory_mapping(void)
 {
@@ -80,9 +85,9 @@ digits D4 - D7 are not used
     gs_memory_mapped_types[0]=0;
 
     gs_memory_mapped[1]=gs_ram_memory_tables[0];
-    gs_memory_mapped_types[0]=1;
+    gs_memory_mapped_types[1]=1;
 
-    z80_byte mapped_value=gs_memory_mapping_value & 31;
+    z80_byte mapped_value=gs_memory_mapping_value & 15;
 
     if (!mapped_value) {
         //ROM en segmentos altos
@@ -98,18 +103,25 @@ digits D4 - D7 are not used
         //3= ram 4,5
         mapped_value--;
 
+        
+
         mapped_value *=2;
         gs_memory_mapped[2]=gs_ram_memory_tables[mapped_value];
         gs_memory_mapped_types[2]=1;
         gs_memory_mapped[3]=gs_ram_memory_tables[mapped_value+1];
         gs_memory_mapped_types[3]=1;        
+
+        printf("Mapping RAMS %d and %d in upper segment. reg_pc=%04XH\n",mapped_value,mapped_value+1,reg_pc);
     }
 }
 
 
 
-z80_byte gs_peek_byte_no_time(z80_int dir)
+z80_byte gs_peek_byte_no_time(z80_int dir_orig)
 {
+
+    z80_int dir=dir_orig;
+
     int segmento=dir/16384;
 
     dir &=16383;
@@ -119,7 +131,30 @@ z80_byte gs_peek_byte_no_time(z80_int dir)
 
     puntero +=dir;
 
-    return *puntero;
+    z80_byte valor=*puntero;
+
+    /*
+Data are entered into channels when the processor reads RAM at addresses # 6000
+- # 7FFF automatically.
+Data for channels should be located at the following addresses:
+╔═════════════╤═══════════════╗
+║address bit  │ for channel   ║ # 6000 - # 60FF - channel 1 data
+║             ├───┬───┬───┬───╢ # 6100 - # 61FF - channel 2 data
+║             │ 1 │ 2 │ 3 │ 4 ║ # 6200 - # 62FF - channel 3 data
+╟─────────────┼───┼───┼───┼───╢ # 6300 - # 63FF - channel 4 data
+║ A0 - A7     │ X │ X │ X │ X ║ # 6400 - # 64FF - channel 1 data    
+    */
+
+   if (dir_orig>=0x6000 && dir_orig<=0x7fff) {
+       //write DAC
+
+       //temporal
+       printf ("Send DAC %d\n",valor);
+       audiodac_send_sample_value(valor);
+   }
+
+
+    return valor;
 }
 
 
@@ -135,10 +170,15 @@ z80_byte gs_peek_byte(z80_int dir)
 
 void gs_poke_byte_no_time(z80_int dir,z80_byte valor)
 {
+
+
     int segmento=dir/16384;
 
     //Pagina de rom?
-    if (!gs_memory_mapped_types[segmento]) return;
+    if (!gs_memory_mapped_types[segmento]) {
+        printf ("Trying to write to %04XH but mapped ROM\n",dir);
+        return;
+    }
 
     dir &=16383;
 
@@ -158,18 +198,40 @@ void gs_poke_byte(z80_int dir,z80_byte valor)
     
 }
 
+//#define gs->pstate gs_state_register
+//#define gs->pb3_gs gs_port3_from_gs
+//#define gs->pbb_zx gs_command_register
+
 z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 {
+    //Solo los 4 bits inferiores
+    puerto_l &=0xf;
 
-    //De momento
+	switch (puerto_l) {
+		case 0: break;
+		case 1: return gs_command_register; break;
+		case 2: gs_state_register &= 0x7f; return gs_port3_from_gs; break;
+		case 3: gs_state_register |= 0x80; break;
+		case 4: return gs_state_register; break;
+		case 5: gs_state_register &= 0xfe; break;
+		case 6: break;
+		case 7: break;
+		case 8: break;
+		case 9: break;
+
+		//case 10: if (gs->rp0 & 0x01) gs_state_register &= 0x7f; else gs_state_register |= 0x80; break;
+		//case 11: if (gs->vol1 & 0x20) gs_state_register |= 1; else gs_state_register &= 0xfe; break;
+	}
+
     return 255;
 }
+
 
 
 void gs_out_port(z80_int puerto,z80_byte value)
 {
     //Solo los 4 bits inferiores
-    value &=0xf;
+    puerto &=0xf;
 
     switch(puerto) {
         case 0:
@@ -178,6 +240,43 @@ void gs_out_port(z80_int puerto,z80_byte value)
             printf("Setting GS mapping value: %d\n",value);
             gs_set_memory_mapping();
         break;
+
+        /*case 3:
+		    gs_state_register |= 0x80;
+			gs_port3_from_gs = value;
+			break;        
+        break;*/
+
+        case 2: gs_state_register &= 0x7f;
+			break;
+		case 3: gs_state_register |= 0x80;
+			gs_port3_from_gs = value & 0xff;
+			break;
+		case 4: break;
+		case 5: gs_state_register &= 0xfe;
+			break;
+            /*
+		case 6: gs->vol1 = value & 0x3f;
+			break;
+		case 7: gs->vol2 = value & 0x3f;
+			break;
+		case 8: gs->vol3 = value & 0x3f;
+			break;
+		case 9: gs->vol4 = value & 0x3f;
+			break;
+            */
+            /*
+		case 10: if (gs->rp0 & 0x01)
+				gs_state_register &= 0x7f;
+			else
+				gs_state_register |= 0x80;
+			break;
+		case 11: if (gs->vol1 & 0x20)
+				gs_state_register |= 1;
+			else
+				gs_state_register &= 0xfe;
+			break;    
+            */    
     }
     
 }
@@ -211,10 +310,11 @@ void gs_init_peek_poke_etc(void)
     general_sound_z80_cpu.poke_byte=gs_poke_byte;
     general_sound_z80_cpu.lee_puerto=gs_lee_puerto;
     general_sound_z80_cpu.out_port=gs_out_port;
-    general_sound_z80_cpu.fetch_opcode=fetch_opcode;
+    general_sound_z80_cpu.fetch_opcode=gs_fetch_opcode;
     general_sound_z80_cpu.contend_read=gs_contend_read;
     general_sound_z80_cpu.contend_read_no_mreq=gs_contend_read_no_mreq;
     general_sound_z80_cpu.contend_write_no_mreq=gs_contend_write_no_mreq;
+    general_sound_z80_cpu.memoria_spectrum=gs_memory_pointer;
 }
 
 void gs_init_memory_tables(void)
@@ -238,6 +338,7 @@ void gs_reset(void)
     gs_set_memory_mapping();
 
     general_sound_z80_cpu.r_pc=0;
+    gs_state_register=0x7e;
 }
 
 void gs_alloc_memory(void)
@@ -369,9 +470,12 @@ void gs_save_machine_state(struct gs_machine_state *m)
     m->lee_puerto=lee_puerto;
     m->out_port=out_port;
     m->fetch_opcode=fetch_opcode;
+
     m->contend_read=contend_read;
     m->contend_read_no_mreq=contend_read_no_mreq;
     m->contend_write_no_mreq=contend_write_no_mreq;
+
+    m->memoria_spectrum=memoria_spectrum;
 
 }
 
@@ -379,12 +483,12 @@ void gs_save_machine_state(struct gs_machine_state *m)
 
 void gs_restore_machine_state(struct gs_machine_state *m)
 {
-    reg_pc=m->r_pc=reg_pc;
-    reg_sp=m->r_sp=reg_sp;
+    reg_pc=m->r_pc;
+    reg_sp=m->r_sp;
 
     BC=m->r_bc;
     DE=m->r_de;
-    HL=m->r_hl=HL;
+    HL=m->r_hl;
 
     reg_a=value_16_to_8h(m->r_af);
     Z80_FLAGS=value_16_to_8l(m->r_af);
@@ -433,11 +537,8 @@ void gs_restore_machine_state(struct gs_machine_state *m)
     contend_read_no_mreq=m->contend_read_no_mreq;
     contend_write_no_mreq=m->contend_write_no_mreq;
 
-/*
-    void (*contend_read)(z80_int direccion,int time);
-    void (*contend_read_no_mreq)(z80_int direccion,int time);
-    void (*contend_write_no_mreq)(z80_int direccion,int time);
-    */
+    memoria_spectrum=m->memoria_spectrum;
+
 
 }
 
@@ -451,7 +552,7 @@ void gs_run_scanline_cycles(void)
 
     for (i=0;i<50;i++) {
 
-        printf("Fetch GS opcode at PC=%04XH\n",reg_pc);
+        //printf("Fetch GS opcode at PC=%04XH\n",reg_pc);
 
         t_estados +=4;
         z80_byte byte_leido=fetch_opcode();
@@ -468,6 +569,48 @@ void gs_run_scanline_cycles(void)
         codsinpr[byte_leido]  () ;
 
 
+
+
+    }
+
+    //prueba generar interrupcion
+    if (iff1.v==1) {
+        printf("Generar interrupcion en GS\n");
+					
+
+			if (z80_ejecutando_halt.v) {
+				z80_ejecutando_halt.v=0;
+				reg_pc++;
+			}
+
+				push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
+
+				reg_r++;
+
+		
+
+                //IM0??
+
+                
+				//desactivar interrupciones al generar una
+				iff1.v=iff2.v=0;
+				//Modelos spectrum
+
+				if (im_mode==0 || im_mode==1) {
+					cpu_common_jump_im01();
+				}   
+                
+
+               //NMI
+				/*
+				iff1.v=0;
+				//printf ("Calling NMI with pc=0x%x\n",reg_pc);
+
+				//Otros 6 estados
+				t_estados += 6;
+
+				//Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
+				reg_pc= 0x66;   */                                         
     }
 }
 
@@ -475,6 +618,9 @@ void gs_run_scanline_cycles(void)
 //Ejecutar los opcodes de todo un scanline
 void gs_fetch_opcodes_scanlines(void)
 {
+
+    //printf("reg pc antes de ciclo GS %04XH\n",reg_pc);
+
     //Guardar estado maquina spectrum (registros cpu, testados, interrupciones)
     gs_save_machine_state(&normal_z80_cpu);
 
@@ -489,4 +635,50 @@ void gs_fetch_opcodes_scanlines(void)
 
     //Restaurar estado maquina spectrum
     gs_restore_machine_state(&normal_z80_cpu);
+
+    //printf("reg pc despues de ciclo GS %04XH\n",reg_pc);
 }
+
+
+//z80_byte gs_command_register;
+//z80_byte gs_data_register;
+//z80_byte gs_state_register;
+
+//Lectura y escritura desde la parte de spectrum
+void gs_write_port_bb_from_speccy(z80_byte value)
+{
+    printf("Write port BB from speccy side. value %02XH\n",value);
+
+    gs_command_register=value;
+
+	gs_state_register |= 1;    
+}
+
+void gs_write_port_b3_from_speccy(z80_byte value)
+{
+    printf("Write port B3 from speccy side. value %02XH\n",value);
+    gs_data_register=value;
+
+	gs_state_register |= 0x80;		
+
+}
+
+z80_byte gs_read_port_bb_from_speccy(void)
+{
+    printf("Read port BB from speccy side. value = %d.\n",gs_state_register);    
+
+	
+
+
+    return gs_state_register;
+}
+
+z80_byte gs_read_port_b3_from_speccy(void)
+{
+    printf("Read port B3 from speccy side.\n");    
+
+
+    return gs_port3_from_gs;
+}
+
+

@@ -70,6 +70,16 @@ struct gs_machine_state {
     void (*contend_read)(z80_int direccion,int time);
     void (*contend_read_no_mreq)(z80_int direccion,int time);
     void (*contend_write_no_mreq)(z80_int direccion,int time);
+
+    //En teoria este no haria falta
+    z80_byte *memoria_spectrum;
 };
+
+extern void gs_write_port_bb_from_speccy(z80_byte value);
+extern void gs_write_port_b3_from_speccy(z80_byte value);
+extern z80_byte gs_read_port_bb_from_speccy(void);
+extern z80_byte gs_read_port_b3_from_speccy(void);
+
+
 
 #endif
