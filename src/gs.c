@@ -603,6 +603,26 @@ void gs_run_scanline_cycles(void)
 				}   
                 else {
                     printf("IM 2----------\n");
+                    
+                    
+				//IM 2.
+
+					z80_int temp_i;
+					z80_byte dir_l,dir_h;
+
+					
+
+					temp_i=reg_i*256+255;
+					dir_l=peek_byte(temp_i++);
+					dir_h=peek_byte(temp_i);
+					reg_pc=value_8_to_16(dir_h,dir_l);
+					t_estados += 7;
+
+
+					
+				
+                    
+                    
                 }
 
                //NMI
@@ -681,7 +701,7 @@ z80_byte gs_read_port_b3_from_speccy(void)
 {
     printf("Read port B3 from speccy side.\n");    
 
-
+    gs_state_register &= 0x7f;
     return gs_port3_from_gs;
 }
 
