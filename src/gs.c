@@ -210,19 +210,44 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
     puerto_l &=0xf;
 
 	switch (puerto_l) {
-		case 0: break;
-		case 1: return gs_command_register; break;
-		case 2: gs_state_register &= 0x7f; return gs_port3_from_gs; break;
-		case 3: gs_state_register |= 0x80; break;
-		case 4: return gs_state_register; break;
-		case 5: gs_state_register &= 0xfe; break;
+		case 0: 
+		break;
+		
+		case 1: 
+		    return gs_command_register; 
+		break;
+		
+		case 2: 
+		    gs_state_register &= 0x7f; 
+		    return gs_port3_from_gs; 
+		break;
+		
+		case 3: 
+		    gs_state_register |= 0x80; 
+		break;
+		
+		case 4: 
+		    return gs_state_register; 
+		break;
+		
+		case 5: 
+		    gs_state_register &= 0xfe; 
+		break;
+		
 		case 6: break;
 		case 7: break;
 		case 8: break;
 		case 9: break;
 
-		case 10: if (gs_rp0 & 0x01) gs_state_register &= 0x7f; else gs_state_register |= 0x80; break;
-		case 11: if (gs_vol1 & 0x20) gs_state_register |= 1; else gs_state_register &= 0xfe; break;
+		case 10: 
+		    if (gs_rp0 & 0x01) gs_state_register &= 0x7f; 
+		    else gs_state_register |= 0x80; 
+		break;
+		
+		case 11: 
+		    if (gs_vol1 & 0x20) gs_state_register |= 1; 
+		    else gs_state_register &= 0xfe; 
+		break;
 	}
 
     return 255;
@@ -436,12 +461,6 @@ void gs_disable(void)
 
 
 
-/*
-
-        
-				fetch_opcode=fetch_opcode_coleco;
-*/                
-
 
 //Guarda estado maquina actual (Z80, otras variables) en estructura
 void gs_save_machine_state(struct gs_machine_state *m)
@@ -462,8 +481,6 @@ void gs_save_machine_state(struct gs_machine_state *m)
 
     m->r_ix=reg_ix;
     m->r_iy=reg_iy;
-
-//header[20]=(reg_r&127) | (reg_r_bit7&128);
 
     m->r_ir=IR;
 
