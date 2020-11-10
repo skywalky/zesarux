@@ -49,17 +49,12 @@ z80_byte *gs_memory_mapped[4];
 //Y tipos mapeados: 0=read only, 1=writable
 int gs_memory_mapped_types[4];
 
-void gs_init_memory_tables(void)
-{
-    gs_rom_memory_tables[0]=gs_memory_pointer;
-    gs_rom_memory_tables[1]=&gs_memory_pointer[16384];
+//Estado de la Z80 principal
+struct gs_machine_state normal_z80_cpu;
 
-    int i;
+//Estado de la Z80 del general sound
+struct gs_machine_state general_sound_z80_cpu;
 
-    for (i=0;i<GS_RAM_BLOCKS;i++) {
-        gs_ram_memory_tables[i]=&gs_memory_pointer[32768+16384*i];
-    }
-}
 
 void gs_set_memory_mapping(void)
 {
@@ -110,10 +105,121 @@ digits D4 - D7 are not used
     }
 }
 
+
+
+z80_byte gs_peek_byte_no_time(z80_int dir)
+{
+    int segmento=dir/16384;
+
+    dir &=16383;
+
+    z80_byte *puntero;
+    puntero=gs_memory_mapped[segmento];
+
+    puntero +=dir;
+
+    return *puntero;
+}
+
+
+z80_byte gs_peek_byte(z80_int dir)
+{
+
+    t_estados +=3;
+
+    return gs_peek_byte_no_time(dir);
+
+}
+
+
+void gs_poke_byte_no_time(z80_int dir,z80_byte valor)
+{
+    int segmento=dir/16384;
+
+    //Pagina de rom?
+    if (!gs_memory_mapped_types[segmento]) return;
+
+    dir &=16383;
+
+    z80_byte *puntero;
+    puntero=gs_memory_mapped[segmento];
+
+    puntero +=dir;
+
+    *puntero=valor;
+}
+
+void gs_poke_byte(z80_int dir,z80_byte valor)
+{
+    t_estados += 3;
+
+    gs_poke_byte_no_time(dir,valor);
+    
+}
+
+z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
+{
+
+    //De momento
+    return 255;
+}
+
+
+void gs_out_port(z80_int puerto,z80_byte value)
+{
+    //Solo los 4 bits inferiores
+    puerto &=0xf;
+
+    switch(puerto) {
+        case 0:
+            //Mapeo memoria
+            gs_memory_mapping_value=value;
+            printf("Setting GS mapping value: %d\n",value);
+            gs_set_memory_mapping();
+        break;
+    }
+    
+}
+
+z80_byte gs_fetch_opcode(void)
+{
+    return peek_byte_no_time(reg_pc);
+}
+
+
+
+void gs_init_peek_poke_etc(void)
+{
+    general_sound_z80_cpu.peek_byte_no_time=gs_peek_byte_no_time;
+    general_sound_z80_cpu.peek_byte=gs_peek_byte;
+    general_sound_z80_cpu.poke_byte_no_time=gs_poke_byte_no_time;
+    general_sound_z80_cpu.poke_byte=gs_poke_byte;
+    general_sound_z80_cpu.lee_puerto=gs_lee_puerto;
+    general_sound_z80_cpu.out_port=gs_out_port;
+    general_sound_z80_cpu.fetch_opcode=fetch_opcode;
+}
+
+void gs_init_memory_tables(void)
+{
+    gs_rom_memory_tables[0]=gs_memory_pointer;
+    gs_rom_memory_tables[1]=&gs_memory_pointer[16384];
+
+    int i;
+
+    for (i=0;i<GS_RAM_BLOCKS;i++) {
+        gs_ram_memory_tables[i]=&gs_memory_pointer[32768+16384*i];
+    }
+}
+
+
+
+
 void gs_reset(void)
 {
     gs_memory_mapping_value=0;
     gs_set_memory_mapping();
+
+    general_sound_z80_cpu.r_pc=0;
 }
 
 void gs_alloc_memory(void)
@@ -128,6 +234,7 @@ void gs_alloc_memory(void)
     }
 
     gs_init_memory_tables();
+    gs_init_peek_poke_etc();
     gs_reset();
 }
 
@@ -195,36 +302,7 @@ void gs_disable(void)
 	gs_enabled.v=0;
 }
 
-struct gs_machine_state {
 
-    z80_int r_pc,r_sp;
-
-    z80_int r_bc,r_de,r_hl,r_af;
-    z80_int r_bc_shadow,r_de_shadow,r_hl_shadow,r_af_shadow;
-
-
-    z80_int r_ix,r_iy;
-
-//header[20]=(reg_r&127) | (reg_r_bit7&128);
-
-    z80_int r_ir;
-
-    z80_bit iff1,iff2;
-    z80_byte im_mode;
-
-    int t_estados;
-
-    z80_bit z80_ejecutando_halt;
-
-    void (*poke_byte)(z80_int dir,z80_byte valor);
-    void (*poke_byte_no_time)(z80_int dir,z80_byte valor);
-    z80_byte (*peek_byte)(z80_int dir);
-    z80_byte (*peek_byte_no_time)(z80_int dir);    
-    z80_byte (*lee_puerto)(z80_byte puerto_h,z80_byte puerto_l);
-    void (*out_port)(z80_int puerto,z80_byte value);
-    z80_byte (*fetch_opcode)(void);
-
-};
 
 /*
 
@@ -276,11 +354,89 @@ void gs_save_machine_state(struct gs_machine_state *m)
 }
 
 
-//Estado de la Z80 principal
-struct gs_machine_state normal_z80_cpu;
 
-//Estado de la Z80 del general sound
-struct gs_machine_state general_sound_z80_cpu;
+void gs_restore_machine_state(struct gs_machine_state *m)
+{
+    reg_pc=m->r_pc=reg_pc;
+    reg_sp=m->r_sp=reg_sp;
+
+    BC=m->r_bc;
+    DE=m->r_de;
+    HL=m->r_hl=HL;
+
+    reg_a=value_16_to_8h(m->r_af);
+    Z80_FLAGS=value_16_to_8l(m->r_af);
+
+    reg_b_shadow=value_16_to_8h(m->r_bc_shadow);
+    reg_c_shadow=value_16_to_8l(m->r_bc_shadow);
+
+    reg_d_shadow=value_16_to_8h(m->r_de_shadow);
+    reg_e_shadow=value_16_to_8l(m->r_de_shadow);
+
+    reg_h_shadow=value_16_to_8h(m->r_hl_shadow);
+    reg_l_shadow=value_16_to_8l(m->r_hl_shadow);
+
+    reg_a_shadow=value_16_to_8h(m->r_af_shadow);
+    Z80_FLAGS_SHADOW=value_16_to_8l(m->r_af_shadow);
+
+    
+    reg_ix=m->r_ix;
+    reg_iy=m->r_iy;
+
+//header[20]=(reg_r&127) | (reg_r_bit7&128);
+
+    reg_i=value_16_to_8h(m->r_ir);
+    reg_r=value_16_to_8l(m->r_ir) & 127;
+    reg_r_bit7=value_16_to_8l(m->r_ir) & 128;
+    
+
+    iff1.v=m->iff1.v;
+    iff2.v=m->iff2.v;
+    im_mode=m->im_mode;
+
+    t_estados=m->t_estados;
+
+    z80_ejecutando_halt.v=m->z80_ejecutando_halt.v;
+
+
+    poke_byte=m->poke_byte;
+    poke_byte_no_time=m->poke_byte_no_time;
+    peek_byte=m->peek_byte;
+    peek_byte_no_time=m->peek_byte_no_time;
+    lee_puerto=m->lee_puerto;
+    out_port=m->out_port;
+    fetch_opcode=m->fetch_opcode;
+}
+
+
+
+void gs_run_scanline_cycles(void)
+{
+    //de momento unos pocos ciclos y salir
+
+    int i;
+
+    for (i=0;i<50;i++) {
+
+        printf("Fetch GS opcode at PC=%04XH\n",reg_pc);
+
+        t_estados +=4;
+        z80_byte byte_leido=fetch_opcode();
+
+
+
+        reg_pc++;
+
+        reg_r++;
+
+
+
+
+        codsinpr[byte_leido]  () ;
+
+
+    }
+}
 
 
 //Ejecutar los opcodes de todo un scanline
@@ -290,11 +446,14 @@ void gs_fetch_opcodes_scanlines(void)
     gs_save_machine_state(&normal_z80_cpu);
 
     //Restaurar estado a la cpu de general sound
+    gs_restore_machine_state(&general_sound_z80_cpu);
 
     //Ejecutar todos los ciclos...
+    gs_run_scanline_cycles();
 
     //Guardar estado maquina general sound
     gs_save_machine_state(&general_sound_z80_cpu);
 
     //Restaurar estado maquina spectrum
+    gs_restore_machine_state(&normal_z80_cpu);
 }
