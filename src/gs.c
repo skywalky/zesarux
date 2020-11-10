@@ -111,7 +111,7 @@ digits D4 - D7 are not used
         gs_memory_mapped[3]=gs_ram_memory_tables[mapped_value+1];
         gs_memory_mapped_types[3]=1;        
 
-        printf("Mapping RAMS %d and %d in upper segment. reg_pc=%04XH\n",mapped_value,mapped_value+1,reg_pc);
+        //printf("Mapping RAMS %d and %d in upper segment. reg_pc=%04XH\n",mapped_value,mapped_value+1,reg_pc);
     }
 }
 
@@ -164,7 +164,7 @@ Data for channels should be located at the following addresses:
        
 
        //temporal
-       printf ("Send DAC %d canal\n",valor,canal);
+       //printf ("Send DAC %d canal\n",valor,canal);
 
        gs_dac_channels[canal]=valor;
        //audiodac_send_sample_value(valor);
@@ -282,7 +282,7 @@ void gs_out_port(z80_int puerto,z80_byte value)
         case 0:
             //Mapeo memoria
             gs_memory_mapping_value=value;
-            printf("Setting GS mapping value: %d\n",value);
+            //printf("Setting GS mapping value: %d\n",value);
             gs_set_memory_mapping();
         break;
 
@@ -590,43 +590,9 @@ void gs_restore_machine_state(struct gs_machine_state *m)
 
 }
 
-
-
-void gs_run_scanline_cycles(void)
+void gs_generate_interrupt(void)
 {
-    //de momento unos pocos ciclos y salir
-
-    int i;
-
-    for (i=0;i<50;i++) {
-
-        //printf("Fetch GS opcode at PC=%04XH\n",reg_pc);
-
-        t_estados +=4;
-        z80_byte byte_leido=fetch_opcode();
-
-
-
-        reg_pc++;
-
-        reg_r++;
-
-
-
-
-        codsinpr[byte_leido]  () ;
-
-
-
-
-    }
-
-    //enviar dac
-    gs_mix_dac_channels();
-
-    //prueba generar interrupcion
-    if (iff1.v==1) {
-        printf("Generar interrupcion en GS\n");
+        //printf("Generar interrupcion en GS\n");
 					
 
 			if (z80_ejecutando_halt.v) {
@@ -651,7 +617,7 @@ void gs_run_scanline_cycles(void)
 					cpu_common_jump_im01();
 				}   
                 else {
-                    printf("IM 2----------\n");
+                    //printf("IM 2----------\n");
                     
                     
 				//IM 2.
@@ -683,8 +649,66 @@ void gs_run_scanline_cycles(void)
 				t_estados += 6;
 
 				//Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
-				reg_pc= 0x66;   */                                         
+				reg_pc= 0x66;   */               
+}
+
+
+
+int gs_max_states_line=750;
+
+int gs_interrupts_states=334;
+int gs_number_interrupts=0;
+
+int gs_scanline=0;
+
+void gs_run_scanline_cycles(void)
+{
+    //de momento unos pocos ciclos y salir
+
+    int i;
+
+    //for (i=0;i<gs_max_states_line;i++) {
+    //printf("Inicio scanline GS en t_estados: %d\n",t_estados);
+    while (t_estados/gs_max_states_line<=gs_scanline) {
+
+        //printf("Fetch GS opcode at PC=%04XH\n",reg_pc);
+
+        t_estados +=4;
+        z80_byte byte_leido=fetch_opcode();
+
+
+
+        reg_pc++;
+
+        reg_r++;
+
+
+
+
+        codsinpr[byte_leido]  () ;
+
+
+        if (t_estados/gs_interrupts_states>gs_number_interrupts) {
+            //printf("Generar interrupcion en t_estados %d\n",t_estados);
+            gs_number_interrupts++;
+            //prueba generar interrupcion
+            if (iff1.v==1) {
+                gs_generate_interrupt();                
+            }
+        }
+
+
+
     }
+
+    //printf("FIN scanline GS en t_estados: %d\n",t_estados);
+
+    gs_scanline++;
+
+
+    //enviar dac
+    gs_mix_dac_channels();
+
 }
 
 
@@ -738,7 +762,7 @@ void gs_write_port_b3_from_speccy(z80_byte value)
 
 z80_byte gs_read_port_bb_from_speccy(void)
 {
-    printf("Read port BB from speccy side. value = %d.\n",gs_state_register);    
+    //printf("Read port BB from speccy side. value = %d.\n",gs_state_register);    
 
 	
 

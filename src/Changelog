@@ -2,6 +2,7 @@ Version 9.1 - Toi Acid Game edition. 05 November 2020
 
 Added compile setting to disable networking functions
 Added pc speaker audio driver (for Linux only)
+Added General Sound 512 emulation
 Added date & time field info to ZSF snapshots
 Added configuration & command line setting to save keymap type
 Added SNA to SCR file converter
