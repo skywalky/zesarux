@@ -115,7 +115,19 @@ digits D4 - D7 are not used
     }
 }
 
+z80_byte gs_dac_channels[4];
 
+void gs_mix_dac_channels(void)
+{
+
+    int suma=gs_dac_channels[0]+gs_dac_channels[1]+gs_dac_channels[2]+gs_dac_channels[3];
+
+    suma /=4;
+
+    z80_byte valor_final=suma;
+
+    audiodac_send_sample_value(valor_final);
+}
 
 z80_byte gs_peek_byte_no_time(z80_int dir_orig)
 {
@@ -147,10 +159,15 @@ Data for channels should be located at the following addresses:
 
    if (dir_orig>=0x6000 && dir_orig<=0x7fff) {
        //write DAC
+       int canal=(dir_orig>>8) & 3;
+
+       
 
        //temporal
-       printf ("Send DAC %d\n",valor);
-       audiodac_send_sample_value(valor);
+       printf ("Send DAC %d canal\n",valor,canal);
+
+       gs_dac_channels[canal]=valor;
+       //audiodac_send_sample_value(valor);
    }
 
 
@@ -603,6 +620,9 @@ void gs_run_scanline_cycles(void)
 
 
     }
+
+    //enviar dac
+    gs_mix_dac_channels();
 
     //prueba generar interrupcion
     if (iff1.v==1) {
