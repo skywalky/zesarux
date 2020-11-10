@@ -27,7 +27,9 @@
 
 //Tamanyos en KB de la rom y ram
 #define GS_ROM_SIZE 32
+#define GS_ROM_BLOCKS (GS_ROM_SIZE/16)
 #define GS_RAM_SIZE 512
+#define GS_RAM_BLOCKS (GS_RAM_SIZE/16)
 
 #define GS_ROM_NAME "gs105a.rom"
 
