@@ -202,7 +202,8 @@ void gs_poke_byte(z80_int dir,z80_byte valor)
 //#define gs->pb3_gs gs_port3_from_gs
 //#define gs->pbb_zx gs_command_register
 
-z80_byte gs_rp0,gs_vol1;
+//z80_byte gs_rp0;
+z80_byte gs_vol1;
 
 z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 {
@@ -240,7 +241,7 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 		case 9: break;
 
 		case 10: 
-		    if (gs_rp0 & 0x01) gs_state_register &= 0x7f; 
+		    if (gs_memory_mapping_value & 0x01) gs_state_register &= 0x7f; 
 		    else gs_state_register |= 0x80; 
 		break;
 		
@@ -302,7 +303,7 @@ void gs_out_port(z80_int puerto,z80_byte value)
             */
             
 		case 10: 
-		    if (gs_rp0 & 0x01)
+		    if (gs_memory_mapping_value & 0x01)
 				gs_state_register &= 0x7f;
 			else
 				gs_state_register |= 0x80;
