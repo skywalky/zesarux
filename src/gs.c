@@ -249,14 +249,22 @@ void gs_out_port(z80_int puerto,z80_byte value)
 			break;        
         break;*/
 
-        case 2: gs_state_register &= 0x7f;
-			break;
-		case 3: gs_state_register |= 0x80;
-			gs_port3_from_gs = value & 0xff;
-			break;
-		case 4: break;
-		case 5: gs_state_register &= 0xfe;
-			break;
+        case 2: 
+            gs_state_register &= 0x7f;
+		break;
+			
+		case 3: 
+		    gs_state_register |= 0x80;
+			gs_port3_from_gs = value ;
+		break;
+		
+		case 4: 
+		break;
+		
+		case 5: 
+		    gs_state_register &= 0xfe;
+		break;
+		
             /*
 		case 6: gs->vol1 = value & 0x3f;
 			break;
@@ -268,16 +276,19 @@ void gs_out_port(z80_int puerto,z80_byte value)
 			break;
             */
             
-		case 10: if (gs_rp0 & 0x01)
+		case 10: 
+		    if (gs_rp0 & 0x01)
 				gs_state_register &= 0x7f;
 			else
 				gs_state_register |= 0x80;
-			break;
-		case 11: if (gs_vol1 & 0x20)
+		break;
+			
+		case 11: 
+		    if (gs_vol1 & 0x20)
 				gs_state_register |= 1;
 			else
 				gs_state_register &= 0xfe;
-			break;    
+		break;    
             
     }
     
