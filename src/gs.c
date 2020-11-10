@@ -220,7 +220,7 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 		
 		case 2: 
 		    gs_state_register &= 0x7f; 
-		    return gs_port3_from_gs; 
+		    return gs_data_register;
 		break;
 		
 		case 3: 
