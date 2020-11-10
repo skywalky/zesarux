@@ -111,6 +111,7 @@
 #include "svi.h"
 #include "ql_qdos_handler.h"
 #include "ql_i8049.h"
+#include "gs.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -1383,6 +1384,11 @@ void menu_audio_i8049_chip_present(MENU_ITEM_PARAMETERS)
     i8049_chip_present ^= 1;
 }
 
+void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
+{
+    if (gs_enabled.v) gs_disable();
+    else gs_enable();
+}
 
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
 {
@@ -1430,7 +1436,10 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
             }
 
 
+        if (MACHINE_IS_PENTAGON) {
+            menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_general_sound,NULL,"[%c] General Sound", (gs_enabled.v ? 'X' : ' '));
 
+        }
 
 		if (si_complete_video_driver() ) {
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,NULL,"    Show ~~Piano: %s",

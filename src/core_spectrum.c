@@ -61,6 +61,7 @@
 #include "snap_zsf.h"
 #include "zeng.h"
 #include "ds1307.h"
+#include "gs.h"
 
 z80_byte byte_leido_core_spectrum;
 
@@ -932,6 +933,12 @@ void cpu_core_loop_spectrum(void)
 		if ( (t_estados/screen_testados_linea)>t_scanline  ) {
 			TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_spectrum_fin_scanline);
 			core_spectrum_fin_scanline();			
+
+            //General sound. Ejecutar los opcodes de un frame entero
+            if (gs_enabled.v) {
+                gs_fetch_opcodes_scanlines();
+            }
+
 			TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_spectrum_fin_scanline);
 		}
 		
