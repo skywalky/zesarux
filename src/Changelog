@@ -45,6 +45,8 @@ Improved QL emulation:
 -Show all registers on Debug CPU window
 -Support ZSF snapshots
 
+Improved Waveform window: Can now show left & right channels
+
 Fixed QL bugs:
 -Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes
 -Fixed loading executable files, can even exec/exec_w files without QDOS header
