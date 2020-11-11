@@ -257,7 +257,7 @@ void gs_poke_byte_no_time(z80_int dir,z80_byte valor)
 
     //Pagina de rom?
     if (!gs_memory_mapped_types[segmento]) {
-        printf ("Trying to write to %04XH but mapped ROM\n",dir);
+        //printf ("Trying to write to %04XH but mapped ROM\n",dir);
         return;
     }
 
