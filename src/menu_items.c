@@ -4805,6 +4805,8 @@ void menu_audio_draw_sound_wave(void)
 
         for (canal=0;canal<total_canales;canal++) {
 
+            puntero_audio=0;
+
         
             int xinicial_grafica;
             int ancho_grafica;
@@ -4846,6 +4848,7 @@ void menu_audio_draw_sound_wave(void)
 
                     int suma_canales;
 
+                    //Canales separados
                     if (menu_waveform_separar_canales.v) {
 					    suma_canales=audio_buffer[canal+puntero_audio*2];
 					    valor_medio=valor_medio+suma_canales;
@@ -4919,6 +4922,13 @@ void menu_audio_draw_sound_wave(void)
 
 		}
 
+        }
+
+        if (menu_waveform_separar_canales.v) {
+            //dibujar linea separación
+            if (si_complete_video_driver() ) {
+                menu_linea_zxvision(menu_audio_draw_sound_wave_window,xorigen+ancho/2,yorigen,yorigen+alto-1,ESTILO_GUI_COLOR_WAVEFORM);
+            }
         }
 
 	}
