@@ -23970,42 +23970,10 @@ void menu_audio_general_sound_overlay(void)
         if (menu_audio_general_sound_previos_volumes[i]>15) menu_audio_general_sound_previos_volumes[i]=15;
     }    
 
-    //VU meters para DAC
+
+    
     for (i=0;i<4;i++) {
-
-        //Valor unsigned con 0 en 128
-        int nivel_actual=gs_dac_channels[i];
-        nivel_actual=nivel_actual-128;
-
-        //Valor absoluto
-        if (nivel_actual<0) nivel_actual=-nivel_actual;
-
-        //Y pasar de escala 0..128 a escala 0..15
-        nivel_actual /=8;
-
-        if (nivel_actual>=16) nivel_actual=15;
-
-        menu_audio_general_sound_previos_dac[i]=menu_decae_ajusta_valor_volumen(menu_audio_general_sound_previos_dac[i],nivel_actual);
-        
-
-        char buf_nivel[33];
-
-        
-        menu_string_volumen(buf_nivel,nivel_actual,menu_audio_general_sound_previos_dac[i]);
-        sprintf (buffer_linea,"DAC #%d:    %02XH %s",i,gs_dac_channels[i],buf_nivel);
-        zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
-
-        if (decaer_volumenes) {
-            //printf("Decaer volumen %d\n",i);
-            //printf("decae actual %d\n",menu_audio_general_sound_previos_dac[i]);
-            menu_audio_general_sound_previos_dac[i]=menu_decae_dec_valor_volumen(menu_audio_general_sound_previos_dac[i],nivel_actual);
-        }        
-    }
-
-
-
-    //VU meters para volumes
-    for (i=0;i<4;i++) {
+        //VU meters para volumes
 
         int nivel_actual=gs_volumes[i];
 
@@ -24028,7 +23996,44 @@ void menu_audio_general_sound_overlay(void)
         if (decaer_volumenes) {
             menu_audio_general_sound_previos_volumes[i]=menu_decae_dec_valor_volumen(menu_audio_general_sound_previos_volumes[i],nivel_actual);
         }        
+    
+
+
+
+        //VU meters para DAC, para volumes
+    
+
+        //Valor unsigned con 0 en 128
+        nivel_actual=gs_dac_channels[i];
+        nivel_actual=nivel_actual-128;
+
+        //Valor absoluto
+        if (nivel_actual<0) nivel_actual=-nivel_actual;
+
+        //Y pasar de escala 0..128 a escala 0..15
+        nivel_actual /=8;
+
+        if (nivel_actual>=16) nivel_actual=15;
+
+        menu_audio_general_sound_previos_dac[i]=menu_decae_ajusta_valor_volumen(menu_audio_general_sound_previos_dac[i],nivel_actual);
+        
+
+        //char buf_nivel[33];
+
+        
+        menu_string_volumen(buf_nivel,nivel_actual,menu_audio_general_sound_previos_dac[i]);
+        sprintf (buffer_linea,"DAC #%d:    %02XH %s",i,gs_dac_channels[i],buf_nivel);
+        zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+        if (decaer_volumenes) {
+            //printf("Decaer volumen %d\n",i);
+            //printf("decae actual %d\n",menu_audio_general_sound_previos_dac[i]);
+            menu_audio_general_sound_previos_dac[i]=menu_decae_dec_valor_volumen(menu_audio_general_sound_previos_dac[i],nivel_actual);
+        }        
     }
+
+
+
     
 
 
