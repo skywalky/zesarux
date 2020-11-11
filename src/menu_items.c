@@ -4611,6 +4611,8 @@ int *menu_waveform_pixel_array=NULL;
 
 zxvision_window *menu_audio_draw_sound_wave_window;
 
+z80_bit menu_waveform_separar_canales={0};
+
 void menu_audio_draw_sound_wave(void)
 {
 
@@ -4796,7 +4798,34 @@ void menu_audio_draw_sound_wave(void)
 
 	if (menu_sound_wave_llena<2) {
 
-		for (x=xorigen;x<xorigen+ancho;x++) {
+        int canal=0;
+        int total_canales=1;
+
+        if (menu_waveform_separar_canales.v) total_canales=2;
+
+        for (canal=0;canal<total_canales;canal++) {
+
+        
+            int xinicial_grafica;
+            int ancho_grafica;
+
+            if (menu_waveform_separar_canales.v) {
+                ancho_grafica=ancho/2;
+                xinicial_grafica=xorigen+ancho_grafica*canal;
+            }
+
+            else  {
+                xinicial_grafica=xorigen;
+                ancho_grafica=ancho;
+            }
+
+
+
+        //canales separados
+        for (x=xinicial_grafica;x<xinicial_grafica+ancho_grafica;x++) {
+
+        //Stereo junto
+		//for (x=xorigen;x<xorigen+ancho;x++) {
 
 			//Obtenemos valor medio de audio
 			int valor_medio=0;
@@ -4814,9 +4843,26 @@ void menu_audio_draw_sound_wave(void)
 
 				//stereo 
 				//if (audio_driver_accepts_stereo.v) {
-					int suma_canales=audio_buffer[puntero_audio*2]+audio_buffer[(puntero_audio*2)+1];
-					suma_canales /=2;
-					valor_medio=valor_medio+suma_canales;
+
+                    int suma_canales;
+
+                    if (menu_waveform_separar_canales.v) {
+					    suma_canales=audio_buffer[canal+puntero_audio*2];
+					    valor_medio=valor_medio+suma_canales;
+                    }
+
+                    else {
+
+                    //Stereo junto
+                    
+                        suma_canales=audio_buffer[puntero_audio*2]+audio_buffer[(puntero_audio*2)+1];
+                        suma_canales /=2;
+                        valor_medio=valor_medio+suma_canales;
+                    }
+
+                    //1 solo canal
+
+
 				//}
 
 				//else valor_medio=valor_medio+audio_buffer[puntero_audio];
@@ -4872,6 +4918,8 @@ void menu_audio_draw_sound_wave(void)
 			}		
 
 		}
+
+        }
 
 	}
 
@@ -4942,6 +4990,10 @@ void menu_audio_new_waveform_shape(MENU_ITEM_PARAMETERS)
 	if (!si_complete_video_driver() && menu_sound_wave_llena==2) menu_sound_wave_llena=0;
 }
 
+void menu_audio_waveform_sep_canales_setting(MENU_ITEM_PARAMETERS)
+{
+    menu_waveform_separar_canales.v ^=1;
+}
 
 zxvision_window zxvision_window_audio_waveform;
 
@@ -5010,11 +5062,20 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 				(tipos_soundwave[menu_sound_wave_llena]) );
 		menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
 
+
+        
+
 		//Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
 		//menu_add_item_menu_tooltip(array_menu_audio_new_waveform,"Change wave Shape");
 		menu_add_item_menu_ayuda(array_menu_audio_new_waveform,"Change wave Shape: simple line or vertical fill");
 						
 		menu_add_item_menu_tabulado(array_menu_audio_new_waveform,1,0);
+
+
+        menu_add_item_menu_format(array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_waveform_sep_canales_setting,NULL,"[%s] Channels ",
+            (menu_waveform_separar_canales.v ? "Split" : "Join"));
+
+        menu_add_item_menu_tabulado(array_menu_audio_new_waveform,15,0);
 
 
 		//Nombre de ventana solo aparece en el caso de stdout
