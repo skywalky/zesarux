@@ -446,6 +446,10 @@ void core_spectrum_fin_scanline(void)
 					audiodac_mix();
 				}
 
+                if (gs_enabled.v) {
+                    gs_mix_dac_channels();
+                }
+
 
 				if (realtape_inserted.v && realtape_playing.v) {
 					realtape_get_byte();
@@ -513,6 +517,11 @@ void core_spectrum_fin_scanline(void)
 
 			}
 
+            //General sound. Ejecutar los opcodes de un frame entero
+            if (gs_enabled.v) {
+                gs_fetch_opcodes_scanlines();
+            }
+
 			TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_spectrum_t_scanline_next_line);
 			t_scanline_next_line();
 			TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_spectrum_t_scanline_next_line);
@@ -524,6 +533,12 @@ void core_spectrum_fin_scanline(void)
             if (t_estados>=screen_testados_total) {
 				TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_spectrum_fin_frame_pantalla);
 				core_spectrum_fin_frame_pantalla();
+
+                //General sound. Avisar de cambio de frame de pantalla
+                if (gs_enabled.v) {
+                    gs_new_video_frame();
+                }
+
 				TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_spectrum_fin_frame_pantalla);
 			} 
 			//Fin bloque final de pantalla
@@ -933,12 +948,6 @@ void cpu_core_loop_spectrum(void)
 		if ( (t_estados/screen_testados_linea)>t_scanline  ) {
 			TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_spectrum_fin_scanline);
 			core_spectrum_fin_scanline();			
-
-            //General sound. Ejecutar los opcodes de un frame entero
-            if (gs_enabled.v) {
-                gs_fetch_opcodes_scanlines();
-            }
-
 			TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_spectrum_fin_scanline);
 		}
 		

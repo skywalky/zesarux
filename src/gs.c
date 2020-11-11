@@ -30,6 +30,7 @@
 #include "utils.h"
 #include "operaciones.h"
 #include "contend.h"
+#include "audio.h"
 
 z80_bit gs_enabled={0};
 
@@ -61,6 +62,17 @@ z80_byte gs_data_register;
 z80_byte gs_state_register;
 
 z80_byte gs_port3_from_gs;
+
+//Conteo del numero de interrupciones del GS, para saber cuando lanzar otra
+int gs_number_interrupts=0;
+
+//Conteo del scanline del GS. Para saber cuando finaliza el scanline
+int gs_scanline=0;
+
+z80_byte gs_dac_channels[4];
+
+
+z80_byte gs_volumes[4];
 
 void gs_set_memory_mapping(void)
 {
@@ -115,7 +127,7 @@ digits D4 - D7 are not used
     }
 }
 
-z80_byte gs_dac_channels[4];
+
 
 void gs_mix_dac_channels(void)
 {
@@ -126,7 +138,27 @@ void gs_mix_dac_channels(void)
 
     z80_byte valor_final=suma;
 
-    audiodac_send_sample_value(valor_final);
+    //audiodac_send_sample_value(valor_final);
+
+
+    //Mezclar la salida actual de sonido con el audiodac.
+    //El audiodac es muy simple, lo que hace es generar un valor de onda de 8 bits signed
+
+	//Pasar valor a signed
+	char valor_signed_audiodac=(valor_final-128);
+
+	//Mezclar con el valor de salida. Mezclar mono
+	int v;
+	v=audio_valor_enviar_sonido_izquierdo+valor_signed_audiodac;
+	v /=2;
+	audio_valor_enviar_sonido_izquierdo=v;
+
+	v=audio_valor_enviar_sonido_derecho+valor_signed_audiodac;
+	v /=2;
+	audio_valor_enviar_sonido_derecho=v;
+
+    silence_detection_counter=0;
+
 }
 
 z80_byte gs_peek_byte_no_time(z80_int dir_orig)
@@ -215,11 +247,7 @@ void gs_poke_byte(z80_int dir,z80_byte valor)
     
 }
 
-//#define gs->pstate gs_state_register
-//#define gs->pb3_gs gs_port3_from_gs
-//#define gs->pbb_zx gs_command_register
 
-//z80_byte gs_rp0;
 z80_byte gs_vol1;
 
 z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
@@ -228,8 +256,6 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
     puerto_l &=0xf;
 
 	switch (puerto_l) {
-		case 0: 
-		break;
 		
 		case 1: 
 		    return gs_command_register; 
@@ -252,10 +278,6 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 		    gs_state_register &= 0xfe; 
 		break;
 		
-		case 6: break;
-		case 7: break;
-		case 8: break;
-		case 9: break;
 
 		case 10: 
 		    if (gs_memory_mapping_value & 0x01) gs_state_register &= 0x7f; 
@@ -286,11 +308,6 @@ void gs_out_port(z80_int puerto,z80_byte value)
             gs_set_memory_mapping();
         break;
 
-        /*case 3:
-		    gs_state_register |= 0x80;
-			gs_port3_from_gs = value;
-			break;        
-        break;*/
 
         case 2: 
             gs_state_register &= 0x7f;
@@ -301,8 +318,6 @@ void gs_out_port(z80_int puerto,z80_byte value)
 			gs_port3_from_gs = value ;
 		break;
 		
-		case 4: 
-		break;
 		
 		case 5: 
 		    gs_state_register &= 0xfe;
@@ -370,7 +385,7 @@ void gs_init_peek_poke_etc(void)
     general_sound_z80_cpu.contend_read=gs_contend_read;
     general_sound_z80_cpu.contend_read_no_mreq=gs_contend_read_no_mreq;
     general_sound_z80_cpu.contend_write_no_mreq=gs_contend_write_no_mreq;
-    general_sound_z80_cpu.memoria_spectrum=gs_memory_pointer;
+    general_sound_z80_cpu.memoria_spectrum=gs_memory_pointer;    
 }
 
 void gs_init_memory_tables(void)
@@ -395,6 +410,12 @@ void gs_reset(void)
 
     general_sound_z80_cpu.r_pc=0;
     gs_state_register=0x7e;
+
+    general_sound_z80_cpu.t_estados=0;
+
+    //Inicializar contadores
+    gs_number_interrupts=0;
+    gs_scanline=0;
 }
 
 void gs_alloc_memory(void)
@@ -590,86 +611,70 @@ void gs_restore_machine_state(struct gs_machine_state *m)
 
 }
 
+//Tratamiento de interrupción maskable. Como cualquier otra normal. Lo ponemos en una función
+//diferente del core normal por si acaso...
 void gs_generate_interrupt(void)
 {
-        //printf("Generar interrupcion en GS\n");
+    //printf("Generar interrupcion en GS\n");
 					
 
-			if (z80_ejecutando_halt.v) {
-				z80_ejecutando_halt.v=0;
-				reg_pc++;
-			}
+    if (z80_ejecutando_halt.v) {
+        z80_ejecutando_halt.v=0;
+        reg_pc++;
+    }
 
-				push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
+    push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
 
-				reg_r++;
-
-		
-
-                //IM0??
-
-                
-				//desactivar interrupciones al generar una
-				iff1.v=iff2.v=0;
-				//Modelos spectrum
-
-				if (im_mode==0 || im_mode==1) {
-					cpu_common_jump_im01();
-				}   
-                else {
-                    //printf("IM 2----------\n");
-                    
-                    
-				//IM 2.
-
-					z80_int temp_i;
-					z80_byte dir_l,dir_h;
-
-					
-
-					temp_i=reg_i*256+255;
-					dir_l=peek_byte(temp_i++);
-					dir_h=peek_byte(temp_i);
-					reg_pc=value_8_to_16(dir_h,dir_l);
-					t_estados += 7;
+    reg_r++;
 
 
-					
-				
-                    
-                    
-                }
 
-               //NMI
-				/*
-				iff1.v=0;
-				//printf ("Calling NMI with pc=0x%x\n",reg_pc);
+    //desactivar interrupciones al generar una
+    iff1.v=iff2.v=0;
 
-				//Otros 6 estados
-				t_estados += 6;
 
-				//Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
-				reg_pc= 0x66;   */               
+    if (im_mode==0 || im_mode==1) {
+        cpu_common_jump_im01();
+    }   
+    else {
+            
+        //IM 2.
+
+        z80_int temp_i;
+        z80_byte dir_l,dir_h;
+
+
+        temp_i=reg_i*256+255;
+        dir_l=peek_byte(temp_i++);
+        dir_h=peek_byte(temp_i);
+        reg_pc=value_8_to_16(dir_h,dir_l);
+        t_estados += 7;
+    
+        
+    }
+
+                            
 }
 
 
 
-int gs_max_states_line=750;
 
-int gs_interrupts_states=334;
-int gs_number_interrupts=0;
 
-int gs_scanline=0;
+void gs_new_video_frame(void)
+{
+    //Reinicializar contadores
+    gs_number_interrupts=0;
+    gs_scanline=0;
+    general_sound_z80_cpu.t_estados=0;
+
+}
 
 void gs_run_scanline_cycles(void)
 {
-    //de momento unos pocos ciclos y salir
+    
 
-    int i;
 
-    //for (i=0;i<gs_max_states_line;i++) {
-    //printf("Inicio scanline GS en t_estados: %d\n",t_estados);
-    while (t_estados/gs_max_states_line<=gs_scanline) {
+    while (t_estados/GS_MAX_STATES_LINE<=gs_scanline) {
 
         //printf("Fetch GS opcode at PC=%04XH\n",reg_pc);
 
@@ -677,21 +682,18 @@ void gs_run_scanline_cycles(void)
         z80_byte byte_leido=fetch_opcode();
 
 
-
         reg_pc++;
 
         reg_r++;
 
 
-
-
         codsinpr[byte_leido]  () ;
 
 
-        if (t_estados/gs_interrupts_states>gs_number_interrupts) {
-            //printf("Generar interrupcion en t_estados %d\n",t_estados);
+        if (t_estados/GS_INTERRUPTS_STATES>gs_number_interrupts) {
+            //printf("Generar interrupcion en t_estados %d numero interrupciones: %d\n",t_estados,gs_number_interrupts);
             gs_number_interrupts++;
-            //prueba generar interrupcion
+            //Generar interrupcion
             if (iff1.v==1) {
                 gs_generate_interrupt();                
             }
@@ -707,7 +709,7 @@ void gs_run_scanline_cycles(void)
 
 
     //enviar dac
-    gs_mix_dac_channels();
+    //gs_mix_dac_channels();
 
 }
 
@@ -744,7 +746,7 @@ void gs_fetch_opcodes_scanlines(void)
 //Lectura y escritura desde la parte de spectrum
 void gs_write_port_bb_from_speccy(z80_byte value)
 {
-    printf("Write port BB from speccy side. value %02XH\n",value);
+    //printf("Write port BB from speccy side. value %02XH\n",value);
 
     gs_command_register=value;
 
@@ -772,7 +774,7 @@ z80_byte gs_read_port_bb_from_speccy(void)
 
 z80_byte gs_read_port_b3_from_speccy(void)
 {
-    printf("Read port B3 from speccy side.\n");    
+    //printf("Read port B3 from speccy side.\n");    
 
     gs_state_register &= 0x7f;
     return gs_port3_from_gs;

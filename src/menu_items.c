@@ -1384,7 +1384,7 @@ void menu_audio_i8049_chip_present(MENU_ITEM_PARAMETERS)
     i8049_chip_present ^= 1;
 }
 
-void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
+void menu_audio_general_sound_enable(MENU_ITEM_PARAMETERS)
 {
     if (gs_enabled.v) gs_disable();
     else gs_enable();
@@ -1437,7 +1437,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
         if (MACHINE_IS_PENTAGON) {
-            menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_general_sound,NULL,"[%c] General Sound", (gs_enabled.v ? 'X' : ' '));
+            menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_general_sound_enable,NULL,"[%c] General Sound", (gs_enabled.v ? 'X' : ' '));
 
         }
 
@@ -23856,6 +23856,228 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
             menu_debug_verbose(0);
             debug_unnamed_console_modified=1;
         }
+
+        //printf ("tecla: %d\n",tecla);
+    } while (tecla!=2 && tecla!=3);
+
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	//(siempre que esta funcion tenga overlay realmente)
+	zxvision_set_window_overlay_from_current(ventana);    
+
+    //restauramos modo normal de texto de menu
+     set_menu_overlay_function(normal_overlay_texto_menu);
+
+    
+    cls_menu_overlay();
+
+    //Grabar geometria ventana
+    util_add_window_geometry_compact(ventana);    
+
+	if (tecla==3) {
+		//zxvision_ay_registers_overlay
+		zxvision_message_put_window_background();
+	}
+
+	else {
+		zxvision_destroy_window(ventana);		
+ 	}
+}
+
+
+zxvision_window *menu_audio_general_sound_overlay_window;
+
+
+int menu_audio_general_sound_previos_dac[4];
+
+int menu_audio_general_sound_contador_segundo_anterior;
+
+void menu_audio_general_sound_overlay(void)
+{
+
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+ 
+
+
+
+    zxvision_window *ventana;
+
+    ventana=menu_audio_general_sound_overlay_window;   
+
+
+    if (gs_enabled.v==0) {
+        zxvision_print_string_defaults_fillspc(ventana,1,0,"General sound is not enabled");
+        zxvision_draw_window_contents(ventana);
+        return;
+    }   
+
+    int decaer_volumenes=0;
+
+    //esto hara ejecutar esto 2 veces por segundo
+    if ( ((contador_segundo%500) == 0 && menu_audio_general_sound_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+        menu_audio_general_sound_contador_segundo_anterior=contador_segundo;
+
+        decaer_volumenes=1;
+    }
+ 
+
+
+    int linea=0;
+    char buffer_linea[64];
+
+    sprintf(buffer_linea,"Command Register: %02XH",gs_command_register);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+    sprintf(buffer_linea,"Data Register:    %02XH",gs_data_register);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+    sprintf(buffer_linea,"Status Register:  %02XH",gs_state_register);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+    sprintf(buffer_linea,"Port3 from GS:    %02XH",gs_port3_from_gs);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+   
+    sprintf(buffer_linea,"MMU Register:     %02XH",gs_memory_mapping_value);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
+
+    int i;    
+
+    for (i=0;i<4;i++) {
+        sprintf(buffer_linea,"Volume   #%d:      %02XH",i,gs_volumes[i]);
+        zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);            
+    }
+
+    /*
+    for (i=0;i<4;i++) {
+        sprintf(buffer_linea,"Last DAC #%d:      %02XH",i,gs_dac_channels[i]);
+        zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);            
+    }
+    */
+
+    //Controlar limites, dado que las variables entran sin inicializar
+    for (i=0;i<4;i++) {
+        if (menu_audio_general_sound_previos_dac[i]>15) menu_audio_general_sound_previos_dac[i]=15;
+    }
+
+    //VU meters
+    for (i=0;i<4;i++) {
+
+        //Valor unsigned con 0 en 128
+        int nivel_actual=gs_dac_channels[i];
+        nivel_actual=nivel_actual-128;
+
+        //Valor absoluto
+        if (nivel_actual<0) nivel_actual=-nivel_actual;
+
+        //Y pasar de escala 0..128 a escala 0..15
+        nivel_actual /=8;
+
+        if (nivel_actual>=16) nivel_actual=15;
+
+        menu_audio_general_sound_previos_dac[i]=menu_decae_ajusta_valor_volumen(menu_audio_general_sound_previos_dac[i],nivel_actual);
+        
+
+        char buf_nivel[33];
+
+        
+        menu_string_volumen(buf_nivel,nivel_actual,menu_audio_general_sound_previos_dac[i]);
+        sprintf (buffer_linea,"DAC #%d: %02XH %s",i,gs_dac_channels[i],buf_nivel);
+        zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+        if (decaer_volumenes) {
+            printf("Decaer volumen %d\n",i);
+            printf("decae actual %d\n",menu_audio_general_sound_previos_dac[i]);
+            menu_audio_general_sound_previos_dac[i]=menu_decae_dec_valor_volumen(menu_audio_general_sound_previos_dac[i],nivel_actual);
+        }        
+    }
+
+
+    
+
+
+    sprintf(buffer_linea,"PC Register:    %04XH",general_sound_z80_cpu.r_pc);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+    sprintf(buffer_linea,"SP Register:    %04XH",general_sound_z80_cpu.r_sp);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
+
+
+    
+
+
+
+    zxvision_draw_window_contents(ventana);
+
+
+}
+
+
+zxvision_window zxvision_window_general_sound;
+
+void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
+{
+    /*if (!menu_multitarea) {
+            menu_warn_message("This menu item needs multitask enabled");
+            return;
+    }*/
+
+
+
+
+    zxvision_window *ventana;
+    ventana=&zxvision_window_general_sound;    
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);    
+
+    int x,y,ancho,alto;
+
+    if (!util_find_window_geometry("audiogensound",&x,&y,&ancho,&alto)) {
+        x=menu_origin_x();
+        y=0;
+        ancho=32;
+        alto=18;
+    }    
+
+    zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,"General sound");
+  
+
+   
+
+    ventana->can_be_backgrounded=1;
+    ventana->upper_margin=2;
+    //Permitir hotkeys desde raton
+    ventana->can_mouse_send_hotkeys=1;	
+
+    //indicar nombre del grabado de geometria
+    strcpy(ventana->geometry_name,"audiogensound");    
+
+    zxvision_draw_window(ventana);
+
+    menu_audio_general_sound_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+                                                
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de onda + texto
+    set_menu_overlay_function(menu_audio_general_sound_overlay);   
+
+    //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+    //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+    if (zxvision_currently_restoring_windows_on_start) {
+        //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+        return;
+    }     
+
+    z80_byte tecla;
+    do {
+
+
+        tecla=zxvision_common_getkey_refresh();
+        zxvision_handle_cursors_pgupdn(ventana,tecla);
+
 
         //printf ("tecla: %d\n",tecla);
     } while (tecla!=2 && tecla!=3);

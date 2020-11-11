@@ -108,6 +108,7 @@
 #include "sg1000.h"
 #include "svi.h"
 #include "ql_qdos_handler.h"
+#include "gs.h"
 
 
 #if defined(__APPLE__)
@@ -6205,6 +6206,7 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"debugcpu",menu_debug_registers},
 	{"helpshowkeyboard",menu_help_show_keyboard},
     {"debugconsole",menu_debug_unnamed_console},
+    {"audiogensound",menu_audio_general_sound},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };
@@ -13751,6 +13753,10 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 		}
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_chip_info,menu_cond_ay_or_sn_chip,"Audio Chip Info");
+
+                    if (MACHINE_IS_PENTAGON && gs_enabled.v) {
+                        menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_general_sound,NULL,"General Sound Info");
+                    }
 					
                     if (MACHINE_IS_QL) {
 					    menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_i8049_mixer,menu_cond_i8049_chip,"i8049 Mi~~xer");

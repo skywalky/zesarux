@@ -225,3 +225,25 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 -ventana Audio DAC los 4 canales. 4 waveforms?
 
 -gs_mix_dac_channels quiza que coja los ultimos 2-3 valores ultimos y haga media
+
+-Pendiente volúmenes dac
+
+Dado que es unsigned (centro 128), al enviar valor dac, debe aplicar volumen teniendo en cuenta el centro 128, o sea:
+
+Valor signed=valor-128
+
+Valor signed / volumen ( o cuál sea la fórmula)
+
+Valor final dac=128+valor signed
+
+-Ventana general sound en audio. Con valores dac, estados registros, mapping...
+
+Y que actualice continuamente y se quede en background 
+
+-enviar output a un dac aparte, que no tenga que ver con el specdrum etc. Luego en funcion de core, que lea valor de ahi y lo mezcle
+
+-mostrar fecha y hora en los debug printf logs?
+
+-footer indicador actividad GS?
+
+-agregar juego pentagon general sound a extras

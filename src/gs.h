@@ -33,11 +33,18 @@
 
 #define GS_ROM_NAME "gs105a.rom"
 
+//Estados totales de cpu por scanline
+#define GS_MAX_STATES_LINE 750
+
+//Cada cuantos estados de esos lanzar una interrupcion
+#define GS_INTERRUPTS_STATES 334
+
 
 extern z80_bit gs_enabled;
 extern void gs_enable(void);
 extern void gs_disable(void);
 extern void gs_fetch_opcodes_scanlines(void);
+extern void gs_new_video_frame(void);
 
 struct gs_machine_state {
 
@@ -80,6 +87,22 @@ extern void gs_write_port_b3_from_speccy(z80_byte value);
 extern z80_byte gs_read_port_bb_from_speccy(void);
 extern z80_byte gs_read_port_b3_from_speccy(void);
 
+
+extern z80_byte gs_command_register;
+extern z80_byte gs_data_register;
+extern z80_byte gs_state_register;
+
+extern z80_byte gs_port3_from_gs;
+
+extern z80_byte gs_dac_channels[];
+extern z80_byte gs_volumes[];
+
+extern z80_byte gs_memory_mapping_value;
+
+
+
+//Estado de la Z80 del general sound
+extern struct gs_machine_state general_sound_z80_cpu;
 
 
 #endif
