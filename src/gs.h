@@ -92,7 +92,7 @@ extern z80_byte gs_command_register;
 extern z80_byte gs_data_register;
 extern z80_byte gs_state_register;
 
-extern z80_byte gs_port3_from_gs;
+extern z80_byte gs_output_register;
 
 extern z80_byte gs_dac_channels[];
 extern z80_byte gs_volumes[];

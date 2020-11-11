@@ -23929,14 +23929,14 @@ void menu_audio_general_sound_overlay(void)
     sprintf(buffer_linea,"Command Register: %02XH",gs_command_register);
     zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
+    sprintf(buffer_linea,"Status Register:  %02XH",gs_state_register);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
+
     sprintf(buffer_linea,"Data Register:    %02XH",gs_data_register);
     zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
-    sprintf(buffer_linea,"Status Register:  %02XH",gs_state_register);
-    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
-
-    sprintf(buffer_linea,"Port3 from GS:    %02XH",gs_port3_from_gs);
-    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+    sprintf(buffer_linea,"Output Register:  %02XH",gs_output_register);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
    
     sprintf(buffer_linea,"MMU Register:     %02XH",gs_memory_mapping_value);
     zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
@@ -23986,8 +23986,8 @@ void menu_audio_general_sound_overlay(void)
         zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
         if (decaer_volumenes) {
-            printf("Decaer volumen %d\n",i);
-            printf("decae actual %d\n",menu_audio_general_sound_previos_dac[i]);
+            //printf("Decaer volumen %d\n",i);
+            //printf("decae actual %d\n",menu_audio_general_sound_previos_dac[i]);
             menu_audio_general_sound_previos_dac[i]=menu_decae_dec_valor_volumen(menu_audio_general_sound_previos_dac[i],nivel_actual);
         }        
     }

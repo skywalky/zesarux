@@ -61,7 +61,7 @@ z80_byte gs_command_register;
 z80_byte gs_data_register;
 z80_byte gs_state_register;
 
-z80_byte gs_port3_from_gs;
+z80_byte gs_output_register;
 
 //Conteo del numero de interrupciones del GS, para saber cuando lanzar otra
 int gs_number_interrupts=0;
@@ -346,7 +346,7 @@ void gs_out_port(z80_int puerto,z80_byte value)
 			
 		case 3: 
 		    gs_state_register |= 0x80;
-			gs_port3_from_gs = value ;
+			gs_output_register = value ;
 		break;
 		
 		
@@ -810,7 +810,7 @@ z80_byte gs_read_port_b3_from_speccy(void)
     //printf("Read port B3 from speccy side.\n");    
 
     gs_state_register &= 0x7f;
-    return gs_port3_from_gs;
+    return gs_output_register;
 }
 
 
