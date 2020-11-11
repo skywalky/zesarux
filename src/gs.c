@@ -132,7 +132,27 @@ digits D4 - D7 are not used
 void gs_mix_dac_channels(void)
 {
 
-    int suma=gs_dac_channels[0]+gs_dac_channels[1]+gs_dac_channels[2]+gs_dac_channels[3];
+    int i;
+
+    int suma=0;
+
+    for (i=0;i<4;i++) {
+        int dac_valor=gs_dac_channels[i];
+
+        //aplicar volumen
+        /*int volumen=gs_volumes[i] & 0x3F;
+
+        int dac_final=(dac_valor * volumen) / 0x3F;
+
+        suma +=dac_final;
+        */
+
+        suma += dac_valor;
+
+        //printf("canal %d dac %d volumen %d dac_final %d\n",i,dac_valor,volumen,dac_final);
+    }
+
+    //int suma=gs_dac_channels[0]+gs_dac_channels[1]+gs_dac_channels[2]+gs_dac_channels[3];
 
     suma /=4;
 
@@ -198,8 +218,20 @@ Data for channels should be located at the following addresses:
        //temporal
        //printf ("Send DAC %d canal\n",valor,canal);
 
-       gs_dac_channels[canal]=valor;
-       //audiodac_send_sample_value(valor);
+        //Tener en cuenta que valor central es 128 (unsigned sample)
+        int valor_signed=valor-128;
+
+       
+       //aplicar volumen. 
+        
+        int volumen=gs_volumes[canal] & 0x3F;
+
+        int dac_final=128 + (valor_signed * volumen) / 0x3F;       
+
+        gs_dac_channels[canal]=dac_final;
+
+        //printf("canal %d dac %d signed %d volumen %d dac_final %d\n",canal,valor,valor_signed,volumen,dac_final);
+
    }
 
 
@@ -248,7 +280,6 @@ void gs_poke_byte(z80_int dir,z80_byte valor)
 }
 
 
-z80_byte gs_vol1;
 
 z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 {
@@ -285,7 +316,7 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 		break;
 		
 		case 11: 
-		    if (gs_vol1 & 0x20) gs_state_register |= 1; 
+		    if (gs_volumes[0] & 0x20) gs_state_register |= 1; 
 		    else gs_state_register &= 0xfe; 
 		break;
 	}
@@ -323,29 +354,31 @@ void gs_out_port(z80_int puerto,z80_byte value)
 		    gs_state_register &= 0xfe;
 		break;
 		
-            /*
-		case 6: gs->vol1 = value & 0x3f;
-			break;
-		case 7: gs->vol2 = value & 0x3f;
-			break;
-		case 8: gs->vol3 = value & 0x3f;
-			break;
-		case 9: gs->vol4 = value & 0x3f;
-			break;
-            */
-            
+		case 6: 
+            gs_volumes[0] = value & 0x3f;
+		break;
+
+		case 7: 
+            gs_volumes[1] = value & 0x3f;
+		break;
+
+		case 8: 
+            gs_volumes[2] = value & 0x3f;
+		break;
+
+		case 9: 
+            gs_volumes[3] = value & 0x3f;
+		break;
+
+       
 		case 10: 
-		    if (gs_memory_mapping_value & 0x01)
-				gs_state_register &= 0x7f;
-			else
-				gs_state_register |= 0x80;
+		    if (gs_memory_mapping_value & 0x01) gs_state_register &= 0x7f;
+			else gs_state_register |= 0x80;
 		break;
 			
 		case 11: 
-		    if (gs_vol1 & 0x20)
-				gs_state_register |= 1;
-			else
-				gs_state_register &= 0xfe;
+		    if (gs_volumes[0] & 0x20) gs_state_register |= 1;
+			else gs_state_register &= 0xfe;
 		break;    
             
     }
