@@ -76,6 +76,10 @@ z80_byte gs_volumes[4];
 
 z80_bit gs_stereo_mode={0};
 
+//Valores finales enviados a DAC a los dos canales. Utiles para mostrar en ventana Audio General Sound
+z80_byte gs_dac_valor_final_left;
+z80_byte gs_dac_valor_final_right;
+
 void gs_set_memory_mapping(void)
 {
 /*
@@ -163,8 +167,8 @@ void gs_mix_dac_channels(void)
 
 
 
-    z80_byte valor_final_left=suma_left;
-    z80_byte valor_final_right=suma_right;
+    gs_dac_valor_final_left=suma_left;
+    gs_dac_valor_final_right=suma_right;
 
     //audiodac_send_sample_value(valor_final);
 
@@ -173,8 +177,8 @@ void gs_mix_dac_channels(void)
     //El audiodac es muy simple, lo que hace es generar un valor de onda de 8 bits signed
 
 	//Pasar valor a signed
-	char valor_signed_audiodac_left=(valor_final_left-128);
-    char valor_signed_audiodac_right=(valor_final_right-128);
+	char valor_signed_audiodac_left=(gs_dac_valor_final_left-128);
+    char valor_signed_audiodac_right=(gs_dac_valor_final_right-128);
 
 	//Mezclar con el valor de salida. Mezclar mono
 	int v;
@@ -797,7 +801,7 @@ void gs_write_port_bb_from_speccy(z80_byte value)
 
 void gs_write_port_b3_from_speccy(z80_byte value)
 {
-    printf("Write port B3 from speccy side. value %02XH\n",value);
+    //printf("Write port B3 from speccy side. value %02XH\n",value);
     gs_data_register=value;
 
 	gs_state_register |= 0x80;		

@@ -23886,11 +23886,15 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
 
 zxvision_window *menu_audio_general_sound_overlay_window;
 
-//Valores previos para vu meters
+//Valores previos para vu meters dac
 int menu_audio_general_sound_previos_dac[4];
 
-//Valores previos para vu meters
+//Valores previos para vu meters volumenes
 int menu_audio_general_sound_previos_volumes[4];
+
+//Valores previos para vu meters left right
+int menu_audio_general_sound_previo_left;
+int menu_audio_general_sound_previo_right;
 
 
 int menu_audio_general_sound_contador_segundo_anterior;
@@ -23982,12 +23986,17 @@ void menu_audio_general_sound_overlay(void)
         if (menu_audio_general_sound_previos_volumes[i]>15) menu_audio_general_sound_previos_volumes[i]=15;
     }    
 
+    if (menu_audio_general_sound_previo_left>15) menu_audio_general_sound_previo_left=15;
+    if (menu_audio_general_sound_previo_right>15) menu_audio_general_sound_previo_right=15;
 
+
+    int nivel_actual;
+    char buf_nivel[33];
     
     for (i=0;i<4;i++) {
         //VU meters para volumes
 
-        int nivel_actual=gs_volumes[i];
+        nivel_actual=gs_volumes[i];
 
 
         //Y pasar de escala 0..3F a escala 0..15
@@ -23997,8 +24006,6 @@ void menu_audio_general_sound_overlay(void)
 
         menu_audio_general_sound_previos_volumes[i]=menu_decae_ajusta_valor_volumen(menu_audio_general_sound_previos_volumes[i],nivel_actual);
         
-
-        char buf_nivel[33];
 
         
         menu_string_volumen(buf_nivel,nivel_actual,menu_audio_general_sound_previos_volumes[i]);
@@ -24046,7 +24053,73 @@ void menu_audio_general_sound_overlay(void)
 
 
 
+        //VU meters para Left
     
+
+        //Valor unsigned con 0 en 128
+        nivel_actual=gs_dac_valor_final_left;
+        nivel_actual=nivel_actual-128;
+
+        //Valor absoluto
+        if (nivel_actual<0) nivel_actual=-nivel_actual;
+
+        //Y pasar de escala 0..128 a escala 0..15
+        nivel_actual /=8;
+
+        if (nivel_actual>=16) nivel_actual=15;
+
+        menu_audio_general_sound_previo_left=menu_decae_ajusta_valor_volumen(menu_audio_general_sound_previo_left,nivel_actual);
+        
+
+        //char buf_nivel[33];
+
+        
+        menu_string_volumen(buf_nivel,nivel_actual,menu_audio_general_sound_previo_left);
+        sprintf (buffer_linea,"Left Out:  %02XH %s",gs_dac_valor_final_left,buf_nivel);
+        zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+        if (decaer_volumenes) {
+            menu_audio_general_sound_previo_left=menu_decae_dec_valor_volumen(menu_audio_general_sound_previo_left,nivel_actual);
+        }     
+
+        //VU meters para Right
+    
+
+        //Valor unsigned con 0 en 128
+        nivel_actual=gs_dac_valor_final_right;
+        nivel_actual=nivel_actual-128;
+
+        //Valor absoluto
+        if (nivel_actual<0) nivel_actual=-nivel_actual;
+
+        //Y pasar de escala 0..128 a escala 0..15
+        nivel_actual /=8;
+
+        if (nivel_actual>=16) nivel_actual=15;
+
+        menu_audio_general_sound_previo_right=menu_decae_ajusta_valor_volumen(menu_audio_general_sound_previo_right,nivel_actual);
+        
+
+        //char buf_nivel[33];
+
+        
+        menu_string_volumen(buf_nivel,nivel_actual,menu_audio_general_sound_previo_right);
+        sprintf (buffer_linea,"Right Out: %02XH %s",gs_dac_valor_final_right,buf_nivel);
+        zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+        if (decaer_volumenes) {
+            menu_audio_general_sound_previo_right=menu_decae_dec_valor_volumen(menu_audio_general_sound_previo_right,nivel_actual);
+        }             
+
+
+    //Left & Right Channels
+    /*
+    sprintf(buffer_linea,"Left:    %02XH",gs_dac_valor_final_left);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+    sprintf(buffer_linea,"Right:    %02XH",gs_dac_valor_final_left);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
+    */
 
 
     sprintf(buffer_linea,"PC Register:    %04XH",general_sound_z80_cpu.r_pc);

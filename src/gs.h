@@ -101,6 +101,9 @@ extern z80_byte gs_memory_mapping_value;
 
 extern z80_bit gs_stereo_mode;
 
+extern z80_byte gs_dac_valor_final_left;
+extern z80_byte gs_dac_valor_final_right;
+
 
 
 //Estado de la Z80 del general sound
