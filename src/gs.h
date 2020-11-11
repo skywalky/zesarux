@@ -99,6 +99,8 @@ extern z80_byte gs_volumes[];
 
 extern z80_byte gs_memory_mapping_value;
 
+extern z80_bit gs_stereo_mode;
+
 
 
 //Estado de la Z80 del general sound

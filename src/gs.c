@@ -74,6 +74,8 @@ z80_byte gs_dac_channels[4];
 
 z80_byte gs_volumes[4];
 
+z80_bit gs_stereo_mode={0};
+
 void gs_set_memory_mapping(void)
 {
 /*
@@ -134,29 +136,35 @@ void gs_mix_dac_channels(void)
 
     int i;
 
-    int suma=0;
+    int suma_left=0;
+    int suma_right=0;
 
-    for (i=0;i<4;i++) {
-        int dac_valor=gs_dac_channels[i];
+    if (gs_stereo_mode.v) {
+        suma_left  = gs_dac_channels[0] + gs_dac_channels[1];
+        suma_right = gs_dac_channels[2] + gs_dac_channels[3];
 
-        //aplicar volumen
-        /*int volumen=gs_volumes[i] & 0x3F;
+        suma_left  /=2;
+        suma_right /=2;        
+    }
+    else {
+        for (i=0;i<4;i++) {
+            int dac_valor=gs_dac_channels[i];
 
-        int dac_final=(dac_valor * volumen) / 0x3F;
+            suma_left += dac_valor;
+            suma_right += dac_valor;
 
-        suma +=dac_final;
-        */
+        }
 
-        suma += dac_valor;
-
-        //printf("canal %d dac %d volumen %d dac_final %d\n",i,dac_valor,volumen,dac_final);
+        suma_left /=4;
+        suma_right /=4;
     }
 
     //int suma=gs_dac_channels[0]+gs_dac_channels[1]+gs_dac_channels[2]+gs_dac_channels[3];
 
-    suma /=4;
 
-    z80_byte valor_final=suma;
+
+    z80_byte valor_final_left=suma_left;
+    z80_byte valor_final_right=suma_right;
 
     //audiodac_send_sample_value(valor_final);
 
@@ -165,15 +173,16 @@ void gs_mix_dac_channels(void)
     //El audiodac es muy simple, lo que hace es generar un valor de onda de 8 bits signed
 
 	//Pasar valor a signed
-	char valor_signed_audiodac=(valor_final-128);
+	char valor_signed_audiodac_left=(valor_final_left-128);
+    char valor_signed_audiodac_right=(valor_final_right-128);
 
 	//Mezclar con el valor de salida. Mezclar mono
 	int v;
-	v=audio_valor_enviar_sonido_izquierdo+valor_signed_audiodac;
+	v=audio_valor_enviar_sonido_izquierdo+valor_signed_audiodac_left;
 	v /=2;
 	audio_valor_enviar_sonido_izquierdo=v;
 
-	v=audio_valor_enviar_sonido_derecho+valor_signed_audiodac;
+	v=audio_valor_enviar_sonido_derecho+valor_signed_audiodac_right;
 	v /=2;
 	audio_valor_enviar_sonido_derecho=v;
 

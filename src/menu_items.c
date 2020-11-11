@@ -23930,6 +23930,18 @@ void menu_audio_general_sound_overlay(void)
     int linea=0;
     char buffer_linea[64];
 
+    //Forzar a mostrar atajos
+    z80_bit antes_menu_writing_inverse_color;
+    antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+    menu_writing_inverse_color.v=1;		
+
+ 
+    sprintf(buffer_linea,"~~Mode: %s",(gs_stereo_mode.v ? "Stereo" : "Mono") );
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
+
+    //Restaurar comportamiento atajos
+    menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v; 
+
     sprintf(buffer_linea,"Command Register: %02XH",gs_command_register);
     zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
@@ -24022,7 +24034,7 @@ void menu_audio_general_sound_overlay(void)
 
         
         menu_string_volumen(buf_nivel,nivel_actual,menu_audio_general_sound_previos_dac[i]);
-        sprintf (buffer_linea,"DAC #%d:    %02XH %s",i,gs_dac_channels[i],buf_nivel);
+        sprintf (buffer_linea,"DAC    #%d: %02XH %s",i,gs_dac_channels[i],buf_nivel);
         zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
         if (decaer_volumenes) {
@@ -24118,6 +24130,10 @@ void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
 
         tecla=zxvision_common_getkey_refresh();
         zxvision_handle_cursors_pgupdn(ventana,tecla);
+
+        if (tecla=='m') {
+            gs_stereo_mode.v ^=1;
+        }        
 
 
         //printf ("tecla: %d\n",tecla);
