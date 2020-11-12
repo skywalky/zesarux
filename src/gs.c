@@ -324,7 +324,7 @@ void gs_poke_byte(z80_int dir,z80_byte valor)
 
 
 
-z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
+z80_byte gs_lee_puerto(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 {
     //Solo los 4 bits inferiores
     puerto_l &=0xf;
@@ -434,16 +434,16 @@ z80_byte gs_fetch_opcode(void)
 }
 
 
-void gs_contend_read(z80_int direccion,int time)
+void gs_contend_read(z80_int direccion GCC_UNUSED,int time)
 {
     t_estados += time;
 }
-void gs_contend_read_no_mreq(z80_int direccion,int time)
+void gs_contend_read_no_mreq(z80_int direccion GCC_UNUSED,int time)
 {
     t_estados += time;
 }
 
-void gs_contend_write_no_mreq(z80_int direccion,int time)
+void gs_contend_write_no_mreq(z80_int direccion GCC_UNUSED,int time)
 {
     t_estados += time;
 }
