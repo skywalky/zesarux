@@ -19,6 +19,10 @@
 
 */
 
+
+// Code based on Xpeccy emulator
+// https://github.com/samstyle/Xpeccy
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
@@ -332,12 +336,12 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 		break;
 		
 		case 2: 
-		    gs_state_register &= 0x7f; 
+		    gs_state_register &=0x7f; 
 		    return gs_data_register;
 		break;
 		
 		case 3: 
-		    gs_state_register |= 0x80; 
+		    gs_state_register |=0x80; 
 		break;
 		
 		case 4: 
@@ -345,18 +349,18 @@ z80_byte gs_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 		break;
 		
 		case 5: 
-		    gs_state_register &= 0xfe; 
+		    gs_state_register &=0xfe; 
 		break;
 		
 
 		case 10: 
-		    if (gs_memory_mapping_value & 0x01) gs_state_register &= 0x7f; 
-		    else gs_state_register |= 0x80; 
+		    if (gs_memory_mapping_value & 0x01) gs_state_register &=0x7f; 
+		    else gs_state_register |=0x80; 
 		break;
 		
 		case 11: 
-		    if (gs_volumes[0] & 0x20) gs_state_register |= 1; 
-		    else gs_state_register &= 0xfe; 
+		    if (gs_volumes[0] & 0x20) gs_state_register |=1; 
+		    else gs_state_register &=0xfe; 
 		break;
 	}
 
@@ -380,17 +384,17 @@ void gs_out_port(z80_int puerto,z80_byte value)
 
 
         case 2: 
-            gs_state_register &= 0x7f;
+            gs_state_register &=0x7f;
 		break;
 			
 		case 3: 
-		    gs_state_register |= 0x80;
-			gs_output_register = value ;
+		    gs_state_register |=0x80;
+			gs_output_register=value ;
 		break;
 		
 		
 		case 5: 
-		    gs_state_register &= 0xfe;
+		    gs_state_register &=0xfe;
 		break;
 		
 		case 6: 
@@ -411,13 +415,13 @@ void gs_out_port(z80_int puerto,z80_byte value)
 
        
 		case 10: 
-		    if (gs_memory_mapping_value & 0x01) gs_state_register &= 0x7f;
-			else gs_state_register |= 0x80;
+		    if (gs_memory_mapping_value & 0x01) gs_state_register &=0x7f;
+			else gs_state_register |=0x80;
 		break;
 			
 		case 11: 
-		    if (gs_volumes[0] & 0x20) gs_state_register |= 1;
-			else gs_state_register &= 0xfe;
+		    if (gs_volumes[0] & 0x20) gs_state_register |=1;
+			else gs_state_register &=0xfe;
 		break;    
             
     }
@@ -481,6 +485,9 @@ void gs_reset(void)
     gs_set_memory_mapping();
 
     general_sound_z80_cpu.r_pc=0;
+    general_sound_z80_cpu.iff1.v=0;
+    general_sound_z80_cpu.iff2.v=0;
+
     gs_state_register=0x7e;
 
     general_sound_z80_cpu.t_estados=0;
@@ -650,7 +657,6 @@ void gs_restore_machine_state(struct gs_machine_state *m)
     reg_ix=m->r_ix;
     reg_iy=m->r_iy;
 
-//header[20]=(reg_r&127) | (reg_r_bit7&128);
 
     reg_i=value_16_to_8h(m->r_ir);
     reg_r=value_16_to_8l(m->r_ir) & 127;
@@ -787,6 +793,18 @@ void gs_run_scanline_cycles(void)
 
 
 //Ejecutar los opcodes de todo un scanline
+/*
+
+Info de como funciona la emulación del General Sound:
+
+Dado que la emulación de Z80 no puedo indicarle un numero de cpu o contexto distinto (tal y como sí deja el core de Motorola),
+lo que hago es que antes de lanzar la emulación del General Sound, me guardo el estado actual del Spectrum (registros Z80 y otras variables necesarias),
+y luego lanzo la emulación del Z80 del General Sound
+
+Lo que hago es ejecutar un scanline entero de Spectrum, y luego otro scanline del GS
+Dado que el GS va a mayor velocidad, los t-estados por linea son mayores que el Spectrum
+
+*/
 void gs_fetch_opcodes_scanlines(void)
 {
 
@@ -811,18 +829,15 @@ void gs_fetch_opcodes_scanlines(void)
 }
 
 
-//z80_byte gs_command_register;
-//z80_byte gs_data_register;
-//z80_byte gs_state_register;
 
-//Lectura y escritura desde la parte de spectrum
+//Funciones de lectura y escritura desde la parte de spectrum
 void gs_write_port_bb_from_speccy(z80_byte value)
 {
     //printf("Write port BB from speccy side. value %02XH\n",value);
 
     gs_command_register=value;
 
-	gs_state_register |= 1;    
+	gs_state_register |=1;    
 }
 
 void gs_write_port_b3_from_speccy(z80_byte value)
@@ -830,7 +845,7 @@ void gs_write_port_b3_from_speccy(z80_byte value)
     //printf("Write port B3 from speccy side. value %02XH\n",value);
     gs_data_register=value;
 
-	gs_state_register |= 0x80;		
+	gs_state_register |=0x80;		
 
 }
 
@@ -848,8 +863,9 @@ z80_byte gs_read_port_b3_from_speccy(void)
 {
     //printf("Read port B3 from speccy side.\n");    
 
-    gs_state_register &= 0x7f;
+    gs_state_register &=0x7f;
     return gs_output_register;
 }
 
 
+//FIN Funciones de lectura y escritura desde la parte de spectrum

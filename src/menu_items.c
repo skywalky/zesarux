@@ -24274,7 +24274,7 @@ void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
     if (!util_find_window_geometry("audiogensound",&x,&y,&ancho,&alto)) {
         x=menu_origin_x();
         y=1;
-        ancho=32;
+        ancho=33;
         alto=22;
     }    
 
