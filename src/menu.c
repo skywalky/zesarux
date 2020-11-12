@@ -13754,7 +13754,7 @@ void menu_audio_settings(MENU_ITEM_PARAMETERS)
 
 					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_chip_info,menu_cond_ay_or_sn_chip,"Audio Chip Info");
 
-                    if (MACHINE_IS_PENTAGON && gs_enabled.v) {
+                    if (MACHINE_IS_SPECTRUM && gs_enabled.v) {
                         menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_general_sound,NULL,"General Sound Info");
                     }
 					
@@ -23322,7 +23322,7 @@ void menu_tape_browser_show(char *filename)
         ptr_tapebrowser=fopen(filename,"rb");
 
         if (!ptr_tapebrowser) {
-		debug_printf(VERBOSE_ERR,"Unable to open tape");
+		debug_printf(VERBOSE_ERR,"Unable to open tape for browsing");
 		return;
 	}
 
@@ -35797,6 +35797,13 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	}    
 
     strcpy(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado);
+
+    //Si no existe
+    //Esto sucede cuando se escribe el nombre del archivo a mano desde el campo File del fileselector
+    if (!si_existe_archivo(filesel_nombre_archivo_seleccionado)) {
+        debug_printf(VERBOSE_DEBUG,"%s does not exist when rendering preview",filesel_nombre_archivo_seleccionado);
+        return;
+    }
 
 
     if (file_is_directory(filesel_nombre_archivo_seleccionado)) {

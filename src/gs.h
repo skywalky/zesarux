@@ -28,7 +28,7 @@
 //Tamanyos en KB de la rom y ram
 #define GS_ROM_SIZE 32
 #define GS_ROM_BLOCKS (GS_ROM_SIZE/16)
-#define GS_RAM_SIZE 512
+#define GS_RAM_SIZE 1024
 #define GS_RAM_BLOCKS (GS_RAM_SIZE/16)
 
 #define GS_ROM_NAME "gs105a.rom"
@@ -45,6 +45,8 @@ extern void gs_enable(void);
 extern void gs_disable(void);
 extern void gs_fetch_opcodes_scanlines(void);
 extern void gs_new_video_frame(void);
+
+extern z80_byte gs_memory_mapping_mask_pages;
 
 struct gs_machine_state {
 

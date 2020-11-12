@@ -13366,7 +13366,7 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
         ptr_tapebrowser=fopen(filename,"rb");
 
         if (!ptr_tapebrowser) {
-		debug_printf(VERBOSE_ERR,"Unable to open tape");
+		debug_printf(VERBOSE_ERR,"Unable to open tape %s for extracting tap",filename);
 		return 1; 
 	}
 
@@ -13560,7 +13560,7 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
         ptr_tapebrowser=fopen(filename,"rb");
 
         if (!ptr_tapebrowser) {
-		debug_printf(VERBOSE_ERR,"Unable to open tape");
+		debug_printf(VERBOSE_ERR,"Unable to open tape for extracting tzx");
 		return 1; 
 	}
 
@@ -13874,7 +13874,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
         ptr_tapebrowser=fopen(filename,"rb");
 
         if (!ptr_tapebrowser) {
-		debug_printf(VERBOSE_ERR,"Unable to open tape");
+		debug_printf(VERBOSE_ERR,"Unable to open tape for extracting pzx");
 		return 1;
 	}
 

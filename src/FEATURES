@@ -28,35 +28,35 @@
 
 * Almost perfect emulation of timing of all Spectrum machines
 
-* Supports undocumented Z80 flags, features, and MEMPTR register
+* Emulates undocumented Z80 flags, features, and MEMPTR register
 
-* Supports idle bus port, contended memory, ULA early/late timings
+* Emulates idle bus port, contended memory, ULA early/late timings
 
-* Supports Motorola CPU 68008 (Sinclair QL)
+* Emulates Motorola CPU 68008 (Sinclair QL)
 
-* Supports SC/MP CPU - INS8060 (MK14)
+* Emulates SC/MP CPU - INS8060 (MK14)
 
-* Supports perfect ZX Spectrum 16k/48k colour palette
+* Emulates perfect ZX Spectrum 16k/48k colour palette
 
-* Supports ULAplus: Standard 64 colour palette, linear modes with 16 colours per pixel: Radastan Mode: 128x96, ZEsarUX modes: 256x96, 128x192, 256x192
+* Emulates ULAplus: Standard 64 colour palette, linear modes with 16 colours per pixel: Radastan Mode: 128x96, ZEsarUX modes: 256x96, 128x192, 256x192
 
-* Supports Chroma81 ZX81 Colour mode
+* Emulates Chroma81 ZX81 Colour mode
 
-* Supports Spectra Video Modes
+* Emulates Spectra Video Modes
 
-* Supports Timex Video modes (Mode 0 standard, 1 dual screen, 2 hires colour 8x1, 6 512x192 monochrome)
+* Emulates Timex Video modes (Mode 0 standard, 1 dual screen, 2 hires colour 8x1, 6 512x192 monochrome)
 
-* Supports Pentagon 16C mode
+* Emulates Pentagon 16C mode
 
-* Supports All Video modes from Prism machine
+* Emulates All Video modes from Prism machine
 
-* Supports ZGX Sprite Chip
+* Emulates ZGX Sprite Chip
 
-* Supports snow effect on Spectrum models
+* Emulates snow effect on Spectrum models
 
-* Supports interlaced, scanlines and Gigascreen effects
+* Emulates interlaced, scanlines and Gigascreen effects
 
-* Supports hi-res modes on ZX Spectrum (rainbow effects and others) and ZX80/ZX81 (UDG, CHR$128, WRX, HRG and some other hi-res modes)
+* Emulates hi-res modes on ZX Spectrum (rainbow effects and others) and ZX80/ZX81 (UDG, CHR$128, WRX, HRG and some other hi-res modes)
 
 * Supports reducing the screen to 192x144 (0.75 scale)
 
@@ -118,17 +118,17 @@
 
 * Handles compressed formats zip (with internal decompressor), and tar, rar, gz through external utilities
 
-* Supports AY Audio Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
+* Emulates AY Audio Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
 
-* Supports General Sound 512
+* Emulates General Sound
 
-* Supports SN76489AN Audio Chip
+* Emulates SN76489AN Audio Chip
 
 * Real time playback from AY Chip sound to external MIDI device 
 
-* Supports Quicksilva, ZON-X81, and VSYNC-based sound on ZX80/81
+* Emulates Quicksilva, ZON-X81, and VSYNC-based sound on ZX80/81
 
-* Supports Speaker and Soundbox sound on Jupiter Ace
+* Emulates Speaker and Soundbox sound on Jupiter Ace
 
 * Experimental simulation of the Sam Coupe Audio Chip (SAA1099)
 
@@ -146,7 +146,7 @@
 
 * ZX Spectrum Recreated keyboard support
 
-* Supports native turbo modes on ZX-Uno, Chloe, Prism and TBBlue and manual for other machines
+* Emulates native turbo modes on ZX-Uno, Chloe, Prism and TBBlue and manual for other machines
 
 * ZX Printer emulation
 

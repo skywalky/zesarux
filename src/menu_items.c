@@ -1390,6 +1390,32 @@ void menu_audio_general_sound_enable(MENU_ITEM_PARAMETERS)
     else gs_enable();
 }
 
+void menu_audio_general_sound_mem(MENU_ITEM_PARAMETERS)
+{
+    /*
+//3=128 kb
+//7=256 kb
+//15=512 kb
+//31=1024 kb
+z80_byte gs_memory_mapping_mask_pages=15;    
+    */
+   
+   //Desactivar y activar GS para que note el cambio de paginas
+   gs_disable();
+   
+
+   gs_memory_mapping_mask_pages *=2;
+
+   gs_memory_mapping_mask_pages |=1;
+
+   if (gs_memory_mapping_mask_pages>31) gs_memory_mapping_mask_pages=3;
+
+   //printf("mask page: %d\n",gs_memory_mapping_mask_pages);
+
+   gs_enable();   
+
+}
+
 void menu_settings_audio(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_settings_audio;
@@ -1436,10 +1462,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
             }
 
 
-        if (MACHINE_IS_PENTAGON) {
-            menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_general_sound_enable,NULL,"[%c] General Sound", (gs_enabled.v ? 'X' : ' '));
 
-        }
 
 		if (si_complete_video_driver() ) {
 			menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_setting_ay_piano_grafico,NULL,"    Show ~~Piano: %s",
@@ -1451,7 +1474,14 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		}
 
 
+        if (MACHINE_IS_SPECTRUM) {
+            menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_general_sound_enable,NULL,"[%c] General Sound", (gs_enabled.v ? 'X' : ' '));
 
+            if (gs_enabled.v) {
+                menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_general_sound_mem,NULL,"[%4d KB] General Sound RAM",
+                (gs_memory_mapping_mask_pages+1)*32 );
+            }
+        }
 
 
 		
@@ -4713,7 +4743,11 @@ void menu_audio_draw_sound_wave(void)
 
 	menu_audio_draw_sound_wave_ycentro=yorigen+alto/2;
 
-	int x,y,lasty;
+	int x,y;
+
+
+    //En teoria no se usa sin inicializar pero por si acaso
+    int lasty=0;
 
 
 	//Para drivers de texto, borrar zona
@@ -4823,17 +4857,15 @@ void menu_audio_draw_sound_wave(void)
 
 
 
-        //canales separados
+        //Total ancho para cada canal
         for (x=xinicial_grafica;x<xinicial_grafica+ancho_grafica;x++) {
 
-        //Stereo junto
-		//for (x=xorigen;x<xorigen+ancho;x++) {
 
 			//Obtenemos valor medio de audio
 			int valor_medio=0;
 
 			//Calcular cuantos valores representa un pixel, teniendo en cuenta maximo buffer
-			const int max_valores=AUDIO_BUFFER_SIZE/ancho;
+			const int max_valores=AUDIO_BUFFER_SIZE/ancho_grafica;
 
 			int valores=max_valores;
 			for (;valores>0;valores--,puntero_audio++) {
@@ -4843,40 +4875,29 @@ void menu_audio_draw_sound_wave(void)
 					cpu_panic("menu_audio_draw_sound_wave: pointer beyond AUDIO_BUFFER_SIZE");
 				}
 
-				//stereo 
-				//if (audio_driver_accepts_stereo.v) {
 
-                    int suma_canales;
+                int suma_canales;
 
-                    //Canales separados
-                    if (menu_waveform_separar_canales.v) {
-					    suma_canales=audio_buffer[canal+puntero_audio*2];
-					    valor_medio=valor_medio+suma_canales;
-                    }
+                //Canales separados
+                if (menu_waveform_separar_canales.v) {
+                    suma_canales=audio_buffer[canal+puntero_audio*2];
+                    valor_medio=valor_medio+suma_canales;
+                }
 
-                    else {
+                else {
 
-                    //Stereo junto
-                    
-                        suma_canales=audio_buffer[puntero_audio*2]+audio_buffer[(puntero_audio*2)+1];
-                        suma_canales /=2;
-                        valor_medio=valor_medio+suma_canales;
-                    }
-
-                    //1 solo canal
-
-
-				//}
-
-				//else valor_medio=valor_medio+audio_buffer[puntero_audio];
+                //Stereo junto
+                
+                    suma_canales=audio_buffer[puntero_audio*2]+audio_buffer[(puntero_audio*2)+1];
+                    suma_canales /=2;
+                    valor_medio=valor_medio+suma_canales;
+                }
+				
 
 
 			}
 
 			valor_medio=valor_medio/max_valores;
-
-
-
 
 
 			valor_audio=valor_medio;
@@ -4891,7 +4912,8 @@ void menu_audio_draw_sound_wave(void)
 
 
 			//unimos valor anterior con actual con una linea vertical	
-			if (x!=xorigen) {
+            //Pero si no es el primer valor
+			if (x!=xinicial_grafica) {
 				if (si_complete_video_driver() ) {
 
 					//Onda no llena
@@ -4908,6 +4930,10 @@ void menu_audio_draw_sound_wave(void)
 				}
 			}
 
+            //else {
+            //    printf("NO unir x: %d\n",x);
+            //}
+
 			lasty=y;
 
 			//dibujamos valor actual
@@ -4922,12 +4948,14 @@ void menu_audio_draw_sound_wave(void)
 
 		}
 
+        //printf("canal: %d max_valores: %10d puntero_audio: %d\n",canal,AUDIO_BUFFER_SIZE/ancho_grafica,puntero_audio);
+
         }
 
         if (menu_waveform_separar_canales.v) {
             //dibujar linea separación
             if (si_complete_video_driver() ) {
-                menu_linea_zxvision(menu_audio_draw_sound_wave_window,xorigen+ancho/2,yorigen,yorigen+alto-1,ESTILO_GUI_COLOR_WAVEFORM);
+                menu_linea_zxvision(menu_audio_draw_sound_wave_window,xorigen+ancho/2,yorigen,yorigen+alto-1,ESTILO_GUI_TINTA_NORMAL);
             }
         }
 
@@ -5065,10 +5093,13 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
 	do {
 
+        //borrar primera linea, por si antes hay visible opcion de view stereo/mono
+        zxvision_print_string_defaults_fillspc(ventana,1,0,"");
+
 		//Agrego dos espacios al final para borrar restos de "Scroll" pues ocupa 2 caracteres mas que "Line" y "Fill"
-		char *tipos_soundwave[3]={"Line  ","Fill  ","Scroll"};
+		char *tipos_soundwave[3]={" Line "," Fill ","Scroll"};
 	
-		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"[%s] Wave ~~Shape",
+		menu_add_item_menu_inicial_format(&array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_new_waveform_shape,NULL,"[%s] ~~Shape",
 				(tipos_soundwave[menu_sound_wave_llena]) );
 		menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'s');
 
@@ -5082,10 +5113,14 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tabulado(array_menu_audio_new_waveform,1,0);
 
 
-        menu_add_item_menu_format(array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_waveform_sep_canales_setting,NULL,"[%s] Channels ",
-            (menu_waveform_separar_canales.v ? "Split" : "Join"));
+        //Vista stereo solo para line y fill, no con scroll
+        if (menu_sound_wave_llena<2) {
+            menu_add_item_menu_format(array_menu_audio_new_waveform,MENU_OPCION_NORMAL,menu_audio_waveform_sep_canales_setting,NULL,"[%s] ~~View",
+                (menu_waveform_separar_canales.v ? "Stereo" : " Mono "));
+            menu_add_item_menu_shortcut(array_menu_audio_new_waveform,'v');
 
-        menu_add_item_menu_tabulado(array_menu_audio_new_waveform,15,0);
+            menu_add_item_menu_tabulado(array_menu_audio_new_waveform,16,0);
+        }
 
 
 		//Nombre de ventana solo aparece en el caso de stdout
@@ -24192,13 +24227,15 @@ void menu_audio_general_sound_overlay(void)
     zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
     */
 
+   zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 
-    sprintf(buffer_linea,"PC Register:    %04XH",general_sound_z80_cpu.r_pc);
+    sprintf(buffer_linea,"PC=%04X SP=%04X AF=%04X HL=%04X",
+        general_sound_z80_cpu.r_pc,general_sound_z80_cpu.r_sp,general_sound_z80_cpu.r_af,general_sound_z80_cpu.r_hl);
     zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
-    sprintf(buffer_linea,"SP Register:    %04XH",general_sound_z80_cpu.r_sp);
-    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
-
+    sprintf(buffer_linea,"BC=%04X DE=%04X IX=%04X IY=%04X",
+        general_sound_z80_cpu.r_bc,general_sound_z80_cpu.r_de,general_sound_z80_cpu.r_ix,general_sound_z80_cpu.r_iy);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
     
 

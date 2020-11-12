@@ -80,6 +80,17 @@ z80_bit gs_stereo_mode={0};
 z80_byte gs_dac_valor_final_left;
 z80_byte gs_dac_valor_final_right;
 
+
+
+//z80_byte mapped_value=gs_memory_mapping_value & 15;
+
+
+//3=128 kb
+//7=256 kb
+//15=512 kb
+//31=1024 kb
+z80_byte gs_memory_mapping_mask_pages=15;
+
 void gs_set_memory_mapping(void)
 {
 /*
@@ -102,10 +113,12 @@ digits D4 - D7 are not used
     gs_memory_mapped[0]=gs_rom_memory_tables[0];
     gs_memory_mapped_types[0]=0;
 
-    gs_memory_mapped[1]=gs_ram_memory_tables[0];
+    //Creo que aqui tiene que entrar la ultima pagina de RAM. no tiene sentido meter la 0 pues ya se puede asignar en el segmento 8000h-
+    //gs_memory_mapped[1]=gs_ram_memory_tables[0];
+    gs_memory_mapped[1]=gs_ram_memory_tables[gs_memory_mapping_mask_pages];
     gs_memory_mapped_types[1]=1;
 
-    z80_byte mapped_value=gs_memory_mapping_value & 15;
+    z80_byte mapped_value=gs_memory_mapping_value & gs_memory_mapping_mask_pages;
 
     if (!mapped_value) {
         //ROM en segmentos altos
@@ -115,10 +128,23 @@ digits D4 - D7 are not used
         gs_memory_mapped_types[3]=0;
     }
     else {
-        //RAM en segmentos altos
-        //1= ram 0,1
-        //2= ram 2,3
-        //3= ram 4,5
+        //RAM en segmentos altos. Para general sound con 512kb:
+        //1=  ram 0,1
+        //2=  ram 2,3
+        //3=  ram 4,5
+        //4=  ram 6,7
+        //5=  ram 8,9
+        //6=  ram 10,11
+        //7=  ram 12,13
+        //8=  ram 14,15
+        //9=  ram 16,17
+        //10= ram 18,19
+        //11= ram 20,21
+        //12= ram 22,23
+        //13= ram 24,25
+        //14= ram 26,27
+        //15=ram  28,29
+        //->no hay combinacion para 30,31, por tanto los ultimos 32 kb se pierden??
         mapped_value--;
 
         
@@ -515,8 +541,8 @@ int gs_load_rom(void)
 void gs_enable(void)
 {
 
-  if (!MACHINE_IS_PENTAGON) {
-    debug_printf(VERBOSE_INFO,"Can not enable general sound on non Pentagon machine");
+  if (!MACHINE_IS_SPECTRUM) {
+    debug_printf(VERBOSE_INFO,"Can not enable general sound on non Spectrum machine");
     return;
   }
 

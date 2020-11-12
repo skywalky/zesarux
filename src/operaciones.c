@@ -6807,12 +6807,13 @@ Bit 5 If set disable Chrome features ( reading/writing to port 1FFDh, reading fr
 		if (MACHINE_IS_PENTAGON) {
 					if (puerto==0xeff7) return puerto_eff7;
 
-                    if (gs_enabled.v) {
-                        if (puerto_l==0xBB) return gs_read_port_bb_from_speccy();
-                        if (puerto_l==0xB3) return gs_read_port_b3_from_speccy();
 
-                    }
 				}	
+
+    if (gs_enabled.v) {
+        if (puerto_l==0xBB) return gs_read_port_bb_from_speccy();
+        if (puerto_l==0xB3) return gs_read_port_b3_from_speccy();
+    }                
 
 	if (MACHINE_IS_TSCONF) {
 
@@ -8540,11 +8541,13 @@ acts as expected unless this registe is explicitly changed by the user/software.
 					}
 
 
-                    if (gs_enabled.v) {
-                        if (puerto_l==0xBB) gs_write_port_bb_from_speccy(value);
-                        if (puerto_l==0xB3) gs_write_port_b3_from_speccy(value);
-                    }                    
+              
 				}
+
+                if (gs_enabled.v) {
+                    if (puerto_l==0xBB) gs_write_port_bb_from_speccy(value);
+                    if (puerto_l==0xB3) gs_write_port_b3_from_speccy(value);
+                }                      
 
 
 				//Puertos de Paginacion
