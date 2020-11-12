@@ -24067,6 +24067,8 @@ void menu_audio_general_sound_overlay(void)
     sprintf(buffer_linea,"MMU Register:     %02XH",gs_memory_mapping_value);
     zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);    
 
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");  
+
     int i;    
 
     /*
@@ -24271,9 +24273,9 @@ void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
 
     if (!util_find_window_geometry("audiogensound",&x,&y,&ancho,&alto)) {
         x=menu_origin_x();
-        y=0;
+        y=1;
         ancho=32;
-        alto=18;
+        alto=22;
     }    
 
     zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,"General sound");
