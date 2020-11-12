@@ -207,12 +207,7 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 -QL: Gestión de teclado QL quizá sufre de lectura de teclas desde emulación (que va a ráfagas cada frame de pantalla). Gestionarlo mejor todo desde timer?
 
 
-
 -ordenar directorios arriba en filesel? Pero entonces al pulsar una letra y buscar... a donde ira?
-
--Opción para que al salir del menú se active background window. Como si pulsase F15 siempre automáticamente al cerrar menú
-
-
 
 
 -First aid de f keys. Cuando se pulse una f por primera vez
@@ -221,11 +216,8 @@ squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y
 
 -help de verbose level decir que consola tambien sale en ventana
 
--ventana Audio DAC los 4 canales. 4 waveforms?
-
 -gs_mix_dac_channels quiza que coja los ultimos 2-3 valores ultimos y haga media
 
 
 -mostrar fecha y hora en los debug printf logs?
 
--footer indicador actividad GS?

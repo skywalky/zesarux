@@ -203,7 +203,9 @@ int mdv_load(char *name) {
     // check preamble
     if(mdvtool_check_preamble(hdr->preamble, 10) != 0) {
       fprintf(stderr, "Header @%d: Preamble check failed\n", i);
-      return -1;
+
+      //algun juego da error aqui
+      //return -1;
     }
     
     if(hdr->ff != 0xff) {
@@ -212,7 +214,8 @@ int mdv_load(char *name) {
     } else {
       if(hdr->csum != sum(&hdr->ff, 14)) {
 	printf("Header @%d: checksum failed\n", i);
-	return -1;
+    //algun juego da error aqui
+	//return -1;
       }
       
       if(!mdvtool_medium_name[0]) {
