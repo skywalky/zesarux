@@ -231,7 +231,9 @@ int mdv_load(char *name) {
       if(mdvtool_sector_table[i] != 0xff) {
 	fprintf(stderr, "Header @%d: Multiple sector number %d\n",
 		i, hdr->snum);
-	return -1;
+
+        //algun juego da error aqui
+	    //return -1;
       }
       mdvtool_sector_table[i] = hdr->snum;
       
@@ -260,7 +262,8 @@ int mdv_load(char *name) {
 	if(mdvtool_files[sec->file][sec->block] != 255) {
 	  fprintf(stderr, "Sector @%d: Multiple file/block %d/%d\n",
 		  i, sec->file, sec->block);
-	  return -1;
+          //algun juego da error aqui
+	  //return -1;
 	}
 	
 	used++;
