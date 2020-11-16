@@ -51,6 +51,8 @@
 #include "ql_i8049.h"
 #include "ql_qdos_handler.h"
 #include "ql_zx8302.h"
+#include "zeng.h"
+#include "snap_zsf.h"
 
 
 
@@ -302,7 +304,7 @@ pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
 			m68k_set_irq(2);
 			
 
-       
+            core_end_frame_check_zrcp_zeng_snap.v=1;
 
 			}
 
@@ -342,7 +344,12 @@ pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
                         timer_get_elapsed_core_frame_pre();
                 }
 
-
+                //Aplicar snapshot pendiente de ZRCP y ZENG envio snapshots. Despues de haber gestionado interrupciones
+                if (core_end_frame_check_zrcp_zeng_snap.v) {
+                    core_end_frame_check_zrcp_zeng_snap.v=0;
+                    check_pending_zrcp_put_snapshot();
+                    zeng_send_snapshot_if_needed();			
+                }
 
 	
                 debug_get_t_stados_parcial_post();
