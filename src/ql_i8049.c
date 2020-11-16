@@ -1585,7 +1585,7 @@ ipc..wp equ     6       return state of p26, currently not connected
 						break;
 
                         default:
-                            printf("i8049: IPC write. status idle. unhandled command: %d\n",ql_ipc_last_command);
+                            debug_printf(VERBOSE_DEBUG,"i8049: IPC write. status idle. unhandled command: %d",ql_ipc_last_command);
 
                         break;                        
 

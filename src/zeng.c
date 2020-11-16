@@ -559,7 +559,7 @@ Poder enviar mensajes a otros jugadores
 
 
 
-
+//Enviar estado actual de la maquina como snapshot a maquina remota
 void zeng_send_snapshot_if_needed(void)
 {
 

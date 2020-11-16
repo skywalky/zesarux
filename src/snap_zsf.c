@@ -3589,7 +3589,7 @@ int pending_zrcp_put_snapshot_longitud;
 
 void check_pending_zrcp_put_snapshot(void)
 {
-  //Enviar un snapshot que se habia leido por ZRCP. Aqui se llama al final de cada frame de pantalla
+  //Aplicar un snapshot que se habia leido por ZRCP. Aqui se llama al final de cada frame de pantalla
 
   if (pending_zrcp_put_snapshot_buffer_destino!=NULL) {
     debug_printf (VERBOSE_DEBUG,"Putting snapshot coming from ZRCP");
