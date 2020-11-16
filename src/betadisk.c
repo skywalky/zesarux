@@ -167,14 +167,14 @@ void betadisk_cambio_pagina(z80_int dir)
 
 	if (betadisk_active.v) {
 		if (dir>=0x4000) {
-			//printf ("Unactivating betadisk rom space\n");
+			//printf ("Unactivating betadisk rom space on PC=%04XH\n",reg_pc);
 			betadisk_active.v=0;
 		}
 	}
 
 	else {
 		if (dir>=0x3C00 && dir<=0x3DFF) {
-			//printf ("Activating betadisk rom space\n");
+			//printf ("Activating betadisk rom space on PC=%04XH\n",reg_pc);
 			betadisk_active.v=1;
 		}
 	}
@@ -316,6 +316,7 @@ l1e67h:
 			}
 */
 			if (reg_pc==0x1e67) {
+                //printf("PC on addr 0x1e67\n");
 				if (reg_a==0 || reg_a==255) {
 					//char buffer_registros[8192];
 					//print_registers(buffer_registros);
@@ -556,8 +557,14 @@ A=0 read, A=255 write
 	int byte_en_sector;
 	z80_int destino=reg_hl;
 
-	if (reg_a==0) debug_printf (VERBOSE_DEBUG,"Reading %d sectors from track %d sector %d to address %04XH",numero_sectores,pista,sector,destino);
-	if (reg_a==255) debug_printf (VERBOSE_DEBUG,"Writing %d sectors to track %d sector %d from address %04XH",numero_sectores,pista,sector,destino);
+	if (reg_a==0) {
+        debug_printf (VERBOSE_DEBUG,"Reading %d sectors from track %d sector %d to address %04XH",numero_sectores,pista,sector,destino);
+        //printf ("Reading %d sectors from track %d sector %d to address %04XH\n",numero_sectores,pista,sector,destino);
+    }
+	if (reg_a==255) {
+        debug_printf (VERBOSE_DEBUG,"Writing %d sectors to track %d sector %d from address %04XH",numero_sectores,pista,sector,destino);
+        //printf ("Writing %d sectors to track %d sector %d from address %04XH\n",numero_sectores,pista,sector,destino);
+    }
 
 
 		//poke_byte_no_time(TRD_SYM_trdos_variable_sector_rw_flag,reg_a);

@@ -78,3 +78,4 @@ aunque no es necesario, pues cuando se crea un elemento y el handler no apunta a
 y ademas, la funcion de debug_dump_nested_functions ya controla esos casos y no retorna nada de la lista
 
 
+-mostrar fecha y hora en los debug printf logs?

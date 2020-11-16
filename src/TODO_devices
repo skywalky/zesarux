@@ -46,6 +46,10 @@ night hunter. aunque luego no carga la cara b
 
 -betadisk: nmi no parece guardar el snapshot, aunque lo intenta
 
+-para siguiente version: revisar betadisk. quiza demos de generalsound en scl/trd fallan por eso:
+* revisar puertos de estado: FF, 1F, etc...
+* rutinas de salto a la rom de betadisk desde Chase HQ, quiza un trap para esa rutina?
+
 -------------
 
 

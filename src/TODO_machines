@@ -118,6 +118,51 @@ QLay style, and Q-emulator style made with the mdump_exe program.
 QLay image files are 174,930 bytes long, and q-emulater image files are of a varying length due to only storing the good sectors of the Microdrive.
 
 
+--juegos funcionan bien en ql (hay muchos mas, pero estos estan bien y ademas tienen sonido):
+catchjack.zip
+bullshot.zip
+trek1/2
+fred(aunque creo que es basic)
+qbert
+starburst
+golf(basic)
+starport
+thress
+psion chess (chess_exe)
+games/Fives 
+match point
+
+Ya conocidos:
+spook
+spacepods
+
+squidgy falla pero a saber por que... parece que sobreescribe el archivo mazes y luego lo quiere abrir...
+
+-SV_FSTAT $AA word flashing cursor status
+
+Ver en uqlx:
+
+void FrameInt(void)
+{
+  if((intReg&8)!=0) /* controlla che sia abilitato */
+    {
+      theInt=8;
+      intReg^=8;
+      pendingInterrupt=2;
+      *((uw8*)theROM+0x280a0l)=16;
+      extraFlag=true;
+      nInst2=nInst;
+      nInst=0;
+    }
+}
+
+y en la doc de uqlx:
+
+Q: How do you manage the 50 hz interrupt of the 8049 and the Keyboard interrupt?
+
+
+-QL: Gestión de teclado QL quizá sufre de lectura de teclas desde emulación (que va a ráfagas cada frame de pantalla). Gestionarlo mejor todo desde timer?
+
 -------------
 
 
