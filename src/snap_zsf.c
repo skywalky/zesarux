@@ -1849,6 +1849,8 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
         }
 
         //Si cambiamos a QL, resetear ipc, para que no se quede el buffer de teclado medio tonto, por ejemplo
+        //Lo ideal seria que toda la info de ipc viniera en el snapshot, incluido el sonido, pero 
+        //de momento esto corrige el problema del teclado (que se manifiesta sobretodo con ZENG)
         if (MACHINE_IS_QL) {
             ql_ipc_reset();
         }

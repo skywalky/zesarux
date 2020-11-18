@@ -19195,6 +19195,12 @@ void menu_zeng_cancel_connect(MENU_ITEM_PARAMETERS)
 	}
 }
 
+
+void menu_zeng_snapshot_force_reconnect(MENU_ITEM_PARAMETERS)
+{
+    zeng_force_reconnect_failed_retries.v ^=1;
+}
+
 void menu_zeng(MENU_ITEM_PARAMETERS)
 {
         //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
@@ -19227,6 +19233,11 @@ void menu_zeng(MENU_ITEM_PARAMETERS)
 
 			if (zeng_i_am_master) {
 				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_snapshot_seconds,NULL,"[%d] Snapshot seconds",zeng_segundos_cada_snapshot);
+
+                menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_zeng_snapshot_force_reconnect,NULL,"[%c] Force reconnect",
+                (zeng_force_reconnect_failed_retries.v ? 'X' : ' ' ));
+                menu_add_item_menu_tooltip(array_menu_common,"Force reconnect when sending snapshot fails 3 times");
+                menu_add_item_menu_ayuda(array_menu_common,"Force reconnect when sending snapshot fails 3 times");
 			}
 
 			if (zeng_enabled.v) {

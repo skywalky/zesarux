@@ -38,6 +38,7 @@ Improved TBBlue emulation:
 -Added sprite clipping emulation
 
 Improved File Browser: added previews for screens (on .scr, .tap, .tzx, .pzx, .trd, .dsk, .sna, .sp, .z80, .p, .zsf)
+Improved ZENG: Added setting to reconnect after retry failed sending
 
 Improved QL emulation:
 -Added sound emulation

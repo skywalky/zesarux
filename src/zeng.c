@@ -366,12 +366,16 @@ int zeng_send_snapshot(int socket)
 				
 			
 				//printf ("Sending put-snapshot\n");
+                //printf("before z_sock_write_string 1\n");
 				escritos=z_sock_write_string(socket,"put-snapshot ");
+                //printf("after z_sock_write_string 1\n");
 				if (escritos<0) return escritos;
 			
 
 				//TODO esto es ineficiente y que tiene que calcular la longitud. hacer otra z_sock_write sin tener que calcular
+                //printf("before z_sock_write_string 2\n");
 				escritos=z_sock_write_string(socket,zeng_send_snapshot_mem_hexa);
+                //printf("after z_sock_write_string 2\n");
 
 				free(zeng_send_snapshot_mem_hexa);
 				zeng_send_snapshot_mem_hexa=NULL;
@@ -382,7 +386,9 @@ int zeng_send_snapshot(int socket)
 
 				z80_byte buffer[200];
 				//Leer hasta prompt
+                //printf("before zsock_read_all_until_command\n");
 				leidos=zsock_read_all_until_command(socket,buffer,199,&posicion_command);
+                //printf("after zsock_read_all_until_command\n");
 				return leidos;
 
 		
@@ -456,6 +462,15 @@ int zeng_send_message(void)
 
 }
 
+//Cantidad de snapshots no enviados porque hay otro pendiente
+int zeng_snapshots_not_sent=0;
+
+//Forzar a reconectar si llega a 3 failed snapshots
+z80_bit zeng_force_reconnect_failed_retries={0};
+
+//No mostrar error en thread send 
+int zeng_thread_send_not_show_error=0;
+
 
 void *thread_zeng_function(void *nada GCC_UNUSED)
 {
@@ -526,7 +541,9 @@ Poder enviar mensajes a otros jugadores
 		//Si hay snapshot pendiente de enviar
 		if (zeng_i_am_master && !error_desconectar) {
 			if (zeng_send_snapshot_pending && zeng_send_snapshot_mem_hexa!=NULL) {
+                //printf("before zeng_send_snapshot\n");
 				int error=zeng_send_snapshot(zeng_remote_socket);
+                //printf("after zeng_send_snapshot\n");
 				zeng_send_snapshot_pending=0;
 
 				if (error<0) {
@@ -539,7 +556,7 @@ Poder enviar mensajes a otros jugadores
 
 
 		if (error_desconectar) {
-			debug_printf (VERBOSE_ERR,"Error sending to socket. Disabling ZENG");
+			if (!zeng_thread_send_not_show_error) debug_printf (VERBOSE_ERR,"Error sending to socket. Disabling ZENG");
 
 			//Aqui cerramos el thread desde mismo dentro del thread
 			zeng_disable_forced();	
@@ -550,7 +567,7 @@ Poder enviar mensajes a otros jugadores
 			//Y le damos un tiempo para que se cierre con cancel. Al menos asi en Mac no llegara aqui pues se cierra antes el pthread
 			sleep(1);
 
-			debug_printf(VERBOSE_ERR,"Error sending to socket. Disabling ZENG. Returning from thread after disabling it");
+			if (!zeng_thread_send_not_show_error) debug_printf(VERBOSE_ERR,"Error sending to socket. Disabling ZENG. Returning from thread after disabling it");
 			return NULL;
 
 		}
@@ -558,6 +575,22 @@ Poder enviar mensajes a otros jugadores
 }
 
 
+
+
+void zeng_force_reconnect(void)
+{
+
+    zeng_thread_send_not_show_error=1;
+
+    zeng_disable_forced();
+    //Darle tiempo a que se cierre 
+
+    usleep(100000); //0.1 segundo
+
+    zeng_enable();    
+
+    zeng_thread_send_not_show_error=0;
+}
 
 //Enviar estado actual de la maquina como snapshot a maquina remota
 void zeng_send_snapshot_if_needed(void)
@@ -571,9 +604,22 @@ void zeng_send_snapshot_if_needed(void)
 		if ( (contador_envio_snapshot % (50*zeng_segundos_cada_snapshot) )==0) { //cada 5 segundos
 				//Si esta el anterior snapshot aun pendiente de enviar
 				if (zeng_send_snapshot_pending) {
-					debug_printf (VERBOSE_DEBUG,"ZENG: Last snapshot has not been sent yet");
+                    zeng_snapshots_not_sent++;
+					debug_printf (VERBOSE_DEBUG,"ZENG: Last snapshot has not been sent yet. Total unsent: %d",zeng_snapshots_not_sent);
+
+                    //Si llegado a un limite, reconectar
+                    if (zeng_force_reconnect_failed_retries.v) {
+                        if (zeng_snapshots_not_sent>=3) {
+                            debug_printf (VERBOSE_DEBUG,"ZENG: Forcing reconnect");
+                            //printf("Before forcing ZENG reconnect\n");
+                            zeng_force_reconnect();
+                            //printf("After forcing ZENG reconnect\n");
+                        }
+                    }
 				}
 				else {
+                    zeng_snapshots_not_sent=0;
+
 					//zona de memoria donde se guarda el snapshot pero sin pasar a hexa
 					z80_byte *buffer_temp;
 					buffer_temp=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
@@ -625,6 +671,9 @@ void *zeng_enable_thread_function(void *nada GCC_UNUSED)
 
 	//No hay pendiente snapshot
 	zeng_send_snapshot_pending=0;
+
+    //Y resetear la cuenta de snapshots no enviados
+    zeng_snapshots_not_sent=0;
 
 	//Conectar a remoto
 	if (!zeng_connect_remote()) {

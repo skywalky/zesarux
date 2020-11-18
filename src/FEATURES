@@ -132,6 +132,8 @@
 
 * Experimental simulation of the Sam Coupe Audio Chip (SAA1099)
 
+* Emulates i8049 QL sound
+
 * Supports RAM size up to 1024 KB on Spectrum and Pentagon
 
 * Supports RAM packs on ZX80/81 up to 56 KB

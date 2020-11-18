@@ -302,7 +302,9 @@ int escribir_socket(int socket, char *buffer)
 
 #else
 
+    //printf("before write\n");
 	int escrito=write(socket,buffer,strlen(buffer));
+    //printf("after write\n");
 
 	if (efectivo_enviar_cr) write(socket,&cr,1);
 
@@ -784,8 +786,9 @@ int z_sock_write_string(int indice_tabla, char *buffer)
 #endif
 	}
 
-
+    //printf("before escribir_socket\n");
 	return escribir_socket(sock,buffer);
+    //printf("after escribir_socket\n");
 }
 
 

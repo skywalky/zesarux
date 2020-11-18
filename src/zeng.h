@@ -65,6 +65,8 @@ extern void zeng_disable_forced(void);
 
 extern int zeng_enable_thread_running;
 
+extern z80_bit zeng_force_reconnect_failed_retries;
+
 #define MAX_ZENG_HOSTNAME 256
 
 #endif
