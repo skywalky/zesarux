@@ -607,10 +607,15 @@ void zeng_send_snapshot_if_needed(void)
                     zeng_snapshots_not_sent++;
 					debug_printf (VERBOSE_DEBUG,"ZENG: Last snapshot has not been sent yet. Total unsent: %d",zeng_snapshots_not_sent);
 
-                    //Si llegado a un limite, reconectar
+                    //Si llegado a un limite, reconectar. Suele suceder con ZENG en slave windows
+                    //Sucede que se queda la operacion de send a socket que no acaba
+                    /*
+                    Aun con esto, parece que a veces va enviando snapshots pero el remoto no parece procesarlos,
+                    con lo que aqui lo da como bueno y no incrementa el contador de retries
+                    */
                     if (zeng_force_reconnect_failed_retries.v) {
                         if (zeng_snapshots_not_sent>=3) {
-                            debug_printf (VERBOSE_DEBUG,"ZENG: Forcing reconnect");
+                            debug_printf (VERBOSE_INFO,"ZENG: Forcing reconnect");
                             //printf("Before forcing ZENG reconnect\n");
                             zeng_force_reconnect();
                             //printf("After forcing ZENG reconnect\n");
