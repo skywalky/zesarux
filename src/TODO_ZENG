@@ -1,8 +1,8 @@
 -ZENG "ZEsarUX Network Gaming"
 
 
--ZENG: Desde Mac (Master) a Windows (slave). Si abro ventana de enviar mensaje desde windows, al cabo de un rato parece 
-desincronizarse y hasta acaba petando la instancia de Windows
+-ZENG: Desde Mac (Master) a Windows (slave). Parece que tiene mas tendencia a desincronizarse (y por tanto cuando entra un snapshot se nota mas)
+-ZENG: Desde Windows (Master) a Mac (slave). No parece desincronizarse mucho
 
 
 *en remote.c, bufferes de longitud MAX_LENGTH_PROTOCOL_COMMAND deberian ser con malloc

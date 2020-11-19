@@ -36,6 +36,10 @@ funciones de reajuste de disposicion de texto en ventana por ejemplo
 
 -combinacion de teclas para conmutar entre ventanas
 
+-cuando una tecla F no esta como default, no la envia a maquina emulada: ejemplo MSX F2, QL F5
+
+-First aid de f keys. Cuando se pulse una f por primera vez
+
 -redraws de zxdesktop en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
 
 -acabar de migrar todas menu_dibuja_ventana a zxvision. queda alguna?? las de definir evento joystick 

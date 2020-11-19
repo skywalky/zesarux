@@ -1,20 +1,7 @@
 --------Para esta versión 9.1:
 
--Info ZENG en FAQ: ya está en ayuda. Quizá extender mas?
-
 - meter en extras de docs Benchmark legacy tbblue: de momento está en el código, en el menú como comentarios
-
--ayuda zdesktop / background windows: que ya no esta zlogo y si que hay botones ahora
-                  
+                 
 -Agregar screenshots versiones anteriores 
 
--Probar Filesel en Windows 
-
--Ventana debug I/o port que refresque continuamente y permita ir a background
-
--cuando una tecla F no esta como default, no la envia a maquina emulada: ejemplo MSX F2, QL F5
-
--First aid de f keys. Cuando se pulse una f por primera vez
-
--help de verbose level decir que consola tambien sale en ventana
 

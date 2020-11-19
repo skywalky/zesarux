@@ -79,3 +79,5 @@ y ademas, la funcion de debug_dump_nested_functions ya controla esos casos y no 
 
 
 -mostrar fecha y hora en los debug printf logs?
+
+-Ventana debug I/o port que refresque continuamente y permita ir a background
