@@ -30789,7 +30789,7 @@ void menu_help_background_windows(MENU_ITEM_PARAMETERS)
 			"First, we will refer to 'menu' to all the menu windows and all the windows in background. "
 			"When we say that the 'menu is open' or the 'menu is closed', we refer to all the menu windows and all the windows "
 			"in background, that they are visible and can be interacted with them or not "
-            "(enabling setting background windows+even with menu closed, shows windows in background but you can't interact with them ). \n"
+            "(enabling setting background windows+even with menu closed, shows windows in background but you can't interact with them). \n"
 			"\n"
 			"We will refer to 'main menu' to the main ZEsarUX menu window (the one with Smartload, Machine, etc). \n"
 			"\n"

@@ -88,7 +88,7 @@ extern void gs_write_port_bb_from_speccy(z80_byte value);
 extern void gs_write_port_b3_from_speccy(z80_byte value);
 extern z80_byte gs_read_port_bb_from_speccy(void);
 extern z80_byte gs_read_port_b3_from_speccy(void);
-
+extern void gs_mix_dac_channels(void);
 
 extern z80_byte gs_command_register;
 extern z80_byte gs_data_register;
