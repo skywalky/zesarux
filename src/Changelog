@@ -1,15 +1,24 @@
 Version 9.1 - Toi Acid Game edition. 05 November 2020
 
-Added compile setting to disable networking functions
 Added pc speaker audio driver (for Linux only)
 Added General Sound emulation
+Added compile setting to disable networking functions
 Added date & time field info to ZSF snapshots
 Added configuration & command line setting to save keymap type
-Added SNA to SCR file converter
-Added SP to SCR file converter
-Added Z80 to SCR file converter
-Added P to SCR file converter
-Added ZSF to SCR file converter
+Added some file converters: from SNA, SP, Z80, P, ZSF to SCR 
+
+
+Improved QL emulation:
+-Added sound emulation
+-Guessing of file name extension
+-Show all registers on Debug CPU window
+-Support ZSF snapshots
+
+Improved TBBlue emulation:
+-Added emulation of tbblue joystick type (register 5)
+-Added sprite zoom emulation
+-Added relative sprites emulation
+-Added sprite clipping emulation
 
 Improved ZX Desktop: 
 -Added direct buttons, to access menu items
@@ -20,9 +29,6 @@ Improved ZX Desktop:
 -Improved input number windows: added buttons to increase/decrease values
 -Now backgrounded windows can be seen even with menu closed (added a setting and also a F-key)
 
-Improved loading .pok files: increased maximum pokes from 100 to 49152 pokes
-Improved 1 bit resample audio filter
-
 Improved ZRCP: 
 -Added MMU information to cpu-history and get-registers commands
 -Added ZRCP command qdos-get-open-files: to get open files from QL QDOS
@@ -31,52 +37,38 @@ Improved debugging:
 -Added debug console as a menu window
 -Added MMU information when viewing cpu registers on terminal console
 
-Improved TBBlue emulation:
--Added emulation of tbblue joystick type (register 5)
--Added sprite zoom emulation
--Added relative sprites emulation
--Added sprite clipping emulation
-
+Improved Waveform window: Now can show left & right channels
+Improved 1 bit resample audio filter
+Improved loading .pok files: increased maximum pokes from 100 to 49152 pokes
 Improved File Browser: added previews for screens (on .scr, .tap, .tzx, .pzx, .trd, .dsk, .sna, .sp, .z80, .p, .zsf)
 Improved ZENG: Added setting to reconnect after retry failed sending
 
-Improved QL emulation:
--Added sound emulation
--Guessing of file name extension
--Show all registers on Debug CPU window
--Support ZSF snapshots
-
-Improved Waveform window: Now can show left & right channels
 
 Fixed QL bugs:
 -Fixed loading QL Superbasic programs when line lenght usually longer than 128 bytes
 -Fixed loading executable files, can even exec/exec_w files without QDOS header
--Fixed using QL system calls and A6 pointer offset used after previous Trap was not 4
--Fixed frame interrupt
--Fixed system call FS.SAVE
--Fixed system call FS.HEADS
--Fixed system call FS.HEADR
--Fixed system call IO.FSTRG
--Fixed system call IO.EDLIN
--Fixed system call IO.FCLOSE
--Fixed system call IO.DELET
+-Fixed system calls FS.SAVE, FS.HEADS, FS.HEADR, IO.FSTRG, IO.EDLIN, IO.FCLOSE, IO.DELET
 -Fixed possible hang calling IO.SSTRG
--Fixed listing (dir) call
--Fixed cursor flashing
+-Fixed using QL system calls and A6 pointer offset used after previous Trap was not 4
 -Fixed RTC emulation
+-Fixed frame interrupt
+-Fixed cursor flashing
+-Fixed listing (dir) call
 -Fixed reading keyboard when menu open
 
 Fixed reading keys on SDL and X11 drivers with default keymap and machines QL, MSX and Spectravideo
+Fixed panic when changing machines and having ZX Desktop windows opened
+Fixed panic when initializing audio and video drivers
+Fixed panic extracting tap when invalid block
 Fixed restoring machine to msx, coleco, sg1000 and svi
 Fixed showing last core frame time in Core Statistics window
-
-Fixed segfaults when changing machines and having ZX Desktop windows opened
 Fixed easter egg and cyrillic characters
-Fixed segfaults when initializing audio and video drivers
 Fixed rendering ZX Desktop on startup
 Fixed arranging ZX Vision windows when changing machine or disabling border
-Fixed panic screen extracting tap when invalid block
 Fixed open error when extracting tap with Spectrum names with '/'
+
+
+Some other minor bugfixes and improvements
 
 
 
