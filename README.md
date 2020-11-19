@@ -288,7 +288,7 @@ ZX Desktop, running multitask windows, on Solarized Dark GUI Style, running ZX S
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_zxdesktop_multitask.png "ZX Desktop")
 
 
-ZX Desktop, running demo nh17 from TSConf, showing new direct access buttons starting from ZEsarUX version 9.1
+ZX Desktop, running demo ny17 from TSConf, showing new direct access buttons starting from ZEsarUX version 9.1
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_zxdesktop_buttons.png "ZX Desktop Buttons")
 
 
