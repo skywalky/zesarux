@@ -508,8 +508,8 @@
 17630 IF CASAS_TUYAS=0 THEN RETurn
 17640 AT#0;1,0:IF CONDICION=1 THEN PRINT#0;"Hipotecar propiedad"
 17650 AT#0;1,0:IF CONDICION=4 THEN PRINT#0;"Inventario"
-17660 AT#0;1,0:IF CONDICION=3 THEN PRINT#0;"Missing"
-17670 rem missing
+17660 AT#0;1,0:IF CONDICION=3 THEN PRINT#0;"Vender propiedad"
+17670 AT#0;1,0:IF CONDICION=2 THEN PRINT#0;"Levantar hipoteca"
 17680 rem missing
 17690 rem missing
 17700 rem missing
