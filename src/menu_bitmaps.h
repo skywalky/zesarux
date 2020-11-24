@@ -80,5 +80,6 @@ extern char *bitmap_lowericon_ext_desktop_ide_inactive[];
 
 #define EXT_DESKTOP_BUTTONS_TOTAL_SIZE 32
 
+#define EXT_DESKTOP_BUTTON_CLOSE_ALL_ID 12
 
 #endif

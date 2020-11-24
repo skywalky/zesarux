@@ -3018,11 +3018,31 @@ void menu_ext_desktop_lower_icons_get_geometry(int *p_ancho_boton,int *p_alto_bo
 
 }
 
+//Si se muestra el boton de cerrar todos menus.
+//Nota: aunque no se muestre, el evento de cerrar los menus se produce aunque el menu este cerrado,
+//pero como cierra los menus, se abre y se cierra y no se nota nada
+z80_bit menu_mostrar_boton_close_all_menus={0};
 
+//Dice si hay que dibujar ese boton. Normalmente todos se ven, excepto el de cerrar menus cuando menu esta cerrado
+int menu_si_dibujar_boton(int numero_boton)
+{
+    //Si no es el boton de cerrar todo y menu esta cerrado y por tanto no se ve
+    int mostrar=1;
+    
+    if (menu_mostrar_boton_close_all_menus.v==0 && numero_boton==EXT_DESKTOP_BUTTON_CLOSE_ALL_ID) mostrar=0;
+    //if (!menu_abierto && numero_boton==EXT_DESKTOP_BUTTON_CLOSE_ALL_ID) mostrar=0;
+
+    if (numero_boton==EXT_DESKTOP_BUTTON_CLOSE_ALL_ID) printf("menu_si_dibujar_boton. mostrar: %d menu_mostrar_boton_close_all_menus %d menu_abierto: %d\n",
+        mostrar,menu_mostrar_boton_close_all_menus.v,menu_abierto);
+
+    return mostrar;
+}	
 
 
 void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 {
+
+    if (!menu_si_dibujar_boton(contador_boton)) return;
 
 	int ancho_boton;
 	int alto_boton;
@@ -3150,12 +3170,15 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 
 }
 
-		
+
+	
 
 
 //Dibujar un boton con su bitmap, con efecto pulsado si/no
 void menu_draw_ext_desktop_one_button_bitmap(int numero_boton,int pulsado)
 {
+
+    if (!menu_si_dibujar_boton(numero_boton)) return;
 
 	int total_botones;
 
@@ -3261,6 +3284,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 			destino_x+=2;
 			destino_y+=2;
 		}
+
 		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom,0);
 	}
 }
@@ -9844,7 +9868,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			//Ver si hemos pulsado por la zona del logo en el ext desktop
 			else if (zxvision_if_mouse_in_zlogo_or_buttons_desktop()) {
-
+                printf("pulsado en un boton desde handle mouse events. menu_abierto %d\n",menu_abierto);
 				menu_draw_ext_desktop_dibujar_boton_or_lower_icon_pulsado();
 
 				menu_pressed_open_menu_while_in_menu.v=1;
@@ -31902,8 +31926,7 @@ void menu_inicio_handle_button_presses(void)
 		break;
 
         case 12:
-            //temp
-            printf("pulsado pressed all\n");
+            printf("pulsado en boton de cerrar todos menus\n");
             menu_pressed_close_all_menus.v=1;
             menu_pressed_open_menu_while_in_menu.v=1;   
         break;        
@@ -32118,6 +32141,9 @@ void menu_inicio_bucle(void)
 
 	}
 
+    //A partir de aqui ya se debe mostrar boton de cerrar todos menus
+    menu_mostrar_boton_close_all_menus.v=1;
+
 
 	//Si reabrimos menu despues de conmutar entre ventanas en background
 	int reopen_menu;
@@ -32222,6 +32248,9 @@ void menu_inicio_bucle(void)
 
 
 	} while (reopen_menu);		
+
+    //Ya no se deberia mostrar boton de cerrar todos menus
+    menu_mostrar_boton_close_all_menus.v=0;
 
 	textspeech_print_speech("Closing emulator menu and going back to emulated machine");
 	        
@@ -32492,7 +32521,7 @@ void menu_inicio(void)
 	//Comprobar si se ha pulsado un boton para colorearlo
 	if (mouse_left) {
 		if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
-			//printf("Pulsado en un boton\n");
+			printf("Pulsado en un boton desde menu_inicio. menu_abierto: %d\n",menu_abierto);
 
 			//Dibujamos de otro color ese boton
 			//que boton=menu_pressed_zxdesktop_button_which
