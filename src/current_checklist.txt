@@ -149,7 +149,7 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar desactivando visualmem
 -probar waveform, tambien en drivers no graficos como curses, aa, etc
 -probar ay player. Con versiones 00,01,02,3. Probar Spectrum y CPC
--probar paleta gris, roja, verde, azul, inverso, real, etc. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
+-probar paleta gris, roja, verde, azul, inverso, real, etc ok. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
 -ver paletas de colores
 -probar expansiones de ram de zx80/81
 -probar a generar algun error y que aparezca en menu
@@ -170,7 +170,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencion del boton de fire
 -probar kempston mouse, para todos drivers que lo soportan: xwindows, cocoa, sdl, caca (consola texto y X), curses (consola texto y X). con demo kempston, art studio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
--probar buscador vidas infinitas. tambien con cpu top speed
 -probar debug i/o ports: spectrum zx80/81, z88, zx-uno, etc
 -probar debugger, step over interrupt, electron position, cursores, toggle, runto, etc
 -probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor) , operadores bitwise &|^ en variables
@@ -205,12 +204,10 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar recent files, drive
 -probar autoload & autosave
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. autofire
--probar on screen keyboard, con F8 y con joystick
--probar asignar teclas f a funciones
+-probar on screen keyboard, con F8 y con joystick. Ok con F8 y desde menu
+-probar on screen adventure keyboard. ok
 -probar --limitopenmenu
--probar idle bus. con Arkanoid por ejemplo
 -probar realjoystick. probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick. Probar joystick sdl, joystick nativo linux, joystick simulator, disable joystick. En todos casos probar quitar y poner border (porque reinicializa drivers)
--probar cambio driver audio desde menu
 -probar desactivar putpixel cache en compilacion
 -probar Setting putpixel functions to zoom 1, variable, interlace
 -probar frameskip
