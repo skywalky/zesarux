@@ -203,7 +203,8 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"BackgroundWindow",F_FUNCION_BACKGROUND_WINDOW},
 
 	//Para el usuario, mejor esta descripcion
-	{"ShowBackgroundWindows",F_FUNCION_OVERLAY_WINDOWS}
+	{"ShowBackgroundWindows",F_FUNCION_OVERLAY_WINDOWS},
+    {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS}
 };
 
 //Funciones de teclas F mapeadas. Desde F1 hasta F15
@@ -413,6 +414,9 @@ z80_bit mouse_menu_disabled={0};
 
 //Se ha pulsado tecla de menu cuando menu esta abierto
 z80_bit menu_pressed_open_menu_while_in_menu={0};
+
+//Si se pulsa tecla que simula F5 + ESC (y por tanto cierra todos menus)
+z80_bit menu_pressed_close_all_menus={0};
 
 //En que boton se ha pulsado del menu
 int menu_pressed_zxdesktop_button_which=-1;
@@ -1609,7 +1613,7 @@ int menu_if_pressed_menu_button(void)
 		if (accion==F_FUNCION_OPENMENU) {
 			//liberamos esa tecla
 			menu_button_f_function.v=0;
-			printf ("Pulsada tecla F abrir menu\n");
+			//printf ("Pulsada tecla F abrir menu\n");
 			//sleep(1);
 			return 1;
 		}
@@ -1630,6 +1634,41 @@ int menu_if_pressed_menu_button(void)
 	return 0;
 }
 
+
+
+int menu_if_pressed_close_all_menus_button(void)
+{
+	//Si pulsada tecla que simula F5 + ESC (y por tanto cierra todas ventanas de menu)
+
+	//Si se pulsa tecla F que no es default
+	if (menu_button_f_function.v && menu_button_f_function_index>=0) {
+
+		//Estas variables solo se activan cuando   //Abrir menu si funcion no es defecto y no es background window
+  		//if (accion!=F_FUNCION_DEFAULT && accion!=F_FUNCION_BACKGROUND_WINDOW) {
+
+		int indice=menu_button_f_function_index;
+
+		//Si accion es openmenu
+		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+		if (accion==F_FUNCION_CLOSE_ALL_MENUS) {
+			//liberamos esa tecla
+			menu_button_f_function.v=0;
+			//printf ("Pulsada tecla F abrir menu\n");
+			//sleep(1);
+			return 1;
+		}
+
+
+		else return 0;
+
+	}
+
+
+
+	return 0;
+}
+
+
 z80_byte menu_get_pressed_key_no_modifier(void)
 {
 	z80_byte tecla;
@@ -1644,14 +1683,27 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 	//if (menu_pressed_background_key() && menu_allow_background_windows) return 3; //Tecla background F6
 	if (menu_if_pressed_background_button() && menu_allow_background_windows) return 3; //Tecla background F6
 
+    int pulsada_tecla_cerrar_todos_menus=0;
+    if (menu_if_pressed_close_all_menus_button()) {
+        pulsada_tecla_cerrar_todos_menus=1;
+    }
+
 
 	//Si menu esta abierto y pulsamos de nuevo la tecla de menu, cerrar todas ventanas y reabrir menu
+    //O si se pulsa tecla que cierra todos menus (simula F5+ESC), y por tanto tiene que hacer la parte de F5 igual
 	//No acabo de tener claro que este sea el mejor sitio para comprobar esto... o si?
-	if (menu_if_pressed_menu_button()) {
+	if (menu_if_pressed_menu_button() || pulsada_tecla_cerrar_todos_menus ) {
 	//if ((puerto_especial2&16)==0) {
 		//printf ("Pulsada tecla abrir menu\n");
 		//sleep(1);
 		menu_pressed_open_menu_while_in_menu.v=1;
+
+
+        if (pulsada_tecla_cerrar_todos_menus) {
+            debug_printf(VERBOSE_INFO,"Pressed key close all menus");
+            menu_pressed_close_all_menus.v=1;
+        }
+
 		/*
 		-si no se permite background, cerrar todos menus abiertos y volver a abrir el menu principal
 -si se permite background:
@@ -32151,6 +32203,14 @@ void menu_inicio_bucle(void)
 
 		//Si hay que reabrirlo, resetear estado de salida de todos
 		if (reopen_menu) salir_todos_menus=0;	
+
+
+        //Pero si se ha pulsado tecla que cierra todos menus, salor
+        if (menu_pressed_close_all_menus.v) {
+            debug_printf(VERBOSE_INFO,"Do not reopen main menu because key to close all menus has been pressed");
+            menu_pressed_close_all_menus.v=0;
+            reopen_menu=0;
+        }
 
 
 

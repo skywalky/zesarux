@@ -23,6 +23,7 @@ Improved TBBlue emulation:
 Improved ZX Desktop: 
 -Added direct buttons, to access menu items
 -Added devices buttons/icons, to show device activity and device configuration
+-Added F-key to close all open menus
 -Reordered menu items
 -Windows are not closed when changing ZX Desktop size
 -Added new ZX Desktop fill types: RainbowAlive, Chess, Grid, Random
