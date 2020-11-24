@@ -38,6 +38,7 @@ extern char *bitmap_button_ext_desktop_debug[];
 extern char *bitmap_button_ext_desktop_network[];
 extern char *bitmap_button_ext_desktop_windows[];
 extern char *bitmap_button_ext_desktop_settings[];
+extern char *bitmap_button_ext_desktop_close_all_menus[];
 extern char *bitmap_button_ext_desktop_exit[];
 
 extern char **zxdesktop_buttons_bitmaps[];
@@ -72,7 +73,7 @@ extern char *bitmap_lowericon_ext_desktop_cart_timex_active[];
 extern char *bitmap_lowericon_ext_desktop_ide_active[];
 extern char *bitmap_lowericon_ext_desktop_ide_inactive[];
 
-#define EXT_DESKTOP_TOTAL_BUTTONS 13
+#define EXT_DESKTOP_TOTAL_BUTTONS 14
 
 #define EXT_DESKTOP_BUTTONS_ANCHO 26
 #define EXT_DESKTOP_BUTTONS_ALTO 26

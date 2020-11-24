@@ -31901,7 +31901,14 @@ void menu_inicio_handle_button_presses(void)
 			menu_about(0);
 		break;
 
-		case 12:
+        case 12:
+            //temp
+            printf("pulsado pressed all\n");
+            menu_pressed_close_all_menus.v=1;
+            menu_pressed_open_menu_while_in_menu.v=1;   
+        break;        
+
+		case 13:
 			menu_principal_salir_emulador(0);
 		break;																			
 	}

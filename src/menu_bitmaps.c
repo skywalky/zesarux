@@ -35,7 +35,8 @@
 
 10 Settings
 11 Help
-12 Exit
+12 Close all menus
+13 Exit
 
 */
 char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
@@ -51,7 +52,8 @@ char **zxdesktop_buttons_bitmaps[EXT_DESKTOP_TOTAL_BUTTONS]={
     bitmap_button_ext_desktop_windows,
     bitmap_button_ext_desktop_settings, //10
     bitmap_button_ext_desktop_help,
-    bitmap_button_ext_desktop_exit //12
+    bitmap_button_ext_desktop_close_all_menus,
+    bitmap_button_ext_desktop_exit //13
     
 };
 
@@ -383,7 +385,35 @@ char *bitmap_button_ext_desktop_exit[EXT_DESKTOP_BUTTONS_ANCHO]={
 };
 
 
-
+char *bitmap_button_ext_desktop_close_all_menus[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                  rryyggcc",     //0
+  	" xxx xx x  x x   rryyggcc ",      
+	" x x x   x xxx  rryyggcc  ",		
+	"               rryyggcc   ",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",	
+	"                          ",			
+	"      R                 R ",			
+	" xxx xRRxxxxxxxxx      RR ", 		
+	" xxx   RR             RR  ", 		
+	" xxx xxxRRxxxxxxx    RR   ", 		
+	"         RR         RR    ",	//10	
+	"          RR       RR     ",		
+	" xxx xxxxxxRRxxxx RR      ", 		
+	" xxx        RR   RR       ", 		
+	" xxx xxxxxxxxRRxRR        ", 			
+	"              RRR         ",		
+	"              RRR         ",		
+	" xxx xxxxxxxxRRxRR        ", 		
+	" xxx        RR   RR       ", 		
+	" xxx xxxxxxRRxxxx RR      ", 			
+	"          RR       RR     ",    //20
+	"         RR         RR    ",		
+	" xxx xxxRRxxxxxxx    RR   ", 		
+	" xxx   RR             RR  ", 		
+	" xxx xRRxxxxxxxxx      RR ", 		
+	"                          " 	 //25
+};
 
 
 char *bitmap_button_ext_desktop_storage[EXT_DESKTOP_BUTTONS_ANCHO]={
