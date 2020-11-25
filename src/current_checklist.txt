@@ -63,7 +63,7 @@ ok coreaudio
 
 
 -Funciones de Red:
---Windows: Probar ZENG, Speccy browser, ZX81 browser, Download TBLLUE SD
+--Windows: Probar Speccy browser, ZX81 browser, Download TBLLUE SD
 
 --Linux: Probar ZENG, Speccy browser, ZX81 browser, Download TBLLUE SD 
 

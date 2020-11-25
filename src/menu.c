@@ -3032,8 +3032,8 @@ int menu_si_dibujar_boton(int numero_boton)
     if (menu_mostrar_boton_close_all_menus.v==0 && numero_boton==EXT_DESKTOP_BUTTON_CLOSE_ALL_ID) mostrar=0;
     //if (!menu_abierto && numero_boton==EXT_DESKTOP_BUTTON_CLOSE_ALL_ID) mostrar=0;
 
-    if (numero_boton==EXT_DESKTOP_BUTTON_CLOSE_ALL_ID) printf("menu_si_dibujar_boton. mostrar: %d menu_mostrar_boton_close_all_menus %d menu_abierto: %d\n",
-        mostrar,menu_mostrar_boton_close_all_menus.v,menu_abierto);
+    //if (numero_boton==EXT_DESKTOP_BUTTON_CLOSE_ALL_ID) printf("menu_si_dibujar_boton. mostrar: %d menu_mostrar_boton_close_all_menus %d menu_abierto: %d\n",
+    //    mostrar,menu_mostrar_boton_close_all_menus.v,menu_abierto);
 
     return mostrar;
 }	
@@ -9868,7 +9868,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 			//Ver si hemos pulsado por la zona del logo en el ext desktop
 			else if (zxvision_if_mouse_in_zlogo_or_buttons_desktop()) {
-                printf("pulsado en un boton desde handle mouse events. menu_abierto %d\n",menu_abierto);
+                //printf("pulsado en un boton desde handle mouse events. menu_abierto %d\n",menu_abierto);
 				menu_draw_ext_desktop_dibujar_boton_or_lower_icon_pulsado();
 
 				menu_pressed_open_menu_while_in_menu.v=1;
@@ -31926,7 +31926,7 @@ void menu_inicio_handle_button_presses(void)
 		break;
 
         case 12:
-            printf("pulsado en boton de cerrar todos menus\n");
+            //printf("pulsado en boton de cerrar todos menus\n");
             menu_pressed_close_all_menus.v=1;
             menu_pressed_open_menu_while_in_menu.v=1;   
         break;        
@@ -32521,7 +32521,7 @@ void menu_inicio(void)
 	//Comprobar si se ha pulsado un boton para colorearlo
 	if (mouse_left) {
 		if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
-			printf("Pulsado en un boton desde menu_inicio. menu_abierto: %d\n",menu_abierto);
+			//printf("Pulsado en un boton desde menu_inicio. menu_abierto: %d\n",menu_abierto);
 
 			//Dibujamos de otro color ese boton
 			//que boton=menu_pressed_zxdesktop_button_which
