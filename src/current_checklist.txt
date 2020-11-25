@@ -65,8 +65,6 @@ ok coreaudio
 -probar aofile raw y wav
 -probar con --disable-sndfile
 -probar vofile. Con spectrum (border on, border off, ulaplus, spectra, timex), zx80/81 (border on, border off), z88. Con xwindows, curses, stdout y simpletext: en estos drivers probar tanto spectrum, zx81, y z88
--probar todas maquinas, una por una. OK
--probar juegos varios de zx80,zx81, spectrum, aquellos que hacen efectos especiales hi-res, etc
 -probar juegos zx81 multipart: wrx/voyage , wrx/blockbuster
 -probar particularidades Inves: 64 kb ram, OUT ula AND RAM (border color, snow in border, no sound), no contended memory, colour ula delay, interrupt starts at video display (not at the top of the border), interrupt escribe en direccion I*256+R valor 255. Puerto ficticio para hacer visible RAM baja, requiere hardware debug ports , se puede probar con inves-switch-lowram.tap. Ver RAM baja con view hexdump. Probar con musica Lemmings
 -probar hotswap maquina
@@ -126,29 +124,21 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar verbose 3, 4, debugregisters
 -probar desactivando border, con y sin realvideo, en spectrum y zx8081
 -probar efectos border: btime, overscan, vectron, BorderTrix, Hercules, dark star (cuando te matan), aqua plane, paperboy, super wonder boy (pausa), thelosttapesofalbion0 (pausa), rotatrix, shock megademo, KnightsDemonsDX. en modos 128, 48k e inves.
--probar ula48.tap, ula128.tap, scroll2017. Deberian verse bien sin necesidad de cambiar early / late timings
 -probar autoactivado de rainbow cuando efectos en border. juegos, demos y snap_tests/test_autorealvideo_border.zx
 -probar color border en ULAPlus
--probar desactivando ssl
--probar activando ssl
 -probar azerty. se puede probar pulsando guion o cedilla
 -probar redefinir teclas, en menu y linea comandos
 -probar desactivando contended memory en compilacion
 
-
--probar desactivando memptr i pasar z80tests.tap de spectrum. probar activando memptr i pasar z80tests.tap
--probar z80flags.tap. con memptr y --enable-undoc-scfccf son 6 de 152: fallan bit n,a ; bit n,[r,(hl)], ldi, ldd, ldir, lddr
 -probar cpustats
 -probar visualmem, tambien en drivers no graficos como curses, aa, etc
 -probar desactivando cpustats
 -probar desactivando visualmem
 -probar waveform, tambien en drivers no graficos como curses, aa, etc
--probar ay player. Con versiones 00,01,02,3. Probar Spectrum y CPC
--probar paleta gris, roja, verde, azul, inverso, real, etc ok. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
+-probar paleta gris, roja, verde, azul, inverso, real, etc ok. tambien con modos ulaplus, scanlines, spectra, timex, prism, sam
 -ver paletas de colores
 -probar expansiones de ram de zx80/81
 -probar a generar algun error y que aparezca en menu
--probar first aid
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
 -probar tooltip y ayuda de opciones en menu
 -probar shortcuts en menu
@@ -225,12 +215,8 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 
 -keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
 
--probar Jupiter Ace. centipede (chip ay) y valkyr (speaker y chip ay). cargar y grabar ace. cargar wav
 -probar Timex. Tests, carga trap, grabar tap
 -Probar TBBlue. Copper (carpeta media... copper con demo specdrum y beast (beast con esxdos handler ) ) .  Sprites con Dungeonette (con esxdos handler), tiles
--Probar Amstrad cpc. Todas teclas
--Probar Sam Coupe. Todas teclas. Probar atomlite
-
 -probar usar extension de archivo no conocida y ver que avisa
 -probar activando funciones de captura de segmentation fault y forzando fallo
 -probar cpu_panic. desde dentro del emulador y antes de entrar (por ejemplo cuando no encuentra una rom)
