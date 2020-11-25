@@ -95,6 +95,11 @@ TBBlue/ZX Spectrum Next
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_tbblue.png "TBBlue/ZX Spectrum Next")
 
 
+Prism 512
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_prism.png "Prism 512")
+
+
 CPC 464
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_cpc.png "CPC 464")

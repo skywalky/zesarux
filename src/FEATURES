@@ -170,7 +170,7 @@
 
 * AY Chip Tools: AY Player, AY Sheet, AY Piano, AY Registers, export AY music to midi (.mid) files, AY Mixer
 
-* Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX by using a telnet client.
+* Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog) or just by using a telnet client.
 
 * Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
 

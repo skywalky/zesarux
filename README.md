@@ -261,7 +261,7 @@ __FEATURES__
 
 * AY Chip Tools: AY Player, AY Sheet, AY Piano, AY Registers, export AY music to midi (.mid) files, AY Mixer
 
-* Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX by using a telnet client.
+* Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog) or just by using a telnet client.
 
 * Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
 
@@ -330,6 +330,11 @@ ZX-Evolution TSConf
 TBBlue/ZX Spectrum Next
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_tbblue.png "TBBlue/ZX Spectrum Next")
+
+
+Prism 512
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_prism.png "Prism 512")
 
 
 CPC 464
