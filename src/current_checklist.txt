@@ -62,11 +62,6 @@ ok coreaudio
 
 
 
--Funciones de Red:
---Windows: Probar Speccy browser, ZX81 browser, Download TBLLUE SD
-
---Linux: Probar ZENG, Speccy browser, ZX81 browser, Download TBLLUE SD 
-
 -probar aofile raw y wav
 -probar con --disable-sndfile
 -probar vofile. Con spectrum (border on, border off, ulaplus, spectra, timex), zx80/81 (border on, border off), z88. Con xwindows, curses, stdout y simpletext: en estos drivers probar tanto spectrum, zx81, y z88
@@ -156,7 +151,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar first aid
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
 -probar tooltip y ayuda de opciones en menu
--probar menus ayudas. probar cargar juego edition name desde about->seleccionar linea 1(activando cursor con f/n) y enter (segundo easter egg)
 -probar shortcuts en menu
 -probar GUI styles: opcion normal, seleccionada, no disponible, no disponible seleccionada, pixel (audio waveform, visual mem, view sprites) en: driver grafico, en caca y en curses
 -probar opcion desactivar contended memory en menu
@@ -200,18 +194,13 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 ** primer y segundo mensaje se desplazan, como voyage of peril
 ** FSCAPES.P, que no da tiempo a mostrar todo el segundo mensaje porque carga partes
 * Con y sin border enabled
--probar smartload. probar deteccion de tipo tzx (standard o turbo) en quickload
 -probar recent files, drive
--probar autoload & autosave
--probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. autofire
 -probar on screen keyboard, con F8 y con joystick. Ok con F8 y desde menu
--probar on screen adventure keyboard. ok
 -probar --limitopenmenu
 -probar realjoystick. probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick. Probar joystick sdl, joystick nativo linux, joystick simulator, disable joystick. En todos casos probar quitar y poner border (porque reinicializa drivers)
 -probar desactivar putpixel cache en compilacion
 -probar Setting putpixel functions to zoom 1, variable, interlace
 -probar frameskip
--probar easter eggs
 -probar repeticion de teclas en selector de archivos, ayuda, etc (en opciones de menu no hace repeticion)
 -probar ghosting
 -probar teclas en menu: normal, mayus, minus, -+ ,. TAB BACKSPACE, en mk14, zx8081, spectrum,  , ql, cpc, z88  ( ',' y "." en zx80/81 no va en menu porque se interpreta como symbol+shift y es lo mismo que TAB). en driver xwindow y curses, para cada maquina (total: 6 pruebas)
@@ -226,18 +215,10 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -probar cpu transaction log
 -probar menu file utilities
 -probar demos beeper
--probar real beeper activo/desactivado
 -probar tone generator --tonegenerator con 1,2 y 3 en spectrum 48k. Ver menu waveform
--probar modo interlaced, scanlines y tapes/spectrum/tests/interlace-test.tap. interlaced zx81 con ilena. probar interlace y abrir menu visualmem y view sprites (debe desactivar interlace momentaneamente)
--probar modo gigascreen. demos e imagenes
 -probar modos ULA Plus: rgb estandard, modo 3 radastan, modos ZEsarUX. modos ham (cambio rapido de paleta por interrupciones) multicolor demo, etc. hardware scroll radastan+zxuno
--probar View Basic: ZX80, ZX81, Spectrum
 -probar View Hexdump
--probar View Sprites
--probar emulator speed
--probar turbo mode. manual y en zxuno, prism, chloe y tbblue
 -probar top speed, con threads y sin threads
--probar accelerate loaders
 -probar mantransferv3
 -probar multiface
 -probar betadisk
@@ -245,21 +226,11 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -keymaps en xwindows y sdl para z88, cpc, chloe, sam, ql, ...
 
 -probar Jupiter Ace. centipede (chip ay) y valkyr (speaker y chip ay). cargar y grabar ace. cargar wav
--probar Chloe 140, 280. Tests, carga trap, grabar tap, chloe keyboard
 -probar Timex. Tests, carga trap, grabar tap
--Probar Prism: extras/media/spectrum/prism/allvideotests.tap. Tests de chloe. Failsafe mode. Modos lineales de video extras/media/spectrum/prism/linear_modes/
 -Probar TBBlue. Copper (carpeta media... copper con demo specdrum y beast (beast con esxdos handler ) ) .  Sprites con Dungeonette (con esxdos handler), tiles
 -Probar Amstrad cpc. Todas teclas
 -Probar Sam Coupe. Todas teclas. Probar atomlite
--probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS. Probar DMA
--Probar demos Pentagon. Nota: confusio.tap requiere usr0
--Probar TSConf
--Probar Baseconf
--Probar Chrome
--Probar MK14
 
--probar Sprite chip con demo
--probar textos splash en cambio de modo de video por ejemplo
 -probar usar extension de archivo no conocida y ver que avisa
 -probar activando funciones de captura de segmentation fault y forzando fallo
 -probar cpu_panic. desde dentro del emulador y antes de entrar (por ejemplo cuando no encuentra una rom)

@@ -45,12 +45,12 @@ I want to thank the help and the collaboration of the following people (date sor
 -Daniel Leon for information about his ZX Dandanator! Mini interface and bug reporting
 -Alejandro Valero for information about his Superupgrade interface and 8-bit simple ide interface
 -Miguel Angel Gomez (haplo) for lots of bug reporting
--Karl Stenerud, for granting permission to include his Musashi Motorola 680x0 emulator https://github.com/kstenerud/Musashi. Distributed under MIT license
+-Karl Stenerud, for granting permission to include his Musashi Motorola 680x0 emulator 
 -Javier R. Santurde (tolkien), for the MorhOS patch
 -Rich Mellor, helping me with QL emulation
 -Yerzmyey, for granting permission to include his Astral Combat demo. http://yerzmyey.i-demo.pl/ . http://hooyprogram.republika.pl/
 -JSJ, helping me with pthreads on Windows version
--Miodrag Milanovic, for granting permission to include his National Semiconductor SC/MP CPU Emulator https://github.com/mamedev/mame/blob/master/src/devices/cpu/scmp/ . Distributed under BSD-3 license
+-Miodrag Milanovic, for granting permission to include his National Semiconductor SC/MP CPU Emulator 
 -Tim Gilberts, for bug reporting and the Sped translation to English
 -Gary Lancaster, for bug reporting
 -Mark Hutchings, for bug reporting, proposing new features and code contribution
