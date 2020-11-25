@@ -100,6 +100,11 @@ Prism 512
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_prism.png "Prism 512")
 
 
+Chloe 280SE
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_chloe280se.png "Chloe 280SE")
+
+
 CPC 464
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_cpc.png "CPC 464")
