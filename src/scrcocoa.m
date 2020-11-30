@@ -765,54 +765,43 @@ if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
 
 //printf ("Ejecutando performDragOperation\n");
 
-   NSPasteboard *zPasteboard = [sender draggingPasteboard];
-   // define the images  types we accept
-   // NSPasteboardTypeTIFF: (used to be NSTIFFPboardType).
-   // NSFilenamesPboardType:An array of NSString filenames
-   NSArray *zImageTypesAry = [NSArray arrayWithObjects:NSPasteboardTypeTIFF,
-                 NSPasteboardTypeFileURL, nil];
+    NSPasteboard *zPasteboard = [sender draggingPasteboard];
+    // define the images  types we accept
+    // NSPasteboardTypeTIFF: (used to be NSTIFFPboardType).
+    // NSFilenamesPboardType:An array of NSString filenames
+    NSArray *zImageTypesAry = [NSArray arrayWithObjects:NSPasteboardTypeTIFF,
+        NSPasteboardTypeFileURL, nil];
 
-   NSString *zDesiredType =
-                [zPasteboard availableTypeFromArray:zImageTypesAry];
+    NSString *zDesiredType =
+        [zPasteboard availableTypeFromArray:zImageTypesAry];
 
     if ([zDesiredType isEqualToString:NSPasteboardTypeFileURL]) {
-      // the pasteboard contains a list of file names
-      //Take the first one
-      NSArray *zFileNamesAry =
-             [zPasteboard propertyListForType:@"NSFilenamesPboardType"];
-      NSString *zPath = [zFileNamesAry objectAtIndex:0];
+        // the pasteboard contains a list of file names
+        //Take the first one
+        NSArray *zFileNamesAry =
+            [zPasteboard propertyListForType:@"NSFilenamesPboardType"];
+            
+        NSString *zPath = [zFileNamesAry objectAtIndex:0];
 
 
 //printf ("Path: %s\n",[zPath UTF8String]);
-/*
-      NSImage *zNewImage = [[NSImage alloc] initWithContentsOfFile:zPath];
-
-      if (zNewImage == nil) {
-         NSLog(@"Error: MyNSView performDragOperation zNewImage == nil");
-         return NO;
-      }// end if
-
-
-      self.nsImageObj = zNewImage;
-      [self setNeedsDisplay:YES];
-*/
 
 
 
-	strcpy(quickload_file,[zPath UTF8String]);
+        strcpy(quickload_file,[zPath UTF8String]);
 
 
 
-	menu_abierto=1;
-	menu_event_drag_drop.v=1;
-      return YES;
+        menu_abierto=1;
+        menu_event_drag_drop.v=1;
+        return YES;
 
-   }// end if
+    }// end if
 
 
-   //this cant happen ???
-   NSLog(@"Error MyNSView performDragOperation");
-   return NO;
+    //this cant happen ???
+    //NSLog(@"Error MyNSView performDragOperation");
+    return NO;
 
 
 } // end performDragOperation
