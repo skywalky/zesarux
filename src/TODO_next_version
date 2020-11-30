@@ -154,3 +154,6 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 
 
 Spool que permita tiempo intermedio como 150 ms. Quizá hacer que tenga más incrementos que ahora 
+
+
+-Revisar en Mac si propertyListForType:@"NSFilenamesPboardType" tiene sentido
