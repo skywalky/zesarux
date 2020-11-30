@@ -711,7 +711,7 @@ int pendiente_z88_draw_lower=0;
 //Para drag-drop, ver http://juliuspaintings.co.uk/cgi-bin/paint_css/animatedPaint/072-NSView-drag-and-drop.pl
 
 [self registerForDraggedTypes:
-      [NSArray arrayWithObjects:NSTIFFPboardType,NSFilenamesPboardType,nil]];
+      [NSArray arrayWithObjects:NSPasteboardTypeTIFF,NSFilenamesPboardType,nil]];
 
 //[self registerForDraggedTypes: 
   //    [NSArray arrayWithObjects:NSPasteboardTypeTIFF,NSFilenamesPboardType,nil]];

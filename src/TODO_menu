@@ -36,8 +36,6 @@ funciones de reajuste de disposicion de texto en ventana por ejemplo
 
 -combinacion de teclas para conmutar entre ventanas
 
--tecla para cerrar menus (igual que pulsar F5 y luego ESC)
-
 -cuando una tecla F no esta como default, no la envia a maquina emulada: ejemplo MSX F2, QL F5
 
 -First aid de f keys. Cuando se pulse una f por primera vez
