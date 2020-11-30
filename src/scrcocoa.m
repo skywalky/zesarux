@@ -780,21 +780,28 @@ if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
         //Take the first one
         NSArray *zFileNamesAry =
             [zPasteboard propertyListForType:@"NSFilenamesPboardType"];
-            
+
         NSString *zPath = [zFileNamesAry objectAtIndex:0];
 
 
 //printf ("Path: %s\n",[zPath UTF8String]);
 
 
+        char *file_to_open=(char *)[zPath UTF8String];
 
-        strcpy(quickload_file,[zPath UTF8String]);
+        if (file_to_open!=NULL) {
+            strcpy(quickload_file,file_to_open);
 
 
 
-        menu_abierto=1;
-        menu_event_drag_drop.v=1;
-        return YES;
+            menu_abierto=1;
+            menu_event_drag_drop.v=1;
+            return YES;
+        }
+        else {
+            debug_printf(VERBOSE_DEBUG,"Can't find a file type in dragged item");
+            return NO;
+        }
 
     }// end if
 
