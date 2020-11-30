@@ -710,13 +710,10 @@ int pendiente_z88_draw_lower=0;
 
 //Para drag-drop, ver http://juliuspaintings.co.uk/cgi-bin/paint_css/animatedPaint/072-NSView-drag-and-drop.pl
 
-[self registerForDraggedTypes:
-      [NSArray arrayWithObjects:NSPasteboardTypeTIFF,NSFilenamesPboardType,nil]];
+    [self registerForDraggedTypes:
+      [NSArray arrayWithObjects:NSPasteboardTypeTIFF,NSPasteboardTypeFileURL,nil]];
 
-//[self registerForDraggedTypes: 
-  //    [NSArray arrayWithObjects:NSPasteboardTypeTIFF,NSFilenamesPboardType,nil]];
 
-      //[self registerForDraggedTypes([NSFilenamesPboardType]) ];
 
 
     return self;
@@ -773,12 +770,12 @@ if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
    // NSPasteboardTypeTIFF: (used to be NSTIFFPboardType).
    // NSFilenamesPboardType:An array of NSString filenames
    NSArray *zImageTypesAry = [NSArray arrayWithObjects:NSPasteboardTypeTIFF,
-                 NSFilenamesPboardType, nil];
+                 NSPasteboardTypeFileURL, nil];
 
    NSString *zDesiredType =
                 [zPasteboard availableTypeFromArray:zImageTypesAry];
 
-    if ([zDesiredType isEqualToString:NSFilenamesPboardType]) {
+    if ([zDesiredType isEqualToString:NSPasteboardTypeFileURL]) {
       // the pasteboard contains a list of file names
       //Take the first one
       NSArray *zFileNamesAry =
