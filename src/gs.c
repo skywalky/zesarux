@@ -521,7 +521,9 @@ int gs_load_rom(void)
 
     debug_printf (VERBOSE_INFO,"Loading gs rom %s",GS_ROM_NAME);
 
-    ptr_gs_romfile=fopen(GS_ROM_NAME,"rb");
+    //ptr_gs_romfile=fopen(GS_ROM_NAME,"rb");
+    open_sharedfile(GS_ROM_NAME,&ptr_gs_romfile);
+
     if (!ptr_gs_romfile) {
             debug_printf (VERBOSE_ERR,"Unable to open ROM file");
     }

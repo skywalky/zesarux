@@ -147,3 +147,9 @@ https://foro.speccy.org/viewtopic.php?t=1502
 
 Quizá versión en un futuro en que al pulsar escape cierra todos los menús. 
 Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
+
+
+-No encuentra la rom de general sound cuando se ejecuta desde un binario de Linux o Mac: probablemente porque la busca en la ruta actual,
+y deberia ir a buscarla a la ruta habitual de las roms 
+
+-Cargar código fuente desde ventana debug cpu 
