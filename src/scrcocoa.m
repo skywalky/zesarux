@@ -723,15 +723,15 @@ int pendiente_z88_draw_lower=0;
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
 //printf ("Entrando drag drop\n");
-if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
-      == NSDragOperationGeneric) {
+    if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
+        == NSDragOperationGeneric) {
 
-      return NSDragOperationGeneric;
+        return NSDragOperationGeneric;
 
-   } // end if
+    } // end if
 
-   // not a drag we can use
-   return NSDragOperationNone;
+    // not a drag we can use
+    return NSDragOperationNone;
 
 }
 
@@ -760,7 +760,7 @@ if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
    return YES;
 } // end prepareForDragOperation
 
-
+/*
 - (BOOL)performDragOperation:(id )sender {
 
 //printf ("Ejecutando performDragOperation\n");
@@ -792,8 +792,6 @@ if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
         if (file_to_open!=NULL) {
             strcpy(quickload_file,file_to_open);
 
-
-
             menu_abierto=1;
             menu_event_drag_drop.v=1;
             return YES;
@@ -809,6 +807,45 @@ if ((NSDragOperationGeneric & [sender draggingSourceOperationMask])
     //this cant happen ???
     //NSLog(@"Error MyNSView performDragOperation");
     return NO;
+
+
+} // end performDragOperation
+*/
+
+
+
+- (BOOL)performDragOperation:(id )sender {
+
+    NSPasteboard *objeto_pboard = [sender draggingPasteboard];
+
+    if ([[objeto_pboard types] containsObject:NSPasteboardTypeFileURL]) {
+        NSString *file_URL = [[NSURL URLFromPasteboard:objeto_pboard] path];
+
+        //TODO comprobar si tipo (UTI) es file://
+
+        //TODO esto solo vale para obtener un solo elemento, aunque se arrastren varios
+        //aunque no necesito arrastrar varios, solo uno
+
+        char *filepath;
+
+        filepath = (char *)[file_URL UTF8String];
+
+        if (filepath!=NULL) {
+            debug_printf(VERBOSE_INFO,"Smartloading by drag & drop: %s",filepath);
+            strcpy(quickload_file,filepath);
+
+            menu_abierto=1;
+            menu_event_drag_drop.v=1;
+            return YES;
+        }            
+
+    }
+
+
+    debug_printf(VERBOSE_DEBUG,"Can't find a file type in dragged item");
+
+    return NO;
+
 
 
 } // end performDragOperation
