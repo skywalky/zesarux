@@ -7441,7 +7441,11 @@ void screen_store_scanline_rainbow_solo_display(void)
 		return;
 	}
 
-
+    //Si modo zxuno prism
+    if (MACHINE_IS_ZXUNO && zxuno_is_prism_mode_enabled() ) {
+        zxuno_prism_screen_store_scanline_rainbow();
+        return;
+    }
 
         //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
 
