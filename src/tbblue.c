@@ -3180,24 +3180,23 @@ void tbblue_set_emulator_setting_divmmc(void)
 {
 
 
+    z80_byte diven=tbblue_get_diviface_enabled();
+    debug_printf (VERBOSE_INFO,"Apply config.divmmc change: %s",(diven ? "enabled" : "disabled") );
+    //printf ("Apply config2.divmmc change: %s\n",(diven ? "enabled" : "disabled") );
 
-				z80_byte diven=tbblue_get_diviface_enabled();
-        debug_printf (VERBOSE_INFO,"Apply config.divmmc change: %s",(diven ? "enabled" : "disabled") );
-        //printf ("Apply config2.divmmc change: %s\n",(diven ? "enabled" : "disabled") );
-
-				if (diven) {
-					//printf ("Activando diviface automatic paging\n");
-					divmmc_diviface_enable();
-					diviface_allow_automatic_paging.v=1;
-				}
+    if (diven) {
+        //printf ("Activando diviface automatic paging\n");
+        divmmc_diviface_enable();
+        diviface_allow_automatic_paging.v=1;
+    }
 
 
-				else {
-					//printf ("Desactivando diviface automatic paging\n");
-					diviface_allow_automatic_paging.v=0;
-					//Y hacer un page-out si hay alguna pagina activa
-					diviface_paginacion_automatica_activa.v=0;
-				}
+    else {
+        //printf ("Desactivando diviface automatic paging\n");
+        diviface_allow_automatic_paging.v=0;
+        //Y hacer un page-out si hay alguna pagina activa
+        diviface_paginacion_automatica_activa.v=0;
+    }
 
 }
 

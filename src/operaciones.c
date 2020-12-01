@@ -2491,21 +2491,21 @@ IMMEDIATE
 
             if (escribir) {
 
-			int offset=tbblue_get_offset_start_layer2();
+                int offset=tbblue_get_offset_start_layer2();
 
-			z80_byte region=tbblue_port_123b&(64+128);
-			switch (region) {
-				case 64:
-					offset +=16384;
-				break;
+                z80_byte region=tbblue_port_123b&(64+128);
+                switch (region) {
+                    case 64:
+                        offset +=16384;
+                    break;
 
-				case 128: //TODO: en la documentacion dice 192... tiene logica???
-					offset +=32768;
-				break;
-			}
+                    case 128: //TODO: en la documentacion dice 192... tiene logica???
+                        offset +=32768;
+                    break;
+                }
 
-			offset +=dir;
-			memoria_spectrum[offset]=valor;
+                offset +=dir;
+                memoria_spectrum[offset]=valor;
 
             }
 
