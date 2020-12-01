@@ -2463,6 +2463,34 @@ IMMEDIATE
 		//Si se escribe en memoria layer2
 		if (dir<16384 && tbblue_write_on_layer2() ) {
 
+            //Pero si no hay por encima la memoria divmmc encima:
+            /*
+               -- memory decode order
+   --
+   -- 0-16k:
+   --   1. bootrom
+   --   2. machine config mapping
+   --   3. multiface
+   --   4. divmmc
+   --   5. layer 2 mapping
+   --   6. mmu
+   --   7. romcs expansion bus
+   --   8. rom
+            */
+
+            int escribir=1;
+
+      
+        
+            if ((diviface_control_register&128) || diviface_paginacion_automatica_activa.v==1) {
+                //printf("no escribir pues divmmc activo. dir: %d\n",dir);
+                escribir=0;
+            }
+                
+         
+
+            if (escribir) {
+
 			int offset=tbblue_get_offset_start_layer2();
 
 			z80_byte region=tbblue_port_123b&(64+128);
@@ -2478,6 +2506,8 @@ IMMEDIATE
 
 			offset +=dir;
 			memoria_spectrum[offset]=valor;
+
+            }
 
 			//printf ("Escribiendo layer 2 direccion %d valor %d offset %d region %d\n",dir,valor,offset,region);
 		}

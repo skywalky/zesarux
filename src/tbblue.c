@@ -3164,18 +3164,24 @@ which allows you access to all SRAM.
 }
 */
 
-void tbblue_set_emulator_setting_divmmc(void)
+z80_byte tbblue_get_diviface_enabled(void)
 {
-
-/*
+    /*
 (W)		06 => Peripheral 2 setting, only in bootrom or config mode:
 			bit 7 = Enable turbo mode (0 = disabled, 1 = enabled)
 			bit 6 = DAC chip mode (0 = I2S, 1 = JAP)
 			bit 5 = Enable Lightpen  (1 = enabled)
 			bit 4 = Enable DivMMC (1 = enabled) -> divmmc automatic paging. divmmc memory is supported using manual
 		*/
-        //z80_byte diven=tbblue_config2&4;
-				z80_byte diven=tbblue_registers[6]&16;
+    return tbblue_registers[6]&16;    
+}
+
+void tbblue_set_emulator_setting_divmmc(void)
+{
+
+
+
+				z80_byte diven=tbblue_get_diviface_enabled();
         debug_printf (VERBOSE_INFO,"Apply config.divmmc change: %s",(diven ? "enabled" : "disabled") );
         //printf ("Apply config2.divmmc change: %s\n",(diven ? "enabled" : "disabled") );
 
@@ -3185,7 +3191,7 @@ void tbblue_set_emulator_setting_divmmc(void)
 					diviface_allow_automatic_paging.v=1;
 				}
 
-        //else divmmc_diviface_disable();
+
 				else {
 					//printf ("Desactivando diviface automatic paging\n");
 					diviface_allow_automatic_paging.v=0;

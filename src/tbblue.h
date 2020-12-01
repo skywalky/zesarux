@@ -330,4 +330,6 @@ extern void tbblue_uartbridge_writedata(z80_byte value);
 extern z80_byte tbblue_uartbridge_readstatus(void);
 extern int tbblue_tiles_are_monocrome(void);
 
+extern z80_byte tbblue_get_diviface_enabled(void);
+
 #endif

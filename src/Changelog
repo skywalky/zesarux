@@ -1,7 +1,7 @@
 Version 9.2 - xxxx edition. 26 November 2020
 
 Fixed loading General Sound rom
-
+TBBlue: Fixed writing on divmmc memory when layer2 active
 
 Version 9.1 - Toi Acid Game edition. 26 November 2020
 
