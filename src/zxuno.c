@@ -170,7 +170,9 @@ z80_int zxuno_dma_current_len;
 z80_bit zxuno_dma_disabled={0};
 
 
-
+//Donde empieza la vram1 de zxuno, de modo prism 256x192x4bpp 
+//Luego va vram2 y vram3
+z80_byte *zxuno_begin_vram1_pointer;
 
 
 void zxuno_test_if_prob(void)
@@ -441,6 +443,9 @@ void hard_reset_cpu_zxuno(void)
 
 	//registro RADASPALBANK, el numero 0x43 (67)
 	zxuno_ports[0x43]=0;
+
+    //registro prism
+    zxuno_ports[0x50]=0;
 
 	//Sincronizar settings de emulador con los valores de puertos de zxuno
 	zxuno_set_emulador_settings();
@@ -778,6 +783,7 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 		z80_byte anterior_devcontrol=zxuno_ports[0x0E];
 		z80_byte anterior_devctrl2=zxuno_ports[0x0F];
 		z80_byte anterior_scandblctrl=zxuno_ports[0x0B];
+        z80_byte anterior_prism=zxuno_ports[0x50];
 		//Si se va a tocar masterconf, ver cambios en bits, como por ejemplo I2KB
 
 		//El indice al registro viene por last_port_FC3B
@@ -972,6 +978,13 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 				zxuno_radasoffset_high_byte.v ^=1;
 
 			break;
+
+            case 0x50:
+                //Modo prism zxuno
+                if ((zxuno_ports[0x50] & 128) != (anterior_prism & 128)) {
+                    zxuno_set_memory_pages();
+                }
+            break;
 			
 
 			//Registros DMA de 16 bits
@@ -1484,6 +1497,15 @@ void zxuno_init_memory_tables(void)
                         puntero +=16384;
                 }
 
+    //Paginas VRAM
+    /*
+    		malloc_machine((ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE+ZXUNO_SPI_SIZE+8*3)*1024);
+    */
+
+    //Van justo despues de la flash spi
+
+    zxuno_begin_vram1_pointer=&memoria_spectrum[(ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE+ZXUNO_SPI_SIZE)*1024];
+
 	zxuno_chloe_init_memory_tables();
 }
 
@@ -1672,17 +1694,35 @@ void zxuno_set_memory_pages(void)
 			pagina3=zxuno_get_ram_page();
 
 
+            //0-1fffh      (0-8191)
 			zxuno_memory_paged_brandnew[0*2]=zxuno_sram_mem_table_new[pagina0+8];
+            //2000h-3fffh  (8192-16383)
 			zxuno_memory_paged_brandnew[0*2+1]=zxuno_sram_mem_table_new[pagina0+8]+8192;
 			//En la tabla zxuno_sram_mem_table hay que saltar las 8 primeras, que son las 8 rams del modo 128k
 
-			zxuno_memory_paged_brandnew[1*2]=zxuno_sram_mem_table_new[pagina1];
+            //4000h-5fffh  (16384-24575)
+            //Si habilitado modo prism
+            if (zxuno_is_prism_mode_enabled()) {
+                zxuno_memory_paged_brandnew[1*2]=zxuno_get_vram_mapped_address();
+            }
+            else { 
+			    zxuno_memory_paged_brandnew[1*2]=zxuno_sram_mem_table_new[pagina1];
+            }
+
+
+            //6000h-7fffh  (24576-32767)
 			zxuno_memory_paged_brandnew[1*2+1]=zxuno_sram_mem_table_new[pagina1]+8192;
 
+            //8000h-9fffh  (32768-40959)
 			zxuno_memory_paged_brandnew[2*2]=zxuno_sram_mem_table_new[pagina2];
+
+            //A000h-bfffh  (40960-49151)
 			zxuno_memory_paged_brandnew[2*2+1]=zxuno_sram_mem_table_new[pagina2]+8192;
 
+            //C000h-dfffh  (49152-57343)
 			zxuno_memory_paged_brandnew[3*2]=zxuno_sram_mem_table_new[pagina3];
+
+            //E000h-ffffh  (57344-65535)
 			zxuno_memory_paged_brandnew[3*2+1]=zxuno_sram_mem_table_new[pagina3]+8192;
 
 			contend_pages_actual[0]=0;
@@ -1759,4 +1799,36 @@ z80_byte zxuno_uartbridge_readstatus(void)
 	if (status & CHDEV_ST_RD_AVAIL_DATA) status_retorno |= ZXUNO_UART_BYTE_RECEIVED_BIT;
 
 	return status_retorno;
+}
+
+
+//Retorna puntero a vram de los modos Prism
+z80_byte *zxuno_get_vram_address(int vram)
+{
+    if (vram==0) return zxuno_sram_mem_table_new[5];
+
+    else {
+        int offset=(vram-1)*8192;
+        return &zxuno_begin_vram1_pointer[offset];
+    }
+}
+
+int zxuno_is_prism_mode_enabled(void)
+{
+    return (zxuno_ports[0x50]&128);
+}
+
+//Retorna numero de vram que entra en segmento 16384-22527 si modo prism activo
+//En este caso es el mismo valor que la rom que entra del modo +2A
+int zxuno_get_vram_mapped(void)
+{
+    int numero_vram=zxuno_get_rom_page();
+    printf("vram mapeada: %d\n",numero_vram);
+    return numero_vram;
+}
+
+//Retorna puntero a vram mapeada
+z80_byte *zxuno_get_vram_mapped_address(void)
+{
+    return zxuno_get_vram_address(zxuno_get_vram_mapped());
 }

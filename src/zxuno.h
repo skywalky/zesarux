@@ -162,4 +162,9 @@ extern z80_byte zxuno_get_devcontrol_di7ffd(void);
 extern z80_byte zxuno_get_devcontrol_di1ffd(void);
 
 
+extern z80_byte *zxuno_get_vram_address(int vram);
+extern int zxuno_is_prism_mode_enabled(void);
+extern int zxuno_get_vram_mapped(void);
+extern z80_byte *zxuno_get_vram_mapped_address(void);
+
 #endif

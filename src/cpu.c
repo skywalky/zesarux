@@ -2756,8 +2756,9 @@ void malloc_mem_machine(void) {
 		//16 KB rom
 		//512 KB SRAM
 		//1024 FLASH
-		malloc_machine((ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE+ZXUNO_SPI_SIZE)*1024);
-		random_ram(memoria_spectrum,(ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE+ZXUNO_SPI_SIZE)*1024);
+        //3 paginas vram adicionales de 8192 kb
+		malloc_machine((ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE+ZXUNO_SPI_SIZE+8*3)*1024);
+		random_ram(memoria_spectrum,(ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE+ZXUNO_SPI_SIZE+8*3)*1024);
 
 
 		zxuno_init_memory_tables();
