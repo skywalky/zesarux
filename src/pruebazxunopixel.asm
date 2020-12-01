@@ -55,15 +55,23 @@ set_rom:
 ;set vram in 23298
 ;set value in 23299
 
+;c02f = 49199
 poke_vram:
 		di
+
+        ld hl,(23296)
+        ld a,(23299)
+        push hl
+        push af
+
 		call enable_prism_mode
 
         ld a,(23298)
         call set_rom
 
-        ld hl,(23296)
-        ld a,(23299)
+        pop af
+        pop hl
+
         ld (hl),a
 
         call disable_prism_mode
@@ -74,7 +82,7 @@ poke_vram:
         ei
 
         ret
-
+;c04e = 49230
 view_prism:
         di
         call enable_prism_mode
@@ -84,6 +92,8 @@ view_prism:
         call wait_key
 
         call disable_prism_mode
+
+        ei
 
         ret
 
