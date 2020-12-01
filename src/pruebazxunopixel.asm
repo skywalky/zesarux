@@ -51,26 +51,22 @@ set_rom:
 	;z80_byte rom7f=(puerto_32765>>4)&1;
 	
 ;poke function to desired vram
-;set address in 23296
-;set vram in 23298
-;set value in 23299
+;set address in 32768
+;set vram in 32770
+;set value in 32771
 
 ;c02f = 49199
 poke_vram:
 		di
 
-        ld hl,(23296)
-        ld a,(23299)
-        push hl
-        push af
 
 		call enable_prism_mode
 
-        ld a,(23298)
+        ld a,(32770)
         call set_rom
 
-        pop af
-        pop hl
+        ld hl,(32768)
+        ld a,(32771)
 
         ld (hl),a
 
@@ -82,7 +78,7 @@ poke_vram:
         ei
 
         ret
-;c04e = 49230
+;c04e = 49226
 view_prism:
         di
         call enable_prism_mode
