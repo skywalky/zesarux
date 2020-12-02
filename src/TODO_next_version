@@ -156,3 +156,14 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 Spool que permita tiempo intermedio como 150 ms. Quizá hacer que tenga más incrementos que ahora 
 
 -zxuno prism: de momento sin paleta , con colores spectrum
+
+
+-snx de Next es lo mismo que sna 48 o 128? Probar con cuadragon
+mas info:
+
+".snx is a Spectrum snapshot file, more suitable as emulator compatibility than a real format. 
+It is identical to a 128K .sna file, but when loaded using the browser or the SPECTRUM command, 
+NextZXOS leaves file handle 0 open for further use by the program. 
+The program is expected close the handle before exiting. .snx files may also have private data appended to them. 
+They are not supported by esxDOS."
+
