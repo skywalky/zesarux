@@ -980,11 +980,15 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
 			break;
 
             case 0x50:
-                printf("Change prism mode value: %d\n",zxuno_ports[0x50]);
+                //printf("Change prism mode value: %d\n",zxuno_ports[0x50]);
                 //Modo prism zxuno
                 if ((zxuno_ports[0x50] & 128) != (anterior_prism & 128)) {
-                    printf("Setting memory pages after change prism mode\n");
+                    //printf("Setting memory pages after change prism mode\n");
                     zxuno_set_memory_pages();
+
+                    if (zxuno_ports[0x50] & 128) {
+                        screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling Prism mode. 256x192x4bpp");
+                    }
                 }
             break;
 			
@@ -1825,7 +1829,7 @@ int zxuno_is_prism_mode_enabled(void)
 int zxuno_get_vram_mapped(void)
 {
     int numero_vram=zxuno_get_rom_page();
-    printf("vram mapeada: %d\n",numero_vram);
+    //printf("vram mapeada: %d\n",numero_vram);
     return numero_vram;
 }
 
