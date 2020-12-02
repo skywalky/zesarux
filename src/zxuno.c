@@ -1861,12 +1861,7 @@ void zxuno_prism_screen_store_scanline_rainbow(void)
 {
 
 
-
-
   if (t_scanline_draw>=screen_indice_inicio_pant && t_scanline_draw<screen_indice_fin_pant) {
-
-
-
 
 
     //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);

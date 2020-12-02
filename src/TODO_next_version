@@ -167,3 +167,5 @@ NextZXOS leaves file handle 0 open for further use by the program.
 The program is expected close the handle before exiting. .snx files may also have private data appended to them. 
 They are not supported by esxDOS."
 
+
+-paleta colores modo zxuno prism. que se vea tambien desde menu display-color palette
