@@ -987,7 +987,7 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
                     zxuno_set_memory_pages();
 
                     if (zxuno_ports[0x50] & 128) {
-                        screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling Prism mode. 256x192x4bpp");
+                        screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling ZX-Uno Prism mode. 256x192x4bpp");
                     }
                 }
             break;
@@ -1869,68 +1869,33 @@ void zxuno_prism_screen_store_scanline_rainbow(void)
 
 
 
-        //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
+    //printf ("scan line de pantalla fisica (no border): %d\n",t_scanline_draw);
 
-        //linea que se debe leer
-        int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
+    //linea que se debe leer
+    int scanline_copia=t_scanline_draw-screen_indice_inicio_pant;
 
-        //la copiamos a buffer rainbow
-        z80_int *puntero_buf_rainbow;
-        //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
-        int y;
+    //la copiamos a buffer rainbow
+    z80_int *puntero_buf_rainbow;
+    //esto podria ser un contador y no hace falta que lo recalculemos cada vez. TODO
+    int y;
 
-        y=t_scanline_draw-screen_invisible_borde_superior;
-        if (border_enabled.v==0) y=y-screen_borde_superior;
+    y=t_scanline_draw-screen_invisible_borde_superior;
+    if (border_enabled.v==0) y=y-screen_borde_superior;
 
-        puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
+    puntero_buf_rainbow=&rainbow_buffer[ y*get_total_ancho_rainbow() ];
 
-        puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
-
-
-        int x,bit;
-        z80_int direccion;
-	//z80_int dir_atributo;
-        z80_byte byte_vram0,byte_vram1,byte_vram2,byte_vram3;
+    puntero_buf_rainbow +=screen_total_borde_izquierdo*border_enabled.v;
 
 
-        int color=0;
-        int fila;
+    int x,bit;
+    z80_int direccion;
 
-        z80_byte attribute,bright,flash;
-	//z80_int ink,paper,aux;
-	unsigned int ink,paper,aux;
+    z80_byte byte_vram0,byte_vram1,byte_vram2,byte_vram3;
 
+    int color;
 
-        z80_byte *screen=get_base_mem_pantalla();
-
-        direccion=screen_addr_table[(scanline_copia<<5)];
-
-				
-
-
-        fila=scanline_copia/8;
-        //dir_atributo=6144+(fila*32);
-
-
-	z80_byte *puntero_buffer_atributos;
-
-
-
-
-
-	//temporal modo 6 timex 512x192 pero hacemos 256x192
-	z80_byte temp_prueba_modo6[SCANLINEBUFFER_ONE_ARRAY_LENGTH];
-	z80_byte col6;
-	z80_byte tin6, pap6;
-
-	
-	z80_byte timexhires_resultante;
-	z80_int timexhires_origen;
-
-	z80_bit si_timex_hires={0};
-
-	//Por defecto
-	puntero_buffer_atributos=scanline_buffer;
+      
+    direccion=screen_addr_table[(scanline_copia<<5)];
 
 
     z80_byte *vram0_pointer=zxuno_get_vram_address(0);
@@ -1939,53 +1904,32 @@ void zxuno_prism_screen_store_scanline_rainbow(void)
     z80_byte *vram3_pointer=zxuno_get_vram_address(3);
 
 
+    for (x=0;x<32;x++) {
+            
+        byte_vram0=vram0_pointer[direccion];
+        byte_vram1=vram1_pointer[direccion];
+        byte_vram2=vram2_pointer[direccion];
+        byte_vram3=vram3_pointer[direccion];
 
-	int posicion_array_pixeles_atributos=0;
-        for (x=0;x<32;x++) {
+        for (bit=0;bit<8;bit++) {
 
+            color=zxuno_get_prism_pixel_color(byte_vram0,byte_vram1,byte_vram2,byte_vram3);
+            
+            store_value_rainbow(puntero_buf_rainbow,color);
+            
 
-                    
-                        byte_vram0=vram0_pointer[direccion];
-                        byte_vram1=vram1_pointer[direccion];
-                        byte_vram2=vram2_pointer[direccion];
-                        byte_vram3=vram3_pointer[direccion];
-
-
-   
-
-            for (bit=0;bit<8;bit++) {
-
-	
-
-                color=zxuno_get_prism_pixel_color(byte_vram0,byte_vram1,byte_vram2,byte_vram3);
-
-				
-
-
-				
-                store_value_rainbow(puntero_buf_rainbow,color);
-				
-
-                byte_vram0=byte_vram0<<1;
-                byte_vram1=byte_vram1<<1;
-                byte_vram2=byte_vram2<<1;
-                byte_vram3=byte_vram3<<1;
-
-
-																//tbblue_layer2_offset++;
-				
-            }
-			direccion++;
-                	//dir_atributo++;
-
-
+            byte_vram0=byte_vram0<<1;
+            byte_vram1=byte_vram1<<1;
+            byte_vram2=byte_vram2<<1;
+            byte_vram3=byte_vram3<<1;
+            
         }
+        direccion++;
+
+    }
 
 
-
-
-	}
-
+  }
 
 
 }
