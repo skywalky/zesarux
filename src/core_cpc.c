@@ -53,122 +53,9 @@
 
 z80_byte byte_leido_core_cpc;
 
-
-
-
-//bucle principal de ejecucion de la cpu de cpc
-void cpu_core_loop_cpc(void)
+void core_cpc_end_scanline_stuff(void)
 {
 
-                debug_get_t_stados_parcial_pre();
-
-  
-		timer_check_interrupt();
-
-
-//#ifdef COMPILE_STDOUT 
-//		if (screen_stdout_driver) scr_stdout_printchar();
-//#endif
-//
-//#ifdef COMPILE_SIMPLETEXT
-//                if (screen_simpletext_driver) scr_simpletext_printchar();
-//#endif
-		if (chardetect_detect_char_enabled.v) chardetect_detect_char();
-		if (chardetect_printchar_enabled.v) chardetect_printchar();
-
-
-		//Gestionar autoload
-		gestionar_autoload_cpc();
-		
-
-		if (tap_load_detect()) {
-				
-        	                //si estamos en pausa, no hacer nada
-                	        if (!tape_pause) {
-					audio_playing.v=0;
-
-					draw_tape_text();
-
-					tap_load();
-					all_interlace_scr_refresca_pantalla();
-
-					//printf ("refresco pantalla\n");
-					//audio_playing.v=1;
-					timer_reset();
-				}
-			
-				else {
-					//core_cpc_store_rainbow_current_atributes();
-					//generamos nada. como si fuera un NOP
-					
-					contend_read( reg_pc, 4 );
-		
-
-				}
-		}
-
-		else  if (tap_save_detect()) {
-	               	        audio_playing.v=0;
-
-				draw_tape_text();
-
-                        	tap_save();
-	                        //audio_playing.v=1;
-				timer_reset();
-               	}
-
-
-		else {
-			if (esperando_tiempo_final_t_estados.v==0) {
-
-				//core_cpc_store_rainbow_current_atributes();
-
-				//printf ("t-estados %d\n",t_estados);
-
-
-#ifdef DEBUG_SECOND_TRAP_STDOUT
-
-        //Para poder debugar rutina que imprima texto. Util para aventuras conversacionales 
-        //hay que definir este DEBUG_SECOND_TRAP_STDOUT manualmente en compileoptions.h despues de ejecutar el configure
-
-	scr_stdout_debug_print_char_routine();
-
-#endif
-
-
-
-        	                        contend_read( reg_pc, 4 );
-					byte_leido_core_cpc=fetch_opcode();
-
-
-
-#ifdef EMULATE_CPU_STATS
-				util_stats_increment_counter(stats_codsinpr,byte_leido_core_cpc);
-#endif
-
-                                reg_pc++;
-
-				reg_r++;
-
-				//printf ("ejecutando opcode %d\n",byte_leido_core_cpc);
-
-	                	codsinpr[byte_leido_core_cpc]  () ;
-
-				//printf ("despues ejecucion opcode\n");
-
-
-                        }
-                }
-
-
-
-		//ejecutar esto al final de cada una de las scanlines (312)
-		//esto implica que al final del frame de pantalla habremos enviado 312 bytes de sonido
-
-
-		
-		//A final de cada scanline 
-		if ( (t_estados/screen_testados_linea)>t_scanline  ) {
 			//printf ("%d\n",t_estados);
 			//if (t_estados>69000) printf ("t_scanline casi final: %d\n",t_scanline);
 
@@ -354,7 +241,127 @@ void cpu_core_loop_cpc(void)
 				cpc_ppi_ports[1] &=(255-1);
 			}*/
 
+}
+
+
+
+
+//bucle principal de ejecucion de la cpu de cpc
+void cpu_core_loop_cpc(void)
+{
+
+    debug_get_t_stados_parcial_pre();
+
+  
+    timer_check_interrupt();
+
+
+//#ifdef COMPILE_STDOUT 
+//		if (screen_stdout_driver) scr_stdout_printchar();
+//#endif
+//
+//#ifdef COMPILE_SIMPLETEXT
+//                if (screen_simpletext_driver) scr_simpletext_printchar();
+//#endif
+    if (chardetect_detect_char_enabled.v) chardetect_detect_char();
+    if (chardetect_printchar_enabled.v) chardetect_printchar();
+
+
+    //Gestionar autoload
+    gestionar_autoload_cpc();
+		
+
+    if (tap_load_detect()) {
+            
+                        //si estamos en pausa, no hacer nada
+                        if (!tape_pause) {
+                audio_playing.v=0;
+
+                draw_tape_text();
+
+                tap_load();
+                all_interlace_scr_refresca_pantalla();
+
+                //printf ("refresco pantalla\n");
+                //audio_playing.v=1;
+                timer_reset();
+            }
+        
+            else {
+                //core_cpc_store_rainbow_current_atributes();
+                //generamos nada. como si fuera un NOP
+                
+                contend_read( reg_pc, 4 );
+    
+
+            }
+    }
+
+    else  if (tap_save_detect()) {
+                        audio_playing.v=0;
+
+            draw_tape_text();
+
+                        tap_save();
+                        //audio_playing.v=1;
+            timer_reset();
+    }
+
+
+    else {
+        if (esperando_tiempo_final_t_estados.v==0) {
+
+
+
+#ifdef DEBUG_SECOND_TRAP_STDOUT
+
+        //Para poder debugar rutina que imprima texto. Util para aventuras conversacionales 
+        //hay que definir este DEBUG_SECOND_TRAP_STDOUT manualmente en compileoptions.h despues de ejecutar el configure
+
+	scr_stdout_debug_print_char_routine();
+
+#endif
+
+
+
+            contend_read( reg_pc, 4 );
+            byte_leido_core_cpc=fetch_opcode();
+
+
+
+#ifdef EMULATE_CPU_STATS
+            util_stats_increment_counter(stats_codsinpr,byte_leido_core_cpc);
+#endif
+
+            reg_pc++;
+
+            reg_r++;
+
+				
+            codsinpr[byte_leido_core_cpc]  () ;
+
+
+        }
+    }
+
+
+
+    //ejecutar esto al final de cada una de las scanlines (312)
+    //esto implica que al final del frame de pantalla habremos enviado 312 bytes de sonido
+
+
+		
+    //A final de cada scanline 
+    if ( (t_estados/screen_testados_linea)>t_scanline  ) {
+
+        core_cpc_end_scanline_stuff();
+
+			
 		}
+
+
+
+///HASTA AQUI
 
 		if (esperando_tiempo_final_t_estados.v) {
 			timer_pause_waiting_end_frame();
