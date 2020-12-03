@@ -3,6 +3,7 @@ Version 9.2 - xxxx edition. 26 November 2020
 Fixed loading General Sound rom
 Fixed CPC CRTC interrupts. After a CRTC interrupt with Z80 interrupts disabled, they were not fired when enabling Z80 interrupts
 Fixed CPC setting bit 4 of the "Select screen mode and rom configuration" register of the Gate-Array and interrupt request
+Fixed CPC behaviour firing interrupt after vsync
 
 TBBlue: Fixed writing on divmmc memory when layer2 active
 

@@ -545,8 +545,35 @@ void cpc_handle_vsync_state(void)
 	//final_vsync +=2;
 
 
-	if (t_scanline_draw>=vsync_position && t_scanline_draw<final_vsync) cpc_vsync_signal.v=1;
-	else cpc_vsync_signal.v=0;
+	if (t_scanline_draw>=vsync_position && t_scanline_draw<final_vsync) {
+        cpc_vsync_signal.v=1;
+
+/*
+The Gate-Array senses the VSYNC signal. If two HSYNCs have been detected following the start of the VSYNC 
+then there are two possible actions:
+
+If the top bit of the 6-bit counter is set to "1" (i.e. the counter >=32), then there is no interrupt request, 
+and the 6-bit counter is reset to "0". (If a interrupt was requested and acknowledged it would be closer than 3
+2 HSYNCs compared to the position of the previous interrupt).
+If the top bit of the 6-bit counter is set to "0" (i.e. the counter <32), then a interrupt request is issued, 
+and the 6-bit counter is reset to "0".
+In both cases the following interrupt requests are synchronised with the VSYNC.
+*/
+        if (t_scanline_draw==vsync_position+2) {
+            if (cpc_scanline_counter>=32) {
+            	cpc_crt_pending_interrupt.v=0;
+            }
+            else {
+                cpc_crt_pending_interrupt.v=1;
+            }
+        
+            cpc_scanline_counter=0;
+        }
+
+    }
+	else {
+        cpc_vsync_signal.v=0;
+    }
 
 	//Y si está justo después, resetear posicion
 	if (t_scanline_draw==final_vsync) t_scanline_draw=0;
