@@ -245,6 +245,118 @@ void core_cpc_end_scanline_stuff(void)
 
 
 
+void core_cpc_handle_interrupts(void)
+{
+
+			debug_fired_interrupt=1;
+
+			//if (interrupcion_non_maskable_generada.v) printf ("generada nmi\n");
+
+                        //if (interrupts.v==1) {   //esto ya no se mira. si se ha producido interrupcion es porque estaba en ei o es una NMI
+                        //ver si esta en HALT
+                        if (z80_ejecutando_halt.v) {
+                                        z80_ejecutando_halt.v=0;
+                                        reg_pc++;
+                        }
+
+			if (1==1) {
+
+					if (interrupcion_non_maskable_generada.v) {
+						debug_anota_retorno_step_nmi();
+						//printf ("generada nmi\n");
+                                                interrupcion_non_maskable_generada.v=0;
+
+
+                                                //NMI wait 14 estados
+                                                t_estados += 14;
+
+
+                                                
+												push_valor(reg_pc,PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT);
+
+
+                                                reg_r++;
+                                                iff1.v=0;
+                                                //printf ("Calling NMI with pc=0x%x\n",reg_pc);
+
+                                                //Otros 6 estados
+                                                t_estados += 6;
+
+                                                //Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
+                                                reg_pc= 0x66;
+
+                                                //temp
+
+                                                t_estados -=15;
+
+						//Prueba
+						//Al recibir nmi tiene que poner paginacion normal. Luego ya saltara por autotrap de divmmc
+						//if (divmmc_enabled.v) divmmc_paginacion_activa.v=0;
+
+
+						
+					}
+
+					if (1==1) {
+					//else {
+
+						
+					//justo despues de EI no debe generar interrupcion
+					//e interrupcion nmi tiene prioridad
+						if (interrupcion_maskable_generada.v && byte_leido_core_cpc!=251) {
+						debug_anota_retorno_step_maskable();
+						//Tratar interrupciones maskable
+						interrupcion_maskable_generada.v=0;
+
+						
+
+						push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
+
+						reg_r++;
+
+						//Caso Inves. Hacer poke (I*256+R) con 255
+						if (MACHINE_IS_INVES) {
+							//z80_byte reg_r_total=(reg_r&127) | (reg_r_bit7 &128);
+
+							//Se usan solo los 7 bits bajos del registro R
+							z80_byte reg_r_total=(reg_r&127);
+
+							z80_int dir=reg_i*256+reg_r_total;
+
+							poke_byte_no_time(dir,255);
+						}
+						
+						
+						//desactivar interrupciones al generar una
+						iff1.v=iff2.v=0;
+						//Modelos cpc
+
+						if (im_mode==0 || im_mode==1) {
+							cpu_common_jump_im01();
+						}
+						else {
+						//IM 2.
+
+							z80_int temp_i;
+							z80_byte dir_l,dir_h;   
+							temp_i=reg_i*256+255;
+							dir_l=peek_byte(temp_i++);
+							dir_h=peek_byte(temp_i);
+							reg_pc=value_8_to_16(dir_h,dir_l);
+							t_estados += 7;
+
+
+						}
+						
+					}
+				}
+
+
+			}
+
+}
+
+
 
 //bucle principal de ejecucion de la cpu de cpc
 void cpu_core_loop_cpc(void)
@@ -357,172 +469,65 @@ void cpu_core_loop_cpc(void)
         core_cpc_end_scanline_stuff();
 
 			
-		}
+    }
 
 
 
-///HASTA AQUI
-
-		if (esperando_tiempo_final_t_estados.v) {
-			timer_pause_waiting_end_frame();
-		}
+    if (esperando_tiempo_final_t_estados.v) {
+        timer_pause_waiting_end_frame();
+    }
 
 
 
-              //Interrupcion de 1/50s. mapa teclas activas y joystick
-                if (interrupcion_fifty_generada.v) {
-                        interrupcion_fifty_generada.v=0;
+    //Interrupcion de 1/50s. mapa teclas activas y joystick
+    if (interrupcion_fifty_generada.v) {
+            interrupcion_fifty_generada.v=0;
 
-                        //y de momento actualizamos tablas de teclado segun tecla leida
-                        //printf ("Actualizamos tablas teclado %d ", temp_veces_actualiza_teclas++);
-                       scr_actualiza_tablas_teclado();
-
-
-                       //lectura de joystick
-                       realjoystick_main();
-
-                        //printf ("temp conta fifty: %d\n",tempcontafifty++);
-                }
+            //y de momento actualizamos tablas de teclado segun tecla leida
+            //printf ("Actualizamos tablas teclado %d ", temp_veces_actualiza_teclas++);
+            scr_actualiza_tablas_teclado();
 
 
-                //Interrupcion de procesador y marca final de frame
-                if (interrupcion_timer_generada.v) {
-                        interrupcion_timer_generada.v=0;
-                        esperando_tiempo_final_t_estados.v=0;
-                        interlaced_numero_frame++;
-                        //printf ("%d\n",interlaced_numero_frame);
+            //lectura de joystick
+            realjoystick_main();
 
-					//Para calcular lo que se tarda en ejecutar todo un frame
-					timer_get_elapsed_core_frame_pre();									
-                }
+            //printf ("temp conta fifty: %d\n",tempcontafifty++);
+    }
 
 
-        //printf("t: %d\n",t_estados);
+    //Interrupcion de procesador y marca final de frame
+    if (interrupcion_timer_generada.v) {
+        interrupcion_timer_generada.v=0;
+        esperando_tiempo_final_t_estados.v=0;
+        interlaced_numero_frame++;
+        //printf ("%d\n",interlaced_numero_frame);
 
-        //Si habia interrupcion pendiente de crtc y están las interrupciones habilitadas
-        if (cpc_crt_pending_interrupt.v && iff1.v==1) {
-            //printf("Se genera interrupcion del Z80 pendiente de crtc en t: %d\n",t_estados);
-
-            cpc_crt_pending_interrupt.v=0;
-            interrupcion_maskable_generada.v=1;
-
-            //Ademas:
-            //When the interrupt is acknowledged, this is sensed by the Gate-Array. The top bit (bit 5), of the counter is set to "0" and the interrupt request is cleared. This prevents the next interrupt from occuring closer than 32 HSYNCs time.
-            //http://cpctech.cpcwiki.de/docs/ints.html
-
-            cpc_scanline_counter &=(255-32);
-
-        }
+        //Para calcular lo que se tarda en ejecutar todo un frame
+        timer_get_elapsed_core_frame_pre();									
+    }
 
 
-		//Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en cpc o al cambio de bit6 de R en zx80/81
-		if (interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) {
+    //printf("t: %d\n",t_estados);
 
-			debug_fired_interrupt=1;
+    //Si habia interrupcion pendiente de crtc y están las interrupciones habilitadas
+    if (cpc_crt_pending_interrupt.v && iff1.v==1) {
+        //printf("Se genera interrupcion del Z80 pendiente de crtc en t: %d\n",t_estados);
 
-			//if (interrupcion_non_maskable_generada.v) printf ("generada nmi\n");
+        cpc_crt_pending_interrupt.v=0;
+        interrupcion_maskable_generada.v=1;
 
-                        //if (interrupts.v==1) {   //esto ya no se mira. si se ha producido interrupcion es porque estaba en ei o es una NMI
-                        //ver si esta en HALT
-                        if (z80_ejecutando_halt.v) {
-                                        z80_ejecutando_halt.v=0;
-                                        reg_pc++;
-                        }
+        //Ademas:
+        //When the interrupt is acknowledged, this is sensed by the Gate-Array. The top bit (bit 5), of the counter is set to "0" and the interrupt request is cleared. This prevents the next interrupt from occuring closer than 32 HSYNCs time.
+        //http://cpctech.cpcwiki.de/docs/ints.html
 
-			if (1==1) {
+        cpc_scanline_counter &=(255-32);
 
-					if (interrupcion_non_maskable_generada.v) {
-						debug_anota_retorno_step_nmi();
-						//printf ("generada nmi\n");
-                                                interrupcion_non_maskable_generada.v=0;
+    }
 
 
-                                                //NMI wait 14 estados
-                                                t_estados += 14;
-
-
-                                                
-												push_valor(reg_pc,PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT);
-
-
-                                                reg_r++;
-                                                iff1.v=0;
-                                                //printf ("Calling NMI with pc=0x%x\n",reg_pc);
-
-                                                //Otros 6 estados
-                                                t_estados += 6;
-
-                                                //Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
-                                                reg_pc= 0x66;
-
-                                                //temp
-
-                                                t_estados -=15;
-
-						//Prueba
-						//Al recibir nmi tiene que poner paginacion normal. Luego ya saltara por autotrap de divmmc
-						//if (divmmc_enabled.v) divmmc_paginacion_activa.v=0;
-
-
-						
-					}
-
-					if (1==1) {
-					//else {
-
-						
-					//justo despues de EI no debe generar interrupcion
-					//e interrupcion nmi tiene prioridad
-						if (interrupcion_maskable_generada.v && byte_leido_core_cpc!=251) {
-						debug_anota_retorno_step_maskable();
-						//Tratar interrupciones maskable
-						interrupcion_maskable_generada.v=0;
-
-						
-
-						push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
-
-						reg_r++;
-
-						//Caso Inves. Hacer poke (I*256+R) con 255
-						if (MACHINE_IS_INVES) {
-							//z80_byte reg_r_total=(reg_r&127) | (reg_r_bit7 &128);
-
-							//Se usan solo los 7 bits bajos del registro R
-							z80_byte reg_r_total=(reg_r&127);
-
-							z80_int dir=reg_i*256+reg_r_total;
-
-							poke_byte_no_time(dir,255);
-						}
-						
-						
-						//desactivar interrupciones al generar una
-						iff1.v=iff2.v=0;
-						//Modelos cpc
-
-						if (im_mode==0 || im_mode==1) {
-							cpu_common_jump_im01();
-						}
-						else {
-						//IM 2.
-
-							z80_int temp_i;
-							z80_byte dir_l,dir_h;   
-							temp_i=reg_i*256+255;
-							dir_l=peek_byte(temp_i++);
-							dir_h=peek_byte(temp_i);
-							reg_pc=value_8_to_16(dir_h,dir_l);
-							t_estados += 7;
-
-
-						}
-						
-					}
-				}
-
-
-			}
+    //Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en cpc o al cambio de bit6 de R en zx80/81
+    if (interrupcion_maskable_generada.v || interrupcion_non_maskable_generada.v) {
+        core_cpc_handle_interrupts();
 
     }
 	//Fin gestion interrupciones
