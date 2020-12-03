@@ -67,6 +67,9 @@ z80_byte cpc_gate_registers[4];
 //Contador de linea para lanzar interrupcion.
 z80_byte cpc_scanline_counter;
 
+//Pendiente interrupcion de cpc crtc
+z80_bit cpc_crt_pending_interrupt={0};
+
 /*
 
 Registro 2:

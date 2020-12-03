@@ -225,10 +225,22 @@ void cpu_core_loop_cpc(void)
 
 			//Con ay player, interrupciones a 50 Hz
 			if (cpc_scanline_counter>=52 && ay_player_playing.v==0) {
+                cpc_crt_pending_interrupt.v=1;
+
+
+                
+
 				if (iff1.v==1) {
+                    //printf ("Llega interrupcion crtc con interrupciones habilitadas del Z80 en t: %d\n",t_estados);
 					//printf ("Generamos interrupcion en scanline: %d cpc_scanline_counter: %d\n",t_scanline,cpc_scanline_counter);
-                                       	interrupcion_maskable_generada.v=1;
+
+                    
+                                       	//interrupcion_maskable_generada.v=1;
 				}
+
+                else {
+                    //printf ("Llega interrupcion crtc con interrupciones DESHABILITADAS del Z80 en t: %d\n",t_estados);
+                }
 				cpc_scanline_counter=0;
 			}
 
@@ -286,10 +298,7 @@ void cpu_core_loop_cpc(void)
 
 
 
-				//Final de instrucciones ejecutadas en un frame de pantalla. Esto no en cpc
-				//if (iff1.v==1) {
-				//	interrupcion_maskable_generada.v=1;
-				//}
+		
 
 
 				cpu_loop_refresca_pantalla();
@@ -379,6 +388,24 @@ void cpu_core_loop_cpc(void)
 					//Para calcular lo que se tarda en ejecutar todo un frame
 					timer_get_elapsed_core_frame_pre();									
                 }
+
+
+        //printf("t: %d\n",t_estados);
+
+        //Si habia interrupcion pendiente de crtc y están las interrupciones habilitadas
+        if (cpc_crt_pending_interrupt.v && iff1.v==1) {
+            //printf("Se genera interrupcion del Z80 pendiente de crtc en t: %d\n",t_estados);
+
+            cpc_crt_pending_interrupt.v=0;
+            interrupcion_maskable_generada.v=1;
+
+            //Ademas:
+            //When the interrupt is acknowledged, this is sensed by the Gate-Array. The top bit (bit 5), of the counter is set to "0" and the interrupt request is cleared. This prevents the next interrupt from occuring closer than 32 HSYNCs time.
+            //http://cpctech.cpcwiki.de/docs/ints.html
+
+            cpc_scanline_counter &=(255-32);
+
+        }
 
 
 		//Interrupcion de cpu. gestion im0/1/2. Esto se hace al final de cada frame en cpc o al cambio de bit6 de R en zx80/81

@@ -1178,6 +1178,7 @@ util_stats_init();
 		cpc_gate_registers[0]=cpc_gate_registers[1]=cpc_gate_registers[2]=cpc_gate_registers[3]=0;
 		cpc_set_memory_pages();
 		cpc_scanline_counter=0;
+        cpc_crt_pending_interrupt.v=0;
 	}
 
 	if (MACHINE_IS_SAM) {

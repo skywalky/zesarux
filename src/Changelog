@@ -1,6 +1,8 @@
 Version 9.2 - xxxx edition. 26 November 2020
 
 Fixed loading General Sound rom
+Fixed CPC CRTC interrupts. After a CRTC interrupt with Z80 interrupts disabled, they were not fired when enabling Z80 interrupts
+
 TBBlue: Fixed writing on divmmc memory when layer2 active
 
 Version 9.1 - Toi Acid Game edition. 26 November 2020
