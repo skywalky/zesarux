@@ -181,7 +181,7 @@ z80_byte cpc_keyboard_table[16]={
 };
 
 
-z80_bit cpc_send_double_vsync={1};
+z80_bit cpc_send_double_vsync={0};
 
 z80_bit cpc_vsync_signal={0};
 
