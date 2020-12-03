@@ -441,7 +441,10 @@ note 1: This function is not available in the Gate-Array, but is performed by a 
 			if (value&16) {
 				//Esto resetea bit 5 de contador de scanline
 				//printf ("Resetting bit 5 of cpc_scanline_counter\n");
+                //If bit 4 of the "Select screen mode and rom configuration" register of the Gate-Array 
+                //(bit 7="1" and bit 6="0") is set to "1" then the interrupt request is cleared and the 6-bit counter is reset to "0".
 				cpc_scanline_counter &=(255-32);
+                cpc_crt_pending_interrupt.v=0;
 			}
 		break;
 
