@@ -248,111 +248,92 @@ void core_cpc_end_scanline_stuff(void)
 void core_cpc_handle_interrupts(void)
 {
 
-			debug_fired_interrupt=1;
-
-			//if (interrupcion_non_maskable_generada.v) printf ("generada nmi\n");
-
-                        //if (interrupts.v==1) {   //esto ya no se mira. si se ha producido interrupcion es porque estaba en ei o es una NMI
-                        //ver si esta en HALT
-                        if (z80_ejecutando_halt.v) {
-                                        z80_ejecutando_halt.v=0;
-                                        reg_pc++;
-                        }
-
-			if (1==1) {
-
-					if (interrupcion_non_maskable_generada.v) {
-						debug_anota_retorno_step_nmi();
-						//printf ("generada nmi\n");
-                                                interrupcion_non_maskable_generada.v=0;
+    debug_fired_interrupt=1;
 
 
-                                                //NMI wait 14 estados
-                                                t_estados += 14;
+
+    //if (interrupts.v==1) {   //esto ya no se mira. si se ha producido interrupcion es porque estaba en ei o es una NMI
+    //ver si esta en HALT
+    if (z80_ejecutando_halt.v) {
+        z80_ejecutando_halt.v=0;
+        reg_pc++;
+    }
+
+   
+
+    if (interrupcion_non_maskable_generada.v) {
+        debug_anota_retorno_step_nmi();
+        //printf ("generada nmi\n");
+        interrupcion_non_maskable_generada.v=0;
 
 
-                                                
-												push_valor(reg_pc,PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT);
+        //NMI wait 14 estados
+        t_estados += 14;
 
 
-                                                reg_r++;
-                                                iff1.v=0;
-                                                //printf ("Calling NMI with pc=0x%x\n",reg_pc);
-
-                                                //Otros 6 estados
-                                                t_estados += 6;
-
-                                                //Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
-                                                reg_pc= 0x66;
-
-                                                //temp
-
-                                                t_estados -=15;
-
-						//Prueba
-						//Al recibir nmi tiene que poner paginacion normal. Luego ya saltara por autotrap de divmmc
-						//if (divmmc_enabled.v) divmmc_paginacion_activa.v=0;
+        
+        push_valor(reg_pc,PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT);
 
 
-						
-					}
+        reg_r++;
+        iff1.v=0;
+        //printf ("Calling NMI with pc=0x%x\n",reg_pc);
 
-					if (1==1) {
-					//else {
+        //Otros 6 estados
+        t_estados += 6;
 
-						
-					//justo despues de EI no debe generar interrupcion
-					//e interrupcion nmi tiene prioridad
-						if (interrupcion_maskable_generada.v && byte_leido_core_cpc!=251) {
-						debug_anota_retorno_step_maskable();
-						//Tratar interrupciones maskable
-						interrupcion_maskable_generada.v=0;
+        //Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
+        reg_pc= 0x66;
 
-						
+        //temp
 
-						push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
-
-						reg_r++;
-
-						//Caso Inves. Hacer poke (I*256+R) con 255
-						if (MACHINE_IS_INVES) {
-							//z80_byte reg_r_total=(reg_r&127) | (reg_r_bit7 &128);
-
-							//Se usan solo los 7 bits bajos del registro R
-							z80_byte reg_r_total=(reg_r&127);
-
-							z80_int dir=reg_i*256+reg_r_total;
-
-							poke_byte_no_time(dir,255);
-						}
-						
-						
-						//desactivar interrupciones al generar una
-						iff1.v=iff2.v=0;
-						//Modelos cpc
-
-						if (im_mode==0 || im_mode==1) {
-							cpu_common_jump_im01();
-						}
-						else {
-						//IM 2.
-
-							z80_int temp_i;
-							z80_byte dir_l,dir_h;   
-							temp_i=reg_i*256+255;
-							dir_l=peek_byte(temp_i++);
-							dir_h=peek_byte(temp_i);
-							reg_pc=value_8_to_16(dir_h,dir_l);
-							t_estados += 7;
+        t_estados -=15;
 
 
-						}
-						
-					}
-				}
+        
+    }
+
+ 
+                  
+    //justo despues de EI no debe generar interrupcion
+    //e interrupcion nmi tiene prioridad
+    if (interrupcion_maskable_generada.v && byte_leido_core_cpc!=251) {
+        debug_anota_retorno_step_maskable();
+        //Tratar interrupciones maskable
+        interrupcion_maskable_generada.v=0;
+
+        
+
+        push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
+
+        reg_r++;
+
+    
+             
+        //desactivar interrupciones al generar una
+        iff1.v=iff2.v=0;
 
 
-			}
+        if (im_mode==0 || im_mode==1) {
+            cpu_common_jump_im01();
+        }
+        else {
+        //IM 2.
+
+            z80_int temp_i;
+            z80_byte dir_l,dir_h;   
+            temp_i=reg_i*256+255;
+            dir_l=peek_byte(temp_i++);
+            dir_h=peek_byte(temp_i);
+            reg_pc=value_8_to_16(dir_h,dir_l);
+            t_estados += 7;
+
+
+        }
+                    
+    }
+            
+    
 
 }
 
@@ -385,38 +366,37 @@ void cpu_core_loop_cpc(void)
 
     if (tap_load_detect()) {
             
-                        //si estamos en pausa, no hacer nada
-                        if (!tape_pause) {
-                audio_playing.v=0;
-
-                draw_tape_text();
-
-                tap_load();
-                all_interlace_scr_refresca_pantalla();
-
-                //printf ("refresco pantalla\n");
-                //audio_playing.v=1;
-                timer_reset();
-            }
-        
-            else {
-                //core_cpc_store_rainbow_current_atributes();
-                //generamos nada. como si fuera un NOP
-                
-                contend_read( reg_pc, 4 );
-    
-
-            }
-    }
-
-    else  if (tap_save_detect()) {
-                        audio_playing.v=0;
+        //si estamos en pausa, no hacer nada
+        if (!tape_pause) {
+            audio_playing.v=0;
 
             draw_tape_text();
 
-                        tap_save();
-                        //audio_playing.v=1;
+            tap_load();
+            all_interlace_scr_refresca_pantalla();
+
+            //printf ("refresco pantalla\n");
+            //audio_playing.v=1;
             timer_reset();
+        }
+        
+        else {
+
+            //generamos nada. como si fuera un NOP
+            
+            contend_read( reg_pc, 4 );    
+
+        }
+    }
+
+    else  if (tap_save_detect()) {
+        audio_playing.v=0;
+
+        draw_tape_text();
+
+        tap_save();
+        //audio_playing.v=1;
+        timer_reset();
     }
 
 
@@ -436,21 +416,21 @@ void cpu_core_loop_cpc(void)
 
 
 
-            contend_read( reg_pc, 4 );
-            byte_leido_core_cpc=fetch_opcode();
+        contend_read( reg_pc, 4 );
+        byte_leido_core_cpc=fetch_opcode();
 
 
 
 #ifdef EMULATE_CPU_STATS
-            util_stats_increment_counter(stats_codsinpr,byte_leido_core_cpc);
+        util_stats_increment_counter(stats_codsinpr,byte_leido_core_cpc);
 #endif
 
-            reg_pc++;
+        reg_pc++;
 
-            reg_r++;
+        reg_r++;
 
 				
-            codsinpr[byte_leido_core_cpc]  () ;
+        codsinpr[byte_leido_core_cpc]  () ;
 
 
         }
@@ -481,17 +461,17 @@ void cpu_core_loop_cpc(void)
 
     //Interrupcion de 1/50s. mapa teclas activas y joystick
     if (interrupcion_fifty_generada.v) {
-            interrupcion_fifty_generada.v=0;
+        interrupcion_fifty_generada.v=0;
 
-            //y de momento actualizamos tablas de teclado segun tecla leida
-            //printf ("Actualizamos tablas teclado %d ", temp_veces_actualiza_teclas++);
-            scr_actualiza_tablas_teclado();
+        //y de momento actualizamos tablas de teclado segun tecla leida
+        //printf ("Actualizamos tablas teclado %d ", temp_veces_actualiza_teclas++);
+        scr_actualiza_tablas_teclado();
 
 
-            //lectura de joystick
-            realjoystick_main();
+        //lectura de joystick
+        realjoystick_main();
 
-            //printf ("temp conta fifty: %d\n",tempcontafifty++);
+
     }
 
 
