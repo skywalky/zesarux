@@ -559,16 +559,44 @@ If the top bit of the 6-bit counter is set to "0" (i.e. the counter <32), then a
 and the 6-bit counter is reset to "0".
 In both cases the following interrupt requests are synchronised with the VSYNC.
 */
+
+        //TODO: no estoy del todo seguro con esto
+        //No seria la condicion al reves? cpc_scanline_counter<32
+
+        //O querra decir que se resetea el interrupt request si >=32, pero en caso contrario, no se activa un interrupt request?
+
+        /*
+        http://cpctech.cpc-live.com/source/split.html
+        ;; The interrupt counter is updated every HSYNC.
+        ;; The interrupt counter reset is synchronised to the start of the VSYNC.
+        ;; A interrupt request is issued when the interrupt counter reaches 52.
+        ;; 
+        ;; The next interrupt could occur in two HSYNC times, assuming that
+        ;; the previous interrupt was not serviced less than 32 lines ago.
+        ;;
+        ;; Otherwise the next interrupt will occur in 52+2 HSYNC times.
+        ;;
+        ;; A perfect split relies on predicting the position of the start of the VSYNC
+        ;; and the position of the interrupts, as these are the signals we use to
+        ;; synchronise with the display, and this means that we can setup the next split
+        ;; block at the correct position).
+        */
+
+       //Por tanto creo que vsync solo resetea cpc_scanline_counter y nada mas
+        
+
         if (t_scanline_draw==vsync_position+2) {
             if (cpc_scanline_counter>=32) {
-            	cpc_crt_pending_interrupt.v=0;
+            	//cpc_crt_pending_interrupt.v=0;
             }
             else {
-                cpc_crt_pending_interrupt.v=1;
+                //cpc_crt_pending_interrupt.v=1;
+                //printf("Generating vsync en counter: %d t: %d\n",cpc_scanline_counter,t_estados);
             }
         
             cpc_scanline_counter=0;
         }
+        
 
     }
 	else {
