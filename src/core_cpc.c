@@ -53,193 +53,188 @@
 
 z80_byte byte_leido_core_cpc;
 
+void core_cpc_final_frame(void)
+{
+
+
+
+    //Con ay player, interrupciones a 50 Hz
+    if (ay_player_playing.v==1) {
+        if (iff1.v==1) {
+            //printf ("Generamos interrupcion en scanline: %d cpc_scanline_counter: %d\n",t_scanline,cpc_scanline_counter);
+            interrupcion_maskable_generada.v=1;
+        }
+    }
+
+
+
+
+    t_scanline=0;
+
+    timer_get_elapsed_core_frame_post();						
+
+
+    set_t_scanline_draw_zero();
+
+
+    //Parche para maquinas que no generan 312 lineas, porque si enviamos menos sonido se escuchara un click al final
+    //Es necesario que cada frame de pantalla contenga 312 bytes de sonido
+    //Igualmente en la rutina de envio_audio se vuelve a comprobar que todo el sonido a enviar
+    //este completo; esto es necesario para Z88
+
+
+    int linea_estados=t_estados/screen_testados_linea;
+
+    while (linea_estados<312) {
+        audio_send_mono_sample(audio_valor_enviar_sonido);
+        linea_estados++;
+    }
+
+
+
+
+    t_estados -=screen_testados_total;
+
+
+
+    cpu_loop_refresca_pantalla();
+
+    vofile_send_frame(rainbow_buffer);	
+
+
+    siguiente_frame_pantalla();
+
+
+    if (debug_registers) scr_debug_registers();
+
+    contador_parpadeo--;
+    //printf ("Parpadeo: %d estado: %d\n",contador_parpadeo,estado_parpadeo.v);
+    if (!contador_parpadeo) {
+        contador_parpadeo=16;
+        estado_parpadeo.v ^=1;
+    }
+
+			
+    if (!interrupcion_timer_generada.v) {
+        //Llegado a final de frame pero aun no ha llegado interrupcion de timer. Esperemos...
+        //printf ("no demasiado\n");
+        esperando_tiempo_final_t_estados.v=1;
+    }
+
+    else {
+        //Llegado a final de frame y ya ha llegado interrupcion de timer. No esperamos.... Hemos tardado demasiado
+        //printf ("demasiado\n");
+        esperando_tiempo_final_t_estados.v=0;
+    }
+
+    core_end_frame_check_zrcp_zeng_snap.v=1;
+
+
+}
+
+
 void core_cpc_end_scanline_stuff(void)
 {
 
-			//printf ("%d\n",t_estados);
-			//if (t_estados>69000) printf ("t_scanline casi final: %d\n",t_scanline);
+    //printf ("%d\n",t_estados);
+    //if (t_estados>69000) printf ("t_scanline casi final: %d\n",t_scanline);
 
-			audio_valor_enviar_sonido=0;
+    audio_valor_enviar_sonido=0;
 
-			audio_valor_enviar_sonido +=da_output_ay();
+    audio_valor_enviar_sonido +=da_output_ay();
 
-			if (realtape_inserted.v && realtape_playing.v) {
-				realtape_get_byte();
-				if (realtape_loading_sound.v) {
-                                audio_valor_enviar_sonido /=2;
-                                audio_valor_enviar_sonido += realtape_last_value/2;
-                                //Sonido alterado cuando top speed
-                                if (timer_condicion_top_speed() ) audio_valor_enviar_sonido=audio_change_top_speed_sound(audio_valor_enviar_sonido);
-				}
-			}
+    if (realtape_inserted.v && realtape_playing.v) {
+        realtape_get_byte();
+        if (realtape_loading_sound.v) {
+            audio_valor_enviar_sonido /=2;
+            audio_valor_enviar_sonido += realtape_last_value/2;
+            //Sonido alterado cuando top speed
+            if (timer_condicion_top_speed() ) audio_valor_enviar_sonido=audio_change_top_speed_sound(audio_valor_enviar_sonido);
+        }
+    }
 
-			//Ajustar volumen
-			if (audiovolume!=100) {
-				audio_valor_enviar_sonido=audio_adjust_volume(audio_valor_enviar_sonido);
-			}
+    //Ajustar volumen
+    if (audiovolume!=100) {
+        audio_valor_enviar_sonido=audio_adjust_volume(audio_valor_enviar_sonido);
+    }
 
-			audio_send_mono_sample(audio_valor_enviar_sonido);
+    audio_send_mono_sample(audio_valor_enviar_sonido);
 
 
-			ay_chip_siguiente_ciclo();
+    ay_chip_siguiente_ciclo();
 
 
 
-			//final de linea
-			
+    //final de linea
+    
 
-			//copiamos contenido linea y border a buffer rainbow
-			if (rainbow_enabled.v==1) {
-				//screen_store_scanline_rainbow_solo_border();
-				//screen_store_scanline_rainbow_solo_display();	
+    //copiamos contenido linea y border a buffer rainbow
+    if (rainbow_enabled.v==1) {
+        //screen_store_scanline_rainbow_solo_border();
+        //screen_store_scanline_rainbow_solo_display();	
 
-				//t_scanline_next_border();
+        //t_scanline_next_border();
 
-			}
+    }
 
-			t_scanline_next_line();
+    t_scanline_next_line();
 
-			cpc_handle_vsync_state();
+    cpc_handle_vsync_state();
 
 
-			//CPC genera interrupciones a 300 hz
-			//Esto supone lanzar 6  (50*6=300) interrupciones en cada frame
-			//al final de un frame ya va una interrupcion
-			//generar otras 5
-			//tenemos unas 300 scanlines en cada pantalla
-			//generamos otras 5 interrupciones en cada scanline: 50,100,150,200,250
-			cpc_scanline_counter++;
+    //CPC genera interrupciones a 300 hz
+    //Esto supone lanzar 6  (50*6=300) interrupciones en cada frame
+    //al final de un frame ya va una interrupcion
+    //generar otras 5
+    //tenemos unas 300 scanlines en cada pantalla
+    //generamos otras 5 interrupciones en cada scanline: 50,100,150,200,250
+    cpc_scanline_counter++;
 
-			//Con ay player, interrupciones a 50 Hz
-			if (cpc_scanline_counter>=52 && ay_player_playing.v==0) {
-                cpc_crt_pending_interrupt.v=1;
+    //Con ay player, interrupciones a 50 Hz
+    if (cpc_scanline_counter>=52 && ay_player_playing.v==0) {
+        cpc_crt_pending_interrupt.v=1;
 
+  
+        if (iff1.v==1) {
+            //printf ("Llega interrupcion crtc con interrupciones habilitadas del Z80 en t: %d\n",t_estados);
+            //printf ("Generamos interrupcion en scanline: %d cpc_scanline_counter: %d\n",t_scanline,cpc_scanline_counter);
 
-                
+        }
 
-				if (iff1.v==1) {
-                    //printf ("Llega interrupcion crtc con interrupciones habilitadas del Z80 en t: %d\n",t_estados);
-					//printf ("Generamos interrupcion en scanline: %d cpc_scanline_counter: %d\n",t_scanline,cpc_scanline_counter);
+        else {
+            //printf ("Llega interrupcion crtc con interrupciones DESHABILITADAS del Z80 en t: %d\n",t_estados);
+        }
+        cpc_scanline_counter=0;
+    }
 
-                    
-                                       	//interrupcion_maskable_generada.v=1;
-				}
 
-                else {
-                    //printf ("Llega interrupcion crtc con interrupciones DESHABILITADAS del Z80 en t: %d\n",t_estados);
-                }
-				cpc_scanline_counter=0;
-			}
 
+    //se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
+    //esperar para ver si se ha generado una interrupcion 1/50
 
+    if (t_estados>=screen_testados_total) {
+        core_cpc_final_frame();
+    }
 
-			//se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
-			//esperar para ver si se ha generado una interrupcion 1/50
+    //Fin final de frame
 
-                        if (t_estados>=screen_testados_total) {
+    //Bit de vsync
+    //Duracion vsync
+    /*z80_byte vsync_lenght=cpc_ppi_ports[3]&15;
 
+    //Si es 0, en algunos chips significa 16
+    if (vsync_lenght==0) vsync_lenght=16;
+    //cpc_ppi_ports[1];
+    if (t_scanline>=0 && t_scanline<=vsync_lenght-1) {
+    //if (t_scanline>=0 && t_scanline<=7) {
+        //printf ("Enviando vsync en linea %d\n",t_scanline);
+        cpc_ppi_ports[1] |=1;
+    }
 
-
-			//Con ay player, interrupciones a 50 Hz
-                        if (ay_player_playing.v==1) {
-                                if (iff1.v==1) {
-                                        //printf ("Generamos interrupcion en scanline: %d cpc_scanline_counter: %d\n",t_scanline,cpc_scanline_counter);
-                                        interrupcion_maskable_generada.v=1;
-                                }
-                        }
-
-
-
-				//if (rainbow_enabled.v==1) t_scanline_next_fullborder();
-
-		                t_scanline=0;
-
-						timer_get_elapsed_core_frame_post();						
-
-		                //printf ("final scan lines. total: %d\n",screen_scanlines);
-                		        //printf ("reset no inves\n");
-					set_t_scanline_draw_zero();
-
-
-                                //Parche para maquinas que no generan 312 lineas, porque si enviamos menos sonido se escuchara un click al final
-                                //Es necesario que cada frame de pantalla contenga 312 bytes de sonido
-                                //Igualmente en la rutina de envio_audio se vuelve a comprobar que todo el sonido a enviar
-                                //este completo; esto es necesario para Z88
-
-
-                                int linea_estados=t_estados/screen_testados_linea;
-
-                                while (linea_estados<312) {
-										audio_send_mono_sample(audio_valor_enviar_sonido);
-                                        linea_estados++;
-                                }
-
-
-
-
-                                t_estados -=screen_testados_total;
-
-				//Para paperboy, thelosttapesofalbion0 y otros que hacen letras en el border, para que no se desplacen en diagonal
-				//t_estados=0;
-				//->paperboy queda fijo. thelosttapesofalbion0 no se desplaza, sino que tiembla si no forzamos esto
-
-
-
-		
-
-
-				cpu_loop_refresca_pantalla();
-
-				vofile_send_frame(rainbow_buffer);	
-
-
-				siguiente_frame_pantalla();
-
-
-				if (debug_registers) scr_debug_registers();
-
-	  	                contador_parpadeo--;
-                        	//printf ("Parpadeo: %d estado: %d\n",contador_parpadeo,estado_parpadeo.v);
-	                        if (!contador_parpadeo) {
-        	                        contador_parpadeo=16;
-                	                estado_parpadeo.v ^=1;
-	                        }
-
-			
-				if (!interrupcion_timer_generada.v) {
-					//Llegado a final de frame pero aun no ha llegado interrupcion de timer. Esperemos...
-					//printf ("no demasiado\n");
-					esperando_tiempo_final_t_estados.v=1;
-				}
-
-				else {
-					//Llegado a final de frame y ya ha llegado interrupcion de timer. No esperamos.... Hemos tardado demasiado
-					//printf ("demasiado\n");
-					esperando_tiempo_final_t_estados.v=0;
-				}
-
-				core_end_frame_check_zrcp_zeng_snap.v=1;
-
-
-			}
-
-			//Bit de vsync
-			//Duracion vsync
-			/*z80_byte vsync_lenght=cpc_ppi_ports[3]&15;
-
-			//Si es 0, en algunos chips significa 16
-			if (vsync_lenght==0) vsync_lenght=16;
-			//cpc_ppi_ports[1];
-			if (t_scanline>=0 && t_scanline<=vsync_lenght-1) {
-			//if (t_scanline>=0 && t_scanline<=7) {
-				//printf ("Enviando vsync en linea %d\n",t_scanline);
-				cpc_ppi_ports[1] |=1;
-			}
-
-			else {
-				//printf ("NO enviando vsync en linea %d\n",t_scanline);
-				cpc_ppi_ports[1] &=(255-1);
-			}*/
+    else {
+        //printf ("NO enviando vsync en linea %d\n",t_scanline);
+        cpc_ppi_ports[1] &=(255-1);
+    }*/
 
 }
 
@@ -447,8 +442,7 @@ void cpu_core_loop_cpc(void)
     if ( (t_estados/screen_testados_linea)>t_scanline  ) {
 
         core_cpc_end_scanline_stuff();
-
-			
+		
     }
 
 
