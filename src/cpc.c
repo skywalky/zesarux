@@ -1621,7 +1621,8 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     //de momento:
     int inicio_pantalla;
     int final_pantalla;
-    int borde_izq=CPC_LEFT_BORDER_NO_ZOOM;
+    //int borde_izq=CPC_LEFT_BORDER_NO_ZOOM;
+    int borde_izq=ancho_maximo-ancho_total-CPC_LEFT_BORDER_NO_ZOOM;
 
     //inicio_pantalla=CPC_TOP_BORDER_NO_ZOOM/2; //porque aqui consideramos scanlines, no tamanyo final
 
