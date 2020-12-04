@@ -171,3 +171,8 @@ They are not supported by esxDOS."
 -paleta colores modo zxuno prism. que se vea tambien desde menu display-color palette
 
 -cpc: considerar anchos borde segun crtc. esta bien ahora?
+
+-cpc: revisar esto:     //temp
+    offset_x=0;
+
+    realmente de donde tiene que salir offset_x?

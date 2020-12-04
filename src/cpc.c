@@ -1613,8 +1613,9 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
         if (offset_x<0) offset_x=0;
         if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
 
-        printf("ancho total despues limite: %d\n",ancho_total);     
-
+         
+    //temp
+    offset_x=0;
 
 
     //TODO: cuadrar esto con el tamanyo del border actual segun CRTC
@@ -1622,7 +1623,11 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     int inicio_pantalla;
     int final_pantalla;
     //int borde_izq=CPC_LEFT_BORDER_NO_ZOOM;
-    int borde_izq=ancho_maximo-ancho_total-CPC_LEFT_BORDER_NO_ZOOM;
+    //int borde_izq=ancho_maximo-ancho_total-CPC_LEFT_BORDER_NO_ZOOM;
+    int borde_izq=(ancho_maximo-ancho_total)/2;
+
+
+    printf("ancho total despues limite: %d ancho maximo %d borde_izqu %d offset_x: %d\n",ancho_total,ancho_maximo,borde_izq,offset_x);    
 
     //inicio_pantalla=CPC_TOP_BORDER_NO_ZOOM/2; //porque aqui consideramos scanlines, no tamanyo final
 
