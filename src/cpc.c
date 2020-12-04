@@ -54,7 +54,7 @@ z80_byte debug_cpc_type_memory_paged_read[4];
 z80_byte debug_cpc_paginas_memoria_mapeadas_read[4];
 
 //Offset a cada linea de pantalla
-z80_int cpc_line_display_table[200];
+z80_int cpc_line_display_table[272];
 
 //Forzar modo video para algunos juegos (p.ej. Paperboy)
 z80_bit cpc_forzar_modo_video={0};
@@ -1569,6 +1569,53 @@ void cpc_putpixel_zoom_rainbow(int x,z80_int *puntero_buf_rainbow,int color)
 //void screen_store_scanline_rainbow_solo_display_cpc(z80_int *scanline_buffer,z80_byte *vram_memory_pointer)
 void screen_store_scanline_rainbow_solo_display_cpc(void)
 {
+    int alto_caracter,ancho_total,total_alto,offset_x;
+
+        //scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
+
+            //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
+
+    alto_caracter=(cpc_crtc_registers[9]&7)+1;
+
+
+
+
+         ancho_total=cpc_crtc_registers[1]*16;
+         total_alto=cpc_crtc_registers[6]*alto_caracter;
+
+        //temp para living daylights
+        //if (total_alto<192) total_alto=200;
+
+
+        //CRTC registro: 2 valor: 46 . Normal
+        //CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
+         offset_x=(46-cpc_crtc_registers[2])*16;
+
+
+/*
+#define CPC_LEFT_BORDER_NO_ZOOM 64
+#define CPC_TOP_BORDER_NO_ZOOM 72
+
+#define CPC_LEFT_BORDER CPC_LEFT_BORDER_NO_ZOOM*zoom_x
+#define CPC_TOP_BORDER CPC_TOP_BORDER_NO_ZOOM*zoom_y
+
+#define CPC_DISPLAY_WIDTH 640
+#define CPC_DISPLAY_HEIGHT 400
+*/
+
+        int ancho_maximo=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
+        int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+
+        printf("ancho total: %d\n",ancho_total);     
+
+        if (ancho_total>ancho_maximo) ancho_total=ancho_maximo;
+        if (total_alto>alto_maximo) total_alto=alto_maximo;
+        if (offset_x<0) offset_x=0;
+        if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
+
+        printf("ancho total despues limite: %d\n",ancho_total);     
+
+
 
     //TODO: cuadrar esto con el tamanyo del border actual segun CRTC
     //de momento:
@@ -1577,7 +1624,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     int borde_izq=CPC_LEFT_BORDER_NO_ZOOM;
 
     inicio_pantalla=CPC_TOP_BORDER_NO_ZOOM/2; //porque aqui consideramos scanlines, no tamanyo final
-    final_pantalla=inicio_pantalla+CPC_DISPLAY_HEIGHT/2;
+    final_pantalla=inicio_pantalla+total_alto;
 
   //Si en zona pantalla (no border superior ni inferior)
   printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
@@ -1653,7 +1700,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     z80_byte byte_leido;
 
     
-    int alto_caracter,ancho_total,total_alto,offset_x;
+
 
 
     //offset_x=0;
@@ -1695,49 +1742,6 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
         */
 
 
-        //scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
-
-            //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
-
-    alto_caracter=(cpc_crtc_registers[9]&7)+1;
-
-
-
-
-         ancho_total=cpc_crtc_registers[1]*16;
-         total_alto=cpc_crtc_registers[6]*alto_caracter;
-
-        //temp para living daylights
-        //if (total_alto<192) total_alto=200;
-
-
-        //CRTC registro: 2 valor: 46 . Normal
-        //CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
-         offset_x=(46-cpc_crtc_registers[2])*16;
-
-
-/*
-#define CPC_LEFT_BORDER_NO_ZOOM 64
-#define CPC_TOP_BORDER_NO_ZOOM 72
-
-#define CPC_LEFT_BORDER CPC_LEFT_BORDER_NO_ZOOM*zoom_x
-#define CPC_TOP_BORDER CPC_TOP_BORDER_NO_ZOOM*zoom_y
-
-#define CPC_DISPLAY_WIDTH 640
-#define CPC_DISPLAY_HEIGHT 400
-*/
-
-        int ancho_maximo=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
-        int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
-
-        printf("ancho total: %d\n",ancho_total);     
-
-        if (ancho_total>ancho_maximo) ancho_total=ancho_maximo;
-        if (total_alto>alto_maximo) total_alto=alto_maximo;
-        if (offset_x<0) offset_x=0;
-        if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
-
-        printf("ancho total despues limite: %d\n",ancho_total);     
 
         int bit;
 
@@ -1745,7 +1749,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
         //sale tal cual de init_cpc_line_display_table pero cambiando valor 80
         int yy;
         z80_int offset;
-        for (yy=0;yy<200;yy++) {
+        for (yy=0;yy<total_alto;yy++) {
                 //offset=((yy / 8) * cpc_crtc_registers[1]*2) + ((yy % 8) * 2048);
                 offset=((yy / alto_caracter) * cpc_crtc_registers[1]*2) + ((yy % alto_caracter) * 2048);
                 cpc_line_display_table[yy]=offset;
