@@ -42,16 +42,39 @@ extern z80_byte debug_cpc_paginas_memoria_mapeadas_read[];
 extern void init_cpc_line_display_table(void);
 
 //Hacer que estos valores de border sean multiples de 8
-#define CPC_LEFT_BORDER_NO_ZOOM 48
-#define CPC_TOP_BORDER_NO_ZOOM 24
+#define CPC_LEFT_BORDER_NO_ZOOM 64
+#define CPC_TOP_BORDER_NO_ZOOM 72
 
 #define CPC_LEFT_BORDER CPC_LEFT_BORDER_NO_ZOOM*zoom_x
 #define CPC_TOP_BORDER CPC_TOP_BORDER_NO_ZOOM*zoom_y
 
-//#define CPC_LEFT_BORDER 0
-//#define CPC_TOP_BORDER 0
 #define CPC_DISPLAY_WIDTH 640
 #define CPC_DISPLAY_HEIGHT 400
+
+/*
+
+http://www.cpcwiki.eu/index.php/Video_modes
+
+Mode 0: 160×200 pixels with 16 colors (4 bpp)
+Mode 1: 320×200 pixels with 4 colors (2 bpp)
+Mode 2: 640×200 pixels with 2 colors (1 bpp)
+Mode 3: 160×200 pixels with 4 colors (2bpp) (this is not an official mode, but rather a side-effect of the hardware)
+The Video modes are known to display pixels with different sizes.
+
+Basically, the Amstrad CPC Video works like a CGA video card from a PC. But extra features like a 16 colours mode exist.
+
+The dimensions in pixels given could be raised with clever use of FullScreen Trick (often dubbed erronuously as "overscan mode".)
+
+This then allows with a video memory of 24 KB (approximately) to displays on the standard screen up to :
+
+Full screen Mode 0: 192×272 pixels with 16 colors (4 bpp)
+Full screen Mode 1: 384×272 pixels with 4 colors (2 bpp)
+Full screen Mode 2: 768×272 pixels with 2 colors (1 bpp)
+
+En modo no rainbow, border superior e inferior suman 272-200=72 pixeles. O sea 72/2=36 cada uno. Pero como hacemos x2, son de 72 cada uno
+Borde izquierdo y derecho son de 768-640=128 total, o sea , 64 pixeles cada uno
+
+*/
 
 extern z80_int cpc_line_display_table[];
 
