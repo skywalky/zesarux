@@ -1559,6 +1559,8 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 void cpc_putpixel_zoom_rainbow(int x,z80_int *puntero_buf_rainbow,int color)
 {
     puntero_buf_rainbow[x]=color;
+    //Siempre es x2 de alto
+    puntero_buf_rainbow[x+get_total_ancho_rainbow()]=color;
 }
 
 //Guardar en buffer rainbow la linea actual. 
