@@ -1652,12 +1652,12 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
     z80_byte byte_leido;
 
-    //TODO
+    
     int alto_caracter,ancho_total,total_alto,offset_x;
 
 
-    offset_x=0;
-    ancho_total=640;
+    //offset_x=0;
+    //ancho_total=640;
     int x;
     int color0,color1,color2,color3;
 
@@ -1695,7 +1695,49 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
         */
 
 
-        scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
+        //scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
+
+            //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
+
+    alto_caracter=(cpc_crtc_registers[9]&7)+1;
+
+
+
+
+         ancho_total=cpc_crtc_registers[1]*16;
+         total_alto=cpc_crtc_registers[6]*alto_caracter;
+
+        //temp para living daylights
+        //if (total_alto<192) total_alto=200;
+
+
+        //CRTC registro: 2 valor: 46 . Normal
+        //CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
+         offset_x=(46-cpc_crtc_registers[2])*16;
+
+
+/*
+#define CPC_LEFT_BORDER_NO_ZOOM 64
+#define CPC_TOP_BORDER_NO_ZOOM 72
+
+#define CPC_LEFT_BORDER CPC_LEFT_BORDER_NO_ZOOM*zoom_x
+#define CPC_TOP_BORDER CPC_TOP_BORDER_NO_ZOOM*zoom_y
+
+#define CPC_DISPLAY_WIDTH 640
+#define CPC_DISPLAY_HEIGHT 400
+*/
+
+        int ancho_maximo=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
+        int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+
+        printf("ancho total: %d\n",ancho_total);     
+
+        if (ancho_total>ancho_maximo) ancho_total=ancho_maximo;
+        if (total_alto>alto_maximo) total_alto=alto_maximo;
+        if (offset_x<0) offset_x=0;
+        if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
+
+        printf("ancho total despues limite: %d\n",ancho_total);     
 
         int bit;
 

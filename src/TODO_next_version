@@ -169,3 +169,5 @@ They are not supported by esxDOS."
 
 
 -paleta colores modo zxuno prism. que se vea tambien desde menu display-color palette
+
+-cpc: considerar alto pantalla al hacer render. En el if inicial
