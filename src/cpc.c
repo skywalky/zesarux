@@ -1623,7 +1623,24 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     int final_pantalla;
     int borde_izq=CPC_LEFT_BORDER_NO_ZOOM;
 
-    inicio_pantalla=CPC_TOP_BORDER_NO_ZOOM/2; //porque aqui consideramos scanlines, no tamanyo final
+    //inicio_pantalla=CPC_TOP_BORDER_NO_ZOOM/2; //porque aqui consideramos scanlines, no tamanyo final
+
+    int total_scanlines=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+
+    int borde_superior=CPC_TOTAL_SCANLINES-total_alto-CPC_TOP_BORDER_NO_ZOOM/2;
+
+    inicio_pantalla=borde_superior;
+
+    /*
+    #define CPC_LEFT_BORDER_NO_ZOOM 64
+#define CPC_TOP_BORDER_NO_ZOOM 72
+
+
+
+#define CPC_DISPLAY_WIDTH 640
+#define CPC_DISPLAY_HEIGHT 400
+    */
+
     final_pantalla=inicio_pantalla+total_alto;
 
   //Si en zona pantalla (no border superior ni inferior)
