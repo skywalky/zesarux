@@ -1466,7 +1466,7 @@ pixel 0 (bit 1)	pixel 1 (bit 1)	pixel 2 (bit 1)	pixel 3 (bit 1)	pixel 0 (bit 0)	
 
 
 
-void scr_refresca_pantalla_y_border_cpc(void)
+void scr_refresca_pantalla_y_border_cpc_no_rainbow(void)
 {
 
         //Refrescar border si conviene
@@ -1487,3 +1487,427 @@ void scr_refresca_pantalla_y_border_cpc(void)
 }
 
 
+
+//Refresco pantalla con rainbow
+void scr_refresca_pantalla_y_border_cpc_rainbow(void)
+{
+
+
+
+	int ancho,alto;
+
+	ancho=get_total_ancho_rainbow();
+	alto=get_total_alto_rainbow();
+
+	int x,y;
+
+
+
+	z80_int color_pixel;
+	z80_int *puntero;
+
+	puntero=rainbow_buffer;
+
+
+
+
+	for (y=0;y<alto;y++) {
+
+
+
+
+	
+		for (x=0;x<ancho;x++) {
+
+
+
+
+
+            color_pixel=*puntero++;
+            scr_putpixel_zoom_rainbow(x,y,color_pixel);
+
+
+
+		}
+		
+	}
+
+
+
+
+}
+
+
+
+void scr_refresca_pantalla_y_border_cpc(void)
+{
+    if (rainbow_enabled.v) {
+        scr_refresca_pantalla_y_border_cpc_rainbow();
+    }
+    else {
+        scr_refresca_pantalla_y_border_cpc_no_rainbow();
+    }
+}
+
+
+void screen_store_scanline_rainbow_solo_border_cpc(void)
+{
+    //TODO
+}
+
+
+void cpc_putpixel_zoom_rainbow(int x,z80_int *puntero_buf_rainbow,int color)
+{
+    puntero_buf_rainbow[x]=color;
+}
+
+//Guardar en buffer rainbow la linea actual. 
+//Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
+//en cambio, si border esta activado, la primera linea del buffer sera de border
+//void screen_store_scanline_rainbow_solo_display_cpc(z80_int *scanline_buffer,z80_byte *vram_memory_pointer)
+void screen_store_scanline_rainbow_solo_display_cpc(void)
+{
+
+    //TODO: cuadrar esto con el tamanyo del border actual segun CRTC
+    //de momento:
+    int inicio_pantalla;
+    int final_pantalla;
+    int borde_izq=CPC_LEFT_BORDER_NO_ZOOM;
+
+    inicio_pantalla=CPC_TOP_BORDER_NO_ZOOM/2; //porque aqui consideramos scanlines, no tamanyo final
+    final_pantalla=inicio_pantalla+CPC_DISPLAY_HEIGHT/2;
+
+  //Si en zona pantalla (no border superior ni inferior)
+  printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
+  if (t_scanline_draw>=inicio_pantalla && t_scanline_draw<final_pantalla) {
+
+
+        //linea en coordenada display (no border) que se debe leer
+        int y_display=t_scanline_draw-inicio_pantalla;
+
+ 
+
+
+
+
+//Renderiza una linea de display (pantalla y sprites, pero no border)
+//void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
+
+
+
+    //Nos ubicamos ya en la zona de pixeles, saltando el border
+    //En esta capa, si color=0, no lo ponemos como transparente sino como color negro
+    z80_int *puntero_buf_rainbow;
+
+    printf("%d\n",t_scanline_draw);
+
+   int y_destino_rainbow=t_scanline_draw*2;
+
+    
+    //TODO: calculo con border desactivado
+    //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
+    //if (border_enabled.v==0) y_destino_rainbow=y_destino_rainbow-screen_borde_superior;
+
+
+
+    //Limite inferior y superior. Sobretodo el inferior, pues puede ser negativo (en zona border invisible)
+    //En teoria superior no deberia ser mayor, pero por si acaso
+    int max_y=get_total_alto_rainbow();
+
+    if (y_destino_rainbow<0 || y_destino_rainbow>=max_y) return;
+
+    puntero_buf_rainbow=&rainbow_buffer[borde_izq+y_destino_rainbow*get_total_ancho_rainbow()];
+
+
+    //*puntero_buf_rainbow=99;
+
+
+
+	z80_byte modo_video=cpc_gate_registers[2] &3;
+
+	if (cpc_forzar_modo_video.v) {
+		modo_video=cpc_forzar_modo_video_modo;
+	}
+
+	switch (modo_video) {
+		case 0:
+			//printf ("Mode 0, 160x200 resolution, 16 colours\n");
+		break;
+
+		case 1:
+			//printf ("Mode 1, 320x200 resolution, 4 colours\n");
+		break;
+
+		case 2:
+			//printf ("Mode 2, 640x200 resolution, 2 colours\n");
+		break;
+
+		case 3:
+			//printf ("Mode 3, 160x200 resolution, 4 colours (undocumented)\n");
+
+		break;
+	}
+
+    z80_byte byte_leido;
+
+    //TODO
+    int alto_caracter,ancho_total,total_alto,offset_x;
+
+
+    offset_x=0;
+    ancho_total=640;
+    int x;
+    int color0,color1,color2,color3;
+
+        z80_int crtc_offset_videoram=(cpc_crtc_registers[13])  + (256*(cpc_crtc_registers[12]&3));
+        z80_byte crtc_video_page=(cpc_crtc_registers[12]>>4)&3;
+        //printf ("offset: %d video page: %d\n",crtc_offset_videoram,crtc_video_page);
+
+        crtc_offset_videoram *=2;
+
+        
+        /*
+
+        int alto_caracter=(cpc_crtc_registers[9]&7)+1;
+
+
+
+        int ancho_total=cpc_crtc_registers[1]*16;
+        int total_alto=cpc_crtc_registers[6]*alto_caracter;
+
+        //temp para living daylights
+        //if (total_alto<192) total_alto=200;
+
+
+        //CRTC registro: 2 valor: 46 . Normal
+        //CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
+        int offset_x=(46-cpc_crtc_registers[2])*16;
+
+        //printf ("offset_x: %d\n",offset_x);
+
+        //Controlar maximos
+        if (ancho_total>640) ancho_total=640;
+        if (total_alto>200) total_alto=200;
+        if (offset_x<0) offset_x=0;
+        if (offset_x+ancho_total>640) offset_x=640-ancho_total;
+        */
+
+
+        scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
+
+        //Temporal. Quiza no tener que inicializar la tabla cada vez??? Esta tabla
+        //sale tal cual de init_cpc_line_display_table pero cambiando valor 80
+        int yy;
+        z80_int offset;
+        for (yy=0;yy<200;yy++) {
+                //offset=((yy / 8) * cpc_crtc_registers[1]*2) + ((yy % 8) * 2048);
+                offset=((yy / alto_caracter) * cpc_crtc_registers[1]*2) + ((yy % alto_caracter) * 2048);
+                cpc_line_display_table[yy]=offset;
+        }
+        z80_int direccion_pixel;
+        int yfinal;
+        z80_int offset_tabla;
+
+
+                yfinal=y_display;
+                offset_tabla=cpc_line_display_table[yfinal];
+                direccion_pixel=offset_tabla+crtc_offset_videoram;
+
+                //puntero=cpc_ram_mem_table[3]+offset_tabla;
+
+                //x lo incrementa cada modo por separado
+                //for (x=0;x<640;) {
+                    
+                                                
+
+	for (x=offset_x;x<ancho_total+offset_x;) {
+			switch (modo_video) {
+		                case 0:  //160x200
+
+    
+
+                		        //printf ("Mode 0, 160x200 resolution, 16 colours\n");
+					//Cada pixel por cuaduplicado
+					byte_leido=*(cpc_ram_mem_table[crtc_video_page]+(direccion_pixel&16383) ); //Solo offset dentro de 16kb
+
+					//if (crtc_offset_videoram) direccion_pixel=cpc_refresca_ajusta_offet(direccion_pixel);
+					//else direccion_pixel++;
+
+					direccion_pixel++;
+
+					color0=(byte_leido&128)>>7 | (byte_leido&8)>>2 | (byte_leido&32)>>3 | (byte_leido&2)<<2;
+					color1=(byte_leido&64)>>6  | (byte_leido&4)>>1 | (byte_leido&16)>>2 | (byte_leido&1)<<3;
+
+					color0=cpc_palette_table[color0];
+                                        color0 +=CPC_INDEX_FIRST_COLOR;
+                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+
+					color1=cpc_palette_table[color1];
+                                        color1 +=CPC_INDEX_FIRST_COLOR;
+                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+
+
+		    break;
+
+    }
+    }
+    /*
+
+	z80_byte video_mode=vdp_9918a_get_video_mode();
+
+	//printf ("video_mode: %d\n",video_mode);
+
+
+	int x,bit; 
+	z80_int direccion_name_table;
+	z80_byte byte_leido;
+    z80_byte byte_color;
+	int color=0;
+	
+	//int zx,zy;
+
+	z80_byte ink,paper;
+
+
+	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
+	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
+
+	pattern_name_table=vdp_9918a_get_pattern_name_table(); //(vdp_9918a_registers[2]&15) * 0x400; 
+
+
+
+	pattern_base_address=vdp_9918a_get_pattern_base_address();
+
+
+	z80_int pattern_color_table=vdp_9918a_get_pattern_color_table();
+
+
+    //Sumar el offset por linea
+
+    int fila=scanline/8;
+
+    //entre 0 y 7 dentro de la fila
+    int scanline_fila=scanline % 8;    
+
+    int offset_sumar_linea;
+
+
+	int chars_in_line;
+	int char_width;
+
+
+
+			chars_in_line=32;
+			char_width=8;
+
+            //printf ("pattern base address before mask: %d\n",pattern_base_address);
+
+            //printf ("pattern color table before mask:  %d\n",pattern_color_table);            
+
+
+			pattern_base_address &=8192; //Cae en offset 0 o 8192
+          
+			pattern_color_table &=8192; //Cae en offset 0 o 8192
+
+
+            //printf ("pattern base address after mask: %d\n",pattern_base_address);
+
+            //printf ("pattern color table after mask:  %d\n",pattern_color_table);
+
+			direccion_name_table=pattern_name_table;  
+
+            offset_sumar_linea=chars_in_line*fila;
+
+            direccion_name_table +=offset_sumar_linea;            
+
+			//for (y=0;y<24;y++) {
+
+				int tercio=fila/8;
+
+				for (x=0;x<chars_in_line;x++) {  
+					
+					
+					z80_byte caracter=vdp_9918a_read_vram_byte(vram,direccion_name_table);
+					
+
+					//int scanline;
+
+					z80_int pattern_address=(caracter*8+2048*tercio) ;
+					pattern_address +=pattern_base_address+scanline_fila;
+					
+					
+
+
+					z80_int color_address=(caracter*8+2048*tercio) ;
+					color_address +=pattern_color_table+scanline_fila;
+
+	
+			
+
+					//for (scanline=0;scanline<8;scanline++) {
+
+						byte_leido=vdp_9918a_read_vram_byte(vram,pattern_address);
+
+						byte_color=vdp_9918a_read_vram_byte(vram,color_address);
+
+
+						ink=(byte_color>>4) &15;
+						paper=byte_color &15;
+
+							
+						for (bit=0;bit<char_width;bit++) {
+
+							//int columna=(x*char_width+bit)/8;
+
+													
+							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
+							//if (scr_ver_si_refrescar_por_menu_activo(columna,fila)) {
+								color= ( byte_leido & 128 ? ink : paper );
+								//scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
+                                *destino_scanline_buffer=VDP_9918_INDEX_FIRST_COLOR+color;
+                                destino_scanline_buffer++;                                
+							//}
+
+							byte_leido=byte_leido<<1;
+						}
+					//}
+
+						
+					direccion_name_table++;
+
+				}
+		   //}
+
+
+
+}
+
+
+
+        
+
+
+
+
+        
+*/
+  }    
+  
+
+}
+
+
+
+void screen_store_scanline_rainbow_cpc_border_and_display(void)
+{
+    //Renderizar border y pantalla en buffer rainbow
+
+    screen_store_scanline_rainbow_solo_display_cpc();
+    screen_store_scanline_rainbow_solo_border_cpc();
+}

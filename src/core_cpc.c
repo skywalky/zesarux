@@ -170,6 +170,8 @@ void core_cpc_end_scanline_stuff(void)
 
     //copiamos contenido linea y border a buffer rainbow
     if (rainbow_enabled.v==1) {
+        printf ("core scanline draw: %d\n",t_scanline_draw);
+        screen_store_scanline_rainbow_cpc_border_and_display();
         //screen_store_scanline_rainbow_solo_border();
         //screen_store_scanline_rainbow_solo_display();	
 
