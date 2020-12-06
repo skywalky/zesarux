@@ -982,7 +982,7 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
             case 0x50:
                 //printf("Change prism mode value: %d\n",zxuno_ports[0x50]);
                 //Modo prism zxuno
-                if ((zxuno_ports[0x50] & 128) != (anterior_prism & 128)) {
+                if ((zxuno_ports[0x50] & 64) != (anterior_prism & 64)) {
                     //printf("Setting memory pages after change prism mode\n");
                     zxuno_set_memory_pages();
 
