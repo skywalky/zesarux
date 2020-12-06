@@ -1850,7 +1850,7 @@ z80_byte *zxuno_get_vram_mapped_address(void)
 //El bit 7 de byte_vram1 sera el bit 1 del color
 //El bit 7 de byte_vram2 sera el bit 2 del color
 //El bit 7 de byte_vram3 sera el bit 3 del color
-int zxuno_get_prism_pixel_color(byte_vram0,byte_vram1,byte_vram2,byte_vram3)
+int zxuno_get_prism_pixel_color(z80_byte byte_vram0,z80_byte byte_vram1,z80_byte byte_vram2,z80_byte byte_vram3)
 {
     return  ((byte_vram0>>7)&1)  |
             ((byte_vram1>>6)&2)  |
