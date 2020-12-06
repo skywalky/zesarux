@@ -170,9 +170,9 @@ z80_int zxuno_dma_current_len;
 z80_bit zxuno_dma_disabled={0};
 
 
-//Donde empieza la vram1 de zxuno, de modo prism 256x192x4bpp 
-//Luego va vram2 y vram3
-z80_byte *zxuno_begin_vram1_pointer;
+//Donde empieza la vram0 de zxuno, de modo prism 256x192x4bpp 
+//Luego va vram1, 2 y vram3
+z80_byte *zxuno_begin_vram0_pointer;
 
 
 void zxuno_test_if_prob(void)
@@ -1510,7 +1510,7 @@ void zxuno_init_memory_tables(void)
 
     //Van justo despues de la flash spi
 
-    zxuno_begin_vram1_pointer=&memoria_spectrum[(ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE+ZXUNO_SPI_SIZE)*1024];
+    zxuno_begin_vram0_pointer=&memoria_spectrum[(ZXUNO_ROM_SIZE+ZXUNO_SRAM_SIZE+ZXUNO_SPI_SIZE)*1024];
 
 	zxuno_chloe_init_memory_tables();
 }
@@ -1811,12 +1811,12 @@ z80_byte zxuno_uartbridge_readstatus(void)
 //Retorna puntero a vram de los modos Prism
 z80_byte *zxuno_get_vram_address(int vram)
 {
-    if (vram==0) return zxuno_sram_mem_table_new[5];
+    //if (vram==0) return zxuno_sram_mem_table_new[5];
 
-    else {
-        int offset=(vram-1)*8192;
-        return &zxuno_begin_vram1_pointer[offset];
-    }
+    //else {
+        int offset=vram*8192;
+        return &zxuno_begin_vram0_pointer[offset];
+    //}
 }
 
 int zxuno_is_prism_mode_enabled(void)
