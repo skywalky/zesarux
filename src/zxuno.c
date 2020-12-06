@@ -1708,7 +1708,7 @@ void zxuno_set_memory_pages(void)
 
             //4000h-5fffh  (16384-24575)
             //Si habilitado modo prism
-            if (zxuno_is_prism_mode_enabled()) {
+            if (zxuno_is_prism_mapping_enabled()) {
                 zxuno_memory_paged_brandnew[1*2]=zxuno_get_vram_mapped_address();
             }
             else { 
@@ -1822,6 +1822,11 @@ z80_byte *zxuno_get_vram_address(int vram)
 int zxuno_is_prism_mode_enabled(void)
 {
     return (zxuno_ports[0x50]&128);
+}
+
+int zxuno_is_prism_mapping_enabled(void)
+{
+    return (zxuno_ports[0x50]&64);
 }
 
 //Retorna numero de vram que entra en segmento 16384-22527 si modo prism activo
