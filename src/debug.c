@@ -4870,7 +4870,7 @@ void debug_get_ioports(char *stats_buffer)
   			sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
 
 
-			int i;
+			
 			for (i=0;i<4;i++) {
 					sprintf (buf_linea,"%02X:  %02X\n",i,cpc_gate_registers[i]);
 					sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
