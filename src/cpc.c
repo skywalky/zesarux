@@ -1606,7 +1606,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
         int ancho_maximo=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
         int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
 
-        printf("ancho total: %d\n",ancho_total);     
+        //printf("ancho total: %d\n",ancho_total);     
 
         if (ancho_total>ancho_maximo) ancho_total=ancho_maximo;
         if (total_alto>alto_maximo) total_alto=alto_maximo;
@@ -1627,7 +1627,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     int borde_izq=(ancho_maximo-ancho_total)/2;
 
 
-    printf("ancho total despues limite: %d ancho maximo %d borde_izqu %d offset_x: %d\n",ancho_total,ancho_maximo,borde_izq,offset_x);    
+    //printf("ancho total despues limite: %d ancho maximo %d borde_izqu %d offset_x: %d\n",ancho_total,ancho_maximo,borde_izq,offset_x);    
 
     //inicio_pantalla=CPC_TOP_BORDER_NO_ZOOM/2; //porque aqui consideramos scanlines, no tamanyo final
 
@@ -1650,7 +1650,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     final_pantalla=inicio_pantalla+total_alto;
 
   //Si en zona pantalla (no border superior ni inferior)
-  printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
+  //printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
   if (t_scanline_draw>=inicio_pantalla && t_scanline_draw<final_pantalla) {
 
 
@@ -1671,7 +1671,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     //En esta capa, si color=0, no lo ponemos como transparente sino como color negro
     z80_int *puntero_buf_rainbow;
 
-    printf("%d\n",t_scanline_draw);
+    //printf("%d\n",t_scanline_draw);
 
    int y_destino_rainbow=t_scanline_draw*2;
 
