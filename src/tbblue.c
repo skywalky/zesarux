@@ -3521,7 +3521,20 @@ void tbblue_hard_reset(void)
 	if (tbblue_fast_boot_mode.v) {
 		tbblue_registers[3]=3;
 
-		tbblue_registers[8]=2+8; //turbosound 3 chips, specdrum
+		tbblue_registers[8]=2+8+16; //turbosound 3 chips, specdrum, internal speaker
+		
+		/*
+		0x08 (08) => Peripheral 3 Setting
+(R/W)
+  bit 7 = Unlock port 0x7ffd (read 1 indicates port 0x7ffd is not locked)
+  bit 6 = Disable ram and port contention (soft reset = 0)
+  bit 5 = AY stereo mode (0 = ABC, 1 = ACB) (hard reset = 0)
+  bit 4 = Enable internal speaker (hard reset = 1)
+  bit 3 = Enable 8-bit DACs (A,B,C,D) (hard reset = 0)
+  bit 2 = Enable port 0xff Timex video mode read (hides floating bus on 0xff) (hard reset = 0)
+  bit 1 = Enable turbosound (currently selected AY is frozen when disabled) (hard reset = 0)
+  bit 0 = Implement issue 2 keyboard (hard reset = 0)
+		*/
 
 		set_total_ay_chips(3);
 
