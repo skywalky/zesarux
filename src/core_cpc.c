@@ -170,7 +170,7 @@ void core_cpc_end_scanline_stuff(void)
 
     //copiamos contenido linea y border a buffer rainbow
     if (rainbow_enabled.v==1) {
-        printf ("core scanline draw: %d\n",t_scanline_draw);
+        //printf ("core scanline draw: %d\n",t_scanline_draw);
         screen_store_scanline_rainbow_cpc_border_and_display();
         //screen_store_scanline_rainbow_solo_border();
         //screen_store_scanline_rainbow_solo_display();	
@@ -198,12 +198,12 @@ void core_cpc_end_scanline_stuff(void)
 
   
         if (iff1.v==1) {
-            printf ("Llega interrupcion crtc con interrupciones habilitadas del Z80 en counter: %d t: %d\n",cpc_scanline_counter,t_estados);
+            //printf ("Llega interrupcion crtc con interrupciones habilitadas del Z80 en counter: %d t: %d\n",cpc_scanline_counter,t_estados);
 
         }
 
         else {
-            printf ("Llega interrupcion crtc con interrupciones DESHABILITADAS del Z80 en counter: %d t: %d\n",cpc_scanline_counter,t_estados);
+            //printf ("Llega interrupcion crtc con interrupciones DESHABILITADAS del Z80 en counter: %d t: %d\n",cpc_scanline_counter,t_estados);
         }
         cpc_scanline_counter=0;
     }
@@ -486,7 +486,7 @@ void cpu_core_loop_cpc(void)
 
     //Si habia interrupcion pendiente de crtc y están las interrupciones habilitadas
     if (cpc_crt_pending_interrupt.v && iff1.v==1) {
-        printf("Se genera interrupcion del Z80 pendiente de crtc en contador: %d t: %d\n",cpc_scanline_counter,t_estados);
+        //printf("Se genera interrupcion del Z80 pendiente de crtc en contador: %d t: %d\n",cpc_scanline_counter,t_estados);
 
         cpc_crt_pending_interrupt.v=0;
         interrupcion_maskable_generada.v=1;
