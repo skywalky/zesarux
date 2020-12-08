@@ -4854,6 +4854,32 @@ void debug_get_ioports(char *stats_buffer)
 					sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
 			}		
 	}	 
+	
+	if (MACHINE_IS_CPC) {
+  			sprintf (buf_linea,"\nCRTC Registers:\n");
+  			sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+
+			int i;
+			for (i=0;i<32;i++) {
+					sprintf (buf_linea,"%02X:  %02X\n",i,cpc_crtc_registers[i]);
+					sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+			}		
+			
+			sprintf (buf_linea,"\nGate Registers:\n");
+  			sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+
+			int i;
+			for (i=0;i<4;i++) {
+					sprintf (buf_linea,"%02X:  %02X\n",i,cpc_gate_registers[i]);
+					sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+			}		
+			
+			
+	}	 
+	
+	
 
     if (MACHINE_IS_QL) {
         int value_rtc=(ql_zx8032_readbyte(0x18000)<<24) | (ql_zx8032_readbyte(0x18001)<<16) | (ql_zx8032_readbyte(0x18002)<<8) | ql_zx8032_readbyte(0x18003);
