@@ -1104,14 +1104,49 @@ int cpc_crtc_get_hsync_position(void)
     return valor;
 }
 
+//Lo que mostramos realmente en pantalla
+int cpc_get_maximum_width_window(void)
+{
+    return CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
+}
+
+int cpc_get_remaining_width_for_borders(void)
+{
+    return cpc_get_maximum_width_window()-cpc_crtc_get_total_pixels_horizontal();
+}
+
+//Retornar tamanyos border ajustando a lo que mostramos en pantalla
+void cpc_adjust_border_sizes(int *p_left,int *p_right)
+{
+    int remaining=cpc_get_remaining_width_for_borders();
+
+    int left_border_crtc=cpc_crtc_get_hsync_position()-cpc_crtc_get_total_pixels_horizontal();
+
+    int right_border_crtc=cpc_crtc_get_total_horizontal()-cpc_crtc_get_hsync_position()-cpc_crtc_get_total_hsync_width();
+
+    //Si al sumarlos excede lo disponible para border, ajustar los dos
+
+    if (left_border_crtc+right_border_crtc>remaining) {
+        //printf("ajustando borders\n");
+        left_border_crtc=right_border_crtc=remaining/2;
+    }
+
+    *p_left=left_border_crtc;
+    *p_right=right_border_crtc;
+}
+
 int cpc_crtc_get_total_right_border(void)
 {
-    return cpc_crtc_get_hsync_position()-cpc_crtc_get_total_pixels_horizontal();
+    int left,right;
+    cpc_adjust_border_sizes(&left,&right);
+    return right;
 }
 
 int cpc_crtc_get_total_left_border(void)
 {
-    return cpc_crtc_get_total_horizontal()-cpc_crtc_get_hsync_position()-cpc_crtc_get_total_hsync_width();
+    int left,right;
+    cpc_adjust_border_sizes(&left,&right);
+    return left;
 }
 
 void scr_cpc_return_ancho_alto(int *an,int *al,int *al_car,int *off_x)
