@@ -121,6 +121,8 @@ extern void cpc_splash_videomode_change(void);
 
 extern z80_bit cpc_send_double_vsync;
 
+extern z80_bit cpc_debug_borders;
+
 extern void cpc_handle_vsync_state(void);
 
 extern z80_bit cpc_crt_pending_interrupt;

@@ -183,6 +183,8 @@ z80_byte cpc_keyboard_table[16]={
 
 z80_bit cpc_send_double_vsync={0};
 
+z80_bit cpc_debug_borders={0};
+
 z80_bit cpc_vsync_signal={0};
 
 void cpc_set_memory_pages()
@@ -1844,10 +1846,22 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
         //linea en coordenada display (no border) que se debe leer
         int y_display=t_scanline_draw-inicio_pantalla;
 
- 
+ 			unsigned int color=cpc_border_color;
+			color=cpc_palette_table[color];
+			color +=CPC_INDEX_FIRST_COLOR;
 
 
+    if (cpc_debug_borders.v) {
+        if (t_scanline_draw<inicio_pantalla) {
+        
+            color=1;
+        }
 
+        else {
+            color=2;
+        }
+
+    }
 
 //Renderiza una linea de display (pantalla y sprites, pero no border)
 //void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
@@ -1861,8 +1875,8 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     //printf("%d\n",t_scanline_draw);
 
    int y_destino_rainbow=t_scanline_draw*2;
-   printf("y destino: %d\n",y_destino_rainbow);
-   printf("vsync position: %d\n",cpc_crtc_get_vsync_position());
+   //printf("y destino: %d\n",y_destino_rainbow);
+   //printf("vsync position: %d\n",cpc_crtc_get_vsync_position());
 
 
     //Nota: en cpc rom, vsync esta en 240 (posicion y=480). Pero tenemos una ventana de 544 de alto para soportar overscan
@@ -1885,16 +1899,13 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
     puntero_buf_rainbow=&rainbow_buffer[y_destino_rainbow*get_total_ancho_rainbow()];
 
-			unsigned int color=cpc_border_color;
-			color=cpc_palette_table[color];
-			color +=CPC_INDEX_FIRST_COLOR;
+
 
 
 
     //*puntero_buf_rainbow=7;
 
-    //temp
-    color=7;
+
 
     int x;
 
@@ -1909,6 +1920,8 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
   if (t_scanline_draw>=inicio_pantalla && t_scanline_draw<final_pantalla) {
       //if (t_scanline_draw>=final_pantalla) {
+
+
 
 
         //linea en coordenada display (no border) que se debe leer
@@ -1960,8 +1973,9 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
     //*puntero_buf_rainbow=7;
 
-    //temp
-    color=15;
+    if (cpc_debug_borders.v) {
+        color=3;
+    }
 
     int x;
 
@@ -1970,8 +1984,9 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     }
 
 
-    //temp
-    color=2;    
+    if (cpc_debug_borders.v) {
+        color=4;    
+    }
 
     int offset_right=left_border+cpc_crtc_get_total_pixels_horizontal();
     for (x=0;x<right_border;x++) {

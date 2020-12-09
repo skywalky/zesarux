@@ -10113,6 +10113,11 @@ void menu_display_cpc_double_vsync(MENU_ITEM_PARAMETERS)
 	cpc_send_double_vsync.v ^=1;
 }
 
+void menu_display_cpc_debug_borders(MENU_ITEM_PARAMETERS)
+{
+	cpc_debug_borders.v ^=1;
+}
+
 void menu_display_16c_mode(MENU_ITEM_PARAMETERS)
 {
     if (pentagon_16c_mode_available.v) disable_16c_mode();
@@ -10283,6 +10288,12 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_cpc_double_vsync,NULL,"[%c] Double Vsync",(cpc_send_double_vsync.v==1 ? 'X' : ' ') );
 				menu_add_item_menu_tooltip(array_menu_settings_display,"Workaround to avoid hang on some games");
 				menu_add_item_menu_ayuda(array_menu_settings_display,"Workaround to avoid hang on some games");
+
+                if (rainbow_enabled.v) {
+                    menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_cpc_debug_borders,NULL,"[%c] Debug borders",
+                    (cpc_debug_borders.v==1 ? 'X' : ' ') );
+
+                }
 		}
 
 
