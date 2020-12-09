@@ -1175,10 +1175,7 @@ util_stats_init();
 	if (MACHINE_IS_TIMEX_TS2068) timex_set_memory_pages();
 
 	if (MACHINE_IS_CPC) {
-		cpc_gate_registers[0]=cpc_gate_registers[1]=cpc_gate_registers[2]=cpc_gate_registers[3]=0;
-		cpc_set_memory_pages();
-		cpc_scanline_counter=0;
-        cpc_crt_pending_interrupt.v=0;
+        cpc_reset();
 	}
 
 	if (MACHINE_IS_SAM) {

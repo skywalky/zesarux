@@ -187,6 +187,14 @@ z80_bit cpc_debug_borders={0};
 
 z80_bit cpc_vsync_signal={0};
 
+//Ultima linea que se ha escrito en el buffer rainbow. Sirve para luego al renderizar, las que quedan por debajo, ponerlas en negro
+int cpc_last_drawn_line=0;
+
+void cpc_reset_last_drawn_line(void)
+{
+    cpc_last_drawn_line=0;
+}
+
 void cpc_set_memory_pages()
 {
 
@@ -954,6 +962,12 @@ void cpc_out_port_crtc(z80_int puerto,z80_byte value)
 		case 1:
 			//printf ("Write 6845 register %d with 0x%02X\n",cpc_crtc_last_selected_register,value);
 			cpc_crtc_registers[cpc_crtc_last_selected_register]=value;
+
+            //Si cambia alguno de los registros de crtc vertical
+            if (cpc_crtc_last_selected_register>=4 && cpc_crtc_last_selected_register<=7) {
+                printf("cambiando crtc registro %d valor %d\n",cpc_crtc_last_selected_register,value);
+                cpc_reset_last_drawn_line();
+            }
 		break;
 
 		case 2:
@@ -1707,7 +1721,7 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
 	puntero=rainbow_buffer;
 
 
-
+    //printf("ultima linea al hacer render: %d\n",cpc_last_drawn_line);
 
 	for (y=0;y<alto;y++) {
 
@@ -1718,10 +1732,15 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
 		for (x=0;x<ancho;x++) {
 
 
+            if (y>=cpc_last_drawn_line) {
+                color_pixel=0;
+            }
 
+            else {
+                color_pixel=*puntero;
+            }
 
-
-            color_pixel=*puntero++;
+            puntero++;
             scr_putpixel_zoom_rainbow(x,y,color_pixel);
 
             //temp
@@ -1732,7 +1751,8 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
 	}
 
 
-
+    //Para resetear y poder luego saber la ultima linea que se haya rellenado en el buffer rainbow
+    //cpc_last_drawn_line=0;
 
 }
 
@@ -1875,6 +1895,11 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     //printf("%d\n",t_scanline_draw);
 
    int y_destino_rainbow=t_scanline_draw*2;
+
+    if (y_destino_rainbow>cpc_last_drawn_line) {
+        cpc_last_drawn_line=y_destino_rainbow;
+    }
+   //printf("ultima linea: %d\n",cpc_last_drawn_line);
    //printf("y destino: %d\n",y_destino_rainbow);
    //printf("vsync position: %d\n",cpc_crtc_get_vsync_position());
 
@@ -2355,4 +2380,13 @@ void screen_store_scanline_rainbow_cpc_border_and_display(void)
 
     screen_store_scanline_rainbow_solo_display_cpc();
     screen_store_scanline_rainbow_solo_border_cpc();
+}
+
+void cpc_reset(void)
+{
+		cpc_gate_registers[0]=cpc_gate_registers[1]=cpc_gate_registers[2]=cpc_gate_registers[3]=0;
+		cpc_set_memory_pages();
+		cpc_scanline_counter=0;
+        cpc_crt_pending_interrupt.v=0;
+        cpc_reset_last_drawn_line();
 }
