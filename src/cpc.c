@@ -1101,6 +1101,7 @@ int cpc_crtc_get_total_pixels_horizontal(void)
 }
 
 //Zona de pixeles
+//En scanlines, no en pixels
 int cpc_crtc_get_total_pixels_vertical(void)
 {
 
@@ -1141,7 +1142,7 @@ int cpc_get_remaining_width_for_borders(void)
 }
 
 //Retornar tamanyos border ajustando a lo que mostramos en pantalla
-void cpc_adjust_left_border_sizes(int *p_left,int *p_right)
+void cpc_adjust_vertical_border_sizes(int *p_left,int *p_right)
 {
     int remaining=cpc_get_remaining_width_for_borders();
 
@@ -1163,54 +1164,81 @@ void cpc_adjust_left_border_sizes(int *p_left,int *p_right)
 int cpc_crtc_get_total_right_border(void)
 {
     int left,right;
-    cpc_adjust_left_border_sizes(&left,&right);
+    cpc_adjust_vertical_border_sizes(&left,&right);
     return right;
 }
 
 int cpc_crtc_get_total_left_border(void)
 {
     int left,right;
-    cpc_adjust_left_border_sizes(&left,&right);
+    cpc_adjust_vertical_border_sizes(&left,&right);
     return left;
 }
 
-int cpc_crtc_get_top_border_height(void)
+//Lo que mostramos realmente en pantalla
+//En scanlines, no en pixels
+int cpc_get_maximum_height_window(void)
 {
-
-    int valor=cpc_crtc_get_total_vertical()-cpc_crtc_get_vsync_position()-cpc_crtc_get_total_vsync_height();
-
-    //int valor=cpc_crtc_get_hsync_position()-cpc_crtc_get_total_pixels_horizontal();
-
-/*
-        int total_alto=cpc_crtc_get_total_pixels_vertical();         
-
-        
-        int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+    return (CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+}
 
 
-        if (total_alto>alto_maximo) total_alto=alto_maximo;
+//En scanlines, no en pixels
+int cpc_get_remaining_height_for_borders(void)
+{
+    return cpc_get_maximum_height_window()-cpc_crtc_get_total_pixels_vertical();
+}
 
 
-    int total_scanlines=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+//Retornar tamanyos border ajustando a lo que mostramos en pantalla
+void cpc_adjust_horizontal_border_sizes(int *p_top,int *p_bottom)
+{
+    int remaining=cpc_get_remaining_height_for_borders();
 
-    int borde_superior=CPC_TOTAL_SCANLINES-total_alto-CPC_TOP_BORDER_NO_ZOOM/2;
-    */
+    int top_border_crtc=cpc_crtc_get_total_vertical()-cpc_crtc_get_vsync_position()-cpc_crtc_get_total_vsync_height();
 
-    printf("borde superior: %d\n",valor);
+    int bottom_border_crtc=cpc_crtc_get_vsync_position()-cpc_crtc_get_total_pixels_vertical();
 
-    return valor;
+
+    //Si al sumarlos excede lo disponible para border, ajustar los dos
+
+    printf("remaining: %d top: %d bottom: %d\n",remaining,top_border_crtc,bottom_border_crtc);
+
+    if (top_border_crtc+bottom_border_crtc>remaining) {
+        printf("ajustando borders\n");
+        top_border_crtc=bottom_border_crtc=remaining/2;
+    }
+
+    *p_top=top_border_crtc;
+    *p_bottom=bottom_border_crtc;
 }
 
 
 
+//En scanlines, no en pixels
+int cpc_crtc_get_top_border_height(void)
+{
 
+    //int valor=cpc_crtc_get_total_vertical()-cpc_crtc_get_vsync_position()-cpc_crtc_get_total_vsync_height();
+
+    int top,bottom;
+    cpc_adjust_horizontal_border_sizes(&top,&bottom);
+
+    return top;
+}
+
+
+
+//En scanlines, no en pixels
 int cpc_crtc_get_bottom_border_height(void)
 {
-    int valor=cpc_crtc_get_vsync_position()-cpc_crtc_get_total_pixels_vertical();
+    //int valor=cpc_crtc_get_vsync_position()-cpc_crtc_get_total_pixels_vertical();
 
-    printf("bottom border: %d\n",valor);
+    int top,bottom;
+    cpc_adjust_horizontal_border_sizes(&top,&bottom);
 
-    return valor;
+    return bottom;
+
 }
 
 void scr_cpc_return_ancho_alto(int *an,int *al,int *al_car,int *off_x)
