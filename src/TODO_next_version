@@ -174,3 +174,4 @@ They are not supported by esxDOS."
 cpc_reset_last_drawn_line
 y provocando parpadeos
 ->mejorar esto
+ademas el logo de OSD se ve cortado porque lo pone en color negro cuando last_drawn es menor
