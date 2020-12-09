@@ -170,3 +170,7 @@ They are not supported by esxDOS."
 
 -paleta colores modo zxuno prism. que se vea tambien desde menu display-color palette
 
+-cpc en juego bubble modifica crtc registros 4 al 7 continuamente antes de empezar el juego, con lo que resetea
+cpc_reset_last_drawn_line
+y provocando parpadeos
+->mejorar esto
