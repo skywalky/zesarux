@@ -511,7 +511,10 @@ void init_cpc_line_display_table(void)
 
 
 
-
+int cpc_crtc_get_vsync_height(void)
+{
+    return (cpc_crtc_registers[3]>>4) & 15;
+}
 
 
 //Decir si vsync está activo o no, según en qué posición de pantalla estamos,
@@ -524,7 +527,9 @@ and stay two lines (same cut rule if VSYNC is lower than 4). PAL (50Hz) does nee
 void cpc_handle_vsync_state(void)
 {
 	//Duracion vsync
-	int vsync_lenght=cpc_crtc_registers[3]&15;
+	//int vsync_lenght=cpc_crtc_registers[3]&15;
+
+    int vsync_lenght=cpc_crtc_get_vsync_height();
 
 	//Si es 0, en algunos chips significa 16
 	if (vsync_lenght==0) vsync_lenght=16;
@@ -561,7 +566,7 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
 */
 
         //TODO: no estoy del todo seguro con esto
-        //No seria la condicion al reves? cpc_scanline_counter<32
+        //No seria la condicion al reves? cpc_scanline_counter<32 Esta al reves
 
         //O querra decir que se resetea el interrupt request si >=32, pero en caso contrario, no se activa un interrupt request?
 
@@ -587,11 +592,12 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
 
         if (t_scanline_draw==vsync_position+2) {
             if (cpc_scanline_counter>=32) {
-            	//cpc_crt_pending_interrupt.v=0;
+            	cpc_crt_pending_interrupt.v=1;
+                //printf("Generating vsync en counter: %d t: %d\n",cpc_scanline_counter,t_estados);
             }
             else {
-                //cpc_crt_pending_interrupt.v=1;
-                //printf("Generating vsync en counter: %d t: %d\n",cpc_scanline_counter,t_estados);
+                //cpc_crt_pending_interrupt.v=0;
+                
             }
         
             cpc_scanline_counter=0;
@@ -624,7 +630,9 @@ z80_byte old_cpc_get_vsync_bit(void)
 {
 				//Bit de vsync
 			//Duracion vsync
-			z80_byte vsync_lenght=cpc_crtc_registers[3]&15;
+			//z80_byte vsync_lenght=cpc_crtc_registers[3]&15;
+
+            z80_byte vsync_lenght=cpc_crtc_get_vsync_height();
 
 			//Si es 0, en algunos chips significa 16
 			if (vsync_lenght==0) vsync_lenght=16;
@@ -1047,16 +1055,75 @@ FFFF->F800
 	return direccion_pixel;
 }
 
+int cpc_crtc_get_total_horizontal(void)
+{
+    int valor=(cpc_crtc_registers[0]+1)*16;
+
+    //printf("total horiz: %d\n",valor);
+    //if (valor>CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2) valor=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
+
+    //printf("total horiz fixed: %d\n",valor);
+
+    return valor;
+}
+
+//Zona de pixeles
+int cpc_crtc_get_total_pixels_horizontal(void)
+{
+    int valor=cpc_crtc_registers[1]*16;
+    //printf("total pixels horiz: %d\n",valor);
+    return valor;
+}
+
+//Zona de pixeles
+int cpc_crtc_get_total_pixels_vertical(void)
+{
+
+    int alto_caracter=cpc_crtc_get_height_character();
+
+    return cpc_crtc_registers[6]*alto_caracter;
+}
+
+int cpc_crtc_get_height_character(void)
+{
+    return (cpc_crtc_registers[9]&7)+1;
+}
+
+int cpc_crtc_get_total_hsync_width(void)
+{
+    int valor=(cpc_crtc_registers[3] & 15) * 16; 
+    if (valor==0) valor=16*16; //HSync pulse width in characters (0 means 16 on some CRTC),
+    //printf("hsync width: %d\n",valor);
+    return valor;
+}
+
+int cpc_crtc_get_hsync_position(void)
+{
+    int valor=cpc_crtc_registers[2]*16;
+    //printf("hsync position: %d\n",valor);
+    return valor;
+}
+
+int cpc_crtc_get_total_right_border(void)
+{
+    return cpc_crtc_get_hsync_position()-cpc_crtc_get_total_pixels_horizontal();
+}
+
+int cpc_crtc_get_total_left_border(void)
+{
+    return cpc_crtc_get_total_horizontal()-cpc_crtc_get_hsync_position()-cpc_crtc_get_total_hsync_width();
+}
+
 void scr_cpc_return_ancho_alto(int *an,int *al,int *al_car,int *off_x)
 {
 
-   int alto_caracter=(cpc_crtc_registers[9]&7)+1;
+   int alto_caracter=cpc_crtc_get_height_character();
 
 
 
 
-        int ancho_total=cpc_crtc_registers[1]*16;
-        int total_alto=cpc_crtc_registers[6]*alto_caracter;
+        int ancho_total=cpc_crtc_get_total_pixels_horizontal();
+        int total_alto=cpc_crtc_get_total_pixels_vertical();
 
         //temp para living daylights
         //if (total_alto<192) total_alto=200;
@@ -1575,21 +1642,21 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
             //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
 
-    alto_caracter=(cpc_crtc_registers[9]&7)+1;
+        alto_caracter=cpc_crtc_get_height_character();
 
+        ancho_total=cpc_crtc_get_total_pixels_horizontal();
+        total_alto=cpc_crtc_get_total_pixels_vertical();         
 
+        printf("Bordes: %d %d\n",cpc_crtc_get_total_left_border(),cpc_crtc_get_total_right_border() );
 
-
-         ancho_total=cpc_crtc_registers[1]*16;
-         total_alto=cpc_crtc_registers[6]*alto_caracter;
-
-        //temp para living daylights
-        //if (total_alto<192) total_alto=200;
+        
 
 
         //CRTC registro: 2 valor: 46 . Normal
         //CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
-         offset_x=(46-cpc_crtc_registers[2])*16;
+        //offset_x=(46-cpc_crtc_registers[2])*16;
+
+        offset_x=cpc_crtc_get_total_left_border();
 
 
 /*
@@ -1614,9 +1681,6 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
         if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
 
          
-    //temp
-    offset_x=0;
-
 
     //TODO: cuadrar esto con el tamanyo del border actual segun CRTC
     //de momento:
@@ -1624,7 +1688,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     int final_pantalla;
     //int borde_izq=CPC_LEFT_BORDER_NO_ZOOM;
     //int borde_izq=ancho_maximo-ancho_total-CPC_LEFT_BORDER_NO_ZOOM;
-    int borde_izq=(ancho_maximo-ancho_total)/2;
+    //int borde_izq=(ancho_maximo-ancho_total)/2;
 
 
     //printf("ancho total despues limite: %d ancho maximo %d borde_izqu %d offset_x: %d\n",ancho_total,ancho_maximo,borde_izq,offset_x);    
@@ -1688,7 +1752,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
     if (y_destino_rainbow<0 || y_destino_rainbow>=max_y) return;
 
-    puntero_buf_rainbow=&rainbow_buffer[borde_izq+y_destino_rainbow*get_total_ancho_rainbow()];
+    puntero_buf_rainbow=&rainbow_buffer[y_destino_rainbow*get_total_ancho_rainbow()];
 
 
     //*puntero_buf_rainbow=99;
@@ -1725,9 +1789,6 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     
 
 
-
-    //offset_x=0;
-    //ancho_total=640;
     int x;
     int color0,color1,color2,color3;
 
@@ -1738,31 +1799,6 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
         crtc_offset_videoram *=2;
 
         
-        /*
-
-        int alto_caracter=(cpc_crtc_registers[9]&7)+1;
-
-
-
-        int ancho_total=cpc_crtc_registers[1]*16;
-        int total_alto=cpc_crtc_registers[6]*alto_caracter;
-
-        //temp para living daylights
-        //if (total_alto<192) total_alto=200;
-
-
-        //CRTC registro: 2 valor: 46 . Normal
-        //CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
-        int offset_x=(46-cpc_crtc_registers[2])*16;
-
-        //printf ("offset_x: %d\n",offset_x);
-
-        //Controlar maximos
-        if (ancho_total>640) ancho_total=640;
-        if (total_alto>200) total_alto=200;
-        if (offset_x<0) offset_x=0;
-        if (offset_x+ancho_total>640) offset_x=640-ancho_total;
-        */
 
 
 
@@ -1770,20 +1806,27 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
         //Temporal. Quiza no tener que inicializar la tabla cada vez??? Esta tabla
         //sale tal cual de init_cpc_line_display_table pero cambiando valor 80
+        /*
         int yy;
         z80_int offset;
+
         for (yy=0;yy<total_alto;yy++) {
                 //offset=((yy / 8) * cpc_crtc_registers[1]*2) + ((yy % 8) * 2048);
                 offset=((yy / alto_caracter) * cpc_crtc_registers[1]*2) + ((yy % alto_caracter) * 2048);
                 cpc_line_display_table[yy]=offset;
         }
+        */
         z80_int direccion_pixel;
         int yfinal;
         z80_int offset_tabla;
 
 
                 yfinal=y_display;
-                offset_tabla=cpc_line_display_table[yfinal];
+                //offset_tabla=cpc_line_display_table[yfinal];
+                offset_tabla=((yfinal / alto_caracter) * cpc_crtc_registers[1]*2) + ((yfinal % alto_caracter) * 2048);
+
+
+
                 direccion_pixel=offset_tabla+crtc_offset_videoram;
 
                 //puntero=cpc_ram_mem_table[3]+offset_tabla;

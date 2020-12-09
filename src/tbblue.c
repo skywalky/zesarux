@@ -3253,7 +3253,7 @@ void tbblue_set_emulator_setting_reg_8(void)
 */
 	z80_byte value=tbblue_registers[8];
 
-	debug_printf (VERBOSE_DEBUG,"Setting register 8 to %02XH",value);
+	debug_printf (VERBOSE_DEBUG,"Setting register 8 to %02XH from PC=%04XH",value,reg_pc);
 
 	//bit 6 = "1" to disable RAM contention. (0 after a reset)
 	if (value&64) {

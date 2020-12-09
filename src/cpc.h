@@ -42,7 +42,10 @@ extern z80_byte debug_cpc_paginas_memoria_mapeadas_read[];
 extern void init_cpc_line_display_table(void);
 
 //Hacer que estos valores de border sean multiples de 8
-#define CPC_LEFT_BORDER_NO_ZOOM 64
+#define CPC_LEFT_BORDER_NO_ZOOM 80
+//#define CPC_LEFT_BORDER_NO_ZOOM 192
+
+
 #define CPC_TOP_BORDER_NO_ZOOM 72
 
 
