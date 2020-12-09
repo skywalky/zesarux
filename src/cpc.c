@@ -1202,12 +1202,14 @@ void cpc_adjust_horizontal_border_sizes(int *p_top,int *p_bottom)
 
     //Si al sumarlos excede lo disponible para border, ajustar los dos
 
-    printf("remaining: %d top: %d bottom: %d\n",remaining,top_border_crtc,bottom_border_crtc);
+    //printf("remaining: %d top: %d bottom: %d\n",remaining,top_border_crtc,bottom_border_crtc);
 
     if (top_border_crtc+bottom_border_crtc>remaining) {
-        printf("ajustando borders\n");
+        //printf("ajustando borders\n");
         top_border_crtc=bottom_border_crtc=remaining/2;
     }
+
+    //printf("remaining: %d top: %d bottom: %d\n",remaining,top_border_crtc,bottom_border_crtc);
 
     *p_top=top_border_crtc;
     *p_bottom=bottom_border_crtc;
@@ -1720,7 +1722,8 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
             color_pixel=*puntero++;
             scr_putpixel_zoom_rainbow(x,y,color_pixel);
 
-
+            //temp
+            //if (y==alto-1) scr_putpixel_zoom_rainbow(x,y,3);
 
 		}
 		
@@ -1754,6 +1757,8 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 {
     int alto_caracter,ancho_total,total_alto,offset_x;
 
+    
+
         //scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
 
             //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
@@ -1763,10 +1768,10 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
         ancho_total=cpc_crtc_get_total_pixels_horizontal();
         total_alto=cpc_crtc_get_total_pixels_vertical();         
 
-        printf("Bordes horiz: %d %d\n",cpc_crtc_get_total_left_border(),cpc_crtc_get_total_right_border() );
+        //printf("Bordes horiz: %d %d\n",cpc_crtc_get_total_left_border(),cpc_crtc_get_total_right_border() );
 
 
-        printf("Bordes vert: %d %d\n",cpc_crtc_get_top_border_height(),cpc_crtc_get_bottom_border_height() );
+        //printf("Bordes vert: %d %d\n",cpc_crtc_get_top_border_height(),cpc_crtc_get_bottom_border_height() );
 
         
 
@@ -1826,10 +1831,14 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
     final_pantalla=inicio_pantalla+total_alto;
 
+    
+
   //Si en zona pantalla (no border superior ni inferior)
   //printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
   //Borde superior o inferior
+
   if (t_scanline_draw<inicio_pantalla || t_scanline_draw>=final_pantalla) {
+      //if (t_scanline_draw>=final_pantalla) {
 
 
         //linea en coordenada display (no border) que se debe leer
@@ -1852,7 +1861,12 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     //printf("%d\n",t_scanline_draw);
 
    int y_destino_rainbow=t_scanline_draw*2;
+   printf("y destino: %d\n",y_destino_rainbow);
+   printf("vsync position: %d\n",cpc_crtc_get_vsync_position());
 
+
+    //Nota: en cpc rom, vsync esta en 240 (posicion y=480). Pero tenemos una ventana de 544 de alto para soportar overscan
+    //Por tanto, a no ser que el juego use modo overscan, la parte de abajo normalmente va a estar sin usar
     
     //TODO: calculo con border desactivado
     //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
@@ -1864,7 +1878,10 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     //En teoria superior no deberia ser mayor, pero por si acaso
     int max_y=get_total_alto_rainbow();
 
-    if (y_destino_rainbow<0 || y_destino_rainbow>=max_y) return;
+    if (y_destino_rainbow<0 || y_destino_rainbow>=max_y) {
+        //printf("y por encima del maximo: %d\n",y_destino_rainbow);
+        return;
+    }
 
     puntero_buf_rainbow=&rainbow_buffer[y_destino_rainbow*get_total_ancho_rainbow()];
 
@@ -1886,6 +1903,83 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     }
 
   }
+  
+
+  //Borde izquierdo y derecho
+
+  if (t_scanline_draw>=inicio_pantalla && t_scanline_draw<final_pantalla) {
+      //if (t_scanline_draw>=final_pantalla) {
+
+
+        //linea en coordenada display (no border) que se debe leer
+        int y_display=t_scanline_draw-inicio_pantalla;
+
+ 
+
+        int left_border=cpc_crtc_get_total_left_border();
+        int right_border=cpc_crtc_get_total_right_border();
+
+
+//Renderiza una linea de display (pantalla y sprites, pero no border)
+//void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
+
+
+
+    //Nos ubicamos ya en la zona de pixeles, saltando el border
+    //En esta capa, si color=0, no lo ponemos como transparente sino como color negro
+    z80_int *puntero_buf_rainbow;
+
+    //printf("%d\n",t_scanline_draw);
+
+   int y_destino_rainbow=t_scanline_draw*2;
+   //printf("y destino: %d\n\n",y_destino_rainbow);
+
+    
+    //TODO: calculo con border desactivado
+    //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
+    //if (border_enabled.v==0) y_destino_rainbow=y_destino_rainbow-screen_borde_superior;
+
+
+
+    //Limite inferior y superior. Sobretodo el inferior, pues puede ser negativo (en zona border invisible)
+    //En teoria superior no deberia ser mayor, pero por si acaso
+    int max_y=get_total_alto_rainbow();
+
+    if (y_destino_rainbow<0 || y_destino_rainbow>=max_y) {
+        //printf("y por encima del maximo: %d\n",y_destino_rainbow);
+        return;
+    }
+
+    puntero_buf_rainbow=&rainbow_buffer[y_destino_rainbow*get_total_ancho_rainbow()];
+
+			unsigned int color=cpc_border_color;
+			color=cpc_palette_table[color];
+			color +=CPC_INDEX_FIRST_COLOR;
+
+
+
+    //*puntero_buf_rainbow=7;
+
+    //temp
+    color=15;
+
+    int x;
+
+    for (x=0;x<left_border;x++) {
+       cpc_putpixel_zoom_rainbow(x,puntero_buf_rainbow,color); 
+    }
+
+
+    //temp
+    color=2;    
+
+    int offset_right=left_border+cpc_crtc_get_total_pixels_horizontal();
+    for (x=0;x<right_border;x++) {
+       cpc_putpixel_zoom_rainbow(x+offset_right,puntero_buf_rainbow,color); 
+    }    
+
+  }
+
 
 
 }
@@ -1910,7 +2004,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
         ancho_total=cpc_crtc_get_total_pixels_horizontal();
         total_alto=cpc_crtc_get_total_pixels_vertical();         
 
-        printf("Bordes: %d %d\n",cpc_crtc_get_total_left_border(),cpc_crtc_get_total_right_border() );
+        //printf("Bordes: %d %d\n",cpc_crtc_get_total_left_border(),cpc_crtc_get_total_right_border() );
 
         
 
