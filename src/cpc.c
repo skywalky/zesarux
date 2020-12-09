@@ -965,7 +965,7 @@ void cpc_out_port_crtc(z80_int puerto,z80_byte value)
 
             //Si cambia alguno de los registros de crtc vertical
             if (cpc_crtc_last_selected_register>=4 && cpc_crtc_last_selected_register<=7) {
-                printf("cambiando crtc registro %d valor %d\n",cpc_crtc_last_selected_register,value);
+                //printf("cambiando crtc registro %d valor %d\n",cpc_crtc_last_selected_register,value);
                 cpc_reset_last_drawn_line();
             }
 		break;
