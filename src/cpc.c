@@ -511,9 +511,19 @@ void init_cpc_line_display_table(void)
 
 
 
-int cpc_crtc_get_vsync_height(void)
+int cpc_crtc_get_total_vsync_height(void)
 {
     return (cpc_crtc_registers[3]>>4) & 15;
+}
+
+int cpc_crtc_get_vsync_position(void)
+{
+    int valor=cpc_crtc_registers[7]&127;
+
+    //esta en caracteres
+	valor *=cpc_crtc_get_height_character();
+
+    return valor;
 }
 
 
@@ -529,7 +539,7 @@ void cpc_handle_vsync_state(void)
 	//Duracion vsync
 	//int vsync_lenght=cpc_crtc_registers[3]&15;
 
-    int vsync_lenght=cpc_crtc_get_vsync_height();
+    int vsync_lenght=cpc_crtc_get_total_vsync_height();
 
 	//Si es 0, en algunos chips significa 16
 	if (vsync_lenght==0) vsync_lenght=16;
@@ -537,9 +547,8 @@ void cpc_handle_vsync_state(void)
 
 	if (cpc_send_double_vsync.v) vsync_lenght *=2;	
 
-	int vsync_position=cpc_crtc_registers[7]&127;
-	//esta en caracteres
-	vsync_position *=8;
+	int vsync_position=cpc_crtc_get_vsync_position();
+
 
 
 	int final_vsync=vsync_position+vsync_lenght;
@@ -632,15 +641,14 @@ z80_byte old_cpc_get_vsync_bit(void)
 			//Duracion vsync
 			//z80_byte vsync_lenght=cpc_crtc_registers[3]&15;
 
-            z80_byte vsync_lenght=cpc_crtc_get_vsync_height();
+            z80_byte vsync_lenght=cpc_crtc_get_total_vsync_height();
 
 			//Si es 0, en algunos chips significa 16
 			if (vsync_lenght==0) vsync_lenght=16;
 			//cpc_ppi_ports[1];
 
-		int vsync_position=cpc_crtc_registers[7]&127;
-		//esta en caracteres
-		vsync_position *=8;
+		int vsync_position=cpc_crtc_get_vsync_position();
+
 
 		int vertical_total=cpc_crtc_registers[4]+1; //en R0 tambien se suma 1
 		vertical_total *=8;
@@ -1067,6 +1075,23 @@ int cpc_crtc_get_total_horizontal(void)
     return valor;
 }
 
+
+int cpc_crtc_get_total_vertical(void)
+{
+
+	int valor=cpc_crtc_registers[4]+1; //en R0 tambien se suma 1
+
+    int alto_caracter=cpc_crtc_get_height_character();        
+	valor *=alto_caracter;    
+
+    //printf("total horiz: %d\n",valor);
+    //if (valor>CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2) valor=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
+
+    //printf("total horiz fixed: %d\n",valor);
+
+    return valor;
+}
+
 //Zona de pixeles
 int cpc_crtc_get_total_pixels_horizontal(void)
 {
@@ -1116,13 +1141,13 @@ int cpc_get_remaining_width_for_borders(void)
 }
 
 //Retornar tamanyos border ajustando a lo que mostramos en pantalla
-void cpc_adjust_border_sizes(int *p_left,int *p_right)
+void cpc_adjust_left_border_sizes(int *p_left,int *p_right)
 {
     int remaining=cpc_get_remaining_width_for_borders();
 
-    int left_border_crtc=cpc_crtc_get_hsync_position()-cpc_crtc_get_total_pixels_horizontal();
+    int right_border_crtc=cpc_crtc_get_hsync_position()-cpc_crtc_get_total_pixels_horizontal();
 
-    int right_border_crtc=cpc_crtc_get_total_horizontal()-cpc_crtc_get_hsync_position()-cpc_crtc_get_total_hsync_width();
+    int left_border_crtc=cpc_crtc_get_total_horizontal()-cpc_crtc_get_hsync_position()-cpc_crtc_get_total_hsync_width();
 
     //Si al sumarlos excede lo disponible para border, ajustar los dos
 
@@ -1138,15 +1163,54 @@ void cpc_adjust_border_sizes(int *p_left,int *p_right)
 int cpc_crtc_get_total_right_border(void)
 {
     int left,right;
-    cpc_adjust_border_sizes(&left,&right);
+    cpc_adjust_left_border_sizes(&left,&right);
     return right;
 }
 
 int cpc_crtc_get_total_left_border(void)
 {
     int left,right;
-    cpc_adjust_border_sizes(&left,&right);
+    cpc_adjust_left_border_sizes(&left,&right);
     return left;
+}
+
+int cpc_crtc_get_top_border_height(void)
+{
+
+    int valor=cpc_crtc_get_total_vertical()-cpc_crtc_get_vsync_position()-cpc_crtc_get_total_vsync_height();
+
+    //int valor=cpc_crtc_get_hsync_position()-cpc_crtc_get_total_pixels_horizontal();
+
+/*
+        int total_alto=cpc_crtc_get_total_pixels_vertical();         
+
+        
+        int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+
+
+        if (total_alto>alto_maximo) total_alto=alto_maximo;
+
+
+    int total_scanlines=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+
+    int borde_superior=CPC_TOTAL_SCANLINES-total_alto-CPC_TOP_BORDER_NO_ZOOM/2;
+    */
+
+    printf("borde superior: %d\n",valor);
+
+    return valor;
+}
+
+
+
+
+int cpc_crtc_get_bottom_border_height(void)
+{
+    int valor=cpc_crtc_get_vsync_position()-cpc_crtc_get_total_pixels_vertical();
+
+    printf("bottom border: %d\n",valor);
+
+    return valor;
 }
 
 void scr_cpc_return_ancho_alto(int *an,int *al,int *al_car,int *off_x)
@@ -1651,19 +1715,155 @@ void scr_refresca_pantalla_y_border_cpc(void)
     }
 }
 
-
-void screen_store_scanline_rainbow_solo_border_cpc(void)
-{
-    //TODO
-}
-
-
 void cpc_putpixel_zoom_rainbow(int x,z80_int *puntero_buf_rainbow,int color)
 {
     puntero_buf_rainbow[x]=color;
     //Siempre es x2 de alto
     puntero_buf_rainbow[x+get_total_ancho_rainbow()]=color;
 }
+
+void screen_store_scanline_rainbow_solo_border_cpc(void)
+{
+    int alto_caracter,ancho_total,total_alto,offset_x;
+
+        //scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
+
+            //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
+
+        alto_caracter=cpc_crtc_get_height_character();
+
+        ancho_total=cpc_crtc_get_total_pixels_horizontal();
+        total_alto=cpc_crtc_get_total_pixels_vertical();         
+
+        printf("Bordes horiz: %d %d\n",cpc_crtc_get_total_left_border(),cpc_crtc_get_total_right_border() );
+
+
+        printf("Bordes vert: %d %d\n",cpc_crtc_get_top_border_height(),cpc_crtc_get_bottom_border_height() );
+
+        
+
+
+        //CRTC registro: 2 valor: 46 . Normal
+        //CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
+        //offset_x=(46-cpc_crtc_registers[2])*16;
+
+        offset_x=cpc_crtc_get_total_left_border();
+
+
+/*
+#define CPC_LEFT_BORDER_NO_ZOOM 64
+#define CPC_TOP_BORDER_NO_ZOOM 72
+
+#define CPC_LEFT_BORDER CPC_LEFT_BORDER_NO_ZOOM*zoom_x
+#define CPC_TOP_BORDER CPC_TOP_BORDER_NO_ZOOM*zoom_y
+
+#define CPC_DISPLAY_WIDTH 640
+#define CPC_DISPLAY_HEIGHT 400
+*/
+
+        int ancho_maximo=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
+        int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+
+        //printf("ancho total: %d\n",ancho_total);     
+
+        if (ancho_total>ancho_maximo) ancho_total=ancho_maximo;
+        if (total_alto>alto_maximo) total_alto=alto_maximo;
+        if (offset_x<0) offset_x=0;
+        if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
+
+         
+
+    int inicio_pantalla;
+    int final_pantalla;
+
+
+    //printf("ancho total despues limite: %d ancho maximo %d borde_izqu %d offset_x: %d\n",ancho_total,ancho_maximo,borde_izq,offset_x);    
+
+
+    int total_scanlines=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+
+    int borde_superior=cpc_crtc_get_top_border_height();
+
+    inicio_pantalla=borde_superior;
+
+    /*
+    #define CPC_LEFT_BORDER_NO_ZOOM 64
+#define CPC_TOP_BORDER_NO_ZOOM 72
+
+
+
+#define CPC_DISPLAY_WIDTH 640
+#define CPC_DISPLAY_HEIGHT 400
+    */
+
+    final_pantalla=inicio_pantalla+total_alto;
+
+  //Si en zona pantalla (no border superior ni inferior)
+  //printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
+  //Borde superior o inferior
+  if (t_scanline_draw<inicio_pantalla || t_scanline_draw>=final_pantalla) {
+
+
+        //linea en coordenada display (no border) que se debe leer
+        int y_display=t_scanline_draw-inicio_pantalla;
+
+ 
+
+
+
+
+//Renderiza una linea de display (pantalla y sprites, pero no border)
+//void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
+
+
+
+    //Nos ubicamos ya en la zona de pixeles, saltando el border
+    //En esta capa, si color=0, no lo ponemos como transparente sino como color negro
+    z80_int *puntero_buf_rainbow;
+
+    //printf("%d\n",t_scanline_draw);
+
+   int y_destino_rainbow=t_scanline_draw*2;
+
+    
+    //TODO: calculo con border desactivado
+    //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
+    //if (border_enabled.v==0) y_destino_rainbow=y_destino_rainbow-screen_borde_superior;
+
+
+
+    //Limite inferior y superior. Sobretodo el inferior, pues puede ser negativo (en zona border invisible)
+    //En teoria superior no deberia ser mayor, pero por si acaso
+    int max_y=get_total_alto_rainbow();
+
+    if (y_destino_rainbow<0 || y_destino_rainbow>=max_y) return;
+
+    puntero_buf_rainbow=&rainbow_buffer[y_destino_rainbow*get_total_ancho_rainbow()];
+
+			unsigned int color=cpc_border_color;
+			color=cpc_palette_table[color];
+			color +=CPC_INDEX_FIRST_COLOR;
+
+
+
+    //*puntero_buf_rainbow=7;
+
+    //temp
+    color=7;
+
+    int x;
+
+    for (x=0;x<cpc_get_maximum_width_window();x++) {
+       cpc_putpixel_zoom_rainbow(x,puntero_buf_rainbow,color); 
+    }
+
+  }
+
+
+}
+
+
+
 
 //Guardar en buffer rainbow la linea actual. 
 //Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
@@ -1717,22 +1917,16 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
          
 
-    //TODO: cuadrar esto con el tamanyo del border actual segun CRTC
-    //de momento:
     int inicio_pantalla;
     int final_pantalla;
-    //int borde_izq=CPC_LEFT_BORDER_NO_ZOOM;
-    //int borde_izq=ancho_maximo-ancho_total-CPC_LEFT_BORDER_NO_ZOOM;
-    //int borde_izq=(ancho_maximo-ancho_total)/2;
 
 
     //printf("ancho total despues limite: %d ancho maximo %d borde_izqu %d offset_x: %d\n",ancho_total,ancho_maximo,borde_izq,offset_x);    
 
-    //inicio_pantalla=CPC_TOP_BORDER_NO_ZOOM/2; //porque aqui consideramos scanlines, no tamanyo final
 
     int total_scanlines=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
 
-    int borde_superior=CPC_TOTAL_SCANLINES-total_alto-CPC_TOP_BORDER_NO_ZOOM/2;
+    int borde_superior=cpc_crtc_get_top_border_height();
 
     inicio_pantalla=borde_superior;
 
@@ -2010,146 +2204,7 @@ pixel 0 (bit 1)	pixel 1 (bit 1)	pixel 2 (bit 1)	pixel 3 (bit 1)	pixel 0 (bit 0)	
 
     }
     }
-    /*
-
-	z80_byte video_mode=vdp_9918a_get_video_mode();
-
-	//printf ("video_mode: %d\n",video_mode);
-
-
-	int x,bit; 
-	z80_int direccion_name_table;
-	z80_byte byte_leido;
-    z80_byte byte_color;
-	int color=0;
-	
-	//int zx,zy;
-
-	z80_byte ink,paper;
-
-
-	z80_int pattern_base_address; //=2048; //TODO: Puesto a pelo
-	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
-
-	pattern_name_table=vdp_9918a_get_pattern_name_table(); //(vdp_9918a_registers[2]&15) * 0x400; 
-
-
-
-	pattern_base_address=vdp_9918a_get_pattern_base_address();
-
-
-	z80_int pattern_color_table=vdp_9918a_get_pattern_color_table();
-
-
-    //Sumar el offset por linea
-
-    int fila=scanline/8;
-
-    //entre 0 y 7 dentro de la fila
-    int scanline_fila=scanline % 8;    
-
-    int offset_sumar_linea;
-
-
-	int chars_in_line;
-	int char_width;
-
-
-
-			chars_in_line=32;
-			char_width=8;
-
-            //printf ("pattern base address before mask: %d\n",pattern_base_address);
-
-            //printf ("pattern color table before mask:  %d\n",pattern_color_table);            
-
-
-			pattern_base_address &=8192; //Cae en offset 0 o 8192
-          
-			pattern_color_table &=8192; //Cae en offset 0 o 8192
-
-
-            //printf ("pattern base address after mask: %d\n",pattern_base_address);
-
-            //printf ("pattern color table after mask:  %d\n",pattern_color_table);
-
-			direccion_name_table=pattern_name_table;  
-
-            offset_sumar_linea=chars_in_line*fila;
-
-            direccion_name_table +=offset_sumar_linea;            
-
-			//for (y=0;y<24;y++) {
-
-				int tercio=fila/8;
-
-				for (x=0;x<chars_in_line;x++) {  
-					
-					
-					z80_byte caracter=vdp_9918a_read_vram_byte(vram,direccion_name_table);
-					
-
-					//int scanline;
-
-					z80_int pattern_address=(caracter*8+2048*tercio) ;
-					pattern_address +=pattern_base_address+scanline_fila;
-					
-					
-
-
-					z80_int color_address=(caracter*8+2048*tercio) ;
-					color_address +=pattern_color_table+scanline_fila;
-
-	
-			
-
-					//for (scanline=0;scanline<8;scanline++) {
-
-						byte_leido=vdp_9918a_read_vram_byte(vram,pattern_address);
-
-						byte_color=vdp_9918a_read_vram_byte(vram,color_address);
-
-
-						ink=(byte_color>>4) &15;
-						paper=byte_color &15;
-
-							
-						for (bit=0;bit<char_width;bit++) {
-
-							//int columna=(x*char_width+bit)/8;
-
-													
-							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-							//if (scr_ver_si_refrescar_por_menu_activo(columna,fila)) {
-								color= ( byte_leido & 128 ? ink : paper );
-								//scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
-                                *destino_scanline_buffer=VDP_9918_INDEX_FIRST_COLOR+color;
-                                destino_scanline_buffer++;                                
-							//}
-
-							byte_leido=byte_leido<<1;
-						}
-					//}
-
-						
-					direccion_name_table++;
-
-				}
-		   //}
-
-
-
-}
-
-
-
-        
-
-
-
-
-        
-*/
+   
   }    
   
 
