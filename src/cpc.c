@@ -1726,12 +1726,10 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
 	for (y=0;y<alto;y++) {
 
 
-
-
-	
 		for (x=0;x<ancho;x++) {
 
 
+            //Si dibujamos algo que esta por debajo del border inferior y que no estará inicializado con nada
             if (y>=cpc_last_drawn_line) {
                 color_pixel=0;
             }
@@ -1743,8 +1741,6 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
             puntero++;
             scr_putpixel_zoom_rainbow(x,y,color_pixel);
 
-            //temp
-            //if (y==alto-1) scr_putpixel_zoom_rainbow(x,y,3);
 
 		}
 		
