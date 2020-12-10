@@ -56,8 +56,9 @@ z80_byte tsconf_af_ports[256];
 Y a partir de 24 todos son 255
 */
 
-//Por defecto con pwm. Unreal emulator lo tendra asi (los colores son iguales que sin vdac), por lo que entiendo que es lo normal
-z80_bit tsconf_vdac_with_pwm={1};
+//Unreal emulator lo tiene con pwm activado (los colores son iguales que sin vdac)
+//Por defecto sin pwm, los 32 componentes de color todos distintos
+z80_bit tsconf_vdac_with_pwm={0};
 
 /*
 Poner 3 modos de color:

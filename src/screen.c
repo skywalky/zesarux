@@ -5341,6 +5341,15 @@ void screen_store_scanline_rainbow_border_comun(z80_int *puntero_buf_rainbow,int
 
     if (MACHINE_IS_ZXUNO && zxuno_is_prism_mode_enabled() ) {    
         color_border=zxuno_prism_get_border_color();  
+
+        /*
+        printf("last: %d color orig: %02X%02X%02XH color: %04XH\n",screen_border_last_color,
+        zxuno_prism_current_palette[screen_border_last_color].rgb[0],
+        zxuno_prism_current_palette[screen_border_last_color].rgb[1],
+        zxuno_prism_current_palette[screen_border_last_color].rgb[2],
+        zxuno_prism_current_palette[screen_border_last_color].index_palette_15bit);
+        printf("%06XH\n",spectrum_colortable_normal[color_border]);
+        */
     }
 
 
