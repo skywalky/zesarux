@@ -447,6 +447,9 @@ void hard_reset_cpu_zxuno(void)
     //registro prism
     zxuno_ports[0x50]=0;
 
+    //colores paleta prism
+    zxuno_prism_set_default_palette();
+
 	//Sincronizar settings de emulador con los valores de puertos de zxuno
 	zxuno_set_emulador_settings();
 
@@ -1844,6 +1847,106 @@ z80_byte *zxuno_get_vram_mapped_address(void)
     return zxuno_get_vram_address(zxuno_get_vram_mapped());
 }
 
+int zuxno_prism_default_palette[16]={
+    /*
+    Paleta por defecto
+IGRB  color      puro    real
+0000  negro      000000  060800
+0001  azul       0000C0  0D13A7
+0010  rojo       C00000  BD0707
+0011  magenta    C000C0  C312AF
+0100  verde      00C000  07BA0C
+0101  cyan       00C0C0  0DC6B4
+0110  amarillo   C0C000  BCB914
+0111  blanco     C0C0C0  C2C4BC
+1000  negro b    606060  64665E
+1001  azul b     0000FF  161CB0
+1010  rojo b     FF0000  CE1818
+1011  magenta b  FF00FF  DC2CC8
+1100  verde b    00FF00  28DC2D
+1101  cyan b     00FFFF  36EFDE
+1110  amarillo b FFFF00  EEEB46
+1111  blanco b   FFFFFF  FDFFF7
+*/
+
+0x000000,
+0x0000C0,  
+0xC00000,  
+0xC000C0,  
+0x00C000,  
+0x00C0C0,  
+0xC0C000,  
+0xC0C0C0,  
+0x606060,  
+0x0000FF,  
+0xFF0000,  
+0xFF00FF,  
+0x00FF00,  
+0x00FFFF,  
+0xFFFF00,  
+0xFFFFFF  
+
+};
+
+//Componente de cada color de paleta. Por una parte, valor 24 bits tal cual la establece el usuario
+//Por otra parte, indice a color de paleta de 15bits (paleta de tsconf)
+struct s_zxuno_prism_palette_item 
+{
+    z80_byte rgb[3]; //0=r, 1=g, 2=b
+    int index_palette_15bit;
+};
+
+struct s_zxuno_prism_palette_item zxuno_prism_current_palette[16];
+
+//Modifica el valor de indice de 15 bit segun los componentes rgb en la estructura
+void zxuno_prism_set_color_palette_15bit(int indice_color)
+{
+    //Por si acaso
+    indice_color &=15; //mantener entre 0 y 15
+
+    int r,g,b;
+
+
+
+    r=zxuno_prism_current_palette[indice_color].rgb[0];
+    g=zxuno_prism_current_palette[indice_color].rgb[1];
+    b=zxuno_prism_current_palette[indice_color].rgb[2];
+
+
+    //Convertir de 8 bits a 5 bits
+    r=(r>>3)&31;
+    g=(g>>3)&31;
+    b=(b>>3)&31;
+
+    int rgb15=(r<<10)|(g<<5)|b;
+
+    zxuno_prism_current_palette[indice_color].index_palette_15bit=rgb15;
+
+    printf("setting zxuno prism index color %d to %04XH\n",indice_color,rgb15);
+}
+
+void zxuno_prism_set_default_palette(void)
+{
+    int i;
+
+    for (i=0;i<16;i++) {
+        int color_defecto=zuxno_prism_default_palette[i];
+
+        int r,g,b;
+
+        r=(color_defecto>>16) & 0xFF;
+        g=(color_defecto>>8 ) & 0xFF;
+        b=(color_defecto    ) & 0xFF;
+
+        //Meter componentes de 24 bits
+        zxuno_prism_current_palette[i].rgb[0]=r;
+        zxuno_prism_current_palette[i].rgb[1]=g;
+        zxuno_prism_current_palette[i].rgb[2]=b;
+
+        //Y ajustar el color de 15 bits
+        zxuno_prism_set_color_palette_15bit(i);
+    }
+}
 
 //Retorna color 4 bits teniendo en cuenta bit alto de cada byte,
 //El bit 7 de byte_vram0 sera el bit 0 del color
@@ -1852,10 +1955,17 @@ z80_byte *zxuno_get_vram_mapped_address(void)
 //El bit 7 de byte_vram3 sera el bit 3 del color
 int zxuno_get_prism_pixel_color(z80_byte byte_vram0,z80_byte byte_vram1,z80_byte byte_vram2,z80_byte byte_vram3)
 {
-    return  ((byte_vram0>>7)&1)  |
+    z80_byte indice_color=
+            ((byte_vram0>>7)&1)  |
             ((byte_vram1>>6)&2)  |
             ((byte_vram2>>5)&4)  |
             ((byte_vram3>>4)&8)  ;
+
+
+    //Obtener el valor de 15 bits de ese color de la paleta
+    int rgb15=zxuno_prism_current_palette[indice_color].index_palette_15bit;
+
+    return TSCONF_INDEX_FIRST_COLOR+rgb15;
     
         
 }

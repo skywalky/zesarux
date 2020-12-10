@@ -892,6 +892,11 @@ void cold_start_cpu_registers(void)
 		//radaspalbank
 		zxuno_ports[0x43]=0;
 
+        //registro prism
+        zxuno_ports[0x50]=0;
+
+        zxuno_prism_set_default_palette();
+
 	}
 
 	if (MACHINE_IS_PRISM) {

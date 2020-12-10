@@ -1740,7 +1740,7 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
     if (cpc_pending_last_drawn_lines_black.v==1 && cpc_pending_last_drawn_lines_black_counter==0) {
         drawing_black=1;
         cpc_pending_last_drawn_lines_black.v=0;
-        debug_printf(VERBOSE_DEBUG,"Drawing blank lines after lower border (elapsed 1 second since last CRTC vertical changes)");
+        debug_printf(VERBOSE_DEBUG,"Drawing black lines after lower border (elapsed 1 second since last CRTC vertical changes)");
     }
 
 	for (y=0;y<alto;y++) {
