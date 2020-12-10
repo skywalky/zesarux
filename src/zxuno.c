@@ -993,6 +993,11 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
                         screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling ZX-Uno Prism mode. 256x192x4bpp");
                     }
                 }
+
+            break;
+
+            case 0x51:
+                zxuno_prism_set_color_palette();
             break;
 			
 
@@ -1898,7 +1903,10 @@ struct s_zxuno_prism_palette_item
 
 struct s_zxuno_prism_palette_item zxuno_prism_current_palette[16];
 
-//Modifica el valor de indice de 15 bit segun los componentes rgb en la estructura
+//Indica 0,1 o 2 segun si ultimo componente
+//cambiado de un color es 0 (red) , 1 (green) o 2 (blue)
+int zxuno_prism_index_last_palette_component=0;
+
 void zxuno_prism_set_color_palette_15bit(int indice_color)
 {
     //Por si acaso
@@ -1924,6 +1932,46 @@ void zxuno_prism_set_color_palette_15bit(int indice_color)
 
     printf("setting zxuno prism index color %d to %04XH\n",indice_color,rgb15);
 }
+
+void zxuno_prism_set_color_palette(void)
+{
+    //cambia el color de la paleta segun el contenido de los registros 0x50 y 0x51
+    int indice_paleta=zxuno_ports[0x50] & 15;
+
+    int valor_color=zxuno_ports[0x51];
+
+    //Mantener entre 0 y 2 
+    zxuno_prism_index_last_palette_component = zxuno_prism_index_last_palette_component % 3;
+
+    zxuno_prism_current_palette[indice_paleta].rgb[zxuno_prism_index_last_palette_component]=valor_color;
+
+    zxuno_prism_set_color_palette_15bit(indice_paleta);
+
+    //Siguiente componente
+    zxuno_prism_index_last_palette_component++;
+
+    //Mantener entre 0 y 2
+    zxuno_prism_index_last_palette_component = zxuno_prism_index_last_palette_component % 3;
+
+    //Si es 0, hemos completado rgb y por tanto, incrementar indice
+    if (zxuno_prism_index_last_palette_component==0) {
+        printf("Siguiente indice color\n");
+        indice_paleta++;
+        indice_paleta &=15;
+
+        z80_byte valor_registro=zxuno_ports[0x50] & 0xF0;
+        valor_registro &=indice_paleta;
+        zxuno_ports[0x50]=valor_registro;
+
+    }
+    printf("indice componente: %d\n",zxuno_prism_index_last_palette_component);
+    printf("indice color: %02XH\n",zxuno_ports[0x50]);
+}
+
+
+
+//Modifica el valor de indice de 15 bit segun los componentes rgb en la estructura
+
 
 void zxuno_prism_set_default_palette(void)
 {

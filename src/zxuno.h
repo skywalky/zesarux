@@ -167,5 +167,6 @@ extern int zxuno_is_prism_mode_enabled(void);
 extern int zxuno_get_vram_mapped(void);
 extern z80_byte *zxuno_get_vram_mapped_address(void);
 extern void zxuno_prism_set_default_palette(void);
+extern void zxuno_prism_set_color_palette(void);
 
 #endif
