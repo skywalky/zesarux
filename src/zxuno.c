@@ -1960,7 +1960,7 @@ void zxuno_prism_set_color_palette(void)
         indice_paleta &=15;
 
         z80_byte valor_registro=zxuno_ports[0x50] & 0xF0;
-        valor_registro &=indice_paleta;
+        valor_registro |=indice_paleta;
         zxuno_ports[0x50]=valor_registro;
 
     }
