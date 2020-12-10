@@ -127,4 +127,6 @@ extern void cpc_handle_vsync_state(void);
 
 extern z80_bit cpc_crt_pending_interrupt;
 
+extern int cpc_pending_last_drawn_lines_black_counter;
+
 #endif

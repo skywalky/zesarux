@@ -190,9 +190,20 @@ z80_bit cpc_vsync_signal={0};
 //Ultima linea que se ha escrito en el buffer rainbow. Sirve para luego al renderizar, las que quedan por debajo, ponerlas en negro
 int cpc_last_drawn_line=0;
 
+//Pendiente de mostrar esas lineas en negro
+z80_bit cpc_pending_last_drawn_lines_black={0};
+
+//Contador de cuanto falta para mostrar esas lineas en negro, en frames
+int cpc_pending_last_drawn_lines_black_counter=0;
+
 void cpc_reset_last_drawn_line(void)
 {
     cpc_last_drawn_line=0;
+    //Pendiente de mostrar esas lineas en negro
+    cpc_pending_last_drawn_lines_black.v=1;
+
+    //Contador de cuanto falta para mostrar esas lineas en negro, en frames
+    cpc_pending_last_drawn_lines_black_counter=50;
 }
 
 void cpc_set_memory_pages()
@@ -1723,6 +1734,15 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
 
     //printf("ultima linea al hacer render: %d\n",cpc_last_drawn_line);
 
+    //Si dibujar lineas por debajo del borde inferior en negro
+    int drawing_black=0;
+
+    if (cpc_pending_last_drawn_lines_black.v==1 && cpc_pending_last_drawn_lines_black_counter==0) {
+        drawing_black=1;
+        cpc_pending_last_drawn_lines_black.v=0;
+        debug_printf(VERBOSE_DEBUG,"Drawing blank lines after lower border (elapsed 1 second since last CRTC vertical changes)");
+    }
+
 	for (y=0;y<alto;y++) {
 
 
@@ -1730,8 +1750,8 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
 
 
             //Si dibujamos algo que esta por debajo del border inferior y que no estará inicializado con nada
-            if (y>=cpc_last_drawn_line) {
-                color_pixel=0;
+            if (drawing_black && y>=cpc_last_drawn_line) {
+                *puntero=0;
             }
 
             else {

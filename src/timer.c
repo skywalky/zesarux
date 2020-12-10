@@ -55,6 +55,7 @@
 #include "pd765.h"
 #include "settings.h"
 #include "ql_i8049.h"
+#include "cpc.h"
 
 #include "autoselectoptions.h"
 
@@ -517,6 +518,10 @@ void timer_check_interrupt(void)
 			if (timer_osd_keyboard_menu) {
 				timer_osd_keyboard_menu--;
 			}
+
+            if (cpc_pending_last_drawn_lines_black_counter) {
+                cpc_pending_last_drawn_lines_black_counter--;
+            }
 
 
 			if (timer_on_screen_adv_key) {
