@@ -7941,7 +7941,17 @@ void set_value_beeper (int v)
 
 z80_byte get_border_colour_from_out(void)
 {
+
 z80_byte color_border;
+
+if (MACHINE_IS_ZXUNO && zxuno_is_prism_mode_enabled() ) {
+//IxxxxGRB puerto FE
+    color_border=out_254&7;
+    if (out_254 & 128) color_border+=8;
+    //printf("color border: %d\n",color_border);
+    return color_border;
+}
+
 
                                         if (spectra_enabled.v) {
                                                 if (spectra_display_mode_register&16) {

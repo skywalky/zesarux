@@ -169,4 +169,14 @@ extern z80_byte *zxuno_get_vram_mapped_address(void);
 extern void zxuno_prism_set_default_palette(void);
 extern void zxuno_prism_set_color_palette(void);
 
+//Componente de cada color de paleta. Por una parte, valor 24 bits tal cual la establece el usuario
+//Por otra parte, indice a color de paleta de 15bits (paleta de tsconf)
+struct s_zxuno_prism_palette_item 
+{
+    z80_byte rgb[3]; //0=r, 1=g, 2=b
+    int index_palette_15bit;
+};
+
+extern struct s_zxuno_prism_palette_item zxuno_prism_current_palette[];
+
 #endif

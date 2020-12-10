@@ -1893,13 +1893,7 @@ IGRB  color      puro    real
 
 };
 
-//Componente de cada color de paleta. Por una parte, valor 24 bits tal cual la establece el usuario
-//Por otra parte, indice a color de paleta de 15bits (paleta de tsconf)
-struct s_zxuno_prism_palette_item 
-{
-    z80_byte rgb[3]; //0=r, 1=g, 2=b
-    int index_palette_15bit;
-};
+
 
 struct s_zxuno_prism_palette_item zxuno_prism_current_palette[16];
 
@@ -2090,4 +2084,11 @@ void zxuno_prism_screen_store_scanline_rainbow(void)
   }
 
 
+}
+
+
+int zxuno_prism_get_border_color(void)
+{ 
+                int rgb15=zxuno_prism_current_palette[screen_border_last_color].index_palette_15bit;
+                return TSCONF_INDEX_FIRST_COLOR+rgb15;  
 }
