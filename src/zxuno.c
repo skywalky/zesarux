@@ -1924,7 +1924,7 @@ void zxuno_prism_set_color_palette_15bit(int indice_color)
 
     zxuno_prism_current_palette[indice_color].index_palette_15bit=rgb15;
 
-    printf("setting zxuno prism index color %d to %04XH\n",indice_color,rgb15);
+    //printf("setting zxuno prism index color %d to %04XH\n",indice_color,rgb15);
 }
 
 void zxuno_prism_set_color_palette(void)
@@ -1949,7 +1949,7 @@ void zxuno_prism_set_color_palette(void)
 
     //Si es 0, hemos completado rgb y por tanto, incrementar indice
     if (zxuno_prism_index_last_palette_component==0) {
-        printf("Siguiente indice color\n");
+        //printf("Siguiente indice color\n");
         indice_paleta++;
         indice_paleta &=15;
 
@@ -1958,8 +1958,8 @@ void zxuno_prism_set_color_palette(void)
         zxuno_ports[0x50]=valor_registro;
 
     }
-    printf("indice componente: %d\n",zxuno_prism_index_last_palette_component);
-    printf("indice color: %02XH\n",zxuno_ports[0x50]);
+    //printf("indice componente: %d\n",zxuno_prism_index_last_palette_component);
+    //printf("indice color: %02XH\n",zxuno_ports[0x50]);
 }
 
 
