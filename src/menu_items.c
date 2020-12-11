@@ -8688,7 +8688,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 		int linea=0;
 
-		char textoshow[33];
+		char textoshow[64];
 
 		char nombre_paleta[33];
 
@@ -11330,13 +11330,24 @@ int menu_debug_sprites_total_colors_mapped_palette(int paleta)
 		case 16:
 			return 16;
 		break;		
+        
+		//zxuno prism (paleta de lo que el usuario ha establecido, que no son los colores finales)
+		case 17:
+			return 16;
+		break;	 
 
+		//zxuno prism (colores finales, a paleta reducida)
+		case 18:
+			return 16;
+		break;	        
+
+         
 	}
 
 	return 16;
 }
 
-//Retorna maximo valor para una paleta mapeada
+//Retorna maximo valor para una paleta mapeada, o sea, el total de colores definido en screen.h para esa paleta
 int menu_debug_sprites_max_value_mapped_palette(int paleta)
 {
 
@@ -11400,16 +11411,30 @@ int menu_debug_sprites_max_value_mapped_palette(int paleta)
 			return VDP_9918_TOTAL_PALETTE_COLOURS;
 		break;		
 
+
+        //zxuno prism (paleta de lo que el usuario ha establecido, que no son los colores finales)
+		case 17:
+			return 16777216;
+		break;	
+
+		//ZXuno prism (colores finales, a paleta reducida)
+		case 18:
+			return TSCONF_TOTAL_PALETTE_COLOURS;
+		break;	        
+
+        
+
 	}
 
 	return 16;
 }
 
 
-//Retorna indice color asociado a la paleta indicada
+//Retorna indice color asociado a la paleta indicada, que apuntara a la tabla spectrum_colortable_normal
 int menu_debug_sprites_return_index_palette(int paleta, z80_byte color)
 {
 
+    z80_byte r,g,b;
 
 	switch (paleta) {
 		case 0:
@@ -11498,6 +11523,22 @@ int menu_debug_sprites_return_index_palette(int paleta, z80_byte color)
 			return color; //Dado que realmente no hay mapeo
 		break;		
 
+        //zxuno prism (paleta de lo que el usuario ha establecido, que no son los colores finales)
+        case 17:
+            r=zxuno_prism_current_palette[color].rgb[0];
+            g=zxuno_prism_current_palette[color].rgb[1];
+            b=zxuno_prism_current_palette[color].rgb[2];
+			return (r<<16)|(g<<8)|b;
+		break;	         
+
+		case 18:
+			//zxuno prism (colores finales, a paleta reducida)
+			return zxuno_prism_current_palette[color].index_palette_15bit;
+		break;        
+
+       
+
+
 	}
 
 	return color;
@@ -11557,7 +11598,19 @@ int menu_debug_sprites_return_color_palette(int paleta, z80_byte color)
 
 		case 16:
 			return VDP_9918_INDEX_FIRST_COLOR+index;
-		break;		
+		break;	
+
+
+        //zxuno prism (paleta de lo que el usuario ha establecido, que no son los colores finales)
+        case 17:
+            return TSCONF_INDEX_FIRST_COLOR+zxuno_prism_current_palette[color].index_palette_15bit;
+        break;
+
+		case 18:
+			//zxuno prism (colores finales, a paleta reducida)
+			return TSCONF_INDEX_FIRST_COLOR+index;
+		break;       
+
 
 	}
 
@@ -11572,6 +11625,7 @@ void menu_debug_sprites_change_palette(void)
 	if (view_sprites_palette==MENU_TOTAL_MAPPED_PALETTES) view_sprites_palette=0;
 }
 
+//Obtener nombre de una paleta mapeada
 void menu_debug_sprites_get_palette_name(int paleta, char *s)
 {
 	switch (paleta) {
@@ -11642,6 +11696,19 @@ void menu_debug_sprites_get_palette_name(int paleta, char *s)
 		case 16:
 			strcpy(s,"VDP9918A");
 		break;
+
+
+        //(paleta de lo que el usuario ha establecido, que no son los colores finales)
+		case 17:
+			strcpy(s,"ZX-Uno Prism");
+		break;   
+
+        //colores finales, a paleta reducida
+		case 18:
+			strcpy(s,"ZX-Uno Prism (final)");
+		break;       
+
+        
 
 		default:
 			strcpy(s,"UNKNOWN");

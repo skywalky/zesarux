@@ -988,6 +988,9 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
                 if ((zxuno_ports[0x50] & 64) != (anterior_prism & 64)) {
                     //printf("Setting memory pages after change prism mode\n");
                     zxuno_set_memory_pages();
+                }
+
+                if ((zxuno_ports[0x50] & 128) != (anterior_prism & 128)) {
 
                     if (zxuno_ports[0x50] & 128) {
                         screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling ZX-Uno Prism mode. 256x192x4bpp");

@@ -590,7 +590,7 @@ extern void screen_switch_rainbow_buffer(void);
 
 
 struct s_total_palette_colours {
-        char nombre_paleta[17];
+        char nombre_paleta[32];
 				char descripcion_paleta[32];
 				int indice_inicial;
 				int total_colores;

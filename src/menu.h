@@ -127,8 +127,9 @@ typedef struct s_zxvision_window zxvision_window;
 
 #define MENU_ITEM_PARAMETERS int valor_opcion GCC_UNUSED
 
+//Total de paletas mapeadas
 //Usado en ver sprites y ver colores mapeados
-#define MENU_TOTAL_MAPPED_PALETTES 17
+#define MENU_TOTAL_MAPPED_PALETTES 19
 
 #define MENU_LAST_DIR_FILE_NAME "zesarux_last_dir.txt"
 #define MENU_SCR_INFO_FILE_NAME "zesarux_scr_info.txt"
