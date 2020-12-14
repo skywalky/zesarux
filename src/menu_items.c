@@ -22309,7 +22309,7 @@ Altura, para 2 chips de sonido (6 canales), tenemos maximo 192/6=32
 
 }
 
-void menu_ay_pianokeyboard_draw_text_piano(int linea,int canal GCC_UNUSED,char *note)
+void menu_ay_pianokeyboard_draw_text_piano(zxvision_window *w,int linea,int canal GCC_UNUSED,char *note)
 {
 
 	//Forzar a mostrar atajos
@@ -22411,8 +22411,8 @@ void menu_ay_pianokeyboard_draw_text_piano(int linea,int canal GCC_UNUSED,char *
 	//menu_escribe_linea_opcion(linea++,-1,1,linea_negras);
 	//menu_escribe_linea_opcion(linea++,-1,1,linea_blancas);
 
-	zxvision_print_string_defaults(zxvision_current_window,1,linea++,linea_negras);
-	zxvision_print_string_defaults(zxvision_current_window,1,linea++,linea_blancas);
+	zxvision_print_string_defaults(w,1,linea++,linea_negras);
+	zxvision_print_string_defaults(w,1,linea++,linea_blancas);
 
 
 	menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
@@ -22440,7 +22440,7 @@ int si_mostrar_ay_piano_grafico(void)
 void menu_ay_pianokeyboard_draw_piano(zxvision_window *w,int linea,int canal,char *note)
 {
 	if (!si_mostrar_ay_piano_grafico()) {
-		menu_ay_pianokeyboard_draw_text_piano(linea,canal,note);
+		menu_ay_pianokeyboard_draw_text_piano(w,linea,canal,note);
 	}
 	else {
 		menu_ay_pianokeyboard_draw_graphical_piano(w,linea,canal,note);
