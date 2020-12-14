@@ -129,4 +129,10 @@ extern z80_bit cpc_crt_pending_interrupt;
 
 extern int cpc_pending_last_drawn_lines_black_counter;
 
+extern void cpc_reset(void);
+
+extern int cpc_crtc_get_height_character(void);
+
+extern void screen_store_scanline_rainbow_cpc_border_and_display(void);
+
 #endif

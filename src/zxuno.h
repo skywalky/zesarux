@@ -180,4 +180,10 @@ struct s_zxuno_prism_palette_item
 
 extern struct s_zxuno_prism_palette_item zxuno_prism_current_palette[];
 
+extern int zxuno_prism_get_border_color(void);
+
+extern void zxuno_prism_screen_store_scanline_rainbow(void);
+
+extern int zxuno_is_prism_mapping_enabled(void);
+
 #endif

@@ -1851,7 +1851,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     //printf("ancho total despues limite: %d ancho maximo %d borde_izqu %d offset_x: %d\n",ancho_total,ancho_maximo,borde_izq,offset_x);    
 
 
-    int total_scanlines=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+    //int total_scanlines=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
 
     int borde_superior=cpc_crtc_get_top_border_height();
 
@@ -1880,7 +1880,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
 
         //linea en coordenada display (no border) que se debe leer
-        int y_display=t_scanline_draw-inicio_pantalla;
+        //int y_display=t_scanline_draw-inicio_pantalla;
 
  			unsigned int color=cpc_border_color;
 			color=cpc_palette_table[color];
@@ -1966,7 +1966,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
 
         //linea en coordenada display (no border) que se debe leer
-        int y_display=t_scanline_draw-inicio_pantalla;
+        //int y_display=t_scanline_draw-inicio_pantalla;
 
  
 
@@ -2102,7 +2102,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
     //printf("ancho total despues limite: %d ancho maximo %d borde_izqu %d offset_x: %d\n",ancho_total,ancho_maximo,borde_izq,offset_x);    
 
 
-    int total_scanlines=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+    //int total_scanlines=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
 
     int borde_superior=cpc_crtc_get_top_border_height();
 
