@@ -1,5 +1,6 @@
-Version 9.2 - xxxx edition. 26 November 2020
+Version 9.2 - xxxx edition. 14 December 2020
 
+Added new ZX-Uno Prism video mode
 Fixed loading General Sound rom
 Fixed CPC CRTC interrupts. After a CRTC interrupt with Z80 interrupts disabled, they were not fired when enabling Z80 interrupts
 Fixed CPC setting bit 4 of the "Select screen mode and rom configuration" register of the Gate-Array and interrupt request
