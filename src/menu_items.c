@@ -3433,6 +3433,41 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 				}
 
+                if (MACHINE_IS_CPC) {
+					sprintf(texto_buffer,"Video mode:      %d",cpc_gate_registers[2] &3);
+					zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);
+
+                    sprintf(texto_buffer,"Full size:       %d X %d",
+                        cpc_crtc_get_total_horizontal(),cpc_crtc_get_total_vertical()
+                    );
+                    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);
+
+                    sprintf(texto_buffer,"Pixel zone size: %d X %d",
+                        cpc_crtc_get_total_pixels_horizontal(),
+                        cpc_crtc_get_total_pixels_vertical()
+                    );
+                    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);       
+
+                    sprintf(texto_buffer,"Horiz. borders:  %d , %d",
+                        cpc_crtc_get_top_border_height(),
+                        cpc_crtc_get_bottom_border_height()
+                    );
+                    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);       
+
+                    sprintf(texto_buffer,"Vertic. borders: %d , %d",
+                        cpc_crtc_get_total_left_border(),
+                        cpc_crtc_get_total_right_border()
+                    );
+                    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);   
+
+                    sprintf(texto_buffer,"Hsync width:     %d",cpc_crtc_get_total_hsync_width());
+                    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);   
+
+                    sprintf(texto_buffer,"Vsync height:    %d",cpc_crtc_get_total_vsync_height());
+                    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);   
+
+                }
+
 
 				zxvision_draw_window_contents(ventana);	
 			}
@@ -3474,6 +3509,10 @@ void menu_debug_tsconf_tbblue_msx_videoregisters(MENU_ITEM_PARAMETERS)
 		else if (MACHINE_HAS_VDP_9918A) {
 			alto_ventana=12;
 		}		
+
+		else if (MACHINE_IS_CPC) {
+			alto_ventana=9;
+		}	        
 
 		else {
 			//yventana=7;
@@ -23271,11 +23310,15 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_videoregisters,NULL,"Video ~~Info");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'i');
 
+        if (!MACHINE_IS_CPC) {
 		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'l');
+        }
 
+        if (!MACHINE_IS_CPC) {
 		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_spritenav,NULL,"~~Sprite navigator");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'s');
+        }
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE || MACHINE_HAS_VDP_9918A) {
 			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_tilenav,NULL,"~~Tile navigator");

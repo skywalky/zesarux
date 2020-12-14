@@ -135,4 +135,16 @@ extern int cpc_crtc_get_height_character(void);
 
 extern void screen_store_scanline_rainbow_cpc_border_and_display(void);
 
+extern int cpc_crtc_get_total_pixels_horizontal(void);
+extern int cpc_crtc_get_total_pixels_vertical(void);
+extern int cpc_crtc_get_total_horizontal(void);
+extern int cpc_crtc_get_total_vertical(void);
+
+extern int cpc_crtc_get_total_right_border(void);
+extern int cpc_crtc_get_total_left_border(void);
+extern int cpc_crtc_get_top_border_height(void);
+extern int cpc_crtc_get_bottom_border_height(void);
+extern int cpc_crtc_get_total_hsync_width(void);
+extern int cpc_crtc_get_total_vsync_height(void);
+
 #endif
