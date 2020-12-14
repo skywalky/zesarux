@@ -24433,3 +24433,212 @@ void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
 		zxvision_destroy_window(ventana);		
  	}
 }
+
+
+void old_delete_menu_debug_ioports(MENU_ITEM_PARAMETERS)
+{
+
+	char stats_buffer[MAX_TEXTO_GENERIC_MESSAGE];
+
+
+	debug_get_ioports(stats_buffer);
+
+    char titulo_ventana[33];
+
+    if (CPU_IS_MOTOROLA) strcpy(titulo_ventana,"IO Addresses");
+    else strcpy(titulo_ventana,"IO Ports");
+
+  menu_generic_message(titulo_ventana,stats_buffer);
+
+}
+
+
+
+
+zxvision_window *menu_debug_ioports_overlay_window;
+
+
+
+void menu_debug_ioports_overlay(void)
+{
+
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+ 
+
+
+
+    zxvision_window *ventana;
+
+    ventana=menu_debug_ioports_overlay_window;   
+
+
+
+
+
+    int linea=0;
+    char buffer_linea[64];
+
+  
+
+   zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
+
+    sprintf(buffer_linea,"PC=%04X SP=%04X AF=%04X HL=%04X",
+        general_sound_z80_cpu.r_pc,general_sound_z80_cpu.r_sp,general_sound_z80_cpu.r_af,general_sound_z80_cpu.r_hl);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+    sprintf(buffer_linea,"BC=%04X DE=%04X IX=%04X IY=%04X",
+        general_sound_z80_cpu.r_bc,general_sound_z80_cpu.r_de,general_sound_z80_cpu.r_ix,general_sound_z80_cpu.r_iy);
+    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
+
+    //Inicializar punteros a lineas
+    //void zxvision_trocear_string_lineas(char *texto,char *buffer_lineas[])
+
+	//texto que contiene cada linea con ajuste de palabra. Al trocear las lineas aumentan
+	char buffer_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE][MAX_ANCHO_LINEAS_GENERIC_MESSAGE];
+
+    char *punteros_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE];
+
+	//const int max_ancho_texto=30;
+
+    int i;
+    for (i=0;i<MAX_LINEAS_TOTAL_GENERIC_MESSAGE;i++) {
+        punteros_lineas[i]=&buffer_lineas[i][0];
+    }
+
+	char io_buffer[MAX_TEXTO_GENERIC_MESSAGE];
+
+
+	debug_get_ioports(io_buffer);
+
+
+    int total_lineas=zxvision_trocear_string_lineas(io_buffer,punteros_lineas);
+
+    /*
+    void menu_debug_ioports(MENU_ITEM_PARAMETERS)
+{
+
+
+
+    char titulo_ventana[33];
+
+    if (CPU_IS_MOTOROLA) strcpy(titulo_ventana,"IO Addresses");
+    else strcpy(titulo_ventana,"IO Ports");
+
+  menu_generic_message(titulo_ventana,stats_buffer);
+
+}
+    */
+
+    //Escribir cada linea
+    printf("total lineas: %d\n",total_lineas);
+
+    for (i=0;i<total_lineas;i++) {
+        zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_lineas[i]);        
+    }
+
+
+
+    zxvision_draw_window_contents(ventana);
+
+
+}
+
+
+zxvision_window zxvision_window_debug_ioports;
+
+void menu_debug_ioports(MENU_ITEM_PARAMETERS)
+{
+    /*if (!menu_multitarea) {
+            menu_warn_message("This menu item needs multitask enabled");
+            return;
+    }*/
+
+
+
+
+    zxvision_window *ventana;
+    ventana=&zxvision_window_debug_ioports;    
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);    
+
+    int x,y,ancho,alto;
+
+    if (!util_find_window_geometry("debugioports",&x,&y,&ancho,&alto)) {
+        x=menu_origin_x();
+        y=1;
+        ancho=33;
+        alto=22;
+    }    
+
+
+    char titulo_ventana[64];
+
+    if (CPU_IS_MOTOROLA) strcpy(titulo_ventana,"IO Addresses");
+    else strcpy(titulo_ventana,"IO Ports");
+
+    zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,titulo_ventana);
+  
+
+   
+
+    ventana->can_be_backgrounded=1;
+    ventana->upper_margin=2;
+    //Permitir hotkeys desde raton
+    ventana->can_mouse_send_hotkeys=1;	
+
+    //indicar nombre del grabado de geometria
+    strcpy(ventana->geometry_name,"debugioports");    
+
+    zxvision_draw_window(ventana);
+
+    menu_debug_ioports_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+                                                
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de onda + texto
+    set_menu_overlay_function(menu_debug_ioports_overlay);   
+
+    //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+    //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+    if (zxvision_currently_restoring_windows_on_start) {
+        //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+        return;
+    }     
+
+    z80_byte tecla;
+    do {
+
+
+        tecla=zxvision_common_getkey_refresh();
+        zxvision_handle_cursors_pgupdn(ventana,tecla);
+
+
+        //printf ("tecla: %d\n",tecla);
+    } while (tecla!=2 && tecla!=3);
+
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	//(siempre que esta funcion tenga overlay realmente)
+	zxvision_set_window_overlay_from_current(ventana);    
+
+    //restauramos modo normal de texto de menu
+     set_menu_overlay_function(normal_overlay_texto_menu);
+
+    
+    cls_menu_overlay();
+
+    //Grabar geometria ventana
+    util_add_window_geometry_compact(ventana);    
+
+	if (tecla==3) {
+		//zxvision_ay_registers_overlay
+		zxvision_message_put_window_background();
+	}
+
+	else {
+		zxvision_destroy_window(ventana);		
+ 	}
+}

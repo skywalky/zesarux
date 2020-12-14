@@ -6283,6 +6283,7 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"helpshowkeyboard",menu_help_show_keyboard},
     {"debugconsole",menu_debug_unnamed_console},
     {"audiogensound",menu_audio_general_sound},
+    {"debugioports",menu_debug_ioports},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };
@@ -8025,6 +8026,90 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	//if (tooltip_enabled==0)
 
 
+
+}
+
+/*
+Esto es parte de zxvision_generic_message_tooltip que usamos desde alguna funcion externa
+*/
+int zxvision_trocear_string_lineas(char *texto,char *buffer_lineas[])
+{
+	//texto que contiene cada linea con ajuste de palabra. Al trocear las lineas aumentan
+	//char buffer_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE][MAX_ANCHO_LINEAS_GENERIC_MESSAGE];
+
+	const int max_ancho_texto=30;
+
+	//Primera linea que mostramos en la ventana
+	//int primera_linea=0;
+
+	int indice_linea=0;  //Numero total de lineas??
+	int indice_texto=0;
+	int ultimo_indice_texto=0;
+	int longitud=strlen(texto);
+
+
+	//Copia del texto de entrada (ya formateado con vsprintf) que se leera solo al copiar clipboard
+	//Al pulsar tecla de copy a cliboard, se lee el texto que haya aqui,
+	//y no el contenido en el char *texto, pues ese se ha alterado quitando saltos de linea y otros caracteres
+	char *menu_generic_message_tooltip_text_initial;
+
+
+	debug_printf(VERBOSE_INFO,"Allocating %d bytes to initial text",longitud+1);
+	menu_generic_message_tooltip_text_initial=malloc(longitud+1);
+	if (menu_generic_message_tooltip_text_initial==NULL) {
+		debug_printf(VERBOSE_ERR,"Can not allocate buffer for initial text");
+	}
+
+
+	//En caso que se haya podido asignar el buffer de clonado
+	if (menu_generic_message_tooltip_text_initial!=NULL) {
+		strcpy(menu_generic_message_tooltip_text_initial,texto);
+	}
+
+
+
+	do {
+		indice_texto+=max_ancho_texto;
+
+		//temp
+		//printf ("indice_linea: %d\n",indice_linea);
+
+		//Controlar final de texto
+		if (indice_texto>=longitud) indice_texto=longitud;
+
+		//Si no, miramos si hay que separar por espacios
+		else indice_texto=menu_generic_message_aux_wordwrap(texto,ultimo_indice_texto,indice_texto);
+
+		//Separamos por salto de linea, filtramos caracteres extranyos
+		indice_texto=menu_generic_message_aux_filter(texto,ultimo_indice_texto,indice_texto);
+
+		//copiar texto
+		int longitud_texto=indice_texto-ultimo_indice_texto;
+
+
+		//snprintf(buffer_lineas[indice_linea],longitud_texto,&texto[ultimo_indice_texto]);
+
+
+		menu_generic_message_aux_copia(&texto[ultimo_indice_texto],buffer_lineas[indice_linea],longitud_texto);
+		buffer_lineas[indice_linea++][longitud_texto]=0;
+		//printf ("copiado %d caracteres desde %d hasta %d: %s\n",longitud_texto,ultimo_indice_texto,indice_texto,buffer_lineas[indice_linea-1]);
+
+
+		//printf ("texto: %s\n",buffer_lineas[indice_linea-1]);
+
+		if (indice_linea==MAX_LINEAS_TOTAL_GENERIC_MESSAGE) {
+                        //cpu_panic("Max lines on menu_generic_message reached");
+			debug_printf(VERBOSE_INFO,"Max lines on menu_generic_message reached (%d)",MAX_LINEAS_TOTAL_GENERIC_MESSAGE);
+			//finalizamos bucle
+			indice_texto=longitud;
+		}
+
+		ultimo_indice_texto=indice_texto;
+		//printf ("ultimo indice: %d %c\n",ultimo_indice_texto,texto[ultimo_indice_texto]);
+
+	} while (indice_texto<longitud);
+
+    return indice_linea;
 
 }
 
@@ -13553,22 +13638,7 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 
 
 
-void menu_debug_ioports(MENU_ITEM_PARAMETERS)
-{
 
-	char stats_buffer[MAX_TEXTO_GENERIC_MESSAGE];
-
-
-	debug_get_ioports(stats_buffer);
-
-    char titulo_ventana[33];
-
-    if (CPU_IS_MOTOROLA) strcpy(titulo_ventana,"IO Addresses");
-    else strcpy(titulo_ventana,"IO Ports");
-
-  menu_generic_message(titulo_ventana,stats_buffer);
-
-}
 
 
 
