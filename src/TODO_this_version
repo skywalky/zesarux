@@ -170,3 +170,5 @@ They are not supported by esxDOS."
 -Letras de teclas de ay piano en texto, al pulsarse se ven en minúsculas. Porque? Quizá por el tema de que el texto invertido siempre está en mayúsculas (excepto en ventana file utils)
 
 -Debug ir atrás en el tiempo. Usando cpu history
+
+-tecla F para activar/desactivar modo prism zxuno
