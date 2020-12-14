@@ -24457,6 +24457,38 @@ void old_delete_menu_debug_ioports(MENU_ITEM_PARAMETERS)
 
 zxvision_window *menu_debug_ioports_overlay_window;
 
+//Ultimo valor de lineas totales obtenido desde overlay
+//Inicializado con algo por si acaso
+int total_lineas_menu_debug_ioports=10;
+
+
+//texto que contiene cada linea con ajuste de palabra. Al trocear las lineas aumentan
+char debug_io_ports_buffer_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE][MAX_ANCHO_LINEAS_GENERIC_MESSAGE];
+
+//Punteros a cada linea de esas
+char *debug_ioports_punteros_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE];
+
+//Obtener lineas de debug y separar cada linea
+void menu_debug_ioports_overlay_get_lines(void)
+{
+  
+
+    //Inicializar punteros a lineas
+    int i;
+    for (i=0;i<MAX_LINEAS_TOTAL_GENERIC_MESSAGE;i++) {
+        debug_ioports_punteros_lineas[i]=&debug_io_ports_buffer_lineas[i][0];
+    }
+
+	char io_buffer[MAX_TEXTO_GENERIC_MESSAGE];
+
+
+	debug_get_ioports(io_buffer);
+
+    //printf("io ports: %s\n",io_buffer);
+
+
+    total_lineas_menu_debug_ioports=zxvision_trocear_string_lineas(io_buffer,debug_ioports_punteros_lineas);
+}
 
 
 void menu_debug_ioports_overlay(void)
@@ -24474,69 +24506,20 @@ void menu_debug_ioports_overlay(void)
 
 
 
-
-
-    int linea=0;
-    char buffer_linea[64];
-
+    //Obtener lineas de debug y separar cada linea
+    menu_debug_ioports_overlay_get_lines();
+  
+    int i;
   
 
-   zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 
-    sprintf(buffer_linea,"PC=%04X SP=%04X AF=%04X HL=%04X",
-        general_sound_z80_cpu.r_pc,general_sound_z80_cpu.r_sp,general_sound_z80_cpu.r_af,general_sound_z80_cpu.r_hl);
-    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
-
-    sprintf(buffer_linea,"BC=%04X DE=%04X IX=%04X IY=%04X",
-        general_sound_z80_cpu.r_bc,general_sound_z80_cpu.r_de,general_sound_z80_cpu.r_ix,general_sound_z80_cpu.r_iy);
-    zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
-
-    //Inicializar punteros a lineas
-    //void zxvision_trocear_string_lineas(char *texto,char *buffer_lineas[])
-
-	//texto que contiene cada linea con ajuste de palabra. Al trocear las lineas aumentan
-	char buffer_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE][MAX_ANCHO_LINEAS_GENERIC_MESSAGE];
-
-    char *punteros_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE];
-
-	//const int max_ancho_texto=30;
-
-    int i;
-    for (i=0;i<MAX_LINEAS_TOTAL_GENERIC_MESSAGE;i++) {
-        punteros_lineas[i]=&buffer_lineas[i][0];
-    }
-
-	char io_buffer[MAX_TEXTO_GENERIC_MESSAGE];
-
-
-	debug_get_ioports(io_buffer);
-
-
-    int total_lineas=zxvision_trocear_string_lineas(io_buffer,punteros_lineas);
-
-    /*
-    void menu_debug_ioports(MENU_ITEM_PARAMETERS)
-{
-
-
-
-    char titulo_ventana[33];
-
-    if (CPU_IS_MOTOROLA) strcpy(titulo_ventana,"IO Addresses");
-    else strcpy(titulo_ventana,"IO Ports");
-
-  menu_generic_message(titulo_ventana,stats_buffer);
-
-}
-    */
 
     //Escribir cada linea
-    printf("total lineas: %d\n",total_lineas);
+    //printf("total lineas: %d\n",total_lineas);
 
-    for (i=0;i<total_lineas;i++) {
-        zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_lineas[i]);        
+    for (i=0;i<total_lineas_menu_debug_ioports;i++) {
+        zxvision_print_string_defaults_fillspc(ventana,1,i,debug_io_ports_buffer_lineas[i]);        
     }
-
 
 
     zxvision_draw_window_contents(ventana);
@@ -24580,15 +24563,32 @@ void menu_debug_ioports(MENU_ITEM_PARAMETERS)
     if (CPU_IS_MOTOROLA) strcpy(titulo_ventana,"IO Addresses");
     else strcpy(titulo_ventana,"IO Ports");
 
-    zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,titulo_ventana);
+    int total_alto=alto-2;
+
+    //Calculo de minimo alto total, segun las lineas
+    //Esta ventana tiene la particularidad que no sabemos a priori cuanto ocupara en alto total
+    //dependera de la cantidad de lineas de i/o ports
+    //Y o bien lo calculamos aqui al empezar, cosa que implicaria meter codigo redundante de la funcion de overlay,
+    //o bien obtenemos el ultimo valor que muestra la funcion de overlay
+    //Si lo obtenemos de overlay, implica que siempre habra que entrar una primera vez, con tamaño quiza menor,
+    //y luego volver a entrar para que la ventana se recree
+    //Mejor es reusar codigo para calcular ese alto
+
+    //llamamos una primera vez para obtener total de lineas
+    menu_debug_ioports_overlay_get_lines();
+
+    if (total_alto<total_lineas_menu_debug_ioports) {
+        total_alto=total_lineas_menu_debug_ioports;
+        debug_printf(VERBOSE_DEBUG,"Increasing total Debug I/O window height to: %d",total_alto);
+    }
+
+    zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,total_alto,titulo_ventana);
   
 
    
 
     ventana->can_be_backgrounded=1;
-    ventana->upper_margin=2;
-    //Permitir hotkeys desde raton
-    ventana->can_mouse_send_hotkeys=1;	
+
 
     //indicar nombre del grabado de geometria
     strcpy(ventana->geometry_name,"debugioports");    

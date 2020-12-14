@@ -7652,7 +7652,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	//do {
 
 	//printf ("primera_linea: %d\n",primera_linea);
-
+    printf("indice linea: %d\n",indice_linea);
 
 
 
@@ -8054,7 +8054,7 @@ int zxvision_trocear_string_lineas(char *texto,char *buffer_lineas[])
 	char *menu_generic_message_tooltip_text_initial;
 
 
-	debug_printf(VERBOSE_INFO,"Allocating %d bytes to initial text",longitud+1);
+	//debug_printf(VERBOSE_INFO,"Allocating %d bytes to initial text",longitud+1);
 	menu_generic_message_tooltip_text_initial=malloc(longitud+1);
 	if (menu_generic_message_tooltip_text_initial==NULL) {
 		debug_printf(VERBOSE_ERR,"Can not allocate buffer for initial text");
@@ -8106,6 +8106,7 @@ int zxvision_trocear_string_lineas(char *texto,char *buffer_lineas[])
 
 		ultimo_indice_texto=indice_texto;
 		//printf ("ultimo indice: %d %c\n",ultimo_indice_texto,texto[ultimo_indice_texto]);
+        //printf("indice linea: %d\n",indice_linea);
 
 	} while (indice_texto<longitud);
 
