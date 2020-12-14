@@ -4704,7 +4704,7 @@ void debug_get_ioports(char *stats_buffer)
 
 
   	//Esto no en Z88
-  	if (ay_chip_present.v && (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081)) {
+  	if (ay_chip_present.v && (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_MSX1 || MACHINE_IS_SVI)) {
   		int chips=ay_retorna_numero_chips();
   		int j;
   		for (j=0;j<chips;j++) {

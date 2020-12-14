@@ -22022,10 +22022,11 @@ void menu_ay_pianokeyboard_insert_inverse(char *origen_orig, int indice)
 
 	int i;
 
+    //metemos un ~^ que indica siempre inverso sin bajar letra a minusculas
 	for (i=0;*origen;origen++,i++) {
 			if (i==indice) {
 				*destino++='~';
-				*destino++='~';
+				*destino++='^';
 			}
 
 			*destino++=*origen;

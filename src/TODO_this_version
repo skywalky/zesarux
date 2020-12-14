@@ -167,8 +167,6 @@ The program is expected close the handle before exiting. .snx files may also hav
 They are not supported by esxDOS."
 
 
--Debug io en background y que se actualice 
-
 -Letras de teclas de ay piano en texto, al pulsarse se ven en minúsculas. Porque? Quizá por el tema de que el texto invertido siempre está en mayúsculas (excepto en ventana file utils)
 
 -Debug ir atrás en el tiempo. Usando cpu history

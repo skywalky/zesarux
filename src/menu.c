@@ -7652,7 +7652,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 	//do {
 
 	//printf ("primera_linea: %d\n",primera_linea);
-    printf("indice linea: %d\n",indice_linea);
+    //printf("indice linea: %d\n",indice_linea);
 
 
 
