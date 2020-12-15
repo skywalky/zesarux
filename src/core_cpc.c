@@ -176,8 +176,8 @@ void core_cpc_end_scanline_stuff(void)
 
 
     
-    printf("Llega Info %d t: %d cpc_crtc_contador_scanline %d t_scanline_draw %d\n",
-        cpc_scanline_counter,t_estados,cpc_crtc_contador_scanline,t_scanline_draw);
+    //printf("Llega Info %d t: %d cpc_crtc_contador_scanline %d t_scanline_draw %d\n",
+    //    cpc_scanline_counter,t_estados,cpc_crtc_contador_scanline,t_scanline_draw);
     
     //final de linea
     //copiamos contenido linea y border a buffer rainbow
@@ -230,6 +230,14 @@ void core_cpc_end_scanline_stuff(void)
         cpc_scanline_counter=0;
     }
 
+    //Ver si resetear t_scanline_draw
+    int final_pantalla=cpc_get_crtc_final_display_zone();
+    printf("final pantalla: %d\n",final_pantalla);
+    if (t_scanline_draw>=final_pantalla) {
+        printf("reseteando t_scanline_draw en %d\n",t_scanline_draw);
+        t_scanline_draw=0;
+        cpc_crtc_contador_scanline=0;
+    }
 
 
     //se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y

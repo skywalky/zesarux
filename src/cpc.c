@@ -569,6 +569,19 @@ int cpc_crtc_get_vsync_position(void)
     return valor;
 }
 
+//Obtener scanline donde acaba despues de borde superior, en el caso del conteo que hace el crtc:
+//0...x pixeles
+//..... borde inferior
+//..... vsync
+//..... borde superior
+int cpc_get_crtc_final_display_zone(void)
+{
+
+    return cpc_crtc_get_total_vertical();
+
+    
+}
+
 //t_scanline_draw va contando en el caso de cpc:
 //0...x pixeles
 //..... borde inferior
@@ -592,9 +605,21 @@ int cpc_convert_scanline_to_final_y(void)
 
     int vsync_alto=cpc_crtc_get_total_vsync_height_crtc();
 
-    printf("Final borders %d %d pixeles %d vsync %d\n",borde_superior,borde_inferior,pixeles_alto,vsync_alto);
+    int inicio_borde_superior=pixeles_alto+borde_inferior+vsync_alto;
 
 
+    printf("Final borders %d %d pixeles %d vsync %d inicio borde superior: %d\n",borde_superior,borde_inferior,pixeles_alto,vsync_alto,inicio_borde_superior);
+
+    //Si esta en el inicio del borde superior
+    if (t_scanline_draw>=inicio_borde_superior) {
+        return t_scanline_draw-inicio_borde_superior;
+    }
+
+    else {
+        return t_scanline_draw+borde_superior;
+    }
+
+    
 }
 
 
@@ -709,10 +734,10 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
 
         printf("Llega --Setting  cpc_scanline_counter %d\n",cpc_scanline_counter);
 
-        cpc_crtc_contador_scanline=0;
+        //cpc_crtc_contador_scanline=0;
     }
 
-
+    //printf("contador scanline %d\n",cpc_crtc_contador_scanline);
 
 
     //Obtener final_vsync pero del GA
@@ -1914,7 +1939,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
   //printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
   //Borde superior o inferior
 
-  if (t_scanline_draw<inicio_pantalla || t_scanline_draw>=final_pantalla) {
+  if (cpc_convert_scanline_to_final_y()<inicio_pantalla || cpc_convert_scanline_to_final_y()>=final_pantalla) {
       //if (t_scanline_draw>=final_pantalla) {
 
 
@@ -1927,7 +1952,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
 
     if (cpc_debug_borders.v) {
-        if (t_scanline_draw<inicio_pantalla) {
+        if (cpc_convert_scanline_to_final_y()<inicio_pantalla) {
         
             color=1;
         }
@@ -1949,7 +1974,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
     //printf("%d\n",t_scanline_draw);
 
-   int y_destino_rainbow=t_scanline_draw*2;
+   int y_destino_rainbow=cpc_convert_scanline_to_final_y()*2;
 
     if (y_destino_rainbow>cpc_last_drawn_line) {
         cpc_last_drawn_line=y_destino_rainbow;
@@ -1998,7 +2023,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
   //Borde izquierdo y derecho
 
-  if (t_scanline_draw>=inicio_pantalla && t_scanline_draw<final_pantalla) {
+  if (cpc_convert_scanline_to_final_y()>=inicio_pantalla && cpc_convert_scanline_to_final_y()<final_pantalla) {
       //if (t_scanline_draw>=final_pantalla) {
 
 
@@ -2024,7 +2049,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
     //printf("%d\n",t_scanline_draw);
 
-   int y_destino_rainbow=t_scanline_draw*2;
+   int y_destino_rainbow=cpc_convert_scanline_to_final_y()*2;
    //printf("y destino: %d\n\n",y_destino_rainbow);
 
     
@@ -2161,11 +2186,11 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
   //Si en zona pantalla (no border superior ni inferior)
   //printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
-  if (t_scanline_draw>=inicio_pantalla && t_scanline_draw<final_pantalla) {
+  if (cpc_convert_scanline_to_final_y()>=inicio_pantalla && cpc_convert_scanline_to_final_y()<final_pantalla) {
 
-        if (t_scanline_draw==inicio_pantalla) printf("Render inicio pantalla t_scanline_draw %d\n",t_scanline_draw);
+        if (cpc_convert_scanline_to_final_y()==inicio_pantalla) printf("Render inicio pantalla t_scanline_draw %d\n",t_scanline_draw);
         //linea en coordenada display (no border) que se debe leer
-        int y_display=t_scanline_draw-inicio_pantalla;
+        int y_display=cpc_convert_scanline_to_final_y()-inicio_pantalla;
 
  
 
@@ -2182,7 +2207,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
     //printf("%d\n",t_scanline_draw);
 
-   int y_destino_rainbow=t_scanline_draw*2;
+   int y_destino_rainbow=cpc_convert_scanline_to_final_y()*2;
 
     
     //TODO: calculo con border desactivado
