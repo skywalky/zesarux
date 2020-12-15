@@ -170,3 +170,17 @@ They are not supported by esxDOS."
 -Debug ir atrás en el tiempo. Usando cpu history
 
 -tecla F para activar/desactivar modo prism zxuno
+
+-cpc: si no hay vsync, generar uno en algun momento...
+
+Auto enable cpc real video
+
+En momento que ancho no sea 640, 320 o 160
+
+ 
+O que alto no sea 200
+
+Eso se evalúa al escribir en crt y siempre que:
+
+Realvideo este off
+Auto enable real video está on
