@@ -2064,7 +2064,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     int max_y=get_total_alto_rainbow();
 
     if (y_destino_rainbow<0 || y_destino_rainbow>=max_y) {
-        printf("y por encima del maximo: %d\n",y_destino_rainbow);
+        //printf("y por encima del maximo: %d\n",y_destino_rainbow);
         return;
     }
 
