@@ -73,8 +73,18 @@ void core_cpc_final_frame(void)
 
     timer_get_elapsed_core_frame_post();						
 
+    //TODO: controlar si t_scanline_draw se va "por debajo" del borde inferior
+    //tampoco deberia pasar nada porque al hacer render rainbow ya se controla que sea superior y en ese caso no renderiza nada
+    printf ("End video frame en cpc_scanline_counter: %d t: %d scanline_draw: %d\n",cpc_scanline_counter,t_estados,t_scanline_draw);
 
-    set_t_scanline_draw_zero();
+    //TODO
+    //Aqui no se deberia resetear, solo cuando hay vsync, pero algo hay erroneo en mi codigo que si no pongo esto,
+    //hay "parpadeos" de cambio de modo en prince of persia, ianna (en menus), dizzy 5 no va, etc
+    if (cpc_endframe_workaround.v) {
+        //cpc_crtc_contador_scanline=0;
+        t_scanline_draw=0;
+    }
+    
 
 
     //Parche para maquinas que no generan 312 lineas, porque si enviamos menos sonido se escuchara un click al final
@@ -165,23 +175,26 @@ void core_cpc_end_scanline_stuff(void)
 
 
 
-    //final de linea
     
-
+    printf("Llega Info %d t: %d cpc_crtc_contador_scanline %d t_scanline_draw %d\n",
+        cpc_scanline_counter,t_estados,cpc_crtc_contador_scanline,t_scanline_draw);
+    
+    //final de linea
     //copiamos contenido linea y border a buffer rainbow
     if (rainbow_enabled.v==1) {
-        //printf ("core scanline draw: %d\n",t_scanline_draw);
+        printf ("render core scanline draw: %d\n",t_scanline_draw);
         screen_store_scanline_rainbow_cpc_border_and_display();
-        //screen_store_scanline_rainbow_solo_border();
-        //screen_store_scanline_rainbow_solo_display();	
-
-        //t_scanline_next_border();
-
     }
 
     t_scanline_next_line();
 
+    cpc_scanline_counter++;
+
     cpc_handle_vsync_state();
+
+
+    //temp
+    //if (t_scanline_draw>=255) t_scanline_draw=0;    
 
 
     //CPC genera interrupciones a 300 hz
@@ -190,15 +203,24 @@ void core_cpc_end_scanline_stuff(void)
     //generar otras 5
     //tenemos unas 300 scanlines en cada pantalla
     //generamos otras 5 interrupciones en cada scanline: 50,100,150,200,250
-    cpc_scanline_counter++;
+
+    //Esto tiene que ir antes de cpc_handle_vsync_state
+    //cpc_scanline_counter++;
+    
+    printf ("crtc counter: %d t: %d scanline_draw: %d\n",cpc_scanline_counter,t_estados,t_scanline_draw);
+
+
 
     //Con ay player, interrupciones a 50 Hz
     if (cpc_scanline_counter>=52 && ay_player_playing.v==0) {
         cpc_crt_pending_interrupt.v=1;
 
+        printf ("Llega interrupcion crtc del Z80 en counter: %d cpc_crtc_contador_scanline: %d t: %d scanline_draw: %d\n",
+        cpc_scanline_counter,cpc_crtc_contador_scanline,t_estados,t_scanline_draw);
+
   
         if (iff1.v==1) {
-            //printf ("Llega interrupcion crtc con interrupciones habilitadas del Z80 en counter: %d t: %d\n",cpc_scanline_counter,t_estados);
+            //printf ("Llega interrupcion crtc con interrupciones habilitadas del Z80 en counter: %d t: %d t_scanline_draw %d\n",cpc_scanline_counter,t_estados,t_scanline_draw);
 
         }
 
@@ -482,11 +504,13 @@ void cpu_core_loop_cpc(void)
     }
 
 
+
     //printf("t: %d\n",t_estados);
 
     //Si habia interrupcion pendiente de crtc y están las interrupciones habilitadas
     if (cpc_crt_pending_interrupt.v && iff1.v==1) {
-        //printf("Se genera interrupcion del Z80 pendiente de crtc en contador: %d t: %d\n",cpc_scanline_counter,t_estados);
+        printf("Llega Se genera interrupcion del Z80 pendiente de crtc en contador: %d t: %d cpc_crtc_contador_scanline %d t_scanline_draw %d\n",
+        cpc_scanline_counter,t_estados,cpc_crtc_contador_scanline,t_scanline_draw);
 
         cpc_crt_pending_interrupt.v=0;
         interrupcion_maskable_generada.v=1;

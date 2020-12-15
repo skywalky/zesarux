@@ -3183,7 +3183,9 @@ The recommended I/O port address is &7Fxx.
 
 	//Puerto CRTC
 /*
-The 6845 is selected when bit 14 of the I/O port address is set to "0". Bit 9 and 8 of the I/O port address define the function to access. The remaining bits can be any value, but it is adviseable to set these to "1" to avoid conflict with other devices in the system.
+The 6845 is selected when bit 14 of the I/O port address is set to "0". 
+Bit 9 and 8 of the I/O port address define the function to access. 
+The remaining bits can be any value, but it is adviseable to set these to "1" to avoid conflict with other devices in the system.
 */
 
 	if ( (puerto & 16384)==0) {

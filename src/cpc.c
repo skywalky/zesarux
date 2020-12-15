@@ -193,6 +193,11 @@ int cpc_last_drawn_line=0;
 //Pendiente de mostrar esas lineas en negro
 z80_bit cpc_pending_last_drawn_lines_black={0};
 
+
+//Para forzar cambio scanline a 0 cuando se finaliza un frame de video
+//esto no deberia ser asi, se deberia ir a scanline 0 solo cuando hay vsync
+z80_bit cpc_endframe_workaround={0};
+
 //Contador de cuanto falta para mostrar esas lineas en negro, en frames
 int cpc_pending_last_drawn_lines_black_counter=0;
 
@@ -529,11 +534,28 @@ void init_cpc_line_display_table(void)
 //  return (unsigned char *)0xC000 + ((nLine / 8) * 80) + ((nLine % 8) * 2048);
 
 
-
-
-
-int cpc_crtc_get_total_vsync_height(void)
+int cpc_crtc_get_total_vsync_height_ga(void)
 {
+    /*
+    una cosa es la vsync del crtc y otra la del ga
+    la del crtc dispara la del ga
+    y la del ga mide siempre 24 lineas
+    independientemente de la del crtc
+    la del ga es la que va al monitor
+    */
+    return 24;
+}
+
+
+int cpc_crtc_get_total_vsync_height_crtc(void)
+{
+    /*
+    una cosa es la vsync del crtc y otra la del ga
+    la del crtc dispara la del ga
+    y la del ga mide siempre 24 lineas
+    independientemente de la del crtc
+    la del ga es la que va al monitor
+    */
     return (cpc_crtc_registers[3]>>4) & 15;
 }
 
@@ -547,6 +569,34 @@ int cpc_crtc_get_vsync_position(void)
     return valor;
 }
 
+//t_scanline_draw va contando en el caso de cpc:
+//0...x pixeles
+//..... borde inferior
+//..... vsync
+//..... borde superior
+//Convertir ese valor a un contador de linea para el buffer rainbow donde el orden sea:
+//..... borde superior
+//..... pixeles
+//..... borde inferior
+//..... vsync
+//Y esto contando scanlines. Luego el buffer rainbow al final lo multiplicara X2 para tener doble de alto
+int cpc_convert_scanline_to_final_y(void)
+{
+    int borde_superior=cpc_crtc_get_top_border_height();
+
+    int borde_inferior=cpc_crtc_get_bottom_border_height();
+
+
+    int pixeles_alto=cpc_crtc_get_total_pixels_vertical();
+
+
+    int vsync_alto=cpc_crtc_get_total_vsync_height_crtc();
+
+    printf("Final borders %d %d pixeles %d vsync %d\n",borde_superior,borde_inferior,pixeles_alto,vsync_alto);
+
+
+}
+
 
 //Decir si vsync está activo o no, según en qué posición de pantalla estamos,
 //y resetear t_scanline_draw a 0 cuando finaliza dicha vsync
@@ -555,12 +605,24 @@ int cpc_crtc_get_vsync_position(void)
 The VSYNC is also modified before being sent to the monitor. It happens two lines* after the VSYNC from the CRTC 
 and stay two lines (same cut rule if VSYNC is lower than 4). PAL (50Hz) does need two lines VSYNC_width, and 4us HSYNC_width.
 */
+
+int cpc_crtc_contador_scanline=0;
+
 void cpc_handle_vsync_state(void)
 {
+
+    cpc_crtc_contador_scanline++;
+
+    //mi t_scanline_draw es el del monitor (el ga gate array)
+    //cpc_crtc_contador_scanline es la cuenta de scanlines del CRTC
+    
+    //temporal. Esto no deberia ser asi, cpc_crtc_contador_scanline debe ser contador independiente de  t_scanline_draw
+    //cpc_crtc_contador_scanline=t_scanline_draw;
+
 	//Duracion vsync
 	//int vsync_lenght=cpc_crtc_registers[3]&15;
 
-    int vsync_lenght=cpc_crtc_get_total_vsync_height();
+    int vsync_lenght=cpc_crtc_get_total_vsync_height_crtc();
 
 	//Si es 0, en algunos chips significa 16
 	if (vsync_lenght==0) vsync_lenght=16;
@@ -580,7 +642,8 @@ void cpc_handle_vsync_state(void)
 	//final_vsync +=2;
 
 
-	if (t_scanline_draw>=vsync_position && t_scanline_draw<final_vsync) {
+	//if (t_scanline_draw>=vsync_position && t_scanline_draw<final_vsync) {
+    if (cpc_crtc_contador_scanline>=vsync_position && cpc_crtc_contador_scanline<final_vsync) {
         cpc_vsync_signal.v=1;
 
 /*
@@ -620,10 +683,10 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
        //Por tanto creo que vsync solo resetea cpc_scanline_counter y nada mas
         
 
-        if (t_scanline_draw==vsync_position+2) {
+        if (cpc_crtc_contador_scanline==vsync_position+2) {
             if (cpc_scanline_counter>=32) {
             	cpc_crt_pending_interrupt.v=1;
-                //printf("Generating vsync en counter: %d t: %d\n",cpc_scanline_counter,t_estados);
+                printf("Llega Generating vsync en counter: %d t: %d vsync_pos: %d\n",cpc_scanline_counter,t_estados,vsync_position);
             }
             else {
                 //cpc_crt_pending_interrupt.v=0;
@@ -640,9 +703,37 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
     }
 
 	//Y si está justo después, resetear posicion
-	if (t_scanline_draw==final_vsync) t_scanline_draw=0;
+	if (cpc_crtc_contador_scanline==final_vsync) {
+        printf("Llega --Setting cpc_crtc_contador_scanline draw to 0. cpc_crtc_contador_scanline=%d cpc_scanline_counter %d t_scanline_draw %d vsync_position %d vsync_lenght %d\n",
+            cpc_crtc_contador_scanline,cpc_scanline_counter,t_scanline_draw,vsync_position,vsync_lenght);
 
-	//printf ("vsync %d scanline %d scanline_draw %d\n",cpc_vsync_signal.v,t_scanline,t_scanline_draw);
+        printf("Llega --Setting  cpc_scanline_counter %d\n",cpc_scanline_counter);
+
+        cpc_crtc_contador_scanline=0;
+    }
+
+
+
+
+    //Obtener final_vsync pero del GA
+    vsync_lenght=cpc_crtc_get_total_vsync_height_ga();
+
+	final_vsync=vsync_position+vsync_lenght;    
+
+	//Y si está justo después, resetear posicion
+    //Resetear t_scanline_draw justo después de dibujar el borde superior
+
+
+    
+	/*if (t_scanline_draw==final_vsync) {
+    //if (t_scanline_draw>=vsync_position) {    
+        printf("--Setting scanline draw to 0. t_scanline_draw=%d vsync_position %d vsync_lenght %d\n",
+            t_scanline_draw,vsync_position,vsync_lenght);
+
+        //t_scanline_draw=0;
+    }*/
+
+	printf ("vsync %d scanline %d scanline_draw %d\n",cpc_vsync_signal.v,t_scanline,t_scanline_draw);
 
 }
 
@@ -650,69 +741,16 @@ z80_byte cpc_get_vsync_bit(void)
 {
 
 	//printf ("get vsync scanline %d scanline_draw %d : vsync %d\n",t_scanline,t_scanline_draw,cpc_vsync_signal.v);
+    //sleep(1);
 
 	//if (cpc_vsync_signal.v) printf ("1111111######\n");
 
 	return cpc_vsync_signal.v;
 }
 
-z80_byte old_cpc_get_vsync_bit(void)
-{
-				//Bit de vsync
-			//Duracion vsync
-			//z80_byte vsync_lenght=cpc_crtc_registers[3]&15;
-
-            z80_byte vsync_lenght=cpc_crtc_get_total_vsync_height();
-
-			//Si es 0, en algunos chips significa 16
-			if (vsync_lenght==0) vsync_lenght=16;
-			//cpc_ppi_ports[1];
-
-		int vsync_position=cpc_crtc_get_vsync_position();
-
-
-		int vertical_total=cpc_crtc_registers[4]+1; //en R0 tambien se suma 1
-		vertical_total *=8;
-
-		int vertical_displayed=cpc_crtc_registers[6];
-		vertical_displayed *=8;
 
 
 
-		//Dynamite dan 1 se pone a comprobar bit de rsync en lineas:
-		//0,52,104,156,208,260
-		//y vsync empieza en linea 240 y dura 14 lineas... no se cumple nunca
-		//esto sera debido a que los timings los tengo mal o las lineas se empiezan a contar diferente... anyway
-		//O al obtener la linea actual, no deberia ser t_scanline, sino t_scanline quitando la duracion del ultimo vsync
-
-		//workaround para algunos juegos, como bubble bobble. Lo hacemos durar mas
-		if (cpc_send_double_vsync.v) vsync_lenght *=2;		
-
-
-		int linea_actual=t_scanline;
-
-		//linea actual hay que evitar la zona no visible de arriba (precisamente el vsync)
-		linea_actual -=vsync_lenght;
-
-		if (linea_actual<0) {
-			//esta en vsync
-			return 1;
-		}
-
-		//Ver si esta en zona de vsync
-		//printf ("linea %d. lenght: %d vsync pos: %d vertical total: %d vertical displayed: %d\n",t_scanline,vsync_lenght,vsync_position,vertical_total,vertical_displayed);
-			if (linea_actual>=vsync_position && linea_actual<=vsync_position+vsync_lenght-1) {
-			//if (t_scanline>=0 && t_scanline<=7) {
-				//printf ("Enviando vsync\n");
-				return 1;
-			}
-
-			else {
-				//printf ("No Enviando vsync\n");
-				return 0;
-			}
-
-}
 
 //http://www.cpcwiki.eu/index.php/Programming:Keyboard_scanning
 //http://www.cpcwiki.eu/index.php/8255
@@ -821,6 +859,7 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
 
 		case 3:
 			//printf ("Reading PPI port control write only\n");
+            //sleep(1);
 		break;
 
 	}
@@ -1222,7 +1261,7 @@ void cpc_adjust_horizontal_border_sizes(int *p_top,int *p_bottom)
 {
     int remaining=cpc_get_remaining_height_for_borders();
 
-    int top_border_crtc=cpc_crtc_get_total_vertical()-cpc_crtc_get_vsync_position()-cpc_crtc_get_total_vsync_height();
+    int top_border_crtc=cpc_crtc_get_total_vertical()-cpc_crtc_get_vsync_position()-cpc_crtc_get_total_vsync_height_crtc();
 
     int bottom_border_crtc=cpc_crtc_get_vsync_position()-cpc_crtc_get_total_pixels_vertical();
 
@@ -2000,7 +2039,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     int max_y=get_total_alto_rainbow();
 
     if (y_destino_rainbow<0 || y_destino_rainbow>=max_y) {
-        //printf("y por encima del maximo: %d\n",y_destino_rainbow);
+        printf("y por encima del maximo: %d\n",y_destino_rainbow);
         return;
     }
 
@@ -2124,7 +2163,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
   //printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
   if (t_scanline_draw>=inicio_pantalla && t_scanline_draw<final_pantalla) {
 
-
+        if (t_scanline_draw==inicio_pantalla) printf("Render inicio pantalla t_scanline_draw %d\n",t_scanline_draw);
         //linea en coordenada display (no border) que se debe leer
         int y_display=t_scanline_draw-inicio_pantalla;
 
@@ -2134,7 +2173,6 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
 
 //Renderiza una linea de display (pantalla y sprites, pero no border)
-//void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
 
 
 
@@ -2382,6 +2420,16 @@ pixel 0 (bit 1)	pixel 1 (bit 1)	pixel 2 (bit 1)	pixel 3 (bit 1)	pixel 0 (bit 0)	
 
     }
     }
+
+    //prueba
+    /*
+    if (t_scanline_draw==36) {
+        cpc_putpixel_zoom_rainbow(--x,puntero_buf_rainbow,cpc_palette_table[1]);
+        cpc_putpixel_zoom_rainbow(--x,puntero_buf_rainbow,cpc_palette_table[1]);
+        cpc_putpixel_zoom_rainbow(--x,puntero_buf_rainbow,cpc_palette_table[1]);
+        cpc_putpixel_zoom_rainbow(--x,puntero_buf_rainbow,cpc_palette_table[1]);
+    }
+    */
    
   }    
   
