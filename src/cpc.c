@@ -608,7 +608,7 @@ int cpc_convert_scanline_to_final_y(void)
     int inicio_borde_superior=pixeles_alto+borde_inferior+vsync_alto;
 
 
-    printf("Final borders %d %d pixeles %d vsync %d inicio borde superior: %d\n",borde_superior,borde_inferior,pixeles_alto,vsync_alto,inicio_borde_superior);
+    //printf("Final borders %d %d pixeles %d vsync %d inicio borde superior: %d\n",borde_superior,borde_inferior,pixeles_alto,vsync_alto,inicio_borde_superior);
 
     //Si esta en el inicio del borde superior
     if (t_scanline_draw>=inicio_borde_superior) {
@@ -711,7 +711,7 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
         if (cpc_crtc_contador_scanline==vsync_position+2) {
             if (cpc_scanline_counter>=32) {
             	cpc_crt_pending_interrupt.v=1;
-                printf("Llega Generating vsync en counter: %d t: %d vsync_pos: %d\n",cpc_scanline_counter,t_estados,vsync_position);
+                //printf("Llega Generating vsync en counter: %d t: %d vsync_pos: %d\n",cpc_scanline_counter,t_estados,vsync_position);
             }
             else {
                 //cpc_crt_pending_interrupt.v=0;
@@ -729,10 +729,10 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
 
 	//Y si está justo después, resetear posicion
 	if (cpc_crtc_contador_scanline==final_vsync) {
-        printf("Llega --Setting cpc_crtc_contador_scanline draw to 0. cpc_crtc_contador_scanline=%d cpc_scanline_counter %d t_scanline_draw %d vsync_position %d vsync_lenght %d\n",
-            cpc_crtc_contador_scanline,cpc_scanline_counter,t_scanline_draw,vsync_position,vsync_lenght);
+        //printf("Llega --Setting cpc_crtc_contador_scanline draw to 0. cpc_crtc_contador_scanline=%d cpc_scanline_counter %d t_scanline_draw %d vsync_position %d vsync_lenght %d\n",
+        //    cpc_crtc_contador_scanline,cpc_scanline_counter,t_scanline_draw,vsync_position,vsync_lenght);
 
-        printf("Llega --Setting  cpc_scanline_counter %d\n",cpc_scanline_counter);
+        //printf("Llega --Setting  cpc_scanline_counter %d\n",cpc_scanline_counter);
 
         //cpc_crtc_contador_scanline=0;
     }
@@ -758,7 +758,7 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
         //t_scanline_draw=0;
     }*/
 
-	printf ("vsync %d scanline %d scanline_draw %d\n",cpc_vsync_signal.v,t_scanline,t_scanline_draw);
+	//printf ("vsync %d scanline %d scanline_draw %d\n",cpc_vsync_signal.v,t_scanline,t_scanline_draw);
 
 }
 
@@ -2188,7 +2188,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
   //printf("margenes: %d %d\n",inicio_pantalla,final_pantalla);
   if (cpc_convert_scanline_to_final_y()>=inicio_pantalla && cpc_convert_scanline_to_final_y()<final_pantalla) {
 
-        if (cpc_convert_scanline_to_final_y()==inicio_pantalla) printf("Render inicio pantalla t_scanline_draw %d\n",t_scanline_draw);
+        //if (cpc_convert_scanline_to_final_y()==inicio_pantalla) printf("Render inicio pantalla t_scanline_draw %d\n",t_scanline_draw);
         //linea en coordenada display (no border) que se debe leer
         int y_display=cpc_convert_scanline_to_final_y()-inicio_pantalla;
 

@@ -75,7 +75,7 @@ void core_cpc_final_frame(void)
 
     //TODO: controlar si t_scanline_draw se va "por debajo" del borde inferior
     //tampoco deberia pasar nada porque al hacer render rainbow ya se controla que sea superior y en ese caso no renderiza nada
-    printf ("End video frame en cpc_scanline_counter: %d t: %d scanline_draw: %d\n",cpc_scanline_counter,t_estados,t_scanline_draw);
+    //printf ("End video frame en cpc_scanline_counter: %d t: %d scanline_draw: %d\n",cpc_scanline_counter,t_estados,t_scanline_draw);
 
     //TODO
     //Aqui no se deberia resetear, solo cuando hay vsync, pero algo hay erroneo en mi codigo que si no pongo esto,
@@ -182,7 +182,7 @@ void core_cpc_end_scanline_stuff(void)
     //final de linea
     //copiamos contenido linea y border a buffer rainbow
     if (rainbow_enabled.v==1) {
-        printf ("render core scanline draw: %d\n",t_scanline_draw);
+        //printf ("render core scanline draw: %d\n",t_scanline_draw);
         screen_store_scanline_rainbow_cpc_border_and_display();
     }
 
@@ -207,7 +207,7 @@ void core_cpc_end_scanline_stuff(void)
     //Esto tiene que ir antes de cpc_handle_vsync_state
     //cpc_scanline_counter++;
     
-    printf ("crtc counter: %d t: %d scanline_draw: %d\n",cpc_scanline_counter,t_estados,t_scanline_draw);
+    //printf ("crtc counter: %d t: %d scanline_draw: %d\n",cpc_scanline_counter,t_estados,t_scanline_draw);
 
 
 
@@ -215,8 +215,8 @@ void core_cpc_end_scanline_stuff(void)
     if (cpc_scanline_counter>=52 && ay_player_playing.v==0) {
         cpc_crt_pending_interrupt.v=1;
 
-        printf ("Llega interrupcion crtc del Z80 en counter: %d cpc_crtc_contador_scanline: %d t: %d scanline_draw: %d\n",
-        cpc_scanline_counter,cpc_crtc_contador_scanline,t_estados,t_scanline_draw);
+        //printf ("Llega interrupcion crtc del Z80 en counter: %d cpc_crtc_contador_scanline: %d t: %d scanline_draw: %d\n",
+        //cpc_scanline_counter,cpc_crtc_contador_scanline,t_estados,t_scanline_draw);
 
   
         if (iff1.v==1) {
@@ -232,9 +232,9 @@ void core_cpc_end_scanline_stuff(void)
 
     //Ver si resetear t_scanline_draw
     int final_pantalla=cpc_get_crtc_final_display_zone();
-    printf("final pantalla: %d\n",final_pantalla);
+    //printf("final pantalla: %d\n",final_pantalla);
     if (t_scanline_draw>=final_pantalla) {
-        printf("reseteando t_scanline_draw en %d\n",t_scanline_draw);
+        //printf("reseteando t_scanline_draw en %d\n",t_scanline_draw);
         t_scanline_draw=0;
         cpc_crtc_contador_scanline=0;
     }
@@ -517,8 +517,8 @@ void cpu_core_loop_cpc(void)
 
     //Si habia interrupcion pendiente de crtc y están las interrupciones habilitadas
     if (cpc_crt_pending_interrupt.v && iff1.v==1) {
-        printf("Llega Se genera interrupcion del Z80 pendiente de crtc en contador: %d t: %d cpc_crtc_contador_scanline %d t_scanline_draw %d\n",
-        cpc_scanline_counter,t_estados,cpc_crtc_contador_scanline,t_scanline_draw);
+        //printf("Llega Se genera interrupcion del Z80 pendiente de crtc en contador: %d t: %d cpc_crtc_contador_scanline %d t_scanline_draw %d\n",
+        //cpc_scanline_counter,t_estados,cpc_crtc_contador_scanline,t_scanline_draw);
 
         cpc_crt_pending_interrupt.v=0;
         interrupcion_maskable_generada.v=1;
