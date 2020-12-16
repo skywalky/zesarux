@@ -1261,11 +1261,15 @@ void instruccion_ed_113 ()
         if (z80_cpu_current_type==Z80_TYPE_CMOS) {
 	//if (MACHINE_IS_Z88 || MACHINE_IS_TSCONF) {
 		//CMOS
+        //printf("Outing 255 to %XH on pc=%d\n",BC,reg_pc);
 		out_port(BC, 255);
+        
 	}
 
 	else {
+        //printf("Outing 0 to %XH on pc=%d\n",BC,reg_pc);
 	        out_port(BC, 0);
+            
 	}
 }
 

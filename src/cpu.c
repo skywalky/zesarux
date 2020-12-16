@@ -3508,6 +3508,13 @@ You don't need timings for H/V sync =)
 			// 3579545 / 312 / 50
 			screen_testados_linea=229;
 
+            //TODO
+            //Parece que MSX usa CMOS tambien
+            //https://faqwiki.zxnet.co.uk/wiki/Z80#Differences_between_NMOS_and_CMOS_Z80s
+            //https://www.msx.org/forum/development/msx-development/bug-z80-emulation-or-tr-hw
+            //z80_cpu_current_type=Z80_TYPE_CMOS;
+            //Pero a falta de confirmar, de momento no lo toco
+
 		}		
 
 		else if (MACHINE_IS_SVI) {

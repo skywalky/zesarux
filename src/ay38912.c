@@ -1333,6 +1333,7 @@ void out_port_ay(z80_int puerto,z80_byte value)
 
 
 	if (puerto==65533) {
+        //printf("AY chip seleccion registro %d\n",value);
 		//Ver si seleccion de chip turbosound o 3 canales AY
 
 		int value_sin_mascara=value & 156; //10011100

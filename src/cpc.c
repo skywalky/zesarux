@@ -923,7 +923,7 @@ Bit 9   Bit 8   PPI Function    Read/Write status
                 break;
 
                 case 1:
-                        //printf ("Writing PPI port B value 0x%02X\n",value);
+                        //printf ("Writing PPI port B value 0x%02X pc=%d\n",value,reg_pc);
 			cpc_ppi_ports[1]=value;
                 break;
 
@@ -938,7 +938,7 @@ Bit 7	Bit 6	Function
 
 */
 			psg_function=(value>>6)&3;
-            //printf ("Writing PPI port C value %d psg_funcion %d\n",value,psg_function);
+            //printf ("Writing PPI port C value %d psg_funcion %d pc=%d\n",value,psg_function,reg_pc);
 
 
 
@@ -946,26 +946,37 @@ Bit 7	Bit 6	Function
 				//Seleccionar ay chip registro indicado en port A
 				//printf ("Seleccionamos PSG registro %d en pc=%d\n",cpc_ppi_ports[0],reg_pc);
 				out_port_ay(65533,cpc_ppi_ports[0]);
+                cpc_ppi_ports[2]=value;
 			}
 
 
 			//temp prueba sonido AY
 			if (psg_function==2) {
 				//Enviar valor a psg
-				//printf ("Enviamos PSG valor %d\n",cpc_ppi_ports[0]);
-                                out_port_ay(49149,cpc_ppi_ports[0]);
+				//printf ("Enviamos PSG valor %d al registro %d\n",cpc_ppi_ports[0],ay_3_8912_registro_sel[ay_chip_selected]);
+                out_port_ay(49149,cpc_ppi_ports[0]);
+                cpc_ppi_ports[2]=value;
             }
 
-            
-         
+            if (psg_function==1) {
+                cpc_ppi_ports[2]=value;
+            }            
 
-			cpc_ppi_ports[2]=value;
+            
+            if (psg_function==0) {
+                //printf("psg funcion 0 on pc=%d. pre haciendo seleccion registro psg %d\n",reg_pc,cpc_ppi_ports[0]);
+                //Esto es necesario para que la musica del sword of ianna se escuche bien
+                //No acabo de entender bien lo que hace el inactive mode pero...
+                out_port_ay(65533,cpc_ppi_ports[0]);
+            }
+
+			//cpc_ppi_ports[2]=value;
 
 
                 break;
 
                 case 3:
-                        //printf ("Writing PPI port control write only value 0x%02X\n",value);
+                        //printf ("Writing PPI port control write only value 0x%02X on pc=%d\n",value,reg_pc);
                         //sleep(1);
             /*
             PPI Control with Bit7=1
@@ -979,7 +990,9 @@ If Bit 7 is "1" then the other bits will initialize Port A-B as Input or Output:
  Bit 5,6  MS0,MS1  Mode for Port A and Port Ch      (always zero in CPC)
  Bit 7    SF       Must be "1" to setup the above bits
 CAUTION: Writing to PIO Control Register (with Bit7 set), automatically resets PIO Ports A,B,C to 00h each!
-In the CPC only Bit 4 is of interest, all other bits are always having the same value. In order to write to the PSG sound registers, a value of 82h must be written to this register. In order to read from the keyboard (through PSG register 0Eh), a value of 92h must be written to this register.
+In the CPC only Bit 4 is of interest, all other bits are always having the same value. 
+In order to write to the PSG sound registers, a value of 82h must be written to this register. 
+In order to read from the keyboard (through PSG register 0Eh), a value of 92h must be written to this register.
 
 PPI Control with Bit7=0
 Otherwise, if Bit 7 is "0" then the register is used to set or clear a single bit in Port C:
