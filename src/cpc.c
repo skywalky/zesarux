@@ -1109,10 +1109,7 @@ int cpc_crtc_get_total_horizontal(void)
 {
     int valor=(cpc_crtc_registers[0]+1)*16;
 
-    //printf("total horiz: %d\n",valor);
-    //if (valor>CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2) valor=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
 
-    //printf("total horiz fixed: %d\n",valor);
 
     return valor;
 }
@@ -1126,10 +1123,7 @@ int cpc_crtc_get_total_vertical(void)
     int alto_caracter=cpc_crtc_get_height_character();        
 	valor *=alto_caracter;    
 
-    //printf("total horiz: %d\n",valor);
-    //if (valor>CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2) valor=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
 
-    //printf("total horiz fixed: %d\n",valor);
 
     return valor;
 }
@@ -1263,8 +1257,7 @@ void cpc_adjust_horizontal_border_sizes(int *p_top,int *p_bottom)
 int cpc_crtc_get_top_border_height(void)
 {
 
-    //int valor=cpc_crtc_get_total_vertical()-cpc_crtc_get_vsync_position()-cpc_crtc_get_total_vsync_height();
-
+ 
     int top,bottom;
     cpc_adjust_horizontal_border_sizes(&top,&bottom);
 
@@ -1276,7 +1269,6 @@ int cpc_crtc_get_top_border_height(void)
 //En scanlines, no en pixels
 int cpc_crtc_get_bottom_border_height(void)
 {
-    //int valor=cpc_crtc_get_vsync_position()-cpc_crtc_get_total_pixels_vertical();
 
     int top,bottom;
     cpc_adjust_horizontal_border_sizes(&top,&bottom);
@@ -1296,8 +1288,7 @@ void scr_cpc_return_ancho_alto(int *an,int *al,int *al_car,int *off_x)
         int ancho_total=cpc_crtc_get_total_pixels_horizontal();
         int total_alto=cpc_crtc_get_total_pixels_vertical();
 
-        //temp para living daylights
-        //if (total_alto<192) total_alto=200;
+
 
 
         //CRTC registro: 2 valor: 46 . Normal
@@ -1350,7 +1341,7 @@ void scr_refresca_border_cpc(unsigned int color)
 //      printf ("Refresco border cpc\n");
 
 
-	  int alto_caracter,ancho_pantalla,alto_pantalla,offset_x_pantalla;
+    int alto_caracter,ancho_pantalla,alto_pantalla,offset_x_pantalla;
 	scr_cpc_return_ancho_alto(&ancho_pantalla,&alto_pantalla,&alto_caracter,&offset_x_pantalla);
 
 	//Control minimos
@@ -1401,36 +1392,9 @@ void scr_refresca_pantalla_cpc(void)
 		modo_video=cpc_forzar_modo_video_modo;
 	}
 
-	switch (modo_video) {
-		case 0:
-			//printf ("Mode 0, 160x200 resolution, 16 colours\n");
-		break;
-
-		case 1:
-			//printf ("Mode 1, 320x200 resolution, 4 colours\n");
-		break;
-
-		case 2:
-			//printf ("Mode 2, 640x200 resolution, 2 colours\n");
-		break;
-
-		case 3:
-			//printf ("Mode 3, 160x200 resolution, 4 colours (undocumented)\n");
-
-		break;
-	}
-
-
-                                //for (bit=0;bit<8;bit++) {
-
-                                  //      color= ( byte_leido & 128 ? ink : paper );
-                                    //    scr_putpixel_zoom(x_hi+bit,y,color);
-
-                                      //  byte_leido=byte_leido<<1;
-                                //}
 
 	z80_int x,y;
-	//z80_byte *puntero;
+	
 	z80_int offset_tabla;
 	z80_byte byte_leido;
 
@@ -1479,32 +1443,6 @@ Register Index	Register Name	Range	CPC Setting	Notes
 
 	int alto_caracter,ancho_total,total_alto,offset_x;
 
-	/*
-
-	int alto_caracter=(cpc_crtc_registers[9]&7)+1;
-
-
-
-	int ancho_total=cpc_crtc_registers[1]*16;
-	int total_alto=cpc_crtc_registers[6]*alto_caracter;
-
-	//temp para living daylights
-	//if (total_alto<192) total_alto=200;
-
-
-	//CRTC registro: 2 valor: 46 . Normal
-	//CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
-	int offset_x=(46-cpc_crtc_registers[2])*16;
-
-	//printf ("offset_x: %d\n",offset_x);
-
-	//Controlar maximos
-	if (ancho_total>640) ancho_total=640;
-	if (total_alto>200) total_alto=200;
-	if (offset_x<0) offset_x=0;
-	if (offset_x+ancho_total>640) offset_x=640-ancho_total;
-	//printf ("offset_x: %d\n",offset_x);
-	*/
 
 
 	scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
@@ -1532,20 +1470,7 @@ FFFF->F800
 
 
 
-      	//Debug registros crtc
-	/*
-        int debug_regs;
 
-        debug_regs_muestra++;
-
-        if ((debug_regs_muestra%50)==0) {
-                for (debug_regs=0;debug_regs<18;debug_regs++) {
-                        printf ("CRTC registro: %d valor: %d\n",debug_regs,cpc_crtc_registers[debug_regs]);
-                }
-		printf ("Alto: %d Ancho: %d Offset_x: %d\n",total_alto,ancho_total,offset_x);
-        }
-	*/
-        //Fin Debug registros CRTC
 
 
 
@@ -1587,18 +1512,18 @@ FFFF->F800
 					color1=(byte_leido&64)>>6  | (byte_leido&4)>>1 | (byte_leido&16)>>2 | (byte_leido&1)<<3;
 
 					color0=cpc_palette_table[color0];
-                                        color0 +=CPC_INDEX_FIRST_COLOR;
-                                        cpc_putpixel_zoom(x++,yfinal,color0);
-                                        cpc_putpixel_zoom(x++,yfinal,color0);
-                                        cpc_putpixel_zoom(x++,yfinal,color0);
-                                        cpc_putpixel_zoom(x++,yfinal,color0);
+                    color0 +=CPC_INDEX_FIRST_COLOR;
+                    cpc_putpixel_zoom(x++,yfinal,color0);
+                    cpc_putpixel_zoom(x++,yfinal,color0);
+                    cpc_putpixel_zoom(x++,yfinal,color0);
+                    cpc_putpixel_zoom(x++,yfinal,color0);
 
 					color1=cpc_palette_table[color1];
-                                        color1 +=CPC_INDEX_FIRST_COLOR;
-                                        cpc_putpixel_zoom(x++,yfinal,color1);
-                                        cpc_putpixel_zoom(x++,yfinal,color1);
-                                        cpc_putpixel_zoom(x++,yfinal,color1);
-                                        cpc_putpixel_zoom(x++,yfinal,color1);
+                    color1 +=CPC_INDEX_FIRST_COLOR;
+                    cpc_putpixel_zoom(x++,yfinal,color1);
+                    cpc_putpixel_zoom(x++,yfinal,color1);
+                    cpc_putpixel_zoom(x++,yfinal,color1);
+                    cpc_putpixel_zoom(x++,yfinal,color1);
 
 
 		                break;
@@ -1660,8 +1585,8 @@ pixel 0 (bit 1)	pixel 1 (bit 1)	pixel 2 (bit 1)	pixel 3 (bit 1)	pixel 0 (bit 0)	
 					for (bit=0;bit<8;bit++) {
 						color0=(byte_leido&128)>>7;
 						color0=cpc_palette_table[color0];
-	                                        color0 +=CPC_INDEX_FIRST_COLOR;
-        	                                cpc_putpixel_zoom(x++,yfinal,color0);
+                        color0 +=CPC_INDEX_FIRST_COLOR;
+                        cpc_putpixel_zoom(x++,yfinal,color0);
 						byte_leido=byte_leido<<1;
 					}
 		                break;
@@ -1672,27 +1597,27 @@ pixel 0 (bit 1)	pixel 1 (bit 1)	pixel 2 (bit 1)	pixel 3 (bit 1)	pixel 0 (bit 0)	
 					//http://cpctech.cpc-live.com/docs/graphics.html
 					if (crtc_offset_videoram) direccion_pixel=cpc_refresca_ajusta_offet(direccion_pixel);
 					byte_leido=*(cpc_ram_mem_table[crtc_video_page]+(direccion_pixel&16383) ); //Solo offset dentro de 16kb
-                                        direccion_pixel++;
+                    direccion_pixel++;
 
-                                        color0=(byte_leido&128)>>7 | ((byte_leido&8)>>2);
-                                        //if (cpc_palette_table[color0]!=4) printf ("color0: %d valor: %d\n",color0,cpc_palette_table[color0]);
-                                        color0=cpc_palette_table[color0];
-                                        color0 +=CPC_INDEX_FIRST_COLOR;
-                                        cpc_putpixel_zoom(x++,yfinal,color0);
-                                        cpc_putpixel_zoom(x++,yfinal,color0);
-                                        cpc_putpixel_zoom(x++,yfinal,color0);
-                                        cpc_putpixel_zoom(x++,yfinal,color0);
+                    color0=(byte_leido&128)>>7 | ((byte_leido&8)>>2);
+                    //if (cpc_palette_table[color0]!=4) printf ("color0: %d valor: %d\n",color0,cpc_palette_table[color0]);
+                    color0=cpc_palette_table[color0];
+                    color0 +=CPC_INDEX_FIRST_COLOR;
+                    cpc_putpixel_zoom(x++,yfinal,color0);
+                    cpc_putpixel_zoom(x++,yfinal,color0);
+                    cpc_putpixel_zoom(x++,yfinal,color0);
+                    cpc_putpixel_zoom(x++,yfinal,color0);
 
 
-                                        color1=(byte_leido&64)>>6 | ((byte_leido&4)>>1);
-                                        color1=cpc_palette_table[color1];
-                                        color1 +=CPC_INDEX_FIRST_COLOR;
-                                        cpc_putpixel_zoom(x++,yfinal,color1);
-                                        cpc_putpixel_zoom(x++,yfinal,color1);
-                                        cpc_putpixel_zoom(x++,yfinal,color1);
-                                        cpc_putpixel_zoom(x++,yfinal,color1);
+                    color1=(byte_leido&64)>>6 | ((byte_leido&4)>>1);
+                    color1=cpc_palette_table[color1];
+                    color1 +=CPC_INDEX_FIRST_COLOR;
+                    cpc_putpixel_zoom(x++,yfinal,color1);
+                    cpc_putpixel_zoom(x++,yfinal,color1);
+                    cpc_putpixel_zoom(x++,yfinal,color1);
+                    cpc_putpixel_zoom(x++,yfinal,color1);
 
-                		break;
+                    break;
 		        }
 
 		}
@@ -1707,17 +1632,17 @@ pixel 0 (bit 1)	pixel 1 (bit 1)	pixel 2 (bit 1)	pixel 3 (bit 1)	pixel 0 (bit 0)	
 void scr_refresca_pantalla_y_border_cpc_no_rainbow(void)
 {
 
-        //Refrescar border si conviene
-        if (border_enabled.v) {
-	        if (modificado_border.v) {
-        	        //Dibujar border. Color 0
-			unsigned int color=cpc_border_color;
-			color=cpc_palette_table[color];
-			color +=CPC_INDEX_FIRST_COLOR;
+    //Refrescar border si conviene
+    if (border_enabled.v) {
+        if (modificado_border.v) {
+            //Dibujar border. Color 0
+            unsigned int color=cpc_border_color;
+            color=cpc_palette_table[color];
+            color +=CPC_INDEX_FIRST_COLOR;
 
-	                scr_refresca_border_cpc(color);
-        	        modificado_border.v=0;
-	        }
+            scr_refresca_border_cpc(color);
+            modificado_border.v=0;
+        }
 	}
 
 
@@ -1782,8 +1707,7 @@ void scr_refresca_pantalla_y_border_cpc_rainbow(void)
 	}
 
 
-    //Para resetear y poder luego saber la ultima linea que se haya rellenado en el buffer rainbow
-    //cpc_last_drawn_line=0;
+
 
 }
 
@@ -1810,9 +1734,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 {
     int alto_caracter,ancho_total,total_alto,offset_x;
 
-    
 
-        //scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
 
             //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
 
@@ -1821,17 +1743,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
         ancho_total=cpc_crtc_get_total_pixels_horizontal();
         total_alto=cpc_crtc_get_total_pixels_vertical();         
 
-        //printf("Bordes horiz: %d %d\n",cpc_crtc_get_total_left_border(),cpc_crtc_get_total_right_border() );
 
-
-        //printf("Bordes vert: %d %d\n",cpc_crtc_get_top_border_height(),cpc_crtc_get_bottom_border_height() );
-
-        
-
-
-        //CRTC registro: 2 valor: 46 . Normal
-        //CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
-        //offset_x=(46-cpc_crtc_registers[2])*16;
 
         offset_x=cpc_crtc_get_total_left_border();
 
@@ -1847,15 +1759,15 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 #define CPC_DISPLAY_HEIGHT 400
 */
 
-        int ancho_maximo=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
-        int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+    int ancho_maximo=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
+    int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
 
-        //printf("ancho total: %d\n",ancho_total);     
+    //printf("ancho total: %d\n",ancho_total);     
 
-        if (ancho_total>ancho_maximo) ancho_total=ancho_maximo;
-        if (total_alto>alto_maximo) total_alto=alto_maximo;
-        if (offset_x<0) offset_x=0;
-        if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
+    if (ancho_total>ancho_maximo) ancho_total=ancho_maximo;
+    if (total_alto>alto_maximo) total_alto=alto_maximo;
+    if (offset_x<0) offset_x=0;
+    if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
 
          
 
@@ -1872,15 +1784,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
     inicio_pantalla=borde_superior;
 
-    /*
-    #define CPC_LEFT_BORDER_NO_ZOOM 64
-#define CPC_TOP_BORDER_NO_ZOOM 72
 
-
-
-#define CPC_DISPLAY_WIDTH 640
-#define CPC_DISPLAY_HEIGHT 400
-    */
 
     final_pantalla=inicio_pantalla+total_alto;
 
@@ -1891,7 +1795,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
   //Borde superior o inferior
 
   if (cpc_convert_scanline_to_final_y()<inicio_pantalla || cpc_convert_scanline_to_final_y()>=final_pantalla) {
-      //if (t_scanline_draw>=final_pantalla) {
+      
 
 
         //linea en coordenada display (no border) que se debe leer
@@ -1914,8 +1818,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
     }
 
-//Renderiza una linea de display (pantalla y sprites, pero no border)
-//void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
+
 
 
 
@@ -1937,11 +1840,8 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
     //Nota: en cpc rom, vsync esta en 240 (posicion y=480). Pero tenemos una ventana de 544 de alto para soportar overscan
     //Por tanto, a no ser que el juego use modo overscan, la parte de abajo normalmente va a estar sin usar
-    
-    //TODO: calculo con border desactivado
-    //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
-    //if (border_enabled.v==0) y_destino_rainbow=y_destino_rainbow-screen_borde_superior;
 
+    //TODO: calculo con border desactivado
 
 
     //Limite inferior y superior. Sobretodo el inferior, pues puede ser negativo (en zona border invisible)
@@ -1957,9 +1857,6 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
 
 
-
-
-    //*puntero_buf_rainbow=7;
 
 
 
@@ -1989,8 +1886,6 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
         int right_border=cpc_crtc_get_total_right_border();
 
 
-//Renderiza una linea de display (pantalla y sprites, pero no border)
-//void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
 
 
 
@@ -2003,12 +1898,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
    int y_destino_rainbow=cpc_convert_scanline_to_final_y()*2;
    //printf("y destino: %d\n\n",y_destino_rainbow);
 
-    
     //TODO: calculo con border desactivado
-    //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
-    //if (border_enabled.v==0) y_destino_rainbow=y_destino_rainbow-screen_borde_superior;
-
-
 
     //Limite inferior y superior. Sobretodo el inferior, pues puede ser negativo (en zona border invisible)
     //En teoria superior no deberia ser mayor, pero por si acaso
@@ -2021,13 +1911,11 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
 
     puntero_buf_rainbow=&rainbow_buffer[y_destino_rainbow*get_total_ancho_rainbow()];
 
-			unsigned int color=cpc_border_color;
-			color=cpc_palette_table[color];
-			color +=CPC_INDEX_FIRST_COLOR;
+    unsigned int color=cpc_border_color;
+    color=cpc_palette_table[color];
+    color +=CPC_INDEX_FIRST_COLOR;
 
 
-
-    //*puntero_buf_rainbow=7;
 
     if (cpc_debug_borders.v) {
         color=3;
@@ -2066,47 +1954,34 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 {
     int alto_caracter,ancho_total,total_alto,offset_x;
 
-        //scr_cpc_return_ancho_alto(&ancho_total,&total_alto,&alto_caracter,&offset_x);
-
-            //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
-
-        alto_caracter=cpc_crtc_get_height_character();
-
-        ancho_total=cpc_crtc_get_total_pixels_horizontal();
-        total_alto=cpc_crtc_get_total_pixels_vertical();         
-
-        //printf("Bordes: %d %d\n",cpc_crtc_get_total_left_border(),cpc_crtc_get_total_right_border() );
-
-        
 
 
-        //CRTC registro: 2 valor: 46 . Normal
-        //CRTC registro: 2 valor: 42. En dynamite dan 2. Esto significa mover el offset 4*16  (4 sale de 46-42)
-        //offset_x=(46-cpc_crtc_registers[2])*16;
+    //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
 
-        offset_x=cpc_crtc_get_total_left_border();
+    alto_caracter=cpc_crtc_get_height_character();
+
+    ancho_total=cpc_crtc_get_total_pixels_horizontal();
+    total_alto=cpc_crtc_get_total_pixels_vertical();         
+
+    //printf("Bordes: %d %d\n",cpc_crtc_get_total_left_border(),cpc_crtc_get_total_right_border() );
 
 
-/*
-#define CPC_LEFT_BORDER_NO_ZOOM 64
-#define CPC_TOP_BORDER_NO_ZOOM 72
 
-#define CPC_LEFT_BORDER CPC_LEFT_BORDER_NO_ZOOM*zoom_x
-#define CPC_TOP_BORDER CPC_TOP_BORDER_NO_ZOOM*zoom_y
 
-#define CPC_DISPLAY_WIDTH 640
-#define CPC_DISPLAY_HEIGHT 400
-*/
+    offset_x=cpc_crtc_get_total_left_border();
 
-        int ancho_maximo=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
-        int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
 
-        //printf("ancho total: %d\n",ancho_total);     
 
-        if (ancho_total>ancho_maximo) ancho_total=ancho_maximo;
-        if (total_alto>alto_maximo) total_alto=alto_maximo;
-        if (offset_x<0) offset_x=0;
-        if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
+
+    int ancho_maximo=CPC_DISPLAY_WIDTH+CPC_LEFT_BORDER_NO_ZOOM*2;
+    int alto_maximo=(CPC_DISPLAY_HEIGHT+CPC_TOP_BORDER_NO_ZOOM*2)/2;
+
+    //printf("ancho total: %d\n",ancho_total);     
+
+    if (ancho_total>ancho_maximo) ancho_total=ancho_maximo;
+    if (total_alto>alto_maximo) total_alto=alto_maximo;
+    if (offset_x<0) offset_x=0;
+    if (offset_x+ancho_total>ancho_maximo) offset_x=ancho_maximo-ancho_total;   
 
          
 
@@ -2123,15 +1998,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
     inicio_pantalla=borde_superior;
 
-    /*
-    #define CPC_LEFT_BORDER_NO_ZOOM 64
-#define CPC_TOP_BORDER_NO_ZOOM 72
 
-
-
-#define CPC_DISPLAY_WIDTH 640
-#define CPC_DISPLAY_HEIGHT 400
-    */
 
     final_pantalla=inicio_pantalla+total_alto;
 
@@ -2162,8 +2029,7 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
     
     //TODO: calculo con border desactivado
-    //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
-    //if (border_enabled.v==0) y_destino_rainbow=y_destino_rainbow-screen_borde_superior;
+
 
 
 
@@ -2186,29 +2052,11 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 		modo_video=cpc_forzar_modo_video_modo;
 	}
 
-	switch (modo_video) {
-		case 0:
-			//printf ("Mode 0, 160x200 resolution, 16 colours\n");
-		break;
 
-		case 1:
-			//printf ("Mode 1, 320x200 resolution, 4 colours\n");
-		break;
-
-		case 2:
-			//printf ("Mode 2, 640x200 resolution, 2 colours\n");
-		break;
-
-		case 3:
-			//printf ("Mode 3, 160x200 resolution, 4 colours (undocumented)\n");
-
-		break;
-	}
 
     z80_byte byte_leido;
 
     
-
 
     int x;
     int color0,color1,color2,color3;
@@ -2225,39 +2073,27 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 
         int bit;
 
-        //Temporal. Quiza no tener que inicializar la tabla cada vez??? Esta tabla
-        //sale tal cual de init_cpc_line_display_table pero cambiando valor 80
-        /*
-        int yy;
-        z80_int offset;
 
-        for (yy=0;yy<total_alto;yy++) {
-                //offset=((yy / 8) * cpc_crtc_registers[1]*2) + ((yy % 8) * 2048);
-                offset=((yy / alto_caracter) * cpc_crtc_registers[1]*2) + ((yy % alto_caracter) * 2048);
-                cpc_line_display_table[yy]=offset;
-        }
-        */
         z80_int direccion_pixel;
         int yfinal;
         z80_int offset_tabla;
 
 
-                yfinal=y_display;
-                //offset_tabla=cpc_line_display_table[yfinal];
-                offset_tabla=((yfinal / alto_caracter) * cpc_crtc_registers[1]*2) + ((yfinal % alto_caracter) * 2048);
+        yfinal=y_display;
+        //offset_tabla=cpc_line_display_table[yfinal];
+        offset_tabla=((yfinal / alto_caracter) * cpc_crtc_registers[1]*2) + ((yfinal % alto_caracter) * 2048);
 
 
 
-                direccion_pixel=offset_tabla+crtc_offset_videoram;
+        direccion_pixel=offset_tabla+crtc_offset_videoram;
 
-                //puntero=cpc_ram_mem_table[3]+offset_tabla;
+        //puntero=cpc_ram_mem_table[3]+offset_tabla;
 
-                //x lo incrementa cada modo por separado
-                //for (x=0;x<640;) {
+
                     
                                                 
 
-	for (x=offset_x;x<ancho_total+offset_x;) {
+    	for (x=offset_x;x<ancho_total+offset_x;) {
 			switch (modo_video) {
 		                case 0:  //160x200
 
@@ -2276,18 +2112,18 @@ void screen_store_scanline_rainbow_solo_display_cpc(void)
 					color1=(byte_leido&64)>>6  | (byte_leido&4)>>1 | (byte_leido&16)>>2 | (byte_leido&1)<<3;
 
 					color0=cpc_palette_table[color0];
-                                        color0 +=CPC_INDEX_FIRST_COLOR;
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                    color0 +=CPC_INDEX_FIRST_COLOR;
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
 
 					color1=cpc_palette_table[color1];
-                                        color1 +=CPC_INDEX_FIRST_COLOR;
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                    color1 +=CPC_INDEX_FIRST_COLOR;
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
 
 
 		    break;
@@ -2363,25 +2199,25 @@ pixel 0 (bit 1)	pixel 1 (bit 1)	pixel 2 (bit 1)	pixel 3 (bit 1)	pixel 0 (bit 0)	
 					//http://cpctech.cpc-live.com/docs/graphics.html
 					if (crtc_offset_videoram) direccion_pixel=cpc_refresca_ajusta_offet(direccion_pixel);
 					byte_leido=*(cpc_ram_mem_table[crtc_video_page]+(direccion_pixel&16383) ); //Solo offset dentro de 16kb
-                                        direccion_pixel++;
+                    direccion_pixel++;
 
-                                        color0=(byte_leido&128)>>7 | ((byte_leido&8)>>2);
-                                        //if (cpc_palette_table[color0]!=4) printf ("color0: %d valor: %d\n",color0,cpc_palette_table[color0]);
-                                        color0=cpc_palette_table[color0];
-                                        color0 +=CPC_INDEX_FIRST_COLOR;
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                    color0=(byte_leido&128)>>7 | ((byte_leido&8)>>2);
+                    //if (cpc_palette_table[color0]!=4) printf ("color0: %d valor: %d\n",color0,cpc_palette_table[color0]);
+                    color0=cpc_palette_table[color0];
+                    color0 +=CPC_INDEX_FIRST_COLOR;
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color0);
 
 
-                                        color1=(byte_leido&64)>>6 | ((byte_leido&4)>>1);
-                                        color1=cpc_palette_table[color1];
-                                        color1 +=CPC_INDEX_FIRST_COLOR;
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
-                                        cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                    color1=(byte_leido&64)>>6 | ((byte_leido&4)>>1);
+                    color1=cpc_palette_table[color1];
+                    color1 +=CPC_INDEX_FIRST_COLOR;
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
+                    cpc_putpixel_zoom_rainbow(x++,puntero_buf_rainbow,color1);
 
                 		break;
             
@@ -2397,15 +2233,7 @@ pixel 0 (bit 1)	pixel 1 (bit 1)	pixel 2 (bit 1)	pixel 3 (bit 1)	pixel 0 (bit 0)	
     }
     }
 
-    //prueba
-    /*
-    if (t_scanline_draw==36) {
-        cpc_putpixel_zoom_rainbow(--x,puntero_buf_rainbow,cpc_palette_table[1]);
-        cpc_putpixel_zoom_rainbow(--x,puntero_buf_rainbow,cpc_palette_table[1]);
-        cpc_putpixel_zoom_rainbow(--x,puntero_buf_rainbow,cpc_palette_table[1]);
-        cpc_putpixel_zoom_rainbow(--x,puntero_buf_rainbow,cpc_palette_table[1]);
-    }
-    */
+
    
   }    
   
