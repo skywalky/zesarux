@@ -10153,10 +10153,7 @@ if (menu_display_aa_cond() ) {
 //	cpc_send_double_vsync.v ^=1;
 //}
 
-void menu_display_cpc_debug_borders(MENU_ITEM_PARAMETERS)
-{
-	cpc_debug_borders.v ^=1;
-}
+
 
 void menu_display_16c_mode(MENU_ITEM_PARAMETERS)
 {
@@ -10337,11 +10334,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
                 //menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_cpc_end_frame_workaround,NULL,"[%c] End frame workaround",(cpc_endframe_workaround.v==1 ? 'X' : ' ') );
 
-                if (rainbow_enabled.v) {
-                    menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_cpc_debug_borders,NULL,"[%c] Debug borders",
-                    (cpc_debug_borders.v==1 ? 'X' : ' ') );
 
-                }
 		}
 
 
@@ -23307,6 +23300,11 @@ void menu_debug_msx_svi_memory_info(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_debug_tsconf_tbblue_msx_cpc_debug_borders(MENU_ITEM_PARAMETERS)
+{
+	cpc_debug_borders.v ^=1;
+}   
+
 void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_debug_tsconf_tbblue_msx;
@@ -23318,6 +23316,15 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_inicial_format(&array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_videoregisters,NULL,"Video ~~Info");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'i');
+
+        if (MACHINE_IS_CPC && rainbow_enabled.v) {
+            menu_add_item_menu(array_menu_debug_tsconf_tbblue_msx,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+            menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_cpc_debug_borders,NULL,"[%c] Debug borders",
+                (cpc_debug_borders.v==1 ? 'X' : ' ') );
+
+        }
+
 
         if (!MACHINE_IS_CPC) {
 		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_tsconf_layer_settings,NULL,"Video ~~Layers");
@@ -23348,13 +23355,14 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 		//por defecto
 		strcpy(titulo_ventana,"Debug TSConf");
 
-		if (MACHINE_IS_TBBLUE) strcpy(titulo_ventana,"Debug TBBlue");
-		if (MACHINE_IS_MSX) strcpy(titulo_ventana,"Debug MSX");
-		if (MACHINE_IS_COLECO) strcpy(titulo_ventana,"Debug Colecovision");
-		if (MACHINE_IS_SG1000) strcpy(titulo_ventana,"Debug SG1000");
-		if (MACHINE_IS_SVI) strcpy(titulo_ventana,"Debug Spectravideo");
+		if (MACHINE_IS_TBBLUE)  strcpy(titulo_ventana,"Debug TBBlue");
+		if (MACHINE_IS_MSX)     strcpy(titulo_ventana,"Debug MSX");
+		if (MACHINE_IS_COLECO)  strcpy(titulo_ventana,"Debug Colecovision");
+		if (MACHINE_IS_SG1000)  strcpy(titulo_ventana,"Debug SG1000");
+		if (MACHINE_IS_SVI)     strcpy(titulo_ventana,"Debug Spectravideo");
+        if (MACHINE_IS_CPC)     strcpy(titulo_ventana,"Debug CPC");
 
-                retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue_msx,titulo_ventana);
+        retorno_menu=menu_dibuja_menu(&debug_tsconf_opcion_seleccionada,&item_seleccionado,array_menu_debug_tsconf_tbblue_msx,titulo_ventana);
 
                 
 

@@ -994,6 +994,9 @@ void cpc_out_port_crtc(z80_int puerto,z80_byte value)
                 //printf("cambiando crtc registro %d valor %d\n",cpc_crtc_last_selected_register,value);
                 cpc_reset_last_drawn_line();
             }
+
+            //Ver si autoactivar realvideo
+            cpc_if_autoenable_realvideo();
 		break;
 
 		case 2:
@@ -2257,4 +2260,17 @@ void cpc_reset(void)
 		cpc_scanline_counter=0;
         cpc_crt_pending_interrupt.v=0;
         cpc_reset_last_drawn_line();
+}
+
+void cpc_if_autoenable_realvideo(void)
+{
+    if (rainbow_enabled.v==0) {
+        //cpc_crtc_get_total_pixels_horizontal(),
+        int alto_zona_pixeles=cpc_crtc_get_total_pixels_vertical();
+        if (alto_zona_pixeles>200 || alto_zona_pixeles<192) {
+            debug_printf(VERBOSE_INFO,"Autoenabling realvideo because video height not standard");
+            printf("Autoenabling realvideo because video height not standard\n");
+            enable_rainbow();
+        }
+    }
 }

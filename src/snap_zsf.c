@@ -1627,6 +1627,9 @@ Byte fields:
   cpc_crtc_last_selected_register=header[57];                      
 
   cpc_set_memory_pages();
+
+  //Si hay que autoactivar real video porque algun registro de tamanyo de pantalla sea fuera de lo normal
+  cpc_if_autoenable_realvideo();
 }
 
 
