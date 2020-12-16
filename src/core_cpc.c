@@ -77,13 +77,12 @@ void core_cpc_final_frame(void)
     //tampoco deberia pasar nada porque al hacer render rainbow ya se controla que sea superior y en ese caso no renderiza nada
     //printf ("End video frame en cpc_scanline_counter: %d t: %d scanline_draw: %d\n",cpc_scanline_counter,t_estados,t_scanline_draw);
 
-    //TODO
+
     //Aqui no se deberia resetear, solo cuando hay vsync, pero algo hay erroneo en mi codigo que si no pongo esto,
     //hay "parpadeos" de cambio de modo en prince of persia, ianna (en menus), dizzy 5 no va, etc
-    if (cpc_endframe_workaround.v) {
-        //cpc_crtc_contador_scanline=0;
-        t_scanline_draw=0;
-    }
+    //if (cpc_endframe_workaround.v) {
+    //    t_scanline_draw=0;
+    //}
     
 
 

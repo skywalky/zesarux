@@ -181,7 +181,7 @@ z80_byte cpc_keyboard_table[16]={
 };
 
 
-z80_bit cpc_send_double_vsync={0};
+//z80_bit cpc_send_double_vsync={0};
 
 z80_bit cpc_debug_borders={0};
 
@@ -196,7 +196,7 @@ z80_bit cpc_pending_last_drawn_lines_black={0};
 
 //Para forzar cambio scanline a 0 cuando se finaliza un frame de video
 //esto no deberia ser asi, se deberia ir a scanline 0 solo cuando hay vsync
-z80_bit cpc_endframe_workaround={0};
+//z80_bit cpc_endframe_workaround={0};
 
 //Contador de cuanto falta para mostrar esas lineas en negro, en frames
 int cpc_pending_last_drawn_lines_black_counter=0;
@@ -649,7 +649,7 @@ void cpc_handle_vsync_state(void)
 	//Si es 0, en algunos chips significa 16
 	if (vsync_lenght==0) vsync_lenght=16;
 
-	if (cpc_send_double_vsync.v) vsync_lenght *=2;	
+	//if (cpc_send_double_vsync.v) vsync_lenght *=2;	
 
 	int vsync_position=cpc_crtc_get_vsync_position();
 
