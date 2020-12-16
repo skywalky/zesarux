@@ -770,7 +770,7 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
 			// cpc_ppi_ports[3]
 			psg_function=(cpc_ppi_ports[2]>>6)&3;
                         if (psg_function==1) {
-				//printf ("Leer de registro PSG. Registro = %d\n",ay_3_8912_registro_sel);
+				//printf ("Leer de registro PSG. Registro = %d\n",ay_3_8912_registro_sel[ay_chip_selected]);
 				if (ay_3_8912_registro_sel[ay_chip_selected]==14) {
 					//leer teclado
 					//Linea a leer
