@@ -171,3 +171,13 @@ They are not supported by esxDOS."
 
 -tecla F para activar/desactivar modo prism zxuno
 
+-quiza
+
+			if (psg_function==3) {
+				//Seleccionar ay chip registro indicado en port A
+				//printf ("Seleccionamos PSG registro %d en pc=%d\n",cpc_ppi_ports[0],reg_pc);
+				out_port_ay(65533,cpc_ppi_ports[0]);
+                cpc_ppi_ports[2]=value;
+			}
+
+            no deberia hacer el out_port_ay???

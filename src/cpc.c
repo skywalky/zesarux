@@ -968,6 +968,7 @@ Bit 7	Bit 6	Function
                 //Esto es necesario para que la musica del sword of ianna se escuche bien
                 //No acabo de entender bien lo que hace el inactive mode pero...
                 out_port_ay(65533,cpc_ppi_ports[0]);
+                cpc_ppi_ports[2]=value;
             }
 
 			//cpc_ppi_ports[2]=value;
