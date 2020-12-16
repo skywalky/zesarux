@@ -904,8 +904,9 @@ Bit 9   Bit 8   PPI Function    Read/Write status
                         //printf ("Writing PPI port A value %d en pc=%d\n",value,reg_pc);
                         cpc_ppi_ports[0]=value;
 
-                        /*
+                        
                         //Si control esta en output
+                    /*
                     if ((cpc_psg_control_bits & 16)==0) {
                         printf ("Writing PPI port A value %d en pc en modo escritura=%d\n",value,reg_pc);
 			            cpc_ppi_ports[0]=value;
@@ -914,8 +915,10 @@ Bit 9   Bit 8   PPI Function    Read/Write status
                     else {
                         printf ("Writing PPI port A value %d en pc en modo lectura=%d\n",value,reg_pc);
 			            //cpc_ppi_ports[0]=value;
+                        ay_3_8912_registro_sel[ay_chip_selected]=value;
                     }
-                        */
+                    */
+                        
 
                 break;
 
