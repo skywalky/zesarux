@@ -418,6 +418,7 @@ note 1: This function is not available in the Gate-Array, but is performed by a 
 
 	if (modo_video_despues!=modo_video_antes) {
         cpc_video_modes_change_frame_counter++;
+        //printf("contador: %d\n",cpc_video_modes_change_frame_counter);
         cpc_if_autoenable_realvideo_on_changemodes();
         cpc_splash_videomode_change();
     }
@@ -2280,7 +2281,7 @@ void cpc_if_autoenable_realvideo(void)
         int alto_zona_pixeles=cpc_crtc_get_total_pixels_vertical();
         if (alto_zona_pixeles>200 || alto_zona_pixeles<192) {
             debug_printf(VERBOSE_INFO,"Autoenabling realvideo because video height not standard");
-            printf("Autoenabling realvideo because video height not standard\n");
+            //printf("Autoenabling realvideo because video height not standard\n");
             enable_rainbow();
         }
     }
@@ -2292,7 +2293,7 @@ void cpc_if_autoenable_realvideo_on_changemodes(void)
     if (rainbow_enabled.v==0 && autodetect_rainbow.v) {    
         if (cpc_video_modes_change_frame_counter>=2) {
             debug_printf(VERBOSE_INFO,"Autoenabling realvideo because 2 or mode video mode changes in a frame");
-            printf("Autoenabling realvideo because 2 or mode video mode changes in a frame\n");
+            //printf("Autoenabling realvideo because 2 or mode video mode changes in a frame (%d)\n",cpc_video_modes_change_frame_counter);
             enable_rainbow();            
         }
     }
