@@ -151,4 +151,8 @@ extern z80_bit cpc_endframe_workaround;
 
 extern int cpc_crtc_contador_scanline;
 
+extern const char *cpc_video_modes_strings[];
+
+extern int cpc_get_crtc_final_display_zone(void);
+
 #endif

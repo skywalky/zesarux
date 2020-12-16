@@ -640,18 +640,14 @@ void cpc_handle_vsync_state(void)
 
     //mi t_scanline_draw es el del monitor (el ga gate array)
     //cpc_crtc_contador_scanline es la cuenta de scanlines del CRTC
-    
-    //temporal. Esto no deberia ser asi, cpc_crtc_contador_scanline debe ser contador independiente de  t_scanline_draw
-    //cpc_crtc_contador_scanline=t_scanline_draw;
+   
 
 	//Duracion vsync
-	//int vsync_lenght=cpc_crtc_registers[3]&15;
 
     int vsync_lenght=cpc_crtc_get_total_vsync_height_crtc();
 
 	//Si es 0, en algunos chips significa 16
 	if (vsync_lenght==0) vsync_lenght=16;
-	//cpc_ppi_ports[1];
 
 	if (cpc_send_double_vsync.v) vsync_lenght *=2;	
 
@@ -661,13 +657,7 @@ void cpc_handle_vsync_state(void)
 
 	int final_vsync=vsync_position+vsync_lenght;
 
-	//Lo modificamos
-	//vsync_position +=2;
 
-	//final_vsync +=2;
-
-
-	//if (t_scanline_draw>=vsync_position && t_scanline_draw<final_vsync) {
     if (cpc_crtc_contador_scanline>=vsync_position && cpc_crtc_contador_scanline<final_vsync) {
         cpc_vsync_signal.v=1;
 
@@ -711,13 +701,8 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
         if (cpc_crtc_contador_scanline==vsync_position+2) {
             if (cpc_scanline_counter>=32) {
             	cpc_crt_pending_interrupt.v=1;
-                //printf("Llega Generating vsync en counter: %d t: %d vsync_pos: %d\n",cpc_scanline_counter,t_estados,vsync_position);
             }
-            else {
-                //cpc_crt_pending_interrupt.v=0;
-                
-            }
-        
+      
             cpc_scanline_counter=0;
         }
         
@@ -727,48 +712,13 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
         cpc_vsync_signal.v=0;
     }
 
-	//Y si está justo después, resetear posicion
-	if (cpc_crtc_contador_scanline==final_vsync) {
-        //printf("Llega --Setting cpc_crtc_contador_scanline draw to 0. cpc_crtc_contador_scanline=%d cpc_scanline_counter %d t_scanline_draw %d vsync_position %d vsync_lenght %d\n",
-        //    cpc_crtc_contador_scanline,cpc_scanline_counter,t_scanline_draw,vsync_position,vsync_lenght);
 
-        //printf("Llega --Setting  cpc_scanline_counter %d\n",cpc_scanline_counter);
-
-        //cpc_crtc_contador_scanline=0;
-    }
-
-    //printf("contador scanline %d\n",cpc_crtc_contador_scanline);
-
-
-    //Obtener final_vsync pero del GA
-    vsync_lenght=cpc_crtc_get_total_vsync_height_ga();
-
-	final_vsync=vsync_position+vsync_lenght;    
-
-	//Y si está justo después, resetear posicion
-    //Resetear t_scanline_draw justo después de dibujar el borde superior
-
-
-    
-	/*if (t_scanline_draw==final_vsync) {
-    //if (t_scanline_draw>=vsync_position) {    
-        printf("--Setting scanline draw to 0. t_scanline_draw=%d vsync_position %d vsync_lenght %d\n",
-            t_scanline_draw,vsync_position,vsync_lenght);
-
-        //t_scanline_draw=0;
-    }*/
-
-	//printf ("vsync %d scanline %d scanline_draw %d\n",cpc_vsync_signal.v,t_scanline,t_scanline_draw);
 
 }
 
 z80_byte cpc_get_vsync_bit(void)
 {
 
-	//printf ("get vsync scanline %d scanline_draw %d : vsync %d\n",t_scanline,t_scanline_draw,cpc_vsync_signal.v);
-    //sleep(1);
-
-	//if (cpc_vsync_signal.v) printf ("1111111######\n");
 
 	return cpc_vsync_signal.v;
 }
@@ -894,25 +844,26 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
 }
 
 
-void cpc_cassette_motor_control (int valor_bit) {
-                                        //primero vemos si hay cinta insertada
-                                        if (realtape_name!=NULL && realtape_inserted.v) {
+void cpc_cassette_motor_control (int valor_bit) 
+{
+    //primero vemos si hay cinta insertada
+    if (realtape_name!=NULL && realtape_inserted.v) {
 
-                                                if (valor_bit) {
-                                                        //Activar motor si es que no estaba ya activado
-                                                        if (realtape_playing.v==0) {
-                                                                debug_printf (VERBOSE_INFO,"CPC motor on function received. Start playing real tape");
-                                                                realtape_start_playing();
-                                                        }
-                                                }
-                                                else {
-                                                        //Desactivar motor si es que estaba funcionando
-                                                        if (realtape_playing.v) {
-                                                                debug_printf (VERBOSE_INFO,"CPC motor off function received. Stop playing real tape");
-                                                                //desactivado, hay juegos que envian motor off cuando no conviene realtape_stop_playing();
-                                                        }
-                                                }
-                                        }
+            if (valor_bit) {
+                    //Activar motor si es que no estaba ya activado
+                    if (realtape_playing.v==0) {
+                            debug_printf (VERBOSE_INFO,"CPC motor on function received. Start playing real tape");
+                            realtape_start_playing();
+                    }
+            }
+            else {
+                    //Desactivar motor si es que estaba funcionando
+                    if (realtape_playing.v) {
+                            debug_printf (VERBOSE_INFO,"CPC motor off function received. Stop playing real tape");
+                            //desactivado, hay juegos que envian motor off cuando no conviene realtape_stop_playing();
+                    }
+            }
+    }
 }
 
 
@@ -1054,6 +1005,12 @@ void cpc_out_port_crtc(z80_int puerto,z80_byte value)
 
 }
 
+const char *cpc_video_modes_strings[4]={
+    "160x200, 16 col",
+    "320x200, 4 col",
+    "640x200, 2 col",
+    "160x200, 4 col"
+};
 
 void cpc_splash_videomode_change(void) {
 
@@ -1063,19 +1020,13 @@ void cpc_splash_videomode_change(void) {
 
         switch (modo_video) {
                 case 0:
-                        sprintf (mensaje,"Setting screen mode 0, 160x200, 16 colours");
-                break;
-
                 case 1:
-                        sprintf (mensaje,"Setting screen mode 1, 320x200, 4 colours");
-                break;
-
                 case 2:
-                        sprintf (mensaje,"Setting screen mode 2, 640x200, 2 colours");
+                        sprintf (mensaje,"Setting screen mode %d, %s",modo_video,cpc_video_modes_strings[modo_video]);
                 break;
 
                 case 3:
-                        sprintf (mensaje,"Setting screen mode 3, 160x200, 4 colours (undocumented)");
+                        sprintf (mensaje,"Setting screen mode 3, %s (undocumented)",cpc_video_modes_strings[3]);
                 break;
 
                 default:

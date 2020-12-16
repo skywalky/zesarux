@@ -3434,7 +3434,8 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 				}
 
                 if (MACHINE_IS_CPC) {
-					sprintf(texto_buffer,"Video mode:      %d",cpc_gate_registers[2] &3);
+                    z80_byte video_mode=cpc_gate_registers[2] &3;
+					sprintf(texto_buffer,"Video mode: %d %s",video_mode,cpc_video_modes_strings[video_mode]);
 					zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);
 
                     sprintf(texto_buffer,"Full size:       %d X %d",
