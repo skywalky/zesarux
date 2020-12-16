@@ -388,6 +388,10 @@ void cpc_init_memory_tables()
 
 }
 
+//Numero de cambios de modo de video en un frame de video (desde un vsync hasta el otro)
+//para poder detectar 2 o mas cambios de modo y asi autoactivar realvideo
+int cpc_video_modes_change_frame_counter=0;
+
 void cpc_out_port_gate(z80_byte value)
 {
 	/*
@@ -412,7 +416,11 @@ note 1: This function is not available in the Gate-Array, but is performed by a 
 
 	z80_byte modo_video_despues=cpc_gate_registers[2] &3;
 
-	if (modo_video_despues!=modo_video_antes) cpc_splash_videomode_change();
+	if (modo_video_despues!=modo_video_antes) {
+        cpc_video_modes_change_frame_counter++;
+        cpc_if_autoenable_realvideo_on_changemodes();
+        cpc_splash_videomode_change();
+    }
 
 
 	//printf ("Changing register %d of gate array\n",funcion);
@@ -704,6 +712,9 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
             }
       
             cpc_scanline_counter=0;
+
+            //Resetear contador de cambios de modo de video en un frame
+            cpc_video_modes_change_frame_counter=0;
         }
         
 
@@ -2264,13 +2275,25 @@ void cpc_reset(void)
 
 void cpc_if_autoenable_realvideo(void)
 {
-    if (rainbow_enabled.v==0) {
+    if (rainbow_enabled.v==0 && autodetect_rainbow.v) {
         //cpc_crtc_get_total_pixels_horizontal(),
         int alto_zona_pixeles=cpc_crtc_get_total_pixels_vertical();
         if (alto_zona_pixeles>200 || alto_zona_pixeles<192) {
             debug_printf(VERBOSE_INFO,"Autoenabling realvideo because video height not standard");
             printf("Autoenabling realvideo because video height not standard\n");
             enable_rainbow();
+        }
+    }
+}
+
+
+void cpc_if_autoenable_realvideo_on_changemodes(void)
+{
+    if (rainbow_enabled.v==0 && autodetect_rainbow.v) {    
+        if (cpc_video_modes_change_frame_counter>=2) {
+            debug_printf(VERBOSE_INFO,"Autoenabling realvideo because 2 or mode video mode changes in a frame");
+            printf("Autoenabling realvideo because 2 or mode video mode changes in a frame\n");
+            enable_rainbow();            
         }
     }
 }

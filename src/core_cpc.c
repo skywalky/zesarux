@@ -192,8 +192,7 @@ void core_cpc_end_scanline_stuff(void)
     cpc_handle_vsync_state();
 
 
-    //temp
-    //if (t_scanline_draw>=255) t_scanline_draw=0;    
+
 
 
     //CPC genera interrupciones a 300 hz

@@ -157,4 +157,6 @@ extern int cpc_get_crtc_final_display_zone(void);
 
 extern void cpc_if_autoenable_realvideo(void);
 
+extern void cpc_if_autoenable_realvideo_on_changemodes(void);
+
 #endif
