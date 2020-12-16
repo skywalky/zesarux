@@ -802,6 +802,8 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
 
 				else if (ay_3_8912_registro_sel[ay_chip_selected]<14) {
 					//Registros chip ay
+                    //printf("leyendo registro PSG %d en PC=%d\n",ay_3_8912_registro_sel[ay_chip_selected],reg_pc);
+                    //sleep(2);
 					return in_port_ay(0xFF);
 				}
 			}
@@ -855,6 +857,7 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
 
 }
 
+z80_byte cpc_psg_control_bits=0;
 
 void cpc_cassette_motor_control (int valor_bit) 
 {
@@ -892,10 +895,28 @@ Bit 9   Bit 8   PPI Function    Read/Write status
         z80_byte port_number=puerto_h&3;
 	z80_byte psg_function;
 
+
+    //printf ("Writing PPI port %02XH (PPI funcion %d) value %d on PC=%d\n",puerto_h,puerto_h&3,value,reg_pc);
+
         switch (port_number) {
                 case 0:
-                        //printf ("Writing PPI port A value 0x%02X\n",value);
-			cpc_ppi_ports[0]=value;
+                        
+                        //printf ("Writing PPI port A value %d en pc=%d\n",value,reg_pc);
+                        cpc_ppi_ports[0]=value;
+
+                        /*
+                        //Si control esta en output
+                    if ((cpc_psg_control_bits & 16)==0) {
+                        printf ("Writing PPI port A value %d en pc en modo escritura=%d\n",value,reg_pc);
+			            cpc_ppi_ports[0]=value;
+                    }
+                    
+                    else {
+                        printf ("Writing PPI port A value %d en pc en modo lectura=%d\n",value,reg_pc);
+			            //cpc_ppi_ports[0]=value;
+                    }
+                        */
+
                 break;
 
                 case 1:
@@ -914,9 +935,13 @@ Bit 7	Bit 6	Function
 
 */
 			psg_function=(value>>6)&3;
+            //printf ("Writing PPI port C value %d psg_funcion %d\n",value,psg_function);
+
+
+
 			if (psg_function==3) {
 				//Seleccionar ay chip registro indicado en port A
-				//printf ("Seleccionamos PSG registro %d\n",cpc_ppi_ports[0]);
+				//printf ("Seleccionamos PSG registro %d en pc=%d\n",cpc_ppi_ports[0],reg_pc);
 				out_port_ay(65533,cpc_ppi_ports[0]);
 			}
 
@@ -924,9 +949,12 @@ Bit 7	Bit 6	Function
 			//temp prueba sonido AY
 			if (psg_function==2) {
 				//Enviar valor a psg
-				//printf ("Enviamos PSG valor 0x%02X\n",cpc_ppi_ports[0]);
+				//printf ("Enviamos PSG valor %d\n",cpc_ppi_ports[0]);
                                 out_port_ay(49149,cpc_ppi_ports[0]);
-                        }
+            }
+
+            
+         
 
 			cpc_ppi_ports[2]=value;
 
@@ -935,12 +963,43 @@ Bit 7	Bit 6	Function
 
                 case 3:
                         //printf ("Writing PPI port control write only value 0x%02X\n",value);
+                        //sleep(1);
+            /*
+            PPI Control with Bit7=1
+If Bit 7 is "1" then the other bits will initialize Port A-B as Input or Output:
+
+ Bit 0    IO-Cl    Direction for Port C, lower bits (always 0=Output in CPC)
+ Bit 1    IO-B     Direction for Port B             (always 1=Input in CPC)
+ Bit 2    MS0      Mode for Port B and Port Cl      (always zero in CPC)
+ Bit 3    IO-Ch    Direction for Port C, upper bits (always 0=Output in CPC)
+ Bit 4    IO-A     Direction for Port A             (0=Output, 1=Input)
+ Bit 5,6  MS0,MS1  Mode for Port A and Port Ch      (always zero in CPC)
+ Bit 7    SF       Must be "1" to setup the above bits
+CAUTION: Writing to PIO Control Register (with Bit7 set), automatically resets PIO Ports A,B,C to 00h each!
+In the CPC only Bit 4 is of interest, all other bits are always having the same value. In order to write to the PSG sound registers, a value of 82h must be written to this register. In order to read from the keyboard (through PSG register 0Eh), a value of 92h must be written to this register.
+
+PPI Control with Bit7=0
+Otherwise, if Bit 7 is "0" then the register is used to set or clear a single bit in Port C:
+
+ Bit 0    B        New value for the specified bit (0=Clear, 1=Set)
+ Bit 1-3  N0,N1,N2 Specifies the number of a bit (0-7) in Port C
+ Bit 4-6  -        Not Used
+ Bit 7    SF       Must be "0" in this case
+
+
+
+            */
+
+
+
 			cpc_ppi_ports[3]=value;
 			//CAUTION: Writing to PIO Control Register (with Bit7 set), automatically resets PIO Ports A,B,C to 00h each!
 			if (value&128) {
 				cpc_ppi_ports[0]=cpc_ppi_ports[1]=cpc_ppi_ports[2]=0;
 				//tambien motor off
 				//cpc_cassette_motor_control(0);
+
+                cpc_psg_control_bits=value;
 			}
 
 			else {
