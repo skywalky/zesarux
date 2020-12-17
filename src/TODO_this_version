@@ -173,4 +173,21 @@ They are not supported by esxDOS."
 
 -cpc stereo
 
+-poder redefinir tecla fire joystick (inicio no es muy comodo)
 
+-cpc asignar tecla "Copy" que antes se hacia con home:
+
+                        case UTIL_KEY_HOME:
+                                if (pressrelease) {
+                                        joystick_set_fire(1);
+
+					//Home en cpc es copy
+					cpc_keyboard_table[1] &=(255-2);
+                                }
+                                else {
+                                        joystick_release_fire(1);
+
+					//Home en cpc es copy
+					cpc_keyboard_table[1] |=2;
+
+                    
