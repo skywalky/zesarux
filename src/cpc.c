@@ -987,6 +987,58 @@ Bit 7	Bit 6	Function
                 //No acabo de entender bien lo que hace el inactive mode pero...
                 out_port_ay(65533,cpc_ppi_ports[0]);
                 cpc_ppi_ports[2]=value;
+                /*
+                Previo a versión ZEsarUX 9.2 aquí no se hacia nada, pero revisando con juegos con musica con el Arkos Player
+                se observa que es necesario (caso del sword of ianna por ejemplo)
+                Usa sentencias OUT (C), 0 para pasar a este modo inactivo 
+                La traza de ejecuciones es:
+
+                Enviamos PSG valor 0 al registro 0
+Writing PPI port C value 192 psg_funcion 3 pc=13215
+AY chip seleccion registro 0
+Writing PPI port A value 7 en pc=13219
+Outing 0 to F607H on pc=13222
+Writing PPI port C value 0 psg_funcion 0 pc=13222
+psg funcion 0 on pc=13222. pre haciendo seleccion registro psg 7
+
+
+Writing PPI port A value 61 en pc=13226 -> guarda en PPI port A valor 61
+Writing PPI port C value 128 psg_funcion 2 pc=13229 ->Enviar valor de port A a ultimo registro seleccionado en chip AY (el 61)
+
+**Enviamos PSG valor 61 al registro 0**
+**Writing PPI port C value 192 psg_funcion 3 pc=13231  -> Seleccion registro de port A (61)??? Es lo que ya se hacia antes **
+
+AY chip seleccion registro 61
+Writing PPI port A value 8 en pc=13235  -> guarda en PPI port A valor 8
+Outing 0 to F608H on pc=13238
+Writing PPI port C value 0 psg_funcion 0 pc=13238
+**psg funcion 0 on pc=13238. pre haciendo seleccion registro psg 8 -> Y agrego selección de registro en funcion 0 también**
+Writing PPI port A value 0 en pc=13241  -> guarda en PPI port A valor 0
+Writing PPI port C value 128 psg_funcion 2 pc=13244
+**Enviamos PSG valor 0 al registro 13 (61 & 15)**
+Writing PPI port C value 192 psg_funcion 3 pc=13246
+AY chip seleccion registro 0
+
+
+Info:
+
+Register selection
+
+Before reading or writing to the PSG, the appropiate register must be selected.
+
+This is done by putting the register number (0-14) into port &F4xx, and setting bits 7 and 6 of port &F6xx to 1. 
+The register will now be selected and the user can now read or write a value to it. Finally, the PSG must be put into 
+an inactive state by setting bit 7 and 6 to 0 of port &F6xx.
+
+This is necessary, otherwise if the register select command was still in operation, and a byte was sent to port &F4xx, 
+it would use this and change the data in the last register selected. (see below)
+
+Writing to a PSG register
+
+To write data to the PSG, the user must put the data in port &F4xx, and then set bit 7 to 1 and bit 6 to 0 of port &F6xx. 
+The data will be written into the register. Finally, the PSG must be put into an inactive state by setting bit 7 and 6 to 0 of port &F6xx.            
+
+                */
             }
 
 			//cpc_ppi_ports[2]=value;

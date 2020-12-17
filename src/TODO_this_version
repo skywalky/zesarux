@@ -171,30 +171,4 @@ They are not supported by esxDOS."
 
 -tecla F para activar/desactivar modo prism zxuno
 
--quiza
-
-			if (psg_function==3) {
-				//Seleccionar ay chip registro indicado en port A
-				//printf ("Seleccionamos PSG registro %d en pc=%d\n",cpc_ppi_ports[0],reg_pc);
-				out_port_ay(65533,cpc_ppi_ports[0]);
-                cpc_ppi_ports[2]=value;
-			}
-
-            no deberia hacer el out_port_ay??? 
-
-
-            No estoy seguro, ver: https://k1.spdns.de/Develop/Hardware/Infomix/ICs%20computer/IO%2C%20DMA%2C%20Timer/Sound/AY8910%2C%20AY8912%20PSG/psg.html
-
--cpc quitar sonido en carga opcion
-
-Register selection
-
-Before reading or writing to the PSG, the appropiate register must be selected.
-
-This is done by putting the register number (0-14) into port &F4xx, and setting bits 7 and 6 of port &F6xx to 1. The register will now be selected and the user can now read or write a value to it. Finally, the PSG must be put into an inactive state by setting bit 7 and 6 to 0 of port &F6xx.
-
-This is necessary, otherwise if the register select command was still in operation, and a byte was sent to port &F4xx, it would use this and change the data in the last register selected. (see below)
-
-Writing to a PSG register
-
-To write data to the PSG, the user must put the data in port &F4xx, and then set bit 7 to 1 and bit 6 to 0 of port &F6xx. The data will be written into the register. Finally, the PSG must be put into an inactive state by setting bit 7 and 6 to 0 of port &F6xx.            
+-cpc stereo
