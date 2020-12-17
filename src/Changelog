@@ -2,7 +2,10 @@ Version 9.2 - xxxx edition. 14 December 2020
 
 Added new ZX-Uno Prism video mode
 
-Improved CPC emulation: scanlines rendering
+Improved CPC emulation: 
+-Video scanlines rendering
+-Joystick emulation
+
 Improved Debug I/O ports window: can now be backgrounded and it's reloaded continuously
 
 TBBlue: Fixed writing on divmmc memory when layer2 active

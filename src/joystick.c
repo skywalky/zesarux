@@ -115,7 +115,8 @@ char *joystick_texto[]={
 	"Zebra ZX81",
 	"MikroGen ZX81",
 	"ZXpand ZX81",
-	"Cursor Sam"
+	"Cursor Sam",
+    "CPC Joy1"
 };
 
 char *gunstick_texto[]={

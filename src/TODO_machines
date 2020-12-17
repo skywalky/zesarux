@@ -641,13 +641,14 @@ http://velesoft.speccy.cz/sam_zx128.htm
 -ay player en modo cpc no borra debajo de pantalla diferentes ventanas
 --machine cpc464 en aa,caca en consola de texto real da segmentation fault
 -dibujado de border cuando pantalla es menor de lo habitual, temporal, no va bien en casos como paperboy. Esto seria mejor para solucionarlo implementar realvideo
--debug i/o ports
 -Que pasa con keymap y otras teclas de cpc en drivers que no soportan keymap
 -Hardware scroll no va fino
 -Paginación de memoria cpc en la función por defecto array que tenga: 0,1,2,3
 Luego en cpc con más de 64 kb se puede re mapear según registro 3 del gate array
--Modo realvideo
+
 -cpc664. disco y rom de 24 kb. Paginacion de diferentes roms mediante puerto DFXX. http://www.grimware.org/doku.php/documentations/devices/gatearray#upper.rom
+
+-segundo boton fire joystick 
 
 -Carga de .zx falla en uno (cara.zx)
 -Video out to file?

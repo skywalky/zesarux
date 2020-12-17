@@ -805,7 +805,28 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
                                 input_file_keyboard_get_key();
                 }
 
+                    if (linea_teclado==9) {
+                        //printf("leyendo joystick\n");
+                        //&49	DEL	Joy 1 Fire 3 (CPC only)	Joy 1 Fire 2	Joy1 Fire 1	Joy1 right	Joy1 left	Joy1 down	Joy1 up
+                        
+                        z80_byte valor_joystick=255;
 
+                        if (joystick_emulation==JOYSTICK_CPC_1) {
+                            //si estamos con menu abierto, no retornar nada
+                            if (zxvision_key_not_sent_emulated_mach() ) return valor_joystick;
+
+                            //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
+                            if ((puerto_especial_joystick&1)) valor_joystick &=(255-8);   //right
+                            if ((puerto_especial_joystick&2)) valor_joystick &=(255-4);   //left
+                            if ((puerto_especial_joystick&4)) valor_joystick &=(255-2);  //down
+                            if ((puerto_especial_joystick&8)) valor_joystick &=(255-1);  //up
+                            if ((puerto_especial_joystick&16)) valor_joystick &=(255-16);  //fire1
+                        }
+
+                        return valor_joystick;
+                                      
+
+                    }
 					
 					return cpc_keyboard_table[linea_teclado];
 					//if (linea_teclado==8) {
