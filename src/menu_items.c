@@ -3449,17 +3449,21 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
                     );
                     zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);       
 
-                    sprintf(texto_buffer,"Horiz. borders:  %d , %d",
+                    //zxvision_print_string_defaults_fillspc(ventana,1,linea++,"Borders");    
+
+                    sprintf(texto_buffer,"Border Top:  %3d Bottom: %3d",
                         cpc_crtc_get_top_border_height(),
                         cpc_crtc_get_bottom_border_height()
                     );
                     zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);       
 
-                    sprintf(texto_buffer,"Vertic. borders: %d , %d",
+                    sprintf(texto_buffer,"Border Left: %3d Right:  %3d",
                         cpc_crtc_get_total_left_border(),
                         cpc_crtc_get_total_right_border()
                     );
-                    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);   
+                    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer); 
+
+                    //zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");      
 
                     sprintf(texto_buffer,"Hsync width:     %d",cpc_crtc_get_total_hsync_width());
                     zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);   

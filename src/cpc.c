@@ -2083,7 +2083,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
         int right_border=cpc_crtc_get_total_right_border();
 
 
-
+        //printf("borders: %d %d\n",left_border,right_border);
 
 
     //Nos ubicamos ya en la zona de pixeles, saltando el border
