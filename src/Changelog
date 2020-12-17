@@ -7,6 +7,11 @@ Improved Debug I/O ports window: can now be backgrounded and it's reloaded conti
 
 TBBlue: Fixed writing on divmmc memory when layer2 active
 
+Fixed CPC bugs:
+-Fixed vsync and hsync interrupts
+-Fixed border colour
+-Fixed AY chip register selection
+
 Fixed loading General Sound rom
 Fixed CPC CRTC interrupts. After a CRTC interrupt with Z80 interrupts disabled, they were not fired when enabling Z80 interrupts
 Fixed CPC setting bit 4 of the "Select screen mode and rom configuration" register of the Gate-Array and interrupt request
