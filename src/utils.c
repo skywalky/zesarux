@@ -6995,7 +6995,13 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         //puerto_63486 &=255-16;
                                         joystick_set_left(1);
                                         blink_kbd_a12 &= (255-64);
+
+                    //Si no se esta emulando joystick con cursores
+                    if (joystick_emulation!=JOYSTICK_CPC_1)  {
 					cpc_keyboard_table[1] &=(255-1);
+                    }
+
+
                                         msx_keyboard_table[8] &=(255-16);
                                         svi_keyboard_table[6] &=(255-128);
 
@@ -7007,7 +7013,12 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         //puerto_63486 |=16;
                                         joystick_release_left(1);
                                         blink_kbd_a12 |= 64;
+
+                                        //Si no se esta emulando joystick con cursores
+                                        if (joystick_emulation!=JOYSTICK_CPC_1)  {
 					                              cpc_keyboard_table[1] |=1;
+                                        }
+
                                         msx_keyboard_table[8] |=16;
                                         svi_keyboard_table[6] |=128;
                                         ql_keyboard_table[1] |= 2;
