@@ -804,6 +804,8 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
                 if (input_file_keyboard_is_playing() ) {
                                 input_file_keyboard_get_key();
                 }
+                
+
 
                     if (linea_teclado==9) {
                         //printf("leyendo joystick\n");
@@ -827,12 +829,25 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
                                       
 
                     }
+
+                    //Retornar fila teclado
+                    z80_byte byte_teclado=cpc_keyboard_table[linea_teclado];
+
+                    //Si es fila 0 y los cursores emulan el joystick de cpc, no indicar pulsaciones de cursor de cpc
+                    if (linea_teclado==0 && joystick_emulation==JOYSTICK_CPC_1) {
+                        //&40	F Dot	ENTER	F3	F6	F9	CURDOWN	CURRIGHT	CURUP
+                        byte_teclado |=1+2+4;
+                    }
+
+                    //Si es fila 1 y los cursores emulan el joystick de cpc, no indicar pulsaciones de cursor de cpc ni tecla copy
+                    if (linea_teclado==1 && joystick_emulation==JOYSTICK_CPC_1) {
+                        //&41	F0	F2	F1	F5	F8	F7	COPY	CURLEFT
+                        byte_teclado |=1+2;
+ 
+                    }                    
 					
-					return cpc_keyboard_table[linea_teclado];
-					//if (linea_teclado==8) {
-					//	return 255-32;
-					//}
-					//return 255;
+					return byte_teclado;
+
 				}
 
 
