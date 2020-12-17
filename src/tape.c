@@ -2079,7 +2079,11 @@ void realtape_insert(void)
 
 	//Aun asi esto solo es un motivo estetico, se puede desactivar realvideo y la carga funcionara igualmente
 	//Solo si autodetect real video esta activo
-	if (autodetect_rainbow.v) enable_rainbow();
+    //y maquina no es cpc (carga normal no cambia border)
+	if (autodetect_rainbow.v && !MACHINE_IS_CPC) {
+        debug_printf (VERBOSE_INFO,"Enabling realvideo due to real tape insert");
+        enable_rainbow();
+    }
 
 
         //if (noautoload.v==0 && !MACHINE_IS_TBBLUE) { //TODO: desactivamos autoload en TBBLUE

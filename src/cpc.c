@@ -86,7 +86,7 @@ Bit	Value	Function
 
 */
 
-z80_byte cpc_border_color;
+z80_byte cpc_border_color=0;
 
 z80_byte cpc_crtc_registers[32];
 
@@ -392,6 +392,9 @@ void cpc_init_memory_tables()
 //para poder detectar 2 o mas cambios de modo y asi autoactivar realvideo
 int cpc_video_modes_change_frame_counter=0;
 
+//Parecido pero para cambios de border
+int cpc_border_change_frame_counter=0;
+
 void cpc_out_port_gate(z80_byte value)
 {
 	/*
@@ -431,12 +434,13 @@ note 1: This function is not available in the Gate-Array, but is performed by a 
 			//Seleccion indice color a paleta o border
 			if (value&16) {
 				//printf ("Seleccion border. TODO\n");
-				z80_byte color=value&15;
+				/*z80_byte color=value&15;
 				if (cpc_border_color!=color) {
 					cpc_border_color=color;
 					//printf ("Setting border color with value %d\n",color);
 					modificado_border.v=1;
 				}
+                */
 			}
 
 			else {
@@ -447,7 +451,16 @@ note 1: This function is not available in the Gate-Array, but is performed by a 
 
 		case 1:
                         if (cpc_gate_registers[0] & 16) {
-                                //printf ("Seleccion border. sin sentido aqui\n");
+                                //Seleccion color borde. Color directo de paleta
+                                z80_byte color=value&31;
+                                cpc_border_color=color;
+                                //printf("cambio color border. color =%d contador= %d\n",color,cpc_border_change_frame_counter);
+                                modificado_border.v=1;
+                                
+
+                                cpc_border_change_frame_counter++;
+                                //printf("cambio color border. total cambios: %d\n",cpc_border_change_frame_counter);
+                                cpc_if_autoenable_realvideo_on_changeborder();
                         }
 
                         else {
@@ -462,7 +475,7 @@ note 1: This function is not available in the Gate-Array, but is performed by a 
 
 
 				//Si se cambia color para indice de color de border, refrescar border
-				if (indice==cpc_border_color) modificado_border.v=1;
+				//if (indice==cpc_border_color) modificado_border.v=1;
 
 			}
 
@@ -716,6 +729,8 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
 
             //Resetear contador de cambios de modo de video en un frame
             cpc_video_modes_change_frame_counter=0;
+            //Y de border
+            cpc_border_change_frame_counter=0;
         }
         
 
@@ -941,28 +956,31 @@ Bit 7	Bit 6	Function
             //printf ("Writing PPI port C value %d psg_funcion %d pc=%d\n",value,psg_function,reg_pc);
 
 
-
+            //Select PSG register
 			if (psg_function==3) {
 				//Seleccionar ay chip registro indicado en port A
 				//printf ("Seleccionamos PSG registro %d en pc=%d\n",cpc_ppi_ports[0],reg_pc);
+
+                //no estoy seguro si realmente debe seleccionar el registro del chip AY, o esto solo se hace con funcion 0
 				out_port_ay(65533,cpc_ppi_ports[0]);
                 cpc_ppi_ports[2]=value;
 			}
 
 
-			//temp prueba sonido AY
+			//Write to selected PSG register
 			if (psg_function==2) {
 				//Enviar valor a psg
-				//printf ("Enviamos PSG valor %d al registro %d\n",cpc_ppi_ports[0],ay_3_8912_registro_sel[ay_chip_selected]);
+				//printf ("Enviamos PSG valor %d al registro %d\n",cpc_ppi_ports[0],ay_3_8912_registro_sel[ay_chip_selected]);                
                 out_port_ay(49149,cpc_ppi_ports[0]);
                 cpc_ppi_ports[2]=value;
             }
 
+            //Read from selected PSG register
             if (psg_function==1) {
                 cpc_ppi_ports[2]=value;
             }            
 
-            
+            //Inactive
             if (psg_function==0) {
                 //printf("psg funcion 0 on pc=%d. pre haciendo seleccion registro psg %d\n",reg_pc,cpc_ppi_ports[0]);
                 //Esto es necesario para que la musica del sword of ianna se escuche bien
@@ -1728,7 +1746,7 @@ void scr_refresca_pantalla_y_border_cpc_no_rainbow(void)
         if (modificado_border.v) {
             //Dibujar border. Color 0
             unsigned int color=cpc_border_color;
-            color=cpc_palette_table[color];
+            //color=cpc_palette_table[color];
             color +=CPC_INDEX_FIRST_COLOR;
 
             scr_refresca_border_cpc(color);
@@ -1893,7 +1911,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
         //int y_display=t_scanline_draw-inicio_pantalla;
 
  			unsigned int color=cpc_border_color;
-			color=cpc_palette_table[color];
+			//color=cpc_palette_table[color];
 			color +=CPC_INDEX_FIRST_COLOR;
 
 
@@ -2003,7 +2021,7 @@ void screen_store_scanline_rainbow_solo_border_cpc(void)
     puntero_buf_rainbow=&rainbow_buffer[y_destino_rainbow*get_total_ancho_rainbow()];
 
     unsigned int color=cpc_border_color;
-    color=cpc_palette_table[color];
+    //color=cpc_palette_table[color];
     color +=CPC_INDEX_FIRST_COLOR;
 
 
@@ -2370,6 +2388,18 @@ void cpc_if_autoenable_realvideo_on_changemodes(void)
         if (cpc_video_modes_change_frame_counter>=2) {
             debug_printf(VERBOSE_INFO,"Autoenabling realvideo because 2 or mode video mode changes in a frame");
             //printf("Autoenabling realvideo because 2 or mode video mode changes in a frame (%d)\n",cpc_video_modes_change_frame_counter);
+            enable_rainbow();            
+        }
+    }
+}
+
+
+void cpc_if_autoenable_realvideo_on_changeborder(void)
+{
+    if (rainbow_enabled.v==0 && autodetect_rainbow.v) {    
+        if (cpc_border_change_frame_counter>=3) {
+            debug_printf(VERBOSE_INFO,"Autoenabling realvideo because 3 or more border changes in a frame");
+            //printf("Autoenabling realvideo because 3 or more border changes in a frame\n");
             enable_rainbow();            
         }
     }

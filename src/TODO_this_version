@@ -185,6 +185,7 @@ They are not supported by esxDOS."
 
             No estoy seguro, ver: https://k1.spdns.de/Develop/Hardware/Infomix/ICs%20computer/IO%2C%20DMA%2C%20Timer/Sound/AY8910%2C%20AY8912%20PSG/psg.html
 
+-cpc quitar sonido en carga opcion
 
 Register selection
 

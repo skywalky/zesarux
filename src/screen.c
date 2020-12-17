@@ -9331,6 +9331,9 @@ void enable_rainbow(void) {
 
 	debug_printf (VERBOSE_INFO,"Enabling RealVideo");
 
+    //solo para ver de donde se llama a aqui
+    //debug_exec_show_backtrace();
+
 	//si hay un cambio
 	if (rainbow_enabled.v==0) {
         	rainbow_enabled.v=1;
