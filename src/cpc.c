@@ -538,8 +538,6 @@ The Video RAM is always located in the first 64K, VRAM is in no way affected by 
 
 
 
-//cpc_line_display_table
-
 void init_cpc_line_display_table(void)
 {
 	debug_printf (VERBOSE_DEBUG,"Init CPC Line Display Table");
