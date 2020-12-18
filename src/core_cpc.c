@@ -145,8 +145,6 @@ void core_cpc_final_frame(void)
 void core_cpc_end_scanline_stuff(void)
 {
 
-    //printf ("%d\n",t_estados);
-    //if (t_estados>69000) printf ("t_scanline casi final: %d\n",t_scanline);
 
     audio_valor_enviar_sonido=0;
 
@@ -247,23 +245,7 @@ void core_cpc_end_scanline_stuff(void)
 
     //Fin final de frame
 
-    //Bit de vsync
-    //Duracion vsync
-    /*z80_byte vsync_lenght=cpc_ppi_ports[3]&15;
-
-    //Si es 0, en algunos chips significa 16
-    if (vsync_lenght==0) vsync_lenght=16;
-    //cpc_ppi_ports[1];
-    if (t_scanline>=0 && t_scanline<=vsync_lenght-1) {
-    //if (t_scanline>=0 && t_scanline<=7) {
-        //printf ("Enviando vsync en linea %d\n",t_scanline);
-        cpc_ppi_ports[1] |=1;
-    }
-
-    else {
-        //printf ("NO enviando vsync en linea %d\n",t_scanline);
-        cpc_ppi_ports[1] &=(255-1);
-    }*/
+    
 
 }
 
@@ -434,36 +416,31 @@ void cpu_core_loop_cpc(void)
         //Para poder debugar rutina que imprima texto. Util para aventuras conversacionales 
         //hay que definir este DEBUG_SECOND_TRAP_STDOUT manualmente en compileoptions.h despues de ejecutar el configure
 
-	scr_stdout_debug_print_char_routine();
+	        scr_stdout_debug_print_char_routine();
 
 #endif
 
 
 
-        contend_read( reg_pc, 4 );
-        byte_leido_core_cpc=fetch_opcode();
+            contend_read( reg_pc, 4 );
+            byte_leido_core_cpc=fetch_opcode();
 
 
 
 #ifdef EMULATE_CPU_STATS
-        util_stats_increment_counter(stats_codsinpr,byte_leido_core_cpc);
+            util_stats_increment_counter(stats_codsinpr,byte_leido_core_cpc);
 #endif
 
-        reg_pc++;
+            reg_pc++;
 
-        reg_r++;
+            reg_r++;
 
 				
-        codsinpr[byte_leido_core_cpc]  () ;
+            codsinpr[byte_leido_core_cpc]  () ;
 
 
         }
     }
-
-
-
-    //ejecutar esto al final de cada una de las scanlines (312)
-    //esto implica que al final del frame de pantalla habremos enviado 312 bytes de sonido
 
 
 		
@@ -487,13 +464,11 @@ void cpu_core_loop_cpc(void)
         interrupcion_fifty_generada.v=0;
 
         //y de momento actualizamos tablas de teclado segun tecla leida
-        //printf ("Actualizamos tablas teclado %d ", temp_veces_actualiza_teclas++);
         scr_actualiza_tablas_teclado();
 
 
         //lectura de joystick
         realjoystick_main();
-
 
     }
 
@@ -510,8 +485,6 @@ void cpu_core_loop_cpc(void)
     }
 
 
-
-    //printf("t: %d\n",t_estados);
 
     //Si habia interrupcion pendiente de crtc y están las interrupciones habilitadas
     if (cpc_crt_pending_interrupt.v && iff1.v==1) {
