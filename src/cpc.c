@@ -719,7 +719,7 @@ In both cases the following interrupt requests are synchronised with the VSYNC.
         
 
         if (cpc_crtc_contador_scanline==vsync_position+2) {
-            if (cpc_scanline_counter>=32) {
+            if (cpc_scanline_counter>=32 && ay_player_playing.v==0) {
             	cpc_crt_pending_interrupt.v=1;
             }
       

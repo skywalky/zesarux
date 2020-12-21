@@ -163,7 +163,7 @@ void core_cpc_end_scanline_stuff(void)
 
             audio_valor_enviar_sonido_derecho /=2;
             audio_valor_enviar_sonido_derecho += realtape_last_value/2;   
-                     
+
             //Sonido alterado cuando top speed
             if (timer_condicion_top_speed() ) {
                 audio_valor_enviar_sonido_izquierdo=audio_change_top_speed_sound(audio_valor_enviar_sonido_izquierdo);
