@@ -4028,6 +4028,10 @@ You don't need timings for H/V sync =)
 
 		//temp
 		//screen_testados_linea=228;
+
+                //CBA Stereo
+                ay3_stereo_mode=4;
+
                 break;
 
 
@@ -7019,7 +7023,7 @@ int parse_cmdline_options(void) {
 					siguiente_parametro_argumento();
 					valor=atoi(argv[puntero_parametro]);
 
-					if (valor>4 || valor<0) {
+					if (valor>5 || valor<0) {
 						printf ("Invalid ay stereo mode value\n");
 						exit (1);
 					}

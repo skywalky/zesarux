@@ -5,6 +5,7 @@ Added new ZX-Uno Prism video mode
 Improved CPC emulation: 
 -Video scanlines rendering
 -Joystick emulation
+-Stereo emulation
 
 Improved Debug I/O ports window: can now be backgrounded and it's reloaded continuously
 

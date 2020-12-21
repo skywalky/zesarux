@@ -598,7 +598,8 @@ void da_output_ay_izquierdo_derecho(char *iz, char *de)
           1=ACB Stereo (Canal A=Izq,Canal C=Centro,Canal B=Der)
           2=ABC Stereo (Canal A=Izq,Canal B=Centro,Canal C=Der)
 		  3=BAC Stereo (Canal A=Centro,Canal B=Izquierdo,Canal C=Der)
-		  4=Custom. Depende de variables 
+          4=CBA Stereo (Canal A=Der,Canal B=Centro, Canal C=Izq)
+		  5=Custom. Depende de variables 
 		  	ay3_custom_stereo_A 
 			ay3_custom_stereo_B
 			ay3_custom_stereo_C
@@ -622,6 +623,11 @@ void da_output_ay_izquierdo_derecho(char *iz, char *de)
 		break;
 
 		case 4:
+			altavoz_izquierdo=canal_C+canal_B;
+			altavoz_derecho=canal_A+canal_B;
+		break;        
+
+		case 5:
 			//Left
 			if (ay3_custom_stereo_A==0) altavoz_izquierdo +=canal_A;
 			if (ay3_custom_stereo_B==0) altavoz_izquierdo +=canal_B;

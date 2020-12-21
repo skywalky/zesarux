@@ -1304,7 +1304,7 @@ void menu_audio_ay_stereo(MENU_ITEM_PARAMETERS)
 {
 	ay3_stereo_mode++;
 
-	if (ay3_stereo_mode==5) ay3_stereo_mode=0;
+	if (ay3_stereo_mode==6) ay3_stereo_mode=0;
 }
 
 
@@ -18784,14 +18784,27 @@ menu_item *array_menu_ay_mixer;
 			if (ay3_stereo_mode==1) strcpy(ay3_stereo_string,"ACB");
 			else if (ay3_stereo_mode==2) strcpy(ay3_stereo_string,"ABC");
 			else if (ay3_stereo_mode==3) strcpy(ay3_stereo_string,"BAC");
-			else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"Custom");
+			else if (ay3_stereo_mode==4) strcpy(ay3_stereo_string,"CBA");
+            else if (ay3_stereo_mode==5) strcpy(ay3_stereo_string,"Custom");
 			else strcpy(ay3_stereo_string,"Mono");
+            /*
+            CBA Es para Amstrad CPC:
+            Mono and Stereo Output
+            When using the CPC's external stereo jack, 
+            channel A is output to the right, channel C is output left, 
+            and channel B is output to both left and right,   
+            in that case channel B is output through a bigger resistor to prevent that this channel appears loader than the others.
+
+            Otherwise (when using the built-in speaker), all three channels are mixed at the same intensity. 
+            This signal appears to be also sent to the Tape output line also, so a connected Data Recorder could be used to record CPC music also.
+
+            */
 
 			menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo,menu_cond_ay_chip,"    AY S~~tereo: %s",
 				ay3_stereo_string);
 			menu_add_item_menu_shortcut(array_menu_ay_mixer,'t');
 
-			if (ay3_stereo_mode==4) {	
+			if (ay3_stereo_mode==5) {	
 
 				menu_add_item_menu_format(array_menu_ay_mixer,MENU_OPCION_NORMAL,menu_audio_ay_stereo_custom_A,menu_cond_ay_chip,
 					"    Ch. A: %s",menu_stereo_positions[ay3_custom_stereo_A]);
