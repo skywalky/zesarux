@@ -61,7 +61,7 @@ Para poner como disabled en todos los iconos lower meter en compileoptions.h:
 
 #define FORCE_DISABLED_ALL_LOWER_ICONS
 
-Para poner como disabled en todos los iconos lower meter en compileoptions.h:
+Para poner como enabled en todos los iconos lower meter en compileoptions.h:
 
 #define FORCE_ENABLED_ALL_LOWER_ICONS
 
