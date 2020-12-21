@@ -15,7 +15,6 @@ Fixed CPC bugs:
 -Fixed vsync and hsync interrupts
 -Fixed border colour
 -Fixed AY chip register selection
--Fixed AY Player speed
 
 Fixed loading General Sound rom
 Fixed CPC CRTC interrupts. After a CRTC interrupt with Z80 interrupts disabled, they were not fired when enabling Z80 interrupts

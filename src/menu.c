@@ -3431,6 +3431,25 @@ void zxdesktop_lowericon_cart_timex_accion(void)
 	menu_timexcart(0);
 }
 
+//Funciones para dandanator
+int zxdesktop_lowericon_dandanator_is_visible(void)
+{
+	if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) return 1;
+
+	else return 0;
+}
+
+int zxdesktop_lowericon_dandanator_is_active(void)
+{
+	if (dandanator_enabled.v) return 1;
+	else return 0;
+}
+
+void zxdesktop_lowericon_dandanator_accion(void)
+{
+    menu_dandanator(0);
+}
+
 
 //Funciones para Cartuchos MSX, Coleco, SVI, SG1000
 
@@ -3631,6 +3650,9 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 	{ zxdesktop_lowericon_z88_cart_is_visible, zxdesktop_lowericon_z88_cart_3_is_active, zxdesktop_lowericon_z88_cart_3_accion,
 		bitmap_lowericon_ext_desktop_z88_active,bitmap_lowericon_ext_desktop_z88_inactive,&zxdesktop_common_icon_no_inverse},			
 
+    //cartucho dandanator
+	{ zxdesktop_lowericon_dandanator_is_visible, zxdesktop_lowericon_dandanator_is_active, zxdesktop_lowericon_dandanator_accion,
+		bitmap_lowericon_ext_desktop_dandanator_active,bitmap_lowericon_ext_desktop_dandanator_inactive,&zxdesktop_common_icon_no_inverse},	    
 
 
 

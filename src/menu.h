@@ -965,6 +965,7 @@ extern z80_bit menu_disable_special_chars;
 
 extern void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS);
 extern void menu_smartload(MENU_ITEM_PARAMETERS);
+extern void menu_dandanator(MENU_ITEM_PARAMETERS);
 
 extern int timer_osd_keyboard_menu;
 
@@ -1067,7 +1068,7 @@ extern int zxdesktop_icon_ide_inverse;
 extern int zxdesktop_icon_zxpand_inverse;
 extern int zxdesktop_icon_mdv_flp_inverse;
 
-#define TOTAL_ZXDESKTOP_MAX_LOWER_ICONS 15
+#define TOTAL_ZXDESKTOP_MAX_LOWER_ICONS 16
 
 extern struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[];
 

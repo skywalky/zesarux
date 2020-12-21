@@ -73,6 +73,10 @@ extern char *bitmap_lowericon_ext_desktop_cart_timex_active[];
 extern char *bitmap_lowericon_ext_desktop_ide_active[];
 extern char *bitmap_lowericon_ext_desktop_ide_inactive[];
 
+
+extern char *bitmap_lowericon_ext_desktop_dandanator_active[];
+extern char *bitmap_lowericon_ext_desktop_dandanator_inactive[];
+
 #define EXT_DESKTOP_TOTAL_BUTTONS 14
 
 #define EXT_DESKTOP_BUTTONS_ANCHO 26
