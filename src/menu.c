@@ -16715,10 +16715,10 @@ void menu_dandanator_rom_file(MENU_ITEM_PARAMETERS)
 {
 	dandanator_disable();
 
-        char *filtros[2];
+    char *filtros[2];
 
-        filtros[0]="rom";
-        filtros[1]=0;
+    filtros[0]="rom";
+    filtros[1]=0;
 
     //guardamos directorio actual
     char directorio_actual[PATH_MAX];
@@ -16745,35 +16745,32 @@ void menu_dandanator_rom_file(MENU_ITEM_PARAMETERS)
     menu_filesel_chdir(directorio_actual);	    
 
 
-        if (ret==1) {
-                if (!si_existe_archivo(dandanator_rom_file_name)) {
-                        menu_error_message("File does not exist");
-                        dandanator_rom_file_name[0]=0;
-                        return;
-
-
-
-                }
-
-                else {
-                        //Comprobar aqui tambien el tamanyo
-                        long int size=get_file_size(dandanator_rom_file_name);
-                        if (size!=DANDANATOR_SIZE) {
-                                menu_error_message("ROM file must be 512 KB length");
-                                dandanator_rom_file_name[0]=0;
-                                return;
-                        }
-                }
-
-
+    if (ret==1) {
+        if (!si_existe_archivo(dandanator_rom_file_name)) {
+            menu_error_message("File does not exist");
+            dandanator_rom_file_name[0]=0;
+            return;
         }
-        //Sale con ESC
+
         else {
-                //Quitar nombre
+            //Comprobar aqui tambien el tamanyo
+            long int size=get_file_size(dandanator_rom_file_name);
+            if (size!=DANDANATOR_SIZE) {
+                menu_error_message("ROM file must be 512 KB length");
                 dandanator_rom_file_name[0]=0;
-
-
+                return;
+            }
         }
+
+
+    }
+    //Sale con ESC
+    else {
+        //Quitar nombre
+        dandanator_rom_file_name[0]=0;
+
+
+    }
 
 }
 
