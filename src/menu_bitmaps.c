@@ -1295,61 +1295,61 @@ char *bitmap_lowericon_ext_desktop_ide_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
 
 char *bitmap_lowericon_ext_desktop_dandanator_active[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
-    "                          ",     //0
-  	"                          ",      
-	"                          ",		
-	"                          ",		
+    "                          ",   //0
+    "                          ",
+	"                          ",				
 	"wwwwwwwwwwwwwwwwwwwwwwwwww",			
-	"wxxxxxxxxxxxxxxxxxxxxxxxxw",			
-	"wxxccccccccccccccccccccxxw", 		
-	"wxxccccccccccccccccccccxxw",		
-	"wxxcxcxxxcxcxccxccxxcxcxxw",		
-	"wxxcxxcxxcxcxcxcxcxxcccxxw",	
-	"wxxcxccxxcxxxcxxxcxxcxcxxw",   //10			
-	"wxxcxccxxcxcxcxcxcxxcxcxxw",		
-	"wxxcxxcxxcxcxcxcxcxxcxcxxw",		
-	"wxxcxcxxxcxcxcxcxcxxcxcxxw",		
-	"wxxccccccccccccccccccccxxw",		
-	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
-	"wxxxxxxxxxwwwwwwwxxxxxxxxw",		
-	"wxx xxxxxxxxwwwxxxxxxxxxxw",		
-	"wxxxxxxxxxxxxwxxxxxxxxxxxw",		
-	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    
-	"wwwwwxxxxxxxxxxxxxxxxwwwww",  //20
-	"    wxxxxxxxxxxxxxxxxw    ",		
-	"    wxxxxxxxxxxxxxxxxw    ",	
-	"    wxxxxxxxxxxxxxxxxw    ",			
-	"    wwwwwwwwwwwwwwwwww    ",
-	"                          " 	 //25
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",	
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggxxggxw",		
+	"wxggggggggggggggggggxxggxw",	
+	"wxggggggggggggggggggggggxw",	
+	"wxggxxxxggggxxxggggxxxggxw",		
+	"wxggxxxxxggggggxggxgggxgxw",	
+	"wxggxxggxxggxxxxggxgggxgxw",			
+	"wxggxxggxxgxgggxggxgggxgxw",		
+	"wxggxxggxxggxxxgxgxgggxgxw",		
+	"wxggxxggxxggggggggggggggxw",		
+	"wxggxxxxxgggggggggggggggxw",		
+	"wxggxxxxggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",				
+	"wxggggggggggggggggggggggxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",
+	"wwwwwwwxxxxxxxxxxxxxxwwwww",	//20	
+	"      wxxxxxxxxxxxxxxw    ",		
+	"      wxxxxxxxxxxxxxxw    ",	
+	"      wxxxxxxxxxxxxxxw    ",			
+	"      wwwwwwwwwwwwwwww    ",
+	"                          "    //25
 };
 
 char *bitmap_lowericon_ext_desktop_dandanator_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
     "                          ",     //0
   	"                          ",      
-	"                          ",		
-	"                          ",		
+	"                          ",				
 	"wwwwwwwwwwwwwwwwwwwwwwwwww",			
-	"wxxxxxxxxxxxxxxxxxxxxxxxxw",			
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",	
+	"wx                      xw",    		
 	"wx                      xw", 		
+	"wx                      xw",	
+	"wx                      xw",    	
+	"wx  xxxx    xxx    xxx  xw",		
+	"wx  xxxxx      x  x   x xw",	
+	"wx  xx  xx  xxxx  x   x xw",			
+	"wx  xx  xx x   x  x   x xw",		
+	"wx  xx  xx  xxx x x   x xw",		
+	"wx  xx  xx              xw",		
+	"wx  xxxxx               xw",		
+	"wx  xxxx                xw",		
+	"wx                      xw",				
 	"wx                      xw",		
-	"wx  x xxx x x  x  xx x  xw",		
-	"wx  xx xx x x x x xx    xw",	
-	"wx  x  xx xxx xxx xx x  xw",	//10		
-	"wx  x  xx x x x x xx x  xw",		
-	"wx  xx xx x x x x xx x  xw",		
-	"wx  x xxx x x x x xx x  xw",		
-	"wx                      xw",		
-	"wx                      xw",		
-	"wx        xxxxxxx       xw",		
-	"wx x        xxx         xw",		
-	"wx           x          xw",		
 	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    
-	"wwwwwxxxxxxxxxxxxxxxxwwwww",	//20	
-	"    wxxxxxxxxxxxxxxxxw    ",		
-	"    wxxxxxxxxxxxxxxxxw    ",	
-	"    wxxxxxxxxxxxxxxxxw    ",			
-	"    wwwwwwwwwwwwwwwwww    ",
+	"wwwwwwwxxxxxxxxxxxxxxwwwww",	//20	
+	"      wxxxxxxxxxxxxxxw    ",		
+	"      wxxxxxxxxxxxxxxw    ",	
+	"      wxxxxxxxxxxxxxxw    ",			
+	"      wwwwwwwwwwwwwwww    ",
 	"                          " 	 //25
 };
 
