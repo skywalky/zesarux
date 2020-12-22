@@ -1528,7 +1528,7 @@ pd765.o: pd765.c pd765.h cpu.h debug.h utils.h menu.h screen.h mem128.h operacio
 zxpand.o: zxpand.c zxpand.h mmc.h cpu.h debug.h utils.h menu.h screen.h zx8081.h joystick.h
 	\$(CC) \$(CFLAGS) -c zxpand.c
 
-dandanator.o: dandanator.c dandanator.h cpu.h debug.h utils.h operaciones.h ula.h audio.h
+dandanator.o: dandanator.c dandanator.h cpu.h debug.h utils.h operaciones.h ula.h audio.h screen.h
 	\$(CC) \$(CFLAGS) -c dandanator.c
 
 gs.o: gs.c gs.h cpu.h debug.h utils.h operaciones.h contend.h audio.h

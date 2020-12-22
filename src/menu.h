@@ -1067,6 +1067,7 @@ extern int zxdesktop_icon_betadisk_inverse;
 extern int zxdesktop_icon_ide_inverse;
 extern int zxdesktop_icon_zxpand_inverse;
 extern int zxdesktop_icon_mdv_flp_inverse;
+extern int zxdesktop_icon_dandanator_inverse;
 
 #define TOTAL_ZXDESKTOP_MAX_LOWER_ICONS 16
 

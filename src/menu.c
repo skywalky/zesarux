@@ -3593,6 +3593,7 @@ int zxdesktop_icon_betadisk_inverse=0;
 int zxdesktop_icon_ide_inverse=0;
 int zxdesktop_icon_zxpand_inverse=0;
 int zxdesktop_icon_mdv_flp_inverse=0;
+int zxdesktop_icon_dandanator_inverse=0;
 
 struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX_LOWER_ICONS]={
 	//cinta
@@ -3652,7 +3653,7 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 
     //cartucho dandanator
 	{ zxdesktop_lowericon_dandanator_is_visible, zxdesktop_lowericon_dandanator_is_active, zxdesktop_lowericon_dandanator_accion,
-		bitmap_lowericon_ext_desktop_dandanator_active,bitmap_lowericon_ext_desktop_dandanator_inactive,&zxdesktop_common_icon_no_inverse},	    
+		bitmap_lowericon_ext_desktop_dandanator_active,bitmap_lowericon_ext_desktop_dandanator_inactive,&zxdesktop_icon_dandanator_inverse},	    
 
 
 

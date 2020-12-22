@@ -35,6 +35,7 @@
 #include "operaciones.h"
 #include "ula.h"
 #include "audio.h"
+#include "screen.h"
 
 
 z80_bit dandanator_enabled={0};
@@ -194,6 +195,20 @@ void dandanator_run_command_46(void)
 }
 
 
+void dandanator_footer_operating(void)
+{
+    generic_footertext_print_operating("DANDAN");
+
+    //Y poner icono en inverso
+    if (!zxdesktop_icon_dandanator_inverse) {
+        //printf("icon activity\n");
+        zxdesktop_icon_dandanator_inverse=1;
+        menu_draw_ext_desktop();
+    }
+}
+
+
+
 void dandanator_run_command(void)
 {
 	debug_printf (VERBOSE_DEBUG,"Dandanator: Running command %d",dandanator_received_command);
@@ -323,6 +338,8 @@ void dandanator_write_byte_spectrum(z80_int dir,z80_byte valor)
 		//printf ("Escribiendo dir %d valor %d PC=%d\n",dir,valor,reg_pc);
 
 		if (dir==0) {
+            //printf("actividad dandanator dir %d valor %d\n",dir,valor);
+            dandanator_footer_operating();
 			//Confirmacion de un comando de 3 bytes.
 
 			//Ver si estabamos recibiendo comando
@@ -331,10 +348,12 @@ void dandanator_write_byte_spectrum(z80_int dir,z80_byte valor)
 			//Contador para ejecutar comando especial despues de 35 t-estados
 			dandanator_needed_t_states_command=35;
 			dandanator_set_pending_run_command();
-
+            
 		}
 
 		if (dir==1) {
+            //printf("actividad dandanator dir %d valor %d\n",dir,valor);
+            dandanator_footer_operating();
 			if (dandanator_state==Wait_Normal) {
 				dandanator_contador_command=0;
 				dandanator_received_command=valor;
@@ -372,10 +391,14 @@ void dandanator_write_byte_spectrum(z80_int dir,z80_byte valor)
 		}
 
 		if (dir==2) {
+            //printf("actividad dandanator dir %d valor %d\n",dir,valor);
+            dandanator_footer_operating();
 			dandanator_received_data1=valor;  //Para simplificar no contamos numero de veces
 		}
 
 		if (dir==3) {
+            //printf("actividad dandanator dir %d valor %d\n",dir,valor);
+            dandanator_footer_operating();
 			dandanator_received_data2=valor;  //Para simplificar no contamos numero de veces
 		}
 
@@ -383,11 +406,14 @@ void dandanator_write_byte_spectrum(z80_int dir,z80_byte valor)
 	}
 }
 
+//int temp_conta;
 
 int dandanator_check_if_rom_area(z80_int dir)
 {
     if (dandanator_switched_on.v) {
         if (dir<16384) {
+            //temp_conta++;
+            //if ((temp_conta % 1000)==0) printf("accessing rom space with dandanator switched on dir %d\n",dir);
             return 1;
         }
     }
@@ -773,6 +799,8 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 		if (preffix==201 && dandanator_cpc_pending_wait_ret.v) { 
 			dandanator_cpc_execute_ret_delayed_config(dandanator_cpc_change_ret_config);
 			dandanator_cpc_pending_wait_ret.v=0;
+            //printf("1\n");
+            dandanator_footer_operating();
 		}
 
 
@@ -790,6 +818,8 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 						//LD (IY+d),B
 						//Zone 0 Command: Trigger + LD (IY+0),B
 						dandanator_cpc_zone_slots[0]=reg_b;
+                        //printf("2\n");
+                        //dandanator_footer_operating();
 						//printf ("Setting zone 0 slot %d PC=%04XH\n",dandanator_cpc_zone_slots[0],reg_pc_previous);
 					break;
 
@@ -797,6 +827,8 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 						//LD (IY+d),C
 						//Zone 1 Command: Trigger + LD (IY+0),C		
 						dandanator_cpc_zone_slots[1]=reg_c;
+                        //printf("3\n");
+                        //dandanator_footer_operating();
 						//printf ("Setting zone 1 slot %d PC=%04XH\n",dandanator_cpc_zone_slots[1],reg_pc_previous);
 					break;
 
@@ -805,6 +837,8 @@ z80_byte cpu_core_loop_cpc_dandanator(z80_int dir GCC_UNUSED, z80_byte value GCC
 						//printf ("Setting config value reg_a = %02XH PC=%04XH\n",reg_a,reg_pc_previous);
 
 						//Esto se ve afectado por el setting "wait for ret", que se lee del valor enviado actual
+                        //printf("4\n");
+                        dandanator_footer_operating();
 						if (reg_a & 64) {
 
 							/*

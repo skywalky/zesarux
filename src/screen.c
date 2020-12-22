@@ -14005,7 +14005,8 @@ void generic_footertext_print_operating(char *s)
 	//printf ("footer %s\n",s);
 
         //Si ya esta activo, no volver a escribirlo. Porque ademas el menu_putstring_footer consumiria mucha cpu
-        if (!generic_footertext_operating_counter) {  
+        if (!generic_footertext_operating_counter) { 
+            //printf("printing footer %s\n",s); 
         	//Borrar si habia alguno otro diferente
 					//printf ("delete footer\n");
         	delete_generic_footertext();
@@ -14032,6 +14033,7 @@ void delete_generic_footertext(void)
 	zxdesktop_icon_ide_inverse=0;
 	zxdesktop_icon_zxpand_inverse=0;
 	zxdesktop_icon_mdv_flp_inverse=0;
+    zxdesktop_icon_dandanator_inverse=0;
 
 	menu_draw_ext_desktop();
 }
