@@ -16720,8 +16720,32 @@ void menu_dandanator_rom_file(MENU_ITEM_PARAMETERS)
         filtros[0]="rom";
         filtros[1]=0;
 
+    //guardamos directorio actual
+    char directorio_actual[PATH_MAX];
+    getcwd(directorio_actual,PATH_MAX);	
 
-        if (menu_filesel("Select dandanator File",filtros,dandanator_rom_file_name)==1) {
+	//Obtenemos ultimo directorio visitado
+	if (dandanator_rom_file_name[0]!=0) {
+		char directorio[PATH_MAX];
+		util_get_dir(dandanator_rom_file_name,directorio);
+		//printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+		//cambiamos a ese directorio, siempre que no sea nulo
+		if (directorio[0]!=0) {
+				debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+				menu_filesel_chdir(directorio);
+		}
+	}    
+
+    int ret;
+
+    ret=menu_filesel("Select dandanator File",filtros,dandanator_rom_file_name);
+
+    //volvemos a directorio inicial
+    menu_filesel_chdir(directorio_actual);	    
+
+
+        if (ret==1) {
                 if (!si_existe_archivo(dandanator_rom_file_name)) {
                         menu_error_message("File does not exist");
                         dandanator_rom_file_name[0]=0;
