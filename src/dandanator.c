@@ -386,11 +386,11 @@ void dandanator_write_byte_spectrum(z80_int dir,z80_byte valor)
 
 int dandanator_check_if_rom_area(z80_int dir)
 {
-        if (dandanator_switched_on.v) {
-                if (dir<16384) {
-			return 1;
-                }
+    if (dandanator_switched_on.v) {
+        if (dir<16384) {
+            return 1;
         }
+    }
 	return 0;
 }
 
