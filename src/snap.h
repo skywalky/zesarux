@@ -77,6 +77,8 @@ extern void snapshot_get_date_time_string_human(char *texto);
 
 extern void load_z80_snapshot_bytes(z80_byte *buffer_lectura,int leidos,z80_int direccion_destino,int comprimido,z80_byte *puntero_memoria);
 
+extern int load_nex_snapshot_open_esxdos(char *nombre_archivo,int forzar_filehandle_cero);
+
 #define SNA_48K_HEADER_SIZE 27
 #define SNA_128K_HEADER_SIZE 4
 

@@ -20214,7 +20214,7 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
 	menu_first_aid("smartload");
 
-        char *filtros[35];
+        char *filtros[36];
 
         filtros[0]="zx";
         filtros[1]="sp";
@@ -20271,7 +20271,9 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
 	filtros[33]="cas";
 
-	filtros[34]=0;
+    filtros[34]="sna";
+
+	filtros[35]=0;
 
 
         //guardamos directorio actual
@@ -23711,7 +23713,7 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 void menu_snapshot_load(MENU_ITEM_PARAMETERS)
 {
 
-        char *filtros[15];
+        char *filtros[16];
 
         filtros[0]="zx";
         filtros[1]="sp";
@@ -23728,7 +23730,8 @@ void menu_snapshot_load(MENU_ITEM_PARAMETERS)
 		filtros[11]="zsf";
 		filtros[12]="spg";
 		filtros[13]="nex";
-        filtros[14]=0;
+        filtros[14]="snx";
+        filtros[15]=0;
 
 
 
@@ -25234,6 +25237,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	else if (!util_compare_file_extension(file_name,"col")) menu_file_col_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"sna")) menu_file_sna_browser_show(file_name);
+
+    else if (!util_compare_file_extension(file_name,"snx")) menu_file_sna_browser_show(file_name);
 
 	else if (!util_compare_file_extension(file_name,"spg")) menu_file_spg_browser_show(file_name);
 
