@@ -2254,7 +2254,7 @@ They are not supported by esxDOS."
 
     //Si no esta esxdos handler habilitado, avisar y no hacer nada mas
     if (esxdos_handler_enabled.v) {
-        int esx_file_handler=load_nex_snapshot_open_esxdos(archivo,1);
+        load_nex_snapshot_open_esxdos(archivo,1);
         //printf("handler: %d\n",esx_file_handler);
     }
 
