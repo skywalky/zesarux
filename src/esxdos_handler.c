@@ -2200,7 +2200,8 @@ void esxdos_handler_begin_handling_commands(void)
 ;       A=error                
                 */
                 debug_printf (VERBOSE_DEBUG,"ESXDOS handler: ESXDOS_RST8_DISK_FILEMAP. File handle: %02XH DE=%04XH PC=%04XH",reg_a,DE,reg_pc);
-                //de momento dar error 
+                //de momento dar error, no tengo claro como simular esto mediante esxdos handler, o directamente no tiene sentido
+                //a no ser que uses una MMC real
                 //DE=0;
                 //reg_a=0;
 	            //esxdos_handler_no_error_uncarry();       
