@@ -20271,7 +20271,7 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
 	filtros[33]="cas";
 
-    filtros[34]="sna";
+    filtros[34]="snx";
 
 	filtros[35]=0;
 
