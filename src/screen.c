@@ -8247,7 +8247,7 @@ void convertir_paleta(z80_int valor)
 
 }
 
-
+//En principio esto vale para cualquier maquina, no solo spectrum
 void convertir_color_spectrum_paleta_to_rgb(z80_int valor,int *r,int *g,int *b)
 {
 

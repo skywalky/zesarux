@@ -22011,7 +22011,7 @@ void menu_display_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_display_settings,'l');
 		}
 
-		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_CPC) {
 		menu_add_item_menu(array_menu_display_settings,"~~Save Screen",MENU_OPCION_NORMAL,menu_display_save_screen,NULL);
 		menu_add_item_menu_shortcut(array_menu_display_settings,'s');
 		menu_add_item_menu_tooltip(array_menu_display_settings,"Save screen to disk. BMP format requires to enable real video first");
