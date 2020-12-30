@@ -60,6 +60,7 @@
 #include "autoselectoptions.h"
 #include "zeng.h"
 #include "ql_qdos_handler.h"
+#include "tape.h"
 
 
 
@@ -671,7 +672,7 @@ struct s_items_ayuda items_ayuda[]={
 	"opcode          yes|no: Enable opcode logging. Enabled by default\n"
 	"registers       yes|no: Enable registers logging\n"
 	},
-  {"debug-analize-command",NULL,"parameters","Just analize the command and print its parameters"},
+  {"debug-analyze-command",NULL,"parameters","Just analize the command and print its parameters"},
 
   {"disable-breakpoint","|db","index","Disable specific breakpoint"},
   {"disable-breakpoints",NULL,NULL,"Disable all breakpoints"},
@@ -758,9 +759,10 @@ struct s_items_ayuda items_ayuda[]={
 
   {"quit","|exit|logout",NULL,"Closes connection"},
 	{"read-memory",NULL,"[address] [length]","Dumps memory at address. "
-																				"It not specify address, dumps all memory for current memory zone: 64 KB for mapped memory on Z80, 16 kb for Spectrum 48KB ROM, etc. "
-																				"If specify address but not length, only 1 byte is read"
+	"If address not specified, dumps all memory for current memory zone: 64 kB for mapped memory on Z80, 16 kB for Spectrum 48kB ROM etc. "
+	"And if you specify address but not length, only 1 byte is read"
 	},
+    {"realtape-open",NULL,"file","Inserts real tape"},
   {"reset-cpu",NULL,NULL,"Resets CPU"},
 	{"reset-tstates-partial",NULL,NULL,"Resets the t-states partial counter"},
   {"run","|r","[verbose] [limit] [no-stop-on-data] [update-immediately]","Run cpu when on cpu step mode. Returns when a breakpoint is fired, data sent (for example keypress) or any other event which opens the menu.\n"
@@ -4096,7 +4098,7 @@ void interpreta_comando(char *comando,int misocket)
   }
 
 
-	else if (!strcmp(comando_sin_parametros,"debug-analize-command")) {
+	else if (!strcmp(comando_sin_parametros,"debug-analyze-command")) {
 		//Parseamos los parametros porque me sirven para debugar 
 		remote_parse_commands_argvc(parametros);
 
@@ -4939,6 +4941,43 @@ void interpreta_comando(char *comando,int misocket)
 	else if (!strcmp(comando_sin_parametros,"read-mapped-memory")) {
 		escribir_socket(misocket,"This command is no longer supported. Use read-memory command and set memory zone if needed");
 	}
+
+    else if (!strcmp(comando_sin_parametros,"realtape-open")) {
+
+        remote_parse_commands_argvc(parametros);
+        if (remote_command_argc<1) {
+            escribir_socket(misocket,"ERROR. No parameter set");
+            return;
+        }
+
+
+        //Si estamos en cpu-step-mode, cargar tal cual y volver sin tocar modo
+        //Si no, entrar cpu-step-mode y luego quitar cpu-step-mode
+
+        z80_bit antes_menu_event_remote_protocol_enterstep;
+
+        antes_menu_event_remote_protocol_enterstep.v=menu_event_remote_protocol_enterstep.v;
+
+
+        if (antes_menu_event_remote_protocol_enterstep.v==0) {
+            //Asegurarnos que congelamos el emulador: abrir menu con mutitarea desactivada
+            //Entramos en el mismo modo que cpu-step para poder congelar la emulacion
+            remote_cpu_enter_step(misocket);
+            if (menu_event_remote_protocol_enterstep.v==0) return;
+        }
+
+
+        
+        strcpy(menu_realtape_name,remote_command_argv[0]);
+        realtape_name=menu_realtape_name;
+        realtape_insert();    
+
+        if (antes_menu_event_remote_protocol_enterstep.v==0) {
+            remote_cpu_exit_step(misocket);
+        }
+
+    }
+
 
   else if (!strcmp(comando_sin_parametros,"reset-cpu")) {
           reset_cpu();
