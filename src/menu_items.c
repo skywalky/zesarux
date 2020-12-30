@@ -21915,6 +21915,7 @@ void menu_display_window_minimize_all(MENU_ITEM_PARAMETERS)
 		//Primero decimos que no esta minimizada
         ventana->is_minimized=0;
 
+        //Luego simulamos accion de pulsar boton de minimizar ventana
         zxvision_handle_click_minimize(ventana);
 
 
@@ -21963,7 +21964,7 @@ void menu_windows(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_ayuda(array_menu_common,"Reduce windows to maximum size 20x10");
 			
 
-                menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_minimize_all,NULL,"Minimize windows");
+                menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_minimize_all,NULL,"Minimize all windows");
 
 						
 			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);

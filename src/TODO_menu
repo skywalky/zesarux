@@ -36,6 +36,11 @@ funciones de reajuste de disposicion de texto en ventana por ejemplo
 
 -combinacion de teclas para conmutar entre ventanas
 
+-cuando una ventana se ha minimizado, al conmutar de ventana y volver ahi, la ventana no la marca como minimizada, y no sale el boton de "="
+restaurar minimizado, sino que sale el "-" de minimizar
+Seria dificil de corregir, al conmutar de ventana y volver, realmente se crea una ventana de nuevo con la geometria anterior,
+y en esa geometria no se indica que estaba minimizada antes o no. Quiza un parametro mas en la geometria que indique minimizada o no
+
 -cuando una tecla F no esta como default, no la envia a maquina emulada: ejemplo MSX F2, QL F5
 
 -First aid de f keys. Cuando se pulse una f por primera vez
