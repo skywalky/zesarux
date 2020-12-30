@@ -766,6 +766,16 @@ Bit 7: set to 1 when DMAPROB address has been reached. It automatically reset to
 }
 
 
+void zxuno_prism_mode_splash(void)
+{
+
+    if (zxuno_ports[0x50] & 128) {
+        screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling ZX-Uno Prism mode. 256x192x4bpp");
+    }
+    else {
+        screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Disabling ZX-Uno Prism mode");
+    }
+}
 
 
 
@@ -991,10 +1001,7 @@ void zxuno_write_port(z80_int puerto, z80_byte value)
                 }
 
                 if ((zxuno_ports[0x50] & 128) != (anterior_prism & 128)) {
-
-                    if (zxuno_ports[0x50] & 128) {
-                        screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling ZX-Uno Prism mode. 256x192x4bpp");
-                    }
+                    zxuno_prism_mode_splash();
                 }
 
             break;

@@ -186,4 +186,6 @@ extern void zxuno_prism_screen_store_scanline_rainbow(void);
 
 extern int zxuno_is_prism_mapping_enabled(void);
 
+extern void zxuno_prism_mode_splash(void);
+
 #endif

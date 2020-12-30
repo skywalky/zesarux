@@ -204,7 +204,8 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 
 	//Para el usuario, mejor esta descripcion
 	{"ShowBackgroundWindows",F_FUNCION_OVERLAY_WINDOWS},
-    {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS}
+    {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS},
+    {"ZXUnoPrismSwitch",F_FUNCION_ZXUNO_PRISM}
 };
 
 //Funciones de teclas F mapeadas. Desde F1 hasta F15
@@ -32593,6 +32594,14 @@ void menu_process_f_functions_by_action(int accion)
 				//pero para desactivarlo hay que pulsar cualquier otra tecla F (y no la misma, o se reactivaria)
 			}
 		break;
+
+        case F_FUNCION_ZXUNO_PRISM:
+            if (MACHINE_IS_ZXUNO) {
+                zxuno_ports[0x50] ^= 128;
+                //No sirve aqui de nada lanzar el splash, porque en este momento el menu se ha abierto y los splash no se ven
+                //zxuno_prism_mode_splash();
+            }
+        break;
 
 
 
