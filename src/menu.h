@@ -296,6 +296,8 @@ extern void zxvision_print_string_defaults_fillspc(zxvision_window *w,int x,int 
 extern void zxvision_handle_mouse_events(zxvision_window *w);
 extern void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, int resizable, const char * texto_format , ...);
 
+extern void zxvision_handle_click_minimize(zxvision_window *w);
+
 extern int zxvision_trocear_string_lineas(char *texto,char *buffer_lineas[]);
 
 extern void zxvision_send_scroll_up(zxvision_window *w);

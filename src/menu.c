@@ -9552,7 +9552,7 @@ int zxvision_mouse_in_bottom_right(zxvision_window *w)
 }
 
 
-void zxvision_handle_minimize(zxvision_window *w)
+void zxvision_handle_click_minimize(zxvision_window *w)
 {
 
 	if (w->can_be_resized) {
@@ -10196,7 +10196,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						//printf ("minimizar\n");
 						//putchar_menu_overlay(w->x+w->visible_width-2,w->y,'X',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 						//menu_refresca_pantalla();
-						zxvision_handle_minimize(w);
+						zxvision_handle_click_minimize(w);
 					}
 					//Si pulsa boton cerrar ventana
 					/*if (last_x_mouse_clicked==0 && menu_hide_close_button.v==0) {

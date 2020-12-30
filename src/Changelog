@@ -13,6 +13,9 @@ Improved CPC emulation:
 
 Improved Debug I/O ports window: can now be backgrounded and it's reloaded continuously
 
+Improved menu interface:
+-Added action to minimize all windows
+
 TBBlue: Fixed writing on divmmc memory when layer2 active
 
 Fixed CPC bugs:
