@@ -8694,6 +8694,8 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
     zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,"Colour palettes");
 	ventana->can_be_backgrounded=1;
+    //Permitir hotkeys desde raton
+    ventana->can_mouse_send_hotkeys=1;	    
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"displaypalettes");
 

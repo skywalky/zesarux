@@ -40,6 +40,7 @@ funciones de reajuste de disposicion de texto en ventana por ejemplo
 restaurar minimizado, sino que sale el "-" de minimizar
 Seria dificil de corregir, al conmutar de ventana y volver, realmente se crea una ventana de nuevo con la geometria anterior,
 y en esa geometria no se indica que estaba minimizada antes o no. Quiza un parametro mas en la geometria que indique minimizada o no
+Aunque tambien habria que guardar tamaño de antes de minimizar
 
 -cuando una tecla F no esta como default, no la envia a maquina emulada: ejemplo MSX F2, QL F5
 
