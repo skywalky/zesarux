@@ -3716,8 +3716,8 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				int i;
 				
 				for (i=0;i<TBBLUE_SPRITE_ATTRIBUTE_SIZE;i++) {
-				  sprintf(&dumpmemoria[indice_string],"%02XH ",tbsprite_sprites[current_sprite][i]);
-				  indice_string +=4;
+				  sprintf(&dumpmemoria[indice_string],"%02X ",tbsprite_sprites[current_sprite][i]);
+				  indice_string +=3;
 				}
 				
 				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);	
@@ -3787,16 +3787,16 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				sprintf (dumpmemoria,"%03d%s X: %3d Y: %3d %s %s %s",current_sprite,buf_subindex_4_bit,x,y,
 						(mirror_x ? "MX" : "  "),(mirror_y ? "MY" : "  "),(rotate ? "ROT" : "   ")
 				);				
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 
 				sprintf (dumpmemoria," Pattn: %2d Palof: %3d Vis: %s"
 					,pattern,paloff, (visible ? "Yes" : "No ") );
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 
 				sprintf(dumpmemoria," %dbpp ZX: %d ZY: %d",(sprite_es_4bpp ? 4 : 8) ,zoom_x,zoom_y);
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);				
+				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);				
 
 				}
 				
@@ -3827,16 +3827,31 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				z80_byte attr_color_etc=vram_read_function_pointer(sprite_attribute_table+3);					
 
 				vert_pos++;
+				
+				if (menu_debug_spritenav_raw.v) {
+				
+				
+				sprintf (dumpmemoria,"%03d %02X %02H %02X %02X",current_sprite,vert_pos,horiz_pos,sprite_name,attr_color_etc);
+				
+				
+				
+				}
+				
+				else {
+				
 
 				sprintf (dumpmemoria,"%02d X: %3d Y: %3d",
 					current_sprite,horiz_pos,vert_pos);
 				
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 				sprintf (dumpmemoria," Name: %3d Color: %02d EC: %d",
 					sprite_name,attr_color_etc & 15,(attr_color_etc>>7) & 1);
+					
+					
+				}
 				
-				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 				
 			}			
