@@ -3629,6 +3629,9 @@ int menu_debug_tsconf_tbblue_msx_spritenav_get_total_height_win(void)
 
 }
 
+
+int menu_debug_spritenav_raw={0};
+
 //Muestra lista de sprites
 void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 {
@@ -3911,6 +3914,10 @@ void menu_debug_tsconf_tbblue_msx_spritenav(MENU_ITEM_PARAMETERS)
     	menu_speech_tecla_pulsada=0; //Que envie a speech
    		tecla=zxvision_common_getkey_refresh();
 		zxvision_handle_cursors_pgupdn(ventana,tecla);
+		
+		 if (tecla=='r') {
+		 	menu_debug_spritenav_raw.v ^=1;
+        }     
 	} while (tecla!=2 && tecla!=3);  
 
 	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
