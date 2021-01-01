@@ -3680,6 +3680,29 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 			if (MACHINE_IS_TSCONF) {
 
 				int offset=current_sprite*6;
+				
+				if (menu_debug_spritenav_raw.v) {
+				
+				int indice_string;
+				
+				sprintf (dumpmemoria,"%03d ",current_sprite);
+				
+				indice_string=4;
+				
+				int i;
+				
+				for (i=0;i<6;i++) {
+				  sprintf(&dumpmemoria[indice_string],"%02X ",tsconf_fmaps[0x200+offset+i]);
+				  indice_string +=3;
+				}
+				
+				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);	
+				
+				}
+				
+				else {
+				
+				
 				z80_byte sprite_r0h=tsconf_fmaps[0x200+offset+1];
 
 				z80_byte sprite_leap=sprite_r0h&64;
@@ -3715,6 +3738,8 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 				//menu_escribe_linea_opcion(linea++,-1,1,dumpmemoria);
 				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+				
+				}
 			}
 
 			if (MACHINE_IS_TBBLUE) {
