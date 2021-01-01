@@ -3929,22 +3929,10 @@ void menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites(void)
 
 zxvision_window zxvision_window_tsconf_tbblue_spritenav;
 
-void menu_debug_tsconf_tbblue_msx_spritenav(MENU_ITEM_PARAMETERS)
+
+void menu_debug_spritenav_new_window(zxvision_window *ventana)
 {
-	menu_espera_no_tecla();
-	menu_reset_counters_tecla_repeticion();
-
-	
-	//zxvision_window ventana;
-    zxvision_window *ventana;
-    ventana=&zxvision_window_tsconf_tbblue_spritenav;	
-
-	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
-	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
-	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-	zxvision_delete_window_if_exists(ventana);	
-
-	int xventana,yventana,ancho_ventana,alto_ventana;
+int xventana,yventana,ancho_ventana,alto_ventana;
 
 	if (!util_find_window_geometry("tsconftbbluespritenav",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 		xventana=TSCONF_SPRITENAV_WINDOW_X;
@@ -3962,7 +3950,27 @@ void menu_debug_tsconf_tbblue_msx_spritenav(MENU_ITEM_PARAMETERS)
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"tsconftbbluespritenav");
 
-	zxvision_draw_window(ventana);		
+	zxvision_draw_window(ventana);	
+}
+
+
+
+void menu_debug_tsconf_tbblue_msx_spritenav(MENU_ITEM_PARAMETERS)
+{
+	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();
+
+	
+	//zxvision_window ventana;
+    zxvision_window *ventana;
+    ventana=&zxvision_window_tsconf_tbblue_spritenav;	
+
+	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+	zxvision_delete_window_if_exists(ventana);	
+
+	menu_debug_spritenav_new_window(ventana);	
 
     set_menu_overlay_function(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites);
 
