@@ -3955,6 +3955,12 @@ int xventana,yventana,ancho_ventana,alto_ventana;
 
 
 
+void menu_debug_spritenav_save_geometry(zxvision_window *ventana)
+{
+
+	util_add_window_geometry_compact(ventana);
+}
+
 void menu_debug_tsconf_tbblue_msx_spritenav(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
@@ -4002,7 +4008,10 @@ void menu_debug_tsconf_tbblue_msx_spritenav(MENU_ITEM_PARAMETERS)
 		zxvision_handle_cursors_pgupdn(ventana,tecla);
 		
 		 if (tecla=='r') {
+		 	menu_debug_spritenav_save_geometry(ventana);
+		 	zxvision_destroy_window(ventana);
 		 	menu_debug_spritenav_raw.v ^=1;
+		 	menu_debug_spritenav_new_window(ventana);
         }     
 	} while (tecla!=2 && tecla!=3);  
 
@@ -4013,8 +4022,9 @@ void menu_debug_tsconf_tbblue_msx_spritenav(MENU_ITEM_PARAMETERS)
     set_menu_overlay_function(normal_overlay_texto_menu);		
 
     cls_menu_overlay();
+    
+    menu_debug_spritenav_save_geometry(ventana);
 
-	util_add_window_geometry_compact(ventana);
 
 	if (tecla==3) {
 		zxvision_message_put_window_background();
