@@ -3720,6 +3720,8 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				  indice_string +=4;
 				}
 				
+				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);	
+				
 				}
 				
 				else {
