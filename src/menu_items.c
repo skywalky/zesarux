@@ -3623,11 +3623,24 @@ int menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites(void)
 int menu_debug_tsconf_tbblue_msx_spritenav_get_total_height_win(void)
 {
 
+	//menu_debug_spritenav_raw.v
+	
+	int multiplicador;
 
+
+	if (MACHINE_IS_TSCONF) multiplicador=2; 
+	
+	
+	else if (MACHINE_HAS_VDP_9918A) multiplicador=2; 
+	
+	
+	else multiplicador=3;
+	
+	
+	if (menu_debug_spritenav_raw.v) multiplicador=1;
+	
 //+1 por la linea de leyenda
-	if (MACHINE_IS_TSCONF) return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*2+1;
-	else if (MACHINE_HAS_VDP_9918A) return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*2+1;
-	else return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*3+1;
+	return menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites()*multiplicador+1;
 
 }
 
