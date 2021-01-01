@@ -3704,6 +3704,27 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 			}
 
 			if (MACHINE_IS_TBBLUE) {
+			
+				if (menu_debug_spritenav_raw.v) {
+				
+				int indice_string;
+				
+				sprintf (dumpmemoria,"%03d ",current_sprite);
+				
+				indice_string=4;
+				
+				int i;
+				
+				for (i=0;i<TBBLUE_SPRITE_ATTRIBUTE_SIZE;i++) {
+				  sprintf(&dumpmemoria[indice_string],"%02XH ",tbsprite_sprites[current_sprite][i]);
+				  indice_string +=4;
+				}
+				
+				}
+				
+				else {
+			
+			
 					//z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][4];
 	/*
 	1st: X position (bits 7-0).
@@ -3775,6 +3796,7 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				sprintf(dumpmemoria," %dbpp ZX: %d ZY: %d",(sprite_es_4bpp ? 4 : 8) ,zoom_x,zoom_y);
 				zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);				
 
+				}
 				
 			}
 
