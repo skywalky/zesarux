@@ -3658,7 +3658,19 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 	int current_sprite;
 	
-	zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,"R: Raw list");	
+	
+    //Forzar a mostrar atajos
+    z80_bit antes_menu_writing_inverse_color;
+    antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+    menu_writing_inverse_color.v=1;		
+
+    sprintf(dumpmemoria,"[%c] ~~Raw mode list",(menu_debug_spritenav_raw.v ? 'X' : ' '));
+ zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);	
+
+    //Restaurar comportamiento atajos
+    menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v; 
+	
+	
 
 
 		for (linea_color=0;linea_color<limite;linea_color++) {					
