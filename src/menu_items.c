@@ -3630,7 +3630,7 @@ int menu_debug_tsconf_tbblue_msx_spritenav_get_total_height_win(void)
 }
 
 
-int menu_debug_spritenav_raw={0};
+z80_bit menu_debug_spritenav_raw={0};
 
 //Muestra lista de sprites
 void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
