@@ -3652,6 +3652,8 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 */
 
 	int current_sprite;
+	
+	zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,"R: Raw list");	
 
 
 		for (linea_color=0;linea_color<limite;linea_color++) {					
