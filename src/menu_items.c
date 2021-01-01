@@ -3875,6 +3875,7 @@ void menu_debug_tsconf_tbblue_msx_spritenav(MENU_ITEM_PARAMETERS)
 							TSCONF_SPRITENAV_WINDOW_ANCHO-1,menu_debug_tsconf_tbblue_msx_spritenav_get_total_height_win(),"Sprite navigator");
 
 	ventana->can_be_backgrounded=1;
+	ventana->upper_margin=1;
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"tsconftbbluespritenav");
 
