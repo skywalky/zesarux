@@ -3831,7 +3831,7 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				if (menu_debug_spritenav_raw.v) {
 				
 				
-				sprintf (dumpmemoria,"%03d %02X %02H %02X %02X",current_sprite,vert_pos,horiz_pos,sprite_name,attr_color_etc);
+				sprintf (dumpmemoria,"%03d %02X %02X %02X %02X",current_sprite,vert_pos,horiz_pos,sprite_name,attr_color_etc);
 				
 				
 				
