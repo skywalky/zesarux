@@ -125,6 +125,7 @@ z80_byte *samram_check_if_sam_area(z80_int dir)
     romblock=romblock >> 3;
     
     int offset=dir+16384*romblock;
+    //printf("romblock %d\n",romblock);
     return &samram_memory_pointer[offset];
     
   }
@@ -132,21 +133,14 @@ z80_byte *samram_check_if_sam_area(z80_int dir)
   //si mayor 32767
   if (dir>32767) {
     if (samram_settings_byte & 32) {
-    int offset=dir; //la shadow ram esta justo despues de la rom
-    return &samram_memory_pointer[offset];
+        int offset=dir; //la shadow ram esta justo despues de la rom
+        return &samram_memory_pointer[offset];
     }
   }
   
   return NULL;
 }
 
-int samram_check_if_rom_area(z80_int dir)
-{
-                if (dir<16384) {
-			return 1;
-                }
-	return 0;
-}
 
 z80_byte samram_read_byte(z80_int dir)
 {
@@ -367,6 +361,7 @@ void samram_press_button(void)
 
 void samram_write_port(z80_byte value)
 {
+  printf ("write sam ram value %02XH\n",value);
 
   int bitvalue=value&1;
   
@@ -386,6 +381,8 @@ void samram_write_port(z80_byte value)
   bitvalue=bitvalue<<bitnumber;
   
   samram_settings_byte |=bitvalue;
+
+  printf ("write sam ram final settings %02XH\n",samram_settings_byte);
 
 
 }

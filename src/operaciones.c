@@ -8213,7 +8213,7 @@ Port: 10-- ---- ---- --0-
 	}
 	
 	//samram
-	if (MACHINE_IS_SPECTRUM_48 && puerto==31 && samram_enabled.v) {
+	if (MACHINE_IS_SPECTRUM_48 && puerto_l==31 && samram_enabled.v) {
 	  samram_write_port(value);
 	}
 
