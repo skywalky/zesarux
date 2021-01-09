@@ -114,7 +114,7 @@ z80_byte samram_settings_byte;
 //retorna direccion a memoria samram que hace referencia dir
 //NULL si no es memoria samram 
 
-z80_byte samram_check_if_sam_area(z80_int dir)
+z80_byte *samram_check_if_sam_area(z80_int dir)
 {
 
   //si espacio rom
@@ -161,6 +161,12 @@ z80_byte samram_poke_byte(z80_int dir,z80_byte valor)
 	//samram_original_poke_byte(dir,valor);
         //Llamar a anterior
         debug_nested_poke_byte_call_previous(samram_nested_id_poke_byte,dir,valor);
+        
+        z80_byte *samdir;
+        samdir=samram_check_if_sam_area(dir);
+        if (samdir!=NULL) {
+           *samdir=valor;
+        }
 
 	
 
@@ -177,7 +183,11 @@ z80_byte samram_poke_byte_no_time(z80_int dir,z80_byte valor)
         debug_nested_poke_byte_no_time_call_previous(samram_nested_id_poke_byte_no_time,dir,valor);
 
 
-	
+	z80_byte *samdir;
+        samdir=samram_check_if_sam_area(dir);
+        if (samdir!=NULL) {
+           *samdir=valor;
+        }
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
@@ -192,9 +202,11 @@ z80_byte samram_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
 
 	
 
-	if (samram_check_if_rom_area(dir)) {
-		return samram_read_byte(dir);
-	}
+	z80_byte *samdir;
+        samdir=samram_check_if_sam_area(dir);
+        if (samdir!=NULL) {
+           return *samdir;
+        }
 
 	//return samram_original_peek_byte(dir);
 	return valor_leido;
@@ -206,8 +218,10 @@ z80_byte samram_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 	z80_byte valor_leido=debug_nested_peek_byte_no_time_call_previous(samram_nested_id_peek_byte_no_time,dir);
 
 	
-	if (samram_check_if_rom_area(dir)) {
-                return samram_read_byte(dir);
+	z80_byte *samdir;
+        samdir=samram_check_if_sam_area(dir);
+        if (samdir!=NULL) {
+           return *samdir;
         }
 
 	return valor_leido;
@@ -343,6 +357,31 @@ void samram_press_button(void)
 	samram_settings_byte=0; //activar cmos ram y seleccionar bank 0
 
 	reset_cpu();
+
+
+}
+
+void samram_write_port(z80_byte value)
+{
+
+  int bitvalue=value&1;
+  
+  int bitnumber=(value>>1)&3;
+  
+  //samram_settings_byte
+  z80_byte maskzero=1;
+  
+  maskzero=maskzero<<bitnumber;
+  
+  maskzero ^=255;
+  
+  //poner a cero
+  samram_settings_byte &=maskzero;
+  
+  //y OR con valor
+  bitvalue=bitvalue<<bitnumber;
+  
+  samram_settings_byte |=bitvalue;
 
 
 }

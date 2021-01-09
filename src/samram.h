@@ -28,6 +28,8 @@
 
 extern z80_bit samram_enabled;
 
+
+extern void samram_write_port(z80_byte value);
 extern void samram_enable(void);
 extern void samram_disable(void);
 
