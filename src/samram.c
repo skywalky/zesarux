@@ -55,6 +55,62 @@ int samram_nested_id_peek_byte_no_time;
 z80_byte samram_active_bank=0;
 
 
+//Byte de config
+//Bit 0: write protect, bit 1: cmos ram enabled, etc
+z80_byte samram_settings_byte;
+
+
+
+/*
+
+5.6  The SamRam
+
+
+    The SamRam contains a 32K static CMOS Ram chip, and some I/O logic for
+    port 31.  If this port is read, it returns the position of the
+    joystick, as a normal Kempston joystickinterface would.  If written to,
+    the port controls a programmable latch chip (the 74LS259) which
+    contains 8 latches:
+ 
+
+       Bit    7   6   5   4   3   2   1   0
+            ÚÄÄÄÂÄÄÄÂÄÄÄÂÄÄÄÂÄÄÄÂÄÄÄÂÄÄÄÂÄÄÄ¿
+       WRITE³   ³   ³   ³   ³  address  ³bit³
+            ÀÄÄÄÁÄÄÄÁÄÄÄÁÄÄÄÁÄÄÄÁÄÄÄÁÄÄÄÁÄÄÄÙ
+
+
+    The address selects on of the eight latches; bit 0 is the new state of
+    the latch.  The 16 different possibilities are collected in the diagram
+    below:
+
+        OUT 31,   ³  Latch  ³ Result
+        ÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
+            0     ³    0    ³ Switch on write protect of CMOS RAM
+            1     ³    "    ³ Writes to CMOS RAM allowed
+            2     ³    1    ³ turn on CMOS RAM (see also 6/7)
+            3     ³    "    ³ turn off CMOS RAM (standard Spec.  ROM)
+            4     ³    2    ³ -
+            5     ³    "    ³ Ignore all OUT's to 31 hereafter
+            6     ³    3    ³ Select CMOS bank 0 (Basic ROM)
+            7     ³    "    ³ Select CMOS bank 1 (Monitor,...)
+            8     ³    4    ³ Select interface 1
+            9     ³    "    ³ Turn off IF 1 (IF1 rom won't be paged)
+           10     ³    5    ³ Select 32K ram bank 0 (32768-65535)
+           11     ³    "    ³ Select 32K ram bank 1 (32768-65535)
+           12     ³    6    ³ Turn off beeper
+           13     ³    "    ³ Turn on beeper
+           14     ³    7    ³ -
+           15     ³    "    ³ -
+
+    At reset, all latches are 0.  If an OUT 31,5 is issued, only a reset
+    will give you control over the latches again.  The write protect latch
+    is not emulated; you're never able to write the emulated CMOS ram in
+    the emulator.  Latch 4 pulls up the M1 output at the expansion port of
+    the Spectrum.  The Interface I won't page its ROM anymore then.
+
+
+*/
+
 int samram_check_if_rom_area(z80_int dir)
 {
                 if (dir<16384) {
@@ -71,30 +127,7 @@ z80_byte samram_read_byte(z80_int dir)
 }
 
 
-void samram_handle_special_dirs(z80_int dir)
-{
 
-	if (samram_protected.v) return;
-
-	if (dir>=0x3FFC && dir<=0x3FFF) {
-		//Valor bit A0
-		z80_byte value_a0=dir&1;
-
-		//Mover banco * 2
-		samram_active_bank = samram_active_bank << 1;
-
-		samram_active_bank |=value_a0;
-
-		//Mascara final
-		samram_active_bank=samram_active_bank&31;
-
-
-
-		//Si se habilita proteccion
-		if (dir&2) samram_protected.v=1;
-	}
-
-}
 
 
 z80_byte samram_poke_byte(z80_int dir,z80_byte valor)
@@ -104,7 +137,7 @@ z80_byte samram_poke_byte(z80_int dir,z80_byte valor)
         //Llamar a anterior
         debug_nested_poke_byte_call_previous(samram_nested_id_poke_byte,dir,valor);
 
-	samram_handle_special_dirs(dir);
+	
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
@@ -119,7 +152,7 @@ z80_byte samram_poke_byte_no_time(z80_int dir,z80_byte valor)
         debug_nested_poke_byte_no_time_call_previous(samram_nested_id_poke_byte_no_time,dir,valor);
 
 
-	samram_handle_special_dirs(dir);
+	
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
@@ -132,7 +165,7 @@ z80_byte samram_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
 
 	z80_byte valor_leido=debug_nested_peek_byte_call_previous(samram_nested_id_peek_byte,dir);
 
-	samram_handle_special_dirs(dir);
+	
 
 	if (samram_check_if_rom_area(dir)) {
 		return samram_read_byte(dir);
@@ -147,8 +180,7 @@ z80_byte samram_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 
 	z80_byte valor_leido=debug_nested_peek_byte_no_time_call_previous(samram_nested_id_peek_byte_no_time,dir);
 
-	samram_handle_special_dirs(dir);
-
+	
 	if (samram_check_if_rom_area(dir)) {
                 return samram_read_byte(dir);
         }
@@ -214,14 +246,14 @@ int samram_load_rom(void)
 
         if (ptr_samram_romfile!=NULL) {
 
-                leidos=fread(samram_memory_pointer,1,SAMRAM_SIZE,ptr_samram_romfile);
+                leidos=fread(samram_memory_pointer,1,32768,ptr_samram_romfile);
                 fclose(ptr_samram_romfile);
 
         }
 
 
 
-        if (leidos!=SAMRAM_SIZE || ptr_samram_romfile==NULL) {
+        if (leidos!=32768 || ptr_samram_romfile==NULL) {
                 debug_printf (VERBOSE_ERR,"Error reading samram rom");
                 return 1;
         }
@@ -234,8 +266,8 @@ int samram_load_rom(void)
 void samram_enable(void)
 {
 
-  if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_CPC) {
-    debug_printf(VERBOSE_INFO,"Can not enable samram on non Spectrum or CPC machine");
+  if (!MACHINE_IS_SPECTRUM_48) {
+    debug_printf(VERBOSE_INFO,"Can not enable samram on non Spectrum 48 machine");
     return;
   }
 
@@ -256,11 +288,8 @@ void samram_enable(void)
 
 	samram_enabled.v=1;
 
-	samram_press_button();
-
-	//samram_active_bank=0;
-	//samram_protected.v=0;
 	
+	samram_settings_byte=0; //no mapeado
 
 
 
@@ -286,8 +315,7 @@ void samram_press_button(void)
                 return;
         }
 
-	samram_active_bank=0;
-	samram_protected.v=0;
+	samram_settings_byte=2; //activar cmos ram y seleccionar bank 0
 
 	reset_cpu();
 
