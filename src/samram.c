@@ -111,6 +111,31 @@ z80_byte samram_settings_byte;
 
 */
 
+//retorna direccion a memoria samram que hace referencia dir
+//NULL si no es memoria samram 
+
+z80_byte samram_check_if_sam_area(z80_int dir)
+{
+
+  //si espacio rom
+  if (dir<16384) {
+    if (samram_settings_byte & 2) return NULL;
+    //rom mapeada, ver cual
+    int romblock=samram_settings_byte & 8;
+    romblock=romblock >> 3;
+    
+    int offset=dir+16384*romblock;
+    return &samram_memory_pointer[offset];
+    
+  }
+  
+  //si mayor 32767
+  if (dir>32767) {
+  }
+  
+  return NULL;
+}
+
 int samram_check_if_rom_area(z80_int dir)
 {
                 if (dir<16384) {
@@ -289,7 +314,7 @@ void samram_enable(void)
 	samram_enabled.v=1;
 
 	
-	samram_settings_byte=0; //no mapeado
+	samram_settings_byte=2; //no mapeado
 
 
 
@@ -315,7 +340,7 @@ void samram_press_button(void)
                 return;
         }
 
-	samram_settings_byte=2; //activar cmos ram y seleccionar bank 0
+	samram_settings_byte=0; //activar cmos ram y seleccionar bank 0
 
 	reset_cpu();
 
