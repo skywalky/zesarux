@@ -81,6 +81,7 @@
 #include "svi.h"
 #include "vdp_9918a.h"
 #include "gs.h"
+#include "samram.h"
 
 
 void (*poke_byte)(z80_int dir,z80_byte valor);
@@ -8209,6 +8210,11 @@ Port: 10-- ---- ---- --0-
 		activa_ay_chip_si_conviene();
 		if (ay_chip_present.v==1) out_port_ay(puerto_final,value);
 
+	}
+	
+	//samram
+	if (MACHINE_IS_SPECTRUM_48 && puerto==31 && samram_enabled.v) {
+	  samram_write_port(value);
 	}
 
 
