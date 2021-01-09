@@ -28,7 +28,7 @@
 #endif
 
 
-#include "kartusho.h"
+#include "samram.h"
 #include "cpu.h"
 #include "debug.h"
 #include "utils.h"
@@ -36,26 +36,26 @@
 #include "ula.h"
 
 
-z80_bit kartusho_enabled={0};
+z80_bit samram_enabled={0};
 
-z80_bit kartusho_protected={0};
+z80_bit samram_protected={0};
 
-char kartusho_rom_file_name[PATH_MAX]="";
+char samram_rom_file_name[PATH_MAX]="";
 
-z80_byte *kartusho_memory_pointer;
+z80_byte *samram_memory_pointer;
 
 
 
-int kartusho_nested_id_poke_byte;
-int kartusho_nested_id_poke_byte_no_time;
-int kartusho_nested_id_peek_byte;
-int kartusho_nested_id_peek_byte_no_time;
+int samram_nested_id_poke_byte;
+int samram_nested_id_poke_byte_no_time;
+int samram_nested_id_peek_byte;
+int samram_nested_id_peek_byte_no_time;
 
 //Banco activo. 0..31
-z80_byte kartusho_active_bank=0;
+z80_byte samram_active_bank=0;
 
 
-int kartusho_check_if_rom_area(z80_int dir)
+int samram_check_if_rom_area(z80_int dir)
 {
                 if (dir<16384) {
 			return 1;
@@ -63,48 +63,48 @@ int kartusho_check_if_rom_area(z80_int dir)
 	return 0;
 }
 
-z80_byte kartusho_read_byte(z80_int dir)
+z80_byte samram_read_byte(z80_int dir)
 {
-	//Si no, memoria kartusho
-	int puntero=kartusho_active_bank*16384+dir;
-	return kartusho_memory_pointer[puntero];
+	//Si no, memoria samram
+	int puntero=samram_active_bank*16384+dir;
+	return samram_memory_pointer[puntero];
 }
 
 
-void kartusho_handle_special_dirs(z80_int dir)
+void samram_handle_special_dirs(z80_int dir)
 {
 
-	if (kartusho_protected.v) return;
+	if (samram_protected.v) return;
 
 	if (dir>=0x3FFC && dir<=0x3FFF) {
 		//Valor bit A0
 		z80_byte value_a0=dir&1;
 
 		//Mover banco * 2
-		kartusho_active_bank = kartusho_active_bank << 1;
+		samram_active_bank = samram_active_bank << 1;
 
-		kartusho_active_bank |=value_a0;
+		samram_active_bank |=value_a0;
 
 		//Mascara final
-		kartusho_active_bank=kartusho_active_bank&31;
+		samram_active_bank=samram_active_bank&31;
 
 
 
 		//Si se habilita proteccion
-		if (dir&2) kartusho_protected.v=1;
+		if (dir&2) samram_protected.v=1;
 	}
 
 }
 
 
-z80_byte kartusho_poke_byte(z80_int dir,z80_byte valor)
+z80_byte samram_poke_byte(z80_int dir,z80_byte valor)
 {
 
-	//kartusho_original_poke_byte(dir,valor);
+	//samram_original_poke_byte(dir,valor);
         //Llamar a anterior
-        debug_nested_poke_byte_call_previous(kartusho_nested_id_poke_byte,dir,valor);
+        debug_nested_poke_byte_call_previous(samram_nested_id_poke_byte,dir,valor);
 
-	kartusho_handle_special_dirs(dir);
+	samram_handle_special_dirs(dir);
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
@@ -112,14 +112,14 @@ z80_byte kartusho_poke_byte(z80_int dir,z80_byte valor)
 
 }
 
-z80_byte kartusho_poke_byte_no_time(z80_int dir,z80_byte valor)
+z80_byte samram_poke_byte_no_time(z80_int dir,z80_byte valor)
 {
-        //kartusho_original_poke_byte_no_time(dir,valor);
+        //samram_original_poke_byte_no_time(dir,valor);
         //Llamar a anterior
-        debug_nested_poke_byte_no_time_call_previous(kartusho_nested_id_poke_byte_no_time,dir,valor);
+        debug_nested_poke_byte_no_time_call_previous(samram_nested_id_poke_byte_no_time,dir,valor);
 
 
-	kartusho_handle_special_dirs(dir);
+	samram_handle_special_dirs(dir);
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
@@ -127,30 +127,30 @@ z80_byte kartusho_poke_byte_no_time(z80_int dir,z80_byte valor)
 
 }
 
-z80_byte kartusho_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
+z80_byte samram_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
 {
 
-	z80_byte valor_leido=debug_nested_peek_byte_call_previous(kartusho_nested_id_peek_byte,dir);
+	z80_byte valor_leido=debug_nested_peek_byte_call_previous(samram_nested_id_peek_byte,dir);
 
-	kartusho_handle_special_dirs(dir);
+	samram_handle_special_dirs(dir);
 
-	if (kartusho_check_if_rom_area(dir)) {
-		return kartusho_read_byte(dir);
+	if (samram_check_if_rom_area(dir)) {
+		return samram_read_byte(dir);
 	}
 
-	//return kartusho_original_peek_byte(dir);
+	//return samram_original_peek_byte(dir);
 	return valor_leido;
 }
 
-z80_byte kartusho_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
+z80_byte samram_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 {
 
-	z80_byte valor_leido=debug_nested_peek_byte_no_time_call_previous(kartusho_nested_id_peek_byte_no_time,dir);
+	z80_byte valor_leido=debug_nested_peek_byte_no_time_call_previous(samram_nested_id_peek_byte_no_time,dir);
 
-	kartusho_handle_special_dirs(dir);
+	samram_handle_special_dirs(dir);
 
-	if (kartusho_check_if_rom_area(dir)) {
-                return kartusho_read_byte(dir);
+	if (samram_check_if_rom_area(dir)) {
+                return samram_read_byte(dir);
         }
 
 	return valor_leido;
@@ -159,70 +159,70 @@ z80_byte kartusho_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 
 
 //Establecer rutinas propias
-void kartusho_set_peek_poke_functions(void)
+void samram_set_peek_poke_functions(void)
 {
-                debug_printf (VERBOSE_DEBUG,"Setting kartusho poke / peek functions");
+                debug_printf (VERBOSE_DEBUG,"Setting samram poke / peek functions");
 
 	//Asignar mediante nuevas funciones de core anidados
-	kartusho_nested_id_poke_byte=debug_nested_poke_byte_add(kartusho_poke_byte,"Kartusho poke_byte");
-	kartusho_nested_id_poke_byte_no_time=debug_nested_poke_byte_no_time_add(kartusho_poke_byte_no_time,"Kartusho poke_byte_no_time");
-	kartusho_nested_id_peek_byte=debug_nested_peek_byte_add(kartusho_peek_byte,"Kartusho peek_byte");
-	kartusho_nested_id_peek_byte_no_time=debug_nested_peek_byte_no_time_add(kartusho_peek_byte_no_time,"Kartusho peek_byte_no_time");
+	samram_nested_id_poke_byte=debug_nested_poke_byte_add(samram_poke_byte,"Samram poke_byte");
+	samram_nested_id_poke_byte_no_time=debug_nested_poke_byte_no_time_add(samram_poke_byte_no_time,"Samram poke_byte_no_time");
+	samram_nested_id_peek_byte=debug_nested_peek_byte_add(samram_peek_byte,"Samram peek_byte");
+	samram_nested_id_peek_byte_no_time=debug_nested_peek_byte_no_time_add(samram_peek_byte_no_time,"Samram peek_byte_no_time");
 
 }
 
-//Restaurar rutinas de kartusho
-void kartusho_restore_peek_poke_functions(void)
+//Restaurar rutinas de samram
+void samram_restore_peek_poke_functions(void)
 {
-                debug_printf (VERBOSE_DEBUG,"Restoring original poke / peek functions before kartusho");
+                debug_printf (VERBOSE_DEBUG,"Restoring original poke / peek functions before samram");
 
 
-	debug_nested_poke_byte_del(kartusho_nested_id_poke_byte);
-	debug_nested_poke_byte_no_time_del(kartusho_nested_id_poke_byte_no_time);
-	debug_nested_peek_byte_del(kartusho_nested_id_peek_byte);
-	debug_nested_peek_byte_no_time_del(kartusho_nested_id_peek_byte_no_time);
+	debug_nested_poke_byte_del(samram_nested_id_poke_byte);
+	debug_nested_poke_byte_no_time_del(samram_nested_id_poke_byte_no_time);
+	debug_nested_peek_byte_del(samram_nested_id_peek_byte);
+	debug_nested_peek_byte_no_time_del(samram_nested_id_peek_byte_no_time);
 }
 
 
 
-void kartusho_alloc_memory(void)
+void samram_alloc_memory(void)
 {
-        int size=KARTUSHO_SIZE;  
+        int size=SAMRAM_SIZE;  
 
-        debug_printf (VERBOSE_DEBUG,"Allocating %d kb of memory for kartusho emulation",size/1024);
+        debug_printf (VERBOSE_DEBUG,"Allocating %d kb of memory for samram emulation",size/1024);
 
-        kartusho_memory_pointer=malloc(size);
-        if (kartusho_memory_pointer==NULL) {
-                cpu_panic ("No enough memory for kartusho emulation");
+        samram_memory_pointer=malloc(size);
+        if (samram_memory_pointer==NULL) {
+                cpu_panic ("No enough memory for samram emulation");
         }
 
 
 }
 
-int kartusho_load_rom(void)
+int samram_load_rom(void)
 {
 
-        FILE *ptr_kartusho_romfile;
+        FILE *ptr_samram_romfile;
         int leidos=0;
 
-        debug_printf (VERBOSE_INFO,"Loading kartusho rom %s",kartusho_rom_file_name);
+        debug_printf (VERBOSE_INFO,"Loading samram rom %s",samram_rom_file_name);
 
-  			ptr_kartusho_romfile=fopen(kartusho_rom_file_name,"rb");
-                if (!ptr_kartusho_romfile) {
+  			ptr_samram_romfile=fopen(samram_rom_file_name,"rb");
+                if (!ptr_samram_romfile) {
                         debug_printf (VERBOSE_ERR,"Unable to open ROM file");
                 }
 
-        if (ptr_kartusho_romfile!=NULL) {
+        if (ptr_samram_romfile!=NULL) {
 
-                leidos=fread(kartusho_memory_pointer,1,KARTUSHO_SIZE,ptr_kartusho_romfile);
-                fclose(ptr_kartusho_romfile);
+                leidos=fread(samram_memory_pointer,1,SAMRAM_SIZE,ptr_samram_romfile);
+                fclose(ptr_samram_romfile);
 
         }
 
 
 
-        if (leidos!=KARTUSHO_SIZE || ptr_kartusho_romfile==NULL) {
-                debug_printf (VERBOSE_ERR,"Error reading kartusho rom");
+        if (leidos!=SAMRAM_SIZE || ptr_samram_romfile==NULL) {
+                debug_printf (VERBOSE_ERR,"Error reading samram rom");
                 return 1;
         }
 
@@ -231,63 +231,63 @@ int kartusho_load_rom(void)
 
 
 
-void kartusho_enable(void)
+void samram_enable(void)
 {
 
   if (!MACHINE_IS_SPECTRUM && !MACHINE_IS_CPC) {
-    debug_printf(VERBOSE_INFO,"Can not enable kartusho on non Spectrum or CPC machine");
+    debug_printf(VERBOSE_INFO,"Can not enable samram on non Spectrum or CPC machine");
     return;
   }
 
-	if (kartusho_enabled.v) {
+	if (samram_enabled.v) {
 		debug_printf (VERBOSE_DEBUG,"Already enabled");
 		return;
 	}
 
-	if (kartusho_rom_file_name[0]==0) {
-		debug_printf (VERBOSE_ERR,"Trying to enable Kartusho but no ROM file selected");
+	if (samram_rom_file_name[0]==0) {
+		debug_printf (VERBOSE_ERR,"Trying to enable Samram but no ROM file selected");
 		return;
 	}
 
-	kartusho_alloc_memory();
-	if (kartusho_load_rom()) return;
+	samram_alloc_memory();
+	if (samram_load_rom()) return;
 
-	kartusho_set_peek_poke_functions();
+	samram_set_peek_poke_functions();
 
-	kartusho_enabled.v=1;
+	samram_enabled.v=1;
 
-	kartusho_press_button();
+	samram_press_button();
 
-	//kartusho_active_bank=0;
-	//kartusho_protected.v=0;
+	//samram_active_bank=0;
+	//samram_protected.v=0;
 	
 
 
 
 }
 
-void kartusho_disable(void)
+void samram_disable(void)
 {
-	if (kartusho_enabled.v==0) return;
+	if (samram_enabled.v==0) return;
 
-	kartusho_restore_peek_poke_functions();
+	samram_restore_peek_poke_functions();
 
-	free(kartusho_memory_pointer);
+	free(samram_memory_pointer);
 
-	kartusho_enabled.v=0;
+	samram_enabled.v=0;
 }
 
 
-void kartusho_press_button(void)
+void samram_press_button(void)
 {
 
-        if (kartusho_enabled.v==0) {
-                debug_printf (VERBOSE_ERR,"Trying to press Kartusho button when it is disabled");
+        if (samram_enabled.v==0) {
+                debug_printf (VERBOSE_ERR,"Trying to press Samram button when it is disabled");
                 return;
         }
 
-	kartusho_active_bank=0;
-	kartusho_protected.v=0;
+	samram_active_bank=0;
+	samram_protected.v=0;
 
 	reset_cpu();
 
