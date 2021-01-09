@@ -19,23 +19,22 @@
 
 */
 
-#ifndef KARTUSHO_H
-#define KARTUSHO_H
+#ifndef SAMRAM_H
+#define SAMRAM_H
 
 #include "cpu.h"
 
-#define KARTUSHO_SIZE (512*1024)
+#define SAMRAM_SIZE 65536
 
-extern z80_bit kartusho_enabled;
+extern z80_bit samram_enabled;
 
-extern void kartusho_enable(void);
-extern void kartusho_disable(void);
+extern void samram_enable(void);
+extern void samram_disable(void);
 
-extern char kartusho_rom_file_name[];
+extern char samram_rom_file_name[];
 
-extern z80_byte kartusho_active_bank;
-extern void kartusho_press_button(void);
+extern void samram_press_button(void);
 
-extern z80_byte *kartusho_memory_pointer;
+extern z80_byte *samram_memory_pointer;
 
 #endif
