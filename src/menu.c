@@ -109,6 +109,7 @@
 #include "svi.h"
 #include "ql_qdos_handler.h"
 #include "gs.h"
+#include "samram.h"
 
 
 #if defined(__APPLE__)
@@ -915,6 +916,7 @@ int ula_settings_opcion_seleccionada=0;
 //int debug_configuration_opcion_seleccionada=0;
 int dandanator_opcion_seleccionada=0;
 int kartusho_opcion_seleccionada=0;
+int samram_opcion_seleccionada=0;
 int ifrom_opcion_seleccionada=0;
 int hilow_opcion_seleccionada=0;
 int superupgrade_opcion_seleccionada=0;
@@ -13863,6 +13865,7 @@ int menu_cond_allow_write_rom(void)
 	if (superupgrade_enabled.v) return 0;
 	if (dandanator_enabled.v) return 0;
 	if (kartusho_enabled.v) return 0;
+	if (samram_enabled.v) return 0;
 	if (ifrom_enabled.v) return 0;
 	if (betadisk_enabled.v) return 0;
 
@@ -16980,6 +16983,126 @@ void menu_kartusho(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_samram_rom_file(MENU_ITEM_PARAMETERS)
+{
+	samram_disable();
+
+        char *filtros[2];
+
+        filtros[0]="rom";
+        filtros[1]=0;
+
+
+        if (menu_filesel("Select samram File",filtros,samram_rom_file_name)==1) {
+                if (!si_existe_archivo(samram_rom_file_name)) {
+                        menu_error_message("File does not exist");
+                        samram_rom_file_name[0]=0;
+                        return;
+
+
+
+                }
+
+                else {
+                        //Comprobar aqui tambien el tamanyo
+                        long int size=get_file_size(samram_rom_file_name);
+                        if (size!=32768)  {
+                                menu_error_message("ROM file must be 32 KB length");
+                                samram_rom_file_name[0]=0;
+                                return;
+                        }
+                }
+
+
+        }
+        //Sale con ESC
+        else {
+                //Quitar nombre
+                samram_rom_file_name[0]=0;
+
+
+        }
+
+}
+
+int menu_storage_samram_emulation_cond(void)
+{
+	if (samram_rom_file_name[0]==0) return 0;
+        return 1;
+}
+
+int menu_storage_samram_press_button_cond(void)
+{
+	return samram_enabled.v;
+}
+
+
+void menu_storage_samram_emulation(MENU_ITEM_PARAMETERS)
+{
+	if (samram_enabled.v) samram_disable();
+	else samram_enable();
+}
+
+void menu_storage_samram_press_button(MENU_ITEM_PARAMETERS)
+{
+	samram_press_button();
+	//Y salimos de todos los menus
+	salir_todos_menus=1;
+
+}
+
+void menu_samram(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_samram;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                char string_samram_file_shown[13];
+
+
+                        menu_tape_settings_trunc_name(samram_rom_file_name,string_samram_file_shown,13);
+                        menu_add_item_menu_inicial_format(&array_menu_samram,MENU_OPCION_NORMAL,menu_samram_rom_file,NULL,"~~ROM File [%s]",string_samram_file_shown);
+                        menu_add_item_menu_shortcut(array_menu_samram,'r');
+                        menu_add_item_menu_tooltip(array_menu_samram,"ROM Emulation file");
+                        menu_add_item_menu_ayuda(array_menu_samram,"ROM Emulation file");
+
+
+                        			menu_add_item_menu_format(array_menu_samram,MENU_OPCION_NORMAL,menu_storage_samram_emulation,menu_storage_samram_emulation_cond,"[%c] ~~Samram Enabled", (samram_enabled.v ? 'X' : ' '));
+                        menu_add_item_menu_shortcut(array_menu_samram,'s');
+                        menu_add_item_menu_tooltip(array_menu_samram,"Enable samram");
+                        menu_add_item_menu_ayuda(array_menu_samram,"Enable samram");
+
+
+			menu_add_item_menu_format(array_menu_samram,MENU_OPCION_NORMAL,menu_storage_samram_press_button,menu_storage_samram_press_button_cond,"~~Press button");
+			menu_add_item_menu_shortcut(array_menu_samram,'p');
+                        menu_add_item_menu_tooltip(array_menu_samram,"Press button");
+                        menu_add_item_menu_ayuda(array_menu_samram,"Press button");
+
+
+                                menu_add_item_menu(array_menu_samram,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                menu_add_ESC_item(array_menu_samram);
+
+                retorno_menu=menu_dibuja_menu(&samram_opcion_seleccionada,&item_seleccionado,array_menu_samram,"Samram" );
+
+                
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+
+}
+
 
 void menu_ifrom_rom_file(MENU_ITEM_PARAMETERS)
 {
@@ -18381,6 +18504,10 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_storage_settings,"Kartusho settings");
                         menu_add_item_menu_ayuda(array_menu_storage_settings,"Kartusho settings");
 		}
+		
+		if (MACHINE_IS_SPECTRUM_48) {
+                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_samram,NULL,"Samram");
+                        }
 
 
 		if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
