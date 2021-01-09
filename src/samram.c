@@ -132,6 +132,7 @@ z80_byte *samram_check_if_sam_area(z80_int dir)
   
   //si mayor 32767
   if (dir>32767) {
+      //if (samram_settings_byte & 2) return NULL;
     if (samram_settings_byte & 32) {
         int offset=dir; //la shadow ram esta justo despues de la rom
         return &samram_memory_pointer[offset];
