@@ -366,7 +366,7 @@ void samram_write_port(z80_byte value)
 
   int bitvalue=value&1;
   
-  int bitnumber=(value>>1)&3;
+  int bitnumber=(value>>1)&7;
   
   //samram_settings_byte
   z80_byte maskzero=1;
