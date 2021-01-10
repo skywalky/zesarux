@@ -159,14 +159,20 @@ z80_byte samram_poke_byte(z80_int dir,z80_byte valor)
 
 	//samram_original_poke_byte(dir,valor);
         //Llamar a anterior
-        debug_nested_poke_byte_call_previous(samram_nested_id_poke_byte,dir,valor);
+        //pero no cuando escribimos en shadow ram
+        int escribir=1;
+        
         
         z80_byte *samdir;
         samdir=samram_check_if_sam_area(dir);
         if (samdir!=NULL) {
+           //si escribimos en shadow, no escribir en la ram normal
+           if (dir>32767) escribir=0;
+           
            *samdir=valor;
         }
 
+if (escribir) debug_nested_poke_byte_call_previous(samram_nested_id_poke_byte,dir,valor);
 	
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
@@ -179,17 +185,28 @@ z80_byte samram_poke_byte_no_time(z80_int dir,z80_byte valor)
 {
         //samram_original_poke_byte_no_time(dir,valor);
         //Llamar a anterior
-        debug_nested_poke_byte_no_time_call_previous(samram_nested_id_poke_byte_no_time,dir,valor);
-
-
-	z80_byte *samdir;
+        //pero no cuando escribimos en shadow ram
+        int escribir=1;
+        
+        
+        z80_byte *samdir;
         samdir=samram_check_if_sam_area(dir);
         if (samdir!=NULL) {
+           //si escribimos en shadow, no escribir en la ram normal
+           if (dir>32767) escribir=0;
+           
            *samdir=valor;
         }
 
+if (escribir) debug_nested_poke_byte_no_time_call_previous(samram_nested_id_poke_byte,dir,valor);
+	
+
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
-        return 0;
+        return 0;        
+        
+        
+        
+        
 
 
 }
