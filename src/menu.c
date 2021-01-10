@@ -19732,11 +19732,11 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		/* De momento esto desactivado
+		// De momento esto desactivado
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_if1_settings,NULL,"Interface 1: %s",(if1_enabled.v ? "Yes" : "No") );
 		}
-		*/
+		
 
 
 
