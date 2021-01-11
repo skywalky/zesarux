@@ -53,6 +53,7 @@
 #include "tbblue.h"
 #include "settings.h"
 #include "msx.h"
+#include "samram.h"
 
 #include "autoselectoptions.h"
 
@@ -1209,6 +1210,11 @@ int tap_save_detect(void)
 
     //Si esta multiface y esta mapeada su rom, no detectar grabacion
     if (multiface_enabled.v && multiface_switched_on.v) return 0;
+
+
+    if (samram_enabled.v) {
+        return samram_tap_save_detect();
+    }
 
 
                 if (superupgrade_enabled.v) {

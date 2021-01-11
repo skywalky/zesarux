@@ -35,7 +35,9 @@ extern void samram_disable(void);
 
 extern char samram_rom_file_name[];
 
-extern void samram_press_button(void);
+//extern void samram_press_button(void);
+
+extern void samram_nmi(void);
 
 extern z80_byte *samram_memory_pointer;
 

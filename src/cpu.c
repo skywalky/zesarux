@@ -126,6 +126,7 @@
 #include "svi.h"
 #include "ql_qdos_handler.h"
 #include "ql_i8049.h"
+#include "samram.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -3059,6 +3060,7 @@ void set_machine_params(void)
 		ifrom_enabled.v=0;
 		betadisk_enabled.v=0;
 		hilow_enabled.v=0;
+        samram_enabled.v=0;
 
 		plus3dos_traps.v=0;
 		pd765_enabled.v=0;

@@ -17031,10 +17031,12 @@ int menu_storage_samram_emulation_cond(void)
         return 1;
 }
 
+/*
 int menu_storage_samram_press_button_cond(void)
 {
 	return samram_enabled.v;
 }
+*/
 
 
 void menu_storage_samram_emulation(MENU_ITEM_PARAMETERS)
@@ -17043,6 +17045,7 @@ void menu_storage_samram_emulation(MENU_ITEM_PARAMETERS)
 	else samram_enable();
 }
 
+/*
 void menu_storage_samram_press_button(MENU_ITEM_PARAMETERS)
 {
 	samram_press_button();
@@ -17050,6 +17053,7 @@ void menu_storage_samram_press_button(MENU_ITEM_PARAMETERS)
 	salir_todos_menus=1;
 
 }
+*/
 
 void menu_samram(MENU_ITEM_PARAMETERS)
 {
@@ -17074,11 +17078,12 @@ void menu_samram(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_ayuda(array_menu_samram,"Enable samram");
 
 
+            /*
 			menu_add_item_menu_format(array_menu_samram,MENU_OPCION_NORMAL,menu_storage_samram_press_button,menu_storage_samram_press_button_cond,"~~Press button");
 			menu_add_item_menu_shortcut(array_menu_samram,'p');
                         menu_add_item_menu_tooltip(array_menu_samram,"Press button");
                         menu_add_item_menu_ayuda(array_menu_samram,"Press button");
-
+            */
 
                                 menu_add_item_menu(array_menu_samram,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 

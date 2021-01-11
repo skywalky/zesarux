@@ -158,7 +158,7 @@ void samram_opcode_edf9(void)
     //"OBTENER UN BYTE DEL SAMROM"
     //Aquí si se entiende mejor...
 
-    printf("EDF9=LD A,NORMAL_ROM:(DE) , LD (HL),A , INC E , INC H   HL=%d DE=%d\n",HL,DE);
+    //printf("EDF9=LD A,NORMAL_ROM:(DE) , LD (HL),A , INC E , INC H   HL=%d DE=%d\n",HL,DE);
 
     //z80_byte valor_leido=debug_nested_peek_byte_call_previous(samram_nested_id_peek_byte,DE);
 
@@ -257,12 +257,47 @@ void samram_opcode_edfe(void)
     debug_nested_poke_byte_no_time_call_previous(samram_nested_id_poke_byte,HL,reg_a);
 }
 
+int samram_if_rom_mapped(void)
+{
+    if (samram_settings_byte & 2) return 0;
+    else return 1;
+}
+
+int samram_get_rom_mapped(void)
+{
+    //rom mapeada, ver cual
+    int romblock=samram_settings_byte & 8;
+    romblock=romblock >> 3;
+
+    return romblock;
+}
+
+int samram_tap_save_detect(void)
+{
+
+    if (reg_pc!=1222) return 0;
+
+    //no rom mapeada
+    if (!samram_if_rom_mapped()) {
+        return 1;
+    }
+
+    //samrom mapeada. Sera la 0?
+    int rommapped=samram_get_rom_mapped();
+
+    if (rommapped==1) return 0;
+
+    return 1;
+
+
+}
+
 z80_byte *samram_check_if_sam_area(z80_int dir,int writing)
 {
 
   //si espacio rom
   if (dir<16384) {
-    if (samram_settings_byte & 2) return NULL;
+    if (!samram_if_rom_mapped()) return NULL;
 
     //Si intenta escribir, denegar. Tal y como se hacia en emulador Z80, no se permite escribir en esa ram desde el emulador
     if (writing) {
@@ -271,8 +306,7 @@ z80_byte *samram_check_if_sam_area(z80_int dir,int writing)
     }
 
     //rom mapeada, ver cual
-    int romblock=samram_settings_byte & 8;
-    romblock=romblock >> 3;
+    int romblock=samram_get_rom_mapped();
     
     int offset=dir+16384*romblock;
     //printf("romblock %d\n",romblock);
@@ -498,7 +532,11 @@ void samram_enable(void)
 	samram_enabled.v=1;
 
 	
-	samram_settings_byte=2; //no mapeado
+	//samram_settings_byte=2; //no mapeado
+
+	samram_settings_byte=0; //activar cmos ram y seleccionar bank 0
+
+	reset_cpu();    
 
 
 
@@ -515,7 +553,14 @@ void samram_disable(void)
 	samram_enabled.v=0;
 }
 
+void samram_nmi(void)
+{
+    //Si se dispara la nmi, se habilita mapeo de la samrom
+    samram_settings_byte=0; //activar cmos ram y seleccionar bank 0
 
+}
+
+/*
 void samram_press_button(void)
 {
 
@@ -530,6 +575,9 @@ void samram_press_button(void)
 
 
 }
+*/
+
+
 
 void samram_write_port(z80_byte value)
 {

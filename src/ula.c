@@ -34,6 +34,7 @@
 #include "settings.h"
 #include "divmmc.h"
 #include "hilow.h"
+#include "samram.h"
 
 
 //#define ZESARUX_ZXI_PORT_REGISTER 0xCF3B
@@ -329,6 +330,10 @@ void generate_nmi(void)
 {
 	interrupcion_non_maskable_generada.v=1;
     //nmi_pending_post_opcode=1;
+
+    if (samram_enabled.v) {
+        samram_nmi();
+    }
 
 }
 
