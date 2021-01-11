@@ -41,4 +41,11 @@ extern void samram_nmi(void);
 
 extern z80_byte *samram_memory_pointer;
 
+extern int samram_tap_save_detect(void);
+
+extern void samram_opcode_edf9(void);
+extern void samram_opcode_edfa(void);
+extern void samram_opcode_edfb(void);
+extern void samram_opcode_edfe(void);
+
 #endif

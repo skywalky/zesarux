@@ -16993,7 +16993,7 @@ void menu_samram_rom_file(MENU_ITEM_PARAMETERS)
         filtros[1]=0;
 
 
-        if (menu_filesel("Select samram File",filtros,samram_rom_file_name)==1) {
+        if (menu_filesel("Select ROM File",filtros,samram_rom_file_name)==1) {
                 if (!si_existe_archivo(samram_rom_file_name)) {
                         menu_error_message("File does not exist");
                         samram_rom_file_name[0]=0;
@@ -18511,7 +18511,12 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 		
 		if (MACHINE_IS_SPECTRUM_48) {
-                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_samram,NULL,"Samram");
+                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_samram,NULL,"~~Samram");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'s');
+
+                        menu_add_item_menu_tooltip(array_menu_storage_settings,"Samram settings");
+                        menu_add_item_menu_ayuda(array_menu_storage_settings,"Settings for Gerton Lunter Samram emulation.\n"
+                                "It's a device that Gerton Lunter created and also was emulated in his own emulator");                       
                         }
 
 

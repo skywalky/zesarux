@@ -148,7 +148,7 @@ void samram_opcode_edf9(void)
 {
     //;EDF9=LD A,NORMAL_ROM:(DE) \ LD (HL),A \ INC E \ INC H
 
-    //Me encanta la documentacion.... esa NORMAL_ROM yo jugaria que es la rom standard del spectrum ,pero no,
+    //La documentacion es un poco confusa.... esa NORMAL_ROM yo jugaria que es la rom standard del spectrum ,pero no,
     //se refiere a su samrom
     //Esto se usa al escribir en pantalla, desde el menu nmi y el debugger, el tipo de letra
     //Si hiciera la lectura de la rom standard del spectrum, el tipo de letra seria el del spectrum, no el suyo
@@ -316,7 +316,7 @@ z80_byte *samram_check_if_sam_area(z80_int dir,int writing)
   
   //si mayor 32767
   if (dir>32767) {
-      //if (samram_settings_byte & 2) return NULL;
+      
     if (samram_settings_byte & 32) {
         int offset=dir; //la shadow ram esta justo despues de la rom
         return &samram_memory_pointer[offset];
@@ -334,62 +334,58 @@ z80_byte samram_poke_byte(z80_int dir,z80_byte valor)
 {
 
 	//samram_original_poke_byte(dir,valor);
-        //Llamar a anterior
-        //pero no cuando escribimos en shadow ram
-        int escribir=1;
-        
-        
-        z80_byte *samdir;
-        samdir=samram_check_if_sam_area(dir,1);
-        if (samdir!=NULL) {
-           //si escribimos en shadow, no escribir en la ram normal
-           if (dir>32767) {
-               //printf("Poke byte shadow ram %d\n",dir);
-               escribir=0;
-           }
-           
-           *samdir=valor;
+    //Llamar a anterior
+    //pero no cuando escribimos en shadow ram
+    int escribir=1;
+    
+    
+    z80_byte *samdir;
+    samdir=samram_check_if_sam_area(dir,1);
+    if (samdir!=NULL) {
+        //si escribimos en shadow, no escribir en la ram normal
+        if (dir>32767) {
+            //printf("Poke byte shadow ram %d\n",dir);
+            escribir=0;
         }
+        
+        *samdir=valor;
+    }
 
-if (escribir) debug_nested_poke_byte_call_previous(samram_nested_id_poke_byte,dir,valor);
-	
+    if (escribir) debug_nested_poke_byte_call_previous(samram_nested_id_poke_byte,dir,valor);
 
-        //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
-        return 0;
+
+    //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
+    return 0;
 
 
 }
 
 z80_byte samram_poke_byte_no_time(z80_int dir,z80_byte valor)
 {
-        //samram_original_poke_byte_no_time(dir,valor);
-        //Llamar a anterior
-        //pero no cuando escribimos en shadow ram
-        int escribir=1;
-        
-        
-        z80_byte *samdir;
-        samdir=samram_check_if_sam_area(dir,1);
-        if (samdir!=NULL) {
-           //si escribimos en shadow, no escribir en la ram normal
-           if (dir>32767) {
-               //printf("Poke byte shadow ram %d\n",dir);
-               escribir=0;
-           }
-           
-           *samdir=valor;
+    //samram_original_poke_byte_no_time(dir,valor);
+    //Llamar a anterior
+    //pero no cuando escribimos en shadow ram
+    int escribir=1;
+    
+    
+    z80_byte *samdir;
+    samdir=samram_check_if_sam_area(dir,1);
+    if (samdir!=NULL) {
+        //si escribimos en shadow, no escribir en la ram normal
+        if (dir>32767) {
+            //printf("Poke byte shadow ram %d\n",dir);
+            escribir=0;
         }
+        
+        *samdir=valor;
+    }
 
-if (escribir) debug_nested_poke_byte_no_time_call_previous(samram_nested_id_poke_byte,dir,valor);
-	
+    if (escribir) debug_nested_poke_byte_no_time_call_previous(samram_nested_id_poke_byte,dir,valor);
 
-        //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
-        return 0;        
-        
-        
-        
-        
 
+    //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
+    return 0;        
+        
 
 }
 
@@ -398,7 +394,7 @@ z80_byte samram_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
 
 	z80_byte valor_leido=debug_nested_peek_byte_call_previous(samram_nested_id_peek_byte,dir);
 
-	
+
 
 	z80_byte *samdir;
         samdir=samram_check_if_sam_area(dir,0);
@@ -409,7 +405,7 @@ z80_byte samram_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
            return *samdir;
         }
 
-	//return samram_original_peek_byte(dir);
+
 	return valor_leido;
 }
 
@@ -436,7 +432,7 @@ z80_byte samram_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 //Establecer rutinas propias
 void samram_set_peek_poke_functions(void)
 {
-                debug_printf (VERBOSE_DEBUG,"Setting samram poke / peek functions");
+    debug_printf (VERBOSE_DEBUG,"Setting samram poke / peek functions");
 
 	//Asignar mediante nuevas funciones de core anidados
 	samram_nested_id_poke_byte=debug_nested_poke_byte_add(samram_poke_byte,"Samram poke_byte");
@@ -605,8 +601,9 @@ void samram_write_port(z80_byte value)
   //printf ("write sam ram final settings %02XH\n",samram_settings_byte);
 
 
+
     //no hacer los printf siguientes
-  //return;
+  return;
 
   switch (value) {
       case 0:
