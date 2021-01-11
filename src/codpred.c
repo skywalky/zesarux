@@ -31,6 +31,7 @@
 #include "tbblue.h"
 #include "screen.h"
 #include "settings.h"
+#include "samram.h"
 
 
 void invalid_opcode_ed(char *s)
@@ -2860,17 +2861,26 @@ void instruccion_ed_248 ()
 
 void instruccion_ed_249 ()
 {
-        invalid_opcode_ed("237 249");
+    if (samram_enabled.v) {
+        samram_opcode_edf9();
+    }
+    else invalid_opcode_ed("237 249");
 }
 
 void instruccion_ed_250 ()
 {
-        invalid_opcode_ed("237 250");
+    if (samram_enabled.v) {
+        samram_opcode_edfa();
+    }
+    else invalid_opcode_ed("237 250");
 }
 
 void instruccion_ed_251 ()
 {
-        invalid_opcode_ed("237 251");
+    if (samram_enabled.v) {
+        samram_opcode_edfb();
+    }
+    else invalid_opcode_ed("237 251");
 }
 
 void instruccion_ed_252 ()
@@ -2885,7 +2895,10 @@ void instruccion_ed_253 ()
 
 void instruccion_ed_254 ()
 {
-        invalid_opcode_ed("237 254");
+    if (samram_enabled.v) {
+        samram_opcode_edfe();
+    }
+    else invalid_opcode_ed("237 254");
 }
 
 void instruccion_ed_255 ()
