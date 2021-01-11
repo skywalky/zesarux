@@ -3,6 +3,7 @@ Version 9.2 - xxxx edition. 14 December 2020
 Added new ZX-Uno Prism video mode
 Added Dandanator icon
 Added TBBlue snx snapshot support
+Added SamRam Gerton Lunter interface emulation
 Added ZRCP commands:
 -realtape-open
 

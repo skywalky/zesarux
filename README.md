@@ -201,6 +201,8 @@ __FEATURES__
 
 * Emulates Kartusho,iFrom interfaces by Antonio Villena
 
+* Emulates SamRam interface by Gerton Lunter (author of famous Z80 emulator)
+
 * Emulates DataDrive HiLow (beta)
 
 * Handles RAM, EPROM, Intel Flash and Hybrid (RAM+EPROM) cards on Z88
