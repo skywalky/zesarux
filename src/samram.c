@@ -34,6 +34,7 @@
 #include "utils.h"
 #include "operaciones.h"
 #include "ula.h"
+#include "joystick.h"
 
 
 z80_bit samram_enabled={0};
@@ -531,6 +532,10 @@ void samram_enable(void)
 	//samram_settings_byte=2; //no mapeado
 
 	samram_settings_byte=0; //activar cmos ram y seleccionar bank 0
+
+
+	joystick_emulation=JOYSTICK_KEMPSTON;
+	debug_printf(VERBOSE_DEBUG,"Setting joystick 1 emulation to Kempston as NMI menu needs it");    
 
 	reset_cpu();    
 

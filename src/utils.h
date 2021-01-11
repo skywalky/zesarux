@@ -865,6 +865,8 @@ extern z80_int util_paws_get_pc_parser(void);
 #define MEMORY_ZONE_SVI_VRAM 28
 #define MEMORY_ZONE_SVI_ALL_MEM 29
 
+#define MEMORY_ZONE_SAMRAM 30
+
 #define DAAD_PARSER_BREAKPOINT_PC_SPECTRUM 0x617c
 
 #define DAAD_PARSER_BREAKPOINT_PC_CPC 0x09b4 

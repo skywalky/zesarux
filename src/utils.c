@@ -115,6 +115,7 @@
 #include "snap_zsf.h"
 #include "ql_qdos_handler.h"
 #include "ql_i8049.h"
+#include "samram.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -11837,6 +11838,14 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     break;
 
 
+    case MEMORY_ZONE_SAMRAM:
+        if (samram_enabled.v) {
+              *readwrite=1; 
+              size=SAMRAM_SIZE;              
+        }
+    break;
+
+
   }
 
   return size;
@@ -12180,6 +12189,12 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
                 p=&sg1000_vram_memory[address];
         }        
     break;    
+
+    case MEMORY_ZONE_SAMRAM:
+        if (samram_enabled.v) {
+              p=&samram_memory_pointer[address];           
+        }    
+    break;
 
   }
 
@@ -12553,7 +12568,13 @@ void machine_get_memory_zone_name(int zone, char *name)
         if (MACHINE_IS_SG1000) {
                strcpy(name,"SG1000 VRAM"); 
         }
-    break;     
+    break;    
+
+    case MEMORY_ZONE_SAMRAM:
+        if (samram_enabled.v) {
+              strcpy(name,"SamRAM");    
+        }    
+    break;
 
   }
 

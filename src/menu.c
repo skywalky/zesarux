@@ -18516,7 +18516,10 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_tooltip(array_menu_storage_settings,"Samram settings");
                         menu_add_item_menu_ayuda(array_menu_storage_settings,"Settings for Gerton Lunter Samram emulation.\n"
-                                "It's a device that Gerton Lunter created and also was emulated in his own emulator");                       
+                                "It's a device that Gerton Lunter created and also was emulated in his own emulator\n"
+                                "The original interface has a 32kb of static RAM and also uses 32 kb of the extra shadow unused faulty "
+                                "ram of all Spectrum 48kb; in ZEsarUX I emulate it as a 64kb interface"
+                                );                       
                         }
 
 
@@ -19743,9 +19746,11 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 
 		// De momento esto desactivado
+        /*
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_if1_settings,NULL,"Interface 1: %s",(if1_enabled.v ? "Yes" : "No") );
 		}
+        */
 		
 
 
