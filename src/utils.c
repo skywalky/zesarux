@@ -19018,3 +19018,8 @@ unsigned int util_read_long_value(z80_byte *origen)
 {
     return (origen[0])|(origen[1]<<8)|(origen[2]<<16)|(origen[3]<<24);
 }
+
+int util_get_input_file_keyboard_ms(void)
+{
+    return input_file_keyboard_delay*1000/50;
+}

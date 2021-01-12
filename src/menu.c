@@ -19130,20 +19130,6 @@ void menu_cpu_speed(MENU_ITEM_PARAMETERS)
 {
 	menu_ventana_scanf_numero_enhanced("Emulator Speed (%)",&porcentaje_velocidad_emulador,5,+25,1,9999,0);
 
-	/*
-        char string_speed[5];
-
-        sprintf (string_speed,"%d",porcentaje_velocidad_emulador);
-
-        //menu_ventana_scanf("Emulator Speed (%)",string_speed,5);
-
-		int ret=menu_ventana_scanf_numero("Emulator Speed (%)",string_speed,5,25,1,9999,0);
-
-		if (ret<0) return;
-
-        porcentaje_velocidad_emulador=parse_string_to_number(string_speed);
-        if (porcentaje_velocidad_emulador<1 || porcentaje_velocidad_emulador>9999) porcentaje_velocidad_emulador=100;
-	*/
 
 	set_emulator_speed();
 
@@ -24759,13 +24745,20 @@ int menu_input_file_keyboard_cond(void)
 
 void menu_input_file_keyboard_delay(MENU_ITEM_PARAMETERS)
 {
-        if (input_file_keyboard_delay==1) input_file_keyboard_delay=2;
-        else if (input_file_keyboard_delay==2) input_file_keyboard_delay=5;
-        else if (input_file_keyboard_delay==5) input_file_keyboard_delay=10;
-        else if (input_file_keyboard_delay==10) input_file_keyboard_delay=25;
-        else if (input_file_keyboard_delay==25) input_file_keyboard_delay=50;
 
-        else input_file_keyboard_delay=1;
+    //Final valor =>  input_file_keyboard_delay=((Valor en ms)*50)/1000
+    int valor_ms=util_get_input_file_keyboard_ms();
+
+    menu_ventana_scanf_numero_enhanced("Key length",&valor_ms,5,+20,20,2000,1);
+
+
+    input_file_keyboard_delay=(valor_ms*50)/1000;
+
+    //Por si acaso controlar los limites despues de hacer este calculo
+    //1->20 ms. 100->2000 ms
+    if (input_file_keyboard_delay<1 || input_file_keyboard_delay>100) input_file_keyboard_delay=1;
+    
+
 }
 
 void menu_input_file_keyboard(MENU_ITEM_PARAMETERS)
@@ -25119,7 +25112,7 @@ void menu_debug_input_file_keyboard(MENU_ITEM_PARAMETERS)
 
 			if (input_file_keyboard_turbo.v==0) {
 
-	                        menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_delay,NULL,"[%d ms] Key length",input_file_keyboard_delay*1000/50);
+	                        menu_add_item_menu_format(array_menu_input_file_keyboard,MENU_OPCION_NORMAL,menu_input_file_keyboard_delay,NULL,"[%d ms] Key length",util_get_input_file_keyboard_ms() );
         	                menu_add_item_menu_tooltip(array_menu_input_file_keyboard,"Length of every key pressed");
                 	        menu_add_item_menu_ayuda(array_menu_input_file_keyboard,"I recommend 100 ms for entering lines on Spectrum BASIC. I also suggest to send some manual delays, using unhandled character, like \\, to assure entering lines is correct ");
 
@@ -26862,31 +26855,8 @@ void menu_interface_footer(MENU_ITEM_PARAMETERS)
 void menu_interface_frameskip(MENU_ITEM_PARAMETERS)
 {
 
-    //menu_hardware_advanced_input_value(0,49,"Frameskip",&frameskip);
 	menu_ventana_scanf_numero_enhanced("Frameskip",&frameskip,3,+1,0,49,0);
-	/*
 
-	int valor;
-
-        char string_value[3];
-
-        sprintf (string_value,"%d",frameskip);
-
-
-        //menu_ventana_scanf("Frameskip",string_value,3);
-		int ret=menu_ventana_scanf_numero("Frameskip",string_value,3,+1,0,49,0);
-
-		if (ret<0) return;
-
-        valor=parse_string_to_number(string_value);
-
-	if (valor<0 || valor>49) {
-		debug_printf (VERBOSE_ERR,"Value out of range. Minimum: 0 Maximum: 49");
-		return;
-	}
-
-	frameskip=valor;
-	*/
 
 }
 

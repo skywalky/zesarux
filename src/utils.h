@@ -930,4 +930,6 @@ extern const char *spectrum_colour_names[];
 extern void util_write_long_value(z80_byte *destino,unsigned int valor);
 extern unsigned int util_read_long_value(z80_byte *origen);
 
+extern int util_get_input_file_keyboard_ms(void);
+
 #endif
