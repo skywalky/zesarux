@@ -1996,6 +1996,7 @@ printf (
 		"--zxunospifile path          File to use on ZX-Uno as SPI Flash. Default: zxuno.flash\n"
 		"--zxunospi-write-protection  Enable ZX-Uno SPI Flash write protection\n"
 		"--zxunospi-persistent-writes Enable ZX-Uno SPI Flash persistent writes\n"
+        "--zxuno-initial-64k          Load a 64kb block of memory that will be written on the initial 64kb space\n"
 
 
                 "--dandanator-rom f         Set ZX Dandanator rom file\n"
@@ -2767,6 +2768,8 @@ void malloc_mem_machine(void) {
 
 		zxuno_init_memory_tables();
 		zxuno_set_memory_pages();
+
+        zxuno_load_additional_64k_block();
 
                 //mem_set_normal_pages_zxuno();
 
@@ -5994,6 +5997,12 @@ int parse_cmdline_options(void) {
                                 siguiente_parametro_argumento();
 				sprintf(zxuno_flash_spi_name,"%s",argv[puntero_parametro]);
                         }
+
+			else if (!strcmp(argv[puntero_parametro],"--zxuno-initial-64k ")) {
+                                siguiente_parametro_argumento();
+				sprintf(zxuno_initial_64k_file,"%s",argv[puntero_parametro]);
+                        }
+                       
 
 			else if (
 			         !strcmp(argv[puntero_parametro],"--zxunospi-persistent-writes")

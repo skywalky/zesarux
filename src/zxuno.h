@@ -62,7 +62,7 @@ extern z80_bit zxuno_dma_disabled;
 
 extern z80_byte last_port_FC3B;
 
-
+extern char zxuno_initial_64k_file[];
 
 #define ZXUNO_BOOTM_DISABLED ( (zxuno_ports[0]&1)==0 )
 #define ZXUNO_BOOTM_ENABLED ( (zxuno_ports[0]&1)==1 )

@@ -176,6 +176,9 @@ z80_bit zxuno_dma_disabled={0};
 //Luego va vram1, 2 y vram3
 z80_byte *zxuno_begin_vram0_pointer;
 
+//Archivo adicional de carga en espacio de memoria
+char zxuno_initial_64k_file[PATH_MAX]="";
+
 
 void zxuno_test_if_prob(void)
 {
@@ -420,6 +423,7 @@ void zxuno_set_emulador_settings(void)
   
   
 }
+
 
 void hard_reset_cpu_zxuno(void)
 {
@@ -2117,4 +2121,73 @@ int zxuno_prism_get_border_color(void)
 { 
                 int rgb15=zxuno_prism_current_palette[screen_border_last_color].index_palette_15bit;
                 return TSCONF_INDEX_FIRST_COLOR+rgb15;  
+}
+
+
+int zxuno_already_loaded_block=0;
+
+void zxuno_load_additional_64k_block(void)
+{
+
+    printf("check if loading additional 64kb block\n");
+
+    //hay path?
+    if (zxuno_initial_64k_file[0]==0) return;
+
+    
+    printf("loading additional 64kb block\n");
+
+    printf("bootm=%d\n",zxuno_ports[0]);    
+
+    //solo hacerlo una vez. aunque esto solo se llama al crear la maquina, no deberia suceder mas veces
+    if (zxuno_already_loaded_block) {
+        printf("block already loaded. exiting\n");
+        return;
+    }
+
+    printf("first time load block\n");
+
+    //mapeo: rom, pagina 5, pagina 2, pagina mastermapper(0 defecto)
+    /*
+		pagina0=0;
+		pagina1=5;
+		pagina2=2;
+		pagina3=zxuno_ports[1]&31;
+
+		//Los 16kb de rom del zxuno
+		zxuno_memory_paged_brandnew[0*2]=memoria_spectrum;
+		zxuno_memory_paged_brandnew[0*2+1]=memoria_spectrum+8192;
+
+		zxuno_memory_paged_brandnew[1*2]=zxuno_sram_mem_table_new[pagina1];
+		zxuno_memory_paged_brandnew[1*2+1]=zxuno_sram_mem_table_new[pagina1]+8192;
+
+		zxuno_memory_paged_brandnew[2*2]=zxuno_sram_mem_table_new[pagina2];
+		zxuno_memory_paged_brandnew[2*2+1]=zxuno_sram_mem_table_new[pagina2]+8192;
+
+		zxuno_memory_paged_brandnew[3*2]=zxuno_sram_mem_table_new[pagina3];
+		zxuno_memory_paged_brandnew[3*2+1]=zxuno_sram_mem_table_new[pagina3]+8192;    
+    */
+
+   
+        FILE *ptr_configfile;
+        ptr_configfile=fopen(zxuno_initial_64k_file,"rb");
+
+
+        if (!ptr_configfile) {
+                debug_printf(VERBOSE_ERR,"Unable to open file %s",zxuno_initial_64k_file);
+                return;
+        }
+
+        //leer en trocitos de 8kb
+        int i;
+        for (i=0;i<8;i++) {
+            fread(zxuno_memory_paged_brandnew[i],1,8192,ptr_configfile);
+        }     
+
+
+
+
+        fclose(ptr_configfile);
+
+
 }
