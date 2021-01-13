@@ -131,8 +131,10 @@ son ASCII estándar imprimibles (códigos 32-127). Cualquier otro valor es indic
 */
 int zxuno_core_id_indice=0;
 
-char *zxuno_core_id_message="Z24-28022017";
+char *zxuno_core_id_message="Z27-20082020";
 //Lo hago corresponder con el mismo ID del core zxuno que mas se parece a la emulación en ZEsarUX, cambiando la T inicial por una Z
+//En caso de cores EXP tambien cambio EXP por Z
+
 
 
 //Registros de DMA
@@ -660,6 +662,15 @@ z80_byte zxuno_read_spi(void)
 			debug_printf (VERBOSE_DEBUG,"Read SPI. Read Status Register. Value: 0x%02X",zxuno_spi_status_register);
 			return zxuno_spi_status_register;
 			break;
+
+		case 0x9f:
+			//Read JEDEC ID (9Fh)
+
+
+			debug_printf (VERBOSE_DEBUG,"Read SPI. Read JEDEC ID (9Fh)");
+            //Incompleto. Retornar siempre el mismo byte (0x16), para indicar flash de 4MB y poder actualizar la flash de zxuno desde la bios de zxuno
+			return 0x16; //16h= 4 MB. 18h=16 MB
+			break;            
 
 		default:
 			debug_printf (VERBOSE_DEBUG,"Read SPI. Command 0x%02X not implemented",zxuno_spi_bus[0]);
@@ -1360,12 +1371,13 @@ turbo modo 8 en pc=312
 	else t=8;
 
 	debug_printf (VERBOSE_INFO,"Set zxuno turbo mode %d with pc=%d",t,reg_pc);
-	//printf ("Set zxuno turbo mode %d with pc=%d\n",t,reg_pc);
+
+    //printf ("Set zxuno turbo mode %d with pc=%d\n",t,reg_pc);
 
 	if (zxuno_deny_turbo_bios_boot.v) {
 
 		if (t>1) {
-			if (reg_pc==50 || reg_pc==347) {
+			if (reg_pc==50 || reg_pc==356) {
 				debug_printf (VERBOSE_INFO,"Not changing cpu speed on zxuno bios. We dont want to use too much real cpu for this!");
 				//printf ("Not changing cpu speed on zxuno bios. We dont want to use too much real cpu for this!\n");
 				return;

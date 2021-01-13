@@ -164,3 +164,10 @@ Spool que permita tiempo intermedio como 150 ms. Quizá hacer que tenga más inc
 
 -Sprites en delta shadow parece que fallan efecto mirror
 
+-zxuno:
+
+upgrade flash desde bios ok
+upgrade bios desde bios ok
+activar gmodes y boot timer 2x ok
+
+upgrade mmc a 0.8.6 final ok

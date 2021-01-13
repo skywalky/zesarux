@@ -726,7 +726,16 @@ z80_byte mmc_read(void)
 			debug_printf (VERBOSE_DEBUG,"MMC Read command CMD8 SEND_IF_COND unhandled");
 			
 			//mmc_r1 |=4; //Devolver error
-			return 0;
+
+            //Parche para poder actualizar desde la bios de zxuno 
+            if (MACHINE_IS_ZXUNO) {
+                //CMD8, SEND_IF_COND (send interface condition), is used to check whether the card is 
+                //first generation or Version 2.00 (or later). If the card is of first generation, 
+                //it will respond with R1 with bit 2 set (illegal command).
+                return 4;
+            }
+
+            else return 0;
 		break;
 
 		case 0x49:
