@@ -2126,6 +2126,10 @@ int zxuno_prism_get_border_color(void)
 
 int zxuno_already_loaded_block=0;
 
+/*
+Cargar un archivo de maximo 64kb en la memoria mapeada. Se hace justo despues de inicializar la mmu y cargar la rom
+De hecho esa rom se quedará sobreescrita con el bloque que indiquemos aqui
+*/
 void zxuno_load_additional_64k_block(void)
 {
 
@@ -2144,6 +2148,8 @@ void zxuno_load_additional_64k_block(void)
         printf("block already loaded. exiting\n");
         return;
     }
+
+    zxuno_already_loaded_block=1;
 
     printf("first time load block\n");
 
@@ -2181,6 +2187,7 @@ void zxuno_load_additional_64k_block(void)
         //leer en trocitos de 8kb
         int i;
         for (i=0;i<8;i++) {
+            printf("loading 8kb block to segment %d\n",i);
             fread(zxuno_memory_paged_brandnew[i],1,8192,ptr_configfile);
         }     
 

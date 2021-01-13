@@ -2769,7 +2769,7 @@ void malloc_mem_machine(void) {
 		zxuno_init_memory_tables();
 		zxuno_set_memory_pages();
 
-        zxuno_load_additional_64k_block();
+
 
                 //mem_set_normal_pages_zxuno();
 
@@ -4644,6 +4644,9 @@ void rom_load(char *romfilename)
 			debug_printf (VERBOSE_DEBUG,"Read %d bytes of rom file %s",leidos,romfilename);
 
 			zxuno_load_spi_flash();
+
+
+            zxuno_load_additional_64k_block();
 		}
 
 	       else if (MACHINE_IS_CHLOE) {
@@ -5998,7 +6001,7 @@ int parse_cmdline_options(void) {
 				sprintf(zxuno_flash_spi_name,"%s",argv[puntero_parametro]);
                         }
 
-			else if (!strcmp(argv[puntero_parametro],"--zxuno-initial-64k ")) {
+			else if (!strcmp(argv[puntero_parametro],"--zxuno-initial-64k")) {
                                 siguiente_parametro_argumento();
 				sprintf(zxuno_initial_64k_file,"%s",argv[puntero_parametro]);
                         }
