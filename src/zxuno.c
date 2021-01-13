@@ -1661,18 +1661,7 @@ int is_zxuno_chloe_mmu(void)
 void zxuno_set_memory_pages(void)
 {
 
-	//Si hay habilitado paginacion timex/chloe
-	if (zxuno_is_chloe_mmu ()) {
-		//printf ("Usando chloe mmu\n");
-		chloe_set_memory_pages();
 
-		int i;
-		for (i=0;i<8;i++) {
-			zxuno_memory_paged_brandnew[i]=chloe_memory_paged[i];
-		}
-
-		return;
-	}
 
 
 	//Muy facil
@@ -1713,6 +1702,21 @@ void zxuno_set_memory_pages(void)
 
 	//Sin bootm
 	else {
+
+
+	//Si hay habilitado paginacion timex/chloe
+	if (zxuno_is_chloe_mmu ()) {
+		//printf ("Usando chloe mmu\n");
+		chloe_set_memory_pages();
+
+		int i;
+		for (i=0;i<8;i++) {
+			zxuno_memory_paged_brandnew[i]=chloe_memory_paged[i];
+		}
+
+		return;
+	}
+
 		//Modo +2A
 		//Si modo de rom en ram
 		if (puerto_8189 & 1) {

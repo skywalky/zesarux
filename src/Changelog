@@ -22,6 +22,7 @@ Improved menu interface:
 Improved ZX-Uno emulation:
 -Updated BIOS, Flash and ESXDOS (ESXDOS now runs 0.8.6 final version)
 -Fixed bugs on mmc and flash storage layer which prevented to update itself from the BIOS
+-Fixed chloe mmu mapping: bootm has priority. If bootm=1, can't map chloe. If bootm=0, can be chloe or +2a
 
 TBBlue: Fixed writing on divmmc memory when layer2 active
 
