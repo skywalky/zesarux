@@ -188,4 +188,6 @@ extern int zxuno_is_prism_mapping_enabled(void);
 
 extern void zxuno_prism_mode_splash(void);
 
+extern void zxuno_load_additional_64k_block(void);
+
 #endif
