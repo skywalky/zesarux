@@ -254,6 +254,10 @@ export LDFLAGS="-g -rdynamic"
 Before ./configure, then ./configure (with your desired settings) ; make clean ; make
 Then, when a ZEsarUX kernel panic is generated, you will see the call names on the backtrace. This is only valid on GNU/Linux or Mac (and Mac seems to enable these compilation settings by default)
 
+
+Q: I just added a command line breakpoint like this "PC=0" and it does not stop. Why?
+A: That breakpoint won't be fired just after booting the emulator. The reason is that breakpoints are always evaluated after opcode execution, so the first time, the opcode at 0 is evaluated, which used to be a "DI" in a spectrum, so when the breakpoint is evaluated, PC=1. So, you can replace your breakpoint to PC=1 for example
+
 ----------------------------------------------------------------------------
 
 
