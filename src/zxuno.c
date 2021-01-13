@@ -2129,6 +2129,27 @@ int zxuno_already_loaded_block=0;
 /*
 Cargar un archivo de maximo 64kb en la memoria mapeada. Se hace justo despues de inicializar la mmu y cargar la rom
 De hecho esa rom se quedará sobreescrita con el bloque que indiquemos aqui
+
+Como probar esto?
+Aunque es exclusivo de zxuno la manera facil es:
+
+-Meter en los primeros 16kb una rom cualquiera, la de 48.rom vale. Luego agregarle una pantalla .scr.
+
+cp 48.rom pruebabloque.raw
+cat chasehq.scr >> pruebabloque.raw
+
+-Al arrancar con : 
+./zesarux --noconfigfile --machine zxuno --zxuno-initial-64k pruebabloque.raw
+
+Se vera la pantalla un instante y se hara el reset normal la rom del spectrum 48
+
+Logicamente esto no es un archivo de 64kb total pero para la prueba vale
+
+Se puede tambien agregar cadenas de texto al archivo y luego visualizarlas con debug->hexadecimal editor 
+(habiendo pausado antes la emulacion, claro, o se reseteara)
+
+cat prueba.txt >> pruebabloque.raw
+
 */
 void zxuno_load_additional_64k_block(void)
 {
@@ -2154,47 +2175,30 @@ void zxuno_load_additional_64k_block(void)
     printf("first time load block\n");
 
     //mapeo: rom, pagina 5, pagina 2, pagina mastermapper(0 defecto)
-    /*
-		pagina0=0;
-		pagina1=5;
-		pagina2=2;
-		pagina3=zxuno_ports[1]&31;
+    //de todas maneras miro en los segmentos actuales, da igual si son esos u otros
 
-		//Los 16kb de rom del zxuno
-		zxuno_memory_paged_brandnew[0*2]=memoria_spectrum;
-		zxuno_memory_paged_brandnew[0*2+1]=memoria_spectrum+8192;
-
-		zxuno_memory_paged_brandnew[1*2]=zxuno_sram_mem_table_new[pagina1];
-		zxuno_memory_paged_brandnew[1*2+1]=zxuno_sram_mem_table_new[pagina1]+8192;
-
-		zxuno_memory_paged_brandnew[2*2]=zxuno_sram_mem_table_new[pagina2];
-		zxuno_memory_paged_brandnew[2*2+1]=zxuno_sram_mem_table_new[pagina2]+8192;
-
-		zxuno_memory_paged_brandnew[3*2]=zxuno_sram_mem_table_new[pagina3];
-		zxuno_memory_paged_brandnew[3*2+1]=zxuno_sram_mem_table_new[pagina3]+8192;    
-    */
 
    
-        FILE *ptr_configfile;
-        ptr_configfile=fopen(zxuno_initial_64k_file,"rb");
+    FILE *ptr_configfile;
+    ptr_configfile=fopen(zxuno_initial_64k_file,"rb");
 
 
-        if (!ptr_configfile) {
-                debug_printf(VERBOSE_ERR,"Unable to open file %s",zxuno_initial_64k_file);
-                return;
-        }
+    if (!ptr_configfile) {
+            debug_printf(VERBOSE_ERR,"Unable to open file %s",zxuno_initial_64k_file);
+            return;
+    }
 
-        //leer en trocitos de 8kb
-        int i;
-        for (i=0;i<8;i++) {
-            printf("loading 8kb block to segment %d\n",i);
-            fread(zxuno_memory_paged_brandnew[i],1,8192,ptr_configfile);
-        }     
-
-
+    //leer en trocitos de 8kb
+    int i;
+    for (i=0;i<8;i++) {
+        printf("loading 8kb block to segment %d\n",i);
+        fread(zxuno_memory_paged_brandnew[i],1,8192,ptr_configfile);
+    }     
 
 
-        fclose(ptr_configfile);
+
+
+    fclose(ptr_configfile);
 
 
 }

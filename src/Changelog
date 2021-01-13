@@ -23,6 +23,7 @@ Improved ZX-Uno emulation:
 -Updated BIOS, Flash and ESXDOS (ESXDOS now runs 0.8.6 final version)
 -Fixed bugs on mmc and flash storage layer which prevented to update itself from the BIOS
 -Fixed chloe mmu mapping: bootm has priority. If bootm=1, can't map chloe. If bootm=0, can be chloe or +2a
+-Added command line setting --zxuno-initial-64k to allow loading a initial 64kb block in bootm mode, bypassing the normal boot rom
 
 TBBlue: Fixed writing on divmmc memory when layer2 active
 
