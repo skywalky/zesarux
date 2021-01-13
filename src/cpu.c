@@ -1996,7 +1996,7 @@ printf (
 		"--zxunospifile path          File to use on ZX-Uno as SPI Flash. Default: zxuno.flash\n"
 		"--zxunospi-write-protection  Enable ZX-Uno SPI Flash write protection\n"
 		"--zxunospi-persistent-writes Enable ZX-Uno SPI Flash persistent writes\n"
-        "--zxuno-initial-64k          Load a 64kb block of memory that will be written on the initial 64kb space\n"
+        "--zxuno-initial-64k f        Load a 64kb file that will be written on the initial 64kb space\n"
 
 
                 "--dandanator-rom f         Set ZX Dandanator rom file\n"

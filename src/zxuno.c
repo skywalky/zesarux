@@ -2154,25 +2154,27 @@ cat prueba.txt >> pruebabloque.raw
 void zxuno_load_additional_64k_block(void)
 {
 
-    printf("check if loading additional 64kb block\n");
+    debug_printf(VERBOSE_INFO,"ZX-Uno: Checking if loading additional 64kb block (parameter --zxuno-initial-64k)");
 
     //hay path?
     if (zxuno_initial_64k_file[0]==0) return;
 
     
-    printf("loading additional 64kb block\n");
+    
 
-    printf("bootm=%d\n",zxuno_ports[0]);    
+    //printf("bootm=%d\n",zxuno_ports[0]);    
 
     //solo hacerlo una vez. aunque esto solo se llama al crear la maquina, no deberia suceder mas veces
     if (zxuno_already_loaded_block) {
-        printf("block already loaded. exiting\n");
+        debug_printf(VERBOSE_INFO,"ZX-Uno: additional 64kb block already loaded. exiting");
         return;
     }
 
     zxuno_already_loaded_block=1;
 
-    printf("first time load block\n");
+    debug_printf(VERBOSE_INFO,"ZX-Uno: Loading additional 64kb block from file %s",zxuno_initial_64k_file);    
+
+    //printf("first time load block\n");
 
     //mapeo: rom, pagina 5, pagina 2, pagina mastermapper(0 defecto)
     //de todas maneras miro en los segmentos actuales, da igual si son esos u otros
@@ -2191,7 +2193,7 @@ void zxuno_load_additional_64k_block(void)
     //leer en trocitos de 8kb
     int i;
     for (i=0;i<8;i++) {
-        printf("loading 8kb block to segment %d\n",i);
+        debug_printf(VERBOSE_INFO,"ZX-Uno: Loading 8kb block to segment %d",i);
         fread(zxuno_memory_paged_brandnew[i],1,8192,ptr_configfile);
     }     
 
