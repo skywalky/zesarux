@@ -1951,68 +1951,66 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 */
 					int relative_sprite=0;
 
-                int sprite_es_relative_composite=0; 
-                int sprite_es_relative_unified=0;                    
+                    int sprite_es_relative_composite=0; 
+                    int sprite_es_relative_unified=0;                    
 
 					sprite_visible=tbsprite_sprites[conta_sprites][3]&128;
 
 					sprite_has_5_bytes=tbsprite_sprites[conta_sprites][3] & 64;
 
-							if (sprite_has_5_bytes) {
-								//Pattern es de 5 bytes
-								
+                    if (sprite_has_5_bytes) {
+                        //Pattern es de 5 bytes
+                        
 
-								//Relative sprites
-								//H N6 T X X Y Y Y8
-								//{H,N6} must not equal {0,1} as this combination is used to indicate a relative sprite.
-                                z80_byte spr_attr_4=tbsprite_sprites[conta_sprites][4];
-								if ((spr_attr_4 & (128+64))==64) {
+                        //Relative sprites
+                        //H N6 T X X Y Y Y8
+                        //{H,N6} must not equal {0,1} as this combination is used to indicate a relative sprite.
+                        z80_byte spr_attr_4=tbsprite_sprites[conta_sprites][4];
+                        if ((spr_attr_4 & (128+64))==64) {
 
-									relative_sprite=1;
+                            relative_sprite=1;
 
-                                    if (spr_attr_4 & 32) {
-                                        sprite_es_relative_unified=1;
-                                    }
-                                    else {
-                                        sprite_es_relative_composite=1;
-                                    }                                    
+                            if (spr_attr_4 & 32) {
+                                sprite_es_relative_unified=1;
+                            }
+                            else {
+                                sprite_es_relative_composite=1;
+                            }                                    
 
-									//printf ("Relative sprite number %d\n",conta_sprites);
-									/*
-									The sprite module records the following information from the anchor:
+                            //printf ("Relative sprite number %d\n",conta_sprites);
+                            /*
+                            The sprite module records the following information from the anchor:
 
-									Anchor.visible
-									Anchor.X
-									Anchor.Y
-									Anchor.palette_offset
-									Anchor.N (pattern number)
-									Anchor.H (indicates if the sprite uses 4-bit patterns)
-									*/
+                            Anchor.visible
+                            Anchor.X
+                            Anchor.Y
+                            Anchor.palette_offset
+                            Anchor.N (pattern number)
+                            Anchor.H (indicates if the sprite uses 4-bit patterns)
+                            */
 
-									//Relative sprites is visible if anchor and this sprite are both visibles
-									//The visibility of a particular relative sprite is the result of ANDing the anchor’s visibility 
-									//with the relative sprite’s visibility. In other words, if the anchor is invisible then so are all its relatives.
-									if (sprite_visible && anchor_visible) sprite_visible=128; 
-									//Realmente con 1 valdria pero lo hago para que coincida con el valor normal cuando es visible
-
-
-									else sprite_visible=0;
-									
-									//sprite_visible=anchor_visible;
-
-									//printf("visible: %d\n",sprite_visible);
-								}
-
-								else {
-									//No es relativo. Guardar la visibilidad del ultimo anchor
-									anchor_visible=sprite_visible;
-								}
-
-							}
+                            //Relative sprites is visible if anchor and this sprite are both visibles
+                            //The visibility of a particular relative sprite is the result of ANDing the anchor’s visibility 
+                            //with the relative sprite’s visibility. In other words, if the anchor is invisible then so are all its relatives.
+                            if (sprite_visible && anchor_visible) sprite_visible=128; 
+                            //Realmente con 1 valdria pero lo hago para que coincida con el valor normal cuando es visible
 
 
+                            else sprite_visible=0;
+                            
+                            //sprite_visible=anchor_visible;
 
-					//Si sprite visible
+                            //printf("visible: %d\n",sprite_visible);
+                        }
+
+                        else {
+                            //No es relativo. Guardar la visibilidad del ultimo anchor
+                            anchor_visible=sprite_visible;
+                        }
+
+                    }
+
+
 
                     //temp ocultar alguno
                     //if (conta_sprites==7) sprite_visible=0;
