@@ -162,7 +162,15 @@ Spool que permita tiempo intermedio como 150 ms. Quizá hacer que tenga más inc
 
 -poder redefinir tecla fire joystick (inicio no es muy comodo)
 
--Sprites en delta shadow parece que fallan efecto mirror
+-Sprites en delta shadow:
+*corregir tipo unified, el tema del 16x16:
+Unified sprites are a further extension of the composite type. The same information is recorded from the anchor and the same behaviour as described under composite sprites applies.
+
+The difference is the collection of anchor and relatives is treated as if it were a single 16×16 sprite. The anchor’s rotation, mirror, and scaling bits apply to all its relatives. Rotating the anchor causes all the relatives to rotate around the anchor. Mirroring the anchor causes the relatives to mirror around the anchor. The sprite hardware will automatically adjust X,Y coords and rotation, scaling and mirror bits of all relatives according to settings in the anchor.
+
+Unified sprites should be defined as if all its parts are 16×16 in size with the anchor controlling the look of the whole.
+
+A unified sprite is like a big version of an individual 16×16 sprite controlled by the anchor.
 
 
 -changelog llega al maximo que puede mostrar el visor en menu cuando hay update (64000 bytes)

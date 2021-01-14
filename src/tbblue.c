@@ -1919,6 +1919,10 @@ void tbsprite_do_overlay(void)
 
 		int sprite_has_5_bytes;
 
+        int relative_sprite=0;
+        int sprite_es_relative_composite=0; 
+        int sprite_es_relative_unified=0;             
+
         for (conta_sprites=0;conta_sprites<TBBLUE_MAX_SPRITES && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {
 					int sprite_x;
 					int sprite_y;
@@ -1949,10 +1953,9 @@ void tbsprite_do_overlay(void)
 
 If the display of the sprites on the border is disabled, the coordinates of the sprites range from (32,32) to (287,223).
 */
-					int relative_sprite=0;
+					
 
-                    int sprite_es_relative_composite=0; 
-                    int sprite_es_relative_unified=0;                    
+               
 
 					sprite_visible=tbsprite_sprites[conta_sprites][3]&128;
 
@@ -1973,12 +1976,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
                             relative_sprite=1;
 
-                            if (spr_attr_4 & 32) {
-                                sprite_es_relative_unified=1;
-                            }
-                            else {
-                                sprite_es_relative_composite=1;
-                            }                                    
+                                 
 
                             //printf ("Relative sprite number %d\n",conta_sprites);
                             /*
@@ -2007,8 +2005,24 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         }
 
                         else {
+                            relative_sprite=0;
                             //No es relativo. Guardar la visibilidad del ultimo anchor
                             anchor_visible=sprite_visible;
+
+                            //El anchor define el tipo de "relatividad" de los sprites asociados
+
+                            if (spr_attr_4 & 32) {
+                            
+                            //con la condicion al reves para que se arregla un poco 
+                            //if (!(spr_attr_4 & 32)) {                                
+                                sprite_es_relative_unified=1;
+                                sprite_es_relative_composite=0;
+                                printf("sprite unified en %d\n",conta_sprites);
+                            }
+                            else {
+                                sprite_es_relative_unified=0;
+                                sprite_es_relative_composite=1;
+                            }                               
                         }
 
                     }

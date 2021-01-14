@@ -29,6 +29,7 @@ Improved TBBlue emulation:
 -Fix tbblue relative sprites when anchor sprite is not visible
 -Add relative sprite type composite/unified on sprite navigator
 -Fixed writing on divmmc memory when layer2 active
+-Fixed detecting unified/composite sprites
 
 Fixed CPC bugs:
 -Fixed vsync and hsync interrupts
