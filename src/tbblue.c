@@ -1996,9 +1996,12 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 
 					//Si sprite visible
+
+                    //temp ocultar alguno
+                    //if (conta_sprites==6) sprite_visible=0;
 					
 					
-					if (sprite_visible) {
+					//if (sprite_visible) {
 
 						sprite_x=tbsprite_sprites[conta_sprites][0] | ((tbsprite_sprites[conta_sprites][2]&1)<<8);
 
@@ -2075,6 +2078,9 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 							anchor_palette_offset=palette_offset;
 							anchor_index_pattern=index_pattern;
 						}
+
+                    //hasta aqui no lo miramos pues hay que leer variables de anchor si hay un sprite relativo
+                    if (sprite_visible) {    
 
 						//printf("x: %d\n",sprite_x);
 
