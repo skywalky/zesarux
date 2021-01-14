@@ -3807,16 +3807,40 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 				int sprite_es_4bpp=0;
 				int offset_4bpp_N6=0;
+                int sprite_es_relative=0; 
+
+                int sprite_es_relative_composite=0; 
+                int sprite_es_relative_unified=0;
 
 				char buf_subindex_4_bit[10];
+
+                char buf_relative_type[4]; //CMP (composite), UNI (unified)
 
 				int zoom_x=1;
 				int zoom_y=1;
 
 				if (byte_4 & 64) {
 					//Pattern de 5 bytes
+                    //H N6 T X X Y Y Y8
+                    //{H,N6}  {0,1} -> relative sprite.
+
 					if (byte_5 & 128) sprite_es_4bpp=1;
 					if (byte_5 & 64) offset_4bpp_N6=1;
+
+                    if ((byte_5 & (128+64)) == 64) {
+                        //sprite relative
+                        sprite_es_relative=1;
+                        //H N6 T X X Y Y Y8
+                        //T = 0 if relative sprites are composite type else 1 for unified type
+                        if (byte_5 & 32) {
+                            sprite_es_relative_unified=1;
+                            strcpy(buf_relative_type,"UNI");
+                        }
+                        else {
+                            sprite_es_relative_composite=1;
+                            strcpy(buf_relative_type,"CMP");
+                        }
+                    }
 
 					z80_byte zoom_x_value=(byte_5>>3)&3;
 					if (zoom_x_value) zoom_x <<=zoom_x_value;
@@ -3848,7 +3872,9 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
 
 
-				sprintf(dumpmemoria," %dbpp ZX: %d ZY: %d",(sprite_es_4bpp ? 4 : 8) ,zoom_x,zoom_y);
+				sprintf(dumpmemoria," %dbpp %s ZX: %d ZY: %d",(sprite_es_4bpp ? 4 : 8) ,
+                (sprite_es_relative ? buf_relative_type : "   "),
+                zoom_x,zoom_y);
 				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);				
 
 				}
