@@ -1914,8 +1914,8 @@ void tbsprite_do_overlay(void)
         int anchor_mirror_x=0;
         int anchor_mirror_y=0;
         int anchor_rotate=0;
-        int sprite_zoom_x=0;
-        int sprite_zoom_y=0;
+        int anchor_sprite_zoom_x=0;
+        int anchor_sprite_zoom_y=0;
 
 		int sprite_has_5_bytes;
 
@@ -1958,6 +1958,8 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 					sprite_has_5_bytes=tbsprite_sprites[conta_sprites][3] & 64;
 
+                    z80_byte spr_attr_4=tbsprite_sprites[conta_sprites][4];
+
                     if (sprite_has_5_bytes) {
                         //Pattern es de 5 bytes
                         
@@ -1965,7 +1967,8 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         //Relative sprites
                         //H N6 T X X Y Y Y8
                         //{H,N6} must not equal {0,1} as this combination is used to indicate a relative sprite.
-                        z80_byte spr_attr_4=tbsprite_sprites[conta_sprites][4];
+                        //z80_byte spr_attr_4=tbsprite_sprites[conta_sprites][4];
+
                         if ((spr_attr_4 & (128+64))==64) {
 
                             relative_sprite=1;
@@ -2053,17 +2056,21 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                     //Sprite Attribute 4
                     //0 1 N6 X X Y Y PO
                     //TODO: solo para relative composite sprite, no unified
-                    z80_byte sprite_zoom_x=(tbsprite_sprites[conta_sprites][4] >> 3)&3;
-                    z80_byte sprite_zoom_y=(tbsprite_sprites[conta_sprites][4] >> 1)&3;
+                    z80_byte sprite_zoom_x=(spr_attr_4 >> 3)&3;
+                    z80_byte sprite_zoom_y=(spr_attr_4 >> 1)&3;
 
                     //Si era sprite relativo, asignar valores del ultimo anchor
                     if (relative_sprite) {
                         //printf("Using the last anchor values\n");
 
+                        //if (conta_sprites==9) printf("rel sprite on %d\n",conta_sprites);
+
                         //No estoy seguro de estos AND 0xFF
                         //Pero si los quito, el test de SpritRel.sna se ve peor
                         sprite_x=(sprite_x+anchor_x) & 0xFF;
                         sprite_y=(sprite_y+anchor_y) & 0xFF;
+
+                                               
 
                         /*
                         If the relative sprite has its PR bit set in sprite attribute 2, 
@@ -2102,23 +2109,35 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         if (sprite_es_relative_unified) {
                             mirror_x=anchor_mirror_x;
                             mirror_y=anchor_mirror_y;
+
+
+                            sprite_zoom_x=anchor_sprite_zoom_x;
+                            sprite_zoom_y=anchor_sprite_zoom_y;
+
+                            //printf("unified sprite sprite %d\n",conta_sprites);
+                            
                         }                        
                     }
 
                     else {
                         //Guardamos estos valores como el ultimo anchor
                         //if (sprite_x > 512-128) sprite_x -= 512;                // -127 .. +384 (cover 8x scaleX)
+                        //if (conta_sprites==9) printf("anchor sprite on %d\n",conta_sprites);
+                        //printf("anchor on %d\n",conta_sprites);
 
                         anchor_x=sprite_x;
                         anchor_y=sprite_y;
                         anchor_palette_offset=palette_offset;
                         anchor_index_pattern=index_pattern;
                         anchor_mirror_x=mirror_x;
-                        anchor_mirror_y=mirror_y;                        
+                        anchor_mirror_y=mirror_y;    
+                        anchor_sprite_zoom_x=sprite_zoom_x;
+                        anchor_sprite_zoom_y=sprite_zoom_y;
+
+                                           
                     }
 
-
-	
+                    //if (mirror_x) printf("mirror on sprite %d\n",conta_sprites);
 
                     //hasta aqui no lo miramos pues hay que leer variables de anchor si hay un sprite relativo
                     if (sprite_visible) {    
@@ -2176,6 +2195,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 							z80_byte sprite_rotate;
 
 							sprite_rotate=tbsprite_sprites[conta_sprites][2]&2;
+                            //if (sprite_rotate) printf("rotate on %d\n",conta_sprites);
 
 							/*
 							Comparar bits rotacion con ejemplo en media/spectrum/tbblue/sprites/rotate_example.png
