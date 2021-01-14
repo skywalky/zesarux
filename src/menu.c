@@ -21382,6 +21382,14 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 
 }
 
+//Solicitar lectura de memoria controlando si offset fuera de rango
+//para evitar segfaults con DSK protegidos con speedlock por ejemplo (Mercenary - Escape From Targ & The Second City (1988)(Novagen Software))
+z80_byte menu_dsk_get_byte_memory(z80_byte *memoria,int total_size,int offset)
+{
+    if (offset<0 || offset>=total_size) return 0;
+    else return memoria[offset];
+}
+
 
 //Retorna el offset al dsk segun la pista y sector dados (ambos desde 0...)
 //-1 si no se encuentra
@@ -21414,8 +21422,14 @@ sectores van alternados:
 	//Buscamos en todo el archivo dsk
 	for (pista=0;pista<total_pistas;pista++) {
 
-		int sectores_en_pista=dsk_memoria[iniciopista_orig+0x15];
+        //printf("before getting sectores_en_pista iniciopista_orig=%d\n",iniciopista_orig);
+
+		//int sectores_en_pista=dsk_memoria[iniciopista_orig+0x15];
+
+        int sectores_en_pista=menu_dsk_get_byte_memory(dsk_memoria,longitud_dsk,iniciopista_orig+0x15);
 		//debug_printf(VERBOSE_DEBUG,"Iniciopista: %XH (%d). Sectores en pista %d: %d. IDS pista:  ",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
+
+        //printf("Iniciopista: %XH (%d). Sectores en pista %d: %d. IDS pista:  \n",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
 
 		//int iniciopista_orig=traps_plus3dos_getoff_start_trackinfo(pista);
 		int iniciopista=iniciopista_orig;
@@ -21433,8 +21447,13 @@ sectores van alternados:
 			//Validar offset
 			if (offset_leer_dsk>=longitud_dsk) return -1;
 
-			z80_byte pista_id=dsk_memoria[offset_leer_dsk]; //Leemos pista id
-			//printf("before getting sector_id\n");
+            //printf("before getting pistaid\n");
+			//z80_byte pista_id=dsk_memoria[offset_leer_dsk]; //Leemos pista id
+
+            z80_byte pista_id=menu_dsk_get_byte_memory(dsk_memoria,longitud_dsk,offset_leer_dsk); //Leemos pista id
+
+
+			//printf("after getting pistaid\n");
 
 
 			//Validar offset
@@ -21442,10 +21461,17 @@ sectores van alternados:
 			if (offset_leer_dsk>=longitud_dsk) return -1;
 
 
-			z80_byte sector_id=dsk_memoria[offset_leer_dsk]; //Leemos c1, c2, etc
+            //printf("before getting sector_id\n");
+			//z80_byte sector_id=dsk_memoria[offset_leer_dsk]; //Leemos c1, c2, etc
+
+            z80_byte sector_id=menu_dsk_get_byte_memory(dsk_memoria,longitud_dsk,offset_leer_dsk); //Leemos c1, c2, etc
+
 			//printf("after getting sector_id\n");
 
 			//debug_printf(VERBOSE_DEBUG,"%02X ",sector_id);
+
+
+            //printf("%02X \n",sector_id);
 
 			sector_id &=0xF;
 
@@ -21461,13 +21487,19 @@ sectores van alternados:
 		                return offset+512*sector;
 			}
 
+            //printf("after if\n");
+
 		}
+
+        //printf("after for\n");
 
 		//debug_printf(VERBOSE_DEBUG,"");
 
 		iniciopista_orig +=256;
 		iniciopista_orig +=512*sectores_en_pista;
 	}
+
+    //printf("Not found sector %d/%d\n",pista_buscar,sector_buscar);
 
 	debug_printf(VERBOSE_DEBUG,"Not found sector %d/%d",pista_buscar,sector_buscar);	
 	
@@ -36230,6 +36262,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 			else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"dsk") ) {
 					debug_printf (VERBOSE_DEBUG,"Is a dsk file");
+                    //Ejemplos de DSK que muestran pantalla: CASTLE MASTER.DSK , Drazen Petrovic Basket.dsk
 					retorno=util_extract_dsk(filesel_nombre_archivo_seleccionado,tmpdir);
 			}				
 

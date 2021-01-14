@@ -36,6 +36,7 @@ Fixed CPC bugs:
 
 Fixed loading General Sound rom
 
+Fixed segfaults on fileselector +3 DSK screen previews using Speedlock protected disks or bad disks
 
 
 Version 9.1 - Toi Acid Game edition. 26 November 2020
