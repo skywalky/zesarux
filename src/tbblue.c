@@ -2003,81 +2003,81 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 					
 					//if (sprite_visible) {
 
-						sprite_x=tbsprite_sprites[conta_sprites][0] | ((tbsprite_sprites[conta_sprites][2]&1)<<8);
+                    sprite_x=tbsprite_sprites[conta_sprites][0] | ((tbsprite_sprites[conta_sprites][2]&1)<<8);
 
-						//printf ("sprite %d x: %d \n",conta_sprites,sprite_x);
+                    //printf ("sprite %d x: %d \n",conta_sprites,sprite_x);
 
-						sprite_y=tbsprite_sprites[conta_sprites][1];
+                    sprite_y=tbsprite_sprites[conta_sprites][1];
 
-						if (sprite_has_5_bytes && !relative_sprite) {
-							//Sprite Attribute 4
-							//A. Extended Anchor Sprite
-							//H N6 T X X Y Y Y8
-							//Y8 = Ninth bit of the sprite’s Y coordinate
+                    if (sprite_has_5_bytes && !relative_sprite) {
+                        //Sprite Attribute 4
+                        //A. Extended Anchor Sprite
+                        //H N6 T X X Y Y Y8
+                        //Y8 = Ninth bit of the sprite’s Y coordinate
 
-							sprite_y |= ((tbsprite_sprites[conta_sprites][4]&1)<<8);
-						}
+                        sprite_y |= ((tbsprite_sprites[conta_sprites][4]&1)<<8);
+                    }
 
-						//Posicionamos esa y teniendo en cuenta que nosotros contamos 0 arriba del todo del border en cambio sprites aqui
-						//Considera y=32 dentro de pantalla y y=0..31 en el border
-						//sprite_y +=screen_borde_superior-32;
+                    //Posicionamos esa y teniendo en cuenta que nosotros contamos 0 arriba del todo del border en cambio sprites aqui
+                    //Considera y=32 dentro de pantalla y y=0..31 en el border
+                    //sprite_y +=screen_borde_superior-32;
 
-						//Si y==32-> y=32+48-32=32+16=48
-						//Si y==0 -> y=48-32=16
+                    //Si y==32-> y=32+48-32=32+16=48
+                    //Si y==0 -> y=48-32=16
 
 
-						//3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
-						//Offset paleta se lee tal cual sin rotar valor
-						z80_byte palette_offset=(tbsprite_sprites[conta_sprites][2]) & 0xF0;
+                    //3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
+                    //Offset paleta se lee tal cual sin rotar valor
+                    z80_byte palette_offset=(tbsprite_sprites[conta_sprites][2]) & 0xF0;
 
-						index_pattern=tbsprite_sprites[conta_sprites][3]&63;
-						
-						//Sprite Attribute 4
-						//0 1 N6 X X Y Y PO
-						//TODO: solo para relative composite sprite, no unified
-						z80_byte sprite_zoom_x=(tbsprite_sprites[conta_sprites][4] >> 3)&3;
-						z80_byte sprite_zoom_y=(tbsprite_sprites[conta_sprites][4] >> 1)&3;
+                    index_pattern=tbsprite_sprites[conta_sprites][3]&63;
+                    
+                    //Sprite Attribute 4
+                    //0 1 N6 X X Y Y PO
+                    //TODO: solo para relative composite sprite, no unified
+                    z80_byte sprite_zoom_x=(tbsprite_sprites[conta_sprites][4] >> 3)&3;
+                    z80_byte sprite_zoom_y=(tbsprite_sprites[conta_sprites][4] >> 1)&3;
 
-						//Si era sprite relativo
-						if (relative_sprite) {
-							//printf("Using the last anchor values\n");
+                    //Si era sprite relativo
+                    if (relative_sprite) {
+                        //printf("Using the last anchor values\n");
 
-							//No estoy seguro de estos AND 0xFF
-							//Pero si los quito, el test de SpritRel.sna se ve peor
-							sprite_x=(sprite_x+anchor_x) & 0xFF;
-							sprite_y=(sprite_y+anchor_y) & 0xFF;
+                        //No estoy seguro de estos AND 0xFF
+                        //Pero si los quito, el test de SpritRel.sna se ve peor
+                        sprite_x=(sprite_x+anchor_x) & 0xFF;
+                        sprite_y=(sprite_y+anchor_y) & 0xFF;
 
-							/*
-							If the relative sprite has its PR bit set in sprite attribute 2, 
-							then the anchor’s palette offset is added to the relative sprite’s to determine the active 
-							palette offset for the relative sprite. Otherwise the relative sprite uses its own palette 
-							offset as usual.
+                        /*
+                        If the relative sprite has its PR bit set in sprite attribute 2, 
+                        then the anchor’s palette offset is added to the relative sprite’s to determine the active 
+                        palette offset for the relative sprite. Otherwise the relative sprite uses its own palette 
+                        offset as usual.
 
-							If the relative sprite has its PO bit set in sprite attribute 4, then the anchor’s pattern 
-							number is added to the relative sprite’s to determine the pattern used for display. Otherwise 
-							the relative sprite uses its own pattern number as usual. The intention is to supply a method 
-							to easily animate a large sprite by manipulating the pattern number in the anchor.
-							*/
-							//P P P P XM YM R X8/PR
-							if (tbsprite_sprites[conta_sprites][2]&1) {
-								palette_offset=(palette_offset+anchor_palette_offset)& 0xF0;
-							}
+                        If the relative sprite has its PO bit set in sprite attribute 4, then the anchor’s pattern 
+                        number is added to the relative sprite’s to determine the pattern used for display. Otherwise 
+                        the relative sprite uses its own pattern number as usual. The intention is to supply a method 
+                        to easily animate a large sprite by manipulating the pattern number in the anchor.
+                        */
+                        //P P P P XM YM R X8/PR
+                        if (tbsprite_sprites[conta_sprites][2]&1) {
+                            palette_offset=(palette_offset+anchor_palette_offset)& 0xF0;
+                        }
 
-							//0 1 N6 X X Y Y PO
-							if (tbsprite_sprites[conta_sprites][4]&1) {
-								index_pattern=(index_pattern+anchor_index_pattern)&63;
-							}
-						}
+                        //0 1 N6 X X Y Y PO
+                        if (tbsprite_sprites[conta_sprites][4]&1) {
+                            index_pattern=(index_pattern+anchor_index_pattern)&63;
+                        }
+                    }
 
-						else {
-							//Guardamos estos valores como el ultimo anchor
-							//if (sprite_x > 512-128) sprite_x -= 512;                // -127 .. +384 (cover 8x scaleX)
+                    else {
+                        //Guardamos estos valores como el ultimo anchor
+                        //if (sprite_x > 512-128) sprite_x -= 512;                // -127 .. +384 (cover 8x scaleX)
 
-							anchor_x=sprite_x;
-							anchor_y=sprite_y;
-							anchor_palette_offset=palette_offset;
-							anchor_index_pattern=index_pattern;
-						}
+                        anchor_x=sprite_x;
+                        anchor_y=sprite_y;
+                        anchor_palette_offset=palette_offset;
+                        anchor_index_pattern=index_pattern;
+                    }
 
                     //hasta aqui no lo miramos pues hay que leer variables de anchor si hay un sprite relativo
                     if (sprite_visible) {    

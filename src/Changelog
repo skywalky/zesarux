@@ -25,6 +25,10 @@ Improved ZX-Uno emulation:
 -Fixed chloe mmu mapping: bootm has priority. If bootm=1, can't map chloe. If bootm=0, can be chloe or +2a
 -Added command line setting --zxuno-initial-64k to allow loading a initial 64kb block in bootm mode, bypassing the normal boot rom
 
+Improved TBBlue emulation:
+-Fix tbblue relative sprites when anchor sprite is not visible
+-Add relative sprite type composite/unified on sprite navigator
+
 TBBlue: Fixed writing on divmmc memory when layer2 active
 
 Fixed CPC bugs:
