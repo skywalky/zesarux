@@ -2017,7 +2017,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                             //if (!(spr_attr_4 & 32)) {                                
                                 sprite_es_relative_unified=1;
                                 sprite_es_relative_composite=0;
-                                printf("sprite unified en %d\n",conta_sprites);
+                                //printf("sprite unified en %d\n",conta_sprites);
                             }
                             else {
                                 sprite_es_relative_unified=0;
