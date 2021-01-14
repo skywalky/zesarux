@@ -1911,6 +1911,12 @@ void tbsprite_do_overlay(void)
 
 		anchor_x=anchor_y=anchor_palette_offset=anchor_index_pattern=anchor_visible=anchor_sprite_es_4bpp=0;
 
+        int anchor_mirror_x=0;
+        int anchor_mirror_y=0;
+        int anchor_rotate=0;
+        int sprite_zoom_x=0;
+        int sprite_zoom_y=0;
+
 		int sprite_has_5_bytes;
 
         for (conta_sprites=0;conta_sprites<TBBLUE_MAX_SPRITES && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {
@@ -1945,6 +1951,9 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 */
 					int relative_sprite=0;
 
+                int sprite_es_relative_composite=0; 
+                int sprite_es_relative_unified=0;                    
+
 					sprite_visible=tbsprite_sprites[conta_sprites][3]&128;
 
 					sprite_has_5_bytes=tbsprite_sprites[conta_sprites][3] & 64;
@@ -1956,9 +1965,17 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 								//Relative sprites
 								//H N6 T X X Y Y Y8
 								//{H,N6} must not equal {0,1} as this combination is used to indicate a relative sprite.
-								if ((tbsprite_sprites[conta_sprites][4] & (128+64))==64) {
+                                z80_byte spr_attr_4=tbsprite_sprites[conta_sprites][4];
+								if ((spr_attr_4 & (128+64))==64) {
 
 									relative_sprite=1;
+
+                                    if (spr_attr_4 & 32) {
+                                        sprite_es_relative_unified=1;
+                                    }
+                                    else {
+                                        sprite_es_relative_composite=1;
+                                    }                                    
 
 									//printf ("Relative sprite number %d\n",conta_sprites);
 									/*
@@ -1998,8 +2015,11 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 					//Si sprite visible
 
                     //temp ocultar alguno
-                    //if (conta_sprites==6) sprite_visible=0;
-					
+                    //if (conta_sprites==7) sprite_visible=0;
+
+                    z80_byte mirror_x=tbsprite_sprites[conta_sprites][2]&8;
+                    //[2] 3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
+                    z80_byte mirror_y=tbsprite_sprites[conta_sprites][2]&4;						
 					
 					//if (sprite_visible) {
 
@@ -2038,7 +2058,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                     z80_byte sprite_zoom_x=(tbsprite_sprites[conta_sprites][4] >> 3)&3;
                     z80_byte sprite_zoom_y=(tbsprite_sprites[conta_sprites][4] >> 1)&3;
 
-                    //Si era sprite relativo
+                    //Si era sprite relativo, asignar valores del ultimo anchor
                     if (relative_sprite) {
                         //printf("Using the last anchor values\n");
 
@@ -2067,6 +2087,24 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         if (tbsprite_sprites[conta_sprites][4]&1) {
                             index_pattern=(index_pattern+anchor_index_pattern)&63;
                         }
+
+                        /*
+                        These recorded items are not used by composite sprites:
+
+                        Anchor.rotate
+                        Anchor.xmirror
+                        Anchor.ymirror
+                        Anchor.xscale
+                        Anchor.yscale
+
+                        PUES... esto diria que en la wiki esta al reves
+                        Si no, los pies y brazos del deltashadow, cuando va a la izquierda, se ven mal
+                        */
+
+                        if (sprite_es_relative_unified) {
+                            mirror_x=anchor_mirror_x;
+                            mirror_y=anchor_mirror_y;
+                        }                        
                     }
 
                     else {
@@ -2077,16 +2115,15 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         anchor_y=sprite_y;
                         anchor_palette_offset=palette_offset;
                         anchor_index_pattern=index_pattern;
+                        anchor_mirror_x=mirror_x;
+                        anchor_mirror_y=mirror_y;                        
                     }
+
+
+	
 
                     //hasta aqui no lo miramos pues hay que leer variables de anchor si hay un sprite relativo
                     if (sprite_visible) {    
-
-						//printf("x: %d\n",sprite_x);
-
-						z80_byte mirror_x=tbsprite_sprites[conta_sprites][2]&8;
-						//[2] 3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
-						z80_byte mirror_y=tbsprite_sprites[conta_sprites][2]&4;						
 
 						//Si coordenada y esta en margen y sprite activo
 						int diferencia=(y-sprite_y)>>sprite_zoom_y;
@@ -2105,7 +2142,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 						}
 
 
-						//Pintar el sprite si esta en rango de coordenada y
+						//Pintar el sprite si esta en rango de coordenada y 
 						if (diferencia>=0 && diferencia<TBBLUE_SPRITE_HEIGHT && y>=rangoymin && y<=rangoymax) {
 
 							//printf ("y: %d t_scanline_draw: %d rainbowy:%d sprite_y: %d\n",y,t_scanline_draw,rainbowy,sprite_y);
