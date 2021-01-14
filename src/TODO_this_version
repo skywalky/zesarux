@@ -172,5 +172,7 @@ Unified sprites should be defined as if all its parts are 16×16 in size with th
 
 A unified sprite is like a big version of an individual 16×16 sprite controlled by the anchor.
 
+-en sprite navigator mostrar bien tipo composite/unified (definido cuando es anchor, no cuando es relativo)
+
 
 -changelog llega al maximo que puede mostrar el visor en menu cuando hay update (64000 bytes)
