@@ -28,8 +28,7 @@ Improved ZX-Uno emulation:
 Improved TBBlue emulation:
 -Fix tbblue relative sprites when anchor sprite is not visible
 -Add relative sprite type composite/unified on sprite navigator
-
-TBBlue: Fixed writing on divmmc memory when layer2 active
+-Fixed writing on divmmc memory when layer2 active
 
 Fixed CPC bugs:
 -Fixed vsync and hsync interrupts
