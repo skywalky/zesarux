@@ -2154,6 +2154,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                     //if (mirror_x) printf("mirror on sprite %d\n",conta_sprites);
 
                     //hasta aqui no lo miramos pues hay que leer variables de anchor si hay un sprite relativo
+
+                    //Alterar visibilidad de sprites segun ventana debug-tbblues-sprites-sprite disable
+                    sprite_visible *=debug_tbblue_sprite_visibility[conta_sprites];
+
                     if (sprite_visible) {    
 
 						//Si coordenada y esta en margen y sprite activo
@@ -3416,6 +3420,17 @@ void tbblue_set_emulator_setting_reg_8(void)
 
 }
 
+//Para poder alterar visibilidad de sprites desde un menu
+int debug_tbblue_sprite_visibility[TBBLUE_MAX_SPRITES];
+
+void reset_debug_tbblue_sprite_visibility(void)
+{
+    int i;
+    for (i=0;i<TBBLUE_MAX_SPRITES;i++) {
+        debug_tbblue_sprite_visibility[i]=1; 
+    }    
+}
+
 void tbblue_reset_common(void)
 {
 
@@ -3499,6 +3514,8 @@ Bit	Function
 	tbblue_set_mmu_128k_default();
 
 	tbblue_was_in_p2a_ram_in_rom.v=0;
+
+    reset_debug_tbblue_sprite_visibility();
 
 
 }

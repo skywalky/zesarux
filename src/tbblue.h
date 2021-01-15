@@ -332,4 +332,6 @@ extern int tbblue_tiles_are_monocrome(void);
 
 extern z80_byte tbblue_get_diviface_enabled(void);
 
+extern int debug_tbblue_sprite_visibility[];
+
 #endif

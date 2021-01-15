@@ -26,8 +26,9 @@ Improved ZX-Uno emulation:
 -Added command line setting --zxuno-initial-64k to allow loading a initial 64kb block in bootm mode, bypassing the normal boot rom
 
 Improved TBBlue emulation:
+-Added debug window to enable/disable individual sprites
 -Fix tbblue relative sprites when anchor sprite is not visible
--Add relative sprite type composite/unified on sprite navigator
+-Added relative sprite type composite/unified on sprite navigator
 -Fixed writing on divmmc memory when layer2 active
 -Fixed detecting unified/composite sprites
 

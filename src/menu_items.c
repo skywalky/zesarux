@@ -3816,6 +3816,8 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
                 char buf_relative_type[4]; //CMP (composite), UNI (unified)
 
+                strcpy(buf_relative_type,"   ");
+
 				int zoom_x=1;
 				int zoom_y=1;
 
@@ -3830,8 +3832,14 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
                     if ((byte_5 & (128+64)) == 64) {
                         //sprite relative
                         sprite_es_relative=1;
+                        strcpy(buf_relative_type,"REL");
+                    }
+                    else {
+                        //sprite es anchor
                         //H N6 T X X Y Y Y8
-                        //T = 0 if relative sprites are composite type else 1 for unified type
+                        //T = 0 if relative sprites are composite type else 1 for unified type        
+                        //El tipo de sprite relativo (unified o composite) se define en el anchor,
+                        //no en los bits del sprite relativo                
                         if (byte_5 & 32) {
                             sprite_es_relative_unified=1;
                             strcpy(buf_relative_type,"UNI");
@@ -3839,7 +3847,8 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
                         else {
                             sprite_es_relative_composite=1;
                             strcpy(buf_relative_type,"CMP");
-                        }
+                        }                        
+
                     }
 
 					z80_byte zoom_x_value=(byte_5>>3)&3;
@@ -3873,7 +3882,8 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 
 				sprintf(dumpmemoria," %dbpp %s ZX: %d ZY: %d",(sprite_es_4bpp ? 4 : 8) ,
-                (sprite_es_relative ? buf_relative_type : "   "),
+                //(sprite_es_relative ? buf_relative_type : "   "),
+                buf_relative_type,
                 zoom_x,zoom_y);
 				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);				
 
@@ -23498,6 +23508,100 @@ void menu_debug_tsconf_tbblue_msx_cpc_debug_borders(MENU_ITEM_PARAMETERS)
 	cpc_debug_borders.v ^=1;
 }   
 
+
+void menu_debug_sprite_mangement_disable_change(MENU_ITEM_PARAMETERS)
+{
+    debug_tbblue_sprite_visibility[valor_opcion] ^=1;
+}
+
+
+void menu_debug_sprite_mangement_disable(MENU_ITEM_PARAMETERS)
+{
+
+
+
+	int ancho_ventana=34;
+	int alto_ventana=24;
+
+    //Nota: esta ventana es de 34 de ancho, para dar margen izquierda/derecha,
+    //pues los 4 indices por linea ya ocupan 8x4=32
+    //por tanto con border disabled, zx desktop disabled y menu char width=8, la ventana no caberia entera, saldra cortada parte por la derecha
+    //pero no es lo habitual, al menos habra el border activado (en el caso de tbblue, se fuerza siempre border)
+
+
+	int xventana=menu_center_x()-ancho_ventana/2;
+	int yventana=menu_center_y()-alto_ventana/2;
+
+	zxvision_window ventana;
+
+
+    int total_height=TBBLUE_MAX_SPRITES/4;
+
+	zxvision_new_window(&ventana,xventana,yventana,ancho_ventana,alto_ventana,
+                                                        ancho_ventana-1,total_height,"Sprite disable");
+
+	//Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+	menu_item *array_menu_common;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+	int comun_opcion_seleccionada=0;
+
+
+
+
+	do {
+
+
+		
+        menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);        
+
+		int sprite;
+
+
+		for (sprite=0;sprite<TBBLUE_MAX_SPRITES;sprite++) {
+			
+
+
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_sprite_mangement_disable_change,NULL,
+                "[%c] %3d",(debug_tbblue_sprite_visibility[sprite] ? 'X' : ' '),sprite);
+
+            menu_add_item_menu_tabulado(array_menu_common,1+(sprite %4)*8,sprite/4);
+
+            menu_add_item_menu_valor_opcion(array_menu_common,sprite);
+			
+		}
+		
+
+
+
+		//menu_add_ESC_item(array_menu_common);
+		//menu_add_item_menu_tabulado(array_menu_common,1,alto_ventana-4);
+
+		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"Sprite disable");
+
+			
+			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+					//llamamos por valor de funcion
+					if (item_seleccionado.menu_funcion!=NULL) {
+							//printf ("actuamos por funcion\n");
+							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+							
+					}
+			}
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+    //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
+    cls_menu_overlay();
+
+    //En caso de menus tabulados, es responsabilidad de este de liberar ventana
+    zxvision_destroy_window(&ventana);	
+
+}
+
+
 void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_debug_tsconf_tbblue_msx;
@@ -23527,6 +23631,11 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
         if (!MACHINE_IS_CPC) {
 		menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_spritenav,NULL,"~~Sprite navigator");
 		menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'s');
+        }
+
+        if (MACHINE_IS_TBBLUE) {
+		    menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_sprite_mangement_disable,NULL,"Sprite ~~disabling");
+		    menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'d');            
         }
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_TBBLUE || MACHINE_HAS_VDP_9918A) {
