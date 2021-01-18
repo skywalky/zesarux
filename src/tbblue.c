@@ -2034,7 +2034,11 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
                     z80_byte mirror_x=tbsprite_sprites[conta_sprites][2]&8;
                     //[2] 3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
-                    z80_byte mirror_y=tbsprite_sprites[conta_sprites][2]&4;						
+                    z80_byte mirror_y=tbsprite_sprites[conta_sprites][2]&4;			
+
+                    z80_byte sprite_rotate;
+
+                    sprite_rotate=tbsprite_sprites[conta_sprites][2]&2;                    			
 					
 					//if (sprite_visible) {
 
@@ -2132,10 +2136,6 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         */
 
                         if (sprite_es_relative_unified) {
-                            //temp sprite_visible=0;
-                            //mirror_x=anchor_mirror_x;
-                            //mirror_y=anchor_mirror_y;
-
 
                             sprite_zoom_x=anchor_sprite_zoom_x;
                             sprite_zoom_y=anchor_sprite_zoom_y;
@@ -2155,6 +2155,16 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                             A unified sprite is like a big version of an individual 16×16 sprite controlled by the anchor.                            
                             */
 
+                            if (anchor_rotate) {
+                                sprite_rotate = !sprite_rotate;
+                                int old_x = sprite_x;
+                                sprite_x = -sprite_y;
+                                sprite_y = old_x;
+                                z80_byte old_v = mirror_x;
+                                mirror_x = sprite_rotate ? mirror_y : !mirror_y;
+                                mirror_y = sprite_rotate ? old_v : !old_v;
+                            }                           
+
                             if (anchor_mirror_x) {
                                 mirror_x = !mirror_x;
                                 sprite_x = -sprite_x;
@@ -2163,7 +2173,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                             if (anchor_mirror_y) {
                                 mirror_y = !mirror_y;
                                 sprite_y = -sprite_y;
-                            }                            
+                            }      
+
+                            sprite_x <<= sprite_zoom_x;
+                            sprite_y <<= sprite_zoom_y;                                                  
 
                                                                         
                         }     
@@ -2252,9 +2265,9 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 								incx=-1;
 							}
 
-							z80_byte sprite_rotate;
+							//z80_byte sprite_rotate;
 
-							sprite_rotate=tbsprite_sprites[conta_sprites][2]&2;
+							//sprite_rotate=tbsprite_sprites[conta_sprites][2]&2;
                             //if (sprite_rotate) printf("rotate on %d\n",conta_sprites);
 
 							/*
