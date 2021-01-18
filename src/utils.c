@@ -11472,6 +11472,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
   //Por defecto
   int size=0;
+  *readwrite=1; //1 read only
 
   //Zona 0, ram speccy
   switch (zone) {
@@ -11802,7 +11803,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
     case MEMORY_ZONE_MSX_VRAM:
         if (MACHINE_IS_MSX) {
-              *readwrite=1; 
+              *readwrite=3; //read+write
               size=16384;  
         }
     break;
@@ -11817,7 +11818,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
     case MEMORY_ZONE_SVI_VRAM:
         if (MACHINE_IS_SVI) {
-              *readwrite=1; 
+              *readwrite=3; //read+write
               size=16384;  
         }
     break;
@@ -11831,7 +11832,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
     case MEMORY_ZONE_COLECO_VRAM:
         if (MACHINE_IS_COLECO) {
-              *readwrite=1; 
+              *readwrite=3; //read+write
               size=16384;  
         }
     break;
@@ -11839,7 +11840,7 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
     case MEMORY_ZONE_SG1000_VRAM:
         if (MACHINE_IS_SG1000) {
-              *readwrite=1; 
+              *readwrite=3; //read+write
               size=16384;  
         }
     break;
@@ -11847,14 +11848,14 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
     case MEMORY_ZONE_SAMRAM:
         if (samram_enabled.v) {
-              *readwrite=1; 
+              *readwrite=3; //read+write
               size=SAMRAM_SIZE;              
         }
     break;
 
     case MEMORY_ZONE_NUM_TBBLUE_SPRITES:
         if (MACHINE_IS_TBBLUE) {
-            *readwrite=1; 
+            *readwrite=3; //read+write
             size=TBBLUE_MAX_SPRITES*TBBLUE_SPRITE_ATTRIBUTE_SIZE;
         }
     break;
