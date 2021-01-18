@@ -2076,6 +2076,14 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                     //Si era sprite relativo, asignar valores del ultimo anchor
                     if (relative_sprite) {
                         //printf("Using the last anchor values\n");
+                        //Relative sprites only have 8-bit X and Y coordinates (the ninth bits are taken for other purposes)
+                        //These are signed offsets from the anchor’s X,Y coordinate
+
+                        sprite_x=tbsprite_sprites[conta_sprites][0];
+                        if (sprite_x & 128) sprite_x=-(256-sprite_x);
+
+                        sprite_y=tbsprite_sprites[conta_sprites][1]; 
+                        if (sprite_y & 128) sprite_y=-(256-sprite_y);                       
 
                         //temp
                         /*
@@ -2152,15 +2160,19 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                                 sprite_x = -sprite_x;
                             }     
 
+                            if (anchor_mirror_y) {
+                                mirror_y = !mirror_y;
+                                sprite_y = -sprite_y;
+                            }                            
+
                                                                         
                         }     
 
 
-                        //No estoy seguro de estos AND 0xFF
-                        //Pero si los quito, el test de SpritRel.sna se ve peor
-                        sprite_x=(sprite_x+anchor_x) & 0xFF;
-                        sprite_y=(sprite_y+anchor_y) & 0xFF;
-
+                        sprite_x=(sprite_x+anchor_x) & 0x1FF;
+                        sprite_y=(sprite_y+anchor_y) & 0x1FF;
+                        
+                
                     }
 
                     else {
