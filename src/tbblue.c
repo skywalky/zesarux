@@ -1919,15 +1919,17 @@ void tbsprite_do_overlay(void)
 
 		int sprite_has_5_bytes;
 
-        int relative_sprite=0;
+
+        //int relative_sprite=0;
         int sprite_es_relative_composite=0; 
         int sprite_es_relative_unified=0;             
+        
 
         for (conta_sprites=0;conta_sprites<TBBLUE_MAX_SPRITES && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {
 					int sprite_x;
 					int sprite_y;
 
-
+        int relative_sprite=0;
 
 					/*
 
