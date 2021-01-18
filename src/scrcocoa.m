@@ -948,7 +948,7 @@ int cocoa_raton_oculto=0;
 		//si esta dentro de la ventana y hay que ocultar puntero
 
         if (mouse_pointer_shown.v==0) {
-                if (mouse_x>=0 && mouse_y>=0 && mouse_x<=screen_get_window_size_width_zoom_border_en() && mouse_y<=screen_get_window_size_height_zoom_border_en() ) {
+                if (mouse_x>=0 && mouse_y>=0 && mouse_x<=(screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom()) && mouse_y<=screen_get_window_size_height_zoom_border_en() ) {
                         if (!cocoa_raton_oculto) {
                                 debug_printf (VERBOSE_PARANOID,"Mouse inside window and not hidden. Hide it");
                                 cocoa_raton_oculto=1;
