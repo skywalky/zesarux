@@ -1955,13 +1955,17 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 */
 					
 
-               
-
-					sprite_visible=tbsprite_sprites[conta_sprites][3]&128;
-
-					sprite_has_5_bytes=tbsprite_sprites[conta_sprites][3] & 64;
-
+                    z80_byte spr_attr_0=tbsprite_sprites[conta_sprites][0];
+                    z80_byte spr_attr_1=tbsprite_sprites[conta_sprites][1];
+                    z80_byte spr_attr_2=tbsprite_sprites[conta_sprites][2];
+                    z80_byte spr_attr_3=tbsprite_sprites[conta_sprites][3];
                     z80_byte spr_attr_4=tbsprite_sprites[conta_sprites][4];
+
+					sprite_visible=spr_attr_3 & 128;
+
+					sprite_has_5_bytes=spr_attr_3 & 64;
+
+                    
 
                     if (sprite_has_5_bytes) {
                         //Pattern es de 5 bytes
@@ -2029,24 +2033,21 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 
 
-                    //temp ocultar alguno
-                    //if (conta_sprites==7) sprite_visible=0;
-
-                    z80_byte mirror_x=tbsprite_sprites[conta_sprites][2]&8;
+                    z80_byte mirror_x=spr_attr_2 & 8;
                     //[2] 3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
-                    z80_byte mirror_y=tbsprite_sprites[conta_sprites][2]&4;			
+                    z80_byte mirror_y=spr_attr_2 & 4;			
 
                     z80_byte sprite_rotate;
 
-                    sprite_rotate=tbsprite_sprites[conta_sprites][2]&2;                    			
+                    sprite_rotate=spr_attr_2 & 2;                    			
 					
 					//if (sprite_visible) {
 
-                    sprite_x=tbsprite_sprites[conta_sprites][0] | ((tbsprite_sprites[conta_sprites][2]&1)<<8);
+                    sprite_x=spr_attr_0 | ((spr_attr_2 & 1)<<8);
 
                     //printf ("sprite %d x: %d \n",conta_sprites,sprite_x);
 
-                    sprite_y=tbsprite_sprites[conta_sprites][1];
+                    sprite_y=spr_attr_1;
 
                     if (sprite_has_5_bytes && !relative_sprite) {
                         //Sprite Attribute 4
@@ -2054,7 +2055,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         //H N6 T X X Y Y Y8
                         //Y8 = Ninth bit of the sprite’s Y coordinate
 
-                        sprite_y |= ((tbsprite_sprites[conta_sprites][4]&1)<<8);
+                        sprite_y |= ((spr_attr_4 & 1)<<8);
                     }
 
                     //Posicionamos esa y teniendo en cuenta que nosotros contamos 0 arriba del todo del border en cambio sprites aqui
@@ -2067,9 +2068,9 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
                     //3rd: bits 7-4 is palette offset, bit 3 is X mirror, bit 2 is Y mirror, bit 1 is rotate flag and bit 0 is X MSB.
                     //Offset paleta se lee tal cual sin rotar valor
-                    z80_byte palette_offset=(tbsprite_sprites[conta_sprites][2]) & 0xF0;
+                    z80_byte palette_offset=spr_attr_2 & 0xF0;
 
-                    index_pattern=tbsprite_sprites[conta_sprites][3]&63;
+                    index_pattern=spr_attr_3 & 63;
                     
                     //Sprite Attribute 4
                     //0 1 N6 X X Y Y PO
@@ -2083,21 +2084,11 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         //Relative sprites only have 8-bit X and Y coordinates (the ninth bits are taken for other purposes)
                         //These are signed offsets from the anchor’s X,Y coordinate
 
-                        sprite_x=tbsprite_sprites[conta_sprites][0];
+                        sprite_x=spr_attr_0;
                         if (sprite_x & 128) sprite_x=-(256-sprite_x);
 
-                        sprite_y=tbsprite_sprites[conta_sprites][1]; 
+                        sprite_y=spr_attr_1; 
                         if (sprite_y & 128) sprite_y=-(256-sprite_y);                       
-
-                        //temp
-                        /*
-                        if (conta_sprites==8 || conta_sprites==7) {
-                            printf("rel sprite on %d x %d mx %d\n",conta_sprites,sprite_x,mirror_x);
-                            //if (sprite_x<100) sprite_visible=0;
-                            //sprite_visible=0;
-                        }
-                        */
-
 
                                                
 
@@ -2113,12 +2104,12 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         to easily animate a large sprite by manipulating the pattern number in the anchor.
                         */
                         //P P P P XM YM R X8/PR
-                        if (tbsprite_sprites[conta_sprites][2]&1) {
+                        if (spr_attr_2 &1) {
                             palette_offset=(palette_offset+anchor_palette_offset)& 0xF0;
                         }
 
                         //0 1 N6 X X Y Y PO
-                        if (tbsprite_sprites[conta_sprites][4]&1) {
+                        if (spr_attr_4&1) {
                             index_pattern=(index_pattern+anchor_index_pattern)&63;
                         }
 

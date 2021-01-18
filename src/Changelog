@@ -28,10 +28,7 @@ Improved ZX-Uno emulation:
 
 Improved TBBlue emulation:
 -Added debug window to enable/disable individual sprites
--Fix tbblue relative sprites when anchor sprite is not visible
 -Added relative sprite type composite/unified on sprite navigator
--Fixed writing on divmmc memory when layer2 active
--Fixed detecting unified/composite sprites
 
 Fixed CPC bugs:
 -Fixed vsync and hsync interrupts
@@ -39,6 +36,14 @@ Fixed CPC bugs:
 -Fixed AY chip register selection
 -Fixed CRTC interrupts. After a CRTC interrupt with Z80 interrupts disabled, they were not fired when enabling Z80 interrupts
 -Fixed setting bit 4 of the "Select screen mode and rom configuration" register of the Gate-Array and interrupt request
+
+Fixed TBBlue bugs:
+-Fixed relative sprites when anchor sprite is not visible
+-Fixed relative sprites and negative coordinates
+-Fixed relative unified sprites
+-Fixed writing on divmmc memory when layer2 active
+-Fixed detecting unified/composite sprites
+
 
 Fixed loading General Sound rom
 
