@@ -184,4 +184,4 @@ Al guardar la config, la que no existe no debería guardarse (ya no deberá esta
 
 -changelog llega al maximo que puede mostrar el visor en menu cuando hay update (64000 bytes)
 
--hidemousepointer no actua en zxdesktop
+-the next war: revisar border deberia desactivar. musica en menu no se oye bien
