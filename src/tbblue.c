@@ -2077,12 +2077,15 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                     if (relative_sprite) {
                         //printf("Using the last anchor values\n");
 
-                        //if (conta_sprites==9) printf("rel sprite on %d\n",conta_sprites);
+                        //temp
+                        /*
+                        if (conta_sprites==8 || conta_sprites==7) {
+                            printf("rel sprite on %d x %d mx %d\n",conta_sprites,sprite_x,mirror_x);
+                            //if (sprite_x<100) sprite_visible=0;
+                            //sprite_visible=0;
+                        }
+                        */
 
-                        //No estoy seguro de estos AND 0xFF
-                        //Pero si los quito, el test de SpritRel.sna se ve peor
-                        sprite_x=(sprite_x+anchor_x) & 0xFF;
-                        sprite_y=(sprite_y+anchor_y) & 0xFF;
 
                                                
 
@@ -2121,16 +2124,43 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         */
 
                         if (sprite_es_relative_unified) {
-                            mirror_x=anchor_mirror_x;
-                            mirror_y=anchor_mirror_y;
+                            //temp sprite_visible=0;
+                            //mirror_x=anchor_mirror_x;
+                            //mirror_y=anchor_mirror_y;
 
 
                             sprite_zoom_x=anchor_sprite_zoom_x;
                             sprite_zoom_y=anchor_sprite_zoom_y;
 
                             //printf("unified sprite sprite %d\n",conta_sprites);
-                            
-                        }                        
+                            /*
+                            The difference is the collection of anchor and relatives is treated as 
+                            if it were a single 16×16 sprite. The anchor’s rotation, mirror, and 
+                            scaling bits apply to all its relatives. Rotating the anchor causes all the relatives to 
+                            rotate around the anchor. Mirroring the anchor causes the relatives to mirror around the anchor.
+                             The sprite hardware will automatically adjust X,Y coords and rotation, scaling and mirror bits of all 
+                             relatives according to settings in the anchor.
+
+                            Unified sprites should be defined as if all its parts are 16×16 in size with the anchor controlling
+                            the look of the whole.
+
+                            A unified sprite is like a big version of an individual 16×16 sprite controlled by the anchor.                            
+                            */
+
+                            if (anchor_mirror_x) {
+                                mirror_x = !mirror_x;
+                                sprite_x = -sprite_x;
+                            }     
+
+                                                                        
+                        }     
+
+
+                        //No estoy seguro de estos AND 0xFF
+                        //Pero si los quito, el test de SpritRel.sna se ve peor
+                        sprite_x=(sprite_x+anchor_x) & 0xFF;
+                        sprite_y=(sprite_y+anchor_y) & 0xFF;
+
                     }
 
                     else {
