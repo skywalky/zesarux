@@ -1921,6 +1921,8 @@ void tbsprite_do_overlay(void)
 
 
         //int relative_sprite=0;
+
+        //Esto se conserva el valor anterior del anterior anchor
         int sprite_es_relative_composite=0; 
         int sprite_es_relative_unified=0;             
         
@@ -1929,7 +1931,8 @@ void tbsprite_do_overlay(void)
 					int sprite_x;
 					int sprite_y;
 
-        int relative_sprite=0;
+                    //Esto se lee de cada sprite
+                    int relative_sprite=0;
 
 					/*
 

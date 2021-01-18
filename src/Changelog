@@ -29,6 +29,7 @@ Improved ZX-Uno emulation:
 Improved TBBlue emulation:
 -Added debug window to enable/disable individual sprites
 -Added relative sprite type composite/unified on sprite navigator
+-Added Sprites Debug memory zone
 
 Fixed CPC bugs:
 -Fixed vsync and hsync interrupts

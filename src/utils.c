@@ -11852,6 +11852,13 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
         }
     break;
 
+    case MEMORY_ZONE_NUM_TBBLUE_SPRITES:
+        if (MACHINE_IS_TBBLUE) {
+            *readwrite=1; 
+            size=TBBLUE_MAX_SPRITES*TBBLUE_SPRITE_ATTRIBUTE_SIZE;
+        }
+    break;
+
 
   }
 
@@ -12202,6 +12209,14 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
               p=&samram_memory_pointer[address];           
         }    
     break;
+
+    case MEMORY_ZONE_NUM_TBBLUE_SPRITES:
+        if (MACHINE_IS_TBBLUE) {
+            int sprite_offset=address / TBBLUE_SPRITE_ATTRIBUTE_SIZE;
+            int sprite_attr_index=address % TBBLUE_SPRITE_ATTRIBUTE_SIZE;
+            p=&tbsprite_sprites[sprite_offset][sprite_attr_index];
+        }
+    break; 
 
   }
 
@@ -12582,6 +12597,12 @@ void machine_get_memory_zone_name(int zone, char *name)
               strcpy(name,"SamRAM");    
         }    
     break;
+
+    case MEMORY_ZONE_NUM_TBBLUE_SPRITES:
+        if (MACHINE_IS_TBBLUE) {
+            strcpy(name,"TBBlue sprites");  
+        }
+    break;     
 
   }
 
