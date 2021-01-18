@@ -413,6 +413,9 @@ z80_bit force_confirm_yes={0};
 //Si raton no tiene accion sobre el menu
 z80_bit mouse_menu_disabled={0};
 
+//Si pulsar un boton de mouse no activa el menu
+z80_bit mouse_menu_ignore_click_open={0};
+
 
 //Se ha pulsado tecla de menu cuando menu esta abierto
 z80_bit menu_pressed_open_menu_while_in_menu={0};
@@ -27219,6 +27222,16 @@ void menu_interface_allow_background_windows_always_force(MENU_ITEM_PARAMETERS)
     always_force_overlay_visible_when_menu_closed ^=1;
 }
 
+void menu_interface_disable_menu_mouse(MENU_ITEM_PARAMETERS)
+{
+    mouse_menu_disabled.v ^=1;
+}
+
+void menu_interface_ignore_click_open_menu(MENU_ITEM_PARAMETERS)
+{
+    mouse_menu_ignore_click_open.v ^=1;    
+}
+
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_window_settings;
@@ -27241,6 +27254,15 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"[%c] ~~Mouse pointer", (mouse_pointer_shown.v==1 ? 'X' : ' ') );
 			menu_add_item_menu_shortcut(array_menu_window_settings,'m');
 		}
+
+        menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_disable_menu_mouse,NULL,"[%c] ~~Use mouse on menu", (mouse_menu_disabled.v==0 ? 'X' : ' ') );
+
+        if (mouse_menu_disabled.v==0) {
+            menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_ignore_click_open_menu,NULL,"[%c] ~~Clicking mouse opens menu", (mouse_menu_ignore_click_open.v==0 ? 'X' : ' ') );            
+            menu_add_item_menu_tooltip(array_menu_window_settings,"Ignore mouse clicking to open menu or ZX Desktop buttons");
+            menu_add_item_menu_ayuda(array_menu_window_settings,"Disabling this will make mouse be ignored when clicking on "
+                "the window to open menu or pressing ZX Desktop buttons. The mouse can still be used when the menu is open");
+        }
 
 
                 if (si_complete_video_driver() ) {

@@ -1780,6 +1780,7 @@ printf (
 		"--disableborder            Disable Border\n"
 		"--hidemousepointer         Hide Mouse Pointer. Not all video drivers support this\n"
 		"--disablemenumouse         Disable mouse on emulator menu\n"
+        "--ignoremouseclickopenmenu Ignore mouse clicking to open menu or ZX Desktop buttons\n"
 
 		//"--overlayinfo              Overlay on screen some machine info, like when loading tape\n"
 
@@ -5834,6 +5835,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--disablemenumouse")) {
 				mouse_menu_disabled.v=1;
 			}
+
+            else if (!strcmp(argv[puntero_parametro],"--ignoremouseclickopenmenu")) {
+                mouse_menu_ignore_click_open.v=1;
+            }
 /*
                 "--text-keyboard-add        Add a string to the Adventure Text Keyboard\n"
                 "--text-keyboard-clear      Clear all entries of the Adventure Text Keyboard\n"

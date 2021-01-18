@@ -716,6 +716,7 @@ extern int menu_window_splash_counter_ms;
 extern z80_bit tooltip_enabled;
 
 extern z80_bit mouse_menu_disabled;
+extern z80_bit mouse_menu_ignore_click_open;
 
 extern char *quickfile;
 extern char quickload_file[];

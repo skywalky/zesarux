@@ -3425,6 +3425,7 @@ int util_write_configfile(void)
   if (border_enabled.v==0)                    ADD_STRING_CONFIG,"--disableborder");
   if (mouse_pointer_shown.v==0)               ADD_STRING_CONFIG,"--hidemousepointer");
   if (mouse_menu_disabled.v)                  ADD_STRING_CONFIG,"--disablemenumouse");
+  if (mouse_menu_ignore_click_open.v)         ADD_STRING_CONFIG,"--ignoremouseclickopenmenu");
 
   if (kempston_mouse_emulation.v)             ADD_STRING_CONFIG,"--enablekempstonmouse");
 
@@ -6088,8 +6089,10 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
           //Si no esta menu abierto, hace accion de abrir menu, siempre que no este kempston
           if (menu_abierto==0) {
                   if (kempston_mouse_emulation.v==0) {
+                      if (mouse_menu_ignore_click_open.v==0) {
                           menu_fire_event_open_menu();
                           menu_was_open_by_left_mouse_button.v=1;
+                      }
                   }
           }
           else {
@@ -6136,7 +6139,11 @@ void util_set_reset_mouse(enum util_mouse_buttons boton,int pressrelease)
         if (si_menu_mouse_activado() ) {
           //Si no esta menu abierto, hace accion de abrir menu, siempre que no este kempston
           if (menu_abierto==0) {
-                  if (kempston_mouse_emulation.v==0) menu_fire_event_open_menu();
+                  if (kempston_mouse_emulation.v==0) {
+                      if (mouse_menu_ignore_click_open.v==0) {
+                        menu_fire_event_open_menu();
+                      }
+                  }
           }
           else {
             //Si esta menu abierto, es como enviar ESC

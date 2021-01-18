@@ -18,6 +18,7 @@ Improved File spooling: delay can now be any value between 20 and 2000 ms (in in
 
 Improved menu interface:
 -Added action to minimize all windows
+-Added setting to ignore mouse click to open the menu
 
 Improved ZX-Uno emulation:
 -Updated BIOS, Flash and ESXDOS (ESXDOS now runs 0.8.6 final version)
