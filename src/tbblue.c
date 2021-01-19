@@ -2327,7 +2327,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 							int offset_4bpp_N6=0;
 
-							if (tbsprite_sprites[conta_sprites][3] & 64) {
+							if (spr_attr_3 & 64) {
 								//Pattern es de 5 bytes
 
 								//En caso de anchor:
@@ -2339,10 +2339,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 								if (!relative_sprite) {
 
-									if (tbsprite_sprites[conta_sprites][4] & 128) sprite_es_4bpp=1;
+									if (spr_attr_4 & 128) sprite_es_4bpp=1;
 
 									if (sprite_es_4bpp) {
-										if (tbsprite_sprites[conta_sprites][4] & 64) offset_4bpp_N6=1;
+										if (spr_attr_4 & 64) offset_4bpp_N6=1;
 									}
 
 									anchor_sprite_es_4bpp=sprite_es_4bpp;
@@ -2364,7 +2364,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 									sprite_es_4bpp=anchor_sprite_es_4bpp;
 
 									if (sprite_es_4bpp) {
-										if (tbsprite_sprites[conta_sprites][4] & 32) offset_4bpp_N6=1;
+										if (spr_attr_4 & 32) offset_4bpp_N6=1;
 									}
 
 									
