@@ -44,6 +44,7 @@ Fixed TBBlue bugs:
 -Fixed relative unified sprites
 -Fixed writing on divmmc memory when layer2 active
 -Fixed detecting unified/composite sprites
+-Fixed calculating pattern on 4 bpp sprites
 
 
 Fixed loading General Sound rom
