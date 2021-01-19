@@ -2094,6 +2094,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                     //int offset_4bpp_N6=0;
 
                     if (sprite_has_5_bytes) {
+                        /*
                         //Pattern es de 5 bytes
 
                         //En caso de anchor:
@@ -2101,6 +2102,15 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         //H = 1 if the sprite pattern is 4-bit
                         //N6 = 7th pattern bit if the sprite pattern is 4-bit
                         //N6 es un nombre confuso, es el bit que dice si sumamos 128 o no
+                        Lo que hago para sprites de 4bpp es:
+                        multiplico *2 valor que teniamos de index pattern, de los bits N5 N4 N3 N2 N1 N0
+                        el bit llamado N6 sera el bit 0
+                        el valor resultante, multiplicado por 128 (sprites de 4bpp ocupan 128),
+                        
+                        sera el offset al sprite
+                        asi, el index pattern en sprites de 4bpp va de 0 a 127
+                        en el caso de 8bpp, va de 0 a 63
+                        */
 
                         
 
