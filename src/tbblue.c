@@ -2086,63 +2086,63 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 
 
-							int sprite_es_4bpp=0;
+                    int sprite_es_4bpp=0;
 
-                            z80_byte mask_index_pattern=63;
+                    z80_byte mask_index_pattern=63;
 
-							//int offset_4bpp_N6=0;
+                    //int offset_4bpp_N6=0;
 
-							if (sprite_has_5_bytes) {
-								//Pattern es de 5 bytes
+                    if (sprite_has_5_bytes) {
+                        //Pattern es de 5 bytes
 
-								//En caso de anchor:
-								//H N6 T X X Y Y Y8
-								//H = 1 if the sprite pattern is 4-bit
-								//N6 = 7th pattern bit if the sprite pattern is 4-bit
+                        //En caso de anchor:
+                        //H N6 T X X Y Y Y8
+                        //H = 1 if the sprite pattern is 4-bit
+                        //N6 = 7th pattern bit if the sprite pattern is 4-bit
 
-								
+                        
 
-								if (!relative_sprite) {
+                        if (!relative_sprite) {
 
-									if (spr_attr_4 & 128) sprite_es_4bpp=1;
+                            if (spr_attr_4 & 128) sprite_es_4bpp=1;
 
-									if (sprite_es_4bpp) {
-										if (spr_attr_4 & 64) {
-                                            //offset_4bpp_N6=1;
-                                            index_pattern +=64;
-                                        }
-									}
+                            if (sprite_es_4bpp) {
+                                if (spr_attr_4 & 64) {
+                                    //offset_4bpp_N6=1;
+                                    index_pattern +=64;
+                                }
+                            }
 
-									anchor_sprite_es_4bpp=sprite_es_4bpp;
-								}
+                            anchor_sprite_es_4bpp=sprite_es_4bpp;
+                        }
 
-								else {
+                        else {
 
 
-									//En caso de relative sprites, el valor de H viene del anchor
-									/*
-									B. Relative Sprite, Composite Type
-									0 1 N6 X X Y Y PO
-									C. Relative Sprite, Unified Type
-									0 1 N6 0 0 0 0 PO
+                            //En caso de relative sprites, el valor de H viene del anchor
+                            /*
+                            B. Relative Sprite, Composite Type
+                            0 1 N6 X X Y Y PO
+                            C. Relative Sprite, Unified Type
+                            0 1 N6 0 0 0 0 PO
 
-									Ver que el bit N6 se desplaza respecto a cuando es un anchor
-									*/
+                            Ver que el bit N6 se desplaza respecto a cuando es un anchor
+                            */
 
-									sprite_es_4bpp=anchor_sprite_es_4bpp;
+                            sprite_es_4bpp=anchor_sprite_es_4bpp;
 
-									if (sprite_es_4bpp) {
-										if (spr_attr_4 & 32) {
-                                            //offset_4bpp_N6=1;
-                                            index_pattern +=64;
-                                        }
-									}
+                            if (sprite_es_4bpp) {
+                                if (spr_attr_4 & 32) {
+                                    //offset_4bpp_N6=1;
+                                    index_pattern +=64;
+                                }
+                            }
 
-									
-								}
+                            
+                        }
 
-								//TODO: Y8
-							}
+                        
+                    }
 
                     if (sprite_es_4bpp) mask_index_pattern=127;
 
@@ -2457,7 +2457,7 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 
 						}
 
-				}
+				    }
 			}
 
 
