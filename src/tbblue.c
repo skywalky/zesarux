@@ -1134,8 +1134,8 @@ Bit	Function
 //XXX indica desplazamiento de 1 pattern de 4bits
 int tbsprite_pattern_get_offset_index_4bpp(z80_byte sprite,z80_byte index_in_sprite)
 {
-	return sprite*TBBLUE_SPRITE_8BPP_SIZE+index_in_sprite;
-    //return sprite*TBBLUE_SPRITE_4BPP_SIZE+index_in_sprite;
+	//return sprite*TBBLUE_SPRITE_8BPP_SIZE+index_in_sprite;
+    return sprite*TBBLUE_SPRITE_4BPP_SIZE+index_in_sprite;
 }
 
 z80_byte tbsprite_pattern_get_value_index_4bpp(z80_byte sprite,z80_byte index_in_sprite)
@@ -2100,6 +2100,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         //H N6 T X X Y Y Y8
                         //H = 1 if the sprite pattern is 4-bit
                         //N6 = 7th pattern bit if the sprite pattern is 4-bit
+                        //N6 es un nombre confuso, es el bit que dice si sumamos 128 o no
 
                         
 
@@ -2108,9 +2109,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                             if (spr_attr_4 & 128) sprite_es_4bpp=1;
 
                             if (sprite_es_4bpp) {
+                            index_pattern *=2;
                                 if (spr_attr_4 & 64) {
                                     //offset_4bpp_N6=1;
-                                    index_pattern +=64;
+                                    index_pattern +=1;
                                 }
                             }
 
@@ -2133,9 +2135,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                             sprite_es_4bpp=anchor_sprite_es_4bpp;
 
                             if (sprite_es_4bpp) {
+                              index_pattern *=2;
                                 if (spr_attr_4 & 32) {
                                     //offset_4bpp_N6=1;
-                                    index_pattern +=64;
+                                    index_pattern +=1;
                                 }
                             }
 
