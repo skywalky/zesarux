@@ -2083,6 +2083,71 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                     z80_byte sprite_zoom_x=(spr_attr_4 >> 3)&3;
                     z80_byte sprite_zoom_y=(spr_attr_4 >> 1)&3;
 
+
+
+
+							int sprite_es_4bpp=0;
+
+                            z80_byte mask_index_pattern=63;
+
+							//int offset_4bpp_N6=0;
+
+							if (sprite_has_5_bytes) {
+								//Pattern es de 5 bytes
+
+								//En caso de anchor:
+								//H N6 T X X Y Y Y8
+								//H = 1 if the sprite pattern is 4-bit
+								//N6 = 7th pattern bit if the sprite pattern is 4-bit
+
+								
+
+								if (!relative_sprite) {
+
+									if (spr_attr_4 & 128) sprite_es_4bpp=1;
+
+									if (sprite_es_4bpp) {
+										if (spr_attr_4 & 64) {
+                                            //offset_4bpp_N6=1;
+                                            index_pattern +=64;
+                                        }
+									}
+
+									anchor_sprite_es_4bpp=sprite_es_4bpp;
+								}
+
+								else {
+
+
+									//En caso de relative sprites, el valor de H viene del anchor
+									/*
+									B. Relative Sprite, Composite Type
+									0 1 N6 X X Y Y PO
+									C. Relative Sprite, Unified Type
+									0 1 N6 0 0 0 0 PO
+
+									Ver que el bit N6 se desplaza respecto a cuando es un anchor
+									*/
+
+									sprite_es_4bpp=anchor_sprite_es_4bpp;
+
+									if (sprite_es_4bpp) {
+										if (spr_attr_4 & 32) {
+                                            //offset_4bpp_N6=1;
+                                            index_pattern +=64;
+                                        }
+									}
+
+									
+								}
+
+								//TODO: Y8
+							}
+
+                    if (sprite_es_4bpp) mask_index_pattern=127;
+
+
+
                     //Si era sprite relativo, asignar valores del ultimo anchor
                     if (relative_sprite) {
                         //printf("Using the last anchor values\n");
@@ -2115,7 +2180,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
                         //0 1 N6 X X Y Y PO
                         if (spr_attr_4&1) {
-                            index_pattern=(index_pattern+anchor_index_pattern)&63;
+                            index_pattern=(index_pattern+anchor_index_pattern)&mask_index_pattern;
                         }
 
                         /*
@@ -2323,61 +2388,6 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 							}
 
 
-							int sprite_es_4bpp=0;
-
-							//int offset_4bpp_N6=0;
-
-							if (spr_attr_3 & 64) {
-								//Pattern es de 5 bytes
-
-								//En caso de anchor:
-								//H N6 T X X Y Y Y8
-								//H = 1 if the sprite pattern is 4-bit
-								//N6 = 7th pattern bit if the sprite pattern is 4-bit
-
-								
-
-								if (!relative_sprite) {
-
-									if (spr_attr_4 & 128) sprite_es_4bpp=1;
-
-									if (sprite_es_4bpp) {
-										if (spr_attr_4 & 64) {
-                                            //offset_4bpp_N6=1;
-                                            index_pattern +=TBBLUE_SPRITE_4BPP_SIZE;
-                                        }
-									}
-
-									anchor_sprite_es_4bpp=sprite_es_4bpp;
-								}
-
-								else {
-
-
-									//En caso de relative sprites, el valor de H viene del anchor
-									/*
-									B. Relative Sprite, Composite Type
-									0 1 N6 X X Y Y PO
-									C. Relative Sprite, Unified Type
-									0 1 N6 0 0 0 0 PO
-
-									Ver que el bit N6 se desplaza respecto a cuando es un anchor
-									*/
-
-									sprite_es_4bpp=anchor_sprite_es_4bpp;
-
-									if (sprite_es_4bpp) {
-										if (spr_attr_4 & 32) {
-                                            //offset_4bpp_N6=1;
-                                            index_pattern +=TBBLUE_SPRITE_4BPP_SIZE;
-                                        }
-									}
-
-									
-								}
-
-								//TODO: Y8
-							}
 
 							for (i=0;i<TBBLUE_SPRITE_WIDTH;i++) {
 								z80_byte index_color;
