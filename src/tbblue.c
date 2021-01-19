@@ -1135,6 +1135,7 @@ Bit	Function
 int tbsprite_pattern_get_offset_index_4bpp(z80_byte sprite,z80_byte index_in_sprite)
 {
 	return sprite*TBBLUE_SPRITE_8BPP_SIZE+index_in_sprite;
+    //return sprite*TBBLUE_SPRITE_4BPP_SIZE+index_in_sprite;
 }
 
 z80_byte tbsprite_pattern_get_value_index_4bpp(z80_byte sprite,z80_byte index_in_sprite)
@@ -2144,6 +2145,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         
                     }
 
+
                     if (sprite_es_4bpp) mask_index_pattern=127;
 
 
@@ -2274,7 +2276,13 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                     //Alterar visibilidad de sprites segun ventana debug-tbblues-sprites-sprite disable
                     sprite_visible *=debug_tbblue_sprite_visibility[conta_sprites];
 
+                
+
                     if (sprite_visible) {    
+
+                                    //if (conta_sprites==0 || conta_sprites==1) {
+                                    //    printf("ANTES %d index_pattern: %d\n",conta_sprites,index_pattern);
+                                    //}                                
 
 						//Si coordenada y esta en margen y sprite activo
 						int diferencia=(y-sprite_y)>>sprite_zoom_y;
@@ -2396,6 +2404,8 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 									//printf("es 4bpp\n");
 									//index_color=tbsprite_do_overlay_get_pattern_xy_4bpp(index_pattern,offset_4bpp_N6,sx,sy);
                                     //index_pattern +=TBBLUE_SPRITE_4BPP_SIZE*offset_4bpp_N6;
+
+
                                     index_color=tbsprite_do_overlay_get_pattern_xy_4bpp(index_pattern,sx,sy);
 
 									//index_color +=7;
