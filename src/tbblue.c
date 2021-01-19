@@ -1132,14 +1132,14 @@ Bit	Function
 }
 
 //XXX indica desplazamiento de 1 pattern de 4bits
-int tbsprite_pattern_get_offset_index_4bpp(z80_byte sprite,int offset_1_pattern,z80_byte index_in_sprite)
+int tbsprite_pattern_get_offset_index_4bpp(z80_byte sprite,z80_byte index_in_sprite)
 {
-	return offset_1_pattern*TBBLUE_SPRITE_4BPP_SIZE + sprite*TBBLUE_SPRITE_8BPP_SIZE+index_in_sprite;
+	return sprite*TBBLUE_SPRITE_8BPP_SIZE+index_in_sprite;
 }
 
-z80_byte tbsprite_pattern_get_value_index_4bpp(z80_byte sprite,int offset_1_pattern,z80_byte index_in_sprite)
+z80_byte tbsprite_pattern_get_value_index_4bpp(z80_byte sprite,z80_byte index_in_sprite)
 {
-	return tbsprite_new_patterns[tbsprite_pattern_get_offset_index_4bpp(sprite,offset_1_pattern,index_in_sprite)];
+	return tbsprite_new_patterns[tbsprite_pattern_get_offset_index_4bpp(sprite,index_in_sprite)];
 }
 
 
@@ -1784,9 +1784,9 @@ z80_byte tbsprite_do_overlay_get_pattern_xy_8bpp(z80_byte index_pattern,z80_byte
 	return tbsprite_pattern_get_value_index_8bpp(index_pattern,sy*TBBLUE_SPRITE_WIDTH+sx);
 }
 
-z80_byte tbsprite_do_overlay_get_pattern_xy_4bpp(z80_byte index_pattern,int offset_1_pattern,z80_byte sx,z80_byte sy)
+z80_byte tbsprite_do_overlay_get_pattern_xy_4bpp(z80_byte index_pattern,z80_byte sx,z80_byte sy)
 {
-	z80_byte valor=tbsprite_pattern_get_value_index_4bpp(index_pattern,offset_1_pattern, (sy*TBBLUE_SPRITE_WIDTH+sx)/2  );
+	z80_byte valor=tbsprite_pattern_get_value_index_4bpp(index_pattern, (sy*TBBLUE_SPRITE_WIDTH+sx)/2  );
 
 	if ( (sx % 2) == 0) valor=valor>>4;
 
@@ -2325,7 +2325,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 							int sprite_es_4bpp=0;
 
-							int offset_4bpp_N6=0;
+							//int offset_4bpp_N6=0;
 
 							if (spr_attr_3 & 64) {
 								//Pattern es de 5 bytes
@@ -2342,7 +2342,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 									if (spr_attr_4 & 128) sprite_es_4bpp=1;
 
 									if (sprite_es_4bpp) {
-										if (spr_attr_4 & 64) offset_4bpp_N6=1;
+										if (spr_attr_4 & 64) {
+                                            //offset_4bpp_N6=1;
+                                            index_pattern +=TBBLUE_SPRITE_4BPP_SIZE;
+                                        }
 									}
 
 									anchor_sprite_es_4bpp=sprite_es_4bpp;
@@ -2364,7 +2367,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 									sprite_es_4bpp=anchor_sprite_es_4bpp;
 
 									if (sprite_es_4bpp) {
-										if (spr_attr_4 & 32) offset_4bpp_N6=1;
+										if (spr_attr_4 & 32) {
+                                            //offset_4bpp_N6=1;
+                                            index_pattern +=TBBLUE_SPRITE_4BPP_SIZE;
+                                        }
 									}
 
 									
@@ -2378,7 +2384,9 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 								if (sprite_es_4bpp) {
 									//printf("es 4bpp\n");
-									index_color=tbsprite_do_overlay_get_pattern_xy_4bpp(index_pattern,offset_4bpp_N6,sx,sy);
+									//index_color=tbsprite_do_overlay_get_pattern_xy_4bpp(index_pattern,offset_4bpp_N6,sx,sy);
+                                    //index_pattern +=TBBLUE_SPRITE_4BPP_SIZE*offset_4bpp_N6;
+                                    index_color=tbsprite_do_overlay_get_pattern_xy_4bpp(index_pattern,sx,sy);
 
 									//index_color +=7;
 								}

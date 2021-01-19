@@ -5643,8 +5643,9 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
 
 				//Esto solo usado para 4bpp
-				int indice_4bpp=index_int/2;
-				int offset_1_pattern=index_int %2;	
+				//int indice_4bpp=index_int/2;
+                int indice_4bpp=index_int;
+				//int offset_1_pattern=index_int %2;	
 
 
 				if (index_int<0 || index_int>=max_pattern) escribir_socket(misocket,"ERROR. Out of range");
@@ -5659,7 +5660,7 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 								index_color=tbsprite_pattern_get_value_index_8bpp(index_int,i);
 							}
 							else {
-								index_color=tbsprite_pattern_get_value_index_4bpp(indice_4bpp,offset_1_pattern,i);
+								index_color=tbsprite_pattern_get_value_index_4bpp(indice_4bpp,i);
 							}
 							
 							escribir_socket_format(misocket,"%02X ",index_color);
