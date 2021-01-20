@@ -18229,6 +18229,11 @@ int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
 }
 
 //Retorna 0 si error. Lo agrega si no existe. Si existe, lo modifica
+/*
+Hay que tener en cuenta que puede agregar cualquier nombre, exista o no dicha ventana
+Esto permite que si en el futuro se borra alguna ventana por código, pero el usuario la estaba guardando por configuración,
+con --windowgeometry, no dará error si es de una ventana que ya no existe
+*/
 int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto)
 {
 
@@ -18909,7 +18914,35 @@ reserved	1 byte	 	unused (=0)
 		}
 }
 
+//Cargar un archivo bmp en memoria. Retorna puntero
+z80_byte *util_load_bmp_file(char *archivo)
+{
+    z80_byte *puntero;
 
+    //Asignar memoria
+    int tamanyo=get_file_size(archivo);
+    puntero=malloc(tamanyo);
+
+    if (puntero==NULL) cpu_panic("Can not allocate memory for bmp file");
+
+    //cargarlo en memoria
+    FILE *ptr_bmpfile;
+    ptr_bmpfile=fopen(archivo,"rb");
+
+    if (!ptr_bmpfile) {
+            debug_printf(VERBOSE_ERR,"Unable to open bmp file %s",archivo);
+            return NULL;
+    }
+
+    fread(puntero,1,tamanyo,ptr_bmpfile);
+    fclose(ptr_bmpfile);		
+
+
+    //Cargar la paleta bmp. 
+    util_bmp_load_palette(puntero,BMP_INDEX_FIRST_COLOR);    
+
+    return puntero;
+}
 
 void util_rotate_file(char *filename,int archivos)
 {

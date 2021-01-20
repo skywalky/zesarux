@@ -23844,7 +23844,9 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
                 return;
         }
 
+        help_keyboard_bmp_file_mem=util_load_bmp_file(buffer_nombre);
 
+/*
 		//Asignar memoria
 		int tamanyo=get_file_size(buffer_nombre);
 		help_keyboard_bmp_file_mem=malloc(tamanyo);
@@ -23867,7 +23869,9 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		//Cargar la paleta bmp. 
 		util_bmp_load_palette(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR);
 
-	
+*/	
+        if (help_keyboard_bmp_file_mem==NULL) return;
+
 
 		//Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
 		//en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay

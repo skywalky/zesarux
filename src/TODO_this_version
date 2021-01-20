@@ -176,12 +176,6 @@ esos, debe haber cls antes siempre
 
 
 
--Función que restaura geometría ventanas, si en la config se define una ventana con nombre desconocido, 
-que muestre error pero siga adelante, para así que en el futuro si se elimina alguna ventana, 
-si alguien la restauraba por config, que salga aviso (o no) y que pueda seguir usando la config. 
-Al guardar la config, la que no existe no debería guardarse (ya no deberá estar en memoria en principio)
-
-
 -changelog llega al maximo que puede mostrar el visor en menu cuando hay update (64000 bytes)
 
 -the next war: revisar border deberia desactivar. musica en menu no se oye bien
