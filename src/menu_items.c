@@ -23726,7 +23726,8 @@ void menu_help_keyboard_overlay(void)
 											help_keyboard_valor_contador_segundo_anterior=contador_segundo;
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana);
+                        //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
+						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x);
                         
 	
 
@@ -25055,7 +25056,8 @@ void menu_new_about_window_overlay(void)
 											new_about_window_valor_contador_segundo_anterior=contador_segundo;
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-						screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana);
+                    //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
+						screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x);
                         
 	
 

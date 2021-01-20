@@ -14605,7 +14605,7 @@ void disable_16c_mode(void)
 
 
 
-void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana)
+void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_offset)
 {
 
 						//putpixel del archivo bmp
@@ -14669,7 +14669,7 @@ DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the b
 								z80_byte byte_leido=mem[offset_final];
 								z80_int color_final=indice_paleta_color+byte_leido;
 								//zxvision_putpixel(ventana,x,y,color_final);
-								zxvision_putpixel_no_zoom(ventana,x,y,color_final);
+								zxvision_putpixel_no_zoom(ventana,x+x_offset,y,color_final);
 							}
 						}
 						
