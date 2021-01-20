@@ -1932,6 +1932,8 @@ void tbsprite_do_overlay(void)
 					int sprite_x;
 					int sprite_y;
 
+                    z80_byte transparency_colour=tbblue_registers[75];
+
                     //Esto se lee de cada sprite
                     int relative_sprite=0;
 
@@ -2159,7 +2161,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                     }
 
 
-                    if (sprite_es_4bpp) mask_index_pattern=127;
+                    if (sprite_es_4bpp) {
+                        mask_index_pattern=127;
+                        transparency_colour &=0xF; //solo se coge los 4 bits inferiores del registro de indice de transparencia
+                    }
 
 
 
@@ -2445,7 +2450,9 @@ bits 7-0 = Set the index value. (0XE3 after a reset)
 								int sumar_x=1<<sprite_zoom_x;
 
 
-								if (index_color!=tbblue_registers[75]) {
+
+
+								if (index_color!=transparency_colour) {
 
 								//Sumar palette offset. Logicamente si es >256 el resultado, dará la vuelta el contador
 								index_color +=palette_offset;
