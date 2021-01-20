@@ -31284,6 +31284,11 @@ void menu_about(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
             menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_about,NULL);
+
+            
+            //menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_new,NULL);
+
+
 			menu_add_item_menu_shortcut(array_menu_about,'a');
 
 			menu_add_item_menu(array_menu_about,"~~Help",MENU_OPCION_NORMAL,menu_about_help,NULL);

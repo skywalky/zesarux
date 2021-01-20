@@ -120,5 +120,7 @@ extern void menu_audio_general_sound(MENU_ITEM_PARAMETERS);
 
 extern void menu_debug_ioports(MENU_ITEM_PARAMETERS);
 
+extern void menu_about_new(MENU_ITEM_PARAMETERS);
+
 #endif
 

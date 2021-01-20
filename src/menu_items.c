@@ -25019,3 +25019,216 @@ void menu_debug_ioports(MENU_ITEM_PARAMETERS)
 		zxvision_destroy_window(ventana);		
  	}
 }
+
+
+int new_about_window_valor_contador_segundo_anterior;
+
+zxvision_window *menu_new_about_window_overlay_window;
+
+
+z80_byte *new_about_window_bmp_file_mem=NULL;
+
+void menu_new_about_window_overlay(void)
+{
+	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+
+				if (!si_complete_video_driver() ) return;
+
+
+	//Si no hay archivo bmp cargado
+	if (new_about_window_bmp_file_mem==NULL) return;
+
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+
+	zxvision_window *ventana;
+
+	ventana=menu_new_about_window_overlay_window;
+
+
+     
+     
+
+			//esto hara ejecutar esto 5 veces por segundo (lo habitual en muchos de estos que no actualizan siempre es 2 veces por segundo)
+			if ( ((contador_segundo%200) == 0 && new_about_window_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+											new_about_window_valor_contador_segundo_anterior=contador_segundo;
+				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+						screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana);
+                        
+	
+
+                }
+
+			//Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
+			//y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
+			//En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
+			zxvision_draw_window_contents(ventana);
+
+
+
+}
+
+
+
+
+zxvision_window menu_about_new_ventana;
+
+void menu_about_new(MENU_ITEM_PARAMETERS)
+{
+
+    
+
+	menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();		
+
+	/*if (!menu_multitarea) {
+			menu_warn_message("This menu item needs multitask enabled");
+			return;
+	}*/
+
+    //TODO: probar sin multitask	
+
+	zxvision_window *ventana;
+		
+	ventana=&menu_about_new_ventana;
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);
+
+		
+	int x,y,ancho,alto;
+
+	//if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
+		//x=menu_origin_x();
+		x=0;
+		y=0;
+
+		//540x201 es lo que ocupa el bmp de spectrum 48k
+
+		//ancho=1+1+540/menu_char_width/zoom_x;
+
+		//alto=1+2+201/8/zoom_y;
+
+        ancho=32;
+
+        alto=9;
+
+		//printf ("ancho %d alto %d\n",ancho,alto);
+
+	//}		
+
+
+	zxvision_new_window(ventana,x,y,ancho,alto,
+							ancho-1,alto-2,"About");
+
+
+	//ventana->can_be_backgrounded=1;	
+	zxvision_draw_window(ventana);
+	//indicar nombre del grabado de geometria
+	//strcpy(ventana->geometry_name,"helpshowkeyboard");
+
+	
+		//Cargar el archivo bmp
+		/*
+		Deben ser, idealmente: 540x201.  (puede ser otro tamaño)
+		bmp. 256 colour (indexed)
+		*/
+
+		char nombrebmp[PATH_MAX];
+
+        strcpy(nombrebmp,"salamanquesa.bmp");
+
+
+
+		//localizarlo
+        char buffer_nombre[PATH_MAX];
+
+		int existe=find_sharedfile(nombrebmp,buffer_nombre);
+		if (!existe)  {
+				debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp);
+                return;
+        }
+
+        new_about_window_bmp_file_mem=util_load_bmp_file(buffer_nombre);
+
+
+        if (new_about_window_bmp_file_mem==NULL) return;
+
+
+		//Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
+		//en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
+		//Al meter caracter transparente, el normal_overlay lo ignora y no dibuja ese caracter
+		zxvision_fill_window_transparent(ventana);
+
+        //TODO: quiza hacer transparente solo la parte que ocupa el logo
+        //TODO: ir con cuidado con zoom de menu, en tbblue por ejemplo el logo ocupa el doble!
+
+
+        //Texto
+        zxvision_print_string_defaults(ventana,10,0,"ZEsarUX XX");
+		
+
+
+		menu_new_about_window_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+
+        new_about_window_valor_contador_segundo_anterior=contador_segundo;
+
+        //Cambiamos funcion overlay de texto de menu
+        //Se establece a la de funcion de onda + texto
+        set_menu_overlay_function(menu_new_about_window_overlay);
+
+       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+       //if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+         //      return;
+       //}	
+
+	
+
+	z80_byte tecla;
+
+	do {
+		tecla=zxvision_common_getkey_refresh();		
+		zxvision_handle_cursors_pgupdn(ventana,tecla);
+		//printf ("tecla: %d\n",tecla);
+	} while (tecla!=2 && tecla!=3);				
+
+	//Gestionar salir con tecla background
+ 
+	menu_espera_no_tecla(); //Si no, se va al menu anterior.
+	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
+
+	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+	zxvision_set_window_overlay_from_current(ventana);	
+
+    //restauramos modo normal de texto de menu
+     set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+    cls_menu_overlay();	
+
+	//Grabar geometria ventana
+	//util_add_window_geometry_compact(ventana);		
+
+
+	/*if (tecla==3) {
+		zxvision_message_put_window_background();
+	}*/
+
+	//else {
+		zxvision_destroy_window(ventana);	
+		free(new_about_window_bmp_file_mem);	
+ 	//}
+
+
+
+
+}
+
+
