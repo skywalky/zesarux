@@ -1546,7 +1546,9 @@ void load_zsf_tbblue_sprites(z80_byte *header)
   int indice=i; //Leer desde donde nos hemos quedado antes
   for (spr=0;spr<TBBLUE_MAX_SPRITES;spr++) {
     for (attr=0;attr<TBBLUE_SPRITE_ATTRIBUTE_SIZE;attr++) {
-      tbsprite_sprites[spr][attr]=header[indice];
+
+      //tbsprite_sprites[spr][attr]=header[indice];
+      tbblue_write_sprite_value(spr,attr,header[indice]);
 
       indice++;
     }

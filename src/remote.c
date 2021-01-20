@@ -5868,7 +5868,9 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 			char *s=find_space_or_end(parametros);
 			while (*s) {
 				valor=parse_string_to_number(s);
-				tbsprite_sprites[index_int][i++]=valor;
+				//tbsprite_sprites[index_int][i]=valor;
+                tbblue_write_sprite_value(index_int,i,valor);
+                i++;
 				if (i==4) i=0;
 
 				s=find_space_or_end(s);

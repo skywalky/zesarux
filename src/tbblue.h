@@ -227,6 +227,10 @@ extern z80_byte tbsprite_pattern_get_value_index_4bpp(z80_byte sprite,z80_byte i
 
 extern void tbsprite_pattern_put_value_index_8bpp(z80_byte sprite,z80_byte index_in_sprite,z80_byte value);
 
+extern int tbsprite_last_visible_sprite;
+
+extern void tbblue_write_sprite_value(z80_byte indice,z80_byte subindice,z80_byte value);
+
 
 #define TBBLUE_CLIP_WINDOW_LAYER2   0
 #define TBBLUE_CLIP_WINDOW_SPRITES  1

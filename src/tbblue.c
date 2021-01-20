@@ -170,6 +170,12 @@ z80_byte tbsprite_new_patterns[TBBLUE_SPRITE_ARRAY_PATTERN_SIZE];
 */
 z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
 
+//Indica el ultimo sprite en la lista que esta visible, para solo renderizar hasta este
+int tbsprite_last_visible_sprite=-1;
+
+//Hay opcion de desactivar esto, pero por defecto vendra habilitado
+z80_bit tbblue_disable_optimized_sprites={0};
+
 //Indices al indicar paleta, pattern, sprites. Subindex indica dentro de cada pattern o sprite a que posicion (0..3 en sprites o 0..255 en pattern ) apunta
 //z80_byte tbsprite_index_palette;
 z80_byte tbsprite_index_pattern,tbsprite_index_pattern_subindex;
@@ -1295,6 +1301,8 @@ void tbblue_reset_sprites(void)
 		}
 	}
 
+    tbsprite_last_visible_sprite=-1;
+
 
 	//tbsprite_index_palette=tbsprite_index_pattern=tbsprite_index_sprite=0;
 	tbsprite_index_pattern=tbsprite_index_pattern_subindex=0;
@@ -1658,6 +1666,20 @@ Así también, si N6 es 0 puede ser pattern de 4 bits, aunque da igual. N6 lo tr
 void tbblue_write_sprite_value(z80_byte indice,z80_byte subindice,z80_byte value)
 {
     tbsprite_sprites[indice][subindice]=value;
+
+    //tbsprite_last_visible_sprite
+    if (subindice==3 && (value&128)) {
+        //registro 3 e indica que sprite esta visible
+        if (indice>tbsprite_last_visible_sprite) {
+            tbsprite_last_visible_sprite=indice;
+            printf("last visible sprite: %d\n",tbsprite_last_visible_sprite);
+
+            //TODO: logicamente si se escribe un sprite que no está visible, habria que recorrer todo el array para ver el ultimo,
+            //y actualizarlo tambien, pero creo que no vale la pena, de momento solo ponemos el indice del mayor sprite que se 
+            //ha escrito que esta visible, y listo
+        }
+
+    }
 }
 
 void tbblue_out_sprite_sprite(z80_byte value)
@@ -1933,10 +1955,19 @@ void tbsprite_do_overlay(void)
 
         //Esto se conserva el valor anterior del anterior anchor
         int sprite_es_relative_composite=0; 
-        int sprite_es_relative_unified=0;             
+        int sprite_es_relative_unified=0;        
+
+        int ultimo_sprite=TBBLUE_MAX_SPRITES-1;
+
+
+        //Si optimizamos, que es lo habitual
+        if (tbblue_disable_optimized_sprites.v==0) ultimo_sprite=tbsprite_last_visible_sprite;
         
 
-        for (conta_sprites=0;conta_sprites<TBBLUE_MAX_SPRITES && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {
+        //for (conta_sprites=0;conta_sprites<TBBLUE_MAX_SPRITES && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {
+
+        //recorremos array no a todos los sprites sino hasta el ultimo visible o bien hasta el maximo de lineas
+        for (conta_sprites=0;conta_sprites<=ultimo_sprite && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {
 					int sprite_x;
 					int sprite_y;
 
