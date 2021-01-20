@@ -1678,7 +1678,7 @@ void tbblue_write_sprite_value(z80_byte indice,z80_byte subindice,z80_byte value
         //registro 3 e indica que sprite esta visible
         if (indice>tbsprite_last_visible_sprite) {
             tbsprite_last_visible_sprite=indice;
-            printf("last visible sprite: %d\n",tbsprite_last_visible_sprite);
+            //printf("last visible sprite: %d\n",tbsprite_last_visible_sprite);
 
             //TODO: logicamente si se escribe un sprite que no está visible, habria que recorrer todo el array para ver el ultimo,
             //y actualizarlo tambien, pero creo que no vale la pena, de momento solo ponemos el indice del mayor sprite que se 
