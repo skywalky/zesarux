@@ -168,7 +168,7 @@ z80_byte tbsprite_new_patterns[TBBLUE_SPRITE_ARRAY_PATTERN_SIZE];
 [3] 4th: bits 7-6 is reserved, bits 5-0 is Name (pattern index, 0-63).
 [4] 5th: if 4bpp pattern, anchor, relative, etc
 */
-z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
+z80_byte tbsprite_new_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
 
 //Indica el ultimo sprite en la lista que esta visible, para solo renderizar hasta este
 int tbsprite_last_visible_sprite=-1;
@@ -1297,7 +1297,7 @@ void tbblue_reset_sprites(void)
 	for (i=0;i<TBBLUE_MAX_SPRITES;i++) {
 		int j;
 		for (j=0;j<TBBLUE_SPRITE_ATTRIBUTE_SIZE;j++) {
-			tbsprite_sprites[i][j]=0;
+			tbsprite_new_sprites[i][j]=0;
 		}
 	}
 
@@ -1665,7 +1665,13 @@ Así también, si N6 es 0 puede ser pattern de 4 bits, aunque da igual. N6 lo tr
 //Para escribir en el array de sprites
 void tbblue_write_sprite_value(z80_byte indice,z80_byte subindice,z80_byte value)
 {
-    tbsprite_sprites[indice][subindice]=value;
+
+    if (indice>=TBBLUE_MAX_SPRITES) {
+        //Esto no deberia pasar pero... por si acaso
+        return;
+    }
+
+    tbsprite_new_sprites[indice][subindice]=value;
 
     //tbsprite_last_visible_sprite
     if (subindice==3 && (value&128)) {
@@ -2007,11 +2013,11 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 */
 					
 
-                    z80_byte spr_attr_0=tbsprite_sprites[conta_sprites][0];
-                    z80_byte spr_attr_1=tbsprite_sprites[conta_sprites][1];
-                    z80_byte spr_attr_2=tbsprite_sprites[conta_sprites][2];
-                    z80_byte spr_attr_3=tbsprite_sprites[conta_sprites][3];
-                    z80_byte spr_attr_4=tbsprite_sprites[conta_sprites][4];
+                    z80_byte spr_attr_0=tbsprite_new_sprites[conta_sprites][0];
+                    z80_byte spr_attr_1=tbsprite_new_sprites[conta_sprites][1];
+                    z80_byte spr_attr_2=tbsprite_new_sprites[conta_sprites][2];
+                    z80_byte spr_attr_3=tbsprite_new_sprites[conta_sprites][3];
+                    z80_byte spr_attr_4=tbsprite_new_sprites[conta_sprites][4];
 
 					sprite_visible=spr_attr_3 & 128;
 

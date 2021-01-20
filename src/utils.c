@@ -12216,8 +12216,11 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
         if (MACHINE_IS_TBBLUE) {
             int sprite_offset=address / TBBLUE_SPRITE_ATTRIBUTE_SIZE;
             int sprite_attr_index=address % TBBLUE_SPRITE_ATTRIBUTE_SIZE;
-            p=&tbsprite_sprites[sprite_offset][sprite_attr_index];
+            p=&tbsprite_new_sprites[sprite_offset][sprite_attr_index];
 
+            //Por si alguien escribe desde aqui, que indique el ultimo sprite del optimizador, en este caso, el maximo
+            //dado que esta funcion vale para lectura y escritura, no sabemos realmente cuando escribe ahi
+            //entonces, la solucion pasa por indicarle aqui el maximo y listo
             tbsprite_last_visible_sprite=TBBLUE_MAX_SPRITES-1;
 
         }

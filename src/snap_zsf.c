@@ -3078,7 +3078,7 @@ if (MACHINE_IS_TBBLUE) {
   int indice=i; //desde donde ha acabado antes
   for (spr=0;spr<TBBLUE_MAX_SPRITES;spr++) {
     for (attr=0;attr<TBBLUE_SPRITE_ATTRIBUTE_SIZE;attr++) {
-      tbbluespriteblock[indice]=tbsprite_sprites[spr][attr];
+      tbbluespriteblock[indice]=tbsprite_new_sprites[spr][attr];
 
       indice++;
     }

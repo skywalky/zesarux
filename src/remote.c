@@ -5718,10 +5718,10 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 									int i;
 
 									int tamanyo_sprite=4;
-									if (tbsprite_sprites[index_int][3] & 64) tamanyo_sprite++;
+									if (tbsprite_new_sprites[index_int][3] & 64) tamanyo_sprite++;
 
 									for (i=0;i<tamanyo_sprite;i++) {
-											z80_byte value_sprite=tbsprite_sprites[index_int][i];
+											z80_byte value_sprite=tbsprite_new_sprites[index_int][i];
 											escribir_socket_format(misocket,"%02X ",value_sprite);
 									}
 									escribir_socket(misocket,"\n");

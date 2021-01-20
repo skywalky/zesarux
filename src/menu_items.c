@@ -3769,7 +3769,7 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				int i;
 				
 				for (i=0;i<TBBLUE_SPRITE_ATTRIBUTE_SIZE;i++) {
-				  sprintf(&dumpmemoria[indice_string],"%02X ",tbsprite_sprites[current_sprite][i]);
+				  sprintf(&dumpmemoria[indice_string],"%02X ",tbsprite_new_sprites[current_sprite][i]);
 				  indice_string +=3;
 				}
 				
@@ -3788,10 +3788,10 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 4th: bit 7 is the visible flag, bit 6 is reserved, bits 5-0 is Name (pattern index, 0-63).
 */
 
-				z80_int x=tbsprite_sprites[current_sprite][0]; //
-				z80_byte y=tbsprite_sprites[current_sprite][1];  //
+				z80_int x=tbsprite_new_sprites[current_sprite][0]; //
+				z80_byte y=tbsprite_new_sprites[current_sprite][1];  //
 
-				z80_byte byte_3=tbsprite_sprites[current_sprite][2];
+				z80_byte byte_3=tbsprite_new_sprites[current_sprite][2];
 				z80_byte paloff=byte_3 & 0xF0; //
 				z80_byte mirror_x=byte_3 & 8; //
 				z80_byte mirror_y=byte_3 & 4; //
@@ -3800,8 +3800,8 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 				x +=msb_x*256;
 
-				z80_byte byte_4=tbsprite_sprites[current_sprite][3];
-				z80_byte byte_5=tbsprite_sprites[current_sprite][4];
+				z80_byte byte_4=tbsprite_new_sprites[current_sprite][3];
+				z80_byte byte_5=tbsprite_new_sprites[current_sprite][4];
 				z80_byte visible=byte_4 & 128; //
 				z80_byte pattern=byte_4 & 63; //
 

@@ -175,7 +175,7 @@ extern z80_byte tbsprite_new_patterns[TBBLUE_MAX_PATTERNS*256];
 
 
 //extern z80_int tbsprite_palette[];
-extern z80_byte tbsprite_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
+extern z80_byte tbsprite_new_sprites[TBBLUE_MAX_SPRITES][TBBLUE_SPRITE_ATTRIBUTE_SIZE];
 
 
 extern z80_int tbblue_palette_ula_first[];
