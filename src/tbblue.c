@@ -1654,6 +1654,11 @@ Así también, si N6 es 0 puede ser pattern de 4 bits, aunque da igual. N6 lo tr
 	else tbsprite_index_sprite_subindex++;
 }*/
 
+//Para escribir en el array de sprites
+void tbblue_write_sprite_value(z80_byte indice,z80_byte subindice,z80_byte value)
+{
+    tbsprite_sprites[indice][subindice]=value;
+}
 
 void tbblue_out_sprite_sprite(z80_byte value)
 {
@@ -1673,11 +1678,14 @@ The attribute pointer will roll over from sprite 127 to sprite 0.
 	//(0..3/4 en sprites o 0..255 en pattern ) apunta
 	//z80_byte tbsprite_index_sprite,tbsprite_index_sprite_subindex;
 
-	tbsprite_sprites[tbsprite_index_sprite][tbsprite_index_sprite_subindex]=value;
+	//tbsprite_sprites[tbsprite_index_sprite][tbsprite_index_sprite_subindex]=value;
+    tbblue_write_sprite_value(tbsprite_index_sprite,tbsprite_index_sprite_subindex,value);
+
 	if (tbsprite_index_sprite_subindex == 3 && (value & 0x40) == 0) {			
 		// 4-byte type, add 0 as fifth
 		tbsprite_index_sprite_subindex++;
-		tbsprite_sprites[tbsprite_index_sprite][tbsprite_index_sprite_subindex]=0;
+		//tbsprite_sprites[tbsprite_index_sprite][tbsprite_index_sprite_subindex]=0;
+        tbblue_write_sprite_value(tbsprite_index_sprite,tbsprite_index_sprite_subindex,0);
 	}
 
 	tbsprite_index_sprite_subindex++;
@@ -4585,7 +4593,8 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 		{
 			int attribute_id = (index_position-0x35)&7;				//0..4
 			int sprite_id = tbsprite_is_lockstep() ? tbsprite_index_sprite : tbsprite_nr_index_sprite;
-			tbsprite_sprites[sprite_id][attribute_id] = value;
+			//tbsprite_sprites[sprite_id][attribute_id] = value;
+            tbblue_write_sprite_value(sprite_id,attribute_id,value);
 			if (index_position < 0x70) break;	//0x35, 0x36, 0x37, 0x38, 0x39 = done
 			//0x75, 0x76, 0x77, 0x78, 0x79 = increment sprite id
 			if (tbsprite_is_lockstep()) {
