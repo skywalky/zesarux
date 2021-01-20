@@ -1663,8 +1663,9 @@ printf (
 		"--realvideo                Enable real video display - for Spectrum (rainbow and other advanced effects) and ZX80/81 (non standard & hi-res modes)\n"
 		"--no-detect-realvideo      Disable real video autodetection\n"
 
-		"--tbblue-legacy-hicolor    Allow legacy hi-color effects on pixel/attribute display zone\n"
-		"--tbblue-legacy-border     Allow legacy border effects on tbblue machine\n"
+		"--tbblue-legacy-hicolor         Allow legacy hi-color effects on pixel/attribute display zone\n"
+		"--tbblue-legacy-border          Allow legacy border effects on tbblue machine\n"
+        "--tbblue-no-sprite-optimization Disable tbblue sprite render optimization\n"
 
 		//"--tsconf-fast-render       Enables fast render of Tiles and Sprites for TSConf. Uses less host cpu but it's less realistic: doesn't do scanline render but full frame render\n"
 
@@ -6961,6 +6962,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--tbblue-legacy-border")) {
 				tbblue_store_scanlines_border.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--tbblue-no-sprite-optimization")) {
+				tbblue_disable_optimized_sprites.v=1;
+			}            
 
 
 			/*else if (!strcmp(argv[puntero_parametro],"--tsconf-fast-render")) {

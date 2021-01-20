@@ -3754,6 +3754,7 @@ int util_write_configfile(void)
 
   if (tbblue_store_scanlines.v)               ADD_STRING_CONFIG,"--tbblue-legacy-hicolor");
   if (tbblue_store_scanlines_border.v)        ADD_STRING_CONFIG,"--tbblue-legacy-border");
+  if (tbblue_disable_optimized_sprites.v)     ADD_STRING_CONFIG,"--tbblue-no-sprite-optimization");      
 
   //if (tsconf_si_render_spritetile_rapido.v)   ADD_STRING_CONFIG,"--tsconf-fast-render");
 
