@@ -31020,16 +31020,14 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
 
                         "(C) 2013 Cesar Hernandez Ba%co\n",letra_enye);
 
-	//menu_generic_message("About",mensaje_about);
+	
 
-/*menu_generic_message_tooltip("Select file", 0, 0, 0, &retorno_archivo, "%s", texto_buffer);
-menu_generic_message_tooltip(char *titulo, int volver_timeout, int tooltip_enabled, int mostrar_cursor, generic_message_tooltip_return *retorno, const char * texto_format , ...);
-*/
+
 	generic_message_tooltip_return retorno_ventana;
-	//menu_generic_message_tooltip("About",0,0,0,&retorno_ventana,mensaje_about);
+	
 	zxvision_generic_message_tooltip("About" , 0 ,0,0,0,&retorno_ventana,0,mensaje_about);
 
-	//printf ("retorno ventana: %d\n",retorno_ventana.estado_retorno);
+	
 
 	//Si se sale con ESC
     if (retorno_ventana.estado_retorno==0) return;
