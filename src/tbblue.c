@@ -1961,7 +1961,12 @@ void tbsprite_do_overlay(void)
 
 
         //Si optimizamos, que es lo habitual
+        /*
+        Con Delta shadow, me ahorro un 1% de mi CPU optimizando esto
+        */
         if (tbblue_disable_optimized_sprites.v==0) ultimo_sprite=tbsprite_last_visible_sprite;
+
+        //printf("renderizando hasta %d\n",ultimo_sprite);
         
 
         //for (conta_sprites=0;conta_sprites<TBBLUE_MAX_SPRITES && total_sprites<MAX_SPRITES_PER_LINE;conta_sprites++) {

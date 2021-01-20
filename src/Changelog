@@ -30,6 +30,7 @@ Improved TBBlue emulation:
 -Added debug window to enable/disable individual sprites
 -Added relative sprite type composite/unified on sprite navigator
 -Added Sprites Debug memory zone
+-Optimize sprite rendering (saving 1% cpu on my computer)
 
 Fixed CPC bugs:
 -Fixed vsync and hsync interrupts

@@ -231,6 +231,8 @@ extern int tbsprite_last_visible_sprite;
 
 extern void tbblue_write_sprite_value(z80_byte indice,z80_byte subindice,z80_byte value);
 
+extern z80_bit tbblue_disable_optimized_sprites;
+
 
 #define TBBLUE_CLIP_WINDOW_LAYER2   0
 #define TBBLUE_CLIP_WINDOW_SPRITES  1

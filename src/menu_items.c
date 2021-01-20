@@ -10350,6 +10350,10 @@ void menu_display_ql_simular_parpadeo(MENU_ITEM_PARAMETERS)
 }
 */
 
+void menu_display_tbblue_optimized_sprite_render(MENU_ITEM_PARAMETERS)
+{
+    tbblue_disable_optimized_sprites.v ^=1;
+}
 
 //void menu_display_cpc_end_frame_workaround(MENU_ITEM_PARAMETERS)
 //{
@@ -10462,6 +10466,12 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 
 			*/
+
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_tbblue_optimized_sprite_render,NULL,"[%c] Optimized render sprite",(tbblue_disable_optimized_sprites.v==0 ? 'X' : ' '));	
+			menu_add_item_menu_tooltip(array_menu_settings_display,"Enable optimized sprite rendering. Usually you don't need to disable this");
+			menu_add_item_menu_ayuda(array_menu_settings_display,"Optimized render walks on the sprite list until the last visible sprite. "
+                                    "Besides, non-optimized rendering walk on the whole sprite list all the time, no matter the last visible sprite. "
+                                    "Usually don't want to disable this optimization");            
 
 		}
 
