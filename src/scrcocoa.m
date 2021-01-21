@@ -2224,7 +2224,7 @@ if (!GetCurrentProcess(&psn))
 	
 
 //Funcion de poner pixel en pantalla de driver, teniendo como entrada el color en RGB
-void scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
+void noretina_scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 {
 
 
@@ -2240,13 +2240,14 @@ void scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 
 
 //Funcion de poner pixel en pantalla de driver, teniendo como entrada el color en RGB
-void retina_scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
+void scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 {
+    //if (x>200 || y>200) return;
 
     //para retina
     int ancho=pixel_screen_width*2;
     int zx,zy;
-    int index = 4*(x+y*pixel_screen_width);
+    int index = 4*(x*2+y*2*pixel_screen_width);
     unsigned int *p;
     p=(unsigned int *) &pixel_screen_data[index];
 
@@ -2261,13 +2262,14 @@ void retina_scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
     p++;
     *p=color_rgb;
 
+
     //el de abajo a la izquierda
     p=(unsigned int *) &pixel_screen_data[index+4*pixel_screen_width];
     *p=color_rgb;
 
     //el de la derecha
     p++;
-    *p=color_rgb;        
+    *p=color_rgb;       
 }
 
 //Funcion de poner pixel en pantalla de driver, teniendo como entrada el color indexado de tabla de colores
