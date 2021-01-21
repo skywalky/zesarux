@@ -2246,24 +2246,28 @@ void retina_scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
     //para retina
     int ancho=pixel_screen_width*2;
     int zx,zy;
-        int index = 4*(x+y*pixel_screen_width);
-        unsigned int *p;
-        p=(unsigned int *) &pixel_screen_data[index];
+    int index = 4*(x+y*pixel_screen_width);
+    unsigned int *p;
+    p=(unsigned int *) &pixel_screen_data[index];
 
 
-        //agregar alpha
-        color_rgb |=0xFF000000;  
-        //Escribir de golpe los 32 bits                 
-        *p=color_rgb;
+    //agregar alpha
+    color_rgb |=0xFF000000;  
+    //Escribir de golpe los 32 bits   
+    //primer pixel              
+    *p=color_rgb;
 
-        p++;
-        *p=color_rgb;
+    //el de la derecha
+    p++;
+    *p=color_rgb;
 
-        p=(unsigned int *) &pixel_screen_data[index+4*pixel_screen_width];
-        *p=color_rgb;
+    //el de abajo a la izquierda
+    p=(unsigned int *) &pixel_screen_data[index+4*pixel_screen_width];
+    *p=color_rgb;
 
-        p--;
-        *p=color_rgb;        
+    //el de la derecha
+    p++;
+    *p=color_rgb;        
 }
 
 //Funcion de poner pixel en pantalla de driver, teniendo como entrada el color indexado de tabla de colores
