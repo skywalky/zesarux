@@ -27766,7 +27766,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_interface_settings,'x');	
 			menu_add_item_menu_tooltip(array_menu_interface_settings,"Expand the program window having a ZX Desktop space to the right");
 			menu_add_item_menu_ayuda(array_menu_interface_settings,"ZX Desktop enables you to have a space on the right to place "
-				"zxvision windows or other widgets. This is a work in progress, so expect improvements in the next versions");
+				"zxvision windows, menus or other widgets");
 		}
 
 
@@ -31283,10 +31283,10 @@ void menu_about(MENU_ITEM_PARAMETERS)
         menu_item item_seleccionado;
         int retorno_menu;
         do {
-            menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_about,NULL);
+            //menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_about,NULL);
 
             
-            //menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_new,NULL);
+            menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_new,NULL);
 
 
 			menu_add_item_menu_shortcut(array_menu_about,'a');
@@ -35401,6 +35401,8 @@ void menu_first_aid_add(char *key_string,int *puntero_setting,char *texto_opcion
 
 
 //No mostrar la opcion. por defecto a 0 (mostrarla)
+
+//Items que se disparan en ciertos eventos, con parametro si_startup=0
 int first_aid_no_filesel_uppercase_keys=0;
 char *first_aid_string_filesel_uppercase_keys="If you want to select a file by its initial letter, please press the letter as it is. "
 							"If you want to execute actions shown in the bottom of the window, in inverted colour, please press shift+letter";
@@ -35409,21 +35411,35 @@ int first_aid_no_filesel_enter_key=0;
 char *first_aid_string_filesel_enter_key="Press ENTER to select a file or change directory.\n"
 							"Press Space to expand files, like tap, tzx, trd, scl... etc and also all the compressed supported files";							
 
-
-int first_aid_no_ssl_wos=0;
-char *first_aid_string_no_ssl_wos="Warning: as SSL support is not compiled, results newer than 2013 may fail";	
-
-
 int first_aid_no_smartload=0;
 char *first_aid_string_smartload="This smartload window allows you to load any file known by the emulator. Just select it and go!\n"
 							"Press TAB to change between areas in the file selector";
-
 
 int first_aid_no_initial_menu=0;
 char *first_aid_string_initial_menu="This is the Main Menu. You can select an item by using cursor keys and mouse. Most of them have help, "
 	"try pressing F1. Also, many have tooltip help, that means if you don't press a key, it will appear a tooltip "
 	"about what the item does. ESC or right mouse button closes a menu, you can also close it by pressing the top-left button in the window. "
-	"You can also use your mouse to resize or move windows";
+	"You can also use your mouse to resize or move windows";    
+
+int first_aid_no_ssl_wos=0;
+char *first_aid_string_no_ssl_wos="Warning: as SSL support is not compiled, results newer than 2013 may fail";	
+
+int first_aid_no_realjoystick_detected=0;
+char *first_aid_string_realjoystick_detected="A real joystick has been detected\n"
+							"You can go to menu Settings->Hardware->Real joystick support and set your buttons configuration";	
+
+int first_aid_no_sg1000_boot=0;
+char *first_aid_string_sg1000_boot="The SG1000 doesn't have a BIOS, so you must insert a game rom from menu Storage->SG1000 Cartridge";
+
+int first_aid_no_tbblue_download_sd_bugs=0;
+char *first_aid_string_tbblue_download_sd_bugs="In case of glitches or bugs, maybe the official image uses features not emulated in ZEsarUX yet. "
+		"If it's that the case, use the included tbblue sd image in ZEsarUX";  
+
+
+//Items que se disparan en startup
+
+
+
 
 int first_aid_no_startup_aid=0;
 char *first_aid_string_startup_aid="This is a first aid help message. You will be shown some of these at the emulator startup, but also "
@@ -35492,25 +35508,13 @@ char *first_aid_string_spaceexpand="Do you know you can navigate inside files, l
 	"Use the fileselector and press space over that kind of file.\n"
 	"Remember to change fileselector filter to show all contents";
 
-
-int first_aid_no_realjoystick_detected=0;
-char *first_aid_string_realjoystick_detected="A real joystick has been detected\n"
-							"You can go to menu Settings->Hardware->Real joystick support and set your buttons configuration";	
-
-
-int first_aid_no_sg1000_boot=0;
-char *first_aid_string_sg1000_boot="The SG1000 doesn't have a BIOS, so you must insert a game rom from menu Storage->SG1000 Cartridge";
-							
-
-
 int first_aid_no_backgroundwindows=0;
 char *first_aid_string_backgroundwindows="You can enable background windows and put some windows on the background. "
 		"Go to Settings-> GUI-> Windows settings-> Background windows to enable it";
 
-
-int first_aid_no_tbblue_download_sd_bugs=0;
-char *first_aid_string_tbblue_download_sd_bugs="In case of glitches or bugs, maybe the official image uses features not emulated in ZEsarUX yet. "
-		"If it's that the case, use the included tbblue sd image in ZEsarUX";
+int first_aid_no_zxdesktop=0;
+char *first_aid_string_zxdesktop="Have you enabled ZX Desktop? It enables you to have a space on the right to place "
+				"zxvision windows, menus or other widgets. Go to Settings-> GUI-> ZX Desktop settings to enable it";
 
 
 void menu_first_aid_init(void)
@@ -35542,6 +35546,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("zsfextension",&first_aid_no_zsfextension,first_aid_string_zsfextension,1);
 	menu_first_aid_add("spaceexpand",&first_aid_no_spaceexpand,first_aid_string_spaceexpand,1);
 	menu_first_aid_add("backgroundwindows",&first_aid_no_backgroundwindows,first_aid_string_backgroundwindows,1);
+    menu_first_aid_add("zxdesktop",&first_aid_no_zxdesktop,first_aid_string_zxdesktop,1);
 
 }
 

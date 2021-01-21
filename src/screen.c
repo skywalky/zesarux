@@ -14604,8 +14604,21 @@ void disable_16c_mode(void)
 }
 
 
+/*
+Se puede especificar un x_offset que desplaza la imagen x pixeles a la derecha,
+lo que pretendemos es que la imagen no quede pegada a la izquierda y justo encima del marco de la ventana, 
+produciendo parpadeo pues sobreescribe el marco, y el marco sobreescribe a la imagen
+Desplazandolo a la izquierda ese espacio que ocupa el marco, evitamos el parpadeo
 
-void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_offset)
+TODO: 1. si hay barra de scroll horizontal y desplazamos la imagen, esta se "comera" esos pixeles de margen y se irá a la zona del marco
+TODO: 2. si desplazamos la ventana y evitamos el marco, en las ventanas de help keyboard, cuando la ventana no tiene el foco,
+se redibujará toda la ventana pero excepto el marco (lo habitual) pero como esas ventanas son transparentes (excepto logicamente para la imagen),
+el marco forma parte de la zona transparente y por tanto se verá transparente dicho marco, mostrando el fondo
+*/
+
+//parametro de follow_zoom hace seguir al zoom de la interfaz, usado al visualizar el logo de la salamandra,
+//pero no al visualizar el help keyboard
+void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_offset,int follow_zoom)
 {
 
 						//putpixel del archivo bmp
@@ -14629,7 +14642,7 @@ Height	4 bytes	0016h	Vertical height of bitmap in pixels
 						int ancho=mem[18] + 256 * mem[19];
 						int alto=mem[22] + 256 * mem[23];
 
-						//printf ("ancho: %d alto: %d\n",ancho,alto);
+						printf ("ancho: %d alto: %d\n",ancho,alto);
 
 
 						//118 bytes de cabecera ignorar
@@ -14650,7 +14663,7 @@ DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the b
 
 								int ancho_calculo=ancho;
 								//Nota: parece que el ancho tiene que ser par, para poder calcular el offset
-								//if ( (ancho_calculo % 2 ) !=0) ancho_calculo++;						
+								if ( (ancho_calculo % 2 ) !=0) ancho_calculo++;						
 
 						int x,y;
 						for (y=0;y<alto;y++) {
@@ -14669,7 +14682,19 @@ DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the b
 								z80_byte byte_leido=mem[offset_final];
 								z80_int color_final=indice_paleta_color+byte_leido;
 								//zxvision_putpixel(ventana,x,y,color_final);
-								zxvision_putpixel_no_zoom(ventana,x+x_offset,y,color_final);
+
+                                if (!follow_zoom) {
+								    zxvision_putpixel_no_zoom(ventana,x+x_offset,y,color_final);
+                                }
+                                else {
+                                    int zx,zy;
+                                    for (zx=0;zx<zoom_x;zx++) {
+                                        for (zy=0;zy<zoom_y;zy++) {
+                                            zxvision_putpixel_no_zoom(ventana,(x+x_offset)*zoom_x+zx,y*zoom_y+zy,color_final);
+                                        }
+                                    }
+                                    
+                                }
 							}
 						}
 						

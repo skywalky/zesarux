@@ -23727,7 +23727,7 @@ void menu_help_keyboard_overlay(void)
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
                         //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
-						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x);
+						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,0);
                         
 	
 
@@ -25057,7 +25057,7 @@ void menu_new_about_window_overlay(void)
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
                     //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
-						screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x);
+						screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,1);
                         
 	
 
@@ -25091,6 +25091,11 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 	}*/
 
     //TODO: probar sin multitask	
+    //TODO: solo para drivers graficos
+    //TODO: que quepa de ancho (40..?) en QL por ejemplo no cabe si no hay zx desktop. Quiza solo mostrarlo cuando hay zx desktop,
+    //aunque en spectrum 48 sin zxdesktop (pero con border) 
+    //quiza este menu de about que solo aparezca con zxdesktop como un "plus" o easter egg, al tener zxdesktop tienes um about con logo
+    //TODO: transparencia de ventana solo para la zona ocupada en el logo
 
 	zxvision_window *ventana;
 		
@@ -25102,12 +25107,12 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
     zxvision_delete_window_if_exists(ventana);
 
 		
-	int x,y,ancho,alto;
+	int x_ventana,y_ventana,ancho_ventana,alto_ventana;
 
 	//if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
 		//x=menu_origin_x();
-		x=0;
-		y=0;
+		x_ventana=0;
+		y_ventana=0;
 
 		//540x201 es lo que ocupa el bmp de spectrum 48k
 
@@ -25115,17 +25120,20 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 
 		//alto=1+2+201/8/zoom_y;
 
-        ancho=32;
+        ancho_ventana=40;
 
-        alto=9;
+        alto_ventana=9;
 
 		//printf ("ancho %d alto %d\n",ancho,alto);
 
 	//}		
 
+    int ancho_ventana_visible=ancho_ventana-1;
+    int alto_ventana_visible=alto_ventana-2;
 
-	zxvision_new_window(ventana,x,y,ancho,alto,
-							ancho-1,alto-2,"About");
+
+	zxvision_new_window(ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,
+							ancho_ventana_visible,alto_ventana_visible,"About");
 
 
 	//ventana->can_be_backgrounded=1;	
@@ -25169,11 +25177,45 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
         //TODO: quiza hacer transparente solo la parte que ocupa el logo
         //TODO: ir con cuidado con zoom de menu, en tbblue por ejemplo el logo ocupa el doble!
 
+        //Y la zona que sera de texto, la quitamos como transparente (inicializamos con espacios)
+
+        int x_texto=9;
+
+        int x,y;
+        for (y=0;y<alto_ventana_visible;y++) {
+            //zxvision_print_string_defaults_fillspc(ventana,10,i,"");
+            for (x=x_texto;x<ancho_ventana_visible;x++) {
+                //zxvision_print_string_defaults(ventana,10,y,"         ");
+                zxvision_print_char_defaults(ventana,x,y,'0'+y);
+            }
+        }
 
         //Texto
-        zxvision_print_string_defaults(ventana,10,0,"ZEsarUX XX");
-		
+	    char mensaje_about[1024];
+	    unsigned char letra_enye;
 
+		//mensaje completo con enye en segundo apellido
+		letra_enye=129;        
+
+        //zxvision_print_string_defaults(ventana,10,0,"ZEsarUX XX");
+        int linea=0;
+
+        sprintf (mensaje_about,"ZEsarUX v." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")");
+        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about);
+
+	    sprintf (mensaje_about," - " EMULATOR_EDITION_NAME " - ");
+        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about);
+
+#ifdef SNAPSHOT_VERSION
+        sprintf (mensaje_about,"Build number: " BUILDNUMBER );
+        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about);
+#endif
+
+        sprintf (mensaje_about,"(C) 2013 Cesar Hernandez Ba%co",letra_enye);
+        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about);
+
+           
+		
 
 		menu_new_about_window_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
