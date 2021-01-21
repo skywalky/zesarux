@@ -14605,10 +14605,12 @@ void disable_16c_mode(void)
 
 
 /*
-Se puede especificar un x_offset que desplaza la imagen x pixeles a la derecha,
+//Se puede especificar un x_offset que desplaza la imagen x pixeles a la derecha,
+Se puede especificar un x_ignore que hace que X lineas desde la izquierda no se dibujen,
 lo que pretendemos es que la imagen no quede pegada a la izquierda y justo encima del marco de la ventana, 
 produciendo parpadeo pues sobreescribe el marco, y el marco sobreescribe a la imagen
 Desplazandolo a la izquierda ese espacio que ocupa el marco, evitamos el parpadeo
+
 
 TODO: 1. si hay barra de scroll horizontal y desplazamos la imagen, esta se "comera" esos pixeles de margen y se irá a la zona del marco
 TODO: 2. si desplazamos la ventana y evitamos el marco, en las ventanas de help keyboard, cuando la ventana no tiene el foco,
@@ -14618,7 +14620,7 @@ el marco forma parte de la zona transparente y por tanto se verá transparente d
 
 //parametro de follow_zoom hace seguir al zoom de la interfaz, usado al visualizar el logo de la salamandra,
 //pero no al visualizar el help keyboard
-void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_offset,int follow_zoom)
+void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_ignore,int follow_zoom)
 {
 
 						//putpixel del archivo bmp
@@ -14668,10 +14670,10 @@ DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the b
 						int x,y;
 						for (y=0;y<alto;y++) {
 							for (x=0;x<ancho;x++) {
+                                if (x<x_ignore) continue;
 								//lineas empiezan por la del final en un bmp
 								//1 byte por pixel, color indexado
 			
-
 
 								int offset_final=(alto-1-y)*ancho_calculo + x + offset_bmp;
 
@@ -14684,13 +14686,13 @@ DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the b
 								//zxvision_putpixel(ventana,x,y,color_final);
 
                                 if (!follow_zoom) {
-								    zxvision_putpixel_no_zoom(ventana,x+x_offset,y,color_final);
+								    zxvision_putpixel_no_zoom(ventana,x,y,color_final);
                                 }
                                 else {
                                     int zx,zy;
                                     for (zx=0;zx<zoom_x;zx++) {
                                         for (zy=0;zy<zoom_y;zy++) {
-                                            zxvision_putpixel_no_zoom(ventana,(x+x_offset)*zoom_x+zx,y*zoom_y+zy,color_final);
+                                            zxvision_putpixel_no_zoom(ventana,x*zoom_x+zx,y*zoom_y+zy,color_final);
                                         }
                                     }
                                     

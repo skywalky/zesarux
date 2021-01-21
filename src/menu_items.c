@@ -25057,7 +25057,10 @@ void menu_new_about_window_overlay(void)
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
                     //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
-						screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,1);
+                    //screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,1);
+
+                    //parametro x_ignore a 1 para evitar dibujar x=0 que sobreescribiria el marco izquierdo, produciendo parpadeo
+						screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1);
                         
 	
 
