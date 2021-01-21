@@ -25104,12 +25104,19 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
     //printf("x_texto: %d\n",x_texto);
     //con esto, son 8 caracteres cuando el menu_char_width=8 por defecto
     //pero si son menos de 7, pasaria que el texto se sobreescribe la primera columna por la imagen. ajustar
+    
     if (menu_char_width!=8) x_texto++;
+
     //printf("x_texto ajustado: %d\n",x_texto);
     //12345678901234567890123456789
     //(C) 2013 Cesar Hernandez Bano"
     // - Toi Acid Game edition - "
-    //29 de ancho el texto
+    
+    //TODO: con menu char width distinto de 8, queda un hueco vertical "transparente" entre el logo y el texto
+    //esto es casi imposible de evitar, pues ubico la zona del logo con transparente, y ese logo es multiple de 8 el ancho
+    //la solucion seria mostrar el logo siempre a multiplo del char width, por ejemplo si char width es 7,
+    //mostrar 63 de ancho (que es multiple de 7). Pero eso requiere que la funcion de screen_render_bmpfile se le pueda
+    //cambiar el ancho
 
     //Textos. Creamos antes para ver el que tiene mas ancho
     char mensaje_about[3][200];
