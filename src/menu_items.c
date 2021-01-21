@@ -25022,7 +25022,6 @@ void menu_debug_ioports(MENU_ITEM_PARAMETERS)
 }
 
 
-//int new_about_window_valor_contador_segundo_anterior;
 
 zxvision_window *menu_new_about_window_overlay_window;
 
@@ -25034,13 +25033,11 @@ void menu_new_about_window_overlay(void)
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 
-				if (!si_complete_video_driver() ) return;
+    if (!si_complete_video_driver() ) return;
 
 
 	//Si no hay archivo bmp cargado
 	if (new_about_window_bmp_file_mem==NULL) return;
-
-	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
 	zxvision_window *ventana;
@@ -25048,31 +25045,28 @@ void menu_new_about_window_overlay(void)
 	ventana=menu_new_about_window_overlay_window;
 
 
-     
-     
 
-			//Dibujar siempre la imagen, a 50 fps
-			
 
-                    //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
-                    //screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,1);
+    //Dibujar siempre la imagen, a 50 fps
 
-                    //parametro x_ignore a 1 para evitar dibujar x=0 que sobreescribiria el marco izquierdo, produciendo parpadeo
 
-                    //aun asi, la imagen es de 63 pixeles de ancho, porque me producia parpadeo en la derecha, cosa que no entiendo,
-                    //podria tener una imagen de 64 pixeles de ancho y no caer la imagen 1 pixel sobre el texto de la derecha
-						screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1);
-                        
+    //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
+    //screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,1);
+
+    //parametro x_ignore a 1 para evitar dibujar x=0 que sobreescribiria el marco izquierdo, produciendo parpadeo
+
+    //aun asi, la imagen es de 63 pixeles de ancho, porque me producia parpadeo en la derecha, cosa que no entiendo,
+    //podria tener una imagen de 64 pixeles de ancho y no caer la imagen 1 pixel sobre el texto de la derecha
+    screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1);
+
+    
+
+    //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
+    //y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
+    //En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
+    zxvision_draw_window_contents(ventana);    
+
 	
-
-                
-
-			//Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
-			//y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
-			//En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
-			zxvision_draw_window_contents(ventana);
-
-
 
 }
 
@@ -25094,70 +25088,66 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 		
 	ventana=&menu_about_new_ventana;
 
-    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
-    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
-    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
-    zxvision_delete_window_if_exists(ventana);
 
 		
 	int x_ventana,y_ventana,ancho_ventana,alto_ventana;
 
-        //hardcoded
-        int ancho_imagen_salamanquesa=64;
-        
+    //hardcoded. la imagen bmp hace 64x64
+    int ancho_imagen_salamanquesa=64;
+    
 
-        int x_texto=ancho_imagen_salamanquesa/menu_char_width;
-        //printf("x_texto: %d\n",x_texto);
-        //con esto, son 8 caracteres cuando el menu_char_width=8 por defecto
-        //pero si son menos de 7, pasaria que el texto se sobreescribe la primera columna por la imagen. ajustar
-        if (menu_char_width!=8) x_texto++;
-        //printf("x_texto ajustado: %d\n",x_texto);
-        //12345678901234567890123456789
-        //(C) 2013 Cesar Hernandez Bano"
-        // - Toi Acid Game edition - "
-        //29 de ancho el texto
+    int x_texto=ancho_imagen_salamanquesa/menu_char_width;
+    //printf("x_texto: %d\n",x_texto);
+    //con esto, son 8 caracteres cuando el menu_char_width=8 por defecto
+    //pero si son menos de 7, pasaria que el texto se sobreescribe la primera columna por la imagen. ajustar
+    if (menu_char_width!=8) x_texto++;
+    //printf("x_texto ajustado: %d\n",x_texto);
+    //12345678901234567890123456789
+    //(C) 2013 Cesar Hernandez Bano"
+    // - Toi Acid Game edition - "
+    //29 de ancho el texto
 
-        //Textos. Creamos antes para ver el que tiene mas ancho
-	    char mensaje_about[3][200];
-	    unsigned char letra_enye;
+    //Textos. Creamos antes para ver el que tiene mas ancho
+    char mensaje_about[3][200];
+    unsigned char letra_enye;
 
-		//mensaje completo con enye en segundo apellido
-		letra_enye=129;       
+    //mensaje completo con enye en segundo apellido
+    letra_enye=129;       
 
-        sprintf (mensaje_about[0],"ZEsarUX v." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")");
-	    sprintf (mensaje_about[1]," - " EMULATOR_EDITION_NAME " - ");
-        sprintf (mensaje_about[2],"(C) 2013 Cesar Hernandez Ba%co",letra_enye);   
+    sprintf (mensaje_about[0],"ZEsarUX v." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")");
+    sprintf (mensaje_about[1]," - " EMULATOR_EDITION_NAME " - ");
+    sprintf (mensaje_about[2],"(C) 2013 Cesar Hernandez Ba%co",letra_enye);   
 
-        int ancho_maximo=0; 
-        int i;
+    int ancho_maximo=0; 
+    int i;
 
-        for (i=0;i<3;i++) {
-            int ancho_texto=strlen(mensaje_about[i]);
-            if (ancho_texto>ancho_maximo) ancho_maximo=ancho_texto;
-        }
+    for (i=0;i<3;i++) {
+        int ancho_texto=strlen(mensaje_about[i]);
+        if (ancho_texto>ancho_maximo) ancho_maximo=ancho_texto;
+    }
 
-        //+2 de los marcos de la ventana
-        ancho_ventana=ancho_maximo+x_texto+2;
+    //+1 de margen derecho. el habitual izquierdo no lo contamos pues la parte izquierda ya la ocupa el logo
+    ancho_ventana=ancho_maximo+x_texto+1;
 
 
-         alto_ventana=9;
+    alto_ventana=9;
 
      
 
-        //x_ventana=menu_center_x()-ancho_ventana/2;
+    //x_ventana=menu_center_x()-ancho_ventana/2;
 
-        //Dado que si tenemos la opcion activada de situar ventanas en zx desktop por defecto,
-        //si zx desktop es muy pequeño, no cabera ahi, y entonces la ventana se redimensiona al maximo como consecuencia del error
-        //de que no cabe
-        //por eso en vez de obtener menu_center_x() mejor usamos scr_get_menu_width que nos da el ancho total
+    //Dado que si tenemos la opcion activada de situar ventanas en zx desktop por defecto,
+    //si zx desktop es muy pequeño, no cabera ahi, y entonces la ventana se redimensiona al maximo como consecuencia del error
+    //de que no cabe
+    //por eso en vez de obtener menu_center_x() mejor usamos scr_get_menu_width que nos da el ancho total
 
-        x_ventana=(scr_get_menu_width()-ancho_ventana)/2;
+    x_ventana=(scr_get_menu_width()-ancho_ventana)/2;
 
-        y_ventana=menu_center_y()-alto_ventana/2;        
+    y_ventana=menu_center_y()-alto_ventana/2;        
 
-		//printf ("ancho %d alto %d\n",ancho,alto);
+    //printf ("ancho %d alto %d\n",ancho,alto);
 
-	//}		
+		
 
     int ancho_ventana_visible=ancho_ventana-1;
     int alto_ventana_visible=alto_ventana-2;
@@ -25166,98 +25156,88 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 	zxvision_new_window(ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,
 							ancho_ventana_visible,alto_ventana_visible,"About");
 
-
-	//ventana->can_be_backgrounded=1;	
+	
 	zxvision_draw_window(ventana);
-	//indicar nombre del grabado de geometria
-	//strcpy(ventana->geometry_name,"helpshowkeyboard");
+
 
 	
-		//Cargar el archivo bmp
-		/*
-		Deben ser, idealmente: 540x201.  (puede ser otro tamaño)
-		bmp. 256 colour (indexed)
-		*/
+    //Cargar el archivo bmp
+    /*
+    Deben ser, idealmente: 540x201.  (puede ser otro tamaño)
+    bmp. 256 colour (indexed)
+    */
 
-		char nombrebmp[PATH_MAX];
+    char nombrebmp[PATH_MAX];
 
-        strcpy(nombrebmp,"salamanquesa.bmp");
+    strcpy(nombrebmp,"salamanquesa.bmp");
+
+
+    //localizarlo
+    char buffer_nombre[PATH_MAX];
+
+    int existe=find_sharedfile(nombrebmp,buffer_nombre);
+    if (!existe)  {
+        debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp);
+        return;
+    }
+
+    new_about_window_bmp_file_mem=util_load_bmp_file(buffer_nombre);
+
+
+    if (new_about_window_bmp_file_mem==NULL) return;
+
+
+    //Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
+    //en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
+    //Al meter caracter transparente, el normal_overlay lo ignora y no dibuja ese caracter
+    zxvision_fill_window_transparent(ventana);
 
 
 
-		//localizarlo
-        char buffer_nombre[PATH_MAX];
+    //Y la zona que sera de texto, la quitamos como transparente (inicializamos con espacios)
 
-		int existe=find_sharedfile(nombrebmp,buffer_nombre);
-		if (!existe)  {
-				debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp);
-                return;
+
+
+    int x,y;
+    for (y=0;y<alto_ventana_visible;y++) {
+        //zxvision_print_string_defaults_fillspc(ventana,10,i,"");
+        for (x=x_texto;x<ancho_ventana_visible;x++) {
+            //zxvision_print_string_defaults(ventana,10,y,"         ");
+            zxvision_print_char_defaults(ventana,x,y,'0'+y);
         }
-
-        new_about_window_bmp_file_mem=util_load_bmp_file(buffer_nombre);
-
-
-        if (new_about_window_bmp_file_mem==NULL) return;
-
-
-		//Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
-		//en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
-		//Al meter caracter transparente, el normal_overlay lo ignora y no dibuja ese caracter
-		zxvision_fill_window_transparent(ventana);
-
-        //TODO: quiza hacer transparente solo la parte que ocupa el logo
-        //TODO: ir con cuidado con zoom de menu, en tbblue por ejemplo el logo ocupa el doble!
-
-        //Y la zona que sera de texto, la quitamos como transparente (inicializamos con espacios)
-
-
-
-        int x,y;
-        for (y=0;y<alto_ventana_visible;y++) {
-            //zxvision_print_string_defaults_fillspc(ventana,10,i,"");
-            for (x=x_texto;x<ancho_ventana_visible;x++) {
-                //zxvision_print_string_defaults(ventana,10,y,"         ");
-                zxvision_print_char_defaults(ventana,x,y,'0'+y);
-            }
-        }
+    }
 
       
 
-        //zxvision_print_string_defaults(ventana,10,0,"ZEsarUX XX");
-        int linea=0;
+    //zxvision_print_string_defaults(ventana,10,0,"ZEsarUX XX");
+    int linea=0;
 
 
 
 
 
-        for (i=0;i<3;i++) {
-            zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about[i]);            
-        }
+    for (i=0;i<3;i++) {
+        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about[i]);            
+    }
 
 #ifdef SNAPSHOT_VERSION
-        char mensaje_about_build[200];
-        sprintf (mensaje_about_build,"Build number: " BUILDNUMBER );
-        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about_build);
+    char mensaje_about_build[200];
+    sprintf (mensaje_about_build,"Build number: " BUILDNUMBER );
+    zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about_build);
 #endif        
 
            
 		
 
-		menu_new_about_window_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+    menu_new_about_window_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
-        //new_about_window_valor_contador_segundo_anterior=contador_segundo;
 
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de onda + texto
-        set_menu_overlay_function(menu_new_about_window_overlay);
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de onda + texto
+    set_menu_overlay_function(menu_new_about_window_overlay);
 
-       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
-       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
-       //if (zxvision_currently_restoring_windows_on_start) {
-               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
-         //      return;
-       //}	
+
 
     //si no, el texto no apareceria a no ser que movieramos el raton o la ventana, cuando multitask esta off
 	if (!menu_multitarea) zxvision_draw_window_contents(ventana);
@@ -25268,9 +25248,8 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 		tecla=zxvision_common_getkey_refresh();		
 		zxvision_handle_cursors_pgupdn(ventana,tecla);
 		//printf ("tecla: %d\n",tecla);
-	} while (tecla!=2 && tecla!=3);				
+	} while (tecla!=2);				
 
-	//Gestionar salir con tecla background
  
 	menu_espera_no_tecla(); //Si no, se va al menu anterior.
 	//En AY Piano por ejemplo esto no pasa aunque el estilo del menu es el mismo...
@@ -25284,19 +25263,10 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();	
 
-	//Grabar geometria ventana
-	//util_add_window_geometry_compact(ventana);		
 
 
-	/*if (tecla==3) {
-		zxvision_message_put_window_background();
-	}*/
-
-	//else {
-		zxvision_destroy_window(ventana);	
-		free(new_about_window_bmp_file_mem);	
- 	//}
-
+	zxvision_destroy_window(ventana);	
+	free(new_about_window_bmp_file_mem);	
 
 
 
