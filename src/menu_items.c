@@ -25022,7 +25022,7 @@ void menu_debug_ioports(MENU_ITEM_PARAMETERS)
 }
 
 
-int new_about_window_valor_contador_segundo_anterior;
+//int new_about_window_valor_contador_segundo_anterior;
 
 zxvision_window *menu_new_about_window_overlay_window;
 
@@ -25051,20 +25051,21 @@ void menu_new_about_window_overlay(void)
      
      
 
-			//esto hara ejecutar esto 5 veces por segundo (lo habitual en muchos de estos que no actualizan siempre es 2 veces por segundo)
-			if ( ((contador_segundo%200) == 0 && new_about_window_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-											new_about_window_valor_contador_segundo_anterior=contador_segundo;
-				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+			//Dibujar siempre la imagen, a 50 fps
+			
 
                     //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
                     //screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,1);
 
                     //parametro x_ignore a 1 para evitar dibujar x=0 que sobreescribiria el marco izquierdo, produciendo parpadeo
+
+                    //aun asi, la imagen es de 63 pixeles de ancho, porque me producia parpadeo en la derecha, cosa que no entiendo,
+                    //podria tener una imagen de 64 pixeles de ancho y no caer la imagen 1 pixel sobre el texto de la derecha
 						screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1);
                         
 	
 
-                }
+                
 
 			//Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
 			//y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
@@ -25111,6 +25112,8 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 
 		
 	int x_ventana,y_ventana,ancho_ventana,alto_ventana;
+
+
 
 	//if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
 		//x=menu_origin_x();
@@ -25182,7 +25185,16 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 
         //Y la zona que sera de texto, la quitamos como transparente (inicializamos con espacios)
 
-        int x_texto=9;
+        //hardcoded
+        int ancho_imagen_salamanquesa=64;
+        
+
+        int x_texto=ancho_imagen_salamanquesa/menu_char_width;
+        //printf("x_texto: %d\n",x_texto);
+        //con esto, son 8 caracteres cuando el menu_char_width=8 por defecto
+        //pero si son menos de 7, pasaria que el texto se sobreescribe la primera columna por la imagen. ajustar
+        if (menu_char_width!=8) x_texto++;
+        //printf("x_texto ajustado: %d\n",x_texto);
 
         int x,y;
         for (y=0;y<alto_ventana_visible;y++) {
@@ -25223,7 +25235,7 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 		menu_new_about_window_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
-        new_about_window_valor_contador_segundo_anterior=contador_segundo;
+        //new_about_window_valor_contador_segundo_anterior=contador_segundo;
 
         //Cambiamos funcion overlay de texto de menu
         //Se establece a la de funcion de onda + texto

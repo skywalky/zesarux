@@ -14644,7 +14644,7 @@ Height	4 bytes	0016h	Vertical height of bitmap in pixels
 						int ancho=mem[18] + 256 * mem[19];
 						int alto=mem[22] + 256 * mem[23];
 
-						printf ("ancho: %d alto: %d\n",ancho,alto);
+						//printf ("ancho: %d alto: %d\n",ancho,alto);
 
 
 						//118 bytes de cabecera ignorar
