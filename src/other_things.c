@@ -43,7 +43,7 @@ So, the list:
 The answer for that change, in the FAQ
 
 5. Disable ZX Desktop. Go to the about menu, press F key (used to find text). 
-Just press enter to the text to find. You'll see a cursor in the window,
+Just press enter with no text to find. You'll see a cursor in the window,
 select the second line and press Enter...
 
 */
