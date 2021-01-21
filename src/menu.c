@@ -31012,13 +31012,16 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
 	} 
 
 	sprintf (mensaje_about,"ZEsarUX v." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")\n"
-                        " - " EMULATOR_EDITION_NAME " - \n"
+        " - " EMULATOR_EDITION_NAME " - \n"
+        "(C) 2013 Cesar Hernandez Ba%co\n"
 
 #ifdef SNAPSHOT_VERSION
-                "Build number: " BUILDNUMBER "\n"
+        "Build number: " BUILDNUMBER "\n"
 #endif
 
-                        "(C) 2013 Cesar Hernandez Ba%co\n",letra_enye);
+                        
+        ,letra_enye);
+                                        
 
 	
 

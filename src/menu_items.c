@@ -25059,8 +25059,8 @@ void menu_new_about_window_overlay(void)
     //podria tener una imagen de 64 pixeles de ancho y no caer la imagen 1 pixel sobre el texto de la derecha
     screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1);
 
-    
 
+    
     //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
     //y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
     //En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
@@ -25157,8 +25157,10 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 							ancho_ventana_visible,alto_ventana_visible,"About");
 
 	
-	zxvision_draw_window(ventana);
+    //nota: la carga del juego de edicion y por tanto uno de los easter egg no sale con este about, logicamente pues no tenemos
+    //opcion para buscar texto asi... hay que hacerlo desde el otro about, que se dispara si no hay zx desktop habilitado
 
+	zxvision_draw_window(ventana);
 
 	
     //Cargar el archivo bmp
@@ -25203,16 +25205,17 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
         //zxvision_print_string_defaults_fillspc(ventana,10,i,"");
         for (x=x_texto;x<ancho_ventana_visible;x++) {
             //zxvision_print_string_defaults(ventana,10,y,"         ");
-            zxvision_print_char_defaults(ventana,x,y,'0'+y);
+            zxvision_print_char_defaults(ventana,x,y,' ');
         }
     }
 
       
+    int linea;
 
-    //zxvision_print_string_defaults(ventana,10,0,"ZEsarUX XX");
-    int linea=0;
-
-
+    //considerar 3 lineas para centrar el texto (la de build number no la contamos pues solo es en los snapshots)
+    //linea inicial para que quede centrado
+    linea=(alto_ventana_visible-3)/2;
+    //printf("linea: %d\n",linea);
 
 
 
