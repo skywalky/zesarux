@@ -31274,7 +31274,22 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 
 }
 
+int if_menu_new_about_is_available(void)
+{
+    //No hacer si no hay driver grafico completo
+    if (!si_complete_video_driver()) return 0;
 
+    //Solo cuando zx desktop activado y soportado por el driver
+    if (!if_zxdesktop_enabled_and_driver_allows()) return 0;
+
+    return 1;
+}
+
+void menu_about_about_which(MENU_ITEM_PARAMETERS)
+{
+    if (if_menu_new_about_is_available()) menu_about_new(0);
+    else menu_about_about(0);
+}
 
 //menu about settings
 void menu_about(MENU_ITEM_PARAMETERS)
@@ -31283,10 +31298,8 @@ void menu_about(MENU_ITEM_PARAMETERS)
         menu_item item_seleccionado;
         int retorno_menu;
         do {
-            //menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_about,NULL);
+            menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_about_which,NULL);
 
-            
-            menu_add_item_menu_inicial(&array_menu_about,"~~About",MENU_OPCION_NORMAL,menu_about_new,NULL);
 
 
 			menu_add_item_menu_shortcut(array_menu_about,'a');

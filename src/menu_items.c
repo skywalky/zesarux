@@ -25089,17 +25089,6 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
-	/*if (!menu_multitarea) {
-			menu_warn_message("This menu item needs multitask enabled");
-			return;
-	}*/
-
-    //TODO: probar sin multitask	
-    //TODO: solo para drivers graficos
-    //TODO: que quepa de ancho (40..?) en QL por ejemplo no cabe si no hay zx desktop. Quiza solo mostrarlo cuando hay zx desktop,
-    //aunque en spectrum 48 sin zxdesktop (pero con border) 
-    //quiza este menu de about que solo aparezca con zxdesktop como un "plus" o easter egg, al tener zxdesktop tienes um about con logo
-    //TODO: transparencia de ventana solo para la zona ocupada en el logo
 
 	zxvision_window *ventana;
 		
@@ -25113,22 +25102,58 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 		
 	int x_ventana,y_ventana,ancho_ventana,alto_ventana;
 
+        //hardcoded
+        int ancho_imagen_salamanquesa=64;
+        
+
+        int x_texto=ancho_imagen_salamanquesa/menu_char_width;
+        //printf("x_texto: %d\n",x_texto);
+        //con esto, son 8 caracteres cuando el menu_char_width=8 por defecto
+        //pero si son menos de 7, pasaria que el texto se sobreescribe la primera columna por la imagen. ajustar
+        if (menu_char_width!=8) x_texto++;
+        //printf("x_texto ajustado: %d\n",x_texto);
+        //12345678901234567890123456789
+        //(C) 2013 Cesar Hernandez Bano"
+        // - Toi Acid Game edition - "
+        //29 de ancho el texto
+
+        //Textos. Creamos antes para ver el que tiene mas ancho
+	    char mensaje_about[3][200];
+	    unsigned char letra_enye;
+
+		//mensaje completo con enye en segundo apellido
+		letra_enye=129;       
+
+        sprintf (mensaje_about[0],"ZEsarUX v." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")");
+	    sprintf (mensaje_about[1]," - " EMULATOR_EDITION_NAME " - ");
+        sprintf (mensaje_about[2],"(C) 2013 Cesar Hernandez Ba%co",letra_enye);   
+
+        int ancho_maximo=0; 
+        int i;
+
+        for (i=0;i<3;i++) {
+            int ancho_texto=strlen(mensaje_about[i]);
+            if (ancho_texto>ancho_maximo) ancho_maximo=ancho_texto;
+        }
+
+        //+2 de los marcos de la ventana
+        ancho_ventana=ancho_maximo+x_texto+2;
 
 
-	//if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
-		//x=menu_origin_x();
-		x_ventana=0;
-		y_ventana=0;
+         alto_ventana=9;
 
-		//540x201 es lo que ocupa el bmp de spectrum 48k
+     
 
-		//ancho=1+1+540/menu_char_width/zoom_x;
+        //x_ventana=menu_center_x()-ancho_ventana/2;
 
-		//alto=1+2+201/8/zoom_y;
+        //Dado que si tenemos la opcion activada de situar ventanas en zx desktop por defecto,
+        //si zx desktop es muy pequeño, no cabera ahi, y entonces la ventana se redimensiona al maximo como consecuencia del error
+        //de que no cabe
+        //por eso en vez de obtener menu_center_x() mejor usamos scr_get_menu_width que nos da el ancho total
 
-        ancho_ventana=40;
+        x_ventana=(scr_get_menu_width()-ancho_ventana)/2;
 
-        alto_ventana=9;
+        y_ventana=menu_center_y()-alto_ventana/2;        
 
 		//printf ("ancho %d alto %d\n",ancho,alto);
 
@@ -25185,16 +25210,7 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 
         //Y la zona que sera de texto, la quitamos como transparente (inicializamos con espacios)
 
-        //hardcoded
-        int ancho_imagen_salamanquesa=64;
-        
 
-        int x_texto=ancho_imagen_salamanquesa/menu_char_width;
-        //printf("x_texto: %d\n",x_texto);
-        //con esto, son 8 caracteres cuando el menu_char_width=8 por defecto
-        //pero si son menos de 7, pasaria que el texto se sobreescribe la primera columna por la imagen. ajustar
-        if (menu_char_width!=8) x_texto++;
-        //printf("x_texto ajustado: %d\n",x_texto);
 
         int x,y;
         for (y=0;y<alto_ventana_visible;y++) {
@@ -25205,29 +25221,24 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
             }
         }
 
-        //Texto
-	    char mensaje_about[1024];
-	    unsigned char letra_enye;
-
-		//mensaje completo con enye en segundo apellido
-		letra_enye=129;        
+      
 
         //zxvision_print_string_defaults(ventana,10,0,"ZEsarUX XX");
         int linea=0;
 
-        sprintf (mensaje_about,"ZEsarUX v." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")");
-        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about);
 
-	    sprintf (mensaje_about," - " EMULATOR_EDITION_NAME " - ");
-        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about);
+
+
+
+        for (i=0;i<3;i++) {
+            zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about[i]);            
+        }
 
 #ifdef SNAPSHOT_VERSION
-        sprintf (mensaje_about,"Build number: " BUILDNUMBER );
-        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about);
-#endif
-
-        sprintf (mensaje_about,"(C) 2013 Cesar Hernandez Ba%co",letra_enye);
-        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about);
+        char mensaje_about_build[200];
+        sprintf (mensaje_about_build,"Build number: " BUILDNUMBER );
+        zxvision_print_string_defaults(ventana,x_texto,linea++,mensaje_about_build);
+#endif        
 
            
 		
@@ -25248,7 +25259,8 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
          //      return;
        //}	
 
-	
+    //si no, el texto no apareceria a no ser que movieramos el raton o la ventana, cuando multitask esta off
+	if (!menu_multitarea) zxvision_draw_window_contents(ventana);
 
 	z80_byte tecla;
 

@@ -2589,6 +2589,12 @@ void screen_init_ext_desktop(void)
 	scr_driver_can_ext_desktop=scrgeneric_driver_can_ext_desktop;
 }
 
+//Si la opcion esta habilitada y el driver lo permite. o sea a efectos practicos, que la interfaz muestra zxdesktop
+int if_zxdesktop_enabled_and_driver_allows(void) 
+{
+    if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() ) return 1;
+    else return 0;
+}
 
 //Gestion de extension de desktop a ventana. Antes se llamaba extended desktop. Ahora es ZX Desktop
 int screen_ext_desktop_enabled=0;
