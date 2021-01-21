@@ -25036,8 +25036,7 @@ void menu_new_about_window_overlay(void)
     if (!si_complete_video_driver() ) return;
 
 
-	//Si no hay archivo bmp cargado
-	if (new_about_window_bmp_file_mem==NULL) return;
+
 
 
 	zxvision_window *ventana;
@@ -25057,10 +25056,15 @@ void menu_new_about_window_overlay(void)
 
     //aun asi, la imagen es de 63 pixeles de ancho, porque me producia parpadeo en la derecha, cosa que no entiendo,
     //podria tener una imagen de 64 pixeles de ancho y no caer la imagen 1 pixel sobre el texto de la derecha
-    screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1);
 
 
-    
+    //mostrarla solo si hay archivo cargado. podria ser que alguien borrase el bmp
+	if (new_about_window_bmp_file_mem!=NULL) {
+        screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1);
+    }
+
+
+
     //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
     //y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
     //En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
@@ -25179,14 +25183,23 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 
     int existe=find_sharedfile(nombrebmp,buffer_nombre);
     if (!existe)  {
-        debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp);
-        return;
+        debug_printf(VERBOSE_DEBUG,"Unable to find bmp file %s",nombrebmp);
+        //no lanzamos error de esto, al menos mostrar ventana about
+        //return;
+
+        //decimos imagen a NULL para que no la muestre
+        //en ese caso si que habra un recuadro transparente donde estaria la imagen
+        //podria hacer que en este caso el recuadro no saliera, pero lo prefiero asi,
+        //asi el usuario de alguna manera sabe que algo raro pasa... ;)
+        new_about_window_bmp_file_mem=NULL;
     }
 
-    new_about_window_bmp_file_mem=util_load_bmp_file(buffer_nombre);
+    else {
+        new_about_window_bmp_file_mem=util_load_bmp_file(buffer_nombre);
+    }
 
 
-    if (new_about_window_bmp_file_mem==NULL) return;
+    //if (new_about_window_bmp_file_mem==NULL) return;
 
 
     //Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
