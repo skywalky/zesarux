@@ -14626,7 +14626,8 @@ el marco forma parte de la zona transparente y por tanto se verá transparente d
 
 //parametro de follow_zoom hace seguir al zoom de la interfaz, usado al visualizar el logo de la salamandra,
 //pero no al visualizar el help keyboard
-void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_ignore,int follow_zoom)
+//si ancho_mostrar=0, no hacemos caso
+void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_ignore,int follow_zoom,int ancho_mostrar)
 {
 
 						//putpixel del archivo bmp
@@ -14673,9 +14674,15 @@ DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the b
 								//Nota: parece que el ancho tiene que ser par, para poder calcular el offset
 								if ( (ancho_calculo % 2 ) !=0) ancho_calculo++;						
 
+                        int ancho_mostrar_final=ancho;
+
+                        if (ancho_mostrar!=0) ancho_mostrar_final=ancho_mostrar;
+
+                        //printf ("ancho mostrar final : %d\n",ancho_mostrar_final);
+
 						int x,y;
 						for (y=0;y<alto;y++) {
-							for (x=0;x<ancho;x++) {
+							for (x=0;x<ancho_mostrar_final;x++) {
                                 if (x<x_ignore) continue;
 								//lineas empiezan por la del final en un bmp
 								//1 byte por pixel, color indexado

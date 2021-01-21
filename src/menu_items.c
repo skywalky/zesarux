@@ -23727,7 +23727,7 @@ void menu_help_keyboard_overlay(void)
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
                         //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
-						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,0);
+						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,0,0);
                         
 	
 
@@ -25028,6 +25028,8 @@ zxvision_window *menu_new_about_window_overlay_window;
 
 z80_byte *new_about_window_bmp_file_mem=NULL;
 
+int new_about_window_ancho_mostrar=0;
+
 void menu_new_about_window_overlay(void)
 {
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
@@ -25060,7 +25062,7 @@ void menu_new_about_window_overlay(void)
 
     //mostrarla solo si hay archivo cargado. podria ser que alguien borrase el bmp
 	if (new_about_window_bmp_file_mem!=NULL) {
-        screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1);
+        screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1,new_about_window_ancho_mostrar);
     }
 
 
@@ -25104,19 +25106,30 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
     //printf("x_texto: %d\n",x_texto);
     //con esto, son 8 caracteres cuando el menu_char_width=8 por defecto
     //pero si son menos de 7, pasaria que el texto se sobreescribe la primera columna por la imagen. ajustar
-    
-    if (menu_char_width!=8) x_texto++;
+
+    //if (menu_char_width!=8) x_texto++;
 
     //printf("x_texto ajustado: %d\n",x_texto);
     //12345678901234567890123456789
     //(C) 2013 Cesar Hernandez Bano"
     // - Toi Acid Game edition - "
     
-    //TODO: con menu char width distinto de 8, queda un hueco vertical "transparente" entre el logo y el texto
-    //esto es casi imposible de evitar, pues ubico la zona del logo con transparente, y ese logo es multiple de 8 el ancho
-    //la solucion seria mostrar el logo siempre a multiplo del char width, por ejemplo si char width es 7,
-    //mostrar 63 de ancho (que es multiple de 7). Pero eso requiere que la funcion de screen_render_bmpfile se le pueda
+    //Lo siguiente es para que: con menu char width distinto de 8, quedaria un hueco vertical "transparente" entre el logo y el texto
+    //esto seria casi imposible de evitar, pues ubico la zona del logo con transparente, y ese logo es multiple de 8 el ancho
+    //la solucion es mostrar el logo siempre a multiplo del char width, por ejemplo si char width es 7,
+    //mostrar 63 de ancho (que es multiple de 7). Y eso requiere la funcion de screen_render_bmpfile se le pueda
     //cambiar el ancho
+
+    //Realmente lo que hago es cortar un poco el logo por la derecha pero como tiene margen en blanco, no pasa nada
+
+    int ancho_mostrar_bmp=64/menu_char_width;
+
+    int final_ancho_mostrar_bmp=ancho_mostrar_bmp*menu_char_width;
+
+    //E indicamos a la funcion de render bmp, desde el overlay, el ancho final
+    //printf("ancho bmp: %d\n",final_ancho_mostrar_bmp);
+
+    new_about_window_ancho_mostrar=final_ancho_mostrar_bmp;
 
     //Textos. Creamos antes para ver el que tiene mas ancho
     char mensaje_about[3][200];
