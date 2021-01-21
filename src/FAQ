@@ -731,6 +731,10 @@ It's important to write lowercase and uppercase characters correctly. Uppercase 
 And lowercase letters refer to the less important part : "second", "and", "released"
 
 
+Q: I have seen a gecko in the About window. What does it mean?
+A: That gecko is a real one which I saw in my parents house, some years ago. This is a tribute to my father, who was very fond of geckos
+
+
 Q: Can this emulator run on MS-DOS?
 A: No, it can not, you can only run it on Windows, Mac, GNU/Linux, Raspberry pi and other Unix compatible systems. But you can try my old ZXSpectr emulator:
 https://github.com/chernandezba/zxspectr
