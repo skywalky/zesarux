@@ -178,3 +178,6 @@ esos, debe haber cls antes siempre
 -tbblue: rotaciones de sprites (tanto 8bpp como 4bpp). Ver test SprBig4b.sna , SpritBig.sna. 
 
 -cocoa: con pantallas retina se queda una pantalla de mitad abajo a la izquierda
+
+-Zoom 1-1 curses en modo all in pixel 
+Posible scroll y ventana de vista 
