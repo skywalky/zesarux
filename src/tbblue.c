@@ -2023,12 +2023,21 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 					sprite_has_5_bytes=spr_attr_3 & 64;
 
-                    
-
-                    if (sprite_has_5_bytes) {
-                        //Pattern es de 5 bytes
+                    if (!sprite_has_5_bytes) {
+                        //sprite es de 4 bytes. entonces sera como un anchor de modo composite
+                        //Sprite attribute 3 V E N5 N4 N3 N2 N1 N0
+                        //If E=0, the sprite is fully described by sprite attributes 0-3. 
+                        //The sprite pattern is an 8-bit one identified by pattern N=0-63. 
+                        //The sprite is an anchor and cannot be made relative. 
                         
+                        //The sprite is displayed as if sprite attribute 4 is zero.
+                        spr_attr_4=0;                      
+                    }
+                    
+                    //if (sprite_has_5_bytes) {
+                        //Pattern es de 5 bytes
 
+                        
                         //Relative sprites
                         //H N6 T X X Y Y Y8
                         //{H,N6} must not equal {0,1} as this combination is used to indicate a relative sprite.
@@ -2087,7 +2096,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                             }                               
                         }
 
-                    }
+                    //}
 
 
 
