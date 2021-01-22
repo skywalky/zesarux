@@ -188,6 +188,5 @@ el easter egg se puede cambiar para que se active pulsando en el logo
 
 
 -tbblue: rotaciones de sprites (tanto 8bpp como 4bpp). Ver test SprBig4b.sna , SpritBig.sna. 
--tbblue: otras issues con sprites, ver SpritRel.sna.
 
 -cocoa: con pantallas retina se queda una pantalla de mitad abajo a la izquierda
