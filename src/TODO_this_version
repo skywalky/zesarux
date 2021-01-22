@@ -125,9 +125,6 @@ https://foro.speccy.org/viewtopic.php?t=1502
 -Idea: en vez de tener la imagen Mmc, que tenga los archivos que contiene y cree el Mmc copiándolos 
 
 
--En ventana sprite navigator Tbblue, indicar parámetros de sprite relativo etc
-
-
 
 -ordenar directorios arriba en filesel? Pero entonces al pulsar una letra y buscar... a donde ira?
 
@@ -153,8 +150,6 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 -Cargar código fuente desde ventana debug cpu 
 
 
-Spool que permita tiempo intermedio como 150 ms. Quizá hacer que tenga más incrementos que ahora 
-
 
 
 -Debug ir atrás en el tiempo. Usando cpu history
@@ -173,13 +168,6 @@ Spool que permita tiempo intermedio como 150 ms. Quizá hacer que tenga más inc
 
 
 esos, debe haber cls antes siempre
-
--para ventana about con logo dentro:
-
-* quiza zxvision_generic_message_tooltip para que permita tener funcion de overlay, indicándola antes de alguna manera...
-* o crear el about distinto, con solo texto+imagen, aunque esto romperia uno de los easter egg.... quiza
-el easter egg se puede cambiar para que se active pulsando en el logo
-- screen_render_bmpfile debe permitir offset x,esto evitara parpadeo de redibujado del marco de ventana a la izquierda
 
 
 -changelog llega al maximo que puede mostrar el visor en menu cuando hay update (64000 bytes)

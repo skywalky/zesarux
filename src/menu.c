@@ -4958,7 +4958,7 @@ void menu_convierte_texto_sin_modificadores(char *texto,char *texto_destino)
 
 int menu_es_prefijo_utf(z80_byte caracter)
 {
-	if (caracter==0xD0 || caracter==0xD1 || caracter==0xC3) return 1;
+	if (caracter==0xD0 || caracter==0xD1 || caracter==0xC3 || caracter==0xC9 || caracter==0xCE) return 1;
 	else return 0;
 }
 
@@ -4977,6 +4977,32 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
                 }
 
 	}
+
+	if (prefijo_utf==0xC9) {
+		if (caracter==0xBE) {
+			//r minuscula con anzuelo. Sale en el FAQ, en la pronunciacion de ZEsarUX
+			if (si_complete_video_driver()) {
+                                return 137; 
+                        }
+                        else {
+                                return 'r';
+                        }
+                }
+
+	}    
+
+	if (prefijo_utf==0xCE) {
+		if (caracter==0xB8) {
+			//Greek Small Letter Theta θ - 138. Sale en el FAQ, en la pronunciacion de ZEsarUX
+			if (si_complete_video_driver()) {
+                                return 138; 
+                        }
+                        else {
+                                return 'z'; //no se si es lo mas parecido a θ pero en cuanto a sonido es la Z en ZEsarUX
+                        }
+                }
+
+	}       
 
 	if (prefijo_utf==0xD0) {
 		if (caracter==0x90) return 'A';
