@@ -3788,6 +3788,9 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 4th: bit 7 is the visible flag, bit 6 is reserved, bits 5-0 is Name (pattern index, 0-63).
 */
 
+                //NOTA: puede que todas las caracteristicas de los sprites no esten reflejadas correctamente aqui
+
+
 				z80_int x=tbsprite_new_sprites[current_sprite][0]; //
 				z80_byte y=tbsprite_new_sprites[current_sprite][1];  //
 
@@ -3821,46 +3824,51 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				int zoom_x=1;
 				int zoom_y=1;
 
-				if (byte_4 & 64) {
-					//Pattern de 5 bytes
+                if ((byte_4 & 64)==0) {
+                    //Pattern de 4 bytes. Se comporta como uno de 5 bytes con ultimo byte a 0
+                    byte_5=0;
+                }
+
+				
+                //Byte 5
+                //H N6 T X X Y Y Y8
+                //{H,N6}  {0,1} -> relative sprite.
+
+                if (byte_5 & 128) sprite_es_4bpp=1;
+                if (byte_5 & 64) offset_4bpp_N6=1;
+
+                if ((byte_5 & (128+64)) == 64) {
+                    //sprite relative
+                    sprite_es_relative=1;
+                    strcpy(buf_relative_type,"REL");
+                }
+                else {
+                    //sprite es anchor
                     //H N6 T X X Y Y Y8
-                    //{H,N6}  {0,1} -> relative sprite.
-
-					if (byte_5 & 128) sprite_es_4bpp=1;
-					if (byte_5 & 64) offset_4bpp_N6=1;
-
-                    if ((byte_5 & (128+64)) == 64) {
-                        //sprite relative
-                        sprite_es_relative=1;
-                        strcpy(buf_relative_type,"REL");
+                    //T = 0 if relative sprites are composite type else 1 for unified type        
+                    //El tipo de sprite relativo (unified o composite) se define en el anchor,
+                    //no en los bits del sprite relativo                
+                    if (byte_5 & 32) {
+                        sprite_es_relative_unified=1;
+                        strcpy(buf_relative_type,"UNI");
                     }
                     else {
-                        //sprite es anchor
-                        //H N6 T X X Y Y Y8
-                        //T = 0 if relative sprites are composite type else 1 for unified type        
-                        //El tipo de sprite relativo (unified o composite) se define en el anchor,
-                        //no en los bits del sprite relativo                
-                        if (byte_5 & 32) {
-                            sprite_es_relative_unified=1;
-                            strcpy(buf_relative_type,"UNI");
-                        }
-                        else {
-                            sprite_es_relative_composite=1;
-                            strcpy(buf_relative_type,"CMP");
-                        }                        
+                        sprite_es_relative_composite=1;
+                        strcpy(buf_relative_type,"CMP");
+                    }                        
 
-                    }
+                }
 
-					z80_byte zoom_x_value=(byte_5>>3)&3;
-					if (zoom_x_value) zoom_x <<=zoom_x_value;
+                z80_byte zoom_x_value=(byte_5>>3)&3;
+                if (zoom_x_value) zoom_x <<=zoom_x_value;
 
-					z80_byte zoom_y_value=(byte_5>>1)&3;
-					if (zoom_y_value) zoom_y <<=zoom_y_value;
+                z80_byte zoom_y_value=(byte_5>>1)&3;
+                if (zoom_y_value) zoom_y <<=zoom_y_value;
 
 
-					//TODO: Y8
+                //TODO: Y8
 
-				}	
+				
 
 				if (sprite_es_4bpp) {
 					sprintf(buf_subindex_4_bit,":%d",offset_4bpp_N6);
