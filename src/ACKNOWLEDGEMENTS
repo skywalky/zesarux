@@ -82,7 +82,7 @@ I want to thank the help and the collaboration of the following people (date sor
 -Kio, for granting permission to add his beautiful keyboard images from his zxsp emulator
 -Rafa (aka Spirax), for reporting the CPC CRTC interrupts bug
 -Simon Berry, reporting some ZRCP bugs
--Gerton Lunter, for information with his SamRam interface
+-Gerton Lunter, for information with his SamRam interface and granting permission to include the roms
 
 
 -Everyone at several forums about Spectrum, ZX80, ZX81, Z88, Raspberry Pi, etc for all the suggestions to my emulator
