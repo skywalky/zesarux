@@ -1954,7 +1954,7 @@ void tbsprite_do_overlay(void)
         int anchor_sprite_zoom_x=0;
         int anchor_sprite_zoom_y=0;
 
-		int sprite_has_5_bytes;
+		//int sprite_has_5_bytes;
 
 
         //int relative_sprite=0;
@@ -2021,9 +2021,10 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
 					sprite_visible=spr_attr_3 & 128;
 
-					sprite_has_5_bytes=spr_attr_3 & 64;
+					//sprite_has_5_bytes=spr_attr_3 & 64;
 
-                    if (!sprite_has_5_bytes) {
+                    //if (!sprite_has_5_bytes) {
+                    if ((spr_attr_3 & 64)==0) {
                         //sprite es de 4 bytes. entonces sera como un anchor de modo composite
                         //Sprite attribute 3 V E N5 N4 N3 N2 N1 N0
                         //If E=0, the sprite is fully described by sprite attributes 0-3. 
@@ -2116,7 +2117,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
                     sprite_y=spr_attr_1;
 
-                    if (sprite_has_5_bytes && !relative_sprite) {
+                    if (!relative_sprite) {
                         //Sprite Attribute 4
                         //A. Extended Anchor Sprite
                         //H N6 T X X Y Y Y8
@@ -2154,7 +2155,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
 
                     //int offset_4bpp_N6=0;
 
-                    if (sprite_has_5_bytes) {
+                    //if (sprite_has_5_bytes) {
                         /*
                         //Pattern es de 5 bytes
 
@@ -2217,7 +2218,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
                         }
 
                         
-                    }
+                    //}
 
 
                     if (sprite_es_4bpp) {
