@@ -35,6 +35,8 @@ Improved TBBlue emulation:
 -Added Sprites Debug memory zone
 -Optimize sprite rendering (saving 1% cpu on my computer)
 
+Fixed menu annoying flashing on XWindows video driver
+
 Fixed CPC bugs:
 -Fixed vsync and hsync interrupts
 -Fixed border colour
