@@ -24769,7 +24769,7 @@ void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
    
 
     ventana->can_be_backgrounded=1;
-    ventana->upper_margin=2;
+    //ventana->upper_margin=2;
     //Permitir hotkeys desde raton
     ventana->can_mouse_send_hotkeys=1;	
 
