@@ -380,6 +380,14 @@ void esxdos_handler_call_f_unlink(void)
 		return;
 	}
 
+    //Ver si read only
+    if (esxdos_handler_readonly.v) {
+        debug_printf(VERBOSE_DEBUG,"ESXDOS handler: Device is open read only");
+        esxdos_handler_error_carry(ESXDOS_ERROR_ERDONLY);
+        return;
+    
+    }        
+
 	unlink(fullpath);
 
 	esxdos_handler_no_error_uncarry();
@@ -420,6 +428,14 @@ void esxdos_handler_call_f_rename(void)
 		esxdos_handler_error_carry(ESXDOS_ERROR_ENOENT);
 		return;
 	}
+
+    //Ver si read only
+    if (esxdos_handler_readonly.v) {
+        debug_printf(VERBOSE_DEBUG,"ESXDOS handler: Device is open read only");
+        esxdos_handler_error_carry(ESXDOS_ERROR_ERDONLY);
+        return;
+    
+    }    
 
 	esxdos_handler_copy_register_to_string(nombre_archivo_destino,reg_de);
 	esxdos_handler_pre_fileopen(nombre_archivo_destino,fullpath_destino);
