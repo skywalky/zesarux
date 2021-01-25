@@ -191,7 +191,8 @@ Posible scroll y ventana de vista
 A veces salen interrogantes 
 
 
-Para que upper margin?
 
 
 -read only setting que actue en QL tambien para rename
+
+-eliminar parpadeos en fbdev usando doble buffer?
