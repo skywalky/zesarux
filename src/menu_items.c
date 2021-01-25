@@ -25192,6 +25192,8 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
     //nota: la carga del juego de edicion y por tanto uno de los easter egg no sale con este about, logicamente pues no tenemos
     //opcion para buscar texto asi... hay que hacerlo desde el otro about, que se dispara si no hay zx desktop habilitado
 
+    ventana->can_be_resized=0;
+
 	zxvision_draw_window(ventana);
 
 	
