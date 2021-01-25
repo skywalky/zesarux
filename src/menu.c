@@ -17923,57 +17923,58 @@ void menu_esxdos_traps_readonly(MENU_ITEM_PARAMETERS)
 
 void menu_esxdos_traps(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_esxdos_traps;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
+    menu_item *array_menu_esxdos_traps;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    do {
 
-                char string_esxdos_traps_root_dir_shown[18];
-
-
-                menu_add_item_menu_inicial_format(&array_menu_esxdos_traps,MENU_OPCION_NORMAL,menu_storage_esxdos_traps_emulation,NULL,"[%c] ~~Enabled", (esxdos_handler_enabled.v ? 'X' : ' ' ));
-          menu_add_item_menu_shortcut(array_menu_esxdos_traps,'e');
-          menu_add_item_menu_tooltip(array_menu_esxdos_traps,"Enable ESXDOS handler");
-          menu_add_item_menu_ayuda(array_menu_esxdos_traps,"Enable ESXDOS handler");
-
-						if (esxdos_handler_enabled.v) {
-                        menu_tape_settings_trunc_name(esxdos_handler_root_dir,string_esxdos_traps_root_dir_shown,18);
-                        menu_add_item_menu_format(array_menu_esxdos_traps,MENU_OPCION_NORMAL,menu_esxdos_traps_root_dir,NULL,"~~Root dir: %s",string_esxdos_traps_root_dir_shown);
-                        menu_add_item_menu_shortcut(array_menu_esxdos_traps,'r');
-
-												menu_add_item_menu_tooltip(array_menu_esxdos_traps,"Sets the root directory for ESXDOS filesystem");
-												menu_add_item_menu_ayuda(array_menu_esxdos_traps,"Sets the root directory for ESXDOS filesystem. "
-													"Only file and folder names valid for ESXDOS will be shown:\n"
-													"-Maximum 8 characters for name and 3 for extension\n"
-													"-Files and folders will be shown always in uppercase. Folders which are not uppercase, are shown but can not be accessed\n"
-													);
-                            menu_add_item_menu_format(array_menu_esxdos_traps,MENU_OPCION_NORMAL,menu_esxdos_traps_readonly,NULL,"[%c] Read only",
-                                (esxdos_handler_readonly.v ? 'X' : ' ' ) );
-
-						}
+        char string_esxdos_traps_root_dir_shown[18];
 
 
+        menu_add_item_menu_inicial_format(&array_menu_esxdos_traps,MENU_OPCION_NORMAL,menu_storage_esxdos_traps_emulation,NULL,"[%c] ~~Enabled", (esxdos_handler_enabled.v ? 'X' : ' ' ));
+        menu_add_item_menu_shortcut(array_menu_esxdos_traps,'e');
+        menu_add_item_menu_tooltip(array_menu_esxdos_traps,"Enable ESXDOS handler");
+        menu_add_item_menu_ayuda(array_menu_esxdos_traps,"Enable ESXDOS handler");
 
+        if (esxdos_handler_enabled.v) {
+            menu_tape_settings_trunc_name(esxdos_handler_root_dir,string_esxdos_traps_root_dir_shown,18);
+            menu_add_item_menu_format(array_menu_esxdos_traps,MENU_OPCION_NORMAL,menu_esxdos_traps_root_dir,NULL,"~~Root dir: %s",string_esxdos_traps_root_dir_shown);
+            menu_add_item_menu_shortcut(array_menu_esxdos_traps,'r');
+
+            menu_add_item_menu_tooltip(array_menu_esxdos_traps,"Sets the root directory for ESXDOS filesystem");
+            menu_add_item_menu_ayuda(array_menu_esxdos_traps,"Sets the root directory for ESXDOS filesystem. "
+                "Only file and folder names valid for ESXDOS will be shown:\n"
+                "-Maximum 8 characters for name and 3 for extension\n"
+                "-Files and folders will be shown always in uppercase. Folders which are not uppercase, are shown but can not be accessed\n"
+                );
+
+            menu_add_item_menu_format(array_menu_esxdos_traps,MENU_OPCION_NORMAL,menu_esxdos_traps_readonly,NULL,"[%c] Read only",
+                (esxdos_handler_readonly.v ? 'X' : ' ' ) );
+
+        }
 
 
 
-                                menu_add_item_menu(array_menu_esxdos_traps,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-                menu_add_ESC_item(array_menu_esxdos_traps);
 
-                retorno_menu=menu_dibuja_menu(&esxdos_traps_opcion_seleccionada,&item_seleccionado,array_menu_esxdos_traps,"ESXDOS handler" );
 
-                
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
+        menu_add_item_menu(array_menu_esxdos_traps,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+        menu_add_ESC_item(array_menu_esxdos_traps);
+
+        retorno_menu=menu_dibuja_menu(&esxdos_traps_opcion_seleccionada,&item_seleccionado,array_menu_esxdos_traps,"ESXDOS handler" );
+
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                    //printf ("actuamos por funcion\n");
+                    item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                    
+            }
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 
