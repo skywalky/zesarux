@@ -173,6 +173,8 @@ extern void esxdos_handler_run(void);
 extern char esxdos_handler_root_dir[];
 extern char esxdos_handler_cwd[];
 
+extern z80_bit esxdos_handler_readonly;
+
 
 extern void esxdos_handler_enable(void);
 extern void esxdos_handler_disable(void);

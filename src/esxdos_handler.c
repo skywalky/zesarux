@@ -52,6 +52,9 @@ z80_int *registro_parametros_hl_ix;
 
 const char *esxdos_plus3dos_signature="PLUS3DOS";
 
+//Modo solo lectura, no se permiten escrituras
+z80_bit esxdos_handler_readonly={0};
+
 
 void esxdos_handler_footer_esxdos_handler_operating(void)
 {
@@ -604,10 +607,20 @@ Esto se usa en NextDaw, es open+truncate
 
 				debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Unsupported fopen mode: %02XH",reg_b);
 				esxdos_handler_error_carry(ESXDOS_ERROR_EIO);
-				esxdos_handler_old_return_call();
 				return;
 			break;
 	}
+
+    //Ver si read only
+    //Se comprueba si fopen_mode es "wb"
+    if (esxdos_handler_readonly.v) {
+        if (!strcmp(fopen_mode,"wb")) {
+            debug_printf(VERBOSE_DEBUG,"ESXDOS handler: Device is open read only");
+            esxdos_handler_error_carry(ESXDOS_ERROR_ERDONLY);
+            return;
+        }
+    }
+
 
 	debug_printf (VERBOSE_DEBUG,"ESXDOS handler: Opening file in system mode: [%s]",fopen_mode);
 

@@ -3615,6 +3615,8 @@ int util_write_configfile(void)
 
   if (esxdos_handler_enabled.v && esxdos_handler_cwd[0]!=0)  ADD_STRING_CONFIG,"--esxdos-local-dir \"%s\"",esxdos_handler_cwd);
 
+  if (esxdos_handler_readonly.v)              ADD_STRING_CONFIG,"--esxdos-readonly");
+
   if (ql_microdrive_floppy_emulation)         ADD_STRING_CONFIG,"--enable-ql-mdv-flp");
   if (ql_mdv1_root_dir[0]!=0)                 ADD_STRING_CONFIG,"--ql-mdv1-root-dir \"%s\"",ql_mdv1_root_dir);
   if (ql_mdv2_root_dir[0]!=0)                 ADD_STRING_CONFIG,"--ql-mdv2-root-dir \"%s\"",ql_mdv2_root_dir);

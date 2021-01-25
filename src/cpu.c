@@ -1983,6 +1983,7 @@ printf (
 
 		"--enable-esxdos-handler    Enable ESXDOS traps handler. Requires divmmc or divide paging emulation\n"
 		"--esxdos-root-dir p        Set ESXDOS root directory for traps handler. Uses current directory by default.\n"
+        "--esxdos-readonly          Forbid write operations on ESXDOS handler\n"
                 "--esxdos-local-dir p       Set ESXDOS local directory for traps handler. This is the relative directory used inside esxdos.\n"
 
 
@@ -6554,6 +6555,10 @@ int parse_cmdline_options(void) {
 			    sprintf (esxdos_handler_root_dir,"%s",argv[puntero_parametro]);
 			  }
 			}
+
+            else if (!strcmp(argv[puntero_parametro],"--esxdos-readonly")) {
+                esxdos_handler_readonly.v=1;
+            }
 
 			else if (!strcmp(argv[puntero_parametro],"--esxdos-local-dir")) {
                           siguiente_parametro_argumento();

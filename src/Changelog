@@ -8,6 +8,7 @@ Added ZRCP commands:
 -realtape-open
 Added alternate Jupiter ACE rom: TODO: description
 Added another fourth easter egg ;)
+Added read only setting for esxdos handler
 
 Improved CPC emulation: 
 -Video scanlines rendering

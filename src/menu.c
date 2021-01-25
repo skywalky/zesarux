@@ -17915,6 +17915,11 @@ void menu_esxdos_traps_root_dir(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_esxdos_traps_readonly(MENU_ITEM_PARAMETERS)
+{
+    esxdos_handler_readonly.v ^=1;
+}
+
 
 void menu_esxdos_traps(MENU_ITEM_PARAMETERS)
 {
@@ -17942,7 +17947,8 @@ void menu_esxdos_traps(MENU_ITEM_PARAMETERS)
 													"-Maximum 8 characters for name and 3 for extension\n"
 													"-Files and folders will be shown always in uppercase. Folders which are not uppercase, are shown but can not be accessed\n"
 													);
-
+                            menu_add_item_menu_format(array_menu_esxdos_traps,MENU_OPCION_NORMAL,menu_esxdos_traps_readonly,NULL,"[%c] Read only",
+                                (esxdos_handler_readonly.v ? 'X' : ' ' ) );
 
 						}
 
