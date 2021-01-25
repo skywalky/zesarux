@@ -67,6 +67,7 @@ z80_bit diviface_eprom_write_jumper={0};
 //void (*cpu_core_loop_no_diviface) (void);
 
 int diviface_current_ram_memory_bits=4; //Por defecto 128 KB
+//tbblue y zxuno tienen tambien 128kb 
 /*
 -using 2 bits: 32 kb
 -using 3 bits: 64 kb

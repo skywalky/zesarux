@@ -21460,20 +21460,30 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 
 			}
 
-			if (divmmc_rom_name[0]==0) sprintf (string_divmmc_rom_file_shown,"Default");
-			else menu_tape_settings_trunc_name(divmmc_rom_name, string_divmmc_rom_file_shown,10);
-			menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_divmmc_rom_file,NULL,"DIVMMC EPROM File [%s]", string_divmmc_rom_file_shown);
+            //En tbblue y zxuno no tiene sentido mostrar estas opciones, no las usa
+            //incluso la anterior de divmmc ram, las dos maquinas tienen 128kb de divmmc ram por defecto,
+            //esta opcion si que la leen esas máquinas aunque alterar ese valor puede tener efectos indeseados
+            if (!MACHINE_IS_ZXUNO && !MACHINE_IS_TBBLUE) {            
 
-			menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Changes DIVMMC firmware eprom file");
-			menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Changes DIVMMC firmware eprom file");
+                if (divmmc_rom_name[0]==0) sprintf (string_divmmc_rom_file_shown,"Default");
+                else menu_tape_settings_trunc_name(divmmc_rom_name, string_divmmc_rom_file_shown,10);
+                menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_divmmc_rom_file,NULL,"DIVMMC EPROM File [%s]", string_divmmc_rom_file_shown);
+
+                menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Changes DIVMMC firmware eprom file");
+                menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Changes DIVMMC firmware eprom file");
 
 
-			if (divmmc_diviface_enabled.v) {
-				menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_diviface_eprom_write_jumper,NULL,"[%c] Firmware writeable",
-				(diviface_eprom_write_jumper.v ? 'X' : ' ') );
-				menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Allows writing to DivIDE/DivMMC eprom");
-				menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Allows writing to DivIDE/DivMMC eprom. Changes are lost when you exit the emulator");
-			}
+                if (divmmc_diviface_enabled.v) {
+                    menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_diviface_eprom_write_jumper,NULL,"[%c] Firmware writeable",
+                    (diviface_eprom_write_jumper.v ? 'X' : ' ') );
+                    menu_add_item_menu_tooltip(array_menu_mmc_divmmc,"Allows writing to DivIDE/DivMMC eprom");
+                    menu_add_item_menu_ayuda(array_menu_mmc_divmmc,"Allows writing to DivIDE/DivMMC eprom. Changes are lost when you exit the emulator");
+                }
+
+            }
+
+
+
 
                         menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_divmmc_mmc_ports_emulation,menu_storage_mmc_if_enabled_cond,"[%c] DIVMMC ~~ports",(divmmc_mmc_ports_enabled.v ? 'X' : ' ') );
                         menu_add_item_menu_shortcut(array_menu_mmc_divmmc,'p');
