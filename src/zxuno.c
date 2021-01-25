@@ -461,6 +461,8 @@ void hard_reset_cpu_zxuno(void)
 
 	reset_cpu();
 
+    zxuno_load_additional_64k_block();
+
 }
 
 
@@ -1667,7 +1669,6 @@ void zxuno_set_memory_pages(void)
 
 
 
-
 	//Muy facil
 	z80_byte pagina0, pagina1, pagina2, pagina3;
 
@@ -2124,11 +2125,12 @@ int zxuno_prism_get_border_color(void)
 }
 
 
-int zxuno_already_loaded_block=0;
+//int zxuno_already_loaded_block=0;
 
 /*
 Cargar un archivo de maximo 64kb en la memoria mapeada. Se hace justo despues de inicializar la mmu y cargar la rom
 De hecho esa rom se quedará sobreescrita con el bloque que indiquemos aqui
+Tambien se hace despues de cada hard reset
 
 Como probar esto?
 Aunque es exclusivo de zxuno la manera facil es:
@@ -2165,12 +2167,12 @@ void zxuno_load_additional_64k_block(void)
     //printf("bootm=%d\n",zxuno_ports[0]);    
 
     //solo hacerlo una vez. aunque esto solo se llama al crear la maquina, no deberia suceder mas veces
-    if (zxuno_already_loaded_block) {
-        debug_printf(VERBOSE_INFO,"ZX-Uno: additional 64kb block already loaded. exiting");
-        return;
-    }
+    //if (zxuno_already_loaded_block) {
+    //    debug_printf(VERBOSE_INFO,"ZX-Uno: additional 64kb block already loaded. exiting");
+    //    return;
+    //}
 
-    zxuno_already_loaded_block=1;
+    //zxuno_already_loaded_block=1;
 
     debug_printf(VERBOSE_INFO,"ZX-Uno: Loading additional 64kb block from file %s",zxuno_initial_64k_file);    
 
