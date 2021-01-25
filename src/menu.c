@@ -30737,7 +30737,7 @@ void menu_ventana_scanf_numero_enhanced(char *titulo,int *variable,int max_lengt
 	
 }
 
-void menu_about_read_file(char *title,char *aboutfile)
+void menu_about_read_file(char *title,char *aboutfile,int show_err_if_big)
 {
 
 	char about_file[MAX_TEXTO_GENERIC_MESSAGE];
@@ -30756,8 +30756,14 @@ void menu_about_read_file(char *title,char *aboutfile)
 		int leidos=fread(about_file,1,MAX_TEXTO_GENERIC_MESSAGE,ptr_aboutfile);
 		debug_printf (VERBOSE_INFO,"Read %d bytes of file: %s",leidos,aboutfile);
 
+        int message_verbose=VERBOSE_DEBUG;
+
 		if (leidos==MAX_TEXTO_GENERIC_MESSAGE) {
-			debug_printf (VERBOSE_ERR,"Reached maximum text buffer: %d bytes. Showing only these",leidos);
+            if (show_err_if_big) {
+			    message_verbose=VERBOSE_ERR;
+            }
+
+            debug_printf (message_verbose,"Reached maximum text buffer: %d bytes. Showing only the first %d bytes",leidos,leidos);
 			leidos--;
 		}
 
@@ -30774,136 +30780,136 @@ void menu_about_read_file(char *title,char *aboutfile)
 
 void menu_about_changelog(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Changelog","Changelog");
+        menu_about_read_file("Changelog","Changelog",1);
 }
 
 
 void menu_about_history(MENU_ITEM_PARAMETERS)
 {
-	menu_about_read_file("History","HISTORY");
+	menu_about_read_file("History","HISTORY",1);
 }
 
 void menu_about_features(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Features","FEATURES");
+        menu_about_read_file("Features","FEATURES",1);
 }
 
 void menu_about_readme(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Readme","README");
+        menu_about_read_file("Readme","README",1);
 }
 
 
 void menu_about_install(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Install","INSTALL");
+        menu_about_read_file("Install","INSTALL",1);
 }
 
 void menu_about_installwindows(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Install on Windows","INSTALLWINDOWS");
+        menu_about_read_file("Install on Windows","INSTALLWINDOWS",1);
 }
 
 void menu_about_alternate_roms(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Alternate ROMS","ALTERNATEROMS");
+        menu_about_read_file("Alternate ROMS","ALTERNATEROMS",1);
 }
 
 void menu_about_included_tapes(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Included Tapes","INCLUDEDTAPES");
+        menu_about_read_file("Included Tapes","INCLUDEDTAPES",1);
 }
 
 
 
 void menu_about_acknowledgements(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Acknowledgements","ACKNOWLEDGEMENTS");
+        menu_about_read_file("Acknowledgements","ACKNOWLEDGEMENTS",1);
 }
 
 void menu_about_donate(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Donate","DONATE");
+        menu_about_read_file("Donate","DONATE",1);
 }
 
 void menu_about_faq(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("FAQ","FAQ");
+        menu_about_read_file("FAQ","FAQ",1);
 }
 
 void menu_about_license(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("ZEsarUX License","LICENSE");
+        menu_about_read_file("ZEsarUX License","LICENSE",1);
 }
 
 void menu_about_licenses_info(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Licenses information","LICENSES_info");
+        menu_about_read_file("Licenses information","LICENSES_info",1);
 }
 
 void menu_about_license_motorola_core(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Motorola Core License","licenses/LICENSE_MOTOROLA_CORE");
+        menu_about_read_file("Motorola Core License","licenses/LICENSE_MOTOROLA_CORE",1);
 }
 
 void menu_about_license_scmp_core(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("SCMP Core License","licenses/LICENSE_SCMP_CORE");
+        menu_about_read_file("SCMP Core License","licenses/LICENSE_SCMP_CORE",1);
 }
 
 void menu_about_license_scl2trd(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("scl2trd License","licenses/LICENSE_scl2trd");
+        menu_about_read_file("scl2trd License","licenses/LICENSE_scl2trd",1);
 }
 
 void menu_about_license_fuse(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Fuse License","licenses/LICENSE_fuse");
+        menu_about_read_file("Fuse License","licenses/LICENSE_fuse",1);
 }
 
 void menu_about_license_atomlite(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("SimCoupe License","licenses/LICENSE_simcoupe");
+        menu_about_read_file("SimCoupe License","licenses/LICENSE_simcoupe",1);
 }
 
 void menu_about_license_unrealspeccy(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("UnrealSpeccy License","licenses/LICENSE_unrealspeccy");
+        menu_about_read_file("UnrealSpeccy License","licenses/LICENSE_unrealspeccy",1);
 }
 
 void menu_about_license_mdvtool(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("mdvtool License","licenses/LICENSE_mdvtool");
+        menu_about_read_file("mdvtool License","licenses/LICENSE_mdvtool",1);
 }
 
 void menu_about_license_zip(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("zip License","licenses/LICENSE_zip");
+        menu_about_read_file("zip License","licenses/LICENSE_zip",1);
 }
 
 void menu_about_license_unpaws(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("unpaws/unquill License","licenses/LICENSE_unpaws");
+        menu_about_read_file("unpaws/unquill License","licenses/LICENSE_unpaws",1);
 }
 
 void menu_about_license_undaad(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("undaad License","licenses/LICENSE_undaad");
+        menu_about_read_file("undaad License","licenses/LICENSE_undaad",1);
 }
 
 void menu_about_license_grackle(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("grackle License","licenses/LICENSE_grackle");
+        menu_about_read_file("grackle License","licenses/LICENSE_grackle",1);
 }
 
 void menu_about_license_qemu(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Qemu License","licenses/LICENSE_qemu");
+        menu_about_read_file("Qemu License","licenses/LICENSE_qemu",1);
 }
 
 void menu_about_license_hilow(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Hilow License","licenses/LICENSE_hilow");
+        menu_about_read_file("Hilow License","licenses/LICENSE_hilow",1);
 }
 
 
@@ -33200,7 +33206,8 @@ void menu_inicio(void)
 		osd_kb_no_mostrar_desde_menu=0; //Volver a permitir aparecer teclado osd
 		menu_event_new_version_show_changes.v=0;
 		menu_generic_message_format("Updated version","You have updated ZEsarUX :)\nPlease take a look at the changes:");
-		menu_about_changelog(0);
+		//No mostramos error si el Changelog es mayor de lo que puede leer el visor de text (y es mayor de 64000 desde versión 9.2)
+        menu_about_read_file("Changelog","Changelog",0);
 
 		cls_menu_overlay();
 	}
@@ -35677,6 +35684,7 @@ void menu_first_aid_restore_all(void)
 }
 
 //Deshabilitar first aid de lectura de config. Si no existe, volver sin decir nada
+//Asi evitamos que si en un futuro borro algun first aid y alguien lo tenga por config, no de error al no existir
 void menu_first_aid_disable(char *texto)
 {
 	int indice;

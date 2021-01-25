@@ -170,7 +170,6 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 esos, debe haber cls antes siempre
 
 
--changelog llega al maximo que puede mostrar el visor en menu cuando hay update (64000 bytes)
 
 -the next war: revisar border deberia desactivar. musica en menu no se oye bien
 
@@ -182,7 +181,6 @@ esos, debe haber cls antes siempre
 -Zoom 1-1 curses en modo all in pixel 
 Posible scroll y ventana de vista 
 
--Opción no recordar sugerencia si se borra la sugerencia, la opción dará error?
 
 -Opción activar nuevo algoritmo de carga según valor anterior como conversor 1 bit
 
@@ -190,9 +188,5 @@ Posible scroll y ventana de vista
 
 A veces salen interrogantes 
 
-
-
-
--read only setting que actue en QL tambien para rename
 
 -eliminar parpadeos en fbdev usando doble buffer?

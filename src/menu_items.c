@@ -18660,7 +18660,7 @@ void menu_direct_alsa_midi_output_list_devices(MENU_ITEM_PARAMETERS)
 
 	//Abrir archivo y mostrarlo en ventana
 	//Usamos esta funcion generica de mostrar archivos de ayuda
-	menu_about_read_file("Sequencer devices",device_list);
+	menu_about_read_file("Sequencer devices",device_list,1);
 
 }
 

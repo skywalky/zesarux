@@ -171,7 +171,7 @@ extern void menu_espera_tecla_timeout_window_splash(void);
 
 extern void menu_cpu_core_loop(void);
 extern z80_byte menu_get_pressed_key(void);
-extern void menu_about_read_file(char *title,char *aboutfile);
+extern void menu_about_read_file(char *title,char *aboutfile,int show_err_if_big);
 
 extern int menu_cond_zx8081(void);
 extern int menu_cond_zx8081_realvideo(void);
@@ -444,6 +444,7 @@ extern overlay_screen overlay_screen_array[];
 //#define MAX_LINEAS_TOTAL_GENERIC_MESSAGE 1000
 
 //archivo LICENSE ocupa 1519 lineas ya parseado
+//archivo changelog ocupa 65184 bytes (en version 9.2)
 #define MAX_LINEAS_TOTAL_GENERIC_MESSAGE 2000
 
 #define MAX_ANCHO_LINEAS_GENERIC_MESSAGE 32
