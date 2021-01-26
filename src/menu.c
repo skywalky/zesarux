@@ -34130,7 +34130,7 @@ FRESULT file_utils_prueba_dir(char *path)
 
     const int recursiva=0;
 
-
+    printf("Abriendo dir: %s\n",path);
     res = f_opendir(&dir, path);                       /* Open the directory */
     if (res == FR_OK) {
         for (;;) {
@@ -34156,7 +34156,12 @@ FRESULT file_utils_prueba_dir(char *path)
 
 
             else {                                       /* It is a file. */
-                printf("%s/%s %d\n", path, fno.fname,fno.fsize);
+                if (recursiva) {
+                    printf("%s/%s %d\n", path, fno.fname,fno.fsize);
+                }
+                else {
+                    printf("%s %d\n", fno.fname,fno.fsize);
+                }
             }
         }
         f_closedir(&dir);
@@ -34200,10 +34205,13 @@ FATFS FatFs;   /* Work area (filesystem object) for logical drive */
     file_utils_mount_mmc_image_prueba_leer();
 
     char buff[256];
-    strcpy(buff, "/");
+
+    //FatFs gestiona 0:/ o equivalente /
+    //Pero para nosotros identificamos 0:/ para diferenciar de sistema local de archivos
+    strcpy(buff, "0:/");
 
 
-    printf("Dir /\n");
+    printf("Dir %s\n",buff);
     file_utils_prueba_dir(buff);
 
     printf("Desmontar\n");
