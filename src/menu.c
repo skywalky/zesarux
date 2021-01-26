@@ -20293,14 +20293,14 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
            return -1;
        }
 
-
-
         int salir=0;
 
         while (!salir) {
 
-
+                    printf("antes readdir\n");
                    res = f_readdir(&dir, &fno);                   /* Read a directory item */
+                   printf("despues readdir\n");
+
                     if (res != FR_OK || fno.fname[0] == 0) {
                         //printf("temp: %s\n",fno.fname);
                         printf("Fin leyendo directorio. res=%d\n",res);
@@ -20313,7 +20313,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
                     printf("menu_filesel_readdir_mmc_image: file: %s\n",fno.fname);
 
                     //TODO: filter puede ser NULL???
-                    if (filter(dp)) {
+                    //temp if (filter(dp)) {
 
                             //Asignar memoria para ese fichero
                             memoria_archivos=malloc(sizeof(struct dirent));
@@ -20346,7 +20346,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
                                     return archivos;
                             }
 
-                    }
+                    //}
                 }
 
 
@@ -34297,13 +34297,16 @@ FRESULT file_utils_prueba_dir(char *path)
     return res;
 }
 
+//Esto va fuera porque todas las operaciones lo usan
+FATFS FatFs_menu_mmc_mount;   /* Work area (filesystem object) for logical drive */
+
 void file_utils_mount_mmc_image(char *fullpath)
 {
     printf("Mounting %s\n",fullpath);
 
     strcpy(fatfs_disk_zero_path,fullpath);
 
-FATFS FatFs;   /* Work area (filesystem object) for logical drive */
+
 
     //prueba abrir archivo de la mmc
 
@@ -34312,7 +34315,7 @@ FATFS FatFs;   /* Work area (filesystem object) for logical drive */
 
 
     /* Gives a work area to the default drive */
-    FRESULT resultado=f_mount(&FatFs, "", 1);
+    FRESULT resultado=f_mount(&FatFs_menu_mmc_mount, "", 1);
 
     if (resultado!=FR_OK) {
         printf("Error montando imagen %s:  %d\n",fullpath,resultado);
