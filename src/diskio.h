@@ -33,7 +33,7 @@ DRESULT disk_write (BYTE pdrv, const BYTE* buff, LBA_t sector, UINT count);
 DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 
 
-
+extern BYTE *fatfs_disk_zero_memory;
 
 /* Disk Status Bits (DSTATUS) */
 

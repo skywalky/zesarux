@@ -111,6 +111,7 @@
 #include "gs.h"
 #include "samram.h"
 #include "ff.h"
+#include "diskio.h"
 
 
 #if defined(__APPLE__)
@@ -20248,6 +20249,122 @@ int menu_filesel_alphasort(const struct dirent **d1, const struct dirent **d2)
 	return (strcasecmp((*d1)->d_name,(*d2)->d_name));
 }
 
+int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***namelist,
+              int (*filter)(const struct dirent *),
+              int (*compar)(const struct dirent **, const struct dirent **))
+{
+
+
+	#define MAX_ARCHIVOS_SCANDIR_MINGW 20000
+        int archivos=0;
+
+        //Puntero a cada archivo leido
+        struct dirent *memoria_archivos;
+
+        //Array de punteros.
+        struct dirent **memoria_punteros;
+
+        //Asignamos memoria
+        memoria_punteros=malloc(sizeof(struct dirent *)*MAX_ARCHIVOS_SCANDIR_MINGW);
+
+
+        if (memoria_punteros==NULL) {
+                cpu_panic("Error allocating memory when reading directory");
+        }
+
+        *namelist=memoria_punteros;
+
+        //int indice_puntero;
+
+        printf("leyendo directorio %s desde menu_filesel_readdir_mmc_image\n",directorio);
+
+       struct dirent *dp;
+
+
+        FRESULT res;
+       FATFS_DIR dir;
+
+       static FILINFO fno;
+
+        res = f_opendir(&dir, directorio);                       /* Open the directory */
+        if (res != FR_OK) {       
+           printf("Error abriendo directorio de mmc: %s\n",directorio);
+           debug_printf(VERBOSE_ERR,"Can't open directory %s", directorio);
+           return -1;
+       }
+
+
+
+        int salir=0;
+
+        while (!salir) {
+
+
+                   res = f_readdir(&dir, &fno);                   /* Read a directory item */
+                    if (res != FR_OK || fno.fname[0] == 0) {
+                        //printf("temp: %s\n",fno.fname);
+                        printf("Fin leyendo directorio. res=%d\n",res);
+                        //break;  /* Break on error or end of dir */
+                        salir=1;
+                    }
+
+                else {
+                    //debug_printf(VERBOSE_DEBUG,"menu_filesel_readdir_mmc_image: file: %s",fno.fname);
+                    printf("menu_filesel_readdir_mmc_image: file: %s\n",fno.fname);
+
+                    //TODO: filter puede ser NULL???
+                    if (filter(dp)) {
+
+                            //Asignar memoria para ese fichero
+                            memoria_archivos=malloc(sizeof(struct dirent));
+
+                        if (memoria_archivos==NULL) {
+                                    cpu_panic("Error allocating memory when reading directory");
+                            }
+
+                            //Meter puntero
+                            memoria_punteros[archivos]=memoria_archivos;
+
+                            //Meter datos
+
+                            //memcpy(memoria_archivos,dp,sizeof( struct dirent ));
+
+                            strcpy(memoria_archivos->d_name,fno.fname);
+
+
+                            if (fno.fattrib & AM_DIR) {
+                                memoria_archivos->d_type=DT_DIR;
+                            }
+                            else {
+                                memoria_archivos->d_type=DT_REG;
+                            }
+
+                            archivos++;
+
+                            if (archivos>=MAX_ARCHIVOS_SCANDIR_MINGW) {
+                                    debug_printf(VERBOSE_ERR,"Error. Maximum files in directory reached: %d",MAX_ARCHIVOS_SCANDIR_MINGW);
+                                    return archivos;
+                            }
+
+                    }
+                }
+
+
+       }
+       f_closedir(&dir);
+
+	//lanzar qsort
+	int (*funcion_compar)(const void *, const void *);
+
+	funcion_compar=( int (*)(const void *, const void *)  )compar;
+
+	qsort(memoria_punteros,archivos,sizeof( struct dirent *), funcion_compar);
+
+        return archivos;
+
+
+}
+
 int menu_filesel_readdir(void)
 {
 
@@ -20288,6 +20405,14 @@ primer_filesel_item=NULL;
 	filesel_item *item;
 	filesel_item *itemanterior;
 
+//prueba leer con chanfs
+    if (fatfs_disk_zero_memory!=NULL) 
+    {
+        //TODO: siempre abre el /
+        n = menu_filesel_readdir_mmc_image("0:/", &namelist, menu_filesel_filter_func, menu_filesel_alphasort);
+    }
+
+    else {
 
 #ifndef MINGW
 	n = scandir(".", &namelist, menu_filesel_filter_func, menu_filesel_alphasort);
@@ -20295,6 +20420,8 @@ primer_filesel_item=NULL;
 	//alternativa scandir, creada por mi
 	n = scandir_mingw(".", &namelist, menu_filesel_filter_func, menu_filesel_alphasort);
 #endif
+
+    }
 
     if (n < 0) {
 		debug_printf (VERBOSE_ERR,"Error reading directory contents: %s",strerror(errno));
@@ -34200,7 +34327,7 @@ FATFS FatFs;   /* Work area (filesystem object) for logical drive */
     printf("\n\nEscribiendo\n");
     file_utils_mount_mmc_image_prueba_escribir();
 
-    sleep(5);
+    //sleep(5);
     printf("leyendo\n");
     file_utils_mount_mmc_image_prueba_leer();
 
@@ -34212,12 +34339,12 @@ FATFS FatFs;   /* Work area (filesystem object) for logical drive */
 
 
     printf("Dir %s\n",buff);
-    file_utils_prueba_dir(buff);
+    //file_utils_prueba_dir(buff);
 
     printf("Desmontar\n");
 
     //Y desmontar
-    f_unmount("");
+    //f_unmount("");
 
 }    
 
