@@ -117,6 +117,8 @@
 #include "ql_i8049.h"
 #include "samram.h"
 
+#include "ff.h"
+
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
 //Nombre archivo
@@ -163,6 +165,9 @@ char external_tool_sox[PATH_MAX]="/usr/bin/sox";
 char external_tool_gunzip[PATH_MAX]="/bin/gunzip";
 char external_tool_tar[PATH_MAX]="/bin/tar";
 char external_tool_unrar[PATH_MAX]="/usr/bin/unrar";
+
+//Para interfaz con FatFS
+char fatfs_disk_zero_path[PATH_MAX]="/Users/cesarhernandez/Desktop/pruebas_fatfs.mmc";
 
 
 //tablas de conversion de teclado
