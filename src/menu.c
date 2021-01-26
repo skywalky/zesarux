@@ -34019,22 +34019,79 @@ int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 	return 0;
 }
 
-void file_utils_mount_mmc_image(char *fullpath)
+void file_utils_mount_mmc_image_prueba_escribir(void)
 {
-    printf("Mounting %s\n",fullpath);
+    FIL fil;        /* File object */
+    //char line[100]; /* Line buffer */
+    FRESULT fr;     /* FatFs return code */
 
-FATFS FatFs;   /* Work area (filesystem object) for logical drive */
+    /* Open a text file */
+    fr = f_open(&fil, "README.md", FA_CREATE_ALWAYS | FA_WRITE); 
 
-    //prueba abrir archivo de la mmc
+    //fr = f_open(&fil, "README.md", FA_CREATE_NEW);
+    
+    //FA_WRITE no lo crea si no existe. Y si existe, con FA_WRITE empieza a escribir desde el principio, conservando
+    //tamanyo y bytes no escritos con los antiguos
 
-    //disk_initialize(0);
+    /*
+
+Hay que tener en cuenta la tabla de equivalencias:
+
+POSIX	FatFs
+"r"	FA_READ
+"r+"	FA_READ | FA_WRITE
+
+"w"	FA_CREATE_ALWAYS | FA_WRITE
+"w+"	FA_CREATE_ALWAYS | FA_WRITE | FA_READ
+
+"a"	FA_OPEN_APPEND | FA_WRITE
+"a+"	FA_OPEN_APPEND | FA_WRITE | FA_READ
+
+"wx"	FA_CREATE_NEW | FA_WRITE
+"w+x"	FA_CREATE_NEW | FA_WRITE | FA_READ
+
+    */
+
+    if (fr!=FR_OK) {
+        printf("Error abriendo archivo para escritura\n");
+        return ; //(int)fr
+    }
+
+    char *buffer_texto="Hola que tal";
+
+    UINT escritos;
+
+    f_write(&fil,buffer_texto,strlen(buffer_texto),&escritos);
+
+    if (escritos!=strlen(buffer_texto)) {
+        printf("Error escribiendo archivo\n");
+    }
+
+
+
+    /* Close the file */
+    f_close(&fil);    
+}
+
+void file_utils_mount_mmc_image_prueba_borrar(void)
+{
+
+    FRESULT fr;     /* FatFs return code */
+
+    /* Open a text file */
+    fr = f_unlink("README.md");
+
+    if (fr!=FR_OK) {
+        printf("error borrando\n");
+    }
+  
+}
+
+void file_utils_mount_mmc_image_prueba_leer(void)
+{
     FIL fil;        /* File object */
     char line[100]; /* Line buffer */
     FRESULT fr;     /* FatFs return code */
-
-
-    /* Gives a work area to the default drive */
-    f_mount(&FatFs, "", 0);
 
     /* Open a text file */
     fr = f_open(&fil, "README.md", FA_READ);
@@ -34061,7 +34118,40 @@ FATFS FatFs;   /* Work area (filesystem object) for logical drive */
     }
 
     /* Close the file */
-    f_close(&fil);
+    f_close(&fil);    
+}
+
+void file_utils_mount_mmc_image(char *fullpath)
+{
+    printf("Mounting %s\n",fullpath);
+
+FATFS FatFs;   /* Work area (filesystem object) for logical drive */
+
+    //prueba abrir archivo de la mmc
+
+    //disk_initialize(0);
+
+
+
+    /* Gives a work area to the default drive */
+    f_mount(&FatFs, "", 0);
+
+    printf("leyendo\n");
+    file_utils_mount_mmc_image_prueba_leer();
+    printf("borrando\n");
+    file_utils_mount_mmc_image_prueba_borrar();
+
+    printf("\n\nEscribiendo\n");
+    file_utils_mount_mmc_image_prueba_escribir();
+
+    sleep(5);
+    printf("leyendo\n");
+    file_utils_mount_mmc_image_prueba_leer();
+
+    printf("Desmontar\n");
+
+    //Y desmontar
+    f_unmount("");
 
 }    
 

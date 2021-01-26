@@ -1396,7 +1396,7 @@ scl2trd.o: scl2trd.c scl2trd.h debug.h utils.h
 zip.o: zip.c zip.h miniz.h debug.h 
 	\$(CC) \$(CFLAGS) -c zip.c
 
-diskio.o: diskio.c diskio.h ff.h
+diskio.o: diskio.c diskio.h ff.h utils.h
 	\$(CC) \$(CFLAGS) -c diskio.c
 
 ff.o: ff.c ff.h diskio.h 

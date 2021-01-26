@@ -9,8 +9,11 @@
 
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
+#include "utils.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+
 
 /* Definitions of physical drive number for each drive */
 #define DEV_MMC		0	/* Example: Map MMC/SD card to physical drive 0 */
@@ -19,6 +22,12 @@
 
 
 FILE *ptr_fatfs_disk_zero_file;
+
+//Puntero que apunta a la memoria donde hemos leido nuestro archivo 
+BYTE *fatfs_disk_zero_memory=NULL;
+
+//Tamanyo del archivo
+long int fatfs_disk_zero_tamanyo=0;
 
 
 /*-----------------------------------------------------------------------*/
@@ -32,7 +41,7 @@ DSTATUS disk_status (
 	//DSTATUS stat;
 	//int result;
 
-    printf("FatFs llamado disk status mmc para physical drive: %d\n",pdrv);
+    printf("FatFs llamado disk status para physical drive: %d\n",pdrv);
 
 	switch (pdrv) {
     /*
@@ -103,6 +112,39 @@ DSTATUS disk_initialize (
             printf("FatFs error abriendo archivo %s\n",fatfs_disk_zero_path);
             return STA_NOINIT;
         }
+
+
+        //Tamanyo del archivo
+        fatfs_disk_zero_tamanyo=get_file_size(fatfs_disk_zero_path);
+
+        if (fatfs_disk_zero_tamanyo<=0) {
+            printf("FatFs error leyendo longitud archivo %s\n",fatfs_disk_zero_path);
+            return STA_NOINIT;
+        }
+
+        //asignar memoria. Liberar si existia antes
+        if (fatfs_disk_zero_memory!=NULL) {
+            printf("FatFs freeing previous ram cache\n");
+            free(fatfs_disk_zero_memory);
+        }
+        fatfs_disk_zero_memory=malloc(fatfs_disk_zero_tamanyo);
+
+        if (fatfs_disk_zero_memory==NULL) {
+            printf("FatFs error asignando memoria para archivo %s\n",fatfs_disk_zero_path);
+            return STA_NOINIT;            
+        }
+
+        //Y leerlo entero
+        long int leidos=fread(fatfs_disk_zero_memory,1,fatfs_disk_zero_tamanyo,ptr_fatfs_disk_zero_file);
+
+        if (leidos<fatfs_disk_zero_tamanyo) {
+            printf("FatFs error leyendo archivo %s en memoria\n",fatfs_disk_zero_path);
+            return STA_NOINIT;               
+        }
+
+        //Y ya se puede cerrar
+        fclose(ptr_fatfs_disk_zero_file);
+
             
 		return 0;
     break;
@@ -120,7 +162,35 @@ DSTATUS disk_initialize (
 	return STA_NOINIT;
 }
 
+//leer un byte del archivo mmc (en memoria) controlando offsets
+BYTE diskio_lee_byte(long int posicion)
+{
+    if (posicion>=fatfs_disk_zero_tamanyo || posicion<0) {
+        printf("FatFs error reading beyond mmc size (total %ld, trying %ld)\n",fatfs_disk_zero_tamanyo,posicion);
+        return 0;
+    }
 
+    else {
+        return fatfs_disk_zero_memory[posicion];
+    }
+}
+
+
+//escribir un byte en el archivo mmc (en memoria) controlando offsets
+void diskio_escribe_byte(long int posicion,BYTE valor)
+{
+    if (posicion>=fatfs_disk_zero_tamanyo || posicion<0) {
+        printf("FatFs error writing beyond mmc size (total %ld, trying %ld)\n",fatfs_disk_zero_tamanyo,posicion);
+        return;
+    }
+
+    else {
+        //printf("Escribiendo byte %d (%c)\n",valor,
+        //    (valor>=32 && valor<=127 ? valor : '?'));
+
+        fatfs_disk_zero_memory[posicion]=valor;
+    }
+}
 
 /*-----------------------------------------------------------------------*/
 /* Read Sector(s)                                                        */
@@ -135,6 +205,8 @@ DRESULT disk_read (
 {
 	//DRESULT res;
 	//int result;
+
+    long int offset;
 
     printf("FatFs llamado disk_read para drive %d\n",pdrv);
 
@@ -158,9 +230,18 @@ DRESULT disk_read (
 		// translate the reslut code here
 
         //TODO: no se si realmente seria leer FF_MIN_SS o FF_MAX_SS
-        fseek(ptr_fatfs_disk_zero_file,sector*FF_MIN_SS,SEEK_SET);
 
-        fread(buff,1,count*FF_MIN_SS,ptr_fatfs_disk_zero_file);
+        offset=sector*FF_MIN_SS;
+
+        long int total_leer=count*FF_MIN_SS;
+
+        for (;total_leer>0;total_leer--) {
+            *buff=diskio_lee_byte(offset);
+
+            buff++;
+            offset++;
+        }
+
 
 		return RES_OK;
     break;
@@ -200,7 +281,9 @@ DRESULT disk_write (
 	//DRESULT res;
 	//int result;
 
-    printf("FatFs llamado disk_write para drive %d\n",pdrv);
+    long int offset;   
+
+    printf("FatFs llamado disk_write para drive %d sector %d count %d\n",pdrv,sector,count);
 
 	switch (pdrv) {
         /*
@@ -221,9 +304,22 @@ DRESULT disk_write (
 
 		// translate the reslut code here
 
-        //TODO
+        //TODO: no se si realmente seria leer FF_MIN_SS o FF_MAX_SS
 
-		return RES_OK;
+        offset=sector*FF_MIN_SS;
+
+        long int total_leer=count*FF_MIN_SS;
+
+        for (;total_leer>0;total_leer--) {
+            diskio_escribe_byte(offset,*buff);
+
+            buff++;
+            offset++;
+        }
+
+
+		return RES_OK;        
+
     break;
 
     /*
@@ -272,7 +368,12 @@ DRESULT disk_ioctl (
 
 		// Process of the command for the MMC/SD card
 
-        //TODO
+        //TODO. sync por ejemplo, para hacer flush a filesystem.
+        switch(cmd) {
+            case CTRL_SYNC:
+                printf("FatFs llamado disk_ioctl CTRL_SYNC\n");
+            break;
+        } 
         return RES_OK;
 
 	break;
