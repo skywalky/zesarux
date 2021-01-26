@@ -30912,6 +30912,11 @@ void menu_about_license_hilow(MENU_ITEM_PARAMETERS)
         menu_about_read_file("Hilow License","licenses/LICENSE_hilow",1);
 }
 
+void menu_about_license_fatfs(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("FatFs License","licenses/LICENSE_FatFs",1);
+}
+
 
 void menu_about_statistics(MENU_ITEM_PARAMETERS)
 {
@@ -31258,6 +31263,9 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu(array_menu_common,"~~Atomlite (from simcoupe)",MENU_OPCION_NORMAL,menu_about_license_atomlite,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'a');	
 
+			menu_add_item_menu(array_menu_common,"Fa~~tFs",MENU_OPCION_NORMAL,menu_about_license_fatfs,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'t');	
+            
 			menu_add_item_menu(array_menu_common,"~~Fuse disassembler",MENU_OPCION_NORMAL,menu_about_license_fuse,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'f');	
 
