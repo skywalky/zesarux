@@ -34121,9 +34121,55 @@ void file_utils_mount_mmc_image_prueba_leer(void)
     f_close(&fil);    
 }
 
+FRESULT file_utils_prueba_dir(char *path) 
+{
+    FRESULT res;
+    FATFS_DIR dir;
+    UINT i;
+    static FILINFO fno;
+
+    const int recursiva=0;
+
+
+    res = f_opendir(&dir, path);                       /* Open the directory */
+    if (res == FR_OK) {
+        for (;;) {
+            res = f_readdir(&dir, &fno);                   /* Read a directory item */
+            if (res != FR_OK || fno.fname[0] == 0) break;  /* Break on error or end of dir */
+
+
+            //Llamar recursivamente
+            if (fno.fattrib & AM_DIR) {                    /* It is a directory */
+                if (recursiva) {
+                    i = strlen(path);
+                    sprintf(&path[i], "/%s", fno.fname);
+
+                    //manera recursiva!
+                    res = file_utils_prueba_dir(path);                    /* Enter the directory */
+                    if (res != FR_OK) break;
+                    path[i] = 0;
+                }
+                else {
+                    printf("%s/%s     <dir>\n", path, fno.fname);
+                }
+            } 
+
+
+            else {                                       /* It is a file. */
+                printf("%s/%s %d\n", path, fno.fname,fno.fsize);
+            }
+        }
+        f_closedir(&dir);
+    }
+
+    return res;
+}
+
 void file_utils_mount_mmc_image(char *fullpath)
 {
     printf("Mounting %s\n",fullpath);
+
+    strcpy(fatfs_disk_zero_path,fullpath);
 
 FATFS FatFs;   /* Work area (filesystem object) for logical drive */
 
@@ -34134,7 +34180,12 @@ FATFS FatFs;   /* Work area (filesystem object) for logical drive */
 
 
     /* Gives a work area to the default drive */
-    f_mount(&FatFs, "", 0);
+    FRESULT resultado=f_mount(&FatFs, "", 1);
+
+    if (resultado!=FR_OK) {
+        printf("Error montando imagen %s:  %d\n",fullpath,resultado);
+        return;
+    }
 
     printf("leyendo\n");
     file_utils_mount_mmc_image_prueba_leer();
@@ -34147,6 +34198,13 @@ FATFS FatFs;   /* Work area (filesystem object) for logical drive */
     sleep(5);
     printf("leyendo\n");
     file_utils_mount_mmc_image_prueba_leer();
+
+    char buff[256];
+    strcpy(buff, "/");
+
+
+    printf("Dir /\n");
+    file_utils_prueba_dir(buff);
 
     printf("Desmontar\n");
 

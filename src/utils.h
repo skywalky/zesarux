@@ -936,4 +936,6 @@ extern unsigned int util_read_long_value(z80_byte *origen);
 
 extern int util_get_input_file_keyboard_ms(void);
 
+extern char fatfs_disk_zero_path[];
+
 #endif
