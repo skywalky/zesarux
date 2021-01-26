@@ -110,6 +110,7 @@
 #include "ql_qdos_handler.h"
 #include "gs.h"
 #include "samram.h"
+#include "ff.h"
 
 
 #if defined(__APPLE__)
@@ -33816,7 +33817,7 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 
                                                                 //    01234  567890  12345  678901  2345678901
                 zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,"~^View ~^Trunc D~^El M~^Kdr C~^Onv ~^Inf");
-                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"~^Copy ~^Move Re~^N ~^Paste ~^Filemem");
+                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"~^Copy ~^Move Re~^N ~^Paste ~^Filemem mo~^Unt");
 
         }
 
@@ -34017,6 +34018,52 @@ int si_menu_filesel_no_mas_alla_ultimo_item(int linea)
 	if (filesel_archivo_seleccionado+linea<filesel_total_items-1) return 1;
 	return 0;
 }
+
+void file_utils_mount_mmc_image(char *fullpath)
+{
+    printf("Mounting %s\n",fullpath);
+
+FATFS FatFs;   /* Work area (filesystem object) for logical drive */
+
+    //prueba abrir archivo de la mmc
+
+    //disk_initialize(0);
+    FIL fil;        /* File object */
+    char line[100]; /* Line buffer */
+    FRESULT fr;     /* FatFs return code */
+
+
+    /* Gives a work area to the default drive */
+    f_mount(&FatFs, "", 0);
+
+    /* Open a text file */
+    fr = f_open(&fil, "README.md", FA_READ);
+    if (fr) return ; //(int)fr;
+
+    /* Read every line and display it */
+    /*while (f_gets(line, sizeof line, &fil)) {
+        printf("%s\n",line);
+    }*/
+
+    int salir=0;
+    UINT leidos;
+    int leer=99;
+    while (!salir) {
+        FRESULT resultado=f_read(&fil,line,99,&leidos);
+        if (resultado==FR_OK) {
+            line[leidos]=0;
+            printf("%s\n",line);
+            if (leidos!=leer) salir=1;
+        }
+        else {
+            salir=1;
+        }
+    }
+
+    /* Close the file */
+    f_close(&fil);
+
+}    
 
 void file_utils_file_convert(char *fullpath)
 {
@@ -37207,7 +37254,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						menu_reset_counters_tecla_repeticion();
 						
 						//Comun para acciones que usan archivo seleccionado
-						if (tecla=='V' || tecla=='T' || tecla=='E' || tecla=='M' || tecla=='N' || tecla=='C' || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I') {
+						if (tecla=='V' || tecla=='T' || tecla=='E' || tecla=='M' || tecla=='N' || tecla=='C' 
+                            || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I' || tecla=='U') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -37272,7 +37320,11 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 										releer_directorio=1;
 									}
 
-						
+									//Mount mmc image
+									if (tecla=='U') {
+										file_utils_mount_mmc_image(file_utils_file_selected);
+										releer_directorio=1;
+									}						
 
 									//Copy
 									if (tecla=='C') {
