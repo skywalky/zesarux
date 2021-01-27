@@ -10446,7 +10446,9 @@ int get_file_type(char *nombre)
     //TODO: d_type no lo estamos usando. Se podria eliminar su uso
 
     //Si es archivo de la mmc
-    if (util_path_is_mounted_mmc(nombre)) {        
+    //if (util_path_is_prefix_mmc_fatfs(nombre)) {  
+    if (util_path_is_mmc_fatfs(nombre)) {
+        printf("f_stat for %s using FatFS\n",nombre);
         FRESULT fr;
         FILINFO fno;
 
@@ -19127,17 +19129,55 @@ int util_get_input_file_keyboard_ms(void)
 //Realmente chan fat fs soporta otras rutas como validas, pero aqui establecemos siempre
 // "X:/", donde X es un numero de unidad de 0 al 9, para poder distinguir de rutas locales de filesystem
 //Ejemplo:   0:/SYS/ESXDOS.SYS
-int util_path_is_mounted_mmc(char *dir)
+int util_path_is_prefix_mmc_fatfs(char *dir)
 {
     //Al menos 3 de longitud
     if (strlen(dir)<3) return 0;
 
     if (util_is_digit(dir[0]) && dir[1]==':' && dir[2]=='/') {
-        printf("util_path_is_mounted_mmc ruta %s es de mmc montado\n",dir);
+        printf("util_path_is_prefix_mmc_fatfs ruta %s es de mmc montado\n",dir);
         return 1;
     }
 
     return 0;
+}
+
+//Dice si un archivo esta en una ruta de mmc fat fs o no , teniendo en cuenta la unidad actual
+int util_path_is_mmc_fatfs(char *dir) 
+{
+    /*
+Cambios de ruta al estilo unix:
+
+Si 0:/xxxx, cambiamos a unidad mmc
+Si /xxxx o \xxxxx o X:\XXXXX o X:/XXXXX, no es unidad mmc
+
+Cualquier otra cosa, chdir sin alterar unidad mmc activa o no
+*/
+
+    int ruta_es_mmc=util_path_is_prefix_mmc_fatfs(dir);
+
+    int ruta_es_relativa=1;
+    if (dir[0]=='/' || dir[0]=='\\' || util_path_is_windows_with_drive(dir)) ruta_es_relativa=0;
+
+    //Si ruta es de mmc o ruta relativa
+    printf("ruta: [%s]ruta_es_mmc %d ruta_es_relativa %d\n",dir,ruta_es_mmc,ruta_es_relativa);
+
+    int usar_chdir_mmc=0;
+
+    if (ruta_es_mmc && menu_mmc_image_montada) usar_chdir_mmc=1;
+
+    else {
+        if (ruta_es_relativa) {
+            //ruta relativa. Conservar unidad actual
+            if (menu_current_drive_mmc_image.v) usar_chdir_mmc=1;
+            else usar_chdir_mmc=0;
+        }
+        else {
+            //usar_chdir_mmc=0; //ya es por defecto
+        }
+    }
+
+    return usar_chdir_mmc;
 }
 
 //Si ruta empieza por X:\ o X:/ donde X es una letra

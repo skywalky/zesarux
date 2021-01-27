@@ -34088,28 +34088,9 @@ Si /xxxx o \xxxxx o X:\XXXXX o X:/XXXXX, no es unidad mmc
 
 Cualquier otra cosa, chdir sin alterar unidad mmc activa o no
 */
-    int ruta_es_mmc=util_path_is_mounted_mmc(dir);
+    int usar_chdir_mmc=util_path_is_mmc_fatfs(dir);
 
-    int ruta_es_relativa=1;
-    if (dir[0]=='/' || dir[0]=='\\' || util_path_is_windows_with_drive(dir)) ruta_es_relativa=0;
 
-    //Si ruta es de mmc o ruta relativa
-    printf("ruta: [%s]ruta_es_mmc %d ruta_es_relativa %d\n",dir,ruta_es_mmc,ruta_es_relativa);
-
-    int usar_chdir_mmc=0;
-
-    if (util_path_is_mounted_mmc(dir) && menu_mmc_image_montada) usar_chdir_mmc=1;
-
-    else {
-        if (ruta_es_relativa) {
-            //ruta relativa. Conservar unidad actual
-            if (menu_current_drive_mmc_image.v) usar_chdir_mmc=1;
-            else usar_chdir_mmc=0;
-        }
-        else {
-            //usar_chdir_mmc=0; //ya es por defecto
-        }
-    }
 
     if (usar_chdir_mmc) {
         menu_current_drive_mmc_image.v=1;
@@ -34146,7 +34127,7 @@ void menu_filesel_getcwd(char *dir,int len)
         char buffer_cwd[2048];
         f_getcwd(buffer_cwd,len);
 
-        if (util_path_is_mounted_mmc(buffer_cwd)) {
+        if (util_path_is_prefix_mmc_fatfs(buffer_cwd)) {
             //La devolvemos tal cual
             strcpy(dir,buffer_cwd);
         }

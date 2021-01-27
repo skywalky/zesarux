@@ -939,7 +939,8 @@ extern int util_get_input_file_keyboard_ms(void);
 
 extern char fatfs_disk_zero_path[];
 
-extern int util_path_is_mounted_mmc(char *dir);
+extern int util_path_is_prefix_mmc_fatfs(char *dir);
 extern int util_path_is_windows_with_drive(char *dir);
+extern int util_path_is_mmc_fatfs(char *dir);
 
 #endif
