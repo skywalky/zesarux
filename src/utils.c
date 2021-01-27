@@ -17067,6 +17067,12 @@ int util_is_digit(char c)
         return 0;
 }
 
+int util_is_letter(char c)
+{
+        if (letra_minuscula(c)>='a' && letra_minuscula(c)<='z') return 1;
+        return 0;
+}
+
 
 int util_get_available_drives(char *texto)
 {
@@ -19132,4 +19138,20 @@ int util_path_is_mounted_mmc(char *dir)
     }
 
     return 0;
+}
+
+//Si ruta empieza por X:\ o X:/ donde X es una letra
+int util_path_is_windows_with_drive(char *dir)
+{
+    if (strlen(dir)<3) return 0;
+
+    if (util_is_digit(dir[0]) && dir[1]==':' &&
+        (dir[2]=='/' || dir[2]=='\\')
+    )
+    {
+        return 1;
+    }
+
+    return 0;
+
 }

@@ -775,6 +775,7 @@ extern char menu_realtape_name[];
 extern z80_bit menu_force_writing_inverse_color;
 
 extern void menu_filesel_chdir(char *dir);
+extern void menu_filesel_getcwd(char *dir,int len);
 extern int menu_filesel_mkdir(char *directory);
 
 extern z80_bit force_confirm_yes;

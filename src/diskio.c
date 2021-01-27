@@ -29,6 +29,8 @@ BYTE *fatfs_disk_zero_memory=NULL;
 //Tamanyo del archivo
 long int fatfs_disk_zero_tamanyo=0;
 
+int debug_diskio=0;
+
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -41,7 +43,7 @@ DSTATUS disk_status (
 	//DSTATUS stat;
 	//int result;
 
-    printf("FatFs llamado disk status para physical drive: %d\n",pdrv);
+    if (debug_diskio) printf("FatFs llamado disk status para physical drive: %d\n",pdrv);
 
 	switch (pdrv) {
     /*
@@ -58,7 +60,7 @@ DSTATUS disk_status (
 		// translate the result code here
 
         //TODO: de momento ok
-        printf("FatFs llamado disk status mmc\n");
+        if (debug_diskio) printf("FatFs llamado disk status mmc\n");
         return 0;
     break;
 
@@ -88,7 +90,7 @@ DSTATUS disk_initialize (
 	//DSTATUS stat;
 	//int result;
     
-    printf("FatFs llamado disk_initialize para drive %d\n",pdrv);
+    if (debug_diskio) ("FatFs llamado disk_initialize para drive %d\n",pdrv);
 
 	switch (pdrv) {
     /*
@@ -109,7 +111,7 @@ DSTATUS disk_initialize (
         ptr_fatfs_disk_zero_file=fopen(fatfs_disk_zero_path,"rb");
 
         if (ptr_fatfs_disk_zero_file==NULL) {
-            printf("FatFs error abriendo archivo %s\n",fatfs_disk_zero_path);
+            if (debug_diskio) printf("FatFs error abriendo archivo %s\n",fatfs_disk_zero_path);
             return STA_NOINIT;
         }
 
@@ -118,19 +120,19 @@ DSTATUS disk_initialize (
         fatfs_disk_zero_tamanyo=get_file_size(fatfs_disk_zero_path);
 
         if (fatfs_disk_zero_tamanyo<=0) {
-            printf("FatFs error leyendo longitud archivo %s\n",fatfs_disk_zero_path);
+            if (debug_diskio) printf("FatFs error leyendo longitud archivo %s\n",fatfs_disk_zero_path);
             return STA_NOINIT;
         }
 
         //asignar memoria. Liberar si existia antes
         if (fatfs_disk_zero_memory!=NULL) {
-            printf("FatFs freeing previous ram cache\n");
+            if (debug_diskio) printf("FatFs freeing previous ram cache\n");
             free(fatfs_disk_zero_memory);
         }
         fatfs_disk_zero_memory=malloc(fatfs_disk_zero_tamanyo);
 
         if (fatfs_disk_zero_memory==NULL) {
-            printf("FatFs error asignando memoria para archivo %s\n",fatfs_disk_zero_path);
+            if (debug_diskio) printf("FatFs error asignando memoria para archivo %s\n",fatfs_disk_zero_path);
             return STA_NOINIT;            
         }
 
@@ -138,7 +140,7 @@ DSTATUS disk_initialize (
         long int leidos=fread(fatfs_disk_zero_memory,1,fatfs_disk_zero_tamanyo,ptr_fatfs_disk_zero_file);
 
         if (leidos<fatfs_disk_zero_tamanyo) {
-            printf("FatFs error leyendo archivo %s en memoria\n",fatfs_disk_zero_path);
+            if (debug_diskio) printf("FatFs error leyendo archivo %s en memoria\n",fatfs_disk_zero_path);
             return STA_NOINIT;               
         }
 
@@ -166,7 +168,7 @@ DSTATUS disk_initialize (
 BYTE diskio_lee_byte(long int posicion)
 {
     if (posicion>=fatfs_disk_zero_tamanyo || posicion<0) {
-        printf("FatFs error reading beyond mmc size (total %ld, trying %ld)\n",fatfs_disk_zero_tamanyo,posicion);
+        if (debug_diskio) printf("FatFs error reading beyond mmc size (total %ld, trying %ld)\n",fatfs_disk_zero_tamanyo,posicion);
         return 0;
     }
 
@@ -180,7 +182,7 @@ BYTE diskio_lee_byte(long int posicion)
 void diskio_escribe_byte(long int posicion,BYTE valor)
 {
     if (posicion>=fatfs_disk_zero_tamanyo || posicion<0) {
-        printf("FatFs error writing beyond mmc size (total %ld, trying %ld)\n",fatfs_disk_zero_tamanyo,posicion);
+        if (debug_diskio) printf("FatFs error writing beyond mmc size (total %ld, trying %ld)\n",fatfs_disk_zero_tamanyo,posicion);
         return;
     }
 
@@ -208,7 +210,7 @@ DRESULT disk_read (
 
     long int offset;
 
-    printf("FatFs llamado disk_read para drive %d\n",pdrv);
+    if (debug_diskio) printf("FatFs llamado disk_read para drive %d\n",pdrv);
 
 	switch (pdrv) {
         /*
@@ -283,7 +285,7 @@ DRESULT disk_write (
 
     long int offset;   
 
-    printf("FatFs llamado disk_write para drive %d sector %d count %d\n",pdrv,sector,count);
+    if (debug_diskio) printf("FatFs llamado disk_write para drive %d sector %d count %d\n",pdrv,sector,count);
 
 	switch (pdrv) {
         /*
@@ -353,7 +355,7 @@ DRESULT disk_ioctl (
 	//DRESULT res;
 	//int result;
 
-    printf("FatFs llamado disk_ioctl para drive %d\n",pdrv);
+    if (debug_diskio) printf("FatFs llamado disk_ioctl para drive %d\n",pdrv);
 
 	switch (pdrv) {
         /*
@@ -371,7 +373,7 @@ DRESULT disk_ioctl (
         //TODO. sync por ejemplo, para hacer flush a filesystem.
         switch(cmd) {
             case CTRL_SYNC:
-                printf("FatFs llamado disk_ioctl CTRL_SYNC\n");
+                if (debug_diskio) printf("FatFs llamado disk_ioctl CTRL_SYNC\n");
             break;
         } 
         return RES_OK;

@@ -790,6 +790,7 @@ extern char *gacversions_strings[];
 extern int util_unpawsetc_dump_words(char *mensaje);
 
 extern int util_is_digit(char c);
+extern int util_is_letter(char c);
 
 extern int util_get_available_drives(char *texto);
 
@@ -939,5 +940,6 @@ extern int util_get_input_file_keyboard_ms(void);
 extern char fatfs_disk_zero_path[];
 
 extern int util_path_is_mounted_mmc(char *dir);
+extern int util_path_is_windows_with_drive(char *dir);
 
 #endif

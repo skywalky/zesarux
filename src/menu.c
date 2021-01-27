@@ -20410,8 +20410,7 @@ primer_filesel_item=NULL;
     //if (fatfs_disk_zero_memory!=NULL) 
     if (menu_current_drive_mmc_image.v)
     {
-        //TODO: siempre abre el /
-        n = menu_filesel_readdir_mmc_image("0:/", &namelist, menu_filesel_filter_func, menu_filesel_alphasort);
+        n = menu_filesel_readdir_mmc_image(".", &namelist, menu_filesel_filter_func, menu_filesel_alphasort);
     }
 
     else {
@@ -34080,18 +34079,71 @@ void menu_filesel_switch_filters(void)
 
 void menu_filesel_chdir(char *dir)
 {
-    //Si ruta es de mmc
-    if (util_path_is_mounted_mmc(dir)) {
+
+/*
+Cambios de ruta al estilo unix:
+
+Si 0:/xxxx, cambiamos a unidad mmc
+Si /xxxx o \xxxxx o X:\XXXXX o X:/XXXXX, no es unidad mmc
+
+Cualquier otra cosa, chdir sin alterar unidad mmc activa o no
+*/
+    int ruta_es_mmc=util_path_is_mounted_mmc(dir);
+
+    int ruta_es_relativa=1;
+    if (dir[0]=='/' || dir[0]=='\\' || util_path_is_windows_with_drive(dir)) ruta_es_relativa=0;
+
+    //Si ruta es de mmc o ruta relativa
+    printf("ruta: [%s]ruta_es_mmc %d ruta_es_relativa %d\n",dir,ruta_es_mmc,ruta_es_relativa);
+    if (util_path_is_mounted_mmc(dir) || ruta_es_relativa) {
         menu_current_drive_mmc_image.v=1;
-        printf("ruta de chdir es de mmc\n");
+        printf("ruta de menu_filesel_chdir es de mmc\n");
+        printf("llamando f_chdir desde menu_filesel_chdir a %s\n",dir);
         //menu_mmc_chdir(dir);
         f_chdir(dir);
+
+        char buffer[1024];
+        f_getcwd(buffer,1023);
+
+        printf("ruta despues de f_chdir: %s\n",buffer);
+
+        menu_filesel_getcwd(buffer,1023);
+        printf("ruta despues de menu_filesel_getcwd: %s\n",buffer);
 
     }
 
     else {
         menu_current_drive_mmc_image.v=0;
         chdir(dir);
+    }
+}
+
+void menu_filesel_getcwd(char *dir,int len)
+{
+    //printf("path_max: %d\n",PATH_MAX);
+    //Si unidad activa es la de mmc
+    if (menu_current_drive_mmc_image.v) {
+        printf("unidad actual de menu_filesel_getcwd es de mmc\n");
+
+        //Miramos si nos retorna un 0:/ y si no, lo agregamos
+        //TODO: esperemos que nadie use rutas mas grandes que esto
+        char buffer_cwd[2048];
+        f_getcwd(buffer_cwd,len);
+
+        if (util_path_is_mounted_mmc(buffer_cwd)) {
+            //La devolvemos tal cual
+            strcpy(dir,buffer_cwd);
+        }
+        else {
+            //Agregamos 0:/
+            //TODO: aqui no hacemos caso del parametro len
+            sprintf(dir,"0:/%s",buffer_cwd);
+        }
+
+    }
+
+    else {
+        getcwd(dir,len);
     }
 }
 
@@ -35557,7 +35609,9 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 	char current_dir[PATH_MAX];
 	char buffer_dir[OVERLAY_SCREEN_MAX_WIDTH+1];
 	char buffer3[OVERLAY_SCREEN_MAX_WIDTH+1+32];
-	getcwd(current_dir,PATH_MAX);
+
+	//getcwd(current_dir,PATH_MAX);
+    menu_filesel_getcwd(current_dir,PATH_MAX);
 
 	menu_tape_settings_trunc_name(current_dir,buffer_dir,ventana->visible_width-14); //14 es lo que ocupa el texto "Current dir: "
 	sprintf (buffer3,"Current dir: %s",buffer_dir);
@@ -37226,10 +37280,15 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					//Si es Windows y se escribe unidad: (ejemplo: "D:") hacer chdir
 					int unidadwindows=0;
 #ifdef MINGW
-					if (filesel_nombre_archivo_seleccionado[0] &&
-						filesel_nombre_archivo_seleccionado[1]==':' &&
-						filesel_nombre_archivo_seleccionado[2]==0 )
-						{
+
+                    if (strlen(filesel_nombre_archivo_seleccionado)==3 && 
+                    util_path_is_windows_with_drive(filesel_nombre_archivo_seleccionado)
+                    ) {
+
+					//if (filesel_nombre_archivo_seleccionado[0] &&
+					//	filesel_nombre_archivo_seleccionado[1]==':' &&
+					//	filesel_nombre_archivo_seleccionado[2]==0 )
+					//	{
 						debug_printf (VERBOSE_INFO,"%s is a Windows drive",filesel_nombre_archivo_seleccionado);
 						unidadwindows=1;
 					}
@@ -37534,6 +37593,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							}
 
 							debug_printf (VERBOSE_DEBUG,"Changing to directory %s",directorio_a_cambiar);
+
+                            printf("cambiando a directorio %s desde filesel\n",directorio_a_cambiar);
 
 							menu_filesel_chdir(directorio_a_cambiar);
 
