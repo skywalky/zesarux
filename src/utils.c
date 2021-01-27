@@ -5321,6 +5321,27 @@ int si_existe_archivo(char *nombre)
 //Retorna tamanyo archivo
 long int get_file_size(char *nombre)
 {
+
+    //Si es archivo de la mmc
+    //if (util_path_is_prefix_mmc_fatfs(nombre)) {
+    if (util_path_is_mmc_fatfs(nombre)) {
+        printf("get_file_size for %s using FatFS\n",nombre);
+        FRESULT fr;
+        FILINFO fno;
+
+
+        //printf("Test for 'file.txt'...\n");
+
+        fr = f_stat(nombre, &fno);
+        if (fr==FR_OK) {
+            return fno.fsize;
+        }
+
+        //desconocido
+        else return 0;
+    }
+
+    else {
         struct stat buf_stat;
 
                 if (stat(nombre, &buf_stat)!=0) {
@@ -5332,6 +5353,7 @@ long int get_file_size(char *nombre)
 			//printf ("file size: %ld\n",buf_stat.st_size);
 			return buf_stat.st_size;
                 }
+    }
 }
 
 

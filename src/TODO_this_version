@@ -192,3 +192,5 @@ A veces salen interrogantes
 -eliminar parpadeos en fbdev usando doble buffer?
 
 -funcion comun fopen fatfs y local. mismo para fclose
+
+-al abrir un sped.bas, revisar file_is_z88_basic, que salta error porque no puede abrir

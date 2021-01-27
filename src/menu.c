@@ -22763,14 +22763,31 @@ void menu_file_basic_browser_show(char *filename)
 	
 	//Leemos archivo .bas
         FILE *ptr_file_bas_browser;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;    
+
+    printf("menu_file_basic_browser_show %s\n",filename);    
+
+    if (menu_fopen(filename,&in_fatfs,&ptr_file_bas_browser,&fil)<0) {
+        return;
+    }
+    /*
         ptr_file_bas_browser=fopen(filename,"rb");
 
         if (!ptr_file_bas_browser) {
 		debug_printf(VERBOSE_ERR,"Unable to open file");
 		return;
 	}
+    */
 
 	int tamanyo=get_file_size(filename);
+    printf("tamanyo: %d\n",tamanyo);
+
+
 	z80_byte *memoria;
 	memoria=malloc(tamanyo);
 	if (memoria==NULL) cpu_panic ("Can not allocate memory for bas read");
@@ -22782,14 +22799,18 @@ void menu_file_basic_browser_show(char *filename)
 	//Leer archivo
 
 
-    int leidos=fread(memoria,1,tamanyo,ptr_file_bas_browser);
+    int leidos;
+    
+    //leidos=fread(memoria,1,tamanyo,ptr_file_bas_browser);
+    leidos=menu_fread(in_fatfs,memoria,tamanyo,ptr_file_bas_browser,&fil);
 
 	if (leidos!=tamanyo) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
     }
 
-    fclose(ptr_file_bas_browser);
+    menu_fclose(in_fatfs,ptr_file_bas_browser,&fil);
+    //fclose(ptr_file_bas_browser);
 
 	char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
 
@@ -22802,6 +22823,8 @@ void menu_file_basic_browser_show(char *filename)
 	int dir_inicio_linea=0;
 
 	int tipo=0; //Asumimos spectrum
+
+    printf("antes de ver extension\n");
 
 	//Si es basic zx81
 	if (!util_compare_file_extension(filename,"baszx81")) {
@@ -25646,6 +25669,8 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
     if (menu_fopen(file_name,&in_fatfs,&ptr_file_name,&fil)<0) {
         return;
     }
+
+    printf("despues menu_fopen\n");
     
     /*
     =util_path_is_prefix_mmc_fatfs(file_name);
@@ -25681,7 +25706,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
     leidos=menu_fread(in_fatfs,(z80_byte *)file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name,&fil);
 
-
+    printf("despues menu_fread\n");
 /*
     if (in_fatfs) {
         UINT leidos_fatfs;
@@ -25696,6 +25721,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 
 	debug_printf (VERBOSE_INFO,"Read %d bytes of file: %s",leidos,file_name);
+    printf ("Read %d bytes of file: %s\n",leidos,file_name);
 	int avisolimite=0;
 
 	if (leidos==MAX_TEXTO_GENERIC_MESSAGE) {
@@ -25716,7 +25742,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
     }
     */
 
-
+   printf("antes deteccion 17\n");
 	//Si longitud de bloque es 17, y byte inicial es 0,1,2 o 3, visor de cabecera de bloque de spectrum
 	z80_byte byte_inicial=file_read_memory[0];
 	if (leidos==17 && byte_inicial<4) {
@@ -25738,6 +25764,8 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 		
 		return;
 	}
+
+    printf("despues deteccion 17\n");
 
 
 	//Ahora deducir si el archivo cargado es texto o binario.
