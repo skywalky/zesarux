@@ -20295,6 +20295,9 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
         int salir=0;
 
+        //FatFS parece que nunca muestra . o .., lo agregamos si no aparece
+        int got_dotdot=0;
+
         while (!salir) {
 
                     printf("antes readdir\n");
@@ -20311,6 +20314,11 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
                 else {
                     //debug_printf(VERBOSE_DEBUG,"menu_filesel_readdir_mmc_image: file: %s",fno.fname);
                     printf("menu_filesel_readdir_mmc_image: file: %s\n",fno.fname);
+
+                    if (!strcmp(fno.fname,"..")) {
+                        printf("Hay ..\n");
+                        got_dotdot=1;
+                    }
 
                     //TODO: filtro que entienda nuestro archivo de FatFS
                     //if (filter(dp)) {
@@ -20353,6 +20361,45 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
        }
        f_closedir(&dir);
+
+        //Agregar .. siempre que no estemos en la raiz
+        //Nota mental: los strcmp son 0 cuando la comparacion es cierta
+        //Aqui lo que queremos es que no sea cierta la comparacion, por tanto seria !!strcmp, o sea, strcmp
+        //TODO: Si directorio es "."
+        char directorio_actual[1024];
+        menu_filesel_getcwd(directorio_actual,1023);
+        printf("ruta actual despues de leer directorio: %s\n",directorio_actual);
+
+        if (!got_dotdot && strcmp(directorio_actual,"/") && strcmp(directorio_actual,"0:/") && strcmp(directorio_actual,"0://")) {
+
+        //TODO: hacer que pase misma funcion de filter
+
+        printf("Adding .. entry\n");
+
+        //Asignar memoria para ese fichero
+        memoria_archivos=malloc(sizeof(struct dirent));
+
+        if (memoria_archivos==NULL) {
+            cpu_panic("Error allocating memory when reading directory");
+        }
+
+        //Meter puntero
+        memoria_punteros[archivos]=memoria_archivos;
+
+        //Meter datos
+        strcpy(memoria_archivos->d_name,"..");
+
+        memoria_archivos->d_type=DT_DIR;
+
+        archivos++;     
+
+        if (archivos>=MAX_ARCHIVOS_SCANDIR_MINGW) {
+            debug_printf(VERBOSE_ERR,"Error. Maximum files in directory reached: %d",MAX_ARCHIVOS_SCANDIR_MINGW);
+            return archivos;
+        }          
+
+
+    }
 
 	//lanzar qsort
 	int (*funcion_compar)(const void *, const void *);
