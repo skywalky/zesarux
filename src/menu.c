@@ -22438,6 +22438,17 @@ void menu_file_flash_browser_show(char *filename)
 
 }
 
+//funcion fclose que soporta nativo del sistema o fatfs
+void menu_fclose(int in_fatfs,FILE *ptr_file_name,FIL *fil) 
+{
+    if (in_fatfs) {
+        f_close(fil);
+    }
+    else {
+	    fclose(ptr_file_name);
+    }
+}
+
 //funcion fopen que soporta nativo del sistema o fatfs
 //retorna <0 si error
 int menu_fopen(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil)
@@ -22599,6 +22610,10 @@ void menu_file_hexdump_browser_show(char *filename)
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
         }
+
+    menu_fclose(in_fatfs,ptr_file_hexdump_browser,&fil);
+
+    /*
     if (in_fatfs) {
         f_close(&fil);
     }
@@ -22606,7 +22621,7 @@ void menu_file_hexdump_browser_show(char *filename)
 
         fclose(ptr_file_hexdump_browser);
     }
-
+    */
         
 
 
@@ -25690,12 +25705,16 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 	file_read_memory[leidos]=0;
 
+    menu_fclose(in_fatfs,ptr_file_name,&fil);
+
+    /*
     if (in_fatfs) {
         f_close(&fil);
     }
     else {
 	    fclose(ptr_file_name);
     }
+    */
 
 
 	//Si longitud de bloque es 17, y byte inicial es 0,1,2 o 3, visor de cabecera de bloque de spectrum
