@@ -10413,6 +10413,63 @@ int get_file_date_from_stat(struct stat *buf_stat,int *hora,int *minuto,int *seg
 //anyo tal cual: 2017, etc
 int get_file_date_from_name(char *nombre,int *hora,int *minuto,int *segundo,int *dia,int *mes,int *anyo)
 {
+
+    if (util_path_is_mmc_fatfs(nombre)) {
+        printf("get_file_date_from_name for %s using FatFS\n",nombre);
+        FRESULT fr;
+        FILINFO fno;
+
+
+        //printf("Test for 'file.txt'...\n");
+
+        fr = f_stat(nombre, &fno);
+        if (fr==FR_OK) {
+            /*
+fdate
+The date when the file was modified or the directory was created.
+bit15:9
+Year origin from 1980 (0..127)
+
+bit8:5
+Month (1..12)
+
+bit4:0
+Day (1..31)
+
+ftime
+The time when the file was modified or the directory was created.
+
+bit15:11
+Hour (0..23)
+
+bit10:5
+Minute (0..59)
+
+bit4:0
+Second / 2 (0..29)
+
+            */
+
+           *anyo=1980+((fno.fdate >> 9) &127);
+
+           *mes=((fno.fdate >> 5) & 15);
+
+           *dia=((fno.fdate ) & 31);
+
+           *hora=((fno.ftime >> 11) &31);
+
+           *minuto=((fno.ftime >> 5) &63);
+
+           *segundo=((fno.ftime ) &31);
+
+           return 0;
+        }
+
+        //desconocido
+        else return 1;
+    }
+    else {
+
     struct stat buf_stat;
 
     if (stat(nombre, &buf_stat)!=0) {
@@ -10426,7 +10483,7 @@ int get_file_date_from_name(char *nombre,int *hora,int *minuto,int *segundo,int 
 
     return 0;
 
-
+    }
 }
 
 
