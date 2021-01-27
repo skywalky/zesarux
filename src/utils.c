@@ -118,6 +118,7 @@
 #include "samram.h"
 
 #include "ff.h"
+#include "diskio.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -10444,7 +10445,23 @@ int get_file_type(char *nombre)
 
     //TODO: d_type no lo estamos usando. Se podria eliminar su uso
 
+    //Si es archivo de la mmc
+    if (util_path_is_mounted_mmc(nombre)) {        
+        FRESULT fr;
+        FILINFO fno;
 
+
+        //printf("Test for 'file.txt'...\n");
+
+        fr = f_stat(nombre, &fno);
+        if (fr==FR_OK) {
+            if (fno.fattrib & AM_DIR) return 2;
+            else return 1;
+        }
+
+        //desconocido
+        else return 0;
+    }
 
     struct stat buf_stat;
 
@@ -19098,4 +19115,21 @@ unsigned int util_read_long_value(z80_byte *origen)
 int util_get_input_file_keyboard_ms(void)
 {
     return input_file_keyboard_delay*1000/50;
+}
+
+//Dice si una ruta es de una mmc montada
+//Realmente chan fat fs soporta otras rutas como validas, pero aqui establecemos siempre
+// "X:/", donde X es un numero de unidad de 0 al 9, para poder distinguir de rutas locales de filesystem
+//Ejemplo:   0:/SYS/ESXDOS.SYS
+int util_path_is_mounted_mmc(char *dir)
+{
+    //Al menos 3 de longitud
+    if (strlen(dir)<3) return 0;
+
+    if (util_is_digit(dir[0]) && dir[1]==':' && dir[2]=='/') {
+        printf("util_path_is_mounted_mmc ruta %s es de mmc montado\n",dir);
+        return 1;
+    }
+
+    return 0;
 }

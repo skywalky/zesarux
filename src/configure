@@ -1396,16 +1396,16 @@ scl2trd.o: scl2trd.c scl2trd.h debug.h utils.h
 zip.o: zip.c zip.h miniz.h debug.h 
 	\$(CC) \$(CFLAGS) -c zip.c
 
-diskio.o: diskio.c diskio.h ff.h utils.h
+diskio.o: diskio.c diskio.h ff.h ffconf.h utils.h
 	\$(CC) \$(CFLAGS) -c diskio.c
 
-ff.o: ff.c ff.h diskio.h 
+ff.o: ff.c ff.h ffconf.h diskio.h 
 	\$(CC) \$(CFLAGS) -c ff.c
 
-ffsystem.o: ffsystem.c ff.h 
+ffsystem.o: ffsystem.c ffconf.h ff.h 
 	\$(CC) \$(CFLAGS) -c ffsystem.c
 
-ffunicode.o: ffunicode.c ff.h 
+ffunicode.o: ffunicode.c ffconf.h ff.h 
 	\$(CC) \$(CFLAGS) -c ffunicode.c
 
 stats.o: stats.c stats.h cpu.h menu.h compileoptions.h debug.h network.h screen.h timer.h
@@ -1495,7 +1495,7 @@ snap_zx8081.o: snap_zx8081.c snap_zx8081.h cpu.h debug.h operaciones.h zx8081.h 
 snap_rzx.o: snap_rzx.c snap_rzx.h snap.h cpu.h debug.h operaciones.h utils.h menu.h screen.h
 	\$(CC) \$(CFLAGS) -c snap_rzx.c
 
-menu.o: menu.c menu.h menu_items.h menu_bitmaps.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h zxevo.h tsconf.h baseconf.h snap_spg.h betadisk.h tape_tzx.h snap_zsf.h settings.h datagear.h stats.h network.h hilow.h msx.h coleco.h sg1000.h svi.h ql_qdos_handler.h gs.h samram.h ff.h
+menu.o: menu.c menu.h menu_items.h menu_bitmaps.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h zxevo.h tsconf.h baseconf.h snap_spg.h betadisk.h tape_tzx.h snap_zsf.h settings.h datagear.h stats.h network.h hilow.h msx.h coleco.h sg1000.h svi.h ql_qdos_handler.h gs.h samram.h ff.h ffconf.h
 	\$(CC) \$(CFLAGS) -c menu.c
 
 menu_items.o: menu_items.c menu_items.h menu.h screen.h cpu.h debug.h zx8081.h ay38912.h compileoptions.h tape.h audio.h timer.h snap.h operaciones.h disassemble.h utils.h contend.h joystick.h ula.h printers.h realjoystick.h scrstdout.h z88.h ulaplus.h autoselectoptions.h zxuno.h charset.h chardetect.h textspeech.h  mmc.h ide.h divmmc.h divide.h diviface.h zxpand.h spectra.h spritechip.h jupiterace.h timex.h chloe.h cpc.h prism.h sam.h if1.h pd765.h atomlite.h tbblue.h dandanator.h kartusho.h ifrom.h spritefinder.h multiface.h superupgrade.h m68k.h remote.h snap_rzx.h multiface.h scmp.h esxdos_handler.h zxevo.h tsconf.h baseconf.h snap_spg.h betadisk.h tape_tzx.h snap_zsf.h settings.h datagear.h assemble.h expression_parser.h uartbridge.h zeng.h network.h stats.h vdp_9918a.h msx.h coleco.h sg1000.h svi.h sn76489an.h ql_qdos_handler.h ql_i8049.h gs.h
@@ -1510,7 +1510,7 @@ settings.o: settings.c settings.h menu_items.h menu.h screen.h cpu.h debug.h zx8
 disassemble.o: disassemble.c disassemble.h cpu.h operaciones.h debug.h ql.h utils.h scmp.h menu.h tbblue.h
 	\$(CC) \$(CFLAGS) -c disassemble.c
 
-utils.o: utils.c utils.h cpu.h debug.h joystick.h compileoptions.h tape.h snap.h screen.h realjoystick.h menu.h z88.h playtzx.h tape_tzx.h operaciones.h zx8081.h autoselectoptions.h ulaplus.h ay38912.h textspeech.h spectra.h zxuno.h spritechip.h timex.h cpc.h sam.h divmmc.h divide.h superupgrade.h chardetect.h zx8081.h jupiterace.h mmc.h ide.h zxpand.h diviface.h divmmc.h divide.h dandanator.h kartusho.h ifrom.h spritefinder.h ql.h m68k.h remote.h ula.h snap_rzx.h scmp.h mk14.h esxdos_handler.h tbblue.h zxevo.h tsconf.h baseconf.h mdvtool.h betadisk.h pd765.h settings.h datagear.h zeng.h network.h stats.h scl2trd.h zip.h msx.h coleco.h sg1000.h svi.h charset.h snap_zsf.h ql_qdos_handler.h ql_i8049.h samram.h
+utils.o: utils.c utils.h cpu.h debug.h joystick.h compileoptions.h tape.h snap.h screen.h realjoystick.h menu.h z88.h playtzx.h tape_tzx.h operaciones.h zx8081.h autoselectoptions.h ulaplus.h ay38912.h textspeech.h spectra.h zxuno.h spritechip.h timex.h cpc.h sam.h divmmc.h divide.h superupgrade.h chardetect.h zx8081.h jupiterace.h mmc.h ide.h zxpand.h diviface.h divmmc.h divide.h dandanator.h kartusho.h ifrom.h spritefinder.h ql.h m68k.h remote.h ula.h snap_rzx.h scmp.h mk14.h esxdos_handler.h tbblue.h zxevo.h tsconf.h baseconf.h mdvtool.h betadisk.h pd765.h settings.h datagear.h zeng.h network.h stats.h scl2trd.h zip.h msx.h coleco.h sg1000.h svi.h charset.h snap_zsf.h ql_qdos_handler.h ql_i8049.h samram.h ff.h diskio.h ffconf.h
 	\$(CC) \$(CFLAGS) -c utils.c
 
 playtzx.o: playtzx.c playtzx.h debug.h audio.h utils.h

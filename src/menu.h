@@ -1082,8 +1082,11 @@ extern void zxvision_espera_tecla_condicion_progreso(zxvision_window *w,int (*fu
 extern void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) );
 extern void menu_uncompress_zip_progress(char *zip_file,char *dest_dir);
 
-//"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
+extern z80_bit menu_current_drive_mmc_image;
 
+
+
+//"[VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] [VARIABLE][VOP][CONDITION][VALUE] [OPERATOR] .... where: \n" 
 
 #define HELP_MESSAGE_CONDITION_BREAKPOINT \
 "A condition breakpoint evaluates an expression and the breakpoint will be fired if the expression is not 0.\n" \

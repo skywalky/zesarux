@@ -20312,8 +20312,9 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
                     //debug_printf(VERBOSE_DEBUG,"menu_filesel_readdir_mmc_image: file: %s",fno.fname);
                     printf("menu_filesel_readdir_mmc_image: file: %s\n",fno.fname);
 
-                    //TODO: filter puede ser NULL???
-                    //temp if (filter(dp)) {
+                    //TODO: filtro que entienda nuestro archivo de FatFS
+                    //if (filter(dp)) {
+                    if (1) {
 
                             //Asignar memoria para ese fichero
                             memoria_archivos=malloc(sizeof(struct dirent));
@@ -20346,7 +20347,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
                                     return archivos;
                             }
 
-                    //}
+                    }
                 }
 
 
@@ -20405,8 +20406,9 @@ primer_filesel_item=NULL;
 	filesel_item *item;
 	filesel_item *itemanterior;
 
-//prueba leer con chanfs
-    if (fatfs_disk_zero_memory!=NULL) 
+    // Si unidad actual es la mmc montada
+    //if (fatfs_disk_zero_memory!=NULL) 
+    if (menu_current_drive_mmc_image.v)
     {
         //TODO: siempre abre el /
         n = menu_filesel_readdir_mmc_image("0:/", &namelist, menu_filesel_filter_func, menu_filesel_alphasort);
@@ -34078,7 +34080,19 @@ void menu_filesel_switch_filters(void)
 
 void menu_filesel_chdir(char *dir)
 {
-	chdir(dir);
+    //Si ruta es de mmc
+    if (util_path_is_mounted_mmc(dir)) {
+        menu_current_drive_mmc_image.v=1;
+        printf("ruta de chdir es de mmc\n");
+        //menu_mmc_chdir(dir);
+        f_chdir(dir);
+
+    }
+
+    else {
+        menu_current_drive_mmc_image.v=0;
+        chdir(dir);
+    }
 }
 
 /*char menu_minus_letra(char letra)
@@ -34300,6 +34314,25 @@ FRESULT file_utils_prueba_dir(char *path)
 //Esto va fuera porque todas las operaciones lo usan
 FATFS FatFs_menu_mmc_mount;   /* Work area (filesystem object) for logical drive */
 
+//Si tenemos una mmc montada
+int menu_mmc_image_montada=0;
+
+
+//Si unidad actual es la mmc
+z80_bit menu_current_drive_mmc_image={0};
+
+
+//TODO: no estoy seguro del maximo de esto
+//Directorio actual en la imagen mmc
+//char menu_mmc_cwd[1024]="0:/";
+
+/*void menu_mmc_chdir(char *ruta)
+{
+    //TODO: gestionar rutas relativas
+    strcpy(menu_mmc_cwd)
+
+}*/
+
 void file_utils_mount_mmc_image(char *fullpath)
 {
     printf("Mounting %s\n",fullpath);
@@ -34321,6 +34354,8 @@ void file_utils_mount_mmc_image(char *fullpath)
         printf("Error montando imagen %s:  %d\n",fullpath,resultado);
         return;
     }
+
+    menu_mmc_image_montada=1;
 
     printf("leyendo\n");
     file_utils_mount_mmc_image_prueba_leer();
@@ -35597,17 +35632,30 @@ int menu_filesel_change_zone_if_clicked(zxvision_window *ventana,int *filesel_zo
 }
 
 
-//Cambiar unidad Windows
-//Retorna 0 si cancelado
-char menu_filesel_cambiar_unidad_windows(void)
+
+void menu_filesel_cambiar_unidad_common(char *destino)
 {
 
+    //de momento
+    destino[0]=0;
+
+
+
 	char buffer_unidades[100]; //Aunque son 26 maximo, pero por si acaso
+#ifdef MINGW    
 	int unidades=util_get_available_drives(buffer_unidades);
 	if (unidades==0) {
 		menu_error_message("No available drives");
-		return 0;
-	}
+		return;
+	}    
+#else
+    //En sistemas no windows, no hay unidades.
+    //Hago el menor código dependiente de MINGW, por ejemplo el bucle que hay abajo con las unidades
+    //para poder detectar mas fácilmente errores
+    int unidades=0;
+#endif    
+
+
 
 	//printf ("total unidades: %d string Unidades: %s 0 %d 1 %d 2 %d 3 %d\n",unidades,buffer_unidades,buffer_unidades[0],buffer_unidades[1],buffer_unidades[2],buffer_unidades[3]);
 
@@ -35625,25 +35673,51 @@ char menu_filesel_cambiar_unidad_windows(void)
 
 	for (i=0;i<unidades;i++) {
 		char letra=buffer_unidades[i];
-		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"~~%c:",letra);
-		menu_add_item_menu_shortcut(array_menu_filesel_unidad,letra_minuscula(letra));
-		menu_add_item_menu_valor_opcion(array_menu_filesel_unidad,letra);
+		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"%c:",letra);
+		//menu_add_item_menu_shortcut(array_menu_filesel_unidad,letra_minuscula(letra));
+		//menu_add_item_menu_valor_opcion(array_menu_filesel_unidad,letra);
 	}
+
+#ifdef MINGW
+//nada
+#else
+
+//Agregar ruta /media (en linux) o a /Volumes en Mac
+
+	#if defined(__APPLE__)
+
+//En Mac
+        menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"/Volumes");
+
+	#else
+
+//En Linux
+
+		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"/media");
+
+	#endif
+
+#endif 
+
+    if (menu_mmc_image_montada) {
+        menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"0:/");
+        menu_add_item_menu_tooltip(array_menu_filesel_unidad,"This is the first mmc mounted image");
+        menu_add_item_menu_ayuda(array_menu_filesel_unidad,"This is the first mmc mounted image");
+    }
 
                 menu_add_item_menu(array_menu_filesel_unidad,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 menu_add_ESC_item(array_menu_filesel_unidad);
                 retorno_menu=menu_dibuja_menu(&menu_filesel_unidad_opcion_seleccionada,&item_seleccionado,array_menu_filesel_unidad,"Select Drive" );
 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-				//Sacamos la letra del texto mismo
-				char unidad=item_seleccionado.valor_opcion;
-				//printf ("Leida unidad de menu: %c\n",unidad);
-				return unidad;
+                    strcpy(destino,item_seleccionado.texto_opcion);
+
+    				return;
                 }
 
 
 
-	return 0;
+	return;
 }
 
 //Retorna 1 si ha realizado cambio cursor. 0 si no
@@ -36089,8 +36163,8 @@ int menu_first_aid(char *key_setting) //(enum first_aid_number_list indice)
 
 }
 
-
-int menu_filesel_cambiar_unidad_o_volumen(void)
+/*
+int old_menu_filesel_cambiar_unidad_o_volumen(void)
 {
 
 	int releer_directorio=0;
@@ -36130,6 +36204,66 @@ int menu_filesel_cambiar_unidad_o_volumen(void)
 
 
 #endif
+
+	return releer_directorio;
+}
+*/
+
+int menu_filesel_cambiar_unidad_o_volumen(void)
+{
+
+	int releer_directorio=0;
+
+    char directorio[PATH_MAX];
+
+    menu_filesel_cambiar_unidad_common(directorio);
+
+    if (directorio[0]) {
+        printf("Cambiando a directorio %s\n",directorio);
+        menu_filesel_chdir(directorio);
+        return 1;
+    }
+
+    else return 0;
+
+
+/*
+#ifdef MINGW
+	//Mostrar selector de unidades
+						char letra=menu_filesel_cambiar_unidad_windows();
+					//printf ("letra: %d\n",letra);
+					if (letra!=0) {
+						char directorio[3];
+						sprintf (directorio,"%c:",letra);
+
+						//printf ("Changing to unit %s\n",directorio);
+
+						menu_filesel_chdir(directorio);
+						releer_directorio=1;
+						
+					}
+#else
+
+//Cambiar a ruta /media (en linux) o a /Volumes en Mac
+
+	#if defined(__APPLE__)
+
+//En Mac
+		menu_filesel_chdir("/Volumes");
+		releer_directorio=1;
+
+	#else
+
+//En Linux
+
+		menu_filesel_chdir("/media");
+		releer_directorio=1;	
+
+	#endif
+
+
+#endif
+*/
 
 	return releer_directorio;
 }

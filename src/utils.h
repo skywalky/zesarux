@@ -938,4 +938,6 @@ extern int util_get_input_file_keyboard_ms(void);
 
 extern char fatfs_disk_zero_path[];
 
+extern int util_path_is_mounted_mmc(char *dir);
+
 #endif
