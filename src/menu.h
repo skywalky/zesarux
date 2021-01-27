@@ -778,6 +778,8 @@ extern void menu_filesel_chdir(char *dir);
 extern void menu_filesel_getcwd(char *dir,int len);
 extern int menu_filesel_mkdir(char *directory);
 
+extern int menu_mmc_image_montada;
+
 extern z80_bit force_confirm_yes;
 
 extern void draw_middle_footer(void);

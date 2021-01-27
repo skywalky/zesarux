@@ -34098,7 +34098,7 @@ Cualquier otra cosa, chdir sin alterar unidad mmc activa o no
 
     int usar_chdir_mmc=0;
 
-    if (util_path_is_mounted_mmc(dir)) usar_chdir_mmc=1;
+    if (util_path_is_mounted_mmc(dir) && menu_mmc_image_montada) usar_chdir_mmc=1;
 
     else {
         if (ruta_es_relativa) {
