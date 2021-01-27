@@ -190,3 +190,5 @@ A veces salen interrogantes
 
 
 -eliminar parpadeos en fbdev usando doble buffer?
+
+-funcion comun fopen fatfs y local. mismo para fclose
