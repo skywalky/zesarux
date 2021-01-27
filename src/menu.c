@@ -22438,6 +22438,64 @@ void menu_file_flash_browser_show(char *filename)
 
 }
 
+//funcion fopen que soporta nativo del sistema o fatfs
+//retorna <0 si error
+int menu_fopen(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil)
+{
+	//FILE *ptr_file_name;
+
+    //Soporte para FatFS
+    //FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    *in_fatfs=util_path_is_prefix_mmc_fatfs(file_name);
+    printf("txt esta en fatfs: %d\n",*in_fatfs);
+
+    if (*in_fatfs) {
+        fr = f_open(fil, file_name, FA_READ);
+        if (fr!=FR_OK)
+        {
+            debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
+            return -1;
+        }     
+
+        //Esto solo para que no se queje el compilador al llamar a menu_fread
+        *ptr_file_name=NULL;           
+    }
+
+    else {
+	    *ptr_file_name=fopen(file_name,"rb");
+    
+
+
+        if (!(*ptr_file_name))
+        {
+            debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
+            return -1;
+        }
+    }
+
+    return 0;
+
+	//int leidos;
+
+    //leidos=menu_fread(in_fatfs,(z80_byte *)file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name,&fil);
+
+
+/*
+    if (in_fatfs) {
+        UINT leidos_fatfs;
+        FRESULT resultado=f_read(&fil,file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,&leidos_fatfs);
+        leidos=leidos_fatfs;
+    }
+
+    else {
+        leidos=fread(file_read_memory,1,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name);
+    }    
+*/
+}
+
+
 //funcion fread que soporta nativo del sistema o fatfs
 int menu_fread(int in_fatfs,z80_byte *puntero_memoria,int bytes_to_load,FILE *ptr_file_hexdump_browser,FIL *fil)
 {
@@ -22479,7 +22537,20 @@ void menu_file_hexdump_browser_show(char *filename)
     FIL fil;        /* File object */
     FRESULT fr;     /* FatFs return code */
 
-    int in_fatfs=util_path_is_prefix_mmc_fatfs(filename);
+
+
+
+    int in_fatfs;
+    
+    
+    if (menu_fopen(filename,&in_fatfs,&ptr_file_hexdump_browser,&fil)<0) {
+        free(hexdump_file_memory);
+        return;
+    }
+
+    
+/*    
+    =util_path_is_prefix_mmc_fatfs(filename);
     printf("txt esta en fatfs: %d\n",in_fatfs);
 
     if (in_fatfs) {
@@ -22505,7 +22576,7 @@ void menu_file_hexdump_browser_show(char *filename)
             return;
 	    }
     }
-
+*/
 
         int leidos;
 
@@ -25553,7 +25624,16 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
     FIL fil;        /* File object */
     FRESULT fr;     /* FatFs return code */
 
-    int in_fatfs=util_path_is_prefix_mmc_fatfs(file_name);
+    int in_fatfs;
+    
+    
+    
+    if (menu_fopen(file_name,&in_fatfs,&ptr_file_name,&fil)<0) {
+        return;
+    }
+    
+    /*
+    =util_path_is_prefix_mmc_fatfs(file_name);
     printf("txt esta en fatfs: %d\n",in_fatfs);
 
     if (in_fatfs) {
@@ -25579,7 +25659,8 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
             return;
         }
     }
-	
+
+    */
 
 	int leidos;
 
