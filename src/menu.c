@@ -34095,7 +34095,23 @@ Cualquier otra cosa, chdir sin alterar unidad mmc activa o no
 
     //Si ruta es de mmc o ruta relativa
     printf("ruta: [%s]ruta_es_mmc %d ruta_es_relativa %d\n",dir,ruta_es_mmc,ruta_es_relativa);
-    if (util_path_is_mounted_mmc(dir) || ruta_es_relativa) {
+
+    int usar_chdir_mmc=0;
+
+    if (util_path_is_mounted_mmc(dir)) usar_chdir_mmc=1;
+
+    else {
+        if (ruta_es_relativa) {
+            //ruta relativa. Conservar unidad actual
+            if (menu_current_drive_mmc_image.v) usar_chdir_mmc=1;
+            else usar_chdir_mmc=0;
+        }
+        else {
+            //usar_chdir_mmc=0; //ya es por defecto
+        }
+    }
+
+    if (usar_chdir_mmc) {
         menu_current_drive_mmc_image.v=1;
         printf("ruta de menu_filesel_chdir es de mmc\n");
         printf("llamando f_chdir desde menu_filesel_chdir a %s\n",dir);
