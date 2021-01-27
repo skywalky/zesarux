@@ -22438,6 +22438,25 @@ void menu_file_flash_browser_show(char *filename)
 
 }
 
+//funcion fread que soporta nativo del sistema o fatfs
+int menu_fread(int in_fatfs,z80_byte *puntero_memoria,int bytes_to_load,FILE *ptr_file_hexdump_browser,FIL *fil)
+{
+    int leidos;
+
+    if (in_fatfs) {
+        UINT leidos_fatfs;
+        FRESULT resultado=f_read(fil,puntero_memoria,bytes_to_load,&leidos_fatfs);
+        leidos=leidos_fatfs;
+    }
+
+    else {        
+        
+        leidos=fread(puntero_memoria,1,bytes_to_load,ptr_file_hexdump_browser);
+    }
+
+    return leidos;
+}
+
 void menu_file_hexdump_browser_show(char *filename)
 {
 
@@ -22455,25 +22474,67 @@ void menu_file_hexdump_browser_show(char *filename)
 	
 	//Leemos cabecera archivo hexdump
         FILE *ptr_file_hexdump_browser;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs=util_path_is_prefix_mmc_fatfs(filename);
+    printf("txt esta en fatfs: %d\n",in_fatfs);
+
+    if (in_fatfs) {
+        fr = f_open(&fil, filename, FA_READ);
+        if (fr!=FR_OK)
+        {
+            debug_printf (VERBOSE_ERR,"Unable to open %s file",filename);
+            return;
+        }    
+
+        //Esto solo para que no se queje el compilador al llamar a menu_fread
+        ptr_file_hexdump_browser=NULL;
+
+    }
+
+    else {
+
         ptr_file_hexdump_browser=fopen(filename,"rb");
 
         if (!ptr_file_hexdump_browser) {
-		debug_printf(VERBOSE_ERR,"Unable to open file");
-		free(hexdump_file_memory);
-		return;
-	}
+            debug_printf(VERBOSE_ERR,"Unable to open file");
+            free(hexdump_file_memory);
+            return;
+	    }
+    }
 
 
-        int leidos=fread(hexdump_file_memory,1,bytes_to_load,ptr_file_hexdump_browser);
+        int leidos;
+
+    leidos=menu_fread(in_fatfs,hexdump_file_memory,bytes_to_load,ptr_file_hexdump_browser,&fil);
+
+/*
+    if (in_fatfs) {
+        UINT leidos_fatfs;
+        FRESULT resultado=f_read(&fil,hexdump_file_memory,bytes_to_load,&leidos_fatfs);
+        leidos=leidos_fatfs;
+    }
+
+    else {        
+        
+        leidos=fread(hexdump_file_memory,1,bytes_to_load,ptr_file_hexdump_browser);
+    }
+*/
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
         }
-
+    if (in_fatfs) {
+        f_close(&fil);
+    }
+    else {
 
         fclose(ptr_file_hexdump_browser);
-
+    }
 
         
 
@@ -25483,18 +25544,61 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 
 	debug_printf (VERBOSE_INFO,"Loading %s File",file_name);
+
+    printf("cargando txt file: %s\n",file_name);
+
 	FILE *ptr_file_name;
-	ptr_file_name=fopen(file_name,"rb");
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs=util_path_is_prefix_mmc_fatfs(file_name);
+    printf("txt esta en fatfs: %d\n",in_fatfs);
+
+    if (in_fatfs) {
+        fr = f_open(&fil, file_name, FA_READ);
+        if (fr!=FR_OK)
+        {
+            debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
+            return;
+        }     
+
+        //Esto solo para que no se queje el compilador al llamar a menu_fread
+        ptr_file_name=NULL;           
+    }
+
+    else {
+	    ptr_file_name=fopen(file_name,"rb");
+    
 
 
-	if (!ptr_file_name)
-	{
-		debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
-		return;
-	}
+        if (!ptr_file_name)
+        {
+            debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
+            return;
+        }
+    }
 	
 
-	int leidos=fread(file_read_memory,1,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name);
+	int leidos;
+
+    leidos=menu_fread(in_fatfs,(z80_byte *)file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name,&fil);
+
+
+/*
+    if (in_fatfs) {
+        UINT leidos_fatfs;
+        FRESULT resultado=f_read(&fil,file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,&leidos_fatfs);
+        leidos=leidos_fatfs;
+    }
+
+    else {
+        leidos=fread(file_read_memory,1,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name);
+    }    
+*/
+
+
 	debug_printf (VERBOSE_INFO,"Read %d bytes of file: %s",leidos,file_name);
 	int avisolimite=0;
 
@@ -25505,7 +25609,12 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 	file_read_memory[leidos]=0;
 
-	fclose(ptr_file_name);
+    if (in_fatfs) {
+        f_close(&fil);
+    }
+    else {
+	    fclose(ptr_file_name);
+    }
 
 
 	//Si longitud de bloque es 17, y byte inicial es 0,1,2 o 3, visor de cabecera de bloque de spectrum
@@ -34456,10 +34565,10 @@ void file_utils_mount_mmc_image(char *fullpath)
     printf("leyendo\n");
     file_utils_mount_mmc_image_prueba_leer();
     printf("borrando\n");
-    file_utils_mount_mmc_image_prueba_borrar();
+    //file_utils_mount_mmc_image_prueba_borrar();
 
     printf("\n\nEscribiendo\n");
-    file_utils_mount_mmc_image_prueba_escribir();
+    //file_utils_mount_mmc_image_prueba_escribir();
 
     //sleep(5);
     printf("leyendo\n");
@@ -37788,7 +37897,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							if (item_seleccionado!=NULL) {
 								//Esto pasa en las carpetas vacias, como /home en Mac OS
 									//unimos directorio y nombre archivo
-									getcwd(file_utils_file_selected,PATH_MAX);
+									//getcwd(file_utils_file_selected,PATH_MAX);
+                                    menu_filesel_getcwd(file_utils_file_selected,PATH_MAX);
+
+
 									sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);								
 								//Info para cualquier tipo de archivo
 								if (tecla=='I') file_utils_info_file(file_utils_file_selected);
