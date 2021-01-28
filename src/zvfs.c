@@ -59,7 +59,7 @@ void zvfs_fclose(int in_fatfs,FILE *ptr_file_name,FIL *fil)
 
 //funcion fopen que soporta nativo del sistema o fatfs
 //retorna <0 si error
-int zvfs_fopen(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil)
+int zvfs_fopen_read(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil)
 {
 	//FILE *ptr_file_name;
 
@@ -89,6 +89,48 @@ int zvfs_fopen(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil)
 
         if (!(*ptr_file_name))
         {
+            debug_printf (VERBOSE_ERR,"Unable to open file for reading",file_name);
+            return -1;
+        }
+    }
+
+    return 0;
+
+
+}
+
+//funcion fopen que soporta nativo del sistema o fatfs
+//retorna <0 si error
+int zvfs_fopen_write(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil)
+{
+	//FILE *ptr_file_name;
+
+    //Soporte para FatFS
+    //FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    *in_fatfs=util_path_is_mmc_fatfs(file_name);
+    printf("txt esta en fatfs: %d\n",*in_fatfs);
+
+    if (*in_fatfs) {
+        fr = f_open(fil, file_name, FA_CREATE_ALWAYS | FA_WRITE );
+        if (fr!=FR_OK)
+        {
+            debug_printf (VERBOSE_ERR,"Unable to open file for writing",file_name);
+            return -1;
+        }     
+
+        //Esto solo para que no se queje el compilador al llamar a zvfs_fread
+        *ptr_file_name=NULL;           
+    }
+
+    else {
+	    *ptr_file_name=fopen(file_name,"w");
+    
+
+
+        if (!(*ptr_file_name))
+        {
             debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
             return -1;
         }
@@ -96,22 +138,7 @@ int zvfs_fopen(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil)
 
     return 0;
 
-	//int leidos;
 
-    //leidos=zvfs_fread(in_fatfs,(z80_byte *)file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name,&fil);
-
-
-/*
-    if (in_fatfs) {
-        UINT leidos_fatfs;
-        FRESULT resultado=f_read(&fil,file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,&leidos_fatfs);
-        leidos=leidos_fatfs;
-    }
-
-    else {
-        leidos=fread(file_read_memory,1,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name);
-    }    
-*/
 }
 
 

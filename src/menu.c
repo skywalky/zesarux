@@ -21034,7 +21034,7 @@ void menu_file_p_browser_show(char *filename)
 
     printf("menu_file_p_browser_show %s\n",filename);
 
-    if (zvfs_fopen(filename,&in_fatfs,&ptr_file_p_browser,&fil)<0) {
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_p_browser,&fil)<0) {
         return;
     }
 
@@ -22491,7 +22491,7 @@ void menu_file_hexdump_browser_show(char *filename)
     int in_fatfs;
     
     
-    if (zvfs_fopen(filename,&in_fatfs,&ptr_file_hexdump_browser,&fil)<0) {
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_hexdump_browser,&fil)<0) {
         free(hexdump_file_memory);
         return;
     }
@@ -22709,7 +22709,7 @@ void menu_file_basic_browser_show(char *filename)
 
     printf("menu_file_basic_browser_show %s\n",filename);    
 
-    if (zvfs_fopen(filename,&in_fatfs,&ptr_file_bas_browser,&fil)<0) {
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_bas_browser,&fil)<0) {
         return;
     }
     /*
@@ -24001,7 +24001,7 @@ void menu_tape_browser_show(char *filename)
 
     printf("menu_tape_browser_show %s\n",filename);
 
-    if (zvfs_fopen(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
         return;
     }
 
@@ -25624,11 +25624,11 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
     
     
     
-    if (zvfs_fopen(file_name,&in_fatfs,&ptr_file_name,&fil)<0) {
+    if (zvfs_fopen_read(file_name,&in_fatfs,&ptr_file_name,&fil)<0) {
         return;
     }
 
-    printf("despues zvfs_fopen\n");
+    printf("despues zvfs_fopen_read\n");
     
     /*
     =util_path_is_prefix_mmc_fatfs(file_name);
@@ -35074,7 +35074,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
         	//guardamos directorio actual
         	char directorio_actual[PATH_MAX];
-        	getcwd(directorio_actual,PATH_MAX);
+        	zvfs_getcwd(directorio_actual,PATH_MAX);
 
         	int ret;
 
@@ -37681,7 +37681,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 					case 2:
 						//meter en menu_filesel_last_directory_seen nombre directorio
 						//getcwd(archivo,PATH_MAX);
-						getcwd(menu_filesel_last_directory_seen,PATH_MAX);
+						zvfs_getcwd(menu_filesel_last_directory_seen,PATH_MAX);
 						//printf ("salimos con ESC. nombre directorio: %s\n",archivo);
                         menu_filesel_exist_ESC();
 

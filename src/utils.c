@@ -12852,8 +12852,10 @@ void util_copy_file(char *source_file, char *destination_file)
 
     int in_fatfs_source;
 
+    printf("copiar %s a %s\n",source_file,destination_file);
 
-    if (zvfs_fopen(source_file,&in_fatfs_source,&ptr_source_file,&fil_source)<0) {
+
+    if (zvfs_fopen_read(source_file,&in_fatfs_source,&ptr_source_file,&fil_source)<0) {
         return;
     }
 
@@ -12881,7 +12883,7 @@ void util_copy_file(char *source_file, char *destination_file)
     int in_fatfs_destination;
 
 
-    if (zvfs_fopen(destination_file,&in_fatfs_destination,&ptr_destination_file,&fil_destination)<0) {
+    if (zvfs_fopen_write(destination_file,&in_fatfs_destination,&ptr_destination_file,&fil_destination)<0) {
         return;
     }
 
@@ -15953,7 +15955,7 @@ int file_is_z88_basic(char *filename)
 
     printf("file_is_z88_basic %s\n",filename);
 
-    if (zvfs_fopen(filename,&in_fatfs,&ptr_file_flash_browser,&fil)<0) {
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_flash_browser,&fil)<0) {
         free(flash_file_memory);
         return 0;
     }
