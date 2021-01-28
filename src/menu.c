@@ -37986,6 +37986,17 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								//Info para cualquier tipo de archivo
 								if (tecla=='I') file_utils_info_file(file_utils_file_selected);
 
+                                //Umount para cualquier tipo de archivo
+
+									if (tecla=='U') {
+                                        if (menu_mmc_image_montada) {
+                                            printf("Umount\n");
+                                            file_utils_umount_mmc_image();
+                                        }
+
+										releer_directorio=1;
+									}	                                
+
 								//Si no es directorio
 								if (get_file_type(item_seleccionado->d_name)!=2) {
 									//unimos directorio y nombre archivo
@@ -38040,10 +38051,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 									//Mount mmc image
 									if (tecla=='U') {
-                                        if (menu_mmc_image_montada) {
-                                            file_utils_umount_mmc_image();
-                                        }
-										else {
+
+										if (!menu_mmc_image_montada) {
+                                            printf("Mount\n");
                                             file_utils_mount_mmc_image(file_utils_file_selected);
                                         }
 										releer_directorio=1;
