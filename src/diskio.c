@@ -90,7 +90,7 @@ DSTATUS disk_initialize (
 	//DSTATUS stat;
 	//int result;
     
-    if (debug_diskio) ("FatFs llamado disk_initialize para drive %d\n",pdrv);
+    if (debug_diskio) printf("FatFs llamado disk_initialize para drive %d\n",pdrv);
 
 	switch (pdrv) {
     /*

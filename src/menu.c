@@ -112,7 +112,7 @@
 #include "samram.h"
 #include "ff.h"
 #include "diskio.h"
-
+#include "zvfs.h"
 
 #if defined(__APPLE__)
 	#include <sys/syslimits.h>
@@ -839,7 +839,6 @@ int menu_display_cursesstdout_cond(void);
 
 
 
-void menu_filesel_chdir(char *dir);
 
 void menu_change_audio_driver(MENU_ITEM_PARAMETERS);
 
@@ -1364,12 +1363,12 @@ void menu_chdir_sharedfiles(void)
 
 	//cambia a los dos directorios. se quedara en el ultimo que exista
 	debug_printf(VERBOSE_INFO,"Trying ../Resources");
-	menu_filesel_chdir("../Resources");
+	zvfs_chdir("../Resources");
 
 	char installshare[PATH_MAX];
 	sprintf (installshare,"%s/%s",INSTALL_PREFIX,"/share/zesarux/");
 	debug_printf(VERBOSE_INFO,"Trying %s",installshare);
-	menu_filesel_chdir(installshare);
+	zvfs_chdir(installshare);
 
 
 }
@@ -14126,7 +14125,7 @@ void menu_z88_slot_insert_eprom(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -14136,7 +14135,7 @@ void menu_z88_slot_insert_eprom(MENU_ITEM_PARAMETERS)
 
         ret=menu_filesel("Select existing or new",filtros,menu_insert_slot_eprom_name);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
         if (ret==1) {
 
@@ -14196,7 +14195,7 @@ void menu_z88_slot_insert_hybrid_eprom(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -14206,7 +14205,7 @@ void menu_z88_slot_insert_hybrid_eprom(MENU_ITEM_PARAMETERS)
 
         ret=menu_filesel("Select existing or new",filtros,menu_insert_slot_eprom_name);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
   if (ret==1) {
 
@@ -14657,7 +14656,7 @@ void menu_z88_slot_copy_to_eprom_flash(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -14667,7 +14666,7 @@ void menu_z88_slot_copy_to_eprom_flash(MENU_ITEM_PARAMETERS)
         ret=menu_filesel("Select file to copy",filtros,copy_to_eprom_nombrearchivo);
 
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
         if (ret==1) {
 		//Cargamos archivo en memoria. Maximo 128 KB
@@ -16709,7 +16708,7 @@ void menu_timexcart_load(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -16718,7 +16717,7 @@ void menu_timexcart_load(MENU_ITEM_PARAMETERS)
 
         ret=menu_filesel("Select Cartridge",filtros,last_timex_cart);
         //volvemos a directorio inicial
-		menu_filesel_chdir(directorio_actual);
+		zvfs_chdir(directorio_actual);
 
 
         if (ret==1) {
@@ -16769,7 +16768,7 @@ void menu_dandanator_rom_file(MENU_ITEM_PARAMETERS)
 		//cambiamos a ese directorio, siempre que no sea nulo
 		if (directorio[0]!=0) {
 				debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-				menu_filesel_chdir(directorio);
+				zvfs_chdir(directorio);
 		}
 	}    
 
@@ -16778,7 +16777,7 @@ void menu_dandanator_rom_file(MENU_ITEM_PARAMETERS)
     ret=menu_filesel("Select dandanator File",filtros,dandanator_rom_file_name);
 
     //volvemos a directorio inicial
-    menu_filesel_chdir(directorio_actual);	    
+    zvfs_chdir(directorio_actual);	    
 
 
     if (ret==1) {
@@ -17383,14 +17382,14 @@ void menu_storage_trd_file(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
 
         int ret=menu_filesel("Select TRD File",filtros,trd_file_name);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
         if (ret==1) {
 		if (!si_existe_archivo(trd_file_name)) {
@@ -17861,7 +17860,7 @@ int menu_storage_string_root_dir(char *string_root_dir)
 	char nada[PATH_MAX];
 
         //Obtenemos ultimo directorio visitado
-	menu_filesel_chdir(string_root_dir);
+	zvfs_chdir(string_root_dir);
 
 
         ret=menu_filesel("Enter dir & press ESC",filtros,nada);
@@ -17876,7 +17875,7 @@ int menu_storage_string_root_dir(char *string_root_dir)
 	}
 
     //volvemos a directorio inicial
-    menu_filesel_chdir(directorio_actual);
+    zvfs_chdir(directorio_actual);
 
 	return ret;
 
@@ -18010,7 +18009,7 @@ void menu_storage_dskplusthree_file(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -18019,7 +18018,7 @@ void menu_storage_dskplusthree_file(MENU_ITEM_PARAMETERS)
 
         int ret=menu_filesel("Select DSK File",filtros,dskfile);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
         if (ret==1) {
 
@@ -18238,7 +18237,7 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -18247,7 +18246,7 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
 
         ret=menu_filesel("Select Cartridge",filtros,last_msx_cart);
         //volvemos a directorio inicial
-		menu_filesel_chdir(directorio_actual);
+		zvfs_chdir(directorio_actual);
 
 
         if (ret==1) {
@@ -20367,7 +20366,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
         //Aqui lo que queremos es que no sea cierta la comparacion, por tanto seria !!strcmp, o sea, strcmp
         //TODO: Si directorio es "."
         char directorio_actual[1024];
-        menu_filesel_getcwd(directorio_actual,1023);
+        zvfs_getcwd(directorio_actual,1023);
         printf("ruta actual despues de leer directorio: %s\n",directorio_actual);
 
         if (!got_dotdot && strcmp(directorio_actual,"/") && strcmp(directorio_actual,"0:/") && strcmp(directorio_actual,"0://")) {
@@ -20632,9 +20631,9 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-						//printf ("antes menu_filesel_chdir\n");
-                        menu_filesel_chdir(directorio);
-						//printf ("despues menu_filesel_chdir\n");
+						//printf ("antes zvfs_chdir\n");
+                        zvfs_chdir(directorio);
+						//printf ("despues zvfs_chdir\n");
                 }
 
 				util_get_file_no_directory(quickfile,menu_filesel_posicionar_archivo_nombre);
@@ -20658,7 +20657,7 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
         //volvemos a directorio inicial
 		
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
         if (ret==1) {
 
@@ -20849,7 +20848,7 @@ void menu_tape_open(MENU_ITEM_PARAMETERS)
 		//cambiamos a ese directorio, siempre que no sea nulo
 		if (directorio[0]!=0) {
 			debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-			menu_filesel_chdir(directorio);
+			zvfs_chdir(directorio);
 		}
 	}
 
@@ -20859,7 +20858,7 @@ void menu_tape_open(MENU_ITEM_PARAMETERS)
 
         ret=menu_filesel("Select Input Tape",filtros,tape_open_file);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
 
 	if (ret==1) {
@@ -20959,7 +20958,7 @@ void menu_realtape_open(MENU_ITEM_PARAMETERS)
      		//cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -20969,7 +20968,7 @@ void menu_realtape_open(MENU_ITEM_PARAMETERS)
 
         ret=menu_filesel("Select Input Tape",filtros,menu_realtape_name);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
 
         if (ret==1) {
@@ -21026,25 +21025,45 @@ void menu_file_p_browser_show(char *filename)
 	
 	//Leemos cabecera archivo p
         FILE *ptr_file_p_browser;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+    printf("menu_file_p_browser_show %s\n",filename);
+
+    if (zvfs_fopen(filename,&in_fatfs,&ptr_file_p_browser,&fil)<0) {
+        return;
+    }
+
+    /*
         ptr_file_p_browser=fopen(filename,"rb");
 
         if (!ptr_file_p_browser) {
 		debug_printf(VERBOSE_ERR,"Unable to open file");
 		return;
 	}
+    */
 
 	//Leer 128 bytes de la cabecera. Nota: archivos .P no tienen cabecera como tal
 	z80_byte p_header[128];
 
-        int leidos=fread(p_header,1,128,ptr_file_p_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,p_header,128,ptr_file_p_browser,&fil);        
+        
+        //leidos=fread(p_header,1,128,ptr_file_p_browser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
         }
 
-
-        fclose(ptr_file_p_browser);
+        zvfs_fclose(in_fatfs,ptr_file_p_browser,&fil);
+        
+        //fclose(ptr_file_p_browser);
 
 
 	char buffer_texto[64]; //2 lineas, por si acaso
@@ -22438,93 +22457,11 @@ void menu_file_flash_browser_show(char *filename)
 
 }
 
-//funcion fclose que soporta nativo del sistema o fatfs
-void menu_fclose(int in_fatfs,FILE *ptr_file_name,FIL *fil) 
-{
-    if (in_fatfs) {
-        f_close(fil);
-    }
-    else {
-	    fclose(ptr_file_name);
-    }
-}
-
-//funcion fopen que soporta nativo del sistema o fatfs
-//retorna <0 si error
-int menu_fopen(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil)
-{
-	//FILE *ptr_file_name;
-
-    //Soporte para FatFS
-    //FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
-
-    *in_fatfs=util_path_is_prefix_mmc_fatfs(file_name);
-    printf("txt esta en fatfs: %d\n",*in_fatfs);
-
-    if (*in_fatfs) {
-        fr = f_open(fil, file_name, FA_READ);
-        if (fr!=FR_OK)
-        {
-            debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
-            return -1;
-        }     
-
-        //Esto solo para que no se queje el compilador al llamar a menu_fread
-        *ptr_file_name=NULL;           
-    }
-
-    else {
-	    *ptr_file_name=fopen(file_name,"rb");
-    
 
 
-        if (!(*ptr_file_name))
-        {
-            debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
-            return -1;
-        }
-    }
-
-    return 0;
-
-	//int leidos;
-
-    //leidos=menu_fread(in_fatfs,(z80_byte *)file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name,&fil);
 
 
-/*
-    if (in_fatfs) {
-        UINT leidos_fatfs;
-        FRESULT resultado=f_read(&fil,file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,&leidos_fatfs);
-        leidos=leidos_fatfs;
-    }
 
-    else {
-        leidos=fread(file_read_memory,1,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name);
-    }    
-*/
-}
-
-
-//funcion fread que soporta nativo del sistema o fatfs
-int menu_fread(int in_fatfs,z80_byte *puntero_memoria,int bytes_to_load,FILE *ptr_file_hexdump_browser,FIL *fil)
-{
-    int leidos;
-
-    if (in_fatfs) {
-        UINT leidos_fatfs;
-        FRESULT resultado=f_read(fil,puntero_memoria,bytes_to_load,&leidos_fatfs);
-        leidos=leidos_fatfs;
-    }
-
-    else {        
-        
-        leidos=fread(puntero_memoria,1,bytes_to_load,ptr_file_hexdump_browser);
-    }
-
-    return leidos;
-}
 
 void menu_file_hexdump_browser_show(char *filename)
 {
@@ -22554,7 +22491,7 @@ void menu_file_hexdump_browser_show(char *filename)
     int in_fatfs;
     
     
-    if (menu_fopen(filename,&in_fatfs,&ptr_file_hexdump_browser,&fil)<0) {
+    if (zvfs_fopen(filename,&in_fatfs,&ptr_file_hexdump_browser,&fil)<0) {
         free(hexdump_file_memory);
         return;
     }
@@ -22572,7 +22509,7 @@ void menu_file_hexdump_browser_show(char *filename)
             return;
         }    
 
-        //Esto solo para que no se queje el compilador al llamar a menu_fread
+        //Esto solo para que no se queje el compilador al llamar a zvfs_fread
         ptr_file_hexdump_browser=NULL;
 
     }
@@ -22591,7 +22528,7 @@ void menu_file_hexdump_browser_show(char *filename)
 
         int leidos;
 
-    leidos=menu_fread(in_fatfs,hexdump_file_memory,bytes_to_load,ptr_file_hexdump_browser,&fil);
+    leidos=zvfs_fread(in_fatfs,hexdump_file_memory,bytes_to_load,ptr_file_hexdump_browser,&fil);
 
 /*
     if (in_fatfs) {
@@ -22611,7 +22548,7 @@ void menu_file_hexdump_browser_show(char *filename)
                 return;
         }
 
-    menu_fclose(in_fatfs,ptr_file_hexdump_browser,&fil);
+    zvfs_fclose(in_fatfs,ptr_file_hexdump_browser,&fil);
 
     /*
     if (in_fatfs) {
@@ -22772,7 +22709,7 @@ void menu_file_basic_browser_show(char *filename)
 
     printf("menu_file_basic_browser_show %s\n",filename);    
 
-    if (menu_fopen(filename,&in_fatfs,&ptr_file_bas_browser,&fil)<0) {
+    if (zvfs_fopen(filename,&in_fatfs,&ptr_file_bas_browser,&fil)<0) {
         return;
     }
     /*
@@ -22802,14 +22739,14 @@ void menu_file_basic_browser_show(char *filename)
     int leidos;
     
     //leidos=fread(memoria,1,tamanyo,ptr_file_bas_browser);
-    leidos=menu_fread(in_fatfs,memoria,tamanyo,ptr_file_bas_browser,&fil);
+    leidos=zvfs_fread(in_fatfs,memoria,tamanyo,ptr_file_bas_browser,&fil);
 
 	if (leidos!=tamanyo) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
     }
 
-    menu_fclose(in_fatfs,ptr_file_bas_browser,&fil);
+    zvfs_fclose(in_fatfs,ptr_file_bas_browser,&fil);
     //fclose(ptr_file_bas_browser);
 
 	char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
@@ -24055,12 +23992,29 @@ void menu_tape_browser_show(char *filename)
 
 
         FILE *ptr_tapebrowser;
+
+   //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+    printf("menu_tape_browser_show %s\n",filename);
+
+    if (zvfs_fopen(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
+        return;
+    }
+
+
+    /*
         ptr_tapebrowser=fopen(filename,"rb");
 
         if (!ptr_tapebrowser) {
 		debug_printf(VERBOSE_ERR,"Unable to open tape for browsing");
 		return;
 	}
+    */
+
 
 	taperead=malloc(total_mem);
 	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser");
@@ -24069,7 +24023,11 @@ void menu_tape_browser_show(char *filename)
 	puntero_lectura=taperead;
 
 
-        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+        int leidos;
+
+        leidos=zvfs_fread(in_fatfs,taperead,total_mem,ptr_tapebrowser,&fil);        
+        
+        //leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading tape");
@@ -24077,8 +24035,8 @@ void menu_tape_browser_show(char *filename)
                 return;
         }
 
-
-        fclose(ptr_tapebrowser);
+        zvfs_fclose(in_fatfs,ptr_tapebrowser,&fil);
+        //fclose(ptr_tapebrowser);
 
 	char buffer_texto[40];
 
@@ -24294,7 +24252,7 @@ void menu_snapshot_load(MENU_ITEM_PARAMETERS)
 	        //cambiamos a ese directorio, siempre que no sea nulo
 	        if (directorio[0]!=0) {
 	                debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-	                menu_filesel_chdir(directorio);
+	                zvfs_chdir(directorio);
         	}
 	}
 
@@ -24303,7 +24261,7 @@ void menu_snapshot_load(MENU_ITEM_PARAMETERS)
 
 	ret=menu_filesel("Select Snapshot",filtros,snapshot_load_file);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
 
         if (ret==1) {
@@ -24395,7 +24353,7 @@ void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 			//cambiamos a ese directorio, siempre que no sea nulo
 			if (directorio[0]!=0) {
 					debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-					menu_filesel_chdir(directorio);
+					zvfs_chdir(directorio);
 			}
 		}
 
@@ -24405,7 +24363,7 @@ void menu_snapshot_save(MENU_ITEM_PARAMETERS)
 
 		ret=menu_filesel("Snapshot file",filtros,snapshot_save_file);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
         if (ret==1) {
 
@@ -24521,14 +24479,14 @@ void menu_snapshot_quickload(MENU_ITEM_PARAMETERS)
 	getcwd(directorio_actual,PATH_MAX);
 
 	//Vamos a directorio de autosnap
-	menu_filesel_chdir(snapshot_autosave_interval_quicksave_directory);
+	zvfs_chdir(snapshot_autosave_interval_quicksave_directory);
 
 
 	int ret;
 
 	ret=menu_filesel("Select Snapshot",filtros,snapshot_load_file);
 	//volvemos a directorio inicial
-	menu_filesel_chdir(directorio_actual);
+	zvfs_chdir(directorio_actual);
 
 
 	if (ret==1) {
@@ -24655,7 +24613,7 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 	                //cambiamos a ese directorio, siempre que no sea nulo
         	        if (directorio[0]!=0) {
                 	        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        	menu_filesel_chdir(directorio);
+                        	zvfs_chdir(directorio);
 	        }
 
 
@@ -24668,7 +24626,7 @@ void menu_snapshot_save_game_config(MENU_ITEM_PARAMETERS)
 
 			ret=menu_filesel("Source or dest file",filtros,source_file);
 			//volvemos a directorio inicial
-			menu_filesel_chdir(directorio_actual);
+			zvfs_chdir(directorio_actual);
 
 	}
 
@@ -25011,14 +24969,14 @@ void menu_debug_load_binary(MENU_ITEM_PARAMETERS)
 		//cambiamos a ese directorio, siempre que no sea nulo
 		if (directorio[0]!=0) {
 				debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-				menu_filesel_chdir(directorio);
+				zvfs_chdir(directorio);
 		}
 	}
 
 	ret=menu_filesel("Select File to Load",filtros,binary_file_load);
 
 	//volvemos a directorio inicial
-	menu_filesel_chdir(directorio_actual);
+	zvfs_chdir(directorio_actual);
 
 	if (ret==1) {
 
@@ -25080,14 +25038,14 @@ void menu_debug_save_binary(MENU_ITEM_PARAMETERS)
 		//cambiamos a ese directorio, siempre que no sea nulo
 		if (directorio[0]!=0) {
 				debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-				menu_filesel_chdir(directorio);
+				zvfs_chdir(directorio);
 		}
 	}
 
 	ret=menu_filesel("Select File to Save",filtros,binary_file_save);
 
 	//volvemos a directorio inicial
-	menu_filesel_chdir(directorio_actual);
+	zvfs_chdir(directorio_actual);
 
 
     if (ret==1) {
@@ -25666,11 +25624,11 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
     
     
     
-    if (menu_fopen(file_name,&in_fatfs,&ptr_file_name,&fil)<0) {
+    if (zvfs_fopen(file_name,&in_fatfs,&ptr_file_name,&fil)<0) {
         return;
     }
 
-    printf("despues menu_fopen\n");
+    printf("despues zvfs_fopen\n");
     
     /*
     =util_path_is_prefix_mmc_fatfs(file_name);
@@ -25684,7 +25642,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
             return;
         }     
 
-        //Esto solo para que no se queje el compilador al llamar a menu_fread
+        //Esto solo para que no se queje el compilador al llamar a zvfs_fread
         ptr_file_name=NULL;           
     }
 
@@ -25704,9 +25662,9 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 	int leidos;
 
-    leidos=menu_fread(in_fatfs,(z80_byte *)file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name,&fil);
+    leidos=zvfs_fread(in_fatfs,(z80_byte *)file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name,&fil);
 
-    printf("despues menu_fread\n");
+    printf("despues zvfs_fread\n");
 /*
     if (in_fatfs) {
         UINT leidos_fatfs;
@@ -25731,7 +25689,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 	file_read_memory[leidos]=0;
 
-    menu_fclose(in_fatfs,ptr_file_name,&fil);
+    zvfs_fclose(in_fatfs,ptr_file_name,&fil);
 
     /*
     if (in_fatfs) {
@@ -25943,7 +25901,7 @@ void menu_debug_file_utils(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -25952,7 +25910,7 @@ void menu_debug_file_utils(MENU_ITEM_PARAMETERS)
         menu_filesel_show_utils.v=0;
 
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
         if (ret==1) {
 
@@ -26608,7 +26566,7 @@ void menu_textspeech_filter_program(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -26616,7 +26574,7 @@ void menu_textspeech_filter_program(MENU_ITEM_PARAMETERS)
 
         ret=menu_filesel("Select Speech Program",filtros,menu_buffer_textspeech_filter_program);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
 
         if (ret==1) {
@@ -26683,7 +26641,7 @@ void menu_textspeech_stop_filter_program(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -26691,7 +26649,7 @@ void menu_textspeech_stop_filter_program(MENU_ITEM_PARAMETERS)
 
         ret=menu_filesel("Select Stop Speech Prg",filtros,menu_buffer_textspeech_stop_filter_program);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
 
         if (ret==1) {
@@ -27014,7 +26972,7 @@ void menu_tool_path(char *tool_path,char *name)
         //cambiamos a ese directorio, siempre que no sea nulo
         if (directorio[0]!=0) {
 		debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-		menu_filesel_chdir(directorio);
+		zvfs_chdir(directorio);
         }
 
 
@@ -27025,7 +26983,7 @@ void menu_tool_path(char *tool_path,char *name)
 
         ret=menu_filesel(ventana_titulo,filtros,buffer_tool_path);
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
 
         if (ret==1) {
@@ -34361,72 +34319,7 @@ void menu_filesel_switch_filters(void)
 
 }
 
-void menu_filesel_chdir(char *dir)
-{
 
-/*
-Cambios de ruta al estilo unix:
-
-Si 0:/xxxx, cambiamos a unidad mmc
-Si /xxxx o \xxxxx o X:\XXXXX o X:/XXXXX, no es unidad mmc
-
-Cualquier otra cosa, chdir sin alterar unidad mmc activa o no
-*/
-    int usar_chdir_mmc=util_path_is_mmc_fatfs(dir);
-
-
-
-    if (usar_chdir_mmc) {
-        menu_current_drive_mmc_image.v=1;
-        printf("ruta de menu_filesel_chdir es de mmc\n");
-        printf("llamando f_chdir desde menu_filesel_chdir a %s\n",dir);
-        //menu_mmc_chdir(dir);
-        f_chdir(dir);
-
-        char buffer[1024];
-        f_getcwd(buffer,1023);
-
-        printf("ruta despues de f_chdir: %s\n",buffer);
-
-        menu_filesel_getcwd(buffer,1023);
-        printf("ruta despues de menu_filesel_getcwd: %s\n",buffer);
-
-    }
-
-    else {
-        menu_current_drive_mmc_image.v=0;
-        chdir(dir);
-    }
-}
-
-void menu_filesel_getcwd(char *dir,int len)
-{
-    //printf("path_max: %d\n",PATH_MAX);
-    //Si unidad activa es la de mmc
-    if (menu_current_drive_mmc_image.v) {
-        printf("unidad actual de menu_filesel_getcwd es de mmc\n");
-
-        //Miramos si nos retorna un 0:/ y si no, lo agregamos
-        //TODO: esperemos que nadie use rutas mas grandes que esto
-        char buffer_cwd[2048];
-        f_getcwd(buffer_cwd,len);
-
-        if (util_path_is_prefix_mmc_fatfs(buffer_cwd)) {
-            //La devolvemos tal cual
-            strcpy(dir,buffer_cwd);
-        }
-        else {
-            //Agregamos 0:/
-            //TODO: aqui no hacemos caso del parametro len
-            sprintf(dir,"0:/%s",buffer_cwd);
-        }
-
-    }
-
-    else {
-        getcwd(dir,len);
-    }
-}
 
 /*char menu_minus_letra(char letra)
 {
@@ -34691,7 +34584,7 @@ void file_utils_mount_mmc_image(char *fullpath)
     menu_mmc_image_montada=1;
 
     printf("leyendo\n");
-    file_utils_mount_mmc_image_prueba_leer();
+    //file_utils_mount_mmc_image_prueba_leer();
     printf("borrando\n");
     //file_utils_mount_mmc_image_prueba_borrar();
 
@@ -34700,7 +34593,7 @@ void file_utils_mount_mmc_image(char *fullpath)
 
     //sleep(5);
     printf("leyendo\n");
-    file_utils_mount_mmc_image_prueba_leer();
+    //file_utils_mount_mmc_image_prueba_leer();
 
     char buff[256];
 
@@ -34716,6 +34609,12 @@ void file_utils_mount_mmc_image(char *fullpath)
 
     //Y desmontar
     //f_unmount("");
+
+
+    menu_generic_message_splash("Mount Image","Ok image has been mounted on 0:/");
+
+    //Y cambiar a dicho directorio
+    zvfs_chdir("0:/");
 
 }    
 
@@ -35209,7 +35108,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
 
         	//volvemos a directorio inicial
-        	menu_filesel_chdir(directorio_actual);
+        	zvfs_chdir(directorio_actual);
 	}
 
 	if (ejecutar_accion) {
@@ -35384,7 +35283,7 @@ void menu_filesel_exist_ESC(void)
 {
                                                 cls_menu_overlay();
                                                 menu_espera_no_tecla();
-                                                menu_filesel_chdir(filesel_directorio_inicial);
+                                                zvfs_chdir(filesel_directorio_inicial);
                                                 menu_filesel_free_mem();
 }
 
@@ -35752,7 +35651,7 @@ void menu_filesel_change_to_tmp(char *tmpdir)
                                                                         char directorio_actual[PATH_MAX];
                                                                         getcwd(directorio_actual,PATH_MAX);
 
-                                                                        menu_filesel_chdir(tmpdir);
+                                                                        zvfs_chdir(tmpdir);
 
                                                                         //escribir archivo que indique directorio anterior
                                                                         menu_filesel_write_file_last_dir(directorio_actual);
@@ -35892,7 +35791,7 @@ void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
 	char buffer3[OVERLAY_SCREEN_MAX_WIDTH+1+32];
 
 	//getcwd(current_dir,PATH_MAX);
-    menu_filesel_getcwd(current_dir,PATH_MAX);
+    zvfs_getcwd(current_dir,PATH_MAX);
 
 	menu_tape_settings_trunc_name(current_dir,buffer_dir,ventana->visible_width-14); //14 es lo que ocupa el texto "Current dir: "
 	sprintf (buffer3,"Current dir: %s",buffer_dir);
@@ -36034,11 +35933,18 @@ void menu_filesel_cambiar_unidad_common(char *destino)
 
 #endif 
 
+    //Si hay imagen montada, permitir seleccionarla
     if (menu_mmc_image_montada) {
         menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"0:/");
         menu_add_item_menu_tooltip(array_menu_filesel_unidad,"This is the first mmc mounted image");
         menu_add_item_menu_ayuda(array_menu_filesel_unidad,"This is the first mmc mounted image");
+
+        //Y si esa imagen es el disco actual, permitir elegir el disco local
+        if (menu_current_drive_mmc_image.v) {
+            menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"Local Drive");
+        }
     }
+
 
                 menu_add_item_menu(array_menu_filesel_unidad,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 menu_add_ESC_item(array_menu_filesel_unidad);
@@ -36514,7 +36420,7 @@ int old_menu_filesel_cambiar_unidad_o_volumen(void)
 
 						//printf ("Changing to unit %s\n",directorio);
 
-						menu_filesel_chdir(directorio);
+						zvfs_chdir(directorio);
 						releer_directorio=1;
 						
 					}
@@ -36525,14 +36431,14 @@ int old_menu_filesel_cambiar_unidad_o_volumen(void)
 	#if defined(__APPLE__)
 
 //En Mac
-		menu_filesel_chdir("/Volumes");
+		zvfs_chdir("/Volumes");
 		releer_directorio=1;
 
 	#else
 
 //En Linux
 
-		menu_filesel_chdir("/media");
+		zvfs_chdir("/media");
 		releer_directorio=1;	
 
 	#endif
@@ -36555,8 +36461,17 @@ int menu_filesel_cambiar_unidad_o_volumen(void)
 
     if (directorio[0]) {
         printf("Cambiando a directorio %s\n",directorio);
-        menu_filesel_chdir(directorio);
-        return 1;
+
+        //Si es "local drive", es que estabamos en la imagen mmc y hay que ir a imagen local
+        if (!strcasecmp(directorio,"local drive")) {
+            menu_current_drive_mmc_image.v=0;
+            return 1;
+        }
+
+        else {
+            zvfs_chdir(directorio);
+            return 1;
+        }
     }
 
     else return 0;
@@ -36573,7 +36488,7 @@ int menu_filesel_cambiar_unidad_o_volumen(void)
 
 						//printf ("Changing to unit %s\n",directorio);
 
-						menu_filesel_chdir(directorio);
+						zvfs_chdir(directorio);
 						releer_directorio=1;
 						
 					}
@@ -36584,14 +36499,14 @@ int menu_filesel_cambiar_unidad_o_volumen(void)
 	#if defined(__APPLE__)
 
 //En Mac
-		menu_filesel_chdir("/Volumes");
+		zvfs_chdir("/Volumes");
 		releer_directorio=1;
 
 	#else
 
 //En Linux
 
-		menu_filesel_chdir("/media");
+		zvfs_chdir("/media");
 		releer_directorio=1;	
 
 	#endif
@@ -37416,7 +37331,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
      		set_menu_overlay_function(normal_overlay_texto_menu);
 			cls_menu_overlay();
 			menu_espera_no_tecla();
-			menu_filesel_chdir(filesel_directorio_inicial);
+			zvfs_chdir(filesel_directorio_inicial);
 			menu_filesel_free_mem();
 			zxvision_destroy_window(ventana);
 			return 0;
@@ -37585,7 +37500,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						(unidadwindows)
 						) {
 						debug_printf (VERBOSE_DEBUG,"%s Is a directory or windows drive. Change",filesel_nombre_archivo_seleccionado);
-                                                menu_filesel_chdir(filesel_nombre_archivo_seleccionado);
+                                                zvfs_chdir(filesel_nombre_archivo_seleccionado);
 						menu_filesel_free_mem();
                                                 releer_directorio=1;
 						filesel_zona_pantalla=1;
@@ -37615,7 +37530,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						else sprintf(archivo,"%s",filesel_nombre_archivo_seleccionado);
 
 
-                        menu_filesel_chdir(filesel_directorio_inicial);
+                        zvfs_chdir(filesel_directorio_inicial);
 						menu_filesel_free_mem();
 
 						//return menu_avisa_si_extension_no_habitual(filtros,archivo);
@@ -37877,7 +37792,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
                             printf("cambiando a directorio %s desde filesel\n",directorio_a_cambiar);
 
-							menu_filesel_chdir(directorio_a_cambiar);
+							zvfs_chdir(directorio_a_cambiar);
 
 
 							menu_filesel_free_mem();
@@ -37928,7 +37843,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									getcwd(archivo,PATH_MAX);
 									sprintf(&archivo[strlen(archivo)],"/%s",item_seleccionado->d_name);
 
-									menu_filesel_chdir(filesel_directorio_inicial);
+									zvfs_chdir(filesel_directorio_inicial);
 									menu_filesel_free_mem();
 
 									//return menu_avisa_si_extension_no_habitual(filtros,archivo);
@@ -37987,7 +37902,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//printf ("Loading file %s\n",archivo_reciente);
 						strcpy(archivo,archivo_reciente);
 
-                                                                      menu_filesel_chdir(filesel_directorio_inicial);
+                                                                      zvfs_chdir(filesel_directorio_inicial);
                                                                         menu_filesel_free_mem();
 
                                                                         //return menu_avisa_si_extension_no_habitual(filtros,archivo);
@@ -38026,7 +37941,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								//Esto pasa en las carpetas vacias, como /home en Mac OS
 									//unimos directorio y nombre archivo
 									//getcwd(file_utils_file_selected,PATH_MAX);
-                                    menu_filesel_getcwd(file_utils_file_selected,PATH_MAX);
+                                    zvfs_getcwd(file_utils_file_selected,PATH_MAX);
 
 
 									sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);								
@@ -38177,7 +38092,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 else if (tecla==2) {
                                                 cls_menu_overlay();
                                                 menu_espera_no_tecla();
-                                                menu_filesel_chdir(filesel_directorio_inicial);
+                                                zvfs_chdir(filesel_directorio_inicial);
 						menu_filesel_free_mem();
 
 						//restauramos modo normal de texto de menu

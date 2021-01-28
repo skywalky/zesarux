@@ -193,4 +193,8 @@ A veces salen interrogantes
 
 -funcion comun fopen fatfs y local. mismo para fclose
 
--al abrir un sped.bas, revisar file_is_z88_basic, que salta error porque no puede abrir
+
+-al salir de filesel, debe cambiar unidad activa a la local, y no a mmc.
+Esto podria provocar que otros sitios que usan ZVFS (por ejemplo esxdos handler) accedieran a la mmc si lo ultimo que se ha accedido
+desde filesel era la mmc
+Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El resto, rutinas de sistema? -> esxdos, zxpand etc ya NO usan ZVFS

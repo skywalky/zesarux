@@ -112,6 +112,7 @@
 #include "ql_qdos_handler.h"
 #include "ql_i8049.h"
 #include "gs.h"
+#include "zvfs.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -6066,7 +6067,7 @@ void menu_ay_player_load(MENU_ITEM_PARAMETERS)
 					//cambiamos a ese directorio, siempre que no sea nulo
 					if (directorio[0]!=0) {
 									debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-									menu_filesel_chdir(directorio);
+									zvfs_chdir(directorio);
 					}
 	}
 
@@ -6075,7 +6076,7 @@ void menu_ay_player_load(MENU_ITEM_PARAMETERS)
 
 	ret=menu_filesel("Select AY File",filtros,last_ay_file);
 	//volvemos a directorio inicial
-	menu_filesel_chdir(directorio_actual);
+	zvfs_chdir(directorio_actual);
 
 
 	if (ret==1) {
@@ -18446,7 +18447,7 @@ void menu_record_mid_save(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }	
 
@@ -18455,7 +18456,7 @@ void menu_record_mid_save(MENU_ITEM_PARAMETERS)
         ret=menu_filesel("Mid file",filtros,file_save);
 
         //volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);		
+        zvfs_chdir(directorio_actual);		
 
         if (ret==1) {
 
@@ -21136,7 +21137,7 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
                 //cambiamos a ese directorio, siempre que no sea nulo
                 if (directorio[0]!=0) {
                         debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
-                        menu_filesel_chdir(directorio);
+                        zvfs_chdir(directorio);
                 }
         }
 
@@ -21144,7 +21145,7 @@ void menu_storage_mmc_file(MENU_ITEM_PARAMETERS)
         
 		int ret=menu_filesel("Select MMC File",filtros,mmc_file_name);
 		//volvemos a directorio inicial
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 
 
         if (ret==1) {
@@ -24061,7 +24062,7 @@ int menu_storage_ql_mdv_flp(char *string_root_dir)
 	char nada[PATH_MAX];
 
         //Obtenemos ultimo directorio visitado
-	menu_filesel_chdir(string_root_dir);
+	zvfs_chdir(string_root_dir);
 
 
         ret=menu_filesel("Enter dir & press ESC",filtros,nada);
@@ -24076,7 +24077,7 @@ int menu_storage_ql_mdv_flp(char *string_root_dir)
 	}
 
     //volvemos a directorio inicial
-    menu_filesel_chdir(directorio_actual);
+    zvfs_chdir(directorio_actual);
 
 	return ret;
 

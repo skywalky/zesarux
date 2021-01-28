@@ -1162,7 +1162,7 @@ void esxdos_handler_get_final_directory(char *dir, char *finaldir, char *localdi
 		sprintf (dir_pedido,"%s/%s/%s",esxdos_handler_root_dir,esxdos_handler_cwd,dir);
 	}
 
-	menu_filesel_chdir(dir_pedido);
+	chdir(dir_pedido);
 
 	//Ver en que directorio estamos
 	//char dir_final[PATH_MAX];
@@ -1210,7 +1210,7 @@ void esxdos_handler_get_final_directory(char *dir, char *finaldir, char *localdi
 
 
 	//Restauramos directorio actual del emulador
-	menu_filesel_chdir(directorio_actual);
+	chdir(directorio_actual);
 }
 
 

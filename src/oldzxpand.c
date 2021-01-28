@@ -1814,7 +1814,7 @@ void zxpand_get_final_directory(char *dir, char *finaldir, char *localdir)
 		sprintf (dir_pedido,"%s/%s/%s",zxpand_root_dir,zxpand_cwd,dir);
 	}
 
-	menu_filesel_chdir(dir_pedido);
+	zvfs_chdir(dir_pedido);
 
 	//Ver en que directorio estamos
 	//char dir_final[PATH_MAX];
@@ -1845,7 +1845,7 @@ void zxpand_get_final_directory(char *dir, char *finaldir, char *localdir)
 
 
 	//Restauramos directorio actual del emulador
-        menu_filesel_chdir(directorio_actual);
+        zvfs_chdir(directorio_actual);
 }
 
 

@@ -119,6 +119,7 @@
 
 #include "ff.h"
 #include "diskio.h"
+#include "zvfs.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -10569,13 +10570,13 @@ void convert_relative_to_absolute(char *relative_path,char *final_path)
 	getcwd(directorio_actual,PATH_MAX);
 
 	//Cambiamos a lo que dice el path relativo
-	menu_filesel_chdir(relative_path);
+	zvfs_chdir(relative_path);
 
 	//Y en que directorio acabamos?
 	getcwd(final_path,PATH_MAX);
 
 	//Volver a directorio inicial
-	menu_filesel_chdir(directorio_actual);
+	zvfs_chdir(directorio_actual);
 
 	//printf ("Convert relative to absolute path: relative: %s absolute: %s\n",relative_path,final_path);
 
@@ -15894,6 +15895,21 @@ int file_is_z88_basic(char *filename)
         
         //Leemos archivo 
         FILE *ptr_file_flash_browser;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+    printf("file_is_z88_basic %s\n",filename);
+
+    if (zvfs_fopen(filename,&in_fatfs,&ptr_file_flash_browser,&fil)<0) {
+        free(flash_file_memory);
+        return 0;
+    }
+
+/*
         ptr_file_flash_browser=fopen(filename,"rb");
 
         if (!ptr_file_flash_browser) {
@@ -15901,9 +15917,13 @@ int file_is_z88_basic(char *filename)
                 free(flash_file_memory);
                 return 0;
         }
+*/
 
+        int leidos;
 
-        int leidos=fread(flash_file_memory,1,bytes_to_load,ptr_file_flash_browser);
+        leidos=zvfs_fread(in_fatfs,flash_file_memory,bytes_to_load,ptr_file_flash_browser,&fil);        
+        
+        //leidos=fread(flash_file_memory,1,bytes_to_load,ptr_file_flash_browser);
 
         if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
@@ -15911,7 +15931,8 @@ int file_is_z88_basic(char *filename)
         }
 
 
-        fclose(ptr_file_flash_browser);
+        zvfs_fclose(in_fatfs,ptr_file_flash_browser,&fil);
+        //fclose(ptr_file_flash_browser);
 
         int esbasic=0;
 
