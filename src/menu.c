@@ -37992,6 +37992,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                     if (menu_mmc_image_montada) {
                                         printf("Umount\n");
                                         file_utils_umount_mmc_image();
+
+                                        menu_generic_message_splash("Umount Image","Ok image has been unmounted");
                                     }
 
                                     releer_directorio=1;
