@@ -35038,12 +35038,26 @@ void file_utils_file_mem_load(char *archivo)
 		memory_zone_by_file_size=tamanyo;
 
                 FILE *ptr_load;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+
+    if (zvfs_fopen_read(archivo,&in_fatfs,&ptr_load,&fil)<0) {
+        return;
+    }
+
+    /*
                 ptr_load=fopen(archivo,"rb");
 
                 if (!ptr_load) {
                         debug_printf (VERBOSE_ERR,"Unable to open file %s",archivo);
                         return;
                 }
+    */
 
 /*
 extern char memory_zone_by_file_name[];
@@ -35055,12 +35069,17 @@ extern int memory_zone_by_file_size;
 		strcpy(memory_zone_by_file_name,archivo);
 
 
-                int leidos=fread(memory_zone_by_file_pointer,1,tamanyo,ptr_load);
+                int leidos;
+
+                leidos=zvfs_fread(in_fatfs,memory_zone_by_file_pointer,tamanyo,ptr_load,&fil);
+                
+                //leidos=fread(memory_zone_by_file_pointer,1,tamanyo,ptr_load);
                 if (leidos!=tamanyo) {
                         debug_printf (VERBOSE_ERR,"Error reading file. Bytes read: %d bytes",leidos);
                 }
 
-		fclose(ptr_load);
+        zvfs_fclose(in_fatfs,ptr_load,&fil);
+		//fclose(ptr_load);
 
 		if (error_limite) menu_warn_message("File too big. Reading first 16 Mb");
 		else menu_generic_message_splash("File memory zone","File loaded to File memory zone");
