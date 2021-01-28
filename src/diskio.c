@@ -373,7 +373,7 @@ DRESULT disk_ioctl (
         //TODO. sync por ejemplo, para hacer flush a filesystem.
         switch(cmd) {
             case CTRL_SYNC:
-                if (debug_diskio) printf("FatFs llamado disk_ioctl CTRL_SYNC\n");
+                //if (debug_diskio) printf("FatFs llamado disk_ioctl CTRL_SYNC\n");
             break;
         } 
         return RES_OK;
@@ -402,4 +402,32 @@ DWORD get_fattime (void)
     return 0;
 }
 
+//Flush cambios a disco
+/*
+Solo permito hacerlo mediante esta llamada, que se puede invocar desde menu,
+pero no permito mediante disk_ioctl comando CTRL_SYNC
+Asi el usuario puede jugar con cambios en la imagen fat, sin peligro, hasta que decide aplicar los cambios (si es que quiere)
+*/
+int diskio_sync(void)
+{
+    printf("Flushing changes to FatFS image %s\n",fatfs_disk_zero_path);
 
+        ptr_fatfs_disk_zero_file=fopen(fatfs_disk_zero_path,"wb");
+
+        if (ptr_fatfs_disk_zero_file==NULL) {
+            if (debug_diskio) printf("FatFs error abriendo archivo %s\n",fatfs_disk_zero_path);
+            return 1;
+        }
+
+
+
+        //Escribirlo entero
+        fwrite(fatfs_disk_zero_memory,1,fatfs_disk_zero_tamanyo,ptr_fatfs_disk_zero_file);
+
+ 
+        //Y ya se puede cerrar
+        fclose(ptr_fatfs_disk_zero_file);
+
+        return 0;
+
+}

@@ -35,6 +35,8 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 
 //extern BYTE *fatfs_disk_zero_memory;
 
+extern int diskio_sync(void);
+
 /* Disk Status Bits (DSTATUS) */
 
 #define STA_NOINIT		0x01	/* Drive not initialized */

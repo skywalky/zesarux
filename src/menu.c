@@ -34187,7 +34187,18 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 
                                                                 //    01234  567890  12345  678901  2345678901
                 zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,"~^View ~^Trunc D~^El M~^Kdr C~^Onv ~^Inf");
-                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,"~^Copy ~^Move Re~^N ~^Paste ~^Filemem mo~^Unt");
+
+                char buffer_temporal[100];
+                char buffer_sync[32];
+                if (menu_mmc_image_montada) {
+                    strcpy(buffer_sync," ~^Umount ~^Sync");
+                }
+                else {
+                    strcpy(buffer_sync," mo~^Unt");
+                }
+
+                sprintf(buffer_temporal,"~^Copy ~^Move Re~^N ~^Paste ~^Filemem%s",buffer_sync);
+                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_temporal);
 
         }
 
@@ -34558,6 +34569,22 @@ z80_bit menu_current_drive_mmc_image={0};
     strcpy(menu_mmc_cwd)
 
 }*/
+
+void file_utils_umount_mmc_image(void)
+{
+    printf("Unmounting image\n");
+
+    //Decir que no montado y cambiar drive a local
+    menu_mmc_image_montada=0;
+    menu_current_drive_mmc_image.v=0;
+
+    FRESULT resultado=f_mount(0, "", 0);
+
+    if (resultado!=FR_OK) {
+        printf("Error desmontando imagen : %d\n",resultado);
+        return;
+    }    
+}
 
 void file_utils_mount_mmc_image(char *fullpath)
 {
@@ -35124,24 +35151,26 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 		}
 
         //Copy
-		if (rename_move==2) util_copy_file(archivo,nombre_final);
+		if (rename_move==2) {
+            util_copy_file(archivo,nombre_final);
+            menu_generic_message("Copy file","OK. File copied");
+        }
 		//Rename
-		else if (rename_move==1) zvfs_rename(archivo,nombre_final);
+		else if (rename_move==1) {
+            zvfs_rename(archivo,nombre_final);
+            menu_generic_message("Rename file","OK. File renamed");
+        }
         //Move
 		else {
             //zvfs_rename(archivo,nombre_final);
             //En este caso, para que podamos hacer move entre local y mmc, hacemos como un copy pero luego borramos origen
             util_copy_file(archivo,nombre_final);
             zvfs_delete(archivo);
+            menu_generic_message("Move file","OK. File moved");
         }
 
 
-		//Copy
-		if (rename_move==2) menu_generic_message("Copy file","OK. File copied");
-		//Rename
-		else if (rename_move==1) menu_generic_message("Rename file","OK. File renamed");
-		//Move
-		else menu_generic_message("Move file","OK. File moved");
+		
 	}
 }
 
@@ -37941,7 +37970,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						
 						//Comun para acciones que usan archivo seleccionado
 						if (tecla=='V' || tecla=='T' || tecla=='E' || tecla=='M' || tecla=='N' || tecla=='C' 
-                            || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I' || tecla=='U') {
+                            || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I' || tecla=='U' || tecla=='S') {
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
@@ -38011,9 +38040,19 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 									//Mount mmc image
 									if (tecla=='U') {
-										file_utils_mount_mmc_image(file_utils_file_selected);
+                                        if (menu_mmc_image_montada) {
+                                            file_utils_umount_mmc_image();
+                                        }
+										else {
+                                            file_utils_mount_mmc_image(file_utils_file_selected);
+                                        }
 										releer_directorio=1;
-									}						
+									}	
+
+                                    //Sync mmc image
+                                    if (tecla=='S' && menu_mmc_image_montada) {
+                                        diskio_sync();
+                                    }					
 
 									//Copy
 									if (tecla=='C') {
