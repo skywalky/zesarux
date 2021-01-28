@@ -199,6 +199,6 @@ Esto podria provocar que otros sitios que usan ZVFS (por ejemplo esxdos handler)
 desde filesel era la mmc
 Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El resto, rutinas de sistema? -> esxdos, zxpand etc ya NO usan ZVFS
 
--zvfs trunc, conv, mkdir y demas visores
+-zvfs trunc, conv, mkdir y demas visores. extract. file previews. viewer bas para archivos con cabecera plus3dos
 
 -punteros en diskio, de read y write, soportaran imagenes de mas de 2 gB en sistemas 32 bits?
