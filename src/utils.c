@@ -12845,30 +12845,79 @@ void util_copy_file(char *source_file, char *destination_file)
 	long int tamanyo_origen=get_file_size(source_file);
 
 	FILE *ptr_source_file;
+
+    //Soporte para FatFS
+    FIL fil_source;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs_source;
+
+
+    if (zvfs_fopen(source_file,&in_fatfs_source,&ptr_source_file,&fil_source)<0) {
+        return;
+    }
+
+
+
+    /*
         ptr_source_file=fopen(source_file,"rb");
         if (!ptr_source_file) {
                         debug_printf (VERBOSE_ERR,"Can not open %s",source_file);
                         return;
         }
+    */
+
+
+
+
 
         FILE *ptr_destination_file;
+
+
+    //Soporte para FatFS
+    FIL fil_destination;        /* File object */
+    //FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs_destination;
+
+
+    if (zvfs_fopen(destination_file,&in_fatfs_destination,&ptr_destination_file,&fil_destination)<0) {
+        return;
+    }
+
+
+
+/*
         ptr_destination_file=fopen(destination_file,"wb");
 
                 if (!ptr_destination_file) {
                         debug_printf (VERBOSE_ERR,"Can not open %s",destination_file);
                         return;
         }
+*/
 
         z80_byte byte_buffer;
 
         //Leer byte a byte... Si, es poco eficiente
         while (tamanyo_origen) {
-        	fread(&byte_buffer,1,1,ptr_source_file);
-        	fwrite(&byte_buffer,1,1,ptr_destination_file);
+
+            zvfs_fread(in_fatfs_source,&byte_buffer,1,ptr_source_file,&fil_source);
+
+        	//fread(&byte_buffer,1,1,ptr_source_file);
+
+
+            zvfs_fwrite(in_fatfs_destination,&byte_buffer,1,ptr_destination_file,&fil_destination);
+
+        	//fwrite(&byte_buffer,1,1,ptr_destination_file);
+
         	tamanyo_origen--;
 	}
-        fclose(ptr_source_file);
-        fclose(ptr_destination_file);
+
+    zvfs_fclose(in_fatfs_source,ptr_source_file,&fil_source);
+    zvfs_fclose(in_fatfs_destination,ptr_destination_file,&fil_destination);
+
+        //fclose(ptr_source_file);
+        //fclose(ptr_destination_file);
 
 
 }

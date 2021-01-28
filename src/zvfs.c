@@ -134,6 +134,23 @@ int zvfs_fread(int in_fatfs,z80_byte *puntero_memoria,int bytes_to_load,FILE *pt
     return leidos;
 }
 
+//funcion fwrite que soporta nativo del sistema o fatfs
+int zvfs_fwrite(int in_fatfs,z80_byte *puntero_memoria,int bytes_to_save,FILE *ptr_file_hexdump_browser,FIL *fil)
+{
+    int escritos;
+
+    if (in_fatfs) {
+        UINT escritos_fatfs;
+        FRESULT resultado=f_write(fil,puntero_memoria,bytes_to_save,&escritos_fatfs);
+        escritos=escritos_fatfs;
+    }
+
+    else {        
+        escritos=fwrite(puntero_memoria,1,bytes_to_save,ptr_file_hexdump_browser);
+    }
+
+    return escritos;
+}
 
 void zvfs_chdir(char *dir)
 {
@@ -199,5 +216,25 @@ void zvfs_getcwd(char *dir,int len)
 
     else {
         getcwd(dir,len);
+    }
+}
+
+void zvfs_rename(char *old,char *new)
+{
+    if (util_path_is_mmc_fatfs(old)) {
+        f_rename(old,new);
+    }
+    else {
+        rename(old,new);
+    }    
+}
+
+void zvfs_delete(char *filename)
+{
+    if (util_path_is_mmc_fatfs(filename)) {
+        f_unlink(filename);
+    }
+    else {
+	    unlink(filename);
     }
 }

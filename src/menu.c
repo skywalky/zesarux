@@ -35124,7 +35124,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 		}
 
 		if (rename_move==2) util_copy_file(archivo,nombre_final);
-		else rename(archivo,nombre_final);
+		else zvfs_rename(archivo,nombre_final);
 
 
 		//Copy
@@ -37965,7 +37965,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									//Delete
 									if (tecla=='E') {
 										if (menu_confirm_yesno_texto("Delete","Sure?")) {
-											util_delete(file_utils_file_selected);
+											zvfs_delete(file_utils_file_selected);
 											//unlink(file_utils_file_selected);
 											releer_directorio=1;
 										}
