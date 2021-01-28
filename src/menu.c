@@ -35123,8 +35123,17 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
 		}
 
+        //Copy
 		if (rename_move==2) util_copy_file(archivo,nombre_final);
-		else zvfs_rename(archivo,nombre_final);
+		//Rename
+		else if (rename_move==1) zvfs_rename(archivo,nombre_final);
+        //Move
+		else {
+            //zvfs_rename(archivo,nombre_final);
+            //En este caso, para que podamos hacer move entre local y mmc, hacemos como un copy pero luego borramos origen
+            util_copy_file(archivo,nombre_final);
+            zvfs_delete(archivo);
+        }
 
 
 		//Copy
