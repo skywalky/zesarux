@@ -12890,7 +12890,7 @@ void util_copy_file(char *source_file, char *destination_file)
 
     int in_fatfs_source;
 
-    printf("copiar %s a %s\n",source_file,destination_file);
+    printf("copiar %s a %s. tamanyo=%d\n",source_file,destination_file,tamanyo_origen);
 
 
     if (zvfs_fopen_read(source_file,&in_fatfs_source,&ptr_source_file,&fil_source)<0) {
