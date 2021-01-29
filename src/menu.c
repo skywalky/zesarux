@@ -36589,7 +36589,7 @@ void menu_filesel_mmc_sync(void)
 
     //Sync tal cual sin progreso
     //No se si hay alguien que compile sin soporte de threads, pero al menos, avisarle y mostrarle un ok cuando finalice
-    menu_warn_message("Syncing disk image may take a while. Please be patient");
+    menu_warn_message("Syncing disk image may take a while. Press Enter and wait please");
     diskio_sync();
     menu_generic_message_splash("Sync","OK. Disk image synchronized");
 
