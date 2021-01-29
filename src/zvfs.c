@@ -128,7 +128,7 @@ int zvfs_fopen_write(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil
     }
 
     else {
-	    *ptr_file_name=fopen(file_name,"w");
+	    *ptr_file_name=fopen(file_name,"wb");
     
 
 
