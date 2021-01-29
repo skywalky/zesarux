@@ -36001,7 +36001,12 @@ void menu_filesel_cambiar_unidad_common(char *destino)
 
 	for (i=0;i<unidades;i++) {
 		char letra=buffer_unidades[i];
-		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"%c:",letra);
+        /*
+        Nota: pongo X:/, donde X es la unidad, con la / final
+        La / es importante para que cuando estemos en unidad mmc, si cambiamos a c:/, la rutina util_path_is_mmc_fatfs (llamada desde zvfs_chdir)
+        detecta que la ruta es absoluta. Si no, detectaria ruta relativa y no cambiaria de unidad
+        */
+		menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"%c:/",letra);
 		//menu_add_item_menu_shortcut(array_menu_filesel_unidad,letra_minuscula(letra));
 		//menu_add_item_menu_valor_opcion(array_menu_filesel_unidad,letra);
 	}

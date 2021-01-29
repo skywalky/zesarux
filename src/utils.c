@@ -5473,7 +5473,7 @@ int lee_archivo(char *nombre,char *buffer,int max_longitud)
                         return -1;
                 }
     */
-                leidos=zvfs_fread(in_fatfs,buffer,max_longitud,ptr_archivo,&fil);
+                leidos=zvfs_fread(in_fatfs,(z80_byte *)buffer,max_longitud,ptr_archivo,&fil);
                 //leidos=fread(buffer,1,max_longitud,ptr_archivo);
 
                 zvfs_fclose(in_fatfs,ptr_archivo,&fil);
@@ -19457,6 +19457,9 @@ Si 0:/xxxx, cambiamos a unidad mmc
 Si /xxxx o \xxxxx o X:\XXXXX o X:/XXXXX, no es unidad mmc
 
 Cualquier otra cosa, chdir sin alterar unidad mmc activa o no
+
+TODO: indicar C: sin barra (C:/) provoca que crea que es ruta relativa, aunque no afecta a ningun sitio
+porque desde el menu de Drives en file selector ya agrego la / final
 */
 
     int ruta_es_mmc=util_path_is_prefix_mmc_fatfs(dir);
