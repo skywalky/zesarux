@@ -205,4 +205,7 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -scandir para zvfs que funcione el filtro
 
+-zvfs: copiando un .tap de la mmc al escritorio, en windows, la copia mal, contenido alterado y le agrega longitud
+Parece que falla tambien de local a local
+
 -punteros en diskio, de read y write, soportaran imagenes de mas de 2 gB en sistemas 32 bits?
