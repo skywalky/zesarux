@@ -34,6 +34,7 @@
 #include "operaciones.h"
 #include "debug.h"
 #include "utils.h"
+#include "zvfs.h"
 
 
 /*
@@ -381,7 +382,7 @@ int tape_out_block_tzx_close(void)
         return 0;
 }
 
-void tape_write_tzx_header_ptr(FILE *ptr_archivo)
+void tape_write_tzx_header_ptr(FILE *ptr_archivo, int in_fatfs, FIL *fil_tzxfile)
 {
 	//"ZXTape!",0x1a,version 1,subversion 20
 	//30, longitud, "Created by ZEsarUX emulator"
@@ -392,7 +393,8 @@ void tape_write_tzx_header_ptr(FILE *ptr_archivo)
 	};
 
 	//no contamos el 0 del final
-	fwrite(cabecera, 1, sizeof(cabecera), ptr_archivo);	
+    zvfs_fwrite(in_fatfs,cabecera,sizeof(cabecera),ptr_archivo,fil_tzxfile);
+	//fwrite(cabecera, 1, sizeof(cabecera), ptr_archivo);	
 }
 
 void tape_write_tzx_header(void)
@@ -416,7 +418,10 @@ void tape_write_tzx_header(void)
 
 	debug_printf(VERBOSE_INFO,"Writing TZX header");
 
-	tape_write_tzx_header_ptr(ptr_mycinta_tzx_out);
+	//tape_write_tzx_header_ptr(ptr_mycinta_tzx_out);
+
+    //Como esto no se grabara en volumen montado FatFS, puntero a NULL
+    tape_write_tzx_header_ptr(ptr_mycinta_tzx_out, 0 , NULL);
 
 	/*
 

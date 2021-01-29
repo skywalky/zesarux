@@ -13579,12 +13579,26 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
 
         FILE *ptr_tapebrowser;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
+        return 1;
+    }
+
+    /*
         ptr_tapebrowser=fopen(filename,"rb");
 
         if (!ptr_tapebrowser) {
 		debug_printf(VERBOSE_ERR,"Unable to open tape %s for extracting tap",filename);
 		return 1; 
 	}
+    */
 
 	taperead=malloc(total_mem);
 	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser");
@@ -13594,19 +13608,41 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
         //Abrir fichero tzxfile si conviene convertir
         FILE *ptr_tzxfile;
+
+                //Soporte para FatFS
+                FIL fil_tzxfile;        /* File object */
+                FRESULT fr_tzxfile;     /* FatFs return code */
+
+                int in_fatfs_tzxfile;
+
+
         if (tzxfile!=NULL) {
+
+
+
+                if (zvfs_fopen_write(tzxfile,&in_fatfs_tzxfile,&ptr_tzxfile,&fil_tzxfile)<0) {
+                    return 1;
+                }
+
+                /*
                 ptr_tzxfile=fopen(tzxfile,"wb");
 
                 if (!ptr_tzxfile) {
                                 debug_printf (VERBOSE_ERR,"Can not open %s",tzxfile);
                                 return 1;
                 }
+                */
 
-                tape_write_tzx_header_ptr(ptr_tzxfile);
+                tape_write_tzx_header_ptr(ptr_tzxfile,in_fatfs_tzxfile,&fil_tzxfile);
         }        
 
 
-        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+        int leidos;
+        
+
+         leidos=zvfs_fread(in_fatfs,taperead,total_mem,ptr_tapebrowser,&fil);
+        
+        //leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading tape");
@@ -13614,8 +13650,8 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
                 return 1;
         }
 
-
-        fclose(ptr_tapebrowser);
+        zvfs_fclose(in_fatfs,ptr_tapebrowser,&fil);
+        //fclose(ptr_tapebrowser);
 
 	char buffer_texto[32*4]; //4 lineas mas que suficiente
 
@@ -13726,10 +13762,18 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
                                 buffer_tzx[1]=244;
                                 buffer_tzx[2]=1;
 
-                                fwrite(buffer_tzx,1,3,ptr_tzxfile);
+
+
+
+
+                                zvfs_fwrite(in_fatfs_tzxfile,buffer_tzx,3,ptr_tzxfile,&fil_tzxfile);
+
+                                //fwrite(buffer_tzx,1,3,ptr_tzxfile);
 
                                 //Meter datos tal cual de tap: longitud, flag, datos, crc
-                                fwrite(copia_puntero,1,longitud_bloque,ptr_tzxfile);
+
+                                zvfs_fwrite(in_fatfs_tzxfile,copia_puntero,longitud_bloque,ptr_tzxfile,&fil_tzxfile);
+                                //fwrite(copia_puntero,1,longitud_bloque,ptr_tzxfile);
 
 
                         }                
@@ -13746,7 +13790,10 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
 	free(taperead);
 
-        if (tzxfile!=NULL) fclose(ptr_tzxfile);        
+        if (tzxfile!=NULL) {
+            zvfs_fclose(in_fatfs_tzxfile,ptr_tzxfile,&fil_tzxfile);
+            //fclose(ptr_tzxfile);        
+        }
 
 	return 0;
 
