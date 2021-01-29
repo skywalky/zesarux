@@ -5304,7 +5304,26 @@ int quickload(char *nombre) {
 int si_existe_archivo(char *nombre)
 {
 
+    printf("si_existe_archivo %s\n",nombre);
 
+    if (util_path_is_mmc_fatfs(nombre)) {
+        printf("si_existe_archivo for %s using FatFS\n",nombre);
+        FRESULT fr;
+        FILINFO fno;
+
+
+        //printf("Test for 'file.txt'...\n");
+
+        fr = f_stat(nombre, &fno);
+        if (fr==FR_OK) {
+            return 1;
+        }
+
+        //desconocido
+        else return 0;        
+    }
+
+    else {
                 //Ver si archivo existe y preguntar
                 struct stat buf_stat;
 
@@ -5315,6 +5334,7 @@ int si_existe_archivo(char *nombre)
                 }
 
 	return 0;
+    }
 
 }
 
@@ -5433,14 +5453,32 @@ int lee_archivo(char *nombre,char *buffer,int max_longitud)
 	int leidos;
 
                 FILE *ptr_archivo;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+
+    if (zvfs_fopen_read(nombre,&in_fatfs,&ptr_archivo,&fil)<0) {
+        debug_printf (VERBOSE_DEBUG,"Can not open %s",nombre);
+        return -1;
+    }
+
+    /*
                 ptr_archivo=fopen(nombre,"rb");
                 if (!ptr_archivo) {
                         debug_printf (VERBOSE_DEBUG,"Can not open %s",nombre);
                         return -1;
                 }
+    */
+                leidos=zvfs_fread(in_fatfs,buffer,max_longitud,ptr_archivo,&fil);
+                //leidos=fread(buffer,1,max_longitud,ptr_archivo);
 
-                leidos=fread(buffer,1,max_longitud,ptr_archivo);
+                zvfs_fclose(in_fatfs,ptr_archivo,&fil);
                 fclose(ptr_archivo);
+
 
 		return leidos;
 

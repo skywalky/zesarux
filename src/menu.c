@@ -22842,9 +22842,25 @@ void menu_file_basic_browser_show(char *filename)
 		//Deducimos si es un simple .bas de texto normal, o es de basic spectrum
 		//Comprobacion facil, primeros dos bytes contiene numero de linea. Asumimos que si los dos son caracteres ascii imprimibles, son de texto
 		//Y siempre que extension no sea .B (en este caso es spectrum con tokens)
+
+        //Tambien contemplar archivos .bas con tokens pero con la cabecera de PLUS3DOS delante
+        //Estos son los archivos .bas generados por ejemplo desde Next y grabados en la mmc
+
+        int indice_memoria=0;
+
+        char *plus3dos_signature="PLUS3DOS";
+        if (leidos>128) {
+            if (!memcmp(plus3dos_signature,memoria,8)) {
+                //Simplemente avanzamos el puntero del visor y decrementamos tamanyo
+                last_bas_browser_memory +=128;
+                last_bas_browser_memory_size -=128;
+                indice_memoria +=128;
+            }
+        }
+
 		if (leidos>2 && util_compare_file_extension(filename,"b") ) {
-			z80_byte caracter1=memoria[0];
-			z80_byte caracter2=memoria[1]; 
+			z80_byte caracter1=memoria[indice_memoria];
+			z80_byte caracter2=memoria[indice_memoria+1]; 
 			if (caracter1>=32 && caracter1<=127 && caracter2>=32 && caracter2<=127) {
 				//Es ascii. abrir visor ascii
 				debug_printf(VERBOSE_INFO,".bas file type is guessed as simple text");
@@ -37165,6 +37181,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		}
 
 		//Ver si hay archivo que indica pantalla
+        printf("archivo_info_pantalla %s\n",archivo_info_pantalla);
 
 		if (si_existe_archivo(archivo_info_pantalla)) {
 			//printf("HAY PANTALLA--------------- \n");
