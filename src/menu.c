@@ -36570,7 +36570,7 @@ void menu_filesel_mmc_sync(void)
 
 
             contador_menu_syncing_mmc_progress_print=0;
-        zxvision_simple_progress_window("Syncing...", menu_syncing_mmc_progress_cond,menu_syncing_mmc_progress_print );
+        zxvision_simple_progress_window("Syncing", menu_syncing_mmc_progress_cond,menu_syncing_mmc_progress_print );
 
         if (diskio_syncing_flag) {
 
@@ -36588,7 +36588,10 @@ void menu_filesel_mmc_sync(void)
 {
 
     //Sync tal cual sin progreso
+    //No se si hay alguien que compile sin soporte de threads, pero al menos, avisarle y mostrarle un ok cuando finalice
+    menu_warn_message("Syncing disk image may take a while. Please be patient");
     diskio_sync();
+    menu_generic_message_splash("Sync","OK. Disk image synchronized");
 
 }
 
