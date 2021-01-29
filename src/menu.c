@@ -38038,6 +38038,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							char file_utils_file_selected[PATH_MAX]="";
 							item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
 							if (item_seleccionado!=NULL) {
+
+                                int tipo_archivo_seleccionado=get_file_type(item_seleccionado->d_name);
+
 								//Esto pasa en las carpetas vacias, como /home en Mac OS
 									//unimos directorio y nombre archivo
 									//getcwd(file_utils_file_selected,PATH_MAX);
@@ -38048,8 +38051,9 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								//Info para cualquier tipo de archivo
 								if (tecla=='I') file_utils_info_file(file_utils_file_selected);
 
-                                //Umount para cualquier tipo de archivo
 
+
+                                //Umount da igual el tipo de archivo seleccionado
                                 if (tecla=='U') {
                                     if (menu_mmc_image_montada) {
                                         printf("Umount\n");
@@ -38057,6 +38061,18 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
                                         menu_generic_message_splash("Umount Image","Ok image has been unmounted");
                                     }
+
+
+                                    //Aunque mount solo cuando se haya seleccionado archivo
+                                    else  {
+                                        //Si no es directorio
+                                        if (tipo_archivo_seleccionado!=2) {
+                                            printf("Mount\n");
+                                            file_utils_mount_mmc_image(file_utils_file_selected);
+                                        }
+                                    }
+										
+										                                    
 
                                     releer_directorio=1;
                                 }	
@@ -38067,7 +38083,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 }	                                                                    
 
 								//Si no es directorio
-								if (get_file_type(item_seleccionado->d_name)!=2) {
+								if (tipo_archivo_seleccionado!=2) {
 									//unimos directorio y nombre archivo
 									//getcwd(file_utils_file_selected,PATH_MAX);
 									//sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);
@@ -38118,15 +38134,6 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 										releer_directorio=1;
 									}
 
-									//Mount mmc image
-									if (tecla=='U') {
-
-										if (!menu_mmc_image_montada) {
-                                            printf("Mount\n");
-                                            file_utils_mount_mmc_image(file_utils_file_selected);
-                                        }
-										releer_directorio=1;
-									}	
 
 				
 
