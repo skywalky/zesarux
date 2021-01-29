@@ -22636,6 +22636,9 @@ void menu_file_sna_browser_show(char *filename)
 {
 	
 	//Leemos cabecera archivo sna
+	//Leer 27 bytes de la cabecera
+	z80_byte sna_header[27];    
+    /*
         FILE *ptr_file_sna_browser;
         ptr_file_sna_browser=fopen(filename,"rb");
 
@@ -22644,8 +22647,7 @@ void menu_file_sna_browser_show(char *filename)
 		return;
 	}
 
-	//Leer 27 bytes de la cabecera
-	z80_byte sna_header[27];
+
 
         int leidos=fread(sna_header,1,27,ptr_file_sna_browser);
 
@@ -22656,9 +22658,10 @@ void menu_file_sna_browser_show(char *filename)
 
 
         fclose(ptr_file_sna_browser);
+    */
 
 
-        
+    lee_archivo(filename,sna_header,27);        
 
 
 	char buffer_texto[64]; //2 lineas, por si acaso

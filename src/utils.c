@@ -15523,6 +15523,21 @@ int util_extract_dsk(char *filename,char *tempdir)  {
 	
 	//Leemos archivo dsk
         FILE *ptr_file_dsk_browser;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_dsk_browser,&fil)<0) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(dsk_file_memory);
+		return 0;
+    }
+
+    /*
         ptr_file_dsk_browser=fopen(filename,"rb");
 
         if (!ptr_file_dsk_browser) {
@@ -15530,9 +15545,13 @@ int util_extract_dsk(char *filename,char *tempdir)  {
 		free(dsk_file_memory);
 		return 0;
 	}
+    */
 
 
-        int leidos=fread(dsk_file_memory,1,bytes_to_load,ptr_file_dsk_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,dsk_file_memory,bytes_to_load,ptr_file_dsk_browser,&fil);
+        //leidos=fread(dsk_file_memory,1,bytes_to_load,ptr_file_dsk_browser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
@@ -15540,7 +15559,8 @@ int util_extract_dsk(char *filename,char *tempdir)  {
         }
 
 
-        fclose(ptr_file_dsk_browser);
+        zvfs_fclose(in_fatfs,ptr_file_dsk_browser,&fil);
+        //fclose(ptr_file_dsk_browser);
 
 
         
