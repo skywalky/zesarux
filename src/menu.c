@@ -35724,7 +35724,7 @@ void menu_filesel_change_to_tmp(char *tmpdir)
 
                                                                         //Dejar antes un archivo temporal en ese directorio que indique directorio anterior
                                                                         char directorio_actual[PATH_MAX];
-                                                                        getcwd(directorio_actual,PATH_MAX);
+                                                                        zvfs_getcwd(directorio_actual,PATH_MAX);
 
                                                                         zvfs_chdir(tmpdir);
 
