@@ -1,5 +1,6 @@
 Version 9.2 - xxxx edition. 22 January 2021
 
+Added support for browsing inside disk images (.mmc, .ide, etc) from ZEsarUX file browser (Debug->File utilities)
 Added new ZX-Uno Prism video mode
 Added Dandanator storage button icon
 Added TBBlue snx snapshot support
