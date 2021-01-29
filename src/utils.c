@@ -5477,7 +5477,7 @@ int lee_archivo(char *nombre,char *buffer,int max_longitud)
                 //leidos=fread(buffer,1,max_longitud,ptr_archivo);
 
                 zvfs_fclose(in_fatfs,ptr_archivo,&fil);
-                fclose(ptr_archivo);
+                //fclose(ptr_archivo);
 
 
 		return leidos;
