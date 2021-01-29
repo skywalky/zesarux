@@ -33,5 +33,6 @@ extern void zvfs_getcwd(char *dir,int len);
 extern void zvfs_chdir(char *dir);
 extern void zvfs_rename(char *old,char *new);
 extern void zvfs_delete(char *filename);
+extern void zvfs_mkdir(char *directory);
 
 #endif

@@ -38130,7 +38130,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							string_carpeta[0]=0;
 							menu_ventana_scanf("Folder name",string_carpeta,200);
 							if (string_carpeta[0]) {
-								menu_filesel_mkdir(string_carpeta);
+                                zvfs_mkdir(string_carpeta);
+								//menu_filesel_mkdir(string_carpeta);
 								releer_directorio=1;
 							}
 						}

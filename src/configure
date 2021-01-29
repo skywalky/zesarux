@@ -1387,7 +1387,7 @@ network.o: network.c network.h cpu.h debug.h utils.h compileoptions.h chardevice
 zeng.o: zeng.c zeng.h cpu.h debug.h utils.h network.h compileoptions.h remote.h snap_zsf.h autoselectoptions.h
 	\$(CC) \$(CFLAGS) -c zeng.c
 
-zvfs.o: zvfs.c zvfs.h cpu.h debug.h utils.h ff.h
+zvfs.o: zvfs.c zvfs.h cpu.h debug.h utils.h ff.h compileoptions.h
 	\$(CC) \$(CFLAGS) -c zvfs.c
 
 atomic.o: atomic.c atomic.h compileoptions.h

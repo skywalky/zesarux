@@ -24,6 +24,8 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <errno.h>
 
 
 
@@ -32,6 +34,7 @@
 #include "utils.h"
 #include "zvfs.h"
 #include "ff.h"
+#include "compileoptions.h"
 
 
 /*
@@ -264,4 +267,27 @@ void zvfs_delete(char *filename)
     else {
 	    unlink(filename);
     }
+}
+
+void zvfs_mkdir(char *directory)
+{
+    if (util_path_is_mmc_fatfs(directory)) {
+        f_mkdir(directory);
+    }
+
+    else {
+
+    #ifndef MINGW
+        int tmpdirret=mkdir(directory,S_IRWXU);
+    #else
+        int tmpdirret=mkdir(directory);
+    #endif
+
+        if (tmpdirret!=0 && errno!=EEXIST) {
+                    debug_printf (VERBOSE_ERR,"Error creating %s directory : %s",directory,strerror(errno) );
+        }
+
+
+    }
+
 }
