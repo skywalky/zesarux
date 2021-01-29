@@ -19490,7 +19490,7 @@ int util_path_is_windows_with_drive(char *dir)
 {
     if (strlen(dir)<3) return 0;
 
-    if (util_is_letter(letra_minuscula(dir[0])) &&
+    if (util_is_letter(dir[0]) &&
         dir[1]==':' &&
         (dir[2]=='/' || dir[2]=='\\')
     )
