@@ -36,6 +36,7 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 //extern BYTE *fatfs_disk_zero_memory;
 
 extern int diskio_sync(void);
+extern int diskio_syncing_flag;
 
 /* Disk Status Bits (DSTATUS) */
 

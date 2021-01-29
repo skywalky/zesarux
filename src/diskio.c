@@ -31,6 +31,7 @@ long int fatfs_disk_zero_tamanyo=0;
 
 int debug_diskio=0;
 
+int diskio_syncing_flag=0;
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -412,6 +413,8 @@ int diskio_sync(void)
 {
     printf("Flushing changes to FatFS image %s\n",fatfs_disk_zero_path);
 
+
+
         ptr_fatfs_disk_zero_file=fopen(fatfs_disk_zero_path,"wb");
 
         if (ptr_fatfs_disk_zero_file==NULL) {
@@ -419,7 +422,8 @@ int diskio_sync(void)
             return 1;
         }
 
-
+    //Activamos un flag para que se pueda consultar desde menu
+    diskio_syncing_flag=1;
 
         //Escribirlo entero
         fwrite(fatfs_disk_zero_memory,1,fatfs_disk_zero_tamanyo,ptr_fatfs_disk_zero_file);
@@ -427,6 +431,10 @@ int diskio_sync(void)
  
         //Y ya se puede cerrar
         fclose(ptr_fatfs_disk_zero_file);
+
+        //sleep(10);
+
+    diskio_syncing_flag=0;        
 
         return 0;
 

@@ -36503,6 +36503,97 @@ int menu_first_aid(char *key_setting) //(enum first_aid_number_list indice)
 
 }
 
+//Si hay soporte de threads, mostrar ventana de progreso
+#ifdef USE_PTHREADS
+
+int contador_menu_syncing_mmc_progress_print=0;
+pthread_t menu_syncing_mmc_progress_thread;
+
+void *menu_syncing_mmc_progress_thread_function(void *entrada)
+{
+        printf("Starting sync thread\n");
+
+
+
+        diskio_sync();
+
+        printf("Finishing sync thread\n");
+
+
+
+        return 0;
+
+}
+
+int menu_syncing_mmc_progress_cond(zxvision_window *w GCC_UNUSED)
+{
+        return !diskio_syncing_flag;
+}
+
+
+void menu_syncing_mmc_progress_print(zxvision_window *w)
+{
+        char *mensaje="|/-\\";
+
+        int max=strlen(mensaje);
+        char mensaje_dest[32];
+
+        int pos=contador_menu_syncing_mmc_progress_print % max;
+
+        sprintf(mensaje_dest,"Syncing %c",mensaje[pos]);
+
+        zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);
+        zxvision_draw_window_contents(w);
+
+        contador_menu_syncing_mmc_progress_print++;
+
+}
+void menu_filesel_mmc_sync(void)
+{
+
+                //Thread aparte para descomprimir. Necesario en caso de imagen de 2 gb que tarda mucho
+                //Inicializar thread
+        debug_printf (VERBOSE_DEBUG,"Initializing thread menu_syncing_mmc_progress_thread");
+
+
+                //Lanzar el thread de sync
+        //struct menu_syncing_mmc_progress_struct parametros;
+
+
+        //Antes de lanzarlo, decir que se ejecuta, por si el usuario le da enter rapido a la ventana de progreso y el thread aun no se ha lanzado
+        //menu_syncing_mmc_progress_thread_running=1;
+
+        if (pthread_create( &menu_syncing_mmc_progress_thread, NULL, &menu_syncing_mmc_progress_thread_function, NULL )) {
+                debug_printf(VERBOSE_ERR,"Can not create menu_syncing_mmc_progress_thread thread");
+                return;
+        }    
+
+
+            contador_menu_syncing_mmc_progress_print=0;
+        zxvision_simple_progress_window("Syncing...", menu_syncing_mmc_progress_cond,menu_syncing_mmc_progress_print );
+
+        if (diskio_syncing_flag) {
+
+                        //Al parecer despues de ventana de zxvision_simple_progress_window no se espera a liberar tecla
+                        menu_espera_no_tecla();
+                        menu_warn_message("Syncing has not ended yet");
+                }
+
+
+}
+
+#else
+
+void menu_filesel_mmc_sync(void)
+{
+
+    //Sync tal cual sin progreso
+    diskio_sync();
+
+}
+
+#endif
+
 /*
 int old_menu_filesel_cambiar_unidad_o_volumen(void)
 {
@@ -38079,7 +38170,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
                                 //Sync mmc image
                                 if (tecla=='S' && menu_mmc_image_montada) {
-                                    diskio_sync();
+                                    menu_filesel_mmc_sync();
                                 }	                                                                    
 
 								//Si no es directorio
