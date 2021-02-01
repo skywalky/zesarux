@@ -71,7 +71,7 @@ int zvfs_fopen_read(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil)
     FRESULT fr;     /* FatFs return code */
 
     *in_fatfs=util_path_is_mmc_fatfs(file_name);
-    printf("txt esta en fatfs: %d\n",*in_fatfs);
+    //printf("txt esta en fatfs: %d\n",*in_fatfs);
 
     if (*in_fatfs) {
         fr = f_open(fil, file_name, FA_READ);
@@ -113,7 +113,7 @@ int zvfs_fopen_write(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil
     FRESULT fr;     /* FatFs return code */
 
     *in_fatfs=util_path_is_mmc_fatfs(file_name);
-    printf("txt esta en fatfs: %d\n",*in_fatfs);
+    //printf("txt esta en fatfs: %d\n",*in_fatfs);
 
     if (*in_fatfs) {
         fr = f_open(fil, file_name, FA_CREATE_ALWAYS | FA_WRITE );
@@ -225,7 +225,7 @@ void zvfs_getcwd(char *dir,int len)
     //printf("path_max: %d\n",PATH_MAX);
     //Si unidad activa es la de mmc
     if (menu_current_drive_mmc_image.v) {
-        printf("unidad actual de zvfs_getcwd es de mmc\n");
+        //printf("unidad actual de zvfs_getcwd es de mmc\n");
 
         //Miramos si nos retorna un 0:/ y si no, lo agregamos
         //TODO: esperemos que nadie use rutas mas grandes que esto

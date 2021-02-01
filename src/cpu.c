@@ -1958,9 +1958,14 @@ printf (
 		"--mmc-file f                   Set mmc image file\n"
 		"--enable-mmc                   Enable MMC emulation. Usually requires --mmc-file\n"
 		"--mmc-write-protection         Enable MMC write protection\n"
-		"--mmc-no-persistent-writes     Disable MMC persistent writes\n"
-        "--add-file-to-mmc source dest  Add file from local filesystem to the mmc. Destination must not include 0:/ prefix\n"
+		"--mmc-no-persistent-writes     Disable MMC persistent writes\n");
 
+        printf(
+            "--add-file-to-mmc source dest  Add file from local filesystem to the mmc, before starting ZEsarUX. "
+            "You can use that setting up to %d times. Destination must not include 0:/ prefix\n",
+            MAX_COPY_FILES_TO_MMC);
+        
+        printf(
 		"--enable-divmmc-ports      Enable DIVMMC emulation ports only, but not paging. Usually requires --enable-mmc\n"
 		"--enable-divmmc-paging     Enable DIVMMC paging only\n"
 		"--enable-divmmc            Enable DIVMMC emulation: ports & paging. Usually requires --enable-mmc\n"

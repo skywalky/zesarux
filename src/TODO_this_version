@@ -210,11 +210,3 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -Copy recursivo. Tomar como idea el ls recursivo de file_utils_prueba_dir
 
--Una opcion de command line que meta ficheros en la mmc molaria
-
-o sea --mmcfile test.mmc —putfile prueba.tmp —putfile pepe.bin
-
-Con paths de Origen y destino
-
-
-

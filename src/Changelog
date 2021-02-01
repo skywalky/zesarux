@@ -1,6 +1,7 @@
 Version 9.2 - xxxx edition. 22 January 2021
 
 Added support for browsing inside disk images (.mmc, .ide, etc) from ZEsarUX file browser (Debug->File utilities)
+Added command line setting --add-file-to-mmc to be able to copy files to a mmc image before starting ZEsarUX
 Added new ZX-Uno Prism video mode
 Added Dandanator storage button icon
 Added TBBlue snx snapshot support

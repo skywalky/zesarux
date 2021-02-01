@@ -5306,10 +5306,10 @@ int quickload(char *nombre) {
 int si_existe_archivo(char *nombre)
 {
 
-    printf("si_existe_archivo %s\n",nombre);
+    //printf("si_existe_archivo %s\n",nombre);
 
     if (util_path_is_mmc_fatfs(nombre)) {
-        printf("si_existe_archivo for %s using FatFS\n",nombre);
+        //printf("si_existe_archivo for %s using FatFS\n",nombre);
         FRESULT fr;
         FILINFO fno;
 
@@ -5348,7 +5348,7 @@ long int get_file_size(char *nombre)
     //Si es archivo de la mmc
     //if (util_path_is_prefix_mmc_fatfs(nombre)) {
     if (util_path_is_mmc_fatfs(nombre)) {
-        printf("get_file_size for %s using FatFS\n",nombre);
+        //printf("get_file_size for %s using FatFS\n",nombre);
         FRESULT fr;
         FILINFO fno;
 
@@ -10568,7 +10568,7 @@ int get_file_type(char *nombre)
     //Si es archivo de la mmc
     //if (util_path_is_prefix_mmc_fatfs(nombre)) {  
     if (util_path_is_mmc_fatfs(nombre)) {
-        printf("f_stat for %s using FatFS\n",nombre);
+        //printf("f_stat for %s using FatFS\n",nombre);
         FRESULT fr;
         FILINFO fno;
 
@@ -11601,7 +11601,7 @@ void util_truncate_file(char *filename)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -12881,7 +12881,7 @@ void util_save_file(z80_byte *origin, long int tamanyo_origen, char *destination
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -12930,11 +12930,11 @@ void util_copy_file(char *source_file, char *destination_file)
 
     //Soporte para FatFS
     FIL fil_source;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs_source;
 
-    printf("copiar %s a %s. tamanyo=%ld\n",source_file,destination_file,tamanyo_origen);
+    //printf("copiar %s a %s. tamanyo=%ld\n",source_file,destination_file,tamanyo_origen);
 
 
     if (zvfs_fopen_read(source_file,&in_fatfs_source,&ptr_source_file,&fil_source)<0) {
@@ -13666,7 +13666,7 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -13696,7 +13696,7 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
                 //Soporte para FatFS
                 FIL fil_tzxfile;        /* File object */
-                FRESULT fr_tzxfile;     /* FatFs return code */
+                //FRESULT fr_tzxfile;     /* FatFs return code */
 
                 int in_fatfs_tzxfile;
 
@@ -13909,7 +13909,7 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -13940,7 +13940,7 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 
     //Soporte para FatFS
     FIL fil_tapfile;        /* File object */
-    FRESULT fr_tapfile;     /* FatFs return code */
+    //FRESULT fr_tapfile;     /* FatFs return code */
 
     int in_fatfs_tapfile;
 
@@ -15576,7 +15576,7 @@ int util_extract_dsk(char *filename,char *tempdir)  {
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -16153,7 +16153,7 @@ int file_is_z88_basic(char *filename)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -19491,7 +19491,7 @@ int util_path_is_prefix_mmc_fatfs(char *dir)
     if (strlen(dir)<3) return 0;
 
     if (util_is_digit(dir[0]) && dir[1]==':' && dir[2]=='/') {
-        printf("util_path_is_prefix_mmc_fatfs ruta %s es de mmc montado\n",dir);
+        //printf("util_path_is_prefix_mmc_fatfs ruta %s es de mmc montado\n",dir);
         return 1;
     }
 
@@ -19600,14 +19600,14 @@ void util_copy_files_to_mmc_doit(void)
     if (!copy_files_to_mmc_total) return;
 
     if (mmc_file_name[0]==0) {
-        debug_printf(VERBOSE_ERR,"No mmc file name set");
+        debug_printf(VERBOSE_ERR,"No mmc file name set using --add-file-to-mmc");
         return;
     }
 
 
     strcpy(fatfs_disk_zero_path,mmc_file_name);
 
-
+    printf("Mounting mmc image %s\n",mmc_file_name);
 
     /* Gives a work area to the default drive */
     FRESULT resultado=f_mount(&FatFs_util_copy_files_to_mmc, "", 1);
@@ -19635,6 +19635,8 @@ void util_copy_files_to_mmc_doit(void)
 
         util_copy_file(copy_files_to_mmc_source[i],destination);
     }
+
+    printf("Syncing changes to the mmc image\n");
 
     diskio_sync();
 
