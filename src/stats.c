@@ -122,7 +122,7 @@ void stats_ask_if_enable(void)
 }
 
 
-void *send_stats_server_pthread(void *nada)
+void *send_stats_server_pthread(void *nada GCC_UNUSED)
 {
 
 	if (stats_enabled.v==0) return NULL;
@@ -197,7 +197,7 @@ int stats_get_current_total_minutes_use(void)
 	return total_minutes_use+uptime_seconds/60;
 }
 
-void *stats_check_updates_pthread(void *nada)
+void *stats_check_updates_pthread(void *nada GCC_UNUSED)
 {
 
 	//opcion de comprobar updates desactivada
@@ -307,7 +307,7 @@ void stats_check_updates(void)
 
 char stats_last_yesterday_users[MAX_YESTERDAY_USERS_STRING+1]="";
 
-void *stats_check_yesterday_users_pthread(void *nada)
+void *stats_check_yesterday_users_pthread(void *nada GCC_UNUSED)
 {
 
 	//opcion de comprobar updates desactivada

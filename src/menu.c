@@ -21047,11 +21047,11 @@ void menu_file_p_browser_show(char *filename)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
-    printf("menu_file_p_browser_show %s\n",filename);
+    //printf("menu_file_p_browser_show %s\n",filename);
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_p_browser,&fil)<0) {
         debug_printf(VERBOSE_ERR,"Unable to open file");
@@ -21847,7 +21847,7 @@ void menu_file_dsk_browser_show(char *filename)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -22522,7 +22522,7 @@ void menu_file_hexdump_browser_show(char *filename)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
 
 
@@ -22683,7 +22683,7 @@ void menu_file_sna_browser_show(char *filename)
     */
 
 
-    lee_archivo(filename,sna_header,27);        
+    lee_archivo(filename,(char *)sna_header,27);        
 
 
 	char buffer_texto[64]; //2 lineas, por si acaso
@@ -22746,7 +22746,7 @@ void menu_file_basic_browser_show(char *filename)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;    
 
@@ -24055,7 +24055,7 @@ void menu_tape_browser_show(char *filename)
 
    //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -25679,7 +25679,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
     
@@ -34585,20 +34585,17 @@ void file_utils_mount_mmc_image_prueba_borrar(void)
   
 }
 
+/*
 void file_utils_mount_mmc_image_prueba_leer(void)
 {
-    FIL fil;        /* File object */
-    char line[100]; /* Line buffer */
-    FRESULT fr;     /* FatFs return code */
+    FIL fil;        // File object 
+    char line[100]; // Line buffer 
+    FRESULT fr;     // FatFs return code 
 
-    /* Open a text file */
+    // Open a text file 
     fr = f_open(&fil, "README.md", FA_READ);
     if (fr) return ; //(int)fr;
 
-    /* Read every line and display it */
-    /*while (f_gets(line, sizeof line, &fil)) {
-        printf("%s\n",line);
-    }*/
 
     int salir=0;
     UINT leidos;
@@ -34615,9 +34612,10 @@ void file_utils_mount_mmc_image_prueba_leer(void)
         }
     }
 
-    /* Close the file */
+    // Close the file 
     f_close(&fil);    
 }
+*/
 
 FRESULT file_utils_prueba_dir(char *path) 
 {
@@ -35161,7 +35159,7 @@ void file_utils_file_mem_load(char *archivo)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -36593,19 +36591,16 @@ int menu_first_aid(char *key_setting) //(enum first_aid_number_list indice)
 int contador_menu_syncing_mmc_progress_print=0;
 pthread_t menu_syncing_mmc_progress_thread;
 
-void *menu_syncing_mmc_progress_thread_function(void *entrada)
+void *menu_syncing_mmc_progress_thread_function(void *nada GCC_UNUSED)
 {
-        printf("Starting sync thread\n");
+    debug_printf(VERBOSE_DEBUG,"Starting sync thread");
+
+    diskio_sync();
+
+    debug_printf(VERBOSE_DEBUG,"Finishing sync thread");
 
 
-
-        diskio_sync();
-
-        printf("Finishing sync thread\n");
-
-
-
-        return 0;
+    return 0;
 
 }
 
