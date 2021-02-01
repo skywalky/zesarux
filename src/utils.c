@@ -14587,40 +14587,73 @@ int util_convert_sna_to_scr(char *filename,char *archivo_destino)
 
         if (filesize==49179 || filesize==131103 || filesize==147487) {
 
+                //Soporte para FatFS
+                FIL fil_origen;        /* File object */
+                
+                int in_fatfs_origen;
+
+
+                if (zvfs_fopen_read(filename,&in_fatfs_origen,&ptr_snafile,&fil_origen)<0) {
+                        debug_printf(VERBOSE_ERR,"Error opening %s",filename);
+                        return 1;
+                }            
+
                 int leidos;
 
                 //Load File
+                /*
                 ptr_snafile=fopen(filename,"rb");
                 if (ptr_snafile==NULL) {
                         debug_printf(VERBOSE_ERR,"Error opening %s",filename);
                         return 1;
                 }
+                */
 
                 //48k y 128k tienen misma cabecera al principio
-                leidos=fread(sna_48k_header,1,SNA_48K_HEADER_SIZE,ptr_snafile);
+                leidos=zvfs_fread(in_fatfs_origen,sna_48k_header,SNA_48K_HEADER_SIZE,ptr_snafile,&fil_origen);
+                //leidos=fread(sna_48k_header,1,SNA_48K_HEADER_SIZE,ptr_snafile);
                 
 
 
                 //Leer byte a byte y pasarlo a archivo destino
 
                 FILE *ptr_destination_file;
+
+                FIL fil_destino;        /* File object */
+  
+                int in_fatfs_destino;
+
+                if (zvfs_fopen_write(archivo_destino,&in_fatfs_destino,&ptr_destination_file,&fil_destino)<0) {
+                    debug_printf (VERBOSE_ERR,"Can not open %s",archivo_destino);
+                    return 1;
+                }                
+
+                /*
                 ptr_destination_file=fopen(archivo_destino,"wb");
 
                         if (!ptr_destination_file) {
                                 debug_printf (VERBOSE_ERR,"Can not open %s",archivo_destino);
                                 return 1;
-                }      
+                } 
+                */     
 
                 int i;
 
                 for (i=0;i<6912;i++) {
                         z80_byte byte_leido;
-                        fread(&byte_leido,1,1,ptr_snafile);
-                        fwrite(&byte_leido,1,1,ptr_destination_file);
+
+                        zvfs_fread(in_fatfs_origen,&byte_leido,1,ptr_snafile,&fil_origen);
+                        //fread(&byte_leido,1,1,ptr_snafile);
+
+                        zvfs_fwrite(in_fatfs_destino,&byte_leido,1,ptr_destination_file,&fil_destino);
+                        //fwrite(&byte_leido,1,1,ptr_destination_file);
                 }   
 
-                fclose(ptr_snafile);
-                fclose(ptr_destination_file);
+                zvfs_fclose(in_fatfs_origen,ptr_snafile,&fil_origen);
+                //fclose(ptr_snafile);
+
+                zvfs_fclose(in_fatfs_destino,ptr_destination_file,&fil_destino);
+                //fclose(ptr_destination_file);
         }
 
         return 0; 
