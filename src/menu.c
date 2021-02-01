@@ -20250,6 +20250,20 @@ int menu_filesel_alphasort(const struct dirent **d1, const struct dirent **d2)
 	return (strcasecmp((*d1)->d_name,(*d2)->d_name));
 }
 
+//Copia nombre y tipo de archivo de estructura de fatfs a dirent
+void menu_filesel_fatfs_to_dirent(FILINFO* fno,struct dirent *dp)
+{
+    strcpy(dp->d_name,fno->fname);
+
+    if (fno->fattrib & AM_DIR) {
+        dp->d_type=DT_DIR;
+    }
+    else {
+        dp->d_type=DT_REG;
+    }                    
+
+}  
+
 int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***namelist,
               int (*filter)(const struct dirent *),
               int (*compar)(const struct dirent **, const struct dirent **))
@@ -20321,18 +20335,10 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
                         got_dotdot=1;
                     }
 
-                    //TODO: filtro que entienda nuestro archivo de FatFS
-                    strcpy(dp.d_name,fno.fname);
-
-                    if (fno.fattrib & AM_DIR) {
-                        dp.d_type=DT_DIR;
-                    }
-                    else {
-                        dp.d_type=DT_REG;
-                    }                    
+                    //Pasar por el filtro, pero este solo entiende dirent
+                    menu_filesel_fatfs_to_dirent(&fno,&dp);
 
                     if (filter(&dp)) {
-                    //if (1) {
 
                             //Asignar memoria para ese fichero
                             memoria_archivos=malloc(sizeof(struct dirent));
@@ -20346,8 +20352,9 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
                             //Meter datos
 
-                            //memcpy(memoria_archivos,dp,sizeof( struct dirent ));
+                            memcpy(memoria_archivos,&dp,sizeof( struct dirent ));
 
+                            /*
                             strcpy(memoria_archivos->d_name,fno.fname);
 
 
@@ -20357,6 +20364,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
                             else {
                                 memoria_archivos->d_type=DT_REG;
                             }
+                            */
 
                             archivos++;
 
