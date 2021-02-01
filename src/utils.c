@@ -5458,7 +5458,7 @@ int lee_archivo(char *nombre,char *buffer,int max_longitud)
 
     //Soporte para FatFS
     FIL fil;        /* File object */
-    FRESULT fr;     /* FatFs return code */
+    //FRESULT fr;     /* FatFs return code */
 
     int in_fatfs;
 
@@ -10456,7 +10456,7 @@ int get_file_date_from_name(char *nombre,int *hora,int *minuto,int *segundo,int 
 {
 
     if (util_path_is_mmc_fatfs(nombre)) {
-        printf("get_file_date_from_name for %s using FatFS\n",nombre);
+        //printf("get_file_date_from_name for %s using FatFS\n",nombre);
         FRESULT fr;
         FILINFO fno;
 
@@ -16157,10 +16157,10 @@ int file_is_z88_basic(char *filename)
 
     int in_fatfs;
 
-    printf("file_is_z88_basic %s\n",filename);
+    //printf("file_is_z88_basic %s\n",filename);
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_flash_browser,&fil)<0) {
-        debug_printf(VERBOSE_ERR,"Unable to open file");
+        //debug_printf(VERBOSE_ERR,"Unable to open file");
         free(flash_file_memory);
         return 0;
     }
@@ -16181,10 +16181,10 @@ int file_is_z88_basic(char *filename)
         
         //leidos=fread(flash_file_memory,1,bytes_to_load,ptr_file_flash_browser);
 
-        if (leidos==0) {
-                debug_printf(VERBOSE_ERR,"Error reading file");
-                return 0;
-        }
+        //if (leidos==0) {
+        //        debug_printf(VERBOSE_ERR,"Error reading file");
+        //        return 0;
+        //}
 
 
         zvfs_fclose(in_fatfs,ptr_file_flash_browser,&fil);

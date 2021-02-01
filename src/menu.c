@@ -25667,6 +25667,8 @@ void menu_file_viewer_sped_show(char *file_read_memory,int longitud)
 void menu_file_viewer_read_text_file(char *title,char *file_name)
 {
 
+    //printf("inicio menu_file_viewer_read_text_file\n");
+
 	char file_read_memory[MAX_TEXTO_GENERIC_MESSAGE];
 
 
@@ -25683,7 +25685,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
     int in_fatfs;
     
-    
+    //printf("antes zvfs_fopen_read\n");
     
     if (zvfs_fopen_read(file_name,&in_fatfs,&ptr_file_name,&fil)<0) {
         debug_printf (VERBOSE_ERR,"Unable to open file");
@@ -25724,9 +25726,11 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 	int leidos;
 
+    //printf("antes zvfs_fread\n");
+
     leidos=zvfs_fread(in_fatfs,(z80_byte *)file_read_memory,MAX_TEXTO_GENERIC_MESSAGE,ptr_file_name,&fil);
 
-    printf("despues zvfs_fread\n");
+    //printf("despues zvfs_fread\n");
 /*
     if (in_fatfs) {
         UINT leidos_fatfs;
@@ -36736,7 +36740,7 @@ int menu_filesel_cambiar_unidad_o_volumen(void)
     menu_filesel_cambiar_unidad_common(directorio);
 
     if (directorio[0]) {
-        printf("Cambiando a directorio %s\n",directorio);
+        //printf("Cambiando a directorio %s\n",directorio);
 
         //Si es "local drive", es que estabamos en la imagen mmc y hay que ir a imagen local
         if (!strcasecmp(directorio,"local drive")) {
@@ -38072,7 +38076,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 							debug_printf (VERBOSE_DEBUG,"Changing to directory %s",directorio_a_cambiar);
 
-                            printf("cambiando a directorio %s desde filesel\n",directorio_a_cambiar);
+                            //printf("cambiando a directorio %s desde filesel\n",directorio_a_cambiar);
 
 							zvfs_chdir(directorio_a_cambiar);
 

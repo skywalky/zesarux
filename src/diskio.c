@@ -439,7 +439,7 @@ Asi el usuario puede jugar con cambios en la imagen fat, sin peligro, hasta que 
 */
 int diskio_sync(void)
 {
-    printf("Flushing changes to FatFS image %s\n",fatfs_disk_zero_path);
+    //printf("Flushing changes to FatFS image %s\n",fatfs_disk_zero_path);
 
 
 
