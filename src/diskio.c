@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 
 /* Definitions of physical drive number for each drive */
@@ -398,9 +399,36 @@ DRESULT disk_ioctl (
 
 DWORD get_fattime (void)
 {
-    //TODO
+    /*
+Return Value
+Currnet local time shall be returned as bit-fields packed into a DWORD value. The bit fields are as follows:
+bit31:25
+Year origin from the 1980 (0..127, e.g. 37 for 2017)
 
-    return 0;
+bit24:21
+Month (1..12)
+
+bit20:16
+Day of the month (1..31)
+
+bit15:11
+Hour (0..23)
+
+bit10:5
+Minute (0..59)
+
+bit4:0
+Second / 2 (0..29, e.g. 25 for 50)    
+    */
+
+    //fecha grabacion
+    time_t tiempo = time(NULL);
+    struct tm tm = *localtime(&tiempo);
+
+    //printf("now: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+
+    return (tm.tm_sec) | (tm.tm_min<<5) | (tm.tm_hour<<11) | (tm.tm_mday<<16) | ((tm.tm_mon+1)<<21) | ((tm.tm_year-80)<<25); 
 }
 
 //Flush cambios a disco

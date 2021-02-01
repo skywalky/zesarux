@@ -295,3 +295,20 @@ void zvfs_mkdir(char *directory)
     }
 
 }
+
+const char *zvfs_error_no_filesystem="No filesystem";
+const char *zvfs_error_unknown="Unknown error";
+
+const char *zvfs_get_strerror(FRESULT error)
+{
+    switch (error) {
+        case FR_NO_FILESYSTEM:
+            return zvfs_error_no_filesystem;
+        break;
+
+        default:
+            return zvfs_error_unknown;
+        break;
+    }
+
+}

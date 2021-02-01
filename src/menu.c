@@ -34701,35 +34701,35 @@ void file_utils_mount_mmc_image(char *fullpath)
     FRESULT resultado=f_mount(&FatFs_menu_mmc_mount, "", 1);
 
     if (resultado!=FR_OK) {
-        printf("Error montando imagen %s:  %d\n",fullpath,resultado);
+        debug_printf(VERBOSE_ERR,"Error %d mounting image %s: %s",resultado,fullpath,zvfs_get_strerror(resultado));
         return;
     }
 
     menu_mmc_image_montada=1;
 
-    printf("leyendo\n");
+    //printf("leyendo\n");
     //file_utils_mount_mmc_image_prueba_leer();
-    printf("borrando\n");
+    //printf("borrando\n");
     //file_utils_mount_mmc_image_prueba_borrar();
 
-    printf("\n\nEscribiendo\n");
+    //printf("\n\nEscribiendo\n");
     //file_utils_mount_mmc_image_prueba_escribir();
 
     //sleep(5);
-    printf("leyendo\n");
+    //printf("leyendo\n");
     //file_utils_mount_mmc_image_prueba_leer();
 
-    char buff[256];
+    //char buff[256];
 
     //FatFs gestiona 0:/ o equivalente /
     //Pero para nosotros identificamos 0:/ para diferenciar de sistema local de archivos
-    strcpy(buff, "0:/");
+    //strcpy(buff, "0:/");
 
 
-    printf("Dir %s\n",buff);
+    //printf("Dir %s\n",buff);
     //file_utils_prueba_dir(buff);
 
-    printf("Desmontar\n");
+    //printf("Desmontar\n");
 
     //Y desmontar
     //f_unmount("");
@@ -35227,7 +35227,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
         	//Ocultar utilidades
         	menu_filesel_show_utils.v=0;
-        	ret=menu_filesel("Enter dir & press ESC",filtros,nada);
+        	ret=menu_filesel("Set target dir & press ESC",filtros,nada);
         	//Volver a mostrar utilidades
         	menu_filesel_show_utils.v=1;
 
@@ -35301,7 +35301,7 @@ void file_utils_paste_clipboard(void)
 	}
 
 	char directorio_actual[PATH_MAX];
-    getcwd(directorio_actual,PATH_MAX);
+    zvfs_getcwd(directorio_actual,PATH_MAX);
 
 	char nombre_sin_dir[PATH_MAX];
 	char nombre_final[PATH_MAX];
@@ -38268,7 +38268,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
                                 //Sync mmc image
                                 if (tecla=='S' && menu_mmc_image_montada) {
-                                    menu_filesel_mmc_sync();
+                                    if (menu_confirm_yesno_texto("Sync changes","Sure?")) menu_filesel_mmc_sync();                              
                                 }	                                                                    
 
 								//Si no es directorio

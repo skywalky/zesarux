@@ -34,5 +34,6 @@ extern void zvfs_chdir(char *dir);
 extern void zvfs_rename(char *old,char *new);
 extern int zvfs_delete(char *filename);
 extern void zvfs_mkdir(char *directory);
+extern const char *zvfs_get_strerror(FRESULT error);
 
 #endif

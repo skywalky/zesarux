@@ -11598,14 +11598,31 @@ void util_truncate_file(char *filename)
 	debug_printf(VERBOSE_INFO,"Truncating file %s",filename);
 
 	FILE *ptr_destino;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+
+    if (zvfs_fopen_write(filename,&in_fatfs,&ptr_destino,&fil)<0) {
+        debug_printf (VERBOSE_ERR,"Error truncating file");
+        return;
+    }
+
+
+    /*
 	ptr_destino=fopen(filename,"wb");
 
   	if (ptr_destino==NULL) {
     		debug_printf (VERBOSE_ERR,"Error truncating file");
     		return;
     	}
+    */
 
-    	fclose(ptr_destino);
+   zvfs_fclose(in_fatfs,ptr_destino,&fil);
+    	//fclose(ptr_destino);
 
 }
 
@@ -12861,20 +12878,45 @@ void util_save_file(z80_byte *origin, long int tamanyo_origen, char *destination
 
 
         FILE *ptr_destination_file;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+    if (zvfs_fopen_write(destination_file,&in_fatfs,&ptr_destination_file,&fil)<0) {
+        debug_printf (VERBOSE_ERR,"Can not open %s",destination_file);
+        return;
+    }    
+
+    /*
         ptr_destination_file=fopen(destination_file,"wb");
 
                 if (!ptr_destination_file) {
                         debug_printf (VERBOSE_ERR,"Can not open %s",destination_file);
                         return;
         }
+    */
 
-        //Leer byte a byte... Si, es poco eficiente
+    zvfs_fwrite(in_fatfs,origin,tamanyo_origen,ptr_destination_file,&fil);
+
+    /*
+        //Escribir byte a byte... Si, es poco eficiente
         while (tamanyo_origen) {
-        	fwrite(origin,1,1,ptr_destination_file);
+
+            zvfs_fwrite(in_fatfs,origin,1,ptr_destination_file,&fil);
+
+        	//fwrite(origin,1,1,ptr_destination_file);
+
                 origin++;
         	tamanyo_origen--;
 	}
-        fclose(ptr_destination_file);
+    */
+
+   zvfs_fclose(in_fatfs,ptr_destination_file,&fil);
+        
+        //fclose(ptr_destination_file);
 
 }
 
@@ -19470,7 +19512,7 @@ porque desde el menu de Drives en file selector ya agrego la / final
     if (dir[0]=='/' || dir[0]=='\\' || util_path_is_windows_with_drive(dir)) ruta_es_relativa=0;
 
     //Si ruta es de mmc o ruta relativa
-    printf("ruta: [%s]ruta_es_mmc %d ruta_es_relativa %d\n",dir,ruta_es_mmc,ruta_es_relativa);
+    //printf("ruta: [%s]ruta_es_mmc %d ruta_es_relativa %d\n",dir,ruta_es_mmc,ruta_es_relativa);
 
     int usar_chdir_mmc=0;
 
