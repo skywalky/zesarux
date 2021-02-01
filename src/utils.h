@@ -943,4 +943,8 @@ extern int util_path_is_prefix_mmc_fatfs(char *dir);
 extern int util_path_is_windows_with_drive(char *dir);
 extern int util_path_is_mmc_fatfs(char *dir);
 
+#define MAX_COPY_FILES_TO_MMC 10
+extern int util_copy_files_to_mmc_addlist(char *source, char *destination);
+extern void util_copy_files_to_mmc_doit(void);
+
 #endif

@@ -1955,10 +1955,11 @@ printf (
 		"\n"
 
 
-		"--mmc-file f               Set mmc image file\n"
-		"--enable-mmc               Enable MMC emulation. Usually requires --mmc-file\n"
-		"--mmc-write-protection     Enable MMC write protection\n"
-		"--mmc-no-persistent-writes Disable MMC persistent writes\n"
+		"--mmc-file f                   Set mmc image file\n"
+		"--enable-mmc                   Enable MMC emulation. Usually requires --mmc-file\n"
+		"--mmc-write-protection         Enable MMC write protection\n"
+		"--mmc-no-persistent-writes     Disable MMC persistent writes\n"
+        "--add-file-to-mmc source dest  Add file from local filesystem to the mmc. Destination must not include 0:/ prefix\n"
 
 		"--enable-divmmc-ports      Enable DIVMMC emulation ports only, but not paging. Usually requires --enable-mmc\n"
 		"--enable-divmmc-paging     Enable DIVMMC paging only\n"
@@ -6443,6 +6444,20 @@ int parse_cmdline_options(void) {
 				command_line_mmc.v=1;
 			}
 
+            else if (!strcmp(argv[puntero_parametro],"--add-file-to-mmc")) {
+                siguiente_parametro_argumento();
+				char *source;
+                source=argv[puntero_parametro];
+
+                siguiente_parametro_argumento();
+				char *destination;
+                destination=argv[puntero_parametro];
+
+                if (util_copy_files_to_mmc_addlist(source,destination)) {
+                    exit(1);
+                }
+            }
+
 			else if (!strcmp(argv[puntero_parametro],"--mmc-write-protection")) {
 				mmc_write_protection.v=1;
 			}
@@ -8599,6 +8614,9 @@ init_randomize_noise_value();
 	if (command_line_chroma81.v) enable_chroma81();
 
 	//MMC
+    //Antes ver si hay que copiar archivos
+    util_copy_files_to_mmc_doit();
+
 	if (command_line_mmc.v) mmc_enable();
 
 	if (command_line_divmmc_ports.v) {

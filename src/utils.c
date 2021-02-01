@@ -19555,3 +19555,99 @@ int util_path_is_windows_with_drive(char *dir)
     return 0;
 
 }
+
+//Funciones para poder copiar en una imagen mmc una cantidad de X archivos, al iniciar el emulador
+
+//origenes
+char copy_files_to_mmc_source[MAX_COPY_FILES_TO_MMC][PATH_MAX];
+//destinos
+char copy_files_to_mmc_destination[MAX_COPY_FILES_TO_MMC][1024];
+//Cuantos se han indicado
+int copy_files_to_mmc_total=0;
+
+//Agregar un archivo a la lista
+//Retorna 0 si ok
+int util_copy_files_to_mmc_addlist(char *source, char *destination)
+{
+    if (copy_files_to_mmc_total==MAX_COPY_FILES_TO_MMC) {
+        debug_printf(VERBOSE_ERR,"Maximum files reached: (%d)",MAX_COPY_FILES_TO_MMC);
+        return 1;
+    }
+
+    //destino no debe incluir 0:/, lo agregaremos nosotros
+    if (util_path_is_prefix_mmc_fatfs(destination)) {
+        debug_printf(VERBOSE_ERR,"Destination must not include 0:/ prefix");
+        return 1;
+    }
+
+    strcpy(copy_files_to_mmc_source[copy_files_to_mmc_total],source);
+
+    strcpy(copy_files_to_mmc_destination[copy_files_to_mmc_total],destination);
+
+    copy_files_to_mmc_total++;
+
+    return 0;
+    
+}
+
+
+//Esto va fuera porque todas las operaciones lo usan. Lo uso en el copy inicial
+FATFS FatFs_util_copy_files_to_mmc;   /* Work area (filesystem object) for logical drive */
+
+//Copiarlos
+void util_copy_files_to_mmc_doit(void)
+{
+    if (!copy_files_to_mmc_total) return;
+
+    if (mmc_file_name[0]==0) {
+        debug_printf(VERBOSE_ERR,"No mmc file name set");
+        return;
+    }
+
+
+    strcpy(fatfs_disk_zero_path,mmc_file_name);
+
+
+
+    /* Gives a work area to the default drive */
+    FRESULT resultado=f_mount(&FatFs_util_copy_files_to_mmc, "", 1);
+
+    if (resultado!=FR_OK) {
+        debug_printf(VERBOSE_ERR,"Error %d mounting image %s: %s",resultado,mmc_file_name,zvfs_get_strerror(resultado));
+        return;
+    }
+
+    menu_mmc_image_montada=1;
+
+
+
+    //copiar
+    int i;
+
+    for (i=0;i<copy_files_to_mmc_total;i++) {
+
+        //meter prefijo 0:// en destino
+        char destination[1024];
+        sprintf(destination,"0://%s",copy_files_to_mmc_destination[i]);
+
+        printf("Copying file %s to %s\n",copy_files_to_mmc_source[i],destination);
+
+
+        util_copy_file(copy_files_to_mmc_source[i],destination);
+    }
+
+    diskio_sync();
+
+    //desmontar
+    //Decir que no montado y cambiar drive a local
+    menu_mmc_image_montada=0;
+    menu_current_drive_mmc_image.v=0;
+
+    resultado=f_mount(0, "", 0);
+
+    if (resultado!=FR_OK) {
+        debug_printf(VERBOSE_ERR,"Error desmontando imagen : %d\n",resultado);
+        return;
+    }   
+
+}

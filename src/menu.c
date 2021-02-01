@@ -20390,31 +20390,31 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
         if (!got_dotdot && strcmp(directorio_actual,"/") && strcmp(directorio_actual,"0:/") && strcmp(directorio_actual,"0://")) {
 
-        //TODO: hacer que pase misma funcion de filter
+            //TODO: hacer que pase misma funcion de filter
 
-        printf("Adding .. entry\n");
+            printf("Adding .. entry\n");
 
-        //Asignar memoria para ese fichero
-        memoria_archivos=malloc(sizeof(struct dirent));
+            //Asignar memoria para ese fichero
+            memoria_archivos=malloc(sizeof(struct dirent));
 
-        if (memoria_archivos==NULL) {
-            cpu_panic("Error allocating memory when reading directory");
-        }
+            if (memoria_archivos==NULL) {
+                cpu_panic("Error allocating memory when reading directory");
+            }
 
-        //Meter puntero
-        memoria_punteros[archivos]=memoria_archivos;
+            //Meter puntero
+            memoria_punteros[archivos]=memoria_archivos;
 
-        //Meter datos
-        strcpy(memoria_archivos->d_name,"..");
+            //Meter datos
+            strcpy(memoria_archivos->d_name,"..");
 
-        memoria_archivos->d_type=DT_DIR;
+            memoria_archivos->d_type=DT_DIR;
 
-        archivos++;     
+            archivos++;     
 
-        if (archivos>=MAX_ARCHIVOS_SCANDIR_MINGW) {
-            debug_printf(VERBOSE_ERR,"Error. Maximum files in directory reached: %d",MAX_ARCHIVOS_SCANDIR_MINGW);
-            return archivos;
-        }          
+            if (archivos>=MAX_ARCHIVOS_SCANDIR_MINGW) {
+                debug_printf(VERBOSE_ERR,"Error. Maximum files in directory reached: %d",MAX_ARCHIVOS_SCANDIR_MINGW);
+                return archivos;
+            }          
 
 
     }
@@ -34701,7 +34701,7 @@ void file_utils_umount_mmc_image(void)
     FRESULT resultado=f_mount(0, "", 0);
 
     if (resultado!=FR_OK) {
-        printf("Error desmontando imagen : %d\n",resultado);
+        debug_printf(VERBOSE_ERR,"Error desmontando imagen : %d\n",resultado);
         return;
     }    
 }
