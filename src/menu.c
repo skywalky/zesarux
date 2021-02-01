@@ -865,6 +865,8 @@ void menu_betadisk(MENU_ITEM_PARAMETERS);
 
 void menu_timexcart(MENU_ITEM_PARAMETERS);
 
+filesel_item *menu_get_filesel_item(int index);
+
 
 int menu_inicio_opcion_seleccionada=0;
 int machine_selection_opcion_seleccionada=0;
@@ -17435,7 +17437,7 @@ void menu_storage_trd_file(MENU_ITEM_PARAMETERS)
 void menu_storage_trd_browser(MENU_ITEM_PARAMETERS)
 {
 	//menu_file_trd_browser_show(trd_file_name,"TRD");
-	menu_file_viewer_read_file("TRD file browser",trd_file_name);
+	menu_file_viewer_read_file("TRD file viewer",trd_file_name);
 }
 
 
@@ -17486,10 +17488,10 @@ menu_tape_settings_trunc_name(trd_file_name,string_trd_file_shown,17);
 
 
 
-                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_browser,menu_storage_trd_emulation_cond,"TRD ~~Browser");
-                        menu_add_item_menu_shortcut(array_menu_betadisk,'b');
-                        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Browser");
-                        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Browser");
+                        menu_add_item_menu_format(array_menu_betadisk,MENU_OPCION_NORMAL,menu_storage_trd_browser,menu_storage_trd_emulation_cond,"TRD ~~Viewer");
+                        menu_add_item_menu_shortcut(array_menu_betadisk,'v');
+                        menu_add_item_menu_tooltip(array_menu_betadisk,"TRD Viewer");
+                        menu_add_item_menu_ayuda(array_menu_betadisk,"TRD Viewer");
 
 
 
@@ -21442,7 +21444,7 @@ Bytes   Content
 
 	texto_browser[indice_buffer]=0;
 	char titulo_ventana[32];
-	sprintf(titulo_ventana,"%s file browser",tipo_imagen);
+	sprintf(titulo_ventana,"%s file viewer",tipo_imagen);
 	//menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip(titulo_ventana , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
@@ -21603,7 +21605,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 
 	texto_browser[indice_buffer]=0;
 	char titulo_ventana[32];
-	sprintf(titulo_ventana,"%s file browser",tipo_imagen);
+	sprintf(titulo_ventana,"%s file viewer",tipo_imagen);
 	//menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip(titulo_ventana , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
@@ -25834,75 +25836,84 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 	//No mostrar caracteres especiales
 	menu_disable_special_chars.v=1;
 
-	//printf ("extension vacia: %d\n",util_compare_file_extension(file_name,"") );
-	//printf ("es z88 basic: %d\n",file_is_z88_basic(file_name));
+    if (menu_file_viewer_always_hex.v) {
+        menu_file_hexdump_browser_show(file_name);
+    }
 
-	//Algunos tipos conocidos
-	if (!util_compare_file_extension(file_name,"tap")) menu_tape_browser_show(file_name);
+    else {
 
-	else if (!util_compare_file_extension(file_name,"zx")) menu_file_zx_browser_show(file_name);
+        //printf ("extension vacia: %d\n",util_compare_file_extension(file_name,"") );
+        //printf ("es z88 basic: %d\n",file_is_z88_basic(file_name));
 
-	else if (!util_compare_file_extension(file_name,"sp")) menu_file_sp_browser_show(file_name);
+        //Algunos tipos conocidos
+        if (!util_compare_file_extension(file_name,"tap")) menu_tape_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"z80")) menu_file_z80_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"zx")) menu_file_zx_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"col")) menu_file_col_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"sp")) menu_file_sp_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"sna")) menu_file_sna_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"z80")) menu_file_z80_browser_show(file_name);
 
-    else if (!util_compare_file_extension(file_name,"snx")) menu_file_sna_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"col")) menu_file_col_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"spg")) menu_file_spg_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"sna")) menu_file_sna_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"bas")) menu_file_basic_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"snx")) menu_file_sna_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"b")) menu_file_basic_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"spg")) menu_file_spg_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"baszx80")) menu_file_basic_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"bas")) menu_file_basic_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"baszx81")) menu_file_basic_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"b")) menu_file_basic_browser_show(file_name);
 
-	//Aunque esa extension no la usa nadie pero es una manera de forzar que se pueda mostrar un archivo de tokens
-	//z88 en caso que la deteccion automatica (que se hace aqui mas abajo) falle
-	else if (!util_compare_file_extension(file_name,"basz88")) menu_file_basic_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"baszx80")) menu_file_basic_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"p")) menu_file_p_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"baszx81")) menu_file_basic_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"o")) menu_file_o_browser_show(file_name);
+        //Aunque esa extension no la usa nadie pero es una manera de forzar que se pueda mostrar un archivo de tokens
+        //z88 en caso que la deteccion automatica (que se hace aqui mas abajo) falle
+        else if (!util_compare_file_extension(file_name,"basz88")) menu_file_basic_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"mmc")) menu_file_mmc_browser_show(file_name,"MMC");
+        else if (!util_compare_file_extension(file_name,"p")) menu_file_p_browser_show(file_name);
 
-	//Suponemos que un mmcide (que sale de un hdf) es un mmc
-	else if (!util_compare_file_extension(file_name,"mmcide")) menu_file_mmc_browser_show(file_name,"MMC");
+        else if (!util_compare_file_extension(file_name,"o")) menu_file_o_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"ide")) menu_file_mmc_browser_show(file_name,"IDE");
+        else if (!util_compare_file_extension(file_name,"mmc")) menu_file_mmc_browser_show(file_name,"MMC");
 
-	else if (!util_compare_file_extension(file_name,"trd")) menu_file_trd_browser_show(file_name,"TRD");
+        //Suponemos que un mmcide (que sale de un hdf) es un mmc
+        else if (!util_compare_file_extension(file_name,"mmcide")) menu_file_mmc_browser_show(file_name,"MMC");
 
-	else if (!util_compare_file_extension(file_name,"dsk")) menu_file_dsk_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"ide")) menu_file_mmc_browser_show(file_name,"IDE");
 
-	else if (!util_compare_file_extension(file_name,"tzx")) menu_file_tzx_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"trd")) menu_file_trd_browser_show(file_name,"TRD");
 
-	else if (!util_compare_file_extension(file_name,"cas")) menu_file_cas_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"dsk")) menu_file_dsk_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"pzx")) menu_file_pzx_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"tzx")) menu_file_tzx_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"cdt")) menu_file_tzx_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"cas")) menu_file_cas_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"flash")) menu_file_flash_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"pzx")) menu_file_pzx_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"epr")) menu_z88_new_ptr_card_browser(file_name);
+        else if (!util_compare_file_extension(file_name,"cdt")) menu_file_tzx_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"eprom")) menu_z88_new_ptr_card_browser(file_name);
+        else if (!util_compare_file_extension(file_name,"flash")) menu_file_flash_browser_show(file_name);
 
-	else if (!util_compare_file_extension(file_name,"zsf")) menu_file_zsf_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"epr")) menu_z88_new_ptr_card_browser(file_name);
 
-	//Si archivo no tiene extension pero su contenido parece indicar que es z88 basic
-	else if (!util_compare_file_extension(file_name,"") && file_is_z88_basic(file_name)) menu_file_basic_browser_show(file_name);
+        else if (!util_compare_file_extension(file_name,"eprom")) menu_z88_new_ptr_card_browser(file_name);
+
+        else if (!util_compare_file_extension(file_name,"zsf")) menu_file_zsf_browser_show(file_name);
+
+        //Si archivo no tiene extension pero su contenido parece indicar que es z88 basic
+        else if (!util_compare_file_extension(file_name,"") && file_is_z88_basic(file_name)) menu_file_basic_browser_show(file_name);
 
 
-	//Por defecto, texto
-	else menu_file_viewer_read_text_file(title,file_name);
+        //Por defecto, texto
+        else menu_file_viewer_read_text_file(title,file_name);
+
+
+    }
 
 
 	//IMPORTANTE: siempre se debe salir de la funcion desde aqui abajo, para que se vuelva a mostrar los caracteres especiales
@@ -28043,6 +28054,11 @@ void menu_setting_filesel_previews(MENU_ITEM_PARAMETERS)
 	menu_filesel_show_previews.v ^=1;
 }
 
+void menu_setting_fileviewer_hex(MENU_ITEM_PARAMETERS)
+{
+    menu_file_viewer_always_hex.v ^=1;
+}
+
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_interface_settings;
@@ -28159,6 +28175,11 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Hide directories from file selector menus. "
 								"Useful on demo environments and you don't want the user to be able to navigate the filesystem");
 
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_fileviewer_hex,NULL,"[%c] ~~Hexadecimal file viewer",
+			(menu_file_viewer_always_hex.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"File viewer always shows file contents in hexadecimal+ascii");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"File viewer always shows file contents in hexadecimal+ascii");
+	
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_previews,NULL,"[%c] Show file previews",
 			(menu_filesel_show_previews.v ? 'X' : ' ') );
@@ -31553,6 +31574,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"- Use f and n to find text\n"
 			"- Use c to copy to ZEsarUX clipboard\n"
 			"\n"
+            "On input fields, press cursor down to delete all input text.\n"
 			"On numeric input fields, numbers can be written on decimal, hexadecimal (with suffix H), binary (with suffix %) or as a character (with quotes '' or \"\")\n\n"
 			"Symbols on menu must be written according to the Spectrum keyboard mapping, so for example, to write the symbol minus (<), you have to press "
 			"ctrl(symbol shift)+r. You should use ctrl/alt (no need to Spectrum extended mode) to write any of the following: ~|\\{}[], located on letters asdfgyu\n\n"
@@ -34184,7 +34206,20 @@ void zxvision_menu_filesel_print_filters(zxvision_window *ventana,char *filtros[
 	zxvision_print_string(ventana,1,posicion_filtros,tinta,papel,0,buffer_filtros);
 }
 
+//Dice el archivo seleccionado por el cursor
+filesel_item *menu_get_filesel_item_cursor(void)
+{
 
+
+    filesel_item *item_seleccionado;
+
+
+    item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
+
+    return item_seleccionado;
+
+
+}
 
 void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 {
@@ -34221,20 +34256,45 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 
         if (menu_filesel_show_utils.v) {
 
+                //Obtener tipo de archivo al que apunta para saber si es archivo o directorio, para ocultar textos leyenda
+                int es_directorio=0;
 
-                                                                //    01234  567890  12345  678901  2345678901
-                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,"~^View ~^Trunc D~^El M~^Kdr C~^Onv ~^Inf");
+                filesel_item *item_seleccionado;
+
+                item_seleccionado=menu_get_filesel_item_cursor();
+                if (item_seleccionado!=NULL) {
+
+                    int tipo_archivo_seleccionado=get_file_type(item_seleccionado->d_name);
+
+                    //Si es directorio
+                    if (tipo_archivo_seleccionado==2) es_directorio=1;
+                }
 
                 char buffer_temporal[100];
+
+
+                //                         01234  567890  12345  678901  2345678901
+                sprintf(buffer_temporal,"%sM~^Kdr ~^Inf",
+                        (es_directorio ? "" : "~^View ~^Trunc C~^Onv ~^Filemem ")
+                );
+
+                                                                
+                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,buffer_temporal);
+
+
                 char buffer_sync[32];
                 if (menu_mmc_image_montada) {
-                    strcpy(buffer_sync," ~^Umount ~^Sync");
+                    strcpy(buffer_sync,"~^Umount ~^Sync ");
                 }
                 else {
-                    strcpy(buffer_sync," mo~^Unt");
+                    if (es_directorio) buffer_sync[0]=0;
+                    else strcpy(buffer_sync,"mo~^Unt ");
                 }
 
-                sprintf(buffer_temporal,"~^Copy ~^Move Re~^N ~^Paste ~^Filemem%s",buffer_sync);
+                sprintf(buffer_temporal,"%sD~^El Re~^N ~^Paste %s",
+                    //Copy, move, de momento  solo para archivos
+                    (es_directorio ? "" : "~^Copy ~^Move "),
+                    buffer_sync);
                 zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_temporal);
 
         }
@@ -36577,7 +36637,11 @@ void menu_filesel_mmc_sync(void)
                         //Al parecer despues de ventana de zxvision_simple_progress_window no se espera a liberar tecla
                         menu_espera_no_tecla();
                         menu_warn_message("Syncing has not ended yet");
-                }
+        }
+
+        else {
+            menu_generic_message_splash("Sync","OK. All changes have been written to the disk image");
+        }
 
 
 }
@@ -36591,7 +36655,7 @@ void menu_filesel_mmc_sync(void)
     //No se si hay alguien que compile sin soporte de threads, pero al menos, avisarle y mostrarle un ok cuando finalice
     menu_warn_message("Syncing disk image may take a while. Press Enter and wait please");
     diskio_sync();
-    menu_generic_message_splash("Sync","OK. Disk image synchronized");
+    menu_generic_message_splash("Sync","OK. All changes have been written to the disk image");
 
 }
 
@@ -37768,7 +37832,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 				debug_printf (VERBOSE_DEBUG,"Read directory. menu_speech_tecla_pulsada=%d",menu_speech_tecla_pulsada);
 				ventana->visible_cursor=1;
 				zxvision_menu_print_dir(filesel_archivo_seleccionado,ventana);
+
+                //Queremos que actualice la leyenda sobretodo en el caso de fileutils, para mostrar/ocultar
+                //opciones segun si seleccionado archivo o directorio
+                zxvision_menu_filesel_print_legend(ventana);
 				zxvision_draw_window_contents(ventana);
+
 				//Para no releer todas las entradas
 				menu_speech_tecla_pulsada=1;
 
@@ -38130,7 +38199,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";
-							item_seleccionado=menu_get_filesel_item(filesel_archivo_seleccionado+filesel_linea_seleccionada);
+							item_seleccionado=menu_get_filesel_item_cursor();
 							if (item_seleccionado!=NULL) {
 
                                 int tipo_archivo_seleccionado=get_file_type(item_seleccionado->d_name);
@@ -38146,6 +38215,32 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 								if (tecla=='I') file_utils_info_file(file_utils_file_selected);
 
 
+                                //Rename para cualquier tipo de archivo
+                                if (tecla=='N') {
+                                    file_utils_move_rename_copy_file(file_utils_file_selected,1);
+                                    releer_directorio=1;
+                                }
+
+                                //Delete para cualquier tipo de archivo
+                                if (tecla=='E') {
+                                    if (menu_confirm_yesno_texto("Delete","Sure?")) {
+                                        //zvfs_delete(file_utils_file_selected);
+
+
+                                        int resultado=zvfs_delete(file_utils_file_selected);
+                                        if (resultado) {
+                                            menu_error_message("Error deleting item");
+                                        }
+                                        else {
+                                            menu_generic_message_splash("Delete","OK. Item deleted");
+                                        }
+        
+
+                                        //unlink(file_utils_file_selected);
+                                        releer_directorio=1;
+                                    }
+
+                                }                                
 
                                 //Umount da igual el tipo de archivo seleccionado
                                 if (tecla=='U') {
@@ -38190,15 +38285,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 										if (menu_confirm_yesno_texto("Truncate","Sure?")) util_truncate_file(file_utils_file_selected);
 									}
 
-									//Delete
-									if (tecla=='E') {
-										if (menu_confirm_yesno_texto("Delete","Sure?")) {
-											zvfs_delete(file_utils_file_selected);
-											//unlink(file_utils_file_selected);
-											releer_directorio=1;
-										}
 
-									}
+
 									//Move
 									if (tecla=='M') {
 										file_utils_move_rename_copy_file(file_utils_file_selected,0);
@@ -38211,11 +38299,6 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 									}
 
-									//Rename
-									if (tecla=='N') {
-										file_utils_move_rename_copy_file(file_utils_file_selected,1);
-										releer_directorio=1;
-									}
 
 									//Filemem
 									if (tecla=='F') {

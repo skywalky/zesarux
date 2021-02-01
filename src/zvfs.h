@@ -32,7 +32,7 @@ extern int zvfs_fwrite(int in_fatfs,z80_byte *puntero_memoria,int bytes_to_save,
 extern void zvfs_getcwd(char *dir,int len);
 extern void zvfs_chdir(char *dir);
 extern void zvfs_rename(char *old,char *new);
-extern void zvfs_delete(char *filename);
+extern int zvfs_delete(char *filename);
 extern void zvfs_mkdir(char *directory);
 
 #endif

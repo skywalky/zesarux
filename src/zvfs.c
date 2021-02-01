@@ -259,13 +259,17 @@ void zvfs_rename(char *old,char *new)
     }    
 }
 
-void zvfs_delete(char *filename)
+int zvfs_delete(char *filename)
 {
     if (util_path_is_mmc_fatfs(filename)) {
-        f_unlink(filename);
+        FRESULT resultado=f_unlink(filename);
+        if (resultado!=FR_OK) return 1;
+        else return 0;
     }
     else {
-	    unlink(filename);
+	    int resultado=unlink(filename);
+        if (resultado!=0) return 1;
+        else return 0;
     }
 }
 

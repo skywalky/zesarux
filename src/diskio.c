@@ -432,7 +432,7 @@ int diskio_sync(void)
         //Y ya se puede cerrar
         fclose(ptr_fatfs_disk_zero_file);
 
-        //sleep(10);
+        //sleep(3);
 
     diskio_syncing_flag=0;        
 

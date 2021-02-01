@@ -24,6 +24,7 @@ Improved menu interface:
 -Added action to minimize all windows
 -Added setting to ignore mouse click to open the menu
 -Added more utf-8 characters support
+-Added setting to show files in hexa+ascii using file viewer
 
 Improved ZX-Uno emulation:
 -Updated BIOS, Flash and ESXDOS (ESXDOS now runs 0.8.6 final version)

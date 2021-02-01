@@ -3849,6 +3849,8 @@ int util_write_configfile(void)
 
   if (menu_filesel_hide_dirs.v)         ADD_STRING_CONFIG,"--hide-dirs");
 
+  if (menu_file_viewer_always_hex.v)            ADD_STRING_CONFIG,"--fileviewer-hex");
+				
   if (menu_filesel_show_previews.v==0)         ADD_STRING_CONFIG,"--no-file-previews");
 			
   if (menu_desactivado.v)                     ADD_STRING_CONFIG,"--disablemenu");
@@ -12890,7 +12892,7 @@ void util_copy_file(char *source_file, char *destination_file)
 
     int in_fatfs_source;
 
-    printf("copiar %s a %s. tamanyo=%d\n",source_file,destination_file,tamanyo_origen);
+    printf("copiar %s a %s. tamanyo=%ld\n",source_file,destination_file,tamanyo_origen);
 
 
     if (zvfs_fopen_read(source_file,&in_fatfs_source,&ptr_source_file,&fil_source)<0) {

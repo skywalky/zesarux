@@ -269,3 +269,7 @@ z80_bit menu_reopen_background_windows_on_start={0};
 
 //Si se selecciona maquina con listado ordenado por nombre, en vez de por fabricante
 z80_bit setting_machine_selection_by_name={0};
+
+
+//Si el visor de archivos siempre muestra en hexadecimal
+z80_bit menu_file_viewer_always_hex={0};
