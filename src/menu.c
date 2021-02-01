@@ -34694,7 +34694,7 @@ z80_bit menu_current_drive_mmc_image={0};
 
 void file_utils_umount_mmc_image(void)
 {
-    printf("Unmounting image\n");
+    //printf("Unmounting image\n");
 
     //Decir que no montado y cambiar drive a local
     menu_mmc_image_montada=0;
@@ -37263,6 +37263,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//de momento nada mas
 	debug_printf(VERBOSE_DEBUG,"Preview File: %s",filesel_nombre_archivo_seleccionado);
+    //printf("Preview File: %s\n",filesel_nombre_archivo_seleccionado);
 
 	if (!strcmp(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado)) {
 		debug_printf(VERBOSE_DEBUG,"File is the same as before. Do not do anything");
@@ -38268,7 +38269,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 //Umount da igual el tipo de archivo seleccionado
                                 if (tecla=='U') {
                                     if (menu_mmc_image_montada) {
-                                        printf("Umount\n");
+                                        //printf("Umount\n");
                                         file_utils_umount_mmc_image();
 
                                         menu_generic_message_splash("Umount Image","Ok image has been unmounted");
