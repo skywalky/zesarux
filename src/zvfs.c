@@ -199,18 +199,18 @@ Cualquier otra cosa, chdir sin alterar unidad mmc activa o no
 
     if (usar_chdir_mmc) {
         menu_current_drive_mmc_image.v=1;
-        printf("ruta de zvfs_chdir es de mmc\n");
-        printf("llamando f_chdir desde zvfs_chdir a %s\n",dir);
+        //printf("ruta de zvfs_chdir es de mmc\n");
+        //printf("llamando f_chdir desde zvfs_chdir a %s\n",dir);
         //menu_mmc_chdir(dir);
         f_chdir(dir);
 
         char buffer[1024];
         f_getcwd(buffer,1023);
 
-        printf("ruta despues de f_chdir: %s\n",buffer);
+        //printf("ruta despues de f_chdir: %s\n",buffer);
 
         zvfs_getcwd(buffer,1023);
-        printf("ruta despues de zvfs_getcwd: %s\n",buffer);
+        //printf("ruta despues de zvfs_getcwd: %s\n",buffer);
 
     }
 

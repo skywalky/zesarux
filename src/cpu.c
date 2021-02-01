@@ -1961,7 +1961,8 @@ printf (
 		"--mmc-no-persistent-writes     Disable MMC persistent writes\n");
 
         printf(
-            "--add-file-to-mmc source dest  Add file from local filesystem to the mmc, before starting ZEsarUX. "
+            "--add-file-to-mmc source dest  Add file from local filesystem to the mmc, before starting ZEsarUX. That copies the files in "
+            "the mmc image and syncs the changes. "
             "You can use that setting up to %d times. Destination must not include 0:/ prefix\n",
             MAX_COPY_FILES_TO_MMC);
         

@@ -20291,7 +20291,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
         //int indice_puntero;
 
-        printf("leyendo directorio %s desde menu_filesel_readdir_mmc_image\n",directorio);
+        //printf("leyendo directorio %s desde menu_filesel_readdir_mmc_image\n",directorio);
 
        struct dirent dp;
 
@@ -20303,7 +20303,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
         res = f_opendir(&dir, directorio);                       /* Open the directory */
         if (res != FR_OK) {       
-           printf("Error abriendo directorio de mmc: %s\n",directorio);
+           //printf("Error abriendo directorio de mmc: %s\n",directorio);
            debug_printf(VERBOSE_ERR,"Can't open directory %s", directorio);
            return -1;
        }
@@ -20315,23 +20315,23 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
         while (!salir) {
 
-                    printf("antes readdir\n");
+                    //printf("antes readdir\n");
                    res = f_readdir(&dir, &fno);                   /* Read a directory item */
-                   printf("despues readdir\n");
+                   //printf("despues readdir\n");
 
                     if (res != FR_OK || fno.fname[0] == 0) {
                         //printf("temp: %s\n",fno.fname);
-                        printf("Fin leyendo directorio. res=%d\n",res);
+                        //printf("Fin leyendo directorio. res=%d\n",res);
                         //break;  /* Break on error or end of dir */
                         salir=1;
                     }
 
                 else {
-                    //debug_printf(VERBOSE_DEBUG,"menu_filesel_readdir_mmc_image: file: %s",fno.fname);
-                    printf("menu_filesel_readdir_mmc_image: file: %s\n",fno.fname);
+                    debug_printf(VERBOSE_DEBUG,"menu_filesel_readdir_mmc_image: file: %s",fno.fname);
+                    //printf("menu_filesel_readdir_mmc_image: file: %s\n",fno.fname);
 
                     if (!strcmp(fno.fname,"..")) {
-                        printf("Hay ..\n");
+                        //printf("Hay ..\n");
                         got_dotdot=1;
                     }
 
@@ -20386,13 +20386,13 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
         //TODO: Si directorio es "."
         char directorio_actual[1024];
         zvfs_getcwd(directorio_actual,1023);
-        printf("ruta actual despues de leer directorio: %s\n",directorio_actual);
+        //printf("ruta actual despues de leer directorio: %s\n",directorio_actual);
 
         if (!got_dotdot && strcmp(directorio_actual,"/") && strcmp(directorio_actual,"0:/") && strcmp(directorio_actual,"0://")) {
 
             //TODO: hacer que pase misma funcion de filter
 
-            printf("Adding .. entry\n");
+            //printf("Adding .. entry\n");
 
             //Asignar memoria para ese fichero
             memoria_archivos=malloc(sizeof(struct dirent));
@@ -22750,7 +22750,7 @@ void menu_file_basic_browser_show(char *filename)
 
     int in_fatfs;    
 
-    printf("menu_file_basic_browser_show %s\n",filename);    
+    //printf("menu_file_basic_browser_show %s\n",filename);    
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_bas_browser,&fil)<0) {
         debug_printf(VERBOSE_ERR,"Unable to open file");
@@ -22766,7 +22766,7 @@ void menu_file_basic_browser_show(char *filename)
     */
 
 	int tamanyo=get_file_size(filename);
-    printf("tamanyo: %d\n",tamanyo);
+    //printf("tamanyo: %d\n",tamanyo);
 
 
 	z80_byte *memoria;
@@ -22805,7 +22805,7 @@ void menu_file_basic_browser_show(char *filename)
 
 	int tipo=0; //Asumimos spectrum
 
-    printf("antes de ver extension\n");
+    //printf("antes de ver extension\n");
 
 	//Si es basic zx81
 	if (!util_compare_file_extension(filename,"baszx81")) {
@@ -24059,7 +24059,7 @@ void menu_tape_browser_show(char *filename)
 
     int in_fatfs;
 
-    printf("menu_tape_browser_show %s\n",filename);
+    //printf("menu_tape_browser_show %s\n",filename);
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
         debug_printf(VERBOSE_ERR,"Unable to open tape for browsing");
@@ -25741,7 +25741,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 
 	debug_printf (VERBOSE_INFO,"Read %d bytes of file: %s",leidos,file_name);
-    printf ("Read %d bytes of file: %s\n",leidos,file_name);
+    //printf ("Read %d bytes of file: %s\n",leidos,file_name);
 	int avisolimite=0;
 
 	if (leidos==MAX_TEXTO_GENERIC_MESSAGE) {
@@ -25762,7 +25762,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
     }
     */
 
-   printf("antes deteccion 17\n");
+   //printf("antes deteccion 17\n");
 	//Si longitud de bloque es 17, y byte inicial es 0,1,2 o 3, visor de cabecera de bloque de spectrum
 	z80_byte byte_inicial=file_read_memory[0];
 	if (leidos==17 && byte_inicial<4) {
@@ -25785,7 +25785,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 		return;
 	}
 
-    printf("despues deteccion 17\n");
+    //printf("despues deteccion 17\n");
 
 
 	//Ahora deducir si el archivo cargado es texto o binario.
@@ -34708,7 +34708,7 @@ void file_utils_umount_mmc_image(void)
 
 void file_utils_mount_mmc_image(char *fullpath)
 {
-    printf("Mounting %s\n",fullpath);
+    debug_printf(VERBOSE_INFO,"Mounting %s",fullpath);
 
     strcpy(fatfs_disk_zero_path,fullpath);
 
@@ -37371,7 +37371,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		}
 
 		//Ver si hay archivo que indica pantalla
-        printf("archivo_info_pantalla %s\n",archivo_info_pantalla);
+        //printf("archivo_info_pantalla %s\n",archivo_info_pantalla);
 
 		if (si_existe_archivo(archivo_info_pantalla)) {
 			//printf("HAY PANTALLA--------------- \n");
@@ -38280,7 +38280,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                     else  {
                                         //Si no es directorio
                                         if (tipo_archivo_seleccionado!=2) {
-                                            printf("Mount\n");
+                                            //printf("Mount\n");
                                             file_utils_mount_mmc_image(file_utils_file_selected);
                                         }
                                     }
