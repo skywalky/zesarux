@@ -119,7 +119,7 @@ int zvfs_fopen_write(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil
         fr = f_open(fil, file_name, FA_CREATE_ALWAYS | FA_WRITE );
         if (fr!=FR_OK)
         {
-            debug_printf (VERBOSE_ERR,"Unable to open file for writing",file_name);
+            //debug_printf (VERBOSE_ERR,"Unable to open file for writing",file_name);
             return -1;
         }     
 
@@ -134,7 +134,7 @@ int zvfs_fopen_write(char *file_name,int *in_fatfs,FILE **ptr_file_name,FIL *fil
 
         if (!(*ptr_file_name))
         {
-            debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
+            //debug_printf (VERBOSE_ERR,"Unable to open %s file",file_name);
             return -1;
         }
     }

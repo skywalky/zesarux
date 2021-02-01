@@ -12938,6 +12938,7 @@ void util_copy_file(char *source_file, char *destination_file)
 
 
     if (zvfs_fopen_read(source_file,&in_fatfs_source,&ptr_source_file,&fil_source)<0) {
+        debug_printf (VERBOSE_ERR,"Can not open %s",source_file);
         return;
     }
 
@@ -12966,6 +12967,7 @@ void util_copy_file(char *source_file, char *destination_file)
 
 
     if (zvfs_fopen_write(destination_file,&in_fatfs_destination,&ptr_destination_file,&fil_destination)<0) {
+        debug_printf (VERBOSE_ERR,"Can not open %s",destination_file);
         return;
     }
 
@@ -13670,6 +13672,7 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
+        debug_printf(VERBOSE_ERR,"Unable to open tape %s for extracting tap",filename);
         return 1;
     }
 
@@ -13703,6 +13706,7 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
 
                 if (zvfs_fopen_write(tzxfile,&in_fatfs_tzxfile,&ptr_tzxfile,&fil_tzxfile)<0) {
+                    debug_printf (VERBOSE_ERR,"Can not open %s",tzxfile);
                     return 1;
                 }
 
@@ -13912,6 +13916,7 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
+        debug_printf(VERBOSE_ERR,"Unable to open tape for extracting tzx");
         return 1;
     }
 
@@ -13947,6 +13952,7 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 
 
                 if (zvfs_fopen_write(tapfile,&in_fatfs_tapfile,&ptr_tapfile,&fil_tapfile)<0) {
+                    debug_printf (VERBOSE_ERR,"Can not open %s",tapfile);
                     return 1;
                 }
 
@@ -16154,6 +16160,7 @@ int file_is_z88_basic(char *filename)
     printf("file_is_z88_basic %s\n",filename);
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_flash_browser,&fil)<0) {
+        debug_printf(VERBOSE_ERR,"Unable to open file");
         free(flash_file_memory);
         return 0;
     }

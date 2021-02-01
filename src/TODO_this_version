@@ -199,14 +199,8 @@ Esto podria provocar que otros sitios que usan ZVFS (por ejemplo esxdos handler)
 desde filesel era la mmc
 Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El resto, rutinas de sistema? -> esxdos, zxpand etc ya NO usan ZVFS
 
--zvfs trunc, conv y demas visores. extract. file previews. viewer bas para archivos con cabecera plus3dos
+-zvfs conv y demas visores. 
 
--zvfs_fopen_read: las que retornaban error con verbose_**, reactivar esos errores pues zvfs_fopen_read ya no genera verbose_printf
-
--scandir para zvfs que funcione el filtro
-
--zvfs: copiando un .tap de la mmc al escritorio, en windows, la copia mal, contenido alterado y le agrega longitud
-Parece que falla tambien de local a local
 
 -punteros en diskio, de read y write, soportaran imagenes de mas de 2 gB en sistemas 32 bits?
 
@@ -214,7 +208,7 @@ Parece que falla tambien de local a local
 
 -Si ZX desktops activado. Pero cargo un driver de texto que pasará? Y sale habilitado? Y como se guardará la opción?
 
--Copy recursivo 
+-Copy recursivo. Tomar como idea el ls recursivo de file_utils_prueba_dir
 
 -Una opcion de command line que meta ficheros en la mmc molaria
 
@@ -222,5 +216,5 @@ o sea --mmcfile test.mmc —putfile prueba.tmp —putfile pepe.bin
 
 Con paths de Origen y destino
 
--Fecha de carpetas y archivos creados en fatfs. sale bien? si no, quiza falte alguna funcion de fatfs
+
 

@@ -20279,7 +20279,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
         printf("leyendo directorio %s desde menu_filesel_readdir_mmc_image\n",directorio);
 
-       struct dirent *dp;
+       struct dirent dp;
 
 
         FRESULT res;
@@ -20322,8 +20322,17 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
                     }
 
                     //TODO: filtro que entienda nuestro archivo de FatFS
-                    //if (filter(dp)) {
-                    if (1) {
+                    strcpy(dp.d_name,fno.fname);
+
+                    if (fno.fattrib & AM_DIR) {
+                        dp.d_type=DT_DIR;
+                    }
+                    else {
+                        dp.d_type=DT_REG;
+                    }                    
+
+                    if (filter(&dp)) {
+                    //if (1) {
 
                             //Asignar memoria para ese fichero
                             memoria_archivos=malloc(sizeof(struct dirent));
@@ -21037,6 +21046,7 @@ void menu_file_p_browser_show(char *filename)
     printf("menu_file_p_browser_show %s\n",filename);
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_p_browser,&fil)<0) {
+        debug_printf(VERBOSE_ERR,"Unable to open file");
         return;
     }
 
@@ -21835,6 +21845,7 @@ void menu_file_dsk_browser_show(char *filename)
 
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_dsk_browser,&fil)<0) {
+        debug_printf(VERBOSE_ERR,"Unable to open file");
         free(dsk_file_memory);
         return;
     }
@@ -22512,6 +22523,7 @@ void menu_file_hexdump_browser_show(char *filename)
     
     
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_hexdump_browser,&fil)<0) {
+        debug_printf (VERBOSE_ERR,"Unable to open file");
         free(hexdump_file_memory);
         return;
     }
@@ -22733,6 +22745,7 @@ void menu_file_basic_browser_show(char *filename)
     printf("menu_file_basic_browser_show %s\n",filename);    
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_bas_browser,&fil)<0) {
+        debug_printf(VERBOSE_ERR,"Unable to open file");
         return;
     }
     /*
@@ -24041,6 +24054,7 @@ void menu_tape_browser_show(char *filename)
     printf("menu_tape_browser_show %s\n",filename);
 
     if (zvfs_fopen_read(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
+        debug_printf(VERBOSE_ERR,"Unable to open tape for browsing");
         return;
     }
 
@@ -25651,7 +25665,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
 
 	debug_printf (VERBOSE_INFO,"Loading %s File",file_name);
 
-    printf("cargando txt file: %s\n",file_name);
+    //printf("cargando txt file: %s\n",file_name);
 
 	FILE *ptr_file_name;
 
@@ -25664,10 +25678,11 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
     
     
     if (zvfs_fopen_read(file_name,&in_fatfs,&ptr_file_name,&fil)<0) {
+        debug_printf (VERBOSE_ERR,"Unable to open file");
         return;
     }
 
-    printf("despues zvfs_fopen_read\n");
+    //printf("despues zvfs_fopen_read\n");
     
     /*
     =util_path_is_prefix_mmc_fatfs(file_name);
@@ -35144,6 +35159,7 @@ void file_utils_file_mem_load(char *archivo)
 
 
     if (zvfs_fopen_read(archivo,&in_fatfs,&ptr_load,&fil)<0) {
+        debug_printf (VERBOSE_ERR,"Unable to open file %s",archivo);
         return;
     }
 
