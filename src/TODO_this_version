@@ -201,6 +201,9 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -al hacer extract desde archivo en mmc, y volver a mmc, luego al ir a local drive nos ubica en la carpeta tmp
 
+-quiza si se mueve un archivo y origen y destino carpeta son la misma, no permitir
+Dado que el move al final lo que hace es copiar y borrar, borraria el archivo al final
+
 
 -punteros en diskio, de read y write, soportaran imagenes de mas de 2 gB en sistemas 32 bits?
 
