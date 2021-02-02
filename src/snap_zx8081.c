@@ -855,93 +855,93 @@ void new_load_zx80_set_common_registers(void)
 void new_load_zx81_set_common_registers(z80_int ramtopvalue)
 {
 
-        //32767 para 16kb ram -> 7fff
+    //32767 para 16kb ram -> 7fff
 
-        z80_int constante_ramtop_regsp=ramtopvalue;
+    z80_int constante_ramtop_regsp=ramtopvalue;
 
-        debug_printf (VERBOSE_DEBUG,"ramtop zx8081: %d (0x%x)",constante_ramtop_regsp+1,constante_ramtop_regsp+1);
+    debug_printf (VERBOSE_DEBUG,"ramtop zx8081: %d (0x%x)",constante_ramtop_regsp+1,constante_ramtop_regsp+1);
 
-        constante_ramtop_regsp -=3;
-        debug_printf (VERBOSE_DEBUG,"Setting reg_sp to: %d (0x%x).",constante_ramtop_regsp,constante_ramtop_regsp);
-
-
-        z80_byte constante_ramtop_regsp_l=value_16_to_8l(constante_ramtop_regsp);
-        z80_byte constante_ramtop_regsp_h=value_16_to_8h(constante_ramtop_regsp);
+    constante_ramtop_regsp -=3;
+    debug_printf (VERBOSE_DEBUG,"Setting reg_sp to: %d (0x%x).",constante_ramtop_regsp,constante_ramtop_regsp);
 
 
-        z80_int constante_ramtop_masuno=ramtopvalue+1;
-        debug_printf (VERBOSE_DEBUG,"Setting stack relative to RAMTOP: %d (0x%x).",constante_ramtop_masuno,constante_ramtop_masuno);
+    z80_byte constante_ramtop_regsp_l=value_16_to_8l(constante_ramtop_regsp);
+    z80_byte constante_ramtop_regsp_h=value_16_to_8h(constante_ramtop_regsp);
 
-        z80_byte constante_ramtop_masuno_l=value_16_to_8l(constante_ramtop_masuno);
-        z80_byte constante_ramtop_masuno_h=value_16_to_8h(constante_ramtop_masuno);
+
+    z80_int constante_ramtop_masuno=ramtopvalue+1;
+    debug_printf (VERBOSE_DEBUG,"Setting stack relative to RAMTOP: %d (0x%x).",constante_ramtop_masuno,constante_ramtop_masuno);
+
+    z80_byte constante_ramtop_masuno_l=value_16_to_8l(constante_ramtop_masuno);
+    z80_byte constante_ramtop_masuno_h=value_16_to_8h(constante_ramtop_masuno);
         
 
 
 
 
-//Este 7FFC parece indicar 32767 o cerca...
-//  static unsigned char bit1[9]={0xFF,0x80,0xFC,0x7F,0x00,0x80,0x00,0xFE,0xFF};
-  unsigned char bit1[9]={0xFF,0x80,constante_ramtop_regsp_l,constante_ramtop_regsp_h,constante_ramtop_masuno_l,constante_ramtop_masuno_h,0x00,0xFE,0xFF};
+    //Este 7FFC parece indicar 32767 o cerca...
+    //  static unsigned char bit1[9]={0xFF,0x80,0xFC,0x7F,0x00,0x80,0x00,0xFE,0xFF};
+    unsigned char bit1[9]={0xFF,0x80,constante_ramtop_regsp_l,constante_ramtop_regsp_h,constante_ramtop_masuno_l,constante_ramtop_masuno_h,0x00,0xFE,0xFF};
 
-  static unsigned char bit2[4]={0x76,0x06,0x00,0x3e};
-
-
-                memcpy(memoria_spectrum+0x4000,bit1,9);
-
-                //Aqui tambien hay referencias a 7FFC
-                //memcpy(memoria_spectrum+0x7ffc,bit2,4);
-                memcpy(memoria_spectrum+constante_ramtop_regsp,bit2,4);
+    static unsigned char bit2[4]={0x76,0x06,0x00,0x3e};
 
 
-        reg_a=0x0B;
+    memcpy(memoria_spectrum+0x4000,bit1,9);
 
-        z80_byte flags=0x85;
+    //Aqui tambien hay referencias a 7FFC
+    //memcpy(memoria_spectrum+0x7ffc,bit2,4);
+    memcpy(memoria_spectrum+constante_ramtop_regsp,bit2,4);
+
+
+    reg_a=0x0B;
+
+    z80_byte flags=0x85;
 	store_flags(flags);
 
 
-        reg_b=0x00; reg_c=0xFF;
-        reg_d=0x43; reg_e=0x99; reg_h=0xC3; reg_l=0x99;
-        reg_a_shadow=0xE2;
+    reg_b=0x00; reg_c=0xFF;
+    reg_d=0x43; reg_e=0x99; reg_h=0xC3; reg_l=0x99;
+    reg_a_shadow=0xE2;
 
 
-        z80_byte flags_shadow=0xA1;
+    z80_byte flags_shadow=0xA1;
 	store_flags_shadow(flags_shadow);
 
-        reg_b_shadow=0x81; reg_c_shadow=0x02;
-        reg_d_shadow=0x00; reg_e_shadow=0x2B; reg_h_shadow=0x00; reg_l_shadow=0x00;
+    reg_b_shadow=0x81; reg_c_shadow=0x02;
+    reg_d_shadow=0x00; reg_e_shadow=0x2B; reg_h_shadow=0x00; reg_l_shadow=0x00;
 
-        reg_i=0x1E;
-
-
-        iff1.v=iff2.v=0;
-
-        reg_r=0xDD;
-
-        reg_ix=0x281; reg_iy=0x4000;
-
-        //Mismo 7F que antes....
-        //reg_sp=0x7FFC;
-        reg_sp=constante_ramtop_regsp;
+    reg_i=0x1E;
 
 
+    iff1.v=iff2.v=0;
+
+    reg_r=0xDD;
+
+    reg_ix=0x281; reg_iy=0x4000;
+
+    //Mismo 7F que antes....
+    //reg_sp=0x7FFC;
+    reg_sp=constante_ramtop_regsp;
 
 
-                //zx81
-                reg_pc=0x207;
-
-                //forzar siempre modo slow. Util para 3D monster maze, que parece que arranca en slow
-                //S1    16443   403B    CDFLAG  Various flags. Bit 7 is on (1) during compute & display mode.
-                //Bit 6 - the true fast/slow flag
-                //Bit 7 - copy of the fast/slow flag. RESET when FAST needed
-
-                //z80_byte cdflag=peek_byte_no_time(0x403B);
-                //cdflag=cdflag | (64+128);
-                //poke_byte_no_time(0x403B,cdflag);
 
 
-                //suponemos que esta esto activo . TODO: detectar modo fast/slow por las variables de sistema
-                nmi_generator_active.v=1;
-                hsync_generator_active.v=1;
+    //zx81
+    reg_pc=0x207;
+
+    //forzar siempre modo slow. Util para 3D monster maze, que parece que arranca en slow
+    //S1    16443   403B    CDFLAG  Various flags. Bit 7 is on (1) during compute & display mode.
+    //Bit 6 - the true fast/slow flag
+    //Bit 7 - copy of the fast/slow flag. RESET when FAST needed
+
+    //z80_byte cdflag=peek_byte_no_time(0x403B);
+    //cdflag=cdflag | (64+128);
+    //poke_byte_no_time(0x403B,cdflag);
+
+
+    //suponemos que esta esto activo . TODO: detectar modo fast/slow por las variables de sistema
+    nmi_generator_active.v=1;
+    hsync_generator_active.v=1;
 
 
 
