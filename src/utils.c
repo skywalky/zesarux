@@ -15566,18 +15566,37 @@ int util_extract_o(char *filename,char *tempdir)
 
 
         FILE *ptr_tapebrowser;
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+        //FRESULT fr;     /* FatFs return code */
+
+        int in_fatfs;
+
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
+            debug_printf(VERBOSE_ERR,"Unable to open file");
+            return 1; 
+        }
+
+        /*
+
         ptr_tapebrowser=fopen(filename,"rb");
 
         if (!ptr_tapebrowser) {
 		debug_printf(VERBOSE_ERR,"Unable to open file");
 		return 1; 
 	}
+    */
 
 	taperead=malloc(total_mem);
 	if (taperead==NULL) cpu_panic("Error allocating memory for expander");
 
 
-        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,taperead,total_mem,ptr_tapebrowser,&fil);
+        //leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading tape");
@@ -15586,7 +15605,8 @@ int util_extract_o(char *filename,char *tempdir)
         }
 
 
-        fclose(ptr_tapebrowser);
+        zvfs_fclose(in_fatfs,ptr_tapebrowser,&fil);
+        //fclose(ptr_tapebrowser);
 
 
 

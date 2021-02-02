@@ -21125,27 +21125,46 @@ void menu_file_p_browser_show(char *filename)
 void menu_file_o_browser_show(char *filename)
 {
 	
-	//Leemos cabecera archivo p
+	//Leemos cabecera archivo o
         FILE *ptr_file_o_browser;
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+        //FRESULT fr;     /* FatFs return code */
+
+        int in_fatfs;
+
+        //printf("menu_file_p_browser_show %s\n",filename);
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_o_browser,&fil)<0) {
+            debug_printf(VERBOSE_ERR,"Unable to open file");
+            return;
+        }
+
+        /*
         ptr_file_o_browser=fopen(filename,"rb");
 
         if (!ptr_file_o_browser) {
 		debug_printf(VERBOSE_ERR,"Unable to open file");
 		return;
 	}
+    */
 
 	//Leer 128 bytes de la cabecera. Nota: archivos .O no tienen cabecera como tal
 	z80_byte o_header[128];
 
-        int leidos=fread(o_header,1,128,ptr_file_o_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,o_header,128,ptr_file_o_browser,&fil);
+        //leidos=fread(o_header,1,128,ptr_file_o_browser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
         }
 
-
-        fclose(ptr_file_o_browser);
+        zvfs_fclose(in_fatfs,ptr_file_o_browser,&fil);
+        //fclose(ptr_file_o_browser);
 
 
 	char buffer_texto[64]; //2 lineas, por si acaso
@@ -21164,6 +21183,16 @@ void menu_file_o_browser_show(char *filename)
         z80_int o_pc_reg=0x283;
         sprintf(buffer_texto,"PC Register: %04XH",o_pc_reg);
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    //Los siguientes registros son fijos, pero queda bonito mostrarlo
+    strcpy(buffer_texto,"IM mode: 1");
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    strcpy(buffer_texto,"I register: 0EH");
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    strcpy(buffer_texto,"Interrupts: Disabled");
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);     
 
 
 	texto_browser[indice_buffer]=0;
