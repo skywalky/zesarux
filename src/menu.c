@@ -21088,9 +21088,7 @@ void menu_file_p_browser_show(char *filename)
 
 	char buffer_texto[64]; //2 lineas, por si acaso
 
-	//int longitud_bloque;
 
-	//int longitud_texto;
 
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
@@ -21099,16 +21097,26 @@ void menu_file_p_browser_show(char *filename)
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 	
 
-        z80_int p_pc_reg=0x207;
-        sprintf(buffer_texto,"PC Register: %04XH",p_pc_reg);
+    z80_int p_pc_reg=0x207;
+    sprintf(buffer_texto,"PC Register: %04XH",p_pc_reg);
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    //Los siguientes registros son fijos, pero queda bonito mostrarlo
+    strcpy(buffer_texto,"IM mode: 1");
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    strcpy(buffer_texto,"I register: 1EH");
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    strcpy(buffer_texto,"Interrupts: Disabled");
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
 	texto_browser[indice_buffer]=0;
-	//menu_generic_message_tooltip("P file browser", 0, 0, 1, NULL, "%s", texto_browser);
-  zxvision_generic_message_tooltip("P file Browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+    zxvision_generic_message_tooltip("P file Browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
+
+	
 
 
 }
