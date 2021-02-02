@@ -14674,37 +14674,74 @@ int util_convert_sp_to_scr(char *filename,char *archivo_destino)
 
         int leidos;
 
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+        //FRESULT fr;     /* FatFs return code */
+
+        int in_fatfs;        
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_spfile,&fil)<0) {
+                debug_printf(VERBOSE_ERR,"Error opening %s",filename);
+                return 1;
+        }        
+
+        /*
         //Load File
         ptr_spfile=fopen(filename,"rb");
         if (ptr_spfile==NULL) {
                 debug_printf(VERBOSE_ERR,"Error opening %s",filename);
                 return 1;
         }
+        */
 
-        leidos=fread(sp_header,1,SP_HEADER_SIZE,ptr_spfile);
+        leidos=zvfs_fread(in_fatfs,sp_header,SP_HEADER_SIZE,ptr_spfile,&fil);
+        //leidos=fread(sp_header,1,SP_HEADER_SIZE,ptr_spfile);
         
 
 
         //Leer byte a byte y pasarlo a archivo destino
 
         FILE *ptr_destination_file;
+
+    //Soporte para FatFS
+    FIL fil_destination;        /* File object */
+    //FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs_destination;
+
+
+    if (zvfs_fopen_write(archivo_destino,&in_fatfs_destination,&ptr_destination_file,&fil_destination)<0) {
+                        debug_printf (VERBOSE_ERR,"Can not open %s",archivo_destino);
+                        return 1;
+    }
+
+        /*
         ptr_destination_file=fopen(archivo_destino,"wb");
 
                 if (!ptr_destination_file) {
                         debug_printf (VERBOSE_ERR,"Can not open %s",archivo_destino);
                         return 1;
-        }      
+        } 
+        */     
 
         int i;
 
         for (i=0;i<6912;i++) {
                 z80_byte byte_leido;
-                fread(&byte_leido,1,1,ptr_spfile);
-                fwrite(&byte_leido,1,1,ptr_destination_file);
+
+                zvfs_fread(in_fatfs,&byte_leido,1,ptr_spfile,&fil);
+                //fread(&byte_leido,1,1,ptr_spfile);
+
+                zvfs_fwrite(in_fatfs_destination,&byte_leido,1,ptr_destination_file,&fil_destination);
+                //fwrite(&byte_leido,1,1,ptr_destination_file);
         }   
 
-        fclose(ptr_spfile);
-        fclose(ptr_destination_file);
+        zvfs_fclose(in_fatfs,ptr_spfile,&fil);
+        //fclose(ptr_spfile);
+
+        zvfs_fclose(in_fatfs_destination,ptr_destination_file,&fil_destination);
+        //fclose(ptr_destination_file);
 
         return 0;
 
@@ -15205,14 +15242,30 @@ int util_convert_z80_to_scr(char *filename,char *archivo_destino)
 
         int leidos;
 
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+        //FRESULT fr;     /* FatFs return code */
+
+        int in_fatfs;
+
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_z80file,&fil)<0) {
+                    debug_printf(VERBOSE_ERR,"Error opening %s",filename);
+                    return 1;
+        }
+
+
+    /*
         //Load File
         ptr_z80file=fopen(filename,"rb");
         if (ptr_z80file==NULL) {
                 debug_printf(VERBOSE_ERR,"Error opening %s",filename);
                 return 1;
         }
+    */
 
-        leidos=fread(z80_header,1,Z80_MAIN_HEADER_SIZE,ptr_z80file);
+        leidos=zvfs_fread(in_fatfs,z80_header,Z80_MAIN_HEADER_SIZE,ptr_z80file,&fil);
+        //leidos=fread(z80_header,1,Z80_MAIN_HEADER_SIZE,ptr_z80file);
         
 
 
@@ -15227,7 +15280,8 @@ int util_convert_z80_to_scr(char *filename,char *archivo_destino)
                 //Z80 version 2 o 3
 
                 //leemos longitud de la cabecera adicional
-                leidos=fread(z80_header_adicional,1,2,ptr_z80file);
+                leidos=zvfs_fread(in_fatfs,z80_header_adicional,2,ptr_z80file,&fil);
+                //leidos=fread(z80_header_adicional,1,2,ptr_z80file);
                 z80_int long_cabecera_adicional=value_8_to_16(z80_header_adicional[1],z80_header_adicional[0]);
                 if (long_cabecera_adicional!= 23 && long_cabecera_adicional!= 54 && long_cabecera_adicional!= 55) {
                         debug_printf(VERBOSE_DEBUG,"Header with %d bytes unknown",long_cabecera_adicional);
@@ -15249,7 +15303,8 @@ int util_convert_z80_to_scr(char *filename,char *archivo_destino)
 
                         //leemos esa cabecera adicional
                         debug_printf(VERBOSE_DEBUG,"Reading %d bytes of additional header",long_cabecera_adicional);
-                        leidos=fread(&z80_header_adicional[2],1,long_cabecera_adicional,ptr_z80file);                                
+                        leidos=zvfs_fread(in_fatfs,&z80_header_adicional[2],long_cabecera_adicional,ptr_z80file,&fil);
+                        //leidos=fread(&z80_header_adicional[2],1,long_cabecera_adicional,ptr_z80file);                                
                         
 
                         int salir=0;
@@ -15262,7 +15317,9 @@ int util_convert_z80_to_scr(char *filename,char *archivo_destino)
 
                         //leer datos
                         //cabecera del bloque de 16kb
-                        leidos=fread(z80_header_bloque,1,3,ptr_z80file);
+                        leidos=zvfs_fread(in_fatfs,z80_header_bloque,3,ptr_z80file,&fil);
+                        //leidos=fread(z80_header_bloque,1,3,ptr_z80file);
+
                         comprimido=1;
                         //printf("leidos: %d\n",leidos);
                         if (leidos>0) {
@@ -15276,7 +15333,9 @@ int util_convert_z80_to_scr(char *filename,char *archivo_destino)
 
                                 
                                 debug_printf(VERBOSE_DEBUG,"Reading %d bytes of data block %d",longitudbloque,numerobloque);
-                                leidos=fread(buffer_lectura,1,longitudbloque,ptr_z80file);
+                                leidos=zvfs_fread(in_fatfs,buffer_lectura,longitudbloque,ptr_z80file,&fil);
+                                //leidos=fread(buffer_lectura,1,longitudbloque,ptr_z80file);
+
                                 direccion_destino=0;
                                 load_z80_snapshot_bytes(buffer_lectura,leidos,direccion_destino,comprimido,buffer_destino);
 
@@ -15294,7 +15353,8 @@ int util_convert_z80_to_scr(char *filename,char *archivo_destino)
         }
 
         else {
-                leidos=fread(buffer_lectura,1,65536,ptr_z80file);
+                leidos=zvfs_fread(in_fatfs,buffer_lectura,65536,ptr_z80file,&fil);
+                //leidos=fread(buffer_lectura,1,65536,ptr_z80file);
                 //printf ("despues de carga\n");
                 debug_printf(VERBOSE_DEBUG,"Read %d bytes of data",leidos);
                 //printf ("despues de debug_printf\n");
@@ -15312,8 +15372,8 @@ int util_convert_z80_to_scr(char *filename,char *archivo_destino)
         //Grabar 6912 bytes a archivo destino
         util_save_file(buffer_destino,6912,archivo_destino);
 
-
-        fclose(ptr_z80file);
+        zvfs_fclose(in_fatfs,ptr_z80file,&fil);
+        //fclose(ptr_z80file);
 
         free(buffer_lectura);
         free(buffer_destino);
@@ -19633,7 +19693,7 @@ void util_copy_files_to_mmc_doit(void)
     if (!copy_files_to_mmc_total) return;
 
     if (mmc_file_name[0]==0) {
-        debug_printf(VERBOSE_ERR,"No mmc file name set using --add-file-to-mmc");
+        debug_printf(VERBOSE_ERR,"No mmc file name set using --copy-file-to-mmc");
         return;
     }
 

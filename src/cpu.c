@@ -1955,15 +1955,15 @@ printf (
 		"\n"
 
 
-		"--mmc-file f                   Set mmc image file\n"
-		"--enable-mmc                   Enable MMC emulation. Usually requires --mmc-file\n"
-		"--mmc-write-protection         Enable MMC write protection\n"
-		"--mmc-no-persistent-writes     Disable MMC persistent writes\n");
+		"--mmc-file f                    Set mmc image file\n"
+		"--enable-mmc                    Enable MMC emulation. Usually requires --mmc-file\n"
+		"--mmc-write-protection          Enable MMC write protection\n"
+		"--mmc-no-persistent-writes      Disable MMC persistent writes\n");
 
         printf(
-            "--add-file-to-mmc source dest  Add file from local filesystem to the mmc, before starting ZEsarUX. That copies the files in "
+            "--copy-file-to-mmc source dest  Add file from local filesystem to the mmc, before starting ZEsarUX. That copies the files in "
             "the mmc image and syncs the changes. "
-            "You can use that setting up to %d times. Destination must not include 0:/ prefix\n",
+            "You can use that setting up to %d times. Destination must not include 0:/ prefix. mmc file is set with setting --mmc-file\n",
             MAX_COPY_FILES_TO_MMC);
         
         printf(
@@ -6450,7 +6450,7 @@ int parse_cmdline_options(void) {
 				command_line_mmc.v=1;
 			}
 
-            else if (!strcmp(argv[puntero_parametro],"--add-file-to-mmc")) {
+            else if (!strcmp(argv[puntero_parametro],"--copy-file-to-mmc")) {
                 siguiente_parametro_argumento();
 				char *source;
                 source=argv[puntero_parametro];

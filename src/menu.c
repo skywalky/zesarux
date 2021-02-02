@@ -21174,25 +21174,44 @@ void menu_file_sp_browser_show(char *filename)
 	
 	//Leemos cabecera archivo sp
         FILE *ptr_file_sp_browser;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    //FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_sp_browser,&fil)<0) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		return;
+    }
+
+    /*
         ptr_file_sp_browser=fopen(filename,"rb");
 
         if (!ptr_file_sp_browser) {
 		debug_printf(VERBOSE_ERR,"Unable to open file");
 		return;
 	}
+    */
 
 	//Leer 38 bytes de la cabecera
 	z80_byte sp_header[38];
 
-        int leidos=fread(sp_header,1,38,ptr_file_sp_browser);
+        int leidos;
+
+        leidos=zvfs_fread(in_fatfs,sp_header,38,ptr_file_sp_browser,&fil);
+        
+        //leidos=fread(sp_header,1,38,ptr_file_sp_browser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
         }
 
-
-        fclose(ptr_file_sp_browser);
+        zvfs_fclose(in_fatfs,ptr_file_sp_browser,&fil);
+        //fclose(ptr_file_sp_browser);
 
         //Testear cabecera "SP" en los primeros bytes
         if (sp_header[0]!='S' || sp_header[1]!='P') {
@@ -21211,11 +21230,25 @@ void menu_file_sp_browser_show(char *filename)
 
 	sprintf(buffer_texto,"Machine: Spectrum 48k");
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
-	
 
-        z80_int sp_pc_reg=value_8_to_16(sp_header[31],sp_header[30]);
-        sprintf(buffer_texto,"PC Register: %04XH",sp_pc_reg);
+    z80_int registro_leido;
+
+    registro_leido=value_8_to_16(sp_header[31],sp_header[30]);
+    sprintf(buffer_texto,"PC Register: %04XH",registro_leido);
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    registro_leido=value_8_to_16(sp_header[29],sp_header[28]);
+    sprintf(buffer_texto,"SP Register: %04XH",registro_leido);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    z80_byte im_leido=sp_header[36] & 2;
+	if (im_leido==1) im_leido=2;
+    sprintf(buffer_texto,"IM mode: %d",im_leido);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    z80_byte ints_leido=sp_header[36] &1;
+    sprintf(buffer_texto,"Interrupts: %s", (ints_leido ? "Enabled" : "Disabled"));
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
 	texto_browser[indice_buffer]=0;
@@ -22717,6 +22750,28 @@ void menu_file_sna_browser_show(char *filename)
 
 
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    z80_int registro_leido;
+
+    /*
+    registro_leido=value_8_to_16(sna_header[31],sp_header[30]);
+    sprintf(buffer_texto,"PC Register: %04XH",registro_leido);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+     */
+
+    registro_leido=value_8_to_16(sna_header[24],sna_header[23]);
+    sprintf(buffer_texto,"SP Register: %04XH",registro_leido);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    z80_byte im_leido=sna_header[25] & 3;
+    sprintf(buffer_texto,"IM mode: %d",im_leido);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    z80_byte ints_leido;
+	if (sna_header[19] & 4) ints_leido=1;
+	else ints_leido=0;
+    sprintf(buffer_texto,"Interrupts: %s", (ints_leido ? "Enabled" : "Disabled"));
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);    
 
 
 
