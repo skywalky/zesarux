@@ -15074,17 +15074,35 @@ int util_convert_p_to_scr(char *filename,char *archivo_destino)
 
         int leidos;
 
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+        //FRESULT fr;     /* FatFs return code */
+
+        int in_fatfs;
+
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_pfile,&fil)<0) {
+                debug_printf(VERBOSE_ERR,"Error opening %s",filename);
+                return 1;
+        }        
+
         //Load File
+
+        /*
         ptr_pfile=fopen(filename,"rb");
         if (ptr_pfile==NULL) {
                 debug_printf(VERBOSE_ERR,"Error opening %s",filename);
                 return 1;
         }
+        */
 
-        leidos=fread(buffer_lectura,1,bytes_to_load,ptr_pfile);
+        leidos=zvfs_fread(in_fatfs,buffer_lectura,bytes_to_load,ptr_pfile,&fil);
+        //leidos=fread(buffer_lectura,1,bytes_to_load,ptr_pfile);
         
 
-        fclose(ptr_pfile);
+        zvfs_fclose(in_fatfs,ptr_pfile,&fil);
+        //fclose(ptr_pfile);
 
 //        //puntero pantalla en DFILE
         /*
