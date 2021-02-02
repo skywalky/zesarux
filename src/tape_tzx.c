@@ -393,7 +393,7 @@ void tape_write_tzx_header_ptr(FILE *ptr_archivo, int in_fatfs, FIL *fil_tzxfile
 	};
 
 	//no contamos el 0 del final
-    zvfs_fwrite(in_fatfs,cabecera,sizeof(cabecera),ptr_archivo,fil_tzxfile);
+    zvfs_fwrite(in_fatfs,(z80_byte *)cabecera,sizeof(cabecera),ptr_archivo,fil_tzxfile);
 	//fwrite(cabecera, 1, sizeof(cabecera), ptr_archivo);	
 }
 

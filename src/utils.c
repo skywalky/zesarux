@@ -14755,12 +14755,26 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
     FILE *ptr_zsf_file;
 
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    //FRESULT fr;     /* FatFs return code */
 
+    int in_fatfs;
+
+    //printf("menu_file_p_browser_show %s\n",filename);
+
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_zsf_file,&fil)<0) {
+        debug_printf (VERBOSE_DEBUG,"Error reading snapshot file %s",filename);
+        return 1;
+    }
+
+    /*
     ptr_zsf_file=fopen(filename,"rb");
     if (!ptr_zsf_file) {
         debug_printf (VERBOSE_DEBUG,"Error reading snapshot file %s",filename);
         return 1;
     }
+    */
 
 
     //Verificar que la cabecera inicial coincide
@@ -14772,11 +14786,15 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
 
 
-    int leidos=fread(buffer_magic_header,1,longitud_magic,ptr_zsf_file);
+    int leidos;
+    
+    leidos=zvfs_fread(in_fatfs,(z80_byte *)buffer_magic_header,longitud_magic,ptr_zsf_file,&fil);
+    //leidos=fread(buffer_magic_header,1,longitud_magic,ptr_zsf_file);
 
     if (leidos!=longitud_magic) {
         debug_printf (VERBOSE_DEBUG,"Invalid ZSF file, small magic header");
-        fclose(ptr_zsf_file);
+        zvfs_fclose(in_fatfs,ptr_zsf_file,&fil);
+        //fclose(ptr_zsf_file);
         return 1;
     }
 
@@ -14786,7 +14804,8 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
     if (strcmp(buffer_magic_header,zsf_magic_header)) {
         debug_printf (VERBOSE_DEBUG,"Invalid ZSF file, invalid magic header");
-        fclose(ptr_zsf_file);
+        zvfs_fclose(in_fatfs,ptr_zsf_file,&fil);
+        //fclose(ptr_zsf_file);
         return 1;
     }
 
@@ -14798,11 +14817,13 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
     int salir=0;
 
-    while (!feof(ptr_zsf_file) && !salir) {
+    
+    while (!zvfs_feof(in_fatfs,ptr_zsf_file,&fil) && !salir) {
         //Read header block
         unsigned int leidos;
 
-        leidos=fread(block_header,1,6,ptr_zsf_file);
+        leidos=zvfs_fread(in_fatfs,block_header,6,ptr_zsf_file,&fil);
+        //leidos=fread(block_header,1,6,ptr_zsf_file);
 
 
         if (leidos==0) break; //End while
@@ -14834,7 +14855,8 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
             if (block_data==NULL) cpu_panic("Can not allocate memory for zsf convert");
 
             //Read block data
-            leidos=fread(block_data,1,block_lenght_zsf,ptr_zsf_file);
+            leidos=zvfs_fread(in_fatfs,block_data,block_lenght_zsf,ptr_zsf_file,&fil);
+            //leidos=fread(block_data,1,block_lenght_zsf,ptr_zsf_file);
 
 
             if (leidos!=block_lenght_zsf) {
@@ -14990,7 +15012,8 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
     }
 
-    fclose(ptr_zsf_file);
+    zvfs_fclose(in_fatfs,ptr_zsf_file,&fil);
+    //fclose(ptr_zsf_file);
 
     return 0;
 

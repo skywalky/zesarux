@@ -21254,6 +21254,10 @@ void menu_file_sp_browser_show(char *filename)
     sprintf(buffer_texto,"IM mode: %d",im_leido);
     indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
+    z80_byte i_leido=sp_header[27];
+    sprintf(buffer_texto,"I register: %02XH",i_leido);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);    
+
     z80_byte ints_leido=sp_header[36] &1;
     sprintf(buffer_texto,"Interrupts: %s", (ints_leido ? "Enabled" : "Disabled"));
     indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
@@ -22092,6 +22096,22 @@ void menu_file_zsf_browser_show(char *filename)
 	
 	//Leemos archivo zsf
         FILE *ptr_file_zsf_browser;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    //FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+    //printf("menu_file_p_browser_show %s\n",filename);
+
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_zsf_browser,&fil)<0) {
+		debug_printf(VERBOSE_ERR,"Unable to open file");
+		free(zsf_file_memory);
+    }
+
+    /*
+
         ptr_file_zsf_browser=fopen(filename,"rb");
 
         if (!ptr_file_zsf_browser) {
@@ -22099,17 +22119,20 @@ void menu_file_zsf_browser_show(char *filename)
 		free(zsf_file_memory);
 		return;
 	}
+    */
 
-
-        int leidos=fread(zsf_file_memory,1,bytes_to_load,ptr_file_zsf_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,zsf_file_memory,bytes_to_load,ptr_file_zsf_browser,&fil);
+        //leidos=fread(zsf_file_memory,1,bytes_to_load,ptr_file_zsf_browser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
         }
 
-
-        fclose(ptr_file_zsf_browser);
+        zvfs_fclose(in_fatfs,ptr_file_zsf_browser,&fil);
+        //fclose(ptr_file_zsf_browser);
 
 
         
@@ -22774,6 +22797,10 @@ void menu_file_sna_browser_show(char *filename)
     z80_byte im_leido=sna_header[25] & 3;
     sprintf(buffer_texto,"IM mode: %d",im_leido);
     indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    z80_byte i_leido=sna_header[0];
+    sprintf(buffer_texto,"I register: %02XH",i_leido);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);      
 
     z80_byte ints_leido;
 	if (sna_header[19] & 4) ints_leido=1;

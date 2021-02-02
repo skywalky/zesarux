@@ -59,6 +59,16 @@ void zvfs_fclose(int in_fatfs,FILE *ptr_file_name,FIL *fil)
     }
 }
 
+//funcion fclose que soporta nativo del sistema o fatfs
+int zvfs_feof(int in_fatfs,FILE *ptr_file_name,FIL *fil) 
+{
+    if (in_fatfs) {
+        return f_eof(fil);
+    }
+    else {
+	    return feof(ptr_file_name);
+    }
+}
 
 //funcion fopen que soporta nativo del sistema o fatfs
 //retorna <0 si error
@@ -152,7 +162,7 @@ int zvfs_fread(int in_fatfs,z80_byte *puntero_memoria,int bytes_to_load,FILE *pt
 
     if (in_fatfs) {
         UINT leidos_fatfs;
-        FRESULT resultado=f_read(fil,puntero_memoria,bytes_to_load,&leidos_fatfs);
+        f_read(fil,puntero_memoria,bytes_to_load,&leidos_fatfs);
         leidos=leidos_fatfs;
     }
 
@@ -171,7 +181,7 @@ int zvfs_fwrite(int in_fatfs,z80_byte *puntero_memoria,int bytes_to_save,FILE *p
 
     if (in_fatfs) {
         UINT escritos_fatfs;
-        FRESULT resultado=f_write(fil,puntero_memoria,bytes_to_save,&escritos_fatfs);
+        f_write(fil,puntero_memoria,bytes_to_save,&escritos_fatfs);
         escritos=escritos_fatfs;
     }
 
