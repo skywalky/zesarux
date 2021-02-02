@@ -36,5 +36,8 @@ extern void zvfs_rename(char *old,char *new);
 extern int zvfs_delete(char *filename);
 extern void zvfs_mkdir(char *directory);
 extern const char *zvfs_get_strerror(FRESULT error);
+extern void zvfs_fseek(int in_fatfs,FILE *ptr_file, long offset, int whence,FIL *fil);
+extern long zvfs_ftell(int in_fatfs,FILE *ptr_file, FIL *fil);
+extern z80_byte zvfs_fgetc(int in_fatfs,FILE *ptr_file_hexdump_browser,FIL *fil);
 
 #endif

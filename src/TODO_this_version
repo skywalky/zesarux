@@ -197,7 +197,9 @@ Esto podria provocar que otros sitios que usan ZVFS (por ejemplo esxdos handler)
 desde filesel era la mmc
 Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El resto, rutinas de sistema? -> esxdos, zxpand etc ya NO usan ZVFS
 
--zvfs conv, visores y demas previews: sp, p, zsf....
+-zvfs conv, visores y demas previews
+
+-al hacer extract desde archivo en mmc, y volver a mmc, luego al ir a local drive nos ubica en la carpeta tmp
 
 
 -punteros en diskio, de read y write, soportaran imagenes de mas de 2 gB en sistemas 32 bits?

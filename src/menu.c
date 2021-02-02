@@ -23700,27 +23700,45 @@ void menu_file_cas_browser_show(char *filename)
 
 	char buffer_texto[300]; //Para poder contener info de msx cas extensa
 
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+
+    int in_fatfs;
+
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_cas_browser,&fil)<0) {
+		debug_printf(VERBOSE_ERR,"Error opening cas file %s",filename);
+		return;
+    }    
+
+    /*
 	ptr_file_cas_browser=fopen(filename,"rb");
 
 	if (ptr_file_cas_browser==NULL) {
 		debug_printf(VERBOSE_ERR,"Error opening cas file %s",filename);
 		return;
 	}
+    */
 
 	posicion_lectura=0;
-	while (fread(buffer,1,8,ptr_file_cas_browser)==8) {
+
+    
+	while (zvfs_fread(in_fatfs,buffer,8,ptr_file_cas_browser,&fil)==8) {
     
 		if (!memcmp(buffer,msx_cabecera_firma,8)) {
 		
-			if (fread(buffer,1,10,ptr_file_cas_browser)==10) {
+
+			if (zvfs_fread(in_fatfs,buffer,10,ptr_file_cas_browser,&fil)==10) {
 			
 				if (next==CAS_NEXT_BINARY) {
 				
-					fseek(ptr_file_cas_browser,posicion_lectura+8,SEEK_SET);
+					zvfs_fseek(in_fatfs,ptr_file_cas_browser,posicion_lectura+8,SEEK_SET,&fil);
+
+                    //void zvfs_fseek(int in_fatfs,FILE *ptr_file, long offset, int whence,FIL *fil)
 
 					z80_byte buffer_datos[6];
 
-					fread(buffer_datos,1,6,ptr_file_cas_browser);
+                    zvfs_fread(in_fatfs,buffer_datos,6,ptr_file_cas_browser,&fil);
+					//fread(buffer_datos,1,6,ptr_file_cas_browser);
 
 					z80_int start,stop,exec;
 
@@ -23742,26 +23760,41 @@ void menu_file_cas_browser_show(char *filename)
 				else if (!memcmp(buffer,cas_ascii,10)) {
 				
 					z80_byte buffer_nombre[7];
-					fread(buffer_nombre,1,6,ptr_file_cas_browser);
+
+                    zvfs_fread(in_fatfs,buffer_nombre,6,ptr_file_cas_browser,&fil);
+					//fread(buffer_nombre,1,6,ptr_file_cas_browser);
+
 					menu_file_cas_browser_show_getname(buffer_nombre,cas_filename);
 
 					sprintf(buffer_texto,"Ascii: %s",cas_filename);
 					indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);	  	  
 
-					while (fgetc(ptr_file_cas_browser)!=0x1a && !feof(ptr_file_cas_browser));
-					posicion_lectura=ftell(ptr_file_cas_browser);
+					while (zvfs_fgetc(in_fatfs,ptr_file_cas_browser,&fil)!=0x1a && !zvfs_feof(in_fatfs,ptr_file_cas_browser,&fil) );
+                    
+
+                    
+
+
+                    //long zvfs_ftell(int in_fatfs,FILE *ptr_file, FIL *fil)
+					posicion_lectura=zvfs_ftell(in_fatfs,ptr_file_cas_browser,&fil);
 				} 
 				
 				else if (!memcmp(buffer,cas_bin,10)) {  
 					z80_byte buffer_nombre[7];
-					fread(buffer_nombre,1,6,ptr_file_cas_browser);
+
+                    zvfs_fread(in_fatfs,buffer_nombre,6,ptr_file_cas_browser,&fil);
+					//fread(buffer_nombre,1,6,ptr_file_cas_browser);
+
 					menu_file_cas_browser_show_getname(buffer_nombre,cas_filename);
 					next=CAS_NEXT_BINARY;
 				}
 
 				else if (!memcmp(buffer,cas_basic,10)) {
 					z80_byte buffer_nombre[7];
-					fread(buffer_nombre,1,6,ptr_file_cas_browser);
+
+                    zvfs_fread(in_fatfs,buffer_nombre,6,ptr_file_cas_browser,&fil);
+					//fread(buffer_nombre,1,6,ptr_file_cas_browser);
+
 					menu_file_cas_browser_show_getname(buffer_nombre,cas_filename);					
 				
 					next=CAS_NEXT_DATA;
@@ -23779,11 +23812,14 @@ void menu_file_cas_browser_show(char *filename)
     	}
 	
 		posicion_lectura++;
-    	fseek(ptr_file_cas_browser,posicion_lectura,SEEK_SET);
+        zvfs_fseek(in_fatfs,ptr_file_cas_browser,posicion_lectura,SEEK_SET,&fil);
+    	//fseek(ptr_file_cas_browser,posicion_lectura,SEEK_SET);
+
       
 	}
 
-	fclose(ptr_file_cas_browser);
+    zvfs_fclose(in_fatfs,ptr_file_cas_browser,&fil);
+	//fclose(ptr_file_cas_browser);
 	
 	texto_browser[indice_buffer]=0;
 	zxvision_generic_message_tooltip("CAS file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);

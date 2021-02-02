@@ -48,6 +48,38 @@ En principio, estas rutinas solo se usan desde los menús
 
 
 
+//funcion fseek que soporta nativo del sistema o fatfs.
+//Nota: para zvfs solo funciona con tipo SEEK_SET
+
+void zvfs_fseek(int in_fatfs,FILE *ptr_file, long offset, int whence,FIL *fil)
+{
+    if (in_fatfs) {
+        if (whence==SEEK_SET) {
+            f_lseek(fil, offset);
+        }
+        else {
+            debug_printf(VERBOSE_ERR,"zvfs_fseek only allows type SEEK_SET on FatFS volumes");
+            return;
+        }
+
+    }
+    else {
+	    fseek(ptr_file, offset, whence);
+    }
+}
+
+//funcion ftell que soporta nativo del sistema o fatfs.
+long zvfs_ftell(int in_fatfs,FILE *ptr_file, FIL *fil)
+{
+    if (in_fatfs) {
+        return f_tell(fil);
+
+    }
+    else {
+	    return ftell(ptr_file);
+    }
+}
+
 //funcion fclose que soporta nativo del sistema o fatfs
 void zvfs_fclose(int in_fatfs,FILE *ptr_file_name,FIL *fil) 
 {
@@ -172,6 +204,24 @@ int zvfs_fread(int in_fatfs,z80_byte *puntero_memoria,int bytes_to_load,FILE *pt
     }
 
     return leidos;
+}
+
+
+//funcion getc que soporta nativo del sistema o fatfs
+z80_byte zvfs_fgetc(int in_fatfs,FILE *ptr_file_hexdump_browser,FIL *fil)
+{
+   
+
+    if (in_fatfs) {
+        UINT leidos_fatfs;
+        z80_byte byte_leido;
+        f_read(fil,&byte_leido,1,&leidos_fatfs);
+        return byte_leido;
+    }
+
+    else {      
+        return fgetc(ptr_file_hexdump_browser);
+    }
 }
 
 //funcion fwrite que soporta nativo del sistema o fatfs
