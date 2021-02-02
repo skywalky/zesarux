@@ -21541,6 +21541,19 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	
 	//Leemos cabecera archivo trd
         FILE *ptr_file_trd_browser;
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+    
+        int in_fatfs;
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_trd_browser,&fil)<0) {
+            debug_printf(VERBOSE_ERR,"Unable to open file");
+            free(trd_file_memory);
+            return;
+        }
+
+        /*
         ptr_file_trd_browser=fopen(filename,"rb");
 
         if (!ptr_file_trd_browser) {
@@ -21548,17 +21561,21 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 		free(trd_file_memory);
 		return;
 	}
+    */
 
 
-        int leidos=fread(trd_file_memory,1,bytes_to_load,ptr_file_trd_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,trd_file_memory,bytes_to_load,ptr_file_trd_browser,&fil);
+        //leidos=fread(trd_file_memory,1,bytes_to_load,ptr_file_trd_browser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
         }
 
-
-        fclose(ptr_file_trd_browser);
+        zvfs_fclose(in_fatfs,ptr_file_trd_browser,&fil);
+        //fclose(ptr_file_trd_browser);
 
 
         
@@ -23427,14 +23444,29 @@ void menu_file_tzx_browser_show(char *filename)
 	
 	//Leemos cabecera archivo tzx
         FILE *ptr_file_tzx_browser;
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+    
+        int in_fatfs;
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_tzx_browser,&fil)<0) {
+            debug_printf(VERBOSE_ERR,"Unable to open file");
+            return;
+        }
+        /*
         ptr_file_tzx_browser=fopen(filename,"rb");
 
         if (!ptr_file_tzx_browser) {
 		debug_printf(VERBOSE_ERR,"Unable to open file");
 		return;
 	}
+    */
 
-        int leidos=fread(tzx_file_mem,1,filesize,ptr_file_tzx_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,tzx_file_mem,filesize,ptr_file_tzx_browser,&fil);
+        //leidos=fread(tzx_file_mem,1,filesize,ptr_file_tzx_browser);
 
 	if (leidos!=filesize) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
@@ -23442,8 +23474,8 @@ void menu_file_tzx_browser_show(char *filename)
                 return;
         }
 
-
-        fclose(ptr_file_tzx_browser);
+        zvfs_fclose(in_fatfs,ptr_file_tzx_browser,&fil);
+        //fclose(ptr_file_tzx_browser);
 
         //Testear cabecera "ZXTape!" en los primeros bytes
 	char signature[8];
@@ -23777,14 +23809,30 @@ void menu_file_pzx_browser_show(char *filename)
 
 	//Leemos cabecera archivo pzx
         FILE *ptr_file_pzx_browser;
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+    
+        int in_fatfs;
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_pzx_browser,&fil)<0) {
+            debug_printf(VERBOSE_ERR,"Unable to open file");
+            return;
+        }
+
+        /*
         ptr_file_pzx_browser=fopen(filename,"rb");
 
     if (!ptr_file_pzx_browser) {
 		debug_printf(VERBOSE_ERR,"Unable to open file");
 		return;
 	}
+        */
 
-        int leidos=fread(pzx_file_mem,1,filesize,ptr_file_pzx_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,pzx_file_mem,filesize,ptr_file_pzx_browser,&fil);
+        //leidos=fread(pzx_file_mem,1,filesize,ptr_file_pzx_browser);
 
 	if (leidos!=filesize) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
@@ -23792,8 +23840,8 @@ void menu_file_pzx_browser_show(char *filename)
                 return;
         }
 
-
-        fclose(ptr_file_pzx_browser);
+        zvfs_fclose(in_fatfs,ptr_file_pzx_browser,&fil);
+        //fclose(ptr_file_pzx_browser);
 
       
 	//char buffer_texto[300]; //Para poder contener info de pzx extensa

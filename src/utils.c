@@ -14271,12 +14271,25 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 
         FILE *ptr_tapebrowser;
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+    
+        int in_fatfs;
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_tapebrowser,&fil)<0) {
+            debug_printf(VERBOSE_ERR,"Unable to open tape for extracting pzx");
+            return 1;
+        }
+
+    /*
         ptr_tapebrowser=fopen(filename,"rb");
 
         if (!ptr_tapebrowser) {
 		debug_printf(VERBOSE_ERR,"Unable to open tape for extracting pzx");
 		return 1;
 	}
+    */
 
 	taperead=malloc(total_mem);
 	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser/convert");
@@ -14286,17 +14299,36 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
         //Abrir fichero tapfile si conviene convertir
         FILE *ptr_tapfile;
+
+    //Soporte para FatFS
+    FIL fil_tapfile;        /* File object */
+ 
+    int in_fatfs_tapfile;
+
+
+
         if (tapfile!=NULL) {
+
+                if (zvfs_fopen_write(tapfile,&in_fatfs_tapfile,&ptr_tapfile,&fil_tapfile)<0) {
+                    debug_printf (VERBOSE_ERR,"Can not open %s",tapfile);
+                    return 1;
+                }
+
+                /*
                 ptr_tapfile=fopen(tapfile,"wb");
 
                 if (!ptr_tapfile) {
                                 debug_printf (VERBOSE_ERR,"Can not open %s",tapfile);
                                 return 1;
                 }
+                */
         }
 
 
-        int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,taperead,total_mem,ptr_tapebrowser,&fil);
+        //leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading tape");
@@ -14304,8 +14336,8 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                 return 1;
         }
 
-
-        fclose(ptr_tapebrowser);
+        zvfs_fclose(in_fatfs,ptr_tapebrowser,&fil);
+        //fclose(ptr_tapebrowser);
 
 	char buffer_texto[32*4]; //4 lineas mas que suficiente
 
@@ -14525,17 +14557,21 @@ z80_byte *memoria;
                                 buffer_tap[0]=value_16_to_8l(longitud_cabecera_tap);
                                 buffer_tap[1]=value_16_to_8h(longitud_cabecera_tap);
                                 buffer_tap[2]=flag;
-                                fwrite(buffer_tap,1,3,ptr_tapfile);
+
+                                zvfs_fwrite(in_fatfs_tapfile,buffer_tap,3,ptr_tapfile,&fil_tapfile);
+                                //fwrite(buffer_tap,1,3,ptr_tapfile);
 
 
                                 //Meter datos
-                                fwrite(copia_puntero+3,1,longitud_final,ptr_tapfile);
+                                zvfs_fwrite(in_fatfs_tapfile,copia_puntero+3,longitud_final,ptr_tapfile,&fil_tapfile);
+                                //fwrite(copia_puntero+3,1,longitud_final,ptr_tapfile);
 
                                 //Agregar CRC
                                 z80_byte byte_crc=*(copia_puntero+3+longitud_final);
 
                                 buffer_tap[0]=byte_crc;
-                                fwrite(buffer_tap,1,1,ptr_tapfile);
+                                zvfs_fwrite(in_fatfs_tapfile,buffer_tap,1,ptr_tapfile,&fil_tapfile);
+                                //fwrite(buffer_tap,1,1,ptr_tapfile);
 
                         }
 
@@ -14565,7 +14601,10 @@ z80_byte *memoria;
 
 	free(taperead);
 
-        if (tapfile!=NULL) fclose(ptr_tapfile);
+        if (tapfile!=NULL) {
+            zvfs_fclose(in_fatfs_tapfile,ptr_tapfile,&fil_tapfile);
+            //fclose(ptr_tapfile);
+        }
 
 	return 0;
 
@@ -15579,6 +15618,19 @@ int util_extract_trd(char *filename,char *tempdir)
 	
 	//Leemos cabecera archivo trd
         FILE *ptr_file_trd_browser;
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+    
+        int in_fatfs;
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_trd_browser,&fil)<0) {
+            debug_printf(VERBOSE_ERR,"Unable to open file");
+            free(trd_file_memory);
+            return 0;
+        }
+
+        /*
         ptr_file_trd_browser=fopen(filename,"rb");
 
         if (!ptr_file_trd_browser) {
@@ -15586,17 +15638,21 @@ int util_extract_trd(char *filename,char *tempdir)
 		free(trd_file_memory);
 		return 0;
 	}
+        */
 
 
-        int leidos=fread(trd_file_memory,1,bytes_to_load,ptr_file_trd_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,trd_file_memory,bytes_to_load,ptr_file_trd_browser,&fil);
+        //leidos=fread(trd_file_memory,1,bytes_to_load,ptr_file_trd_browser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return 0;
         }
 
-
-        fclose(ptr_file_trd_browser);
+        zvfs_fclose(in_fatfs,ptr_file_trd_browser,&fil);
+        //fclose(ptr_file_trd_browser);
 
      
 
