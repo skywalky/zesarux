@@ -14,7 +14,7 @@ Added read only setting for esxdos handler
 Added .nex file viewer
 
 Improved File utilities browser:
--Added support for browsing inside disk images (.mmc, .ide, etc) from ZEsarUX file browser (Debug->File utilities)
+-Added support for browsing inside disk images (.mmc, .ide, etc)
 -Detect when source and target directories are the same when moving or copying
 -Show more info in some file viewers (.sna, .p, .o, etc)
 
