@@ -29,6 +29,7 @@ IN THE SOFTWARE.
 
 //Para usar definiciones de PATH_MAX
 #include "utils.h"
+#include "zvfs.h"
 
 //#include "lib/textUtils.h"
 //#include "lib/esxdos.h"
@@ -50,14 +51,27 @@ unsigned char count;
 unsigned char isFull = 0;
 int totalFreeSect = 2544;
 
+
+//Soporte para FatFS
+FIL fil_input;        
+int in_fatfs_input;
+
+FIL fil_output;        
+int in_fatfs_output;
+
+
 size_t scl2trd_fread(void *restrict ptr, size_t nitems)
 {
-    return fread(ptr,1,nitems,iStream);
+    //return fread(ptr,1,nitems,iStream);
+
+    return zvfs_fread(in_fatfs_input,ptr,nitems,iStream,&fil_input);
 }
 
 size_t scl2trd_fwrite(const void *restrict ptr, size_t nitems)
 {
-    return fwrite(ptr,1,nitems,oStream);
+    //return fwrite(ptr,1,nitems,oStream);
+
+    return zvfs_fwrite(in_fatfs_output,(z80_byte *)ptr,nitems,oStream,&fil_output);
 }
 
 void cleanBuffer()
@@ -89,9 +103,11 @@ void writeDiskData()
             scl2trd_fwrite(&buff,256);
     }
     
+    zvfs_fclose(in_fatfs_input,iStream,&fil_input);
+    //fclose(iStream);
 
-    fclose(iStream);
-    fclose(oStream);
+    zvfs_fclose(in_fatfs_output,oStream,&fil_output);
+    //fclose(oStream);
 
    debug_printf (VERBOSE_INFO,"All scl to trd data written");
 }
@@ -135,12 +151,18 @@ void writeCatalog()
     freeSec = 0;
     count = 0;
 
-    //oStream = ESXDOS_fopen(filePath, ESXDOS_FILEMODE_WRITE_CREATE, drive);
+    if (zvfs_fopen_write(scl_outputfile,&in_fatfs_output,&oStream,&fil_output)<0) {
+        showMessage("Can't open output file");
+        return ;
+    }    
+    
+    /*
     oStream = fopen(scl_outputfile,"wb");
     if  (oStream==NULL) {
         showMessage("Can't open output file");
         return ;
     }
+    */
 
     scl2trd_fread(&count,1);
     for (i=0;i<count; i++) {
@@ -169,13 +191,19 @@ void writeCatalog()
 void validateScl()
 {
     char *expected = "SINCLAIR";
-    //drive = ESXDOS_getDefaultDrive();
-    //iStream = ESXDOS_fopen(filePath, ESXDOS_FILEMODE_READ, drive );
+
+    if (zvfs_fopen_read(scl_inputfile,&in_fatfs_input,&iStream,&fil_input)<0) {
+        showMessage("Can't open input file");
+        return;
+    }    
+
+    /*
     iStream = fopen(scl_inputfile,"rb");
     if (iStream==NULL) {
         showMessage("Can't open input file");
         return ;
     }
+    */
 
     cleanBuffer();
 
@@ -189,42 +217,6 @@ void validateScl()
     writeCatalog();
 }
 
-void selectFile() 
-{
-    /*char c;
-    textUtils_cls();
-    textUtils_setAttributes( INK_BLUE | PAPER_BLACK );
-    fileDialogpathUpOneDir( filePath );
-    while ( 
-        openFileDialog( 
-            "SCL2TRD by Nihirash v. 1.1.0", 
-            "<Cursor/Sincl> - movement  <Ent/0> - select file  <Space> - exit",
-            filePath, 
-            PATH_SIZE, 
-            INK_BLUE | PAPER_WHITE, 
-            INK_WHITE | PAPER_BLACK 
-            ) == false ) {
-        __asm
-            rst 0
-        __endasm;
-    }
-
-    textUtils_cls();
-    textUtils_println("");
-    textUtils_print("Do you want full TRD-file? (y/n) ");
-    
-    while (!(c == 'y' || c == 'n')) {
-        c = waitKeyPress();
-    }
-
-    isFull = (c == 'y');
-
-    textUtils_println(isFull ? "yes" : "no");
-
-    textUtils_println(" Converting file!");
-
-    validateScl();*/
-}
 
 void scl2trd_main(char *input,char *output)
 {

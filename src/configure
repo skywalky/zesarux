@@ -1393,7 +1393,7 @@ zvfs.o: zvfs.c zvfs.h cpu.h debug.h utils.h ff.h compileoptions.h
 atomic.o: atomic.c atomic.h compileoptions.h
 	\$(CC) \$(CFLAGS) -c atomic.c
 
-scl2trd.o: scl2trd.c scl2trd.h debug.h utils.h
+scl2trd.o: scl2trd.c scl2trd.h debug.h utils.h zvfs.h
 	\$(CC) \$(CFLAGS) -c scl2trd.c
 
 zip.o: zip.c zip.h miniz.h debug.h 
