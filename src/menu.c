@@ -36033,7 +36033,10 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
         	return util_extract_tap(archivo,tmpdir,NULL);
         }
 
-        else if (!util_compare_file_extension(archivo,"tzx") ) {
+        else if (
+            !util_compare_file_extension(archivo,"tzx") || 
+            !util_compare_file_extension(archivo,"cdt")
+            ) {
                 debug_printf (VERBOSE_DEBUG,"Is a tzx file");
                 return util_extract_tzx(archivo,tmpdir,NULL);
         }
