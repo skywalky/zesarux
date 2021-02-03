@@ -23183,6 +23183,33 @@ void menu_file_nex_browser_show(char *filename)
 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
+    z80_int registro_leido;
+
+    registro_leido=value_8_to_16(nex_header[15],nex_header[14]);
+    sprintf(buffer_texto,"PC Register: %04XH",registro_leido);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    registro_leido=value_8_to_16(nex_header[13],nex_header[12]);
+    sprintf(buffer_texto,"SP Register: %04XH",registro_leido);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    registro_leido=value_8_to_16(nex_header[141],nex_header[140]);
+    sprintf(buffer_texto,"File handler: %04XH",registro_leido);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    sprintf(buffer_texto,"RAM required: %dk",(nex_header[8] ? 1792 : 768) );
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    sprintf(buffer_texto,"16k Banks: %d",nex_header[9]);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    sprintf(buffer_texto,"Required core v. %d.%d.%d",nex_header[135],nex_header[136],nex_header[137]);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);    
+    //135	3	Required core version, three bytes 
+    //0..15 "major", 0..15 "minor", 0..255 "subminor" version numbers. 
+    //(core version is checked only when reported machine-ID is 10 = "Next", 
+    //on other machine or emulator=8 the latest loaders will skip the check)
+
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, "%s", texto_browser);
