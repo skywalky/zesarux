@@ -87,4 +87,6 @@ extern int load_nex_snapshot_open_esxdos(char *nombre_archivo,int forzar_filehan
 #define Z80_MAIN_HEADER_SIZE 30
 #define Z80_AUX_HEADER_SIZE 57
 
+#define NEX_HEADER_SIZE 512
+
 #endif

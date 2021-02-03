@@ -23137,6 +23137,64 @@ void menu_file_spg_browser_show(char *filename)
 }
 
 
+
+void menu_file_nex_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo spg
+
+
+	//Leer  bytes de la cabecera
+	//buffer para la cabecera
+	z80_byte nex_header[NEX_HEADER_SIZE];
+
+    int leidos=lee_archivo(filename,(char *)nex_header,NEX_HEADER_SIZE);
+
+	if (leidos!=NEX_HEADER_SIZE) {
+                debug_printf(VERBOSE_ERR,"Error reading file");
+                return;
+        }
+
+
+	char buffer_texto[64]; //2 lineas, por si acaso
+
+	//int longitud_bloque;
+
+	//int longitud_texto;
+
+	char texto_browser[MAX_TEXTO_BROWSER];
+	int indice_buffer=0;
+
+
+	char snap_version[5];
+	//4	4	string with NEX file version, currently "V1.0", "V1.1" or "V1.2"
+	snap_version[0]=nex_header[4];
+	snap_version[1]=nex_header[5];
+	snap_version[2]=nex_header[6];
+	snap_version[3]=nex_header[7];
+	snap_version[4]=0;
+
+
+        //z80_int spg_pc_reg=value_8_to_16(spg_header[31],spg_header[30]);
+        //sprintf(buffer_texto,"PC Register: %04XH",spg_pc_reg);
+ 	//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+ 	sprintf(buffer_texto,"File version: %s",snap_version);
+	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+
+	texto_browser[indice_buffer]=0;
+	//menu_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, "%s", texto_browser);
+	zxvision_generic_message_tooltip("NEX file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
+
+	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
+
+}
+
+
+
 void menu_file_zx_browser_show(char *filename)
 {
 	
@@ -26166,6 +26224,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 
         else if (!util_compare_file_extension(file_name,"snx")) menu_file_sna_browser_show(file_name);
 
+        else if (!util_compare_file_extension(file_name,"nex")) menu_file_nex_browser_show(file_name);
+
         else if (!util_compare_file_extension(file_name,"spg")) menu_file_spg_browser_show(file_name);
 
         else if (!util_compare_file_extension(file_name,"bas")) menu_file_basic_browser_show(file_name);
@@ -26184,6 +26244,7 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 
         else if (!util_compare_file_extension(file_name,"o")) menu_file_o_browser_show(file_name);
 
+        //TODO .mmc viewer no soportado cuando el archivo .mmc esta dentro de una imagen fatfs (o sea no soporta zvfs)
         else if (!util_compare_file_extension(file_name,"mmc")) menu_file_mmc_browser_show(file_name,"MMC");
 
         //Suponemos que un mmcide (que sale de un hdf) es un mmc
@@ -26203,10 +26264,13 @@ void menu_file_viewer_read_file(char *title,char *file_name)
 
         else if (!util_compare_file_extension(file_name,"cdt")) menu_file_tzx_browser_show(file_name);
 
+        //TODO .flash viewer no soportado cuando el archivo .mmc esta dentro de una imagen fatfs (o sea no soporta zvfs)
         else if (!util_compare_file_extension(file_name,"flash")) menu_file_flash_browser_show(file_name);
 
+        //TODO .epr viewer no soportado cuando el archivo .mmc esta dentro de una imagen fatfs (o sea no soporta zvfs)
         else if (!util_compare_file_extension(file_name,"epr")) menu_z88_new_ptr_card_browser(file_name);
 
+        //TODO .eprom viewer no soportado cuando el archivo .mmc esta dentro de una imagen fatfs (o sea no soporta zvfs)
         else if (!util_compare_file_extension(file_name,"eprom")) menu_z88_new_ptr_card_browser(file_name);
 
         else if (!util_compare_file_extension(file_name,"zsf")) menu_file_zsf_browser_show(file_name);

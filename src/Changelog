@@ -12,6 +12,7 @@ Added ZRCP commands:
 Added alternate Jupiter ACE rom
 Added another fourth easter egg ;)
 Added read only setting for esxdos handler
+Added .nex file viewer
 
 Improved CPC emulation: 
 -Video scanlines rendering

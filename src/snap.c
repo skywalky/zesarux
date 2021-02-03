@@ -5534,7 +5534,7 @@ void load_nex_snapshot(char *archivo)
 	debug_printf(VERBOSE_DEBUG,"Loading .nex snapshot %s",archivo);
 
 
-#define NEX_HEADER_SIZE 512
+
 	//buffer para la cabecera
 	z80_byte nex_header[NEX_HEADER_SIZE];
 
