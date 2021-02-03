@@ -35657,6 +35657,20 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
 		if (menu_confirm_yesno_texto("Confirm operation","Sure?")==0) return;
 
+        //Ver si ruta origen y destino es la misma, en el caso de copy y move
+        if (rename_move==0 || rename_move==2) {
+            char dir_origen[PATH_MAX];
+            char dir_destino[PATH_MAX];
+
+            util_get_dir(archivo,dir_origen);
+            util_get_dir(nombre_final,dir_destino);
+
+            if (!strcmp(dir_origen,dir_destino)) {
+                debug_printf(VERBOSE_ERR,"Source and target directory are the same (%s). Aborting!",dir_origen);
+                return;
+            }
+        }
+
 		//Si existe archivo destino
 		if (si_existe_archivo(nombre_final)) {
 			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
