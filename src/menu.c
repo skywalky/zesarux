@@ -23277,17 +23277,34 @@ void menu_file_z80_browser_show(char *filename)
 	
 	//Leemos cabecera archivo z80
         FILE *ptr_file_z80_browser;
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+        //FRESULT fr;     /* FatFs return code */
+
+        int in_fatfs;
+
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_z80_browser,&fil)<0) {
+            debug_printf(VERBOSE_ERR,"Unable to open file");
+            return;
+        }
+
+        /*
         ptr_file_z80_browser=fopen(filename,"rb");
 
         if (!ptr_file_z80_browser) {
 		debug_printf(VERBOSE_ERR,"Unable to open file");
 		return;
 	}
+        */
 
 	//Leemos primeros 30 bytes de la cabecera
 	z80_byte z80_header[87];
 
-        int leidos=fread(z80_header,1,30,ptr_file_z80_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,z80_header,30,ptr_file_z80_browser,&fil);
+        //leidos=fread(z80_header,1,30,ptr_file_z80_browser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
@@ -23306,15 +23323,16 @@ void menu_file_z80_browser_show(char *filename)
         	z80_version=2; //minimo 2
 
         	//Leer cabecera adicional 
-        	fread(&z80_header[30],1,57,ptr_file_z80_browser);
+            zvfs_fread(in_fatfs,&z80_header[30],57,ptr_file_z80_browser,&fil);
+        	//fread(&z80_header[30],1,57,ptr_file_z80_browser);
 
         	z80_pc_reg=value_8_to_16(z80_header[33],z80_header[32]);
 
         	if (z80_header[30]!=23) z80_version=3;
         }
 
-
-        fclose(ptr_file_z80_browser);
+        zvfs_fclose(in_fatfs,ptr_file_z80_browser,&fil);
+        //fclose(ptr_file_z80_browser);
 
        
 	char buffer_texto[64]; //2 lineas, por si acaso
@@ -23359,6 +23377,27 @@ void menu_file_z80_browser_show(char *filename)
 
  	sprintf(buffer_texto,"PC Register: %04XH",z80_pc_reg);
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+    z80_int registro_leido;
+
+    registro_leido=value_8_to_16(z80_header[9],z80_header[8]);
+    sprintf(buffer_texto,"SP Register: %04XH",registro_leido);
+        indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    z80_byte im_leido=z80_header[29] & 3;
+    sprintf(buffer_texto,"IM mode: %d",im_leido);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    z80_byte i_leido=z80_header[10];
+    sprintf(buffer_texto,"I register: %02XH",i_leido);
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+    z80_byte ints_leido=(z80_header[27] == 0 ? 0 : 1);
+    sprintf(buffer_texto,"Interrupts: %s", (ints_leido ? "Enabled" : "Disabled"));
+    indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
 
 	texto_browser[indice_buffer]=0;
 	//menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);
