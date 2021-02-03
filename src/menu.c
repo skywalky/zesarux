@@ -23058,36 +23058,18 @@ void menu_file_spg_browser_show(char *filename)
 {
 	
 	//Leemos cabecera archivo spg
-        FILE *ptr_file_spg_browser;
-        ptr_file_spg_browser=fopen(filename,"rb");
 
-        if (!ptr_file_spg_browser) {
-		debug_printf(VERBOSE_ERR,"Unable to open file");
-		return;
-	}
 
 	//Leer  bytes de la cabecera
 	int tamanyo_cabecera=sizeof(struct hdrSPG1_0);
 	struct hdrSPG1_0 spg_header;
 
-        int leidos=fread(&spg_header,1,tamanyo_cabecera,ptr_file_spg_browser);
+    int leidos=lee_archivo(filename,(char *)&spg_header,tamanyo_cabecera);
 
 	if (leidos!=tamanyo_cabecera) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
         }
-
-        fclose(ptr_file_spg_browser);
-
-
-
-
-
-
-        
-
-
-        
 
 
 	char buffer_texto[64]; //2 lineas, por si acaso
