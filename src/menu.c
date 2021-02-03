@@ -31791,7 +31791,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On fileselector:\n"
 			"- Use cursors and PgDn/Up\n"
 			"- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n"
-			"- Use Space to expand files, currently supported: tap, tzx, trd, scl, dsk, mdv, hdf, P, O, Z88 Cards (.epr, .eprom, .flash) and also all the compressed supported files\n"
+			"- Use Space to expand files, currently supported: tap, tzx, pzx, trd, scl, dsk, mdv, hdf, P, O, Z88 Cards (.epr, .eprom, .flash) and also all the compressed supported files\n"
 			"- Use TAB to change section\n"
 			"- Use Space/cursor on filter to change filter\n"
 			"- Press the initial letter\n"

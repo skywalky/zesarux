@@ -63,39 +63,26 @@ void showMessage(char *e)
 
 void writeDiskData()
 {
-    //int leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
-    //uint16_t r = ESXDOS_fread(&buff, 256, iStream);
+
     int r = fread(&buff, 1,256, iStream);
     while (r == 256) {
-        //fwrite(puntero,1,tamanyo,ptr_filesave);
-        //ESXDOS_fwrite(&buff, r, oStream);
+
         fwrite(&buff,1,r,oStream);
-        //r = ESXDOS_fread(&buff, 256, iStream);
+
         r = fread(&buff, 1,256, iStream);
     }
     
     if (isFull) {
         cleanBuffer();
         for (r=0;r<totalFreeSect;r++)
-        //fwrite(puntero,1,tamanyo,ptr_filesave);
-            //ESXDOS_fwrite(&buff, 256, oStream);
+
             fwrite(&buff,1,256,oStream);
     }
     
-    /*iferror {
-        showMessage("Issue with writing disk data to TRD-file");
-        return;
-    }*/
 
     fclose(iStream);
     fclose(oStream);
-    /*textUtils_println(" * All data written!");
-    textUtils_println("");
-    textUtils_println(" TRD file is stored and ready to use!");
-    textUtils_println("");
-    textUtils_println(" Press any key to convert other SCL-file");
-    waitKeyPress();
-    */
+
    debug_printf (VERBOSE_INFO,"All scl to trd data written");
 }
 
@@ -120,19 +107,13 @@ void writeDiskInfo()
     buff[0xf9] = 't';
     buff[0xfa] = 'r';
     buff[0xfb] = 'd';
-     //fwrite(puntero,1,tamanyo,ptr_filesave);
-    //ESXDOS_fwrite(&buff, 256, oStream);
-    //ESXDOS_fwrite(0, 1792, oStream); // Any dirt is ok
+
     fwrite(&buff, 1,256, oStream);
 
     char dirt_data[1792];
     fwrite(&dirt_data, 1,1792, oStream); // Any dirt is ok
 
-    /*iferror {
-        showMessage("Issue with writing disk info to TRD-file");
-        return;
-    }*/
-    //textUtils_println(" * Disk information written");
+
     writeDiskData();
 }
 
@@ -151,10 +132,9 @@ void writeCatalog()
         return ;
     }
 
-    //ESXDOS_fread(&count, 1, iStream);
     fread(&count,1,1,iStream);
     for (i=0;i<count; i++) {
-        //ESXDOS_fread(&buff, 14, iStream);
+
         fread(&buff, 1,14, iStream);
         buff[14] = freeSec;
         buff[15] = freeTrack;
@@ -162,20 +142,16 @@ void writeCatalog()
         freeTrack += freeSec / 16;
         totalFreeSect -= (int) buff[0xd];
         freeSec = freeSec % 16;
-        //ESXDOS_fwrite(&buff, 16, oStream);
+
         fwrite(&buff, 1,16, oStream);
     }
     cleanBuffer();
 
     for (i = count;i<128;i++) {
-        //ESXDOS_fwrite(&buff, 16, oStream);
+
         fwrite(&buff, 1,16, oStream);
     }
-    /*iferror {
-        showMessage("Issue with writing catalog to TRD-file");
-        return;
-    }*/
-    //textUtils_println(" * Disk catalog written");
+
     writeDiskInfo();
 }
 
@@ -192,7 +168,7 @@ void validateScl()
     }
 
     cleanBuffer();
-    //ESXDOS_fread(&buff, 8, iStream);
+
     fread(&buff, 1,8, iStream);
     if (strcmp(expected, (char *)&buff)) {
         showMessage("Wrong file! Select only SCL files");
