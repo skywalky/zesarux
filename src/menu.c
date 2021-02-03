@@ -35841,7 +35841,7 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
 	sprintf (tmpdir,"%s/%s",get_tmpdir_base(),archivo);
 	menu_filesel_mkdir(tmpdir);
 
-
+        //TODO: hdf no se puede expandir si el archivo esta en una imagen mmc
         if (!util_compare_file_extension(archivo,"hdf") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a hdf file");
                 return util_extract_hdf(archivo,tmpdir);
@@ -35873,6 +35873,7 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
                 return util_extract_dsk(archivo,tmpdir);
         }		
 
+        //TODO: epr, eprom, flash no se puede expandir si el archivo esta en una imagen mmc
         else if (
 			!util_compare_file_extension(archivo,"epr")  ||
 			!util_compare_file_extension(archivo,"eprom")  ||
