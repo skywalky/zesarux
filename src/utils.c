@@ -13893,7 +13893,11 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 
 	
 	//tapefile
-	if (util_compare_file_extension(filename,"tzx")!=0) {
+	if (
+        util_compare_file_extension(filename,"tzx")!=0 &&
+        util_compare_file_extension(filename,"cdt")!=0
+    
+    ) {
 		debug_printf(VERBOSE_ERR,"Tape expander not supported for this tape type");
 		return 1;
 	}
