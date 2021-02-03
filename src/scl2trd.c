@@ -55,6 +55,11 @@ size_t scl2trd_fread(void *restrict ptr, size_t nitems)
     return fread(ptr,1,nitems,iStream);
 }
 
+size_t scl2trd_fwrite(const void *restrict ptr, size_t nitems)
+{
+    return fwrite(ptr,1,nitems,oStream);
+}
+
 void cleanBuffer()
 {
   int i;
@@ -72,7 +77,7 @@ void writeDiskData()
     int r = scl2trd_fread(&buff,256);
     while (r == 256) {
 
-        fwrite(&buff,1,r,oStream);
+        scl2trd_fwrite(&buff,r);
 
         r = scl2trd_fread(&buff,256);
     }
@@ -81,7 +86,7 @@ void writeDiskData()
         cleanBuffer();
         for (r=0;r<totalFreeSect;r++)
 
-            fwrite(&buff,1,256,oStream);
+            scl2trd_fwrite(&buff,256);
     }
     
 
@@ -113,10 +118,10 @@ void writeDiskInfo()
     buff[0xfa] = 'r';
     buff[0xfb] = 'd';
 
-    fwrite(&buff, 1,256, oStream);
+    scl2trd_fwrite(&buff,256);
 
     char dirt_data[1792];
-    fwrite(&dirt_data, 1,1792, oStream); // Any dirt is ok
+    scl2trd_fwrite(&dirt_data,1792); // Any dirt is ok
 
 
     writeDiskData();
@@ -148,13 +153,13 @@ void writeCatalog()
         totalFreeSect -= (int) buff[0xd];
         freeSec = freeSec % 16;
 
-        fwrite(&buff, 1,16, oStream);
+        scl2trd_fwrite(&buff,16);
     }
     cleanBuffer();
 
     for (i = count;i<128;i++) {
 
-        fwrite(&buff, 1,16, oStream);
+        scl2trd_fwrite(&buff,16);
     }
 
     writeDiskInfo();
