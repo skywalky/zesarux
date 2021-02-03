@@ -50,6 +50,11 @@ unsigned char count;
 unsigned char isFull = 0;
 int totalFreeSect = 2544;
 
+size_t scl2trd_fread(void *restrict ptr, size_t nitems)
+{
+    return fread(ptr,1,nitems,iStream);
+}
+
 void cleanBuffer()
 {
   int i;
@@ -64,12 +69,12 @@ void showMessage(char *e)
 void writeDiskData()
 {
 
-    int r = fread(&buff, 1,256, iStream);
+    int r = scl2trd_fread(&buff,256);
     while (r == 256) {
 
         fwrite(&buff,1,r,oStream);
 
-        r = fread(&buff, 1,256, iStream);
+        r = scl2trd_fread(&buff,256);
     }
     
     if (isFull) {
@@ -132,10 +137,10 @@ void writeCatalog()
         return ;
     }
 
-    fread(&count,1,1,iStream);
+    scl2trd_fread(&count,1);
     for (i=0;i<count; i++) {
 
-        fread(&buff, 1,14, iStream);
+        scl2trd_fread(&buff,14);
         buff[14] = freeSec;
         buff[15] = freeTrack;
         freeSec += buff[0xd];
@@ -169,7 +174,7 @@ void validateScl()
 
     cleanBuffer();
 
-    fread(&buff, 1,8, iStream);
+    scl2trd_fread(&buff,8);
     if (strcmp(expected, (char *)&buff)) {
         showMessage("Wrong file! Select only SCL files");
         return;
