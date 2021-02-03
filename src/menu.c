@@ -23415,24 +23415,43 @@ void menu_file_col_browser_show(char *filename)
 	
 	//Leemos cabecera archivo col
         FILE *ptr_file_z80_browser;
+
+        //Soporte para FatFS
+        FIL fil;        /* File object */
+        //FRESULT fr;     /* FatFs return code */
+
+        int in_fatfs;
+
+  
+        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_z80_browser,&fil)<0) {
+            debug_printf(VERBOSE_ERR,"Unable to open file");
+            return;
+        }
+
+        /*
         ptr_file_z80_browser=fopen(filename,"rb");
 
         if (!ptr_file_z80_browser) {
 		debug_printf(VERBOSE_ERR,"Unable to open file");
 		return;
 	}
+    */
 
 	//Leemos primeros 256 bytes de cabecera
 	z80_byte z80_header[256];
 
-        int leidos=fread(z80_header,1,256,ptr_file_z80_browser);
+        int leidos;
+        
+        leidos=zvfs_fread(in_fatfs,z80_header,256,ptr_file_z80_browser,&fil);
+        //leidos=fread(z80_header,1,256,ptr_file_z80_browser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading file");
                 return;
         }
 
-		fclose(ptr_file_z80_browser);
+        zvfs_fclose(in_fatfs,ptr_file_z80_browser,&fil);
+		//fclose(ptr_file_z80_browser);
 
 		char texto_info[256];
 		char buffer_texto[512];
