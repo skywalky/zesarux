@@ -53,25 +53,25 @@ int totalFreeSect = 2544;
 
 
 //Soporte para FatFS
-FIL fil_input;        
-int in_fatfs_input;
+FIL scl2trd_fil_input;        
+int scl2trd_in_fatfs_input;
 
-FIL fil_output;        
-int in_fatfs_output;
+FIL scl2trd_fil_output;        
+int scl2trd_in_fatfs_output;
 
 
 size_t scl2trd_fread(void *restrict ptr, size_t nitems)
 {
     //return fread(ptr,1,nitems,iStream);
 
-    return zvfs_fread(in_fatfs_input,ptr,nitems,iStream,&fil_input);
+    return zvfs_fread(scl2trd_in_fatfs_input,ptr,nitems,iStream,&scl2trd_fil_input);
 }
 
 size_t scl2trd_fwrite(const void *restrict ptr, size_t nitems)
 {
     //return fwrite(ptr,1,nitems,oStream);
 
-    return zvfs_fwrite(in_fatfs_output,(z80_byte *)ptr,nitems,oStream,&fil_output);
+    return zvfs_fwrite(scl2trd_in_fatfs_output,(z80_byte *)ptr,nitems,oStream,&scl2trd_fil_output);
 }
 
 void cleanBuffer()
@@ -103,10 +103,10 @@ void writeDiskData()
             scl2trd_fwrite(&buff,256);
     }
     
-    zvfs_fclose(in_fatfs_input,iStream,&fil_input);
+    zvfs_fclose(scl2trd_in_fatfs_input,iStream,&scl2trd_fil_input);
     //fclose(iStream);
 
-    zvfs_fclose(in_fatfs_output,oStream,&fil_output);
+    zvfs_fclose(scl2trd_in_fatfs_output,oStream,&scl2trd_fil_output);
     //fclose(oStream);
 
    debug_printf (VERBOSE_INFO,"All scl to trd data written");
@@ -151,7 +151,7 @@ void writeCatalog()
     freeSec = 0;
     count = 0;
 
-    if (zvfs_fopen_write(scl_outputfile,&in_fatfs_output,&oStream,&fil_output)<0) {
+    if (zvfs_fopen_write(scl_outputfile,&scl2trd_in_fatfs_output,&oStream,&scl2trd_fil_output)<0) {
         showMessage("Can't open output file");
         return ;
     }    
@@ -192,7 +192,7 @@ void validateScl()
 {
     char *expected = "SINCLAIR";
 
-    if (zvfs_fopen_read(scl_inputfile,&in_fatfs_input,&iStream,&fil_input)<0) {
+    if (zvfs_fopen_read(scl_inputfile,&scl2trd_in_fatfs_input,&iStream,&scl2trd_fil_input)<0) {
         showMessage("Can't open input file");
         return;
     }    

@@ -35892,6 +35892,7 @@ int menu_filesel_expand(char *archivo,char *tmpdir)
         	return util_extract_o(archivo,tmpdir);
         }				
 
+        //TODO: mdv no se puede expandir si el archivo esta en una imagen mmc
         else if ( !util_compare_file_extension(archivo,"mdv") ) {
                 debug_printf (VERBOSE_DEBUG,"Is a mdv file");
                 return util_extract_mdv(archivo,tmpdir);
