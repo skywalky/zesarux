@@ -20568,7 +20568,7 @@ int menu_avisa_si_extension_no_habitual(char *filtros[],char *archivo)
 }
 
 
-int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destino)
+int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destino,int simular)
 {
 
 /*
@@ -20578,13 +20578,19 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
 4) si fin directorio, return
 
 */
-    printf("Inicio menu_filesel_copy_recursive\n");
+    printf("\nInicio menu_filesel_copy_recursive origen %s destino %s\n",directorio_origen,directorio_destino);
+
+
     printf("mkdir destino %s\n",directorio_destino);
 
+    if (!simular) zvfs_mkdir(directorio_destino);
+
     int in_fatfs_origen=util_path_is_mmc_fatfs(directorio_origen);
+    //int in_fatfs_destino=util_path_is_mmc_fatfs(directorio_destino);
+    
 
 
-    int in_fatfs_destino;
+    
 
     struct dirent *dp;
     DIR *dfd;
@@ -20670,13 +20676,23 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
                     sprintf(siguiente_directorio_origen,"%s/%s",directorio_origen,nombre_origen);
                     sprintf(siguiente_directorio_destino,"%s/%s",directorio_destino,nombre_origen);
 
-                    menu_filesel_copy_recursive(siguiente_directorio_origen,siguiente_directorio_destino);
+                    menu_filesel_copy_recursive(siguiente_directorio_origen,siguiente_directorio_destino,simular);
                 }
             }
 
             else {
                 //Si es archivo, copiar a destino
-                printf("Copiar %s de %s hacia %s\n",nombre_origen,directorio_origen,directorio_destino);
+                char archivo_copiar_origen[PATH_MAX];
+                char archivo_copiar_destino[PATH_MAX];
+
+                sprintf(archivo_copiar_origen,"%s/%s",directorio_origen,nombre_origen);
+                sprintf(archivo_copiar_destino,"%s/%s",directorio_destino,nombre_origen);
+
+                printf("Copiar %s hacia %s\n",archivo_copiar_origen,archivo_copiar_destino);
+
+                if (!simular) {
+                    util_copy_file(archivo_copiar_origen,archivo_copiar_destino);
+                }
             }
 
             
@@ -20691,6 +20707,7 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
     if (in_fatfs_origen) f_closedir(&dir);
     else closedir(dfd);
 
+    printf("Close dir %s , %s\n\n",directorio_origen,directorio_destino);
 
     return 0;
 
@@ -35791,7 +35808,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
             //util_copy_file(archivo,nombre_final);
             //de momento forzado a tipo recursivo
-            menu_filesel_copy_recursive(archivo,nombre_final);
+            menu_filesel_copy_recursive(archivo,nombre_final,1);
 
             menu_generic_message("Copy file","OK. File copied");
         }
