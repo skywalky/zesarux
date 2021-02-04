@@ -35993,7 +35993,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
                 //Copiar con ventana de progreso
                 menu_filesel_copy_recursive_start(archivo,nombre_final,0);
 
-                menu_generic_message("Copy folder","OK. Folder copied");
+                //menu_generic_message("Copy folder","OK. Folder copied");
             }
             else {
                 util_copy_file(archivo,nombre_final);
