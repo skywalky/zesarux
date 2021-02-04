@@ -793,6 +793,9 @@ char filesel_nombre_archivo_seleccionado[PATH_MAX];
 //Si mostrar en filesel utilidades de archivos
 z80_bit menu_filesel_show_utils={0};
 
+//Decir que en el menu drives aparecera (si es que esta montado) imagen mmc, aunque no estemos con file utils activo
+z80_bit menu_filesel_drives_allow_fatfs={0};
+
 //Si mostrar en filesel previews de archivos
 z80_bit menu_filesel_show_previews={1};
 
@@ -35801,9 +35804,14 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
         	//Ocultar utilidades
         	menu_filesel_show_utils.v=0;
+            //Decir que el menu de drives debe incluir 0:/, aunque file utils no este activo
+            menu_filesel_drives_allow_fatfs.v=1;
+
         	ret=menu_filesel("Set target dir & press ESC",filtros,nada);
         	//Volver a mostrar utilidades
         	menu_filesel_show_utils.v=1;
+
+            menu_filesel_drives_allow_fatfs.v=0;
 
 
         	//Si sale con ESC
@@ -36708,9 +36716,12 @@ void menu_filesel_cambiar_unidad_common(char *destino)
 
 #endif 
 
-    //Si hay imagen montada y esta file utils, permitir seleccionarla
+    //Si hay imagen montada y (esta file utils o bien permitimos mostrar en drives), permitir seleccionarla
     //No queremos que en ventanas que no sean file utils, se pueda seleccionar 0:/
-    if (menu_mmc_image_montada && menu_filesel_show_utils.v) {
+    if (menu_mmc_image_montada && 
+    (menu_filesel_show_utils.v || menu_filesel_drives_allow_fatfs.v)
+    ) 
+    {
         menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"0:/");
         menu_add_item_menu_tooltip(array_menu_filesel_unidad,"This is the first mmc mounted image");
         menu_add_item_menu_ayuda(array_menu_filesel_unidad,"This is the first mmc mounted image");
