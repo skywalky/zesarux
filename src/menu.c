@@ -34809,7 +34809,7 @@ void filesel_return_free_mmc_mounted(int *total, int *free)
     fre_sect = fre_clust * fs->csize;
 
     /* Print the free space (assuming 512 bytes/sector) */
-    printf("%10d KiB total drive space.\n%10d KiB available.\n", tot_sect / 2, fre_sect / 2);
+    //printf("%10d KiB total drive space.\n%10d KiB available.\n", tot_sect / 2, fre_sect / 2);
 
     int mb_total=tot_sect / 2/1024;
     int mb_free=fre_sect / 2 / 1024;
@@ -34889,9 +34889,9 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
                     else strcpy(buffer_sync,"mo~^Unt ");
                 }
 
-                sprintf(buffer_temporal,"%sD~^El Re~^N ~^Paste %s",
-                    //Copy, move, de momento  solo para archivos
-                    (es_directorio ? "" : "~^Copy ~^Move "),
+                sprintf(buffer_temporal,"%sD~^El Re~^N ~^Paste ~^Copy %s",
+                    //move, de momento  solo para archivos
+                    (es_directorio ? "" : "~^Move "),
                     buffer_sync);
                 zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_temporal);
 
@@ -35851,7 +35851,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
 		//Si existe archivo destino
 		if (si_existe_archivo(nombre_final)) {
-			if (menu_confirm_yesno_texto("File exists","Overwrite?")==0) return;
+			if (menu_confirm_yesno_texto("Item exists","Overwrite?")==0) return;
 		}
 
         //Copy
