@@ -35759,6 +35759,125 @@ extern int memory_zone_by_file_size;
 		else menu_generic_message_splash("File memory zone","File loaded to File memory zone");
 }
 
+//Indica con un flag que esta copiando recursivamente
+int menu_filesel_copying_recursive_flag=0;
+
+void menu_filesel_copy_recursive_withflag(char *archivo,char *nombre_final,int simular)
+{
+    menu_filesel_copying_recursive_flag=1;
+    menu_filesel_copy_recursive(archivo,nombre_final,simular);
+    menu_filesel_copying_recursive_flag=0;
+}
+
+
+//Si hay soporte de threads, mostrar ventana de progreso
+#ifdef USE_PTHREADS
+
+int contador_menu_copying_recurse_progress_print=0;
+pthread_t menu_copying_recurse_progress_thread;
+
+char menu_copying_recurse_progress_source[PATH_MAX];
+char menu_copying_recurse_progress_destination[PATH_MAX];
+int menu_copying_recurse_progress_simular;
+
+void *menu_copying_recurse_progress_thread_function(void *nada GCC_UNUSED)
+{
+    debug_printf(VERBOSE_DEBUG,"Starting sync thread");
+
+    menu_filesel_copy_recursive_withflag(menu_copying_recurse_progress_source,menu_copying_recurse_progress_destination,menu_copying_recurse_progress_simular);
+
+    debug_printf(VERBOSE_DEBUG,"Finishing sync thread");
+
+
+    return 0;
+
+}
+
+int menu_copying_recurse_progress_cond(zxvision_window *w GCC_UNUSED)
+{
+        return !menu_filesel_copying_recursive_flag;
+}
+
+
+void menu_copying_recurse_progress_print(zxvision_window *w)
+{
+        char *mensaje="|/-\\";
+
+        int max=strlen(mensaje);
+        char mensaje_dest[32];
+
+        int pos=contador_menu_copying_recurse_progress_print % max;
+
+        sprintf(mensaje_dest,"Copying %c",mensaje[pos]);
+
+        zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);
+        zxvision_draw_window_contents(w);
+
+        contador_menu_copying_recurse_progress_print++;
+
+}
+void menu_filesel_copy_recursive_start(char *archivo,char *nombre_final,int simular)
+{
+
+
+    //TODO: enviar estos parametros como parametros del thread
+    strcpy(menu_copying_recurse_progress_source,archivo);
+
+    strcpy(menu_copying_recurse_progress_destination,nombre_final);
+
+    simular=menu_copying_recurse_progress_simular;
+
+
+                //Inicializar thread
+        debug_printf (VERBOSE_DEBUG,"Initializing thread menu_copying_recurse_progress_thread");
+
+
+                //Lanzar el thread de sync
+        //struct menu_copying_recurse_progress_struct parametros;
+
+
+        //Antes de lanzarlo, decir que se ejecuta, por si el usuario le da enter rapido a la ventana de progreso y el thread aun no se ha lanzado
+        //menu_copying_recurse_progress_thread_running=1;
+
+        if (pthread_create( &menu_copying_recurse_progress_thread, NULL, &menu_copying_recurse_progress_thread_function, NULL )) {
+                debug_printf(VERBOSE_ERR,"Can not create menu_copying_recurse_progress_thread thread");
+                return;
+        }    
+
+
+            contador_menu_copying_recurse_progress_print=0;
+        zxvision_simple_progress_window("Copying", menu_copying_recurse_progress_cond,menu_copying_recurse_progress_print );
+
+        if (menu_filesel_copying_recursive_flag) {
+
+                        //Al parecer despues de ventana de zxvision_simple_progress_window no se espera a liberar tecla
+                        menu_espera_no_tecla();
+                        menu_warn_message("Copying has not ended yet");
+        }
+
+        else {
+            menu_generic_message_splash("Copy","OK. Folder has been copied");
+        }
+
+
+}
+
+#else
+
+void menu_filesel_copy_recursive_start(char *archivo,char *nombre_final,int simular)
+{
+
+    //Sync tal cual sin progreso
+    //No se si hay alguien que compile sin soporte de threads, pero al menos, avisarle y mostrarle un ok cuando finalice
+    menu_warn_message("Copying folder may take a while. Press Enter and wait please");
+    menu_filesel_copy_recursive_withflag(archivo,nombre_final,simular);
+    menu_generic_message_splash("Copy","OK. Folder has been copied");
+
+}
+
+#endif
+
+
 
 //parametro rename: 
 //si 0, move
@@ -35867,7 +35986,13 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
             int tipo_archivo=get_file_type(archivo);
             if (tipo_archivo==2) {
                 if (menu_confirm_yesno_texto("Source is folder","Copy recursive?")==0) return;
-                menu_filesel_copy_recursive(archivo,nombre_final,0);
+
+                //Copiar tal cual
+                //menu_filesel_copy_recursive(archivo,nombre_final,0);
+
+                //Copiar con ventana de progreso
+                menu_filesel_copy_recursive_start(archivo,nombre_final,0);
+
                 menu_generic_message("Copy folder","OK. Folder copied");
             }
             else {
