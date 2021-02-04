@@ -35102,33 +35102,10 @@ void file_utils_mount_mmc_image(char *fullpath)
 
     menu_mmc_image_montada=1;
 
-    //printf("leyendo\n");
-    //file_utils_mount_mmc_image_prueba_leer();
-    //printf("borrando\n");
-    //file_utils_mount_mmc_image_prueba_borrar();
-
-    //printf("\n\nEscribiendo\n");
-    //file_utils_mount_mmc_image_prueba_escribir();
-
-    //sleep(5);
-    //printf("leyendo\n");
-    //file_utils_mount_mmc_image_prueba_leer();
-
-    //char buff[256];
-
-    //FatFs gestiona 0:/ o equivalente /
-    //Pero para nosotros identificamos 0:/ para diferenciar de sistema local de archivos
-    //strcpy(buff, "0:/");
 
 
-    //printf("Dir %s\n",buff);
-    //file_utils_prueba_dir(buff);
 
-    //printf("Desmontar\n");
-
-    //Y desmontar
-    //f_unmount("");
-
+    menu_first_aid("mount_mmc_fileutils");
 
     menu_generic_message_splash("Mount Image","Ok image has been mounted on 0:/");
 
@@ -36722,6 +36699,9 @@ char *first_aid_string_tbblue_download_sd_bugs="In case of glitches or bugs, may
 		"If it's that the case, use the included tbblue sd image in ZEsarUX";  
 
 
+int first_aid_no_mount_mmc_fileutils=0;
+char *first_aid_string_mount_mmc_fileutils="Changes done in the image file are only kept in RAM memory, until you execute the Sync action"; 
+
 //Items que se disparan en startup
 
 
@@ -36816,6 +36796,8 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("realjoystick_detected",&first_aid_no_realjoystick_detected,first_aid_string_realjoystick_detected,0);
 	menu_first_aid_add("sg1000_boot",&first_aid_no_sg1000_boot,first_aid_string_sg1000_boot,0);
 	menu_first_aid_add("tbblue_download_sd_bug",&first_aid_no_tbblue_download_sd_bugs,first_aid_string_tbblue_download_sd_bugs,0);
+    menu_first_aid_add("mount_mmc_fileutils",&first_aid_no_mount_mmc_fileutils,first_aid_string_mount_mmc_fileutils,0);
+
 
 	//Items que se disparan en startup
 	menu_first_aid_add("startup_aid",&first_aid_no_startup_aid,first_aid_string_startup_aid,1);
