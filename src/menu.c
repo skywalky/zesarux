@@ -20624,15 +20624,18 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
     //FatFS parece que nunca muestra . o .., lo agregamos si no aparece
     int got_dotdot=0;
 
+    char archivo_origen_fullpath[PATH_MAX];
+    char archivo_destino_fullpath[PATH_MAX];
+
     while (!salir) {
 
         char *nombre_origen;
         int origen_es_directorio=0;
 
         if (in_fatfs_origen) {
-        //printf("antes readdir\n");
-        res = f_readdir(&dir, &fno);                   /* Read a directory item */
-        //printf("despues readdir\n");
+            //printf("antes readdir\n");
+            res = f_readdir(&dir, &fno);                   /* Read a directory item */
+            //printf("despues readdir\n");
 
             if (res != FR_OK || fno.fname[0] == 0) {
                 //printf("temp: %s\n",fno.fname);
@@ -20641,8 +20644,20 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
                 salir=1;
             }
             else {
+
+
+                    sprintf(archivo_origen_fullpath,"%s/%s",directorio_origen,fno.fname);
+                    sprintf(archivo_destino_fullpath,"%s/%s",directorio_destino,fno.fname);
+
+
                 nombre_origen=fno.fname;
-                if (fno.fattrib & AM_DIR) origen_es_directorio=1;
+                if (fno.fattrib & AM_DIR) {
+                    origen_es_directorio=1;
+                    printf("%s es directorio\n",archivo_origen_fullpath);
+                }
+                else {
+                    printf("%s es archivo\n",archivo_origen_fullpath);   
+                }
             }
         }
         else {
@@ -20651,8 +20666,18 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
             if (dp==NULL) salir=1;
 
             else {
+
+                    sprintf(archivo_origen_fullpath,"%s/%s",directorio_origen,dp->d_name);
+                    sprintf(archivo_destino_fullpath,"%s/%s",directorio_destino,dp->d_name);
+
                 nombre_origen=dp->d_name;
-                if (get_file_type(nombre_origen)==2) origen_es_directorio=1;
+                if (get_file_type(archivo_origen_fullpath)==2) {
+                    printf("%s es directorio\n",archivo_origen_fullpath);
+                    origen_es_directorio=1;
+                }
+                else {
+                    printf("%s es archivo\n",archivo_origen_fullpath);
+                }
             }
         }
 
@@ -20669,29 +20694,28 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
                 }
                 else {
                     
-                    char siguiente_directorio_origen[PATH_MAX];
-                    char siguiente_directorio_destino[PATH_MAX];
-                    //menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destino)
+                    //char siguiente_directorio_origen[PATH_MAX];
+                    //char siguiente_directorio_destino[PATH_MAX];
+                    
+                    //sprintf(siguiente_directorio_origen,"%s/%s",directorio_origen,nombre_origen);
+                    //sprintf(siguiente_directorio_destino,"%s/%s",directorio_destino,nombre_origen);
 
-                    sprintf(siguiente_directorio_origen,"%s/%s",directorio_origen,nombre_origen);
-                    sprintf(siguiente_directorio_destino,"%s/%s",directorio_destino,nombre_origen);
-
-                    menu_filesel_copy_recursive(siguiente_directorio_origen,siguiente_directorio_destino,simular);
+                    menu_filesel_copy_recursive(archivo_origen_fullpath,archivo_destino_fullpath,simular);
                 }
             }
 
             else {
                 //Si es archivo, copiar a destino
-                char archivo_copiar_origen[PATH_MAX];
-                char archivo_copiar_destino[PATH_MAX];
+                //char archivo_copiar_origen[PATH_MAX];
+                //char archivo_copiar_destino[PATH_MAX];
 
-                sprintf(archivo_copiar_origen,"%s/%s",directorio_origen,nombre_origen);
-                sprintf(archivo_copiar_destino,"%s/%s",directorio_destino,nombre_origen);
+                //sprintf(archivo_copiar_origen,"%s/%s",directorio_origen,nombre_origen);
+                //sprintf(archivo_copiar_destino,"%s/%s",directorio_destino,nombre_origen);
 
-                printf("Copiar %s hacia %s\n",archivo_copiar_origen,archivo_copiar_destino);
+                printf("Copiar %s hacia %s\n",archivo_origen_fullpath,archivo_destino_fullpath);
 
                 if (!simular) {
-                    util_copy_file(archivo_copiar_origen,archivo_copiar_destino);
+                    util_copy_file(archivo_origen_fullpath,archivo_destino_fullpath);
                 }
             }
 
@@ -35808,7 +35832,7 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
             //util_copy_file(archivo,nombre_final);
             //de momento forzado a tipo recursivo
-            menu_filesel_copy_recursive(archivo,nombre_final,1);
+            menu_filesel_copy_recursive(archivo,nombre_final,0);
 
             menu_generic_message("Copy file","OK. File copied");
         }
