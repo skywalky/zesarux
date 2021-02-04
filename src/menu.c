@@ -35788,7 +35788,11 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
         //Copy
 		if (rename_move==2) {
-            util_copy_file(archivo,nombre_final);
+
+            //util_copy_file(archivo,nombre_final);
+            //de momento forzado a tipo recursivo
+            menu_filesel_copy_recursive(archivo,nombre_final);
+
             menu_generic_message("Copy file","OK. File copied");
         }
 		//Rename
@@ -38757,6 +38761,18 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                     releer_directorio=1;
                                 }
 
+                                //Copy para cualquier tipo de origen. Si es directorio, hara copy recursive
+                                if (tecla=='C') {
+                                    file_utils_move_rename_copy_file(file_utils_file_selected,2);
+                                    //Restaurar variables globales que se alteran al llamar al otro filesel
+                                    //TODO: hacer que estas variables no sean globales sino locales de esta funcion menu_filesel
+                                    filesel_filtros_iniciales=filtros;
+                                    filesel_filtros=filtros;
+                                    
+                                    releer_directorio=1;
+                                }                                                                                                    
+
+
                                 //Delete para cualquier tipo de archivo
                                 if (tecla=='E') {
                                     if (menu_confirm_yesno_texto("Delete","Sure?")) {
@@ -38805,7 +38821,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 //Sync mmc image
                                 if (tecla=='S' && menu_mmc_image_montada) {
                                     if (menu_confirm_yesno_texto("Sync changes","Sure?")) menu_filesel_mmc_sync();                              
-                                }	                                                                    
+                                }	
 
 								//Si no es directorio
 								if (tipo_archivo_seleccionado!=2) {
@@ -38853,16 +38869,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 				
 
-									//Copy
-									if (tecla=='C') {
-										file_utils_move_rename_copy_file(file_utils_file_selected,2);
-										//Restaurar variables globales que se alteran al llamar al otro filesel
-										//TODO: hacer que estas variables no sean globales sino locales de esta funcion menu_filesel
-										filesel_filtros_iniciales=filtros;
-										filesel_filtros=filtros;
-										
-										releer_directorio=1;
-									}
+
 
 									
 
