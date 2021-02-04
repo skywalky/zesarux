@@ -36484,8 +36484,8 @@ void menu_filesel_cambiar_unidad_common(char *destino)
 
 #endif 
 
-    //Si hay imagen montada, permitir seleccionarla
-    if (menu_mmc_image_montada) {
+    //Si hay imagen montada y esta file utils, permitir seleccionarla
+    if (menu_mmc_image_montada && menu_filesel_show_utils.v) {
         menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"0:/");
         menu_add_item_menu_tooltip(array_menu_filesel_unidad,"This is the first mmc mounted image");
         menu_add_item_menu_ayuda(array_menu_filesel_unidad,"This is the first mmc mounted image");
@@ -38145,6 +38145,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 
 
 					//si es directorio, cambiamos
+                    /*
 					struct stat buf_stat;
 					int stat_valor;
 					stat_valor=stat(filesel_nombre_archivo_seleccionado, &buf_stat);
@@ -38152,6 +38153,12 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						(stat_valor==0 && S_ISDIR(buf_stat.st_mode) ) ||
 						(unidadwindows)
 						) {
+                    */
+                    //printf("tipo archivo: %s: %d\n",filesel_nombre_archivo_seleccionado,get_file_type(filesel_nombre_archivo_seleccionado));
+                    //TODO: esto no funciona para raiz 0:/ pero si para 0:/DOCS por ejemplo
+                    if (get_file_type(filesel_nombre_archivo_seleccionado)==2 || unidadwindows) {
+
+
 						debug_printf (VERBOSE_DEBUG,"%s Is a directory or windows drive. Change",filesel_nombre_archivo_seleccionado);
                                                 zvfs_chdir(filesel_nombre_archivo_seleccionado);
 						menu_filesel_free_mem();
