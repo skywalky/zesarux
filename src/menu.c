@@ -28572,7 +28572,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Hide directories from file selector menus. "
 								"Useful on demo environments and you don't want the user to be able to navigate the filesystem");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_fileviewer_hex,NULL,"[%c] ~~Hexadecimal file viewer",
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_fileviewer_hex,NULL,"[%c] Hexadecimal file viewer",
 			(menu_file_viewer_always_hex.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"File viewer always shows file contents in hexadecimal+ascii");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"File viewer always shows file contents in hexadecimal+ascii");
@@ -36485,6 +36485,7 @@ void menu_filesel_cambiar_unidad_common(char *destino)
 #endif 
 
     //Si hay imagen montada y esta file utils, permitir seleccionarla
+    //No queremos que en ventanas que no sean file utils, se pueda seleccionar 0:/
     if (menu_mmc_image_montada && menu_filesel_show_utils.v) {
         menu_add_item_menu_format(array_menu_filesel_unidad,MENU_OPCION_NORMAL,NULL,NULL,"0:/");
         menu_add_item_menu_tooltip(array_menu_filesel_unidad,"This is the first mmc mounted image");
@@ -38680,7 +38681,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									//sprintf(&file_utils_file_selected[strlen(file_utils_file_selected)],"/%s",item_seleccionado->d_name);
 									
 									//Visor de archivos
-									if (tecla=='V') menu_file_viewer_read_file("Text file view",file_utils_file_selected);
+									if (tecla=='V') {
+                                        menu_file_viewer_read_file("Text file view",file_utils_file_selected);
+                                        menu_muestra_pending_error_message(); //Si se genera un error derivado del view
+                                    }
 
 									//Truncate
 									if (tecla=='T') {
