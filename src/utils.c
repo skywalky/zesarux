@@ -12995,7 +12995,7 @@ void util_copy_file(char *source_file, char *destination_file)
             zvfs_fwrite(in_fatfs_destination,&byte_buffer,1,ptr_destination_file,&fil_destination);
 
         	//fwrite(&byte_buffer,1,1,ptr_destination_file);
-            if ((tamanyo_origen % 1024)==0)printf("bytes restantes por copiar: %ld\n",tamanyo_origen);
+            //if ((tamanyo_origen % 1024)==0) printf("bytes restantes por copiar: %ld\n",tamanyo_origen);
 
         	tamanyo_origen--;
 	}

@@ -34792,6 +34792,33 @@ filesel_item *menu_get_filesel_item_cursor(void)
 
 }
 
+void filesel_return_free_mmc_mounted(int *total, int *free)
+{
+    //Retorna en MB espacio libre de la mmc
+        FATFS *fs;
+    DWORD fre_clust, fre_sect, tot_sect;
+
+    FRESULT res;
+
+    /* Get volume information and free clusters of drive 1 */
+    res = f_getfree("0:", &fre_clust, &fs);
+    if (res) return;
+
+    /* Get total sectors and free sectors */
+    tot_sect = (fs->n_fatent - 2) * fs->csize;
+    fre_sect = fre_clust * fs->csize;
+
+    /* Print the free space (assuming 512 bytes/sector) */
+    printf("%10d KiB total drive space.\n%10d KiB available.\n", tot_sect / 2, fre_sect / 2);
+
+    int mb_total=tot_sect / 2/1024;
+    int mb_free=fre_sect / 2 / 1024;
+
+    *total=mb_total;
+    *free=mb_free;
+
+}
+
 void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 {
 
@@ -35829,12 +35856,18 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 
         //Copy
 		if (rename_move==2) {
+            int tipo_archivo=get_file_type(archivo);
+            if (tipo_archivo==2) {
+                if (menu_confirm_yesno_texto("Source is folder","Copy recursive?")==0) return;
+                menu_filesel_copy_recursive(archivo,nombre_final,0);
+                menu_generic_message("Copy folder","OK. Folder copied");
+            }
+            else {
+                util_copy_file(archivo,nombre_final);
+                menu_generic_message("Copy file","OK. File copied");
 
-            //util_copy_file(archivo,nombre_final);
-            //de momento forzado a tipo recursivo
-            menu_filesel_copy_recursive(archivo,nombre_final,0);
-
-            menu_generic_message("Copy file","OK. File copied");
+            }
+            
         }
 		//Rename
 		else if (rename_move==1) {
@@ -36336,7 +36369,20 @@ int zxvision_si_mouse_zona_archivos(zxvision_window *ventana)
 
 void zxvision_menu_filesel_print_text_contents(zxvision_window *ventana)
 {
-	zxvision_print_string_defaults_fillspc(ventana,1,2,"Directory Contents:");
+    char buffer_linea[100];
+
+        if (menu_mmc_image_montada && menu_current_drive_mmc_image.v) {
+            int total,free;
+            filesel_return_free_mmc_mounted(&total,&free);
+            sprintf(buffer_linea,"Directory Contents: (Image total %d MB Free %d MB)",total,free);
+        }
+        else {
+            strcpy(buffer_linea,"Directory Contents:");
+        }
+
+
+
+	zxvision_print_string_defaults_fillspc(ventana,1,2,buffer_linea);
 }
 
 void file_utils_info_file(char *archivo)
