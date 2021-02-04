@@ -20568,6 +20568,139 @@ int menu_avisa_si_extension_no_habitual(char *filtros[],char *archivo)
 }
 
 
+int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destino)
+{
+
+/*
+1) mkdir destino/carpeta. Entrar en destino/carpeta. Entrar en origen/carpeta. 
+2) listado todo el directorio. Para cada archivo, copiar en destino
+3) si es directorio, gosub 1)
+4) si fin directorio, return
+
+*/
+    printf("Inicio menu_filesel_copy_recursive\n");
+    printf("mkdir destino %s\n",directorio_destino);
+
+    int in_fatfs_origen=util_path_is_mmc_fatfs(directorio_origen);
+
+
+    int in_fatfs_destino;
+
+    struct dirent *dp;
+    DIR *dfd;
+
+    FRESULT res;
+    FATFS_DIR dir;
+
+    static FILINFO fno;
+
+    if (in_fatfs_origen) {
+
+        res = f_opendir(&dir, directorio_origen);                       /* Open the directory */
+        if (res != FR_OK) {       
+        //printf("Error abriendo directorio de mmc: %s\n",directorio);
+        debug_printf(VERBOSE_ERR,"Can't open directory %s", directorio_origen);
+        return -1;
+
+        }
+    }
+
+    else {
+
+        if ((dfd = opendir(directorio_origen)) == NULL) {
+            debug_printf(VERBOSE_ERR,"Can't open directory %s", directorio_origen);
+            return -1;
+        }
+    }
+
+    int salir=0;
+
+    //FatFS parece que nunca muestra . o .., lo agregamos si no aparece
+    int got_dotdot=0;
+
+    while (!salir) {
+
+        char *nombre_origen;
+        int origen_es_directorio=0;
+
+        if (in_fatfs_origen) {
+        //printf("antes readdir\n");
+        res = f_readdir(&dir, &fno);                   /* Read a directory item */
+        //printf("despues readdir\n");
+
+            if (res != FR_OK || fno.fname[0] == 0) {
+                //printf("temp: %s\n",fno.fname);
+                //printf("Fin leyendo directorio. res=%d\n",res);
+                //break;  /* Break on error or end of dir */
+                salir=1;
+            }
+            else {
+                nombre_origen=fno.fname;
+                if (fno.fattrib & AM_DIR) origen_es_directorio=1;
+            }
+        }
+        else {
+            dp = readdir(dfd);
+
+            if (dp==NULL) salir=1;
+
+            else {
+                nombre_origen=dp->d_name;
+                if (get_file_type(nombre_origen)==2) origen_es_directorio=1;
+            }
+        }
+
+
+
+            
+        if (!salir) {
+            //Si es directorio y no . ni .. , llamar recursivamente
+            if (origen_es_directorio) {
+                if (!strcasecmp(nombre_origen,".") ||
+                    !strcasecmp(nombre_origen,"..")
+                ) {
+                    //Ignorar
+                }
+                else {
+                    
+                    char siguiente_directorio_origen[PATH_MAX];
+                    char siguiente_directorio_destino[PATH_MAX];
+                    //menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destino)
+
+                    sprintf(siguiente_directorio_origen,"%s/%s",directorio_origen,nombre_origen);
+                    sprintf(siguiente_directorio_destino,"%s/%s",directorio_destino,nombre_origen);
+
+                    menu_filesel_copy_recursive(siguiente_directorio_origen,siguiente_directorio_destino);
+                }
+            }
+
+            else {
+                //Si es archivo, copiar a destino
+                printf("Copiar %s de %s hacia %s\n",nombre_origen,directorio_origen,directorio_destino);
+            }
+
+            
+                //Asignar memoria para ese fichero
+    
+
+        }
+            
+
+
+    }
+    if (in_fatfs_origen) f_closedir(&dir);
+    else closedir(dfd);
+
+
+    return 0;
+
+
+
+}
+
+
+
+
 void menu_smartload(MENU_ITEM_PARAMETERS)
 {
 
