@@ -239,6 +239,9 @@ z80_bit menu_filesel_hide_dirs={0};
 //No mostrar tamanyos en file selector
 z80_bit menu_filesel_hide_size={0};
 
+//Permitir borrar carpetas en file browser 
+z80_bit menu_filesel_utils_allow_folder_delete={0};
+
 
 //OSD teclado aventura
 /*
@@ -20583,10 +20586,10 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
 4) si fin directorio, return
 
 */
-    printf("\nInicio menu_filesel_copy_recursive origen %s destino %s\n",directorio_origen,directorio_destino);
+    debug_printf(VERBOSE_DEBUG,"Copy_recursive: entering directory copy %s to %s",directorio_origen,directorio_destino);
 
-
-    printf("mkdir destino %s\n",directorio_destino);
+    
+    debug_printf(VERBOSE_DEBUG,"Copy_recursive: mkdir destination %s",directorio_destino);
 
     if (!simular) zvfs_mkdir(directorio_destino);
 
@@ -20658,10 +20661,10 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
                 nombre_origen=fno.fname;
                 if (fno.fattrib & AM_DIR) {
                     origen_es_directorio=1;
-                    printf("%s es directorio\n",archivo_origen_fullpath);
+                    //printf("%s es directorio\n",archivo_origen_fullpath);
                 }
                 else {
-                    printf("%s es archivo\n",archivo_origen_fullpath);   
+                    //printf("%s es archivo\n",archivo_origen_fullpath);   
                 }
             }
         }
@@ -20677,11 +20680,11 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
 
                 nombre_origen=dp->d_name;
                 if (get_file_type(archivo_origen_fullpath)==2) {
-                    printf("%s es directorio\n",archivo_origen_fullpath);
+                    //printf("%s es directorio\n",archivo_origen_fullpath);
                     origen_es_directorio=1;
                 }
                 else {
-                    printf("%s es archivo\n",archivo_origen_fullpath);
+                    //printf("%s es archivo\n",archivo_origen_fullpath);
                 }
             }
         }
@@ -20699,11 +20702,6 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
                 }
                 else {
                     
-                    //char siguiente_directorio_origen[PATH_MAX];
-                    //char siguiente_directorio_destino[PATH_MAX];
-                    
-                    //sprintf(siguiente_directorio_origen,"%s/%s",directorio_origen,nombre_origen);
-                    //sprintf(siguiente_directorio_destino,"%s/%s",directorio_destino,nombre_origen);
 
                     menu_filesel_copy_recursive(archivo_origen_fullpath,archivo_destino_fullpath,simular);
                 }
@@ -20717,7 +20715,7 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
                 //sprintf(archivo_copiar_origen,"%s/%s",directorio_origen,nombre_origen);
                 //sprintf(archivo_copiar_destino,"%s/%s",directorio_destino,nombre_origen);
 
-                printf("Copiar %s hacia %s\n",archivo_origen_fullpath,archivo_destino_fullpath);
+                debug_printf(VERBOSE_DEBUG,"Copy_recursive: copy file %s to %s",archivo_origen_fullpath,archivo_destino_fullpath);
 
                 if (!simular) {
                     util_copy_file(archivo_origen_fullpath,archivo_destino_fullpath);
@@ -20736,7 +20734,7 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
     if (in_fatfs_origen) f_closedir(&dir);
     else closedir(dfd);
 
-    printf("Close dir %s , %s\n\n",directorio_origen,directorio_destino);
+    //printf("Close dir %s , %s\n\n",directorio_origen,directorio_destino);
 
     return 0;
 
@@ -20755,7 +20753,7 @@ int menu_filesel_delete_recursive(char *directorio_origen ,int simular)
 4) si fin directorio, remove folder. return
 
 */
-    printf("\nInicio menu_filesel_delete_recursive origen %s\n",directorio_origen);
+    debug_printf(VERBOSE_DEBUG,"Delete_recursive: entering directory %s",directorio_origen);
 
 
 
@@ -20817,10 +20815,10 @@ int menu_filesel_delete_recursive(char *directorio_origen ,int simular)
                 nombre_origen=fno.fname;
                 if (fno.fattrib & AM_DIR) {
                     origen_es_directorio=1;
-                    printf("%s es directorio\n",archivo_origen_fullpath);
+                    //printf("%s es directorio\n",archivo_origen_fullpath);
                 }
                 else {
-                    printf("%s es archivo\n",archivo_origen_fullpath);   
+                    //printf("%s es archivo\n",archivo_origen_fullpath);   
                 }
             }
         }
@@ -20838,11 +20836,11 @@ int menu_filesel_delete_recursive(char *directorio_origen ,int simular)
                 nombre_origen=dp->d_name;
 
                 if (get_file_type(archivo_origen_fullpath)==2) {
-                    printf("%s es directorio\n",archivo_origen_fullpath);
+                    //printf("%s es directorio\n",archivo_origen_fullpath);
                     origen_es_directorio=1;
                 }
                 else {
-                    printf("%s es archivo\n",archivo_origen_fullpath);
+                    //printf("%s es archivo\n",archivo_origen_fullpath);
                 }
             }
         }
@@ -20869,7 +20867,7 @@ int menu_filesel_delete_recursive(char *directorio_origen ,int simular)
             else {
                 //Si es archivo, borrar
 
-                printf("Borrar archivo %s\n",archivo_origen_fullpath);
+                debug_printf(VERBOSE_DEBUG,"Delete_recursive: delete file %s",archivo_origen_fullpath);
 
                 if (!simular) {
                     zvfs_delete(archivo_origen_fullpath);
@@ -20886,11 +20884,11 @@ int menu_filesel_delete_recursive(char *directorio_origen ,int simular)
     if (in_fatfs_origen) f_closedir(&dir);
     else closedir(dfd);
 
-    printf("Close dir %s \n\n",directorio_origen);
+    //printf("Close dir %s \n\n",directorio_origen);
 
 
     //Y luego borrar carpeta
-    printf("Borrar carpeta %s\n",directorio_origen);
+    debug_printf(VERBOSE_DEBUG,"Delete_recursive: delete folder %s",directorio_origen);
 
     if (!simular) {
         zvfs_delete(directorio_origen);
@@ -36180,6 +36178,12 @@ void file_utils_delete(char *nombre)
 
     int tipo_archivo=get_file_type(nombre);
     if (tipo_archivo==2) {
+
+        if (menu_filesel_utils_allow_folder_delete.v==0) {
+            debug_printf(VERBOSE_ERR,"Allow delete folders setting is not enabled. Enable it AT YOUR OWN RISK on Settings-> File Browser");
+            return;
+        }
+
         if (menu_confirm_yesno_texto("WARNING! Source is folder","Remove folder entirely?")==0) return;
 
 

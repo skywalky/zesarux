@@ -1845,8 +1845,9 @@ printf (
 
 printf (
 		"\n"
-		"--filebrowser-hide-dirs    Do not show directories on file selector menus\n"
-        "--filebrowser-hide-size    Do not show file sizes on file selector menus\n"
+		"--filebrowser-hide-dirs            Do not show directories on file selector menus\n"
+        "--filebrowser-hide-size            Do not show file sizes on file selector menus\n"
+        "--filebrowser-allow-folder-delete  Allows deleting folders on the file utilities browser. Enable it AT YOUR OWN RISK\n"
         "--fileviewer-hex           File viewer always shows file contents in hexadecimal+ascii\n"
 		"--no-file-previews         Do not show file previews on file selector menus\n"
 		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
@@ -5844,6 +5845,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--filebrowser-hide-size")) {
 				menu_filesel_hide_size.v=1;
 			}            
+
+            else if (!strcmp(argv[puntero_parametro],"--filebrowser-allow-folder-delete")) {
+                menu_filesel_utils_allow_folder_delete.v=1;
+            }
 
   			else if (!strcmp(argv[puntero_parametro],"--fileviewer-hex")) {
 				menu_file_viewer_always_hex.v=1;

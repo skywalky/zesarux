@@ -993,6 +993,8 @@ extern z80_bit menu_filesel_hide_dirs;
 
 extern z80_bit menu_filesel_hide_size;
 
+extern z80_bit menu_filesel_utils_allow_folder_delete;
+
 extern z80_bit menu_filesel_show_previews;
 
 extern int osd_kb_no_mostrar_desde_menu;

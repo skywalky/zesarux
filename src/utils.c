@@ -3850,7 +3850,9 @@ int util_write_configfile(void)
   if (menu_filesel_hide_dirs.v)         ADD_STRING_CONFIG,"--filebrowser-hide-dirs");
 
   if (menu_filesel_hide_size.v)             ADD_STRING_CONFIG,"--filebrowser-hide-size");
-				  
+
+  if (menu_filesel_utils_allow_folder_delete.v)      ADD_STRING_CONFIG,"--filebrowser-allow-folder-delete");
+			  
 
   if (menu_file_viewer_always_hex.v)            ADD_STRING_CONFIG,"--fileviewer-hex");
 				

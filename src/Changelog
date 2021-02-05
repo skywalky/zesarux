@@ -17,6 +17,7 @@ Improved File utilities Browser:
 -Added support for browsing inside disk images (.mmc, .ide, etc)
 -Detect when source and target directories are the same when moving or copying
 -Show more info in some file viewers (.sna, .p, .o, etc)
+-Added copy and delete entire folder
 
 Improved File Browser: added file size information
 
