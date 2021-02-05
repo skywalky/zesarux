@@ -13,7 +13,7 @@ Added another fourth easter egg ;)
 Added read only setting for esxdos handler
 Added .nex file viewer
 
-Improved File utilities browser:
+Improved File utilities Browser:
 -Added support for browsing inside disk images (.mmc, .ide, etc)
 -Detect when source and target directories are the same when moving or copying
 -Show more info in some file viewers (.sna, .p, .o, etc)

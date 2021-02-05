@@ -28364,8 +28364,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] ~~Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_window_settings,'p');
-		menu_add_item_menu_tooltip(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file selector");
-		menu_add_item_menu_ayuda(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file selector");
+		menu_add_item_menu_tooltip(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
+		menu_add_item_menu_ayuda(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
 
 
 		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"[%c] M~~inimize button",(menu_hide_minimize_button.v ? ' ' : 'X') );
@@ -32104,7 +32104,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"Unavailable options may be hidden, or disabled, which are shown with red colour or with x cursor on some video drivers\n"
 			"ESC Key gives you to the previous menu, except in the case with aalib driver and pure text console, which is changed to another key (shown on the menu). On curses driver, ESC key is a bit slow, you have to wait one second after pressing it; you can also use key @ to simulate ESC on menu on curses driver. "
 			"\n\n"
-			"On fileselector:\n"
+			"On File Browser:\n"
 			"- Use cursors and PgDn/Up\n"
 			"- Use Enter or left mouse click to select item. Compressed files will be opened like folders\n"
 			"- Use Space to expand files, currently supported: tap, tzx, pzx, trd, scl, dsk, mdv, hdf, P, O, Z88 Cards (.epr, .eprom, .flash) and also all the compressed supported files\n"
@@ -37032,7 +37032,7 @@ char *first_aid_string_filesel_enter_key="Press ENTER to select a file or change
 
 int first_aid_no_smartload=0;
 char *first_aid_string_smartload="This smartload window allows you to load any file known by the emulator. Just select it and go!\n"
-							"Press TAB to change between areas in the file selector";
+							"Press TAB to change between areas in the file browser";
 
 int first_aid_no_initial_menu=0;
 char *first_aid_string_initial_menu="This is the Main Menu. You can select an item by using cursor keys and mouse. Most of them have help, "
