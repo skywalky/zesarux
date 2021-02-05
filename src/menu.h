@@ -991,6 +991,8 @@ extern z80_bit menu_limit_menu_open;
 
 extern z80_bit menu_filesel_hide_dirs;
 
+extern z80_bit menu_filesel_hide_size;
+
 extern z80_bit menu_filesel_show_previews;
 
 extern int osd_kb_no_mostrar_desde_menu;

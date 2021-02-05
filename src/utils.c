@@ -3847,7 +3847,10 @@ int util_write_configfile(void)
 
   if (setting_machine_selection_by_name.v)    ADD_STRING_CONFIG,"--setmachinebyname");
 
-  if (menu_filesel_hide_dirs.v)         ADD_STRING_CONFIG,"--hide-dirs");
+  if (menu_filesel_hide_dirs.v)         ADD_STRING_CONFIG,"--filebrowser-hide-dirs");
+
+  if (menu_filesel_hide_size.v)             ADD_STRING_CONFIG,"--filebrowser-hide-size");
+				  
 
   if (menu_file_viewer_always_hex.v)            ADD_STRING_CONFIG,"--fileviewer-hex");
 				

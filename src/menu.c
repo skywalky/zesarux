@@ -236,6 +236,9 @@ z80_bit menu_limit_menu_open={0};
 //No mostrar subdirectorios en file selector
 z80_bit menu_filesel_hide_dirs={0};
 
+//No mostrar tamanyos en file selector
+z80_bit menu_filesel_hide_size={0};
+
 
 //OSD teclado aventura
 /*
@@ -34957,21 +34960,23 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned int max_length_s
 	        }
 
             else {
-                //Mostrar tamanyo
-                long int tamanyo=get_file_size(s);
-                char buffer_tamanyo[100];
-                char buffer_sufijo[10];
+                //Mostrar tamanyo. Si no hay setting de desactivado
+                if (menu_filesel_hide_size.v==0) {
+                    long int tamanyo=get_file_size(s);
+                    char buffer_tamanyo[100];
+                    char buffer_sufijo[10];
 
-                tamanyo=get_size_human_friendly(tamanyo,buffer_sufijo);
+                    tamanyo=get_size_human_friendly(tamanyo,buffer_sufijo);
 
-                //Con espacio por delante para separar, por si acaso ancho ventana muy pequeña
-                sprintf(buffer_tamanyo," %ld %s",tamanyo,buffer_sufijo);
+                    //Con espacio por delante para separar, por si acaso ancho ventana muy pequeña
+                    sprintf(buffer_tamanyo," %ld %s",tamanyo,buffer_sufijo);
 
-                unsigned int longitud_texto=strlen(buffer_tamanyo);
+                    unsigned int longitud_texto=strlen(buffer_tamanyo);
 
-                //printf("%s i: %d longitud_texto: %d\n",s,i,longitud_texto);
+                    //printf("%s i: %d longitud_texto: %d\n",s,i,longitud_texto);
 
-                if (i>=longitud_texto) strcpy(&buffer[i-longitud_texto],buffer_tamanyo);
+                    if (i>=longitud_texto) strcpy(&buffer[i-longitud_texto],buffer_tamanyo);
+                }
             }
 
 			//O si es empaquetado

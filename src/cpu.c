@@ -1845,7 +1845,8 @@ printf (
 
 printf (
 		"\n"
-		"--hide-dirs                Do not show directories on file selector menus\n"
+		"--filebrowser-hide-dirs    Do not show directories on file selector menus\n"
+        "--filebrowser-hide-size    Do not show file sizes on file selector menus\n"
         "--fileviewer-hex           File viewer always shows file contents in hexadecimal+ascii\n"
 		"--no-file-previews         Do not show file previews on file selector menus\n"
 		"--limitopenmenu            Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second\n"
@@ -5833,9 +5834,16 @@ int parse_cmdline_options(void) {
 				setting_machine_selection_by_name.v=1;
 			}			
 
-			else if (!strcmp(argv[puntero_parametro],"--hide-dirs")) {
+            //soportar opcion antigua tambien
+			else if (!strcmp(argv[puntero_parametro],"--hide-dirs") ||
+                    !strcmp(argv[puntero_parametro],"--filebrowser-hide-dirs")
+            ) {
 				menu_filesel_hide_dirs.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--filebrowser-hide-size")) {
+				menu_filesel_hide_size.v=1;
+			}            
 
   			else if (!strcmp(argv[puntero_parametro],"--fileviewer-hex")) {
 				menu_file_viewer_always_hex.v=1;

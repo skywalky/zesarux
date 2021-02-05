@@ -25336,6 +25336,10 @@ void menu_setting_filesel_no_show_dirs(MENU_ITEM_PARAMETERS)
 	menu_filesel_hide_dirs.v ^=1;
 }
 
+void menu_setting_filesel_no_show_size(MENU_ITEM_PARAMETERS)
+{
+	menu_filesel_hide_size.v ^=1;
+}
 
 void menu_setting_filesel_previews(MENU_ITEM_PARAMETERS)
 {
@@ -25356,24 +25360,34 @@ void menu_fileselector_settings(MENU_ITEM_PARAMETERS)
 
 
 
-        menu_add_item_menu_inicial_format(&array_menu_comon,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_dirs,NULL,"[%c] ~~Hide dirs in filesel",
-            (menu_filesel_hide_dirs.v ? 'X' : ' ') );
-        menu_add_item_menu_shortcut(array_menu_comon,'h');	
+        menu_add_item_menu_inicial_format(&array_menu_comon,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_dirs,NULL,"[%c] Show ~~directories",
+            (menu_filesel_hide_dirs.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_shortcut(array_menu_comon,'d');	
         menu_add_item_menu_tooltip(array_menu_comon,"Hide directories from file selector menus");
         menu_add_item_menu_ayuda(array_menu_comon,"Hide directories from file selector menus. "
                                 "Useful on demo environments and you don't want the user to be able to navigate the filesystem");
 
-        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_setting_fileviewer_hex,NULL,"[%c] Hexadecimal file viewer",
+        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_size,NULL,"[%c] Show file ~~size",
+            (menu_filesel_hide_size.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_shortcut(array_menu_comon,'s');    
+        menu_add_item_menu_tooltip(array_menu_comon,"Hide file size from file selector menus");
+        menu_add_item_menu_ayuda(array_menu_comon,"Hide file size from file selector menus");      
+
+        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_setting_filesel_previews,NULL,"[%c] Show file ~~previews",
+            (menu_filesel_show_previews.v ? 'X' : ' ') );
+        menu_add_item_menu_shortcut(array_menu_comon,'p');
+        menu_add_item_menu_tooltip(array_menu_comon,"Show file previews in the file selector");
+        menu_add_item_menu_ayuda(array_menu_comon,"Show file previews for .scr, .tap, .tzx, etc...\n"
+                            "Note that the fileselector window must be big enough to hold that preview, if not, it will not be shown");
+
+
+        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_setting_fileviewer_hex,NULL,"[%c] ~~Hexadecimal file viewer",
             (menu_file_viewer_always_hex.v ? 'X' : ' ') );
+        menu_add_item_menu_shortcut(array_menu_comon,'h');
         menu_add_item_menu_tooltip(array_menu_comon,"File viewer always shows file contents in hexadecimal+ascii");
         menu_add_item_menu_ayuda(array_menu_comon,"File viewer always shows file contents in hexadecimal+ascii");
 
 
-        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_setting_filesel_previews,NULL,"[%c] Show file previews",
-            (menu_filesel_show_previews.v ? 'X' : ' ') );
-        menu_add_item_menu_tooltip(array_menu_comon,"Show file previews in the file selector");
-        menu_add_item_menu_ayuda(array_menu_comon,"Show file previews for .scr, .tap, .tzx, etc...\n"
-                            "Note that the fileselector window must be big enough to hold that preview, if not, it will not be shown");
 
                    
 
