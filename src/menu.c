@@ -36178,6 +36178,17 @@ void file_utils_delete(char *nombre)
 
     int tipo_archivo=get_file_type(nombre);
     if (tipo_archivo==2) {
+        //Es directorio
+
+        //No permitir borrar . o ..
+        char file_no_directory[PATH_MAX];
+        util_get_file_no_directory(nombre,file_no_directory);
+        if (!strcasecmp(file_no_directory,".") ||
+            !strcasecmp(file_no_directory,"..")
+         ) {
+                debug_printf(VERBOSE_ERR,"Deleting directory . or .. is not allowed");
+                return;                
+            }
 
         if (menu_filesel_utils_allow_folder_delete.v==0) {
             debug_printf(VERBOSE_ERR,"Allow delete folders setting is not enabled. Enable it AT YOUR OWN RISK on Settings-> File Browser");
@@ -36189,6 +36200,8 @@ void file_utils_delete(char *nombre)
 
         menu_filesel_delete_recursive(nombre,0);
 
+        menu_generic_message_splash("Delete","OK. Folder has been deleted");
+
     }
     else {
 
@@ -36198,7 +36211,7 @@ void file_utils_delete(char *nombre)
             menu_error_message("Error deleting item");
         }
         else {
-            menu_generic_message_splash("Delete","OK. Item deleted");
+            menu_generic_message_splash("Delete","OK. File deleted");
         }
 
 
