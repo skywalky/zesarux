@@ -20745,6 +20745,160 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
 }
 
 
+int menu_filesel_delete_recursive(char *directorio_origen ,int simular)
+{
+
+/*
+1) Entrar en origen/carpeta. 
+2) listado todo el directorio. Para cada archivo, borrar
+3) si es directorio, gosub 1)
+4) si fin directorio, return
+
+*/
+    printf("\nInicio menu_filesel_delete_recursive origen %s\n",directorio_origen);
+
+
+
+    int in_fatfs_origen=util_path_is_mmc_fatfs(directorio_origen);
+
+
+    struct dirent *dp;
+    DIR *dfd;
+
+    FRESULT res;
+    FATFS_DIR dir;
+
+    static FILINFO fno;
+
+    if (in_fatfs_origen) {
+
+        res = f_opendir(&dir, directorio_origen);                       /* Open the directory */
+        if (res != FR_OK) {       
+        //printf("Error abriendo directorio de mmc: %s\n",directorio);
+        debug_printf(VERBOSE_ERR,"Can't open directory %s", directorio_origen);
+        return -1;
+
+        }
+    }
+
+    else {
+
+        if ((dfd = opendir(directorio_origen)) == NULL) {
+            debug_printf(VERBOSE_ERR,"Can't open directory %s", directorio_origen);
+            return -1;
+        }
+    }
+
+    int salir=0;
+
+
+    char archivo_origen_fullpath[PATH_MAX];
+
+
+    while (!salir) {
+
+        char *nombre_origen;
+        int origen_es_directorio=0;
+
+        if (in_fatfs_origen) {
+            //printf("antes readdir\n");
+            res = f_readdir(&dir, &fno);                   /* Read a directory item */
+            //printf("despues readdir\n");
+
+            if (res != FR_OK || fno.fname[0] == 0) {
+
+                salir=1;
+            }
+            else {
+
+                sprintf(archivo_origen_fullpath,"%s/%s",directorio_origen,fno.fname);
+
+
+                nombre_origen=fno.fname;
+                if (fno.fattrib & AM_DIR) {
+                    origen_es_directorio=1;
+                    printf("%s es directorio\n",archivo_origen_fullpath);
+                }
+                else {
+                    printf("%s es archivo\n",archivo_origen_fullpath);   
+                }
+            }
+        }
+
+
+        else {
+            dp = readdir(dfd);
+
+            if (dp==NULL) salir=1;
+
+            else {
+
+                sprintf(archivo_origen_fullpath,"%s/%s",directorio_origen,dp->d_name);
+
+                nombre_origen=dp->d_name;
+
+                if (get_file_type(archivo_origen_fullpath)==2) {
+                    printf("%s es directorio\n",archivo_origen_fullpath);
+                    origen_es_directorio=1;
+                }
+                else {
+                    printf("%s es archivo\n",archivo_origen_fullpath);
+                }
+            }
+        }
+
+
+
+            
+        if (!salir) {
+            //Si es directorio y no . ni .. , llamar recursivamente
+            if (origen_es_directorio) {
+                if (!strcasecmp(nombre_origen,".") ||
+                    !strcasecmp(nombre_origen,"..")
+                ) {
+                    //Ignorar
+                }
+                else {
+                    //Volver a llamarse 
+                    menu_filesel_delete_recursive(archivo_origen_fullpath,simular);
+
+                    //Y luego borrar carpeta
+                    printf("Borrar carpeta %s\n",archivo_origen_fullpath);
+
+                    if (!simular) {
+                        //zvfs_delete(archivo_origen_fullpath);
+                    }                    
+                }
+            }
+
+            else {
+                //Si es archivo, borrar
+
+                printf("Borrar archivo %s\n",archivo_origen_fullpath);
+
+                if (!simular) {
+                    //zvfs_delete(archivo_origen_fullpath);
+                }
+            }
+
+              
+
+        }
+            
+
+
+    }
+    if (in_fatfs_origen) f_closedir(&dir);
+    else closedir(dfd);
+
+    printf("Close dir %s \n\n",directorio_origen);
+
+    return 0;
+
+
+
+}
+
 
 
 void menu_smartload(MENU_ITEM_PARAMETERS)
@@ -36017,6 +36171,33 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 }
 
 
+void file_utils_delete(char *nombre)
+{
+
+
+    int tipo_archivo=get_file_type(nombre);
+    if (tipo_archivo==2) {
+        if (menu_confirm_yesno_texto("Source is folder","Remove recursive?")==0) return;
+
+
+        menu_filesel_delete_recursive(nombre,0);
+
+    }
+    else {
+
+
+        int resultado=zvfs_delete(nombre);
+        if (resultado) {
+            menu_error_message("Error deleting item");
+        }
+        else {
+            menu_generic_message_splash("Delete","OK. Item deleted");
+        }
+
+
+    }
+}
+
 
 void file_utils_paste_clipboard(void)
 {
@@ -38994,19 +39175,8 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                 //Delete para cualquier tipo de archivo
                                 if (tecla=='E') {
                                     if (menu_confirm_yesno_texto("Delete","Sure?")) {
-                                        //zvfs_delete(file_utils_file_selected);
-
-
-                                        int resultado=zvfs_delete(file_utils_file_selected);
-                                        if (resultado) {
-                                            menu_error_message("Error deleting item");
-                                        }
-                                        else {
-                                            menu_generic_message_splash("Delete","OK. Item deleted");
-                                        }
-        
-
-                                        //unlink(file_utils_file_selected);
+                                        file_utils_delete(file_utils_file_selected);
+                                      
                                         releer_directorio=1;
                                     }
 
