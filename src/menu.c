@@ -28544,10 +28544,7 @@ void menu_setting_limit_menu_open(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_setting_filesel_no_show_dirs(MENU_ITEM_PARAMETERS)
-{
-	menu_filesel_hide_dirs.v ^=1;
-}
+
 
 void menu_setting_quickexit(MENU_ITEM_PARAMETERS)
 {
@@ -28622,15 +28619,6 @@ void menu_setting_select_machine_by_name(MENU_ITEM_PARAMETERS)
 	setting_machine_selection_by_name.v ^=1;
 }
 
-void menu_setting_filesel_previews(MENU_ITEM_PARAMETERS)
-{
-	menu_filesel_show_previews.v ^=1;
-}
-
-void menu_setting_fileviewer_hex(MENU_ITEM_PARAMETERS)
-{
-    menu_file_viewer_always_hex.v ^=1;
-}
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
@@ -28741,24 +28729,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");			
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_no_show_dirs,NULL,"[%c] ~~Hide dirs in filesel",
-			(menu_filesel_hide_dirs.v ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'h');	
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Hide directories from file selector menus");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Hide directories from file selector menus. "
-								"Useful on demo environments and you don't want the user to be able to navigate the filesystem");
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_fileviewer_hex,NULL,"[%c] Hexadecimal file viewer",
-			(menu_file_viewer_always_hex.v ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"File viewer always shows file contents in hexadecimal+ascii");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"File viewer always shows file contents in hexadecimal+ascii");
-	
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_filesel_previews,NULL,"[%c] Show file previews",
-			(menu_filesel_show_previews.v ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Show file previews in the file selector");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Show file previews for .scr, .tap, .tzx, etc...\n"
-                            "Note that the fileselector window must be big enough to hold that preview, if not, it will not be shown");
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"    GUI ~~style [%s]",
@@ -33039,6 +33009,11 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_settings,'d');
 		menu_add_item_menu_tooltip(array_menu_settings,"Display settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Display settings");
+
+		menu_add_item_menu(array_menu_settings,"~~File Browser",MENU_OPCION_NORMAL,menu_fileselector_settings,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'f');
+		menu_add_item_menu_tooltip(array_menu_settings,"Settings for the File browser");
+		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the File Browser");        
 
 		menu_add_item_menu(array_menu_settings,"~~GUI",MENU_OPCION_NORMAL,menu_interface_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_settings,'g');
