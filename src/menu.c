@@ -20752,7 +20752,7 @@ int menu_filesel_delete_recursive(char *directorio_origen ,int simular)
 1) Entrar en origen/carpeta. 
 2) listado todo el directorio. Para cada archivo, borrar
 3) si es directorio, gosub 1). Y borrar carpeta
-4) si fin directorio, return
+4) si fin directorio, remove folder. return
 
 */
     printf("\nInicio menu_filesel_delete_recursive origen %s\n",directorio_origen);
@@ -20862,12 +20862,7 @@ int menu_filesel_delete_recursive(char *directorio_origen ,int simular)
                     //Volver a llamarse 
                     menu_filesel_delete_recursive(archivo_origen_fullpath,simular);
 
-                    //Y luego borrar carpeta
-                    printf("Borrar carpeta %s\n",archivo_origen_fullpath);
-
-                    if (!simular) {
-                        zvfs_delete(archivo_origen_fullpath);
-                    }                    
+                
                 }
             }
 
@@ -20892,6 +20887,14 @@ int menu_filesel_delete_recursive(char *directorio_origen ,int simular)
     else closedir(dfd);
 
     printf("Close dir %s \n\n",directorio_origen);
+
+
+    //Y luego borrar carpeta
+    printf("Borrar carpeta %s\n",directorio_origen);
+
+    if (!simular) {
+        zvfs_delete(directorio_origen);
+    }        
 
     return 0;
 
