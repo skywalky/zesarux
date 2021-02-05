@@ -230,6 +230,8 @@ extern int si_existe_archivo(char *nombre);
 
 extern long int get_file_size(char *nombre);
 
+extern long int get_size_human_friendly(long int tamanyo,char *sufijo);
+
 extern int lee_archivo(char *nombre,char *buffer,int max_longitud);
 
 extern int util_get_configfile_name(char *configfile);

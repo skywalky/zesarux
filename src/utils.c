@@ -5340,6 +5340,35 @@ int si_existe_archivo(char *nombre)
 
 }
 
+//Retorna sufijo y unidades para un tamaño de bytes
+//B esta con espacios para quede alineado con el resto
+long int get_size_human_friendly(long int tamanyo,char *sufijo)
+{
+    strcpy(sufijo,"B  ");
+
+    //kibibyte (KiB)
+    if (tamanyo >= 1024) {
+        tamanyo /= 1024;
+        strcpy(sufijo,"KiB");
+    }
+
+    if (tamanyo >= 1024) {
+        tamanyo /= 1024;
+        strcpy(sufijo,"MiB");
+    }
+
+    if (tamanyo >= 1024) {
+        tamanyo /= 1024;
+        strcpy(sufijo,"GiB");
+    }
+
+    if (tamanyo >= 1024) {
+        tamanyo /= 1024;
+        strcpy(sufijo,"TiB");
+    }    
+
+    return tamanyo;
+}
 
 //Retorna tamanyo archivo
 long int get_file_size(char *nombre)
@@ -10370,7 +10399,7 @@ int si_ruta_absoluta(char *ruta)
 
 }
 
-//Retorna tipo de archivo segun valor d_type
+//Retorna tipo de archivo 
 //0: desconocido
 //1: archivo normal (o symbolic link)
 //2: directorio
@@ -10532,38 +10561,24 @@ Second / 2 (0..29)
 
 //Retorna tipo de archivo segun valor d_type
 //Funcion nueva que usa st_mode en vez de d_type. d_type no valia para Windows ni para Haiku
+//de hecho, hay que EVITAR usar esa propiedad pues no está en todos los sistemas operativos,
+//haiku por ejemplo no la tiene
+
+/*
+The only fields in the dirent structure that are mandated by
+    POSIX.1 are d_name and d_ino.  The other fields are
+    unstandardized, and not present on all systems; see NOTES below
+    for some further details.
+*/
 //0: desconocido
 //1: archivo normal (o symbolic link)
 //2: directorio
-//Entrada: d_type, nombre archivo. requisito es que el archivo se encuentre en directorio actual
+//Entrada: nombre archivo. requisito es que el archivo se encuentre en directorio actual
 
 
 int get_file_type(char *nombre)
 {
-/*
-       lowing macro constants for the value returned in d_type:
 
-       DT_BLK      This is a block device.
-
-       DT_CHR      This is a character device.
-
-       DT_DIR      This is a directory.
-
-       DT_FIFO     This is a named pipe (FIFO).
-
-       DT_LNK      This is a symbolic link.
-
-       DT_REG      This is a regular file.
-
-       DT_SOCK     This is a UNIX domain socket.
-
-       DT_UNKNOWN  The file type is unknown.
-
-*/
-
-
-
-    //TODO: d_type no lo estamos usando. Se podria eliminar su uso
 
     //Si es archivo de la mmc
     //if (util_path_is_prefix_mmc_fatfs(nombre)) {  
@@ -10577,8 +10592,13 @@ int get_file_type(char *nombre)
 
         fr = f_stat(nombre, &fno);
         if (fr==FR_OK) {
-            if (fno.fattrib & AM_DIR) return 2;
-            else return 1;
+            if (fno.fattrib & AM_DIR) {
+                //if (!strcmp(nombre,"..")) printf(".. es directorio\n");
+                return 2;
+            }
+            else {
+                return 1;
+            }
         }
 
         //desconocido

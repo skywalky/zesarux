@@ -213,11 +213,10 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -Si ZX desktops activado. Pero cargo un driver de texto que pasará? Y sale habilitado? Y como se guardará la opción?
 
--Copy recursivo. Tomar como idea el ls recursivo de file_utils_prueba_dir
+-mostrar tamaño archivos en file utils. Hacia la derecha, parecido a <dir>
 
-**si al copiar origen es carpeta entonces: 
+-quiza opcion para ocultar tamaños del file selector. probar con speech
 
-1) mkdir destino/carpeta. Entrar en destino/carpeta. Entrar en origen/carpeta. 
-2) listado todo el directorio. Para cada archivo, copiar en destino
-3) si es directorio, gosub 1)
-4) si fin directorio, return
+-delete recursivo. Con opcion en menu para habilitarlo o no? Con base el copy recursivo
+
+-quiza opciones para file selector en settings aparte

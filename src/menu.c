@@ -761,12 +761,10 @@ int ventana_tipo_activa=1;
 
 //Elemento que identifica a un archivo en funcion de seleccion
 struct s_filesel_item{
-	//struct dirent *d;
 	char d_name[PATH_MAX];
-        //unsigned char  d_type;
 
-        //siguiente item
-        struct s_filesel_item *next;
+    //siguiente item
+    struct s_filesel_item *next;
 };
 
 typedef struct s_filesel_item filesel_item;
@@ -20258,12 +20256,24 @@ void menu_filesel_fatfs_to_dirent(FILINFO* fno,struct dirent *dp)
 {
     strcpy(dp->d_name,fno->fname);
 
+    //d_type no se usa. de hecho, hay que EVITAR usar esa propiedad pues no está en todos los sistemas operativos,
+    //haiku por ejemplo no la tiene
+
+    /*
+    The only fields in the dirent structure that are mandated by
+       POSIX.1 are d_name and d_ino.  The other fields are
+       unstandardized, and not present on all systems; see NOTES below
+       for some further details.
+    */
+
+    /*
     if (fno->fattrib & AM_DIR) {
         dp->d_type=DT_DIR;
     }
     else {
         dp->d_type=DT_REG;
-    }                    
+    } 
+    */                   
 
 }  
 
@@ -20357,17 +20367,6 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
                             memcpy(memoria_archivos,&dp,sizeof( struct dirent ));
 
-                            /*
-                            strcpy(memoria_archivos->d_name,fno.fname);
-
-
-                            if (fno.fattrib & AM_DIR) {
-                                memoria_archivos->d_type=DT_DIR;
-                            }
-                            else {
-                                memoria_archivos->d_type=DT_REG;
-                            }
-                            */
 
                             archivos++;
 
@@ -20410,7 +20409,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
             //Meter datos
             strcpy(memoria_archivos->d_name,"..");
 
-            memoria_archivos->d_type=DT_DIR;
+            //memoria_archivos->d_type=DT_DIR;
 
             archivos++;     
 
@@ -20429,7 +20428,7 @@ int menu_filesel_readdir_mmc_image(const char *directorio, struct dirent ***name
 
 	qsort(memoria_punteros,archivos,sizeof( struct dirent *), funcion_compar);
 
-        return archivos;
+    return archivos;
 
 
 }
@@ -20625,7 +20624,7 @@ int menu_filesel_copy_recursive(char *directorio_origen, char *directorio_destin
     int salir=0;
 
     //FatFS parece que nunca muestra . o .., lo agregamos si no aparece
-    int got_dotdot=0;
+    //int got_dotdot=0;
 
     char archivo_origen_fullpath[PATH_MAX];
     char archivo_destino_fullpath[PATH_MAX];
@@ -34982,6 +34981,24 @@ void menu_filesel_print_file_get(char *buffer, char *s,unsigned int max_length_s
                 	buffer[i-5]='<';
 	        }
 
+            else {
+                //Mostrar tamanyo
+                long int tamanyo=get_file_size(s);
+                char buffer_tamanyo[100];
+                char buffer_sufijo[10];
+
+                tamanyo=get_size_human_friendly(tamanyo,buffer_sufijo);
+
+                //Con espacio por delante para separar, por si acaso ancho ventana muy pequeña
+                sprintf(buffer_tamanyo," %ld %s",tamanyo,buffer_sufijo);
+
+                unsigned int longitud_texto=strlen(buffer_tamanyo);
+
+                //printf("%s i: %d longitud_texto: %d\n",s,i,longitud_texto);
+
+                if (i>=longitud_texto) strcpy(&buffer[i-longitud_texto],buffer_tamanyo);
+            }
+
 			//O si es empaquetado
 			/*else if (menu_util_file_is_compressed(s) && i>=5) {
 				    buffer[i-1]='>';
@@ -35825,19 +35842,18 @@ void menu_filesel_copy_recursive_start(char *archivo,char *nombre_final,int simu
 
     strcpy(menu_copying_recurse_progress_destination,nombre_final);
 
-    simular=menu_copying_recurse_progress_simular;
+    menu_copying_recurse_progress_simular=simular;
 
 
                 //Inicializar thread
         debug_printf (VERBOSE_DEBUG,"Initializing thread menu_copying_recurse_progress_thread");
 
 
-                //Lanzar el thread de sync
-        //struct menu_copying_recurse_progress_struct parametros;
+        //Lanzar el thread de sync
 
 
         //Antes de lanzarlo, decir que se ejecuta, por si el usuario le da enter rapido a la ventana de progreso y el thread aun no se ha lanzado
-        //menu_copying_recurse_progress_thread_running=1;
+        menu_filesel_copying_recursive_flag=1;
 
         if (pthread_create( &menu_copying_recurse_progress_thread, NULL, &menu_copying_recurse_progress_thread_function, NULL )) {
                 debug_printf(VERBOSE_ERR,"Can not create menu_copying_recurse_progress_thread thread");
@@ -35845,11 +35861,10 @@ void menu_filesel_copy_recursive_start(char *archivo,char *nombre_final,int simu
         }    
 
 
-            contador_menu_copying_recurse_progress_print=0;
+        contador_menu_copying_recurse_progress_print=0;
         zxvision_simple_progress_window("Copying", menu_copying_recurse_progress_cond,menu_copying_recurse_progress_print );
 
         if (menu_filesel_copying_recursive_flag) {
-
                         //Al parecer despues de ventana de zxvision_simple_progress_window no se espera a liberar tecla
                         menu_espera_no_tecla();
                         menu_warn_message("Copying has not ended yet");
@@ -38928,18 +38943,18 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//printf ("Loading file %s\n",archivo_reciente);
 						strcpy(archivo,archivo_reciente);
 
-                                                                      zvfs_chdir(filesel_directorio_inicial);
-                                                                        menu_filesel_free_mem();
+                        zvfs_chdir(filesel_directorio_inicial);
+                        menu_filesel_free_mem();
 
-                                                                        //return menu_avisa_si_extension_no_habitual(filtros,archivo);
+                        //return menu_avisa_si_extension_no_habitual(filtros,archivo);
 
-																		//restauramos modo normal de texto de menu
-																		set_menu_overlay_function(normal_overlay_texto_menu);
+                        //restauramos modo normal de texto de menu
+                        set_menu_overlay_function(normal_overlay_texto_menu);
 
 
-                                                                        cls_menu_overlay();
-                                                                        zxvision_destroy_window(ventana);
-                                                                        return 1;
+                        cls_menu_overlay();
+                        zxvision_destroy_window(ventana);
+                        return 1;
 
 					}
 				}
@@ -39089,12 +39104,7 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 										releer_directorio=1;
 									}
 
-
-				
-
-
-
-									
+								
 
 								}
 							}

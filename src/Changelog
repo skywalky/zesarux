@@ -18,6 +18,8 @@ Improved File utilities browser:
 -Detect when source and target directories are the same when moving or copying
 -Show more info in some file viewers (.sna, .p, .o, etc)
 
+Improved File Browser: added file size information
+
 Improved CPC emulation: 
 -Video scanlines rendering
 -Joystick emulation
