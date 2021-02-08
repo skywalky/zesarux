@@ -35024,10 +35024,15 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
                     else strcpy(buffer_sync,"mo~^Unt ");
                 }
 
+                /*
                 sprintf(buffer_temporal,"%sD~^El Re~^N ~^Paste ~^Copy %s",
                     //move, de momento  solo para archivos
                     (es_directorio ? "" : "~^Move "),
                     buffer_sync);
+                */
+
+                sprintf(buffer_temporal,"%sD~^El Re~^N ~^Paste ~^Copy ~^Move",buffer_sync);
+
                 zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_temporal);
 
         }
@@ -36006,7 +36011,7 @@ void menu_filesel_copy_recursive_start(char *archivo,char *nombre_final,int simu
         }
 
         else {
-            menu_generic_message_splash("Copy","OK. Folder has been copied");
+            menu_generic_message("Copy folder","OK. Folder copied");
         }
 
 
@@ -36021,7 +36026,7 @@ void menu_filesel_copy_recursive_start(char *archivo,char *nombre_final,int simu
     //No se si hay alguien que compile sin soporte de threads, pero al menos, avisarle y mostrarle un ok cuando finalice
     menu_warn_message("Copying folder may take a while. Press Enter and wait please");
     menu_filesel_copy_recursive_withflag(archivo,nombre_final,simular);
-    menu_generic_message_splash("Copy","OK. Folder has been copied");
+    menu_generic_message("Copy folder","OK. Folder copied");
 
 }
 
@@ -36087,11 +36092,11 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
         	if (ret==0) {
 
         		//Move
-                      	if (rename_move==0) debug_printf (VERBOSE_DEBUG,"Move file %s to directory %s",archivo,menu_filesel_last_directory_seen);
+                if (rename_move==0) debug_printf (VERBOSE_DEBUG,"Move file %s to directory %s",archivo,menu_filesel_last_directory_seen);
 
-                      	//Copy
-                      	if (rename_move==2) debug_printf (VERBOSE_DEBUG,"Copy file %s to directory %s",archivo,menu_filesel_last_directory_seen);
-                	sprintf(nombre_final,"%s/%s",menu_filesel_last_directory_seen,nombre_sin_dir);
+                //Copy
+                if (rename_move==2) debug_printf (VERBOSE_DEBUG,"Copy file %s to directory %s",archivo,menu_filesel_last_directory_seen);
+                sprintf(nombre_final,"%s/%s",menu_filesel_last_directory_seen,nombre_sin_dir);
 
         	}
         	else {
@@ -36159,11 +36164,32 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
         }
         //Move
 		else {
-            //zvfs_rename(archivo,nombre_final);
-            //En este caso, para que podamos hacer move entre local y mmc, hacemos como un copy pero luego borramos origen
-            util_copy_file(archivo,nombre_final);
-            zvfs_delete(archivo);
-            menu_generic_message("Move file","OK. File moved");
+            //No permitir move si el origen es carpeta y origen y destino son diferentes dispositivos
+            int tipo_archivo=get_file_type(archivo);
+            if (tipo_archivo==2) {
+                //Ver dispositivo origen y destino
+                int in_fatfs_origen=util_path_is_mmc_fatfs(archivo);
+                int in_fatfs_destino=util_path_is_mmc_fatfs(nombre_final);
+
+                if (in_fatfs_origen!=in_fatfs_destino) {
+                    debug_printf(VERBOSE_ERR,"Moving folder between diferent source and target type is not allowed. Aborting!");
+                    return;
+                }
+
+                zvfs_rename(archivo,nombre_final);
+                menu_generic_message("Move folder","OK. Folder moved");
+
+            }
+
+            else {          
+                //En el caso de archivos, para que podamos hacer move entre local y mmc, hacemos como un copy pero luego borramos origen
+                util_copy_file(archivo,nombre_final);
+                zvfs_delete(archivo);
+                menu_generic_message("Move file","OK. File moved");
+            }
+            
+
+            
         }
 
 
@@ -36200,7 +36226,7 @@ void file_utils_delete(char *nombre)
 
         menu_filesel_delete_recursive(nombre,0);
 
-        menu_generic_message_splash("Delete","OK. Folder has been deleted");
+        menu_generic_message("Delete","OK. Folder has been deleted");
 
     }
     else {
@@ -36211,7 +36237,7 @@ void file_utils_delete(char *nombre)
             menu_error_message("Error deleting item");
         }
         else {
-            menu_generic_message_splash("Delete","OK. File deleted");
+            menu_generic_message("Delete","OK. File deleted");
         }
 
 
@@ -39189,7 +39215,19 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
                                     filesel_filtros=filtros;
                                     
                                     releer_directorio=1;
-                                }                                                                                                    
+                                }     
+
+                                //Move para cualquier tipo de origen. Aunque no permitimos mover carpetas entre diferentes filesystems
+                                if (tecla=='M') {
+                                    file_utils_move_rename_copy_file(file_utils_file_selected,0);
+                                    //Restaurar variables globales que se alteran al llamar al otro filesel
+                                    //TODO: hacer que estas variables no sean globales sino locales de esta funcion menu_filesel
+                                    filesel_filtros_iniciales=filtros;
+                                    filesel_filtros=filtros;
+    
+                                    releer_directorio=1;
+
+                                }                                                                                                                               
 
 
                                 //Delete para cualquier tipo de archivo
@@ -39246,20 +39284,6 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 									//Truncate
 									if (tecla=='T') {
 										if (menu_confirm_yesno_texto("Truncate","Sure?")) util_truncate_file(file_utils_file_selected);
-									}
-
-
-
-									//Move
-									if (tecla=='M') {
-										file_utils_move_rename_copy_file(file_utils_file_selected,0);
-										//Restaurar variables globales que se alteran al llamar al otro filesel
-										//TODO: hacer que estas variables no sean globales sino locales de esta funcion menu_filesel
-										filesel_filtros_iniciales=filtros;
-										filesel_filtros=filtros;
-		
-										releer_directorio=1;
-
 									}
 
 
