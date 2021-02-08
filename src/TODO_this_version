@@ -206,16 +206,9 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -al hacer extract desde archivo en mmc, y volver a mmc, luego al ir a local drive nos ubica en la carpeta tmp
 
-
 -punteros en diskio, de read y write, soportaran imagenes de mas de 2 gB en sistemas 32 bits?
 
 -Widget uso cpu con aguja. Igual para sonido. Quizá común para una variable concreto 
 
 -Si ZX desktops activado. Pero cargo un driver de texto que pasará? Y sale habilitado? Y como se guardará la opción?
 
-
--tamaños del file selector. probar con speech
-
--delete recursivo. Con opcion en menu para habilitarlo o no? Con base el copy recursivo
-
--quiza opciones para file selector en settings aparte
