@@ -36743,8 +36743,17 @@ void zxvision_menu_filesel_print_text_contents(zxvision_window *ventana)
 void file_utils_info_file(char *archivo)
 {
 
-	long int tamanyo=get_file_size(archivo);
-	//fecha
+    char buffer_tamanyo[100]="";
+
+    //Si es carpeta no mostrar tamaño
+    int tipo_archivo=get_file_type(archivo);
+    if (tipo_archivo!=2) {    
+
+        long int tamanyo=get_file_size(archivo);
+        sprintf(buffer_tamanyo,"Size: %ld bytes\n",tamanyo);
+    
+    }
+        //fecha
        int hora;
         int minutos;
         int segundos;
@@ -36758,8 +36767,9 @@ void file_utils_info_file(char *archivo)
 
 
 
-	menu_generic_message_format("Info file","Full path: %s\n\nSize: %ld bytes\nModified: %02d:%02d:%02d %02d/%02d/%02d",
-		archivo,tamanyo,hora,minutos,segundos,dia,mes,anyo);
+
+	menu_generic_message_format("Info file","Full path: %s\n\n%sModified: %02d:%02d:%02d %02d/%02d/%02d",
+		archivo,buffer_tamanyo,hora,minutos,segundos,dia,mes,anyo);
 
 }
 
