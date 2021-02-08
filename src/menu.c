@@ -36114,6 +36114,11 @@ void file_utils_move_rename_copy_file(char *archivo,int rename_move)
 		debug_printf (VERBOSE_INFO,"Original name: %s dir: %s new name %s final name %s"
 				,archivo,directorio,nombre_sin_dir,nombre_final);
 
+        //releer con speech
+        //parece que a veces no lee el titulo de la ventana y es importante
+        //probablemente porque para elegir el directorio destino se pulsa ESC y por tanto
+        //eso evita que se envie el siguiente texto a speech
+        menu_speech_tecla_pulsada=0;   
 
 		if (menu_confirm_yesno_texto("Confirm operation","Sure?")==0) return;
 
@@ -39191,6 +39196,10 @@ int menu_filesel(char *titulo,char *filtros[],char *archivo)
 						//Comun para acciones que usan archivo seleccionado
 						if (tecla=='V' || tecla=='T' || tecla=='E' || tecla=='M' || tecla=='N' || tecla=='C' 
                             || tecla=='P' || tecla=='F' || tecla=='O' || tecla=='I' || tecla=='U' || tecla=='S') {
+
+
+						    //releer con speech
+						    menu_speech_tecla_pulsada=0;                                
 							
 							//Obtener nombre del archivo al que se apunta
 							char file_utils_file_selected[PATH_MAX]="";

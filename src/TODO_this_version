@@ -214,7 +214,7 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 -Si ZX desktops activado. Pero cargo un driver de texto que pasará? Y sale habilitado? Y como se guardará la opción?
 
 
--quiza opcion para ocultar tamaños del file selector. probar con speech
+-tamaños del file selector. probar con speech
 
 -delete recursivo. Con opcion en menu para habilitarlo o no? Con base el copy recursivo
 
