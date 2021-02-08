@@ -20169,6 +20169,7 @@ void menu_online_browse_intelli_get_name(char *nombre_origen,char *nombre_final)
         ".z80.zip",
         ".sna.zip",
         ".rom.zip",
+        ".trd.zip",
         
         //hay otras extensiones pero como no las soporta smartload, mejor mostrar extension
         //.mgt.zip
