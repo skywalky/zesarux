@@ -20176,7 +20176,7 @@ void menu_online_browse_intelli_get_name(char *nombre_origen,char *nombre_final)
         //.slt.zip
         //.mdr.zip
 
-
+        //Indica final de array
         ""
     };
 
