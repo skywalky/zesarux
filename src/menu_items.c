@@ -20147,10 +20147,64 @@ int menu_download_file(char *host,char *url,char *archivo_temp,int ssl_use,int e
 	return parametros.return_code;
 
 }
+/*
+Obtiene nombre de juego de manera inteligente, segun su nombre de archivo
+Se trata de quitar extension conocida
+Ejemplo: ChaseH.Q..tzx.zip
+Debe obtener: ChaseH.Q.
+*/
+void menu_online_browse_intelli_get_name(char *nombre_origen,char *nombre_final)
+{
+    //util_get_file_without_extension(nombre_sin_dir,nombre_sin_ext);
+    //Si nombre acaba en cualquiera de:
+    //tap.zip
+    //dsk.zip
+    //tzx.zip
+    //Quitar esa doble extension
+    //Cualquier otra, dejar tal cual
+    char *posibles_extensiones[]={
+        ".tap.zip",
+        ".dsk.zip",
+        ".tzx.zip",
+        ".z80.zip",
+        ".sna.zip",
+        ".rom.zip",
+        
+        //hay otras extensiones pero como no las soporta smartload, mejor mostrar extension
+        //.mgt.zip
+        //.slt.zip
+        //.mdr.zip
 
 
-//showindex dice si muestra contenido texto variable index en el item->usado para mostrar el archivo de la url en las diferentes descargas de un mismo juego
-void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,char *string_index,char *string_display,
+        ""
+    };
+
+    int i;
+    char *encontrado=NULL;
+
+
+    for (i=0;posibles_extensiones[i][0] && encontrado==NULL;i++) {
+        encontrado=strstr(nombre_origen,posibles_extensiones[i]);
+    }
+
+    //de momento copiar tal cual
+    strcpy(nombre_final,nombre_origen);
+
+    if (encontrado!=NULL) {
+        //longitud hasta encontrada coincidencia. Restamos los dos punteros
+        int longitud_nombre_sin_extension=encontrado-nombre_origen;
+        //Acortar el texto
+        nombre_final[longitud_nombre_sin_extension]=0;
+    }
+
+    
+}
+
+
+//showindex dice si muestra contenido texto variable index en el item->usado para mostrar el archivo de la url 
+//en las diferentes descargas de un mismo juego
+void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *query_url,char *preffix,
+    char *string_index,char *string_display,
      char *add_headers,int showindex,char *windowtitle,char *error_not_found_message)
 {
 	
@@ -20310,9 +20364,8 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 									util_get_file_no_directory(ultimo_id,nombre_sin_dir);
 
-									//TODO Pillamos el nombre sin extension (sin puntos), pero en juegos como "Chase H.Q.tap.zip"
-									//quedará: "Chase H"
-									util_get_file_without_extension(nombre_sin_dir,nombre_sin_ext);
+									//Pillamos el nombre sin extension 
+                                    menu_online_browse_intelli_get_name(nombre_sin_dir,nombre_sin_ext);
 
 									//Acortar el nombre por si acaso
 									char nombre_shown[28];
