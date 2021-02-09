@@ -1923,9 +1923,9 @@ void tbsprite_do_overlay(void)
     else {
         // take clip window coordinates, but limit them to [0,0]->[255,191] (and offset them +32,+32)
         rangoxmin=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][0] + TBBLUE_SPRITE_BORDER;
-        rangoxmax=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][1] + TBBLUE_SPRITE_BORDER-1;
+        rangoxmax=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][1] + TBBLUE_SPRITE_BORDER;
         rangoymin=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][2] + TBBLUE_SPRITE_BORDER;
-        rangoymax=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][3] + TBBLUE_SPRITE_BORDER-1;
+        rangoymax=clip_windows[TBBLUE_CLIP_WINDOW_SPRITES][3] + TBBLUE_SPRITE_BORDER;
         if (rangoymax > TBBLUE_SPRITE_BORDER+192-1) {
             // clamp rangoymax to 32+191 (bottom edge of PAPER)
             rangoymax = TBBLUE_SPRITE_BORDER+192-1;
