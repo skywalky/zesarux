@@ -193,6 +193,51 @@ int z_connect_ssl(int indice_tabla)
 	debug_printf (VERBOSE_DEBUG,"Running SSL_connect");
 	int err = SSL_connect(sockets_list[indice_tabla].ssl_conn);
 	if (err != 1) {
+        //debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d",err);
+        int final_err=SSL_get_error(sockets_list[indice_tabla].ssl_conn,err);
+        switch(final_err) {
+            case SSL_ERROR_NONE:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_NONE error",final_err);
+            break;
+
+            case SSL_ERROR_ZERO_RETURN:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_ZERO_RETURN error",final_err);
+            break;
+
+            case SSL_ERROR_WANT_READ:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_WANT_READ error",final_err);
+            break;
+
+            case SSL_ERROR_WANT_WRITE:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_WANT_WRITE error",final_err);
+            break;
+
+            case SSL_ERROR_WANT_CONNECT:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_WANT_CONNECT error",final_err);
+            break;
+
+            case SSL_ERROR_WANT_ACCEPT:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_WANT_ACCEPT error",final_err);
+            break;
+
+            case SSL_ERROR_WANT_X509_LOOKUP:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_WANT_X509_LOOKUP error",final_err);
+            break;
+
+            case SSL_ERROR_SYSCALL:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_SYSCALL error",final_err);
+            break;
+
+            case SSL_ERROR_SSL:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_SSL error",final_err);
+            break;
+
+            default:
+                debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. Unknown error",final_err);
+            break;
+        }
+
+
    		return -1;
 	}
 
