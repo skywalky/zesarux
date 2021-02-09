@@ -128,8 +128,8 @@ Then enable IDE emulation,  and enable DIVIDE on the menu. Then reset the machin
 
 
 Q: What are file formats with extensions .mmc and .ide?
-A: They are both the same, both are dumps of mmc or ide cards. I use different extensions to distinguish between mmc images and ide images.
-Besides using esxdos or other divide/divmmc firmware, you can browse inside these images (and any other disk image formated on FAT filesystem) from the Debug-> File utilites menu. Then select the file and choose the action "Sync" (Shift+S)
+A: They are both the same, both are dumps of mmc or ide cards/hard disks. I use different extensions to distinguish between mmc images and ide images.
+Besides using esxdos or other divide/divmmc firmware, you can browse inside these images (and any other disk image formated on FAT filesystem) from the Debug-> File utilites menu. Then select the file and choose the action "moUnt" (Shift+u)
 
 You can also access those file image cards using utilities for your operating system:
 -GNU/Linux: you can use command "mount" with option -o loop to mount these images. It file image has a partition, you must first use losetup utility

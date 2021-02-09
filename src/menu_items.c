@@ -20658,7 +20658,7 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 }
 
 
-
+char menu_network_http_request_url[NETWORK_MAX_URL]="";
 
 void menu_network_http_request(MENU_ITEM_PARAMETERS)
 {
@@ -20666,19 +20666,19 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 	char *mem;
 	char *mem_after_headers;
 	char host[100];
-	char url[100];
+	//char url[100];
 	char s_skip_headers[2];
 	char s_add_headers[200];
 
 	host[0]=0;
-	url[0]=0;
+	//url[0]=0;
 
 	strcpy(s_skip_headers,"0");
 	//s_skip_headers[0]='0';
 	s_add_headers[0]=0;
 	
 	menu_ventana_scanf("host?",host,100);
-	menu_ventana_scanf("url?",url,100);
+	menu_ventana_scanf("url?",menu_network_http_request_url,NETWORK_MAX_URL);
 	menu_ventana_scanf("add headers",s_add_headers,200);
 	
 	int l=strlen(s_add_headers);
@@ -20707,7 +20707,7 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 
 	char *mem_mensaje;
 
-	int retorno=menu_zsock_http(host,url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,use_ssl,redirect_url);
+	int retorno=menu_zsock_http(host,menu_network_http_request_url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,use_ssl,redirect_url);
 	if (retorno==0 && mem!=NULL) {
 		if (skip_headers) {
 			if (mem_after_headers) {
