@@ -69,7 +69,7 @@ Fixed TBBlue bugs:
 -Fixed calculating pattern on 4 bpp sprites
 -Fixed 4bpp sprites transparency
 -Fixed anchor on 4-byte sprites
--Fixed clipping
+-Fixed clipping (affected scrollnutter in the right round corners)
 
 
 
