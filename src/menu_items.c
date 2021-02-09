@@ -20288,9 +20288,9 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 					Campos a buscar:
 
 	hits.0._id=0002258
-	hits.0.fulltitle=Headcoach
+	hits.0.title=Headcoach
 
-	Pueden salir antes id o antes fulltitle. En bucle leer los dos y cuando estén los dos y tengan mismo .n., agregar a menu
+	Pueden salir antes id o antes title. En bucle leer los dos y cuando estén los dos y tengan mismo .n., agregar a menu
 					*/
 					
 					//filtrar antes los que tienen prefijo
@@ -20303,6 +20303,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 						existe=strstr(buffer_linea,string_index); //"_id=");
 						if (existe!=NULL) {
 								int pos=strlen(string_index);
+                                //printf("id: existe_id %d existe_fulltitle %d buffer_linea: %s\n",existe_id,existe_fulltitle,buffer_linea);
 								strcpy(ultimo_id,&existe[pos]);
 								existe_id=1;
 								char *existe_indice;
@@ -20316,7 +20317,16 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 
 						existe=strstr(buffer_linea,string_display); //"fulltitle=");
 						if (existe!=NULL) {
+                                //hay que descartar entradas tipo hits.0.screens.1.title=null
+                                //que hacen confundir y pensar que son entradas de title
+                                //TODO: esta exclusion realmente solo haria falta en la primera llamada aqui, 
+                                //en la busqueda de juegos. En cambio en la de game details no hace falta,
+                                //pero bueno tampoco molesta y por no complicar mas el código, lo dejamos
+                                char *existe_screen=strstr(buffer_linea,".screens.");
+                                if (existe_screen==NULL) {
+
 								int pos=strlen(string_display);
+                                //printf("ti: existe_id %d existe_fulltitle %d buffer_linea: %s\n",existe_id,existe_fulltitle,buffer_linea);
 								strcpy(ultimo_fulltitle,&existe[pos]);
 								existe_fulltitle=1;
 								char *existe_indice;
@@ -20326,12 +20336,15 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 									int l=strlen(preffix);
 									ultimo_indice_fulltitle=parse_string_to_number(&existe_indice[l]);
 								}						
+
+                                }
 						}				
 							
 						if (existe_id && existe_fulltitle) {
+                            //printf("ultimo_indice_id %d ultimo_indice_fulltitle %d\n",ultimo_indice_id,ultimo_indice_fulltitle);
 							if (ultimo_indice_id==ultimo_indice_fulltitle) {
 								
-								
+								//printf ("Adding menu item [%s] id [%s]\n",ultimo_fulltitle,ultimo_id);
 								debug_printf (VERBOSE_DEBUG,"Adding menu item [%s] id [%s]",ultimo_fulltitle,ultimo_id);
 								
 								//meter en entrada linea indice. Realmente para que la queremos?
@@ -20551,11 +20564,21 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 
 	do {
 		char query_url[1024];
-		//sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE&availability=Available",query_search_normalized);
-		sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE",query_search_normalized);
+
+        //Old V2
+		//sprintf (query_url,"/api/zxinfo/v2/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE",query_search_normalized);
+
+        //New V3
+        sprintf (query_url,"/v3/search?query=%s&mode=compact&sort=rel_desc&size=100&offset=0&contenttype=SOFTWARE&output=flat",query_search_normalized);
+        
 
 		char query_id[256];
-		menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0,"Spectrum games","No results found");
+
+        //Old V2
+		//menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"hits.","_id=","fulltitle=","",0,"Spectrum games","No results found");
+        //New V3 http://v3.zxinfo.dk
+        menu_online_browse_zxinfowos_query(query_id,"v3.zxinfo.dk",query_url,"hits.","_id=","title=","",0,"Spectrum games","No results found");
+        
 		//gestionar resultado vacio
 		if (query_id[0]==0) {
 			//TODO resultado con ESC
@@ -20574,11 +20597,23 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	releases.1.type=Tape image
 		*/
 		
-		sprintf (query_url,"/api/zxinfo/games/%s?mode=compact",query_id);
+        //Old V2
+		//sprintf (query_url,"/api/zxinfo/games/%s?mode=compact",query_id);
 
-		
-		menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1,"Releases",
+        //New V3
+		sprintf (query_url,"/v3/games/%s?mode=compact&output=flat",query_id);
+
+
+        //New v3 http://v3.zxinfo.dk/v3/games/0000438?mode=compact&output=flat
+
+		//Old V2
+		//menu_online_browse_zxinfowos_query(query_id,"a.zxinfo.dk",query_url,"releases.","url=","format=","",1,"Releases",
+		//									"No results found. Maybe there are no releases available or the game is copyright protected");
+
+		//New V3
+		menu_online_browse_zxinfowos_query(query_id,"v3.zxinfo.dk",query_url,"releases.","path=","format=","",1,"Releases",
 											"No results found. Maybe there are no releases available or the game is copyright protected");
+
 
 		//gestionar resultado vacio
 		if (query_id[0]==0) {

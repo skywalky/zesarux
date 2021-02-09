@@ -47,6 +47,8 @@ Improved TBBlue emulation:
 -Added Sprites Debug memory zone
 -Optimize sprite rendering (saving 1% cpu on my computer)
 
+Improved Speccy online browser: now uses ZXinfo API V3
+
 Fixed annoying flickering in menu using XWindows video driver
 Fixed loading General Sound rom
 Fixed segfaults on fileselector +3 DSK screen previews using Speedlock protected disks or bad disks
