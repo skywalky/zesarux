@@ -255,6 +255,7 @@ enum util_teclas
 
 	UTIL_KEY_SPACE=128,  //128 en adelante para no entrar en conflicto con teclas ascii <128
 	UTIL_KEY_ENTER,
+    UTIL_KEY_HOME,
 	UTIL_KEY_SHIFT_L,
 	UTIL_KEY_SHIFT_R,
 	UTIL_KEY_CAPS_SHIFT,

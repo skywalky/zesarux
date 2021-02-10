@@ -6870,6 +6870,18 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 
                         break;
 
+
+                        case UTIL_KEY_HOME:
+                                if (pressrelease) {
+                                        //Home en cpc es copy
+                                        cpc_keyboard_table[1] &=(255-2);
+                                }
+                                else {
+                                        //Home en cpc es copy
+                                        cpc_keyboard_table[1] |=2;
+                                }
+                        break;                        
+
                         case UTIL_KEY_SHIFT_L:
                         case UTIL_KEY_CAPS_SHIFT:
 
