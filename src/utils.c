@@ -3966,6 +3966,10 @@ int util_write_configfile(void)
 
                                               ADD_STRING_CONFIG,"--joystickemulated \"%s\"",joystick_texto[joystick_emulation]);
 
+
+                                            ADD_STRING_CONFIG,"--joystickfirekey %d",joystick_defined_key_fire);
+
+            
   if (remote_protocol_enabled.v)              ADD_STRING_CONFIG,"--enable-remoteprotocol");
                                               ADD_STRING_CONFIG,"--remoteprotocol-port %d",remote_protocol_port);
 

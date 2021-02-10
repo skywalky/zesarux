@@ -19690,7 +19690,8 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
                     menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_joystick_fire_key,NULL,"[%s] Fire key",
                 joystick_defined_fire_texto[joystick_defined_key_fire]);
             menu_add_item_menu_tooltip(array_menu_hardware_settings,"Define which key triggers the fire function for the joystick");
-            menu_add_item_menu_ayuda(array_menu_hardware_settings,"Define which key triggers the fire function for the joystick");
+            menu_add_item_menu_ayuda(array_menu_hardware_settings,"Define which key triggers the fire function for the joystick. "
+                    "Not all video drivers support reading all keys");
 
 
 

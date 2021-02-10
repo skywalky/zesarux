@@ -2076,6 +2076,7 @@ printf (
 
 
 	printf(
+        "--joystickfirekey n        Define which key triggers the fire function for the joystick: 0=Home, 1=RightAlt, 2=RightCtrl, 3=RightShift\n"
 		"--disablerealjoystick      Disable real joystick emulation\n"
 		"--realjoystickpath f       Change default real joystick device path\n"
 		"--realjoystick-calibrate n Parameter to autocalibrate joystick axis. Axis values read from joystick less than n and greater than -n are considered as 0. Default: 16384. Not used on native linux real joystick\n"
@@ -7610,6 +7611,16 @@ int parse_cmdline_options(void) {
 				}
 
 			}
+
+            else if (!strcmp(argv[puntero_parametro],"--joystickfirekey")) {
+                siguiente_parametro_argumento();
+                int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<0 || valor>3) {
+					printf ("Invalid value %d for setting --joystickfirekey\n",valor);
+                    exit(1);				
+				}
+				joystick_defined_key_fire=valor;
+            }
 
 
 			else if (!strcmp(argv[puntero_parametro],"--disablerealjoystick")) {
