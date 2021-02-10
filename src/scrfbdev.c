@@ -908,7 +908,7 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 				break;
 
 			case RAWKEY_Keypad_Home:
-				util_set_reset_key(UTIL_KEY_HOME,pressrelease);
+				util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
 				break;
 
 			case RAWKEY_Keypad_Left:
@@ -1038,7 +1038,7 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 #ifdef EMULATE_RASPBERRY
 
 			case RAWKEY_RPI_Home:
-				util_set_reset_key(UTIL_KEY_HOME,pressrelease);
+				util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
 			break;
 
 			case RAWKEY_RPI_Up:
@@ -1288,7 +1288,7 @@ void scrfbdev_actualiza_tablas_teclado(void){
 																switch (tecla4) {
 
 																	case 126:
-																		util_set_reset_key(UTIL_KEY_HOME,1);
+																		util_set_reset_key(UTIL_KEY_FIRE,1);
 																		break;
 
 																}

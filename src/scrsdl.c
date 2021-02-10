@@ -1013,7 +1013,7 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
                         break;
 
                         case SDLK_HOME:
-                                util_set_reset_key(UTIL_KEY_HOME,pressrelease);
+                                util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
                         break;
 
                         case SDLK_LEFT:

@@ -1388,7 +1388,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                 break;
 
                 case COCOA_KEY_HOME:
-                        util_set_reset_key(UTIL_KEY_HOME,pressrelease);
+                        util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
                 break;                        
 
 

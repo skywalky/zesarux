@@ -1353,7 +1353,7 @@ void deal_with_keys(XEvent *event,int pressrelease)
                         break;
 
 			case XK_Home:
-				util_set_reset_key(UTIL_KEY_HOME,pressrelease);
+				util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
                         break;
 
 			case XK_Left:

@@ -6801,7 +6801,7 @@ void util_set_reset_key_continue(enum util_teclas tecla,int pressrelease)
   //No estoy seguro que este sea el mejor sitio para llamar a zeng, pero...
 
   //Enviar tecla si no es cursor (esto se trata como joystick aparte)
-  if (tecla!=UTIL_KEY_HOME && tecla!=UTIL_KEY_LEFT && tecla!=UTIL_KEY_RIGHT && tecla!=UTIL_KEY_DOWN && tecla!=UTIL_KEY_UP) {
+  if (tecla!=UTIL_KEY_FIRE && tecla!=UTIL_KEY_LEFT && tecla!=UTIL_KEY_RIGHT && tecla!=UTIL_KEY_DOWN && tecla!=UTIL_KEY_UP) {
         zeng_send_key_event(tecla,pressrelease);
   }
 
@@ -7092,18 +7092,18 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                         break;
 
 
-                        case UTIL_KEY_HOME:
+                        case UTIL_KEY_FIRE:
                                 if (pressrelease) {
                                         joystick_set_fire(1);
 
-					//Home en cpc es copy
-					cpc_keyboard_table[1] &=(255-2);
+                                        //Home en cpc es copy
+                                        cpc_keyboard_table[1] &=(255-2);
                                 }
                                 else {
                                         joystick_release_fire(1);
 
-					//Home en cpc es copy
-					cpc_keyboard_table[1] |=2;
+                                        //Home en cpc es copy
+                                        cpc_keyboard_table[1] |=2;
                                 }
                         break;
 

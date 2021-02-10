@@ -1909,7 +1909,7 @@ void scrcurses_actualiza_tablas_teclado(void)
 
 
 			        case KEY_HOME:
-							util_set_reset_key(UTIL_KEY_HOME,1);
+							util_set_reset_key(UTIL_KEY_FIRE,1);
                     break;
 
 					case KEY_LEFT:

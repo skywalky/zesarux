@@ -160,15 +160,6 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 
 -sprite disabling window tambien para tsconf y maquinas con chip vdp (msx, etc)
 
--
-    cls_menu_overlay();
-
-    //En caso de menus tabulados, es responsabilidad de este de liberar ventana
-    zxvision_destroy_window(&ventana);  
-
-
-esos, debe haber cls antes siempre
-
 
 
 -the next war: revisar border deberia desactivar. musica en menu no se oye bien
