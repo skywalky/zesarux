@@ -1388,7 +1388,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                 break;
 
                 case COCOA_KEY_HOME:
-                        util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
+                        joystick_possible_home_key(pressrelease);
                 break;                        
 
 
@@ -1402,7 +1402,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                 break;
 
                 case COCOA_KEY_RSHIFT:
-                        util_set_reset_key(UTIL_KEY_SHIFT_R,pressrelease);
+                    joystick_possible_rightshift_key(pressrelease);
                 break;
 
                 case COCOA_KEY_LALT:
@@ -1410,7 +1410,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                 break;
 
                 case COCOA_KEY_RALT:
-                        util_set_reset_key(UTIL_KEY_ALT_R,pressrelease);
+                    joystick_possible_rightalt_key(pressrelease);
                 break;
 
                 case COCOA_KEY_LCTRL:
@@ -1418,7 +1418,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                 break;
 
                 case COCOA_KEY_RCTRL:
-                        util_set_reset_key(UTIL_KEY_CONTROL_R,pressrelease);
+                    joystick_possible_rightctrl_key(pressrelease);
                 break;
 
 
@@ -1808,7 +1808,8 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
         //notificar cambios
         if (pulsadoshift_r!=scrcocoa_antespulsadoshift_r) {
                 //printf ("notificar cambio shift right\n");
-                util_set_reset_key(UTIL_KEY_SHIFT_R,pulsadoshift_r);
+                joystick_possible_rightshift_key(pulsadoshift_r);
+                //util_set_reset_key(UTIL_KEY_SHIFT_R,pulsadoshift_r);
         }
 
 

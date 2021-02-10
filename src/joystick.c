@@ -39,6 +39,49 @@ int joystick_emulation=JOYSTICK_CURSOR_WITH_SHIFT;
 int joystick_autofire_frequency=0;
 int joystick_autofire_counter=0;
 
+//Que tecla actua como el Fire del joystick. Por defecto, Home
+//#define JOYSTICK_KEY_FIRE_IS_HOME 0
+//#define JOYSTICK_KEY_FIRE_IS_RIGHTALT 1
+//#define JOYSTICK_KEY_FIRE_IS_RIGHTCTRL 2
+//#define JOYSTICK_KEY_FIRE_IS_RIGHTSHIFT 3
+int joystick_defined_key_fire=JOYSTICK_KEY_FIRE_IS_HOME;
+
+char *joystick_defined_fire_texto[]={
+    "Home",
+    "RightAlt",
+    "RightCtrl",
+    "RightShift"
+};
+
+//Funciones que segun la tecla pulsada de posibles joystick fire (home, rightalt, etc)
+//acaban actuando sobre el fire o sobre la tecla
+void joystick_possible_home_key(int pressrelease)
+{
+    if (joystick_defined_key_fire==JOYSTICK_KEY_FIRE_IS_HOME) util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
+    else util_set_reset_key(UTIL_KEY_HOME,pressrelease);
+}
+
+
+void joystick_possible_rightshift_key(int pressrelease)
+{
+    if (joystick_defined_key_fire==JOYSTICK_KEY_FIRE_IS_RIGHTSHIFT) util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
+    else util_set_reset_key(UTIL_KEY_SHIFT_R,pressrelease);
+}
+
+void joystick_possible_rightalt_key(int pressrelease)
+{
+
+    if (joystick_defined_key_fire==JOYSTICK_KEY_FIRE_IS_RIGHTALT) util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
+    else util_set_reset_key(UTIL_KEY_ALT_R,pressrelease);
+}
+
+void joystick_possible_rightctrl_key(int pressrelease)
+{            
+    if (joystick_defined_key_fire==JOYSTICK_KEY_FIRE_IS_RIGHTCTRL) util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
+    else util_set_reset_key(UTIL_KEY_CONTROL_R,pressrelease);
+}
+
+
 int gunstick_emulation=0;
 
 //Coordenadas x,y en formato scanlines y pixeles totales, es decir,

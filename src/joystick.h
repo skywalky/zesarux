@@ -96,6 +96,17 @@ extern void joystick_print_types(void);
 
 extern void joystick_cycle_next_type(void);
 
+#define JOYSTICK_KEY_FIRE_IS_HOME 0
+#define JOYSTICK_KEY_FIRE_IS_RIGHTALT 1
+#define JOYSTICK_KEY_FIRE_IS_RIGHTCTRL 2
+#define JOYSTICK_KEY_FIRE_IS_RIGHTSHIFT 3
 
+extern char *joystick_defined_fire_texto[];
+extern int joystick_defined_key_fire;
+
+extern void joystick_possible_home_key(int pressrelease);
+extern void joystick_possible_rightshift_key(int pressrelease);
+extern void joystick_possible_rightalt_key(int pressrelease);
+extern void joystick_possible_rightctrl_key(int pressrelease);
 
 #endif

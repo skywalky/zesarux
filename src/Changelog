@@ -12,6 +12,7 @@ Added alternate Jupiter ACE rom
 Added another fourth easter egg ;)
 Added read only setting for esxdos handler
 Added .nex file viewer
+Added setting to redefine joystick fire key
 
 Improved File utilities Browser:
 -Added support for browsing inside disk images (.mmc, .ide, etc)
