@@ -5360,7 +5360,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	//restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);
 
-
+    //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
     cls_menu_overlay();
 
 	//Grabar geometria ventana
@@ -6015,7 +6015,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	//restauramos modo normal de texto de menu
 	set_menu_overlay_function(normal_overlay_texto_menu);
 
-
+    //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
     cls_menu_overlay();
 
 	util_add_window_geometry_compact(ventana);
@@ -6646,7 +6646,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
 
-
+        //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
         cls_menu_overlay();
 
 	util_add_window_geometry_compact(ventana);
@@ -8165,7 +8165,7 @@ void menu_debug_dma_tsconf_zxuno(MENU_ITEM_PARAMETERS)
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
 
-
+        //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
         cls_menu_overlay();
 
 	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
@@ -8655,6 +8655,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
 
+        //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
 	   cls_menu_overlay();
 
 	//En caso de menus tabulados, es responsabilidad de este de liberar ventana
@@ -15107,7 +15108,6 @@ void menu_watches(MENU_ITEM_PARAMETERS)
 								zxvision_draw_window(ventana);
 
 
-				//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
                                 
                         }
                 }
@@ -15121,6 +15121,7 @@ void menu_watches(MENU_ITEM_PARAMETERS)
        //restauramos modo normal de texto de menu
        set_menu_overlay_function(normal_overlay_texto_menu);
 
+        //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
 	   cls_menu_overlay();
 
 	util_add_window_geometry_compact(ventana);	   
@@ -23615,6 +23616,8 @@ void menu_debug_msx_svi_memory_info(MENU_ITEM_PARAMETERS)
 
     } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
+    //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
+    cls_menu_overlay();
 
                                 //En caso de menus tabulados, es responsabilidad de este de liberar ventana
                 zxvision_destroy_window(&ventana);	
