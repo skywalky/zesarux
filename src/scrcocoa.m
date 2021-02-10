@@ -1493,6 +1493,9 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                         util_set_reset_key(UTIL_KEY_ASTERISK,pressrelease);
                 break;
 
+                case COCOA_KEY_DELETE:
+                        util_set_reset_key(UTIL_KEY_DEL,pressrelease);
+                break;
 
                 //F1 pulsado
                 case COCOA_KEY_F1:

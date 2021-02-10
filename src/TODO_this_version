@@ -202,4 +202,6 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -descargas a spectrum computing. todas fallan. ejemplo "CHRISTMAS CRACKER SIMULATOR"
 
--tecla DEL de CPC
+-tecla DEL de CPC. esta con Del y backspace pero no va ninguna de las dos. quiza tiene que ver con joystick
+
+tecla DEL en todos los drivers

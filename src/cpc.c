@@ -169,7 +169,7 @@ Line	7	6	5	4	3	2	1	0
 &46	V	B	F	G (Joy2 fire)	T (Joy2 right)	R (Joy2 left)	5 (Joy2 down)	6 (Joy 2 up)
 &47	X	C	D	S	W	E	3	4
 &48	Z	CAPSLOCK	A	TAB	Q	ESC	2	1
-&49	DEL	Joy 1 Fire 3 (CPC only)	Joy 1 Fire 2	Joy1 Fire 1	Joy1 right	Joy1 left	Joy1 down	Joy1 up
+&49	DEL	    Joy 1 Fire 3 (CPC only)	     Joy 1 Fire 2	   Joy1 Fire 1	   Joy1 right	  Joy1 left	   Joy1 down	Joy1 up
 
 
 For CPC464 and CPC664 users:

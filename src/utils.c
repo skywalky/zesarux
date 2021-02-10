@@ -6884,7 +6884,23 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                         //Home en cpc es copy
                                         cpc_keyboard_table[1] |=2;
                                 }
-                        break;                        
+                        break;                     
+
+
+                        case UTIL_KEY_DEL:
+                                //printf("util press del\n");
+                                if (pressrelease) {
+                                        //del en cpc es del
+                                        //&49	DEL	Joy 1 Fire 3 (CPC only)	Joy 1 Fire 2	Joy1 Fire 1	Joy1 right	Joy1 left	Joy1 down	Joy1 up
+                                        cpc_keyboard_table[9] &=(255-128);
+                                }
+                                else {
+                                        //del en cpc es del
+                                        cpc_keyboard_table[9] |=128;
+                                }
+                                //printf("%d\n",cpc_keyboard_table[9]);
+                        break;  
+                                                    
 
                         case UTIL_KEY_SHIFT_L:
                         case UTIL_KEY_CAPS_SHIFT:
