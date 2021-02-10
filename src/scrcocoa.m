@@ -1716,7 +1716,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 }
 
 //inicializarlos con valores 0 al principio
-int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsadoshift_l=0,scrcocoa_antespulsadoshift_r=0,scrcocoa_antespulsadocmd=0; //,scrcocoa_antespulsadocapslock=0;
+int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespulsadoalt_l=0,scrcocoa_antespulsadoalt_r=0,scrcocoa_antespulsadoshift_l=0,scrcocoa_antespulsadoshift_r=0,scrcocoa_antespulsadocmd=0; //,scrcocoa_antespulsadocapslock=0;
 
 - (void) migestionEvento:(NSEvent *)event
 {
@@ -1724,8 +1724,9 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 
 
         //asumimos teclas de control no pulsadas
-        int pulsadoctrl_l,pulsadoctrl_r,pulsadoalt,pulsadoshift_l,pulsadoshift_r,pulsadocmd; //,pulsadocapslock;
-        pulsadoctrl_l=pulsadoctrl_r=pulsadoalt=pulsadoshift_l=pulsadoshift_r=pulsadocmd=0;
+        int pulsadoctrl_l,pulsadoctrl_r,pulsadoalt_l,pulsadoalt_r,pulsadoshift_l,pulsadoshift_r,pulsadocmd; //,pulsadocapslock;
+
+        pulsadoctrl_l=pulsadoctrl_r=pulsadoalt_l=pulsadoalt_r=pulsadoshift_l=pulsadoshift_r=pulsadocmd=0;
 
         int event_keycode,event_type,event_modifier_flags;
         NSPoint p = [event locationInWindow];
@@ -1789,7 +1790,7 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 
         //Ctrl left: event_modifier_flags       40101H 
         //Ctrl right: event_modifier_flags      42100H 
-        //Ctrl left:right: event_modifier_flags 42101H 
+        //Ctrl left+right: event_modifier_flags 42101H 
 
                                             //L  ---1H
                                             //R  2---H
@@ -1813,7 +1814,30 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 	}
 	if (event_modifier_flags & NSEventModifierFlagOption) {
 		//printf ("Alt key is pressed\n");
-		pulsadoalt=1;
+        //printf("event_modifier_flags %XH\n",event_modifier_flags);
+
+        //Alt left:         event_modifier_flags 80120H
+        //Alt right:        event_modifier_flags 80140H
+        //Alt left+right:   event_modifier_flags 80160H
+        //                                       ---X-
+
+		if ( (event_modifier_flags & 0x20)==0x20) {
+			//printf ("Left Alt key is pressed\n");
+			pulsadoalt_l=1;
+		}
+
+		if ( (event_modifier_flags & 0x40)==0x40) {
+			//printf ("Right Alt key is pressed\n");
+			pulsadoalt_r=1;
+		}
+
+		//dado que estos valores los he obtenido probando, por si acaso, se ha entrado aqui pero no se cumple ni left ni right, metemos left
+		if (pulsadoalt_l==0 && pulsadoalt_r==0) {
+			debug_printf (VERBOSE_DEBUG,"Strange behaviour. alt pressed but do not know if left or right. Asuming left");
+            //printf ("Strange behaviour. alt pressed but do not know if left or right. Asuming left\n");
+			pulsadoalt_l=1;
+		}       
+
 	}
 	if (event_modifier_flags & NSEventModifierFlagCommand) {
 		//printf ("Cmd key is pressed\n");
@@ -1850,10 +1874,16 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 	}
 
 
-	if (pulsadoalt!=scrcocoa_antespulsadoalt) {
+	if (pulsadoalt_l!=scrcocoa_antespulsadoalt_l) {
 		//printf ("notificar cambio alt\n");
-		util_set_reset_key(UTIL_KEY_ALT_L,pulsadoalt);
+		util_set_reset_key(UTIL_KEY_ALT_L,pulsadoalt_l);
 	}
+
+	if (pulsadoalt_r!=scrcocoa_antespulsadoalt_r) {
+		//printf ("notificar cambio alt\n");
+		joystick_possible_rightalt_key(pulsadoalt_r);
+	}
+
 
 
 	if (pulsadocmd!=scrcocoa_antespulsadocmd) {
@@ -1868,9 +1898,13 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 
 	scrcocoa_antespulsadoctrl_l=pulsadoctrl_l;
     scrcocoa_antespulsadoctrl_r=pulsadoctrl_r;
-	scrcocoa_antespulsadoalt=pulsadoalt;
+
+	scrcocoa_antespulsadoalt_l=pulsadoalt_l;
+    scrcocoa_antespulsadoalt_r=pulsadoalt_r;
+
 	scrcocoa_antespulsadoshift_l=pulsadoshift_l;
 	scrcocoa_antespulsadoshift_r=pulsadoshift_r;
+
 	scrcocoa_antespulsadocmd=pulsadocmd;
 
 	//printf ("\nfin migestionEvento\n\n");

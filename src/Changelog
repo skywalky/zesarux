@@ -21,6 +21,7 @@ Improved File utilities Browser:
 -Added copy and delete entire folder
 
 Improved File Browser: added file size information
+Improved cocoa (Mac) driver: allows distinguish between left and right ctrl, and left and right alt
 
 Improved CPC emulation: 
 -Video scanlines rendering
