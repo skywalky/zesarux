@@ -1716,7 +1716,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 }
 
 //inicializarlos con valores 0 al principio
-int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsadoshift_l=0,scrcocoa_antespulsadoshift_r=0,scrcocoa_antespulsadocmd=0; //,scrcocoa_antespulsadocapslock=0;
+int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsadoshift_l=0,scrcocoa_antespulsadoshift_r=0,scrcocoa_antespulsadocmd=0; //,scrcocoa_antespulsadocapslock=0;
 
 - (void) migestionEvento:(NSEvent *)event
 {
@@ -1724,8 +1724,8 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
 
 
         //asumimos teclas de control no pulsadas
-        int pulsadoctrl,pulsadoalt,pulsadoshift_l,pulsadoshift_r,pulsadocmd; //,pulsadocapslock;
-        pulsadoctrl=pulsadoalt=pulsadoshift_l=pulsadoshift_r=pulsadocmd=0;
+        int pulsadoctrl_l,pulsadoctrl_r,pulsadoalt,pulsadoshift_l,pulsadoshift_r,pulsadocmd; //,pulsadocapslock;
+        pulsadoctrl_l=pulsadoctrl_r=pulsadoalt=pulsadoshift_l=pulsadoshift_r=pulsadocmd=0;
 
         int event_keycode,event_type,event_modifier_flags;
         NSPoint p = [event locationInWindow];
@@ -1785,7 +1785,31 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
 	if (event_modifier_flags & NSEventModifierFlagControl) {
 		//printf ("Control key is pressed\n");
         //printf("event_modifier_flags %XH NSEventModifierFlagControl %XH\n",event_modifier_flags,NSEventModifierFlagControl);
-		pulsadoctrl=1;
+		//pulsadoctrl=1;
+
+        //Ctrl left: event_modifier_flags       40101H 
+        //Ctrl right: event_modifier_flags      42100H 
+        //Ctrl left:right: event_modifier_flags 42101H 
+
+                                            //L  ---1H
+                                            //R  2---H
+		if ( (event_modifier_flags & 0x0001)==0x0001) {
+			//printf ("Left Ctrl key is pressed\n");
+			pulsadoctrl_l=1;
+		}
+
+		if ( (event_modifier_flags & 0x2000)==0x2000) {
+			//printf ("Right Ctrl key is pressed\n");
+			pulsadoctrl_r=1;
+		}
+
+
+		//dado que estos valores los he obtenido probando, por si acaso, se ha entrado aqui pero no se cumple ni left ni right, metemos left
+		if (pulsadoctrl_l==0 && pulsadoctrl_r==0) {
+			debug_printf (VERBOSE_DEBUG,"Strange behaviour. ctrl pressed but do not know if left or right. Asuming left");
+            //printf ("Strange behaviour. ctrl pressed but do not know if left or right. Asuming left\n");
+			pulsadoctrl_l=1;
+		}        
 	}
 	if (event_modifier_flags & NSEventModifierFlagOption) {
 		//printf ("Alt key is pressed\n");
@@ -1815,10 +1839,16 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
 
 
 
-	if (pulsadoctrl!=scrcocoa_antespulsadoctrl) {
+	if (pulsadoctrl_l!=scrcocoa_antespulsadoctrl_l) {
 		//printf ("notificar cambio ctrl. ahora: %d\n",pulsadoctrl);
-		util_set_reset_key(UTIL_KEY_CONTROL_L,pulsadoctrl);
+		util_set_reset_key(UTIL_KEY_CONTROL_L,pulsadoctrl_l);
 	}
+
+	if (pulsadoctrl_r!=scrcocoa_antespulsadoctrl_r) {
+		//printf ("notificar cambio ctrl. ahora: %d\n",pulsadoctrl);
+		joystick_possible_rightctrl_key(pulsadoctrl_r);
+	}
+
 
 	if (pulsadoalt!=scrcocoa_antespulsadoalt) {
 		//printf ("notificar cambio alt\n");
@@ -1836,7 +1866,8 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
 
 
 
-	scrcocoa_antespulsadoctrl=pulsadoctrl;
+	scrcocoa_antespulsadoctrl_l=pulsadoctrl_l;
+    scrcocoa_antespulsadoctrl_r=pulsadoctrl_r;
 	scrcocoa_antespulsadoalt=pulsadoalt;
 	scrcocoa_antespulsadoshift_l=pulsadoshift_l;
 	scrcocoa_antespulsadoshift_r=pulsadoshift_r;
