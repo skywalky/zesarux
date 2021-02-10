@@ -155,8 +155,6 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 -Debug ir atrás en el tiempo. Usando cpu history
 
 
--poder redefinir tecla fire joystick (inicio no es muy comodo)
-
 
 -sprite disabling window tambien para tsconf y maquinas con chip vdp (msx, etc)
 

@@ -7112,14 +7112,12 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         joystick_set_fire(1);
 
-                                        //Home en cpc es copy
-                                        cpc_keyboard_table[1] &=(255-2);
+
                                 }
                                 else {
                                         joystick_release_fire(1);
 
-                                        //Home en cpc es copy
-                                        cpc_keyboard_table[1] |=2;
+
                                 }
                         break;
 
@@ -7226,14 +7224,12 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         joystick_set_fire(0);
 
-					//Home en cpc es copy
-					cpc_keyboard_table[1] &=(255-2);
+
                                 }
                                 else {
                                         joystick_release_fire(0);
 
-					//Home en cpc es copy
-					cpc_keyboard_table[1] |=2;
+
                                 }
                         break;
 
