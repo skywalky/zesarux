@@ -171,6 +171,11 @@ Line	7	6	5	4	3	2	1	0
 &48	Z	CAPSLOCK	A	TAB	Q	ESC	2	1
 &49	DEL	Joy 1 Fire 3 (CPC only)	Joy 1 Fire 2	Joy1 Fire 1	Joy1 right	Joy1 left	Joy1 down	Joy1 up
 
+
+For CPC464 and CPC664 users:
+ENTER is the small ENTER key,
+RETURN is the large ENTER key
+
 */
 
 

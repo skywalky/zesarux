@@ -6843,7 +6843,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         puerto_49150 &=255-1;
                                         blink_kbd_a8 &= (255-64);
-					                              cpc_keyboard_table[0] &= (255-64);
+					                    cpc_keyboard_table[2] &= (255-4);
                                         ql_keyboard_table[1] &= (255-1);
                                         msx_keyboard_table[7] &= (255-128);
                                         svi_keyboard_table[6] &= (255-64);
@@ -6856,7 +6856,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 else {
                                         puerto_49150 |=1;
                                         blink_kbd_a8 |=64;
-					                              cpc_keyboard_table[0] |= 64;
+					                    cpc_keyboard_table[2] |= 4;
                                         ql_keyboard_table[1] |= 1;
                                         msx_keyboard_table[7] |= 128;
                                         svi_keyboard_table[6] |= 64;
