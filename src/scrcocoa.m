@@ -1784,6 +1784,7 @@ int scrcocoa_antespulsadoctrl=0,scrcocoa_antespulsadoalt=0,scrcocoa_antespulsado
 	}
 	if (event_modifier_flags & NSEventModifierFlagControl) {
 		//printf ("Control key is pressed\n");
+        //printf("event_modifier_flags %XH NSEventModifierFlagControl %XH\n",event_modifier_flags,NSEventModifierFlagControl);
 		pulsadoctrl=1;
 	}
 	if (event_modifier_flags & NSEventModifierFlagOption) {

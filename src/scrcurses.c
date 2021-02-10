@@ -1909,7 +1909,7 @@ void scrcurses_actualiza_tablas_teclado(void)
 
 
 			        case KEY_HOME:
-							util_set_reset_key(UTIL_KEY_FIRE,1);
+							joystick_possible_home_key(1);
                     break;
 
 					case KEY_LEFT:

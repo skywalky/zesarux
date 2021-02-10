@@ -422,7 +422,7 @@ void scrcaca_deal_with_keys(int tecla,int pressrelease)
                         break;
 
                         case CACA_KEY_HOME:
-				util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
+				joystick_possible_home_key(pressrelease);
                         break;
 
                         case CACA_KEY_LEFT:

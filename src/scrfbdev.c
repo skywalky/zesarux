@@ -882,7 +882,7 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 				break;
 
 			case RAWKEY_Shift_R:
-				util_set_reset_key(UTIL_KEY_SHIFT_R,pressrelease);
+				joystick_possible_rightshift_key(pressrelease);
 				break;
 
 			case RAWKEY_Alt_L:
@@ -890,7 +890,7 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 				break;
 
 				//case RAWKEY_Alt_R:
-				//        util_set_reset_key(UTIL_KEY_ALT_R,pressrelease);
+				//        joystick_possible_rightalt_key(pressrelease);
 				//break;
 
 			case RAWKEY_Control_L:
@@ -898,7 +898,7 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 				break;
 
 				//case RAWKEY_Control_R:
-				//	util_set_reset_key(UTIL_KEY_CONTROL_R,pressrelease);
+				//	joystick_possible_rightctrl_key(pressrelease);
 				//break;
 
 
@@ -908,7 +908,7 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 				break;
 
 			case RAWKEY_Keypad_Home:
-				util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
+				joystick_possible_home_key(pressrelease);
 				break;
 
 			case RAWKEY_Keypad_Left:
@@ -1038,7 +1038,7 @@ void scrfbdev_actualiza_tablas_teclado_rawmode(void){
 #ifdef EMULATE_RASPBERRY
 
 			case RAWKEY_RPI_Home:
-				util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
+				joystick_possible_home_key(pressrelease);
 			break;
 
 			case RAWKEY_RPI_Up:
@@ -1288,7 +1288,7 @@ void scrfbdev_actualiza_tablas_teclado(void){
 																switch (tecla4) {
 
 																	case 126:
-																		util_set_reset_key(UTIL_KEY_FIRE,1);
+																		joystick_possible_home_key(1);
 																		break;
 
 																}

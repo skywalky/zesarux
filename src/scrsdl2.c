@@ -1010,14 +1010,14 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
                         break;
 
                         case SDLK_RSHIFT:
-                                util_set_reset_key(UTIL_KEY_SHIFT_R,pressrelease);
+                                joystick_possible_rightshift_key(pressrelease);
                         break;
 
                         case SDLK_LALT:
                                 util_set_reset_key(UTIL_KEY_ALT_L,pressrelease);
                         break;
                         case SDLK_RALT:
-                                util_set_reset_key(UTIL_KEY_ALT_R,pressrelease);
+                                joystick_possible_rightalt_key(pressrelease);
                         break;
 
 
@@ -1026,7 +1026,7 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
                         break;
 
                         case SDLK_RCTRL:
-                                util_set_reset_key(UTIL_KEY_CONTROL_R,pressrelease);
+                                joystick_possible_rightctrl_key(pressrelease);
                         break;
 
                         case SDLK_LGUI:
@@ -1042,7 +1042,7 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
                         break;
 
                         case SDLK_HOME:
-                                util_set_reset_key(UTIL_KEY_FIRE,pressrelease);
+                                joystick_possible_home_key(pressrelease);
                         break;
 
                         case SDLK_LEFT:
