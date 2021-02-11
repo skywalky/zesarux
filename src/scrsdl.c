@@ -834,6 +834,9 @@ void scrsdl_deal_raw_keys(int pressrelease,int scancode)
                                 util_set_reset_key(UTIL_KEY_F15,pressrelease);
                         break;
 
+                case ZESARUX_SDL_SCANCODE_DELETE:
+                        util_set_reset_key(UTIL_KEY_DEL,pressrelease);
+                break;
 
                 case ZESARUX_SDL_SCANCODE_BACKSPACE:
                         util_set_reset_key(UTIL_KEY_BACKSPACE,pressrelease);

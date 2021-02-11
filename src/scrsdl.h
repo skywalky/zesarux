@@ -127,6 +127,6 @@ extern void scrsdl_messages_debug(char *s);
 #define ZESARUX_SDL_SCANCODE_KP_2 88
 #define ZESARUX_SDL_SCANCODE_KP_8 80
 
-
+#define ZESARUX_SDL_SCANCODE_DELETE 119
 
 #endif
