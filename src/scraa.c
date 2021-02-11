@@ -371,7 +371,7 @@ void scraa_deal_with_keys(int tecla,int pressrelease)
 
         switch (tecla) {
 
-
+                        //AA_BACKSPACE (valor 304) detecta tanto DEL como BACKSPACE
                         case AA_BACKSPACE:
 				util_set_reset_key(UTIL_KEY_BACKSPACE,pressrelease);
 			break;

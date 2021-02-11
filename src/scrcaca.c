@@ -417,6 +417,10 @@ void scrcaca_deal_with_keys(int tecla,int pressrelease)
 				util_set_reset_key(UTIL_KEY_ESC,pressrelease);
 			break;
 
+                       case CACA_KEY_DELETE:
+				util_set_reset_key(UTIL_KEY_DEL,pressrelease);
+                        break;
+
                         case CACA_KEY_BACKSPACE:
 				util_set_reset_key(UTIL_KEY_BACKSPACE,pressrelease);
                         break;
