@@ -14160,6 +14160,10 @@ z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_w
 	int anchomitad=source_width/2;
 	int altomitad=source_height/2;
 
+    //printf("ancho mitad %d alto mitad %d\n",anchomitad,altomitad);
+
+    if (anchomitad>0 && altomitad>0) {
+
 	int cuadrado_izq=screen_convert_rainbow_to_blackwhite(source_bitmap,anchomitad,altomitad,total_ancho);
 	int cuadrado_der=screen_convert_rainbow_to_blackwhite(&source_bitmap[anchomitad],anchomitad,altomitad,total_ancho);
 	int cuadrado_aba=screen_convert_rainbow_to_blackwhite(&source_bitmap[altomitad*total_ancho],anchomitad,altomitad,total_ancho);
@@ -14171,6 +14175,13 @@ z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_w
 	if (cuadrado_abader) valor_get_pixel+=8;
 
 	return caracteres_artisticos[valor_get_pixel];
+    }
+
+    else {
+        int cuadrado=screen_convert_rainbow_to_blackwhite(source_bitmap,1,1,total_ancho);
+        if (cuadrado) return caracteres_artisticos[15];
+        else return caracteres_artisticos[0];
+    }
 
 }
 

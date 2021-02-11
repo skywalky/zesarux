@@ -5944,7 +5944,7 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--allpixeltotext-scale")) {
 					siguiente_parametro_argumento();
 					int valor=parse_string_to_number(argv[puntero_parametro]);
-					if (valor<2 || valor>99) {
+					if (valor<1 || valor>99) {
 									printf ("Invalid --allpixeltotext-scale value\n");
 									exit(1);
 							}
