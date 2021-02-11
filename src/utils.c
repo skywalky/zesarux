@@ -6892,6 +6892,7 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
                                 if (pressrelease) {
                                         //del en cpc es del
                                         //&49	DEL	Joy 1 Fire 3 (CPC only)	Joy 1 Fire 2	Joy1 Fire 1	Joy1 right	Joy1 left	Joy1 down	Joy1 up
+                                        //En cpc hacemos que tanto del y backspace del teclado sean el DEL del cpc
                                         cpc_keyboard_table[9] &=(255-128);
                                 }
                                 else {
@@ -7105,6 +7106,8 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
         	                                puerto_65278 &=255-1;
                 	                        puerto_61438 &=255-1;
                         	                blink_kbd_a8 &= (255-128);
+
+                                                        //En cpc hacemos que tanto del y backspace del teclado sean el DEL del cpc
 						                              cpc_keyboard_table[9] &=(255-128);
                                                 msx_keyboard_table[7] &=(255-32);
                                                 svi_keyboard_table[5] &=(255-64);

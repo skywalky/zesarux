@@ -61,7 +61,7 @@ Fixed CPC bugs:
 -Fixed AY chip register selection
 -Fixed CRTC interrupts. After a CRTC interrupt with Z80 interrupts disabled, they were not fired when enabling Z80 interrupts
 -Fixed setting bit 4 of the "Select screen mode and rom configuration" register of the Gate-Array and interrupt request
--Fixed key RETURN
+-Fixed RETURN key
 
 Fixed TBBlue bugs:
 -Fixed relative sprites when anchor sprite is not visible

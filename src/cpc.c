@@ -814,7 +814,12 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
                         //printf("leyendo joystick\n");
                         //&49	DEL	Joy 1 Fire 3 (CPC only)	Joy 1 Fire 2	Joy1 Fire 1	Joy1 right	Joy1 left	Joy1 down	Joy1 up
                         
-                        z80_byte valor_joystick=255;
+                        //Solo preservar bit 7 donde está la tecla DEL
+                        z80_byte valor_joystick=cpc_keyboard_table[9] & 128;
+
+                        //resto de teclas de esa linea de teclado, asumimos no pulsadas
+
+                        valor_joystick |=127;
 
                         if (joystick_emulation==JOYSTICK_CPC_1) {
                             //si estamos con menu abierto, no retornar nada
