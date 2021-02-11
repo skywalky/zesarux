@@ -1345,10 +1345,12 @@ void deal_with_keys(XEvent *event,int pressrelease)
 				util_set_reset_key(UTIL_KEY_WINKEY,pressrelease);
                         break;
 
-
+			case XK_BackSpace:
+				util_set_reset_key(UTIL_KEY_DEL,pressrelease);
+                        break;
 
 			//Teclas que generan doble pulsacion
-			case XK_BackSpace:
+			case XK_Delete:
 				util_set_reset_key(UTIL_KEY_BACKSPACE,pressrelease);
                         break;
 

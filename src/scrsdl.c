@@ -1005,7 +1005,9 @@ void scrsdl_deal_keys(int pressrelease,int tecla)
                                 util_set_reset_key(UTIL_KEY_WINKEY,pressrelease);
                         break;
 
-
+                        case SDLK_DELETE:
+                                util_set_reset_key(UTIL_KEY_DEL,pressrelease);
+                        break;
 
                         //Teclas que generan doble pulsacion
                         case SDLK_BACKSPACE:
