@@ -8179,6 +8179,45 @@ int zxvision_trocear_string_lineas(char *texto,char *buffer_lineas[])
 
 }
 
+
+//Imprimir mensaje en una ventana ya creada con el texto troceado por espacios
+void zxvision_print_mensaje_lineas_troceado(zxvision_window *ventana,char *mensaje_entrada)
+{
+  
+
+    int total_lineas;
+
+
+    //texto que contiene cada linea con ajuste de palabra. Al trocear las lineas aumentan
+    char buffer_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE][MAX_ANCHO_LINEAS_GENERIC_MESSAGE];
+
+    //Punteros a cada linea de esas
+    char *punteros_lineas[MAX_LINEAS_TOTAL_GENERIC_MESSAGE];
+
+
+    //Inicializar punteros a lineas
+    int i;
+    for (i=0;i<MAX_LINEAS_TOTAL_GENERIC_MESSAGE;i++) {
+        punteros_lineas[i]=&buffer_lineas[i][0];
+    }
+
+
+    total_lineas=zxvision_trocear_string_lineas(mensaje_entrada,punteros_lineas);
+
+
+
+    for (i=0;i<total_lineas;i++) {
+            //printf("linea %d : %s\n",i,punteros_lineas[i]);
+        	zxvision_print_string_defaults_fillspc(ventana,1,i,punteros_lineas[i]);	  
+    }
+
+}
+
+
+
+
+
+
 //Retorna 1 si se debe perder 1 de ancho visible por la linea de scroll vertical (lo habitual)
 //Retorna 0 si no
 int zxvision_get_minus_width_byscrollvbar(zxvision_window *w)
@@ -10789,13 +10828,15 @@ int zxvision_key_not_sent_emulated_mach(void)
 
 
 
-//Crea ventana simple de 1 de alto con funcion para condicion de salida, y funcion de print. 
+//Crea ventana simple de 2 de alto con funcion para condicion de salida, y funcion de print. 
 void zxvision_simple_progress_window(char *titulo, int (*funcioncond) (zxvision_window *),void (*funcionprint) (zxvision_window *) )
 {
 	    zxvision_window ventana;
 
-		int alto_ventana=4;
-		int ancho_ventana=28;
+        //2 de alto de texto y 32 de ancho, para que quepan dos lineas hasta de texto con
+        //"Downloading from spectrumcomputing.co.uk..."
+		int alto_ventana=5;
+		int ancho_ventana=32;
 
 
         int x_ventana=menu_center_x()-ancho_ventana/2; 
@@ -37318,6 +37359,14 @@ char *first_aid_string_tbblue_download_sd_bugs="In case of glitches or bugs, may
 int first_aid_no_mount_mmc_fileutils=0;
 char *first_aid_string_mount_mmc_fileutils="Changes done in the image file are only kept in RAM memory, until you execute the Sync action"; 
 
+int first_aid_no_download_spectrumcomputing=0;
+char *first_aid_string_download_spectrumcomputing="This downloaded file is hosted in spectrumcomputing.co.uk website. Thanks to Peter Jones for allowing it"; 
+
+
+int first_aid_no_search_zxinfo=0;
+char *first_aid_string_search_zxinfo="This search engine is hosted in zxinfo.dk website. Thanks to Thomas Heckmann for allowing it"; 
+
+
 //Items que se disparan en startup
 
 
@@ -37413,6 +37462,8 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("sg1000_boot",&first_aid_no_sg1000_boot,first_aid_string_sg1000_boot,0);
 	menu_first_aid_add("tbblue_download_sd_bug",&first_aid_no_tbblue_download_sd_bugs,first_aid_string_tbblue_download_sd_bugs,0);
     menu_first_aid_add("mount_mmc_fileutils",&first_aid_no_mount_mmc_fileutils,first_aid_string_mount_mmc_fileutils,0);
+    menu_first_aid_add("download_spectrumcomputing",&first_aid_no_download_spectrumcomputing,first_aid_string_download_spectrumcomputing,0);
+    menu_first_aid_add("search_zxinfo",&first_aid_no_search_zxinfo,first_aid_string_search_zxinfo,0);
 
 
 	//Items que se disparan en startup

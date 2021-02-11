@@ -19342,29 +19342,44 @@ void menu_common_connect_print(zxvision_window *w,char *texto)
 	char *mensaje="|/-\\";
 
 	int max=strlen(mensaje);
-	char mensaje_dest[32];
+    //Suficiente para que quepa el texto
+	char mensaje_dest[NETWORK_MAX_URL+256];
 
 	int pos=contador_menu_zeng_connect_print % max;
 
 	sprintf(mensaje_dest,"%s %c",texto,mensaje[pos]);
 	//printf ("pos: %d\n",pos);
 
-	zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);	
+	//zxvision_print_string_defaults_fillspc(w,1,0,mensaje_dest);	
+
+    //Escribir el texto troceado
+    zxvision_print_mensaje_lineas_troceado(w,mensaje_dest);
+
 	zxvision_draw_window_contents(w);
 
 	contador_menu_zeng_connect_print++;
 
 }
 
+//Para indicar desde que host se hace conexion
+char menu_zeng_connect_print_host[NETWORK_MAX_URL]="";
 void menu_zeng_connect_print(zxvision_window *w)
 {
-	menu_common_connect_print(w,"Connecting");
+    char buf_temp[NETWORK_MAX_URL+256];
+    sprintf(buf_temp,"Connecting to %s",menu_zeng_connect_print_host);    
+	//menu_common_connect_print(w,"Connecting");
+    menu_common_connect_print(w,buf_temp);
 }
 
-
+//Para indicar desde que host se hace descarga
+char menu_download_file_connect_print_host[NETWORK_MAX_URL]="";
 void menu_download_file_connect_print(zxvision_window *w)
 {
-	menu_common_connect_print(w,"Downloading");
+    char buf_temp[NETWORK_MAX_URL+256];
+    sprintf(buf_temp,"Downloading from %s",menu_download_file_connect_print_host);
+
+	//menu_common_connect_print(w,"Downloading");
+    menu_common_connect_print(w,buf_temp);
 }
 
 int menu_zeng_connect_cond(zxvision_window *w GCC_UNUSED)
@@ -19389,6 +19404,8 @@ void menu_zeng_enable_disable(MENU_ITEM_PARAMETERS)
 		 
 		contador_menu_zeng_connect_print=0;
 
+        
+        strcpy(menu_zeng_connect_print_host,zeng_remote_hostname);
 		zxvision_simple_progress_window("ZENG connection", menu_zeng_connect_cond,menu_zeng_connect_print );
 
 
@@ -20031,6 +20048,7 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 	contador_menu_zeng_connect_print=0;
 
 	//Usamos misma ventana de progreso que zeng. TODO: si se lanzan los dos a la vez (cosa poco probable) se moverian uno con el otro
+    strcpy(menu_zeng_connect_print_host,host);
 	zxvision_simple_progress_window("Downloading", menu_menu_zsock_http_cond,menu_zeng_connect_print );
 
 	//TODO Si antes de finalizar la descarga se vuelve atras y se vuelve a realizar otra busqueda, puede dar problemas
@@ -20135,6 +20153,7 @@ int menu_download_file(char *host,char *url,char *archivo_temp,int ssl_use,int e
 	contador_menu_zeng_connect_print=0;
 
 	//Usamos misma ventana de progreso que zeng. TODO: si se lanzan los dos a la vez (cosa poco probable) se moverian uno con el otro
+    strcpy(menu_download_file_connect_print_host,host);
 	zxvision_simple_progress_window("Downloading software", menu_download_file_cond,menu_download_file_connect_print );
 
 	//TODO Si antes de finalizar la descarga se vuelve atras y se vuelve a realizar otra busqueda, puede dar problemas
@@ -20548,6 +20567,8 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 	menu_first_aid("no_ssl_wos");	
 #endif
 	
+    menu_first_aid("search_zxinfo");
+
 	menu_ventana_scanf("Query",zxinfowos_query_search,256);
 	if (zxinfowos_query_search[0]==0) return;
 	
@@ -20671,7 +20692,12 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 
 			int ret=menu_download_file(host_final,url_juego_final,archivo_temp,ssl_use,1024*1024);  //1 MB mas que suficiente
 
-			if (ret==200) {                    
+			if (ret==200) {      
+                //Si descarga de spectrumcomputing
+                if (!strcmp(host_final,"spectrumcomputing.co.uk")) {
+                    menu_first_aid("download_spectrumcomputing");
+                }
+
 				//y abrimos menu de smartload
 				strcpy(quickload_file,archivo_temp);
 	

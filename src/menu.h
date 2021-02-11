@@ -299,6 +299,7 @@ extern void zxvision_generic_message_tooltip(char *titulo, int return_after_prin
 extern void zxvision_handle_click_minimize(zxvision_window *w);
 
 extern int zxvision_trocear_string_lineas(char *texto,char *buffer_lineas[]);
+extern void zxvision_print_mensaje_lineas_troceado(zxvision_window *ventana,char *mensaje_entrada);
 
 extern void zxvision_send_scroll_up(zxvision_window *w);
 extern void zxvision_send_scroll_down(zxvision_window *w);
