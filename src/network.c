@@ -193,7 +193,7 @@ int z_connect_ssl(int indice_tabla)
 	// server side, this would use SSL_accept()
 
 	debug_printf (VERBOSE_DEBUG,"Running SSL_connect");
-    ERR_clear_error();
+    	ERR_clear_error();
 	int err = SSL_connect(sockets_list[indice_tabla].ssl_conn);
 	if (err != 1) {
         //debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d",err);
@@ -234,10 +234,13 @@ int z_connect_ssl(int indice_tabla)
             case SSL_ERROR_SSL:
                 debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_SSL error",final_err);
                 int final_ssl_err=1;
-                while (final_ssl_err!=0) {
-                    //final_err=SSL_get_error(sockets_list[indice_tabla].ssl_conn,err);
+
+		//por si acaso, doy un maximo de iteraciones
+		int current_line=0;
+                while (final_ssl_err!=0 && current_line<10) {
                     final_ssl_err=ERR_get_error();
-                    printf("error: %s\n",ERR_error_string(final_ssl_err,NULL));
+                    debug_printf(VERBOSE_DEBUG,"SSL error: %s",ERR_error_string(final_ssl_err,NULL));
+		    current_line++;
                 }
             break;
 
