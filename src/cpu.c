@@ -1692,6 +1692,10 @@ printf (
 		"--allpixeltotext           Enable all pixel to text mode\n"
 		"--allpixeltotext-scale n   All pixel to text mode scale\n"
 		"--allpixeltotext-invert    All pixel to text mode invert mode\n"		
+        "--allpixeltotext-width n    All pixel to text max width (in chars) (minimum 1, maximum 9999)\n"
+        "--allpixeltotext-x-offset n All pixel to text X-Offset (in chars) (minimum 0, maximum 9999)\n"
+        "--allpixeltotext-height n   All pixel to text max height (in chars) (minimum 1, maximum 9999)\n"
+        "--allpixeltotext-y-offset n All pixel to text Y-Offset (in chars) (minimum 0, maximum 9999)\n"        
 
 
 
@@ -5955,6 +5959,46 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--allpixeltotext-invert")) {
 				screen_text_all_refresh_pixel_invert.v=1;
 			}			
+
+			else if (!strcmp(argv[puntero_parametro],"--allpixeltotext-width")) {
+                siguiente_parametro_argumento();
+                int valor=parse_string_to_number(argv[puntero_parametro]);
+                if (valor<1 || valor>9999) {
+                                printf ("Invalid --allpixeltotext-width value\n");
+                                exit(1);
+                        }				
+                scr_refresca_pantalla_tsconf_text_max_ancho=valor;
+			}		
+
+			else if (!strcmp(argv[puntero_parametro],"--allpixeltotext-x-offset")) {
+                siguiente_parametro_argumento();
+                int valor=parse_string_to_number(argv[puntero_parametro]);
+                if (valor<0 || valor>9999) {
+                                printf ("Invalid --allpixeltotext-x-offset value\n");
+                                exit(1);
+                        }				
+                scr_refresca_pantalla_tsconf_text_offset_x=valor;
+			}	
+
+			else if (!strcmp(argv[puntero_parametro],"--allpixeltotext-height")) {
+                siguiente_parametro_argumento();
+                int valor=parse_string_to_number(argv[puntero_parametro]);
+                if (valor<1 || valor>9999) {
+                                printf ("Invalid --allpixeltotext-height value\n");
+                                exit(1);
+                        }				
+                scr_refresca_pantalla_tsconf_text_max_alto=valor;
+			}		
+
+			else if (!strcmp(argv[puntero_parametro],"--allpixeltotext-y-offset")) {
+                siguiente_parametro_argumento();
+                int valor=parse_string_to_number(argv[puntero_parametro]);
+                if (valor<0 || valor>9999) {
+                                printf ("Invalid --allpixeltotext-y-offset value\n");
+                                exit(1);
+                        }				
+                scr_refresca_pantalla_tsconf_text_offset_y=valor;
+			}	
 
 
 
