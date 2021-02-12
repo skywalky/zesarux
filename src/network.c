@@ -66,6 +66,7 @@ Estos ya vienen de network.h
 #ifdef COMPILE_SSL
 
 #include <openssl/ssl.h>
+#include <openssl/err.h>
 
 #endif
 
@@ -170,7 +171,8 @@ int z_connect_ssl(int indice_tabla)
 	debug_printf (VERBOSE_DEBUG,"Connecting SSL");
 
 	debug_printf (VERBOSE_DEBUG,"SSL_CTX_new");
-	sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (SSLv23_client_method ());
+	//sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (SSLv23_client_method ());
+    sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (TLS_client_method() );
 
 	// create an SSL connection and attach it to the socket
 	sockets_list[indice_tabla].ssl_conn = SSL_new(sockets_list[indice_tabla].ssl_ctx);
@@ -191,6 +193,7 @@ int z_connect_ssl(int indice_tabla)
 	// server side, this would use SSL_accept()
 
 	debug_printf (VERBOSE_DEBUG,"Running SSL_connect");
+    ERR_clear_error();
 	int err = SSL_connect(sockets_list[indice_tabla].ssl_conn);
 	if (err != 1) {
         //debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d",err);
@@ -230,6 +233,12 @@ int z_connect_ssl(int indice_tabla)
 
             case SSL_ERROR_SSL:
                 debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_SSL error",final_err);
+                int final_ssl_err=1;
+                while (final_ssl_err!=0) {
+                    //final_err=SSL_get_error(sockets_list[indice_tabla].ssl_conn,err);
+                    final_ssl_err=ERR_get_error();
+                    printf("error: %s\n",ERR_error_string(final_ssl_err,NULL));
+                }
             break;
 
             default:

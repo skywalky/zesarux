@@ -14063,7 +14063,8 @@ https://www.johndcook.com/blog/2009/08/24/algorithms-convert-color-grayscale/
 
 int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width,int source_height,int total_ancho)
 {
-	//Para un cuadrado dado, retorna si es 0 (cercano a negro) o 1 (cercano a blanco)
+	//Para un cuadrado dado, retorna si es 1 (cercano a negro) o 0 (cercano a blanco)
+    //Me parece mas natural asi, al menos en el caso de spectrum (papel 7 tinta 0 habitualmente)
 	int total_superficie=source_width*source_height;
 
 	//Sumar todos los colores
@@ -14125,8 +14126,8 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 	valor_cero=1;
 	}
 
-	if (porc_gris>=brillo) return valor_uno;
-	else return valor_cero;
+	if (porc_gris>=brillo) return valor_cero;
+	else return valor_uno;
 
 
 }

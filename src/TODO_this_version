@@ -214,3 +214,4 @@ Ver errores ssl:
         printf("error: %s\n",ERR_error_string(final_err,NULL))
 
 
+-si driver --ao loquesea, no disponible, en config. Luego por linea comandos no lee un --ao valido, da error antes del ao no valido
