@@ -14217,7 +14217,11 @@ void screen_convert_rainbow_to_text(z80_int *source_bitmap,int source_width,int 
 }
 
 
+//Maximo ancho a renderizar, en caracteres
+int scr_refresca_pantalla_tsconf_text_max_ancho=9999;
 
+//Offset para no mostrar x caracteres a la izquierda
+int scr_refresca_pantalla_tsconf_text_offset_x=0;
 
 void scr_refresca_pantalla_tsconf_text(void (*fun_color) (z80_byte color,int *brillo, int *parpadeo), void (*fun_caracter) (int x,int y,int brillo, unsigned char inv,z80_byte caracter ) , void (*fun_saltolinea) (void) , int factor_division)
 {
@@ -14251,12 +14255,21 @@ void scr_refresca_pantalla_tsconf_text(void (*fun_color) (z80_byte color,int *br
 				fun_color(56,&brillo,&parpadeo);
 
 				int x,y;
+				int xfinal,yfinal;
+
+				yfinal=0;
 				for (y=0;y<alto_final;y++) {
-					for (x=0;x<ancho_final;x++) {
+					xfinal=0;
+					for (x=scr_refresca_pantalla_tsconf_text_offset_x;x<ancho_final && 
+						x<scr_refresca_pantalla_tsconf_text_max_ancho+scr_refresca_pantalla_tsconf_text_offset_x;x++) {
+						
 						z80_byte caracter=buffer_texto_copia[y*ancho_final+x];
-						fun_caracter (x,y,0,0,caracter);
+						fun_caracter (xfinal,yfinal,0,0,caracter);
+
+						xfinal++;
 					}
 					fun_saltolinea();
+					yfinal++;
 				}
 
 				free(buffer_texto);
