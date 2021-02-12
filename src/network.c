@@ -171,8 +171,8 @@ int z_connect_ssl(int indice_tabla)
 	debug_printf (VERBOSE_DEBUG,"Connecting SSL");
 
 	debug_printf (VERBOSE_DEBUG,"SSL_CTX_new");
-	//sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (SSLv23_client_method ());
-    sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (TLS_client_method() );
+	sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (SSLv23_client_method ());
+    //sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (TLS_client_method() );
 
 	// create an SSL connection and attach it to the socket
 	sockets_list[indice_tabla].ssl_conn = SSL_new(sockets_list[indice_tabla].ssl_ctx);

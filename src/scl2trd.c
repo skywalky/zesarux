@@ -60,14 +60,14 @@ FIL scl2trd_fil_output;
 int scl2trd_in_fatfs_output;
 
 
-size_t scl2trd_fread(void *restrict ptr, size_t nitems)
+size_t scl2trd_fread(void *ptr, size_t nitems)
 {
     //return fread(ptr,1,nitems,iStream);
 
     return zvfs_fread(scl2trd_in_fatfs_input,ptr,nitems,iStream,&scl2trd_fil_input);
 }
 
-size_t scl2trd_fwrite(const void *restrict ptr, size_t nitems)
+size_t scl2trd_fwrite(const void *ptr, size_t nitems)
 {
     //return fwrite(ptr,1,nitems,oStream);
 
