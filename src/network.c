@@ -235,12 +235,12 @@ int z_connect_ssl(int indice_tabla)
                 debug_printf(VERBOSE_DEBUG,"ERROR SSL_connect: %d. SSL_ERROR_SSL error",final_err);
                 int final_ssl_err=1;
 
-		//por si acaso, doy un maximo de iteraciones
-		int current_line=0;
+                //por si acaso, doy un maximo de iteraciones
+                int current_line=0;
                 while (final_ssl_err!=0 && current_line<10) {
                     final_ssl_err=ERR_get_error();
                     debug_printf(VERBOSE_DEBUG,"SSL error: %s",ERR_error_string(final_ssl_err,NULL));
-		    current_line++;
+                    current_line++;
                 }
             break;
 
