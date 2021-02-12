@@ -3465,6 +3465,11 @@ int util_write_configfile(void)
 
   if (screen_text_all_refresh_pixel_invert.v) ADD_STRING_CONFIG,"--allpixeltotext-invert");
 
+                                            ADD_STRING_CONFIG,"--allpixeltotext-width %d",scr_refresca_pantalla_tsconf_text_max_ancho);
+                                            ADD_STRING_CONFIG,"--allpixeltotext-x-offset %d",scr_refresca_pantalla_tsconf_text_offset_x);
+                                            ADD_STRING_CONFIG,"--allpixeltotext-height %d",scr_refresca_pantalla_tsconf_text_max_alto);
+                                            ADD_STRING_CONFIG,"--allpixeltotext-y-offset %d",scr_refresca_pantalla_tsconf_text_offset_y);
+
   if (zx8081_vsync_sound.v)                   ADD_STRING_CONFIG,"--zx8081vsyncsound");
   if (ram_in_8192.v)                          ADD_STRING_CONFIG,"--zx8081ram8K2000");
   if (ram_in_32768.v)                         ADD_STRING_CONFIG,"--zx8081ram16K8000");

@@ -50,7 +50,10 @@ Improved TBBlue emulation:
 -Optimize sprite rendering (saving 1% cpu on my computer)
 
 Improved Speccy online browser: now uses ZXinfo API V3
-Improved all-to-pixel text rendering: allow 1:1 scale
+
+Improved all-to-pixel text rendering: 
+-Allow 1:1 scale
+-Allow to set window size and offsets in characters
 
 Fixed annoying flickering in menu using XWindows video driver
 Fixed loading General Sound rom
