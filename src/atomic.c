@@ -26,8 +26,8 @@
 
 #include "atomic.h"
 #include "compileoptions.h"
-
-
+//temporal mi portatil
+#define MINGW
 
 #if defined(__APPLE__)
     //En Mac OS X

@@ -14223,6 +14223,10 @@ int scr_refresca_pantalla_tsconf_text_max_ancho=9999;
 //Offset para no mostrar x caracteres a la izquierda
 int scr_refresca_pantalla_tsconf_text_offset_x=0;
 
+//Lo mismo pero para vertical
+int scr_refresca_pantalla_tsconf_text_max_alto=9999;
+int scr_refresca_pantalla_tsconf_text_offset_y=0;
+
 void scr_refresca_pantalla_tsconf_text(void (*fun_color) (z80_byte color,int *brillo, int *parpadeo), void (*fun_caracter) (int x,int y,int brillo, unsigned char inv,z80_byte caracter ) , void (*fun_saltolinea) (void) , int factor_division)
 {
 
@@ -14258,7 +14262,8 @@ void scr_refresca_pantalla_tsconf_text(void (*fun_color) (z80_byte color,int *br
 				int xfinal,yfinal;
 
 				yfinal=0;
-				for (y=0;y<alto_final;y++) {
+				for (y=scr_refresca_pantalla_tsconf_text_offset_y;y<alto_final &&
+					y<scr_refresca_pantalla_tsconf_text_max_alto+scr_refresca_pantalla_tsconf_text_offset_y;y++) {
 					xfinal=0;
 					for (x=scr_refresca_pantalla_tsconf_text_offset_x;x<ancho_final && 
 						x<scr_refresca_pantalla_tsconf_text_max_ancho+scr_refresca_pantalla_tsconf_text_offset_x;x++) {
