@@ -166,6 +166,11 @@ extern z80_bit screen_text_all_refresh_pixel;
 
 extern int screen_text_all_refresh_pixel_scale;
 
+extern int scr_refresca_pantalla_tsconf_text_max_ancho;
+extern int scr_refresca_pantalla_tsconf_text_offset_x;
+extern int scr_refresca_pantalla_tsconf_text_max_alto;
+extern int scr_refresca_pantalla_tsconf_text_offset_y;
+
 extern z80_bit screen_text_all_refresh_pixel_invert;
 
 extern int screen_refresh_menu;

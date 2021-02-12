@@ -10166,8 +10166,62 @@ char string_bri[3];
 	
 }
 
-          
+void menu_display_text_all_refresh_pixel_max_ancho(MENU_ITEM_PARAMETERS)
+{
+    char string_bri[5];
 
+    sprintf (string_bri,"%d",scr_refresca_pantalla_tsconf_text_max_ancho);
+
+    menu_ventana_scanf("Max width? (1-9999)",string_bri,5);
+
+	int valor=parse_string_to_number(string_bri);
+	if (valor<1 || valor>9999) debug_printf (VERBOSE_ERR,"Invalid max width value %d",valor);
+
+	else scr_refresca_pantalla_tsconf_text_max_ancho=valor;    
+}          
+
+void menu_display_text_all_refresh_pixel_offset_x(MENU_ITEM_PARAMETERS)
+{
+    char string_bri[5];
+
+    sprintf (string_bri,"%d",scr_refresca_pantalla_tsconf_text_offset_x);
+
+    menu_ventana_scanf("X-Offset? (0-9999)",string_bri,5);
+
+	int valor=parse_string_to_number(string_bri);
+	if (valor<0 || valor>9999) debug_printf (VERBOSE_ERR,"Invalid X-Offset value %d",valor);
+
+	else scr_refresca_pantalla_tsconf_text_offset_x=valor;    
+}       
+
+
+void menu_display_text_all_refresh_pixel_max_alto(MENU_ITEM_PARAMETERS)
+{
+    char string_bri[5];
+
+    sprintf (string_bri,"%d",scr_refresca_pantalla_tsconf_text_max_alto);
+
+    menu_ventana_scanf("Max height? (1-9999)",string_bri,5);
+
+	int valor=parse_string_to_number(string_bri);
+	if (valor<1 || valor>9999) debug_printf (VERBOSE_ERR,"Invalid max height value %d",valor);
+
+	else scr_refresca_pantalla_tsconf_text_max_alto=valor;    
+}          
+
+void menu_display_text_all_refresh_pixel_offset_y(MENU_ITEM_PARAMETERS)
+{
+    char string_bri[5];
+
+    sprintf (string_bri,"%d",scr_refresca_pantalla_tsconf_text_offset_y);
+
+    menu_ventana_scanf("Y-Offset? (0-9999)",string_bri,5);
+
+	int valor=parse_string_to_number(string_bri);
+	if (valor<0 || valor>9999) debug_printf (VERBOSE_ERR,"Invalid Y-Offset value %d",valor);
+
+	else scr_refresca_pantalla_tsconf_text_offset_y=valor;    
+}   
 
 
 #ifdef COMPILE_CURSESW
@@ -10257,9 +10311,16 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
                                 menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel_scale,NULL,"[1:%d] Scale",screen_text_all_refresh_pixel_scale );
                                 
                                 menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel_invert,NULL,"[%c] Invert text",(screen_text_all_refresh_pixel_invert.v ? 'X' : ' ' ));
+
+                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel_max_ancho,NULL,"[%d] Max width (in chars)",scr_refresca_pantalla_tsconf_text_max_ancho);
                                 
+                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel_offset_x,NULL,"[%d] X-Offset (in chars)",scr_refresca_pantalla_tsconf_text_offset_x);
+
+                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel_max_alto,NULL,"[%d] Max height (in chars)",scr_refresca_pantalla_tsconf_text_max_alto);
                                 
-                                
+                                menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_text_all_refresh_pixel_offset_y,NULL,"[%d] Y-Offset (in chars)",scr_refresca_pantalla_tsconf_text_offset_y);
+
+
                                 }
                                 
                                 
