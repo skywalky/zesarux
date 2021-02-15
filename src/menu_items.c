@@ -19912,7 +19912,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		char redirect_url[NETWORK_MAX_URL];
 		
 
-		int retorno=menu_zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url);
+		int retorno=menu_zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url,"");
 		orig_mem=mem;
 	
 		//printf("%s\n",mem);
@@ -19932,7 +19932,7 @@ void menu_online_browse_zx81(MENU_ITEM_PARAMETERS)
 		
                 	
 					//usamos misma funcion thread que usa download wos y otros
-					int ret=menu_download_file("www.zx81.nl",url_juego,archivo_temp,0,1024*1024);  //1 MB mas que suficiente
+					int ret=menu_download_file("www.zx81.nl",url_juego,archivo_temp,0,1024*1024,"");  //1 MB mas que suficiente
 
 					if (ret==200) {
                                 
@@ -20003,6 +20003,7 @@ struct menu_zsock_http_struct
 	char *add_headers;
 	int use_ssl;
 	char *redirect_url;
+    char *ssl_sni_host_name;
 
 
 	int return_code;
@@ -20044,7 +20045,8 @@ void *menu_menu_zsock_http_thread_function(void *entrada)
 								((struct menu_zsock_http_struct *)entrada)->add_headers,
 								((struct menu_zsock_http_struct *)entrada)->use_ssl,
 								((struct menu_zsock_http_struct *)entrada)->redirect_url,
-								0
+								0,
+                                ((struct menu_zsock_http_struct *)entrada)->ssl_sni_host_name
 							); 
 
 
@@ -20062,7 +20064,8 @@ void *menu_menu_zsock_http_thread_function(void *entrada)
 pthread_t menu_zsock_http_thread;
 #endif
 
-int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url)
+int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,
+            int skip_headers,char *add_headers,int use_ssl,char *redirect_url,char *ssl_sni_host_name)
 {
 	
 	 
@@ -20079,6 +20082,7 @@ int menu_zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leido
 	parametros.add_headers=add_headers;
 	parametros.use_ssl=use_ssl;
 	parametros.redirect_url=redirect_url;
+    parametros.ssl_sni_host_name=ssl_sni_host_name;
 
 	//de momento not found y error, y mem a null
 	parametros.return_code=-1;
@@ -20133,6 +20137,7 @@ struct download_wos_struct
 	int ssl_use;
 	int return_code;
 	int estimated_maximum_size;
+    char *ssl_sni_host_name;
 };
 
 int download_wos_thread_running=0;
@@ -20159,7 +20164,8 @@ void *menu_download_file_thread_function(void *entrada)
 								((struct download_wos_struct *)entrada)->url,
 								((struct download_wos_struct *)entrada)->archivo_temp,
 								((struct download_wos_struct *)entrada)->ssl_use,
-								((struct download_wos_struct *)entrada)->estimated_maximum_size);
+								((struct download_wos_struct *)entrada)->estimated_maximum_size,
+                                ((struct download_wos_struct *)entrada)->ssl_sni_host_name);
 
 	debug_printf (VERBOSE_DEBUG,"Finishing download content thread");
 
@@ -20179,7 +20185,7 @@ pthread_t download_wos_thread;
 
 
 //antes llamado menu_download_wos
-int menu_download_file(char *host,char *url,char *archivo_temp,int ssl_use,int estimated_maximum_size)
+int menu_download_file(char *host,char *url,char *archivo_temp,int ssl_use,int estimated_maximum_size,char *ssl_sni_host_name)
 {
 	
 	
@@ -20191,6 +20197,7 @@ int menu_download_file(char *host,char *url,char *archivo_temp,int ssl_use,int e
 	parametros.archivo_temp=archivo_temp;
 	parametros.ssl_use=ssl_use;
 	parametros.estimated_maximum_size=estimated_maximum_size;
+    parametros.ssl_sni_host_name=ssl_sni_host_name;
 
 	//de momento not found
 	parametros.return_code=404;
@@ -20314,7 +20321,7 @@ void menu_online_browse_zxinfowos_query(char *query_result,char *hostname,char *
 		char redirect_url[NETWORK_MAX_URL];
 		
 		
-		int retorno=menu_zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url);
+		int retorno=menu_zsock_http(hostname,query_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,add_headers,0,redirect_url,"");
 
 
 
@@ -20751,11 +20758,20 @@ void menu_online_browse_zxinfowos(MENU_ITEM_PARAMETERS)
 
 			debug_printf (VERBOSE_DEBUG,"Downloading file from host %s (SSL=%d) url %s",host_final,ssl_use,url_juego_final);
 
-			int ret=menu_download_file(host_final,url_juego_final,archivo_temp,ssl_use,1024*1024);  //1 MB mas que suficiente
+            char ssl_sni_host_name[NETWORK_MAX_URL]="";
+            int descargando_spectrumcomputing=0;
+
+                if (!strcmp(host_final,"spectrumcomputing.co.uk")) {
+                    descargando_spectrumcomputing=1;
+                    //Descargas desde spectrum computing requieren SNI cuando hay activado su proteccion de cloudflare
+                    strcpy(ssl_sni_host_name,"spectrumcomputing.co.uk");
+                }            
+
+			int ret=menu_download_file(host_final,url_juego_final,archivo_temp,ssl_use,1024*1024,ssl_sni_host_name);  //1 MB mas que suficiente
 
 			if (ret==200) {      
                 //Si descarga de spectrumcomputing
-                if (!strcmp(host_final,"spectrumcomputing.co.uk")) {
+                if (descargando_spectrumcomputing) {
                     menu_first_aid("download_spectrumcomputing");
                 }
 
@@ -20818,19 +20834,24 @@ void menu_network_http_request(MENU_ITEM_PARAMETERS)
 	char redirect_url[NETWORK_MAX_URL];
 
 	int use_ssl=0;
+    char ssl_sni_host_name[NETWORK_MAX_URL]="";
 
 #ifdef COMPILE_SSL
 	char s_use_ssl[2];
 	strcpy(s_use_ssl,"0");
 	menu_ventana_scanf("use ssl? (0/1)",s_use_ssl,2);
 	use_ssl=parse_string_to_number(s_use_ssl);
+
+    if (use_ssl) {
+        menu_ventana_scanf("ssl sni host name?",ssl_sni_host_name,NETWORK_MAX_URL);
+    }
 #endif
 
 	
 
 	char *mem_mensaje;
 
-	int retorno=menu_zsock_http(host,menu_network_http_request_url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,use_ssl,redirect_url);
+	int retorno=menu_zsock_http(host,menu_network_http_request_url,&http_code,&mem,&total_leidos,&mem_after_headers,skip_headers,s_add_headers,use_ssl,redirect_url,ssl_sni_host_name);
 	if (retorno==0 && mem!=NULL) {
 		if (skip_headers) {
 			if (mem_after_headers) {
@@ -20923,7 +20944,7 @@ void menu_online_download_extras(MENU_ITEM_PARAMETERS)
 	int ssl_use=1;
 
 
-	int ret=menu_download_file(host_final,url,archivo_zip,ssl_use,estimated_size);  
+	int ret=menu_download_file(host_final,url,archivo_zip,ssl_use,estimated_size,"");  
 
 	if (ret==200) {       
 		//descomprimimos zip
@@ -21477,7 +21498,7 @@ void menu_storage_mmc_download_tbblue(void)
 	int ssl_use=0;
 
 
-	int ret=menu_download_file(host_final,url,archivo_zip,ssl_use,estimated_size);  
+	int ret=menu_download_file(host_final,url,archivo_zip,ssl_use,estimated_size,"");  
 
 	if (ret==200) {       
 		//descomprimimos zip

@@ -83,6 +83,8 @@ struct s_z_sockets_struct {
 #ifdef COMPILE_SSL
 	SSL_CTX *ssl_ctx;
 	SSL *ssl_conn;
+    //handle server name indication (SNI)
+    char ssl_sni_hostname[NETWORK_MAX_URL];
 #endif
 
 };
@@ -172,7 +174,7 @@ int z_connect_ssl(int indice_tabla)
 
 	debug_printf (VERBOSE_DEBUG,"SSL_CTX_new");
 	sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (SSLv23_client_method ());
-    //sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (TLS_client_method() );
+    //sockets_list[indice_tabla].ssl_ctx = SSL_CTX_new (TLSv1_client_method() );
 
 	// create an SSL connection and attach it to the socket
 	sockets_list[indice_tabla].ssl_conn = SSL_new(sockets_list[indice_tabla].ssl_ctx);
@@ -191,6 +193,17 @@ int z_connect_ssl(int indice_tabla)
 
 	// perform the SSL/TLS handshake with the server - when on the
 	// server side, this would use SSL_accept()
+
+    //Activate SNI if needed
+    debug_printf(VERBOSE_DEBUG,"ssl_sni_hostname: [%s]",sockets_list[indice_tabla].ssl_sni_hostname);
+    if (sockets_list[indice_tabla].ssl_sni_hostname[0]!=0) {
+        int resultado_sni = SSL_set_tlsext_host_name(sockets_list[indice_tabla].ssl_conn,sockets_list[indice_tabla].ssl_sni_hostname);
+        if(resultado_sni!=1) {
+            debug_printf (VERBOSE_DEBUG,"Error SSL_set_tlsext_host_name");
+            //printf ("Error SSL_set_tlsext_host_name\n");
+            return -1;
+        }
+    }
 
 	debug_printf (VERBOSE_DEBUG,"Running SSL_connect");
     	ERR_clear_error();
@@ -594,6 +607,13 @@ void init_network_tables(void)
 	for (i=0;i<MAX_Z_SOCKETS;i++) {
 		sockets_list[i].used=0;
 		sockets_list[i].use_ssl.v=0;
+
+#ifdef COMPILE_SSL
+    //Y por si acaso ponemos el ssl_sni_host_name a vacio, por si hay alguna llamada en que se le olvida indicarlo
+    sockets_list[i].ssl_sni_hostname[0]=0;
+#endif
+
+
 	}
 
 	z_atomic_reset(&network_semaforo);
@@ -665,7 +685,8 @@ void z_sock_free_socket(int indice_tabla)
 */
 
 //Retorna indice a la tabla de sockets. <0 si error
-int z_sock_open_connection(char *host,int port,int use_ssl)
+//si sni_host_name es "", no usar
+int z_sock_open_connection(char *host,int port,int use_ssl,char *ssl_sni_host_name)
 {
 
 
@@ -714,6 +735,7 @@ int z_sock_open_connection(char *host,int port,int use_ssl)
 	if (use_ssl) {
 
 #ifdef COMPILE_SSL
+        strcpy(sockets_list[indice_tabla].ssl_sni_hostname,ssl_sni_host_name);
 		int ret=z_connect_ssl(indice_tabla);
 		if (ret!=0) {
 			debug_printf (VERBOSE_DEBUG,"Error connecting ssl");
@@ -1091,7 +1113,8 @@ char *zsock_http_skip_headers(char *mem,int total_leidos,int *http_code,char *re
 }
 
 
-int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,char *add_headers,int use_ssl,char *redirect_url,int estimated_maximum_size)
+int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, char **mem_after_headers,int skip_headers,
+    char *add_headers,int use_ssl,char *redirect_url,int estimated_maximum_size, char *ssl_sni_host_name)
 {
 
 	*mem=NULL;
@@ -1104,7 +1127,7 @@ int zsock_http(char *host, char *url,int *http_code,char **mem,int *t_leidos, ch
 
 	if (use_ssl) puerto=443;
 
-	int indice_socket=z_sock_open_connection(host,puerto,use_ssl);
+	int indice_socket=z_sock_open_connection(host,puerto,use_ssl,ssl_sni_host_name);
 
 	if (indice_socket<0) {
 		//printf ("retornamos desde zsock http. errnum: %d\n",indice_socket);

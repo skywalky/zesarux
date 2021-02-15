@@ -19067,7 +19067,7 @@ char *util_read_line(char *origen,char *destino,int size_orig,int max_size_dest,
 }
 
 //Retorna el codigo http o <0 si otros errores
-int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int estimated_maximum_size)
+int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int estimated_maximum_size,char *ssl_sni_host_name)
 {
   int http_code;
 	char *mem;
@@ -19079,7 +19079,7 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int es
 
 
 
-        retorno=zsock_http(hostname,url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl,redirect_url,estimated_maximum_size);
+        retorno=zsock_http(hostname,url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl,redirect_url,estimated_maximum_size,ssl_sni_host_name);
 
         
         if (http_code==302 && redirect_url[0]!=0) {
@@ -19104,7 +19104,8 @@ int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int es
 
                 //El redirect sucede con las url a archive.org
 
-                retorno=zsock_http(nuevo_host,nueva_url,&http_code,&mem,&total_leidos,&mem_after_headers,1,"",use_ssl,redirect_url,estimated_maximum_size);
+                retorno=zsock_http(nuevo_host,nueva_url,&http_code,&mem,&total_leidos,
+                        &mem_after_headers,1,"",use_ssl,redirect_url,estimated_maximum_size,ssl_sni_host_name);
 
 	}
 

@@ -212,7 +212,7 @@ int zeng_connect_remote(void)
 		//Inicialmente desconectado
 		zeng_remote_socket=-1;
 
-		int indice_socket=z_sock_open_connection(zeng_remote_hostname,zeng_remote_port,0);
+		int indice_socket=z_sock_open_connection(zeng_remote_hostname,zeng_remote_port,0,"");
 
 		if (indice_socket<0) {
 			debug_printf(VERBOSE_ERR,"%s",z_sock_get_error(indice_socket));

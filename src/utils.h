@@ -896,7 +896,8 @@ extern char util_printable_char(char c);
 
 extern char *util_read_line(char *origen,char *destino,int size_orig,int max_size_dest,int *leidos);
 extern void util_normalize_name(char *texto);
-extern int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int estimated_maximum_size);
+
+extern int util_download_file(char *hostname,char *url,char *archivo,int use_ssl,int estimated_maximum_size,char *ssl_sni_host_name);
 extern void util_normalize_query_http(char *orig,char *dest);
 
 extern int util_extract_scl(char *sclname, char *dest_dir);

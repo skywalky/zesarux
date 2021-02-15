@@ -1059,7 +1059,79 @@ void codetests_https()
 	char redirect_url[NETWORK_MAX_URL];
 
 	int retorno=zsock_http("archive.org","/download/World_of_Spectrum_June_2017_Mirror/World%20of%20Spectrum%20June%202017%20Mirror.zip/World%20of%20Spectrum%20June%202017%20Mirror/sinclair/games/m/Mandroid.tzx.zip",
-				&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1,redirect_url,0);
+				&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1,redirect_url,0,"");
+
+	if (retorno<0) {
+		printf ("Error zsock_http\n");
+		exit(1);
+	}
+
+	orig_mem=mem;
+	
+	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
+	
+	//leer linea a linea hasta fin cabecera
+	char buffer_linea[1024];
+	int i=0;
+	int salir=0;
+	do {
+		int leidos;
+		char *next_mem;
+		if (*mem=='\n') {
+			//esto puede que no pase, linea con solo salto linea tendra un cr antes,
+			//por tanto la deteccion de esa linea se leera abajom cuando buffer linea vacia
+			salir=1;
+			mem++;
+			printf ("salir con salto linea inicial\n");
+		}
+		else {
+			next_mem=util_read_line(mem,buffer_linea,total_leidos,1024,&leidos);
+			total_leidos -=leidos;
+		
+			if (buffer_linea[0]==0) {
+				salir=1;
+				printf ("salir con linea vacia final\n");
+				mem=next_mem;
+			}
+			else {
+				printf ("cabecera %d: %s\n",i,buffer_linea);
+				i++;
+				mem=next_mem;
+			}
+		
+			if (total_leidos<=0) salir=1;
+		}
+	} while (!salir);
+	
+	printf ("respuesta despues cabeceras:\n%s\n",mem);
+	
+	
+	if (orig_mem!=NULL) free (orig_mem);
+	
+	//peticion saltando cabeceras
+	//printf ("Request skipping headers\n");
+	//retorno=zsock_http("www.google.es","/",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",1);
+	//if (mem_after_headers!=NULL) printf ("Answer after headers:\n%s\n",mem_after_headers);
+	
+	//if (mem!=NULL) free (mem);
+	
+}
+
+
+void codetests_https_sni()
+{
+	//http://www.zx81.nl/files.html
+	int http_code;
+	char *mem;
+	char *orig_mem;
+	char *mem_after_headers;
+	int total_leidos;
+	//int retorno=zsock_http("www.google.es","/",&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1);
+
+	char redirect_url[NETWORK_MAX_URL];
+
+	int retorno=zsock_http("spectrumcomputing.co.uk","/index.hml",
+				&http_code,&mem,&total_leidos,&mem_after_headers,0,"",1,redirect_url,0,"spectrumcomputing.co.uk");
 
 	if (retorno<0) {
 		printf ("Error zsock_http\n");
@@ -1127,7 +1199,7 @@ void codetests_http()
 	char *mem_after_headers;
 	int total_leidos;
 	char redirect_url[NETWORK_MAX_URL];
-	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,0,"",0,redirect_url,0);
+	int retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,0,"",0,redirect_url,0,"");
 	orig_mem=mem;
 	
 	if (retorno==0 && mem!=NULL) printf ("Response\n%s\n",mem);
@@ -1173,7 +1245,7 @@ void codetests_http()
 	//peticion saltando cabeceras
 	printf ("Request skipping headers\n");
 
-	retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url,0);
+	retorno=zsock_http("www.zx81.nl","/files.html",&http_code,&mem,&total_leidos,&mem_after_headers,1,"",0,redirect_url,0,"");
 	if (mem_after_headers!=NULL) printf ("Answer after headers:\n%s\n",mem_after_headers);
 	
 	if (mem!=NULL) free (mem);
@@ -1265,7 +1337,7 @@ void *thread_codetests_network_function(void *nada GCC_UNUSED)
 	while (1) {
 		printf ("Abriendo conexion desde thread secundario\n");
 		fflush(stdout);
-		int sock=z_sock_open_connection("google.es",80,0);
+		int sock=z_sock_open_connection("google.es",80,0,"");
 		printf ("socket para thread secundario: %d\n",sock);
 		fflush(stdout);
 
@@ -1305,7 +1377,8 @@ void codetests_network_atomic(void)
 
 		printf ("Abriendo conexion desde thread primario\n");
 		fflush(stdout);
-		int sock=z_sock_open_connection("google.es",80,0);
+		int sock=z_sock_open_connection("google.es",80,0,"");
+        //int sock=z_sock_open_connection("spectrumcomputing.co.uk",443,1,"spectrumcomputing.co.uk");
 		printf ("socket para thread primario: %d\n",sock);
 		fflush(stdout);
 
@@ -1473,6 +1546,8 @@ void codetests_main(int main_argc,char *main_argv[])
 	//printf ("\nRunning zsock https tests\n");
 	//init_network_tables();
 	//codetests_https();	
+
+    //codetests_https_sni();
 
 	//int r=z_sock_close_connection(44);
 	//if (r<0) printf ("Error: %s\n",z_sock_get_error(r));
