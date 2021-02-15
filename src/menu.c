@@ -35498,6 +35498,23 @@ void file_utils_umount_mmc_image(void)
     }    
 }
 
+//Directorio anterior en el local filesystem antes de ir a ruta de imagen montada
+char previous_path_before_going_mounted_drive[PATH_MAX]="";
+
+void menu_filesel_guardar_cwd_antes_mounted(char *siguiente_directorio)
+{
+    //Si pasamos de disco local a 0:/ , guardar ruta anterior (para luego usarla al ir a local drive)
+    if (menu_current_drive_mmc_image.v==0 && !strcmp(siguiente_directorio,"0:/")) {
+        //printf("Guardando path anterior a montaje\n");
+        char current_dir[PATH_MAX];
+        zvfs_getcwd(current_dir,PATH_MAX);
+        strcpy(previous_path_before_going_mounted_drive,current_dir);
+        //printf("y es: %s\n",current_dir);
+    }
+}
+
+
+
 void file_utils_mount_mmc_image(char *fullpath)
 {
     debug_printf(VERBOSE_INFO,"Mounting %s",fullpath);
@@ -35530,6 +35547,7 @@ void file_utils_mount_mmc_image(char *fullpath)
     menu_generic_message_splash("Mount Image","Ok image has been mounted on 0:/");
 
     //Y cambiar a dicho directorio
+    menu_filesel_guardar_cwd_antes_mounted("0:/");
     zvfs_chdir("0:/");
 
 }    
@@ -37783,10 +37801,16 @@ int menu_filesel_cambiar_unidad_o_volumen(void)
         //Si es "local drive", es que estabamos en la imagen mmc y hay que ir a imagen local
         if (!strcasecmp(directorio,"local drive")) {
             menu_current_drive_mmc_image.v=0;
+
+            //E ir a directorio anterior
+            zvfs_chdir(previous_path_before_going_mounted_drive);
             return 1;
         }
 
         else {
+            //Si pasamos de disco local a 0:/ , guardar ruta anterior (para luego usarla al ir a local drive)
+            menu_filesel_guardar_cwd_antes_mounted(directorio);
+
             zvfs_chdir(directorio);
             return 1;
         }

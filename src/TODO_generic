@@ -181,3 +181,24 @@ Sin realvideo, similar, pero no hay rainbow buffer sino que se hace putpixel a c
 
 crear tambien metodos de deteccion de tercer trap? Aunque esto quiza solo sirve para el hobbit...
 
+-al parsear configuración, si hay un parámetro incorrecto en el ~/.zesaruxrc, por ejemplo:
+
+--vo desconocido
+
+Al Ejecutar zesarux dará error y no inicia, logicamente:
+
+Video Driver desconocido not supported
+
+Pero si indicamos por linea de comandos (sin editar archivo de config) lo siguiente:
+
+./zesarux --vo xwindows
+
+Aunque el driver xwindows sea válido dará error antes de parsear esa opción, pues primero parsea el archivo de config y luego linea de comandos. 
+En el caso de drivers de video y audio se podría corregir evaluando drivervook y driveraook al final de parsear todo, pero en casos como valores con rango, como:
+
+--allpixeltotext-scale
+
+Esto se parsea antes y por tanto no se puede quitar el error
+Por tanto, es difícil de corregir esto. En estos casos, lo mejor es que el usuario edite el .zesaruxrc o bien lo borre para que se recree desde cero,
+pues indicando por linea de comandos no servirá de nada
+

@@ -192,7 +192,6 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 *visores de archivos (tecla V de file utils)
 *expansores de archivos (tecla espacio)-> esto ya está en ayuda
 
--al hacer extract desde archivo en mmc, y volver a mmc, luego al ir a local drive nos ubica en la carpeta tmp
 
 -punteros en diskio, de read y write, soportaran imagenes de mas de 2 gB en sistemas 32 bits?
 
@@ -212,6 +211,3 @@ Ver errores ssl:
         //final_err=SSL_get_error(sockets_list[indice_tabla].ssl_conn,err);
         final_err=ERR_get_error();
         printf("error: %s\n",ERR_error_string(final_err,NULL))
-
-
--si driver --ao loquesea, no disponible, en config. Luego por linea comandos no lee un --ao valido, da error antes del ao no valido
