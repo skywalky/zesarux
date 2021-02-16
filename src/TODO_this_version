@@ -41,9 +41,9 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
- -Cuando haya fat driver, poder descargar cp/m dentro de la imagen mmc de TBBlue 
+-Cuando haya fat driver, poder descargar cp/m dentro de la imagen mmc de TBBlue 
 
- -Quizá file utilities que pueda navegar dentro de archivos mmc. Usando librería fat
+
 
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
@@ -167,8 +167,6 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 
 -cocoa: con pantallas retina se queda una pantalla de mitad abajo a la izquierda
 
--Zoom 1-1 curses en modo all in pixel 
-Posible scroll y ventana de vista 
 
 
 -Opción activar nuevo algoritmo de carga según valor anterior como conversor 1 bit
