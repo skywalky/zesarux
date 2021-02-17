@@ -4643,6 +4643,8 @@ void debug_get_ioports(char *stats_buffer)
 	if (diviface_enabled.v) {
   		sprintf (buf_linea,"Diviface control port: %02X\n",diviface_control_register);
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);		
+  		sprintf (buf_linea,"Diviface automatic paging: %s\n",(diviface_paginacion_automatica_activa.v ? "Yes" : "No")  );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	          
 	}
 
     if (superupgrade_enabled.v) {
@@ -5952,7 +5954,7 @@ $c400-$ffff	System RAM (mirrored every 1KB)
       		if ( !   ( (diviface_control_register&128)==0 && diviface_paginacion_automatica_activa.v==0) )  {
 
 
-			//Caso tbblue
+			//Caso tbblue para paginas de 8 kb
 			int div_segment_zero=1;
 			int div_segment_one=1;
 

@@ -478,8 +478,9 @@ z80_byte ide_read_byte_memory(unsigned int address)
         if (ide_memory_pointer==NULL) return 0xff;
 
         if (address>=ide_size) {
-                debug_printf (VERBOSE_ERR,"Error. Trying to read beyond card size. Size: %ld Asked: %u. Disabling IDE",ide_size,address);
-                ide_disable();
+                //debug_printf (VERBOSE_ERR,"Error. Trying to read beyond card size. Size: %ld Asked: %u. Disabling IDE",ide_size,address);
+                //ide_disable();
+                //No desmontamos ni avisamos. Algunos firmwares para divide suelen leer mas alla de lo permitido
                 return 0;
         }
         else return ide_memory_pointer[address];

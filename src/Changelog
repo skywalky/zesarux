@@ -60,6 +60,7 @@ Fixed loading General Sound rom
 Fixed segfaults on fileselector +3 DSK screen previews using Speedlock protected disks or bad disks
 Fixed pixel color on text all-to-pixel text rendering (color inversion)
 Fixed downloads from spectrumcomputing
+Fixed DivIDE/DivMMC mapram behaviour
 
 Fixed CPC bugs:
 -Fixed vsync and hsync interrupts

@@ -177,14 +177,14 @@ refresh cycle of the instruction fetch from so called off-area, which is
 	if (reg_pc>=0x1ff8 && reg_pc<=0x1fff && diviface_paginacion_automatica_activa.v) {
 		//printf ("Saltado trap de despaginacion pc actual: %d\n",reg_pc);
 		diviface_salta_trap_despaginacion_despues=1;
-        }
+    }
 
 
 	}
 
 
 	if (diviface_salta_trap_antes && diviface_paginacion_automatica_activa.v==0) {
-		//printf ("Saltado trap de paginacion antes pc actual: %d\n",reg_pc);
+	    //printf ("Saltado trap de paginacion antes pc actual: %d\n",reg_pc);
 		diviface_paginacion_automatica_activa.v=1;
         }
 }
@@ -209,7 +209,7 @@ void diviface_post_opcode_fetch(void)
 
 
 
-//Escritura de puerto de control divide/divmmc. Activar o desactivar paginacion solamente
+//Escritura de puerto de control divide/divmmc. 
 void diviface_write_control_register(z80_byte value)
 {
 
@@ -224,7 +224,10 @@ void diviface_write_control_register(z80_byte value)
 		//diviface_paginacion_manual_activa.v=0;
 	}
 
-	diviface_control_register=value;
+    //Preservar bit mapram cuando es 1. En ese caso siempre se mantiene a 1 (excepto al hacer reset)
+    z80_byte mapram_bit=diviface_control_register & 64;
+
+	diviface_control_register=value | mapram_bit;
 }
 
 
@@ -246,6 +249,15 @@ int diviface_nested_id_peek_byte_no_time;
 int diviface_nested_id_poke_byte;
 int diviface_nested_id_poke_byte_no_time;
 
+int diviface_mapram_enabled(void)
+{
+    return diviface_control_register&64;
+}
+
+int diviface_conmem_enabled(void)
+{
+    return diviface_control_register&128;
+}
 
 
 //Retorna puntero a direccion apuntada por dir, en caso de paginacion diviface activa y dir <4000h
@@ -278,15 +290,16 @@ reached:
 	//De momento facil
 	if (dir<=0x1fff) {
 
-		if (diviface_control_register&128) {
+		if (diviface_conmem_enabled() ) {
 			//Devolver eprom
 			return &diviface_memory_pointer[dir];
 		}
 
 		else {
 
-			if (diviface_control_register&64) {
-				//printf ("Retornando direccion cuando MAPRAM activo\n");
+            //Para que funcione mapram, paginacion automatica debe estar activa tambien
+            if (diviface_mapram_enabled() && diviface_paginacion_automatica_activa.v) {
+                //printf ("Retornando direccion %04XH cuando MAPRAM activo\n",dir);
 				//pagina ram 3.
 				int pagina=3;
 				//int offset=DIVIFACE_FIRMWARE_ALLOCATED_KB*1024;
@@ -330,10 +343,27 @@ reached:
 int diviface_poke_byte_to_internal_memory(z80_int dir,z80_byte valor)
 {
 
+
+    //No escribir cuando mapram activo y segmento 0 o banco 3 en segmento 1 
+    if (dir<16384 && !diviface_conmem_enabled() && diviface_mapram_enabled() && diviface_paginacion_automatica_activa.v) {
+        
+//CONMEM clear, MAPRAM set, entrypoint executed:
+
+//0000h-1FFFh - Bank 3, read-only
+//2000h-3FFFh - 8K RAM selected by BANK bits. Writable, unless bank 3.        
+        
+        if (dir<0x2000) return 0;
+
+
+        int pagina=diviface_control_register&get_diviface_ram_mask();
+        if (pagina==3) return 0;
+    
+    }
+
 	//Dado que en tbblue, divmmc tiene prioridad sobre layer2 en tbblue, no hay caso especial para layer2
 	
 
-	if ((diviface_control_register&128)==0 && diviface_paginacion_automatica_activa.v==0) {
+	if (!diviface_conmem_enabled() && diviface_paginacion_automatica_activa.v==0) {
 		return 0;
 	}	
 
@@ -372,7 +402,7 @@ Prioridades Next. Divmmc encima de mmu. Por tanto no hay caso especial
 		if (dir<8192) {
 
 				//Si poke a eprom cuando conmem=1
-				if (diviface_control_register&128 && diviface_eprom_write_jumper.v) {
+				if (diviface_conmem_enabled() && diviface_eprom_write_jumper.v) {
 					debug_printf (VERBOSE_DEBUG,"Diviface eprom writing address: %04XH value: %02XH",dir,valor);
 					//Escribir en eprom siempre que jumper eprom está permitiendolo
 					z80_byte *puntero=diviface_return_memory_paged_pointer(dir);
@@ -492,7 +522,19 @@ z80_byte diviface_peek_byte_no_time(z80_int dir,z80_byte value GCC_UNUSED)
 {
 	z80_byte valor_leido=debug_nested_peek_byte_no_time_call_previous(diviface_nested_id_peek_byte_no_time,dir);
 
-	if ((diviface_control_register&128)==0 && diviface_paginacion_automatica_activa.v==0) {
+    
+    //if (dir<16384 && !diviface_conmem_enabled() && diviface_mapram_enabled() && diviface_paginacion_automatica_activa.v) {
+        
+//CONMEM clear, MAPRAM set, entrypoint executed:
+
+//0000h-1FFFh - Bank 3, read-only
+//2000h-3FFFh - 8K RAM selected by BANK bits. Writable, unless bank 3.        
+        
+    //    return diviface_peek_byte_to_internal_memory(dir);
+    //}
+    
+
+	if (!diviface_conmem_enabled() && diviface_paginacion_automatica_activa.v==0) {
 		//printf ("returning NON diviface internal memory address from diviface_peek_byte_no_time %XH\n",dir);
 		return valor_leido;
 	}
@@ -514,7 +556,7 @@ z80_byte diviface_peek_byte(z80_int dir,z80_byte value GCC_UNUSED)
 {
 	z80_byte valor_leido=debug_nested_peek_byte_call_previous(diviface_nested_id_peek_byte,dir);
 
-  if ((diviface_control_register&128)==0 && diviface_paginacion_automatica_activa.v==0) {
+  if (!diviface_conmem_enabled() && diviface_paginacion_automatica_activa.v==0) {
 	  //printf ("returning NON diviface internal memory address from diviface_peek_byte %XH\n",dir);
     return valor_leido;
   }
@@ -694,7 +736,7 @@ void diviface_enable(char *romfile)
 }
 
 void diviface_disable(void)
-{
+{ 
 
 	if (diviface_enabled.v==0) return;
 
@@ -707,4 +749,14 @@ void diviface_disable(void)
 
         diviface_enabled.v=0;
 				diviface_allow_automatic_paging.v=0;
+}
+
+
+void diviface_reset(void)
+{
+
+	diviface_control_register&=(255-128-64); //bit conmem y mapram a 0
+
+    	diviface_paginacion_automatica_activa.v=0;
+
 }

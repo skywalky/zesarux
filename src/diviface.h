@@ -58,4 +58,6 @@ extern z80_bit diviface_allow_automatic_paging;
 
 extern z80_byte diviface_read_control_register(void);
 
+extern void diviface_reset(void);
+
 #endif

@@ -996,8 +996,9 @@ void reset_cpu(void)
 
 	datagear_reset();
 
-	diviface_control_register&=(255-128);
-	diviface_paginacion_automatica_activa.v=0;
+    diviface_reset();
+
+
 
 
 	//si no se pone esto a 0, al cambiar de zx80 a zx81 suele colgarse
