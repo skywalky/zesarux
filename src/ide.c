@@ -557,9 +557,11 @@ void ide_write_command_register(z80_byte value)
 
 
 			//Identify drive
-			debug_printf (VERBOSE_PARANOID,"Ata command identify drive");
+			
 
                         drive=(ide_register_drive_head&16)>>4;
+
+            debug_printf (VERBOSE_PARANOID,"Ata command identify drive %d",drive);                        
 
 			//No hay disco numero 1. Solo el disco numero 0
                         if (drive==1) {
@@ -581,6 +583,12 @@ void ide_write_command_register(z80_byte value)
 			ide_return_buffer[11]=0x40;
 			ide_return_buffer[12]=value_16_to_8h(ide_disk_sectors_track);
 			ide_return_buffer[13]=value_16_to_8l(ide_disk_sectors_track);
+
+            printf("heads %d sectors %d\n",ide_return_buffer[6],ide_return_buffer[12]);
+            //temp
+            //ide_return_buffer[6]=3;
+            //ide_return_buffer[12]=9;
+
 			ide_return_buffer[14]=(ide_disk_sectors_card>>24)&255;
 			ide_return_buffer[15]=(ide_disk_sectors_card>>16)&255;
 			ide_return_buffer[16]=(ide_disk_sectors_card>>8)&255;
@@ -894,12 +902,13 @@ z80_byte ide_read_command_block_register(z80_byte ide_register)
         switch (ide_register) {
 
 		case 0:
-			//printf ("Reading return buffer index: %d\n",ide_index_return_buffer);
+			printf ("Reading return buffer index: %d\n",ide_index_return_buffer);
 			indice=ide_index_return_buffer&(IDE_MAX_RETURN_BUFFER-1);
 			return_value=ide_return_buffer[indice];
 			ide_index_return_buffer++;
 
 			//if (ide_index_return_buffer==10) sleep(1);
+            printf ("Returning %d PC=%X\n",return_value,reg_pc);
 
 			//Si ha leido ya IDE_SECTOR_SIZE, decir status normal
 			if (ide_index_return_buffer==IDE_SECTOR_SIZE) ide_status_register=(IDE_STATUS_RDY|IDE_STATUS_DSC);
