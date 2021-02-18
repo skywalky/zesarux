@@ -7000,6 +7000,12 @@ menu_z80_moto_int menu_debug_hexdump_get_cursor_pointer(void)
 						return direccion_cursor;
 }
 
+
+z80_byte menu_hexdump_valor_xor=0;
+
+char menu_hexdump_nibble_char='X';	
+char menu_hexdump_nibble_char_cursor='X';	
+
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
@@ -7037,7 +7043,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	int salir=0;
 
-	z80_byte valor_xor=0;
+	menu_hexdump_valor_xor=0;
 
 
 
@@ -7075,13 +7081,13 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		int linea=0;
 
-		int lineas_hex=0;
+		
 
 
 
 		int bytes_por_ventana=menu_hexdump_bytes_por_linea*menu_hexdump_lineas_total;
 
-		char dumpmemoria[33];
+		
 
 
 
@@ -7091,18 +7097,16 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 				char textoshow[33];
 
 		sprintf (textoshow,"Showing %d bytes per page:",bytes_por_ventana);
-        //menu_escribe_linea_opcion(linea++,-1,1,textoshow);
+        
 		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
 
-        //menu_escribe_linea_opcion(linea++,-1,1,"");
+        
 		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
 
 
-		//Hacer que texto ventana empiece pegado a la izquierda
-		menu_escribe_linea_startx=0;
 
-		//No mostrar caracteres especiales
-		menu_disable_special_chars.v=1;
+
+
 
 		//Donde esta el otro caracter que acompanya al nibble, en caso de cursor en zona hexa
 		int menu_hexdump_edit_position_x_nibble=menu_hexdump_edit_position_x^1;
@@ -7113,25 +7117,33 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		if (menu_hexdump_edit_mode && menu_debug_hexdump_cursor_en_zona_ascii) editando_en_zona_ascii=1;		
 
-		char nibble_char='X';	
-		char nibble_char_cursor='X';	
+		menu_hexdump_nibble_char='X';	
+		menu_hexdump_nibble_char_cursor='X';	
 
-		for (;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
+        int lineas_hex;
+        char dumpmemoria[33];
+
+		//Hacer que texto ventana empiece pegado a la izquierda
+		menu_escribe_linea_startx=0;        
+
+		//No mostrar caracteres especiales
+		menu_disable_special_chars.v=1;        
+
+		for (lineas_hex=0;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
 
 			menu_z80_moto_int dir_leida=menu_debug_hexdump_direccion+lineas_hex*menu_hexdump_bytes_por_linea;
 			menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
 
-			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,menu_hexdump_bytes_por_linea,valor_xor);
+			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,menu_hexdump_bytes_por_linea,menu_hexdump_valor_xor);
 
 			zxvision_print_string_defaults_fillspc(&ventana,0,linea,dumpmemoria);
 
 			//Meter el nibble_char si corresponde
 			if (lineas_hex==menu_hexdump_edit_position_y) {
-				nibble_char_cursor=dumpmemoria[7+menu_hexdump_edit_position_x];
-				if (!editando_en_zona_ascii) nibble_char=dumpmemoria[7+menu_hexdump_edit_position_x_nibble];
+				menu_hexdump_nibble_char_cursor=dumpmemoria[7+menu_hexdump_edit_position_x];
+				if (!editando_en_zona_ascii) menu_hexdump_nibble_char=dumpmemoria[7+menu_hexdump_edit_position_x_nibble];
 			}
 		}
-
 
 		menu_escribe_linea_startx=1;
 
@@ -7154,12 +7166,12 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			int xfinal=7+menu_hexdump_edit_position_x;
 			int yfinal=2+menu_hexdump_edit_position_y;			
 
-			menu_debug_hexdump_print_editcursor(&ventana,xfinal,yfinal,nibble_char_cursor);
+			menu_debug_hexdump_print_editcursor(&ventana,xfinal,yfinal,menu_hexdump_nibble_char_cursor);
 
 			//Indicar nibble entero. En caso de edit hexa
 			if (!editando_en_zona_ascii) {
 				xfinal=7+menu_hexdump_edit_position_x_nibble;
-				menu_debug_hexdump_print_editcursor_nibble(&ventana,xfinal,yfinal,nibble_char);
+				menu_debug_hexdump_print_editcursor_nibble(&ventana,xfinal,yfinal,menu_hexdump_nibble_char);
 			}
 		}
 
@@ -7216,7 +7228,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
 
 		sprintf (buffer_linea,"[%c] %sinvert [%c] Edi%st C%shar:%s",
-			(valor_xor==0 ? ' ' : 'X'), 
+			(menu_hexdump_valor_xor==0 ? ' ' : 'X'), 
 			string_atajos,
 			
 			(menu_hexdump_edit_mode==0 ? ' ' : 'X' ),
@@ -7347,7 +7359,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 					break;
 
 					case 'i':
-						if (!editando_en_zona_ascii) valor_xor ^= 255;
+						if (!editando_en_zona_ascii) menu_hexdump_valor_xor ^= 255;
 					break;
 
 					case 't':
