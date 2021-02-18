@@ -6971,6 +6971,8 @@ void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int an
 	//Permitir hotkeys desde raton
 	ventana->can_mouse_send_hotkeys=1;	
 
+    ventana->can_be_backgrounded=1;
+
 	zxvision_draw_window(ventana);
 
 }
@@ -7049,12 +7051,38 @@ int menu_hexdump_print_hexa_ascii(zxvision_window *ventana,int linea)
     
 }
 
+zxvision_window *menu_debug_hexdump_overlay_window;
+
+void menu_debug_hexdump_overlay(void)
+{
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+    zxvision_window *ventana;
+
+    ventana=menu_debug_hexdump_overlay_window;    
+
+    //Asumimos siempre empieza en linea 2
+    menu_hexdump_print_hexa_ascii(ventana,2);
+
+    zxvision_draw_window_contents(ventana);
+
+}
+
+zxvision_window zxvision_window_debug_hexdump;
+
 void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 {
 	menu_espera_no_tecla();
 	menu_reset_counters_tecla_repeticion();		
 
-	zxvision_window ventana;
+	zxvision_window *ventana;
+    ventana=&zxvision_window_debug_hexdump;
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);    
+
 	int xventana,yventana,ancho_ventana,alto_ventana;
 	
 	if (!util_find_window_geometry("hexeditor",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
@@ -7066,8 +7094,16 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
-	//zxvision_new_window_nocheck_staticsize(&ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
-	menu_debug_hexdump_crea_ventana(&ventana,xventana,yventana,ancho_ventana,alto_ventana);
+	//zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
+	menu_debug_hexdump_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+
+
+        //Esto es un poco diferente que otras ventanas, ya que solo hay overlay cuando la ventana esta en segundo plano
+       if (zxvision_currently_restoring_windows_on_start) {
+               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+               return;
+       }
+
 
 	//Nos guardamos alto y ancho anterior. Si el usuario redimensiona la ventana, la recreamos
 	int alto_anterior=alto_ventana;
@@ -7077,9 +7113,9 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 
-	//ventana.can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
+	//ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
 
-	//zxvision_draw_window(&ventana);
+	//zxvision_draw_window(ventana);
 
 
     z80_byte tecla;
@@ -7108,7 +7144,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		//printf ("dibujamos ventana\n");
 			//Alto 23. lineas 13
-		menu_hexdump_lineas_total=ventana.visible_height-10;
+		menu_hexdump_lineas_total=ventana->visible_height-10;
 
 			if (menu_hexdump_lineas_total<3) menu_hexdump_lineas_total=3;
 
@@ -7141,10 +7177,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 		sprintf (textoshow,"Showing %d bytes per page:",bytes_por_ventana);
         
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,textoshow);
 
         
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 
 
 
@@ -7183,7 +7219,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,menu_hexdump_bytes_por_linea,menu_hexdump_valor_xor);
 
-			zxvision_print_string_defaults_fillspc(&ventana,0,linea,dumpmemoria);
+			zxvision_print_string_defaults_fillspc(ventana,0,linea,dumpmemoria);
 
 			//Meter el nibble_char si corresponde
 			if (lineas_hex==menu_hexdump_edit_position_y) {
@@ -7199,10 +7235,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
         */
         
 
-        linea=menu_hexdump_print_hexa_ascii(&ventana,linea);
+        linea=menu_hexdump_print_hexa_ascii(ventana,linea);
 
         //Fin Render
-        
+
 
 		//Mostrar cursor si en modo edicion
 		
@@ -7218,12 +7254,12 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			int xfinal=7+menu_hexdump_edit_position_x;
 			int yfinal=2+menu_hexdump_edit_position_y;			
 
-			menu_debug_hexdump_print_editcursor(&ventana,xfinal,yfinal,menu_hexdump_nibble_char_cursor);
+			menu_debug_hexdump_print_editcursor(ventana,xfinal,yfinal,menu_hexdump_nibble_char_cursor);
 
 			//Indicar nibble entero. En caso de edit hexa
 			if (!menu_hexdump_editando_en_zona_ascii) {
 				xfinal=7+menu_hexdump_edit_position_x_nibble;
-				menu_debug_hexdump_print_editcursor_nibble(&ventana,xfinal,yfinal,menu_hexdump_nibble_char);
+				menu_debug_hexdump_print_editcursor_nibble(ventana,xfinal,yfinal,menu_hexdump_nibble_char);
 			}
 		}
 
@@ -7235,7 +7271,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 //printf ("zone size: %x dir: %x\n",menu_debug_memory_zone_size,menu_debug_hexdump_direccion);
 
         //menu_escribe_linea_opcion(linea++,-1,1,"");
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 
 		char buffer_linea[64]; //Por si acaso, entre negritas y demas
 
@@ -7277,7 +7313,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
 		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
 		sprintf (buffer_linea,"[%c] %sinvert [%c] Edi%st C%shar:%s",
 			(menu_hexdump_valor_xor==0 ? ' ' : 'X'), 
@@ -7290,7 +7326,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			buffer_char_type
 			);
 		//menu_escribe_linea_opcion(linea++,-1,1,buffer_linea);
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 
 
 		char memory_zone_text[64]; //espacio temporal mas grande por si acaso
@@ -7310,28 +7346,28 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		//truncar texto a 32 por si acaso
 		memory_zone_text[32]=0;
 		//menu_escribe_linea_opcion(linea++,-1,1,memory_zone_text);
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,memory_zone_text);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,memory_zone_text);
 
 		sprintf (textoshow," Size: %d (%d KB)",menu_debug_memory_zone_size,menu_debug_memory_zone_size/1024);
 		//menu_escribe_linea_opcion(linea++,-1,1,textoshow);
-		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoshow);
+		zxvision_print_string_defaults_fillspc(ventana,1,linea++,textoshow);
 
 
 		char subzone_info[33];
 		machine_get_memory_subzone_name(menu_debug_memory_zone,current_machine_type, menu_debug_hexdump_direccion, subzone_info);
 		if (subzone_info[0]!=0) {
 			sprintf(buffer_linea," S~~ubzone info: %s",subzone_info);
-			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,buffer_linea);
+			zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_linea);
 		}
 		else {
-			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"");
+			zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 		}
 
 
 		//Restaurar comportamiento atajos
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
-		zxvision_draw_window_contents(&ventana);
+		zxvision_draw_window_contents(ventana);
 		//NOTA: este menu no acostumbra a refrescar rapido la ventana cuando la redimensionamos con el raton
 		//es una razon facil: el volcado de hexa usa relativamente mucha cpu,
 		//cada vez que redimensionamos ventana, se llama al bucle continuamente, usando mucha cpu y si esta el autoframeskip,
@@ -7388,7 +7424,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 						if (!menu_hexdump_editando_en_zona_ascii)  {
 							menu_debug_hexdump_direccion=menu_debug_hexdump_change_pointer(menu_debug_hexdump_direccion);
 							//menu_debug_hexdump_ventana();
-							zxvision_draw_window(&ventana);
+							zxvision_draw_window(ventana);
 							//Y resetear cursor edicion
 							menu_hexdump_edit_position_x=0;
 							menu_hexdump_edit_position_y=0;
@@ -7399,7 +7435,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 						if (!menu_hexdump_editando_en_zona_ascii)  {
 							menu_debug_hexdump_copy();
 							//menu_debug_hexdump_ventana();
-							zxvision_draw_window(&ventana);
+							zxvision_draw_window(ventana);
 						}
 					break;					
 
@@ -7423,7 +7459,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 						//Si zona de filemem
 						if (menu_hexdump_edit_mode && menu_debug_memory_zone==MEMORY_ZONE_NUM_FILE_ZONE) {
-							menu_debug_hexdump_aviso_edit_filezone(&ventana);				
+							menu_debug_hexdump_aviso_edit_filezone(ventana);				
 						}
 					break;	
 
@@ -7498,7 +7534,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 						//Volver a dibujar ventana, pues se ha borrado al pregutar confirmacion
 						//menu_debug_hexdump_ventana();
-						zxvision_draw_window(&ventana);
+						zxvision_draw_window(ventana);
 					}
 
  
@@ -7567,10 +7603,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 				}
 
 		//Si ha cambiado el alto
-		alto_ventana=ventana.visible_height;
-		ancho_ventana=ventana.visible_width;
-		xventana=ventana.x;
-		yventana=ventana.y;
+		alto_ventana=ventana->visible_height;
+		ancho_ventana=ventana->visible_width;
+		xventana=ventana->x;
+		yventana=ventana->y;
 		if (alto_ventana!=alto_anterior || ancho_ventana!=ancho_anterior) {
 			//printf ("recrear ventana\n");
 			//Recrear ventana
@@ -7580,8 +7616,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			menu_hexdump_edit_position_x=0;
 			menu_hexdump_edit_position_y=0;
 
-			zxvision_destroy_window(&ventana);
-			menu_debug_hexdump_crea_ventana(&ventana,xventana,yventana,ancho_ventana,alto_ventana);
+			zxvision_destroy_window(ventana);
+			menu_debug_hexdump_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
 			alto_anterior=alto_ventana;
 			ancho_anterior=ancho_ventana;
 		}
@@ -7590,12 +7626,27 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
         } while (salir==0);
 
+    //zxvision_set_window_overlay_from_current(ventana);
+    //En este caso es un poco diferente, esta ventana tiene overlay solo cuando
+    //esta en background
+    //TODO: quitar overlay al principio si esta??
+
+
 	cls_menu_overlay();
 
-	//util_add_window_geometry("hexeditor",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
-	util_add_window_geometry_compact(&ventana);
+	//Grabar geometria ventana
+	util_add_window_geometry_compact(ventana);
 
-	zxvision_destroy_window(&ventana);
+	//zxvision_destroy_window(ventana);
+
+
+	if (tecla==3) {
+		zxvision_message_put_window_background();
+	}
+
+	else {
+		zxvision_destroy_window(ventana);		
+ 	}    
 	
 
 }
