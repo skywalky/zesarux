@@ -74,6 +74,13 @@ Ver apartado 2.6 Capacity Specifications
 
 */
 
+
+//Probado IDE con:
+// esxdos: no parece usar este comando. Obtiene la geometria según la información de la partición
+// fatware: diferentes versiones. suele funcionar bien aunque a veces da problemas en el boot, no siempre
+// demfir, gasware, mdos3, residos: ok
+// atomlite (Sam coupe): boot ok. no he podido investigar mucho mas
+
 z80_long_int ide_disk_sectors_card=62720;
 int ide_disk_heads=4;
 int ide_disk_sectors_track=32;
@@ -724,6 +731,10 @@ void ide_write_command_register(z80_byte value)
 			}
 
             //Invertir todo a LSB
+            //Nota: al contrario de lo que parece en las especificaciones, cada par de bytes están en formato LSB
+            //Podría simplemente haber escrito todo lo anterior considerando LSB, pero para hacerlo mas fácil la correción
+            //TODO: es probable que alguno de los valores anteriores siga siendo incorrecto
+
             z80_byte v1,v2;
             for (i=0;i<512;i+=2) {
                 v1=ide_return_buffer[i];
@@ -941,7 +952,7 @@ z80_byte ide_read_command_block_register(z80_byte ide_register)
 
 	ide_footer_ide_operating();
 
-	int indice;
+	//int indice;
 
         switch (ide_register) {
 
@@ -961,11 +972,8 @@ z80_byte ide_read_command_block_register(z80_byte ide_register)
 		break;
 
 		case 1:
-
 			return_value=ide_get_error_register();
-
 		break;
-
 
         case 2:
                 return_value=ide_register_sector_count;
@@ -1006,8 +1014,6 @@ z80_byte ide_read_command_block_register(z80_byte ide_register)
 */
 
     
-
-
 			return_value=ide_status_register;
 			debug_printf (VERBOSE_PARANOID,"Returning status register: %d",return_value);
 			//debug_printf (VERBOSE_PARANOID,"Returning status register: %d PC=%d contador=%d",return_value,reg_pc,temp_contador_tonto);
@@ -1033,8 +1039,8 @@ void eight_bit_simple_ide_write(z80_byte port,z80_byte value)
 	//printf ("8bit ide write: register: %d value: %d\n",ide_register,value);
 	ide_write_command_block_register(ide_register,value);
 
-	                        //TODO ver si esto es solo para atom y 8-bit simple o es un fallo de mi emulacion IDE
-                        //ide_status_register=0x50;
+    //TODO ver si esto es solo para atom y 8-bit simple o es un fallo de mi emulacion IDE
+    //ide_status_register=0x50;
 
 }
 
@@ -1045,8 +1051,8 @@ z80_byte eight_bit_simple_ide_read(z80_byte port)
 	//printf ("8bit ide read: register: %d\n",ide_register);
 	z80_byte value=ide_read_command_block_register(ide_register);
 
-                        //TODO ver si esto es solo para atom y 8-bit simple o es un fallo de mi emulacion IDE
-                        //ide_status_register ^=0x08;
+    //TODO ver si esto es solo para atom y 8-bit simple o es un fallo de mi emulacion IDE
+    //ide_status_register ^=0x08;
 
 	return value;
 }

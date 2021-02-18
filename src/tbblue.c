@@ -4304,7 +4304,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 	z80_byte last_register_67=tbblue_registers[67];
 	z80_byte last_register_99=tbblue_registers[99];
 	
-	z80_byte aux_divmmc;
+	//z80_byte aux_divmmc;
 
 	if (index_position==3) {
 
