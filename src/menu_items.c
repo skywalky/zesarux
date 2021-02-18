@@ -6670,9 +6670,6 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 
 
-
-
-
 #define DEBUG_HEXDUMP_WINDOW_X (menu_origin_x() )
 #define DEBUG_HEXDUMP_WINDOW_Y 1
 #define DEBUG_HEXDUMP_WINDOW_ANCHO 32
@@ -6823,37 +6820,37 @@ void menu_debug_hexdump_edit_cursor_derecha(int escribiendo_memoria)
 void menu_debug_hexdump_cursor_arriba(void)
 {
 	int alterar_ptr=0;
-						//arriba
-						if (menu_hexdump_edit_mode) {
-							if (menu_hexdump_edit_position_y>0) menu_hexdump_edit_position_y--;
-							else alterar_ptr=1;
-						}
+    //arriba
+    if (menu_hexdump_edit_mode) {
+        if (menu_hexdump_edit_position_y>0) menu_hexdump_edit_position_y--;
+        else alterar_ptr=1;
+    }
 
-						else {
-							alterar_ptr=1;
-						}
+    else {
+        alterar_ptr=1;
+    }
 
-						if (alterar_ptr) {
-							menu_debug_hexdump_direccion -=menu_hexdump_bytes_por_linea;
-							menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,menu_hexdump_bytes_por_linea);
-						}
+    if (alterar_ptr) {
+        menu_debug_hexdump_direccion -=menu_hexdump_bytes_por_linea;
+        menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,menu_hexdump_bytes_por_linea);
+    }
 }
 
 void menu_debug_hexdump_cursor_abajo(void)
 {
 	int alterar_ptr=0;
-						//abajo
-						if (menu_hexdump_edit_mode) {
-							if (menu_hexdump_edit_position_y<menu_hexdump_lineas_total-1) menu_hexdump_edit_position_y++;
-							else alterar_ptr=1;
-						}						
-						else {
-							alterar_ptr=1;
-						}
+    //abajo
+    if (menu_hexdump_edit_mode) {
+        if (menu_hexdump_edit_position_y<menu_hexdump_lineas_total-1) menu_hexdump_edit_position_y++;
+        else alterar_ptr=1;
+    }						
+    else {
+        alterar_ptr=1;
+    }
 
-						if (alterar_ptr) {
-							menu_debug_hexdump_direccion +=menu_hexdump_bytes_por_linea;
-						}
+    if (alterar_ptr) {
+        menu_debug_hexdump_direccion +=menu_hexdump_bytes_por_linea;
+    }
 }
 
 void menu_debug_hexdump_copy(void)
@@ -6907,51 +6904,51 @@ void menu_debug_hexdump_copy(void)
 
 void menu_debug_hexdump_aviso_edit_filezone(zxvision_window *w)
 {
-							menu_warn_message("Memory zone is File zone. Changes won't be saved to the file");
-							//Volver a dibujar ventana, pues se ha borrado al aparecer el aviso
-							//menu_debug_hexdump_ventana();	
+    menu_warn_message("Memory zone is File zone. Changes won't be saved to the file");
+    //Volver a dibujar ventana, pues se ha borrado al aparecer el aviso
+    //menu_debug_hexdump_ventana();	
 	zxvision_draw_window(w);
 }
 
 void menu_debug_hexdump_info_subzones(void)
 {
 	
-		int x=1;
-		int y=1;
-		int ancho=30;
-		int alto=22;
+    int x=1;
+    int y=1;
+    int ancho=30;
+    int alto=22;
 
 
 
-        subzone_info *puntero;
-        puntero=machine_get_memory_subzone_array(menu_debug_memory_zone,current_machine_type);
-        if (puntero==NULL) return;
+    subzone_info *puntero;
+    puntero=machine_get_memory_subzone_array(menu_debug_memory_zone,current_machine_type);
+    if (puntero==NULL) return;
 
-		zxvision_window ventana;
+    zxvision_window ventana;
 
-                zxvision_new_window(&ventana,x,y,ancho,alto,
-                                                        64,alto-2,"Memory subzones");
+            zxvision_new_window(&ventana,x,y,ancho,alto,
+                                                    64,alto-2,"Memory subzones");
 
-                zxvision_draw_window(&ventana);		
+            zxvision_draw_window(&ventana);		
 
-        int i;
+    int i;
 
-		char buffer_linea[64];
-        for (i=0;puntero[i].nombre[0]!=0;i++) {
+    char buffer_linea[64];
+    for (i=0;puntero[i].nombre[0]!=0;i++) {
 
-			//printf ("inicio: %d fin: %d texto: %s\n",puntero[i].inicio,puntero[i].fin,puntero[i].nombre);
-			sprintf (buffer_linea,"%06X-%06X %s",puntero[i].inicio,puntero[i].fin,puntero[i].nombre);
-			zxvision_print_string_defaults_fillspc(&ventana,1,i,buffer_linea);
-			
-		}
+        //printf ("inicio: %d fin: %d texto: %s\n",puntero[i].inicio,puntero[i].fin,puntero[i].nombre);
+        sprintf (buffer_linea,"%06X-%06X %s",puntero[i].inicio,puntero[i].fin,puntero[i].nombre);
+        zxvision_print_string_defaults_fillspc(&ventana,1,i,buffer_linea);
+        
+    }
 
-		zxvision_draw_window_contents(&ventana);
+    zxvision_draw_window_contents(&ventana);
 
-		zxvision_wait_until_esc(&ventana);
+    zxvision_wait_until_esc(&ventana);
 
-        cls_menu_overlay();
+    cls_menu_overlay();
 
-                zxvision_destroy_window(&ventana);					
+    zxvision_destroy_window(&ventana);					
 
 
 }
@@ -6979,30 +6976,30 @@ void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int an
 
 menu_z80_moto_int menu_debug_hexdump_get_cursor_pointer(void)
 {
-							//Obtener direccion puntero
-						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_direccion;
+    //Obtener direccion puntero
+    menu_z80_moto_int direccion_cursor=menu_debug_hexdump_direccion;
 
-						//int si_zona_hexa=0; //en zona hexa o ascii
-						//if (menu_hexdump_edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
-
-
-						if (!menu_debug_hexdump_cursor_en_zona_ascii) {
-							//Sumar x (cada dos, una posicion)
-							direccion_cursor +=menu_hexdump_edit_position_x/2;
-						}
-						else {
-							int indice_hasta_ascii=menu_hexdump_bytes_por_linea*2+1; //el hexa y el espacio
-							direccion_cursor +=menu_hexdump_edit_position_x-indice_hasta_ascii;
-						}
-
-						//Sumar y. 
-						direccion_cursor +=menu_hexdump_edit_position_y*menu_hexdump_bytes_por_linea;
-
-						//Ajustar direccion a zona memoria
-						direccion_cursor=adjust_address_memory_size(direccion_cursor);
+    //int si_zona_hexa=0; //en zona hexa o ascii
+    //if (menu_hexdump_edit_position_x<bytes_por_linea*2) si_zona_hexa=1;
 
 
-						return direccion_cursor;
+    if (!menu_debug_hexdump_cursor_en_zona_ascii) {
+        //Sumar x (cada dos, una posicion)
+        direccion_cursor +=menu_hexdump_edit_position_x/2;
+    }
+    else {
+        int indice_hasta_ascii=menu_hexdump_bytes_por_linea*2+1; //el hexa y el espacio
+        direccion_cursor +=menu_hexdump_edit_position_x-indice_hasta_ascii;
+    }
+
+    //Sumar y. 
+    direccion_cursor +=menu_hexdump_edit_position_y*menu_hexdump_bytes_por_linea;
+
+    //Ajustar direccion a zona memoria
+    direccion_cursor=adjust_address_memory_size(direccion_cursor);
+
+
+    return direccion_cursor;
 }
 
 
@@ -7017,35 +7014,35 @@ int menu_hexdump_print_hexa_ascii(zxvision_window *ventana,int linea)
 {
 
 
-        int lineas_hex;
-        char dumpmemoria[33];
+    int lineas_hex;
+    char dumpmemoria[33];
 
-		//Hacer que texto ventana empiece pegado a la izquierda
-		menu_escribe_linea_startx=0;        
+    //Hacer que texto ventana empiece pegado a la izquierda
+    menu_escribe_linea_startx=0;        
 
-		//No mostrar caracteres especiales
-		menu_disable_special_chars.v=1;        
+    //No mostrar caracteres especiales
+    menu_disable_special_chars.v=1;        
 
-		for (lineas_hex=0;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
+    for (lineas_hex=0;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
 
-			menu_z80_moto_int dir_leida=menu_debug_hexdump_direccion+lineas_hex*menu_hexdump_bytes_por_linea;
-			menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
+        menu_z80_moto_int dir_leida=menu_debug_hexdump_direccion+lineas_hex*menu_hexdump_bytes_por_linea;
+        menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
 
-			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,menu_hexdump_bytes_por_linea,menu_hexdump_valor_xor);
+        menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,menu_hexdump_bytes_por_linea,menu_hexdump_valor_xor);
 
-			zxvision_print_string_defaults_fillspc(ventana,0,linea,dumpmemoria);
+        zxvision_print_string_defaults_fillspc(ventana,0,linea,dumpmemoria);
 
-			//Meter el nibble_char si corresponde
-			if (lineas_hex==menu_hexdump_edit_position_y) {
-				menu_hexdump_nibble_char_cursor=dumpmemoria[7+menu_hexdump_edit_position_x];
-				if (!menu_hexdump_editando_en_zona_ascii) menu_hexdump_nibble_char=dumpmemoria[7+menu_hexdump_edit_position_x_nibble];
-			}
-		}
+        //Meter el nibble_char si corresponde
+        if (lineas_hex==menu_hexdump_edit_position_y) {
+            menu_hexdump_nibble_char_cursor=dumpmemoria[7+menu_hexdump_edit_position_x];
+            if (!menu_hexdump_editando_en_zona_ascii) menu_hexdump_nibble_char=dumpmemoria[7+menu_hexdump_edit_position_x_nibble];
+        }
+    }
 
-		menu_escribe_linea_startx=1;
+    menu_escribe_linea_startx=1;
 
-		//Volver a mostrar caracteres especiales
-		menu_disable_special_chars.v=0;		
+    //Volver a mostrar caracteres especiales
+    menu_disable_special_chars.v=0;		
 
     return linea;
     
@@ -7056,6 +7053,8 @@ zxvision_window *menu_debug_hexdump_overlay_window;
 void menu_debug_hexdump_overlay(void)
 {
     if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+    menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
     zxvision_window *ventana;
 
@@ -7106,19 +7105,23 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
     //ya que al iniciar el emulador, el puntero por ejemplo del hex editor apunta a 0, y dudo
     //que el usuario quiera ver esa dirección al iniciar. Lo normal es que al arrancar el usuario
     //elija la ventana del hex editor y ya indique que direccion quiere ir
-       if (zxvision_currently_restoring_windows_on_start) {
-               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
-               return;
-       }
+    
+    if (zxvision_currently_restoring_windows_on_start) {
+            //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+            return;
+    }
 
+    //Mas info: al entrar en esta ventana por segunda vez, despues de tenerla en background, alguien podria pensar que 
+    //la ventana se mostrara entonces dos veces: 1 por estar en background, y 2 por las propias rutinas que hay aqui para dibujarla
+    //pero cuando estamos aqui, somos nosotros mismos los que deberíamos hacer el overlay aqui dentro (que no se hace). Las funciones
+    //de redibujado de zxvision redibujan las ventanas que están en background, llamando a sus overlays, pero no llaman al overlay
+    //de la propia ventana que está activa
 
 	//Nos guardamos alto y ancho anterior. Si el usuario redimensiona la ventana, la recreamos
 	int alto_anterior=alto_ventana;
 	int ancho_anterior=ancho_ventana;
 
 	
-
-
 
 	//ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll
 
@@ -7141,55 +7144,47 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	int asked_about_writing_rom=0;
 
-                //Guardar estado atajos
-                z80_bit antes_menu_writing_inverse_color;
-                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;	
+    //Guardar estado atajos
+    z80_bit antes_menu_writing_inverse_color;
+    antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;	
 
 
 
-        do {
+    do {
 
-		//printf ("dibujamos ventana\n");
-			//Alto 23. lineas 13
+
 		menu_hexdump_lineas_total=ventana->visible_height-10;
 
-			if (menu_hexdump_lineas_total<3) menu_hexdump_lineas_total=3;
+        if (menu_hexdump_lineas_total<3) menu_hexdump_lineas_total=3;
 
 			
-			menu_debug_hexdump_cursor_en_zona_ascii=0;
-			menu_hexdump_editando_en_zona_ascii=0;
+        menu_debug_hexdump_cursor_en_zona_ascii=0;
+        menu_hexdump_editando_en_zona_ascii=0;
 
 
-					//Si maquina no es QL, direccion siempre entre 0 y 65535
-					//menu_debug_hexdump_direccion=adjust_address_space_cpu(menu_debug_hexdump_direccion);
-					menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
+        //Si maquina no es QL, direccion siempre entre 0 y 65535
+        //menu_debug_hexdump_direccion=adjust_address_space_cpu(menu_debug_hexdump_direccion);
+        menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
 
 
 		int linea=0;
 
 		
 
-
-
 		int bytes_por_ventana=menu_hexdump_bytes_por_linea*menu_hexdump_lineas_total;
 
 		
 
-
-
 		//Antes de escribir, normalizar zona memoria
 		menu_debug_set_memory_zone_attr();
 
-				char textoshow[33];
+        char textoshow[33];
 
 		sprintf (textoshow,"Showing %d bytes per page:",bytes_por_ventana);
         
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,textoshow);
-
         
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
-
-
 
 
 
@@ -7271,8 +7266,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		}
 
 
-				//Forzar a mostrar atajos
-                menu_writing_inverse_color.v=1;
+        //Forzar a mostrar atajos
+        menu_writing_inverse_color.v=1;
 
 
 //printf ("zone size: %x dir: %x\n",menu_debug_memory_zone_size,menu_debug_hexdump_direccion);
@@ -7384,235 +7379,235 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 		tecla=zxvision_common_getkey_refresh();		
 
 
-				//Aviso: hay que conseguir que las letras de accion no esten entre la a-f, porque asi,
-				//podemos usar dichas letras para editar hexa
+        //Aviso: hay que conseguir que las letras de accion no esten entre la a-f, porque asi,
+        //podemos usar dichas letras para editar hexa
 
-				switch (tecla) {
+        switch (tecla) {
 
-					case 11:
-						menu_debug_hexdump_cursor_arriba();
+            case 11:
+                menu_debug_hexdump_cursor_arriba();
 
-					break;
+            break;
 
-					case 10:
-						menu_debug_hexdump_cursor_abajo();
+            case 10:
+                menu_debug_hexdump_cursor_abajo();
 
-					break;
+            break;
 
-					case 8:
-					case 12:
-						//izquierda o delete
-						if (menu_hexdump_edit_mode) {
-							//if (menu_hexdump_edit_position_x>0) menu_hexdump_edit_position_x--;
-							menu_debug_hexdump_edit_cursor_izquierda();
-						}
-					break;
+            case 8:
+            case 12:
+                //izquierda o delete
+                if (menu_hexdump_edit_mode) {
+                    //if (menu_hexdump_edit_position_x>0) menu_hexdump_edit_position_x--;
+                    menu_debug_hexdump_edit_cursor_izquierda();
+                }
+            break;
 
-					case 9:
-						//derecha
-						if (menu_hexdump_edit_mode) {
-							menu_debug_hexdump_edit_cursor_derecha(0);
-							//if (menu_hexdump_edit_position_x<(bytes_por_linea*2)-1) menu_hexdump_edit_position_x++;
-						}
-					break;					
+            case 9:
+                //derecha
+                if (menu_hexdump_edit_mode) {
+                    menu_debug_hexdump_edit_cursor_derecha(0);
+                    //if (menu_hexdump_edit_position_x<(bytes_por_linea*2)-1) menu_hexdump_edit_position_x++;
+                }
+            break;					
 
-					case 24:
-						//PgUp
-						menu_debug_hexdump_direccion -=bytes_por_ventana;
-						menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,bytes_por_ventana);
-					break;
+            case 24:
+                //PgUp
+                menu_debug_hexdump_direccion -=bytes_por_ventana;
+                menu_debug_hexdump_direccion=menu_debug_hexdump_adjusta_en_negativo(menu_debug_hexdump_direccion,bytes_por_ventana);
+            break;
 
-					case 25:
-						//PgDn
-						menu_debug_hexdump_direccion +=bytes_por_ventana;
-					break;
+            case 25:
+                //PgDn
+                menu_debug_hexdump_direccion +=bytes_por_ventana;
+            break;
 
-					case 'm':
-						if (!menu_hexdump_editando_en_zona_ascii)  {
-							menu_debug_hexdump_direccion=menu_debug_hexdump_change_pointer(menu_debug_hexdump_direccion);
-							//menu_debug_hexdump_ventana();
-							zxvision_draw_window(ventana);
-							//Y resetear cursor edicion
-							menu_hexdump_edit_position_x=0;
-							menu_hexdump_edit_position_y=0;
-						}
-					break;
+            case 'm':
+                if (!menu_hexdump_editando_en_zona_ascii)  {
+                    menu_debug_hexdump_direccion=menu_debug_hexdump_change_pointer(menu_debug_hexdump_direccion);
+                    //menu_debug_hexdump_ventana();
+                    zxvision_draw_window(ventana);
+                    //Y resetear cursor edicion
+                    menu_hexdump_edit_position_x=0;
+                    menu_hexdump_edit_position_y=0;
+                }
+            break;
 
-					case 'o':
-						if (!menu_hexdump_editando_en_zona_ascii)  {
-							menu_debug_hexdump_copy();
-							//menu_debug_hexdump_ventana();
-							zxvision_draw_window(ventana);
-						}
-					break;					
+            case 'o':
+                if (!menu_hexdump_editando_en_zona_ascii)  {
+                    menu_debug_hexdump_copy();
+                    //menu_debug_hexdump_ventana();
+                    zxvision_draw_window(ventana);
+                }
+            break;					
 
-					case 'h':
-						if (!menu_hexdump_editando_en_zona_ascii)  {
-							menu_debug_hexdump_with_ascii_modo_ascii++;
-							if (menu_debug_hexdump_with_ascii_modo_ascii==3) menu_debug_hexdump_with_ascii_modo_ascii=0;
-						}
-					break;
+            case 'h':
+                if (!menu_hexdump_editando_en_zona_ascii)  {
+                    menu_debug_hexdump_with_ascii_modo_ascii++;
+                    if (menu_debug_hexdump_with_ascii_modo_ascii==3) menu_debug_hexdump_with_ascii_modo_ascii=0;
+                }
+            break;
 
-					case 'i':
-						if (!menu_hexdump_editando_en_zona_ascii) menu_hexdump_valor_xor ^= 255;
-					break;
+            case 'i':
+                if (!menu_hexdump_editando_en_zona_ascii) menu_hexdump_valor_xor ^= 255;
+            break;
 
-					case 't':
-						if (!menu_hexdump_editando_en_zona_ascii) {
-							menu_hexdump_edit_mode ^= 1;
-							menu_espera_no_tecla();
-							tecla=0; //para no enviar dicha tecla al editor
-						}
+            case 't':
+                if (!menu_hexdump_editando_en_zona_ascii) {
+                    menu_hexdump_edit_mode ^= 1;
+                    menu_espera_no_tecla();
+                    tecla=0; //para no enviar dicha tecla al editor
+                }
 
-						//Si zona de filemem
-						if (menu_hexdump_edit_mode && menu_debug_memory_zone==MEMORY_ZONE_NUM_FILE_ZONE) {
-							menu_debug_hexdump_aviso_edit_filezone(ventana);				
-						}
-					break;	
+                //Si zona de filemem
+                if (menu_hexdump_edit_mode && menu_debug_memory_zone==MEMORY_ZONE_NUM_FILE_ZONE) {
+                    menu_debug_hexdump_aviso_edit_filezone(ventana);				
+                }
+            break;	
 
-					case 'u':
-						//Ver info subzonas
-						menu_debug_hexdump_info_subzones();
-					break;				
+            case 'u':
+                //Ver info subzonas
+                menu_debug_hexdump_info_subzones();
+            break;				
 
-					//case 'l':
-					//	menu_debug_hex_shows_inves_low_ram.v ^=1;
-					//break;
+            //case 'l':
+            //	menu_debug_hex_shows_inves_low_ram.v ^=1;
+            //break;
 
-					case 'z':
+            case 'z':
 
-						if (!menu_hexdump_editando_en_zona_ascii) {
-							menu_debug_change_memory_zone();
-							asked_about_writing_rom=0;
-						}
+                if (!menu_hexdump_editando_en_zona_ascii) {
+                    menu_debug_change_memory_zone();
+                    asked_about_writing_rom=0;
+                }
 
-						break;
+                break;
 
-					//Salir con ESC si no es modo edit
-					case 2:
-						if (menu_hexdump_edit_mode) {
-							menu_hexdump_edit_mode=0;
-						}
-						else salir=1;
-					break;
+            //Salir con ESC si no es modo edit
+            case 2:
+                if (menu_hexdump_edit_mode) {
+                    menu_hexdump_edit_mode=0;
+                }
+                else salir=1;
+            break;
 
-                    //salir con tecla background
-                    case 3:
-                        salir=1;
-                    break;
+            //salir con tecla background
+            case 3:
+                salir=1;
+            break;
 
-					//Enter tambien sale de modo edit
-					case 13:
-						if (menu_hexdump_edit_mode) menu_hexdump_edit_mode=0;
-					break;
-
-
-
-				}
-
-				//Y ahora para el caso de edit_mode y pulsar tecla hexa o ascii segun la zona
-				int editar_byte=0;
-				if (menu_hexdump_edit_mode) {
-					//Para la zona ascii
-					if (menu_debug_hexdump_cursor_en_zona_ascii && tecla>=32 && tecla<=126) editar_byte=1; 
-
-					//Para la zona hexa
-					if (
-						!menu_debug_hexdump_cursor_en_zona_ascii && 
-						( (tecla>='0' && tecla<='9') || (tecla>='a' && tecla<='f') )
-						) {
-						editar_byte=1; 
-					}
-				}
-
-				//Ver si vamos a editar en zona de rom
-				if (editar_byte) {
-					int attribute_zone;
-					//Si zona por defecto mapped memory, asumimos lectura/escritura
-					if (menu_debug_memory_zone==-1) attribute_zone=3;
-					else machine_get_memory_zone_attrib(menu_debug_memory_zone, &attribute_zone);
-
-					//printf ("Attrib zone %d asked %d\n",attribute_zone,asked_about_writing_rom);
-
-					//Attrib: bit 0: read, bit 1: write
-					//Si no tiene atributo de escritura y no se ha pedido antes si se quiere escribir en rom
-					if ( (attribute_zone&2)==0 && !asked_about_writing_rom) {
-						if (menu_confirm_yesno_texto("Memory zone is ROM","Sure you want to edit?")==0) {
-							editar_byte=0;
-						}
-						else {
-							asked_about_writing_rom=1;
-						}
-
-						//Volver a dibujar ventana, pues se ha borrado al pregutar confirmacion
-						//menu_debug_hexdump_ventana();
-						zxvision_draw_window(ventana);
-					}
-
- 
-				}
-
-
-				//asked_about_writing_rom
-
-				if (editar_byte) {
-						menu_z80_moto_int direccion_cursor=menu_debug_hexdump_get_cursor_pointer();
-				
-
-						//TODO: ver si se sale de tamanyo zona memoria
-
-						//printf ("Direccion edicion: %X\n",direccion_cursor);
-
-						//Obtenemos byte en esa posicion
-						z80_byte valor_leido=menu_debug_get_mapped_byte(direccion_cursor);
-
-
-						//Estamos en zona hexa o ascii
-
-						if (!menu_debug_hexdump_cursor_en_zona_ascii) {
-							//printf ("Zona hexa\n");
-							//Zona hexa
-
-							//Obtener valor nibble
-							z80_byte valor_nibble;
-
-							if (tecla>='0' && tecla<='9') valor_nibble=tecla-'0';
-							else valor_nibble=tecla-'a'+10;
-
-							//Ver si par o impar
-							if ( (menu_hexdump_edit_position_x %2) ==0) {
-								//par. alterar nibble alto
-								valor_leido=(valor_leido&0x0F) | (valor_nibble<<4);
-							}
-
-							else {
-								//impar. alterar nibble bajo
-								valor_leido=(valor_leido&0xF0) | valor_nibble;
-							}
-						}
-
-						else {
-							//printf ("Zona ascii\n");
-							valor_leido=tecla;
-
-							//En el caso de zx80/81
-
-							if (menu_debug_hexdump_with_ascii_modo_ascii==1) valor_leido=ascii_to_zx80(valor_leido);
-							if (menu_debug_hexdump_with_ascii_modo_ascii==2) valor_leido=ascii_to_zx81(valor_leido);
-						}
+            //Enter tambien sale de modo edit
+            case 13:
+                if (menu_hexdump_edit_mode) menu_hexdump_edit_mode=0;
+            break;
 
 
 
-						//Escribimos valor
-						menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
+        }
 
-						//Y mover cursor a la derecha
-						menu_debug_hexdump_edit_cursor_derecha(1);
+        //Y ahora para el caso de edit_mode y pulsar tecla hexa o ascii segun la zona
+        int editar_byte=0;
+        if (menu_hexdump_edit_mode) {
+            //Para la zona ascii
+            if (menu_debug_hexdump_cursor_en_zona_ascii && tecla>=32 && tecla<=126) editar_byte=1; 
 
-						//Si se llega a detecha de hexa o ascii, saltar linea
+            //Para la zona hexa
+            if (
+                !menu_debug_hexdump_cursor_en_zona_ascii && 
+                ( (tecla>='0' && tecla<='9') || (tecla>='a' && tecla<='f') )
+                ) {
+                editar_byte=1; 
+            }
+        }
 
-					
-				}
+        //Ver si vamos a editar en zona de rom
+        if (editar_byte) {
+            int attribute_zone;
+            //Si zona por defecto mapped memory, asumimos lectura/escritura
+            if (menu_debug_memory_zone==-1) attribute_zone=3;
+            else machine_get_memory_zone_attrib(menu_debug_memory_zone, &attribute_zone);
+
+            //printf ("Attrib zone %d asked %d\n",attribute_zone,asked_about_writing_rom);
+
+            //Attrib: bit 0: read, bit 1: write
+            //Si no tiene atributo de escritura y no se ha pedido antes si se quiere escribir en rom
+            if ( (attribute_zone&2)==0 && !asked_about_writing_rom) {
+                if (menu_confirm_yesno_texto("Memory zone is ROM","Sure you want to edit?")==0) {
+                    editar_byte=0;
+                }
+                else {
+                    asked_about_writing_rom=1;
+                }
+
+                //Volver a dibujar ventana, pues se ha borrado al pregutar confirmacion
+                //menu_debug_hexdump_ventana();
+                zxvision_draw_window(ventana);
+            }
+
+
+        }
+
+
+        //asked_about_writing_rom
+
+        if (editar_byte) {
+                menu_z80_moto_int direccion_cursor=menu_debug_hexdump_get_cursor_pointer();
+        
+
+                //TODO: ver si se sale de tamanyo zona memoria
+
+                //printf ("Direccion edicion: %X\n",direccion_cursor);
+
+                //Obtenemos byte en esa posicion
+                z80_byte valor_leido=menu_debug_get_mapped_byte(direccion_cursor);
+
+
+                //Estamos en zona hexa o ascii
+
+                if (!menu_debug_hexdump_cursor_en_zona_ascii) {
+                    //printf ("Zona hexa\n");
+                    //Zona hexa
+
+                    //Obtener valor nibble
+                    z80_byte valor_nibble;
+
+                    if (tecla>='0' && tecla<='9') valor_nibble=tecla-'0';
+                    else valor_nibble=tecla-'a'+10;
+
+                    //Ver si par o impar
+                    if ( (menu_hexdump_edit_position_x %2) ==0) {
+                        //par. alterar nibble alto
+                        valor_leido=(valor_leido&0x0F) | (valor_nibble<<4);
+                    }
+
+                    else {
+                        //impar. alterar nibble bajo
+                        valor_leido=(valor_leido&0xF0) | valor_nibble;
+                    }
+                }
+
+                else {
+                    //printf ("Zona ascii\n");
+                    valor_leido=tecla;
+
+                    //En el caso de zx80/81
+
+                    if (menu_debug_hexdump_with_ascii_modo_ascii==1) valor_leido=ascii_to_zx80(valor_leido);
+                    if (menu_debug_hexdump_with_ascii_modo_ascii==2) valor_leido=ascii_to_zx81(valor_leido);
+                }
+
+
+
+                //Escribimos valor
+                menu_debug_write_mapped_byte(direccion_cursor,valor_leido);
+
+                //Y mover cursor a la derecha
+                menu_debug_hexdump_edit_cursor_derecha(1);
+
+                //Si se llega a detecha de hexa o ascii, saltar linea
+
+            
+        }
 
 		//Si ha cambiado el alto
 		alto_ventana=ventana->visible_height;
@@ -7636,7 +7631,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			
 
 
-        } while (salir==0);
+    } while (salir==0);
 
     //zxvision_set_window_overlay_from_current(ventana);
     //En este caso es un poco diferente, esta ventana tiene overlay solo cuando
@@ -25224,7 +25219,7 @@ void menu_debug_ioports_overlay(void)
     if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
  
-
+    menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
     zxvision_window *ventana;
