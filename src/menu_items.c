@@ -7066,6 +7066,8 @@ void menu_debug_hexdump_overlay(void)
 
     zxvision_draw_window_contents(ventana);
 
+    //printf("Redibujando en background\n");
+
 }
 
 zxvision_window zxvision_window_debug_hexdump;
@@ -7098,7 +7100,12 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 	menu_debug_hexdump_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
 
 
-        //Esto es un poco diferente que otras ventanas, ya que solo hay overlay cuando la ventana esta en segundo plano
+    //Esto es un poco diferente que otras ventanas, ya que solo hay overlay cuando la ventana esta en segundo plano
+    //Ademas, cuando se crea la ventana al haber hecho restore al iniciar el emulador,
+    //no se activa el overlay. Podria activarlo aqui, pero no tiene mucho sentido,
+    //ya que al iniciar el emulador, el puntero por ejemplo del hex editor apunta a 0, y dudo
+    //que el usuario quiera ver esa dirección al iniciar. Lo normal es que al arrancar el usuario
+    //elija la ventana del hex editor y ya indique que direccion quiere ir
        if (zxvision_currently_restoring_windows_on_start) {
                //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
                return;
@@ -7489,6 +7496,11 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 						else salir=1;
 					break;
 
+                    //salir con tecla background
+                    case 3:
+                        salir=1;
+                    break;
+
 					//Enter tambien sale de modo edit
 					case 13:
 						if (menu_hexdump_edit_mode) menu_hexdump_edit_mode=0;
@@ -7629,7 +7641,9 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
     //zxvision_set_window_overlay_from_current(ventana);
     //En este caso es un poco diferente, esta ventana tiene overlay solo cuando
     //esta en background
-    //TODO: quitar overlay al principio si esta??
+    ventana->overlay_function=menu_debug_hexdump_overlay;
+    menu_debug_hexdump_overlay_window=ventana;
+
 
 
 	cls_menu_overlay();

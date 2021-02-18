@@ -50,6 +50,7 @@ Improved TBBlue emulation:
 -Optimize sprite rendering (saving 1% cpu on my computer)
 
 Improved Speccy online browser: now uses ZXinfo API V3
+Improved Hex Editor: Now it can be put on background
 
 Improved all-to-pixel text rendering: 
 -Allow 1:1 scale
