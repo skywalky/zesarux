@@ -58,4 +58,15 @@ extern z80_bit ide_write_protection;
 
 extern z80_bit ide_persistent_writes;
 
+extern z80_byte ide_get_data_register(void);
+
+extern z80_byte ide_get_error_register(void);
+
+extern z80_byte ide_register_sector_count;
+extern z80_byte ide_register_sector_number;
+extern z80_byte ide_register_cylinder_low;
+extern z80_byte ide_register_cylinder_high;
+extern z80_byte ide_register_drive_head;
+extern z80_byte ide_status_register;
+
 #endif

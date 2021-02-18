@@ -200,8 +200,6 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 -en debugger, indicar si accion en el cursor se cumple o no (condiciones de flag)
 
 
--ide + fatware. revisar byte capabilities y otros valores quiza invertidos
 
-			ide_return_buffer[98]=0x02;
-            //Quiza este valor estan intercambiados los bytes??? 
-			ide_return_buffer[99]=0x00;
+
+-hex editor que permita background

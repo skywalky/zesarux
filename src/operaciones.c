@@ -6748,13 +6748,15 @@ z80_byte lee_puerto_spectrum_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
         //Puerto DIVIDE
         if (divide_ide_ports_enabled.v && ( (puerto_l&(128+64+32+2+1))==128+32+2+1) ) {
-                //printf ("Puerto DIVIDE Read: %02x%02xH command: %d\n",puerto_h,puerto_l,(puerto_l>>2)&7);
+                //printf ("Puerto DIVIDE Read: %02x%02xH command: %d PC=%X\n",puerto_h,puerto_l,(puerto_l>>2)&7,reg_pc);
 
                 //So you can access all
                 //eight IDE-registers from so caled command block (rrr=0..7) at addresses
                 //xxxx xxxx  101r rr11
+                z80_byte ide_retorno=ide_read_command_block_register((puerto_l>>2)&7);
+                //printf("Retorno: %X\n",ide_retorno);
 
-                return ide_read_command_block_register((puerto_l>>2)&7);
+                return ide_retorno;
 
         }
 

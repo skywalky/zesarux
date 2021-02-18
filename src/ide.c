@@ -584,15 +584,15 @@ void ide_write_command_register(z80_byte value)
 			ide_return_buffer[12]=value_16_to_8h(ide_disk_sectors_track);
 			ide_return_buffer[13]=value_16_to_8l(ide_disk_sectors_track);
 
-            printf("heads %d sectors %d\n",ide_return_buffer[6],ide_return_buffer[12]);
-            //temp
-            //ide_return_buffer[6]=3;
-            //ide_return_buffer[12]=9;
 
-			ide_return_buffer[14]=(ide_disk_sectors_card>>24)&255;
-			ide_return_buffer[15]=(ide_disk_sectors_card>>16)&255;
-			ide_return_buffer[16]=(ide_disk_sectors_card>>8)&255;
-			ide_return_buffer[17]=(ide_disk_sectors_card)&255;
+			ide_return_buffer[14]=(ide_disk_sectors_card>>8)&255;
+			ide_return_buffer[15]=(ide_disk_sectors_card)&255;
+
+
+			ide_return_buffer[16]=(ide_disk_sectors_card>>24)&255;
+			ide_return_buffer[17]=(ide_disk_sectors_card>>16)&255;
+
+            
 			ide_return_buffer[18]=0;
 			ide_return_buffer[19]=0;
 			ide_return_buffer[20]=' ';
@@ -633,23 +633,23 @@ void ide_write_command_register(z80_byte value)
 
 			for (i=54;i<=93;i++) ide_return_buffer[i]=' ';
 
-			ide_return_buffer[55]='Z';
-			ide_return_buffer[54]='E';
+			ide_return_buffer[54]='Z';
+			ide_return_buffer[55]='E';
 
-			ide_return_buffer[57]='s';
-			ide_return_buffer[56]='a';
+			ide_return_buffer[56]='s';
+			ide_return_buffer[57]='a';
 
-			ide_return_buffer[59]='r';
-			ide_return_buffer[58]='U';
+			ide_return_buffer[58]='r';
+			ide_return_buffer[59]='U';
 
-			ide_return_buffer[61]='X';
-			ide_return_buffer[60]=' ';
+			ide_return_buffer[60]='X';
+			ide_return_buffer[61]=' ';
 
-			ide_return_buffer[63]='I';
-			ide_return_buffer[62]='D';
+			ide_return_buffer[62]='I';
+			ide_return_buffer[63]='D';
 
-			ide_return_buffer[65]='E';
-			ide_return_buffer[64]=' ';
+			ide_return_buffer[64]='E';
+			ide_return_buffer[65]=' ';
 
 			ide_return_buffer[94]=0x00;
 			ide_return_buffer[95]=0x01;
@@ -670,23 +670,31 @@ void ide_write_command_register(z80_byte value)
 			ide_return_buffer[107]=0x03;
 
 			ide_return_buffer[108]=value_16_to_8h(ide_disk_cylinders);
-                        ide_return_buffer[109]=value_16_to_8l(ide_disk_cylinders);
+            ide_return_buffer[109]=value_16_to_8l(ide_disk_cylinders);
+            
 			ide_return_buffer[110]=value_16_to_8h(ide_disk_heads);
-                        ide_return_buffer[111]=value_16_to_8l(ide_disk_heads);
-			ide_return_buffer[112]=value_16_to_8h(ide_disk_sectors_track);
-                        ide_return_buffer[113]=value_16_to_8l(ide_disk_sectors_track);
-			ide_return_buffer[114]=(ide_disk_sectors_card>>24)&255;
-                        ide_return_buffer[115]=(ide_disk_sectors_card>>16)&255;
-                        ide_return_buffer[116]=(ide_disk_sectors_card>>8)&255;
-                        ide_return_buffer[117]=(ide_disk_sectors_card)&255;
+            ide_return_buffer[111]=value_16_to_8l(ide_disk_heads);
+			
+            ide_return_buffer[112]=value_16_to_8h(ide_disk_sectors_track);
+            ide_return_buffer[113]=value_16_to_8l(ide_disk_sectors_track);
+			
+
+            ide_return_buffer[114]=(ide_disk_sectors_card>>8)&255;
+            ide_return_buffer[115]=(ide_disk_sectors_card)&255;
+
+            ide_return_buffer[116]=(ide_disk_sectors_card>>24)&255;
+            ide_return_buffer[117]=(ide_disk_sectors_card>>16)&255;
+            
+
 
 			ide_return_buffer[118]=0x01;
 			ide_return_buffer[119]=0x00; //Multiple sector no lo hacemos valido
 
-			ide_return_buffer[120]=(ide_disk_sectors_card>>24)&255;
-			ide_return_buffer[121]=(ide_disk_sectors_card>>16)&255;
-			ide_return_buffer[122]=(ide_disk_sectors_card>>8)&255;
-			ide_return_buffer[123]=(ide_disk_sectors_card)&255;
+			ide_return_buffer[120]=(ide_disk_sectors_card>>8)&255;
+			ide_return_buffer[121]=(ide_disk_sectors_card)&255;
+
+			ide_return_buffer[122]=(ide_disk_sectors_card>>24)&255;
+			ide_return_buffer[123]=(ide_disk_sectors_card>>16)&255;
 
 			ide_return_buffer[124]=0x00;
 			ide_return_buffer[125]=0x00;
@@ -696,6 +704,7 @@ void ide_write_command_register(z80_byte value)
 			//64 en word es 128
 			ide_return_buffer[128]=0x00;
 			ide_return_buffer[129]=0x03;
+
 			ide_return_buffer[130]=0x00;
 			ide_return_buffer[131]=0x00;
 			ide_return_buffer[132]=0x00;
@@ -704,6 +713,7 @@ void ide_write_command_register(z80_byte value)
 			//67 en  word
 			ide_return_buffer[134]=0x00;
 			ide_return_buffer[135]=0x78;
+
 			ide_return_buffer[136]=0x00;
 			ide_return_buffer[137]=0x78;
 
@@ -712,6 +722,17 @@ void ide_write_command_register(z80_byte value)
 			for (i=138;i<=511;i++) ide_return_buffer[i]=0;
 
 			}
+
+            //Invertir todo a LSB
+            z80_byte v1,v2;
+            for (i=0;i<512;i+=2) {
+                v1=ide_return_buffer[i];
+                v2=ide_return_buffer[i+1];
+
+                ide_return_buffer[i+1]=v1;
+                ide_return_buffer[i]=v2;
+
+            }
 
 		break;
 
@@ -751,11 +772,18 @@ void ide_write_command_register(z80_byte value)
 		case 0x91:
 			debug_printf (VERBOSE_PARANOID,"Initialize Drive Parameters");
 			/*
-This command enables the host to set the number of sectors per track and the number of heads per cylinder. Only the Sector Count and the Card/Drive/Head registers are used by this command.
-NOTE: SanDisk recommends NOT using this command in any system because DOS determines the offset to the Boot Record based on the number of heads and sectors per track. If a CompactFlash Memory Card is “Formatted” with one head and sector per track value, the same CompactFlash Card will not operate correctly with DOS configured with another heads and sectors per track value.
+This command enables the host to set the number of sectors per track and the number of heads per cylinder. 
+Only the Sector Count and the Card/Drive/Head registers are used by this command.
+NOTE: SanDisk recommends NOT using this command in any system because DOS determines the offset to the 
+Boot Record based on the number of heads and sectors per track. 
+If a CompactFlash Memory Card is “Formatted” with one head and sector per track value, 
+the same CompactFlash Card will not operate correctly with DOS configured with another 
+heads and sectors per track value.
 			*/
 
 			//Asi pues, no hacemos nada
+            //decir status normal
+            ide_status_register=(IDE_STATUS_RDY|IDE_STATUS_DSC);
 		break;
 
 		//temp para 8-bit simple con +3e roms
@@ -763,6 +791,7 @@ NOTE: SanDisk recommends NOT using this command in any system because DOS determ
 			if (eight_bit_simple_ide_enabled.v) {
                                         //decir status normal
                                         //ide_status_register=(IDE_STATUS_RDY|IDE_STATUS_DSC|IDE_STATUS_BUSY);
+                ide_status_register=(IDE_STATUS_RDY|IDE_STATUS_DSC);
 			}
 		break;
 
@@ -770,6 +799,7 @@ NOTE: SanDisk recommends NOT using this command in any system because DOS determ
 		case 0xB0:
 			if (eight_bit_simple_ide_enabled.v) {
 				debug_printf (VERBOSE_PARANOID,"SMART DISABLE OPERATIONS - B0h. NOT implemented");
+                ide_status_register=(IDE_STATUS_RDY|IDE_STATUS_DSC);
 			}
 		break;
 
@@ -883,8 +913,22 @@ void ide_write_command_block_register(z80_byte ide_register,z80_byte value)
 	}
 }
 
+z80_byte ide_get_data_register(void)
+{
+    int indice;
 
-int temp_contador_tonto=0;
+    indice=ide_index_return_buffer&(IDE_MAX_RETURN_BUFFER-1);
+    return ide_return_buffer[indice];    
+}
+
+z80_byte ide_get_error_register(void)
+{
+    //[ ERROR REGISTER (R) / FEATURES REGISTER (W) ]
+    //xxxx xxxx  1010 0111, 0a7h, 167
+
+    //De momento decimos que la interfaz nunca da error
+    return 0;
+}
 
 z80_byte ide_read_command_block_register(z80_byte ide_register)
 {
@@ -902,13 +946,14 @@ z80_byte ide_read_command_block_register(z80_byte ide_register)
         switch (ide_register) {
 
 		case 0:
-			printf ("Reading return buffer index: %d\n",ide_index_return_buffer);
-			indice=ide_index_return_buffer&(IDE_MAX_RETURN_BUFFER-1);
-			return_value=ide_return_buffer[indice];
+            //Data Register 
+			//printf ("Reading return buffer index: %d\n",ide_index_return_buffer);
+            return_value=ide_get_data_register();
+			//indice=ide_index_return_buffer&(IDE_MAX_RETURN_BUFFER-1);
+			//return_value=ide_return_buffer[indice];
 			ide_index_return_buffer++;
 
-			//if (ide_index_return_buffer==10) sleep(1);
-            printf ("Returning %d PC=%X\n",return_value,reg_pc);
+			//Este registro realmente es de 16 bits pero en divide y 8-bit simple ide, lee 8 bits solamente
 
 			//Si ha leido ya IDE_SECTOR_SIZE, decir status normal
 			if (ide_index_return_buffer==IDE_SECTOR_SIZE) ide_status_register=(IDE_STATUS_RDY|IDE_STATUS_DSC);
@@ -916,32 +961,31 @@ z80_byte ide_read_command_block_register(z80_byte ide_register)
 		break;
 
 		case 1:
-			//[ ERROR REGISTER (R) / FEATURES REGISTER (W) ]
-			//xxxx xxxx  1010 0111, 0a7h, 167
-			return_value=0;
+
+			return_value=ide_get_error_register();
 
 		break;
 
 
-                case 2:
-                        return_value=ide_register_sector_count;
-                break;
+        case 2:
+                return_value=ide_register_sector_count;
+        break;
 
-                case 3:
-                        return_value=ide_register_sector_number;
-                break;
+        case 3:
+                return_value=ide_register_sector_number;
+        break;
 
-                case 4:
-                        return_value=ide_register_cylinder_low;
-                break;
+        case 4:
+                return_value=ide_register_cylinder_low;
+        break;
 
-                case 5:
-                        return_value=ide_register_cylinder_high;
-                break;
+        case 5:
+                return_value=ide_register_cylinder_high;
+        break;
 
 
-                case 6:
-                        return_value=ide_register_drive_head;
+        case 6:
+                return_value=ide_register_drive_head;
 		break;
 
 		case 7:
@@ -961,14 +1005,7 @@ z80_byte ide_read_command_block_register(z80_byte ide_register)
 #define IDE_STATUS_ERR  1
 */
 
-                        //temp_contador_tonto++;
-                        //if (temp_contador_tonto>10000 && temp_contador_tonto<20000) {
-                        //        ide_status_register=0;
-                        //}
-
-                        //if (temp_contador_tonto==20000) {
-			//	ide_status_register=(IDE_STATUS_RDY|IDE_STATUS_DSC);
-                        //}
+    
 
 
 			return_value=ide_status_register;

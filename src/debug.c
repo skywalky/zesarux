@@ -96,6 +96,7 @@
 #include "svi.h"
 #include "vdp_9918a.h"
 #include "ql_zx8302.h"
+#include "ide.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -4646,6 +4647,36 @@ void debug_get_ioports(char *stats_buffer)
   		sprintf (buf_linea,"Diviface automatic paging: %s\n",(diviface_paginacion_automatica_activa.v ? "Yes" : "No")  );
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	          
 	}
+
+    if (ide_enabled.v) {
+  		sprintf (buf_linea,"ATA Registers\n");
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	 
+
+  		sprintf (buf_linea," Data:          %02X\n",ide_get_data_register() );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	        
+
+  		sprintf (buf_linea," Error:         %02X\n",ide_get_error_register() );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	  
+
+  		sprintf (buf_linea," Sector Count:  %02X\n",ide_register_sector_count );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	  
+
+  		sprintf (buf_linea," Sector Number: %02X\n",ide_register_sector_number );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	  
+
+  		sprintf (buf_linea," Cylinder Low:  %02X\n",ide_register_cylinder_low );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	  
+
+  		sprintf (buf_linea," Cylinder High: %02X\n",ide_register_cylinder_high );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	  
+
+  		sprintf (buf_linea," Drive/Head:    %02X\n",ide_register_drive_head );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	  
+
+  		sprintf (buf_linea," Status:        %02X\n",ide_status_register );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	                                                                        
+
+    }
 
     if (superupgrade_enabled.v) {
       sprintf (buf_linea,"Superupgrade 43B port: %02X\n",superupgrade_puerto_43b);

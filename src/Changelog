@@ -62,6 +62,10 @@ Fixed pixel color on text all-to-pixel text rendering (color inversion)
 Fixed downloads from spectrumcomputing
 Fixed DivIDE/DivMMC mapram behaviour
 
+Fixed IDE commands which affected allmost all IDE firmware: fatware, mdos, etc:
+-Fixed IDE command ECH Identify Drive
+-Fixed IDE command 91H Initialize Drive Parameters 
+
 Fixed CPC bugs:
 -Fixed vsync and hsync interrupts
 -Fixed border colour

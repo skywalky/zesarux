@@ -3082,6 +3082,9 @@ int get_rom_size(int machine)
 	//TBBLUE
 	else if (machine==19) return 8192;
 
+    //Spectrum +3
+    else if (machine==MACHINE_ID_SPECTRUM_P3_40 || machine==MACHINE_ID_SPECTRUM_P3_41 || machine==MACHINE_ID_SPECTRUM_P3_SPA) return 65536;
+
         //ZX80
         else if (machine==120) return 4096;
 

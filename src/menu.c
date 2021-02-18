@@ -29948,6 +29948,7 @@ static char *custom_machine_names[]={
 
                 "Spectrum 128k/+2",
                 "Spectrum +2A",
+                "Spectrum +3",
 		"ZX-Uno",
 
 		"Chloe 140 SE",
@@ -29990,7 +29991,7 @@ void menu_custom_machine_romfile(MENU_ITEM_PARAMETERS)
 void menu_custom_machine_change(MENU_ITEM_PARAMETERS)
 {
 	custom_machine_type++;
-	if (custom_machine_type==17) custom_machine_type=0;
+	if (custom_machine_type==18) custom_machine_type=0;
 }
 
 void menu_custom_machine_run(MENU_ITEM_PARAMETERS)
@@ -30001,102 +30002,99 @@ void menu_custom_machine_run(MENU_ITEM_PARAMETERS)
 
 	switch (custom_machine_type) {
 
+  
+        //Spectrum 16k
 		case 0:
 			next_machine_type=0;
 		break;
 
+        //Spectrum 48k
 		case 1:
 			next_machine_type=1;
 		break;
 
+        //TK90X/95
 		case 2:
 			next_machine_type=3;
 		break;
 
-
+        //Spectrum 128k/+2
 		case 3:
 			next_machine_type=6;
 		break;
 
+        //Spectrum +2A
 		case 4:
 			next_machine_type=11;
 		break;
 
+        //Spectrum +3
 		case 5:
+			next_machine_type=MACHINE_ID_SPECTRUM_P3_40;
+		break;        
+
+		case 6:
 			//ZX-Uno
 			next_machine_type=14;
 		break;
 
-/*
 
-                "Chloe 140 SE",
-                "Chloe 280 SE",
-                "Timex TS 2068",
-                "Prism",
-                "Amstrad CPC 464",
-*/
 
-/*
-15=Chloe 140SE
-16=Chloe 280SE
-17=Timex TS2068
-18=Prism
-40=amstrad cpc464
-*/
 
-		case 6:
+
+		case 7:
 			//Chloe 140SE
 			next_machine_type=15;
 		break;
 
-		case 7:
+		case 8:
 			//Chloe 280SE
 			next_machine_type=16;
 		break;
 
-		case 8:
+		case 9:
 			//Timex TS2068
 			next_machine_type=17;
 		break;
 
-		case 9:
+		case 10:
 			//Prism
 			next_machine_type=18;
 		break;
 
 
 
-		case 10:
+		case 11:
 			//ZX-80
 			next_machine_type=120;
 		break;
 
-		case 11:
+		case 12:
 			//ZX-81
 			next_machine_type=121;
 		break;
 
-		case 12:
+		case 13:
 			//ACE
 			next_machine_type=122;
 		break;
 
-		case 13:
+		case 14:
 			//Z88
 			next_machine_type=130;
 		break;
 
-		case 14:
+		case 15:
 			//Amstrad CPC 464
 			next_machine_type=140;
 		break;
 
-		case 15:
+		case 16:
 			//Sam Coupe
 			next_machine_type=150;
 		break;
 
-		case 16:
+		case 17:
 			//QL
 			next_machine_type=MACHINE_ID_QL_STANDARD;
 		break;
