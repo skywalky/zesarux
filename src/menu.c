@@ -27066,6 +27066,15 @@ void menu_debug_timesensors_init(MENU_ITEM_PARAMETERS)
 
 #endif
 
+void menu_debug_set_pc_zero(MENU_ITEM_PARAMETERS)
+{
+	if (menu_confirm_yesno("Set PC=0")==1) {
+		reg_pc=0;
+        //Y salimos de todos los menus
+        salir_todos_menus=1;
+	}    
+    
+}
 
 //menu debug settings
 void menu_debug_settings(MENU_ITEM_PARAMETERS)
@@ -27078,6 +27087,16 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
         do {
                 menu_add_item_menu_inicial(&array_menu_debug_settings,"~~Reset",MENU_OPCION_NORMAL,menu_debug_reset,NULL);
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'r');
+
+        //Agregar una acción de solo hacer PC=0 en casos en que hay divide en modo mapram y no queremos
+        //que se reinicialice toda la maquina y perder ese mapeo
+        //Dejamos que la acción siempre esté visible
+        menu_add_item_menu(array_menu_debug_settings,"Set PC=0",MENU_OPCION_NORMAL,menu_debug_set_pc_zero,NULL);
+        menu_add_item_menu_tooltip(array_menu_debug_settings,"It only resets cpu by setting PC register to zero");
+        menu_add_item_menu_ayuda(array_menu_debug_settings,"It only resets cpu by setting PC register to zero.\n"
+            "Useful for example using DivIDE firmwares in MAPRAM mode and you need to restart it but without "
+            "losing the mapping");                    
+                
 
 		if (MACHINE_IS_PRISM) {
 			//Reset to failsafe

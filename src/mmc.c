@@ -102,6 +102,12 @@ z80_byte mmc_last_command=0;
 
 int mmc_index_command=0;
 
+//TODO: este mmc_r1 necesita una aclaracion o mejora. Parece los bits CURRENT_STATE de R1 pero no es justo lo mismo
+//Aqui lo pongo a 1 para indicar idle, a 0 para no idle. Pero esos bits de CURRENT_STATE son:
+//0 = idle
+//1 = ready
+//2 = ident
+// ....
 z80_byte mmc_r1=0;
 
 //64 MB

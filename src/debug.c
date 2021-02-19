@@ -97,6 +97,7 @@
 #include "vdp_9918a.h"
 #include "ql_zx8302.h"
 #include "ide.h"
+#include "mmc.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -4676,6 +4677,17 @@ void debug_get_ioports(char *stats_buffer)
   		sprintf (buf_linea," Status:        %02X\n",ide_status_register );
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	                                                                        
 
+    }
+
+    if (mmc_enabled.v) {
+  		sprintf (buf_linea,"MMC Registers\n");
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	 
+
+  		sprintf (buf_linea," State:        %s\n",(mmc_r1&1 ? "Idle" : "Not Idle") );
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	        
+
+  		sprintf (buf_linea," Last Command: %02X\n",mmc_last_command);
+  		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);	             
     }
 
     if (superupgrade_enabled.v) {
