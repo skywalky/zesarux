@@ -1290,7 +1290,7 @@ char *string_machines_list_description=
 
 							" TSConf   ZX-Evolution TS-Conf\n"
 
-							" TBBlue   TBBlue/ZX Spectrum Next\n"
+							" TBBlue   ZX Spectrum Next/TBBlue\n"
 
 					    " ACE      Jupiter Ace\n"
 
@@ -2552,7 +2552,7 @@ struct s_machine_names machine_names[]={
 					    {"Chloe 280SE",    			16},
 			   		    {"Timex TS2068",   			17},
 					    {"Prism 512",       			18},
-					    {"TBBLue",   			19},
+					    {"ZX Spectrum Next",   			19},
 					    {"ZX Spectrum+ 48k (Spanish)",		20},
 					    {"Pentagon",		21},
 							{"Chrome", MACHINE_ID_CHROME},

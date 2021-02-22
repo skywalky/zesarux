@@ -157,7 +157,7 @@ A: Just a little info about divmmc, mmc and the esxdos handler on ZEsarUX :
 You can emulate a real sd/mmc card, with esxdos, by going to the storage menu-mmc. There you can select an image file (.mmc or .img), and enable divmmc. By doing that, you can have a esxdos system like a real one. All disk access will be made to this .img/.mmc file
 However, if you want to use esxdos but accessing the files from your hard drive, you can enable the esxdos handler. You can have esxdos enabled, as well as divmmc/mmc settings, or just esxdos handler alone
 If you enable both divmmc, mmc and esxdos handler, file access will use your files from your hard drive. And you’ll have all the esxdos boot process, nmi etc.
-Note: is not recommended to enable both divmmc and esxdos handler on TBBlue, as many system calls may fail.
+Note: is not recommended to enable both divmmc and esxdos handler on ZX Spectrum Next, as many system calls may fail.
 If you only enable esxdos handler (and not divmmc), if you call any esxdos function (by rst 8 ), that will use the files from your computer. But, logically, you don’t have esxdos boot, nmi etc. If you are a developer and just use esxdos calls for, for example, open a file, esxdos handler is just fine (no need to enable divmmc)
 
 
@@ -294,7 +294,7 @@ After spending two days testing the Windows audio clicking issue I can confirm:
 -It seems also the audio module is sensible to O.S. multitask. I mean, if you change to another Windows task and leave ZEsarUX in the background, some clicking may appear. That doesn't happen in other operating systems. That confirms me, again, Windows is not my preferred operating system ;)
 -I tried changing the audio sdl module to another one, programming a Direct Sound native windows module. But I haven't found any examples to do that on my MinGW environment. 
 -So, until I couldn't change the audio module to something different (DirectSound or SDL2-which already have tested) some of you will have clicking on Windows. It will depend on your audio card and audio driver
--That clicking issue is not related with clicks at startup or looping click in tbblue browser. These two others are probably bugs in my code
+-That clicking issue is not related with clicks at startup or looping click in Next browser. These two others are probably bugs in my code
 
 
 
@@ -512,12 +512,12 @@ See files on extras/docs/prism/ to know which roms are included in the Flash
 ----------------------------------------------------------------------------
 
 
-TBBlue
-------
+ZX Spectrum Next
+----------------
 
 
-Q: I can't run TBBlue machine. I get the following error: "Erro ao inicializar cartao!"
-A: TBBlue machine needs a SD/MMC image to boot. You must select file image "media/disk_images/tbblue.mmc" on Storage->MMC->MMC File.
+Q: I can't run Next machine. I get the following error: "Erro ao inicializar cartao!"
+A: Next machine needs a SD/MMC image to boot. You must select file image "tbblue.mmc" on Storage->MMC->MMC File.
 Then enable MMC emulation and DivMMC ports (but not DivMMC paging), and do a hard reset
 Or you can select it from the command line with:
 ./zesarux --mmc-file tbblue.mmc --enable-mmc --enable-divmmc-ports --machine tbblue --realvideo
@@ -526,38 +526,38 @@ Note 1: tbblue.mmc is included on the base package (and not on extras) because i
 Note 2: --realvideo setting is only needed on the initial video screen adjust. After it writes the configuration to the mmc file, it won't appear again,
 and the Real Video setting is not usually needed on boot anymore
 
-Q: I have enabled divmmc on Tbblue bios, but seems it's not working (no esxdos or nextos)
-A: Sometimes, enabling divmmc on tbblue bios requires closing and reopening ZEsarUX. The technical answer for this issue,
-is that enabling/disabling divmmc on tbblue is not done the same way as when you enable/disable it from ZEsarUX menu, 
-tbblue does not disables entirely divmmc, only automatic memory paging
+Q: I have enabled divmmc on Next bios, but seems it's not working (no esxdos or nextos)
+A: Sometimes, enabling divmmc on Next bios requires closing and reopening ZEsarUX. The technical answer for this issue,
+is that enabling/disabling divmmc on Next is not done the same way as when you enable/disable it from ZEsarUX menu, 
+Next does not disables entirely divmmc, only automatic memory paging
 
 
-Q: Why can't enable divmmc paging (or full divmmc emulation) from command line/config file on TBBlue? When exiting emulator, these settings are not saved on configuration file. But... if I force them to enable from command line, TBBlue does not boot, and then doing a hard reset it boots ok
-A: TBBlue needs divmmc paging disabled to boot, if not, divmmc firmware will be activated on the tbblue boot and then it hangs. When you do a hard reset, some internal tbblue registers (reg 6, bit 4) are reset to zero. Resetting this register 6, divmmc paging is disabled and so the boot works ok. But when initializing the emulator the sequence is:
+Q: Why can't enable divmmc paging (or full divmmc emulation) from command line/config file on Next? When exiting emulator, these settings are not saved on configuration file. But... if I force them to enable from command line, Next does not boot, and then doing a hard reset it boots ok
+A: Next needs divmmc paging disabled to boot, if not, divmmc firmware will be activated on the Next boot and then it hangs. When you do a hard reset, some internal Next registers (reg 6, bit 4) are reset to zero. Resetting this register 6, divmmc paging is disabled and so the boot works ok. But when initializing the emulator the sequence is:
 
 -Apply most of the command line settings (divmmc settings are not applied here)
--Initialize machine, CPU registers, I/O ports, and some tbblue registers to zero, including register 6. So divmmc paging is disabled
+-Initialize machine, CPU registers, I/O ports, and some Next registers to zero, including register 6. So divmmc paging is disabled
 -Apply the rest of command line settings, including divmmc settings. If you enabled divmmc paging here, it will be enabled
--Pass control to Z80. Having divmmc paging enabled, does not boot tbblue
+-Pass control to Z80. Having divmmc paging enabled, does not boot Next
 You may ask now.... why do you apply some command line before initializing machine and some others after? I won't answer it here, it's too complex ;) If you want
 to know the answer, please e-mail me.
 
 
 Q: What is the difference between TBBlue and Spectrum Next?
-A: In a nut shell: TBBlue is the very same firmware that runs on all boards. Some boards have less space, so runs less features. 
-In order, most complete do less complete:
+A: In a nut shell: TBBlue is the very same firmware that runs on all boards and emulators. Some boards have less space, so runs less features. 
+For example, the following are some of the original boards that ran the firmware:
 
-1 - Next
-2 - Multicore
-3 - WXEDA and DE2
-4 - DE1
-5 - VTrucco and FBLabs
+1- Next
+2- Multicore
+3- WXEDA and DE2
+4- DE1
+5- VTrucco and FBLabs
 
-Next and Multicore have HDMI output, others dont. Next have FM sound, others don´t. 1,2 and 3 group have 256 colors and sprites, others dont.
-But still, EXACT THE SAME TBBlue
+Next and Multicore have HDMI output, others dont. Next have FM sound, others don´t. 1,2 and 3 group have 256 colors and sprites, others dont. And they all have the same TBBlue firmware.
+In ZEsarUX, you may find references to TBBlue or Spectrum Next, but you can consider they are the same in ZEsarUX
 
 
-Q: Booting TBBlue is a bit slow. Can I run a sna snapshot without having to wait for the tbblue boot process?
+Q: Booting Next is a bit slow. Can I run a sna snapshot without having to wait for the Next boot process?
 A: Yes. You can use the tbblue-fast-boot-mode setting and it will go directly to a 48 rom, but with all the Next features enabled (except divmmc). For example, you can run the Dungeonette game with: 
 
 ./zesarux --noconfigfile --zoom 1 --machine tbblue --realvideo --enabletimexvideo --tbblue-fast-boot-mode --sna-no-change-machine --enable-esxdos-handler --esxdos-root-dir /Users/cesarhernandez/Downloads/Dungeonette/ /Users/cesarhernandez/Downloads/Dungeonette/project.sna
@@ -582,7 +582,7 @@ so you can use the SD card images. Just some things to take into account:
 
 Q: The performance when starting NexOS is very low, 2 FPS or less and the menu is laggy. Is there any setting I can change?
 A: Please think that emulation has a cost, mostly cpu use. Also, the NextOS runs at 28 MHz,
-comparing with a normal Speccy, it's 8 times faster. So, it will need, at least, 8 times more real cpu than emulating a real speccy (and I'm not considering here all the extra video modes, Sprites, copper etc). So you can't compare a Spectrum emulator with ZEsarUX emulating the tbblue/Spectrum Next. Emulating all the tbblue core needs a lot of cpu power.
+comparing with a normal Speccy, it's 8 times faster. So, it will need, at least, 8 times more real cpu than emulating a real speccy (and I'm not considering here all the extra video modes, Sprites, copper etc). So you can't compare a Spectrum emulator with ZEsarUX emulating the Spectrum Next. Emulating all the Next core needs a lot of cpu power.
 However, there are some settings that you can tune to reduce the cpu needed.
 You can change the following settings:
 -Settings->CPU. Set the setting "deny turbo on ROM". And set the cpu speed to x1. That will set maximum cpu speed to x1 but only on the NexOS,
@@ -807,7 +807,7 @@ The emulator only really needs the following files to run (included in the main 
 -rom files: 5 MB
 -Some dll files on Windows version
 -zxuno.flash if running ZX-Uno machine
--tbblue.mmc if running TBBlue machine
+-tbblue.mmc if running ZX Spectrum Next machine
 These three types of files doesn't use more than 10 MB.
 You can even try to delete all the unnecessary files and the emulator will also work. 
 
@@ -863,7 +863,7 @@ Finally, if you want to remove also the configuration file:
 Q: The emulator runs slower than a real Spectrum. I'm using a Raspberry Pi One (or another slow cpu)
 A: You can use the Spectrum reduced core, which can be set on compile time but also switchable from menu or command line setting.
 Using that core, the following features will NOT be available or will NOT be properly emulated:
-Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, Multiface, RZX, Raster interrupts, ZX-Uno DMA, TBBlue DMA, Datagear DMA, TBBlue Copper, Audio DAC, Stereo AY, Video out to file, Last core frame statistics, Tone generator.
+Debug t-states, Char detection, +3 Disk, Save to tape, Divide, Divmmc, Multiface, RZX, Raster interrupts, ZX-Uno DMA, ZX Spectrum Next DMA, Datagear DMA, ZX Spectrum Next Copper, Audio DAC, Stereo AY, Video out to file, Last core frame statistics, Tone generator.
 Some of these features should not have any effect on cpu performance if you don't enable them, like Divide or Raster interrupts, but this afirmation is only true on Intel cpu and
 cpu with Speculative Execution. Raspberri Pi One (or Zero) does not have Speculative Execution on the cpu, so using the reduced core will use less real cpu and the emulator
 will run fine.
