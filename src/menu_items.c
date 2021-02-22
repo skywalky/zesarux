@@ -14084,6 +14084,94 @@ void menu_debug_registros_parte_derecha(int linea,char *buffer_linea,int columna
     }
 }
 
+//Indica si se cumple el flag indicado o no
+//Entrada: numero flag: 0=NZ, 1=Z, etc
+int menu_debug_if_flag(int numero_flag)
+{
+    switch(numero_flag)
+    {
+        case 0:
+            if( !(Z80_FLAGS & FLAG_Z) ) return 1;
+        break;
+
+        case 1:
+            if( Z80_FLAGS & FLAG_Z ) return 1;
+        break;
+
+        case 2:
+            if( !(Z80_FLAGS & FLAG_C) ) return 1;
+        break;
+
+        case 3:
+            if( Z80_FLAGS & FLAG_C ) return 1;
+        break;        
+
+        case 4:
+            if( !(Z80_FLAGS & FLAG_PV) ) return 1;
+        break;
+
+        case 5:
+            if( Z80_FLAGS & FLAG_PV ) return 1;
+        break;    
+
+        case 6:
+            if( !(Z80_FLAGS & FLAG_S) ) return 1;
+        break;
+
+        case 7:
+            if( Z80_FLAGS & FLAG_S ) return 1;
+        break;   
+
+
+    }
+
+    return 0;
+}
+
+//Segun el opcode mira si se cumple condicion y mete en buffer la condicion que se cumple
+//Si no, no mete nada 
+//Retorna 0 si no se cumple, 1 si se cumple
+int menu_debug_get_condicion_satisfy(z80_byte opcode,char *buffer)
+{
+    if (!CPU_IS_Z80) return;
+    int condicion=-1;
+
+    char *string_conditions[]={
+        "NZ","Z","NC","C","PO","PE","P","M"
+    };
+
+    //JR CC, dis
+    //001cc000
+    if ((opcode & (1+2+4+32+64+128))==32) {
+        condicion=(opcode>>3)&3;
+    }
+
+    //JP CC, dis
+    //11ccc010
+    if ((opcode & (1+2+4+64+128))==2+64+128) {
+        condicion=(opcode>>3)&7;
+    }    
+
+    //CALL CC, dis
+    //11ccc100
+    if ((opcode & (1+2+4+64+128))==4+64+128) {
+        condicion=(opcode>>3)&7;
+    }      
+
+    //RET CC
+    //11ccc000
+    if ((opcode & (1+2+4+64+128))==64+128) {
+        condicion=(opcode>>3)&7;
+    }       
+
+    if (condicion>=0 && menu_debug_if_flag(condicion)) {
+        sprintf(buffer,"(satisfy %s)",string_conditions[condicion]);
+        return 1;
+    }
+
+    return 0;
+}
+
 int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 {
 	//printf("linea: %d\n",linea);
@@ -14531,7 +14619,24 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 					//Si linea es donde esta el PC
 					if (puntero_dir==get_pc_register() ) tiene_pc=1;
 
-					if (tiene_pc) buffer_linea[0]='>';
+                    char buffer_condicion[32];
+
+                    buffer_condicion[0]=0;
+
+					if (tiene_pc) {
+                        buffer_linea[0]='>';
+
+                        //Meteremos texto, si conviene, de si se cumple condición o no
+                        //prueba
+                        z80_byte opcode_fires;
+                        int direccion_condicion=menu_debug_memory_pointer_copia;
+
+
+                        direccion_condicion=adjust_address_memory_size(direccion_condicion);
+                        opcode_fires=menu_debug_get_mapped_byte(direccion_condicion);
+                        menu_debug_get_condicion_satisfy(opcode_fires,buffer_condicion);
+                        //strcpy(buffer_condicion," (satisfy NZ)");
+                    }
 					if (tiene_brk) {
 						buffer_linea[0]='*';
 						opcion_activada=0;
@@ -14560,7 +14665,7 @@ int menu_debug_registers_subview_type=0;
 					if (menu_debug_registers_subview_type==2)  menu_debug_registers_dump_ascii(dumpassembler,puntero_dir,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii,0);
 					//4 para direccion, fijo
 					
-					sprintf(&buffer_linea[1],"%04X %s",puntero_dir,dumpassembler);
+					sprintf(&buffer_linea[1],"%04X %s %s",puntero_dir,dumpassembler,buffer_condicion);
 
 					//Guardar las direcciones de cada linea
 					//menu_debug_lines_addresses[i]=puntero_dir;
