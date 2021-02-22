@@ -241,7 +241,7 @@ __FEATURES__
 
 * ZX Spectrum Recreated keyboard support
 
-* Emulates native turbo modes on ZX-Uno, Chloe, Prism and TBBlue and manual for other machines
+* Emulates native turbo modes on ZX-Uno, Chloe, Prism and ZX Spectrum Next, and manual for other machines
 
 * ZX Printer emulation
 
@@ -329,7 +329,7 @@ ZX-Evolution TSConf
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_tsconf.jpeg "ZX-Evolution TSConf")
 
 
-TBBlue/ZX Spectrum Next
+ZX Spectrum Next
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_tbblue.png "TBBlue/ZX Spectrum Next")
 
