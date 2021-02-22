@@ -14133,7 +14133,9 @@ int menu_debug_if_flag(int numero_flag)
 //Retorna 0 si no se cumple, 1 si se cumple
 int menu_debug_get_condicion_satisfy(z80_byte opcode,char *buffer)
 {
-    if (!CPU_IS_Z80) return;
+    if (!CPU_IS_Z80) return 0;
+
+    //Asumimos no condicion
     int condicion=-1;
 
     char *string_conditions[]={
@@ -14146,13 +14148,13 @@ int menu_debug_get_condicion_satisfy(z80_byte opcode,char *buffer)
         condicion=(opcode>>3)&3;
     }
 
-    //JP CC, dis
+    //JP CC, NN
     //11ccc010
     if ((opcode & (1+2+4+64+128))==2+64+128) {
         condicion=(opcode>>3)&7;
     }    
 
-    //CALL CC, dis
+    //CALL CC, NN
     //11ccc100
     if ((opcode & (1+2+4+64+128))==4+64+128) {
         condicion=(opcode>>3)&7;
@@ -14164,8 +14166,14 @@ int menu_debug_get_condicion_satisfy(z80_byte opcode,char *buffer)
         condicion=(opcode>>3)&7;
     }       
 
+    //Caso DJNZ dis, que no usa flag
+    if (opcode==16 && reg_b!=1) {
+        strcpy(buffer,"-> satisfy B!=1");
+        return 1;        
+    }
+
     if (condicion>=0 && menu_debug_if_flag(condicion)) {
-        sprintf(buffer,"(satisfy %s)",string_conditions[condicion]);
+        sprintf(buffer,"-> satisfy %s",string_conditions[condicion]);
         return 1;
     }
 
