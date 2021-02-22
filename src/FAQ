@@ -516,7 +516,11 @@ ZX Spectrum Next
 ----------------
 
 
-Q: I can't run Next machine. I get the following error: "Erro ao inicializar cartao!"
+Q: I can't find ZX Spectrum Next on Machine Selection menu
+A: Select manufacturer VTrucco/FB Labs
+
+
+Q: I can't run Next machine. I get the following error: "Error initializing SD card!"
 A: Next machine needs a SD/MMC image to boot. You must select file image "tbblue.mmc" on Storage->MMC->MMC File.
 Then enable MMC emulation and DivMMC ports (but not DivMMC paging), and do a hard reset
 Or you can select it from the command line with:

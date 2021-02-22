@@ -21842,7 +21842,7 @@ void menu_mmc_divmmc(MENU_ITEM_PARAMETERS)
 
   if (MACHINE_IS_TBBLUE) {
   
-  menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_autoconfigure_tbblue,NULL,"Autoconfigure TBBLUE SD");
+  menu_add_item_menu_format(array_menu_mmc_divmmc,MENU_OPCION_NORMAL,menu_storage_mmc_autoconfigure_tbblue,NULL,"Autoconfigure Next SD");
   
   }
 
