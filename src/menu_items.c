@@ -14148,6 +14148,12 @@ int menu_debug_get_condicion_satisfy(z80_byte opcode,char *buffer)
         condicion=(opcode>>3)&3;
     }
 
+    //RET CC
+    //11ccc000
+    if ((opcode & (1+2+4+64+128))==64+128) {
+        condicion=(opcode>>3)&7;
+    }        
+
     //JP CC, NN
     //11ccc010
     if ((opcode & (1+2+4+64+128))==2+64+128) {
@@ -14160,11 +14166,6 @@ int menu_debug_get_condicion_satisfy(z80_byte opcode,char *buffer)
         condicion=(opcode>>3)&7;
     }      
 
-    //RET CC
-    //11ccc000
-    if ((opcode & (1+2+4+64+128))==64+128) {
-        condicion=(opcode>>3)&7;
-    }       
 
     //Caso DJNZ dis, que no usa flag
     if (opcode==16 && reg_b!=1) {

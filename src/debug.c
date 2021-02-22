@@ -98,6 +98,7 @@
 #include "ql_zx8302.h"
 #include "ide.h"
 #include "mmc.h"
+#include "esxdos_handler.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -6095,6 +6096,22 @@ void debug_cpu_step_over(void)
   int longitud_opcode=debug_get_opcode_length(direccion);
 
   unsigned int direccion_final=direccion+longitud_opcode;
+
+  //En el caso de Spectrum, si es un RST 8 y en caso de esxdos, hay que descartar el byte siguiente
+  if (MACHINE_IS_SPECTRUM) {
+      if (esxdos_handler_enabled.v) {
+        z80_byte opcode=peek_byte_no_time(direccion);
+        if (opcode==207) {
+            //Y siempre que byte siguiente sea un comando de esxdos (>=128)
+            z80_byte comando_esxdos=peek_byte_no_time(direccion+1);
+            if (comando_esxdos>=128) {
+                direccion_final++;
+                debug_printf(VERBOSE_DEBUG,"Skipping the next byte after RST8 because it is a esxdos call");
+            }
+        }
+      }
+  }
+
   direccion_final=adjust_address_space_cpu(direccion_final);
 
 
@@ -6102,6 +6119,7 @@ void debug_cpu_step_over(void)
   menu_abierto=0;
   int salir=0;
   while (get_pc_register()!=direccion_final && !salir) {
+    //printf("Running until step over ends. Addr=%04XH final=%04XH\n",get_pc_register(),direccion_final);
     debug_core_lanzado_inter.v=0;
     cpu_core_loop();
 
@@ -6111,6 +6129,7 @@ void debug_cpu_step_over(void)
 
     if (menu_abierto) salir=1;
   }
+  debug_printf(VERBOSE_DEBUG,"End Step over");
 }
 
 
