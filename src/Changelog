@@ -30,7 +30,7 @@ Improved CPC emulation:
 -Stereo emulation
 
 Improved Debug CPU Window:
--Can load the source code
+-Can load a source code
 -Tell when a condition is satisfied or not
 -Detecting when running a esxdos call, using the esxdos handler, and doing step over
 
