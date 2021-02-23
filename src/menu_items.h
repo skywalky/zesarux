@@ -128,5 +128,7 @@ extern void menu_about_new(MENU_ITEM_PARAMETERS);
 
 extern void menu_fileselector_settings(MENU_ITEM_PARAMETERS);
 
+extern void menu_debug_load_source_code(MENU_ITEM_PARAMETERS);
+
 #endif
 

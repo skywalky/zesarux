@@ -27131,6 +27131,11 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 					);
 
+        menu_add_item_menu(array_menu_debug_settings,"Load Source Code",MENU_OPCION_NORMAL,menu_debug_load_source_code,NULL);    
+        menu_add_item_menu_tooltip(array_menu_debug_settings,"Load source code");                
+        menu_add_item_menu_ayuda(array_menu_debug_settings,"Load source code. It is shown on the Debug CPU window. "
+            "Source code must have labels in format LXXXX where XXXX is an address in hexadecimal");                
+
 		if (MACHINE_IS_TSCONF || MACHINE_IS_ZXUNO || datagear_dma_emulation.v) {
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_dma_tsconf_zxuno,NULL,"Debug D~~MA");
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'m');

@@ -25914,3 +25914,30 @@ void menu_fileselector_settings(MENU_ITEM_PARAMETERS)
     } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
+
+
+
+void menu_debug_load_source_code(MENU_ITEM_PARAMETERS)
+{
+
+    char source_load_file[PATH_MAX];
+
+    char *filtros[3];
+
+    filtros[0]="txt";
+    filtros[1]="asm";
+    filtros[2]=0;
+
+
+    if (menu_filesel("Select Source File",filtros,source_load_file)==1) {
+        int retorno=remote_load_source_code(source_load_file);
+
+        if (!retorno) {
+            menu_generic_message_splash("Load Soure Code","OK File loaded");
+            //Y salimos de todos los menus
+            salir_todos_menus=1;
+        }
+
+    }
+
+}
