@@ -6685,6 +6685,10 @@ int remote_load_source_code(char *archivo)
 	while (puntero_raw<remote_tamanyo_archivo_raw_source_code) {
 		//Buscar primer codigo 10 o 13
 		while (puntero_raw<remote_tamanyo_archivo_raw_source_code && !remote_is_char_10_or_13(remote_get_raw_source_code_char(puntero_raw))) {
+
+            //Quitar codigos no deseados, como tabulador
+            if (remote_raw_source_code_pointer[puntero_raw]==9) remote_raw_source_code_pointer[puntero_raw]=' ';
+
 			puntero_raw++;
 		}
 
