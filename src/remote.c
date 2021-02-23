@@ -3381,13 +3381,13 @@ void remote_ayplayer(int misocket,char *command,char *command_parm)
 
 }
 	
-
-void remote_load_source_code(int misocket,char *archivo)
+//Retorna 0 si no hay error
+int remote_load_source_code(char *archivo)
 {
 
 	if (!si_existe_archivo(archivo)) {
-		escribir_socket_format(misocket,"ERROR. File %s not found\n",archivo);
-		return;
+		debug_printf(VERBOSE_ERR,"ERROR. File %s not found",archivo);
+		return 1;
 	}
 
 	remote_tamanyo_archivo_raw_source_code=0;
@@ -3403,8 +3403,8 @@ void remote_load_source_code(int misocket,char *archivo)
 	remote_raw_source_code_pointer=malloc(tamanyo+1); //y el 0 del final
 
 	if (remote_raw_source_code_pointer==NULL) {
-		escribir_socket(misocket,"ERROR. Can not allocate memory to load source code file\n");
-		return;
+		debug_printf(VERBOSE_ERR,"ERROR. Can not allocate memory to load source code file\n");
+		return 1;
 	}
 
 	FILE *ptr_sourcecode;
@@ -3413,8 +3413,8 @@ void remote_load_source_code(int misocket,char *archivo)
 	ptr_sourcecode=fopen(archivo,"rb");
 
 	if (ptr_sourcecode==NULL) {
-		escribir_socket(misocket,"ERROR. Can not open source code file\n");
-		return;
+		debug_printf(VERBOSE_ERR,"ERROR. Can not open source code file\n");
+		return 1;
 	}
 
 	leidos=fread(remote_raw_source_code_pointer,1,tamanyo,ptr_sourcecode);
@@ -3424,8 +3424,8 @@ void remote_load_source_code(int misocket,char *archivo)
 	remote_raw_source_code_pointer[tamanyo]=0;
 
 	if (leidos!=tamanyo) {
-		escribir_socket(misocket,"ERROR reading source code file\n");
-		return;
+		debug_printf(VERBOSE_ERR,"ERROR reading source code file\n");
+		return 1;
 	}
 
 
@@ -3550,6 +3550,7 @@ int remote_parsed_source_code_indexes_total;
                 debug_printf (VERBOSE_DEBUG,"Parsed source line %d : index: %d contents: %s",i,indice,&remote_raw_source_code_pointer[indice]);
         }
 
+    return 0;
 
 }
 
@@ -4843,7 +4844,11 @@ void interpreta_comando(char *comando,int misocket)
 
 
 	else if (!strcmp(comando_sin_parametros,"load-source-code") || !strcmp(comando_sin_parametros,"lsc")) {
-					remote_load_source_code(misocket,parametros);
+		int retorno=remote_load_source_code(parametros);
+
+        if (retorno) {
+            escribir_socket(misocket,"ERROR loading source code");
+        }
 	}
 
 	else if (!strcmp(comando_sin_parametros,"ls")) {

@@ -14594,6 +14594,8 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 				int antes_menu_escribe_linea_startx=menu_escribe_linea_startx;
 
 				menu_escribe_linea_startx=0;
+
+                int guessed_next_pos_source=-1;
 					
 				//char buffer_linea[MAX_LINE_CPU_REGISTERS_LENGTH];
                 for (i=0;i<limite;i++) {
@@ -14685,7 +14687,10 @@ int menu_debug_registers_subview_type=0;
                     //Si hay codigo fuente cargado
 		            if (remote_tamanyo_archivo_raw_source_code) {
                         int pos_source=remote_disassemble_find_label(puntero_dir);
-                        if (pos_source>=0) {
+                        if (pos_source>=0) guessed_next_pos_source=pos_source;
+
+                
+                        if (pos_source>=0 || guessed_next_pos_source>=0) {
                             //Escribiremos directamente en buffer_linea
                             int longitud_texto=strlen(buffer_linea);
                             //quitamos fin de cadena
@@ -14701,12 +14706,26 @@ int menu_debug_registers_subview_type=0;
                             //Y escribir linea codigo fuente
 			                char *puntero_source=NULL;
 
-		                    int indice=remote_parsed_source_code_indexes_pointer[pos_source];
-                            puntero_source=&remote_raw_source_code_pointer[indice];  
+		                    //int indice=remote_parsed_source_code_indexes_pointer[pos_source];
+                            //puntero_source=&remote_raw_source_code_pointer[indice];  
+
+                            //Intentamos mostrar la siguiente linea
+                            if (pos_source>=0) {
+                                int indice=remote_parsed_source_code_indexes_pointer[pos_source];
+                                puntero_source=&remote_raw_source_code_pointer[indice];
+                            }
+
+                            else {
+                                //Mostrar guessed
+                                int indice=remote_parsed_source_code_indexes_pointer[guessed_next_pos_source];
+                                puntero_source=&remote_raw_source_code_pointer[indice];
+                            }
+
 
                             if (puntero_source!=NULL) {
-                                int inicio=20; //posicion columna arbitraria
-                                for (inicio=longitud_texto;inicio<MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-1 && *puntero_source;inicio++) {
+                                int inicio=30; //posicion columna arbitraria
+                                if (CPU_IS_MOTOROLA) inicio=40;
+                                for (;inicio<MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-1 && *puntero_source;inicio++) {
                                     buffer_linea[inicio]=*puntero_source;
 
                                     puntero_source++;
@@ -14714,7 +14733,7 @@ int menu_debug_registers_subview_type=0;
                             }
                         } 
                     }                   
-
+                    if (guessed_next_pos_source>=0) guessed_next_pos_source++;
 
 					//printf ("segundo menu_debug_registros_parte_derecha. i=%d columna=%d buffer_linea: [%s]\n",i,columna_registros,buffer_linea);
 					menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,1);
