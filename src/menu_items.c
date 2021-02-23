@@ -802,6 +802,11 @@ void menu_debug_unnamed_console_enable(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_debug_settings_sourcecode_lprefix(MENU_ITEM_PARAMETERS)
+{
+    remote_debug_settings ^=4;    
+}
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -844,6 +849,10 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
 
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_sourcecode_lprefix,NULL,"[%c] Source code L Prefix",
+			( remote_debug_settings & 4 ? ' ' : 'X') );
+        menu_add_item_menu_tooltip(array_menu_settings_debug,"Consider a L preffix when searching source code labels");
+        menu_add_item_menu_ayuda(array_menu_settings_debug,"Consider a L preffix when searching source code labels");
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"[%c] Shows electron on debug",
 			( menu_debug_registers_if_showscan.v ? 'X' : ' ') );

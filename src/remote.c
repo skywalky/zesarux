@@ -785,7 +785,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"set-cr",NULL,NULL,"Sends carriage return to every command output received, useful on Windows environments"},
 	{"set-debug-settings","|sds","setting","Set debug settings on remote command protocol. It's a numeric value with bitmask with different meaning: \n"
 				"Bit 0: show all cpu registers on cpu stepping or only pc+opcode.\nBit 1: show 8 next opcodes on cpu stepping.\n"
-				"Bit 2: Do not add a L preffix when searching source code labels.\n"
+				"Bit 2: Do not consider a L preffix when searching source code labels.\n"
 				"Bit 3: Show bytes when debugging opcodes.\n"
 				"Bit 4: Repeat last command only by pressing enter.\n"
 				"Bit 5: Step over interrupt when running cpu-step, cpu-step-over and run verbose. It's the same setting as Step Over Interrupt on menu\n"
