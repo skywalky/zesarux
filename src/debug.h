@@ -485,6 +485,15 @@ extern int cpu_history_set_max_size(int total);
 extern void cpu_history_init_buffer(void);
 extern void cpu_history_get_pc_register_element(int indice,char *string_destino);
 
+extern int remote_tamanyo_archivo_raw_source_code;
+extern int *remote_parsed_source_code_indexes_pointer;
+extern char *remote_raw_source_code_pointer;
+
+extern int remote_disassemble_find_label(unsigned int direccion);
+
+extern int remote_load_source_code(char *archivo);
+
+
 
 #ifdef TIMESENSORS_ENABLED
  

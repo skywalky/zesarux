@@ -29,11 +29,7 @@ extern void enable_and_init_remote_protocol(void);
 extern z80_bit remote_ack_enter_cpu_step;
 extern z80_bit remote_calling_end_emulator;
 extern int remote_salir_conexion;
-extern int remote_tamanyo_archivo_raw_source_code;
-extern int *remote_parsed_source_code_indexes_pointer;
-extern char *remote_raw_source_code_pointer;
 
-extern int remote_disassemble_find_label(unsigned int direccion);
 
 //extern int   towindows_remote_cpu_run_misocket;
 //extern int towindows_remote_cpu_run_verbose;

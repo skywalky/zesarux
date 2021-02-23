@@ -103,24 +103,13 @@ int remote_salir_conexion;
 
 z80_bit remote_protocol_ended={0};
 
-//Usados en la carga de archivo de codigo fuente. Archivo crudo original
-char *remote_raw_source_code_pointer=NULL;
-int remote_tamanyo_archivo_raw_source_code=0;
-//Puntero a indices en archivo raw source
-int *remote_raw_source_code_indexes_pointer=NULL;
-//Tamanyo de ese array
-int remote_raw_source_code_indexes_total;
-
-//Puntero a indices en archivo parsed source (lineas sin comentarios, con codigo real)
-int *remote_parsed_source_code_indexes_pointer=NULL;
-//Tamanyo de ese array
-int remote_parsed_source_code_indexes_total;
 
 
 
 
 
-int remote_find_label_source_code(char *label_to_find);
+
+
 void remote_cpu_enter_step(int misocket);
 void remote_cpu_exit_step(int misocket);
 
@@ -1650,27 +1639,6 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 
 }
 
-//Retorna indice a array de lineas. -1 si no existe
-int remote_disassemble_find_label(unsigned int direccion)
-{
-    int pos_source=-1;
-
-    char buffer_label[128];
-
-    if (remote_debug_settings & 4) {
-        if (CPU_IS_MOTOROLA) sprintf(buffer_label,"%05X",direccion);
-        else sprintf(buffer_label,"%04X",direccion);
-    }
-    else {
-        if (CPU_IS_MOTOROLA) sprintf(buffer_label,"L%05X",direccion);
-        else sprintf(buffer_label,"L%04X",direccion);
-    }
-
-    pos_source=remote_find_label_source_code(buffer_label);
-
-    return pos_source;
-   
-}
 
 
 void remote_disassemble(int misocket,unsigned int direccion,int lineas,int mostrar_direccion)
@@ -3246,77 +3214,8 @@ void remote_copy_string_spc(char *origen, char *destino)
 
 
 
-char remote_get_raw_source_code_char(int posicion)
-{
-	if (posicion>remote_tamanyo_archivo_raw_source_code) return 0;
-	else return remote_raw_source_code_pointer[posicion];
-}
-
-int remote_is_number_or_letter(char c)
-{
-	if (c>='0' && c<='9') return 1;
-	if (c>='A' && c<='Z') return 1;
-	if (c>='a' && c<='z') return 1;
-	return 0;
-
-}
 
 
-
-int remote_string_contains_label(char *string, char *label)
-{
-
-	char *coincide;
-	coincide=util_strcasestr(string, label);
-
-	if (coincide==string) return 1;
-	else return 0;
-
-
-}
-
-/*
-Busca etiqueta en archivo codigo fuente
-Consideramos formato:
-LXXXXX  (para QL)
-LXXXX   (para Z80)
-Se hace busqueda sin tener en cuenta mayusculas/minusculas
-Retorna numero de linea en parsed source code
-Retorna -1 si no encontrado
-
-*/
-
-int remote_find_label_source_code(char *label_to_find)
-{
-	int linea=0;
-	/*
-//Puntero a indices en archivo parsed source (lineas sin comentarios, con codigo real)
-int *remote_parsed_source_code_indexes_pointer=NULL;
-//Tamanyo de ese array
-int remote_parsed_source_code_indexes_total;
-	*/
-
-	for (linea=0;linea<remote_parsed_source_code_indexes_total;linea++) {
-		//Comparar label
-		int indice=remote_parsed_source_code_indexes_pointer[linea];
-		char *puntero=&remote_raw_source_code_pointer[indice];
-		if (remote_string_contains_label(puntero,label_to_find)) {
-		     //temp
-        	     //printf ("%s\n",puntero);
-		     return linea;
-		}
-	}
-
-	return -1;
-
-}
-
-
-int remote_is_char_10_or_13(char c)
-{
-	if (c==10 || c==13) return 1;
-	return 0;
-}
 
 void remote_ayplayer(int misocket,char *command,char *command_parm)
 {
@@ -3378,179 +3277,6 @@ void remote_ayplayer(int misocket,char *command,char *command_parm)
 	if (!strcasecmp(command,"load")) {
 		ay_player_load_and_play(command_parm);
 	}
-
-}
-	
-//Retorna 0 si no hay error
-int remote_load_source_code(char *archivo)
-{
-
-	if (!si_existe_archivo(archivo)) {
-		debug_printf(VERBOSE_ERR,"ERROR. File %s not found",archivo);
-		return 1;
-	}
-
-	remote_tamanyo_archivo_raw_source_code=0;
-
-	//Desasignar memoria si conviene
-	if (remote_raw_source_code_pointer!=NULL) free(remote_raw_source_code_pointer);
-
-	//Ver tamanyo archivo
-	long int tamanyo;
-
-	tamanyo=get_file_size(archivo);
-
-	remote_raw_source_code_pointer=malloc(tamanyo+1); //y el 0 del final
-
-	if (remote_raw_source_code_pointer==NULL) {
-		debug_printf(VERBOSE_ERR,"ERROR. Can not allocate memory to load source code file\n");
-		return 1;
-	}
-
-	FILE *ptr_sourcecode;
-	int leidos;
-
-	ptr_sourcecode=fopen(archivo,"rb");
-
-	if (ptr_sourcecode==NULL) {
-		debug_printf(VERBOSE_ERR,"ERROR. Can not open source code file\n");
-		return 1;
-	}
-
-	leidos=fread(remote_raw_source_code_pointer,1,tamanyo,ptr_sourcecode);
-	fclose(ptr_sourcecode);
-
-	//El 0 del final
-	remote_raw_source_code_pointer[tamanyo]=0;
-
-	if (leidos!=tamanyo) {
-		debug_printf(VERBOSE_ERR,"ERROR reading source code file\n");
-		return 1;
-	}
-
-
-	remote_tamanyo_archivo_raw_source_code=tamanyo;
-
-
-	//Contar maximo de lineas aproximadas. Segun cuantos codigos 10 o 13
-	int remote_raw_max_source_code_lineas=1;
-
-	int puntero;
-	char c;
-
-	for (puntero=0;puntero<remote_tamanyo_archivo_raw_source_code;puntero++) {
-		c=remote_get_raw_source_code_char(puntero);
-		if (remote_is_char_10_or_13(c) ) remote_raw_max_source_code_lineas++;
-	}
-
-	debug_printf(VERBOSE_DEBUG,"Maximum raw source code lines: %d",remote_raw_max_source_code_lineas);
-
-	//Crear indice a lineas en raw source
-
-	//Asignamos memoria para esos indices
-	//Desasignar si conviene
-	if (remote_raw_source_code_indexes_pointer!=NULL) {
-		debug_printf(VERBOSE_DEBUG,"Freeing previous memory to hold indexes to raw source code file");
-		free (remote_raw_source_code_indexes_pointer);
-	}
-
-	remote_raw_source_code_indexes_pointer=malloc(sizeof(int)*remote_raw_max_source_code_lineas);
-
-	if (remote_raw_source_code_indexes_pointer==NULL) cpu_panic("Can not allocate memory to index source code file");
-
-	remote_raw_source_code_indexes_total=0;
-	//Primera linea
-	remote_raw_source_code_indexes_pointer[remote_raw_source_code_indexes_total++]=0;
-
-	int puntero_raw=0;
-
-	while (puntero_raw<remote_tamanyo_archivo_raw_source_code) {
-		//Buscar primer codigo 10 o 13
-		while (puntero_raw<remote_tamanyo_archivo_raw_source_code && !remote_is_char_10_or_13(remote_get_raw_source_code_char(puntero_raw))) {
-			puntero_raw++;
-		}
-
-		if (puntero_raw<remote_tamanyo_archivo_raw_source_code) {
-			//Buscar siguiente codigo no 10 o 13
-			while (puntero_raw<remote_tamanyo_archivo_raw_source_code && remote_is_char_10_or_13(remote_get_raw_source_code_char(puntero_raw))) {
-					//Metemos 0 en esa posicion
-					remote_raw_source_code_pointer[puntero_raw]=0;
-                        		puntero_raw++;
-                	}
-
-			if (puntero_raw<remote_tamanyo_archivo_raw_source_code) {
-				//Aqui tenemos puntero a siguiente linea
-				remote_raw_source_code_indexes_pointer[remote_raw_source_code_indexes_total++]=puntero_raw;
-			}
-		}
-	}
-
-	debug_printf(VERBOSE_DEBUG,"Total effective raw source code lines: %d",remote_raw_source_code_indexes_total);
-
-	//Mostramos cada linea
-	int i;
-	for (i=0;i<remote_raw_source_code_indexes_total;i++) {
-		int indice=remote_raw_source_code_indexes_pointer[i];
-		debug_printf (VERBOSE_DEBUG,"Full source line %d : index: %d contents: %s",i,indice,&remote_raw_source_code_pointer[indice]);
-	}
-
-	//Crear indice a lineas en source code efectivas (lineas con codigo no comentarios)
-	/*
-
-int *remote_parsed_source_code_indexes_pointer=NULL;
-int remote_parsed_source_code_indexes_total;
-
-	*/
-        //Asignamos memoria para esos indices
-        //Desasignar si conviene
-        if (remote_parsed_source_code_indexes_pointer!=NULL) {
-                debug_printf(VERBOSE_DEBUG,"Freeing previous memory to hold indexes to parsed source code file");
-                free (remote_parsed_source_code_indexes_pointer);
-        }
-
-        remote_parsed_source_code_indexes_pointer=malloc(sizeof(int)*remote_raw_source_code_indexes_total); //Habra un maximo igual a lineas raw
-
-
-        if (remote_parsed_source_code_indexes_pointer==NULL) cpu_panic("Can not allocate memory to index source code file parsed");
-
-        remote_parsed_source_code_indexes_total=0;
-        //Primera linea
-        //remote_parsed_source_code_indexes_pointer[remote_parsed_source_code_indexes_total++]=0;
-
-	//linea leida raw
-	int linea_raw=0;
-
-	//Bucle hasta maximo de lineas raw (remote_raw_source_code_indexes_total)
-	//Por cada linea, saltar las que no empiezan por alfanumerico (e ignorando primeros espacios o tabs)
-
-	for (linea_raw=0;linea_raw<remote_raw_source_code_indexes_total;linea_raw++) {
-		//Saltar primeros espacios o tabs
-		int puntero_raw=remote_raw_source_code_indexes_pointer[linea_raw];
-
-		char *texto=&remote_raw_source_code_pointer[puntero_raw];
-		while (*texto==' ' || *texto=='\t') {
-			texto++;
-		}
-
-		if (*texto!=0) {
-
-			//Ver si empieza con alfanumerico
-			if (remote_is_number_or_letter(*texto)) {
-				remote_parsed_source_code_indexes_pointer[remote_parsed_source_code_indexes_total++]=puntero_raw;
-			}
-
-		}
-	}
-
-        debug_printf(VERBOSE_DEBUG,"Total effective parsed source code lines: %d",remote_parsed_source_code_indexes_total);
-
-        //Mostramos cada linea
-        for (i=0;i<remote_parsed_source_code_indexes_total;i++) {
-                int indice=remote_parsed_source_code_indexes_pointer[i];
-                debug_printf (VERBOSE_DEBUG,"Parsed source line %d : index: %d contents: %s",i,indice,&remote_raw_source_code_pointer[indice]);
-        }
-
-    return 0;
 
 }
 
