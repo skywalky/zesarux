@@ -14674,10 +14674,46 @@ int menu_debug_registers_subview_type=0;
 					if (menu_debug_registers_subview_type==2)  menu_debug_registers_dump_ascii(dumpassembler,puntero_dir,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii,0);
 					//4 para direccion, fijo
 					
+
+                    //char buffer_desensamblado[200];
+
 					sprintf(&buffer_linea[1],"%04X %s %s",puntero_dir,dumpassembler,buffer_condicion);
 
 					//Guardar las direcciones de cada linea
 					//menu_debug_lines_addresses[i]=puntero_dir;
+
+                    //Si hay codigo fuente cargado
+		            if (remote_tamanyo_archivo_raw_source_code) {
+                        int pos_source=remote_disassemble_find_label(puntero_dir);
+                        if (pos_source>=0) {
+                            //Escribiremos directamente en buffer_linea
+                            int longitud_texto=strlen(buffer_linea);
+                            //quitamos fin de cadena
+                            buffer_linea[longitud_texto]=' ';
+                            int inicio=longitud_texto;
+                            for (inicio=longitud_texto;inicio<MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-1;inicio++) {
+                                buffer_linea[inicio]=' ';
+                            }
+
+                            //final de cadena
+                            buffer_linea[inicio]=0; 
+
+                            //Y escribir linea codigo fuente
+			                char *puntero_source=NULL;
+
+		                    int indice=remote_parsed_source_code_indexes_pointer[pos_source];
+                            puntero_source=&remote_raw_source_code_pointer[indice];  
+
+                            if (puntero_source!=NULL) {
+                                int inicio=20; //posicion columna arbitraria
+                                for (inicio=longitud_texto;inicio<MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-1 && *puntero_source;inicio++) {
+                                    buffer_linea[inicio]=*puntero_source;
+
+                                    puntero_source++;
+                                }
+                            }
+                        } 
+                    }                   
 
 
 					//printf ("segundo menu_debug_registros_parte_derecha. i=%d columna=%d buffer_linea: [%s]\n",i,columna_registros,buffer_linea);
