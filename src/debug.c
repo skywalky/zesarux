@@ -6539,6 +6539,8 @@ cargar codigo fuente desde fuera de ZRCP, e incluso cuando no hay soporte de thr
 
 */
 
+int debug_load_source_code_skip_columns=0;
+
 int remote_find_label_source_code(char *label_to_find)
 {
 	int linea=0;
@@ -6552,7 +6554,7 @@ int remote_parsed_source_code_indexes_total;
 	for (linea=0;linea<remote_parsed_source_code_indexes_total;linea++) {
 		//Comparar label
 		int indice=remote_parsed_source_code_indexes_pointer[linea];
-		char *puntero=&remote_raw_source_code_pointer[indice];
+		char *puntero=&remote_raw_source_code_pointer[indice+debug_load_source_code_skip_columns];
 		if (remote_string_contains_label(puntero,label_to_find)) {
 		     //temp
         	     //printf ("%s\n",puntero);

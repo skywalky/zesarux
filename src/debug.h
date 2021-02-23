@@ -493,6 +493,8 @@ extern int remote_disassemble_find_label(unsigned int direccion);
 
 extern int remote_load_source_code(char *archivo);
 
+extern int debug_load_source_code_skip_columns;
+
 
 
 #ifdef TIMESENSORS_ENABLED

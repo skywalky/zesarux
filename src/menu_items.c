@@ -807,6 +807,11 @@ void menu_debug_settings_sourcecode_lprefix(MENU_ITEM_PARAMETERS)
     remote_debug_settings ^=4;    
 }
 
+void menu_debug_settings_sourcecode_skipcols(MENU_ITEM_PARAMETERS)
+{
+    menu_ventana_scanf_numero_enhanced("Skip Columns",&debug_load_source_code_skip_columns,3,+1,0,99,0);
+}
+
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
@@ -853,6 +858,11 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 			( remote_debug_settings & 4 ? ' ' : 'X') );
         menu_add_item_menu_tooltip(array_menu_settings_debug,"Consider a L preffix when searching source code labels");
         menu_add_item_menu_ayuda(array_menu_settings_debug,"Consider a L preffix when searching source code labels");
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_sourcecode_skipcols,NULL,"[%d] Source code skip Cols",
+			debug_load_source_code_skip_columns);
+        menu_add_item_menu_tooltip(array_menu_settings_debug,"Skip columns when searching for label from the beginning of line");
+        menu_add_item_menu_ayuda(array_menu_settings_debug,"Skip columns when searching for label from the beginning of line");    
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"[%c] Shows electron on debug",
 			( menu_debug_registers_if_showscan.v ? 'X' : ' ') );
