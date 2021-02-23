@@ -1650,6 +1650,28 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 
 }
 
+//Retorna indice a array de lineas. -1 si no existe
+int remote_disassemble_find_label(unsigned int direccion)
+{
+    int pos_source=-1;
+
+    char buffer_label[128];
+
+    if (remote_debug_settings & 4) {
+        if (CPU_IS_MOTOROLA) sprintf(buffer_label,"%05X",direccion);
+        else sprintf(buffer_label,"%04X",direccion);
+    }
+    else {
+        if (CPU_IS_MOTOROLA) sprintf(buffer_label,"L%05X",direccion);
+        else sprintf(buffer_label,"L%04X",direccion);
+    }
+
+    pos_source=remote_find_label_source_code(buffer_label);
+
+    return pos_source;
+   
+}
+
 
 void remote_disassemble(int misocket,unsigned int direccion,int lineas,int mostrar_direccion)
 {
@@ -1678,6 +1700,8 @@ void remote_disassemble(int misocket,unsigned int direccion,int lineas,int mostr
 		//int posicion_final_linea=-1;
 
 		if (remote_tamanyo_archivo_raw_source_code) {
+            pos_source=remote_disassemble_find_label(direccion);
+            /*
 			char buffer_label[128];
 
 			if (remote_debug_settings & 4) {
@@ -1690,6 +1714,7 @@ void remote_disassemble(int misocket,unsigned int direccion,int lineas,int mostr
 			}
 
 			pos_source=remote_find_label_source_code(buffer_label);
+            */
 			//printf ("posicion para %s: %d\n",buffer_label,pos_source);
 			if (pos_source!=-1) guessed_next_pos_source=pos_source;
 		}
