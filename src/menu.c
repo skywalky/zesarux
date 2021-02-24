@@ -27134,7 +27134,13 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu(array_menu_debug_settings,"Load Source Code",MENU_OPCION_NORMAL,menu_debug_load_source_code,NULL);    
         menu_add_item_menu_tooltip(array_menu_debug_settings,"Load source code");                
         menu_add_item_menu_ayuda(array_menu_debug_settings,"Load source code. It is shown on the Debug CPU window. "
-            "Source code must have labels in format LXXXX or XXXX where XXXX is an address in hexadecimal");                
+            "Source code must have labels in format LXXXX or XXXX where XXXX is an address in hexadecimal. \n"
+            "If you compile with sjasmplus, you can generate an assembler output file with addresses on every line "
+            "so it can be loaded in ZEsarUX. Run it the following way:\n"
+            "sjasmplus inputfile.asm --lst=output_extended.asm\n"
+            "That output_extended.asm will have labels/addresses on every line. Then go to Debug settings, and uncheck "
+            "'Source code L Prefix'. You need also to adjust 'Source code skip cols' to discard X characters from the beginning "
+            "of the line until the label/address is located, typically 6 or 7 characters");                
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_ZXUNO || datagear_dma_emulation.v) {
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_dma_tsconf_zxuno,NULL,"Debug D~~MA");
