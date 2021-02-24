@@ -41,9 +41,6 @@ https://spectrumcomputing.co.uk/forums/viewtopic.php?t=2553
 -meter real tape en linea comandos siempre acelera la carga, aunque este desactivado
  ejemplo: ./zesarux --realtape tetris2.pzx
 
--Cuando haya fat driver, poder descargar cp/m dentro de la imagen mmc de TBBlue 
-
-
 
 
 -para comprobar coordenada y footer, calcular desde abajo de alto ventana. Y usar funcion comun en screen.c
@@ -110,10 +107,6 @@ entonces en el servidor, en el archivo de update de la estable, ya habré actual
 -parece que si hay joystick conectado, el splash de Z logo no aparece toda la animacion, se cierra a la primera barra de color
 
 
-- bios zxuno, no hace update desde la mmc. condiciones de compilacion en la bios para ZEsarUX:
-
-http://svn.zxuno.com/svn/zxuno/firmware/firmware.asm
-
 
 -puerto kempston y puerto 223. Juego El cid
 
@@ -147,25 +140,16 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 
 
 
-
-
-
-
 -Debug ir atrás en el tiempo. Usando cpu history
-
-
 
 -sprite disabling window tambien para tsconf y maquinas con chip vdp (msx, etc)
 
 
-
 -the next war: revisar border deberia desactivar. musica en menu no se oye bien
-
 
 -tbblue: rotaciones de sprites (tanto 8bpp como 4bpp). Ver test SprBig4b.sna , SpritBig.sna. 
 
 -cocoa: con pantallas retina se queda una pantalla de mitad abajo a la izquierda
-
 
 
 -Opción activar nuevo algoritmo de carga según valor anterior como conversor 1 bit
@@ -184,11 +168,6 @@ desde filesel era la mmc
 Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El resto, rutinas de sistema? -> esxdos, zxpand etc ya NO usan ZVFS
 
 
--listar en alguna ayuda todos los posibles:
-*previews de archivos (preview al mover cursor)
-*visores de archivos (tecla V de file utils)
-*expansores de archivos (tecla espacio)-> esto ya está en ayuda
-
 
 -punteros en diskio, de read y write, soportaran imagenes de mas de 2 gB en sistemas 32 bits?
 
@@ -196,41 +175,3 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -Si ZX desktops activado. Pero cargo un driver de texto que pasará? Y sale habilitado? Y como se guardará la opción?
 
-
--cargar archivos .map para asociar codigo fuente con lineas y direcciones
-ejemplo:
-
-z80asm -m -b PrismBootRom.asm
-
-quiza cuando carga, pedir un .map. Si hay map, quedarse con lectura raw (sin el parsed, que quita lineas con comentarios)
-y a la hora de buscar label, hacerlo segun el map
-el map parsearlo guardando direccion de memoria y linea en el raw
-
-->este map no vale, contiene:
-
-apply_changes_start             = $0399 ; addr, local, , PrismBootRom, , PrismBootRom.asm:723
-apply_changes_end               = $03CE ; addr, local, , PrismBootRom, , PrismBootRom.asm:768
-apply_changes_start_no_aperture = $03AE ; addr, local, , PrismBootRom, , PrismBootRom.asm:741
-apply_changes_start_no_compatibility128 = $03B8 ; addr, local, , PrismBootRom, , PrismBootRom.asm:750
-...
-
-O sea, solo labels. Hay que tener un tipo de map que contenga todas las direcciones con todas las lineas
-
-quiza este? https://github.com/Ckirby101/pasmoNext
---cspecsymbols
-
-**mejor sjasmplus:
-
-sjasmplus 3color.asm --lst=salida.asm
-salida:
- 15   8200              ; ---------------------------------------------------------------------------
- 16   8200 CD B0 82     start:		call	GenerateSubs
- 17   8203 ED 73 9B 82  		ld	(loc_829A+1), sp
-
-quitamos numero linea y nos quedamos con direccion y resto de texto
-cat salida.asm |cut -d ' ' -f4- > listado_para_import_ZEsarUX.asm
-
-Para cargar, indicar en settings->debug , quitarle source code L prefix
-quiza otro parámetro que diga a partir de que columna leer (para simular el cut)
-
-tambien caracteres raros (quiza tabs) convertirlos a espacios
