@@ -1,4 +1,4 @@
-Version 9.2 - xxxx edition. 05 February 2021
+Version 9.2 - Cliff Hanger edition. 24 February 2021
 
 Added command line setting --add-file-to-mmc to be able to copy files to a mmc image before starting ZEsarUX
 Added new ZX-Uno Prism video mode
@@ -16,7 +16,7 @@ Added setting to redefine joystick fire key
 Added Debug action to set PC register to zero
 
 Improved File utilities Browser:
--Added support for browsing inside disk images (.mmc, .ide, etc)
+-Added support for browsing inside FAT filesystem disk images (.img, .mmc, .ide, etc)
 -Detect when source and target directories are the same when moving or copying
 -Show more info in some file viewers (.sna, .p, .o, etc)
 -Added copy and delete entire folder

@@ -490,6 +490,7 @@ extern int *remote_parsed_source_code_indexes_pointer;
 extern char *remote_raw_source_code_pointer;
 
 extern int remote_disassemble_find_label(unsigned int direccion);
+extern int remote_find_label_source_code(char *label_to_find);
 
 extern int remote_load_source_code(char *archivo);
 
