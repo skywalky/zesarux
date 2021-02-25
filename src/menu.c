@@ -5146,6 +5146,8 @@ unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned 
 
 //Si codigo de color inverso, invertir una letra
 //Codigo de color inverso: dos ~ seguidas
+//Funcion CASI no usada, solo unas pocas funciones la usan. Era mas usada antiguamente
+//pero con el cambio a zxvision se pasa a escribir en contexto de ventana en la mayoria de los casos
 void menu_escribe_texto(int x,int y,int tinta,int papel,char *texto)
 {
         unsigned int i;
@@ -5582,7 +5584,6 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,int indice,int 
 
 	//Si tiene dos colores
 	if (encontrado>=0) {
-		//menu_escribe_texto_ventana(startx+encontrado,indice,tinta_normal,papel_normal,&texto[encontrado]);
 		zxvision_print_string(ventana,startx+encontrado,indice,tinta_normal,papel_normal,0,&texto[encontrado]);
 	}
 
@@ -5590,11 +5591,9 @@ void menu_escribe_linea_opcion_zxvision(zxvision_window *ventana,int indice,int 
 	if (!scr_tiene_colores || ESTILO_GUI_MUESTRA_CURSOR) {
 		if (opcion_actual==indice) {
 			if (opcion_activada==1) {
-				//menu_escribe_texto_ventana(0,indice,tinta,papel,">");
 				zxvision_print_string(ventana,0,indice,tinta,papel,0,">");
 			}
 			else {
-				//menu_escribe_texto_ventana(0,indice,tinta,papel,"x");
 				zxvision_print_string(ventana,0,indice,tinta,papel,0,"x");
 			}
 		}
@@ -7816,14 +7815,7 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 				//Decir que se ha pulsado tecla asi no se lee todo cuando el cursor esta visible
 				if (ventana->visible_cursor) menu_speech_tecla_pulsada=1;
 	int i;
-	/*for (i=0;i<indice_linea-primera_linea && i<MAX_LINEAS_VENTANA_GENERIC_MESSAGE;i++) {
-		if (mostrar_cursor) {
-			menu_escribe_linea_opcion(i,linea_cursor,1,buffer_lineas[i+primera_linea]);
-		}
-        	else menu_escribe_linea_opcion(i,-1,1,buffer_lineas[i+primera_linea]);
-		//printf ("i: %d linea_cursor: %d primera_linea: %d\n",i,linea_cursor,primera_linea);
-		//printf ("Linea seleccionada: %d (%s)\n",linea_cursor+primera_linea,buffer_lineas[linea_cursor+primera_linea]);
-	}*/
+	
 
 	for (i=0;i<indice_linea;i++) {
 		zxvision_print_string(ventana,1,i,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_lineas[i]);
@@ -16344,7 +16336,7 @@ void menu_hardware_realjoystick_test(MENU_ITEM_PARAMETERS)
 
 			int linea=0;
 			//int menu_info_joystick_last_button,menu_info_joystick_last_type,menu_info_joystick_last_value,menu_info_joystick_last_index;
-			//menu_escribe_linea_opcion(linea++,-1,1,"Last joystick button/axis:");
+			
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Last joystick button/axis:");
 			linea++;
 
@@ -19121,7 +19113,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 			old_textspeech_also_send_menu.v=textspeech_also_send_menu.v;
 			textspeech_also_send_menu.v=0;
 
-	        	//menu_escribe_linea_opcion(linea++,-1,1,textoventana);
+	        	
 			zxvision_print_string_defaults_fillspc(&ventana,1,linea++,textoventana);
 
 
@@ -19136,7 +19128,7 @@ void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS)
 		old_textspeech_also_send_menu.v=textspeech_also_send_menu.v;
 		textspeech_also_send_menu.v=0;
 
-		//menu_escribe_linea_opcion(linea++,-1,1,"Stick Send");
+		
 		zxvision_print_string_defaults_fillspc(&ventana,1,linea++,"Stick Send");
 
 		//Restaurar parametro speech
