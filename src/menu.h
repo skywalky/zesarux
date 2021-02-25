@@ -846,7 +846,7 @@ struct s_estilos_gui {
 typedef struct s_estilos_gui estilos_gui;
 
 
-#define ESTILOS_GUI 15
+#define ESTILOS_GUI 16
 
 
 #define ESTILO_GUI_RETROMAC 9
