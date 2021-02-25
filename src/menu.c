@@ -2294,7 +2294,7 @@ int menu_si_pulsada_tecla_osd(void)
 //devuelve cadena de texto desde teclado
 //max_length contando caracter 0 del final, es decir, para un texto de 4 caracteres, debemos especificar max_length=5
 //ejemplo, si el array es de 50, se le debe pasar max_length a 50
-
+/*
 int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,int y)
 {
 
@@ -2389,7 +2389,7 @@ int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,i
 //tinta=0;
 
 }
-
+*/
 
 
 //funcion para asignar funcion de overlay
