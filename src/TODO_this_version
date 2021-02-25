@@ -25,8 +25,7 @@ ZEsarUX sensors
 Etc... 
 
 
--Que algunas tareas como store scanline se hagan en thread aparte. Problema: que la mayoria de datos de ese scanline
-pueden variar mientras se está ejecutando el thread con el loop del siguiente scanline
+
 
 
 -Meter file browser zxuno en imagen zxuno mmc
@@ -114,9 +113,6 @@ https://foro.speccy.org/viewtopic.php?t=1502
 
 
 -Convertir scr a txt
-
--Idea: en vez de tener la imagen Mmc, que tenga los archivos que contiene y cree el Mmc copiándolos 
-
 
 
 -ordenar directorios arriba en filesel? Pero entonces al pulsar una letra y buscar... a donde ira?

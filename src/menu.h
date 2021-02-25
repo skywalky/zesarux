@@ -154,6 +154,11 @@ extern void normal_overlay_texto_menu(void);
 extern int si_menu_mouse_en_ventana(void);
 extern void menu_calculate_mouse_xy(void);
 
+extern int mouse_is_clicking;
+extern int mouse_is_double_clicking;
+extern int menu_mouse_x;
+extern int menu_mouse_y;
+
 extern unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned char caracter);
 extern int menu_es_prefijo_utf(z80_byte caracter);
 
@@ -172,6 +177,8 @@ extern void menu_espera_tecla_timeout_window_splash(void);
 extern void menu_cpu_core_loop(void);
 extern z80_byte menu_get_pressed_key(void);
 extern void menu_about_read_file(char *title,char *aboutfile,int show_err_if_big);
+
+extern void menu_about_about_load_editionamegame(void);
 
 extern int menu_cond_zx8081(void);
 extern int menu_cond_zx8081_realvideo(void);

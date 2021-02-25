@@ -32245,7 +32245,17 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 
 }
 
-
+void menu_about_about_load_editionamegame(void)
+{
+    if (si_existe_editionnamegame(NULL)) {
+        util_load_editionnamegame();
+        salir_todos_menus=1;
+    }
+    else {
+        //Se ha seleccionado texto edition name pero el juego no esta disponible
+        debug_printf(VERBOSE_INFO,"Edition name game %s is not available",EMULATOR_GAME_EDITION);
+    }
+}
 
 void menu_about_about(MENU_ITEM_PARAMETERS)
 {
@@ -32299,14 +32309,7 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
 
 	debug_printf(VERBOSE_INFO,"Closing window with Enter and selected line=%d",linea);
 	if (linea==1) {
-		if (si_existe_editionnamegame(NULL)) {
-			util_load_editionnamegame();
-			salir_todos_menus=1;
-		}
-		else {
-			//Se ha seleccionado texto edition name pero el juego no esta disponible
-			debug_printf(VERBOSE_INFO,"Edition name game %s is not available",EMULATOR_GAME_EDITION);
-		}
+		menu_about_about_load_editionamegame();
 	}
 
 }

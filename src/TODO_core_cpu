@@ -92,4 +92,7 @@ probado - Variable traps que se activa por si hay load o save- hará que vaya m�
 -Lec-80 rom y Soporte 80 kb
 
 
+-Que algunas tareas como store scanline se hagan en thread aparte. Problema: que la mayoria de datos de ese scanline
+pueden variar mientras se está ejecutando el thread con el loop del siguiente scanline
+
 

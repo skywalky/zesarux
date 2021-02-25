@@ -25632,6 +25632,7 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 
     //hardcoded. la imagen bmp hace 64x64
     int ancho_imagen_salamanquesa=64;
+    int alto_imagen_salamanquesa=64;
     
 
     int x_texto=ancho_imagen_salamanquesa/menu_char_width;
@@ -25686,7 +25687,7 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
     ancho_ventana=ancho_maximo+x_texto+1;
 
 
-    alto_ventana=9;
+    alto_ventana=10;
 
      
 
@@ -25723,7 +25724,6 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 	
     //Cargar el archivo bmp
     /*
-    Deben ser, idealmente: 540x201.  (puede ser otro tamaño)
     bmp. 256 colour (indexed)
     */
 
@@ -25818,6 +25818,26 @@ void menu_about_new(MENU_ITEM_PARAMETERS)
 		tecla=zxvision_common_getkey_refresh();		
 		zxvision_handle_cursors_pgupdn(ventana,tecla);
 		//printf ("tecla: %d\n",tecla);
+        if (mouse_is_clicking && mouse_is_double_clicking) {
+            //printf("double click\n");
+            if (si_menu_mouse_en_ventana() ) {
+                //printf("Mouse en ventana\n");
+                if (menu_mouse_x<x_texto) {
+                    //printf("Coordenada mouse en columna salamanquesa\n");
+                    int alto_imagen_salamanquesa_chars=alto_imagen_salamanquesa/8;
+                    //printf("%d\n",menu_mouse_y);
+                    //y=0 es el titulo
+                    if (menu_mouse_y>0 && menu_mouse_y<alto_imagen_salamanquesa_chars+1) {
+                        //printf("Clicked en salamanquesa\n");
+                        menu_about_about_load_editionamegame();
+                        //simular tecla esc
+                        tecla=2;
+                    }
+                }
+
+            }
+
+        }
 	} while (tecla!=2);				
 
  

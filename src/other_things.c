@@ -42,8 +42,14 @@ So, the list:
 4. Enable ZX Desktop. Go to the about menu, and you'll see something different... 
 The answer for that change, in the FAQ
 
-5. Disable ZX Desktop. Go to the about menu, press F key (used to find text). 
+5. This one can be fired having ZX Desktop enabled or not:
+
+- ZX Enabled: Go to the about menu, double click on the image (you need multitasking
+for the double click to be detected)
+
+- ZX Disabled: Go to the about menu, press F key (used to find text). 
 Just press enter with no text to find. You'll see a cursor in the window,
 select the second line and press Enter...
 
 */
+

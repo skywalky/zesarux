@@ -94,6 +94,7 @@ En este caso esto puede quedar corregido simplemente si al expulsar mmc file sie
 Pero esto NO es recomendable pues entonces haríamos siempre flush de toda imagen, se haya escrito o no. 
 Quizá activar flag cuando se escribe al menos una vez y al salir sabemos si hay que grabarlo o no 
 
+-Idea: en vez de tener la imagen Mmc, que tenga los archivos que contiene y cree el Mmc copiándolos 
 
 
 
