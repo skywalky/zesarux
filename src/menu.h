@@ -840,6 +840,8 @@ struct s_estilos_gui {
 	//franjas de color oscuras
 	int *franjas_oscuras;
 
+    //si texto inverso solo cambia color tinta, en vez de invertir papel y tinta. -1 si no lo hace. Otro valor es el color de tinta
+    int inverse_tinta;
 
 };
 
@@ -918,6 +920,8 @@ extern z80_bit menu_ext_desktop_transparent_upper_icons;
 
 
 #define ESTILO_GUI_REQUIRE_COMPLETE_VIDEO_DRIVER (definiciones_estilos_gui[estilo_gui_activo].require_complete_video_driver)
+
+#define ESTILO_GUI_INVERSE_TINTA (definiciones_estilos_gui[estilo_gui_activo].inverse_tinta)
 
 
 #define MENU_ANCHO_FRANJAS_TITULO 5

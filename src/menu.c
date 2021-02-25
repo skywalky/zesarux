@@ -537,7 +537,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
 		},
 	{0,"ZXSpectr",1,6,
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
@@ -550,7 +551,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
 		},
 
         {0,"ZX80/81",7+8,0,
@@ -564,7 +566,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,0,		//Color para opcion marcada
 		'.',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
                 },
 
 //Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
@@ -581,7 +584,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
                 },
 
 
@@ -596,7 +600,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
-		colores_franja_cpc_brillo,colores_franja_cpc_oscuro
+		colores_franja_cpc_brillo,colores_franja_cpc_oscuro,
+        -1 //si texto inverso solo cambia color tinta
                 },
 
 		//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
@@ -611,7 +616,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
 				'.',
 				2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
-				colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+				colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
         },
 
 
@@ -626,7 +632,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 2,7+8,		//Color para opcion marcada
 		'#',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
                 },
 
 						{0,"ManSoftware",7+8,0,
@@ -640,7 +647,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							3,7+8,		//Color para opcion marcada
 							'#',
 		3+8, //color de aviso, en este tema, magenta con brillo
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
 							},
 
 
@@ -655,7 +663,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 					2,7+8,		//Color para opcion marcada
 					'*',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
 								},
 
 	{0,"RetroMac",7,0,
@@ -669,7 +678,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2,7,		//Color para opcion marcada
 		'.',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        5+8 //si texto inverso solo cambia color tinta
 		},
 
 {0,"Borland",1,7+8,
@@ -683,7 +693,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        2+8 //si texto inverso solo cambia color tinta
 		},
 
 {0,"TurboVision",7,0,
@@ -697,7 +708,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        2+8 //si texto inverso solo cambia color tinta
 		},        
 
 	// https://ethanschoonover.com/solarized/. Solo vale en video driver completo por los colores usados (primer valor de la estructura)
@@ -716,7 +728,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
 		},
 
 	//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
@@ -734,7 +747,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
 		},
 
 
@@ -749,7 +763,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,0,		//Color para opcion marcada
 		'X',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
                 },
 
         {0,"CleanInverse",0,7,
@@ -763,7 +778,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,7,		//Color para opcion marcada
 		'X',
 		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
                 },
 
 
@@ -2278,6 +2294,7 @@ int menu_si_pulsada_tecla_osd(void)
 //devuelve cadena de texto desde teclado
 //max_length contando caracter 0 del final, es decir, para un texto de 4 caracteres, debemos especificar max_length=5
 //ejemplo, si el array es de 50, se le debe pasar max_length a 50
+
 int menu_scanf(char *string,unsigned int max_length,int max_length_shown,int x,int y)
 {
 
@@ -9405,8 +9422,16 @@ void zxvision_print_string(zxvision_window *w,int x,int y,int tinta,int papel,in
 			caracter_aux.papel=papel;
 		}
 		else {
-			caracter_aux.tinta=papel;
-			caracter_aux.papel=tinta;			
+            if (ESTILO_GUI_INVERSE_TINTA!=-1) {
+			    caracter_aux.tinta=ESTILO_GUI_INVERSE_TINTA;
+			    caracter_aux.papel=papel;    
+            }
+            else {
+			    caracter_aux.tinta=papel;
+			    caracter_aux.papel=tinta;
+            }
+        
+
 			//Los hotkeys de menu siempre apareceran en minusculas para ser coherentes
 			//De la misma manera, no se soportan hotkeys en menus que sean minusculas
 			if (minuscula_letra) caracter_aux.caracter=letra_minuscula(caracter_aux.caracter);			
