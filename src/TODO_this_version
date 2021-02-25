@@ -175,3 +175,5 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 Quizá requiere quitar el mostrado de errores en casos en que sí que se quiere mostrar esos errores
 igual se puede simplemente quitar el flag de error pendiente justo despues de hacer el preview, hay (creo) en algun
 otro sitio donde se hace ese reseteo del flag
+
+-ventanas no redimensionables (como la del about) se puede usando teclado WSKL
