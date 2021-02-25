@@ -28261,14 +28261,11 @@ void menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
     int i;
     for (i=0;i<ESTILOS_GUI;i++) {
 
-
-        if (!si_complete_video_driver()) {
-            if (definiciones_estilos_gui[i].require_complete_video_driver) {
-                //El estilo requiere video driver completo. Siguiente
-                //printf ("no puedo seleccionar ese\n");
-                //Y ademas movemos el cursor al principio
-                common_opcion_seleccionada=0;
-            }
+        if (!si_complete_video_driver() && definiciones_estilos_gui[i].require_complete_video_driver) {
+            //El estilo requiere video driver completo. Siguiente
+            //printf ("no puedo seleccionar: %s\n",definiciones_estilos_gui[i].nombre_estilo);
+            //Y ademas movemos el cursor al principio, pues hemos quitado uno al menos de la lista y el cursor no correspondera
+            common_opcion_seleccionada=0;
         }            
         
         else {
