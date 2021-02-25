@@ -28247,8 +28247,60 @@ void menu_interface_zoom(MENU_ITEM_PARAMETERS)
 
 }
 
-
 void menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
+{
+    int common_opcion_seleccionada=estilo_gui_activo;
+
+
+    menu_item *array_menu_common;
+    menu_item item_seleccionado;
+    int retorno_menu;
+
+    menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+    int i;
+    for (i=0;i<ESTILOS_GUI;i++) {
+
+
+        if (!si_complete_video_driver()) {
+            if (definiciones_estilos_gui[i].require_complete_video_driver) {
+                //El estilo requiere video driver completo. Siguiente
+                //printf ("no puedo seleccionar ese\n");
+                //Y ademas movemos el cursor al principio
+                common_opcion_seleccionada=0;
+            }
+        }            
+        
+        else {
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,definiciones_estilos_gui[i].nombre_estilo);
+            menu_add_item_menu_valor_opcion(array_menu_common,i);
+        }
+
+    }
+
+
+    menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+    menu_add_ESC_item(array_menu_common);
+
+    retorno_menu=menu_dibuja_menu(&common_opcion_seleccionada,&item_seleccionado,array_menu_common,"GUI style" );
+
+
+    if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+
+        //Si se pulsa Enter
+        estilo_gui_activo=item_seleccionado.valor_opcion;
+
+        set_charset();
+
+        menu_init_footer();        
+                                    
+    }
+
+}
+
+
+void old_delete_menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
 {
 
 	//No poder seleccionar un estilo que requiere video driver completo si es que no tenemos un video driver completo
