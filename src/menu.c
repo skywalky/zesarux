@@ -575,8 +575,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 //Al menos hacemos colores sin brillo
         {0,"Z88",7,0,
                 0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
-                4,0,          //Colores para opcion seleccionada
-                7,2,4,2,      //Colores para opcion no disponible
+                1,7,          //Colores para opcion seleccionada
+                7,2,1,2,      //Colores para opcion no disponible
                 0,7,          //Colores para el titulo y linea recuadro ventana
 				7,0,          //Colores para el titulo y linea recuadro ventana inactiva
                 4,              //Color waveform
@@ -704,7 +704,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		7+8,0,        	//Colores para el titulo y linea recuadro ventana
 		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
 		0,		//Color waveform
-		7,		//Color para zona no usada en visualmem
+		5,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
@@ -774,7 +774,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 7,0,          //Colores para el titulo y linea recuadro ventana
 				0,7,          //Colores para el titulo y linea recuadro ventana inactiva
                 7,              //Color waveform
-                0,               //Color para zona no usada en visualmem
+                7,               //Color para zona no usada en visualmem
                 0,7,		//Color para opcion marcada
 		'X',
 		2, //color de aviso
