@@ -423,7 +423,26 @@ const int solarized_colortable_original[16]={
 0x859900, //green    (15)
 };
 
+const int turbovision_colortable_original[TURBOVISION_TOTAL_PALETTE_COLOURS]={
 
+0x000000,  //0
+0xa80000,
+0x00a800,  //2 green
+0xa85400,
+0x0000a8,
+0xa800a8,
+0x00a8a8,  //6 cyan
+0xa8a8a8,  //7 white
+0x545454,  //8 grey
+0xfc5454,
+0x54fc54,
+0xfcfc54,
+0x5454fc,
+0xfc54fc,
+0x54fcfc,
+0xffffff
+
+};
 
 //Tabla con los colores extra del Spectra.
 //Valores para intensidades de color:
@@ -8712,7 +8731,10 @@ G  G   R   R   B   B
 					screen_set_colour_normal(QL_INDEX_FIRST_COLOR+i,(r<<16)|(g<<8)|b);					
 				}                
 
-
+				//Colores Turbovision. No los pasamos a grises estos
+				for (i=0;i<TURBOVISION_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(TURBOVISION_INDEX_FIRST_COLOR+i,turbovision_colortable_original[i]);
+				}	
 
 		}
 
@@ -8900,7 +8922,12 @@ Bit 6 GRN1 most  significant bit of green.
 				//Colores QL
 				for (i=0;i<QL_TOTAL_PALETTE_COLOURS;i++) {
 					screen_set_colour_normal(QL_INDEX_FIRST_COLOR+i,ql_colortable_original[i]);
-				}                
+				}         
+
+				//Colores Turbovision
+				for (i=0;i<TURBOVISION_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(TURBOVISION_INDEX_FIRST_COLOR+i,turbovision_colortable_original[i]);
+				}                       
 
 
 		}

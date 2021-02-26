@@ -697,19 +697,19 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         2+8 //si texto inverso solo cambia color tinta
 		},
 
-{0,"TurboVision",7,0,
+{1,"TurboVision",TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-		4,0, 		//Colores para opcion seleccionada
-		7,2,2,7, 	//Colores para opcion no disponible
-		7+8,0,        	//Colores para el titulo y linea recuadro ventana
-		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
-		0,		//Color waveform
-		5,		//Color para zona no usada en visualmem
-		2,7+8,		//Color para opcion marcada
+		TURBOVISION_COLOUR_green,TURBOVISION_COLOUR_black, 		//Colores para opcion seleccionada
+		TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_grey,TURBOVISION_COLOUR_green,TURBOVISION_COLOUR_grey, 	//Colores para opcion no disponible
+		TURBOVISION_COLOUR_lightwhite,TURBOVISION_COLOUR_black,        	//Colores para el titulo y linea recuadro ventana
+		TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,        	//Colores para el titulo y linea recuadro ventana inactiva
+		TURBOVISION_COLOUR_black,		//Color waveform
+		TURBOVISION_COLOUR_cyan,		//Color para zona no usada en visualmem
+		TURBOVISION_COLOUR_red,TURBOVISION_COLOUR_lightwhite,		//Color para opcion marcada
 		'*',
-		2, //color de aviso
+        2, //color de aviso. Seria TURBOVISION_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        2+8 //si texto inverso solo cambia color tinta
+        TURBOVISION_COLOUR_red //si texto inverso solo cambia color tinta
 		},        
 
 	// https://ethanschoonover.com/solarized/. Solo vale en video driver completo por los colores usados (primer valor de la estructura)
