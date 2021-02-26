@@ -547,7 +547,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		6,1,		//Colores para el titulo y linea recuadro ventana
 		1,6,		//Colores para el titulo y linea recuadro ventana inactiva
 		6,		//Color waveform
-		0,               //Color para zona no usada en visualmem
+		7,               //Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
@@ -596,7 +596,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 6+8,1,            //Colores para el titulo y linea recuadro ventana
 				1,6+8,            //Colores para el titulo y linea recuadro ventana inactiva
                 6+8,              //Color waveform
-                0,               //Color para zona no usada en visualmem
+                7,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
@@ -612,7 +612,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para el titulo y linea recuadro ventana
 				VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,            //Colores para el titulo y linea recuadro ventana inactiva
                 VDP_9918_INDEX_FIRST_COLOR+15,              //Color waveform
-                0,               //Color para zona no usada en visualmem
+                7,               //Color para zona no usada en visualmem
                 VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
 				'.',
 				2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
@@ -760,7 +760,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 				7,0,          //Colores para el titulo y linea recuadro ventana inactiva
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
-                7,0,		//Color para opcion marcada
+                7+8,0,		//Color para opcion marcada
 		'X',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -775,7 +775,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 				0,7,          //Colores para el titulo y linea recuadro ventana inactiva
                 7,              //Color waveform
                 7,               //Color para zona no usada en visualmem
-                0,7,		//Color para opcion marcada
+                0,7+8,		//Color para opcion marcada
 		'X',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
