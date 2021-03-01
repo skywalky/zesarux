@@ -411,6 +411,10 @@ Quiza deberia leer el kempston solo por 1f o 3f??
 
 -Poder descargar cp/m dentro de la imagen mmc de TBBlue, usando libreria Chan FatFS
 
+-zoom sprites. coordenadas no siempre correctas. ver BigSprite.sh
+
+-priority sprites. ver BigSprite4b.sh
+
 Refresco de Tbblue para curses , stdout y simpletext en caso de:
 -rainbow y modos tiles etc habilitados. O simplemente modo rainbow  
 

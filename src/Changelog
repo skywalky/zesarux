@@ -86,15 +86,10 @@ Fixed CPC bugs:
 -Fixed RETURN key
 
 Fixed TBBlue bugs:
--Fixed relative sprites when anchor sprite is not visible
--Fixed relative sprites and negative coordinates
--Fixed relative unified sprites
+-Fixed relative sprites: when anchor sprite is not visible, negative coordinates, detecting unified/composite, mirror, rotation
+-Fixed 4bp sprites: calculating pattern, transparency, anchor
 -Fixed writing on divmmc memory when layer2 active
--Fixed detecting unified/composite sprites
--Fixed calculating pattern on 4 bpp sprites
--Fixed 4bpp sprites transparency
--Fixed anchor on 4-byte sprites
--Fixed clipping (affected scrollnutter in the right round corners)
+-Fixed clipping (affected scrollnutter demo in the right round corners)
 
 
 
