@@ -2335,6 +2335,7 @@ If the display of the sprites on the border is disabled, the coordinates of the 
             anchor_index_pattern=index_pattern;
             anchor_mirror_x=mirror_x;
             anchor_mirror_y=mirror_y;    
+            anchor_rotate=sprite_rotate;
             anchor_sprite_zoom_x=sprite_zoom_x;
             anchor_sprite_zoom_y=sprite_zoom_y;
 
