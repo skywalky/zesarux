@@ -28264,10 +28264,10 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     menu_reset_counters_tecla_repeticion();
 
 
-    int x=0;
-    int y=0;
     int ancho=32;
-    int alto=22;
+    int alto=14;
+    int x=menu_center_x()-ancho/2;
+    int y=menu_center_y()-alto/2;
 
 
     zxvision_window ventana;
@@ -28278,11 +28278,17 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
 
     int linea=0;
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Normal Text");    
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Normal Text");
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,0,"Selected Text");    
+    zxvision_print_string(&ventana,1,linea,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,0,"Selected Text"); 
+    if (ESTILO_GUI_MUESTRA_CURSOR) zxvision_print_string(&ventana,0,linea,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,0,">");
+    linea++;
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NO_DISPONIBLE,ESTILO_GUI_PAPEL_NO_DISPONIBLE,0,"Unavailable Text");    
+    zxvision_print_string(&ventana,1,linea,ESTILO_GUI_TINTA_NO_DISPONIBLE,ESTILO_GUI_PAPEL_NO_DISPONIBLE,0,"Unavailable Text");
+    if (ESTILO_GUI_MUESTRA_CURSOR) zxvision_print_string(&ventana,0,linea,ESTILO_GUI_TINTA_NO_DISPONIBLE,ESTILO_GUI_PAPEL_NO_DISPONIBLE,0,"x");
+    linea++;
+
+
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE,ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE,0,"Unavailable Selected Text");    
 
@@ -28304,6 +28310,10 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_text);  
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"~~Hotkey");  
+
+
+    //El parpadeo es igual en todos los temas (de momento) pero también lo mostramos
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"Flashing Text");
 
 
     zxvision_draw_window_contents(&ventana);
