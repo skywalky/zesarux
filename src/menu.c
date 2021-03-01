@@ -28260,7 +28260,48 @@ void menu_interface_change_gui_style_apply(MENU_ITEM_PARAMETERS)
 
 void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
 {
-    
+    menu_espera_no_tecla();
+    menu_reset_counters_tecla_repeticion();
+
+
+    int x=1;
+    int y=1;
+    int ancho=30;
+    int alto=22;
+
+
+    zxvision_window ventana;
+
+    zxvision_new_window(&ventana,x,y,ancho,alto,ancho-1,alto-2,"Test style");
+
+    zxvision_draw_window(&ventana);
+
+    int linea=0;
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Normal Text");    
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,0,"Selected Text");    
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NO_DISPONIBLE,ESTILO_GUI_PAPEL_NO_DISPONIBLE,0,"Unavailable Text");    
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE,ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE,0,"Unavailable Selected Text");    
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO,0,"Title Text");    
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,0,"Inactive Title Text");
+
+
+
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0,"Marked Text");    
+
+    zxvision_draw_window_contents(&ventana);
+
+    zxvision_wait_until_esc(&ventana);
+
+    cls_menu_overlay();    
+
+    zxvision_destroy_window(&ventana);
 }
 
 void menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
