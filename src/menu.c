@@ -28247,6 +28247,22 @@ void menu_interface_zoom(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_interface_change_gui_style_apply(MENU_ITEM_PARAMETERS)
+{
+
+    //Si se pulsa Enter
+    estilo_gui_activo=valor_opcion;
+
+    set_charset();
+
+    menu_init_footer();           
+}
+
+void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
+{
+    
+}
+
 void menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
 {
     int common_opcion_seleccionada=estilo_gui_activo;
@@ -28256,43 +28272,51 @@ void menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
     menu_item item_seleccionado;
     int retorno_menu;
 
-    menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+    do {
 
-    int i;
-    for (i=0;i<ESTILOS_GUI;i++) {
+        menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
-        if (!si_complete_video_driver() && definiciones_estilos_gui[i].require_complete_video_driver) {
-            //El estilo requiere video driver completo. Siguiente
-            //printf ("no puedo seleccionar: %s\n",definiciones_estilos_gui[i].nombre_estilo);
-            //Y ademas movemos el cursor al principio, pues hemos quitado uno al menos de la lista y el cursor no correspondera
-            common_opcion_seleccionada=0;
-        }            
-        
-        else {
-            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,definiciones_estilos_gui[i].nombre_estilo);
-            menu_add_item_menu_valor_opcion(array_menu_common,i);
+        int i;
+        for (i=0;i<ESTILOS_GUI;i++) {
+
+            if (!si_complete_video_driver() && definiciones_estilos_gui[i].require_complete_video_driver) {
+                //El estilo requiere video driver completo. Siguiente
+                //printf ("no puedo seleccionar: %s\n",definiciones_estilos_gui[i].nombre_estilo);
+                //Y ademas movemos el cursor al principio, pues hemos quitado uno al menos de la lista y el cursor no correspondera
+                common_opcion_seleccionada=0;
+            }            
+            
+            else {
+                menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_interface_change_gui_style_apply,NULL,definiciones_estilos_gui[i].nombre_estilo);
+                menu_add_item_menu_valor_opcion(array_menu_common,i);
+            }
+
         }
 
-    }
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        //Y opcion para probar estilo
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_interface_change_gui_style_test,NULL,"Test style");
 
 
-    menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-    menu_add_ESC_item(array_menu_common);
+        menu_add_ESC_item(array_menu_common);
 
-    retorno_menu=menu_dibuja_menu(&common_opcion_seleccionada,&item_seleccionado,array_menu_common,"GUI style" );
+        retorno_menu=menu_dibuja_menu(&common_opcion_seleccionada,&item_seleccionado,array_menu_common,"GUI style" );
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+            }
+        }        
 
 
-    if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-
-        //Si se pulsa Enter
-        estilo_gui_activo=item_seleccionado.valor_opcion;
-
-        set_charset();
-
-        menu_init_footer();        
-                                    
-    }
+    
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
 
