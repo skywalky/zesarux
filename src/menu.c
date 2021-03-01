@@ -28264,9 +28264,9 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     menu_reset_counters_tecla_repeticion();
 
 
-    int x=1;
-    int y=1;
-    int ancho=30;
+    int x=0;
+    int y=0;
+    int ancho=32;
     int alto=22;
 
 
@@ -28290,10 +28290,21 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,0,"Inactive Title Text");
 
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL,0,"Waveform colour (this ink)");
 
+    //tinta 0 - negro es la de intensidad mas baja. papel el del unused
+    zxvision_print_string(&ventana,1,linea++,0,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,0,"Unused visualmem (this paper)");
 
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0,"Marked Text");
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0,"Marked Text");    
+    //Así es tal como lo muestra en texto de volumen
+    char warn_colour='0'+ESTILO_GUI_COLOR_AVISO;
+    char buffer_text[64];
+    sprintf(buffer_text,"$$%cWarning text",warn_colour);
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_text);  
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"~~Hotkey");  
+
 
     zxvision_draw_window_contents(&ventana);
 
