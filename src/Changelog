@@ -1,6 +1,6 @@
 Version 9.2 - Cliff Hanger edition. 24 February 2021
 
-Added command line setting --add-file-to-mmc to be able to copy files to a mmc image before starting ZEsarUX
+Added command line setting --copy-file-to-mmc to be able to copy files to a mmc image before starting ZEsarUX
 Added new ZX-Uno Prism video mode
 Added Dandanator storage button icon
 Added TBBlue snx snapshot support
