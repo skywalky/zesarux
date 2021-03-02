@@ -20,6 +20,7 @@ Improved File utilities Browser:
 -Show more info in some file viewers (.sna, .p, .o, etc)
 -Added .nex file viewer
 -Added copy and delete entire folder
+-Added SCR to TXT file converter
 
 Improved File Browser: added file size information
 Improved cocoa (Mac) driver: allows distinguish between left and right Ctrl key, and left and right Alt key

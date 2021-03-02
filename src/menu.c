@@ -35969,6 +35969,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 		else if (!util_compare_file_extension(archivo,"scr")) {
                 char *opciones[]={
 					"SCR to TAP",
+                    "SCR to TXT",
                         NULL};
 
         int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
@@ -35981,6 +35982,11 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                                 sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
 								convert_scr_to_tap(fullpath,archivo_destino);
                         break;
+
+                        case 1:
+                                sprintf(archivo_destino,"%s/%s.txt",directorio,archivo);
+								convert_scr_to_txt(fullpath,archivo_destino);
+                        break;                        
 
  
                 } 

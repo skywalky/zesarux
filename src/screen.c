@@ -212,6 +212,9 @@ int putpixel_min_y=99999;
 // -> 1,2,5,10,25,1
 int scrstdout_simpletext_refresh_factor=5;
 
+//Usado en varias rutinas
+char screen_common_caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+
 
 total_palette_colours total_palette_colours_array[TOTAL_PALETAS_COLORES]={
 	{"Speccy","16 colour standard",0,SPECCY_TOTAL_PALETTE_COLOURS},
@@ -12042,6 +12045,97 @@ void screen_text_ansi_asigna_color (int x,int y)
 
 }
 
+
+//Parametros
+//si_border: Si debe dibujar con border. Luego las funciones screen_text_borde_horizontal, etc no lo dibujan si border en general esta desactivado
+//rutina puntero_printchar_caracter apunta a rutina de impresion de texto
+//solo_texto: solo muestra texto normal, nada de ascii art ni ? si no se reconoce caracter
+//scrscreen_text_screen: puntero a la direccion de pantalla
+void screen_text_repinta_pantalla_spectrum_comun_addr(int si_border,void (*puntero_printchar_caracter) (z80_byte),int solo_texto,z80_byte *scrscreen_text_screen)
+{
+
+    //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+
+    char caracter;
+    int x,y;
+    unsigned char inv;
+
+    int valor_get_pixel;
+
+
+    //Refresco en Spectrum
+    //unsigned char *scrscreen_text_screen;
+    //scrscreen_text_screen=get_base_mem_pantalla();
+
+    if (si_border) screen_text_borde_horizontal();
+
+    for (y=0;y<24;y++) {
+        if (si_border) screen_text_borde_vertical();
+        for (x=0;x<32;x++) {
+
+			if (!solo_texto) screen_text_ansi_asigna_color(x,y);
+
+            caracter=compare_char(&scrscreen_text_screen[  calcula_offset_screen(x,y)  ] , &inv);
+
+            if (caracter) {
+
+                //printf ("%c",caracter);
+				puntero_printchar_caracter(caracter);
+
+            }
+
+            else {
+
+				if (!solo_texto) {
+
+                    inv=0;
+
+                    if (texto_artistico.v==1) {
+
+                        //si caracter desconocido, hacerlo un poco mas artistico
+                        valor_get_pixel=0;
+                        if (scr_get_4pixel(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
+                        if (scr_get_4pixel(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
+                        if (scr_get_4pixel(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
+                        if (scr_get_4pixel(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
+
+                        caracter=screen_common_caracteres_artisticos[valor_get_pixel];
+
+                    }
+
+                    else caracter='?';
+
+				}
+
+				//solo_texto. caracteres desconocidos son espacios
+				else caracter=' ';
+
+
+
+                //printf ("%c",caracter);
+				puntero_printchar_caracter(caracter);
+
+
+            }
+
+        }
+		if (!solo_texto) screen_text_set_normal_text();
+        if (si_border) screen_text_borde_vertical();
+
+		puntero_printchar_caracter('\n');
+
+    }
+
+    if (si_border) screen_text_borde_horizontal();
+
+
+    if (!solo_texto) screen_text_set_normal_text();
+
+}
+
+
+
+
 //Parametros
 //si_border: Si debe dibujar con border. Luego las funciones screen_text_borde_horizontal, etc no lo dibujan si border en general esta desactivado
 //rutina puntero_printchar_caracter apunta a rutina de impresion de texto
@@ -12155,7 +12249,7 @@ void screen_text_repinta_pantalla_chloe(void)
         //int parpadeo;
 				//int brillo;
 
-        //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+
 
         z80_byte *chloe_screen;
 
@@ -12901,7 +12995,7 @@ void scr_refresca_pantalla_sam_modo_013(int modo,void (*fun_color) (z80_byte col
 
         int brillo,parpadeo;
 
-        //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+
 
 //          scrcurses_screen=get_base_mem_pantalla();
 
@@ -13050,7 +13144,7 @@ void scr_refresca_pantalla_sam_modo_2(void (*fun_color) (z80_byte color,int *bri
 
         int brillo,parpadeo;
 
-        //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+
 
 //          scrcurses_screen=get_base_mem_pantalla();
 

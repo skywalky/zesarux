@@ -9494,6 +9494,46 @@ int convert_hdf_to_raw(char *origen, char *destino)
 }
 
 
+//Para el conversor de scr a txt
+FILE *convert_scr_to_txt_ptr_destino;
+//Soporte para FatFS
+FIL convert_scr_to_txt_fil;        /* File object */
+int convert_scr_to_txt_in_fatfs;
+
+void convert_scr_to_txt_printf (z80_byte c)
+{
+        printf ("%c",c);
+	//scr_detectedchar_print(c);
+    zvfs_fwrite(convert_scr_to_txt_in_fatfs,&c,1,convert_scr_to_txt_ptr_destino,&convert_scr_to_txt_fil);
+
+
+}
+
+int convert_scr_to_txt(char *origen, char *destino)
+{
+            
+        
+    z80_byte *buffer_lectura;
+    buffer_lectura=malloc(6912);
+
+    if (buffer_lectura==NULL) cpu_panic("Cannot allocate memory for file read");
+
+    lee_archivo(origen,(char *)buffer_lectura,6912);
+
+
+    if (zvfs_fopen_write(destino,&convert_scr_to_txt_in_fatfs,&convert_scr_to_txt_ptr_destino,&convert_scr_to_txt_fil)<0) {
+        debug_printf (VERBOSE_ERR,"Can not open %s",destino);
+        return 1;
+    }
+
+
+    screen_text_repinta_pantalla_spectrum_comun_addr(0,convert_scr_to_txt_printf,1,buffer_lectura);
+
+    zvfs_fclose(convert_scr_to_txt_in_fatfs,convert_scr_to_txt_ptr_destino,&convert_scr_to_txt_fil);
+
+    return 0;
+}
+
 
 int convert_scr_to_tap(char *origen, char *destino)
 {
