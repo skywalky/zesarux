@@ -3192,7 +3192,26 @@ int scr_get_pixel_rainbow(int x,int y)
 
 }
 
+//Devuelve pixel a 1 o 0, en coordenadas 0..255,0..191. En pantalla de spectrum con puntero de entrada
+int scr_get_pixel_adr(int x,int y,z80_byte *screen)
+{
 
+	z80_int direccion;
+	z80_byte byte_leido;
+	z80_byte bit;
+	z80_byte mascara;
+
+       direccion=screen_addr_table[(y<<5)]+x/8;
+       byte_leido=screen[direccion];
+
+
+	bit=x%8;
+	mascara=128;
+	if (bit) mascara=mascara>>bit;
+	if ((byte_leido & mascara)==0) return 0;
+	else return 1;
+
+}
 
 //Devuelve pixel a 1 o 0, en coordenadas 0..255,0..191. En pantalla de spectrum
 int scr_get_pixel(int x,int y)
@@ -3227,6 +3246,23 @@ int scr_get_4pixel(int x,int y)
         for (dx=0;dx<4;dx++) {
                 for (dy=0;dy<4;dy++) {
 			result +=scr_get_pixel(x+dx,y+dy);
+		}
+	}
+
+	return result;
+
+}
+
+//Devuelve suma de pixeles a 1 en un cuadrado de 4x4, en coordenadas 0..255,0..191. En pantalla de spectrum con puntero de entrada
+int scr_get_4pixel_adr(int x,int y,z80_byte *screen)
+{
+
+	int result=0;
+	int dx,dy;
+
+        for (dx=0;dx<4;dx++) {
+                for (dy=0;dy<4;dy++) {
+			result +=scr_get_pixel_adr(x+dx,y+dy,screen);
 		}
 	}
 
@@ -12051,10 +12087,10 @@ void screen_text_ansi_asigna_color (int x,int y)
 //rutina puntero_printchar_caracter apunta a rutina de impresion de texto
 //solo_texto: solo muestra texto normal, nada de ascii art ni ? si no se reconoce caracter
 //scrscreen_text_screen: puntero a la direccion de pantalla
-void screen_text_repinta_pantalla_spectrum_comun_addr(int si_border,void (*puntero_printchar_caracter) (z80_byte),int solo_texto,z80_byte *scrscreen_text_screen)
+//no_ansi: no enviar caracteres ansi a consola
+void screen_text_repinta_pantalla_spectrum_comun_addr(int si_border,void (*puntero_printchar_caracter) (z80_byte),int no_ansi,int solo_texto,z80_byte *scrscreen_text_screen)
 {
 
-    //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
     char caracter;
     int x,y;
@@ -12073,7 +12109,10 @@ void screen_text_repinta_pantalla_spectrum_comun_addr(int si_border,void (*punte
         if (si_border) screen_text_borde_vertical();
         for (x=0;x<32;x++) {
 
-			if (!solo_texto) screen_text_ansi_asigna_color(x,y);
+			if (!no_ansi) {
+                //printf("ansii\n");
+                screen_text_ansi_asigna_color(x,y);
+            }
 
             caracter=compare_char(&scrscreen_text_screen[  calcula_offset_screen(x,y)  ] , &inv);
 
@@ -12094,10 +12133,10 @@ void screen_text_repinta_pantalla_spectrum_comun_addr(int si_border,void (*punte
 
                         //si caracter desconocido, hacerlo un poco mas artistico
                         valor_get_pixel=0;
-                        if (scr_get_4pixel(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
-                        if (scr_get_4pixel(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
-                        if (scr_get_4pixel(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
-                        if (scr_get_4pixel(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
+                        if (scr_get_4pixel_adr(x*8,y*8,scrscreen_text_screen)>=umbral_arttext) valor_get_pixel+=1;
+                        if (scr_get_4pixel_adr(x*8+4,y*8,scrscreen_text_screen)>=umbral_arttext) valor_get_pixel+=2;
+                        if (scr_get_4pixel_adr(x*8,y*8+4,scrscreen_text_screen)>=umbral_arttext) valor_get_pixel+=4;
+                        if (scr_get_4pixel_adr(x*8+4,y*8+4,scrscreen_text_screen)>=umbral_arttext) valor_get_pixel+=8;
 
                         caracter=screen_common_caracteres_artisticos[valor_get_pixel];
 

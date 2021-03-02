@@ -9502,10 +9502,7 @@ int convert_scr_to_txt_in_fatfs;
 
 void convert_scr_to_txt_printf (z80_byte c)
 {
-        printf ("%c",c);
-	//scr_detectedchar_print(c);
     zvfs_fwrite(convert_scr_to_txt_in_fatfs,&c,1,convert_scr_to_txt_ptr_destino,&convert_scr_to_txt_fil);
-
 
 }
 
@@ -9527,7 +9524,7 @@ int convert_scr_to_txt(char *origen, char *destino)
     }
 
 
-    screen_text_repinta_pantalla_spectrum_comun_addr(0,convert_scr_to_txt_printf,1,buffer_lectura);
+    screen_text_repinta_pantalla_spectrum_comun_addr(0,convert_scr_to_txt_printf,1,0,buffer_lectura);
 
     zvfs_fclose(convert_scr_to_txt_in_fatfs,convert_scr_to_txt_ptr_destino,&convert_scr_to_txt_fil);
 

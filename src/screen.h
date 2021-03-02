@@ -684,7 +684,7 @@ extern int detect_rainbow_border_changes_in_frame;
 extern int detect_rainbow_border_total_frames;
 
 extern void screen_text_repinta_pantalla_spectrum_comun(int si_border,void (*puntero_printchar_caracter) (z80_byte),int solo_texto);
-extern void screen_text_repinta_pantalla_spectrum_comun_addr(int si_border,void (*puntero_printchar_caracter) (z80_byte),int solo_texto,z80_byte *scrscreen_text_screen);
+extern void screen_text_repinta_pantalla_spectrum_comun_addr(int si_border,void (*puntero_printchar_caracter) (z80_byte),int no_ansi,int solo_texto,z80_byte *scrscreen_text_screen);
 extern void screen_text_repinta_pantalla_zx81_comun(int si_border,void (*puntero_printchar_caracter) (z80_byte),int solo_texto );
 
 extern int snow_effect_min_value;
