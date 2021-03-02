@@ -4799,90 +4799,7 @@ Bit	Function
 			}*/
 		break;
 
-/*
-Juego Santa envia:
-
-debug tbblue register 14H (20 decimal) sending value E3H - Pending?
-debug tbblue register 12H (18 decimal) sending value 09H -OK
-debug tbblue register 13H (19 decimal) sending value 09H -OK
-debug tbblue register 32H (50 decimal) sending value 00H -OK
-debug tbblue register 33H (51 decimal) sending value 00H -OK
-debug tbblue register 16H (22 decimal) sending value 00H -OK
-debug tbblue register 17H (23 decimal) sending value 00H -OK
-debug tbblue register 2FH (47 decimal) sending value 00H -OK
-debug tbblue register 30H (48 decimal) sending value 00H -OK
-debug tbblue register 31H (49 decimal) sending value 00H -OK
-debug tbblue register 68H (104 decimal) sending value 00H -OK
-debug tbblue register 6BH (107 decimal) sending value 00H -OK
-debug tbblue register 14H (20 decimal) sending value E3H - Pending?
-debug tbblue register 4BH (75 decimal) sending value E3H -OK
-debug tbblue register 4AH (74 decimal) sending value 00H -OK
-debug tbblue register 4CH (76 decimal) sending value 0FH -OK
-debug tbblue register 12H (18 decimal) sending value 09H -OK
-debug tbblue register 13H (19 decimal) sending value 0CH -OK
-debug tbblue register 14H (20 decimal) sending value E3H -OK
-debug tbblue register 16H (22 decimal) sending value 00H -OK
-debug tbblue register 17H (23 decimal) sending value 00H -OK
-debug tbblue register 32H (50 decimal) sending value 00H -OK
-debug tbblue register 33H (51 decimal) sending value 00H -OK
-debug tbblue register 4AH (74 decimal) sending value 00H -OK
-debug tbblue register 4BH (75 decimal) sending value E3H -OK
-debug tbblue register 4AH (74 decimal) sending value 00H -OK
-debug tbblue register 14H (20 decimal) sending value E3H - Pending?
-debug tbblue register 68H (104 decimal) sending value 80H -OK
-debug tbblue register 12H (18 decimal) sending value 09H -OK
-
---hasta aqui splash inicial
---a partir de aqui aparece menu
-
-
-
-debug tbblue register 6BH (107 decimal) sending value 00H -OK
-debug tbblue register 4CH (76 decimal) sending value 00H -OK
-debug tbblue register 6EH (110 decimal) sending value 6CH -OK
-debug tbblue register 6FH (111 decimal) sending value 40H -OK
-debug tbblue register 12H (18 decimal) sending value 09H -OK
-debug tbblue register 6BH (107 decimal) sending value 81H -OK
-debug tbblue register 31H (49 decimal) sending value 00H -OK
-
-
-
-Warhawk envia:
-debug tbblue register 78H (120 decimal) sending value 00H
-debug tbblue register 78H (120 decimal) sending value 00H
-debug tbblue register 78H (120 decimal) sending value 00H
-debug tbblue register 78H (120 decimal) sending value 00H
-debug tbblue register 78H (120 decimal) sending value 00H
-debug tbblue register 78H (120 decimal) sending value 00H
-debug tbblue register 38H (56 decimal) sending value 8AH
-debug tbblue register 35H (53 decimal) sending value 60H
-debug tbblue register 36H (54 decimal) sending value FEH
-debug tbblue register 77H (119 decimal) sending value 00H
-debug tbblue register 38H (56 decimal) sending value 8BH
-debug tbblue register 35H (53 decimal) sending value 70H
-debug tbblue register 36H (54 decimal) sending value FEH
-debug tbblue register 77H (119 decimal) sending value 00H
-debug tbblue register 38H (56 decimal) sending value 8CH
-debug tbblue register 35H (53 decimal) sending value 80H
-debug tbblue register 36H (54 decimal) sending value FEH
-debug tbblue register 77H (119 decimal) sending value 00H
-debug tbblue register 38H (56 decimal) sending value 8DH
-debug tbblue register 35H (53 decimal) sending value 90H
-debug tbblue register 36H (54 decimal) sending value FEH
-debug tbblue register 77H (119 decimal) sending value 00H
-debug tbblue register 38H (56 decimal) sending value 94H
-debug tbblue register 35H (53 decimal) sending value 50H
-debug tbblue register 36H (54 decimal) sending value FEH
-debug tbblue register 77H (119 decimal) sending value 00H
-debug tbblue register 38H (56 decimal) sending value 95H
-debug tbblue register 35H (53 decimal) sending value 60H
-debug tbblue register 36H (54 decimal) sending value FEH
-
-
-
-
-
-*/		
+	
 
 
 	}
@@ -5631,11 +5548,7 @@ z80_byte tbblue_get_pixel_tile_xy(int x,int y,z80_byte *puntero_this_tiledef)
 	}
 }
 
-/*int temp_tile_rebote_x=10;
-int temp_tile_rebote_y=10;
-int temp_tile_rebote_incx=+1;
-int temp_tile_rebote_incy=+1;
-int temp_tile_rebote_veces=0;*/
+
 
 void tbblue_do_tile_overlay(int scanline)
 {
@@ -5796,177 +5709,6 @@ Defines the transparent colour index for tiles. The 4-bit pixels of a tile defin
 
 	//printf ("y: %d t_scanline_draw: %d rainbowy:%d sprite_y: %d\n",y,t_scanline_draw,rainbowy,sprite_y);
 	z80_byte tbblue_default_tilemap_attr=tbblue_registers[108];
-
-
-
-		
-
-
-/* Antiguo bloque. Mejorado en el fork de Peter Ped Helcmanovsky mas abajo
-
-
-
-	for (x=0;x<tilemap_width;x++) {
-		//TODO stencil mode
-		byte_first=*puntero_tilemap;
-		puntero_tilemap++;
-		if (tbblue_bytes_per_tile==2) {
-			byte_second=*puntero_tilemap;
-			puntero_tilemap++;
-		}
-                                        
-		int tnum=byte_first;
-
-
-// bits 15-12 : palette offset
-//   bit     11 : x mirror
-//   bit     10 : y mirror
-//   bit      9 : rotate
-//   bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-//   bits   7-0 : tile number
-//                                       
-
-
-		if (tbblue_bytes_per_tile==1) {
-                                        
-
-//                                                 (R/W) 0x6C (108) => Default Tilemap Attribute
-//   bits 7-4 = Palette Offset
-//   bit 3    = X mirror
-//   bit 2    = Y mirror
-//   bit 1    = Rotate
-//   bit 0    = ULA over tilemap
-//             (bit 8 of tile id if the ULA is disabled)
-//                                                 
-			tpal=(tbblue_default_tilemap_attr)&0xF0;
-
-			xmirror=(tbblue_default_tilemap_attr>>3)&1;
-			ymirror=(tbblue_default_tilemap_attr>>2)&1;
-			rotate=(tbblue_default_tilemap_attr>>1)&1;
-
-			if (tbblue_if_ula_is_enabled() ) {
-    
-                                           
-//                                                 108
-//                                                   bit 0    = ULA over tilemap
-//              (bit 8 of tile id if the ULA is disabled)
-                                                
-				ula_over_tilemap=tbblue_default_tilemap_attr &1;
-			}
-
-			else {
-				tnum |=(tbblue_default_tilemap_attr&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-			}
-
-			//printf ("1 bytes por tile\n");
-
-		}
-
-		else {
-			//printf ("2 bytes por tile\n");
-																				
-                                                
-
-//                                          bits 15-12 : palette offset
-//   bit     11 : x mirror
-//   bit     10 : y mirror
-//   bit      9 : rotate
-//   bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-//                                       
-			tpal=(byte_second)&0xF0;
-			xmirror=(byte_second>>3)&1;
-			ymirror=(byte_second>>2)&1;
-			rotate=(byte_second>>1)&1;
-			//ula_over_tilemap=byte_second &1;
-
-			//printf ("Color independiente. tpal:%d byte_second: %02XH\n",tpal,byte_second);
-
-			if (tbblue_if_ula_is_enabled() ) {
-        //
-        //bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number) 
-        //                                        
-				ula_over_tilemap=byte_second &1;
-			}
-
-			else {
-				tnum |=(byte_second&1)<<8; // bit      8 : ULA over tilemap (if the ula is disabled, bit 8 of tile number)
-			}
-		}
-
-		//Sacar puntero a principio tiledef. 
-		int offset_tiledef;
-
-
-		if (tbblue_tiles_are_monocrome()) {
-			
-
-			//TODO: mejorar este caso
-
-
-			//byte_second=*(puntero_tilemap-1);
-
-			xmirror=0;
-			ymirror=0;
-			rotate=0;
-
-
-			
-
-// bits 15-9: palette offset (7 bits)
-// bit 8 : ULA over tilemap (in 512 tile mode, bit 8 of the tile number)
-// bits 7-0 : tile number
-
-			if (tbblue_tiles_512_mode() ) {
-				//printf ("512 mode\n");
-
-				tnum=byte_first | ((byte_second&1)*256);
-				ula_over_tilemap=0;
-			}
-
-			else {
-				tnum=byte_first;
-				ula_over_tilemap=byte_second &1;
-			}
-
-
-			tpal=(byte_second >> 1) & 127;
-
-			//TODO: parche feo. no se porque, si no, cp/m se ven mal los colores.
-			tpal=(byte_second >> 3) & 31;
-
-			//madre mia que mal esta documentado esto.... sin rotar un bit a la derecha??? en fin
-			tpal=(byte_second)&0xFE;
-			
-			offset_tiledef=tnum*TBBLUE_TILE_HEIGHT;
-//printf ("tnum: %d off: %d\n",tnum,offset_tiledef);
-
-			
-// 			In text mode the interpretation of the tilemap entry changes.  Normally it's:
-
-// bits 15-12 : palette offset
-// bit 11 : x mirror
-// bit 10 : y mirror
-// bit 9 : rotate
-// bit 8 : ULA over tilemap (in 512 tile mode, bit 8 of the tile number)
-// bits 7-0 : tile number
-// 
-// but it changes to:
-// 
-// bits 15-9: palette offset (7 bits)
-// bit 8 : ULA over tilemap (in 512 tile mode, bit 8 of the tile number)
-// bits 7-0 : tile number
-// 
-// The tiles are defined like UDGs (1 bit per pixel) and that 1 bit is combined with 
-// the 7-bit palette offset to form the 8-bit pixel that gets looked up in the tilemap palette.
-			
-		}
-		else {
-			//4 bpp. cada tiledef ocupa 4 bytes * 8 = 32
-			offset_tiledef=tnum*(TBBLUE_TILE_WIDTH/2)*TBBLUE_TILE_HEIGHT;
-		}
-
-
-FIN Antiguo bloque. Mejorado del fork de Peter Ped Helcmanovsky */
 
 
 // Bloque mejorado del fork de Peter Ped Helcmanovsky
@@ -6258,7 +6000,6 @@ void tbblue_fast_render_ula_layer(z80_int *puntero_final_rainbow,int estamos_bor
 
 }
 
-//int tempconta;
 
 //Nos situamos en la linea justo donde empiezan los tiles
 void tbblue_render_layers_rainbow(int capalayer2,int capasprites)
