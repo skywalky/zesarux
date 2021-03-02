@@ -171,9 +171,3 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -Si ZX desktops activado. Pero cargo un driver de texto que pasará? Y sale habilitado? Y como se guardará la opción?
 
--con previews, que no muestre error si no puede leer algun archivo. Por ejemplo en carpeta de snap_tests sucede
-Quizá requiere quitar el mostrado de errores en casos en que sí que se quiere mostrar esos errores
-igual se puede simplemente quitar el flag de error pendiente justo despues de hacer el preview, hay (creo) en algun
-otro sitio donde se hace ese reseteo del flag
-
--ventanas no redimensionables (como la del about) se puede usando teclado WSKL

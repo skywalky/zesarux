@@ -38616,6 +38616,12 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 					retorno=util_extract_dsk(filesel_nombre_archivo_seleccionado,tmpdir);
 			}				
 
+            //printf("if_pending_error_message: %d\n",if_pending_error_message);
+            //Quitar posibles errores al preparar esta preview
+            //no queremos alertar al usuario por archivos incorrectos
+            //De todas maneras siempre se vería el error en la consola
+            if_pending_error_message=0;
+
 			if (retorno!=0) {
 				//ERROR
 				return;
@@ -38742,6 +38748,13 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 		menu_filesel_overlay_last_preview_width=0;
 		menu_filesel_overlay_last_preview_height=0;
 	}
+
+    //printf("if_pending_error_message: %d\n",if_pending_error_message);
+    //Quitar posibles errores al preparar esta preview
+    //no queremos alertar al usuario por archivos incorrectos
+    //De todas maneras siempre se vería el error en la consola
+    if_pending_error_message=0;
+
 
 }
 
