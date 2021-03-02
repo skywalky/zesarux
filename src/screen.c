@@ -12182,7 +12182,7 @@ void screen_text_repinta_pantalla_spectrum_comun_addr(int si_border,void (*punte
 void screen_text_repinta_pantalla_spectrum_comun(int si_border,void (*puntero_printchar_caracter) (z80_byte),int solo_texto)
 {
 
-        char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+        //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
         char caracter;
         int x,y;
@@ -12229,7 +12229,7 @@ void screen_text_repinta_pantalla_spectrum_comun(int si_border,void (*puntero_pr
         		                	if (scr_get_4pixel(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
 	                		        if (scr_get_4pixel(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
 
-		        	                caracter=caracteres_artisticos[valor_get_pixel];
+		        	                caracter=screen_common_caracteres_artisticos[valor_get_pixel];
 
         		                }
 
@@ -14296,24 +14296,11 @@ int screen_convert_rainbow_to_blackwhite(z80_int *source_bitmap,int source_width
 z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_width,int source_height,int total_ancho)
 {
 
-	char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+	//char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 	int valor_get_pixel=0;
 
-		/*
-                                if (texto_artistico.v==1) {
-                                        //si caracter desconocido, hacerlo un poco mas artistico
-                                        valor_get_pixel=0;
-                                        if (scr_get_4pixel(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
-                                        if (scr_get_4pixel(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
-                                        if (scr_get_4pixel(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
-                                        if (scr_get_4pixel(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
 
-                                        caracter=caracteres_artisticos[valor_get_pixel];
-                                }
-
-                                else caracter='?';
-		*/
 
 
 
@@ -14335,13 +14322,13 @@ z80_byte screen_convert_rainbow_to_text_char(z80_int *source_bitmap,int source_w
 	if (cuadrado_aba) valor_get_pixel+=4;
 	if (cuadrado_abader) valor_get_pixel+=8;
 
-	return caracteres_artisticos[valor_get_pixel];
+	return screen_common_caracteres_artisticos[valor_get_pixel];
     }
 
     else {
         int cuadrado=screen_convert_rainbow_to_blackwhite(source_bitmap,1,1,total_ancho);
-        if (cuadrado) return caracteres_artisticos[15];
-        else return caracteres_artisticos[0];
+        if (cuadrado) return screen_common_caracteres_artisticos[15];
+        else return screen_common_caracteres_artisticos[0];
     }
 
 }
