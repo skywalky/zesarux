@@ -12110,8 +12110,8 @@ void screen_text_repinta_pantalla_spectrum_comun_addr(int si_border,void (*punte
         for (x=0;x<32;x++) {
 
 			if (!no_ansi) {
-                //printf("ansii\n");
                 screen_text_ansi_asigna_color(x,y);
+                //printf("ansii\n");
             }
 
             caracter=compare_char(&scrscreen_text_screen[  calcula_offset_screen(x,y)  ] , &inv);
