@@ -11,7 +11,6 @@ Added ZRCP commands:
 Added alternate Jupiter ACE rom
 Added another fourth easter egg ;)
 Added read only setting for esxdos handler
-Added .nex file viewer
 Added setting to redefine joystick fire key
 Added Debug action to set PC register to zero
 
@@ -19,6 +18,7 @@ Improved File utilities Browser:
 -Added support for browsing inside FAT filesystem disk images (.img, .mmc, .ide, etc)
 -Detect when source and target directories are the same when moving or copying
 -Show more info in some file viewers (.sna, .p, .o, etc)
+-Added .nex file viewer
 -Added copy and delete entire folder
 
 Improved File Browser: added file size information
@@ -59,12 +59,12 @@ Improved TBBlue emulation:
 -Added Sprites Debug memory zone
 -Optimize sprite rendering (saving 1% cpu on my computer)
 
-Improved Speccy online browser: now uses ZXinfo API V3
-Improved Hex Editor: Now it can be put on background
-
 Improved all-to-pixel text rendering: 
 -Allow 1:1 scale
 -Allow to set window size and offsets in characters
+
+Improved Speccy online browser: now uses ZXinfo API V3
+Improved Hex Editor: Now it can be put on background
 
 Fixed annoying flickering in menu using XWindows video driver
 Fixed loading General Sound rom

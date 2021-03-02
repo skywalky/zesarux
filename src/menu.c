@@ -10721,19 +10721,19 @@ void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla)
 						//Redimensionar ventana
 						//Mover ventana 
 						case 'W':
-							if (ventana->visible_height-1>1) zxvision_set_visible_height(ventana,ventana->visible_height-1);
+							if (ventana->visible_height-1>1 && ventana->can_be_resized) zxvision_set_visible_height(ventana,ventana->visible_height-1);
 						break;		
 
 						case 'S':
-							zxvision_set_visible_height(ventana,ventana->visible_height+1);
+							if (ventana->can_be_resized) zxvision_set_visible_height(ventana,ventana->visible_height+1);
 						break;	
 
 						case 'K':
-							if (ventana->visible_width-1>5) zxvision_set_visible_width(ventana,ventana->visible_width-1);
+							if (ventana->visible_width-1>5 && ventana->can_be_resized) zxvision_set_visible_width(ventana,ventana->visible_width-1);
 						break;									
 
 						case 'L':
-							zxvision_set_visible_width(ventana,ventana->visible_width+1);
+							if (ventana->can_be_resized) zxvision_set_visible_width(ventana,ventana->visible_width+1);
 						break;											
 					
 						default:
