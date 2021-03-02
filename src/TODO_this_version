@@ -141,16 +141,12 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 
 -the next war: revisar border deberia desactivar. musica en menu no se oye bien
 
--tbblue: rotaciones de sprites (tanto 8bpp como 4bpp). Ver test SprBig4b.sna , SpritBig.sna. 
-
 -cocoa: con pantallas retina se queda una pantalla de mitad abajo a la izquierda
 
 
 -Opción activar nuevo algoritmo de carga según valor anterior como conversor 1 bit
 
--Utf blocky 
-
-A veces salen interrogantes 
+-Utf blocky : A veces salen interrogantes 
 
 
 -eliminar parpadeos en fbdev usando doble buffer?
@@ -169,3 +165,4 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -Si ZX desktops activado. Pero cargo un driver de texto que pasará? Y sale habilitado? Y como se guardará la opción?
 
+-al ir a .. desde aux_zesarux, no cambia

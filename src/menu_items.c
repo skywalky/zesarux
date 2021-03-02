@@ -22455,7 +22455,8 @@ void menu_display_save_screen(MENU_ITEM_PARAMETERS)
 
 		save_screen(screen_save_file);
 
-
+        //Si ha ido bien la grabacion
+		if (!if_pending_error_message) menu_generic_message_splash("Save Screen","OK. Screen saved");
 
 		//Y salimos de todos los menus
 		salir_todos_menus=1;
