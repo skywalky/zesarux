@@ -11910,7 +11910,7 @@ void screen_text_repinta_pantalla_zx81_rainbow_comun(void (*puntero_printchar_ca
 
         int valor_get_pixel;
 
-        char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+        //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 
         z80_int direccion;
@@ -11993,7 +11993,7 @@ void screen_text_repinta_pantalla_zx81_rainbow_comun(void (*puntero_printchar_ca
                                         if (scr_get_4pixel_rainbow(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
                                         if (scr_get_4pixel_rainbow(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
 
-                                        caracter=caracteres_artisticos[valor_get_pixel];
+                                        caracter=screen_common_caracteres_artisticos[valor_get_pixel];
 
                                         //attron(COLOR_PAIR(0+7*8+1));
                                  }
@@ -12945,7 +12945,7 @@ char scr_artistic_retorna_artistic_char(z80_byte *origen, int incremento_origen)
 {
 
 	//TODO. meter esto como constante comun
-	char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+	//char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 	//Primero convertir sprite a array lineal
 	z80_byte sprite_destino[8];
@@ -12953,15 +12953,7 @@ char scr_artistic_retorna_artistic_char(z80_byte *origen, int incremento_origen)
 	scr_artistic_copy_8_line_sprite(origen,incremento_origen,sprite_destino);
 
 	//Dividir sprite en 4 partes de 4x4
-	/*
-                                        valor_get_pixel=0;
-                                        if (scr_get_4pixel_rainbow(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
-                                        if (scr_get_4pixel_rainbow(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
-                                        if (scr_get_4pixel_rainbow(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
-                                        if (scr_get_4pixel_rainbow(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
 
-                                        caracter=caracteres_artisticos[valor_get_pixel];
-	*/
 
 	//trozo 1: arriba, izquierda
 	//trozo 2: arriba, derecha
@@ -13000,13 +12992,6 @@ char scr_artistic_retorna_artistic_char(z80_byte *origen, int incremento_origen)
 
 	int valor_get_pixel=0;
 
-	/*
-                                        valor_get_pixel=0;
-                                        if (scr_get_4pixel_rainbow(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
-                                        if (scr_get_4pixel_rainbow(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
-                                        if (scr_get_4pixel_rainbow(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
-                                        if (scr_get_4pixel_rainbow(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
-	*/
 
 
 	if (scr_artistic_count_bits_4_bytes(sprite_troceado[0])>=umbral_arttext) valor_get_pixel+=1;
@@ -13016,7 +13001,7 @@ char scr_artistic_retorna_artistic_char(z80_byte *origen, int incremento_origen)
 
 	char caracter;
 
-	caracter=caracteres_artisticos[valor_get_pixel];
+	caracter=screen_common_caracteres_artisticos[valor_get_pixel];
 
 	return caracter;
 }
