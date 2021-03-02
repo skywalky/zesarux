@@ -437,7 +437,7 @@ char *bitmap_button_ext_desktop_storage[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"xggg   ggxggx bbybybybybbb",		
 	"xggg   ggxggx bbybbbbbbbbb",		
 	"xggggggggxggx bbbbbbbbbbbb",		
-	"xgggxxxggxggx bbwwwbwwbbb",		
+	"xgggxxxggxggx bbwwwbwwbbbb",
 	"xggxx xxggxxx bbwbbbwbwbbb",	//20	
 	"xggx   xggggx bbwwwbwbwbbb",		
 	"xggxx xxggggx bbbbwbwbwbbb",    
