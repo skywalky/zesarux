@@ -587,7 +587,7 @@ void scrcurses_refresca_pantalla_no_rainbow(void)
 
         int brillo,parpadeo;
 
-	char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+	//char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 	  scrcurses_screen=get_base_mem_pantalla();
 
@@ -627,7 +627,7 @@ void scrcurses_refresca_pantalla_no_rainbow(void)
 
                                 if (texto_artistico.v==1) {
                                         //si caracter desconocido, hacerlo un poco mas artistico
-                                        caracter=caracteres_artisticos[valor_get_pixel];
+                                        caracter=screen_common_caracteres_artisticos[valor_get_pixel];
        							}
 
                                 else caracter='?';
@@ -848,7 +848,7 @@ void scrcurses_refresca_pantalla_zx8081_rainbow(void)
 
         int valor_get_pixel;
 
-        char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+        //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 
 	z80_int direccion;
@@ -924,7 +924,7 @@ void scrcurses_refresca_pantalla_zx8081_rainbow(void)
                                         if (scr_get_4pixel_rainbow(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
                                         if (scr_get_4pixel_rainbow(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
 
-                                        caracter=caracteres_artisticos[valor_get_pixel];
+                                        caracter=screen_common_caracteres_artisticos[valor_get_pixel];
 
 					attron(COLOR_PAIR(0+7*8+1));
                                  }
@@ -1081,12 +1081,12 @@ void scrcurses_refresca_pantalla_common_fun_caracter(int x,int y,int brillo, uns
 //lo normal seria que el valor viniera aqui desde la funcion que llama aqui
 
 
-char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+//char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 int valor_get_pixel;
 
 for (valor_get_pixel=0;valor_get_pixel<16;valor_get_pixel++) {
-  if (caracter==caracteres_artisticos[valor_get_pixel]) break;
+  if (caracter==screen_common_caracteres_artisticos[valor_get_pixel]) break;
 }
 
 if (valor_get_pixel>15) valor_get_pixel=15;
@@ -1249,7 +1249,7 @@ void scrcurses_refresca_pantalla(void)
 	//char c;
 	//int brillo,parpadeo;
 
-	//char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+
 
 	//char my_string[2];
 	//char caracter;

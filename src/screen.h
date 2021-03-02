@@ -842,6 +842,8 @@ extern int screen_colores_rainbow_nobrillo[];
 
 extern int scrstdout_simpletext_refresh_factor;
 
+extern char screen_common_caracteres_artisticos[];
+
 extern void scr_set_fps_stdout_simpletext(int fps);
 
 extern int screen_if_refresh(void);
