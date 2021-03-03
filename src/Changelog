@@ -70,6 +70,7 @@ Improved Hex Editor: Now it can be put on background
 Fixed annoying flickering in menu using XWindows video driver
 Fixed loading General Sound rom
 Fixed segfaults on fileselector +3 DSK screen previews using Speedlock protected disks or bad disks
+Fixed receiving large snapshots on ZRCP/ZENG
 Fixed pixel color on text all-to-pixel text rendering (color inversion)
 Fixed downloads from spectrumcomputing
 Fixed DivIDE/DivMMC mapram behaviour
