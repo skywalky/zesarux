@@ -790,7 +790,7 @@ void core_spectrum_ciclo_fetch(void)
 				//Es muy poco...
 				if (nmi_pending_post_opcode) {
 					//Dado que esto se activa despues de lanzar nmi y leer opcode, aqui saltara cuando PC=67H
-					debug_printf (VERBOSE_DEBUG,"Handling nmi mapping post opcode fetch at %04XH",reg_pc);
+					//debug_printf (VERBOSE_DEBUG,"Handling nmi mapping post opcode fetch at %04XH",reg_pc);
 					nmi_handle_pending_prepost_fetch(); 
 				}				
 
