@@ -638,7 +638,9 @@ void tsconf_dma_operation(int source,int destination,int burst_length,int burst_
 			break;
 
 			default:
-				debug_printf (VERBOSE_ERR,"Unemulated dma type: rw: %d ddev: %02XH",dma_rw,dma_ddev);
+                //cargando zifi-2.spg genera error: "Unemulated dma type: rw: 0 ddev: 02H" continuamente
+                //acaba colgando ZEsarUX si el mensaje es con VERBOSE_ERR
+				debug_printf (VERBOSE_DEBUG,"Unemulated dma type: rw: %d ddev: %02XH",dma_rw,dma_ddev);
 				return;
 			break;
 		}
