@@ -157,6 +157,7 @@ Por drivers:
 -Permitir ZX desktop en curses? Cuidado porque igual intenta usar putpixel para dibujar las franjas de colores por defecto del fondo de ZX desktop
 
 
+-Utf blocky : A veces salen interrogantes. Probado en linux y no sale. Quiza es el cliente ssh contra remoto el que falla con esto a veces
 
 --stdout--
 

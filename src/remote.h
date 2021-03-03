@@ -40,15 +40,16 @@ extern int remote_salir_conexion;
 
 #define DEFAULT_REMOTE_PROTOCOL_PORT 10000
 
-#define MAX_LENGTH_PROTOCOL_COMMAND (65536*4+1024)
-  //Maximo es 65536*4, para permitir comando largo write-mapped-memory que pueda escribir en 64kb de memoria,
-	//teniendo en cuenta que un numero como maximo ocupa 3 caracteres + 1 espacio
-	//Damos algunos bytes de mas de margen por si acaso
+#define ZRCP_GET_PUT_SNAPSHOT_MEM 1024*1024*16
+
+
+#define MAX_LENGTH_PROTOCOL_COMMAND ((ZRCP_GET_PUT_SNAPSHOT_MEM*2)+1024)
+
 
   //comando de put-snapshot usa hexadecimal sin espacios, asi cada byte ocupa 2 en ZRCP
   //Con el valor de MAX_LENGTH_PROTOCOL_COMMAND, podemos usar hasta 128kb de put-snapshot
   //de momento es poco pero probaremos asi
 
-#define ZRCP_GET_PUT_SNAPSHOT_MEM 1024*1024*16
+
 
 #endif

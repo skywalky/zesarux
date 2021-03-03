@@ -3561,10 +3561,10 @@ void remote_visualmem_generic_compact(int misocket, z80_byte *buffer, int final_
 //char parametros[MAX_LENGTH_PROTOCOL_COMMAND];
 
 
-char buffer_lectura_socket[MAX_LENGTH_PROTOCOL_COMMAND];
+char *buffer_lectura_socket;
 
 //para poder repetir comando anterior solo pulsando enter
-char buffer_lectura_socket_anterior[MAX_LENGTH_PROTOCOL_COMMAND]="";
+char *buffer_lectura_socket_anterior;
 
 char *parametros;
 
@@ -4638,7 +4638,7 @@ void interpreta_comando(char *comando,int misocket)
 			int parametros_recibidos=0;
 
 			z80_byte *buffer_destino;
-			buffer_destino=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM); //16 MB es mas que suficiente
+			buffer_destino=malloc(ZRCP_GET_PUT_SNAPSHOT_MEM*2); 
 			if (buffer_destino==NULL) cpu_panic("Can not allocate memory for put-snapshot");
 
 		
@@ -5992,7 +5992,7 @@ void *thread_remote_protocol_function(void *nada)
 					int salir_bucle=0;
 					do {
 						leidos=leer_socket(sock_conectat, &buffer_lectura_socket[indice_destino], MAX_LENGTH_PROTOCOL_COMMAND-1);
-						debug_printf (VERBOSE_DEBUG,"Read block %d bytes index: %d",leidos,indice_destino);
+						debug_printf (VERBOSE_DEBUG,"ZRCP: Read block %d bytes index: %d",leidos,indice_destino);
 
 						/*
 						RETURN VALUES
@@ -6230,6 +6230,19 @@ void init_remote_protocol(void)
   if (remote_protocol_enabled.v==0) return;
 
 	debug_printf (VERBOSE_INFO,"Starting ZEsarUX remote protocol (ZRCP) listener on port %d",remote_protocol_port);
+
+    //Asignar memoria para los buffers de recepcion
+    buffer_lectura_socket=malloc(MAX_LENGTH_PROTOCOL_COMMAND);
+
+    buffer_lectura_socket_anterior=malloc(MAX_LENGTH_PROTOCOL_COMMAND);
+
+    if (buffer_lectura_socket==NULL || buffer_lectura_socket_anterior==NULL) cpu_panic("Can not allocate buffer for ZRCP");
+
+
+    //Inicializarlo a cadena vacia
+    buffer_lectura_socket_anterior[0]=0;
+
+
 	thread_remote_inicializado.v=0;
 
 	if (pthread_create( &thread_remote_protocol, NULL, &thread_remote_protocol_function, NULL) ) {
@@ -6274,6 +6287,10 @@ void end_remote_protocol(void)
 
 
   pthread_cancel(thread_remote_protocol);
+
+    //Liberar buffers de recepcion
+  free(buffer_lectura_socket);
+  free(buffer_lectura_socket_anterior);
 
 }
 

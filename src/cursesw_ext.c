@@ -43,7 +43,7 @@ ncursesw5-config --cflags --libs
 #include "settings.h"
 #include "cursesw_ext.h"
 
-
+//Rutinas para usar caracteres utf "blocky" para simular mejor los pixeles mediante texto
 
 
 //Parece que este tipo de caracteres no permite brillo

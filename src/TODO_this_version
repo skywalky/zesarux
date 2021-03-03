@@ -146,8 +146,6 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 
 -Opción activar nuevo algoritmo de carga según valor anterior como conversor 1 bit
 
--Utf blocky : A veces salen interrogantes 
-
 
 -eliminar parpadeos en fbdev usando doble buffer?
 
@@ -158,11 +156,7 @@ desde filesel era la mmc
 Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El resto, rutinas de sistema? -> esxdos, zxpand etc ya NO usan ZVFS
 
 
-
 -punteros en diskio, de read y write, soportaran imagenes de mas de 2 gB en sistemas 32 bits?
 
 -Widget uso cpu con aguja. Igual para sonido. Quizá común para una variable concreto 
 
--Si ZX desktops activado. Pero cargo un driver de texto que pasará? Y sale habilitado? Y como se guardará la opción?
-
--al ir a .. desde aux_zesarux, no cambia
