@@ -118,6 +118,8 @@ https://foro.speccy.org/viewtopic.php?t=1502
 -Si se mueve ratón a zona redimensionado ventana, que la ventana cambie la esquina inferior derecha 
 
 -ZENG soporte para QL. ok aunque no envia teclas extendidas
+-ZENG para msx se leen los cursores en destino
+-ZENG colecovision no va bien
 
 -soporte joystick usb para msx, coleco etc
 

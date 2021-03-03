@@ -503,7 +503,7 @@ void core_sg1000_ciclo_fetch(void)
 
 				if (nmi_pending_pre_opcode) {
 						//Dado que esto se activa despues de lanzar nmi y antes de leer opcode, aqui saltara cuando PC=66H
-						debug_printf (VERBOSE_DEBUG,"Handling nmi mapping pre opcode fetch at %04XH",reg_pc);
+						//debug_printf (VERBOSE_DEBUG,"Handling nmi mapping pre opcode fetch at %04XH",reg_pc);
 						nmi_handle_pending_prepost_fetch();
 				}				
 
