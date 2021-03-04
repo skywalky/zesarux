@@ -1293,6 +1293,24 @@ void *thread_codetests_function(void *nada GCC_UNUSED)
 	}
 }
 
+void codetests_simple_atomic(void)
+{
+
+        z_atomic_reset(&codetest_semaforo);
+        printf("Semaforo despues reset: %d\n",codetest_semaforo);
+
+
+		while(z_atomic_test_and_set(&codetest_semaforo)) {
+			printf ("Esperando a adquirir lock en secondary pthread\n");
+		}
+
+        printf("Semaforo despues set: %d\n",codetest_semaforo);
+
+
+		z_atomic_reset(&codetest_semaforo);
+        printf("Semaforo despues reset: %d\n",codetest_semaforo);
+}
+
 void codetests_atomic(void)
 {
 		//Inicializar thread
@@ -1557,6 +1575,9 @@ void codetests_main(int main_argc,char *main_argv[])
 //  init_network_tables();
 //	codetests_atomic();
 //#endif
+
+//    codetests_simple_atomic();
+
 
 
 //#ifdef USE_PTHREADS
