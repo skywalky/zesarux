@@ -6932,6 +6932,10 @@ void util_set_reset_key_continue_after_zeng(enum util_teclas tecla,int pressrele
 					cpc_keyboard_table[2] |=32;
                                         msx_keyboard_table[6] |=1;
                                         svi_keyboard_table[6] |=1;
+
+                                    //Si se libera left shift, reiniciamos contador de conmutacion de ventanas
+                                    menu_contador_conmutar_ventanas=0;
+                                    //printf("reset contador conmutacion\n");
                                 }
                         break;
 

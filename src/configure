@@ -2268,6 +2268,14 @@ export LANG=C
 #Estadisticas
 LINES_SOURCE=`wc -l *.c *.m *.h|grep total|awk '{printf $1}'`
 
+#contamos entradas en los TODO files que empiezan con guion (-)
+TODO_FILES_LINES=`cat TODO*|grep -v "^$"|grep "^-"|wc -l|awk '{printf $1}'`
+#y comentarios tipo "TODO" en los archivos .c
+TODO_C_LINES=`grep TODO *.c|wc -l|awk '{printf $1}'`
+
+TOTAL_TODO_ITEMS=$(($TODO_FILES_LINES+$TODO_C_LINES))
+
+
 cat >> compileoptions.h << _EOF
 
 #define COMPILATION_DATE "`date`"
@@ -2281,6 +2289,7 @@ cat >> compileoptions.h << _EOF
 #define INSTALL_PREFIX "$INSTALLPREFIX"
 
 #define LINES_SOURCE $LINES_SOURCE
+#define TOTAL_TODO_ITEMS $TOTAL_TODO_ITEMS
 
 #define BUILDNUMBER "$BUILDNUMBER"
 

@@ -458,11 +458,25 @@ void menu_espera_tecla_timeout_tooltip(void);
 z80_byte menu_da_todas_teclas(void);
 
 
+//Gestión de conmutar entre ventanas mediante shift+left/right
+/*
+Es una funcionalidad que no me acaba de gustar por varias razones:
+1) Tal y como se conmuta entre una ventana a la otra, hace difícil mostrarlas por orden cuando se cambia de una a la otra
+2) Se simula evento de pulsado de botón de mouse cuando se intenta conmutar desde una ventana que no permite background,
+esto hace un tanto complicado liberar esa pulsación de botón que igual en un futuro puede dar problemas
+*/
+int menu_pressed_shift_left=0;
+int menu_pressed_shift_right=0;
+int menu_pressed_shift_cursor_window_doesnot_allow=0;
+//Contador que indica cuantas veces hay que conmutar de ventana al pulsar shift+left/right
+//En zxvision_handle_mouse_events está explicada la problemática con esto
+int menu_contador_conmutar_ventanas=0;
 
 
 
 
 int menu_simple_two_choices(char *texto_ventana,char *texto_interior,char *opcion1,char *opcion2);
+void zxvision_handle_mouse_ev_switch_back_wind(zxvision_window *ventana_pulsada);
 
 void menu_file_trd_browser_show(char *filename,char *tipo_imagen);
 void menu_file_mmc_browser_show(char *filename,char *tipo_imagen);
@@ -1474,6 +1488,8 @@ static char menu_array_keys_32766[]="mnb";
 valores de teclas especiales:
 2  ESC
 3  Tecla de background
+4  shift+cursor left
+5  shift+cursor right
 8  cursor left
 9  cursor right
 10 cursor down
@@ -1836,6 +1852,12 @@ z80_byte menu_get_pressed_key(void)
 	//int pulsado_boton_cerrar=
 	zxvision_handle_mouse_events(zxvision_current_window);
 
+    //Boton shift+cursor en ventana que no permite background, cerrarla
+    if (menu_pressed_shift_cursor_window_doesnot_allow) {
+        printf("devolver ESC pues ventana no permite background despues shift+cursor\n");
+        return 2; //Como ESC
+    }    
+
 	if (mouse_pressed_close_window) {
 		return 2; //Como ESC
 	}
@@ -1857,9 +1879,28 @@ z80_byte menu_get_pressed_key(void)
 	//primero joystick
 	if (puerto_especial_joystick) {
 		//z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
-		if ((puerto_especial_joystick&1)) return 9;
+		if ((puerto_especial_joystick&1)) {
+            //Cursor Right
+            if (menu_allow_background_windows && (puerto_65278&1)==0) {
+                printf("Pulsada shift+cursor right\n");
+                return 5;
+            }
+            return 9;
+        }
 
-		if ((puerto_especial_joystick&2)) return 8;
+		if ((puerto_especial_joystick&2)) {
+            //Cursor Left
+
+            //De momento no permitimos shift+left. solo shift+right
+            /*
+            if (menu_allow_background_windows && (puerto_65278&1)==0) {
+                printf("Pulsada shift+cursor left\n");
+                return 4;
+            }
+            */
+
+            return 8;
+        }
 
 		//left joystick hace delete en menu.NO
 		//if ((puerto_especial_joystick&2)) return 12;
@@ -7080,6 +7121,9 @@ void zxvision_speech_read_current_window(void)
 z80_byte zxvision_read_keyboard(void)
 {
 
+    //Decimos que de momento no se pulsa shift+left/right
+    menu_pressed_shift_left=menu_pressed_shift_right=0;
+
 	//printf ("antes menu_get_pressed_key\n");
     z80_byte tecla;
 	
@@ -7105,6 +7149,41 @@ z80_byte zxvision_read_keyboard(void)
 		//sleep(5);
 		return 3;
 	}	
+
+    //Pulsadas teclas de shift+left/right
+    if (menu_allow_background_windows && (tecla==4 || tecla==5)) {
+        if (tecla==4) menu_pressed_shift_left=1;
+        if (tecla==5) menu_pressed_shift_right=1;
+        printf("Pulsadas teclas de cambio ventana (left o right)\n");
+        printf("menu_pressed_shift_cursor_window_doesnot_allow: %d\n",menu_pressed_shift_cursor_window_doesnot_allow);
+
+
+        //Si ventana no tiene previo, decir no tecla
+        if (zxvision_current_window!=NULL) {
+            if (zxvision_current_window->previous_window==NULL) {
+                printf("Solo hay una ventana\n");
+                return 0;
+            }
+        }
+
+
+        //devolver como ESC cuando ventana no permite background
+        if (zxvision_current_window!=NULL) {
+            if (!(zxvision_current_window->can_be_backgrounded)) {
+                printf ("Retornar ESC pues ventana no permite background\n");
+                salir_todos_menus=1;
+                //hay que hacer que se activase una ventana de las de background
+                zxvision_window *previous_window=zxvision_current_window->previous_window;
+                if (previous_window!=NULL) {
+                    zxvision_handle_mouse_ev_switch_back_wind(previous_window);
+                }
+                return 2;
+            }
+        }
+        //Devolver como background
+        return 3;
+    }
+
 
 	if (mouse_pressed_hotkey_window) {
 		mouse_pressed_hotkey_window=0;
@@ -10043,6 +10122,130 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 	if (w==NULL) return; // 0; 
 
+    menu_pressed_shift_cursor_window_doesnot_allow=0;
+
+    //Capturar aquí el cambio de ventana mediante shift+cursor, como si fuera otro evento de mouse mas
+    if (menu_pressed_shift_left || menu_pressed_shift_right) {
+        menu_pressed_shift_left=0;
+        menu_pressed_shift_right=0;
+
+        //Si ventana no lo permite, simularemos pulsado ESC
+        if (!(w->can_be_backgrounded)) {
+            printf("Pulsado shift-left en ventana que no permite conmutar. Cerrarla\n");
+            menu_pressed_shift_cursor_window_doesnot_allow=1;
+            return;
+        }
+
+        if (menu_allow_background_windows && zxvision_current_window!=NULL && w->can_be_backgrounded) {
+            printf("Handle mouse event. Conmutar a ventana izquierda/derecha\n");
+            menu_contador_conmutar_ventanas++;
+            zxvision_window *pointer_window;
+
+            pointer_window=w;
+
+            zxvision_window *previous_window;
+
+            //al conmutar ventanas siempre vamos solo de la anterior a la actual. Hay que tener 
+            //un contador de cuantas nos tenemos que mover
+            /*
+            Cuando se conmuta a una ventana, simplemente se mueve esa ventana arriba del todo: Ejemplo:
+
+            Ventanas A,B,C,D siendo la primera la de mas arriba y siendo la ultima la de mas abajo en pantalla
+            A
+            B
+            C
+            D
+            Si conmutamos a ventana B, se tiene:
+            B
+            A
+            C
+            D
+
+            Con lo que se puede ver que el orden se ha alterado. Luego si conmutamos a ventana C, tenemos
+            C
+            B
+            A
+            D
+
+            Y si conmutamos a D tenemos:
+            D
+            C
+            B
+            A
+
+            Con lo que el orden se ha invertido completamente
+
+            Es por eso que al pulsar en este ejemplo 3 veces shift+left, hemos invertido completamente el orden.
+            Si volvemos a conmutar, subiendo A arriba tenemos:
+            A
+            D
+            C
+            B
+
+            Con lo que, para el usuario ve la A arriba, pero la de abajo ya no es la B como inicialmente, sino la D, con lo que es confuso
+            Realmente habria que tener una funcion de conmutar ventana que teniendo esto
+            A
+            B
+            C
+            D
+
+            Al conmutar B arriba hiciera
+            B
+            A
+            C
+            D
+
+            Pero esto de momento no es asi. TODO...
+
+            */
+            int i;
+            for (i=0;i<menu_contador_conmutar_ventanas;i++) {
+                previous_window=pointer_window->previous_window;
+                
+                //Llegado a la de abajo
+                if (previous_window==NULL) {
+                    //Y la siguiente ventana sera justo la inicial
+                    pointer_window=w;
+                   
+                }
+                else {
+                    pointer_window=previous_window;
+                }
+            }
+            
+
+            if (pointer_window!=NULL) {
+                //Si es la misma ventana, hacer que sea la siguiente
+                //Esto puede suceder dado que vamos buscando en el bucle de antes hasta contador menu_contador_conmutar_ventanas
+                if (pointer_window==w) pointer_window=w->previous_window;
+
+                if (pointer_window!=NULL) {
+
+                    zxvision_handle_mouse_ev_switch_back_wind(pointer_window);
+                    //Ya no decimos que se pulsa tecla background, pues en retorno dira que es tecla 3 de salir,
+                    //y ha habremos cambiado la ventana a la que nos interesa
+                    mouse_pressed_background_window=0;
+                    //sleep(1);
+                    return;
+                }
+            }
+
+            printf("pointer window es null. no deberia suceder\n");
+            return;
+        }
+
+    
+        else {
+            //Pulsado shift left/right pero o bien no se permite background windows, o bien ventana no lo permite, o bien ventana es NULL
+            //simular escape
+            printf("pulsado shift izq/der pero no permitido background, o ventana no lo permite, o ventana NULL. simulamos cierre ventana\n");
+            //mouse_pressed_background_window=1;
+        
+            return;
+        }
+    }
+
+
 	if (!si_menu_mouse_activado()) return; // 0;
 
 	//printf ("zxvision_handle_mouse_events: mouse_left: %d\n",mouse_left);
@@ -11382,6 +11585,12 @@ z80_byte menu_da_todas_teclas(void)
 	//symbol i shift no cuentan por separado
 	acumulado=acumulado & (puerto_65278 | 1) & puerto_65022 & puerto_64510 & puerto_63486 & puerto_61438 & puerto_57342 & puerto_49150 & (puerto_32766 |2) & puerto_especial1 & puerto_especial2 & puerto_especial3 & puerto_especial4;
 
+
+    //Boton shift+cursor en ventana que no permite background, cerrarla
+    if (menu_pressed_shift_cursor_window_doesnot_allow) {
+        printf("en menu_da_todas_teclas pulsado shift+cursor en ventana que no permite background\n");
+        acumulado |=1;
+    }
 
 	//Boton cerrar ventana
 	if (mouse_pressed_close_window) {
@@ -32300,12 +32509,14 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 	menu_generic_message_format("Statistics",
 		"Source code lines: %d\n"
 		"Total time used on coding ZEsarUX: ^^%d^^ hours (and growing)\n"
-		"ZEsarUX yesterday users: %s"
-		"\n\n"
+		"ZEsarUX yesterday users: %s\n"
+        "Approximate TODOs: %d\n"
+		"\n"
 		"Edited with VSCode, Working Copy and vim\n"
 		"Developed on macOS Catalina, Debian 10, Raspbian, FreeBSD 12, and MinGW environment on Windows\n"
 		,LINES_SOURCE,tiempo_trabajado_en_zesarux,
-		(stats_last_yesterday_users[0]==0 ? "Unknown" : stats_last_yesterday_users)
+		(stats_last_yesterday_users[0]==0 ? "Unknown" : stats_last_yesterday_users),
+        TOTAL_TODO_ITEMS
 		);
 
 }
@@ -33930,6 +34141,11 @@ void menu_inicio_bucle(void)
 			
 			clicked_on_background_windows=0;
 			debug_printf(VERBOSE_DEBUG,"Clicked on background window, notified at the end of menus");	
+
+            //Para que al simular cerrado de ventana al pulsar shift+left/right en ventana que no permite conmutar, la cerramos
+            //y alguien tiene que simular la liberacion de ese pulsado de boton sobre el cerrado de ventana
+            printf("Liberar boton de cierre ventana\n");
+            mouse_pressed_close_window=0;              
 
 			if (which_window_clicked_on_background!=NULL) {
 				//printf ("Ventana: %s\n",which_window_clicked_on_background->window_title);

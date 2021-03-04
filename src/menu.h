@@ -1001,6 +1001,8 @@ extern char menu_filesel_posicionar_archivo_nombre[];
 
 extern z80_bit menu_limit_menu_open;
 
+extern int menu_contador_conmutar_ventanas;
+
 extern z80_bit menu_filesel_hide_dirs;
 
 extern z80_bit menu_filesel_hide_size;
