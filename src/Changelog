@@ -1,18 +1,32 @@
 Version 9.2 - Cliff Hanger edition. 24 February 2021
 
-Added command line setting --copy-file-to-mmc to be able to copy files to a mmc image before starting ZEsarUX
+Added SamRam Gerton Lunter interface emulation
 Added new ZX-Uno Prism video mode
 Added Dandanator storage button icon
-Added TBBlue snx snapshot support
-Added SamRam Gerton Lunter interface emulation
-Added ZRCP commands:
--realtape-open
-
 Added alternate Jupiter ACE rom
 Added another fourth easter egg ;)
 Added read only setting for esxdos handler
 Added setting to redefine joystick fire key
 Added Debug action to set PC register to zero
+Added command line setting --copy-file-to-mmc to be able to copy files to a mmc image before starting ZEsarUX
+Added ZRCP command realtape-open
+
+
+Improved ZX-Uno emulation:
+-Updated BIOS, Flash and ESXDOS (ESXDOS now runs 0.8.6 final version)
+-Added command line setting --zxuno-initial-64k to allow loading a initial 64kb block in bootm mode, bypassing the normal boot rom
+
+Improved TBBlue emulation:
+-Added .snx snapshot support
+-Added debug window to enable/disable individual sprites
+-Added relative sprite type composite/unified on sprite navigator
+-Added Sprites Debug memory zone
+-Optimize sprite rendering (saving 1% cpu on my computer)
+
+Improved CPC emulation: 
+-Added video scanlines rendering (A.K.A. Real Video)
+-Joystick emulation
+-Stereo emulation
 
 Improved File utilities Browser:
 -Added support for browsing inside FAT filesystem disk images (.img, .mmc, .ide, etc)
@@ -22,63 +36,45 @@ Improved File utilities Browser:
 -Added copy and delete entire folder
 -Added SCR to TXT file converter
 
-Improved File Browser: added file size information
-Improved cocoa (Mac) driver: allows distinguish between left and right Ctrl key, and left and right Alt key
-
-Improved CPC emulation: 
--Video scanlines rendering
--Joystick emulation
--Stereo emulation
-
 Improved Debug CPU Window:
 -Can load a source code
 -Tell when a condition is satisfied or not
 -Detecting when running a esxdos call, using the esxdos handler, and doing step over
 
-Improved Debug I/O ports window: can now be backgrounded and it's reloaded continuously
-Improved File spooling: delay can now be any value between 20 and 2000 ms (in increments of +20)
-
 Improved ZX Vision menu interface:
 -Added Turbo Vision GUI style
 -Added GUI Style Selector menu
 -Added GUI Test Style
--Fixed some GUI style colours
 -Added key Shift+Cursor Right to switch to another window
 -Added action to minimize all windows
 -Added setting to ignore mouse click to open the menu
 -Added more utf-8 characters support
 -Added setting to show files in hexa+ascii using file viewer
 
-Improved ZX-Uno emulation:
--Updated BIOS, Flash and ESXDOS (ESXDOS now runs 0.8.6 final version)
--Fixed bugs on mmc and flash storage layer which prevented to update bios, esxdos rom or entire flash from the BIOS
--Fixed chloe mmu mapping: bootm has priority. If bootm=1, can't map chloe. If bootm=0, can be chloe or +2a
--Added command line setting --zxuno-initial-64k to allow loading a initial 64kb block in bootm mode, bypassing the normal boot rom
-
-Improved TBBlue emulation:
--Added debug window to enable/disable individual sprites
--Added relative sprite type composite/unified on sprite navigator
--Added Sprites Debug memory zone
--Optimize sprite rendering (saving 1% cpu on my computer)
-
 Improved all-to-pixel text rendering: 
 -Allow 1:1 scale
 -Allow to set window size and offsets in characters
 
-Improved Speccy online browser: now uses ZXinfo API V3
-Improved Hex Editor: Now it can be put on background
+Improved Speccy online browser: 
+-now uses ZXinfo API V3
+-uses SSL SNI when downloading files
 
-Fixed annoying flickering in menu using XWindows video driver
-Fixed loading General Sound rom
-Fixed segfaults on fileselector +3 DSK screen previews using Speedlock protected disks or bad disks
-Fixed receiving large snapshots on ZRCP/ZENG
-Fixed pixel color on text all-to-pixel text rendering (color inversion)
-Fixed downloads from spectrumcomputing
-Fixed DivIDE/DivMMC mapram behaviour
+Improved Hex Editor: can now be backgrounded
+Improved Debug I/O ports window: can now be backgrounded and it's reloaded continuously
+Improved File spooling: delay can now be any value between 20 and 2000 ms (in increments of +20)
+Improved File Browser: added file size information
+Improved cocoa (Mac) driver: allows distinguish between left and right Ctrl key, and left and right Alt key
 
-Fixed IDE commands which affected allmost all IDE firmware: fatware, mdos, etc:
--Fixed IDE command ECH Identify Drive
--Fixed IDE command 91H Initialize Drive Parameters 
+
+Fixed ZX-Uno bugs:
+-Fixed bugs on mmc and flash storage layer which prevented to update bios, esxdos rom or entire flash from the BIOS
+-Fixed chloe mmu mapping: bootm has priority. If bootm=1, can't map chloe. If bootm=0, can be chloe or +2a
+
+Fixed TBBlue bugs:
+-Fixed relative sprites: when anchor sprite is not visible, negative coordinates, detecting unified/composite, mirror, rotation
+-Fixed 4bp sprites: pattern calculating, transparency, anchor
+-Fixed clipping (affected scrollnutter demo in the right round corners)
+-Fixed writing on divmmc memory when layer2 active
 
 Fixed CPC bugs:
 -Fixed vsync and hsync interrupts
@@ -88,12 +84,20 @@ Fixed CPC bugs:
 -Fixed setting bit 4 of the "Select screen mode and rom configuration" register of the Gate-Array and interrupt request
 -Fixed RETURN key
 
-Fixed TBBlue bugs:
--Fixed relative sprites: when anchor sprite is not visible, negative coordinates, detecting unified/composite, mirror, rotation
--Fixed 4bp sprites: calculating pattern, transparency, anchor
--Fixed writing on divmmc memory when layer2 active
--Fixed clipping (affected scrollnutter demo in the right round corners)
+Fixed IDE commands which affected almost all IDE firmwares: fatware, mdos, etc:
+-Fixed IDE command ECH Identify Drive
+-Fixed IDE command 91H Initialize Drive Parameters 
 
+Fixed annoying flickering in menu using XWindows video driver
+Fixed loading General Sound rom
+Fixed segfaults on fileselector +3 DSK screen previews using Speedlock protected disks or bad disks
+Fixed receiving large snapshots on ZRCP/ZENG
+Fixed pixel color on text all-to-pixel text rendering (color inversion)
+Fixed DivIDE/DivMMC mapram behaviour
+Fixed some GUI style colours
+
+
+Some other minor bugfixes and improvements
 
 
 
