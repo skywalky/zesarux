@@ -28474,7 +28474,7 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
 
 
     int ancho=32;
-    int alto=14;
+    int alto=21;
     int x=menu_center_x()-ancho/2;
     int y=menu_center_y()-alto/2;
 
@@ -28524,6 +28524,24 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     //El parpadeo es igual en todos los temas (de momento) pero también lo mostramos
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"Flashing Text");
 
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Ascii table:");
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"!\"#$%&\'()*+,-./0123456789:;<=>");
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\");
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"]_`abcdefghijklmnopqrstuvwxyz");
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"{|}~");
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Extra characters:");
+    int i;
+
+    //Aunque este buffer esta pensado para maximo 32 caracteres de la linea
+    char buffer_extra[64];
+    int posicion=0;
+    for (i=128;i<=MAX_CHARSET_GRAPHIC;i++,posicion++) {
+        buffer_extra[posicion]=i;
+    }
+
+    buffer_extra[posicion]=0;
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_extra);
 
     zxvision_draw_window_contents(&ventana);
 
@@ -28567,7 +28585,9 @@ void menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
         menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
         //Y opcion para probar estilo
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_interface_change_gui_style_test,NULL,"Test style");
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_interface_change_gui_style_test,NULL,"~~Test style");
+        menu_add_item_menu_shortcut(array_menu_common,'t');
+
 
 
         menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
