@@ -32818,6 +32818,7 @@ void menu_help_background_windows(MENU_ITEM_PARAMETERS)
 			"Some background windows don't refresh their contents when they are in background, like Debug CPU. \n"
 			"\n"
 			"Pressing F5 when on menu or pressing the ZEsarUX logo button (on the top left of ZX Desktop) will send you back to the main menu.\n"
+            "Pressing Shift+Cursor Right will switch to another background window.\n"
 			"\n"
 			
 			"Pressing window close button, ESC or right click on the mouse it always closes the current window (same behaviour with background windows disabled). \n" 
