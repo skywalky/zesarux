@@ -1854,7 +1854,7 @@ z80_byte menu_get_pressed_key(void)
 
     //Boton shift+cursor en ventana que no permite background, cerrarla
     if (menu_pressed_shift_cursor_window_doesnot_allow) {
-        printf("devolver ESC pues ventana no permite background despues shift+cursor\n");
+        debug_printf(VERBOSE_DEBUG,"Return ESC because window does not allow background after pressing shift+cursor");
         return 2; //Como ESC
     }    
 
@@ -1882,7 +1882,7 @@ z80_byte menu_get_pressed_key(void)
 		if ((puerto_especial_joystick&1)) {
             //Cursor Right
             if (menu_allow_background_windows && (puerto_65278&1)==0) {
-                printf("Pulsada shift+cursor right\n");
+                //printf("Pulsada shift+cursor right\n");
                 return 5;
             }
             return 9;
@@ -1894,7 +1894,7 @@ z80_byte menu_get_pressed_key(void)
             //De momento no permitimos shift+left. solo shift+right
             /*
             if (menu_allow_background_windows && (puerto_65278&1)==0) {
-                printf("Pulsada shift+cursor left\n");
+                //printf("Pulsada shift+cursor left\n");
                 return 4;
             }
             */
@@ -7154,14 +7154,14 @@ z80_byte zxvision_read_keyboard(void)
     if (menu_allow_background_windows && (tecla==4 || tecla==5)) {
         if (tecla==4) menu_pressed_shift_left=1;
         if (tecla==5) menu_pressed_shift_right=1;
-        printf("Pulsadas teclas de cambio ventana (left o right)\n");
-        printf("menu_pressed_shift_cursor_window_doesnot_allow: %d\n",menu_pressed_shift_cursor_window_doesnot_allow);
+        debug_printf(VERBOSE_DEBUG,"Pressed switch window keys (left or right)");
+        //printf("menu_pressed_shift_cursor_window_doesnot_allow: %d\n",menu_pressed_shift_cursor_window_doesnot_allow);
 
 
         //Si ventana no tiene previo, decir no tecla
         if (zxvision_current_window!=NULL) {
             if (zxvision_current_window->previous_window==NULL) {
-                printf("Solo hay una ventana\n");
+                debug_printf(VERBOSE_DEBUG,"Just one window");
                 return 0;
             }
         }
@@ -7170,7 +7170,7 @@ z80_byte zxvision_read_keyboard(void)
         //devolver como ESC cuando ventana no permite background
         if (zxvision_current_window!=NULL) {
             if (!(zxvision_current_window->can_be_backgrounded)) {
-                printf ("Retornar ESC pues ventana no permite background\n");
+                debug_printf(VERBOSE_DEBUG,"Return ESC cause window does not allow background");
                 salir_todos_menus=1;
                 //hay que hacer que se activase una ventana de las de background
                 zxvision_window *previous_window=zxvision_current_window->previous_window;
@@ -10131,13 +10131,13 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
         //Si ventana no lo permite, simularemos pulsado ESC
         if (!(w->can_be_backgrounded)) {
-            printf("Pulsado shift-left en ventana que no permite conmutar. Cerrarla\n");
+            debug_printf(VERBOSE_DEBUG,"Pressed shift-left/right in a window that can not be switched. Closing it");
             menu_pressed_shift_cursor_window_doesnot_allow=1;
             return;
         }
 
         if (menu_allow_background_windows && zxvision_current_window!=NULL && w->can_be_backgrounded) {
-            printf("Handle mouse event. Conmutar a ventana izquierda/derecha\n");
+            debug_printf(VERBOSE_DEBUG,"Switch to next window");
             menu_contador_conmutar_ventanas++;
             zxvision_window *pointer_window;
 
@@ -10230,7 +10230,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
                 }
             }
 
-            printf("pointer window es null. no deberia suceder\n");
+            //printf("pointer window es null. no deberia suceder\n");
             return;
         }
 
@@ -10238,7 +10238,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
         else {
             //Pulsado shift left/right pero o bien no se permite background windows, o bien ventana no lo permite, o bien ventana es NULL
             //simular escape
-            printf("pulsado shift izq/der pero no permitido background, o ventana no lo permite, o ventana NULL. simulamos cierre ventana\n");
+            debug_printf(VERBOSE_DEBUG,"Pressed shift left/right but background is not allowed or window can not be bacgrounded, or window NULL. Simulate close window");
             //mouse_pressed_background_window=1;
         
             return;
@@ -11588,7 +11588,7 @@ z80_byte menu_da_todas_teclas(void)
 
     //Boton shift+cursor en ventana que no permite background, cerrarla
     if (menu_pressed_shift_cursor_window_doesnot_allow) {
-        printf("en menu_da_todas_teclas pulsado shift+cursor en ventana que no permite background\n");
+        //printf("en menu_da_todas_teclas pulsado shift+cursor en ventana que no permite background\n");
         acumulado |=1;
     }
 
@@ -34144,7 +34144,7 @@ void menu_inicio_bucle(void)
 
             //Para que al simular cerrado de ventana al pulsar shift+left/right en ventana que no permite conmutar, la cerramos
             //y alguien tiene que simular la liberacion de ese pulsado de boton sobre el cerrado de ventana
-            printf("Liberar boton de cierre ventana\n");
+            //printf("Liberar boton de cierre ventana\n");
             mouse_pressed_close_window=0;              
 
 			if (which_window_clicked_on_background!=NULL) {
