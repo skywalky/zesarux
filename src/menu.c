@@ -37314,6 +37314,7 @@ void set_charset(void)
 	else if (estilo_gui_activo==ESTILO_GUI_MANSOFTWARE) char_set=char_set_mansoftware;
 	else if (estilo_gui_activo==ESTILO_GUI_QL) char_set=char_set_ql;
 	else if (estilo_gui_activo==ESTILO_GUI_RETROMAC) char_set=char_set_retromac;
+    else if (estilo_gui_activo==ESTILO_GUI_TURBOVISION) char_set=char_set_retromac;
 	else char_set=char_set_spectrum;
 }
 

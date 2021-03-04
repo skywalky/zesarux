@@ -851,13 +851,14 @@ typedef struct s_estilos_gui estilos_gui;
 #define ESTILOS_GUI 16
 
 
-#define ESTILO_GUI_RETROMAC 9
-#define ESTILO_GUI_QL 8
-#define ESTILO_GUI_MANSOFTWARE 7
-#define ESTILO_GUI_SAM 6
-#define ESTILO_GUI_MSX 5
-#define ESTILO_GUI_CPC 4
 #define ESTILO_GUI_Z88 3
+#define ESTILO_GUI_CPC 4
+#define ESTILO_GUI_MSX 5
+#define ESTILO_GUI_SAM 6
+#define ESTILO_GUI_MANSOFTWARE 7
+#define ESTILO_GUI_QL 8
+#define ESTILO_GUI_RETROMAC 9
+#define ESTILO_GUI_TURBOVISION 11
 
 extern void estilo_gui_retorna_nombres(void);
 
