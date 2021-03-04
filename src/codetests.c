@@ -1266,33 +1266,6 @@ void codetests_messages_debug(char *s)
 pthread_t thread_codetests;
 z_atomic_semaphore codetest_semaforo;
 
-
-
-
-
-void *thread_codetests_function(void *nada GCC_UNUSED)
-{
-	while (1) {
-		//Adquirir lock
-		/*while(z_atomic_test_and_set(&codetest_semaforo)) {
-			printf ("Esperando a adquirir lock en secondary pthread\n");
-		}*/
-
-
-		//printf("Message from secondary pthread\n");
-		debug_printf(VERBOSE_DEBUG,"Message from secondary pthread\n");
-		usleep(1000);
-		//printf ("hola\n");
-
-		//Liberar lock
-		z_atomic_reset(&codetest_semaforo);
-
-
-		//Pausa de test
-		usleep(1000);		
-	}
-}
-
 void codetests_simple_atomic(void)
 {
 
@@ -1311,8 +1284,42 @@ void codetests_simple_atomic(void)
         printf("Semaforo despues reset: %d\n",codetest_semaforo);
 }
 
+
+
+void *thread_codetests_function(void *nada GCC_UNUSED)
+{
+	while (1) {
+		//Adquirir lock
+		/*while(z_atomic_test_and_set(&codetest_semaforo)) {
+			printf ("  Esperando a adquirir lock en secondary pthread\n");
+		}*/
+
+
+		//printf("Message from secondary pthread\n");
+		debug_printf(VERBOSE_DEBUG,"Message from secondary pthread\n");
+		usleep(1000);
+		//printf ("hola\n");
+
+		//Liberar lock
+		z_atomic_reset(&codetest_semaforo);
+
+
+		//Pausa de test
+		usleep(1000);		
+	}
+}
+
+
+
 void codetests_atomic(void)
 {
+
+    z_atomic_reset(&codetest_semaforo);
+	scr_messages_debug=codetests_messages_debug;
+	verbose_level=VERBOSE_PARANOID;
+	scr_set_driver_name("");
+
+
 		//Inicializar thread
 
 	if (pthread_create( &thread_codetests, NULL, &thread_codetests_function, NULL) ) {
@@ -1320,17 +1327,12 @@ void codetests_atomic(void)
 		exit(1);
 	}
 
-	scr_messages_debug=codetests_messages_debug;
-	verbose_level=VERBOSE_PARANOID;
-	scr_set_driver_name("");
-
-	z_atomic_reset(&codetest_semaforo);
 
 	//Empezar a escribir debug info en este pthread y en el otro
 	while (1) {
 		//Adquirir lock
 		/*while(z_atomic_test_and_set(&codetest_semaforo)) {
-			printf ("Esperando a adquirir lock en primary pthread\n");
+			printf ("  Esperando a adquirir lock en primary pthread\n");
 		}*/
 
 
