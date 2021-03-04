@@ -839,7 +839,7 @@ int z_sock_read(int indice_tabla, z80_byte *buffer, int longitud)
 	}
 
 
-	return leer_socket(sock,buffer,longitud);
+	return leer_socket(sock,(char *)buffer,longitud);
 }
 
 
@@ -890,7 +890,7 @@ int zsock_wait_until_command_prompt(int indice_tabla)
 		do {
 			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 			if (zsock_available_data(sock)) {
-				leidos=z_sock_read(indice_tabla,buffer,100);
+				leidos=z_sock_read(indice_tabla,(z80_byte *)buffer,100);
 				//printf ("leidos en zsock_wait_until_command_prompt: %d\n",leidos);
 				if (leidos<0) return -1;
 			}
@@ -1220,7 +1220,7 @@ If no Accept-Encoding field is present in a request, the server MAY
 		do {
 			//if (chardevice_status(sock) & CHDEV_ST_RD_AVAIL_DATA) {
 			if (zsock_available_data(sock)) {
-				leidos=z_sock_read(indice_socket,&response[pos_destino],max_buffer);
+				leidos=z_sock_read(indice_socket,(z80_byte *)&response[pos_destino],max_buffer);
 
 				//Print un poco mas inteligente
 				int print_total_leidos_mb=0;

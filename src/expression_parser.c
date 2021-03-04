@@ -997,7 +997,7 @@ void exp_par_tokens_to_exp(token_parser *tokens,char *expression,int maximo)
         }
 
         else {
-            int indice=tokens[i].indice; //indice a buscar
+            enum token_parser_indice indice=tokens[i].indice; //indice a buscar
 
             //buscar texto que corresponda con ese indice
             int j;
