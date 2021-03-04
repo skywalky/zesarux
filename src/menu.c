@@ -28528,20 +28528,33 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"!\"#$%&\'()*+,-./0123456789:;<=>");
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\");
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"]_`abcdefghijklmnopqrstuvwxyz");
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"{|}~");
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Extra characters:");
-    int i;
 
-    //Aunque este buffer esta pensado para maximo 32 caracteres de la linea
-    char buffer_extra[64];
-    int posicion=0;
-    for (i=128;i<=MAX_CHARSET_GRAPHIC;i++,posicion++) {
-        buffer_extra[posicion]=i;
+
+    if (si_complete_video_driver()) {
+        zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"{|}~\x7f"); 
+        //el 127 en teoria no es ascii
+        //aunque en mis tipos de letras si que esta y lo pongo
+
+        zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Extra characters:");
+        int i;
+
+        //Aunque este buffer esta pensado para maximo 32 caracteres de la linea
+        char buffer_extra[64];
+        int posicion=0;
+        for (i=128;i<=MAX_CHARSET_GRAPHIC;i++,posicion++) {
+            buffer_extra[posicion]=i;
+        }
+
+        buffer_extra[posicion]=0;
+        zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_extra);
     }
 
-    buffer_extra[posicion]=0;
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_extra);
+    else {
+        //Sin el 127 porque no es ascii y en drivers de texto no se veria
+        zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"{|}~"); 
+    }
+
 
     zxvision_draw_window_contents(&ventana);
 
