@@ -16,6 +16,18 @@
 #include <time.h>
 
 
+//Para evitar warnings
+#ifndef GCC_UNUSED
+
+#ifdef __GNUC__
+#  define GCC_UNUSED __attribute__((unused))
+#else
+#  define GCC_UNUSED
+#endif
+
+#endif
+
+
 /* Definitions of physical drive number for each drive */
 #define DEV_MMC		0	/* Example: Map MMC/SD card to physical drive 0 */
 #define DEV_RAM		1	/* Example: Map Ramdisk to physical drive 1 */
@@ -351,7 +363,7 @@ DRESULT disk_write (
 DRESULT disk_ioctl (
 	BYTE pdrv,		/* Physical drive nmuber (0..) */
 	BYTE cmd,		/* Control code */
-	void *buff		/* Buffer to send/receive control data */
+	void *buff GCC_UNUSED		/* Buffer to send/receive control data */
 )
 {
 	//DRESULT res;

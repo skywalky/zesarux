@@ -27,9 +27,14 @@
 
 #if defined(__APPLE__)
     //En Mac OS X
-    #include <libkern/OSAtomic.h>
 
-    typedef uint32_t z_atomic_semaphore;
+    //old
+    //#include <libkern/OSAtomic.h>
+    //typedef uint32_t z_atomic_semaphore;
+
+    #include <stdatomic.h>
+
+    typedef _Atomic int z_atomic_semaphore;
 
 
     #else 
