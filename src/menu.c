@@ -717,7 +717,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_grey,TURBOVISION_COLOUR_green,TURBOVISION_COLOUR_grey, 	//Colores para opcion no disponible
 		TURBOVISION_COLOUR_lightwhite,TURBOVISION_COLOUR_black,        	//Colores para el titulo y linea recuadro ventana
 		TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,        	//Colores para el titulo y linea recuadro ventana inactiva
-		TURBOVISION_COLOUR_black,		//Color waveform
+		TURBOVISION_COLOUR_blue,		//Color waveform
 		TURBOVISION_COLOUR_cyan,		//Color para zona no usada en visualmem
 		TURBOVISION_COLOUR_red,TURBOVISION_COLOUR_lightwhite,		//Color para opcion marcada
 		'*',
