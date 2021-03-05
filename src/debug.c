@@ -779,6 +779,11 @@ void cpu_panic(char *mensaje)
             cpu_panic_xmax=screen_get_emulated_display_width_zoom_border_en();
             cpu_panic_ymax=screen_get_emulated_display_height_zoom_border_en();
 
+            //Extenderlo al zx desktop
+            if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() ) {
+                cpu_panic_xmax +=screen_get_ext_desktop_width_zoom();
+            }
+
             //Determinar si hacemos zoom 1 o 2, segun tamanyo total ventana
             int desired_width=32*8*2;
             int desired_height=24*8*2;

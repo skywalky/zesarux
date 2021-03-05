@@ -27,6 +27,25 @@
 #include "atomic.h"
 #include "compileoptions.h"
 
+/*
+Rutinas:
+
+- z_atomic_test_and_set
+Ver el valor del semáforo. 
+
+Si es 1, volver y retornar 1
+Si es 0, modificarla a 1 y retornar 0
+
+Técnicamente, luego el sistema operativo lo puede implementar ligeramente diferente.
+Por ejemplo en Mac dice que hace realmente:
+
+Leer valor anterior. Establecer a 1. Retornar valor anterior
+Que al final es el mismo comportamiento
+
+- z_atomic_reset
+Establecer a 0 el semáforo
+
+*/
 
 
 #if defined(__APPLE__)
