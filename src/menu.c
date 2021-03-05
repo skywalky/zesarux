@@ -10035,11 +10035,25 @@ z80_byte zxvision_get_char_at_position(zxvision_window *w,int x,int y,int *inver
 
 	//Interpretar si es inverso
 	if (caracter.caracter>=32 && caracter.caracter<=126) {
-		if (caracter.tinta==ESTILO_GUI_PAPEL_NORMAL && caracter.papel==ESTILO_GUI_TINTA_NORMAL) {
-			//printf ("Caracter es inverso\n");
-			*inverso=1;
-				
-		}
+
+        //En el caso habitual de letra con texto inverso
+        if (ESTILO_GUI_INVERSE_TINTA==-1) {
+
+            if (caracter.tinta==ESTILO_GUI_PAPEL_NORMAL && caracter.papel==ESTILO_GUI_TINTA_NORMAL) {
+                //printf ("Caracter %c es tratado como inverso\n",caracter.caracter);
+                *inverso=1;
+                    
+            }
+        }
+
+        //Caso de letra hotkey como estilo turbovision y otros en que es solo cambio de tinta
+        else {
+            if (caracter.tinta==ESTILO_GUI_INVERSE_TINTA && caracter.papel==ESTILO_GUI_PAPEL_NORMAL) {
+                //printf ("Caracter %c es tratado como inverso (aunque solo cambia tinta)\n",caracter.caracter);
+                *inverso=1;
+                    
+            }
+        }
 	}
 			
 
@@ -25106,11 +25120,15 @@ void menu_tape_browser_show(char *filename)
 	char texto_browser[MAX_TEXTO_BROWSER];
 	int indice_buffer=0;
 
+    int offset_debug=0;
+
 	while(total_mem>0) {
 		longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
 		total_mem-=longitud_bloque;
 		puntero_lectura +=longitud_bloque;
-		debug_printf (VERBOSE_DEBUG,"Tape browser. Block: %s",buffer_texto);
+		debug_printf (VERBOSE_DEBUG,"Tape browser. Offset %d Block: %s",offset_debug,buffer_texto);
+
+        offset_debug +=longitud_bloque;
 
 
      //printf ("nombre: %s c1: %d\n",buffer_nombre,buffer_nombre[0]);
