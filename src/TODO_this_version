@@ -135,7 +135,8 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 
 
 
--Debug ir atrás en el tiempo. Usando cpu history
+
+Problema con el almacenamiento de los t-estados en snapshot 
 
 -sprite disabling window tambien para tsconf y maquinas con chip vdp (msx, etc)
 
@@ -161,3 +162,7 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 -Widget uso cpu con aguja. Igual para sonido. Quizá común para una variable concreto 
 
+
+Teclas f3-f5 funcionan en QL?
+
+Delete file mdv hacer trap?

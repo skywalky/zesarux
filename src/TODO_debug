@@ -58,6 +58,10 @@ Este JR NZ deberia aparecer como 20004
 
 -poder cargar tabla de simbolos de un codigo fuente
 
+-Debug ir atrás en el tiempo. Usando cpu history?
+Guardando snapshots en cada iteración?. Snapshots en memoria o disco. Si es en memoria, alguna especie de lista enlazada
+
+
 -visor sprites: quizá mejorarlo para que se pueda elegir el incremento de salto para cada scanline... Por ejemplo, sprites de tsconf saltan de 256 en 256
 
 -Paso a paso cuando hay condición de debug activa no deja salir (en menú) : ocurre porque sale y al momento salta 
