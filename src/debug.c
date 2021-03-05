@@ -810,19 +810,45 @@ void cpu_panic(char *mensaje)
 			//los registros los mostramos dos lineas por debajo de la ultima usada
 			cpu_panic_printstring(buffer);
 
+            cpu_panic_printstring("\n");
+
 			if (dumped_debug_dump_zsf_on_cpu_panic.v) {
-				cpu_panic_printstring("\n\nDumped cpu panic snapshot:\n");
+				cpu_panic_printstring("\nDumped cpu panic snapshot:\n");
 				cpu_panic_printstring(dump_snapshot_panic_name);
 				cpu_panic_printstring("\non current directory");
 				printf ("Dumped cpu panic snapshot: %s on current directory\n",dump_snapshot_panic_name);
 			}
+                                     //01234567890123456789012345678901
+            cpu_panic_printstring("\nHave a nice day ;)\n");            
 		
-			scr_refresca_pantalla_solo_driver();
 
-			//Para xwindows hace falta esto, sino no refresca
-			scr_actualiza_tablas_teclado();
+            int cuenta_atras;
 
-			sleep(20);
+            for (cuenta_atras=20;cuenta_atras>=-1;cuenta_atras--) {
+
+                char buffer_texto[32];
+
+                if (cuenta_atras>=0) {
+                    sprintf(buffer_texto,"%d ",cuenta_atras);
+                    cpu_panic_printstring(buffer_texto);
+                }
+                else {
+                    //En el -1, otro texto mas artistico
+                    cpu_panic_printstring("Sayonara baby");
+                }
+
+                //Cambiamos coordenada a 0 para sobreescribir contador
+                cpu_panic_last_x=0;
+
+                scr_refresca_pantalla_solo_driver();
+
+                //Para xwindows hace falta esto, sino no refresca
+                scr_actualiza_tablas_teclado();
+
+                sleep(1);
+            }
+
+
 			scr_end_pantalla();
 		}
 

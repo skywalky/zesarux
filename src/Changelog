@@ -64,6 +64,7 @@ Improved Debug I/O ports window: can now be backgrounded and it's reloaded conti
 Improved File spooling: delay can now be any value between 20 and 2000 ms (in increments of +20)
 Improved File Browser: added file size information
 Improved cocoa (Mac) driver: allows distinguish between left and right Ctrl key, and left and right Alt key
+Improved panic screen
 
 
 Fixed ZX-Uno bugs:
