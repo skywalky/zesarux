@@ -6392,6 +6392,7 @@ char restore_window_array[MAX_RESTORE_WINDOWS_START][MAX_NAME_WINDOW_GEOMETRY];
 int total_restore_window_array_elements=0;
 
 //Ventanas conocidas y sus funciones que las inicializan. Usado al restaurar ventanas al inicio
+//Y tambien al reabrir todas ventanas en el cambio de estilo de GUI style
 //La ultima siempre finaliza con funcion NULL
 zxvision_known_window_names zxvision_known_window_names_array[]={
 	{"waveform",menu_audio_new_waveform},
@@ -6529,6 +6530,164 @@ void zxvision_restore_windows_on_startup(void)
 
 }
 
+void zxvision_restart_all_background_windows(void)
+{
+	if (!menu_allow_background_windows) return;
+
+
+	//Si no hay multitask, no restaurar, porque esto puede implicar que se abran ventanas que necesitan multitask, 
+	//y se quejen con "This menu item needs multitask enabled", y ese mensaje no se ve el error, y espera una tecla
+	if (!menu_multitarea) return;
+
+    if (zxvision_current_window==NULL) return;
+
+	//indicar que estamos restaurando ventanas y por tanto las funciones que las crean tienen que volver nada mas entrar
+	zxvision_currently_restoring_windows_on_start=1;
+
+
+
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente los textos de las ventanas a speech
+
+
+	//Guardar valores funciones anteriores
+	int antes_menu_overlay_activo=menu_overlay_activo;
+
+
+    //Primero ir a buscar la de abajo del todo
+    zxvision_window *pointer_window;
+
+    pointer_window=zxvision_find_first_window_below_this(zxvision_current_window);
+
+    zxvision_window *initial_current_window=zxvision_current_window;
+
+    //Y ahora de ahi hacia arriba
+    int salir=0;
+    do {
+
+        //Hay que ir con ojo con los punteros a ventana. Dado que lo que haremos sera reseguir las ventanas,
+        //empezando desde la de mas abajo, antes de reabrir una, guardamos el puntero a la siguiente,
+        //reabrimos y vamos a la siguiente
+
+        //Y finalizamos cuando la que hemos redibujado era la misma que la inicial
+        /*
+        Ejemplo tenemos ventanas:
+        A
+        B
+        C
+        D
+        Donde la actual es la A
+
+        La primera que encontramos abajo es la D, Al reabrirla tendremos:
+
+        D
+        A
+        B
+        C
+
+        La siguiente la C
+
+        C
+        D
+        A
+        B
+
+        La siguiente la B
+        B
+        C
+        D
+        A
+
+        Y la siguiente la A
+        A
+        B
+        C
+        D
+
+        Y entonces es cuando verá que la última que hemos reabierto, la A, era la inicial A, y finaliza
+
+        */
+
+        //printf("Puntero ventana: %p\n",pointer_window);
+        if (pointer_window==NULL) {
+            debug_printf(VERBOSE_DEBUG,"Window is null. Exiting");
+            salir=1;
+        }
+        else {
+            //printf("ventana: %s\n",pointer_window->geometry_name);
+
+            //Obtenemos la siguiente ventana antes de borrar la actual
+            zxvision_window *next_window=pointer_window->next_window;
+
+            if (pointer_window->can_be_backgrounded) {
+                //Mirar su nombre de geometria
+                char *nombre;
+
+                nombre=pointer_window->geometry_name;
+                if (nombre[0]!=0) {
+                    //debug_printf(VERBOSE_DEBUG,"Closing and opening window %s",nombre);
+
+                    int indice=zxvision_find_known_window(nombre);
+
+                    if (indice>=0) {
+                        //Lanzar funcion que la crea
+                        //printf("Relanzando ventana %s (indice %d)\n",nombre,indice);
+                        debug_printf(VERBOSE_DEBUG,"Closing and reopening window %s",nombre);
+                        zxvision_known_window_names_array[indice].start(0);
+
+                        //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background,
+                        //siempre que no sea la de normal overlay o null
+                        zxvision_set_window_overlay_from_current(zxvision_current_window);
+
+                        //restauramos modo normal de texto de menu
+                        set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+                        //Esa ventana ya viene de background por tanto no hay que guardar nada en la ventana.,
+                        //es más, si estamos aquí es que se ha salido de la ventana con escape (y la current window ya no estará)
+                        //o con f6. Total que no hay que guardar nada.
+                        //Pero si que conviene dejar el overlay como estaba antes
+                    }
+                    else {
+                        //printf("Window %s not found\n",nombre);
+                    }
+                }
+            }
+
+            //Si la que hemos redibujado era la inicial, salimos
+            if (pointer_window==initial_current_window) {
+                debug_printf(VERBOSE_DEBUG,"Redrawn window was the last. Exiting");
+                salir=1;
+            }
+
+            else {
+                pointer_window=next_window;
+            }
+
+        }
+
+
+    } while(!salir);
+
+
+
+	zxvision_currently_restoring_windows_on_start=0;
+
+
+
+	//printf ("End restoring windows\n");
+
+	//Si antes no estaba activo, ponerlo a 0. El cambio a normal_overlay_texto_menu que se hace en el bucle
+	//no lo desactiva
+	//Si no hicieramos esto, al restaurar ventanas y, no siempre, se quedan las ventanas abiertas,
+	//sin dibujar el contenido, pero con los marcos y titulo visible, aunque el menu está cerrado
+	//quiza sucede cuando la maquina al arrancar es tsconf o cualquier otra que no tiene el tamaño de ventana standard de spectrum
+	if (!antes_menu_overlay_activo) {
+		menu_overlay_activo=0;
+	}
+
+}
+
+
 void zxvision_set_draw_window_parameters(zxvision_window *w)
 {
 	ventana_activa_tipo_zxvision=1;
@@ -6631,7 +6790,7 @@ zxvision_window *zxvision_find_first_window_below_this(zxvision_window *w)
 	pointer_window=w;
 
 	while (pointer_window->previous_window!=NULL) {
-		//printf ("zxvision_find_first_window. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
+		//printf ("zxvision_find_first_window_below_this. current window %p below window: %p title below: %s\n",pointer_window,pointer_window->previous_window,pointer_window->previous_window->window_title);
 		pointer_window=pointer_window->previous_window;
 	}
 
@@ -28482,7 +28641,9 @@ void menu_interface_change_gui_style_apply(MENU_ITEM_PARAMETERS)
 
     set_charset();
 
-    menu_init_footer();           
+    menu_init_footer();
+
+    zxvision_restart_all_background_windows();     
 }
 
 void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)

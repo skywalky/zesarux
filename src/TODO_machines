@@ -13,9 +13,12 @@ http://www.rwapadventures.com/ql_wiki/index.php?title=Sinclair%20QL%20Home%20Com
 *si pulsar mas de 1 segundo, devolver tecla con repeticiones
 *ver traps de qdos y ipc afectado en esto
 
+-Poder usar tecla F5
 
 
 -interrupciones de timer. Ver como lo hace uqlx:
+
+-Delete file mdv hacer trap?
 
 "
 Q: How do you manage the 50 hz interrupt of the 8049 and the Keyboard interrupt?
