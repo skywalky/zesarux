@@ -2266,7 +2266,7 @@ fi
 export LANG=C
 
 #Estadisticas
-LINES_SOURCE=`wc -l *.c *.m *.h|grep total|awk '{printf $1}'`
+LINES_SOURCE=`wc -l *.c *.m *.h|tail -1|awk '{printf $1}'`
 
 #contamos entradas en los TODO files que empiezan con guion (-)
 TODO_FILES_LINES=`cat TODO*|grep -v "^$"|grep "^-"|wc -l|awk '{printf $1}'`
