@@ -28643,7 +28643,7 @@ void menu_interface_change_gui_style_apply(MENU_ITEM_PARAMETERS)
 
     menu_init_footer();
 
-    zxvision_restart_all_background_windows();     
+    zxvision_restart_all_background_windows();
 }
 
 void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
