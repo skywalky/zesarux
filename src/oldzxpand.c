@@ -19,6 +19,12 @@
 
 */
 
+/*
+OLD and unused source file for ZXPand emulation used before Charlie Robson explained me the technical details of the interface
+Just kept it here for historical reasons: before those details, I made long debuggin sessions trying to deduce the protocol,
+and I discovered aproximately 50% of it
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
