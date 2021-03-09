@@ -658,26 +658,28 @@ int pendiente_z88_draw_lower=0;
         // We set the final size considering if Retina Display present
         if (ventana_fullscreen) {
 
-            //Siempre sera mas ancho que alto
-            //Llenamos en vertical y en horizontal escalamos manteniendo la proporción
+            //Escalamos manteniendo la proporción
             int fullscreen_height=[[NSScreen mainScreen] frame].size.height;
             int fullscreen_width=[[NSScreen mainScreen] frame].size.width;
 
-
+            //Asumimos que llena en vertical
             float finalheight=fullscreen_height;
 
-            //proporción de escalado
-            float scale=finalheight/((float)vprect.size.height);
+            //proporción ancho/alto de la imagen a renderizar
+            float aspectratio=((float)vprect.size.width)/((float)vprect.size.height);
 
-            float finalwidth=vprect.size.width*scale;
+            float finalwidth=finalheight*aspectratio;
 
-            //Puede que no salga exacto, si nos salimos de pantalla, ajustar
-            if (finalwidth>fullscreen_width) finalwidth=fullscreen_width;
-
+            //Si necesita mas en horizontal, cambiamos: llena en horizontal y recalculamos en vertical
+            if (finalwidth>fullscreen_width) {
+                finalwidth=fullscreen_width;
+                finalheight=fullscreen_width/aspectratio;
+            }
             int offset_x=(fullscreen_width-finalwidth)/2;
+            int offset_y=(fullscreen_height-finalheight)/2;
 
-            //Escalado para llenar en vertical, dado que es mediante openGL, se puede hacer un escalado "decimal" no entero si es necesario
-            glViewport(offset_x, 0, finalwidth, finalheight);
+            //Escalado dado que es mediante openGL, se puede hacer un escalado "decimal" no entero si es necesario
+            glViewport(offset_x, offset_y, finalwidth, finalheight);
 
         }
 
