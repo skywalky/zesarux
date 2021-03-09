@@ -161,6 +161,7 @@ UInt8 *pixel_screen_data;
 NSInteger pixel_screen_width;
 NSInteger pixel_screen_height;
 
+//Para poder escalar a pantallas Retina
 NSRect vprect;
 
 // keymap conversion
@@ -518,6 +519,7 @@ int pendiente_z88_draw_lower=0;
         pixel_screen_height = screen_get_window_size_height_zoom_border_en();
 
         // Convert screen width & height to their backing store coordinates
+        // Support Retina Display
         vprect = [normalWindow convertRectToBacking:NSMakeRect(0, 0, pixel_screen_width, pixel_screen_height)];
 
         NSInteger dataLength = pixel_screen_width * pixel_screen_height * 4;
@@ -653,6 +655,7 @@ int pendiente_z88_draw_lower=0;
 
         [[self openGLContext] makeCurrentContext];
 
+        // We set the final size considering if Retina Display present
         glViewport(0, 0, vprect.size.width, vprect.size.height);
 
         //NO BORRAMOS el fondo porque ya lo dibujamos más abajo
@@ -2859,6 +2862,7 @@ int scrcocoa_init (void) {
         pixel_screen_height = screen_get_window_size_height_zoom_border_en();
 
         // Convert screen width & height to their backing store coordinates
+        // Support Retina Display
         vprect = [normalWindow convertRectToBacking:NSMakeRect(0, 0, pixel_screen_width, pixel_screen_height)];
 
 //screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en()
