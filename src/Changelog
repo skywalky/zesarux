@@ -91,6 +91,7 @@ Fixed IDE commands which affected almost all IDE firmwares: fatware, mdos, etc:
 
 Fixed annoying flickering in menu using XWindows video driver
 Fixed Mac OS retina display window
+Fixed Mac OS full screen
 Fixed loading General Sound rom
 Fixed segfaults on fileselector +3 DSK screen previews using Speedlock protected disks or bad disks
 Fixed receiving large snapshots on ZRCP/ZENG

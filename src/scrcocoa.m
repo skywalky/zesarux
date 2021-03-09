@@ -656,7 +656,34 @@ int pendiente_z88_draw_lower=0;
         [[self openGLContext] makeCurrentContext];
 
         // We set the final size considering if Retina Display present
-        glViewport(0, 0, vprect.size.width, vprect.size.height);
+        if (ventana_fullscreen) {
+
+            //Siempre sera mas ancho que alto
+            //Llenamos en vertical y en horizontal escalamos manteniendo la proporción
+            int fullscreen_height=[[NSScreen mainScreen] frame].size.height;
+            int fullscreen_width=[[NSScreen mainScreen] frame].size.width;
+
+
+            float finalheight=fullscreen_height;
+
+            //proporción de escalado
+            float scale=finalheight/((float)vprect.size.height);
+
+            float finalwidth=vprect.size.width*scale;
+
+            //Puede que no salga exacto, si nos salimos de pantalla, ajustar
+            if (finalwidth>fullscreen_width) finalwidth=fullscreen_width;
+
+            int offset_x=(fullscreen_width-finalwidth)/2;
+
+            //Escalado para llenar en vertical, dado que es mediante openGL, se puede hacer un escalado "decimal" no entero si es necesario
+            glViewport(offset_x, 0, finalwidth, finalheight);
+
+        }
+
+        else {
+            glViewport(0, 0, vprect.size.width, vprect.size.height);
+        }
 
         //NO BORRAMOS el fondo porque ya lo dibujamos más abajo
 
