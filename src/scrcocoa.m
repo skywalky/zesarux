@@ -2227,6 +2227,8 @@ if (!GetCurrentProcess(&psn))
     //[NSApp setDelegate:(ZesaruxCocoaAppController *)appController];
 //[application setDelegate:appController];
 
+    //No queremos el menu de view tab bar
+    [NSWindow setAllowsAutomaticWindowTabbing:NO];
 
     // Start the main event loop
 //	printf ("\n\nrun app\n\n");
