@@ -199,7 +199,7 @@ __FEATURES__
 
 * Emulates Speccy Superupgrade
 
-* Emulates Kartusho,iFrom interfaces by Antonio Villena
+* Emulates Kartusho, iFrom interfaces by Antonio Villena
 
 * Emulates SamRam interface by Gerton Lunter (author of famous Z80 emulator)
 
@@ -211,7 +211,7 @@ __FEATURES__
 
 * Handles compressed formats zip (with internal decompressor), and tar, rar, gz through external utilities
 
-* Emulates AY Audio Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, different DAC: Specdrum, Covox, ACB/ABC/BAC Stereo 
+* Emulates AY Audio Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, different DAC: Specdrum, Covox, ACB/ABC/BAC/CBA Stereo 
 
 * Emulates General Sound
 

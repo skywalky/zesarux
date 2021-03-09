@@ -33183,7 +33183,7 @@ void menu_about(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu(array_menu_about,"~~Features",MENU_OPCION_NORMAL,menu_about_features,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'f');
 
-			menu_add_item_menu(array_menu_about,"E~~xclusive Features",MENU_OPCION_NORMAL,menu_about_exclusivefeatures,NULL);
+			menu_add_item_menu(array_menu_about,"E~~xclusive features",MENU_OPCION_NORMAL,menu_about_exclusivefeatures,NULL);
 			menu_add_item_menu_shortcut(array_menu_about,'x');            
 
             menu_add_item_menu(array_menu_about,"H~~istory",MENU_OPCION_NORMAL,menu_about_history,NULL);

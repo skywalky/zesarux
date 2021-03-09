@@ -8,7 +8,9 @@ The following are features exclusive to ZEsarUX and not found on any emulator of
 
 * Emulates Speccy Superupgrade
 
-* Emulates Kartusho
+* Emulates Kartusho, iFrom interfaces
+
+* Emulates DataDrive HiLow (beta)
 
 * Real time playback from AY Chip sound to external MIDI device 
 
@@ -16,7 +18,7 @@ The following are features exclusive to ZEsarUX and not found on any emulator of
 
 * Emulates Spectrum keyboard ghosting error feature
 
-* AY Chip Tools: AY Player, AY Sheet, AY Piano
+* AY Chip Tools: AY Player, AY Sheet, AY Piano, export AY music to midi (.mid) files
 
 * Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX by using a telnet client.
 
