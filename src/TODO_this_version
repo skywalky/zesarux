@@ -165,3 +165,5 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 
 
 -new retina driver: zoom 1 12% .  zoom 2 20%
+
+-scr_lee_puerto en cada driver de video creo que ya no se usa para nada. borrar

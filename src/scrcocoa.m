@@ -106,28 +106,28 @@ char **gArgv;
 //pasado ese rato, desactivar caps
 int cocoa_enviar_caps_contador=0;
 
-//temp
+
 void kbd_mouse_event (int a,int b,int c,int d)
 {
 }
 
-//temp
+
 void kbd_put_keycode(int a)
 {
 }
 
-//temp
+
 int is_graphic_console(void)
 {
 return 1;
 }
 
-//temp
+
 void kbd_put_keysym(int a)
 {
 }
 
-//temp
+
 int kbd_mouse_is_absolute(void)
 {
 	return 0;
@@ -151,7 +151,7 @@ typedef struct {
 } QEMUScreen;
 
 id cocoaView;
-//static DisplayChangeListener *dcl;
+
 
 
 //donde se guarda nuestro bitmap
@@ -165,7 +165,6 @@ NSInteger pixel_screen_height;
 NSRect vprect;
 
 // keymap conversion
-
 
 //estos valores son arbitrarios, solo son para meterlos en el array y luego leerlos, deben ser >255 y no repetirse
 #define COCOA_KEY_RETURN 256
@@ -290,79 +289,79 @@ int keymap[] =
     COCOA_KEY_BACKSPACE,
     0,
     COCOA_KEY_ESCAPE,
-COCOA_KEY_RMETA,
-COCOA_KEY_LMETA,
-COCOA_KEY_LSHIFT,
-COCOA_KEY_CAPSLOCK,
-COCOA_KEY_LALT,
-COCOA_KEY_LCTRL,
-COCOA_KEY_RSHIFT, //60
-COCOA_KEY_RALT,
-COCOA_KEY_RCTRL,
-0,
-0,
-COCOA_KEY_KP_COMMA,
-0,
-COCOA_KEY_KP_MULTIPLY,
-0,
-COCOA_KEY_KP_PLUS,
-0, //70
-COCOA_KEY_NUMLOCK,
-0,
-0,
-0,
-COCOA_KEY_KP_DIVIDE,
-COCOA_KEY_KP_ENTER,
-0,
-COCOA_KEY_KP_MINUS,
-0,
-0,  //80
-COCOA_KEY_KP_EQUALS,
-COCOA_KEY_KP0,
-COCOA_KEY_KP1,
-COCOA_KEY_KP2,
-COCOA_KEY_KP3,
-COCOA_KEY_KP4,
-COCOA_KEY_KP5,
-COCOA_KEY_KP6,
-COCOA_KEY_KP7,
-0,  //90
-COCOA_KEY_KP8,  //91
-COCOA_KEY_KP9,  //93
-0,
-0,
-0,
-COCOA_KEY_F5,
-COCOA_KEY_F6,
-COCOA_KEY_F7,
-COCOA_KEY_F3,
-COCOA_KEY_F8,  //100
-COCOA_KEY_F9,
-0,
-COCOA_KEY_F11,
-0,
-COCOA_KEY_F13, //COCOA_KEY_PRINT,
-0,
-COCOA_KEY_F14, //COCOA_KEY_SCROLLOCK,
-0,
-COCOA_KEY_F10,
-0, //110
-COCOA_KEY_F12,
-0,
-COCOA_KEY_F15, //COCOA_KEY_PAUSE,
-COCOA_KEY_INSERT,
-COCOA_KEY_HOME,
-COCOA_KEY_PAGEUP,
-COCOA_KEY_DELETE,
-COCOA_KEY_F4,
-COCOA_KEY_END,
-COCOA_KEY_F2, //120
-COCOA_KEY_PAGEDOWN,
-COCOA_KEY_F1,
-COCOA_KEY_LEFT,
-COCOA_KEY_RIGHT,
-COCOA_KEY_DOWN,
-COCOA_KEY_UP
+    COCOA_KEY_RMETA,
+    COCOA_KEY_LMETA,
+    COCOA_KEY_LSHIFT,
+    COCOA_KEY_CAPSLOCK,
+    COCOA_KEY_LALT,
+    COCOA_KEY_LCTRL,
+    COCOA_KEY_RSHIFT, //60
+    COCOA_KEY_RALT,
+    COCOA_KEY_RCTRL,
+    0,
+    0,
+    COCOA_KEY_KP_COMMA,
+    0,
+    COCOA_KEY_KP_MULTIPLY,
+    0,
+    COCOA_KEY_KP_PLUS,
+    0, //70
+    COCOA_KEY_NUMLOCK,
+    0,
+    0,
+    0,
+    COCOA_KEY_KP_DIVIDE,
+    COCOA_KEY_KP_ENTER,
+    0,
+    COCOA_KEY_KP_MINUS,
+    0,
+    0,  //80
+    COCOA_KEY_KP_EQUALS,
+    COCOA_KEY_KP0,
+    COCOA_KEY_KP1,
+    COCOA_KEY_KP2,
+    COCOA_KEY_KP3,
+    COCOA_KEY_KP4,
+    COCOA_KEY_KP5,
+    COCOA_KEY_KP6,
+    COCOA_KEY_KP7,
+    0,  //90
+    COCOA_KEY_KP8,  //91
+    COCOA_KEY_KP9,  //93
+    0,
+    0,
+    0,
+    COCOA_KEY_F5,
+    COCOA_KEY_F6,
+    COCOA_KEY_F7,
+    COCOA_KEY_F3,
+    COCOA_KEY_F8,  //100
+    COCOA_KEY_F9,
+    0,
+    COCOA_KEY_F11,
+    0,
+    COCOA_KEY_F13, //COCOA_KEY_PRINT,
+    0,
+    COCOA_KEY_F14, //COCOA_KEY_SCROLLOCK,
+    0,
+    COCOA_KEY_F10,
+    0, //110
+    COCOA_KEY_F12,
+    0,
+    COCOA_KEY_F15, //COCOA_KEY_PAUSE,
+    COCOA_KEY_INSERT,
+    COCOA_KEY_HOME,
+    COCOA_KEY_PAGEUP,
+    COCOA_KEY_DELETE,
+    COCOA_KEY_F4,
+    COCOA_KEY_END,
+    COCOA_KEY_F2, //120
+    COCOA_KEY_PAGEDOWN,
+    COCOA_KEY_F1,
+    COCOA_KEY_LEFT,
+    COCOA_KEY_RIGHT,
+    COCOA_KEY_DOWN,
+    COCOA_KEY_UP
 
 
 
@@ -418,7 +417,6 @@ COCOA_KEY_UP
 - (void)windowDidEndLiveResize:(NSNotification *)notification;
 @end
 
-//NSWindow *normalWindow;
 ZesaruxCocoaWindow *normalWindow;
 
 int pendingresize=0;
@@ -444,13 +442,11 @@ int pendiente_z88_draw_lower=0;
     CGDataProviderRef dataProviderRef;
     int modifiers_state[256];
     BOOL isMouseGrabed;
-    //BOOL isFullscreen;
     BOOL isAbsoluteEnabled;
     BOOL isTabletEnabled;
     uint texId;
 }
 
-//- (void) resizeContentToWidth:(int)w height:(int)h displayState:(DisplayState *)ds;
 - (void) resizeContentToWidth:(int)w height:(int)h ;
 - (void) setSizeScreen:(int)w height:(int)h ;
 - (void) grabMouse;
@@ -490,61 +486,61 @@ int pendiente_z88_draw_lower=0;
 	NSWindow *laventana=normalWindow;
 
 
-        int zoom_x_calculado,zoom_y_calculado;
+    int zoom_x_calculado,zoom_y_calculado;
 
-        debug_printf (VERBOSE_INFO,"zoom_x %d zoom_y %d width: %d get_window_width: %d height: %d get_window_height: %d",zoom_x,zoom_y,width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
-
-
-        zoom_x_calculado=width/(screen_get_window_size_width_no_zoom_border_en()+screen_get_ext_desktop_width_no_zoom() );
-        zoom_y_calculado=height/screen_get_window_size_height_no_zoom_border_en();
+    debug_printf (VERBOSE_INFO,"zoom_x %d zoom_y %d width: %d get_window_width: %d height: %d get_window_height: %d",zoom_x,zoom_y,width,screen_get_window_size_width_no_zoom_border_en(),height,screen_get_window_size_height_no_zoom_border_en());
 
 
-        if (!zoom_x_calculado) zoom_x_calculado=1;
-        if (!zoom_y_calculado) zoom_y_calculado=1;
-
-        debug_printf (VERBOSE_INFO,"zoom_x: %d zoom_y: %d zoom_x_calculated: %d zoom_y_calculated: %d",zoom_x,zoom_y,zoom_x_calculado,zoom_y_calculado);
-
-        if (zoom_x_calculado!=zoom_x || zoom_y_calculado!=zoom_y) {
-                //resize
-                debug_printf (VERBOSE_INFO,"Resizing window");
-
-                zoom_x=zoom_x_calculado;
-                zoom_y=zoom_y_calculado;
-                set_putpixel_zoom();
-        }
-
-        pixel_screen_width = screen_get_window_size_width_zoom_border_en();
-        pixel_screen_width += screen_get_ext_desktop_width_zoom();
-
-        pixel_screen_height = screen_get_window_size_height_zoom_border_en();
-
-        // Convert screen width & height to their backing store coordinates
-        // Support Retina Display
-        vprect = [normalWindow convertRectToBacking:NSMakeRect(0, 0, pixel_screen_width, pixel_screen_height)];
-
-        NSInteger dataLength = pixel_screen_width * pixel_screen_height * 4;
-        pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
-
-        ZesaruxCocoaView *elview;
-        elview=[ laventana contentView ];
-
-        NSSize nuevosize;
-        nuevosize.width=pixel_screen_width;
-        nuevosize.height=pixel_screen_height;
-
-        [elview setSizeScreen:pixel_screen_width height:pixel_screen_height];
+    zoom_x_calculado=width/(screen_get_window_size_width_no_zoom_border_en()+screen_get_ext_desktop_width_no_zoom() );
+    zoom_y_calculado=height/screen_get_window_size_height_no_zoom_border_en();
 
 
-        [laventana setContentSize:nuevosize];
-        [laventana setContentView:elview];
+    if (!zoom_x_calculado) zoom_x_calculado=1;
+    if (!zoom_y_calculado) zoom_y_calculado=1;
+
+    debug_printf (VERBOSE_INFO,"zoom_x: %d zoom_y: %d zoom_x_calculated: %d zoom_y_calculated: %d",zoom_x,zoom_y,zoom_x_calculado,zoom_y_calculado);
+
+    if (zoom_x_calculado!=zoom_x || zoom_y_calculado!=zoom_y) {
+            //resize
+            debug_printf (VERBOSE_INFO,"Resizing window");
+
+            zoom_x=zoom_x_calculado;
+            zoom_y=zoom_y_calculado;
+            set_putpixel_zoom();
+    }
+
+    pixel_screen_width = screen_get_window_size_width_zoom_border_en();
+    pixel_screen_width += screen_get_ext_desktop_width_zoom();
+
+    pixel_screen_height = screen_get_window_size_height_zoom_border_en();
+
+    // Convert screen width & height to their backing store coordinates
+    // Support Retina Display
+    vprect = [normalWindow convertRectToBacking:NSMakeRect(0, 0, pixel_screen_width, pixel_screen_height)];
+
+    NSInteger dataLength = pixel_screen_width * pixel_screen_height * 4;
+    pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
+
+    ZesaruxCocoaView *elview;
+    elview=[ laventana contentView ];
+
+    NSSize nuevosize;
+    nuevosize.width=pixel_screen_width;
+    nuevosize.height=pixel_screen_height;
+
+    [elview setSizeScreen:pixel_screen_width height:pixel_screen_height];
 
 
-        [laventana center];
+    [laventana setContentSize:nuevosize];
+    [laventana setContentView:elview];
 
-        [elview setContentDimensions];
 
-        [elview setFrame:NSMakeRect(0, 0, pixel_screen_width, pixel_screen_height)];
-        [ [ laventana contentView ] resizeContentToWidth:(int)(pixel_screen_width) height:(int)(pixel_screen_height) ];
+    [laventana center];
+
+    [elview setContentDimensions];
+
+    [elview setFrame:NSMakeRect(0, 0, pixel_screen_width, pixel_screen_height)];
+    [ [ laventana contentView ] resizeContentToWidth:(int)(pixel_screen_width) height:(int)(pixel_screen_height) ];
 
    //printf ("resize: %d X %d\n",width,height);
 
@@ -616,8 +612,8 @@ int pendiente_z88_draw_lower=0;
 
 	//printf ("createTexture %ld %ld\n",pixel_screen_width, pixel_screen_height);
 
-        NSInteger ancho;
-        NSInteger alto;
+    NSInteger ancho;
+    NSInteger alto;
 
 	ancho=pixel_screen_width;
 	alto=pixel_screen_height;
@@ -630,99 +626,100 @@ int pendiente_z88_draw_lower=0;
 
 
 
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        glGenTextures(1, &texId); //Creamos una textura
+    glGenTextures(1, &texId); //Creamos una textura
 
-        glBindTexture(GL_TEXTURE_2D, texId);
+    glBindTexture(GL_TEXTURE_2D, texId);
 
-        //Configuramos la textura
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //Configuramos la textura
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-        //No copiamos nada lo haremos luego (le pasamos null)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ancho, alto, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
+    //No copiamos nada lo haremos luego (le pasamos null)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ancho, alto, 0, GL_BGRA, GL_UNSIGNED_BYTE, NULL);
 }
 
 - (void)render {
 
 
-        // CGLLockContext([[self openGLContext] CGLContextObj]);
+    // CGLLockContext([[self openGLContext] CGLContextObj]);
 
-        [[self openGLContext] makeCurrentContext];
+    [[self openGLContext] makeCurrentContext];
 
-        // We set the final size considering if Retina Display present
-        if (ventana_fullscreen) {
+    // We set the final size considering if Retina Display present
+    //TODO: peta con segfault si cambiamos de maquina en pantalla completa y la maquina nueva es ventana mas grande
+    if (ventana_fullscreen) {
 
-            //Escalamos manteniendo la proporción
-            int fullscreen_height=[[NSScreen mainScreen] frame].size.height;
-            int fullscreen_width=[[NSScreen mainScreen] frame].size.width;
+        //Escalamos manteniendo la proporción
+        int fullscreen_height=[[NSScreen mainScreen] frame].size.height;
+        int fullscreen_width=[[NSScreen mainScreen] frame].size.width;
 
-            //Asumimos que llena en vertical
-            float finalheight=fullscreen_height;
+        //Asumimos que llena en vertical
+        float finalheight=fullscreen_height;
 
-            //proporción ancho/alto de la imagen a renderizar
-            float aspectratio=((float)vprect.size.width)/((float)vprect.size.height);
+        //proporción ancho/alto de la imagen a renderizar
+        float aspectratio=((float)vprect.size.width)/((float)vprect.size.height);
 
-            float finalwidth=finalheight*aspectratio;
+        float finalwidth=finalheight*aspectratio;
 
-            //Si necesita mas en horizontal, cambiamos: llena en horizontal y recalculamos en vertical
-            if (finalwidth>fullscreen_width) {
-                finalwidth=fullscreen_width;
-                finalheight=fullscreen_width/aspectratio;
-            }
-            int offset_x=(fullscreen_width-finalwidth)/2;
-            int offset_y=(fullscreen_height-finalheight)/2;
-
-            //Escalado dado que es mediante openGL, se puede hacer un escalado "decimal" no entero si es necesario
-            glViewport(offset_x, offset_y, finalwidth, finalheight);
-
+        //Si necesita mas en horizontal, cambiamos: llena en horizontal y recalculamos en vertical
+        if (finalwidth>fullscreen_width) {
+            finalwidth=fullscreen_width;
+            finalheight=fullscreen_width/aspectratio;
         }
+        int offset_x=(fullscreen_width-finalwidth)/2;
+        int offset_y=(fullscreen_height-finalheight)/2;
 
-        else {
-            glViewport(0, 0, vprect.size.width, vprect.size.height);
-        }
+        //Escalado dado que es mediante openGL, se puede hacer un escalado "decimal" no entero si es necesario
+        glViewport(offset_x, offset_y, finalwidth, finalheight);
 
-        //NO BORRAMOS el fondo porque ya lo dibujamos más abajo
+    }
 
-        glBindTexture(GL_TEXTURE_2D, texId);
-        //Actualizamos la textura
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pixel_screen_width, pixel_screen_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixel_screen_data);
+    else {
+        glViewport(0, 0, vprect.size.width, vprect.size.height);
+    }
 
-        glBegin(GL_QUADS);
-        glColor4d(1.0,1.0,1.0,1.0); //Color blanco se multiplica con el color de los pixeles de la textura.
+    //NO BORRAMOS el fondo porque ya lo dibujamos más abajo
 
-        glTexCoord2d(0,1);
-        glVertex2d(-1.0, -1.0);
+    glBindTexture(GL_TEXTURE_2D, texId);
+    //Actualizamos la textura
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pixel_screen_width, pixel_screen_height, 0, GL_BGRA, GL_UNSIGNED_BYTE, pixel_screen_data);
 
-        glTexCoord2d(1,1);
-        glVertex2d(1.0,-1.0);
+    glBegin(GL_QUADS);
+    glColor4d(1.0,1.0,1.0,1.0); //Color blanco se multiplica con el color de los pixeles de la textura.
 
-        glTexCoord2d(1,0);
-        glVertex2d(1.0,1.0);
+    glTexCoord2d(0,1);
+    glVertex2d(-1.0, -1.0);
 
-        glTexCoord2d(0,0);
-        glVertex2d(-1.0,1.0);
-        glEnd();
+    glTexCoord2d(1,1);
+    glVertex2d(1.0,-1.0);
 
-        [[self openGLContext] flushBuffer];
+    glTexCoord2d(1,0);
+    glVertex2d(1.0,1.0);
 
-        glFlush();
-        /*
-        The documentation for -[NSOpenGLContext flushBuffer] says:
+    glTexCoord2d(0,0);
+    glVertex2d(-1.0,1.0);
+    glEnd();
 
-        Discussion
+    [[self openGLContext] flushBuffer];
 
-        If the receiver is not a double-buffered context, this call does nothing.
-        You can cause your context to be double-buffered by including NSOpenGLPFADoubleBuffer in your pixel format attributes. Alternatively, you can call glFlush() instead of -[NSOpenGLContext flushBuffer] and leave your context single-buffered.
-        */
+    glFlush();
+    /*
+    The documentation for -[NSOpenGLContext flushBuffer] says:
+
+    Discussion
+
+    If the receiver is not a double-buffered context, this call does nothing.
+    You can cause your context to be double-buffered by including NSOpenGLPFADoubleBuffer in your pixel format attributes. Alternatively, you can call glFlush() instead of -[NSOpenGLContext flushBuffer] and leave your context single-buffered.
+    */
 
 
-        // CGLUnlockContext([[self openGLContext] CGLContextObj]);
+    // CGLUnlockContext([[self openGLContext] CGLContextObj]);
 }
 
 
@@ -744,9 +741,7 @@ int pendiente_z88_draw_lower=0;
 //Para drag-drop, ver http://juliuspaintings.co.uk/cgi-bin/paint_css/animatedPaint/072-NSView-drag-and-drop.pl
 
     [self registerForDraggedTypes:
-      [NSArray arrayWithObjects:NSPasteboardTypeTIFF,NSPasteboardTypeFileURL,nil]];
-
-
+    [NSArray arrayWithObjects:NSPasteboardTypeTIFF,NSPasteboardTypeFileURL,nil]];
 
 
     return self;
@@ -792,58 +787,6 @@ int pendiente_z88_draw_lower=0;
 - (BOOL)prepareForDragOperation:(id )sender {
    return YES;
 } // end prepareForDragOperation
-
-/*
-- (BOOL)performDragOperation:(id )sender {
-
-//printf ("Ejecutando performDragOperation\n");
-
-    NSPasteboard *zPasteboard = [sender draggingPasteboard];
-    // define the images  types we accept
-    // NSPasteboardTypeTIFF: (used to be NSTIFFPboardType).
-    // NSFilenamesPboardType:An array of NSString filenames
-    NSArray *zImageTypesAry = [NSArray arrayWithObjects:NSPasteboardTypeTIFF,
-        NSPasteboardTypeFileURL, nil];
-
-    NSString *zDesiredType =
-        [zPasteboard availableTypeFromArray:zImageTypesAry];
-
-    if ([zDesiredType isEqualToString:NSPasteboardTypeFileURL]) {
-        // the pasteboard contains a list of file names
-        //Take the first one
-        NSArray *zFileNamesAry =
-            [zPasteboard propertyListForType:@"NSFilenamesPboardType"];
-
-        NSString *zPath = [zFileNamesAry objectAtIndex:0];
-
-
-//printf ("Path: %s\n",[zPath UTF8String]);
-
-
-        char *file_to_open=(char *)[zPath UTF8String];
-
-        if (file_to_open!=NULL) {
-            strcpy(quickload_file,file_to_open);
-
-            menu_abierto=1;
-            menu_event_drag_drop.v=1;
-            return YES;
-        }
-        else {
-            debug_printf(VERBOSE_DEBUG,"Can't find a file type in dragged item");
-            return NO;
-        }
-
-    }// end if
-
-
-    //this cant happen ???
-    //NSLog(@"Error MyNSView performDragOperation");
-    return NO;
-
-
-} // end performDragOperation
-*/
 
 
 
@@ -910,36 +853,36 @@ int pendiente_z88_draw_lower=0;
 - (void)scrollWheel:(NSEvent *)event
 {
 	debug_printf (VERBOSE_PARANOID,"Scroll wheel scrolled %f horizontally and %f vertically", [event deltaX], [event deltaY]);
-        mouse_wheel_horizontal=[event deltaX];
-        mouse_wheel_vertical=[event deltaY];
+    mouse_wheel_horizontal=[event deltaX];
+    mouse_wheel_vertical=[event deltaY];
 }
 
 - (void)leftrightmouseDown:(int)x y:(int)y
 {
-        gunstick_x=x;
-        gunstick_y=y;
+    gunstick_x=x;
+    gunstick_y=y;
 
-        //0,0 en cocoa esta abajo a la izquierda
-        //por tanto, para coordenada y, restamos del tope la coordenada y
-        gunstick_x=gunstick_x/zoom_x;
-        gunstick_y=screen_get_window_size_height_no_zoom_border_en()-gunstick_y/zoom_y;
+    //0,0 en cocoa esta abajo a la izquierda
+    //por tanto, para coordenada y, restamos del tope la coordenada y
+    gunstick_x=gunstick_x/zoom_x;
+    gunstick_y=screen_get_window_size_height_no_zoom_border_en()-gunstick_y/zoom_y;
 
-        debug_printf (VERBOSE_DEBUG,"Mouse Button press. x=%d y=%d. gunstick: x: %d y: %d", x, y,gunstick_x,gunstick_y);
+    debug_printf (VERBOSE_DEBUG,"Mouse Button press. x=%d y=%d. gunstick: x: %d y: %d", x, y,gunstick_x,gunstick_y);
 
 }
 
 - (void)mouseDown:(NSEvent *)event
 {
 
-        NSPoint locationInView = [self convertPoint:[event locationInWindow]
-                                       fromView:nil];
+    NSPoint locationInView = [self convertPoint:[event locationInWindow]
+                                    fromView:nil];
 
-        //mouse_left=1;
-        util_set_reset_mouse(UTIL_MOUSE_LEFT_BUTTON,1);
+    //mouse_left=1;
+    util_set_reset_mouse(UTIL_MOUSE_LEFT_BUTTON,1);
 
-        //0,0 en cocoa esta abajo a la izquierda
-        int posx=locationInView.x;
-        int posy=locationInView.y;
+    //0,0 en cocoa esta abajo a la izquierda
+    int posx=locationInView.x;
+    int posy=locationInView.y;
 
 	[self leftrightmouseDown:posx y:posy];
 
@@ -949,17 +892,17 @@ int pendiente_z88_draw_lower=0;
 - (void)rightMouseDown:(NSEvent *)event
 {
 
-        NSPoint locationInView = [self convertPoint:[event locationInWindow]
-                fromView:nil];
+    NSPoint locationInView = [self convertPoint:[event locationInWindow]
+            fromView:nil];
 
-        //mouse_right=1;
-        util_set_reset_mouse(UTIL_MOUSE_RIGHT_BUTTON,1);
+    //mouse_right=1;
+    util_set_reset_mouse(UTIL_MOUSE_RIGHT_BUTTON,1);
 
-        //0,0 en cocoa esta abajo a la izquierda
-        int posx=locationInView.x;
-        int posy=locationInView.y;
+    //0,0 en cocoa esta abajo a la izquierda
+    int posx=locationInView.x;
+    int posy=locationInView.y;
 
-        [self leftrightmouseDown:posx y:posy];
+    [self leftrightmouseDown:posx y:posy];
 
 }
 
@@ -968,48 +911,48 @@ int cocoa_raton_oculto=0;
 - (void)mouseMoved:(NSEvent *)event
 {
 
-        NSPoint locationInView = [self convertPoint:[event locationInWindow]
-                                       fromView:nil];
+    NSPoint locationInView = [self convertPoint:[event locationInWindow]
+                                    fromView:nil];
 
-        //0,0 en cocoa esta abajo a la izquierda
-        mouse_x=locationInView.x;
-        mouse_y=screen_get_window_size_height_zoom_border_en()-locationInView.y;
+    //0,0 en cocoa esta abajo a la izquierda
+    mouse_x=locationInView.x;
+    mouse_y=screen_get_window_size_height_zoom_border_en()-locationInView.y;
 
-        kempston_mouse_x=mouse_x/zoom_x;
-        kempston_mouse_y=255-mouse_y/zoom_y;
+    kempston_mouse_x=mouse_x/zoom_x;
+    kempston_mouse_y=255-mouse_y/zoom_y;
 
-		//si esta dentro de la ventana y hay que ocultar puntero
+    //si esta dentro de la ventana y hay que ocultar puntero
 
-        if (mouse_pointer_shown.v==0) {
-                if (mouse_x>=0 && mouse_y>=0 && mouse_x<=(screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom()) && mouse_y<=screen_get_window_size_height_zoom_border_en() ) {
-                        if (!cocoa_raton_oculto) {
-                                debug_printf (VERBOSE_PARANOID,"Mouse inside window and not hidden. Hide it");
-                                cocoa_raton_oculto=1;
-                                [NSCursor hide];
-                        }
-                }
+    if (mouse_pointer_shown.v==0) {
+            if (mouse_x>=0 && mouse_y>=0 && mouse_x<=(screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom()) && mouse_y<=screen_get_window_size_height_zoom_border_en() ) {
+                    if (!cocoa_raton_oculto) {
+                            debug_printf (VERBOSE_PARANOID,"Mouse inside window and not hidden. Hide it");
+                            cocoa_raton_oculto=1;
+                            [NSCursor hide];
+                    }
+            }
 
-                else {
-                        if (cocoa_raton_oculto) {
-                                debug_printf (VERBOSE_PARANOID,"Mouse outside window and hidden. Unhide it");
-                                cocoa_raton_oculto=0;
-                                [NSCursor unhide];
-                        }
-                }
+            else {
+                    if (cocoa_raton_oculto) {
+                            debug_printf (VERBOSE_PARANOID,"Mouse outside window and hidden. Unhide it");
+                            cocoa_raton_oculto=0;
+                            [NSCursor unhide];
+                    }
+            }
 
+    }
+
+    else {
+        //Si se tiene que mostrar, pero se habia ocultado y ahora se ha vuelto a habilitar el setting
+        if (cocoa_raton_oculto) {
+            debug_printf (VERBOSE_PARANOID,"Mouse was hidden and the setting is now enabled. Unhide it");
+    cocoa_raton_oculto=0;
+    [NSCursor unhide];                   
         }
-
-        else {
-           //Si se tiene que mostrar, pero se habia ocultado y ahora se ha vuelto a habilitar el setting
-           if (cocoa_raton_oculto) {
-                debug_printf (VERBOSE_PARANOID,"Mouse was hidden and the setting is now enabled. Unhide it");
-		cocoa_raton_oculto=0;
-		[NSCursor unhide];                   
-           }
-        }
+    }
 
 
-        //debug_printf (VERBOSE_PARANOID,"Mouse motion. X: %d Y:%d kempston x: %d y: %d",mouse_x,mouse_y,kempston_mouse_x,kempston_mouse_y);
+    //debug_printf (VERBOSE_PARANOID,"Mouse motion. X: %d Y:%d kempston x: %d y: %d",mouse_x,mouse_y,kempston_mouse_x,kempston_mouse_y);
 }
 
 - (BOOL)acceptsFirstResponder {
@@ -1019,19 +962,19 @@ int cocoa_raton_oculto=0;
 //Cuando se mueve y hay boton pulsado, genera esto
 - (void)mouseDragged:(NSEvent *)event
 {
-        debug_printf (VERBOSE_PARANOID,"Mouse dragged");
+    debug_printf (VERBOSE_PARANOID,"Mouse dragged");
 
-        [self mouseDown:event];
-        [self mouseMoved:event];
+    [self mouseDown:event];
+    [self mouseMoved:event];
 }
 
 //Cuando se mueve y hay boton pulsado, genera esto
 - (void)rightMouseDragged:(NSEvent *)event
 {
-        debug_printf (VERBOSE_PARANOID,"Mouse dragged");
+    debug_printf (VERBOSE_PARANOID,"Mouse dragged");
 
-        [self rightMouseDown:event];
-        [self mouseMoved:event];
+    [self rightMouseDown:event];
+    [self mouseMoved:event];
 }
 
 
@@ -1062,46 +1005,38 @@ int cocoa_raton_oculto=0;
 
     if (ventana_fullscreen) {
 
-	//Esto da distorsion de proporcion y llenado total de pantalla (cosa que quiza no queremos)
-        /*cdx = [[NSScreen mainScreen] frame].size.width / (float)screen.width;
-        cdy = [[NSScreen mainScreen] frame].size.height / (float)screen.height;
-        cw = screen.width * cdx;
-        ch = screen.height * cdy;
-        cx = ([[NSScreen mainScreen] frame].size.width - cw) / 2.0;
-        cy = ([[NSScreen mainScreen] frame].size.height - ch) / 2.0;
-	*/
+        //printf ("[[NSScreen mainScreen] frame].size %f X %f\n",[[NSScreen mainScreen] frame].size.width,[[NSScreen mainScreen] frame].size.height);
 
-	//printf ("[[NSScreen mainScreen] frame].size %f X %f\n",[[NSScreen mainScreen] frame].size.width,[[NSScreen mainScreen] frame].size.height);
+        int anchopantalla=[[NSScreen mainScreen] frame].size.width;
+        int altopantalla=[[NSScreen mainScreen] frame].size.height;
 
-	int anchopantalla=[[NSScreen mainScreen] frame].size.width;
-	int altopantalla=[[NSScreen mainScreen] frame].size.height;
+        //Establecemos alto ventana. Ancho va en proporcion
+        int proporcion_y=altopantalla/screen.height;
+        int altoventana=screen.height*proporcion_y;
+        int anchoventana=screen.width*proporcion_y;
 
-	//Establecemos alto ventana. Ancho va en proporcion
-	int proporcion_y=altopantalla/screen.height;
-	int altoventana=screen.height*proporcion_y;
-	int anchoventana=screen.width*proporcion_y;
-
-	cdy=proporcion_y;
-	cdx=proporcion_y;
+        cdy=proporcion_y;
+        cdx=proporcion_y;
 
 
         cw = anchoventana;
         ch = altoventana;
 
-	//printf ("ventana: %d X %d proporciones x: %f y: %f\n",anchoventana,altoventana,cdx,cdy);
+        //printf ("ventana: %d X %d proporciones x: %f y: %f\n",anchoventana,altoventana,cdx,cdy);
 
         cx = (anchopantalla - cw) / 2.0;
         cy = (altopantalla - ch) / 2.0;
 
-        } 
-        else {
-                cx = 0;
-                cy = 0;
-                cw = screen.width;
-                ch = screen.height;
-                cdx = 1.0;
-                cdy = 1.0;
-        }
+    } 
+
+    else {
+            cx = 0;
+            cy = 0;
+            cw = screen.width;
+            ch = screen.height;
+            cdx = 1.0;
+            cdy = 1.0;
+    }
 
 }
 
@@ -1116,58 +1051,58 @@ int cocoa_raton_oculto=0;
 {
 	debug_printf (VERBOSE_INFO,"resizeContentToWidth %d X %d",w,h);
 
-        int timeout=100;
+    int timeout=100;
 
-        if (sem_screen_refresh_reallocate_layers) {
-                debug_printf (VERBOSE_DEBUG,"About to run resizeContentToWidth in the middle of a screen refresh. Wait until finish refreshing");
-        }
+    if (sem_screen_refresh_reallocate_layers) {
+            debug_printf (VERBOSE_DEBUG,"About to run resizeContentToWidth in the middle of a screen refresh. Wait until finish refreshing");
+    }
 
-        while (sem_screen_refresh_reallocate_layers && timeout) {
-                //printf ("Se va a hacer resizeContentToWidth en medio de refresco. Esperar\n");
+    while (sem_screen_refresh_reallocate_layers && timeout) {
+            //printf ("Se va a hacer resizeContentToWidth en medio de refresco. Esperar\n");
 
-                //esto parece que solo sucede al inicio del programa? y solo en Cocoa?
-                //este tipo de cosas parece que solo sucede en cocoa pues el driver de video va con un thread aparte a su bola
-                //cuando genera error aqui entra por un resize de un evento "automatico" de cocoa
-                //esto es independiente de ZX Desktop, ya este habilitado o no, puede suceder esto
-                //si no controlase esto, acaba generando segmentation fault (pero parece que el segmentation fault solo cuando esta habilitado ZX Desktop)
+            //esto parece que solo sucede al inicio del programa? y solo en Cocoa?
+            //este tipo de cosas parece que solo sucede en cocoa pues el driver de video va con un thread aparte a su bola
+            //cuando genera error aqui entra por un resize de un evento "automatico" de cocoa
+            //esto es independiente de ZX Desktop, ya este habilitado o no, puede suceder esto
+            //si no controlase esto, acaba generando segmentation fault (pero parece que el segmentation fault solo cuando esta habilitado ZX Desktop)
 
-                usleep(10000); //0.01 segundo
+            usleep(10000); //0.01 segundo
 
-                timeout--;
-        }
+            timeout--;
+    }
 
-        //Si ha saltado el timeout despues de 100 intentos (100*0.01=1 segundo) y sigue reallocating, que pase lo que pase, pero que salga de ahi
+    //Si ha saltado el timeout despues de 100 intentos (100*0.01=1 segundo) y sigue reallocating, que pase lo que pase, pero que salga de ahi
 
-        scr_reallocate_layers_menu(w,h);      
+    scr_reallocate_layers_menu(w,h);      
 
-        // update screenBuffer
-        if (dataProviderRef) CGDataProviderRelease(dataProviderRef);
+    // update screenBuffer
+    if (dataProviderRef) CGDataProviderRelease(dataProviderRef);
 
 
     //sync host window color space with guests
 	screen.bitsPerPixel = 32;
 	screen.bitsPerComponent = 4 * 2;
 
-        dataProviderRef = CGDataProviderCreateWithData(NULL, pixel_screen_data, w * 4 * h, NULL);
+    dataProviderRef = CGDataProviderCreateWithData(NULL, pixel_screen_data, w * 4 * h, NULL);
 
 
-        // update windows
-        if (ventana_fullscreen) {
-                [[fullScreenWindow contentView] setFrame:[[NSScreen mainScreen] frame]];
+    // update windows
+    if (ventana_fullscreen) {
+            [[fullScreenWindow contentView] setFrame:[[NSScreen mainScreen] frame]];
 
-                [normalWindow setFrame:NSMakeRect([normalWindow frame].origin.x, [normalWindow frame].origin.y - h + screen.height, w, h + [normalWindow frame].size.height - screen.height) display:NO animate:NO];
-        } else {
+            [normalWindow setFrame:NSMakeRect([normalWindow frame].origin.x, [normalWindow frame].origin.y - h + screen.height, w, h + [normalWindow frame].size.height - screen.height) display:NO animate:NO];
+    } else {
 
-                [normalWindow setFrame:NSMakeRect([normalWindow frame].origin.x, [normalWindow frame].origin.y - h + screen.height, w, h + [normalWindow frame].size.height - screen.height) display:YES animate:NO];
-        }
+            [normalWindow setFrame:NSMakeRect([normalWindow frame].origin.x, [normalWindow frame].origin.y - h + screen.height, w, h + [normalWindow frame].size.height - screen.height) display:YES animate:NO];
+    }
 
 
-        screen.width = w;
-        screen.height = h;
-        [normalWindow center];
-        [self setContentDimensions];
+    screen.width = w;
+    screen.height = h;
+    [normalWindow center];
+    [self setContentDimensions];
 
-        [self setFrame:NSMakeRect(cx, cy, cw, ch)];
+    [self setFrame:NSMakeRect(cx, cy, cw, ch)];
 
 	//printf ("crear ventana de %f X %f \n",cw,ch);
 	clear_putpixel_cache();
@@ -1179,7 +1114,6 @@ int cocoa_raton_oculto=0;
 
 
 	[self createTexture];
-
 
 
 }
@@ -1229,15 +1163,15 @@ int cocoa_raton_oculto=0;
 #endif
 
 		//Ocultar menu, dock
-            [NSMenu setMenuBarVisible:NO];
+        [NSMenu setMenuBarVisible:NO];
 
 
 		//TODO fullscreen. Esto llena la pantalla completamente, distorsionando
 
-            fullScreenWindow = [[NSWindow alloc] initWithContentRect:[[NSScreen mainScreen] frame]
-                styleMask:NSWindowStyleMaskBorderless
-                backing:NSBackingStoreBuffered
-                defer:NO];
+        fullScreenWindow = [[NSWindow alloc] initWithContentRect:[[NSScreen mainScreen] frame]
+            styleMask:NSWindowStyleMaskBorderless
+            backing:NSBackingStoreBuffered
+            defer:NO];
 
 		//TODO fullscreen. Esto	pone el tamanyo que queremos, pero no oculta el resto de detras, por tanto no aparenta ser pantalla completa
 
@@ -1248,9 +1182,9 @@ int cocoa_raton_oculto=0;
                 defer:NO];
 		*/
 
-            [fullScreenWindow setHasShadow:NO];
-            [fullScreenWindow setContentView:self];
-            [fullScreenWindow makeKeyAndOrderFront:self];
+        [fullScreenWindow setHasShadow:NO];
+        [fullScreenWindow setContentView:self];
+        [fullScreenWindow makeKeyAndOrderFront:self];
 
 
 	//esto parece que no hace nada [fullScreenWindow setResizeIncrements:NSMakeSize(1.0,1.0)];
@@ -1304,14 +1238,14 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 
 	//printf ("cmd key: %d\n",scrcocoa_antespulsadocmd);
 
-        int buttons = 0;
-        int cocoakeycode;
-        NSPoint p = [event locationInWindow];
-        cocoakeycode=[event keyCode];
-        //printf ("cocoakeycode tecla %d pressrelease: %d\n",cocoakeycode,pressrelease);
+    int buttons = 0;
+    int cocoakeycode;
+    NSPoint p = [event locationInWindow];
+    cocoakeycode=[event keyCode];
+    //printf ("cocoakeycode tecla %d pressrelease: %d\n",cocoakeycode,pressrelease);
 
 	int teclareal=0;
-        //printf ("gestionTecla.tecla: %d contador: %d\n",cocoakeycode,temp_cocoa_contador++);
+    //printf ("gestionTecla.tecla: %d contador: %d\n",cocoakeycode,temp_cocoa_contador++);
 
 	//printf ("sizeof array: %d\n",sizeof(keymap));
 	if (cocoakeycode<sizeof(keymap)/sizeof(int) ) {
@@ -1320,7 +1254,7 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
 
 	if (pressrelease) notificar_tecla_interrupcion_si_z88();
 
-        //printf ("teclareal %d pressrelease: %d\n",teclareal,pressrelease);
+    //printf ("teclareal %d pressrelease: %d\n",teclareal,pressrelease);
 
 	//Teclas que necesitan conversion de teclado para Chloe
 	int tecla_gestionada_chloe=0;
@@ -1459,8 +1393,6 @@ int scrcocoa_keymap_z88_cpc_leftz; //Tecla a la izquierda de la Z. Solo usada en
                 case COCOA_KEY_BACKSPACE:
                         util_set_reset_key(UTIL_KEY_BACKSPACE,pressrelease);
                 break;
-
-
 
 
 
@@ -1756,16 +1688,16 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 
 - (void) migestionEvento:(NSEvent *)event
 {
-        //printf ("\nmigestionEvento\n");
+    //printf ("\nmigestionEvento\n");
 
 
-        //asumimos teclas de control no pulsadas
-        int pulsadoctrl_l,pulsadoctrl_r,pulsadoalt_l,pulsadoalt_r,pulsadoshift_l,pulsadoshift_r,pulsadocmd; //,pulsadocapslock;
+    //asumimos teclas de control no pulsadas
+    int pulsadoctrl_l,pulsadoctrl_r,pulsadoalt_l,pulsadoalt_r,pulsadoshift_l,pulsadoshift_r,pulsadocmd; //,pulsadocapslock;
 
-        pulsadoctrl_l=pulsadoctrl_r=pulsadoalt_l=pulsadoalt_r=pulsadoshift_l=pulsadoshift_r=pulsadocmd=0;
+    pulsadoctrl_l=pulsadoctrl_r=pulsadoalt_l=pulsadoalt_r=pulsadoshift_l=pulsadoshift_r=pulsadocmd=0;
 
-        int event_keycode,event_type,event_modifier_flags;
-        NSPoint p = [event locationInWindow];
+    int event_keycode,event_type,event_modifier_flags;
+    NSPoint p = [event locationInWindow];
 
 	event_type=[event type];
 	event_keycode=[event keyCode];
@@ -1777,11 +1709,11 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 
 	//https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSEvent_Class/#//apple_ref/doc/constant_group/Function_Key_Unicodes
 
-        if (event_keycode==0x39) {
-                //printf ("enviar caps lock durante 10/50 s\n");
-                cocoa_enviar_caps_contador=10;
-                util_set_reset_key(UTIL_KEY_CAPS_LOCK,1);
-        }
+    if (event_keycode==0x39) {
+            //printf ("enviar caps lock durante 10/50 s\n");
+            cocoa_enviar_caps_contador=10;
+            util_set_reset_key(UTIL_KEY_CAPS_LOCK,1);
+    }
 
 
 	/*if (event_modifier_flags & NSAlphaShiftKeyMask) {
@@ -1890,12 +1822,12 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 		util_set_reset_key(UTIL_KEY_SHIFT_L,pulsadoshift_l);
 	}
 
-        //notificar cambios
-        if (pulsadoshift_r!=scrcocoa_antespulsadoshift_r) {
-                //printf ("notificar cambio shift right\n");
-                joystick_possible_rightshift_key(pulsadoshift_r);
-                //util_set_reset_key(UTIL_KEY_SHIFT_R,pulsadoshift_r);
-        }
+    //notificar cambios
+    if (pulsadoshift_r!=scrcocoa_antespulsadoshift_r) {
+            //printf ("notificar cambio shift right\n");
+            joystick_possible_rightshift_key(pulsadoshift_r);
+            //util_set_reset_key(UTIL_KEY_SHIFT_R,pulsadoshift_r);
+    }
 
 
 
@@ -1984,8 +1916,6 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 
 
 
-
-
 /*
  ------------------------------------------------------
     ZesaruxCocoaAppController
@@ -2041,7 +1971,7 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 
 	//[normalWindow setResizeIncrements:NSMakeSize(screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en()) ];
 
-	[normalWindow activaSelectores];
+	    [normalWindow activaSelectores];
 
 
 /*
@@ -2077,8 +2007,8 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 {
     //COCOA_DEBUG("ZesaruxCocoaAppController: applicationWillTerminate\n");
 
-		//Cuando llega aqui la ventana ya esta cerrada. No hacer nada de refresco de ventana
-		no_fadeout_exit.v=1;
+    //Cuando llega aqui la ventana ya esta cerrada. No hacer nada de refresco de ventana
+    no_fadeout_exit.v=1;
 
     end_emulator();
     exit(0);
@@ -2190,29 +2120,29 @@ int main (int argc, const char * argv[]) {
 
 	// Si se especifica un video driver diferente de cocoa, no inicializar GUI
 
-        if (scrcocoa_non_cocoa_driver_set_cmd(argc,argv) ) {
-                //Y de aqui no salimos
-                printf ("Running ZEsarUX in non GUI mode because a non cocoa video driver is selected\n\n");
+    if (scrcocoa_non_cocoa_driver_set_cmd(argc,argv) ) {
+            //Y de aqui no salimos
+            printf ("Running ZEsarUX in non GUI mode because a non cocoa video driver is selected\n\n");
 
 
-                zesarux_main(gArgc, gArgv);
+            zesarux_main(gArgc, gArgv);
 
 
-                //Bucle cerrado con sleep. El bucle main se ha lanzado como thread
-                while (1) {
-                        timer_sleep(1000);
-                        //printf ("bucle con sleep\n");
-                }
+            //Bucle cerrado con sleep. El bucle main se ha lanzado como thread
+            while (1) {
+                    timer_sleep(1000);
+                    //printf ("bucle con sleep\n");
+            }
 
-        }
+    }
 
 
 
 
 	CPSProcessSerNum PSN;
 
-        NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-        [NSApplication sharedApplication];
+    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    [NSApplication sharedApplication];
 //	NSApplication *application = [NSApplication sharedApplication];
 
 // de qemu
@@ -2249,15 +2179,15 @@ if (!GetCurrentProcess(&psn))
 
     // Application menu
     menu = [[NSMenu alloc] initWithTitle:@""];
-    [menu addItemWithTitle:@"About ZEsarUX" action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""]; // About QEMU
+    [menu addItemWithTitle:@"About ZEsarUX" action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""]; 
     [menu addItem:[NSMenuItem separatorItem]]; //Separator
-    [menu addItemWithTitle:@"Hide ZEsarUX" action:@selector(hide:) keyEquivalent:@""]; //Hide QEMU
-    menuItem = (NSMenuItem *)[menu addItemWithTitle:@"Hide Others" action:@selector(hideOtherApplications:) keyEquivalent:@""]; // Hide Others
+    [menu addItemWithTitle:@"Hide ZEsarUX" action:@selector(hide:) keyEquivalent:@""]; 
+    menuItem = (NSMenuItem *)[menu addItemWithTitle:@"Hide Others" action:@selector(hideOtherApplications:) keyEquivalent:@""]; 
 
     //[menuItem setKeyEquivalentModifierMask:(NSAlternateKeyMask|NSCommandKeyMask)];
-		[menuItem setKeyEquivalentModifierMask:(NSEventModifierFlagOption|NSEventModifierFlagCommand)];
+    [menuItem setKeyEquivalentModifierMask:(NSEventModifierFlagOption|NSEventModifierFlagCommand)];
 
-    [menu addItemWithTitle:@"Show All" action:@selector(unhideAllApplications:) keyEquivalent:@""]; // Show All
+    [menu addItemWithTitle:@"Show All" action:@selector(unhideAllApplications:) keyEquivalent:@""]; 
 
     [menu addItem:[NSMenuItem separatorItem]]; //Separator
     [menu addItemWithTitle:@"Quit ZEsarUX" action:@selector(terminate:) keyEquivalent:@""];
@@ -2286,13 +2216,7 @@ if (!GetCurrentProcess(&psn))
     [[NSApp mainMenu] addItem:menuItem];
     [NSApp setWindowsMenu:menu];
 
-    // Help menu
-    //menu = [[NSMenu alloc] initWithTitle:@"Help"];
-    //[menu addItem: [[[NSMenuItem alloc] initWithTitle:@"QEMU Documentation" action:@selector(showQEMUDoc:) keyEquivalent:@""] autorelease]]; // QEMU Help
-    //[menu addItem: [[[NSMenuItem alloc] initWithTitle:@"QEMU Technology" action:@selector(showQEMUTec:) keyEquivalent:@""] autorelease]]; // QEMU Help
-    //menuItem = [[[NSMenuItem alloc] initWithTitle:@"Window" action:nil keyEquivalent:@""] autorelease];
-    //[menuItem setSubmenu:menu];
-    //[[NSApp mainMenu] addItem:menuItem];
+
 
     // Create an Application controller
     ZesaruxCocoaAppController *appController = [[ZesaruxCocoaAppController alloc] init];
@@ -2307,8 +2231,6 @@ if (!GetCurrentProcess(&psn))
     // Start the main event loop
 //	printf ("\n\nrun app\n\n");
 
-//temp
-//[NSApp grabMouse];
 
     [NSApp run];
 
@@ -2331,50 +2253,18 @@ void scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
 {
 
 
-        int index = 4*(x+y*pixel_screen_width);
-        unsigned int *p;
-        p=(unsigned int *) &pixel_screen_data[index];
-
-        //agregar alpha
-        color_rgb |=0xFF000000;  
-        //Escribir de golpe los 32 bits                 
-        *p=color_rgb;
-}
-
-
-//Funcion de poner pixel en pantalla de driver, teniendo como entrada el color en RGB
-//Pruebas pantalla retina
-void retina_scrcocoa_putpixel_final_rgb(int x,int y,unsigned int color_rgb)
-{
-    //if (x>200 || y>200) return;
-
-    //para retina
-    int ancho=pixel_screen_width*2;
-    int zx,zy;
-    int index = 4*(x*2+y*2*pixel_screen_width);
+    int index = 4*(x+y*pixel_screen_width);
     unsigned int *p;
     p=(unsigned int *) &pixel_screen_data[index];
 
-
     //agregar alpha
     color_rgb |=0xFF000000;  
-    //Escribir de golpe los 32 bits   
-    //primer pixel              
+    //Escribir de golpe los 32 bits                 
     *p=color_rgb;
-
-    //el de la derecha
-    p++;
-    *p=color_rgb;
-
-
-    //el de abajo a la izquierda
-    p=(unsigned int *) &pixel_screen_data[index+4*pixel_screen_width];
-    *p=color_rgb;
-
-    //el de la derecha
-    p++;
-    *p=color_rgb;       
 }
+
+
+
 
 //Funcion de poner pixel en pantalla de driver, teniendo como entrada el color indexado de tabla de colores
 void scrcocoa_putpixel_final(int x,int y,unsigned int color)
@@ -2386,11 +2276,11 @@ void scrcocoa_putpixel_final(int x,int y,unsigned int color)
 	}
                 
 
-        //Tabla con los colores reales del Spectrum. Formato RGB
-        unsigned int color32=spectrum_colortable[color];
+    //Tabla con los colores reales del Spectrum. Formato RGB
+    unsigned int color32=spectrum_colortable[color];
 
-        //y escribir
-        scrcocoa_putpixel_final_rgb(x,y,color32);
+    //y escribir
+    scrcocoa_putpixel_final_rgb(x,y,color32);
                
 
 }
@@ -2403,11 +2293,11 @@ void scrcocoa_putpixel(int x,int y,unsigned int color)
 {
 
 
-        if (menu_overlay_activo==0) {
-                //Putpixel con menu cerrado
-                scrcocoa_putpixel_final(x,y,color);
-                return;
-        }          
+    if (menu_overlay_activo==0) {
+            //Putpixel con menu cerrado
+            scrcocoa_putpixel_final(x,y,color);
+            return;
+    }          
 
 /*if (buffer_layer_machine==NULL) {
         printf ("----buffer_layer_machine null running_realloc %d\n",running_realloc);
@@ -2429,17 +2319,17 @@ void scrcocoa_putpixel(int x,int y,unsigned int color)
 
 
 
-        //Metemos pixel en layer adecuado
+    //Metemos pixel en layer adecuado
 	buffer_layer_machine[y*ancho_layer_menu_machine+x]=color;   
    
 
-        //Putpixel haciendo mix  
-        screen_putpixel_mix_layers(x,y);   
+    //Putpixel haciendo mix  
+    screen_putpixel_mix_layers(x,y);   
 }
 
 void scrcocoa_putchar_zx8081(int x,int y, z80_byte caracter)
 {
-        scr_putchar_zx8081_comun(x,y, caracter);
+    scr_putchar_zx8081_comun(x,y, caracter);
 }
 
 void scrcocoa_debug_registers(void)
@@ -2453,27 +2343,27 @@ void scrcocoa_debug_registers(void)
 
 void scrcocoa_messages_debug(char *s)
 {
-        printf ("%s\n",s);
+    printf ("%s\n",s);
 }
 
 //Rutina de putchar para menu
 void scrcocoa_putchar_menu(int x,int y, z80_byte caracter,int tinta,int papel)
 {
 
-        z80_bit inverse;
+    z80_bit inverse;
 
-        inverse.v=0;
+    inverse.v=0;
 
-        //128 y 129 corresponden a franja de menu y a letra enye minuscula
-        if (caracter<32 || caracter>MAX_CHARSET_GRAPHIC) caracter='?';
-        scr_putchar_menu_comun_zoom(caracter,x,y,inverse,tinta,papel,menu_gui_zoom);
+    //128 y 129 corresponden a franja de menu y a letra enye minuscula
+    if (caracter<32 || caracter>MAX_CHARSET_GRAPHIC) caracter='?';
+    scr_putchar_menu_comun_zoom(caracter,x,y,inverse,tinta,papel,menu_gui_zoom);
 
 }
 
 void scrcocoa_putchar_footer(int x,int y, z80_byte caracter,int tinta,int papel)
 {
 
-        int yorigen;
+    int yorigen;
 
 
 	yorigen=screen_get_emulated_display_height_no_zoom_bottomborder_en()/8;
@@ -2491,7 +2381,7 @@ void scrcocoa_putchar_footer(int x,int y, z80_byte caracter,int tinta,int papel)
 	//scr_putchar_menu_comun_zoom(caracter,x,y,inverse,tinta,papel,1);
 
 
-        scr_putchar_footer_comun_zoom(caracter,x,y,inverse,tinta,papel);
+    scr_putchar_footer_comun_zoom(caracter,x,y,inverse,tinta,papel);
 
 }
 
@@ -2527,7 +2417,7 @@ void scrcocoa_reset_fullscreen(void)
 //[cocoaView toggleFullScreen:nil];
 //Mismo comentario que set_fullscreen
 
-[cocoaView performSelectorOnMainThread:@selector(toggleFullScreen:) withObject:nil waitUntilDone:YES];
+    [cocoaView performSelectorOnMainThread:@selector(toggleFullScreen:) withObject:nil waitUntilDone:YES];
 
 }
 
@@ -2541,7 +2431,7 @@ void scrcocoa_refresca_pantalla_zx81(void)
 
 void scrcocoa_refresca_border(void)
 {
-        scr_refresca_border();
+    scr_refresca_border();
 
 }
 
@@ -2572,7 +2462,7 @@ void scrcocoa_refresca_pantalla(void)
 	}
 
 
-        if (pendingresize) return;
+    if (pendingresize) return;
 
 	/*if (pendingresize && pendingresize_w!=0 && pendingresize_h!=0) {
 		printf ("redimensionar desde refresca_pantalla\n");
@@ -2580,28 +2470,28 @@ void scrcocoa_refresca_pantalla(void)
 		pendingresize=0;
 	}*/
 
-        if (sem_screen_refresh_reallocate_layers) {
-                //printf ("--Screen layers are being reallocated. return\n");
-                //debug_exec_show_backtrace();
-                return;
-        }
+    if (sem_screen_refresh_reallocate_layers) {
+            //printf ("--Screen layers are being reallocated. return\n");
+            //debug_exec_show_backtrace();
+            return;
+    }
 
-        sem_screen_refresh_reallocate_layers=1;
+    sem_screen_refresh_reallocate_layers=1;
 
 
 
     if (MACHINE_IS_ZX8081) {
-                //scr_refresca_pantalla_rainbow_comun();
-                scrcocoa_refresca_pantalla_zx81();
+        //scr_refresca_pantalla_rainbow_comun();
+        scrcocoa_refresca_pantalla_zx81();
     }
 
 	else if (MACHINE_IS_PRISM) {
 		screen_prism_refresca_pantalla();
 	}
 
-        else if (MACHINE_IS_TBBLUE) {
-                screen_tbblue_refresca_pantalla();
-        }
+    else if (MACHINE_IS_TBBLUE) {
+            screen_tbblue_refresca_pantalla();
+    }
 
     else if (MACHINE_IS_SPECTRUM) {
 
@@ -2635,17 +2525,17 @@ void scrcocoa_refresca_pantalla(void)
 		}
     }
 
-        else if (MACHINE_IS_Z88) {
-                screen_z88_refresca_pantalla();
-        }
+    else if (MACHINE_IS_Z88) {
+            screen_z88_refresca_pantalla();
+    }
 
 	else if (MACHINE_IS_ACE) {
 		scr_refresca_pantalla_y_border_ace();
 	}
 
-        else if (MACHINE_IS_CPC) {
-                scr_refresca_pantalla_y_border_cpc();
-        }
+    else if (MACHINE_IS_CPC) {
+            scr_refresca_pantalla_y_border_cpc();
+    }
 
 	else if (MACHINE_IS_SAM) {
 		scr_refresca_pantalla_y_border_sam();
@@ -2683,19 +2573,19 @@ void scrcocoa_refresca_pantalla(void)
                 //printf ("antes de menu_overlay_function en cocoa\n");
                 menu_overlay_function();
                 //printf ("despues de menu_overlay_function en cocoa\n");
-        }
+    }
 
 
 
-        //Escribir footer
-        draw_middle_footer();
+    //Escribir footer
+    draw_middle_footer();
 
 
-        scrcocoa_refresca_pantalla_solo_driver();
+    scrcocoa_refresca_pantalla_solo_driver();
 
 
 
-        sem_screen_refresh_reallocate_layers=0;
+    sem_screen_refresh_reallocate_layers=0;
 
 
 }
@@ -2798,40 +2688,40 @@ void scrcocoa_actualiza_tablas_teclado(void)
 
 void scrcocoa_detectedchar_print(z80_byte caracter)
 {
-        printf ("%c",caracter);
-        //flush de salida standard
-        fflush(stdout);
+    printf ("%c",caracter);
+    //flush de salida standard
+    fflush(stdout);
 }
 
 //Estos valores no deben ser mayores de OVERLAY_SCREEN_MAX_WIDTH y OVERLAY_SCREEN_MAX_HEIGTH
 int scrcocoa_get_menu_width(void)
 {
-        int max=screen_get_emulated_display_width_no_zoom_border_en();
+    int max=screen_get_emulated_display_width_no_zoom_border_en();
 
-        max +=screen_get_ext_desktop_width_no_zoom();
+    max +=screen_get_ext_desktop_width_no_zoom();
 
-        max=max/menu_char_width/menu_gui_zoom;
-        if (max>OVERLAY_SCREEN_MAX_WIDTH) max=OVERLAY_SCREEN_MAX_WIDTH;
+    max=max/menu_char_width/menu_gui_zoom;
+    if (max>OVERLAY_SCREEN_MAX_WIDTH) max=OVERLAY_SCREEN_MAX_WIDTH;
 
-                //printf ("max x: %d %d\n",max,screen_get_emulated_display_width_no_zoom_border_en());
+            //printf ("max x: %d %d\n",max,screen_get_emulated_display_width_no_zoom_border_en());
 
-        return max;
+    return max;
 }
 
 
 int scrcocoa_get_menu_height(void)
 {
-        int max=screen_get_emulated_display_height_no_zoom_border_en()/8/menu_gui_zoom;
-        if (max>OVERLAY_SCREEN_MAX_HEIGTH) max=OVERLAY_SCREEN_MAX_HEIGTH;
+    int max=screen_get_emulated_display_height_no_zoom_border_en()/8/menu_gui_zoom;
+    if (max>OVERLAY_SCREEN_MAX_HEIGTH) max=OVERLAY_SCREEN_MAX_HEIGTH;
 
-                //printf ("max y: %d %d\n",max,screen_get_emulated_display_height_no_zoom_border_en());
-        return max;
+            //printf ("max y: %d %d\n",max,screen_get_emulated_display_height_no_zoom_border_en());
+    return max;
 }
 
 
 int scrcocoa_driver_can_ext_desktop (void)
 {
-        return 1;
+    return 1;
 }
 
 
@@ -2841,64 +2731,64 @@ int scrcocoa_init (void) {
 	debug_printf (VERBOSE_INFO,"Init COCOA(OpenGL) Video Driver");
 
 
-        //printf ("scrcocoa_init\n");
+    //printf ("scrcocoa_init\n");
 
-        int soyelmainthread;
+    int soyelmainthread;
 
-        if ([NSThread isMainThread]) {
-                //printf ("Soy el main thread\n");
-                soyelmainthread=1;
-        }
+    if ([NSThread isMainThread]) {
+            //printf ("Soy el main thread\n");
+            soyelmainthread=1;
+    }
 
-        else {
-                //printf ("No soy el main thread\n");
-                //Esto solo se puede hacer desde el main thread
-                //dispatch_sync(dispatch_get_main_queue(), cocoaView toggleFullScreen:nil);
-                soyelmainthread=0;
-        }
+    else {
+            //printf ("No soy el main thread\n");
+            //Esto solo se puede hacer desde el main thread
+            //dispatch_sync(dispatch_get_main_queue(), cocoaView toggleFullScreen:nil);
+            soyelmainthread=0;
+    }
 
-        //Inicializaciones necesarias
-        scr_putpixel=scrcocoa_putpixel;
-        scr_putpixel_final=scrcocoa_putpixel_final;
-        scr_putpixel_final_rgb=scrcocoa_putpixel_final_rgb;
+    //Inicializaciones necesarias
+    scr_putpixel=scrcocoa_putpixel;
+    scr_putpixel_final=scrcocoa_putpixel_final;
+    scr_putpixel_final_rgb=scrcocoa_putpixel_final_rgb;
 
-        scr_get_menu_width=scrcocoa_get_menu_width;
-        scr_get_menu_height=scrcocoa_get_menu_height;
-        scr_driver_can_ext_desktop=scrcocoa_driver_can_ext_desktop;
+    scr_get_menu_width=scrcocoa_get_menu_width;
+    scr_get_menu_height=scrcocoa_get_menu_height;
+    scr_driver_can_ext_desktop=scrcocoa_driver_can_ext_desktop;
 
-        scr_putchar_zx8081=scrcocoa_putchar_zx8081;
-        scr_debug_registers=scrcocoa_debug_registers;
-        scr_messages_debug=scrcocoa_messages_debug;
-        scr_putchar_menu=scrcocoa_putchar_menu;
-        scr_putchar_footer=scrcocoa_putchar_footer;
-        scr_set_fullscreen=scrcocoa_set_fullscreen;
-        scr_reset_fullscreen=scrcocoa_reset_fullscreen;
-	scr_z88_cpc_load_keymap=scrcocoa_z88_cpc_load_keymap;
-	scr_detectedchar_print=scrcocoa_detectedchar_print;
-        scr_tiene_colores=1;
-        screen_refresh_menu=1;
+    scr_putchar_zx8081=scrcocoa_putchar_zx8081;
+    scr_debug_registers=scrcocoa_debug_registers;
+    scr_messages_debug=scrcocoa_messages_debug;
+    scr_putchar_menu=scrcocoa_putchar_menu;
+    scr_putchar_footer=scrcocoa_putchar_footer;
+    scr_set_fullscreen=scrcocoa_set_fullscreen;
+    scr_reset_fullscreen=scrcocoa_reset_fullscreen;
+    scr_z88_cpc_load_keymap=scrcocoa_z88_cpc_load_keymap;
+    scr_detectedchar_print=scrcocoa_detectedchar_print;
+    scr_tiene_colores=1;
+    screen_refresh_menu=1;
 
 
-        //Otra inicializacion necesaria
-        //Esto debe estar al final, para que funcione correctamente desde menu, cuando se selecciona un driver, y no va, que pueda volver al anterior
-        scr_set_driver_name("cocoa");
+    //Otra inicializacion necesaria
+    //Esto debe estar al final, para que funcione correctamente desde menu, cuando se selecciona un driver, y no va, que pueda volver al anterior
+    scr_set_driver_name("cocoa");
 
 	scr_z88_cpc_load_keymap();
 
 
 
-        pixel_screen_width = screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom();
-        pixel_screen_height = screen_get_window_size_height_zoom_border_en();
+    pixel_screen_width = screen_get_window_size_width_zoom_border_en()+screen_get_ext_desktop_width_zoom();
+    pixel_screen_height = screen_get_window_size_height_zoom_border_en();
 
-        // Convert screen width & height to their backing store coordinates
-        // Support Retina Display
-        vprect = [normalWindow convertRectToBacking:NSMakeRect(0, 0, pixel_screen_width, pixel_screen_height)];
+    // Convert screen width & height to their backing store coordinates
+    // Support Retina Display
+    vprect = [normalWindow convertRectToBacking:NSMakeRect(0, 0, pixel_screen_width, pixel_screen_height)];
 
-//screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en()
+    //screen_get_window_size_width_zoom_border_en(), screen_get_window_size_height_zoom_border_en()
 
-        NSInteger dataLength = pixel_screen_width * pixel_screen_height * 4;
-        //UInt8 *pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
-        pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
+    NSInteger dataLength = pixel_screen_width * pixel_screen_height * 4;
+    //UInt8 *pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
+    pixel_screen_data = (UInt8*)malloc(dataLength * sizeof(UInt8));
 
     scr_reallocate_layers_menu(pixel_screen_width,pixel_screen_height);     
 
