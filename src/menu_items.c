@@ -11318,6 +11318,11 @@ void menu_ext_desk_settings_lower_transparent(MENU_ITEM_PARAMETERS)
 	menu_ext_desktop_transparent_lower_icons.v ^=1;
 }
 
+int menu_ext_desktop_cond(void)
+{
+	if (ventana_fullscreen) return 0;
+	return 1;
+}
 
 void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 {
@@ -11328,15 +11333,15 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_enable,NULL,"[%c] Enabled",(screen_ext_desktop_enabled ? 'X' : ' ' ) );
+		menu_add_item_menu_inicial_format(&array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_enable,menu_ext_desktop_cond,"[%c] Enabled",(screen_ext_desktop_enabled ? 'X' : ' ' ) );
 
 
 		if (screen_ext_desktop_enabled) {
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,NULL,"[%4d] Width",screen_ext_desktop_width);
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,menu_ext_desktop_cond,"[%4d] Width",screen_ext_desktop_width);
 			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Tells the width of the ZX Desktop space");
 			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Final width is this value in pixels X current horizontal zoom");
 
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_custom_width,NULL,"Custom Width");
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_custom_width,menu_ext_desktop_cond,"Custom Width");
 
 			char fill_type_name[32];
 			int seleccion_primary=0;
