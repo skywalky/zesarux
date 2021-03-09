@@ -16,9 +16,11 @@ The following are features exclusive to ZEsarUX and not found on any emulator of
 
 * Emulates Spectrum keyboard ghosting error feature
 
-* AY Chip Tools: AY Player, AY Sheet, AY Piano,
+* AY Chip Tools: AY Player, AY Sheet, AY Piano
 
 * Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX by using a telnet client.
+
+* Supports ZEsarUX Network Gaming protocol (ZENG) which allows you to play to any emulated game, using two ZEsarUX instances
 
 * Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
 

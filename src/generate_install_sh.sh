@@ -13,7 +13,7 @@ mkdir -p $INSTALLPREFIX
 mkdir -p $INSTALLPREFIX/bin
 mkdir -p $INSTALLPREFIX/share/zesarux/
 
-COMMONFILES="ACKNOWLEDGEMENTS LICENSE LICENSES_info licenses Changelog TODO* README HISTORY FEATURES INSTALL INSTALLWINDOWS ALTERNATEROMS INCLUDEDTAPES DONATE FAQ *.odt mantransfev3.bin *.rom zxuno.flash tbblue.mmc speech_filters my_soft zesarux.mp3 zesarux.xcf editionnamegame.tap editionnamegame.tap.config bin_sprite_to_c.sh keyboard_*.bmp salamanquesa.bmp"
+COMMONFILES="ACKNOWLEDGEMENTS LICENSE LICENSES_info licenses Changelog TODO* README HISTORY FEATURES EXCLUSIVEFEATURES INSTALL INSTALLWINDOWS ALTERNATEROMS INCLUDEDTAPES DONATE FAQ *.odt mantransfev3.bin *.rom zxuno.flash tbblue.mmc speech_filters my_soft zesarux.mp3 zesarux.xcf editionnamegame.tap editionnamegame.tap.config bin_sprite_to_c.sh keyboard_*.bmp salamanquesa.bmp"
 
 
 cp -a \$COMMONFILES $INSTALLPREFIX/share/zesarux/
