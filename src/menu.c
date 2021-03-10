@@ -6422,6 +6422,7 @@ zxvision_known_window_names zxvision_known_window_names_array[]={
     {"audiogensound",menu_audio_general_sound},
     {"debugioports",menu_debug_ioports},
     {"hexeditor",menu_debug_hexdump},
+    {"corestatistics",menu_about_core_statistics},
 
 	{"",NULL} //NO BORRAR ESTA!!
 };
