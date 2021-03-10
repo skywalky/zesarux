@@ -2545,7 +2545,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 
 	zxvision_window ventana;
 
-	int alto_ventana=9;
+	int alto_ventana=12;
 	int ancho_ventana=32;
 
 	int x_ventana=menu_center_x()-ancho_ventana/2; 
@@ -2558,7 +2558,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 	zxvision_draw_window(&ventana);
 
 
-        char texto_buffer[33];
+        char texto_buffer[64];
 
 
         //Empezar con espacio
@@ -2660,6 +2660,21 @@ Calculando ese tiempo: 12% cpu
 								 //menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
 								 zxvision_print_string_defaults(&ventana,1,linea++," (expected): 20000 us");
 
+                                sprintf (texto_buffer,"Total video frames: %d",stats_frames_total);
+                                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+                                sprintf (texto_buffer," Drawn: %d",stats_frames_total_drawn);
+                                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+                                int perc_dropped;
+
+                                //Evitar división por cero
+                                if (stats_frames_total==0) perc_dropped=0;
+
+                                else perc_dropped=(stats_frames_total_dropped*100)/stats_frames_total;
+
+                                sprintf (texto_buffer," Dropped: %d (%3d%%)",stats_frames_total_dropped,perc_dropped);
+                                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 								zxvision_draw_window_contents(&ventana);
 

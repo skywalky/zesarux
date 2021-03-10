@@ -54,4 +54,8 @@ extern int stats_total_speccy_browser_queries;
 extern int stats_total_zx81_browser_queries;
 extern char stats_last_yesterday_users[];
 
+extern int stats_frames_total;
+extern int stats_frames_total_drawn;
+extern int stats_frames_total_dropped;
+
 #endif

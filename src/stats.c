@@ -58,6 +58,14 @@ int stats_total_speccy_browser_queries=0;
 //total consultas realizadas con browser zx81
 int stats_total_zx81_browser_queries=0;
 
+//Frames de video totales
+int stats_frames_total=0;
+//Frames de video dibujados
+int stats_frames_total_drawn=0;
+//Frames de video saltados
+int stats_frames_total_dropped=0;
+
+
 void generate_stats_uuid(void)
 {
 

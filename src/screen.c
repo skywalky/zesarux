@@ -56,6 +56,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "ql_zx8302.h"
+#include "stats.h"
 
 //Incluimos estos dos para la funcion de fade out
 #ifdef COMPILE_XWINDOWS
@@ -9299,7 +9300,6 @@ void cpu_loop_refresca_pantalla_return(void)
 
 		TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_cpu_timer_refresca_pantalla);
 }
-	
 
 void cpu_loop_refresca_pantalla(void)
 {
@@ -9320,6 +9320,8 @@ void cpu_loop_refresca_pantalla(void)
     //printf("cpu_loop_refresca_pantalla on scanline %d\n",t_scanline_draw);
     next_frame_skip_render_scanlines=0;
 
+    stats_frames_total++;
+
 
 	if (rainbow_enabled.v) screen_add_watermark_rainbow();
 	else screen_add_watermark_no_rainbow();
@@ -9334,6 +9336,7 @@ void cpu_loop_refresca_pantalla(void)
 			debug_printf (VERBOSE_DEBUG,"Refreshing screen on top speed");
 			scr_refresca_pantalla();
 			frameskip_counter=frameskip;
+            stats_frames_total_drawn++;
 
 		}
 		cpu_loop_refresca_pantalla_return();
@@ -9351,12 +9354,14 @@ void cpu_loop_refresca_pantalla(void)
         //printf ("refrescando\n");
         scr_refresca_pantalla();
         frameskip_counter=frameskip;
+        stats_frames_total_drawn++;
     }
 
 
     //Si no se ha llegado a final de frame antes, o hay frameskip manual
     else {
         next_frame_skip_render_scanlines=1;
+        stats_frames_total_dropped++;
         //printf ("-no refrescando. frameskip_counter %d\n",frameskip_counter);
         if (frameskip_counter) frameskip_counter--;
         else {
