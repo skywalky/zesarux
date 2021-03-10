@@ -6457,7 +6457,7 @@ void zxvision_restore_windows_on_startup(void)
 	if (menu_reopen_background_windows_on_start.v==0) return;
 
 	//Si no hay multitask, no restaurar, porque esto puede implicar que se abran ventanas que necesitan multitask, 
-	//y se quejen con "This menu item needs multitask enabled", y ese mensaje no se ve el error, y espera una tecla
+	//y se quejen con "This window needs multitask enabled", y ese mensaje no se ve el error, y espera una tecla
 	if (!menu_multitarea) return;
 
 	//indicar que estamos restaurando ventanas y por tanto las funciones que las crean tienen que volver nada mas entrar
@@ -6537,7 +6537,7 @@ void zxvision_restart_all_background_windows(void)
 
 
 	//Si no hay multitask, no restaurar, porque esto puede implicar que se abran ventanas que necesitan multitask, 
-	//y se quejen con "This menu item needs multitask enabled", y ese mensaje no se ve el error, y espera una tecla
+	//y se quejen con "This window needs multitask enabled", y ese mensaje no se ve el error, y espera una tecla
 	if (!menu_multitarea) return;
 
     if (zxvision_current_window==NULL) return;

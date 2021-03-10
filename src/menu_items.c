@@ -3175,7 +3175,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 	menu_reset_counters_tecla_repeticion();
 
 		if (!menu_multitarea) {
-			menu_warn_message("This menu item needs multitask enabled");
+			menu_warn_message("This window needs multitask enabled");
 			return;
 		}
 
@@ -6548,7 +6548,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 
 
 				if (!menu_multitarea) {
-					menu_warn_message("This menu item needs multitask enabled");
+					menu_warn_message("This window needs multitask enabled");
 					return;
 				}
 
@@ -18673,7 +18673,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
         menu_espera_no_tecla();
 
 		if (!menu_multitarea) {
-			menu_warn_message("This menu item needs multitask enabled");
+			menu_warn_message("This window needs multitask enabled");
 			return;
 		}		
 
@@ -23435,7 +23435,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
         menu_espera_no_tecla();
 
 		if (!menu_multitarea) {
-			menu_warn_message("This menu item needs multitask enabled");
+			menu_warn_message("This window needs multitask enabled");
 			return;
 		}		
 
@@ -23761,7 +23761,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 
 	if (!menu_multitarea) {
-		menu_warn_message("This menu item needs multitask enabled");
+		menu_warn_message("This window needs multitask enabled");
 		return;
 	}
 
@@ -24365,7 +24365,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 	menu_reset_counters_tecla_repeticion();		
 
 	if (!menu_multitarea) {
-			menu_warn_message("This menu item needs multitask enabled");
+			menu_warn_message("This window needs multitask enabled");
 			return;
 	}	
 
@@ -24958,7 +24958,7 @@ zxvision_window zxvision_window_unnamed_console;
 void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
 {
     /*if (!menu_multitarea) {
-            menu_warn_message("This menu item needs multitask enabled");
+            menu_warn_message("This window needs multitask enabled");
             return;
     }*/
 
@@ -25330,7 +25330,7 @@ zxvision_window zxvision_window_general_sound;
 void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
 {
     /*if (!menu_multitarea) {
-            menu_warn_message("This menu item needs multitask enabled");
+            menu_warn_message("This window needs multitask enabled");
             return;
     }*/
 
@@ -25520,7 +25520,7 @@ zxvision_window zxvision_window_debug_ioports;
 void menu_debug_ioports(MENU_ITEM_PARAMETERS)
 {
     /*if (!menu_multitarea) {
-            menu_warn_message("This menu item needs multitask enabled");
+            menu_warn_message("This window needs multitask enabled");
             return;
     }*/
 
