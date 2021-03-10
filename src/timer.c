@@ -485,9 +485,6 @@ void timer_check_interrupt(void)
 			if (esperando_tiempo_final_t_estados.v==0 && framedrop_total<48) {
 
 				//normal
-				//framescreen_saltar=1;
-
-				//pruebas
 				framescreen_saltar++;
 
 				//printf ("Interrupcion con framedrop\n");

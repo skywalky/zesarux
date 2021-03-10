@@ -59,6 +59,7 @@ Improved Speccy online browser:
 -now uses ZXinfo API V3
 -uses SSL SNI when downloading files
 
+Improved Frameskip algorithm
 Improved Hex Editor: can now be backgrounded
 Improved Debug I/O ports window: can now be backgrounded and it's reloaded continuously
 Improved File spooling: delay can now be any value between 20 and 2000 ms (in increments of +20)

@@ -370,6 +370,7 @@ extern void siguiente_frame_pantalla(void);
 extern int framedrop_total;
 extern int frames_total;
 extern int framescreen_saltar;
+extern int next_frame_skip_render_scanlines;
 extern int ultimo_fps;
 
 //vofile

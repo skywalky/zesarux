@@ -590,6 +590,29 @@ int frames_total=0;
 //ha llegado la interrupcion de final de frame antes de redibujar la pantalla. Normalmente no dibujar ese frame para ganar velocidad
 int framescreen_saltar;
 
+/*
+Si en el frame anterior hemos saltado ese frame a la hora de dibujarlo
+Y por tanto indica proxima decision en el siguiente frame para renderizar scanlines o no
+Utilizado por ejemplo en tbblue para no renderizar cada scanline si frame anterior se ha saltado
+
+El funcionamiento del sistema de framedrop es:
+
+-contar tiempo entre el inicio de los t-estados de un frame de video hasta el final. 
+Si ha pasado mas del tiempo esperado (habitualmente 20ms) indicarlo con variable framescreen_saltar
+
+Si framescreen_saltar y tenemos autoframeskip, no dibujar ese frame en pantalla  (funcion cpu_loop_refresca_pantalla retorna sin hacer nada)
+Al mismo tiempo, si no se ha dibujado ese frame, indicar next_frame_skip_render_scanlines=1
+
+Ese next_frame_skip_render_scanlines se comprueba cuando se renderiza cada scanline (funciones screen_store_scanline_rainbow*)
+Si está el flag a 1, no se renderiza esa linea. Esto lo que hace es que si el frame anterior no lo hemos dibujado en pantalla 
+(funcion cpu_loop_refresca_pantalla retorna sin hacer nada), al siguiente frame no renderizaremos ninguna scanline.
+
+Esto permite ahorrar mucho tiempo de proceso
+
+
+*/
+int next_frame_skip_render_scanlines=0;
+
 //Se hace auto frameskip
 z80_bit autoframeskip={1};
 
@@ -9294,8 +9317,8 @@ void cpu_loop_refresca_pantalla(void)
 	//Siguiente tiempo
 	timer_stats_current_time(&core_cpu_timer_each_frame_antes);
 
-
-
+    //printf("cpu_loop_refresca_pantalla on scanline %d\n",t_scanline_draw);
+    next_frame_skip_render_scanlines=0;
 
 
 	if (rainbow_enabled.v) screen_add_watermark_rainbow();
@@ -9333,9 +9356,15 @@ void cpu_loop_refresca_pantalla(void)
 
 				//Si no se ha llegado a final de frame antes, o hay frameskip manual
                                 else {
-					//printf ("-no refrescando\n");
+                                    next_frame_skip_render_scanlines=1;
+					//printf ("-no refrescando. frameskip_counter %d\n",frameskip_counter);
                                        if (frameskip_counter) frameskip_counter--;
-                                        else debug_printf(VERBOSE_DEBUG,"Framedrop %d",framedrop_total);
+                                        else {
+                                            //printf("Framedrop %d\n",framedrop_total);
+                                            //printf("frameskip_counter %d\n",frameskip_counter);
+                                            //printf("framescreen_saltar %d\n",framescreen_saltar);
+                                            debug_printf(VERBOSE_DEBUG,"Framedrop %d",framedrop_total);
+                                        }
 
 
                                         framedrop_total++;

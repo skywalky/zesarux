@@ -74,6 +74,7 @@ int disparada_int_pentagon=0;
 int pentagon_inicio_interrupt=160;
 
 //int tempcontafifty=0;
+//int temp_xx_veces;
 
 int si_siguiente_sonido(void)
 {
@@ -183,7 +184,7 @@ void core_spectrum_store_rainbow_current_atributes(void)
 	if (MACHINE_IS_TSCONF) return;
 
 
-	//Si no vamos a refrescar pantalla, no tiene sentido almacenar nada en el buffer
+	//Si no vamos a refrescar pantalla (framedrop), no tiene sentido almacenar nada en el buffer
 /*
 Sin saltar frame aqui, tenemos por ejemplo
 ./zesarux --realvideo --frameskip 4  --vo null --exit-after 10
@@ -194,8 +195,9 @@ Saltando frame aqui,
 12% cpu
 tiempo de proceso en 10 segundos: user	0m1.239s
 */
-                                if (!screen_if_refresh()) {
+                                if (next_frame_skip_render_scanlines) {
                                         //if ((t_estados/screen_testados_linea)>310) printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
+                                        //if ((temp_xx_veces % 50)==0 && ((t_estados % screen_testados_linea)>1640)) printf("Skipping core_spectrum_store_rainbow_current_atributes due to framedrop. scanline %d\n",t_scanline_draw);
 
 					//printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
 					return;
@@ -270,7 +272,6 @@ tiempo de proceso en 10 segundos: user	0m1.239s
 					}
 				}
 }
-
 
 void core_spectrum_fin_frame_pantalla(void)
 {
@@ -374,8 +375,8 @@ void core_spectrum_fin_frame_pantalla(void)
 				//Final de frame. Permitir de nuevo interrupciones pentagon
 				disparada_int_pentagon=0;				
 
-
 				cpu_loop_refresca_pantalla();
+                //temp_xx_veces++;
 
 				vofile_send_frame(rainbow_buffer);
 
@@ -501,8 +502,11 @@ void core_spectrum_fin_scanline(void)
 
 			//copiamos contenido linea y border a buffer rainbow
 			if (rainbow_enabled.v==1) {
-				if (!screen_if_refresh()) {
+
+				if (next_frame_skip_render_scanlines) {
+                    //Cuando en el frame anterior se ha hecho skip, en el siguiente lo que hacemos es no renderizar scanlines
 					//if ((t_estados/screen_testados_linea)>319) printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
+                    //if ((temp_xx_veces % 25)==0) printf("Skipping scanline due to framedrop. scanline %d\n",t_estados/screen_testados_linea);
 				}
 
 				else {
@@ -511,6 +515,7 @@ void core_spectrum_fin_scanline(void)
 					screen_store_scanline_rainbow_solo_border();
 					screen_store_scanline_rainbow_solo_display();
 					TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_spectrum_store_scanline_rainbow);
+                    //if ((temp_xx_veces % 25)==0) printf("NOT Skipping scanline due to framedrop. scanline %d\n",t_estados/screen_testados_linea);
 				}
 
 				//t_scanline_next_border();
