@@ -9340,36 +9340,36 @@ void cpu_loop_refresca_pantalla(void)
 		return;
 	}
 
-		//printf ("saltar: %d counter %d\n",framescreen_saltar,frameskip_counter);
+    //printf ("saltar: %d counter %d\n",framescreen_saltar,frameskip_counter);
 
-				//Si se ha llegado antes a final de frame, y no hay frameskip manual
-				//Si no hay autoframeskip, el primer parentesis siempre se cumple
-				//Si hay autoframeskip, y se ha tardado mucho en llegar a final de frame (framescreen_saltar>0) , el primer parentesis no se cumple y por tanto no se redibuja pantalla
+    //Si se ha llegado antes a final de frame, y no hay frameskip manual
+    //Si no hay autoframeskip, el primer parentesis siempre se cumple
+    //Si hay autoframeskip, y se ha tardado mucho en llegar a final de frame (framescreen_saltar>0) , el primer parentesis no se cumple y por tanto no se redibuja pantalla
 
-                                //if ( (framescreen_saltar==0 || autoframeskip.v==0) && frameskip_counter==0) {
-				if (screen_if_refresh() ) {
-					//printf ("refrescando\n");
-                                        scr_refresca_pantalla();
-                                        frameskip_counter=frameskip;
-                                }
-
-
-				//Si no se ha llegado a final de frame antes, o hay frameskip manual
-                                else {
-                                    next_frame_skip_render_scanlines=1;
-					//printf ("-no refrescando. frameskip_counter %d\n",frameskip_counter);
-                                       if (frameskip_counter) frameskip_counter--;
-                                        else {
-                                            //printf("Framedrop %d\n",framedrop_total);
-                                            //printf("frameskip_counter %d\n",frameskip_counter);
-                                            //printf("framescreen_saltar %d\n",framescreen_saltar);
-                                            debug_printf(VERBOSE_DEBUG,"Framedrop %d",framedrop_total);
-                                        }
+    //if ( (framescreen_saltar==0 || autoframeskip.v==0) && frameskip_counter==0) {
+    if (screen_if_refresh() ) {
+        //printf ("refrescando\n");
+        scr_refresca_pantalla();
+        frameskip_counter=frameskip;
+    }
 
 
-                                        framedrop_total++;
+    //Si no se ha llegado a final de frame antes, o hay frameskip manual
+    else {
+        next_frame_skip_render_scanlines=1;
+        //printf ("-no refrescando. frameskip_counter %d\n",frameskip_counter);
+        if (frameskip_counter) frameskip_counter--;
+        else {
+            //printf("Framedrop %d\n",framedrop_total);
+            //printf("frameskip_counter %d\n",frameskip_counter);
+            //printf("framescreen_saltar %d\n",framescreen_saltar);
+            debug_printf(VERBOSE_DEBUG,"Framedrop %d",framedrop_total);
+        }
 
-                                }
+
+        framedrop_total++;
+
+    }
 
 	cpu_loop_refresca_pantalla_return();
 }
