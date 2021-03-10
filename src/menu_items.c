@@ -2558,30 +2558,29 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 	zxvision_draw_window(&ventana);
 
 
-        char texto_buffer[64];
+    char texto_buffer[64];
 
 
-        //Empezar con espacio
+    //Empezar con espacio
     texto_buffer[0]=' ';
 
-        int valor_contador_segundo_anterior;
+    int valor_contador_segundo_anterior;
 
-        valor_contador_segundo_anterior=contador_segundo;
-
-
-		z80_byte tecla;
-
-        do {
+    valor_contador_segundo_anterior=contador_segundo;
 
 
-                //esto hara ejecutar esto 2 veces por segundo
-                if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-                     valor_contador_segundo_anterior=contador_segundo;
-                     //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+    z80_byte tecla;
 
-                                int linea=0;
-                                //int opcode;
-                                //int sumatotal;
+    do {
+
+
+        //esto hara ejecutar esto 2 veces por segundo
+        if ( ((contador_segundo%500) == 0 && valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+                valor_contador_segundo_anterior=contador_segundo;
+                //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+                int linea=0;
+
 
 /*
 
@@ -2610,84 +2609,84 @@ Calculando ese tiempo: 12% cpu
 				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
 				zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-                                valor_mostrar=core_cpu_timer_frame_media;
-                                //controlar maximos
+                valor_mostrar=core_cpu_timer_frame_media;
+                //controlar maximos
 				if (valor_mostrar>999999) valor_mostrar=999999;
-                                //01234567890123456789012345678901
-                                 // Last core frame: 999999 us
-                                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
-                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+                //01234567890123456789012345678901
+                    // Last core frame: 999999 us
+                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
+                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 
-                                valor_mostrar=core_cpu_timer_refresca_pantalla_difftime;
-                                //controlar maximos
-                                if (valor_mostrar>999999) valor_mostrar=999999;
-                             //01234567890123456789012345678901
-                             // Last render display: 999999 us
-                                sprintf (texto_buffer,"Last full render:    %6ld us",valor_mostrar);
-                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+                valor_mostrar=core_cpu_timer_refresca_pantalla_difftime;
+                //controlar maximos
+                if (valor_mostrar>999999) valor_mostrar=999999;
+                //01234567890123456789012345678901
+                // Last render display: 999999 us
+                sprintf (texto_buffer,"Last full render:    %6ld us",valor_mostrar);
+                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-                                valor_mostrar=core_cpu_timer_refresca_pantalla_media;
-                                //controlar maximos
-                                if (valor_mostrar>999999) valor_mostrar=999999;
-                                //01234567890123456789012345678901
-                                 // Last core refresca_pantalla: 999999 us
-                                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
-                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
-
-
-                                valor_mostrar=core_cpu_timer_each_frame_difftime;
-                                //controlar maximos
-                                if (valor_mostrar>999999) valor_mostrar=999999;
-                             //01234567890123456789012345678901
-                             // Time between frames: 999999 us
-                                sprintf (texto_buffer,"Time between frames: %6ld us",valor_mostrar);
-                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
-
-                                valor_mostrar=core_cpu_timer_each_frame_media;
-                                //controlar maximos
-                                if (valor_mostrar>999999) valor_mostrar=999999;
-                                //01234567890123456789012345678901
-                                 // Last core each_frame: 999999 us
-                                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
-                                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-								zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
-
-								 //menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
-								 zxvision_print_string_defaults(&ventana,1,linea++," (expected): 20000 us");
-
-                                sprintf (texto_buffer,"Total video frames: %d",stats_frames_total);
-                                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
-
-                                sprintf (texto_buffer," Drawn: %d",stats_frames_total_drawn);
-                                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
-
-                                int perc_dropped;
-
-                                //Evitar división por cero
-                                if (stats_frames_total==0) perc_dropped=0;
-
-                                else perc_dropped=(stats_frames_total_dropped*100)/stats_frames_total;
-
-                                sprintf (texto_buffer," Dropped: %d (%3d%%)",stats_frames_total_dropped,perc_dropped);
-                                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
-
-								zxvision_draw_window_contents(&ventana);
+                valor_mostrar=core_cpu_timer_refresca_pantalla_media;
+                //controlar maximos
+                if (valor_mostrar>999999) valor_mostrar=999999;
+                //01234567890123456789012345678901
+                    // Last core refresca_pantalla: 999999 us
+                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
+                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
 
-                }
+                valor_mostrar=core_cpu_timer_each_frame_difftime;
+                //controlar maximos
+                if (valor_mostrar>999999) valor_mostrar=999999;
+                //01234567890123456789012345678901
+                // Time between frames: 999999 us
+                sprintf (texto_buffer,"Time between frames: %6ld us",valor_mostrar);
+                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
 
-				//Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
-				//refrescar contenido de ventana, dado que aqui no llamamos a menu_espera_tecla
-				//(a no ser que este multitarea off)
-				tecla=zxvision_common_getkey_refresh_noesperatecla();				
+                valor_mostrar=core_cpu_timer_each_frame_media;
+                //controlar maximos
+                if (valor_mostrar>999999) valor_mostrar=999999;
+                //01234567890123456789012345678901
+                    // Last core each_frame: 999999 us
+                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
+                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+                    //menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
+                    zxvision_print_string_defaults(&ventana,1,linea++," (expected): 20000 us");
+
+                sprintf (texto_buffer,"Total video frames: %d",stats_frames_total);
+                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+                sprintf (texto_buffer," Drawn: %d",stats_frames_total_drawn);
+                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+                int perc_dropped;
+
+                //Evitar división por cero
+                if (stats_frames_total==0) perc_dropped=0;
+
+                else perc_dropped=(stats_frames_total_dropped*100)/stats_frames_total;
+
+                sprintf (texto_buffer," Dropped: %d (%3d%%)",stats_frames_total_dropped,perc_dropped);
+                zxvision_print_string_defaults(&ventana,1,linea++,texto_buffer);
+
+                zxvision_draw_window_contents(&ventana);
 
 
-				zxvision_handle_cursors_pgupdn(&ventana,tecla);
+            }
+
+            //Nota: No usamos zxvision_common_getkey_refresh porque necesitamos que el bucle se ejecute continuamente para poder 
+            //refrescar contenido de ventana, dado que aqui no llamamos a menu_espera_tecla
+            //(a no ser que este multitarea off)
+            tecla=zxvision_common_getkey_refresh_noesperatecla();				
+
+
+            zxvision_handle_cursors_pgupdn(&ventana,tecla);
 
 
 		} while (tecla!=2);
