@@ -303,7 +303,7 @@ void core_msx_fin_scanline(void)
 
 			//copiamos contenido linea y border a buffer rainbow
 			if (rainbow_enabled.v==1) {
-				if (!screen_if_refresh()) {
+				if (next_frame_skip_render_scanlines) {
 					//if ((t_estados/screen_testados_linea)>319) printf ("-Not storing rainbow buffer as framescreen_saltar is %d or manual frameskip\n",framescreen_saltar);
 				}
 
