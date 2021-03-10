@@ -2678,8 +2678,8 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 	menu_reset_counters_tecla_repeticion();
 
     if (!menu_multitarea) {
-            menu_warn_message("This menu item needs multitask enabled");
-            return;
+        menu_warn_message("This window needs multitask enabled");
+        return;
     }
 
     //Nuestro puntero apunta a la estructura que hay fuera, por comodidad de usar el nombre de puntero "ventana"
@@ -2717,7 +2717,6 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
     menu_about_core_statistics_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
     //Cambiamos funcion overlay de texto de menu
-    //Se establece a la de funcion de onda + texto
     set_menu_overlay_function(menu_about_core_statistics_overlay_window_overlay);
 
     //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
