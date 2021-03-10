@@ -2535,12 +2535,18 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 }
 
+//Indica a la funcion de overlay cual es la ventana
 zxvision_window *menu_about_core_statistics_overlay_window;
+
+//Contador de segundo para hacer que el overlay solo se redibuje un numero de veces por segundo y no siempre
 int menu_core_statistics_contador_segundo_anterior;
 
+//La funcion de overlay
 void menu_about_core_statistics_overlay_window_overlay(void)
 {
     if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+    menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
     zxvision_window *ventana;
 
@@ -2548,17 +2554,17 @@ void menu_about_core_statistics_overlay_window_overlay(void)
 
 
 
-        //esto hara ejecutar esto 2 veces por segundo
-        if ( ((contador_segundo%500) == 0 && menu_core_statistics_contador_segundo_anterior!=contador_segundo) ) {
-                menu_core_statistics_contador_segundo_anterior=contador_segundo;
-                //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+    //esto hara ejecutar esto 2 veces por segundo
+    if ( ((contador_segundo%500) == 0 && menu_core_statistics_contador_segundo_anterior!=contador_segundo) ) {
+        menu_core_statistics_contador_segundo_anterior=contador_segundo;
+        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-                int linea=0;
-                char texto_buffer[64];
+        int linea=0;
+        char texto_buffer[64];
 
 
-                //Empezar con espacio
-                texto_buffer[0]=' ';                
+        //Empezar con espacio
+        texto_buffer[0]=' ';                
 
 
 /*
@@ -2578,89 +2584,91 @@ Calculando ese tiempo: 12% cpu
 //Media de todos los intervalos
 //long core_cpu_timer_frame_media=0;
 
-				long valor_mostrar;
-				valor_mostrar=core_cpu_timer_frame_difftime;
-				//controlar maximos
-				if (valor_mostrar>999999) valor_mostrar=999999;
-			     //01234567890123456789012345678901
-			     // Last core frame: 999999 us
-				sprintf (texto_buffer,"Last core frame:     %6ld us",valor_mostrar);
-				//menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
-				zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+        long valor_mostrar;
+        valor_mostrar=core_cpu_timer_frame_difftime;
+        //controlar maximos
+        if (valor_mostrar>999999) valor_mostrar=999999;
+            //01234567890123456789012345678901
+            // Last core frame: 999999 us
+        sprintf (texto_buffer,"Last core frame:     %6ld us",valor_mostrar);
+        //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);	
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
-                valor_mostrar=core_cpu_timer_frame_media;
-                //controlar maximos
-				if (valor_mostrar>999999) valor_mostrar=999999;
-                //01234567890123456789012345678901
-                    // Last core frame: 999999 us
-                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
-                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-                zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
-
-
-                valor_mostrar=core_cpu_timer_refresca_pantalla_difftime;
-                //controlar maximos
-                if (valor_mostrar>999999) valor_mostrar=999999;
-                //01234567890123456789012345678901
-                // Last render display: 999999 us
-                sprintf (texto_buffer,"Last full render:    %6ld us",valor_mostrar);
-                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-                zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
-
-                valor_mostrar=core_cpu_timer_refresca_pantalla_media;
-                //controlar maximos
-                if (valor_mostrar>999999) valor_mostrar=999999;
-                //01234567890123456789012345678901
-                    // Last core refresca_pantalla: 999999 us
-                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
-                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-                zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+        valor_mostrar=core_cpu_timer_frame_media;
+        //controlar maximos
+        if (valor_mostrar>999999) valor_mostrar=999999;
+        //01234567890123456789012345678901
+            // Last core frame: 999999 us
+        sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
+        //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
 
-                valor_mostrar=core_cpu_timer_each_frame_difftime;
-                //controlar maximos
-                if (valor_mostrar>999999) valor_mostrar=999999;
-                //01234567890123456789012345678901
-                // Time between frames: 999999 us
-                sprintf (texto_buffer,"Time between frames: %6ld us",valor_mostrar);
-                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-                zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+        valor_mostrar=core_cpu_timer_refresca_pantalla_difftime;
+        //controlar maximos
+        if (valor_mostrar>999999) valor_mostrar=999999;
+        //01234567890123456789012345678901
+        // Last render display: 999999 us
+        sprintf (texto_buffer,"Last full render:    %6ld us",valor_mostrar);
+        //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
-                valor_mostrar=core_cpu_timer_each_frame_media;
-                //controlar maximos
-                if (valor_mostrar>999999) valor_mostrar=999999;
-                //01234567890123456789012345678901
-                    // Last core each_frame: 999999 us
-                sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
-                //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
-                zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
-
-                    //menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
-                    zxvision_print_string_defaults(ventana,1,linea++," (expected): 20000 us");
-
-                sprintf (texto_buffer,"Total video frames: %d",stats_frames_total);
-                zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
-
-                sprintf (texto_buffer," Drawn: %d",stats_frames_total_drawn);
-                zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
-
-                int perc_dropped;
-
-                //Evitar división por cero
-                if (stats_frames_total==0) perc_dropped=0;
-
-                else perc_dropped=(stats_frames_total_dropped*100)/stats_frames_total;
-
-                sprintf (texto_buffer," Dropped: %d (%3d%%)",stats_frames_total_dropped,perc_dropped);
-                zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+        valor_mostrar=core_cpu_timer_refresca_pantalla_media;
+        //controlar maximos
+        if (valor_mostrar>999999) valor_mostrar=999999;
+        //01234567890123456789012345678901
+            // Last core refresca_pantalla: 999999 us
+        sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
+        //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
 
-            }
+        valor_mostrar=core_cpu_timer_each_frame_difftime;
+        //controlar maximos
+        if (valor_mostrar>999999) valor_mostrar=999999;
+        //01234567890123456789012345678901
+        // Time between frames: 999999 us
+        sprintf (texto_buffer,"Time between frames: %6ld us",valor_mostrar);
+        //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
+        valor_mostrar=core_cpu_timer_each_frame_media;
+        //controlar maximos
+        if (valor_mostrar>999999) valor_mostrar=999999;
+        //01234567890123456789012345678901
+            // Last core each_frame: 999999 us
+        sprintf (texto_buffer," Average:   %6ld us",valor_mostrar);
+        //menu_escribe_linea_opcion(linea++,-1,1,texto_buffer);
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+        //menu_escribe_linea_opcion(linea++,-1,1," (ideal):  20000 us");
+        zxvision_print_string_defaults(ventana,1,linea++," (expected): 20000 us");
+
+        sprintf (texto_buffer,"Total video frames: %d",stats_frames_total);
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+        sprintf (texto_buffer," Drawn: %d",stats_frames_total_drawn);
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+        int perc_dropped;
+
+        //Evitar división por cero
+        if (stats_frames_total==0) perc_dropped=0;
+
+        else perc_dropped=(stats_frames_total_dropped*100)/stats_frames_total;
+
+        sprintf (texto_buffer," Dropped: %d (%3d%%)",stats_frames_total_dropped,perc_dropped);
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+
+    }
+    //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
+    //y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
+    //En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
     zxvision_draw_window_contents(ventana);
 }
 
-
+//La ventana tal cual que creamos. Es la estructura, no un puntero
 zxvision_window zxvision_window_core_statistics;
 
 void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
@@ -2674,6 +2682,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
             return;
     }
 
+    //Nuestro puntero apunta a la estructura que hay fuera, por comodidad de usar el nombre de puntero "ventana"
     zxvision_window *ventana;
     ventana=&zxvision_window_core_statistics;    
 
@@ -2684,6 +2693,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 
     int x_ventana,y_ventana,ancho_ventana,alto_ventana;
 
+    //Recuperar geometria
     if (!util_find_window_geometry("corestatistics",&x_ventana,&y_ventana,&ancho_ventana,&alto_ventana)) {
         alto_ventana=12;
         ancho_ventana=32;
@@ -2692,13 +2702,15 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
         y_ventana=menu_center_y()-alto_ventana/2; 
     }    
 
-
+    //Crear ventana
 	zxvision_new_window(ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,
 							ancho_ventana-1,alto_ventana-2,"Core Statistics");
 
+    //Se puede ir a background
     ventana->can_be_backgrounded=1;
     //indicar nombre del grabado de geometria
     strcpy(ventana->geometry_name,"corestatistics");
+    //Y dibujar la ventana
     zxvision_draw_window(ventana);
 
 
@@ -2711,12 +2723,13 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
     //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
     //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
     if (zxvision_currently_restoring_windows_on_start) {
-            //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
-            return;
+        //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+        return;
     }    
 
     z80_byte tecla;
 
+    //Y esperar escape (2) o tecla background (3)
     do {
             tecla=zxvision_common_getkey_refresh();
             zxvision_handle_cursors_pgupdn(ventana,tecla);
@@ -2726,7 +2739,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
     //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
     zxvision_set_window_overlay_from_current(ventana);
 
-//restauramos modo normal de texto de menu
+    //restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);
 
 
@@ -2740,7 +2753,6 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
     else {
             zxvision_destroy_window(ventana);
     }
-
 
 
 }

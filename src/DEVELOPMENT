@@ -370,6 +370,7 @@ Con la F-funcion F_FUNCION_OVERLAY_WINDOWS, se activa el dibujado de ventanas en
 
 
 Para soportar background en una ventana:
+(ver como ejemplo menu_about_core_statistics)
 
 Para poder enviar una ventana a background:
 
