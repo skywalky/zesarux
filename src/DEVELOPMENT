@@ -133,6 +133,8 @@ ZEsarUX-version-src.tar.gz
 con comandos:
 make sourcetargz
 
+Nota: no hacerlo desde Mac pues agrega todos esos archivos ._*
+
 #antes de subir los archivos a sourceforge, generar los MD5SUMS de todos
 
 
