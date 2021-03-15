@@ -59,4 +59,4 @@ TEMPFILE=`mktemp`
 ./zesarux --noconfigfile --machine z88 --keyboardspoolfile $TEMPFILE 
 
 ./txt_to_basic_lines.sh README 3 si si no > $TEMPFILE
-./zesarux --noconfigfile --machine cpc464 --keyboardspoolfile $TEMPFILE 
+./zesarux --noconfigfile --machine cpc464 --zoom 1 --keyboardspoolfile $TEMPFILE 
