@@ -132,7 +132,7 @@ However, you can tune the compilation process a bit, depending on your operating
 
 * macOS
 
-    $ ./configure --enable-memptr --enable-visualmem --enable-cpustats --enable-cocoa-opengl
+    $ ./configure --enable-memptr --enable-visualmem --enable-cpustats
     $ make clean
     $ make
     $ ./zesarux
