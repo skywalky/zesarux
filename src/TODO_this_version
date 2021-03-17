@@ -166,3 +166,8 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 -scr_lee_puerto en cada driver de video creo que ya no se usa para nada. borrar
 
 -pentagon turbo mode
+
+-lanzar esto para z88:
+./zesarux --noconfigfile --enable-silencedetector --verbose 3 extras/media/z88/lem.epr
+
+hace que se arranque la ventana en tamaño spectrum y despues de unos segundos se redimensiona

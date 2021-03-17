@@ -52,6 +52,8 @@ Drivers audio:
 ***usar testsound.sh
 ***en dsp, si no se tiene dsp real, se puede probar con aoss (que se oye entrecortado continuo) o en cygwin (que distorsiona)
 
+ok coreaudio, null
+
 -probar targets:
 * linux 32 bits
 * linux 64 bits
@@ -64,7 +66,7 @@ Drivers audio:
 
 -Funciones de Red:
 --Windows: Probar ZENG, Speccy browser, ZX81 browser, Download TBBLUE SD
---Mac: Probar ZENG, Speccy browser, ZX81 browser, Download TBBLUE SD
+--Mac: Probar ZENG, Speccy browser, ZX81 browser, Download TBBLUE SD ok
 --Linux: Probar ZENG, Speccy browser, ZX81 browser, Download TBBLUE SD 
 
 -probar aofile raw y wav
