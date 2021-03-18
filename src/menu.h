@@ -1063,6 +1063,9 @@ extern void menu_debug_daad_init_flagobject(void);
 extern void menu_draw_last_fps(void);
 extern void menu_draw_cpu_use_last(void);
 
+extern int cpu_use_total_acumulado;
+extern int cpu_use_total_acumulado_medidas;
+
 extern void putchar_footer_array(int x,int y,z80_byte caracter,int tinta,int papel,int parpadeo);
 extern void redraw_footer(void);
 extern void cls_footer(void);

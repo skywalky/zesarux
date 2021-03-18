@@ -2660,6 +2660,18 @@ Calculando ese tiempo: 12% cpu
         sprintf (texto_buffer," Dropped: %d (%3d%%)",stats_frames_total_dropped,perc_dropped);
         zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
+        int media_cpu=0;
+
+        if (cpu_use_total_acumulado_medidas>0) {
+            media_cpu=cpu_use_total_acumulado/cpu_use_total_acumulado_medidas;
+        }
+
+
+        if (screen_show_cpu_usage.v && menu_footer) {
+            sprintf(texto_buffer,"Average CPU Use: %d%%",media_cpu);
+            zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+        }
+        
 
     }
     //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
@@ -2695,7 +2707,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 
     //Recuperar geometria
     if (!util_find_window_geometry("corestatistics",&x_ventana,&y_ventana,&ancho_ventana,&alto_ventana)) {
-        alto_ventana=12;
+        alto_ventana=13;
         ancho_ventana=32;
 
         x_ventana=menu_center_x()-ancho_ventana/2; 
