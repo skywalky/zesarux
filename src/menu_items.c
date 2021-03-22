@@ -2666,11 +2666,13 @@ Calculando ese tiempo: 12% cpu
             media_cpu=cpu_use_total_acumulado/cpu_use_total_acumulado_medidas;
         }
 
-
+		//Uso cpu no se ve en windows
+#ifndef MINGW
         if (screen_show_cpu_usage.v && menu_footer) {
             sprintf(texto_buffer,"Average CPU Use: %d%%",media_cpu);
             zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
         }
+#endif
         
 
     }

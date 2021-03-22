@@ -171,3 +171,6 @@ Quiza solo el menu (y no esxdos handler , zxpand u otros) debe usar ZVFS. El res
 ./zesarux --noconfigfile --enable-silencedetector --verbose 3 extras/media/z88/lem.epr
 
 hace que se arranque la ventana en tamaño spectrum y despues de unos segundos se redimensiona
+
+-parpadeo en windows, maquina Next, al entrar cada linea en basic. Sin realvideo no lo hace. Sin autoframeskip, lo hace igual.
+Activando el maximo turbo permitido, tambien hace una franja negra en el border, arriba del todo

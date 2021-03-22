@@ -32787,12 +32787,15 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 
 	char mensaje_cpu_usage[100];
 
+    //por defecto
+    mensaje_cpu_usage[0]=0;
+
+    //Uso cpu no se ve en windows
+#ifndef MINGW
 	if (screen_show_cpu_usage.v && menu_footer) {
 		sprintf(mensaje_cpu_usage,"Average CPU Use: %d%%\n",media_cpu);
 	}
-	else {
-		mensaje_cpu_usage[0]=0;
-	} 
+#endif
 	
 	char mensaje_total_uptime[100];
 
