@@ -113,7 +113,7 @@ extern void scr_refresca_border_zx8081(void);
 extern void scr_refresca_pantalla_y_border_cpc(void);
 
 extern z80_bit simulate_screen_zx8081;
-extern z80_byte umbral_simulate_screen_zx8081;
+extern int umbral_simulate_screen_zx8081;
 extern int scr_get_4pixel(int x,int y);
 extern int scr_get_4pixel_rainbow(int x,int y);
 

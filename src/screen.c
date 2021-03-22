@@ -244,7 +244,7 @@ z80_bit pentagon_16c_mode_available={0};
 z80_bit scr_refresca_sin_colores={0};
 
 //umbral de pixeles para dibujar o no un punto
-z80_byte umbral_simulate_screen_zx8081=4;
+int umbral_simulate_screen_zx8081=4;
 
 //Dice que no hay que hacer fadeout al salir. Se activa desde Mac os x cocoa driver
 z80_bit no_fadeout_exit={0};

@@ -10019,6 +10019,7 @@ void menu_display_osd_word_kb_finalspc(MENU_ITEM_PARAMETERS)
 void menu_display_emulate_zx8081_thres(MENU_ITEM_PARAMETERS)
 {
 
+/*
         char string_thres[3];
 
         sprintf (string_thres,"%d",umbral_simulate_screen_zx8081);
@@ -10027,6 +10028,10 @@ void menu_display_emulate_zx8081_thres(MENU_ITEM_PARAMETERS)
 
 	umbral_simulate_screen_zx8081=parse_string_to_number(string_thres);
 	if (umbral_simulate_screen_zx8081<1 || umbral_simulate_screen_zx8081>16) umbral_simulate_screen_zx8081=4;
+*/
+
+	menu_ventana_scanf_numero_enhanced("Pixel Threshold",&umbral_simulate_screen_zx8081,3,+1,1,16,0);
+
 
 }
 
