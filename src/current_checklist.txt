@@ -69,26 +69,15 @@ ok coreaudio, null
 -probar vofile. Con spectrum (border on, border off, ulaplus, spectra, timex), zx80/81 (border on, border off), z88. Con xwindows, curses, stdout y simpletext: en estos drivers probar tanto spectrum, zx81, y z88
 -probar juegos varios de zx80,zx81, spectrum, aquellos que hacen efectos especiales hi-res, etc
 -probar juegos zx81 multipart: wrx/voyage , wrx/blockbuster
--probar hotswap maquina
 -probar custom rom desde menu y desde linea de comandos. probar todas roms
 -probar realvideo spectrum
 -probar realvideo zx80/81
 -probar realvideo z88
--probar snoweffect de 48k, 128k, con juegos y con extras/media/spectrum/tests/snow_effect.tap. Las que son de pentagon, hacer hotswap a 128 y activar contended memory
--probar simular pantalla zx81 en spectrum
--probar desactivar colores pantalla spectrum
 -probar modos hi-res zx81: hrg, chr$128, udg, wrx, otros hi-res. probar xtricator, pacman 
 -probar autodetect WRX mode on ZX80/81
--probar chip sonido AY, en spectrum (ay y fuller) y zx81 (quicksilva(asteroids, defenda zx80)  y bi-pak (aydemo, pink panther...))
--probar turbosound, 3 chips ay
--probar specdrum, covox
--probar opcion ay speech on/off con chase hq por ejemplo
--probar abc/acb/bac stereo con extras/snap_tests/teststereo.tap y demos y teststereo.h
--probar view ay piano con extras/media/spectrum/tests/testpiano.tap  y demos turbosound
--probar beeper piano. nota: beeper piano con notas largas, como la musica del Zorro
+-probar chip sonido AY, en spectrum  y zx81 (quicksilva(asteroids, defenda zx80)  y bi-pak (aydemo, pink panther...))
 -probar midi output to real device
--probar export to .mid
--probar autoactivado de chip ay: en spectrum (fuller), zx8081 (en zx80/81 solo con bi-pak)
+-probar autoactivado de chip ay: zx8081 (en zx80/81 solo con bi-pak)
 -probar snaps de spectrum, zx80, zx81, z88. Cargar y grabar. .zx, .o, .p, .z80, solo carga: .z81, .sna. En grabar, generar los mismos p** que hay en snap_tests/ en una carpeta temporal y luego probar a cargarlos (desde zesarux, fuse y eightyone) - esto se hace con automatic_test_save_all.sh. Probar snaps grabados en otros emuladores: Fuse, Eightyone, etc. 
 -probar cintas. Cargar cinta con formato tap, tzx. Grabar cinta con comando save en tap, tzx, p, o
 -probar a guardar snapshots versiones anteriores (1, 2, 3, 4, 5 y 6) y cargar en ZEsarUX versiones viejas y ZXSpectr
@@ -111,7 +100,6 @@ ok coreaudio, null
 -probar zxpand: config "V", config "D=", CAT, CAT "+DIR", DELETE, load "NOMBRE", SAVE "NOMBRE" etc. En zx80, zx81
 config "O=X" donde X es 0, 1 o 2 y probar a sobreescribir archivos, dragons lair version lenta y rapida (optimizada). zxpand linea comandos --enable-zxpand y --zxpand-root-dir (y este probando con path completo, relativo, y con y sin / al final)
 Probar delete, rename, etc y resto de acciones con CMDR, con archivos en minusculas y mayusculas
--probar dandanator: spectrum y CPC
 -probar superupgrade. Básico, programa de modificación de rom. Programa en basic extras/media/spectrum/tests/superupgrade-test.tap y usando 512kb de rom que sean siempre la misma rom de spectrum 48k. Probar con rman.tap
 -probar kartusho
 -probar ifrom
