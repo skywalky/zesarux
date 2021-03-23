@@ -554,6 +554,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1 //si texto inverso solo cambia color tinta
 		},
+
+    //Tema igual que ZEsarUX pero sin brillo. Y con color de visualmem cambiado
 	{0,"ZEsarUX Matte",7,0,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		5,0, 		//Colores para opcion seleccionada
