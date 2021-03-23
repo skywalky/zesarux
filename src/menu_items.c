@@ -9374,8 +9374,15 @@ void menu_debug_disassemble(MENU_ITEM_PARAMETERS)
 
 	if (CPU_IS_MOTOROLA) ancho_total=64-1;
 
-	zxvision_new_window(&ventana,0,1,32,20,
-							ancho_total,20-2,"Disassemble");
+    int ancho_visible=32;
+    int alto_visible=20;
+
+    int xventana=menu_center_x()-ancho_visible/2;
+    int yventana=menu_center_y()-alto_visible/2;    
+
+	zxvision_new_window(&ventana,xventana,yventana,ancho_visible,alto_visible,
+							ancho_total,alto_visible-2,"Disassemble");
+
 
 	//Permitir hotkeys desde raton
 	ventana.can_mouse_send_hotkeys=1;
