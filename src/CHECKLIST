@@ -281,6 +281,10 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -Probar Chrome
 -Probar MK14
 
+-Pruebas interfaz menu:
+* habilitar zx desktop
+* zx vision: mover ventana, maximizar, restaurar, minimizar, enviar a background, shift+derecha
+
 -probar Sprite chip con demo
 -probar textos splash en cambio de modo de video por ejemplo
 -probar usar extension de archivo no conocida y ver que avisa
