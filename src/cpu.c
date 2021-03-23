@@ -7486,7 +7486,7 @@ int parse_cmdline_options(void) {
 					}
 				}
 				if (i==ESTILOS_GUI) {
-					printf ("Invalid GUI style\n");
+					printf ("Invalid GUI style: %s\n",argv[puntero_parametro]);
 					exit(1);
 				}
                         }

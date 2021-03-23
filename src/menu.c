@@ -554,6 +554,23 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1 //si texto inverso solo cambia color tinta
 		},
+	{0,"ZEsarUX Matte",7,0,
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		5,0, 		//Colores para opcion seleccionada
+		7,2,5,2, 	//Colores para opcion no disponible
+
+		0,7,        	//Colores para el titulo y linea recuadro ventana
+		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+		1,		//Color waveform
+		4,		//Color para zona no usada en visualmem
+		2,7,		//Color para opcion marcada
+		'*',
+		2, //color de aviso
+		//colores de franjas invertidas, por defecto la oscura
+        colores_franja_speccy_oscuro,colores_franja_speccy_brillo,
+        -1 //si texto inverso solo cambia color tinta
+		},
 	{0,"ZXSpectr",1,6,
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
 		1+8,6,		//Colores para opcion seleccionada
@@ -37524,7 +37541,11 @@ void estilo_gui_retorna_nombres(void)
 	int i;
 
 	for (i=0;i<ESTILOS_GUI;i++) {
-		printf ("%s ",definiciones_estilos_gui[i].nombre_estilo);
+		printf ("%s",definiciones_estilos_gui[i].nombre_estilo);
+        //coma si no es el ultimo item
+        if (i!=ESTILOS_GUI-1) printf(",");
+
+        printf(" ");
 	}
 }
 

@@ -848,17 +848,17 @@ struct s_estilos_gui {
 typedef struct s_estilos_gui estilos_gui;
 
 
-#define ESTILOS_GUI 16
+#define ESTILOS_GUI 17
 
 
-#define ESTILO_GUI_Z88 3
-#define ESTILO_GUI_CPC 4
-#define ESTILO_GUI_MSX 5
-#define ESTILO_GUI_SAM 6
-#define ESTILO_GUI_MANSOFTWARE 7
-#define ESTILO_GUI_QL 8
-#define ESTILO_GUI_RETROMAC 9
-#define ESTILO_GUI_TURBOVISION 11
+#define ESTILO_GUI_Z88 4
+#define ESTILO_GUI_CPC 5
+#define ESTILO_GUI_MSX 6
+#define ESTILO_GUI_SAM 7
+#define ESTILO_GUI_MANSOFTWARE 8
+#define ESTILO_GUI_QL 9
+#define ESTILO_GUI_RETROMAC 10
+#define ESTILO_GUI_TURBOVISION 12
 
 extern void estilo_gui_retorna_nombres(void);
 
