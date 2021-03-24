@@ -76,7 +76,7 @@ Fixed ZX-Uno bugs:
 
 Fixed TBBlue bugs:
 -Fixed relative sprites: when anchor sprite is not visible, negative coordinates, detecting unified/composite, mirror, rotation
--Fixed 4bp sprites: pattern calculating, transparency, anchor
+-Fixed 4bpp sprites: pattern calculating, transparency, anchor
 -Fixed clipping (affected scrollnutter demo in the right round corners)
 -Fixed writing on divmmc memory when layer2 active
 
