@@ -957,35 +957,53 @@ int alsa_note_on(unsigned char channel, unsigned char note,unsigned char velocit
 
 }
 
-int alsa_change_instrument_raw(unsigned char instrument)
+int alsa_change_instrument_raw(unsigned char channel,unsigned char instrument)
 {
 
-  debug_printf (VERBOSE_PARANOID,"change instrument event instrument %d",instrument);
+  debug_printf (VERBOSE_PARANOID,"change instrument event channel %d instrument %d",channel,instrument);
 
     //El mensaje seria 0xC0 + canal
 
-    int i;
-    for (i=0;i<16;i++) {
 
-        z80_byte instrumentchange[] = {0xC0+i, instrument & 127}; 
+    z80_byte instrumentchange[] = {0xC0+channel, instrument & 127}; 
 
-      snd_rawmidi_write(alsa_raw_handle_out,instrumentchange,2);        
-    }
+    snd_rawmidi_write(alsa_raw_handle_out,instrumentchange,2);        
+    
 
 
   return 0;  
 }
 
-int alsa_change_instrument_noraw(unsigned char instrument)
+int alsa_change_instrument_noraw(unsigned char channel,unsigned char instrument)
 {
 
-    //TODO
+	debug_printf (VERBOSE_PARANOID,"change instrument event channel %d instrument %d",channel,instrument);
+
+	snd_seq_event_t ev;
+
+	snd_seq_ev_clear(&ev);
+
+	snd_seq_ev_set_source(&ev, zesarux_mid_alsa_audio_info.port);
+	snd_seq_ev_set_subs(&ev);
+
+	snd_seq_ev_set_direct(&ev);
+	snd_seq_ev_set_pgmchange(&ev, channel, instrument);
+	return (snd_seq_event_output(zesarux_mid_alsa_audio_info.handle, &ev));
+
+    return 0;
 }
 
 int alsa_change_instrument(unsigned char instrument)
 {
-	if (audio_midi_raw_mode) return alsa_change_instrument_raw(instrument);
-	else return alsa_change_instrument_noraw(instrument);
+
+    int i;
+    for (i=0;i<16;i++) {
+
+	    if (audio_midi_raw_mode) alsa_change_instrument_raw(i,instrument);
+	    else alsa_change_instrument_noraw(i,instrument);
+    }
+
+    return 0;
 
 }
 
