@@ -957,7 +957,37 @@ int alsa_note_on(unsigned char channel, unsigned char note,unsigned char velocit
 
 }
 
+int alsa_change_instrument_raw(unsigned char instrument)
+{
 
+  debug_printf (VERBOSE_PARANOID,"change instrument event instrument %d",instrument);
+
+    //El mensaje seria 0xC0 + canal
+
+    int i;
+    for (i=0;i<16;i++) {
+
+        z80_byte instrumentchange[] = {0xC0+i, instrument & 127}; 
+
+      snd_rawmidi_write(alsa_raw_handle_out,instrumentchange,2);        
+    }
+
+
+  return 0;  
+}
+
+int alsa_change_instrument_noraw(unsigned char instrument)
+{
+
+    //TODO
+}
+
+int alsa_change_instrument(unsigned char instrument)
+{
+	if (audio_midi_raw_mode) return alsa_change_instrument_raw(instrument);
+	else return alsa_change_instrument_noraw(instrument);
+
+}
 
 
 //Hacer note off de una nota inmediatamente

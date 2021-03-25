@@ -176,6 +176,7 @@ extern void audio_midi_output_frame_event(void);
 extern int audio_midi_raw_mode;
 
 extern int audio_midi_output_note_on(unsigned char channel, unsigned char note);
+extern int audio_midi_set_instrument(unsigned char instrument);
 extern void audio_midi_output_raw(z80_byte value);
 extern void audio_midi_output_reset(void);
 

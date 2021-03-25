@@ -19183,6 +19183,17 @@ void menu_midi_output_reset(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_midi_output_instrument(MENU_ITEM_PARAMETERS)
+{
+
+    int instrument=0;
+
+    menu_ventana_scanf_numero_enhanced("Instrument",&instrument,4,+1,0,127,0);
+
+    audio_midi_set_instrument(instrument);
+}
+
+
 void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_direct_midi_output;
@@ -19238,6 +19249,8 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
 
 		if (audio_midi_output_initialized) {
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_test,NULL,"Test MIDI");
+
+            menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_instrument,NULL,"Change instrument");
 
 
 			menu_add_item_menu_format(array_menu_direct_midi_output,MENU_OPCION_NORMAL,menu_midi_output_reset,NULL,"Reset channels");

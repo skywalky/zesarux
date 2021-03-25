@@ -3129,6 +3129,7 @@ audio_midi_raw_parse_value(value);
 
 }
 
+//TODO: windows y coreaudio siempre usan canal 0. Mientras que alsa si que tiene canales distintos
 int audio_midi_output_note_on(unsigned char channel, unsigned char note)
 {
 	#ifdef COMPILE_ALSA
@@ -3158,6 +3159,24 @@ int audio_midi_output_note_off(unsigned char channel, unsigned char note)
 
 	#ifdef MINGW
 	return windows_note_off(channel,note,127);
+	#endif		
+}
+
+
+//Cambio de instrumento en todos los canales
+int audio_midi_set_instrument(unsigned char instrument)
+{
+	#ifdef COMPILE_ALSA
+	return alsa_change_instrument(instrument);
+	#endif
+
+
+	#ifdef COMPILE_COREAUDIO
+	return coreaudio_change_instrument(instrument);
+	#endif	
+
+	#ifdef MINGW
+	//return windows_note_off(channel,note,127);
 	#endif		
 }
 
@@ -3509,7 +3528,11 @@ void audio_midi_output_frame_event(void)
                             //Nota invalida. no se deberia llegar aqui nunca
                             debug_printf (VERBOSE_DEBUG,"Invalid note %s",nota);
                         }
-                        else audio_midi_output_note_on(canal_final,nota_numero);
+                        else {
+
+                            audio_midi_output_note_on(canal_final,nota_numero);
+
+                        }                            
                     }
 	
 					
@@ -3520,6 +3543,7 @@ void audio_midi_output_frame_event(void)
 			}
 
 		}
+
 
 
 	//Y enviar todos los eventos

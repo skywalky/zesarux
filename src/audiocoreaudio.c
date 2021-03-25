@@ -678,6 +678,24 @@ int coreaudio_note_off(unsigned char channel, unsigned char note,unsigned char v
   return 0;  
 }
 
+int coreaudio_change_instrument(unsigned char instrument)
+{
+
+  debug_printf (VERBOSE_PARANOID,"change instrument event instrument %d",instrument);
+
+    //El mensaje seria 0xC0 + canal
+
+    int i;
+    for (i=0;i<16;i++) {
+
+        z80_byte instrumentchange[] = {0xC0+i, instrument & 127}; 
+
+        coreaudio_mid_add_note(instrumentchange,2);
+    }
+
+
+  return 0;  
+}
 
 
 /////////////////////////////////////////////////////////////////////////

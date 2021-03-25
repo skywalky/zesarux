@@ -174,3 +174,5 @@ hace que se arranque la ventana en tamaño spectrum y despues de unos segundos s
 
 -parpadeo en windows, maquina Next, al entrar cada linea en basic. Sin realvideo no lo hace. Sin autoframeskip, lo hace igual.
 Activando el maximo turbo permitido, tambien hace una franja negra en el border, arriba del todo
+
+-poder cambiar instrumento midi, tanto en output a dispositivo midi, como en output a .mid
