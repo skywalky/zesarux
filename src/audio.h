@@ -180,6 +180,8 @@ extern int audio_midi_set_instrument(unsigned char instrument);
 extern void audio_midi_output_raw(z80_byte value);
 extern void audio_midi_output_reset(void);
 
+extern char *midi_instrument_list[];
+
 //Para cuantas notas da esto aprox?
 #define MAX_MID_EXPORT_BUFFER 1000000
 

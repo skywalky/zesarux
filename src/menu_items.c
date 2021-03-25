@@ -209,6 +209,8 @@ int ql_mdv_flp_opcion_seleccionada=0;
 int i8049_mixer_opcion_seleccionada=0;
 int fileselector_settings_opcion_seleccionada=0;
 
+int midi_output_instrument_opcion_seleccionada=0;
+
 
 //Fin opciones seleccionadas para cada menu
 
@@ -19186,11 +19188,42 @@ void menu_midi_output_reset(MENU_ITEM_PARAMETERS)
 void menu_midi_output_instrument(MENU_ITEM_PARAMETERS)
 {
 
-    int instrument=0;
 
-    menu_ventana_scanf_numero_enhanced("Instrument",&instrument,4,+1,0,127,0);
+    //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+    menu_item *array_menu_common;
+    menu_item item_seleccionado;
+    int retorno_menu;
 
-    audio_midi_set_instrument(instrument);
+
+    do {
+                
+        menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+        int i;
+
+        for (i=0;i<128;i++) {                
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,midi_instrument_list[i]);
+
+        }
+
+
+
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        menu_add_ESC_item(array_menu_common);
+
+        retorno_menu=menu_dibuja_menu(&midi_output_instrument_opcion_seleccionada,&item_seleccionado,array_menu_common,"Instrument");
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //Cambiar instrumento y salir
+            audio_midi_set_instrument(midi_output_instrument_opcion_seleccionada);
+            return;
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
 }
 
 
