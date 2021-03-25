@@ -7,7 +7,7 @@ Added alternate Jupiter ACE rom
 Added another fourth easter egg ;)
 Added read only setting for esxdos handler
 Added setting to redefine joystick fire key
-Added midi output instrument change
+Added midi output instrument selector
 Added Debug action to set PC register to zero
 Added command line setting --copy-file-to-mmc to be able to copy files to a mmc image before starting ZEsarUX
 Added ZRCP command realtape-open
