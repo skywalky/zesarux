@@ -3176,7 +3176,7 @@ int audio_midi_set_instrument(unsigned char instrument)
 	#endif	
 
 	#ifdef MINGW
-	//return windows_note_off(channel,note,127);
+	return windows_change_instrument(instrument);
 	#endif		
 }
 
@@ -3911,6 +3911,33 @@ int windows_note_off(unsigned char channel, unsigned char note,unsigned char vel
 
 
   return 0;  
+}
+
+int windows_change_instrument(unsigned char instrument)
+{
+
+  debug_printf (VERBOSE_PARANOID,"change instrument event instrument %d",instrument);
+
+  windows_midi_message mensaje;
+
+
+    //El mensaje seria 0xC0 + canal
+
+    int i;
+    for (i=0;i<16;i++) {  
+
+  mensaje.data[0]=0xC0+i;
+  mensaje.data[1]=instrument & 127;
+  mensaje.data[2]=0;
+  mensaje.data[3]=0;
+
+
+  windows_mid_add_note(mensaje);
+    }
+
+  return 0;
+
+    
 }
 
 
