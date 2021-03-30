@@ -15815,10 +15815,10 @@ int util_extract_trd(char *filename,char *tempdir)
 	int start_track_8=256*8;
 
 
-        z80_int files_on_disk=trd_file_memory[start_track_8+228];
+        z80_int files_on_disk=util_get_byte_protect(trd_file_memory,bytes_to_load,start_track_8+228);
 
 
-        z80_int deleted_files_on_disk=trd_file_memory[start_track_8+244];
+        z80_int deleted_files_on_disk=util_get_byte_protect(trd_file_memory,bytes_to_load,start_track_8+244);
 
 
 
@@ -15831,12 +15831,14 @@ int util_extract_trd(char *filename,char *tempdir)
 
         //TODO: Total de archivos incluye los borrados??
 	for (i=0;i<files_on_disk+deleted_files_on_disk;i++) {
-		menu_file_mmc_browser_show_file(&trd_file_memory[puntero],buffer_texto,1,9);
+        z80_byte buffer_nombre[10];
+        util_memcpy_protect_origin(buffer_nombre,trd_file_memory,bytes_to_load,puntero,9);
+		menu_file_mmc_browser_show_file(buffer_nombre,buffer_texto,1,9);
 		if (buffer_texto[0]!='?') {
 
-        		z80_byte start_sector=trd_file_memory[puntero+14];
-	        	z80_byte start_track=trd_file_memory[puntero+15];
-                        z80_int longitud_final=trd_file_memory[puntero+11]+256*trd_file_memory[puntero+12];
+        		z80_byte start_sector=util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+14);
+	        	z80_byte start_track=util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+15);
+                        z80_int longitud_final=util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+11)+256*util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+12);
 	        	debug_printf (VERBOSE_DEBUG,"File %s starts at track %d sector %d size %d",buffer_texto,start_track,start_sector,longitud_final);
 
                         //calcular offset
@@ -15870,8 +15872,13 @@ int util_extract_trd(char *filename,char *tempdir)
                                 util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
                         }
 		
-           
-                        util_save_file(&trd_file_memory[offset],longitud_final,buffer_temp_file);
+                        //Creamos buffer temporal para esto
+                        z80_byte *buffer_temp_memoria;
+                        buffer_temp_memoria=malloc(longitud_final);
+                        if (buffer_temp_memoria==NULL) cpu_panic("Can not allocate memory for trd extract");
+                        util_memcpy_protect_origin(buffer_temp_memoria,trd_file_memory,bytes_to_load,offset,longitud_final);
+
+                        util_save_file(buffer_temp_memoria,longitud_final,buffer_temp_file);
 		}
 
 

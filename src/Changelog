@@ -98,6 +98,7 @@ Fixed Mac OS retina display window
 Fixed Mac OS full screen
 Fixed loading General Sound rom
 Fixed segfaults on fileselector +3 DSK screen previews using Speedlock protected disks or bad disks
+Fixed segfaults on fileselector TRD screen previews using protected disks or bad disks
 Fixed receiving large snapshots on ZRCP/ZENG
 Fixed pixel color on text all-to-pixel text rendering (color inversion)
 Fixed DivIDE/DivMMC mapram behaviour
