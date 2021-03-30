@@ -1032,6 +1032,10 @@ extern int menu_dsk_get_start_filesystem(z80_byte *dsk_file_memory,int longitud_
 
 extern int menu_dsk_getoff_track_sector(z80_byte *dsk_memoria,int total_pistas,int pista_buscar,int sector_buscar,int longitud_dsk);
 
+extern z80_byte menu_dsk_get_byte_memory(z80_byte *memoria,int total_size,int offset);
+
+extern void menu_dsk_memcpy(z80_byte *destino,z80_byte *memoria,int total_size,int offset,int total_copiar);
+
 extern int menu_decae_ajusta_valor_volumen(int valor_decae,int valor_volumen);
 
 extern int menu_decae_dec_valor_volumen(int valor_decae,int valor_volumen);

@@ -22559,6 +22559,19 @@ z80_byte menu_dsk_get_byte_memory(z80_byte *memoria,int total_size,int offset)
     else return memoria[offset];
 }
 
+//Como memcpy pero comprobando origen
+void menu_dsk_memcpy(z80_byte *destino,z80_byte *memoria,int total_size,int offset,int total_copiar)
+{
+
+    for (;total_copiar>=0;total_copiar--) {
+        *destino=menu_dsk_get_byte_memory(memoria,total_size,offset);
+
+        destino++;
+        offset++;
+    }
+
+}
+
 
 //Retorna el offset al dsk segun la pista y sector dados (ambos desde 0...)
 //-1 si no se encuentra
@@ -39084,7 +39097,9 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 			else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"dsk") ) {
 					debug_printf (VERBOSE_DEBUG,"Is a dsk file");
                     //Ejemplos de DSK que muestran pantalla: CASTLE MASTER.DSK , Drazen Petrovic Basket.dsk
+                    //printf("Before extract dsk\n");
 					retorno=util_extract_dsk(filesel_nombre_archivo_seleccionado,tmpdir);
+                    //printf("After extract dsk\n");
 			}				
 
             //printf("if_pending_error_message: %d\n",if_pending_error_message);

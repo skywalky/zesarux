@@ -16058,7 +16058,8 @@ TODO. supuestamente entradas del directorio pueden ocupar 4 sectores. Actualment
 	}
 	//else {
 		//Si contiene e5 en el nombre, nos vamos a pista 1
-		if (dsk_file_memory[puntero+1]==0xe5) {
+        if (menu_dsk_get_byte_memory(dsk_file_memory,longitud_dsk,puntero+1)==0xe5) {
+		//if (dsk_file_memory[puntero+1]==0xe5) {
 			//printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
                         int total_pistas=bytes_to_load/4864;
 
@@ -16098,8 +16099,11 @@ en que empieza en 1300H. Porque??
 
                 //printf("entrada %d\n",i);
 
-                z80_byte file_is_deleted=dsk_file_memory[puntero-1];
-		menu_file_mmc_browser_show_file(&dsk_file_memory[puntero],buffer_texto,1,11);
+                z80_byte file_is_deleted=menu_dsk_get_byte_memory(dsk_file_memory,longitud_dsk,puntero-1);
+                //printf("before menu_file_mmc_browser_show_file\n");
+                z80_byte buffer_nombre[12];
+                menu_dsk_memcpy(buffer_nombre,dsk_file_memory,longitud_dsk,puntero,11);
+		menu_file_mmc_browser_show_file(buffer_nombre,buffer_texto,1,11);
 
                 //printf("after menu_file_mmc_browser_show_file\n");
 
@@ -16112,14 +16116,14 @@ en que empieza en 1300H. Porque??
 
                         //printf("puntero: %d\n",puntero);
 
-			z80_byte continuation_marker=dsk_file_memory[puntero+12-1]; //-1 porque empezamos el puntero en primera posicion
+			z80_byte continuation_marker=menu_dsk_get_byte_memory(dsk_file_memory,longitud_dsk,puntero+12-1); //-1 porque empezamos el puntero en primera posicion
 
 			//Averiguar inicio de los datos
 			//Es un poco mas complejo ya que hay que localizar cada sector donde esta ubicado
 			int total_bloques=1;
 			int bloque;
 
-			bloque=dsk_file_memory[puntero+15];
+			bloque=menu_dsk_get_byte_memory(dsk_file_memory,longitud_dsk,puntero+15);
 
                         //printf("after dsk_file_memory[puntero+15];\n");
 
@@ -16155,14 +16159,17 @@ en que empieza en 1300H. Porque??
 				//contienen 512 bytes de datos. El sector final puede contener 512 bytes o menos
 				if (total_bloques==1 && continuation_marker==0) {
 					int offset_a_longitud=offset1+16;
-					longitud_real_archivo=dsk_file_memory[offset_a_longitud]+256*dsk_file_memory[offset_a_longitud+1];
+					longitud_real_archivo=menu_dsk_get_byte_memory(dsk_file_memory,longitud_dsk,offset_a_longitud)+256*menu_dsk_get_byte_memory(dsk_file_memory,longitud_dsk,offset_a_longitud+1);
 					debug_printf (VERBOSE_DEBUG,"Real length file %s read from PLUS3DOS header: %d",buffer_texto,longitud_real_archivo);
 
-					memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
+                    menu_dsk_memcpy(buffer_temp,dsk_file_memory,longitud_dsk,offset1+128,512-128);
+					//memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
+
 					destino_en_buffer_temp=destino_en_buffer_temp + (512-128);
 
 					//Siguiente sector
-					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
+                    menu_dsk_memcpy(&buffer_temp[destino_en_buffer_temp],dsk_file_memory,longitud_dsk,offset2,512);
+					//memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
 					//printf ("Escribiendo sector 2\n");
 
                                         //printf("destino_en_buffer_temp 1 %d\n",destino_en_buffer_temp);
@@ -16179,10 +16186,12 @@ en que empieza en 1300H. Porque??
 					//Los dos sectores
                                         //printf("destino_en_buffer_temp 2 %d\n",destino_en_buffer_temp);
 
-					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset1],512);
+                    menu_dsk_memcpy(&buffer_temp[destino_en_buffer_temp],dsk_file_memory,longitud_dsk,offset1,512);
+					//memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset1],512);
 					destino_en_buffer_temp +=512;
 
-					memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
+                    menu_dsk_memcpy(&buffer_temp[destino_en_buffer_temp],dsk_file_memory,longitud_dsk,offset2,512);
+					//memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
 					destino_en_buffer_temp +=512;
 
                                         //printf("after memcpy 2\n");
@@ -16193,7 +16202,7 @@ en que empieza en 1300H. Porque??
 				//Cada offset es un sector de 512 bytes
 
 				total_bloques++;
-				bloque=dsk_file_memory[puntero+15-1+total_bloques];
+				bloque=menu_dsk_get_byte_memory(dsk_file_memory,longitud_dsk,puntero+15-1+total_bloques);
 
 
 
