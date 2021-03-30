@@ -953,4 +953,7 @@ extern int util_path_is_mmc_fatfs(char *dir);
 extern int util_copy_files_to_mmc_addlist(char *source, char *destination);
 extern void util_copy_files_to_mmc_doit(void);
 
+extern z80_byte util_get_byte_protect(z80_byte *memoria,int total_size,int offset);
+extern void util_memcpy_protect_origin(z80_byte *destino,z80_byte *memoria,int total_size,int offset,int total_copiar);
+
 #endif

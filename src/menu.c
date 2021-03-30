@@ -22551,26 +22551,9 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 
 }
 
-//Solicitar lectura de memoria controlando si offset fuera de rango
-//para evitar segfaults con DSK protegidos con speedlock por ejemplo (Mercenary - Escape From Targ & The Second City (1988)(Novagen Software))
-z80_byte menu_dsk_get_byte_memory(z80_byte *memoria,int total_size,int offset)
-{
-    if (offset<0 || offset>=total_size) return 0;
-    else return memoria[offset];
-}
 
-//Como memcpy pero comprobando origen
-void menu_dsk_memcpy(z80_byte *destino,z80_byte *memoria,int total_size,int offset,int total_copiar)
-{
 
-    for (;total_copiar>=0;total_copiar--) {
-        *destino=menu_dsk_get_byte_memory(memoria,total_size,offset);
 
-        destino++;
-        offset++;
-    }
-
-}
 
 
 //Retorna el offset al dsk segun la pista y sector dados (ambos desde 0...)
@@ -22608,7 +22591,7 @@ sectores van alternados:
 
 		//int sectores_en_pista=dsk_memoria[iniciopista_orig+0x15];
 
-        int sectores_en_pista=menu_dsk_get_byte_memory(dsk_memoria,longitud_dsk,iniciopista_orig+0x15);
+        int sectores_en_pista=util_get_byte_protect(dsk_memoria,longitud_dsk,iniciopista_orig+0x15);
 		//debug_printf(VERBOSE_DEBUG,"Iniciopista: %XH (%d). Sectores en pista %d: %d. IDS pista:  ",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
 
         //printf("Iniciopista: %XH (%d). Sectores en pista %d: %d. IDS pista:  \n",iniciopista_orig,iniciopista_orig,pista,sectores_en_pista);
@@ -22632,7 +22615,7 @@ sectores van alternados:
             //printf("before getting pistaid\n");
 			//z80_byte pista_id=dsk_memoria[offset_leer_dsk]; //Leemos pista id
 
-            z80_byte pista_id=menu_dsk_get_byte_memory(dsk_memoria,longitud_dsk,offset_leer_dsk); //Leemos pista id
+            z80_byte pista_id=util_get_byte_protect(dsk_memoria,longitud_dsk,offset_leer_dsk); //Leemos pista id
 
 
 			//printf("after getting pistaid\n");
@@ -22646,7 +22629,7 @@ sectores van alternados:
             //printf("before getting sector_id\n");
 			//z80_byte sector_id=dsk_memoria[offset_leer_dsk]; //Leemos c1, c2, etc
 
-            z80_byte sector_id=menu_dsk_get_byte_memory(dsk_memoria,longitud_dsk,offset_leer_dsk); //Leemos c1, c2, etc
+            z80_byte sector_id=util_get_byte_protect(dsk_memoria,longitud_dsk,offset_leer_dsk); //Leemos c1, c2, etc
 
 			//printf("after getting sector_id\n");
 
