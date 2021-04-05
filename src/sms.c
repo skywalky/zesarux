@@ -90,21 +90,24 @@ $c000-$c3ff	System RAM
 $c400-$ffff	System RAM (mirrored every 1KB)
 */
 
+
+    
+    //El orden dentro de toda la memoria asignada es: primero toda la posible ROM y luego los 8 KB de RAM
+
     //ROM
     if (direccion<=0xbfff) {
         *tipo=SMS_SLOT_MEMORY_TYPE_ROM;
         return &memoria_spectrum[direccion];
     }
 
-    //RAM 1 KB
+    //RAM 8 KB
     else {
         *tipo=SMS_SLOT_MEMORY_TYPE_RAM;
 
-        //old para sg1000
-        //return &memoria_spectrum[0xc000 + (direccion & 1023)];
+        //total 1 MByte ROM + 8 kb RAM 
 
-        //Para SMS asi:
-        return &memoria_spectrum[0xc000 + (direccion & 8191)];
+        //Esto sin mapper:
+        return &memoria_spectrum[1024*1024 + (direccion & 8191)];
         /*
 Master System/Mark III (assuming Sega mapper)
 Region	Maps to
