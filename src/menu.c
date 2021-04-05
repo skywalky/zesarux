@@ -39038,8 +39038,11 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	// 
 	if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tap") ||
 		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tzx") ||
-		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") ||
-		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"trd") ||
+
+        //de momento pzx desactivado hasta corregir posibles problemas de segfault con pzx corruptos
+		//!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") ||
+        //de momento pzx desactivado hasta corregir posibles problemas de segfault con trd corruptos
+		//!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"trd") ||
 		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"dsk") 
 	
 	) {
@@ -39231,9 +39234,6 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 void menu_filesel_overlay(void)
 {
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
-
-//temp siempre render, sin pausa
-//menu_filesel_overlay_render_preview_in_memory();
 
 
 	//Y el procesado de nueva preview no tan seguido

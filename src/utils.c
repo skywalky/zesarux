@@ -14570,7 +14570,16 @@ z80_byte *memoria;
                 z80_byte *puntero_lectura_copia=memoria;
 
               
-              
+                //128 mas que suficiente por si da la casualidad de cabecera sped (34 bytes)
+                //TODO: esto son los primeros pasos para evitar un segfault al hacer un preview de un pzx corrupto
+                /*
+                z80_byte buffer_temp[128];
+                memcpy(buffer_temp,&taperead[puntero_lectura],128);
+
+
+                        longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
+                */
+
                         longitud_bloque=util_tape_tap_get_info(&taperead[puntero_lectura],buffer_texto);
                 
 

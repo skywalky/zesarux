@@ -176,3 +176,5 @@ hace que se arranque la ventana en tamaño spectrum y despues de unos segundos s
 Activando el maximo turbo permitido, tambien hace una franja negra en el border, arriba del todo
 
 -poder cambiar instrumento midi en output a .mid
+
+-proteger previews de pzx, trd, tap para archivos random
