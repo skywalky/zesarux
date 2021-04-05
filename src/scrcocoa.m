@@ -72,6 +72,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "svi.h"
 
 
@@ -2567,7 +2568,11 @@ void scrcocoa_refresca_pantalla(void)
 
 	else if (MACHINE_IS_SG1000) {
 		scr_refresca_pantalla_y_border_sg1000();
-	}            
+	}        
+
+	else if (MACHINE_IS_SMS) {
+		scr_refresca_pantalla_y_border_sms();
+	}        
 
         //printf ("%d\n",spectrum_colortable[1]);
 
