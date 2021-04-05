@@ -21424,7 +21424,7 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
 	menu_first_aid("smartload");
 
-        char *filtros[36];
+        char *filtros[37];
 
         filtros[0]="zx";
         filtros[1]="sp";
@@ -21483,7 +21483,9 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
     filtros[34]="snx";
 
-	filtros[35]=0;
+    filtros[35]="sms";
+
+	filtros[36]=0;
 
 
         //guardamos directorio actual

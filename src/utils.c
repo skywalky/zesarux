@@ -5188,8 +5188,30 @@ int quickload_continue(char *nombre) {
 
                 return 0;
 
-        }              
-    //TODO SMS
+        }      
+
+    //Cartuchos de SMS
+	else if (
+                !util_compare_file_extension(nombre,"sms")
+             
+        ) {
+		//Aqui el autoload da igual. cambiamos siempre a sms si conviene
+                if (!MACHINE_IS_SMS) {
+			current_machine_type=MACHINE_ID_SMS;
+                        set_machine(NULL);
+
+                                //establecer parametros por defecto. Incluido quitar slots de memoria
+                           set_machine_params();
+
+                          reset_cpu();
+                }
+
+                sms_insert_rom_cartridge(nombre);
+
+
+                return 0;
+
+        }           
 
 	//eprom cards de Z88
         else if (
