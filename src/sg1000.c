@@ -99,6 +99,26 @@ $c400-$ffff	System RAM (mirrored every 1KB)
     else {
         *tipo=SG1000_SLOT_MEMORY_TYPE_RAM;
         return &memoria_spectrum[0xc000 + (direccion & 1023)];
+
+        //Para SMS asi:
+        //return &memoria_spectrum[0xc000 + (direccion & 8191)];
+        /*
+Master System/Mark III (assuming Sega mapper)
+Region	Maps to
+$0000-$03ff	ROM (unpaged)
+$0400-$3fff	ROM mapper slot 0
+$4000-$7fff	ROM mapper slot 1
+$8000-$bfff	ROM/RAM mapper slot 2
+$c000-$dfff	System RAM
+$e000-$ffff	System RAM (mirror)
+$fff8	3D glasses control
+$fff9-$fffb	3D glasses control (mirrors)
+$fffc	Cartridge RAM mapper control
+$fffd	Mapper slot 0 control
+$fffe	Mapper slot 1 control
+$ffff	Mapper slot 2 control
+
+        */
     }
 
     
