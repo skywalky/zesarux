@@ -607,7 +607,7 @@ int array_maquinas_coleco_industries[]={
 };
 
 int array_maquinas_sega[]={
-	MACHINE_ID_SG1000,255
+	MACHINE_ID_SG1000,MACHINE_ID_SMS,255
 };
 
 int array_maquinas_amstrad[]={
