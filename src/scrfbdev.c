@@ -119,6 +119,7 @@ The scancodes in translated scancode set 2 are given in hex. Between parentheses
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "svi.h"
 
 z80_byte *fbdev_pointer = 0;
@@ -478,7 +479,11 @@ void scrfbdev_refresca_pantalla(void)
 
 	else if (MACHINE_IS_SG1000) {
 		scr_refresca_pantalla_y_border_sg1000();
-	}    
+	}  
+
+	else if (MACHINE_IS_SMS) {
+		scr_refresca_pantalla_y_border_sms();
+	}         
 
 
         if (menu_overlay_activo) {

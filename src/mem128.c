@@ -41,6 +41,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "svi.h"
 
 //Direcciones donde estan cada pagina de ram
@@ -324,6 +325,10 @@ z80_byte *get_base_mem_pantalla_continue(void)
 	if (MACHINE_IS_SG1000) {
 		return sg1000_vram_memory;
 	}		
+
+	if (MACHINE_IS_SMS) {
+		return sms_vram_memory;
+	}    
 
 	cpu_panic("get_base_mem_pantalla on this machine has no sense");
 

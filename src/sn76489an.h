@@ -69,6 +69,7 @@ extern void sn_establece_frecuencias_todos_canales(void);
 
 #define FRECUENCIA_COLECO_SN 3579545
 #define FRECUENCIA_SG1000_SN 3579545
+#define FRECUENCIA_SMS_SN 3579545
 
 #define SN_DIVISOR_FRECUENCIA 32
 

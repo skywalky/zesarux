@@ -107,6 +107,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "sn76489an.h"
 #include "svi.h"
 #include "ql_qdos_handler.h"
@@ -2811,7 +2812,7 @@ void menu_ay_registers_overlay(void)
 
 	if (sn_chip_present.v) {
 
-		//Para chip SN76489A de coleco y sg1000
+		//Para chip SN76489A de coleco y sg1000 y sms
 		total_chips=1;
 
 
@@ -4022,6 +4023,7 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 				if (MACHINE_IS_COLECO) vram_read_function_pointer=coleco_read_vram_byte;
 				else if (MACHINE_IS_SG1000) vram_read_function_pointer=sg1000_read_vram_byte;
+                else if (MACHINE_IS_SMS) vram_read_function_pointer=sms_read_vram_byte;
 				else if (MACHINE_IS_SVI) vram_read_function_pointer=svi_read_vram_byte;
 				else vram_read_function_pointer=msx_read_vram_byte;
 								
@@ -4516,6 +4518,11 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 					else if (MACHINE_IS_SG1000) {
 						tnum=sg1000_read_vram_byte(msx_pattern_name_table+current_tile);	
 					}	
+
+					else if (MACHINE_IS_SMS) {
+                        //TODO SMS. Corregir esto para modo 4?
+						tnum=sms_read_vram_byte(msx_pattern_name_table+current_tile);	
+					}	                    
 
 					else if (MACHINE_IS_SVI) {
 						tnum=svi_read_vram_byte(msx_pattern_name_table+current_tile);	
@@ -12831,6 +12838,7 @@ void menu_debug_sprites_get_parameters_hardware(void)
 			if (MACHINE_IS_MSX) menu_debug_set_memory_zone(MEMORY_ZONE_MSX_VRAM);
 			if (MACHINE_IS_COLECO) menu_debug_set_memory_zone(MEMORY_ZONE_COLECO_VRAM);
 			if (MACHINE_IS_SG1000) menu_debug_set_memory_zone(MEMORY_ZONE_SG1000_VRAM);
+            if (MACHINE_IS_SMS) menu_debug_set_memory_zone(MEMORY_ZONE_SMS_VRAM);
 			if (MACHINE_IS_SVI) menu_debug_set_memory_zone(MEMORY_ZONE_SVI_VRAM);
 
 		}
@@ -24358,6 +24366,7 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_MSX)     strcpy(titulo_ventana,"Debug MSX");
 		if (MACHINE_IS_COLECO)  strcpy(titulo_ventana,"Debug Colecovision");
 		if (MACHINE_IS_SG1000)  strcpy(titulo_ventana,"Debug SG1000");
+        if (MACHINE_IS_SMS)  strcpy(titulo_ventana,"Debug Master System");
 		if (MACHINE_IS_SVI)     strcpy(titulo_ventana,"Debug Spectravideo");
         if (MACHINE_IS_CPC)     strcpy(titulo_ventana,"Debug CPC");
 
@@ -24507,6 +24516,8 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		else if (MACHINE_IS_QL) strcpy(nombrebmp,"keyboard_ql.bmp");
 		else if (MACHINE_IS_SAM) strcpy(nombrebmp,"keyboard_sam.bmp");
 		else if (MACHINE_IS_SG1000) strcpy(nombrebmp,"keyboard_sg1000.bmp");
+        //TODO SMS
+        else if (MACHINE_IS_SMS) strcpy(nombrebmp,"keyboard_sg1000.bmp");
 		else if (MACHINE_IS_SVI) strcpy(nombrebmp,"keyboard_svi.bmp");
 		else if (MACHINE_IS_TBBLUE) strcpy(nombrebmp,"keyboard_next.bmp");
 		else if (MACHINE_IS_TIMEX_TS2068) strcpy(nombrebmp,"keyboard_ts2068.bmp");

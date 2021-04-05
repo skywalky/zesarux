@@ -50,6 +50,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "svi.h"
 
 #ifdef COMPILE_CURSESW
@@ -1330,7 +1331,7 @@ void scrcurses_refresca_pantalla(void)
 	}
 	
 	//para maquinas con chip vdp9918
-	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000 || MACHINE_IS_SVI) {
+	else if (MACHINE_IS_MSX || MACHINE_IS_COLECO || MACHINE_IS_SG1000 || MACHINE_IS_SVI || MACHINE_IS_SMS) {
 	scrcurses_refresca_pantalla_vdp9918();
 	}
 

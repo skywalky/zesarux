@@ -91,6 +91,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "core_sg1000.h"
+#include "core_sms.h"
 #include "sn76489an.h"
 #include "core_svi.h"
 #include "svi.h"
@@ -1785,6 +1786,12 @@ void set_cpu_core_loop(void)
       cpu_core_loop=cpu_core_loop_sg1000;
       cpu_core_loop_name="SG1000";
     break;	
+
+    case CPU_CORE_SMS:
+      debug_printf(VERBOSE_INFO,"Setting Master System CPU core");
+      cpu_core_loop=cpu_core_loop_sms;
+      cpu_core_loop_name="SMS";
+    break;    
 
     case CPU_CORE_SVI:
       debug_printf(VERBOSE_INFO,"Setting SVI CPU core");
@@ -5692,6 +5699,8 @@ $c400-$ffff	System RAM (mirrored every 1KB)
 				strcpy (segmentos[1].shortname,"RAM");
 				strcpy (segmentos[1].longname,"RAM (1 KB)");								
 			}
+
+            //TODO SMS
 
 
   			//Paginas RAM en CHLOE

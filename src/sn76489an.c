@@ -326,6 +326,7 @@ void init_chip_sn(void)
 
 	//Establecemos frecuencia
 	if (MACHINE_IS_SG1000) sn_chip_frequency=FRECUENCIA_SG1000_SN;
+    else if (MACHINE_IS_SMS) sn_chip_frequency=FRECUENCIA_SMS_SN;
 	else sn_chip_frequency=FRECUENCIA_COLECO_SN;
 
 

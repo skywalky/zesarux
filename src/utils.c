@@ -110,6 +110,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "svi.h"
 #include "charset.h"
 #include "snap_zsf.h"
@@ -806,7 +807,8 @@ int return_fabricante_maquina(int maquina)
 			return FABRICANTE_COLECO_INDUSTRIES;
 		break;      
 
-                case MACHINE_ID_SG1000:
+        case MACHINE_ID_SG1000:
+        case MACHINE_ID_SMS:
 			return FABRICANTE_SEGA;
 		break;                                
 
@@ -5187,7 +5189,7 @@ int quickload_continue(char *nombre) {
                 return 0;
 
         }              
-
+    //TODO SMS
 
 	//eprom cards de Z88
         else if (
@@ -10288,6 +10290,7 @@ struct s_machines_short_names_id machines_short_names_id[]={
    {"MSX1",MACHINE_ID_MSX1},
    {"COLECO",MACHINE_ID_COLECO},
    {"SG1000",MACHINE_ID_SG1000},
+   {"SMS",MACHINE_ID_SMS},
    {"SVI318",MACHINE_ID_SVI_318},
    {"SVI328",MACHINE_ID_SVI_328},
 
@@ -12113,7 +12116,13 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
               size=16384;  
         }
     break;
-
+    
+    case MEMORY_ZONE_SMS_VRAM:
+        if (MACHINE_IS_SMS) {
+              *readwrite=3; //read+write
+              size=16384;  
+        }
+    break;    
 
     case MEMORY_ZONE_SAMRAM:
         if (samram_enabled.v) {
@@ -12473,6 +12482,12 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
                 p=&sg1000_vram_memory[address];
         }        
     break;    
+
+    case MEMORY_ZONE_SMS_VRAM:
+        if (MACHINE_IS_SMS) {
+                p=&sms_vram_memory[address];
+        }        
+    break;     
 
     case MEMORY_ZONE_SAMRAM:
         if (samram_enabled.v) {
@@ -12866,7 +12881,13 @@ void machine_get_memory_zone_name(int zone, char *name)
         if (MACHINE_IS_SG1000) {
                strcpy(name,"SG1000 VRAM"); 
         }
-    break;    
+    break;   
+
+    case MEMORY_ZONE_SMS_VRAM:
+        if (MACHINE_IS_SMS) {
+               strcpy(name,"SMS VRAM"); 
+        }
+    break;      
 
     case MEMORY_ZONE_SAMRAM:
         if (samram_enabled.v) {

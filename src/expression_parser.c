@@ -1616,6 +1616,10 @@ int exp_par_calculate_funcion(int valor,enum token_parser_tipo tipo,enum token_p
                         return lee_puerto_sg1000_no_time(value_16_to_8h(valor),value_16_to_8l(valor));
                     }
 
+                    else if (MACHINE_IS_SMS) {
+                        return lee_puerto_sms_no_time(value_16_to_8h(valor),value_16_to_8l(valor));
+                    }                    
+
                     else if (MACHINE_IS_SVI) {
                         return lee_puerto_svi_no_time(value_16_to_8h(valor),value_16_to_8l(valor));
                     }                                                            

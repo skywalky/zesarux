@@ -106,6 +106,7 @@
 #include "coleco.h"
 #include "sn76489an.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "svi.h"
 #include "ql_qdos_handler.h"
 #include "gs.h"
@@ -3404,7 +3405,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 
 int zxdesktop_lowericon_cassete_is_visible(void)
 {
-	if (!MACHINE_IS_Z88 && !MACHINE_IS_QL && !MACHINE_IS_CHLOE && !MACHINE_IS_COLECO && !MACHINE_IS_SG1000) return 1;
+	if (!MACHINE_IS_Z88 && !MACHINE_IS_QL && !MACHINE_IS_CHLOE && !MACHINE_IS_COLECO && !MACHINE_IS_SG1000 && !MACHINE_IS_SMS) return 1;
 	else return 0;
 }
 
@@ -3559,6 +3560,8 @@ void zxdesktop_lowericon_dandanator_accion(void)
 
 
 //Funciones para Cartuchos MSX, Coleco, SVI, SG1000
+
+//TODO SMS
 
 void zxdesktop_lowericon_cartridge_accion(void)
 {
@@ -3727,7 +3730,7 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 	{ zxdesktop_lowericon_zxpand_is_visible, zxdesktop_lowericon_zxpand_is_active, zxdesktop_lowericon_zxpand_accion,
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive,&zxdesktop_icon_zxpand_inverse},			
 
-	//Cartuchos msx, coleco, svi, sg1000
+	//Cartuchos msx, coleco, svi, sg1000. TODO SMS
 	{ zxdesktop_lowericon_cartridge_msx_is_visible, zxdesktop_lowericon_cartridge_msx_is_active, zxdesktop_lowericon_cartridge_accion,
 		bitmap_lowericon_ext_desktop_msx_cart_active,bitmap_lowericon_ext_desktop_msx_cart_inactive,&zxdesktop_common_icon_no_inverse},	
 
@@ -18678,11 +18681,11 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 
 }
 
-//Comun para coleco y msx
+//Comun para coleco y msx y sg1000 y sms
 void menu_msxcart_load(MENU_ITEM_PARAMETERS)
 {
 
-        char *filtros[3];
+        char *filtros[4];
 
 		if (MACHINE_IS_COLECO) {
         	filtros[0]="col";
@@ -18695,6 +18698,14 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
 			filtros[1]="sc";
 			filtros[2]=0;
 		}		
+
+		else if (MACHINE_IS_SMS) {
+            filtros[0]="sms";
+        	filtros[1]="sg";
+			//Aunque extensión SC es de la sega sc3000, algunos cartuchos medio funcionan
+			filtros[2]="sc";
+			filtros[3]=0;
+		}	        
 
 		else {
 			filtros[0]="rom";
@@ -18747,6 +18758,10 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
 					sg1000_insert_rom_cartridge(last_msx_cart);
 				}
 
+				else if (MACHINE_IS_SMS) {
+					sms_insert_rom_cartridge(last_msx_cart);
+				}                
+
 				else if (MACHINE_IS_SVI) {
 					svi_insert_rom_cartridge(last_msx_cart);
 				}
@@ -18771,6 +18786,7 @@ void menu_msxcart_eject(MENU_ITEM_PARAMETERS)
 
 	if (MACHINE_IS_COLECO) coleco_empty_romcartridge_space();
 	else if (MACHINE_IS_SG1000) sg1000_empty_romcartridge_space();
+    else if (MACHINE_IS_SMS) sms_empty_romcartridge_space();
 	else if (MACHINE_IS_SVI) svi_empty_romcartridge_space();
 	else msx_empty_romcartridge_space();
 	menu_generic_message("Eject Cartridge","OK. Cartridge ejected");
@@ -18805,6 +18821,7 @@ void menu_msxcart(MENU_ITEM_PARAMETERS)
 
 				if (MACHINE_IS_COLECO) strcpy(window_title,"Coleco Cartridge");
 				else if (MACHINE_IS_SG1000) strcpy(window_title,"SG1000 Cartridge");
+                else if (MACHINE_IS_SMS) strcpy(window_title,"SMS Cartridge");
 				else if (MACHINE_IS_SVI) strcpy(window_title,"SVI Cartridge");
 				else strcpy(window_title,"MSX Cartridge");
 
@@ -18858,7 +18875,7 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		else if (!MACHINE_IS_CHLOE && !MACHINE_IS_COLECO && !MACHINE_IS_SG1000) {
+		else if (!MACHINE_IS_CHLOE && !MACHINE_IS_COLECO && !MACHINE_IS_SG1000 && !MACHINE_IS_SMS) {
 	            	menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_tape_settings,menu_tape_settings_cond,"~~Tape");
                 	menu_add_item_menu_shortcut(array_menu_storage_settings,'t');
                 	menu_add_item_menu_tooltip(array_menu_storage_settings,"Select tape and options");
@@ -18895,23 +18912,30 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		if (MACHINE_IS_COLECO) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_msxcart,NULL,"Coleco ~~Cartridge");
 			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
-			menu_add_item_menu_tooltip(array_menu_storage_settings,"MSX Cartridge Settings");
-			menu_add_item_menu_ayuda(array_menu_storage_settings,"MSX Cartridge Settings");
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"Coleco Cartridge Settings");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"Coleco Cartridge Settings");
 		}
 
 
 		if (MACHINE_IS_SG1000) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_msxcart,NULL,"SG1000 ~~Cartridge");
 			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
-			menu_add_item_menu_tooltip(array_menu_storage_settings,"MSX Cartridge Settings");
-			menu_add_item_menu_ayuda(array_menu_storage_settings,"MSX Cartridge Settings");
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"SG1000 Cartridge Settings");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"SG1000 Cartridge Settings");
 		}
+
+		if (MACHINE_IS_SMS) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_msxcart,NULL,"SMS ~~Cartridge");
+			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"SMS Cartridge Settings");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"SMS Cartridge Settings");
+		}        
 
 		if (MACHINE_IS_SVI) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_msxcart,NULL,"SVI ~~Cartridge");
 			menu_add_item_menu_shortcut(array_menu_storage_settings,'c');
-			menu_add_item_menu_tooltip(array_menu_storage_settings,"MSX Cartridge Settings");
-			menu_add_item_menu_ayuda(array_menu_storage_settings,"MSX Cartridge Settings");
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"SVI Cartridge Settings");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"SVI Cartridge Settings");
 		}		
 
 
@@ -27622,6 +27646,10 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 			if (MACHINE_IS_SG1000) {
 				strcpy(buffer_item,"SG-1000");
 			}		
+
+			if (MACHINE_IS_SMS) {
+				strcpy(buffer_item,"Master System");
+			}	            
 
 			if (MACHINE_IS_SVI) {
 				strcpy(buffer_item,"Spectravideo");

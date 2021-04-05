@@ -121,6 +121,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "sn76489an.h"
 #include "vdp_9918a.h"
 #include "svi.h"
@@ -1101,6 +1102,10 @@ void reset_cpu(void)
 		sg1000_reset();
 	}	
 
+	if (MACHINE_IS_SMS) {
+		sms_reset();
+	}	    
+
 	vdp_9918a_reset();	
 
 	t_estados=0;
@@ -1300,6 +1305,7 @@ char *string_machines_list_description=
 							" MSX1     MSX1\n"
 							" Coleco   Colecovision\n"
 							" SG1000   Sega SG1000\n"
+                            " SMS      Sega Master System\n"
 							" SVI318   Spectravideo SVI 318\n"
 							" SVI328   Spectravideo SVI 328\n"
 							;
@@ -2569,6 +2575,7 @@ struct s_machine_names machine_names[]={
 {"SG-1000",MACHINE_ID_SG1000},
 {"Spectravideo 318",MACHINE_ID_SVI_318},
 {"Spectravideo 328",MACHINE_ID_SVI_328},
+{"Master System",MACHINE_ID_SMS},
 
                                             {"ZX80",  				120},
                                             {"ZX81",  				121},
@@ -2970,6 +2977,20 @@ void malloc_mem_machine(void) {
 
         }			
 
+        else if (MACHINE_IS_SMS) {
+                //total 8 kb RAM + 1 MByte ROM 
+                malloc_machine(8192+1024*1024);
+                random_ram(memoria_spectrum,8192+1024*1024);
+
+
+				//y 16kb para vram
+				sms_alloc_vram_memory();
+
+
+				sms_init_memory_tables();
+
+        }	        
+
 
 	else if (MACHINE_IS_Z88) {
 		//Asignar 4 MB
@@ -3042,6 +3063,7 @@ void set_machine_params(void)
 101=sega sg1000
 102=Spectravideo 318
 103=Spectravideo 328
+104=sega Master System
 110-119 msx:
 110 msx1
 120=zx80 (old 20)
@@ -3160,7 +3182,11 @@ void set_machine_params(void)
 
 		else if (MACHINE_IS_SG1000) {
 			cpu_core_loop_active=CPU_CORE_SG1000;
-		}			
+		}		
+
+		else if (MACHINE_IS_SMS) {
+			cpu_core_loop_active=CPU_CORE_SMS;
+		}	        	
 
 
 		else {
@@ -3578,7 +3604,20 @@ You don't need timings for H/V sync =)
 			
 			screen_testados_linea=228;
 
-		}						
+		}		
+
+		else if (MACHINE_IS_SMS) {
+			contend_read=contend_read_sms;
+			contend_read_no_mreq=contend_read_no_mreq_sms;
+			contend_write_no_mreq=contend_write_no_mreq_sms;
+
+			ula_contend_port_early=ula_contend_port_early_sms;
+			ula_contend_port_late=ula_contend_port_late_sms;
+
+			
+			screen_testados_linea=228;
+
+		}	        				
 
 		else if (MACHINE_IS_SAM) {
 			contend_read=contend_read_sam;
@@ -3900,6 +3939,17 @@ You don't need timings for H/V sync =)
 				fetch_opcode=fetch_opcode_sg1000;
 				sn_chip_present.v=1;
         break;
+
+		case MACHINE_ID_SMS:
+                poke_byte=poke_byte_sms;
+                peek_byte=peek_byte_sms;
+				peek_byte_no_time=peek_byte_no_time_sms;
+				poke_byte_no_time=poke_byte_no_time_sms;
+                lee_puerto=lee_puerto_sms;
+				out_port=out_port_sms;
+				fetch_opcode=fetch_opcode_sms;
+				sn_chip_present.v=1;
+        break;        
 
 		case MACHINE_ID_MSX1:
                 poke_byte=poke_byte_msx1;
@@ -4513,7 +4563,11 @@ void rom_load(char *romfilename)
 
                 case MACHINE_ID_SG1000:
                 romfilename="sg1000.rom"; 
-                break;							
+                break;		
+
+                case MACHINE_ID_SMS:
+                romfilename="sms.rom"; 
+                break;	                					
                 
                 case MACHINE_ID_MSX1:
                 romfilename="msx.rom";
@@ -4786,6 +4840,12 @@ Total 20 pages=320 Kb
 					//es por eso que es necesario que exista el archivo de rom, aunque no se cargue ni se use para nada
 			
 		}	
+
+                else if (MACHINE_IS_SMS) {
+					//no tiene rom. No cargamos nada, aunque mas arriba intenta siempre abrir un archivo de rom,
+					//es por eso que es necesario que exista el archivo de rom, aunque no se cargue ni se use para nada
+			
+		}	        
 
                 else if (MACHINE_IS_MSX1) {
 			//msx 32 kb rom

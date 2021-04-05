@@ -75,6 +75,7 @@
 #include "vdp_9918a.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "sn76489an.h"
 #include "svi.h"
 #include "m68k.h"
@@ -389,7 +390,7 @@ Byte Fields:
 3,4: Block lenght
 5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
 
-
+//TODO SMS
 
 -Block ID 30: ZSF_VDP_9918A_CONF
 Ports and internal registers of VDP 9918A registers

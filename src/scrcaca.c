@@ -39,6 +39,7 @@
 #include "msx.h"
 #include "coleco.h"
 #include "sg1000.h"
+#include "sms.h"
 #include "svi.h"
 
 int scrcaca_imgwidth,scrcaca_imgheight;
@@ -320,6 +321,10 @@ void scrcaca_refresca_pantalla(void)
 	else if (MACHINE_IS_SG1000) {
 		scr_refresca_pantalla_y_border_sg1000();
 	}        
+
+	else if (MACHINE_IS_SMS) {
+		scr_refresca_pantalla_y_border_sms();
+	}       
 
 
 	//printf ("caca_dither_bitmap scrcaca_imgwidth=%d scrcaca_imgheight=%d\n",scrcaca_imgwidth,scrcaca_imgheight);

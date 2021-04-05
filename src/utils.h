@@ -874,6 +874,9 @@ extern z80_int util_paws_get_pc_parser(void);
 
 #define MEMORY_ZONE_NUM_TBBLUE_SPRITES 31 
 
+#define MEMORY_ZONE_SMS_VRAM 32
+
+
 #define DAAD_PARSER_BREAKPOINT_PC_SPECTRUM 0x617c
 
 #define DAAD_PARSER_BREAKPOINT_PC_CPC 0x09b4 
