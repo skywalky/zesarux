@@ -14404,8 +14404,10 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 	taperead=malloc(total_mem);
 	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser/convert");
 
-	z80_byte *puntero_lectura;
-	puntero_lectura=taperead;
+	//z80_byte *puntero_lectura;
+
+	//puntero_lectura=taperead;
+    int puntero_lectura=0;
 
         //Abrir fichero tapfile si conviene convertir
         FILE *ptr_tapfile;
@@ -14461,7 +14463,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 	z80_byte previo_flag=255; //Almacena flag de bloque justo anterior
 	z80_byte previo_tipo_bloque=255; //Almacena previo tipo bloque anterior (0, program, 3 bytes etc)
 
-	//puntero_lectura +=10; //Saltar cabecera (version pzx etc)
+
 
 	int salir=0;
 
@@ -14470,15 +14472,13 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 	while(total_mem>0 && !salir) {
 
-		//z80_byte pzx_id=*puntero_lectura;
 
-		//puntero_lectura++;
 
                 char tag_name[5];
-                tag_name[0]=puntero_lectura[0];
-                tag_name[1]=puntero_lectura[1];
-                tag_name[2]=puntero_lectura[2];
-                tag_name[3]=puntero_lectura[3];
+                tag_name[0]=taperead[puntero_lectura+0];
+                tag_name[1]=taperead[puntero_lectura+1];
+                tag_name[2]=taperead[puntero_lectura+2];
+                tag_name[3]=taperead[puntero_lectura+3];
                 tag_name[4]=0;
 
                 puntero_lectura +=4;
@@ -14488,10 +14488,10 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 
 
-                block_size=puntero_lectura[0]+
-                          (puntero_lectura[1]*256)+
-                          (puntero_lectura[2]*65536)+
-                          (puntero_lectura[3]*16777216);
+                block_size=taperead[puntero_lectura+0]+
+                          (taperead[puntero_lectura+1]*256)+
+                          (taperead[puntero_lectura+2]*65536)+
+                          (taperead[puntero_lectura+3]*16777216);
                 puntero_lectura +=4;
                 
                 total_mem -=8; 
@@ -14506,7 +14506,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                       //convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
 
 z80_byte *memoria;
-				memoria=puntero_lectura;
+				memoria=&taperead[puntero_lectura];
 
   				int initial_pulse;
 
@@ -14571,7 +14571,7 @@ z80_byte *memoria;
 
               
               
-                        longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
+                        longitud_bloque=util_tape_tap_get_info(&taperead[puntero_lectura],buffer_texto);
                 
 
 

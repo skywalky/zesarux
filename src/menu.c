@@ -39232,6 +39232,8 @@ void menu_filesel_overlay(void)
 {
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
+//temp siempre render, sin pausa
+//menu_filesel_overlay_render_preview_in_memory();
 
 
 	//Y el procesado de nueva preview no tan seguido
