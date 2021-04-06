@@ -556,8 +556,22 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 				for (x=0;x<chars_in_line;x++) {  
 					
                     //scroll x
+                    z80_byte scroll_x=vdp_9918a_registers[8];
+                    //columna
+                    /*
+                     The starting column value gives the first column in the name table to use,
+ calculated by subtracting it from the value 32. So if the starting column
+ value was $1D, the difference of it from 32 would be $02, hence the first
+ column drawn is number 2 from the name table.
+                    */
 
-                    direccion_name_table=pattern_name_table+x*2+y*64;
+                    z80_byte columna_scroll_x=32-((scroll_x>>3)&31);
+
+                    //TODO scroll a pixel
+
+                    z80_byte final_x=(x+columna_scroll_x) & 31;
+
+                    direccion_name_table=pattern_name_table+final_x*2+y*64;
 					
 					z80_int pattern_word=vdp_9918a_read_vram_byte(vram,direccion_name_table)+256*vdp_9918a_read_vram_byte(vram,direccion_name_table+1);
 
@@ -608,7 +622,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 							//int fila=(x*char_width+bit)/8;
 
                             if (mirror_x) {
-                                byte_color=((byte_leido1)&1) | ((byte_leido2)&2) | ((byte_leido3)&4) | ((byte_leido4)&8);
+                                byte_color=((byte_leido1)&1) | ((byte_leido2<<1)&2) | ((byte_leido3<<2)&4) | ((byte_leido4<<3)&8);
                             }
                             else {
 
