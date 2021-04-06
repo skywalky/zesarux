@@ -244,6 +244,10 @@ z80_int vdp_9918a_get_pattern_name_table(void)
     return (vdp_9918a_registers[2]&15) * 0x400; 
 }
 
+z80_int vdp_9918a_get_pattern_name_table_sms_mode4(void)
+{
+    return (vdp_9918a_registers[2]&14) * 0x400; 
+}
 
 
 char *get_vdp_9918_string_video_mode(void) 
@@ -483,19 +487,20 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
             z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
 
-            //printf ("pattern base address before mask: %d\n",pattern_base_address);
 
-            //printf ("pattern color table before mask:  %d\n",pattern_color_table);            
+                   //temp
+                pattern_base_address=0;
 
 
-			//pattern_base_address &=8192; //Cae en offset 0 o 8192
-          
-			
-            //printf ("pattern base address after mask: %d\n",pattern_base_address);
+            pattern_name_table=vdp_9918a_get_pattern_name_table_sms_mode4();
 
-            //printf ("pattern color table after mask:  %d\n",pattern_color_table);
+
+                //pattern_name_table-=1024;
+
 
 			direccion_name_table=pattern_name_table;  
+
+
 
 			for (y=0;y<24;y++) {
 
@@ -509,7 +514,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
                     //TODO
                     /*
                     MSB          LSB
- ---pcvhnnnnnnnnn
+ ---pcvhn nnnnnnnn
 
  - = Unused. Some games use these bits as flags for collision and damage
      zones. (such as Wonderboy in Monster Land, Zillion 2)
@@ -520,6 +525,8 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
  h = Horizontal flip flag.
  n = Pattern index, any one of 512 patterns in VRAM can be selected.
                     */
+
+                    int mirror_x=(pattern_word & 0x0200);
 
                     z80_int caracter=pattern_word & 511;
 					
@@ -532,10 +539,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 					
 					
 
-
-					//z80_int color_address=(caracter*8+2048*tercio) ;
-					//color_address +=pattern_color_table;
-
+             
 	
 			
 
@@ -553,16 +557,32 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 							//int fila=(x*char_width+bit)/8;
 
+                            if (mirror_x) {
+                                byte_color=((byte_leido1)&1) | ((byte_leido2)&2) | ((byte_leido3)&4) | ((byte_leido4)&8);
+                            }
+                            else {
+
                             byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
+                        
+                            }
 
 
 								color= byte_color;
 								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
 
+                            if (mirror_x) {
+                            byte_leido1=byte_leido1>>1;
+                            byte_leido2=byte_leido2>>1;
+                            byte_leido3=byte_leido3>>1;
+                            byte_leido4=byte_leido4>>1;                                
+                            }
+
+                            else {
                             byte_leido1=byte_leido1<<1;
                             byte_leido2=byte_leido2<<1;
                             byte_leido3=byte_leido3<<1;
                             byte_leido4=byte_leido4<<1;
+                            }
 
 							
 						}
