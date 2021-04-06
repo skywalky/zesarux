@@ -2100,7 +2100,7 @@ void poke_byte_no_time_sms(z80_int dir,z80_byte valor)
 
     //Si actua sobre mappers
     if (dir>=0xFFFC) {
-        printf("Writing on sms mapper %X value %x\n",dir,valor);
+        //printf("Writing on sms mapper %X value %x\n",dir,valor);
         switch (dir) {
             case 0xFFFC:
                 sms_mapper_FFFC=valor;
@@ -8081,7 +8081,11 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
                //printf ("VDP Status IN\n");
                return sms_in_port_vdp_status();
        }
-
+       
+       //TODO
+       if (puerto_l==0x7E) {
+           return 0xB0; //sonic por ejemplo espera este valor
+       }
 
        //FC- Reading this port gives the status of controller #1. (farthest from front)
 	   //Temporal fila de teclas

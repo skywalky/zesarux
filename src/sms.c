@@ -311,22 +311,22 @@ void sms_insert_rom_cartridge(char *filename)
     //Por defecto. Hasta 64 bloques = 1 MByte
     sms_mapper_mask_bits=0x3F;
 
-    if (tamanyo_archivo<65536) {
+    if (tamanyo_archivo<=65536) {
         //4 bloques. hasta 64 KB
         sms_mapper_mask_bits=0x03;
     }
 
-    else if (tamanyo_archivo<65536*2) {
+    else if (tamanyo_archivo<=65536*2) {
         //8 bloques. hasta 128 KB
         sms_mapper_mask_bits=0x07;
     }
 
-    else if (tamanyo_archivo<65536*4) {
+    else if (tamanyo_archivo<=65536*4) {
         //16 bloques. Hasta 256 KB
         sms_mapper_mask_bits=0x0F;
     }    
 
-    else if (tamanyo_archivo<65536*8) {
+    else if (tamanyo_archivo<=65536*8) {
         //32 bloques. Hasta 512 KB
         sms_mapper_mask_bits=0x1F;
     }      
