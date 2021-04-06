@@ -373,7 +373,6 @@ const int vdp9918_colortable_original[16]={
 
 
 
-
 //colores para QL
 const int ql_colortable_original[8]={
 0x000000, //Negro
@@ -8810,6 +8809,13 @@ G  G   R   R   B   B
 					screen_set_colour_normal(TURBOVISION_INDEX_FIRST_COLOR+i,turbovision_colortable_original[i]);
 				}	
 
+				//Colores SMS
+				for (i=0;i<SMS_TOTAL_PALETTE_COLOURS;i++) {
+					valorgris=i*16;
+					VALOR_GRIS_A_R_G_B
+					screen_set_colour_normal(SMS_INDEX_FIRST_COLOR+i,(r<<16)|(g<<8)|b);					
+				}                
+
 		}
 
 		else {
@@ -9001,7 +9007,30 @@ Bit 6 GRN1 most  significant bit of green.
 				//Colores Turbovision
 				for (i=0;i<TURBOVISION_TOTAL_PALETTE_COLOURS;i++) {
 					screen_set_colour_normal(TURBOVISION_INDEX_FIRST_COLOR+i,turbovision_colortable_original[i]);
-				}                       
+				}      
+
+				//Colores SMS
+				for (i=0;i<SMS_TOTAL_PALETTE_COLOURS;i++) {
+					//Es formato %00BBGGRR
+					r=i & 3;
+					g=(i >> 2) & 3;
+					b=(i >> 4) & 3;
+
+                    //Pasar de 3 hasta 255
+                    r *=85;
+                    g *=85;
+                    b *=85;
+
+
+					color32=(r<<16)|(g<<8)|b;
+
+					//debug_printf (VERBOSE_PARANOID,"32 bit: r: %d g: %d b: %d",r,g,b);
+
+                    printf ("sms %d 32 bit: r: %d g: %d b: %d\n",i,r,g,b);
+
+					screen_set_colour_normal(SMS_INDEX_FIRST_COLOR+i, color32);
+
+				}                                 
 
 
 		}

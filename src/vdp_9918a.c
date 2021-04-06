@@ -63,12 +63,35 @@ z80_bit vdp_9918a_force_disable_layer_border={0};
 z80_bit vdp_9918a_reveal_layer_ula={0};
 z80_bit vdp_9918a_reveal_layer_sprites={0};
 
+z80_byte vdp_9918a_sms_cram[16];
 
 void vdp_9918a_reset(void)
 {
     int i;
 
     for (i=0;i<8;i++) vdp_9918a_registers[i]=0;
+
+
+    //Y resetear tabla de colores de sms
+
+    vdp_9918a_sms_cram[0]=0x00;	
+    vdp_9918a_sms_cram[1]=0x00;	
+    vdp_9918a_sms_cram[2]=0x08;	
+    vdp_9918a_sms_cram[3]=0x0C;	
+    vdp_9918a_sms_cram[4]=0x10;	
+    vdp_9918a_sms_cram[5]=0x30;	
+    vdp_9918a_sms_cram[6]=0x01;	
+    vdp_9918a_sms_cram[7]=0x3C;	
+    vdp_9918a_sms_cram[8]=0x02;	
+    vdp_9918a_sms_cram[9]=0x03;	
+    vdp_9918a_sms_cram[10]=0x05;	
+    vdp_9918a_sms_cram[11]=0x0f;	
+    vdp_9918a_sms_cram[12]=0x04;	
+    vdp_9918a_sms_cram[13]=0x33;	
+    vdp_9918a_sms_cram[14]=0x15;	
+    vdp_9918a_sms_cram[15]=0x3f;	
+
+
 }
 
 void vdp_9918a_out_vram_data(z80_byte *vram_memory,z80_byte value)
@@ -195,7 +218,13 @@ void vdp_9918a_out_command_status(z80_byte value)
 
 	//printf ("video_mode: %d\n",video_mode);  
 
-            }            
+            }     
+
+
+            //Paleta colores SMS
+            if ( (vdp_9918a_last_command_status_bytes[1] &  (128+64)) == 192  && MACHINE_IS_SMS) {
+                printf("Write palette. Index: %d byte2: %d\n",vdp_9918a_last_command_status_bytes[0],vdp_9918a_last_command_status_bytes[1] & 63);
+            }       
         break;
     }
 
@@ -438,7 +467,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 	z80_byte video_mode=vdp_9918a_get_video_mode();
 
-	printf ("video_mode: %d\n",video_mode);
+	//printf ("video_mode: %d\n",video_mode);
 
 
 	int x,y,bit; 
@@ -480,7 +509,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 		//video_mode: 1
 		case 128:
 
-            printf("Mode 4 sms\n");
+            //printf("Mode 4 sms\n");
 
 			chars_in_line=32;
 			char_width=8;
@@ -568,7 +597,8 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 
 								color= byte_color;
-								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
+                                int color_paleta=vdp_9918a_sms_cram[color];
+								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,SMS_INDEX_FIRST_COLOR+color_paleta);
 
                             if (mirror_x) {
                             byte_leido1=byte_leido1>>1;
