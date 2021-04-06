@@ -35,7 +35,7 @@ Nota: parece que en el documento chipstms9918 la numeracion de bits está al rev
 registro 1 bit 6 (BL disables the screen display when reseted.VDP's commands work a bit faster as well. Screen display is displayed by default.)
 en el documento aparece mal como bit 1
 */
-z80_byte vdp_9918a_registers[8];
+z80_byte vdp_9918a_registers[16];
 
 z80_byte vdp_9918a_status_register=255;
 
@@ -72,7 +72,10 @@ void vdp_9918a_reset(void)
 {
     int i;
 
-    for (i=0;i<8;i++) vdp_9918a_registers[i]=0;
+    for (i=0;i<16;i++) vdp_9918a_registers[i]=0;
+
+    //en sms por defecto modo 4
+    if (MACHINE_IS_SMS) vdp_9918a_registers[0] |= 4;
 
 
     //Y resetear tabla de colores de sms
@@ -208,7 +211,7 @@ void vdp_9918a_out_command_status(z80_byte value)
                 //printf ("Write VDP Register setup.\n");
 
                 //vdp_9918a_last_vram_position=(vdp_9918a_last_command_status_bytes[1] & 63) | (vdp_9918a_last_command_status_bytes[0]<<6);
-                z80_byte vdp_register=vdp_9918a_last_command_status_bytes[1] & 7; //TODO: cuantos registros?
+                z80_byte vdp_register=vdp_9918a_last_command_status_bytes[1] & 15; //TODO: cuantos registros?
 
 
                 vdp_9918a_registers[vdp_register]=vdp_9918a_last_command_status_bytes[0];
@@ -552,6 +555,9 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 				for (x=0;x<chars_in_line;x++) {  
 					
+                    //scroll x
+
+                    direccion_name_table=pattern_name_table+x*2+y*64;
 					
 					z80_int pattern_word=vdp_9918a_read_vram_byte(vram,direccion_name_table)+256*vdp_9918a_read_vram_byte(vram,direccion_name_table+1);
 
@@ -613,6 +619,10 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 								color= byte_color;
                                 int color_paleta=vdp_9918a_sms_cram[color & 15];
+
+                                //maximo 64 colores de paleta
+                                color_paleta &=63;
+
 								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,SMS_INDEX_FIRST_COLOR+color_paleta);
 
                             if (mirror_x) {
@@ -633,9 +643,10 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 						}
 					}
 
-						
-					direccion_name_table++;
-                    direccion_name_table++;
+
+                    //lo recalculamos cada vez para considerar scroll	
+					//direccion_name_table++;
+                    //direccion_name_table++;
 
 				}
 		   }
