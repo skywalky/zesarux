@@ -215,6 +215,7 @@ const char *s_vdp_9918a_video_mode_0="0 - Text 40x24";
 const char *s_vdp_9918a_video_mode_1="1 - Text 32x24";
 const char *s_vdp_9918a_video_mode_2="2 - Graphic 256x192";
 const char *s_vdp_9918a_video_mode_3="3 - Graphic 64x48";
+const char *s_vdp_9918a_video_mode_sms_4="4 - SMS Graphic 256x192";
                                                
 
 z80_byte vdp_9918a_get_video_mode(void)
@@ -227,8 +228,8 @@ z80_byte vdp_9918a_get_video_mode(void)
 	z80_byte video_mode=video_mode_m12 | video_mode_m3;
 
     //Modo "especial" de SMS llamado 4, aqui se retorna como 128
-    if (MACHINE_IS_SMS && vdp_9918a_registers[0] & 4) {
-        //printf("Modo 4 SMS\n");
+    if (MACHINE_IS_SMS && (vdp_9918a_registers[0] & 4)) {
+        printf("Modo 4 SMS\n");
         return 128;
     }
 
@@ -271,6 +272,10 @@ char *get_vdp_9918_string_video_mode(void)
 		case 2:
 			string_mode=s_vdp_9918a_video_mode_3;
 		break;
+
+		case 128:
+			string_mode=s_vdp_9918a_video_mode_sms_4;
+		break;        
     }
 
     return (char *)string_mode;
@@ -428,7 +433,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 	z80_byte video_mode=vdp_9918a_get_video_mode();
 
-	//printf ("video_mode: %d\n",video_mode);
+	printf ("video_mode: %d\n",video_mode);
 
 
 	int x,y,bit; 
@@ -470,6 +475,8 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 		//video_mode: 1
 		case 128:
 
+            printf("Mode 4 sms\n");
+
 			chars_in_line=32;
 			char_width=8;
 
@@ -501,7 +508,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 					int scanline;
 
-					z80_int pattern_address=(caracter*8+2048*tercio) ;
+					z80_int pattern_address=(caracter*32+2048*tercio) ;
 					pattern_address +=pattern_base_address;
 					
 					
