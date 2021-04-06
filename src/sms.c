@@ -107,7 +107,7 @@ $c400-$ffff	System RAM (mirrored every 1KB)
         //total 1 MByte ROM + 8 kb RAM 
 
         //Esto sin mapper:
-        return &memoria_spectrum[1024*1024 + (direccion & 8191)];
+        return &memoria_spectrum[SMS_MAX_ROM_SIZE + (direccion & 8191)];
         /*
 Master System/Mark III (assuming Sega mapper)
 Region	Maps to
@@ -205,8 +205,8 @@ void sms_insert_rom_cartridge(char *filename)
 
     long tamanyo_archivo=get_file_size(filename);
 
-    if (tamanyo_archivo>49152) {
-        debug_printf(VERBOSE_ERR,"Cartridges bigger than 48K are not allowed");
+    if (tamanyo_archivo>SMS_MAX_ROM_SIZE) {
+        debug_printf(VERBOSE_ERR,"Cartridges bigger than %d KB are not allowed",SMS_MAX_ROM_SIZE/1024);
         return;
     }
 

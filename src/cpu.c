@@ -2979,8 +2979,8 @@ void malloc_mem_machine(void) {
 
         else if (MACHINE_IS_SMS) {
                 //total 1 MByte ROM + 8 kb RAM 
-                malloc_machine(1024*1024+8192);
-                random_ram(memoria_spectrum,1024*1024+8192);
+                malloc_machine(SMS_MAX_ROM_SIZE+8192);
+                random_ram(memoria_spectrum,SMS_MAX_ROM_SIZE+8192);
 
 
 				//y 16kb para vram
