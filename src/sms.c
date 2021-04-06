@@ -47,6 +47,15 @@
 z80_byte *sms_vram_memory=NULL;
 
 
+int sms_mapper_type=SMS_MAPPER_TYPE_NONE;
+
+z80_byte sms_mapper_FFFC;
+z80_byte sms_mapper_FFFD;
+z80_byte sms_mapper_FFFE;
+z80_byte sms_mapper_FFFF;
+
+//bits significativos
+z80_byte sms_mapper_mask_bits=0x3F;
 
 
 
@@ -83,53 +92,125 @@ char *sms_get_string_memory_type(int tipo)
 z80_byte *sms_return_segment_address(z80_int direccion,int *tipo)
 {
 
-/*
-Region	Maps to
-$0000-$bfff	Cartridge (ROM/RAM/etc)
-$c000-$c3ff	System RAM
-$c400-$ffff	System RAM (mirrored every 1KB)
-*/
+    z80_byte bloque_entra;
 
+    switch (sms_mapper_type) {
 
-    
-    //El orden dentro de toda la memoria asignada es: primero toda la posible ROM y luego los 8 KB de RAM
-
-    //ROM
-    if (direccion<=0xbfff) {
-        *tipo=SMS_SLOT_MEMORY_TYPE_ROM;
-        return &memoria_spectrum[direccion];
-    }
-
-    //RAM 8 KB
-    else {
-        *tipo=SMS_SLOT_MEMORY_TYPE_RAM;
-
-        //total 1 MByte ROM + 8 kb RAM 
-
-        //Esto sin mapper:
-        return &memoria_spectrum[SMS_MAX_ROM_SIZE + (direccion & 8191)];
+        case SMS_MAPPER_TYPE_SEGA:
+        
         /*
-Master System/Mark III (assuming Sega mapper)
-Region	Maps to
-$0000-$03ff	ROM (unpaged)
-$0400-$3fff	ROM mapper slot 0
-$4000-$7fff	ROM mapper slot 1
-$8000-$bfff	ROM/RAM mapper slot 2
-$c000-$dfff	System RAM
-$e000-$ffff	System RAM (mirror)
-$fff8	3D glasses control
-$fff9-$fffb	3D glasses control (mirrors)
-$fffc	Cartridge RAM mapper control
-$fffd	Mapper slot 0 control
-$fffe	Mapper slot 1 control
-$ffff	Mapper slot 2 control
+        Addresses $fffd-$ffff: ROM mapping
+        Control register	ROM bank select for slot
+        $fffd	0 ($0000-$3fff)
+        $fffe	1 ($4000-$7fff)
+        $ffff	2 ($8000-$bfff)
 
         */
+
+        //ROM
+        if (direccion<=0xbfff) {
+            *tipo=SMS_SLOT_MEMORY_TYPE_ROM;
+
+            if (direccion<=0x3fff) {
+                //TODO: primer 1kb es siempre bloque 0
+                if (direccion<=1023) {
+                    bloque_entra=0;
+                }
+                else {
+                    bloque_entra=sms_mapper_FFFD;
+                }
+            }
+
+            else if (direccion<=0x7fff) {
+                bloque_entra=sms_mapper_FFFE;
+            }
+
+            else {
+                bloque_entra=sms_mapper_FFFF;
+            }
+
+            //printf("dir=%d bloque_entra=%d\n",direccion,bloque_entra);
+
+            int offset=(bloque_entra & sms_mapper_mask_bits) * 16384;
+
+            return &memoria_spectrum[offset+(direccion & 16383)];
+        }
+
+        //TODO registro FFFC
+        //RAM 8 KB
+        else {
+            *tipo=SMS_SLOT_MEMORY_TYPE_RAM;
+
+            //total 1 MByte ROM + 8 kb RAM 
+
+            //Esto sin mapper:
+            return &memoria_spectrum[SMS_MAX_ROM_SIZE + (direccion & 8191)];
+            /*
+    Master System/Mark III (assuming Sega mapper)
+    Region	Maps to
+    $0000-$03ff	ROM (unpaged)
+    $0400-$3fff	ROM mapper slot 0
+    $4000-$7fff	ROM mapper slot 1
+    $8000-$bfff	ROM/RAM mapper slot 2
+    $c000-$dfff	System RAM
+    $e000-$ffff	System RAM (mirror)
+    $fff8	3D glasses control
+    $fff9-$fffb	3D glasses control (mirrors)
+    $fffc	Cartridge RAM mapper control
+    $fffd	Mapper slot 0 control
+    $fffe	Mapper slot 1 control
+    $ffff	Mapper slot 2 control
+
+            */
+        }
+
+        break;        
+
+        //NONE o cualquier otro
+        default:
+        
+        //El orden dentro de toda la memoria asignada es: primero toda la posible ROM y luego los 8 KB de RAM
+
+        //ROM
+        if (direccion<=0xbfff) {
+            *tipo=SMS_SLOT_MEMORY_TYPE_ROM;
+            return &memoria_spectrum[direccion];
+        }
+
+        //RAM 8 KB
+        else {
+            *tipo=SMS_SLOT_MEMORY_TYPE_RAM;
+
+            //total 1 MByte ROM + 8 kb RAM 
+
+            //Esto sin mapper:
+            return &memoria_spectrum[SMS_MAX_ROM_SIZE + (direccion & 8191)];
+            /*
+    Master System/Mark III (assuming Sega mapper)
+    Region	Maps to
+    $0000-$03ff	ROM (unpaged)
+    $0400-$3fff	ROM mapper slot 0
+    $4000-$7fff	ROM mapper slot 1
+    $8000-$bfff	ROM/RAM mapper slot 2
+    $c000-$dfff	System RAM
+    $e000-$ffff	System RAM (mirror)
+    $fff8	3D glasses control
+    $fff9-$fffb	3D glasses control (mirrors)
+    $fffc	Cartridge RAM mapper control
+    $fffd	Mapper slot 0 control
+    $fffe	Mapper slot 1 control
+    $ffff	Mapper slot 2 control
+
+            */
+        }
+
+        break;
+
+
+
     }
 
     
-    
-
 
 
 }
@@ -151,6 +232,14 @@ void sms_reset(void)
     int i;
 
     for (i=0;i<16384;i++) sms_vram_memory[i]=0;
+
+    //reset mappers
+    sms_mapper_FFFC=0;
+    sms_mapper_FFFD=0;
+    sms_mapper_FFFE=1;
+    sms_mapper_FFFF=2;
+
+    //FFFC=00, FFFD=00, FFFE=01, FFFF=02
 
 }
 
@@ -205,10 +294,45 @@ void sms_insert_rom_cartridge(char *filename)
 
     long tamanyo_archivo=get_file_size(filename);
 
+    //Asumimos no mapper
+    sms_mapper_type=SMS_MAPPER_TYPE_NONE;
+
     if (tamanyo_archivo>SMS_MAX_ROM_SIZE) {
         debug_printf(VERBOSE_ERR,"Cartridges bigger than %d KB are not allowed",SMS_MAX_ROM_SIZE/1024);
         return;
     }
+
+    //Si mayor de 48kb, mapper type sega
+    if (tamanyo_archivo>49152) {
+        sms_mapper_type=SMS_MAPPER_TYPE_SEGA;
+    }
+
+    //Ajustar mascara
+    //Por defecto. Hasta 64 bloques = 1 MByte
+    sms_mapper_mask_bits=0x3F;
+
+    if (tamanyo_archivo<65536) {
+        //4 bloques. hasta 64 KB
+        sms_mapper_mask_bits=0x03;
+    }
+
+    else if (tamanyo_archivo<65536*2) {
+        //8 bloques. hasta 128 KB
+        sms_mapper_mask_bits=0x07;
+    }
+
+    else if (tamanyo_archivo<65536*4) {
+        //16 bloques. Hasta 256 KB
+        sms_mapper_mask_bits=0x0F;
+    }    
+
+    else if (tamanyo_archivo<65536*8) {
+        //32 bloques. Hasta 512 KB
+        sms_mapper_mask_bits=0x1F;
+    }      
+ 
+
+    printf("Mapper type: %d mask %d\n",sms_mapper_type,sms_mapper_mask_bits);
 
     FILE *ptr_cartridge;
     ptr_cartridge=fopen(filename,"rb");
