@@ -226,7 +226,8 @@ z80_byte vdp_9918a_get_video_mode(void)
 	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
 
 	z80_byte video_mode=video_mode_m12 | video_mode_m3;
-
+//temp
+return 128;
     //Modo "especial" de SMS llamado 4, aqui se retorna como 128
     if (MACHINE_IS_SMS && (vdp_9918a_registers[0] & 4)) {
         printf("Modo 4 SMS\n");
@@ -480,16 +481,16 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 			chars_in_line=32;
 			char_width=8;
 
+            z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
+
             //printf ("pattern base address before mask: %d\n",pattern_base_address);
 
             //printf ("pattern color table before mask:  %d\n",pattern_color_table);            
 
 
-			pattern_base_address &=8192; //Cae en offset 0 o 8192
+			//pattern_base_address &=8192; //Cae en offset 0 o 8192
           
-			pattern_color_table &=8192; //Cae en offset 0 o 8192
-
-
+			
             //printf ("pattern base address after mask: %d\n",pattern_base_address);
 
             //printf ("pattern color table after mask:  %d\n",pattern_color_table);
@@ -503,51 +504,73 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 				for (x=0;x<chars_in_line;x++) {  
 					
 					
-					z80_byte caracter=vdp_9918a_read_vram_byte(vram,direccion_name_table);
+					z80_int pattern_word=vdp_9918a_read_vram_byte(vram,direccion_name_table)+256*vdp_9918a_read_vram_byte(vram,direccion_name_table+1);
+
+                    //TODO
+                    /*
+                    MSB          LSB
+ ---pcvhnnnnnnnnn
+
+ - = Unused. Some games use these bits as flags for collision and damage
+     zones. (such as Wonderboy in Monster Land, Zillion 2)
+ p = Priority flag. When set, sprites will be displayed underneath the
+     background pattern in question.
+ c = Palette select.
+ v = Vertical flip flag.
+ h = Horizontal flip flag.
+ n = Pattern index, any one of 512 patterns in VRAM can be selected.
+                    */
+
+                    z80_int caracter=pattern_word & 511;
 					
 
 					int scanline;
 
-					z80_int pattern_address=(caracter*32+2048*tercio) ;
+					//z80_int pattern_address=(caracter*32+2048*tercio) ;
+                    z80_int pattern_address=(caracter*32) ;
 					pattern_address +=pattern_base_address;
 					
 					
 
 
-					z80_int color_address=(caracter*8+2048*tercio) ;
-					color_address +=pattern_color_table;
+					//z80_int color_address=(caracter*8+2048*tercio) ;
+					//color_address +=pattern_color_table;
 
 	
 			
 
 					for (scanline=0;scanline<8;scanline++) {
 
-						byte_leido=vdp_9918a_read_vram_byte(vram,pattern_address++);
+						byte_leido1=vdp_9918a_read_vram_byte(vram,pattern_address++);
+                        byte_leido2=vdp_9918a_read_vram_byte(vram,pattern_address++);
+                        byte_leido3=vdp_9918a_read_vram_byte(vram,pattern_address++);
+                        byte_leido4=vdp_9918a_read_vram_byte(vram,pattern_address++);
 
-						byte_color=vdp_9918a_read_vram_byte(vram,color_address++);
-
-
-						ink=(byte_color>>4) &15;
-						paper=byte_color &15;
+						
 
 							
 						for (bit=0;bit<char_width;bit++) {
 
 							//int fila=(x*char_width+bit)/8;
 
-													
-							//Ver en casos en que puede que haya menu activo y hay que hacer overlay
-							//if (scr_ver_si_refrescar_por_menu_activo(fila,y)) {
-								color= ( byte_leido & 128 ? ink : paper );
-								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
-							//}
+                            byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
 
-							byte_leido=byte_leido<<1;
+
+								color= byte_color;
+								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,VDP_9918_INDEX_FIRST_COLOR+color);
+
+                            byte_leido1=byte_leido1<<1;
+                            byte_leido2=byte_leido2<<1;
+                            byte_leido3=byte_leido3<<1;
+                            byte_leido4=byte_leido4<<1;
+
+							
 						}
 					}
 
 						
 					direccion_name_table++;
+                    direccion_name_table++;
 
 				}
 		   }
