@@ -63,7 +63,7 @@ z80_bit vdp_9918a_force_disable_layer_border={0};
 z80_bit vdp_9918a_reveal_layer_ula={0};
 z80_bit vdp_9918a_reveal_layer_sprites={0};
 
-z80_byte vdp_9918a_sms_cram[16];
+z80_byte vdp_9918a_sms_cram[32];
 
 void vdp_9918a_reset(void)
 {
@@ -73,23 +73,28 @@ void vdp_9918a_reset(void)
 
 
     //Y resetear tabla de colores de sms
+    //16+16 colores (tiles + sprites)
+    
+    for (i=0;i<2;i++) {
 
-    vdp_9918a_sms_cram[0]=0x00;	
-    vdp_9918a_sms_cram[1]=0x00;	
-    vdp_9918a_sms_cram[2]=0x08;	
-    vdp_9918a_sms_cram[3]=0x0C;	
-    vdp_9918a_sms_cram[4]=0x10;	
-    vdp_9918a_sms_cram[5]=0x30;	
-    vdp_9918a_sms_cram[6]=0x01;	
-    vdp_9918a_sms_cram[7]=0x3C;	
-    vdp_9918a_sms_cram[8]=0x02;	
-    vdp_9918a_sms_cram[9]=0x03;	
-    vdp_9918a_sms_cram[10]=0x05;	
-    vdp_9918a_sms_cram[11]=0x0f;	
-    vdp_9918a_sms_cram[12]=0x04;	
-    vdp_9918a_sms_cram[13]=0x33;	
-    vdp_9918a_sms_cram[14]=0x15;	
-    vdp_9918a_sms_cram[15]=0x3f;	
+    vdp_9918a_sms_cram[0+i*16]=0x00;	
+    vdp_9918a_sms_cram[1+i*16]=0x00;	
+    vdp_9918a_sms_cram[2+i*16]=0x08;	
+    vdp_9918a_sms_cram[3+i*16]=0x0C;	
+    vdp_9918a_sms_cram[4+i*16]=0x10;	
+    vdp_9918a_sms_cram[5+i*16]=0x30;	
+    vdp_9918a_sms_cram[6+i*16]=0x01;	
+    vdp_9918a_sms_cram[7+i*16]=0x3C;	
+    vdp_9918a_sms_cram[8+i*16]=0x02;	
+    vdp_9918a_sms_cram[9+i*16]=0x03;	
+    vdp_9918a_sms_cram[10+i*16]=0x05;	
+    vdp_9918a_sms_cram[11+i*16]=0x0f;	
+    vdp_9918a_sms_cram[12+i*16]=0x04;	
+    vdp_9918a_sms_cram[13+i*16]=0x33;	
+    vdp_9918a_sms_cram[14+i*16]=0x15;	
+    vdp_9918a_sms_cram[15+i*16]=0x3f;	
+
+    }
 
 
 }
@@ -597,7 +602,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 
 								color= byte_color;
-                                int color_paleta=vdp_9918a_sms_cram[color];
+                                int color_paleta=vdp_9918a_sms_cram[color & 15];
 								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,SMS_INDEX_FIRST_COLOR+color_paleta);
 
                             if (mirror_x) {
