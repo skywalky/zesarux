@@ -52,6 +52,9 @@ z80_byte vdp_9918a_last_vram_bytes[3];
 
 z80_int vdp_9918a_last_vram_position;
 
+int sms_writing_cram=0;
+
+int index_sms_escritura_cram=0;
 
 //Forzar desde menu a desactivar capas 
 z80_bit vdp_9918a_force_disable_layer_ula={0};
@@ -170,6 +173,9 @@ void vdp_9918a_out_command_status(z80_byte value)
 {
     //printf ("vdp_9918a write status: %02XH position: %d\n",value,vdp_9918a_last_command_status_bytes_counter);
 
+    //por defecto
+    sms_writing_cram=0;
+
     switch (vdp_9918a_last_command_status_bytes_counter) {
         case 0:
             vdp_9918a_last_command_status_bytes[0]=value;
@@ -229,6 +235,10 @@ void vdp_9918a_out_command_status(z80_byte value)
             //Paleta colores SMS
             if ( (vdp_9918a_last_command_status_bytes[1] &  (128+64)) == 192  && MACHINE_IS_SMS) {
                 printf("Write palette. Index: %d byte2: %d\n",vdp_9918a_last_command_status_bytes[0],vdp_9918a_last_command_status_bytes[1] & 63);
+
+                sms_writing_cram=1;
+
+                index_sms_escritura_cram=vdp_9918a_last_command_status_bytes[0];
             }       
         break;
     }

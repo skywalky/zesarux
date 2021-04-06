@@ -26,6 +26,12 @@
 
 extern z80_byte vdp_9918a_registers[];
 
+extern int sms_writing_cram;
+
+extern int index_sms_escritura_cram;
+
+extern z80_byte vdp_9918a_sms_cram[];
+
 extern z80_byte vdp_9918a_status_register;
 
 extern char *get_vdp_9918_string_video_mode(void);

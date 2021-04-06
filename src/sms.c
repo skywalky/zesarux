@@ -245,7 +245,14 @@ void sms_reset(void)
 
 void sms_out_port_vdp_data(z80_byte value)
 {
-    vdp_9918a_out_vram_data(sms_vram_memory,value);
+    if (sms_writing_cram) {
+        printf("Escribiendo cram indice %d valor %d\n",index_sms_escritura_cram & 31,value);
+
+        vdp_9918a_sms_cram[index_sms_escritura_cram & 31]=value;
+        index_sms_escritura_cram++;
+    }
+
+    else vdp_9918a_out_vram_data(sms_vram_memory,value);
 }
 
 
