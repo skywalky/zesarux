@@ -1215,10 +1215,10 @@ if (mirror_x) {
 
                                     
 
-                                        byte_leido1=byte_leido1<<1;
-                    byte_leido2=byte_leido2<<1;
-                    byte_leido3=byte_leido3<<1;
-                    byte_leido4=byte_leido4<<1;
+                                    byte_leido1=byte_leido1<<1;
+                                    byte_leido2=byte_leido2<<1;
+                                    byte_leido3=byte_leido3<<1;
+                                    byte_leido4=byte_leido4<<1;
                                 }
                             }
 
@@ -1258,15 +1258,15 @@ if (mirror_x) {
                                 if (1) {
                                     //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
 
-                                        z80_byte byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
+                                    z80_byte byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
 
 
 
-                                        //TODO: segunda paleta??  
-                                        z80_byte color_sprite=vdp_9918a_sms_cram[16 + (byte_color & 15)];
+                                    //TODO: segunda paleta??  
+                                    z80_byte color_sprite=vdp_9918a_sms_cram[16 + (byte_color & 15)];
 
-                                        //maximo 64 colores de paleta
-                                        color_sprite &=63;
+                                    //maximo 64 colores de paleta
+                                    color_sprite &=63;
 
                                     if (vdp_9918a_reveal_layer_sprites.v) {
                                         int posx=pos_x_final&1;
@@ -1289,12 +1289,12 @@ if (mirror_x) {
 
                                         //if (x==0 && y==0) printf("Dibujando sprite %d\n",sprite);            
                                             
-                                    scr_putpixel_zoom(pos_x_final,  pos_y_final,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                    if (sprite_double==2) {
-                                        scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    SMS_INDEX_FIRST_COLOR+color_sprite);
-                                        scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                        scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                    }                   
+                                        scr_putpixel_zoom(pos_x_final,  pos_y_final,  SMS_INDEX_FIRST_COLOR+color_sprite);
+                                        if (sprite_double==2) {
+                                            scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    SMS_INDEX_FIRST_COLOR+color_sprite);
+                                            scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
+                                            scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
+                                        }                   
 
                                     }                             
                                 }
