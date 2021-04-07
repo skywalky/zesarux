@@ -940,9 +940,25 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
         int sprite_size=vdp_9918a_get_sprite_size();
         int sprite_double=vdp_9918a_get_sprite_double();
 
+
+
         //TODO temp
         sprite_size=8;
         sprite_double=1;
+
+/*
+TODO
+ Register $01 - Mode Control No. 2
+
+ D7 - No effect
+ D6 - (BLK) 1= Display visible, 0= display blanked.
+ D5 - (IE0) 1= Frame interrupt enable.
+ D4 - (M1) Selects 224-line screen for Mode 4 if M2=1, else has no effect.
+ D3 - (M3) Selects 240-line screen for Mode 4 if M2=1, else has no effect.
+ D2 - No effect
+ D1 - Sprites are 1=16x16,0=8x8 (TMS9918), Sprites are 1=8x16,0=8x8 (Mode 4)
+ D0 - Sprite pixels are doubled in size.
+ */        
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 
@@ -1026,12 +1042,14 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
 
         for (sprite=primer_sprite_final;sprite>=0;sprite--) {
             int vert_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+sprite);
+            printf("sprite %d pos %d\n",sprite,sprite_attribute_table+sprite);
+
             int horiz_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+0x80+sprite*2);
             z80_byte sprite_name=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+0x80+sprite*2+1);
             //z80_byte attr_color_etc=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+3);
 
             //temp
-            z80_byte attr_color_etc=15;
+            //z80_byte attr_color_etc=15;
 
             printf("Sprite %d Pattern %d X %d Y %d\n",sprite,sprite_name,horiz_pos,vert_pos);
 
@@ -1060,10 +1078,10 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
 
             //Si early clock, x-=32
 
-            if (attr_color_etc & 128) {
+            /*if (attr_color_etc & 128) {
                 //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);                
                 horiz_pos -=32;
-            }
+            }*/
 
             //printf ("sprite number: %d X: %d Y: %d Name: %d color_etc: %d\n",sprite,horiz_pos,vert_pos,sprite_name,attr_color_etc);
 
@@ -1074,7 +1092,7 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
                 if (vert_pos<192) {
                     //int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
                       int offset_pattern_table=sprite_name*32+sprite_pattern_table;
-                    z80_byte color=attr_color_etc & 15;
+                    //z80_byte color=attr_color_etc & 15;
 
                     int x,y;
 
@@ -1199,10 +1217,10 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
                         }                        
                     }
 
-                    //Sprites de 8x8
+                    //Sprites de 8x16
                     else {
 
-                        for (y=0;y<8;y++) {
+                        for (y=0;y<16;y++) {
 
                                 byte_leido1=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
                                     byte_leido2=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
@@ -1231,6 +1249,8 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
 
                                                     z80_byte byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
 
+
+
                                                     //TODO: segunda paleta??  
                                                     z80_byte color_sprite=vdp_9918a_sms_cram[16 + (byte_color & 15)];
 
@@ -1249,14 +1269,21 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
 
                                                     int si_blanco_negro=posx ^ posy;
                                                     color_sprite=si_blanco_negro*15;
-                                                }                                   
+                                                }             
+
+                                                //TODO transparencia
+                                                if (byte_color!=0) {          
+
+                                                    if (x==0 && y==0) printf("Dibujando sprite %d\n",sprite);            
                                                        
                                                 scr_putpixel_zoom(pos_x_final,  pos_y_final,  SMS_INDEX_FIRST_COLOR+color_sprite);
                                                 if (sprite_double==2) {
                                                     scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    SMS_INDEX_FIRST_COLOR+color_sprite);
                                                     scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
                                                     scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                                }                                                
+                                                }                   
+
+                                                }                             
                                             }
                                         }
                                     }
