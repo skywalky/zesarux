@@ -5173,7 +5173,7 @@ int quickload_continue(char *nombre) {
              || !util_compare_file_extension(nombre,"sc")
         ) {
 		//Aqui el autoload da igual. cambiamos siempre a sg1000 si conviene
-                if (!MACHINE_IS_SG1000) {
+                if (!MACHINE_IS_SG1000 && !MACHINE_IS_SMS) {
 			current_machine_type=MACHINE_ID_SG1000;
                         set_machine(NULL);
 

@@ -35,7 +35,10 @@ Nota: parece que en el documento chipstms9918 la numeracion de bits está al rev
 registro 1 bit 6 (BL disables the screen display when reseted.VDP's commands work a bit faster as well. Screen display is displayed by default.)
 en el documento aparece mal como bit 1
 */
-z80_byte vdp_9918a_registers[16];
+
+
+//Antes de agregar emulacion de sms, esto era un array de [8]
+z80_byte vdp_9918a_registers[VDP_9918A_TOTAL_REGISTERS];
 
 z80_byte vdp_9918a_status_register=255;
 
@@ -76,10 +79,10 @@ void vdp_9918a_reset(void)
 {
     int i;
 
-    for (i=0;i<16;i++) vdp_9918a_registers[i]=0;
+    for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdp_9918a_registers[i]=0;
 
     //en sms por defecto modo 4
-    if (MACHINE_IS_SMS) vdp_9918a_registers[0] |= 4;
+    //if (MACHINE_IS_SMS) vdp_9918a_registers[0] |= 4;
 
 
     //Y resetear tabla de colores de sms
@@ -215,7 +218,7 @@ void vdp_9918a_out_command_status(z80_byte value)
                 //printf ("Write VDP Register setup.\n");
 
                 //vdp_9918a_last_vram_position=(vdp_9918a_last_command_status_bytes[1] & 63) | (vdp_9918a_last_command_status_bytes[0]<<6);
-                z80_byte vdp_register=vdp_9918a_last_command_status_bytes[1] & 15; //TODO: cuantos registros?
+                z80_byte vdp_register=vdp_9918a_last_command_status_bytes[1] & (VDP_9918A_TOTAL_REGISTERS-1); 
 
 
                 vdp_9918a_registers[vdp_register]=vdp_9918a_last_command_status_bytes[0];
