@@ -474,6 +474,13 @@ z80_int vdp_9918a_get_sprite_pattern_table(void)
     return sprite_pattern_table;
 }
 
+z80_int vdp_9918a_get_sprite_pattern_table_sms_mode4(void)
+{
+    z80_int sprite_pattern_table=(vdp_9918a_registers[6] & 4) * 0x800;
+
+    return sprite_pattern_table;
+}
+
 
 z80_int vdp_9918a_get_sprite_attribute_table(void)
 {
@@ -923,13 +930,19 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
 {
 
-    z80_int sprite_pattern_table=vdp_9918a_get_sprite_pattern_table();
+    z80_int sprite_pattern_table=vdp_9918a_get_sprite_pattern_table_sms_mode4();
     
     z80_byte byte_leido;
+
+    z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
 
         
         int sprite_size=vdp_9918a_get_sprite_size();
         int sprite_double=vdp_9918a_get_sprite_double();
+
+        //TODO temp
+        sprite_size=8;
+        sprite_double=1;
 
         //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
 
@@ -965,7 +978,7 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
  of $D0 has no special meaning.
         */
         
-        for (primer_sprite_final=0;primer_sprite_final<32 && !salir;primer_sprite_final++) {
+        for (primer_sprite_final=0;primer_sprite_final<VDP_9918A_SMS_MODE4_MAX_SPRITES && !salir;primer_sprite_final++) {
             int offset_sprite=sprite_attribute_table+primer_sprite_final;
 
             z80_byte vert_pos=vdp_9918a_read_vram_byte(vram,offset_sprite);
@@ -1020,7 +1033,7 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
             //temp
             z80_byte attr_color_etc=15;
 
-            printf("Sprite %d Pattern %d X %d Y %d\n",sprite,horiz_pos,vert_pos,sprite_name);
+            printf("Sprite %d Pattern %d X %d Y %d\n",sprite,sprite_name,horiz_pos,vert_pos);
 
             /*
             TODO
@@ -1060,7 +1073,7 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
                 //Si coord Y no esta en el borde inferior
                 if (vert_pos<192) {
                     //int offset_pattern_table=sprite_name*bytes_per_sprite+sprite_pattern_table;
-                      int offset_pattern_table=sprite_name*8+sprite_pattern_table;
+                      int offset_pattern_table=sprite_name*32+sprite_pattern_table;
                     z80_byte color=attr_color_etc & 15;
 
                     int x,y;
@@ -1073,8 +1086,16 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
                             for (quad_y=0;quad_y<2;quad_y++) {
                                 for (y=0;y<8;y++) {
                                 
-                                    byte_leido=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                                    byte_leido1=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                                    byte_leido2=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                                    byte_leido3=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                                    byte_leido4=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+
+
+
                                     for (x=0;x<8;x++) {
+
+
 
                                         int pos_x_final;
                                         int pos_y_final;
@@ -1085,13 +1106,57 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
                                         //Si dentro de limites
                                         if (pos_x_final>=0 && pos_x_final<=255 && pos_y_final>=0 && pos_y_final<=191) {
 
+/*
+  if (mirror_x) {
+                                byte_color=((byte_leido1)&1) | ((byte_leido2<<1)&2) | ((byte_leido3<<2)&4) | ((byte_leido4<<3)&8);
+                            }
+                            else {
+
+                            byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
+                        
+                            }
+
+
+								color= byte_color;
+                                int color_paleta=vdp_9918a_sms_cram[color & 15];
+
+                                //maximo 64 colores de paleta
+                                color_paleta &=63;
+
+								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,SMS_INDEX_FIRST_COLOR+color_paleta);
+
+                            if (mirror_x) {
+                            byte_leido1=byte_leido1>>1;
+                            byte_leido2=byte_leido2>>1;
+                            byte_leido3=byte_leido3>>1;
+                            byte_leido4=byte_leido4>>1;                                
+                            }
+
+                            else {
+                            byte_leido1=byte_leido1<<1;
+                            byte_leido2=byte_leido2<<1;
+                            byte_leido3=byte_leido3<<1;
+                            byte_leido4=byte_leido4<<1;
+                            }
+                        */                                            
+
                                             //Si bit a 1
-                                            if (byte_leido & 128) {
+                                            //if (byte_leido & 128) {
                                                 //Y si ese color no es transparente 
-                                                if (color!=0) {
+
+                                                //TODO: esto es correcto?
+                                                if (1) {
+                                                //if (color!=0) {
                                                     //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
 
-                                                    z80_byte color_sprite=color;
+                                                    z80_byte byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
+
+                                                    z80_byte color_sprite=vdp_9918a_sms_cram[byte_color & 15];
+
+                                                    //maximo 64 colores de paleta
+                                                    color_sprite &=63;
+
+                                                    //z80_byte color_sprite=color;
 
                                                     if (vdp_9918a_reveal_layer_sprites.v) {
                                                         int posx=pos_x_final&1;
@@ -1110,18 +1175,25 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
                                                     }
 
 
-                                                    scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    scr_putpixel_zoom(pos_x_final,  pos_y_final,  SMS_INDEX_FIRST_COLOR+color_sprite);
                                                     if (sprite_double==2) {
-                                                        scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    VDP_9918_INDEX_FIRST_COLOR+color_sprite);
-                                                        scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
-                                                        scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                        scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    SMS_INDEX_FIRST_COLOR+color_sprite);
+                                                        scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
+                                                        scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
                                                     }
                                                 }
-                                            }
+                                            //}
 
-                                            byte_leido = byte_leido << 1;
+                                         
+
+                                              byte_leido1=byte_leido1<<1;
+                            byte_leido2=byte_leido2<<1;
+                            byte_leido3=byte_leido3<<1;
+                            byte_leido4=byte_leido4<<1;
                                         }
                                     }
+
+                                                              
                                 }
                             }
                         }                        
@@ -1132,7 +1204,12 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
 
                         for (y=0;y<8;y++) {
 
-                                byte_leido=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                                byte_leido1=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                                    byte_leido2=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                                    byte_leido3=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+                                    byte_leido4=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
+
+
                                 for (x=0;x<8;x++) {
 
                                     int pos_x_final;
@@ -1144,12 +1221,21 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
                                     if (pos_x_final>=0 && pos_x_final<=255 && pos_y_final>=0 && pos_y_final<=191) {
 
                                         //Si bit a 1
-                                        if (byte_leido & 128) {
+                                        if (1) {
                                             //Y si ese color no es transparente
-                                            if (color!=0) {
+
+                                            //TODO 
+                                            //if (color!=0) {
+                                            if (1) {
                                                 //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
 
-                                                z80_byte color_sprite=color;
+                                                    z80_byte byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
+
+                                                    //TODO: segunda paleta??  
+                                                    z80_byte color_sprite=vdp_9918a_sms_cram[16 + (byte_color & 15)];
+
+                                                    //maximo 64 colores de paleta
+                                                    color_sprite &=63;
 
                                                 if (vdp_9918a_reveal_layer_sprites.v) {
                                                     int posx=pos_x_final&1;
@@ -1163,19 +1249,27 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
 
                                                     int si_blanco_negro=posx ^ posy;
                                                     color_sprite=si_blanco_negro*15;
-                                                }                                            
-                                                scr_putpixel_zoom(pos_x_final,  pos_y_final,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                }                                   
+                                                       
+                                                scr_putpixel_zoom(pos_x_final,  pos_y_final,  SMS_INDEX_FIRST_COLOR+color_sprite);
                                                 if (sprite_double==2) {
-                                                    scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    VDP_9918_INDEX_FIRST_COLOR+color_sprite);
-                                                    scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
-                                                    scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  VDP_9918_INDEX_FIRST_COLOR+color_sprite);
+                                                    scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    SMS_INDEX_FIRST_COLOR+color_sprite);
+                                                    scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
+                                                    scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
                                                 }                                                
                                             }
                                         }
                                     }
 
-                                    byte_leido = byte_leido << 1;
+                                
+                                    
+                                                            byte_leido1=byte_leido1<<1;
+                            byte_leido2=byte_leido2<<1;
+                            byte_leido3=byte_leido3<<1;
+                            byte_leido4=byte_leido4<<1;                                    
                                 }
+
+
                             
                         }
                     }
