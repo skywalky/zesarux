@@ -52,7 +52,11 @@ z80_byte vdp_9918a_last_vram_bytes[3];
 
 z80_int vdp_9918a_last_vram_position;
 
+
+//TODO mejorar nombre de esto
 int sms_writing_cram=0;
+
+
 
 int index_sms_escritura_cram=0;
 
