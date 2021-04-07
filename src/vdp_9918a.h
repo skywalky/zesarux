@@ -116,6 +116,8 @@ extern z80_bit vdp_9918a_reveal_layer_sprites;
 
 #define VDP_9918A_MAX_SPRITES 32
 
+#define VDP_9918A_SMS_MODE4_MAX_SPRITES 64
+
 
 #define VDP_9918A_MAX_SPRITES_PER_LINE 5
 
