@@ -295,13 +295,12 @@ z80_byte vdp_9918a_get_video_mode(void)
 
 z80_int vdp_9918a_get_pattern_name_table(void)
 {
-    return (vdp_9918a_registers[2]&15) * 0x400; 
+    if (vdp_9918a_si_sms_video_mode4() ) {
+        return (vdp_9918a_registers[2]&14) * 0x400; 
+    }
+    else return (vdp_9918a_registers[2]&15) * 0x400; 
 }
 
-z80_int vdp_9918a_get_pattern_name_table_sms_mode4(void)
-{
-    return (vdp_9918a_registers[2]&14) * 0x400; 
-}
 
 
 char *get_vdp_9918_string_video_mode(void) 
@@ -508,28 +507,22 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
     z80_byte byte_color;
 	int color=0;
 	
-	//int zx,zy;
+
 
 	z80_byte ink,paper;
 
 
     z80_int pattern_color_table;
 	z80_int pattern_base_address; 
-	z80_int pattern_name_table; //=0; //TODO: puesto a pelo
+	z80_int pattern_name_table; 
 
-	pattern_name_table=vdp_9918a_get_pattern_name_table(); //(vdp_9918a_registers[2]&15) * 0x400; 
+	pattern_name_table=vdp_9918a_get_pattern_name_table(); 
 
 
 	pattern_color_table=vdp_9918a_get_pattern_color_table();
 
 
     pattern_base_address=vdp_9918a_get_pattern_base_address();
-
-    //z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;
-
-     
-
-	//z80_byte *screen=get_base_mem_pantalla();
 
 
 
@@ -549,23 +542,18 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
             z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
 
 
-                   //temp
-                pattern_base_address=0;
+            //TODO. esto siempre asi??
+            pattern_base_address=0;
 
 
-            pattern_name_table=vdp_9918a_get_pattern_name_table_sms_mode4();
-
-
-                //pattern_name_table-=1024;
+            pattern_name_table=vdp_9918a_get_pattern_name_table();
 
 
 			direccion_name_table=pattern_name_table;  
 
 
-
 			for (y=0;y<24;y++) {
 
-				int tercio=y/8;
 
 				for (x=0;x<chars_in_line;x++) {  
 					
@@ -610,14 +598,11 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 
 
-
-
-
                     direccion_name_table=pattern_name_table+final_x*2+final_y*64;
 					
 					z80_int pattern_word=vdp_9918a_read_vram_byte(vram,direccion_name_table)+256*vdp_9918a_read_vram_byte(vram,direccion_name_table+1);
 
-                    //TODO
+                    
                     /*
                     MSB          LSB
  ---pcvhn nnnnnnnn
@@ -634,7 +619,11 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
                     int mirror_x=(pattern_word & 0x0200);
 
+                    int mirror_y=(pattern_word & 0x0400);
+
                     z80_int caracter=pattern_word & 511;
+
+                    int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
 					
 
 					int scanline;
@@ -644,19 +633,26 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 					pattern_address +=pattern_base_address;
 					
 					
-
-             
+                    //Si tiene mirror vertical, empezamos con la ultima linea del pattern
+                    if (mirror_y) {
+                        pattern_address +=(8*4)-4;
+                    }
 	
 			
 
 					for (scanline=0;scanline<8;scanline++) {
 
-						byte_leido1=vdp_9918a_read_vram_byte(vram,pattern_address++);
-                        byte_leido2=vdp_9918a_read_vram_byte(vram,pattern_address++);
-                        byte_leido3=vdp_9918a_read_vram_byte(vram,pattern_address++);
-                        byte_leido4=vdp_9918a_read_vram_byte(vram,pattern_address++);
+						byte_leido1=vdp_9918a_read_vram_byte(vram,pattern_address);
+                        byte_leido2=vdp_9918a_read_vram_byte(vram,pattern_address+1);
+                        byte_leido3=vdp_9918a_read_vram_byte(vram,pattern_address+2);
+                        byte_leido4=vdp_9918a_read_vram_byte(vram,pattern_address+3);
 
-						
+                        if (mirror_y) {
+                            pattern_address -=4;
+                        }
+                        else {
+						    pattern_address +=4;
+                        }
 
 							
 						for (bit=0;bit<char_width;bit++) {
@@ -673,36 +669,32 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
                             }
 
 
-								color= byte_color;
-                                int color_paleta=vdp_9918a_sms_cram[color & 15];
+                            color= byte_color;
+                            int color_paleta=vdp_9918a_sms_cram[palette_offset+ color & 15];
 
-                                //maximo 64 colores de paleta
-                                color_paleta &=63;
+                            //maximo 64 colores de paleta
+                            color_paleta &=63;
 
-								scr_putpixel_zoom(x*char_width+bit,y*8+scanline,SMS_INDEX_FIRST_COLOR+color_paleta);
+                            scr_putpixel_zoom(x*char_width+bit,y*8+scanline,SMS_INDEX_FIRST_COLOR+color_paleta);
 
                             if (mirror_x) {
-                            byte_leido1=byte_leido1>>1;
-                            byte_leido2=byte_leido2>>1;
-                            byte_leido3=byte_leido3>>1;
-                            byte_leido4=byte_leido4>>1;                                
+                                byte_leido1=byte_leido1>>1;
+                                byte_leido2=byte_leido2>>1;
+                                byte_leido3=byte_leido3>>1;
+                                byte_leido4=byte_leido4>>1;                                
                             }
 
                             else {
-                            byte_leido1=byte_leido1<<1;
-                            byte_leido2=byte_leido2<<1;
-                            byte_leido3=byte_leido3<<1;
-                            byte_leido4=byte_leido4<<1;
+                                byte_leido1=byte_leido1<<1;
+                                byte_leido2=byte_leido2<<1;
+                                byte_leido3=byte_leido3<<1;
+                                byte_leido4=byte_leido4<<1;
                             }
 
 							
 						}
 					}
 
-
-                    //lo recalculamos cada vez para considerar scroll	
-					//direccion_name_table++;
-                    //direccion_name_table++;
 
 				}
 		   }
