@@ -1279,7 +1279,9 @@ if (mirror_x) {
                                         //Es un xor
 
                                         int si_blanco_negro=posx ^ posy;
-                                        color_sprite=si_blanco_negro*15;
+
+                                        //Color 0 o 63 (negro / blanco)
+                                        color_sprite=si_blanco_negro*(SMS_TOTAL_PALETTE_COLOURS-1);
                                     }             
 
                                     //TODO transparencia
