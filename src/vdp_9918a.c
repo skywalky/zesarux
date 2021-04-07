@@ -281,10 +281,10 @@ z80_byte vdp_9918a_get_video_mode(void)
 
 	z80_byte video_mode=video_mode_m12 | video_mode_m3;
 //temp
-return 128;
+//return 128;
     //Modo "especial" de SMS llamado 4, aqui se retorna como 128
     if (vdp_9918a_si_sms_video_mode4() ) {
-        printf("Modo 4 SMS\n");
+        //printf("Modo 4 SMS\n");
         return 128;
     }
 
@@ -1070,7 +1070,7 @@ TODO
 
         for (sprite=primer_sprite_final;sprite>=0;sprite--) {
             int vert_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+sprite);
-            printf("sprite %d pos %d\n",sprite,sprite_attribute_table+sprite);
+            //printf("sprite %d pos %d\n",sprite,sprite_attribute_table+sprite);
 
             int horiz_pos=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+0x80+sprite*2);
             z80_byte sprite_name=vdp_9918a_read_vram_byte(vram,sprite_attribute_table+0x80+sprite*2+1);
@@ -1079,7 +1079,7 @@ TODO
             //temp
             //z80_byte attr_color_etc=15;
 
-            printf("Sprite %d Pattern %d X %d Y %d\n",sprite,sprite_name,horiz_pos,vert_pos);
+            //printf("Sprite %d Pattern %d X %d Y %d\n",sprite,sprite_name,horiz_pos,vert_pos);
 
             /*
             TODO
@@ -1302,7 +1302,7 @@ TODO
                                                 //TODO transparencia
                                                 if (byte_color!=0) {          
 
-                                                    if (x==0 && y==0) printf("Dibujando sprite %d\n",sprite);            
+                                                    //if (x==0 && y==0) printf("Dibujando sprite %d\n",sprite);            
                                                        
                                                 scr_putpixel_zoom(pos_x_final,  pos_y_final,  SMS_INDEX_FIRST_COLOR+color_sprite);
                                                 if (sprite_double==2) {
@@ -1340,10 +1340,8 @@ TODO
 void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
 {
  
-    //temp
-    if (1) {
-    //if (vdp_9918a_si_sms_video_mode4()) {
-        printf("Render sprites modo 4 sms\n");
+    if (vdp_9918a_si_sms_video_mode4()) {
+        //printf("Render sprites modo 4 sms\n");
         vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(vram);
         return;
     }
