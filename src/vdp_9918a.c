@@ -571,6 +571,8 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 					
                     //scroll x
                     z80_byte scroll_x=vdp_9918a_registers[8];
+
+                
                     //columna
                     /*
                      The starting column value gives the first column in the name table to use,
@@ -581,11 +583,37 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
                     z80_byte columna_scroll_x=32-((scroll_x>>3)&31);
 
-                    //TODO scroll a pixel
+                    //TODO scroll a pixel en horiz y vertical
 
                     z80_byte final_x=(x+columna_scroll_x) & 31;
 
-                    direccion_name_table=pattern_name_table+final_x*2+y*64;
+
+
+                   //scroll y
+                    z80_byte scroll_y=vdp_9918a_registers[9];
+
+                
+                    //fila
+                    /*
+                   Register $09 can be divided into two parts, the upper five bits are the
+ starting row, and the lower three bits are the fine scroll value.
+.
+                    */
+
+                    z80_byte fila_scroll_y=((scroll_y>>3)&31);
+
+                    //TODO scroll a pixel en horiz y vertical
+
+
+                    //Maximo 28 en Y
+                    z80_byte final_y=(y+fila_scroll_y) % 28;
+
+
+
+
+
+
+                    direccion_name_table=pattern_name_table+final_x*2+final_y*64;
 					
 					z80_int pattern_word=vdp_9918a_read_vram_byte(vram,direccion_name_table)+256*vdp_9918a_read_vram_byte(vram,direccion_name_table+1);
 
