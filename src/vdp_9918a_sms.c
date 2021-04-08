@@ -264,13 +264,15 @@ starting row, and the lower three bits are the fine scroll value.
 
 				for (x=0;x<total_columnas;x++) {  
 					
-                    //TODO scroll a pixel en horiz y vertical
+                    
 
                     z80_byte final_x;
 
-                    //if (x==32) final_x
-                    
-                    final_x=(x+columna_scroll_x) % 32;        
+                    //prueba para corregir columna final en sonic
+                    //if (x==32) final_x=0;
+                    //else final_x=(x+columna_scroll_x) % 32;        
+
+                    final_x=(x+columna_scroll_x) % 32;
 
                     direccion_name_table=pattern_name_table+final_x*2+final_y*64;
 					
