@@ -342,7 +342,9 @@ TODO
  */        
 
     //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
+    printf("Sprite size: 8x%d\n",(vdp_9918a_registers[1] & 2 ? 16 : 8));
 
+    int sprite_height=(vdp_9918a_registers[1] & 2 ? 16 : 8);
 
 
     //TODO: si coordenada Y=208, fin tabla sprites
@@ -589,10 +591,10 @@ if (mirror_x) {
                 }                        
             }
 
-            //Sprites de 8x16
+            //Sprites de 8x16 y 8x8
             else {
 
-                for (y=0;y<16;y++) {
+                for (y=0;y<sprite_height;y++) {
 
                     byte_leido1=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
                     byte_leido2=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
