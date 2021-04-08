@@ -164,12 +164,32 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
 
 			direccion_name_table=pattern_name_table;  
 
+            //scroll y
+            z80_byte scroll_y=vdp_9918a_sms_get_scroll_vertical();
+
+        
+            //fila
+            /*
+            Register $09 can be divided into two parts, the upper five bits are the
+starting row, and the lower three bits are the fine scroll value.
+.
+            */
+
+            z80_byte fila_scroll_y=((scroll_y>>3)&31);
+
+            z80_byte scroll_y_sublinea=scroll_y&7;
+
+            //TODO scroll a pixel en horiz y vertical
+
+
+      
+
 
 			for (y=0;y<24;y++) {
 
+                //Maximo 28 en Y
+                z80_byte final_y=(y+fila_scroll_y) % 28;     
 
-				for (x=0;x<chars_in_line;x++) {  
-					
                     //scroll x
                     z80_byte scroll_x=vdp_9918a_sms_get_scroll_horizontal();
 
@@ -208,32 +228,14 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
 
                     z80_byte columna_scroll_x=32-((scroll_x>>3)&31);
 
+         
+ 
+
+				for (x=0;x<chars_in_line;x++) {  
+					
                     //TODO scroll a pixel en horiz y vertical
 
-                    z80_byte final_x=(x+columna_scroll_x) & 31;
-
-
-
-                   //scroll y
-                    z80_byte scroll_y=vdp_9918a_sms_get_scroll_vertical();
-
-                
-                    //fila
-                    /*
-                   Register $09 can be divided into two parts, the upper five bits are the
- starting row, and the lower three bits are the fine scroll value.
-.
-                    */
-
-                    z80_byte fila_scroll_y=((scroll_y>>3)&31);
-
-                    //TODO scroll a pixel en horiz y vertical
-
-
-                    //Maximo 28 en Y
-                    z80_byte final_y=(y+fila_scroll_y) % 28;
-
-
+                    z80_byte final_x=(x+columna_scroll_x) & 31;        
 
                     direccion_name_table=pattern_name_table+final_x*2+final_y*64;
 					
@@ -279,6 +281,9 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
 
 					for (scanline=0;scanline<8;scanline++) {
 
+                        int ydestino=y*8+scanline-scroll_y_sublinea;
+                        //printf("%d\n",ydestino);
+
 						byte_leido1=vdp_9918a_read_vram_byte(vram,pattern_address);
                         byte_leido2=vdp_9918a_read_vram_byte(vram,pattern_address+1);
                         byte_leido3=vdp_9918a_read_vram_byte(vram,pattern_address+2);
@@ -291,6 +296,8 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
 						    pattern_address +=4;
                         }
 
+                        //No dibujar si y < 0. Esto sucede cuando se aplica scroll vertical
+                        if (ydestino>=0) {
 							
 						for (bit=0;bit<char_width;bit++) {
 
@@ -301,7 +308,7 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
                             }
                             else {
 
-                            byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
+                                byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
                         
                             }
 
@@ -312,7 +319,10 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
                             //maximo 64 colores de paleta
                             color_paleta &=63;
 
-                            scr_putpixel_zoom(x*char_width+bit,y*8+scanline,SMS_INDEX_FIRST_COLOR+color_paleta);
+                            
+
+
+                            scr_putpixel_zoom(x*char_width+bit,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
 
                             if (mirror_x) {
                                 byte_leido1=byte_leido1>>1;
@@ -330,10 +340,15 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
 
 							
 						}
+
+                        }
+                        
 					}
 
 
 				}
+
+ 
 		   }
 
  
