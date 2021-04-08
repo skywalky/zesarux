@@ -26,11 +26,10 @@
 
 extern z80_byte vdp_9918a_registers[];
 
-extern int sms_writing_cram;
 
-extern int index_sms_escritura_cram;
 
-extern z80_byte vdp_9918a_sms_cram[];
+
+
 
 extern z80_byte vdp_9918a_status_register;
 
@@ -118,7 +117,7 @@ extern z80_bit vdp_9918a_reveal_layer_sprites;
 
 #define VDP_9918A_TOTAL_REGISTERS 16
 
-#define VDP_9918A_SMS_MODE4_MAX_SPRITES 64
+
 
 
 #define VDP_9918A_MAX_SPRITES_PER_LINE 5

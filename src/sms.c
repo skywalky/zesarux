@@ -27,6 +27,7 @@
 
 #include "sms.h"
 #include "vdp_9918a.h"
+#include "vdp_9918a_sms.h"
 #include "cpu.h"
 #include "debug.h"
 //#include "ay38912.h"
