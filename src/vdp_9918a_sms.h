@@ -26,6 +26,8 @@
 
 #define VDP_9918A_SMS_MODE4_MAX_SPRITES 64
 
+#define VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS 32
+
 extern int sms_writing_cram;
 extern int index_sms_escritura_cram;
 extern z80_byte vdp_9918a_sms_cram[];

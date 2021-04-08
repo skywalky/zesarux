@@ -41,7 +41,7 @@ int sms_writing_cram=0;
 
 int index_sms_escritura_cram=0;
 
-z80_byte vdp_9918a_sms_cram[32];
+z80_byte vdp_9918a_sms_cram[VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS];
 
 
 void vdp_9918a_sms_reset(void)

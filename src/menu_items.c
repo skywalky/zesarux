@@ -114,6 +114,7 @@
 #include "ql_i8049.h"
 #include "gs.h"
 #include "zvfs.h"
+#include "vdp_9918a_sms.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"
@@ -11900,7 +11901,12 @@ int menu_debug_sprites_total_colors_mapped_palette(int paleta)
 		//zxuno prism (colores finales, a paleta reducida)
 		case 18:
 			return 16;
-		break;	        
+		break;	    
+
+		//SMS
+		case 19:
+			return VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS;
+		break;            
 
          
 	}
@@ -11981,7 +11987,11 @@ int menu_debug_sprites_max_value_mapped_palette(int paleta)
 		//ZXuno prism (colores finales, a paleta reducida)
 		case 18:
 			return TSCONF_TOTAL_PALETTE_COLOURS;
-		break;	        
+		break;	
+
+        case 19:
+            return SMS_TOTAL_PALETTE_COLOURS;
+        break;        
 
         
 
@@ -12095,7 +12105,13 @@ int menu_debug_sprites_return_index_palette(int paleta, z80_byte color)
 		case 18:
 			//zxuno prism (colores finales, a paleta reducida)
 			return zxuno_prism_current_palette[color].index_palette_15bit;
-		break;        
+		break;       
+
+
+        case 19:
+            //SMS Mode 4
+            return vdp_9918a_sms_cram[color];
+        break; 
 
        
 
@@ -12170,7 +12186,11 @@ int menu_debug_sprites_return_color_palette(int paleta, z80_byte color)
 		case 18:
 			//zxuno prism (colores finales, a paleta reducida)
 			return TSCONF_INDEX_FIRST_COLOR+index;
-		break;       
+		break;    
+
+		case 19:
+			return SMS_INDEX_FIRST_COLOR+index;
+		break;            
 
 
 	}
@@ -12269,7 +12289,9 @@ void menu_debug_sprites_get_palette_name(int paleta, char *s)
 			strcpy(s,"ZX-Uno Prism (final)");
 		break;       
 
-        
+		case 19:
+			strcpy(s,"SMS Mode 4");
+		break;          
 
 		default:
 			strcpy(s,"UNKNOWN");
