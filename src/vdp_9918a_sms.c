@@ -221,8 +221,10 @@ starting row, and the lower three bits are the fine scroll value.
                     //Esto lo usa juego Astro Flash
                    if (vdp_9918a_registers[0] & 64 && y<2) scroll_x=0; 
 
-                    z80_byte columna_scroll_x;
-                   z80_byte scroll_x_fino;
+                   //scroll_x=0;
+
+                    int columna_scroll_x;
+                   int scroll_x_fino;
                    
                    if (scroll_x==0) {
                        scroll_x_fino=0;
@@ -232,6 +234,9 @@ starting row, and the lower three bits are the fine scroll value.
                    else {
                        scroll_x_fino=(255-scroll_x) & 7;
                        columna_scroll_x=32-((scroll_x>>3)&31);
+
+
+                       //scroll_x_fino=7-((scroll_x&7));
                    }
 
                 
@@ -266,13 +271,28 @@ starting row, and the lower three bits are the fine scroll value.
 					
                     
 
-                    z80_byte final_x;
+                    int final_x;
 
                     //prueba para corregir columna final en sonic
                     //if (x==32) final_x=0;
                     //else final_x=(x+columna_scroll_x) % 32;        
 
-                    final_x=(x+columna_scroll_x) % 32;
+                    //de logica deberia ser 32, pero con esto hace bien el scroll fino aunque hora lo 
+                    //que hace es que sale a menudo un tile fuera de sitio
+                    final_x=(x+columna_scroll_x) % 33;
+
+                    //esto no hace saltar tiles pero la ultima columna se ve siempre mal cuando scroll_x_fino!=0
+                    //final_x=(x+columna_scroll_x) % 32;
+
+                    //if (x==32) final_x=((x+columna_scroll_x) % 32)+1;
+
+                    if (x==32) {
+                        final_x=(x+columna_scroll_x) % 32;
+                        //final_x=columna_scroll_x+1;
+                    }
+                    else final_x=(x+columna_scroll_x) % 32;
+
+                    if (y==0 && x>=29) printf("x %d columna_scroll_x %d scroll_x_fino %d final_x %d \n",x,columna_scroll_x,scroll_x_fino,final_x);
 
                     direccion_name_table=pattern_name_table+final_x*2+final_y*64;
 					
@@ -375,10 +395,17 @@ starting row, and the lower three bits are the fine scroll value.
                                 //D5 - 1= Mask column 0 with overscan color from register #7
                                 //Esto lo usa sonic. La primera columna es para usar para el scroll
                                 if (xdestino<=7 && (vdp_9918a_registers[0] & 32)) {
-                                    color_paleta=0; //TODO: que color? debe ser el del border
+                                    //Temporal desactivo para que se vea primera columna
+                                    //color_paleta=0; //TODO: que color? debe ser el del border
                                 }  
 
+                                //prueba para resaltar columna 33
+                                if (xdestino>=256-scroll_x_fino) color_paleta ^=15;
+
                                 scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
+                            }
+                            else {
+                                if (ydestino==0) printf("no permitido en x %d\n",xdestino);
                             }
 
                             if (mirror_x) {
