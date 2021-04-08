@@ -93,6 +93,16 @@ z80_int vdp_9918a_sms_get_pattern_name_table(void)
 
 }
 
+z80_byte vdp_9918a_sms_get_scroll_horizontal(void)
+{
+    return vdp_9918a_registers[8];
+}
+
+z80_byte vdp_9918a_sms_get_scroll_vertical(void)
+{
+    return vdp_9918a_registers[9];
+}
+
 void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
 {
 
@@ -161,7 +171,7 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
 				for (x=0;x<chars_in_line;x++) {  
 					
                     //scroll x
-                    z80_byte scroll_x=vdp_9918a_registers[8];
+                    z80_byte scroll_x=vdp_9918a_sms_get_scroll_horizontal();
 
                     /*
                      If bit #6 of VDP register $00 is set, horizontal scrolling will be fixed
@@ -205,7 +215,7 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
 
 
                    //scroll y
-                    z80_byte scroll_y=vdp_9918a_registers[9];
+                    z80_byte scroll_y=vdp_9918a_sms_get_scroll_vertical();
 
                 
                     //fila
@@ -329,6 +339,27 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
  
 }
 
+int vdp_9918a_sms_get_sprite_height(void)
+{
+    /*
+     Register $01 - Mode Control No. 2
+
+ D7 - No effect
+ D6 - (BLK) 1= Display visible, 0= display blanked.
+ D5 - (IE0) 1= Frame interrupt enable.
+ D4 - (M1) Selects 224-line screen for Mode 4 if M2=1, else has no effect.
+ D3 - (M3) Selects 240-line screen for Mode 4 if M2=1, else has no effect.
+ D2 - No effect
+ D1 - Sprites are 1=16x16,0=8x8 (TMS9918), Sprites are 1=8x16,0=8x8 (Mode 4)
+ D0 - Sprite pixels are doubled in size.
+    */
+
+
+    return (vdp_9918a_registers[1] & 2 ? 16 : 8);
+
+
+
+}
 
 
 //Render sprites en modo 4 Sega Master System
@@ -368,8 +399,8 @@ TODO
     //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
     //printf("Sprite size: 8x%d\n",(vdp_9918a_registers[1] & 2 ? 16 : 8));
 
-    int sprite_height=(vdp_9918a_registers[1] & 2 ? 16 : 8);
 
+    int sprite_height=vdp_9918a_sms_get_sprite_height();
 
     //TODO: si coordenada Y=208, fin tabla sprites
     //    z80_int sprite_attribute_table=(vdp_9918a_registers[5]) * 0x80;

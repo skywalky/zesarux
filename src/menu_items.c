@@ -3516,9 +3516,16 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					sprintf (texto_buffer,"Foreground Color: %2d",vdp_9918a_get_foreground_color());
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);						
 
-					int sprite_size=vdp_9918a_get_sprite_size();
-					sprintf (texto_buffer,"Sprite size: %dX%d",sprite_size,sprite_size);
-					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
+
+                    if (vdp_9918a_si_sms_video_mode4()) {
+	    				sprintf (texto_buffer,"Sprite size: 8X%d",vdp_9918a_sms_get_sprite_height());
+					    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);	
+                    }
+                    else {
+                        int sprite_size=vdp_9918a_get_sprite_size();
+                        sprintf (texto_buffer,"Sprite size: %dX%d",sprite_size,sprite_size);
+                        zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);		                        
+                    }
 
 					sprintf (texto_buffer,"Magnification: %dX",vdp_9918a_get_sprite_double());
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
@@ -3537,7 +3544,16 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
 
 					sprintf (texto_buffer,"Sprite Pattern Table: %04XH",vdp_9918a_get_sprite_pattern_table());
-					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);						
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);		
+
+                    if (vdp_9918a_si_sms_video_mode4()) {
+	    				sprintf (texto_buffer,"Scroll Horizontal:    %d",vdp_9918a_sms_get_scroll_horizontal());
+					    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);	   
+
+	    				sprintf (texto_buffer,"Scroll Vertical:      %d",vdp_9918a_sms_get_scroll_vertical());
+					    zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);	                                             
+                    }
+                    				
 
 
 				}
