@@ -217,8 +217,12 @@ starting row, and the lower three bits are the fine scroll value.
                     //Esto lo usa juego Astro Flash
                    if (vdp_9918a_registers[0] & 64 && y<2) scroll_x=0; 
 
-
-                   z80_byte scroll_x_fino=(255-scroll_x) & 7;
+                    
+                   z80_byte scroll_x_fino;
+                   
+                   if (scroll_x==0) scroll_x_fino=0;
+                   
+                   else scroll_x_fino=(255-scroll_x) & 7;
 
                 
                     //columna
