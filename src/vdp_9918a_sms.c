@@ -217,6 +217,9 @@ starting row, and the lower three bits are the fine scroll value.
                     //Esto lo usa juego Astro Flash
                    if (vdp_9918a_registers[0] & 64 && y<2) scroll_x=0; 
 
+
+                   z80_byte scroll_x_fino=(255-scroll_x) & 7;
+
                 
                     //columna
                     /*
@@ -281,6 +284,7 @@ starting row, and the lower three bits are the fine scroll value.
 
 					for (scanline=0;scanline<8;scanline++) {
 
+                        //TODO: no se si esta es la mejor manera de gestionar el scroll
                         int ydestino=y*8+scanline-scroll_y_sublinea;
                         //printf("%d\n",ydestino);
 
@@ -303,6 +307,9 @@ starting row, and the lower three bits are the fine scroll value.
 
 							//int fila=(x*char_width+bit)/8;
 
+                            //TODO: no se si esta es la mejor manera de gestionar el scroll
+                            int xdestino=x*char_width+bit-scroll_x_fino;
+
                             if (mirror_x) {
                                 byte_color=((byte_leido1)&1) | ((byte_leido2<<1)&2) | ((byte_leido3<<2)&4) | ((byte_leido4<<3)&8);
                             }
@@ -321,8 +328,10 @@ starting row, and the lower three bits are the fine scroll value.
 
                             
 
-
-                            scr_putpixel_zoom(x*char_width+bit,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
+                            //No dibujar si x < 0. Esto sucede cuando se aplica scroll horizontal
+                            if (xdestino>=0) {
+                                scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
+                            }
 
                             if (mirror_x) {
                                 byte_leido1=byte_leido1>>1;
