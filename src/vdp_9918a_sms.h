@@ -37,4 +37,9 @@ extern void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram);
 extern void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram);
 extern z80_int vdp_9918a_sms_get_pattern_name_table(void);
 
+extern z80_byte vdp_9918a_sms_get_scroll_horizontal(void);
+extern z80_byte vdp_9918a_sms_get_scroll_vertical(void);
+
+extern int vdp_9918a_sms_get_sprite_height(void);
+
 #endif

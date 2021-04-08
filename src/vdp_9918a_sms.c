@@ -181,11 +181,15 @@ starting row, and the lower three bits are the fine scroll value.
 
             //TODO scroll a pixel en horiz y vertical
 
-
+            //TODO: la gestion de scroll fino en vertical y horizontal en modo rainbow, sera
+            //algo distinto de este no rainbow (o deberia ser)
       
+            //1 fila mas si hay scroll vertical
+            int total_filas=24;
 
+            if (scroll_y_sublinea) total_filas++;
 
-			for (y=0;y<24;y++) {
+			for (y=0;y<total_filas;y++) {
 
                 //Maximo 28 en Y
                 z80_byte final_y=(y+fila_scroll_y) % 28;     
@@ -217,12 +221,18 @@ starting row, and the lower three bits are the fine scroll value.
                     //Esto lo usa juego Astro Flash
                    if (vdp_9918a_registers[0] & 64 && y<2) scroll_x=0; 
 
-                    
+                    z80_byte columna_scroll_x;
                    z80_byte scroll_x_fino;
                    
-                   if (scroll_x==0) scroll_x_fino=0;
+                   if (scroll_x==0) {
+                       scroll_x_fino=0;
+                       columna_scroll_x=0;
+                   }
                    
-                   else scroll_x_fino=(255-scroll_x) & 7;
+                   else {
+                       scroll_x_fino=(255-scroll_x) & 7;
+                       columna_scroll_x=32-((scroll_x>>3)&31);
+                   }
 
                 
                     //columna
@@ -233,16 +243,34 @@ starting row, and the lower three bits are the fine scroll value.
  column drawn is number 2 from the name table.
                     */
 
-                    z80_byte columna_scroll_x=32-((scroll_x>>3)&31);
+                    
 
-         
- 
+                
 
-				for (x=0;x<chars_in_line;x++) {  
+            //TODO: la gestion de scroll fino en vertical y horizontal en modo rainbow, sera
+            //algo distinto de este no rainbow (o deberia ser)
+      
+            //1 columna mas si hay scroll horizontal
+
+
+            //TODO algo falla en la columna final del sonic cuando hay scroll
+
+    
+            int total_columnas=32;
+
+            if (scroll_x_fino) total_columnas++;
+
+                //printf("%d\n",total_columnas);
+
+				for (x=0;x<total_columnas;x++) {  
 					
                     //TODO scroll a pixel en horiz y vertical
 
-                    z80_byte final_x=(x+columna_scroll_x) & 31;        
+                    z80_byte final_x;
+
+                    //if (x==32) final_x
+                    
+                    final_x=(x+columna_scroll_x) % 32;        
 
                     direccion_name_table=pattern_name_table+final_x*2+final_y*64;
 					
@@ -305,7 +333,9 @@ starting row, and the lower three bits are the fine scroll value.
                         }
 
                         //No dibujar si y < 0. Esto sucede cuando se aplica scroll vertical
-                        if (ydestino>=0) {
+
+                        //Similar para mayor de 192 cuando hay scroll y hacemos 25 filas (parte de la ultima 25)
+                        if (ydestino>=0 && ydestino<=191) {
 							
 						for (bit=0;bit<char_width;bit++) {
 
@@ -330,10 +360,22 @@ starting row, and the lower three bits are the fine scroll value.
                             //maximo 64 colores de paleta
                             color_paleta &=63;
 
+
+
+                            
                             
 
                             //No dibujar si x < 0. Esto sucede cuando se aplica scroll horizontal
-                            if (xdestino>=0) {
+                            //Similar para mayor de 255 cuando hay scroll x  y  hacemos 33 filas (parte de la ultima 33)
+                            if (xdestino>=0 && xdestino<=255) {
+
+                                //Register $00 - Mode Control No. 1
+                                //D5 - 1= Mask column 0 with overscan color from register #7
+                                //Esto lo usa sonic. La primera columna es para usar para el scroll
+                                if (xdestino<=7 && (vdp_9918a_registers[0] & 32)) {
+                                    color_paleta=0; //TODO: que color? debe ser el del border
+                                }  
+
                                 scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
                             }
 
