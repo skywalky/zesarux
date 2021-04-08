@@ -1046,7 +1046,66 @@ char *bitmap_lowericon_ext_desktop_sg1000_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"  wwwwwwwwwwwwwwwwwwwwww  " 	 //25
 };
 
-//TODO SMS
+char *bitmap_lowericon_ext_desktop_sms_active[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",      
+	"                          ",		
+	"wwwwwwwwwwwwwwwwwwwwwwwwww",			
+	"wxrrrrrrrrrrrrrrrrrrrrrrxw",	
+	"wxrrrrrrrrrrrrrrrrrrrrrrxw",				
+	"wxrwwrwwrwwrrrrrrwwrrwrrxw",				
+	"wxrwrrwwrrwrrrrrrwrrwwwrxw", 		
+	"wxrrrrrrrrrrrrrrrrrrrrrrxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	//10	
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",	
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",	
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",	
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    //20
+	"wwwwwwwwwwwwwwwwwwwwwwwwww",		
+	"                          ",		
+	"                          ",	
+	"                          ",
+	"                          ", //25
+};
+
+char *bitmap_lowericon_ext_desktop_sms_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",      
+	"                          ",		
+	"wwwwwwwwwwwwwwwwwwwwwwwwww",			
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",	
+	"wx                      xw",				
+	"wx                      xw",				
+	"wx                      xw", 		
+	"wx                      xw",		
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",		
+	"wwx                    xww",	//10	
+	"wx                      xw",	
+	"wwx                    xww",
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",	
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",	
+	"wxxxxxxxxxxxxxxxxxxxxxxxxw",    //20
+	"wwwwwwwwwwwwwwwwwwwwwwwwww",		
+	"                          ",		
+	"                          ",	
+	"                          ",
+	"                          ", //25
+};
+
 
 char *bitmap_lowericon_ext_desktop_plus3_flp_active[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345

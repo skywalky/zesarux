@@ -3559,9 +3559,8 @@ void zxdesktop_lowericon_dandanator_accion(void)
 }
 
 
-//Funciones para Cartuchos MSX, Coleco, SVI, SG1000
+//Funciones para Cartuchos MSX, Coleco, SVI, SG1000, SMS
 
-//TODO SMS
 
 void zxdesktop_lowericon_cartridge_accion(void)
 {
@@ -3621,6 +3620,19 @@ int zxdesktop_lowericon_cartridge_sg1000_is_visible(void)
 int zxdesktop_lowericon_cartridge_sg1000_is_active(void)
 {
 	if (sg1000_cartridge_inserted.v) return 1;
+	else return 0;
+}
+
+int zxdesktop_lowericon_cartridge_sms_is_visible(void)
+{
+	if (MACHINE_IS_SMS) return 1;
+
+	else return 0;
+}
+
+int zxdesktop_lowericon_cartridge_sms_is_active(void)
+{
+	if (sms_cartridge_inserted.v) return 1;
 	else return 0;
 }
 
@@ -3730,7 +3742,7 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 	{ zxdesktop_lowericon_zxpand_is_visible, zxdesktop_lowericon_zxpand_is_active, zxdesktop_lowericon_zxpand_accion,
 		bitmap_lowericon_ext_desktop_mmc_active,bitmap_lowericon_ext_desktop_mmc_inactive,&zxdesktop_icon_zxpand_inverse},			
 
-	//Cartuchos msx, coleco, svi, sg1000. TODO SMS
+	//Cartuchos msx, coleco, svi, sg1000, sms
 	{ zxdesktop_lowericon_cartridge_msx_is_visible, zxdesktop_lowericon_cartridge_msx_is_active, zxdesktop_lowericon_cartridge_accion,
 		bitmap_lowericon_ext_desktop_msx_cart_active,bitmap_lowericon_ext_desktop_msx_cart_inactive,&zxdesktop_common_icon_no_inverse},	
 
@@ -3742,6 +3754,9 @@ struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX
 
 	{ zxdesktop_lowericon_cartridge_sg1000_is_visible, zxdesktop_lowericon_cartridge_sg1000_is_active, zxdesktop_lowericon_cartridge_accion,
 		bitmap_lowericon_ext_desktop_sg1000_active,bitmap_lowericon_ext_desktop_sg1000_inactive,&zxdesktop_common_icon_no_inverse},	
+
+	{ zxdesktop_lowericon_cartridge_sms_is_visible, zxdesktop_lowericon_cartridge_sms_is_active, zxdesktop_lowericon_cartridge_accion,
+		bitmap_lowericon_ext_desktop_sms_active,bitmap_lowericon_ext_desktop_sms_inactive,&zxdesktop_common_icon_no_inverse},	        
 
 	//Cartuchos Timex TS2068	
 	{ zxdesktop_lowericon_cart_timex_is_visible, zxdesktop_lowericon_cart_timex_is_active, zxdesktop_lowericon_cart_timex_accion,

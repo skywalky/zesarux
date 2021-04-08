@@ -1098,7 +1098,7 @@ extern int zxdesktop_icon_zxpand_inverse;
 extern int zxdesktop_icon_mdv_flp_inverse;
 extern int zxdesktop_icon_dandanator_inverse;
 
-#define TOTAL_ZXDESKTOP_MAX_LOWER_ICONS 16
+#define TOTAL_ZXDESKTOP_MAX_LOWER_ICONS 17
 
 extern struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[];
 
