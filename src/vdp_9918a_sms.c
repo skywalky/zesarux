@@ -163,6 +163,30 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
                     //scroll x
                     z80_byte scroll_x=vdp_9918a_registers[8];
 
+                    /*
+                     If bit #6 of VDP register $00 is set, horizontal scrolling will be fixed
+ at zero for scanlines zero through 15. This is commonly used to create
+ a fixed status bar at the top of the screen for horizontally scrolling
+ games.
+
+ Register $00 - Mode Control No. 1
+
+ D7 - 1= Disable vertical scrolling for columns 24-31
+ D6 - 1= Disable horizontal scrolling for rows 0-1  
+ D5 - 1= Mask column 0 with overscan color from register #7
+ D4 - (IE1) 1= Line interrupt enable
+ D3 - (EC) 1= Shift sprites left by 8 pixels
+ D2 - (M4) 1= Use Mode 4, 0= Use TMS9918 modes (selected with M1, M2, M3)
+ D1 - (M2) Must be 1 for M1/M3 to change screen height in Mode 4.
+      Otherwise has no effect.
+ D0 - 1= No sync, display is monochrome, 0= Normal display
+
+                    */
+
+                    //Las 2 primeras lineas no tendran scroll si bit D6
+                    //Esto lo usa juego Astro Flash
+                   if (vdp_9918a_registers[0] & 64 && y<2) scroll_x=0; 
+
                 
                     //columna
                     /*
@@ -318,13 +342,13 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
     z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
 
         
-    int sprite_size=vdp_9918a_get_sprite_size();
+    //int sprite_size=vdp_9918a_get_sprite_size();
     int sprite_double=vdp_9918a_get_sprite_double();
 
 
 
     //TODO temp
-    sprite_size=8;
+    //sprite_size=8;
     sprite_double=1;
 
 /*
@@ -342,7 +366,7 @@ TODO
  */        
 
     //printf ("Sprite size: %d double: %d\n",sprite_size,sprite_double);
-    printf("Sprite size: 8x%d\n",(vdp_9918a_registers[1] & 2 ? 16 : 8));
+    //printf("Sprite size: 8x%d\n",(vdp_9918a_registers[1] & 2 ? 16 : 8));
 
     int sprite_height=(vdp_9918a_registers[1] & 2 ? 16 : 8);
 
@@ -470,129 +494,10 @@ to be taken from the first 256 or last 256 of the 512 available patterns.
 
             int x,y;
 
-            //Sprites de 16x16
-            if (sprite_size==16) {
-                int quad_x,quad_y;
-
-                for (quad_x=0;quad_x<2;quad_x++) {
-                    for (quad_y=0;quad_y<2;quad_y++) {
-                        for (y=0;y<8;y++) {
-                        
-                            byte_leido1=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
-                            byte_leido2=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
-                            byte_leido3=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
-                            byte_leido4=vdp_9918a_read_vram_byte(vram,offset_pattern_table++);
-
-
-
-                            for (x=0;x<8;x++) {
-
-
-
-                                int pos_x_final;
-                                int pos_y_final;
-
-                                pos_x_final=horiz_pos+((quad_x*8)+x)*sprite_double;
-                                pos_y_final=vert_pos+((quad_y*8)+y)*sprite_double;
-                                
-                                //Si dentro de limites
-                                if (pos_x_final>=0 && pos_x_final<=255 && pos_y_final>=0 && pos_y_final<=191) {
-
-/*
-if (mirror_x) {
-                        byte_color=((byte_leido1)&1) | ((byte_leido2<<1)&2) | ((byte_leido3<<2)&4) | ((byte_leido4<<3)&8);
-                    }
-                    else {
-
-                    byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
-                
-                    }
-
-
-                        color= byte_color;
-                        int color_paleta=vdp_9918a_sms_cram[color & 15];
-
-                        //maximo 64 colores de paleta
-                        color_paleta &=63;
-
-                        scr_putpixel_zoom(x*char_width+bit,y*8+scanline,SMS_INDEX_FIRST_COLOR+color_paleta);
-
-                    if (mirror_x) {
-                    byte_leido1=byte_leido1>>1;
-                    byte_leido2=byte_leido2>>1;
-                    byte_leido3=byte_leido3>>1;
-                    byte_leido4=byte_leido4>>1;                                
-                    }
-
-                    else {
-                    byte_leido1=byte_leido1<<1;
-                    byte_leido2=byte_leido2<<1;
-                    byte_leido3=byte_leido3<<1;
-                    byte_leido4=byte_leido4<<1;
-                    }
-                */                                            
-
-                                    //Si bit a 1
-                                    //if (byte_leido & 128) {
-                                        //Y si ese color no es transparente 
-
-                                        //TODO: esto es correcto?
-                                        if (1) {
-                                        //if (color!=0) {
-                                            //printf ("putpixel sprite x %d y %d\n",pos_x_final,pos_y_final);
-
-                                            z80_byte byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
-
-                                            z80_byte color_sprite=vdp_9918a_sms_cram[byte_color & 15];
-
-                                            //maximo 64 colores de paleta
-                                            color_sprite &=63;
-
-                                            //z80_byte color_sprite=color;
-
-                                            if (vdp_9918a_reveal_layer_sprites.v) {
-                                                int posx=pos_x_final&1;
-                                                int posy=pos_y_final&1;
-
-                                                //0,0: 0
-                                                //0,1: 1
-                                                //1,0: 1
-                                                //1,0: 0
-                                                //Es un xor
-
-                                                int si_blanco_negro=posx ^ posy;
-                                                //printf ("si_blanco_negro: %d\n",si_blanco_negro);
-                                                color_sprite=si_blanco_negro*15;
-                                                //printf ("color: %d\n",color);
-                                            }
-
-
-                                            scr_putpixel_zoom(pos_x_final,  pos_y_final,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                            if (sprite_double==2) {
-                                                scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    SMS_INDEX_FIRST_COLOR+color_sprite);
-                                                scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                                scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                            }
-                                        }
-                                    //}
-
-                                    
-
-                                    byte_leido1=byte_leido1<<1;
-                                    byte_leido2=byte_leido2<<1;
-                                    byte_leido3=byte_leido3<<1;
-                                    byte_leido4=byte_leido4<<1;
-                                }
-                            }
-
-                                                        
-                        }
-                    }
-                }                        
-            }
+            
 
             //Sprites de 8x16 y 8x8
-            else {
+            
 
                 for (y=0;y<sprite_height;y++) {
 
@@ -674,7 +579,7 @@ if (mirror_x) {
 
 
                 }
-            }
+            
 
         }
         
