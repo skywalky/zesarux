@@ -654,8 +654,6 @@ z80_byte sms_get_joypad_b(void)
     //si estamos en el menu, no devolver tecla
     if (zxvision_key_not_sent_emulated_mach() ) return 255;
 
-    //TODO
-    return 255;
 
     z80_byte valor_joystick=255;
 
@@ -690,12 +688,12 @@ JOYPAD2_LEFT:   = 0b00000001;
 
             //Player 2. M
             //puerto_32766    db              255  ; B    N    M    Simb Space ;7
-            if ((puerto_32766 & 4)==0) valor_joystick &=(255-4);
+            if ((puerto_32766 & 4)==0) valor_joystick &=(255-8);
 
 
             //Player 2. N
             //puerto_32766    db              255  ; B    N    M    Simb Space ;7
-            if ((puerto_32766 & 8)==0) valor_joystick &=(255-8);            
+            if ((puerto_32766 & 8)==0) valor_joystick &=(255-4);            
 
 /*
              A B cont reset 
