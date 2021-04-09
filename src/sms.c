@@ -587,16 +587,17 @@ z80_byte sms_get_joypad_a(void)
     z80_byte valor_joystick=255;
 
 /*
-joypad_a (value after mask 0b11000000 = 192)
-JOYPAD2_DOWN:   = 0b10000000;
-JOYPAD2_UP:     = 0b01000000;
-JOYPAD1_B:      = 0b00100000;
-JOYPAD1_A:      = 0b00010000;
-JOYPAD1_RIGHT:  = 0b00001000;
-JOYPAD1_LEFT:   = 0b00000100;
-JOYPAD1_DOWN:   = 0b00000010;
-JOYPAD1_UP:     = 0b00000001;
-}
+Port $DC: I/O port A and B
+Bit	Function
+7	Port B Down pin input
+6	Port B Up pin input
+5	Port A TR pin input
+4	Port A TL pin input
+3	Port A Right pin input
+2	Port A Left pin input
+1	Port A Down pin input
+0	Port A Up pin input
+
 */
 
 //puerto_63486    db              255  ; 5    4    3    2    1     ;3
@@ -658,16 +659,17 @@ z80_byte sms_get_joypad_b(void)
     z80_byte valor_joystick=255;
 
 /*
-value after mask port = 0b11000001 = 193
-B_TH:           = 0b10000000;
-A_TH:           = 0b01000000;
-CONT:           = 0b00100000;
-RESET:          = 0b00010000;
-JOYPAD2_B:      = 0b00001000;
-JOYPAD2_A:      = 0b00000100;
-JOYPAD2_RIGHT:  = 0b00000010;
-JOYPAD2_LEFT:   = 0b00000001;
-}
+Port $DD: I/O port B and miscellaneous
+Bit	Function
+7	Port B TH pin input
+6	Port A TH pin input
+5	Cartridge slot CONT pin *
+4	Reset button (1= not pressed, 0= pressed) *
+3	Port B TR pin input
+2	Port B TL pin input
+1	Port B Right pin input
+0	Port B Left pin input
+
 */
 
 //puerto_63486    db              255  ; 5    4    3    2    1     ;3
@@ -686,14 +688,13 @@ JOYPAD2_LEFT:   = 0b00000001;
             if ((puerto_57342 & 1)==0) valor_joystick &=(255-2);
 
 
+            //Player 2. N
+            //puerto_32766    db              255  ; B    N    M    Simb Space ;7
+            if ((puerto_32766 & 8)==0) valor_joystick &=(255-4);
+
             //Player 2. M
             //puerto_32766    db              255  ; B    N    M    Simb Space ;7
             if ((puerto_32766 & 4)==0) valor_joystick &=(255-8);
-
-
-            //Player 2. N
-            //puerto_32766    db              255  ; B    N    M    Simb Space ;7
-            if ((puerto_32766 & 8)==0) valor_joystick &=(255-4);            
 
 /*
              A B cont reset 
@@ -701,6 +702,7 @@ JOYPAD2_LEFT:   = 0b00000001;
              Z X   C    R
 */
 
+/*
             //Player 2. Reset (R)
             //puerto_64510    db              255  ; T    R    E    W    Q     ;2
             if ((puerto_64510 & 8)==0) valor_joystick &=(255-16);   
@@ -718,7 +720,7 @@ JOYPAD2_LEFT:   = 0b00000001;
             //B  (X)
             //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
             if ((puerto_65278 & 4)==0) valor_joystick &=(255-128);             
-
+*/
 
     return valor_joystick;
 }
