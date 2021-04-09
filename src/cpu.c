@@ -4842,9 +4842,10 @@ Total 20 pages=320 Kb
 		}	
 
                 else if (MACHINE_IS_SMS) {
-					//no tiene rom. No cargamos nada, aunque mas arriba intenta siempre abrir un archivo de rom,
-					//es por eso que es necesario que exista el archivo de rom, aunque no se cargue ni se use para nada
-			
+                        	leidos=fread(memoria_spectrum,1,8192,ptr_romfile);
+				if (leidos!=8192) {
+				 	cpu_panic("Error loading ROM");
+				}
 		}	        
 
                 else if (MACHINE_IS_MSX1) {
