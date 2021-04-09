@@ -113,401 +113,297 @@ z80_byte vdp_9918a_sms_get_scroll_vertical(void)
 
 void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
 {
-
-
-	z80_byte video_mode=vdp_9918a_get_video_mode();
-
-
-
-	//printf ("video_mode: %d\n",video_mode);
+    //Modo 4 SMS. high-res mode, 256x192
 
 
 	int x,y,bit; 
 	z80_int direccion_name_table;
-	z80_byte byte_leido;
     z80_byte byte_color;
-	int color=0;
 	
-
-
-	z80_byte ink,paper;
-
-
-    z80_int pattern_color_table;
 	z80_int pattern_base_address; 
 	z80_int pattern_name_table; 
-
-	pattern_name_table=vdp_9918a_get_pattern_name_table(); 
-
-
-	pattern_color_table=vdp_9918a_get_pattern_color_table();
 
 
     pattern_base_address=vdp_9918a_get_pattern_base_address();
 
 
 
-	int chars_in_line;
-	int char_width;
+	int char_width=8;
 
 	
-		//Modo 4 SMS. high-res mode, 256x192
-		//video_mode: 1
-		
 
-            //printf("Mode 4 sms\n");
-
-			chars_in_line=32;
-			char_width=8;
-
-            z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
+    z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
 
 
-            //TODO. esto siempre asi??
-            pattern_base_address=0;
+    //TODO. esto siempre asi??
+    pattern_base_address=0;
 
 
-            pattern_name_table=vdp_9918a_get_pattern_name_table();
+    pattern_name_table=vdp_9918a_get_pattern_name_table();
 
 
-			direccion_name_table=pattern_name_table;  
+    direccion_name_table=pattern_name_table;  
 
-            //scroll y
-            z80_byte scroll_y=vdp_9918a_sms_get_scroll_vertical();
+    //scroll y
+    z80_byte scroll_y=vdp_9918a_sms_get_scroll_vertical();
 
-            if (vdp_9918a_sms_lock_scroll_vertical.v) scroll_y=0;
+    if (vdp_9918a_sms_lock_scroll_vertical.v) scroll_y=0;
 
-        
-            //fila
-            /*
-            Register $09 can be divided into two parts, the upper five bits are the
+
+    //fila
+    /*
+    Register $09 can be divided into two parts, the upper five bits are the
 starting row, and the lower three bits are the fine scroll value.
 .
+    */
+
+    z80_byte fila_scroll_y=((scroll_y>>3)&31);
+
+    z80_byte scroll_y_sublinea=scroll_y&7;
+
+    //TODO: la gestion de scroll fino en vertical y horizontal en modo rainbow, sera
+    //algo distinto de este no rainbow (o deberia ser)
+
+    //1 fila mas si hay scroll vertical
+    int total_filas=24;
+
+    if (scroll_y_sublinea) total_filas++;
+
+    for (y=0;y<total_filas;y++) {
+
+        //Maximo 28 en Y
+        z80_byte final_y=(y+fila_scroll_y) % 28;     
+
+            //scroll x
+            z80_byte scroll_x=vdp_9918a_sms_get_scroll_horizontal();
+
+            if (vdp_9918a_sms_lock_scroll_horizontal.v) scroll_x=0;
+
+            /*
+                If bit #6 of VDP register $00 is set, horizontal scrolling will be fixed
+at zero for scanlines zero through 15. This is commonly used to create
+a fixed status bar at the top of the screen for horizontally scrolling
+games.
+
+Register $00 - Mode Control No. 1
+
+D7 - 1= Disable vertical scrolling for columns 24-31
+D6 - 1= Disable horizontal scrolling for rows 0-1  
+D5 - 1= Mask column 0 with overscan color from register #7
+D4 - (IE1) 1= Line interrupt enable
+D3 - (EC) 1= Shift sprites left by 8 pixels
+D2 - (M4) 1= Use Mode 4, 0= Use TMS9918 modes (selected with M1, M2, M3)
+D1 - (M2) Must be 1 for M1/M3 to change screen height in Mode 4.
+Otherwise has no effect.
+D0 - 1= No sync, display is monochrome, 0= Normal display
+
             */
 
-            z80_byte fila_scroll_y=((scroll_y>>3)&31);
+            //Las 2 primeras lineas no tendran scroll si bit D6
+            //Esto lo usa juego Astro Flash
+            if (vdp_9918a_registers[0] & 64 && y<2) scroll_x=0; 
 
-            z80_byte scroll_y_sublinea=scroll_y&7;
 
-            //TODO scroll a pixel en horiz y vertical
+            int columna_scroll_x;
+            z80_byte scroll_x_fino;
+            
+
+            //scroll_x_fino=(255-scroll_x) & 7;
+
+            //En alguna documentacion he leido que esto se restaba de 32, en vez de 31, cosa que no tiene sentido:
+            //en sonic por ejemplo provocaria que cuando se hace el primer desplazamiento, salta la columna de golpe a 1,
+            //en vez de simplemente quedarse en columna 0 aunque scroll_x_fino logicamente pasa a 1
+            
+
+//columna
+            /*
+                The starting column value gives the first column in the name table to use,
+calculated by subtracting it from the value 32. So if the starting column
+value was $1D, the difference of it from 32 would be $02, hence the first
+column drawn is number 2 from the name table.
+            */
+
+            //Creo que esto es la manera mas logica pese a la documentación
+
+            z80_byte scroll_negado=256-scroll_x;
+
+            scroll_x_fino=scroll_negado&7;
+
+            columna_scroll_x=(scroll_negado >>3)&31;
+
+                            
+                
+
+        
 
             //TODO: la gestion de scroll fino en vertical y horizontal en modo rainbow, sera
             //algo distinto de este no rainbow (o deberia ser)
-      
-            //1 fila mas si hay scroll vertical
-            int total_filas=24;
-
-            if (scroll_y_sublinea) total_filas++;
-
-			for (y=0;y<total_filas;y++) {
-
-                //Maximo 28 en Y
-                z80_byte final_y=(y+fila_scroll_y) % 28;     
-
-                    //scroll x
-                    z80_byte scroll_x=vdp_9918a_sms_get_scroll_horizontal();
-
-                    if (vdp_9918a_sms_lock_scroll_horizontal.v) scroll_x=0;
-
-                    /*
-                     If bit #6 of VDP register $00 is set, horizontal scrolling will be fixed
- at zero for scanlines zero through 15. This is commonly used to create
- a fixed status bar at the top of the screen for horizontally scrolling
- games.
-
- Register $00 - Mode Control No. 1
-
- D7 - 1= Disable vertical scrolling for columns 24-31
- D6 - 1= Disable horizontal scrolling for rows 0-1  
- D5 - 1= Mask column 0 with overscan color from register #7
- D4 - (IE1) 1= Line interrupt enable
- D3 - (EC) 1= Shift sprites left by 8 pixels
- D2 - (M4) 1= Use Mode 4, 0= Use TMS9918 modes (selected with M1, M2, M3)
- D1 - (M2) Must be 1 for M1/M3 to change screen height in Mode 4.
-      Otherwise has no effect.
- D0 - 1= No sync, display is monochrome, 0= Normal display
-
-                    */
-
-                    //Las 2 primeras lineas no tendran scroll si bit D6
-                    //Esto lo usa juego Astro Flash
-                   if (vdp_9918a_registers[0] & 64 && y<2) scroll_x=0; 
-
-
-                    //temporal para bloqueo scroll. tecla enter
-                    //if ((puerto_49150&1)==0) {
-                        //printf("bloqueo scroll\n");
-                      //  usleep(500000);
-                    //scroll_x=0;
-                    //}
-
-                    int columna_scroll_x;
-                   z80_byte scroll_x_fino;
-                   
-
-                   //necesario esto??
-                   if (scroll_x==0) {
-                       scroll_x_fino=0;
-                       columna_scroll_x=0;
-                   }
-                   
-                   
-                   else {
-                       scroll_x_fino=(255-scroll_x) & 7;
-
-                       //En alguna documentacion he leido que esto se restaba de 32, en vez de 31, cosa que no tiene sentido:
-                       //en sonic por ejemplo provocaria que cuando se hace el primer desplazamiento, salta la columna de golpe a 1,
-                       //en vez de simplemente quedarse en columna 0 aunque scroll_x_fino logicamente pasa a 1
-                       columna_scroll_x=31-((scroll_x>>3)&31);
-
-                       //Prueba alternativa
-                       z80_byte scroll_negado=256-scroll_x;
-
-                        scroll_x_fino=scroll_negado&7;
-
-                        columna_scroll_x=(scroll_negado >>3)&31;
-
-                       //scroll_x_fino=7-((scroll_x&7));
-                   }
-
-                
-                    //columna
-                    /*
-                     The starting column value gives the first column in the name table to use,
- calculated by subtracting it from the value 32. So if the starting column
- value was $1D, the difference of it from 32 would be $02, hence the first
- column drawn is number 2 from the name table.
-                    */
-
-                    
-
-                
-
-            //TODO: la gestion de scroll fino en vertical y horizontal en modo rainbow, sera
-            //algo distinto de este no rainbow (o deberia ser)
-      
+    
             //1 columna mas si hay scroll horizontal
-
-
-            //TODO algo falla en la columna final del sonic cuando hay scroll
-
     
             int total_columnas=32;
 
             if (scroll_x_fino) total_columnas++;
-            //temp siempre 1 columna mas
-            total_columnas=33;
 
-                //printf("%d\n",total_columnas);
+        //printf("%d\n",total_columnas);
 
-				for (x=0;x<total_columnas;x++) {  
-					
-                    
+        for (x=0;x<total_columnas;x++) {  
+            
+            
 
-                    int final_x;
-
-                    //prueba para corregir columna final en sonic
-                    //if (x==32) final_x=0;
-                    //else final_x=(x+columna_scroll_x) % 32;        
-
-                    //de logica deberia ser 32, pero con esto hace bien el scroll fino aunque hora lo 
-                    //que hace es que sale a menudo un tile fuera de sitio
-                    final_x=(x+columna_scroll_x) % 32;
-
-                    //esto no hace saltar tiles pero la ultima columna se ve siempre mal cuando scroll_x_fino!=0
-                    //final_x=(x+columna_scroll_x) % 32;
-
-                    //if (x==32) final_x=((x+columna_scroll_x) % 32)+1;
-
-/*
-                    if (x==32) {
-                        final_x=(x+columna_scroll_x) % 32;
-                        //final_x=columna_scroll_x+1;
-                    }
-                    else final_x=(x+columna_scroll_x) % 32;
-*/
+            int final_x;
 
 
-                    //Prueba temporal
-                    /*
-                    if (scroll_x_fino!=0) {
-                    if (x==31) {
-                            final_x=0;
-                        }
-
-                        if (x==32) {
-                            final_x=32;
-                        }                    
-                    }
-                    */
-                    /*
-                    Sonic: con columna scroll = 1, con scroll fino entre 0 y 6, no vemos mas que 1 tile generado para la columna entera adicional,
-                    pero nada de los 6 pixeles
-
-                    con columna scroll=7, ya aparece
-                    */
-
-                    
-                    int offset_tile=final_x*2+final_y*64;
-                    direccion_name_table=pattern_name_table+offset_tile;
+            final_x=(x+columna_scroll_x) % 32;
 
 
-                    if (y==0 && x>=25) printf("x %d scroll reg: %d columna_scroll_x %d scroll_x_fino %d final_x %d offset_tile %d\n",
+            
+            int offset_tile=final_x*2+final_y*64;
+            direccion_name_table=pattern_name_table+offset_tile;
+
+
+            /*if (y==0 && x>=25) {
+                printf("x %d scroll reg: %d columna_scroll_x %d scroll_x_fino %d final_x %d offset_tile %d\n",
                     x,vdp_9918a_sms_get_scroll_horizontal(),columna_scroll_x,scroll_x_fino,final_x,offset_tile);
-                    //if (y==0 && x==28) printf("---\n");
-					
-					z80_int pattern_word=vdp_9918a_read_vram_byte(vram,direccion_name_table)+256*vdp_9918a_read_vram_byte(vram,direccion_name_table+1);
+            }*/
+            //if (y==0 && x==28) printf("---\n");
+            
+            z80_int pattern_word=vdp_9918a_read_vram_byte(vram,direccion_name_table)+256*vdp_9918a_read_vram_byte(vram,direccion_name_table+1);
+
+            
+            /*
+            MSB          LSB
+---pcvhn nnnnnnnn
+
+- = Unused. Some games use these bits as flags for collision and damage
+zones. (such as Wonderboy in Monster Land, Zillion 2)
+p = Priority flag. When set, sprites will be displayed underneath the
+background pattern in question.
+c = Palette select.
+v = Vertical flip flag.
+h = Horizontal flip flag.
+n = Pattern index, any one of 512 patterns in VRAM can be selected.
+            */
+
+            int mirror_x=(pattern_word & 0x0200);
+
+            int mirror_y=(pattern_word & 0x0400);
+
+            z80_int caracter=pattern_word & 511;
+
+            int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
+            
+
+            int scanline;
+
+            //z80_int pattern_address=(caracter*32+2048*tercio) ;
+            z80_int pattern_address=(caracter*32) ; //32 bytes cada tile
+            pattern_address +=pattern_base_address;
+            
+            
+            //Si tiene mirror vertical, empezamos con la ultima linea del pattern
+            if (mirror_y) {
+                pattern_address +=(8*4)-4;
+            }
+
+    
+
+            for (scanline=0;scanline<8;scanline++) {
+
+                //TODO: no se si esta es la mejor manera de gestionar el scroll
+                int ydestino=y*8+scanline-scroll_y_sublinea;
+                //printf("%d\n",ydestino);
+
+                byte_leido1=vdp_9918a_read_vram_byte(vram,pattern_address);
+                byte_leido2=vdp_9918a_read_vram_byte(vram,pattern_address+1);
+                byte_leido3=vdp_9918a_read_vram_byte(vram,pattern_address+2);
+                byte_leido4=vdp_9918a_read_vram_byte(vram,pattern_address+3);
+
+                if (mirror_y) {
+                    pattern_address -=4;
+                }
+                else {
+                    pattern_address +=4;
+                }
+
+                //No dibujar si y < 0. Esto sucede cuando se aplica scroll vertical
+
+                //Similar para mayor de 192 cuando hay scroll y hacemos 25 filas (parte de la ultima 25)
+                if (ydestino>=0 && ydestino<=191) {
+                    
+                for (bit=0;bit<char_width;bit++) {
+
+                    int xdestino=x*char_width+bit-scroll_x_fino;
+
+                    if (mirror_x) {
+                        byte_color=((byte_leido1)&1) | ((byte_leido2<<1)&2) | ((byte_leido3<<2)&4) | ((byte_leido4<<3)&8);
+                    }
+                    else {
+
+                        byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
+                
+                    }
+
+
+                    int color_paleta=vdp_9918a_sms_cram[palette_offset+ (byte_color & 15)];
+
+                    //maximo 64 colores de paleta
+                    color_paleta &=63;
 
                     
-                    /*
-                    MSB          LSB
- ---pcvhn nnnnnnnn
+                    
 
- - = Unused. Some games use these bits as flags for collision and damage
-     zones. (such as Wonderboy in Monster Land, Zillion 2)
- p = Priority flag. When set, sprites will be displayed underneath the
-     background pattern in question.
- c = Palette select.
- v = Vertical flip flag.
- h = Horizontal flip flag.
- n = Pattern index, any one of 512 patterns in VRAM can be selected.
-                    */
+                    //No dibujar si x < 0. Esto sucede cuando se aplica scroll horizontal
+                    //Similar para mayor de 255 cuando hay scroll x  y  hacemos 33 filas (parte de la ultima 33)
 
-                    int mirror_x=(pattern_word & 0x0200);
 
-                    int mirror_y=(pattern_word & 0x0400);
+                    if (xdestino>=0 && xdestino<=255) {
 
-                    z80_int caracter=pattern_word & 511;
+                        //Register $00 - Mode Control No. 1
+                        //D5 - 1= Mask column 0 with overscan color from register #7
+                        //Esto lo usa sonic. La primera columna es para usar para el scroll
+                        if (xdestino<=7 && (vdp_9918a_registers[0] & 32)) {
+                            //TODO: que color? debe ser el del border
+                            //TODO: esto creo que aplica tambien a sprites, en sonic por ejemplo los enemigos que se van
+                            //por la izquierda se ven en esta columna oculta
+                            
+                            //Y no ocultarlo si tenemos el setting de mostrar forzado columna 0
+                            if (vdp_9918a_sms_force_show_column_zero.v==0) {
+                                color_paleta=0; 
+                            }
+                        }  
 
-                    int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
-					
 
-					int scanline;
-
-					//z80_int pattern_address=(caracter*32+2048*tercio) ;
-                    z80_int pattern_address=(caracter*32) ; //32 bytes cada tile
-					pattern_address +=pattern_base_address;
-					
-					
-                    //Si tiene mirror vertical, empezamos con la ultima linea del pattern
-                    if (mirror_y) {
-                        pattern_address +=(8*4)-4;
+                        scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
                     }
-	
-			
-
-					for (scanline=0;scanline<8;scanline++) {
-
-                        //TODO: no se si esta es la mejor manera de gestionar el scroll
-                        int ydestino=y*8+scanline-scroll_y_sublinea;
-                        //printf("%d\n",ydestino);
-
-						byte_leido1=vdp_9918a_read_vram_byte(vram,pattern_address);
-                        byte_leido2=vdp_9918a_read_vram_byte(vram,pattern_address+1);
-                        byte_leido3=vdp_9918a_read_vram_byte(vram,pattern_address+2);
-                        byte_leido4=vdp_9918a_read_vram_byte(vram,pattern_address+3);
-
-                        if (mirror_y) {
-                            pattern_address -=4;
-                        }
-                        else {
-						    pattern_address +=4;
-                        }
-
-                        //No dibujar si y < 0. Esto sucede cuando se aplica scroll vertical
-
-                        //Similar para mayor de 192 cuando hay scroll y hacemos 25 filas (parte de la ultima 25)
-                        if (ydestino>=0 && ydestino<=191) {
-							
-						for (bit=0;bit<char_width;bit++) {
-
-							//int fila=(x*char_width+bit)/8;
-
-                            //TODO: no se si esta es la mejor manera de gestionar el scroll
-                            int xdestino=x*char_width+bit-scroll_x_fino;
-
-                            if (mirror_x) {
-                                byte_color=((byte_leido1)&1) | ((byte_leido2<<1)&2) | ((byte_leido3<<2)&4) | ((byte_leido4<<3)&8);
-                            }
-                            else {
-
-                                byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
-                        
-                            }
 
 
-                            color= byte_color;
-                            int color_paleta=vdp_9918a_sms_cram[palette_offset+ color & 15];
+                    if (mirror_x) {
+                        byte_leido1=byte_leido1>>1;
+                        byte_leido2=byte_leido2>>1;
+                        byte_leido3=byte_leido3>>1;
+                        byte_leido4=byte_leido4>>1;                                
+                    }
 
-                            //maximo 64 colores de paleta
-                            color_paleta &=63;
+                    else {
+                        byte_leido1=byte_leido1<<1;
+                        byte_leido2=byte_leido2<<1;
+                        byte_leido3=byte_leido3<<1;
+                        byte_leido4=byte_leido4<<1;
+                    }
 
+                    
+                }
 
-
-                            
-                            
-
-                            //No dibujar si x < 0. Esto sucede cuando se aplica scroll horizontal
-                            //Similar para mayor de 255 cuando hay scroll x  y  hacemos 33 filas (parte de la ultima 33)
-
-                            //temporalmente mostrar 2 columna extra
-                            //if (xdestino>=-7 && xdestino<=255+8) {
-
-                            if (xdestino>=0 && xdestino<=255) {
-
-                                //Register $00 - Mode Control No. 1
-                                //D5 - 1= Mask column 0 with overscan color from register #7
-                                //Esto lo usa sonic. La primera columna es para usar para el scroll
-                                if (xdestino<=7 && (vdp_9918a_registers[0] & 32)) {
-                                    //TODO: que color? debe ser el del border
-                                    //TODO: esto creo que aplica tambien a sprites, en sonic por ejemplo los enemigos que se van
-                                    //por la izquierda se ven en esta columna oculta
-                                    
-                                    //Y no ocultarlo si tenemos el setting de mostrar forzado columna 0
-                                    if (vdp_9918a_sms_force_show_column_zero.v==0) {
-                                        color_paleta=0; 
-                                    }
-                                }  
-
-                                //prueba para resaltar columna 33 y columna 0
-                                //if (xdestino>=256-scroll_x_fino && xdestino<=256-scroll_x_fino+7) color_paleta ^=15;
-                                //if (xdestino>=248 && xdestino<=255) color_paleta ^=15;
-
-                                //if (xdestino<=7) color_paleta ^=15;
-                                //if (xdestino>=0 && xdestino<=7) color_paleta ^=15;
-
-                                scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
-                            }
-                            else {
-                                //if (ydestino==0) printf("no permitido en x %d\n",xdestino);
-                            }
-
-                            if (mirror_x) {
-                                byte_leido1=byte_leido1>>1;
-                                byte_leido2=byte_leido2>>1;
-                                byte_leido3=byte_leido3>>1;
-                                byte_leido4=byte_leido4>>1;                                
-                            }
-
-                            else {
-                                byte_leido1=byte_leido1<<1;
-                                byte_leido2=byte_leido2<<1;
-                                byte_leido3=byte_leido3<<1;
-                                byte_leido4=byte_leido4<<1;
-                            }
-
-							
-						}
-
-                        }
-                        
-					}
+                }
+                
+            }
 
 
-				}
+        }
 
- 
-		   }
+
+    }
 
  
 }
@@ -541,8 +437,6 @@ void vdp_9918a_render_sprites_sms_video_mode4_no_rainbow(z80_byte *vram)
 
     z80_int sprite_pattern_table=vdp_9918a_get_sprite_pattern_table_sms_mode4();
     
-    z80_byte byte_leido;
-
     z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
 
         
