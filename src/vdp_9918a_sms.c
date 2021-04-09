@@ -653,14 +653,31 @@ to be taken from the first 256 or last 256 of the 512 available patterns.
                                     //TODO transparencia
                                     if (byte_color!=0) {          
 
-                                        //if (x==0 && y==0) printf("Dibujando sprite %d\n",sprite);            
+                                        //if (x==0 && y==0) printf("Dibujando sprite %d\n",sprite);        
+
+
+                                        int mostrar=1;
+                                        //Si ocultar primera columna
+                                        if (pos_x_final<=7 && (vdp_9918a_registers[0] & 32)) {
+                                            //en sonic por ejemplo los enemigos que se van
+                                            //por la izquierda se ven en esta columna oculta
                                             
-                                        scr_putpixel_zoom(pos_x_final,  pos_y_final,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                        if (sprite_double==2) {
-                                            scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    SMS_INDEX_FIRST_COLOR+color_sprite);
-                                            scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                            scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
-                                        }                   
+                                            //Y no ocultarlo si tenemos el setting de mostrar forzado columna 0
+                                            if (vdp_9918a_sms_force_show_column_zero.v==0) {
+                                                mostrar=0; 
+                                            }
+                                        }  
+
+
+
+                                        if (mostrar) {
+                                            scr_putpixel_zoom(pos_x_final,  pos_y_final,  SMS_INDEX_FIRST_COLOR+color_sprite);
+                                            if (sprite_double==2) {
+                                                scr_putpixel_zoom(pos_x_final+1,  pos_y_final,    SMS_INDEX_FIRST_COLOR+color_sprite);
+                                                scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
+                                                scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
+                                            }             
+                                        }      
 
                                     }                             
                                 }
