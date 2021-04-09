@@ -4686,6 +4686,7 @@ int quickload_valid_extension(char *nombre) {
     || !util_compare_file_extension(nombre,"rom")
     || !util_compare_file_extension(nombre,"col")
     || !util_compare_file_extension(nombre,"sg")
+    || !util_compare_file_extension(nombre,"sms")
     || !util_compare_file_extension(nombre,"sc")
     || !util_compare_file_extension(nombre,"cas")
 	) {

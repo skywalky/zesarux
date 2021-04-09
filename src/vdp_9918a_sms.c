@@ -44,6 +44,14 @@ int index_sms_escritura_cram=0;
 z80_byte vdp_9918a_sms_cram[VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS];
 
 
+//Forzar siempre columna 0
+z80_bit vdp_9918a_sms_force_show_column_zero={0};
+
+//Bloqueo de scrolls
+z80_bit vdp_9918a_sms_lock_scroll_horizontal={0};
+z80_bit vdp_9918a_sms_lock_scroll_vertical={0};
+
+
 void vdp_9918a_sms_reset(void)
 {
     int i;
@@ -167,6 +175,8 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
             //scroll y
             z80_byte scroll_y=vdp_9918a_sms_get_scroll_vertical();
 
+            if (vdp_9918a_sms_lock_scroll_vertical.v) scroll_y=0;
+
         
             //fila
             /*
@@ -197,6 +207,8 @@ starting row, and the lower three bits are the fine scroll value.
                     //scroll x
                     z80_byte scroll_x=vdp_9918a_sms_get_scroll_horizontal();
 
+                    if (vdp_9918a_sms_lock_scroll_horizontal.v) scroll_x=0;
+
                     /*
                      If bit #6 of VDP register $00 is set, horizontal scrolling will be fixed
  at zero for scanlines zero through 15. This is commonly used to create
@@ -221,20 +233,39 @@ starting row, and the lower three bits are the fine scroll value.
                     //Esto lo usa juego Astro Flash
                    if (vdp_9918a_registers[0] & 64 && y<2) scroll_x=0; 
 
-                   //scroll_x=0;
+
+                    //temporal para bloqueo scroll. tecla enter
+                    //if ((puerto_49150&1)==0) {
+                        //printf("bloqueo scroll\n");
+                      //  usleep(500000);
+                    //scroll_x=0;
+                    //}
 
                     int columna_scroll_x;
-                   int scroll_x_fino;
+                   z80_byte scroll_x_fino;
                    
+
+                   //necesario esto??
                    if (scroll_x==0) {
                        scroll_x_fino=0;
                        columna_scroll_x=0;
                    }
                    
+                   
                    else {
                        scroll_x_fino=(255-scroll_x) & 7;
-                       columna_scroll_x=32-((scroll_x>>3)&31);
 
+                       //En alguna documentacion he leido que esto se restaba de 32, en vez de 31, cosa que no tiene sentido:
+                       //en sonic por ejemplo provocaria que cuando se hace el primer desplazamiento, salta la columna de golpe a 1,
+                       //en vez de simplemente quedarse en columna 0 aunque scroll_x_fino logicamente pasa a 1
+                       columna_scroll_x=31-((scroll_x>>3)&31);
+
+                       //Prueba alternativa
+                       z80_byte scroll_negado=256-scroll_x;
+
+                        scroll_x_fino=scroll_negado&7;
+
+                        columna_scroll_x=(scroll_negado >>3)&31;
 
                        //scroll_x_fino=7-((scroll_x&7));
                    }
@@ -264,6 +295,8 @@ starting row, and the lower three bits are the fine scroll value.
             int total_columnas=32;
 
             if (scroll_x_fino) total_columnas++;
+            //temp siempre 1 columna mas
+            total_columnas=33;
 
                 //printf("%d\n",total_columnas);
 
@@ -279,22 +312,49 @@ starting row, and the lower three bits are the fine scroll value.
 
                     //de logica deberia ser 32, pero con esto hace bien el scroll fino aunque hora lo 
                     //que hace es que sale a menudo un tile fuera de sitio
-                    final_x=(x+columna_scroll_x) % 33;
+                    final_x=(x+columna_scroll_x) % 32;
 
                     //esto no hace saltar tiles pero la ultima columna se ve siempre mal cuando scroll_x_fino!=0
                     //final_x=(x+columna_scroll_x) % 32;
 
                     //if (x==32) final_x=((x+columna_scroll_x) % 32)+1;
 
+/*
                     if (x==32) {
                         final_x=(x+columna_scroll_x) % 32;
                         //final_x=columna_scroll_x+1;
                     }
                     else final_x=(x+columna_scroll_x) % 32;
+*/
 
-                    if (y==0 && x>=29) printf("x %d columna_scroll_x %d scroll_x_fino %d final_x %d \n",x,columna_scroll_x,scroll_x_fino,final_x);
 
-                    direccion_name_table=pattern_name_table+final_x*2+final_y*64;
+                    //Prueba temporal
+                    /*
+                    if (scroll_x_fino!=0) {
+                    if (x==31) {
+                            final_x=0;
+                        }
+
+                        if (x==32) {
+                            final_x=32;
+                        }                    
+                    }
+                    */
+                    /*
+                    Sonic: con columna scroll = 1, con scroll fino entre 0 y 6, no vemos mas que 1 tile generado para la columna entera adicional,
+                    pero nada de los 6 pixeles
+
+                    con columna scroll=7, ya aparece
+                    */
+
+                    
+                    int offset_tile=final_x*2+final_y*64;
+                    direccion_name_table=pattern_name_table+offset_tile;
+
+
+                    if (y==0 && x>=25) printf("x %d scroll reg: %d columna_scroll_x %d scroll_x_fino %d final_x %d offset_tile %d\n",
+                    x,vdp_9918a_sms_get_scroll_horizontal(),columna_scroll_x,scroll_x_fino,final_x,offset_tile);
+                    //if (y==0 && x==28) printf("---\n");
 					
 					z80_int pattern_word=vdp_9918a_read_vram_byte(vram,direccion_name_table)+256*vdp_9918a_read_vram_byte(vram,direccion_name_table+1);
 
@@ -325,7 +385,7 @@ starting row, and the lower three bits are the fine scroll value.
 					int scanline;
 
 					//z80_int pattern_address=(caracter*32+2048*tercio) ;
-                    z80_int pattern_address=(caracter*32) ;
+                    z80_int pattern_address=(caracter*32) ; //32 bytes cada tile
 					pattern_address +=pattern_base_address;
 					
 					
@@ -389,23 +449,37 @@ starting row, and the lower three bits are the fine scroll value.
 
                             //No dibujar si x < 0. Esto sucede cuando se aplica scroll horizontal
                             //Similar para mayor de 255 cuando hay scroll x  y  hacemos 33 filas (parte de la ultima 33)
+
+                            //temporalmente mostrar 2 columna extra
+                            //if (xdestino>=-7 && xdestino<=255+8) {
+
                             if (xdestino>=0 && xdestino<=255) {
 
                                 //Register $00 - Mode Control No. 1
                                 //D5 - 1= Mask column 0 with overscan color from register #7
                                 //Esto lo usa sonic. La primera columna es para usar para el scroll
                                 if (xdestino<=7 && (vdp_9918a_registers[0] & 32)) {
-                                    //Temporal desactivo para que se vea primera columna
-                                    //color_paleta=0; //TODO: que color? debe ser el del border
+                                    //TODO: que color? debe ser el del border
+                                    //TODO: esto creo que aplica tambien a sprites, en sonic por ejemplo los enemigos que se van
+                                    //por la izquierda se ven en esta columna oculta
+                                    
+                                    //Y no ocultarlo si tenemos el setting de mostrar forzado columna 0
+                                    if (vdp_9918a_sms_force_show_column_zero.v==0) {
+                                        color_paleta=0; 
+                                    }
                                 }  
 
-                                //prueba para resaltar columna 33
-                                if (xdestino>=256-scroll_x_fino) color_paleta ^=15;
+                                //prueba para resaltar columna 33 y columna 0
+                                //if (xdestino>=256-scroll_x_fino && xdestino<=256-scroll_x_fino+7) color_paleta ^=15;
+                                //if (xdestino>=248 && xdestino<=255) color_paleta ^=15;
+
+                                //if (xdestino<=7) color_paleta ^=15;
+                                //if (xdestino>=0 && xdestino<=7) color_paleta ^=15;
 
                                 scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
                             }
                             else {
-                                if (ydestino==0) printf("no permitido en x %d\n",xdestino);
+                                //if (ydestino==0) printf("no permitido en x %d\n",xdestino);
                             }
 
                             if (mirror_x) {

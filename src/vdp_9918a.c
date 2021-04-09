@@ -221,7 +221,7 @@ void vdp_9918a_out_command_status(z80_byte value)
 
             //Paleta colores SMS
             if ( (vdp_9918a_last_command_status_bytes[1] &  (128+64)) == 192  && MACHINE_IS_SMS) {
-                printf("Write palette. Index: %d byte2: %d\n",vdp_9918a_last_command_status_bytes[0],vdp_9918a_last_command_status_bytes[1] & 63);
+                //printf("Write palette. Index: %d byte2: %d\n",vdp_9918a_last_command_status_bytes[0],vdp_9918a_last_command_status_bytes[1] & 63);
 
                 sms_writing_cram=1;
 

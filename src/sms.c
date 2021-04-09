@@ -247,7 +247,7 @@ void sms_reset(void)
 void sms_out_port_vdp_data(z80_byte value)
 {
     if (sms_writing_cram) {
-        printf("Escribiendo cram indice %d valor %d\n",index_sms_escritura_cram & 31,value);
+        //printf("Escribiendo cram indice %d valor %d\n",index_sms_escritura_cram & 31,value);
 
         vdp_9918a_sms_cram[index_sms_escritura_cram & (VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS-1) ]=value;
         index_sms_escritura_cram++;
