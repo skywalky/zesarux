@@ -654,6 +654,8 @@ z80_byte sms_get_joypad_b(void)
     //si estamos en el menu, no devolver tecla
     if (zxvision_key_not_sent_emulated_mach() ) return 255;
 
+    //TODO
+    return 255;
 
     z80_byte valor_joystick=255;
 
