@@ -615,10 +615,16 @@ JOYPAD1_UP:     = 0b00000001;
             //puerto_32766    db              255  ; B    N    M    Simb Space ;7
             if ((puerto_32766 & 1)==0) valor_joystick &=(255-16);
 
-            //B = Tecla Z
+            //Z tambien vale como Fire/A
+            //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
+            if ((puerto_65278 & 2)==0) valor_joystick &=(255-16);            
+
+            //Boton 2 = Tecla X
 
             //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
-            if ((puerto_65278 & 2)==0) valor_joystick &=(255-32);
+            if ((puerto_65278 & 4)==0) valor_joystick &=(255-32);
+
+
 
 
             //Player 2. Q

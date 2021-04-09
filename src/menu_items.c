@@ -24606,8 +24606,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		else if (MACHINE_IS_QL) strcpy(nombrebmp,"keyboard_ql.bmp");
 		else if (MACHINE_IS_SAM) strcpy(nombrebmp,"keyboard_sam.bmp");
 		else if (MACHINE_IS_SG1000) strcpy(nombrebmp,"keyboard_sg1000.bmp");
-        //TODO SMS
-        else if (MACHINE_IS_SMS) strcpy(nombrebmp,"keyboard_sg1000.bmp");
+        else if (MACHINE_IS_SMS) strcpy(nombrebmp,"keyboard_sms.bmp");
 		else if (MACHINE_IS_SVI) strcpy(nombrebmp,"keyboard_svi.bmp");
 		else if (MACHINE_IS_TBBLUE) strcpy(nombrebmp,"keyboard_next.bmp");
 		else if (MACHINE_IS_TIMEX_TS2068) strcpy(nombrebmp,"keyboard_ts2068.bmp");
