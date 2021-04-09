@@ -192,3 +192,5 @@ strider: sin sonido
 
 -juegos sms que directamente no inician:
 micro machines
+
+-al seleccionar algun juego de sms que falla, deja emulacion que no funciona correctamente (parece error con vram), quiza el flag que habilita escritura en cram??
