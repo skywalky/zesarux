@@ -1443,7 +1443,7 @@ void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *sc
           
 
 
-
+            
             for (i=0;i<256;i++) {
 
                 z80_int color=0;
@@ -1458,8 +1458,10 @@ void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *sc
                     color=si_blanco_negro*15;                    
                 }
 
-                scanline_buffer[inicio_buffer+i]=VDP_9918_INDEX_FIRST_COLOR+color;
+                sms_scanline_buffer_tiles_background[inicio_buffer+i]=VDP_9918_INDEX_FIRST_COLOR+color;
+                //TODO no actuar de momento sobre capa sms_scanline_buffer_tiles_foreground
             }
+            
 
         }
 
