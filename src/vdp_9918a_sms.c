@@ -706,7 +706,7 @@ to be taken from the first 256 or last 256 of the 512 available patterns.
 
 
 
-//Renderizado pixeles en modo 4 de sms
+//Renderizado pixeles en modo 4 de sms en rainbow
 void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_buffer,z80_byte *vram)
 {
    //Modo 4 SMS. high-res mode, 256x192
@@ -769,10 +769,11 @@ starting row, and the lower three bits are the fine scroll value.
     z80_byte scroll_y_sublinea=scroll_y&7;
 
     //entre 0 y 7 dentro de la fila
-    //TODO: scroll Y fino a nivel scanline
-    //int scanline_fila=(scanline+scroll_y_sublinea) % 8;    
+    
+
 
     int scanline_fila=scanline % 8;  
+
 
     //TODO: la gestion de scroll fino en vertical y horizontal en modo rainbow, sera
     //algo distinto de este no rainbow (o deberia ser)
@@ -917,7 +918,8 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
 
             //Y sumar el scanline. Cada linea de tile son 4 bytes
             pattern_address +=scanline_fila*4;
-            
+
+            //scroll_y_sublinea
             
             //Si tiene mirror vertical, empezamos con la ultima linea del pattern
             if (mirror_y) {
