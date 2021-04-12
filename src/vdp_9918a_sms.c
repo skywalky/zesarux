@@ -717,6 +717,10 @@ void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_bu
     //printf("border: %d\n",screen_total_borde_izquierdo);
     destino_scanline_buffer=&scanline_buffer[screen_total_borde_izquierdo];
 
+    z80_int *destino_scanline_buffer_foreground;
+    //printf("border: %d\n",screen_total_borde_izquierdo);
+    destino_scanline_buffer_foreground=&scanline_buffer_foreground[screen_total_borde_izquierdo];    
+
 	int x,bit; 
 	z80_int direccion_name_table;
     z80_byte byte_color;
@@ -928,6 +932,8 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
             z80_int caracter=pattern_word & 511;
 
             int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
+
+            int priority_tile=(pattern_word & 0x1000);
             
 
             //z80_int pattern_address=(caracter*32+2048*tercio) ;
@@ -1016,9 +1022,16 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
 
                         //printf("xdestino: %d\n",xdestino);
                         //scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
+                        //Tile con prioridad (arriba) y solo cuando su color no es 0
+                        if (priority_tile /*&& byte_color!=0*/) {
+                            *destino_scanline_buffer_foreground=SMS_INDEX_FIRST_COLOR+color_paleta;
+                        }
 
-                        *destino_scanline_buffer=SMS_INDEX_FIRST_COLOR+color_paleta;
+                        else {
+                            *destino_scanline_buffer=SMS_INDEX_FIRST_COLOR+color_paleta;
+                        }
                         destino_scanline_buffer++;    
+                        destino_scanline_buffer_foreground++;
                                             
                     }
 
@@ -1475,7 +1488,10 @@ void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *sc
 
         //Capa tiles foreground no transparente?
         color_capa_tiles_foreground=sms_scanline_buffer_tiles_foreground[i];
-        if (color_capa_tiles_foreground!=SMS_3LAYERS_TRANSPARENT_COLOUR) scanline_buffer[i]=color_capa_tiles_foreground;
+        if (color_capa_tiles_foreground!=SMS_3LAYERS_TRANSPARENT_COLOUR) {
+            //printf("Tile en foreground\n");
+            scanline_buffer[i]=color_capa_tiles_foreground;
+        }
 
         else {
             //Capa sprites no transparente?
