@@ -910,7 +910,7 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
             int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
             
 
-            int scanline;
+            //int scanline;
 
             //z80_int pattern_address=(caracter*32+2048*tercio) ;
             z80_int pattern_address=(caracter*32) ; //32 bytes cada tile
