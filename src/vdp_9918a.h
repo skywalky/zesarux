@@ -94,6 +94,8 @@ extern z80_bit vdp_9918a_force_disable_layer_border;
 extern z80_bit vdp_9918a_reveal_layer_ula;
 extern z80_bit vdp_9918a_reveal_layer_sprites;
 
+extern z80_int vdp_9918a_buffer_render_sprites[];
+
 
 #define VDP_9918A_LEFT_BORDER_NO_ZOOM 48
 #define VDP_9918A_RIGHT_BORDER_NO_ZOOM 48
