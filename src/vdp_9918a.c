@@ -1073,11 +1073,11 @@ void vdp_9918a_refresca_border(void)
 void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
 {
 
-    if (vdp_9918a_si_sms_video_mode4()) {
+    /*if (vdp_9918a_si_sms_video_mode4()) {
         //printf("Render sprites modo 4 sms\n");
         vdp_9918a_render_rainbow_display_line_sms(scanline,scanline_buffer,vram);
         return;
-    }
+    }*/
 
 
     //Nos ubicamos ya en la zona de pixeles, saltando el border
@@ -1774,11 +1774,11 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
 {
 
-    if (vdp_9918a_si_sms_video_mode4()) {
+    /*if (vdp_9918a_si_sms_video_mode4()) {
         //printf("Render sprites modo 4 sms\n");
         vdp_9918a_render_rainbow_sprites_line_sms(scanline,scanline_buffer,vram);
         return;
-    }
+    }*/
 
 
     z80_byte video_mode=vdp_9918a_get_video_mode();
@@ -1904,6 +1904,12 @@ void screen_store_scanline_rainbow_solo_display_vdp_9918a(z80_int *scanline_buff
 
         //linea en coordenada display (no border) que se debe leer
         int y_display=t_scanline_draw-screen_indice_inicio_pant;
+
+        //Si modo 4 sms
+        if (vdp_9918a_si_sms_video_mode4() ) {
+            screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(scanline_buffer,vram_memory_pointer,y_display);
+            return;
+        }
 
  
         //Render pixeles

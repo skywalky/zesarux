@@ -707,7 +707,10 @@ to be taken from the first 256 or last 256 of the 512 available patterns.
 
 
 //Renderizado pixeles en modo 4 de sms en rainbow
-void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_buffer,z80_byte *vram)
+
+//scanline_buffer en este caso es la capa de tiles de background
+
+void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_buffer,z80_int *scanline_buffer_foreground,z80_byte *vram)
 {
    //Modo 4 SMS. high-res mode, 256x192
     z80_int *destino_scanline_buffer;
@@ -1388,4 +1391,104 @@ void vdp_9918a_render_rainbow_sprites_line_sms(int scanline,z80_int *scanline_bu
 }
 
 
+//Almacenaje temporal de render de la linea de sprites actual
+z80_int sms_scanline_buffer_sprites[512];
 
+//Almacenaje temporal de render de la linea de tiles background actual
+z80_int sms_scanline_buffer_tiles_background[512];
+
+//Almacenaje temporal de render de la linea de tiles foreground actual
+z80_int sms_scanline_buffer_tiles_foreground[512];
+
+#define SMS_3LAYERS_TRANSPARENT_COLOUR 65535
+
+//Guardar en buffer rainbow la linea actual. Para SMS. solo display
+//Tener en cuenta que si border esta desactivado, la primera linea del buffer sera de display,
+//en cambio, si border esta activado, la primera linea del buffer sera de border
+//Mezcla las 2 capas de tile y la de sprites
+void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *scanline_buffer,z80_byte *vram_memory_pointer,int y_display)
+{
+
+    //Inicializamos las 3 capas a transparente
+    int i;
+
+    for (i=0;i<512;i++) {
+        sms_scanline_buffer_sprites[i]=sms_scanline_buffer_tiles_background[i]=sms_scanline_buffer_tiles_foreground[i]=SMS_3LAYERS_TRANSPARENT_COLOUR;
+    }
+
+ 
+        //Render pixeles
+        if (vdp_9918a_force_disable_layer_ula.v==0 && vdp_9918a_reveal_layer_ula.v==0) {
+            vdp_9918a_render_rainbow_display_line_sms(y_display,sms_scanline_buffer_tiles_background,sms_scanline_buffer_tiles_foreground,vram_memory_pointer);
+        }
+
+        else {
+            //Capa desactivada o reveal
+            //Nos ubicamos en zona central
+            int inicio_buffer=screen_total_borde_izquierdo;
+
+          
+
+
+
+            for (i=0;i<256;i++) {
+
+                z80_int color=0;
+
+                if (vdp_9918a_reveal_layer_ula.v) {
+                    int posx=i&1;
+                    int posy=t_scanline_draw&1;
+
+                    int si_blanco_negro=posx ^ posy;
+
+                    //color 0 o 15
+                    color=si_blanco_negro*15;                    
+                }
+
+                scanline_buffer[inicio_buffer+i]=VDP_9918_INDEX_FIRST_COLOR+color;
+            }
+
+        }
+
+
+
+
+
+        //Render sprites
+        if (vdp_9918a_force_disable_layer_sprites.v==0) {
+            vdp_9918a_render_rainbow_sprites_line_sms(y_display,sms_scanline_buffer_sprites,vram_memory_pointer);
+
+
+
+        }
+
+
+    //Mezclar las 3 capas
+    z80_int color_capa_sprites;
+    z80_int color_capa_tiles_foreground;
+    //z80_int color_capa_tiles_background;
+    for (i=0;i<512;i++) {
+        //Prioridades:
+        //Arriba: capa tiles foreground
+        //Medio: capa sprites
+        //Abajo: capa tiles background
+
+        //Capa tiles foreground no transparente?
+        color_capa_tiles_foreground=sms_scanline_buffer_tiles_foreground[i];
+        if (color_capa_tiles_foreground!=SMS_3LAYERS_TRANSPARENT_COLOUR) scanline_buffer[i]=color_capa_tiles_foreground;
+
+        else {
+            //Capa sprites no transparente?
+            color_capa_sprites=sms_scanline_buffer_sprites[i];
+            if (color_capa_sprites!=SMS_3LAYERS_TRANSPARENT_COLOUR) scanline_buffer[i]=color_capa_sprites;            
+            else {
+                //Finalmente sera el color de la capa de tiles de background
+                scanline_buffer[i]=sms_scanline_buffer_tiles_background[i];
+            }
+        }
+
+
+    }     
+  
+
+}
