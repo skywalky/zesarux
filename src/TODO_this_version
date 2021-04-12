@@ -205,5 +205,7 @@ micro machines
 
 -Agregar documento master system en extras 
 
+-colores border en modo sms 4 deben ser de paleta sms
 
--Parece que hay algun tile en foreground en sonic que no deberia serlo?
+-render border en modo rainbow debe combinar con las 3 capas de renderizado (al menos en la zona central): corregir Border despues, pues el render de tiles+sprites pueden alterar parte del scanline_buffer donde esta el border (aunque no deberian)
+-columna 0 cuando esta oculta en sms debe ser color del border mapeado
