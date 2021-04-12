@@ -1540,6 +1540,9 @@ void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *sc
     z80_int color_capa_sprites;
     z80_int color_capa_tiles_foreground;
     //z80_int color_capa_tiles_background;
+
+    //No tocar zona izquierda y derecha que es el border.
+    //Border no entra como un layer, sino que se renderiza directamente en scanline_buffer
     for (i=screen_total_borde_izquierdo;i<screen_total_borde_izquierdo+256;i++) {
         //Prioridades:
         //Arriba: capa tiles foreground
