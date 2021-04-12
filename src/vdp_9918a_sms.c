@@ -931,14 +931,17 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
             z80_int pattern_address=(caracter*32) ; //32 bytes cada tile
             pattern_address +=pattern_base_address;
 
-            //Y sumar el scanline. Cada linea de tile son 4 bytes
-            pattern_address +=scanline_fila*4;
+
 
             //scroll_y_sublinea
             
             //Si tiene mirror vertical, empezamos con la ultima linea del pattern
             if (mirror_y) {
-                pattern_address +=(8*4)-4;
+                pattern_address +=(7-scanline_fila)*4;
+            }
+            else {
+                //Y sumar el scanline. Cada linea de tile son 4 bytes
+                pattern_address +=scanline_fila*4;
             }
 
     
