@@ -8088,7 +8088,22 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
        
        //TODO
        if (puerto_l==0x7E) {
-           return 0xB0; //sonic por ejemplo espera este valor
+
+            //TODO aproximacion fea
+            printf("scanline draw: %d\n",t_scanline_draw);
+            return t_scanline_draw;
+
+           //return 0xB0; //sonic por ejemplo espera este valor
+
+           //temp
+           //Micromachines espera valor FF
+           //return 0xFF;
+
+           //TODO
+           /*
+           0x7E : Reading: returns VDP V counter. Writing: Writes data to Sound Chip.
+0x7F : Reading: returns VDP H counter. Writing: Writes data to Sound Chip (same as above).
+            */
        }
 
        //FC- Reading this port gives the status of controller #1. (farthest from front)
@@ -8125,10 +8140,22 @@ Lee puerto sms 02DEH PC=1DBFH
              
        }	   
 
+/*
+TODO??
+
+I/O port mirrors
+Master System, Master System II:
+Port	Mirrors
+$3F	All odd addresses from $01 to $3F
+$DC	All even addresses from $C0 to $FE
+$DD	All odd addresses from $C1 to $FF
+
+
+*/
 
 
 
-	//printf ("Lee puerto sms %04XH PC=%04XH\n",puerto,reg_pc);
+	//printf ("Lee puerto sms %02XH PC=%04XH\n",puerto_l,reg_pc);
 
 
 	return 255;

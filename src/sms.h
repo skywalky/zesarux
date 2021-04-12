@@ -43,6 +43,10 @@ extern z80_byte *sms_return_segment_address(z80_int direccion,int *tipo);
 #define SMS_MAPPER_TYPE_NONE 0
 #define SMS_MAPPER_TYPE_SEGA 1
 
+extern int sms_mapper_type;
+extern int sms_cartridge_size;
+extern void sms_set_mapper_mask_bits(void);
+
 extern void sms_insert_rom_cartridge(char *filename);
 extern void sms_empty_romcartridge_space(void);
 extern void sms_out_port_vdp_data(z80_byte value);

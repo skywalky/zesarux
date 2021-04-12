@@ -189,8 +189,18 @@ wonder boy in monster world: no hace scroll
 outrun, F1: pista se desplaza raro al moverse izquierda/derecho
 streets of rage 2: pantalla tiembla 
 strider: sin sonido
+rainbow islands: no se ve nada aunque parece que funciona juego, sonido etc
+road rash: se ralentiza mucho en juego y en intro 
 
 -juegos sms que directamente no inician:
 micro machines
 
 -al seleccionar algun juego de sms que falla, deja emulacion que no funciona correctamente (parece error con vram), quiza el flag que habilita escritura en cram??
+
+-visor de tiles para sms y demas maquinas (
+    
+-Paleta colores gris sms probablemente no está bien
+
+-Registro scroll en Y se actualiza solo al final de frame 
+
+-Agregar documento master system en extras 

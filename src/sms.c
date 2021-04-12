@@ -66,6 +66,9 @@ const char *sms_string_memory_type_empty="EMPTY";
 
 z80_bit sms_cartridge_inserted={0};
 
+//Tamanyo del cartucho insertado
+int sms_cartridge_size=0;
+
 char *sms_get_string_memory_type(int tipo)
 {
     		
@@ -293,7 +296,48 @@ z80_byte sms_read_vram_byte(z80_int address)
     return sms_vram_memory[address & 16383];
 }
 
+void sms_set_mapper_mask_bits(void)
+{
+    //Ajustar mascara
+    //Por defecto. Hasta 64 bloques = 1 MByte
+    sms_mapper_mask_bits=0x3F;
 
+    if (sms_cartridge_size<=65536) {
+        //4 bloques. hasta 64 KB
+        sms_mapper_mask_bits=0x03;
+    }
+
+    else if (sms_cartridge_size<=65536*2) {
+        //8 bloques. hasta 128 KB
+        sms_mapper_mask_bits=0x07;
+    }
+
+    else if (sms_cartridge_size<=65536*4) {
+        //16 bloques. Hasta 256 KB
+        sms_mapper_mask_bits=0x0F;
+    }    
+
+    else if (sms_cartridge_size<=65536*8) {
+        //32 bloques. Hasta 512 KB
+        sms_mapper_mask_bits=0x1F;
+    }      
+ 
+
+    printf("Mapper type: %d mask %d\n",sms_mapper_type,sms_mapper_mask_bits);
+
+}
+
+void sms_set_mapper_type_from_size(void)
+{
+    //Asumimos no mapper
+    sms_mapper_type=SMS_MAPPER_TYPE_NONE;
+ 
+
+    //Si mayor de 48kb, mapper type sega
+    if (sms_cartridge_size>49152) {
+        sms_mapper_type=SMS_MAPPER_TYPE_SEGA;
+    }
+}
 
 void sms_insert_rom_cartridge(char *filename)
 {
@@ -302,45 +346,19 @@ void sms_insert_rom_cartridge(char *filename)
 
     long tamanyo_archivo=get_file_size(filename);
 
-    //Asumimos no mapper
-    sms_mapper_type=SMS_MAPPER_TYPE_NONE;
 
     if (tamanyo_archivo>SMS_MAX_ROM_SIZE) {
         debug_printf(VERBOSE_ERR,"Cartridges bigger than %d KB are not allowed",SMS_MAX_ROM_SIZE/1024);
         return;
     }
 
-    //Si mayor de 48kb, mapper type sega
-    if (tamanyo_archivo>49152) {
-        sms_mapper_type=SMS_MAPPER_TYPE_SEGA;
-    }
+    sms_cartridge_size=tamanyo_archivo;
 
-    //Ajustar mascara
-    //Por defecto. Hasta 64 bloques = 1 MByte
-    sms_mapper_mask_bits=0x3F;
 
-    if (tamanyo_archivo<=65536) {
-        //4 bloques. hasta 64 KB
-        sms_mapper_mask_bits=0x03;
-    }
+    sms_set_mapper_type_from_size();
 
-    else if (tamanyo_archivo<=65536*2) {
-        //8 bloques. hasta 128 KB
-        sms_mapper_mask_bits=0x07;
-    }
+    sms_set_mapper_mask_bits();
 
-    else if (tamanyo_archivo<=65536*4) {
-        //16 bloques. Hasta 256 KB
-        sms_mapper_mask_bits=0x0F;
-    }    
-
-    else if (tamanyo_archivo<=65536*8) {
-        //32 bloques. Hasta 512 KB
-        sms_mapper_mask_bits=0x1F;
-    }      
- 
-
-    printf("Mapper type: %d mask %d\n",sms_mapper_type,sms_mapper_mask_bits);
 
     FILE *ptr_cartridge;
     ptr_cartridge=fopen(filename,"rb");
@@ -375,12 +393,21 @@ void sms_empty_romcartridge_space(void)
 {
 
 //poner a 0
+//Esto ya no hace falta dado que al hacer set_machine se asigna memoria de nuevo
+/*
     int i;
     for (i=0;i<65536;i++) {
         memoria_spectrum[i]=0;
     }
+    */
 
     sms_cartridge_inserted.v=0;
+
+    //Seleccionar de nuevo maquina. Esto resetea y carga de nuevo la rom bios de la master system
+    set_machine(NULL);
+    cold_start_cpu_registers();
+    reset_cpu();
+
 }
 
 
