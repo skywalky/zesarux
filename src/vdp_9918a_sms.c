@@ -742,6 +742,24 @@ void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_bu
 
     direccion_name_table=pattern_name_table;  
 
+
+    //scroll y
+    z80_byte scroll_y_total=vdp_9918a_sms_get_scroll_vertical();
+
+    if (vdp_9918a_sms_lock_scroll_vertical.v) scroll_y_total=0;
+
+    //z80_byte scroll_y_signo=256-scroll_y;
+
+    scanline +=scroll_y_total;
+
+    // In the regular 192-line display mode, the name table is 32x28 so the vertical scroll register wraps past 223
+    scanline = scanline  % 224;    
+
+
+    //El tratamiento del scroll en vertical es ligeramente diferente aqui en funcion rainbow o en funcion no rainbow
+    
+
+
     //Sumar el offset por linea
 
     int y=scanline/8;
@@ -751,10 +769,9 @@ void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_bu
     int offset_sumar_linea;
 
 
-    //scroll y
-    z80_byte scroll_y=vdp_9918a_sms_get_scroll_vertical();
 
-    if (vdp_9918a_sms_lock_scroll_vertical.v) scroll_y=0;
+
+
 
 
     //fila
@@ -764,9 +781,9 @@ starting row, and the lower three bits are the fine scroll value.
 .
     */
 
-    z80_byte fila_scroll_y=((scroll_y>>3)&31);
+    //z80_byte fila_scroll_y=((scroll_y>>3)&31);
 
-    z80_byte scroll_y_sublinea=scroll_y&7;
+    //z80_byte scroll_y_sublinea=scroll_y&7;
 
     //entre 0 y 7 dentro de la fila
     
@@ -781,13 +798,13 @@ starting row, and the lower three bits are the fine scroll value.
     //1 fila mas si hay scroll vertical
     int total_filas=24;
 
-    if (scroll_y_sublinea) total_filas++;
+    //if (scroll_y_sublinea) total_filas++;
 
     //for (y=0;y<total_filas;y++) {
 
 
         //Maximo 28 en Y
-        z80_byte final_y=(y+fila_scroll_y) % 28;     
+        z80_byte final_y=(y+0) % 28;
 
         //printf("y: %d final_y: %d\n",y,final_y);
 
@@ -909,8 +926,6 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
 
             int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
             
-
-            //int scanline;
 
             //z80_int pattern_address=(caracter*32+2048*tercio) ;
             z80_int pattern_address=(caracter*32) ; //32 bytes cada tile
