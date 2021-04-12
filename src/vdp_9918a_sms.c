@@ -1540,7 +1540,7 @@ void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *sc
     z80_int color_capa_sprites;
     z80_int color_capa_tiles_foreground;
     //z80_int color_capa_tiles_background;
-    for (i=0;i<512;i++) {
+    for (i=screen_total_borde_izquierdo;i<screen_total_borde_izquierdo+256;i++) {
         //Prioridades:
         //Arriba: capa tiles foreground
         //Medio: capa sprites

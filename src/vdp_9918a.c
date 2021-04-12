@@ -1837,7 +1837,15 @@ void screen_store_scanline_rainbow_solo_border_vdp_9918a_section(z80_int *buffer
             color_final=VDP_9918_INDEX_FIRST_COLOR+border_color;
         }
 
-        if (vdp_9918a_force_disable_layer_border.v) color_final=VDP_9918_INDEX_FIRST_COLOR; //color 0 de su paleta de colores
+        if (vdp_9918a_force_disable_layer_border.v) {
+            if (vdp_9918a_si_sms_video_mode4()) {
+                z80_byte color_mapeado=vdp_9918a_sms_cram[0];
+                color_final=SMS_INDEX_FIRST_COLOR+color_mapeado;
+            }            
+            else {
+                color_final=VDP_9918_INDEX_FIRST_COLOR; //color 0 de su paleta de colores
+            }
+        }
 
         *buffer=color_final;
         buffer++;
@@ -1975,10 +1983,8 @@ void screen_store_scanline_rainbow_vdp_9918a_border_and_display(z80_int *scanlin
 {
 
     //Renderizar zonas de border y display
-    screen_store_scanline_rainbow_solo_display_vdp_9918a(scanline_buffer,vram_memory);
-
-    //Border despues, pues el render de tiles+sprites pueden alterar parte del scanline_buffer donde esta el border (aunque no deberian)
     screen_store_scanline_rainbow_solo_border_vdp_9918a(scanline_buffer);
+    screen_store_scanline_rainbow_solo_display_vdp_9918a(scanline_buffer,vram_memory);
 
 
     //Y transferir a rainbow buffer
