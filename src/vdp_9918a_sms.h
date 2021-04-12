@@ -53,4 +53,6 @@ extern z80_bit vdp_9918a_force_disable_layer_tile_fg;
 extern z80_bit vdp_9918a_reveal_layer_tile_fg;
 extern z80_bit vdp_9918a_reveal_layer_tile_bg;
 
+extern z80_bit vdp_9918a_force_bg_tiles;
+
 #endif

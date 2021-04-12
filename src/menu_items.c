@@ -8558,48 +8558,48 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 
                 if (MACHINE_HAS_VDP_9918A) {
 
-				if (!vdp_9918a_si_sms_video_mode4()) {
+                    if (!vdp_9918a_si_sms_video_mode4()) {
 
-					//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
-					linea +=3;
+                        //menu_escribe_linea_opcion(linea,-1,1,"Border: ");
+                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
+                        linea +=3;
 
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Pixels:");
-					linea +=3;
+                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Pixels:");
+                        linea +=3;
 
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Sprites:");
-					linea +=3;	
-	
-				}	
+                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Sprites:");
+                        linea +=3;	
+        
+                    }	
 
-                else {
-					//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
-					linea +=3;
+                    else {
+                        //menu_escribe_linea_opcion(linea,-1,1,"Border: ");
+                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
+                        linea +=3;
 
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Background:");
-					linea +=3;
+                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Background:");
+                        linea +=3;
 
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Foreground:");
-					linea +=3;
+                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Foreground:");
+                        linea +=3;
 
 
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Sprites:");
-					linea +=3;	
+                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Sprites:");
+                        linea +=3;	
 
-                    
-                    linea++;
-                    zxvision_print_string_defaults(menu_tsconf_layer_overlay_window,1,linea,"Force show column 0:");
-                    linea +=2;                        
+                        
+                        linea++;
+                        zxvision_print_string_defaults(menu_tsconf_layer_overlay_window,1,linea,"Force show column 0:");
+                        linea +=2;                        
 
-                    zxvision_print_string_defaults(menu_tsconf_layer_overlay_window,1,linea,"Lock scroll horiz.: ");
-                    linea +=2;        
+                        zxvision_print_string_defaults(menu_tsconf_layer_overlay_window,1,linea,"Lock scroll horiz.: ");
+                        linea +=2;        
 
-                    zxvision_print_string_defaults(menu_tsconf_layer_overlay_window,1,linea,"Lock scroll vert.:  ");
-                    linea +=2;                                            
+                        zxvision_print_string_defaults(menu_tsconf_layer_overlay_window,1,linea,"Lock scroll vert.:  ");
+                        linea +=2;                                            
 
-                    	                    
-                }				
+                                                
+                    }				
 
                 }
 
@@ -8808,6 +8808,10 @@ void menu_sms_layer_reveal_tile_bg(MENU_ITEM_PARAMETERS)
     vdp_9918a_reveal_layer_tile_bg.v ^=1;
 }
 
+void menu_sms_layer_force_bg_tiles(MENU_ITEM_PARAMETERS)
+{
+    vdp_9918a_force_bg_tiles.v ^=1;
+}
 
 void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 {
@@ -8941,65 +8945,68 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 
         if (MACHINE_HAS_VDP_9918A) {
 
-        if (!vdp_9918a_si_sms_video_mode4()) {
+            if (!vdp_9918a_si_sms_video_mode4()) {
 
- 			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(vdp_9918a_force_disable_layer_border.v ? "Disabled" : "Enabled "));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-			lin+=3;			
+                menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(vdp_9918a_force_disable_layer_border.v ? "Disabled" : "Enabled "));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+                lin+=3;			
 
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_ula,NULL,"%s",(vdp_9918a_force_disable_layer_ula.v ? "Disabled" : "Enabled "));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_reveal_ula,NULL,"%s",(vdp_9918a_reveal_layer_ula.v ? "Reveal" : "Normal"));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);		
-			lin+=3;
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_ula,NULL,"%s",(vdp_9918a_force_disable_layer_ula.v ? "Disabled" : "Enabled "));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_reveal_ula,NULL,"%s",(vdp_9918a_reveal_layer_ula.v ? "Reveal" : "Normal"));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);		
+                lin+=3;
 
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_sprites,NULL,"%s",(vdp_9918a_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_reveal_sprites,NULL,"%s",(vdp_9918a_reveal_layer_sprites.v ? "Reveal" : "Normal"));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
-			lin+=3;
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_sprites,NULL,"%s",(vdp_9918a_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_reveal_sprites,NULL,"%s",(vdp_9918a_reveal_layer_sprites.v ? "Reveal" : "Normal"));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
+                lin+=3;
 
-		}
+            }
 
-        else {
- 			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(vdp_9918a_force_disable_layer_border.v ? "Disabled" : "Enabled "));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-			lin+=3;			
+            else {
+                menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(vdp_9918a_force_disable_layer_border.v ? "Disabled" : "Enabled "));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+                lin+=3;			
 
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_tile_bg,NULL,"%s",(vdp_9918a_force_disable_layer_tile_bg.v ? "Disabled" : "Enabled "));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_reveal_tile_bg,NULL,"%s",(vdp_9918a_reveal_layer_tile_bg.v ? "Reveal" : "Normal"));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);		
-			lin+=3;
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_tile_bg,NULL,"%s",(vdp_9918a_force_disable_layer_tile_bg.v ? "Disabled" : "Enabled "));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_reveal_tile_bg,NULL,"%s",(vdp_9918a_reveal_layer_tile_bg.v ? "Reveal" : "Normal"));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);		
+                lin+=3;
 
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_tile_fg,NULL,"%s",(vdp_9918a_force_disable_layer_tile_fg.v ? "Disabled" : "Enabled "));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_reveal_tile_fg,NULL,"%s",(vdp_9918a_reveal_layer_tile_fg.v ? "Reveal" : "Normal"));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
-			lin+=3;            
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_tile_fg,NULL,"%s",(vdp_9918a_force_disable_layer_tile_fg.v ? "Disabled" : "Enabled "));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_reveal_tile_fg,NULL,"%s",(vdp_9918a_reveal_layer_tile_fg.v ? "Reveal" : "Normal"));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);	
 
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_sprites,NULL,"%s",(vdp_9918a_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-			menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_reveal_sprites,NULL,"%s",(vdp_9918a_reveal_layer_sprites.v ? "Reveal" : "Normal"));
-			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
-			lin+=3;
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_force_bg_tiles,NULL,"%s",(vdp_9918a_force_bg_tiles.v ? "AlwaysFG": "Normal  " ));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,20,lin);	
+                lin+=3;            
+
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_sprites,NULL,"%s",(vdp_9918a_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_reveal_sprites,NULL,"%s",(vdp_9918a_reveal_layer_sprites.v ? "Reveal" : "Normal"));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);				
+                lin+=3;
 
 
-            //vdp_9918a_sms_force_show_column_zero
-            menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_force_col0,NULL,"%s",(vdp_9918a_sms_force_show_column_zero.v ? "Forced" : "Normal"));
-            menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,22,lin);
-            lin+=2;		                
+                //vdp_9918a_sms_force_show_column_zero
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_force_col0,NULL,"%s",(vdp_9918a_sms_force_show_column_zero.v ? "Forced" : "Normal"));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,22,lin);
+                lin+=2;		                
 
-            menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_lock_scroll_horiz,NULL,"%s",(vdp_9918a_sms_lock_scroll_horizontal.v ? "Locked" : "Normal"));
-            menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,22,lin);
-            lin+=2;		   
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_lock_scroll_horiz,NULL,"%s",(vdp_9918a_sms_lock_scroll_horizontal.v ? "Locked" : "Normal"));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,22,lin);
+                lin+=2;		   
 
-            menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_lock_scroll_vert,NULL,"%s",(vdp_9918a_sms_lock_scroll_vertical.v ? "Locked" : "Normal"));
-            menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,22,lin);
-            lin+=2;	                             
+                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_lock_scroll_vert,NULL,"%s",(vdp_9918a_sms_lock_scroll_vertical.v ? "Locked" : "Normal"));
+                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,22,lin);
+                lin+=2;	                             
 
-            
-        }
+                
+            }
 
         }
 				
