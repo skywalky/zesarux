@@ -703,3 +703,330 @@ to be taken from the first 256 or last 256 of the 512 available patterns.
 
 
 }
+
+
+
+//Renderizado pixeles en modo 4 de sms
+void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_buffer,z80_byte *vram)
+{
+   //Modo 4 SMS. high-res mode, 256x192
+    z80_int *destino_scanline_buffer;
+    //printf("border: %d\n",screen_total_borde_izquierdo);
+    destino_scanline_buffer=&scanline_buffer[screen_total_borde_izquierdo];
+
+	int x,bit; 
+	z80_int direccion_name_table;
+    z80_byte byte_color;
+	
+	z80_int pattern_base_address; 
+	z80_int pattern_name_table; 
+
+
+    pattern_base_address=vdp_9918a_get_pattern_base_address();
+
+
+
+	int char_width=8;
+
+	
+
+    z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
+
+
+    //TODO. esto siempre asi??
+    pattern_base_address=0;
+
+
+    pattern_name_table=vdp_9918a_get_pattern_name_table();
+
+
+    direccion_name_table=pattern_name_table;  
+
+    //Sumar el offset por linea
+
+    int y=scanline/8;
+
+
+
+    int offset_sumar_linea;
+
+
+    //scroll y
+    z80_byte scroll_y=vdp_9918a_sms_get_scroll_vertical();
+
+    if (vdp_9918a_sms_lock_scroll_vertical.v) scroll_y=0;
+
+
+    //fila
+    /*
+    Register $09 can be divided into two parts, the upper five bits are the
+starting row, and the lower three bits are the fine scroll value.
+.
+    */
+
+    z80_byte fila_scroll_y=((scroll_y>>3)&31);
+
+    z80_byte scroll_y_sublinea=scroll_y&7;
+
+    //entre 0 y 7 dentro de la fila
+    //TODO: scroll Y fino a nivel scanline
+    //int scanline_fila=(scanline+scroll_y_sublinea) % 8;    
+
+    int scanline_fila=scanline % 8;  
+
+    //TODO: la gestion de scroll fino en vertical y horizontal en modo rainbow, sera
+    //algo distinto de este no rainbow (o deberia ser)
+
+    //1 fila mas si hay scroll vertical
+    int total_filas=24;
+
+    if (scroll_y_sublinea) total_filas++;
+
+    //for (y=0;y<total_filas;y++) {
+
+
+        //Maximo 28 en Y
+        z80_byte final_y=(y+fila_scroll_y) % 28;     
+
+        //printf("y: %d final_y: %d\n",y,final_y);
+
+            //scroll x
+            z80_byte scroll_x=vdp_9918a_sms_get_scroll_horizontal();
+
+            if (vdp_9918a_sms_lock_scroll_horizontal.v) scroll_x=0;
+
+            /*
+                If bit #6 of VDP register $00 is set, horizontal scrolling will be fixed
+at zero for scanlines zero through 15. This is commonly used to create
+a fixed status bar at the top of the screen for horizontally scrolling
+games.
+
+Register $00 - Mode Control No. 1
+
+D7 - 1= Disable vertical scrolling for columns 24-31
+D6 - 1= Disable horizontal scrolling for rows 0-1  
+D5 - 1= Mask column 0 with overscan color from register #7
+D4 - (IE1) 1= Line interrupt enable
+D3 - (EC) 1= Shift sprites left by 8 pixels
+D2 - (M4) 1= Use Mode 4, 0= Use TMS9918 modes (selected with M1, M2, M3)
+D1 - (M2) Must be 1 for M1/M3 to change screen height in Mode 4.
+Otherwise has no effect.
+D0 - 1= No sync, display is monochrome, 0= Normal display
+
+            */
+
+            //Las 2 primeras lineas no tendran scroll si bit D6
+            //Esto lo usa juego Astro Flash
+            if (vdp_9918a_registers[0] & 64 && y<2) scroll_x=0; 
+
+
+            int columna_scroll_x;
+            z80_byte scroll_x_fino;
+            
+
+            //scroll_x_fino=(255-scroll_x) & 7;
+
+            //En alguna documentacion he leido que esto se restaba de 32, en vez de 31, cosa que no tiene sentido:
+            //en sonic por ejemplo provocaria que cuando se hace el primer desplazamiento, salta la columna de golpe a 1,
+            //en vez de simplemente quedarse en columna 0 aunque scroll_x_fino logicamente pasa a 1
+            
+
+//columna
+            /*
+                The starting column value gives the first column in the name table to use,
+calculated by subtracting it from the value 32. So if the starting column
+value was $1D, the difference of it from 32 would be $02, hence the first
+column drawn is number 2 from the name table.
+            */
+
+            //Creo que esto es la manera mas logica pese a la documentación
+
+            z80_byte scroll_negado=256-scroll_x;
+
+            scroll_x_fino=scroll_negado&7;
+
+            columna_scroll_x=(scroll_negado >>3)&31;
+
+                            
+            
+
+        
+
+            //TODO: scroll_x fino se ve raro en boot de master system por ejemplo
+    
+            //1 columna mas si hay scroll horizontal
+    
+            int total_columnas=32;
+
+            if (scroll_x_fino) total_columnas++;
+
+        //printf("%d\n",total_columnas);
+
+        for (x=0;x<total_columnas;x++) {  
+            
+            
+
+            int final_x;
+
+
+            final_x=(x+columna_scroll_x) % 32;
+
+
+            
+            int offset_tile=final_x*2+final_y*64;
+            direccion_name_table=pattern_name_table+offset_tile;
+
+
+            /*if (y==0 && x>=25) {
+                printf("x %d scroll reg: %d columna_scroll_x %d scroll_x_fino %d final_x %d offset_tile %d\n",
+                    x,vdp_9918a_sms_get_scroll_horizontal(),columna_scroll_x,scroll_x_fino,final_x,offset_tile);
+            }*/
+            //if (y==0 && x==28) printf("---\n");
+            
+            z80_int pattern_word=vdp_9918a_read_vram_byte(vram,direccion_name_table)+256*vdp_9918a_read_vram_byte(vram,direccion_name_table+1);
+
+            
+            /*
+            MSB          LSB
+---pcvhn nnnnnnnn
+
+- = Unused. Some games use these bits as flags for collision and damage
+zones. (such as Wonderboy in Monster Land, Zillion 2)
+p = Priority flag. When set, sprites will be displayed underneath the
+background pattern in question.
+c = Palette select.
+v = Vertical flip flag.
+h = Horizontal flip flag.
+n = Pattern index, any one of 512 patterns in VRAM can be selected.
+            */
+
+            int mirror_x=(pattern_word & 0x0200);
+
+            int mirror_y=(pattern_word & 0x0400);
+
+            z80_int caracter=pattern_word & 511;
+
+            int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
+            
+
+            int scanline;
+
+            //z80_int pattern_address=(caracter*32+2048*tercio) ;
+            z80_int pattern_address=(caracter*32) ; //32 bytes cada tile
+            pattern_address +=pattern_base_address;
+
+            //Y sumar el scanline. Cada linea de tile son 4 bytes
+            pattern_address +=scanline_fila*4;
+            
+            
+            //Si tiene mirror vertical, empezamos con la ultima linea del pattern
+            if (mirror_y) {
+                pattern_address +=(8*4)-4;
+            }
+
+    
+
+            //for (scanline=0;scanline<8;scanline++) {
+
+                //TODO: no se si esta es la mejor manera de gestionar el scroll
+                //int ydestino=y*8+scanline-scroll_y_sublinea;
+                //printf("%d\n",ydestino);
+
+                byte_leido1=vdp_9918a_read_vram_byte(vram,pattern_address);
+                byte_leido2=vdp_9918a_read_vram_byte(vram,pattern_address+1);
+                byte_leido3=vdp_9918a_read_vram_byte(vram,pattern_address+2);
+                byte_leido4=vdp_9918a_read_vram_byte(vram,pattern_address+3);
+
+                if (mirror_y) {
+                    pattern_address -=4;
+                }
+                else {
+                    pattern_address +=4;
+                }
+
+                //No dibujar si y < 0. Esto sucede cuando se aplica scroll vertical
+
+                //Similar para mayor de 192 cuando hay scroll y hacemos 25 filas (parte de la ultima 25)
+                //if (ydestino>=0 && ydestino<=191) {
+                    
+                for (bit=0;bit<char_width;bit++) {
+
+                    int xdestino=x*char_width+bit-scroll_x_fino;
+
+                    if (mirror_x) {
+                        byte_color=((byte_leido1)&1) | ((byte_leido2<<1)&2) | ((byte_leido3<<2)&4) | ((byte_leido4<<3)&8);
+                    }
+                    else {
+
+                        byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
+                
+                    }
+
+
+                    int color_paleta=vdp_9918a_sms_cram[palette_offset+ (byte_color & 15)];
+
+                    //maximo 64 colores de paleta
+                    color_paleta &=63;
+
+                    
+                    
+
+                    //No dibujar si x < 0. Esto sucede cuando se aplica scroll horizontal
+                    //Similar para mayor de 255 cuando hay scroll x  y  hacemos 33 filas (parte de la ultima 33)
+
+
+                    if (xdestino>=0 && xdestino<=255) {
+
+                        //Register $00 - Mode Control No. 1
+                        //D5 - 1= Mask column 0 with overscan color from register #7
+                        //Esto lo usa sonic. La primera columna es para usar para el scroll
+                        if (xdestino<=7 && (vdp_9918a_registers[0] & 32)) {
+                            //TODO: que color? debe ser el del border
+                            //TODO: esto creo que aplica tambien a sprites, en sonic por ejemplo los enemigos que se van
+                            //por la izquierda se ven en esta columna oculta
+                            
+                            //Y no ocultarlo si tenemos el setting de mostrar forzado columna 0
+                            if (vdp_9918a_sms_force_show_column_zero.v==0) {
+                                color_paleta=0; 
+                            }
+                        }  
+
+                        //printf("xdestino: %d\n",xdestino);
+                        //scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
+
+                        *destino_scanline_buffer=SMS_INDEX_FIRST_COLOR+color_paleta;
+                        destino_scanline_buffer++;    
+                                            
+                    }
+
+                    
+
+
+                    if (mirror_x) {
+                        byte_leido1=byte_leido1>>1;
+                        byte_leido2=byte_leido2>>1;
+                        byte_leido3=byte_leido3>>1;
+                        byte_leido4=byte_leido4>>1;                                
+                    }
+
+                    else {
+                        byte_leido1=byte_leido1<<1;
+                        byte_leido2=byte_leido2<<1;
+                        byte_leido3=byte_leido3<<1;
+                        byte_leido4=byte_leido4<<1;
+                    }
+
+                    
+                }
+
+                //}
+                
+            //}
+
+
+        }
+
+
+    
+
+}

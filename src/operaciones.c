@@ -8089,8 +8089,8 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
        //TODO
        if (puerto_l==0x7E) {
 
-            //TODO aproximacion fea
-            printf("scanline draw: %d\n",t_scanline_draw);
+            //TODO aproximacion fea??
+            //printf("scanline draw: %d\n",t_scanline_draw);
             return t_scanline_draw;
 
            //return 0xB0; //sonic por ejemplo espera este valor

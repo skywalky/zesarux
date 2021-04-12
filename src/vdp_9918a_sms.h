@@ -45,5 +45,6 @@ extern int vdp_9918a_sms_get_sprite_height(void);
 extern z80_bit vdp_9918a_sms_force_show_column_zero;
 extern z80_bit vdp_9918a_sms_lock_scroll_horizontal;
 extern z80_bit vdp_9918a_sms_lock_scroll_vertical;
+extern void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_buffer,z80_byte *vram);
 
 #endif

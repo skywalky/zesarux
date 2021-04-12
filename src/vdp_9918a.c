@@ -1073,6 +1073,12 @@ void vdp_9918a_refresca_border(void)
 void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
 {
 
+    if (vdp_9918a_si_sms_video_mode4()) {
+        //printf("Render sprites modo 4 sms\n");
+        vdp_9918a_render_rainbow_display_line_sms(scanline,scanline_buffer,vram);
+        return;
+    }
+
 
     //Nos ubicamos ya en la zona de pixeles, saltando el border
     //En esta capa, si color=0, no lo ponemos como transparente sino como color negro
