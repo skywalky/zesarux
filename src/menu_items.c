@@ -8556,8 +8556,9 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 				
 				}		
 
+                if (MACHINE_HAS_VDP_9918A) {
 
-				if (MACHINE_HAS_VDP_9918A && !MACHINE_IS_SMS) {
+				if (!vdp_9918a_si_sms_video_mode4()) {
 
 					//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
@@ -8571,7 +8572,7 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 	
 				}	
 
-                if (MACHINE_IS_SMS) {
+                else {
 					//menu_escribe_linea_opcion(linea,-1,1,"Border: ");
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
 					linea +=3;
@@ -8600,6 +8601,7 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
                     	                    
                 }				
 
+                }
 
 
 
@@ -8829,9 +8831,9 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 	else if (MACHINE_HAS_VDP_9918A) {
 		alto=11;
 
-        if (MACHINE_IS_SMS) {
+        if (vdp_9918a_si_sms_video_mode4()) {
             //Para que quepa el show column 0, etc
-            alto=24;
+            alto=21;
             ancho=32;
         }
 	}
@@ -8937,7 +8939,9 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 			lin+=3;				
 		}
 
-		if (MACHINE_HAS_VDP_9918A && !MACHINE_IS_SMS) {
+        if (MACHINE_HAS_VDP_9918A) {
+
+        if (!vdp_9918a_si_sms_video_mode4()) {
 
  			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(vdp_9918a_force_disable_layer_border.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
@@ -8957,7 +8961,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 
 		}
 
-        if (MACHINE_IS_SMS) {
+        else {
  			menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(vdp_9918a_force_disable_layer_border.v ? "Disabled" : "Enabled "));
 			menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
 			lin+=3;			
@@ -8995,6 +8999,8 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
             lin+=2;	                             
 
             
+        }
+
         }
 				
 
