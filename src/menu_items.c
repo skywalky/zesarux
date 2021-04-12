@@ -8576,10 +8576,10 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
 					linea +=3;
 
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Back:");
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Background:");
 					linea +=3;
 
-					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles FG:");
+					zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Foreground:");
 					linea +=3;
 
 
