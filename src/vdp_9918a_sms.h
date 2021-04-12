@@ -48,4 +48,9 @@ extern z80_bit vdp_9918a_sms_lock_scroll_vertical;
 extern void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_buffer,z80_int *scanline_buffer_foreground,z80_byte *vram);
 extern void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *scanline_buffer,z80_byte *vram_memory_pointer,int y_display);
 
+extern z80_bit vdp_9918a_force_disable_layer_tile_bg;
+extern z80_bit vdp_9918a_force_disable_layer_tile_fg;
+extern z80_bit vdp_9918a_reveal_layer_tile_fg;
+extern z80_bit vdp_9918a_reveal_layer_tile_bg;
+
 #endif

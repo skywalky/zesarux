@@ -51,6 +51,14 @@ z80_bit vdp_9918a_sms_force_show_column_zero={0};
 z80_bit vdp_9918a_sms_lock_scroll_horizontal={0};
 z80_bit vdp_9918a_sms_lock_scroll_vertical={0};
 
+//Desactivar/Reveal de capas de sms
+
+z80_bit vdp_9918a_force_disable_layer_tile_bg={0};
+z80_bit vdp_9918a_force_disable_layer_tile_fg={0};
+z80_bit vdp_9918a_reveal_layer_tile_fg={0};
+z80_bit vdp_9918a_reveal_layer_tile_bg={0};
+
+
 
 void vdp_9918a_sms_reset(void)
 {
@@ -1024,11 +1032,50 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                         //scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
                         //Tile con prioridad (arriba) y solo cuando su color no es 0
                         if (priority_tile /*&& byte_color!=0*/) {
-                            *destino_scanline_buffer_foreground=SMS_INDEX_FIRST_COLOR+color_paleta;
+                            if (vdp_9918a_force_disable_layer_tile_fg.v==0) {
+                                if (vdp_9918a_reveal_layer_tile_fg.v) {
+                                    int posx=xdestino&1;
+                                    int posy=scanline&1;
+
+                                    //0,0: 0
+                                    //0,1: 1
+                                    //1,0: 1
+                                    //1,0: 0
+                                    //Es un xor
+
+                                    int si_blanco_negro=posx ^ posy;
+
+                                    //Color 0 o 63 (negro / blanco)
+                                    color_paleta=si_blanco_negro*(SMS_TOTAL_PALETTE_COLOURS-1);
+                                }  
+
+                                *destino_scanline_buffer_foreground=SMS_INDEX_FIRST_COLOR+color_paleta;
+
+                              
+                            }
                         }
 
                         else {
-                            *destino_scanline_buffer=SMS_INDEX_FIRST_COLOR+color_paleta;
+                            if (vdp_9918a_force_disable_layer_tile_bg.v==0) {
+
+                                if (vdp_9918a_reveal_layer_tile_bg.v) {
+                                    int posx=xdestino&1;
+                                    int posy=scanline&1;
+
+                                    //0,0: 0
+                                    //0,1: 1
+                                    //1,0: 1
+                                    //1,0: 0
+                                    //Es un xor
+
+                                    int si_blanco_negro=posx ^ posy;
+
+                                    //Color 0 o 63 (negro / blanco)
+                                    color_paleta=si_blanco_negro*(SMS_TOTAL_PALETTE_COLOURS-1);
+                                }  
+
+                                *destino_scanline_buffer=SMS_INDEX_FIRST_COLOR+color_paleta;
+                            }
                         }
                         destino_scanline_buffer++;    
                         destino_scanline_buffer_foreground++;
