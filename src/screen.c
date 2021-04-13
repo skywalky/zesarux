@@ -8800,7 +8800,7 @@ G  G   R   R   B   B
 
 				//Colores QL
 				for (i=0;i<QL_TOTAL_PALETTE_COLOURS;i++) {
-					valorgris=i*16;
+					valorgris=i*32;
 					VALOR_GRIS_A_R_G_B
 					screen_set_colour_normal(QL_INDEX_FIRST_COLOR+i,(r<<16)|(g<<8)|b);					
 				}                
@@ -8812,7 +8812,8 @@ G  G   R   R   B   B
 
 				//Colores SMS
 				for (i=0;i<SMS_TOTAL_PALETTE_COLOURS;i++) {
-					valorgris=i*16;
+					valorgris=i*4;
+                    //printf("i %d valorgris %d\n",i,valorgris);
 					VALOR_GRIS_A_R_G_B
 					screen_set_colour_normal(SMS_INDEX_FIRST_COLOR+i,(r<<16)|(g<<8)|b);					
 				}                
@@ -9027,7 +9028,7 @@ Bit 6 GRN1 most  significant bit of green.
 
 					//debug_printf (VERBOSE_PARANOID,"32 bit: r: %d g: %d b: %d",r,g,b);
 
-                    printf ("sms %d 32 bit: r: %d g: %d b: %d\n",i,r,g,b);
+                    //printf ("sms %d 32 bit: r: %d g: %d b: %d\n",i,r,g,b);
 
 					screen_set_colour_normal(SMS_INDEX_FIRST_COLOR+i, color32);
 
