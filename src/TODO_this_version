@@ -205,9 +205,5 @@ micro machines
 
 -Agregar documento master system en extras 
 
--colores border en modo sms 4 deben ser de paleta sms
-
-
--columna 0 cuando esta oculta en sms debe ser color del border mapeado
 
 -menos codigo en vd_9918a.c que sea de SMS modo 4. Hacer diff con ZEsarUX 9.2 para que haya el minimo

@@ -57,10 +57,6 @@ z80_byte vdp_9918a_last_vram_bytes[3];
 z80_int vdp_9918a_last_vram_position;
 
 
-
-
-
-
 //Forzar desde menu a desactivar capas 
 z80_bit vdp_9918a_force_disable_layer_ula={0};
 z80_bit vdp_9918a_force_disable_layer_sprites={0};
@@ -72,20 +68,14 @@ z80_bit vdp_9918a_reveal_layer_ula={0};
 z80_bit vdp_9918a_reveal_layer_sprites={0};
 
 
-
 void vdp_9918a_reset(void)
 {
     int i;
 
     for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdp_9918a_registers[i]=0;
 
-    //en sms por defecto modo 4
-    //if (MACHINE_IS_SMS) vdp_9918a_registers[0] |= 4;
 
     if (MACHINE_IS_SMS) vdp_9918a_sms_reset();
-
-
-
 
 }
 
@@ -197,8 +187,12 @@ void vdp_9918a_out_command_status(z80_byte value)
                 //vdp_9918a_last_vram_position=(vdp_9918a_last_command_status_bytes[1] & 63) | (vdp_9918a_last_command_status_bytes[0]<<6);
                 z80_byte vdp_register=vdp_9918a_last_command_status_bytes[1] & (VDP_9918A_TOTAL_REGISTERS-1); 
 
+                if (MACHINE_IS_SMS && vdp_register==9) {
+                    vdp9918a_sms_set_scroll_vertical(vdp_9918a_last_command_status_bytes[0]);
+                }
 
-                vdp_9918a_registers[vdp_register]=vdp_9918a_last_command_status_bytes[0];
+
+                else vdp_9918a_registers[vdp_register]=vdp_9918a_last_command_status_bytes[0];
 
                 //Cambio color o bits de modo, actualizar border
                 if (vdp_register==0 || vdp_register==1 || vdp_register==7) {
@@ -221,11 +215,7 @@ void vdp_9918a_out_command_status(z80_byte value)
 
             //Paleta colores SMS
             if ( (vdp_9918a_last_command_status_bytes[1] &  (128+64)) == 192  && MACHINE_IS_SMS) {
-                //printf("Write palette. Index: %d byte2: %d\n",vdp_9918a_last_command_status_bytes[0],vdp_9918a_last_command_status_bytes[1] & 63);
-
-                sms_writing_cram=1;
-
-                index_sms_escritura_cram=vdp_9918a_last_command_status_bytes[0];
+                vdp_9918a_sms_set_writing_cram(vdp_9918a_last_command_status_bytes[0]);
             }       
         break;
     }
@@ -246,9 +236,6 @@ const char *s_vdp_9918a_video_mode_0="0 - Text 40x24";
 const char *s_vdp_9918a_video_mode_1="1 - Text 32x24";
 const char *s_vdp_9918a_video_mode_2="2 - Graphic 256x192";
 const char *s_vdp_9918a_video_mode_3="3 - Graphic 64x48";
-const char *s_vdp_9918a_video_mode_sms_4="4 - SMS Graphic 256x192";
-
-
 
 
 z80_byte vdp_9918a_get_video_mode(void)
@@ -259,8 +246,7 @@ z80_byte vdp_9918a_get_video_mode(void)
 	z80_byte video_mode_m12=(vdp_9918a_registers[1]>>2)&(2+4);
 
 	z80_byte video_mode=video_mode_m12 | video_mode_m3;
-//temp
-//return 128;
+
     //Modo "especial" de SMS llamado 4, aqui se retorna como 128
     if (vdp_9918a_si_sms_video_mode4() ) {
         //printf("Modo 4 SMS\n");
@@ -270,7 +256,6 @@ z80_byte vdp_9918a_get_video_mode(void)
 
     return video_mode;
 }
-
 
 
 z80_int vdp_9918a_get_pattern_name_table(void)
@@ -454,8 +439,6 @@ z80_int vdp_9918a_get_sprite_pattern_table(void)
 }
 
 
-
-
 z80_int vdp_9918a_get_sprite_attribute_table(void)
 {
 
@@ -487,7 +470,7 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
     z80_byte byte_color;
 	int color=0;
 	
-
+    //int zx,zy;
 
 	z80_byte ink,paper;
 
@@ -749,8 +732,6 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 
 
-
-
 	}    
 }
 
@@ -991,12 +972,33 @@ void vdp_9918a_render_sprites_no_rainbow(z80_byte *vram)
         }   
 }
 
+int vdp_9918a_get_final_border_if_disable(void)
+{
 
+    unsigned int color_final_border;
+
+    if (vdp_9918a_si_sms_video_mode4()) {
+        color_final_border=vdp_9918a_sms_get_final_color_border();
+
+        if (vdp_9918a_force_disable_layer_border.v) color_final_border=SMS_INDEX_FIRST_COLOR; //color 0 de su paleta de colores
+    }    
+    
+    else {
+        color_final_border=vdp_9918a_get_border_color()+VDP_9918_INDEX_FIRST_COLOR;
+
+        if (vdp_9918a_force_disable_layer_border.v) color_final_border=VDP_9918_INDEX_FIRST_COLOR; //color 0 de su paleta de colores
+    }
+
+    return color_final_border;
+}
 
 void vdp_9918a_refresca_border(void)
 {
 
-    unsigned int color=vdp_9918a_get_border_color();
+    unsigned int color_final_border;
+
+    color_final_border=vdp_9918a_get_final_border_if_disable();
+
 
 
 
@@ -1016,14 +1018,14 @@ void vdp_9918a_refresca_border(void)
         //parte superior
         for (y=0;y<topborder;y++) {
                 for (x=0;x<VDP_9918A_ANCHO_PANTALLA*zoom_x+VDP_9918A_LEFT_BORDER*2;x++) {
-                                scr_putpixel(x,y,VDP_9918_INDEX_FIRST_COLOR+color);
+                                scr_putpixel(x,y,color_final_border);
                 }
         }
 
         //parte inferior
         for (y=0;y<VDP_9918A_BOTTOM_BORDER;y++) {
                 for (x=0;x<VDP_9918A_ANCHO_PANTALLA*zoom_x+VDP_9918A_LEFT_BORDER*2;x++) {
-                                scr_putpixel(x,topborder+y+VDP_9918A_ALTO_PANTALLA*zoom_y,VDP_9918_INDEX_FIRST_COLOR+color);
+                                scr_putpixel(x,topborder+y+VDP_9918A_ALTO_PANTALLA*zoom_y,color_final_border);
 
 
                 }
@@ -1036,7 +1038,7 @@ void vdp_9918a_refresca_border(void)
 
         for (y=0;y<VDP_9918A_ALTO_PANTALLA*zoom_y;y++) {
                 for (x=0;x<VDP_9918A_LEFT_BORDER;x++) {
-                        scr_putpixel(x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
+                        scr_putpixel(x,topborder+y,color_final_border);
                 }
 
         
@@ -1057,7 +1059,7 @@ void vdp_9918a_refresca_border(void)
         for (y=0;y<VDP_9918A_ALTO_PANTALLA*zoom_y;y++) {
 
                 for (x=0;x<ancho_border_derecho;x++) {
-                        scr_putpixel(VDP_9918A_LEFT_BORDER+ancho_pantalla*zoom_x+x,topborder+y,VDP_9918_INDEX_FIRST_COLOR+color);
+                        scr_putpixel(VDP_9918A_LEFT_BORDER+ancho_pantalla*zoom_x+x,topborder+y,color_final_border);
                 }                
 
         }
@@ -1072,12 +1074,6 @@ void vdp_9918a_refresca_border(void)
 //Renderiza una linea de display (pantalla y sprites, pero no border)
 void vdp_9918a_render_rainbow_display_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
 {
-
-    /*if (vdp_9918a_si_sms_video_mode4()) {
-        //printf("Render sprites modo 4 sms\n");
-        vdp_9918a_render_rainbow_display_line_sms(scanline,scanline_buffer,vram);
-        return;
-    }*/
 
 
     //Nos ubicamos ya en la zona de pixeles, saltando el border
@@ -1774,13 +1770,6 @@ void vdp_9918a_render_rainbow_sprites_line_post(int scanline,z80_int *destino_sc
 void vdp_9918a_render_rainbow_sprites_line(int scanline,z80_int *scanline_buffer,z80_byte *vram)
 {
 
-    /*if (vdp_9918a_si_sms_video_mode4()) {
-        //printf("Render sprites modo 4 sms\n");
-        vdp_9918a_render_rainbow_sprites_line_sms(scanline,scanline_buffer,vram);
-        return;
-    }*/
-
-
     z80_byte video_mode=vdp_9918a_get_video_mode();
 
 
@@ -1824,29 +1813,12 @@ void screen_store_scanline_rainbow_solo_border_vdp_9918a_section(z80_int *buffer
 {
     int i;
 
-    z80_byte border_color=vdp_9918a_get_border_color();
+    z80_int color_final;
+
+    color_final=vdp_9918a_get_final_border_if_disable();
+
 
     for (i=0;i<lenght;i++) {
-        z80_int color_final;
-        
-        if (vdp_9918a_si_sms_video_mode4()) {
-            z80_byte color_mapeado=vdp_9918a_sms_cram[border_color & 15];
-            color_final=SMS_INDEX_FIRST_COLOR+color_mapeado;
-        }
-        else {
-            color_final=VDP_9918_INDEX_FIRST_COLOR+border_color;
-        }
-
-        if (vdp_9918a_force_disable_layer_border.v) {
-            if (vdp_9918a_si_sms_video_mode4()) {
-                z80_byte color_mapeado=vdp_9918a_sms_cram[0];
-                color_final=SMS_INDEX_FIRST_COLOR+color_mapeado;
-            }            
-            else {
-                color_final=VDP_9918_INDEX_FIRST_COLOR; //color 0 de su paleta de colores
-            }
-        }
-
         *buffer=color_final;
         buffer++;
     }
@@ -2017,10 +1989,14 @@ void screen_store_scanline_rainbow_vdp_9918a_border_and_display(z80_int *scanlin
     int blanking=0;
 
     //Bit de blanking
+    //Sonic suele habilitar este bit de blank en los primeros scanline en el juego
+    //supongo que para ocultar cambios en los elementos del juego: sprites, tiles, paletas
     if ((vdp_9918a_registers[1] & 64)==0) {
         //printf ("BLANK: %d\n",vdp_9918a_registers[1] & 2);
         //En este caso mostrar solamente color del border en toda la pantalla
-        blank_color=vdp_9918a_get_border_color()+VDP_9918_INDEX_FIRST_COLOR;
+
+        blank_color=vdp_9918a_get_final_border_if_disable();
+
         blanking=1;
     }
 

@@ -84,6 +84,8 @@ extern z80_byte vdp_9918a_read_vram_byte(z80_byte *vram,z80_int address);
 
 extern void vdp_9918a_reset(void);
 
+extern void vdp9918a_put_sprite_pixel(z80_int *destino,z80_int color);
+
 
 extern z80_bit vdp_9918a_force_disable_layer_ula;
 extern z80_bit vdp_9918a_force_disable_layer_sprites;

@@ -61,6 +61,24 @@ z80_bit vdp_9918a_reveal_layer_tile_bg={0};
 //Decimos que los tiles en foreground (con priority) pasen a background
 z80_bit vdp_9918a_force_bg_tiles={0};
 
+const char *s_vdp_9918a_video_mode_sms_4="4 - SMS Graphic 256x192";
+
+//Siguiente valor para scroll vertical que se actualiza a final de frame
+/*
+ The vertical scroll value cannot be changed during the active display
+ period, any changes made will be stored in a temporary location and
+ used only when the active display period ends (prematurely blanking the
+ screen with bit #6 of register #1 doesn't count).
+
+*/
+z80_byte sms_next_scroll_vertical_value=0;
+
+int vdp_9918a_sms_get_cram_color(int index)
+{
+    return vdp_9918a_sms_cram[index % VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS];
+}
+
+
 
 void vdp_9918a_sms_reset(void)
 {
@@ -88,6 +106,8 @@ void vdp_9918a_sms_reset(void)
         vdp_9918a_sms_cram[15+i*16]=0x3f;	
 
     }
+
+    sms_next_scroll_vertical_value=0;
 }
 
 int vdp_9918a_si_sms_video_mode4(void)
@@ -379,7 +399,7 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                             
                             //Y no ocultarlo si tenemos el setting de mostrar forzado columna 0
                             if (vdp_9918a_sms_force_show_column_zero.v==0) {
-                                color_paleta=0; 
+                                color_paleta=vdp_9918a_sms_get_cram_color(vdp_9918a_get_border_color()); 
                             }
                         }  
 
@@ -783,13 +803,6 @@ void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_bu
 
 
 
-    int offset_sumar_linea;
-
-
-
-
-
-
 
     //fila
     /*
@@ -813,7 +826,7 @@ starting row, and the lower three bits are the fine scroll value.
     //algo distinto de este no rainbow (o deberia ser)
 
     //1 fila mas si hay scroll vertical
-    int total_filas=24;
+    //int total_filas=24;
 
     //if (scroll_y_sublinea) total_filas++;
 
@@ -1028,7 +1041,7 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                             
                             //Y no ocultarlo si tenemos el setting de mostrar forzado columna 0
                             if (vdp_9918a_sms_force_show_column_zero.v==0) {
-                                color_paleta=0; 
+                                color_paleta=vdp_9918a_sms_get_cram_color(vdp_9918a_get_border_color()); 
                             }
                         }  
 
@@ -1326,7 +1339,7 @@ to be taken from the first 256 or last 256 of the 512 available patterns.
                     for (x=0;x<8;x++) {
 
                         int pos_x_final;
-                        int pos_y_final;
+                        //int pos_y_final;
 
                         pos_x_final=horiz_pos+x*sprite_double;
                         //pos_y_final=vert_pos+y*sprite_double;
@@ -1397,7 +1410,8 @@ to be taken from the first 256 or last 256 of the 512 available patterns.
                                                 //scr_putpixel_zoom(pos_x_final,    pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
                                                 //scr_putpixel_zoom(pos_x_final+1,  pos_y_final+1,  SMS_INDEX_FIRST_COLOR+color_sprite);
                                                 
-                                                //vdp9918a_put_sprite_pixel(&destino_scanline_buffer[pos_x_final+1],SMS_INDEX_FIRST_COLOR+color_sprite);
+                                                //TODO. Verificar esto
+                                                vdp9918a_put_sprite_pixel(&destino_scanline_buffer[pos_x_final+1],SMS_INDEX_FIRST_COLOR+color_sprite);
                                             }             
                                         }      
 
@@ -1570,4 +1584,30 @@ void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *sc
     }     
   
 
+}
+
+
+void vdp9918a_sms_set_scroll_vertical(z80_byte valor)
+{
+
+    //En SMS este registro se actualiza a final de frame
+    //printf("Cambio scroll vertical: %d\n",vdp_9918a_last_command_status_bytes[0]);
+    sms_next_scroll_vertical_value=valor;
+
+}
+
+void vdp_9918a_sms_set_writing_cram(z80_byte valor)
+{
+    //printf("Write palette. Index: %d byte2: %d\n",vdp_9918a_last_command_status_bytes[0],vdp_9918a_last_command_status_bytes[1] & 63);
+
+    sms_writing_cram=1;
+
+    index_sms_escritura_cram=valor;
+}
+
+
+int vdp_9918a_sms_get_final_color_border(void)
+{
+    z80_byte border_registro=vdp_9918a_get_border_color();
+    return vdp_9918a_sms_get_cram_color(border_registro & 15)+SMS_INDEX_FIRST_COLOR;
 }

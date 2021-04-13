@@ -54,5 +54,12 @@ extern z80_bit vdp_9918a_reveal_layer_tile_fg;
 extern z80_bit vdp_9918a_reveal_layer_tile_bg;
 
 extern z80_bit vdp_9918a_force_bg_tiles;
+extern int vdp_9918a_sms_get_cram_color(int index);
+
+extern z80_byte sms_next_scroll_vertical_value;
+extern const char *s_vdp_9918a_video_mode_sms_4;
+extern void vdp9918a_sms_set_scroll_vertical(z80_byte valor);
+extern void vdp_9918a_sms_set_writing_cram(z80_byte valor);
+extern int vdp_9918a_sms_get_final_color_border(void);
 
 #endif

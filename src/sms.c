@@ -69,6 +69,8 @@ z80_bit sms_cartridge_inserted={0};
 //Tamanyo del cartucho insertado
 int sms_cartridge_size=0;
 
+
+
 char *sms_get_string_memory_type(int tipo)
 {
     		
@@ -419,8 +421,8 @@ void scr_refresca_pantalla_y_border_sms_no_rainbow(void)
 {
 
  
-
-    if (border_enabled.v && vdp_9918a_force_disable_layer_border.v==0) {
+    //Si se desactiva el layer de border, lo que hara sera mostrarlo con color 0
+    if (border_enabled.v) {
             //ver si hay que refrescar border
             if (modificado_border.v)
             {
@@ -430,12 +432,12 @@ void scr_refresca_pantalla_y_border_sms_no_rainbow(void)
 
     }
 
-
-    if (vdp_9918a_force_disable_layer_ula.v==0) {
+    //En no rainbow, realmente las dos capas de tiles van a la misma capa: background
+    if (vdp_9918a_force_disable_layer_tile_bg.v==0) {
 
         //Capa activada. Pero tiene reveal?
 
-        if (vdp_9918a_reveal_layer_ula.v) {
+        if (vdp_9918a_reveal_layer_tile_bg.v) {
             //En ese caso, poner fondo tramado
             int x,y;
             for (y=0;y<192;y++) {

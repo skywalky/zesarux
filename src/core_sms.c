@@ -55,6 +55,7 @@
 #include "sms.h"
 #include "vdp_9918a.h"
 #include "sn76489an.h"
+#include "vdp_9918a_sms.h"
 
 
 z80_byte byte_leido_core_sms;
@@ -129,6 +130,20 @@ void core_sms_fin_frame_pantalla(void)
 
 		      
 					set_t_scanline_draw_zero();
+
+                    /*
+
+                    En SMS modo video 4
+                     The vertical scroll value cannot be changed during the active display
+ period, any changes made will be stored in a temporary location and
+ used only when the active display period ends (prematurely blanking the
+ screen with bit #6 of register #1 doesn't count).
+
+
+
+                    */
+
+                    vdp_9918a_registers[9]=sms_next_scroll_vertical_value;
 
 		     
 
