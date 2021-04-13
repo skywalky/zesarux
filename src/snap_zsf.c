@@ -81,6 +81,7 @@
 #include "m68k.h"
 #include "ql_zx8302.h"
 #include "ql_i8049.h"
+#include "vdp_9918a_sms.h"
 
 
 #include "autoselectoptions.h"
@@ -390,7 +391,6 @@ Byte Fields:
 3,4: Block lenght
 5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
 
-//TODO SMS
 
 -Block ID 30: ZSF_VDP_9918A_CONF
 Ports and internal registers of VDP 9918A registers
@@ -429,14 +429,44 @@ Byte Fields:
 5: ram block id 
 6 and next bytes: data bytes
 
--Block ID 15: ZSF_QL_CONF
+-Block ID 35: ZSF_QL_CONF
 Ports and internal registers of QL
 Byte fields:
 
 0: unsigned char ql_pc_intr;
 1: unsigned char ql_mc_stat;
 
+-Block ID 36: ZSF_SMS_ROMBLOCK
+A rom binary block for a SMS
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
 
+-Block ID 37: ZSF_SMS_RAMBLOCK
+A rom binary block for a SMS
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
+
+-Block ID 38: ZSF_SMS_CONF
+Ports and internal registers of SMS machine
+Byte fields:
+0 sms_mapper_type=SMS_MAPPER_TYPE_NONE(0), SMS_MAPPER_TYPE_SEGA(1);
+1 sms_mapper_FFFC;
+2 sms_mapper_FFFD;
+3 sms_mapper_FFFE;
+4 sms_mapper_FFFF;
+
+-Block ID 39: ZSF_SMS_CRAM
+CRAM colour palette
+Byte fields:
+0...31
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
@@ -450,7 +480,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 35
+#define MAX_ZSF_BLOCK_ID_NAMES 39
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -489,6 +519,10 @@ char *zsf_block_id_names[]={
   "ZSF_DATETIME",
   "ZSF_QL_RAMBLOCK",
   "ZSF_QL_CONF",
+  "ZSF_SMS_ROMBLOCK",
+  "ZSF_SMS_RAMBLOCK",
+  "ZSF_SMS_CONF",
+  "ZSF_SMS_CRAM",
 
   "Unknown"  //Este siempre al final
 };
@@ -892,6 +926,108 @@ Byte Fields:
 
 }
 
+void load_zsf_sms_romblock_snapshot_block_data(z80_byte *block_data,int longitud_original)
+{
+/*
+
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ....)
+*/
+
+
+  int i=0;
+  z80_byte block_flags=block_data[i];
+
+  //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 8 bytes
+
+  i++;
+  z80_int block_start=value_8_to_16(block_data[i+1],block_data[i]);
+  i +=2;
+  z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+  i+=2;
+
+
+  z80_byte segment=block_data[i];
+  i++;
+
+
+  debug_printf (VERBOSE_DEBUG,"Block segment: %d start: %d Length: %d Compressed: %s Length_source: %d",segment,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+  longitud_original -=6;
+
+  //if (ram_page>1) cpu_panic("Loading more than 32kb ram not implemented yet");
+
+
+
+  int offset=segment*16384;
+
+
+  load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[offset],block_lenght,longitud_original,block_flags&1);
+
+  //Los bloques vendran ordenados, el tamaño del cartucho insertado sera el ultimo bloque * 16384
+  sms_cartridge_size=(segment+1)*16384;
+
+  sms_cartridge_inserted.v=1;
+
+    //El tipo de mapper lo guardamos en bloque ZSF_SMS_CONF
+    //sms_set_mapper_type_from_size();
+
+    sms_set_mapper_mask_bits();  
+
+}
+
+
+void load_zsf_sms_ramblock_snapshot_block_data(z80_byte *block_data,int longitud_original)
+{
+/*
+
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ....)
+*/
+
+
+  int i=0;
+  z80_byte block_flags=block_data[i];
+
+  //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 8 bytes
+
+  i++;
+  z80_int block_start=value_8_to_16(block_data[i+1],block_data[i]);
+  i +=2;
+  z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+  i+=2;
+
+
+  z80_byte segment=block_data[i];
+  i++;
+
+
+  debug_printf (VERBOSE_DEBUG,"Block segment: %d start: %d Length: %d Compressed: %s Length_source: %d",segment,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+  longitud_original -=6;
+
+  //if (ram_page>1) cpu_panic("Loading more than 32kb ram not implemented yet");
+
+
+  //int offset=segment*16384;
+
+  //return &memoria_spectrum[SMS_MAX_ROM_SIZE + (direccion & 8191)];
+
+
+  load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[SMS_MAX_ROM_SIZE],block_lenght,longitud_original,block_flags&1);
+
+
+
+}
+
 
 void load_zsf_msx_snapshot_vram_data(z80_byte *block_data,int longitud_original)
 {
@@ -928,6 +1064,7 @@ Byte Fields:
 
   if (MACHINE_IS_COLECO) vram_destination=coleco_vram_memory;
   else if (MACHINE_IS_SG1000) vram_destination=sg1000_vram_memory;
+  else if (MACHINE_IS_SMS) vram_destination=sms_vram_memory;
   else if (MACHINE_IS_SVI) vram_destination=svi_vram_memory;
   else vram_destination=msx_vram_memory;
 
@@ -1403,6 +1540,48 @@ Byte fields:
 
  
 }
+
+void load_zsf_sms_conf(z80_byte *header)
+{
+
+  /*
+-Block ID 38: ZSF_SMS_CONF
+Ports and internal registers of SMS machine
+Byte fields:
+0 sms_mapper_type=SMS_MAPPER_TYPE_NONE(0), SMS_MAPPER_TYPE_SEGA(1);
+
+1 sms_mapper_FFFC;
+2 sms_mapper_FFFD;
+3 sms_mapper_FFFE;
+4 sms_mapper_FFFF;
+*/
+
+  sms_mapper_type=header[0];
+  sms_mapper_FFFC=header[1];
+  sms_mapper_FFFD=header[2];
+  sms_mapper_FFFE=header[3];
+  sms_mapper_FFFF=header[4];
+
+
+ 
+}
+
+void load_zsf_sms_cram(z80_byte *header)
+{
+
+    int i;
+
+    for (i=0;i<VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS;i++) {
+        vdp_9918a_sms_cram[i]=header[i];
+    }
+
+
+ 
+}
+
+
+
+
 
 
 void load_zsf_svi_conf(z80_byte *header)
@@ -1997,7 +2176,23 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_QL_CONF:
         load_zsf_ql_conf(block_data);
-      break;                          
+      break;  
+
+      case ZSF_SMS_ROMBLOCK:
+        load_zsf_sms_romblock_snapshot_block_data(block_data,block_lenght);
+      break;         
+
+      case ZSF_SMS_RAMBLOCK:
+        load_zsf_sms_ramblock_snapshot_block_data(block_data,block_lenght);
+      break;      
+
+      case ZSF_SMS_CONF:
+        load_zsf_sms_conf(block_data);
+      break;       
+
+      case ZSF_SMS_CRAM:
+        load_zsf_sms_cram(block_data);
+      break;                                  
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -2968,6 +3163,172 @@ Byte Fields:
       
 
     }
+  
+  free(compressed_ramblock);
+
+
+  }  
+
+
+if (MACHINE_IS_SMS) {
+
+    z80_byte smsconfblock[5];
+
+/*
+-Block ID 38: ZSF_SMS_CONF
+Ports and internal registers of SMS machine
+Byte fields:
+0 sms_mapper_type=SMS_MAPPER_TYPE_NONE(0), SMS_MAPPER_TYPE_SEGA(1);
+1 sms_mapper_FFFC;
+2 sms_mapper_FFFD;
+3 sms_mapper_FFFE;
+4 sms_mapper_FFFF;
+*/    
+
+    smsconfblock[0]=sms_mapper_type;
+    smsconfblock[1]=sms_mapper_FFFC;
+    smsconfblock[2]=sms_mapper_FFFD;
+    smsconfblock[3]=sms_mapper_FFFE;
+    smsconfblock[4]=sms_mapper_FFFF;
+
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, smsconfblock,ZSF_SMS_CONF, 5);
+
+    //Paleta. La podemos pillar de aqui directamente sin buffer intermedio
+    //TODO: Por ejemplo con los registros vdp_9918a_registers tambien se podria hacer lo mismo, no usar buffer intermedio
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdp_9918a_sms_cram,ZSF_SMS_CRAM, VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS);
+
+
+    z80_byte vdpconfblock[VDP_9918A_TOTAL_REGISTERS];
+
+/*
+-Block ID 30: ZSF_VDP_9918A_CONF
+Ports and internal registers of VDP 9918A
+Byte fields:
+0: vdp_9918a_registers[16];
+*/    
+
+
+    int i;
+    for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdpconfblock[i]=vdp_9918a_registers[i];
+
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, VDP_9918A_TOTAL_REGISTERS);  
+
+
+
+
+
+   
+int longitud_ram=16384;
+  
+   //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
+  if (compressed_ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+
+/*
+-Block ID 28: ZSF_MSX_VRAM
+VRAM contents for msx
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+*/
+
+        compressed_ramblock[0]=0;
+        compressed_ramblock[1]=value_16_to_8l(16384);
+        compressed_ramblock[2]=value_16_to_8h(16384);
+        compressed_ramblock[3]=value_16_to_8l(longitud_ram); //"Casualidad" que la vram tambien ocupa 16kb
+        compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+
+  z80_byte *vram;
+
+  vram=sms_vram_memory;
+
+
+        int si_comprimido;
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(vram,&compressed_ramblock[5],longitud_ram,&si_comprimido);
+        if (si_comprimido) compressed_ramblock[0]|=1;
+
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_VRAM length: %d",longitud_bloque);
+
+
+
+
+        
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_VRAM, longitud_bloque+5);
+
+
+
+  /*
+
+
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: memory segment(0=0000-3fff, 1=4000-7fff, 2=8000-bfff, 3=c000-ffff, ...)
+  */
+
+
+  int segment;
+
+    int total_segmentos=sms_cartridge_size/16384;
+
+    for (segment=0;segment<total_segmentos;segment++) {
+
+      //Store block to file
+
+        compressed_ramblock[0]=0;
+        compressed_ramblock[1]=value_16_to_8l(16384);
+        compressed_ramblock[2]=value_16_to_8h(16384);
+        compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+        compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+        compressed_ramblock[5]=segment;
+
+
+        int offset=segment*16384;
+
+        int si_comprimido;
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[offset],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+        if (si_comprimido) compressed_ramblock[0]|=1;
+
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_SMS_ROMBLOCK segment: %d length: %d",segment,longitud_bloque);
+
+        
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_SMS_ROMBLOCK, longitud_bloque+6);
+        
+      
+
+    }
+
+    //Y bloque RAM
+
+    longitud_ram=8192;
+    compressed_ramblock[0]=0;
+    compressed_ramblock[1]=value_16_to_8l(16384);
+    compressed_ramblock[2]=value_16_to_8h(16384);
+    compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+    compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+    //Segmento en principio no usado en RAM
+    compressed_ramblock[5]=0;
+
+
+    longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[SMS_MAX_ROM_SIZE],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+    if (si_comprimido) compressed_ramblock[0]|=1;
+
+    debug_printf(VERBOSE_DEBUG,"Saving ZSF_SMS_RAMBLOCK segment: %d length: %d",segment,longitud_bloque);
+
+    
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_SMS_RAMBLOCK, longitud_bloque+6);
+        
+          
+
   
   free(compressed_ramblock);
 

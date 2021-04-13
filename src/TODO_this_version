@@ -207,4 +207,4 @@ micro machines
 -Agregar documento master system en extras 
 
 
--menos codigo en vd_9918a.c que sea de SMS modo 4. Hacer diff con ZEsarUX 9.2 para que haya el minimo
+-puertos SMS en ventana debug I/O

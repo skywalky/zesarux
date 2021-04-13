@@ -59,6 +59,10 @@
 #define ZSF_DATETIME 33
 #define ZSF_QL_RAMBLOCK 34
 #define ZSF_QL_CONF 35
+#define ZSF_SMS_ROMBLOCK 36
+#define ZSF_SMS_RAMBLOCK 37
+#define ZSF_SMS_CONF 38
+#define ZSF_SMS_CRAM 39
 
 extern void load_zsf_snapshot(char *filename);
 extern void save_zsf_snapshot(char *filename);

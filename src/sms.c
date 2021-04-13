@@ -48,7 +48,7 @@
 z80_byte *sms_vram_memory=NULL;
 
 
-int sms_mapper_type=SMS_MAPPER_TYPE_NONE;
+z80_byte sms_mapper_type=SMS_MAPPER_TYPE_NONE;
 
 z80_byte sms_mapper_FFFC;
 z80_byte sms_mapper_FFFD;
