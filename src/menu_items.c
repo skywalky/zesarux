@@ -8577,11 +8577,22 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
                         zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
                         linea +=3;
 
-                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Background:");
+                        char texto_tiles[32];
+                        strcpy(texto_tiles,"Tiles Background:");
+
+                        //Sin rainbow, las dos capas Foreground y Background son la misma
+                        if (rainbow_enabled.v==0) {
+                            strcpy(texto_tiles,"Tiles:");
+                        }
+
+                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_tiles);
                         linea +=3;
 
-                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Foreground:");
-                        linea +=3;
+                        //Sin rainbow, las dos capas Foreground y Background son la misma
+                        if (rainbow_enabled.v) {
+                            zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Foreground:");
+                            linea +=3;
+                        }
 
 
                         zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Sprites:");
@@ -8976,14 +8987,17 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);		
                 lin+=3;
 
-                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_tile_fg,NULL,"%s",(vdp_9918a_force_disable_layer_tile_fg.v ? "Disabled" : "Enabled "));
-                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
-                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_reveal_tile_fg,NULL,"%s",(vdp_9918a_reveal_layer_tile_fg.v ? "Reveal" : "Normal"));
-                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);	
 
-                menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_force_bg_tiles,NULL,"%s",(vdp_9918a_force_bg_tiles.v ? "AlwaysFG": "Normal  " ));
-                menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,20,lin);	
-                lin+=3;            
+                //Sin rainbow, las dos capas Foreground y Background son la misma
+                if (rainbow_enabled.v) {
+                    menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_tile_fg,NULL,"%s",(vdp_9918a_force_disable_layer_tile_fg.v ? "Disabled" : "Enabled "));
+                    menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
+                    menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_reveal_tile_fg,NULL,"%s",(vdp_9918a_reveal_layer_tile_fg.v ? "Reveal" : "Normal"));
+                    menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,12,lin);	
+                    menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_force_bg_tiles,NULL,"%s",(vdp_9918a_force_bg_tiles.v ? "AlwaysBack": "Normal    " ));
+                    menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,20,lin);	
+                    lin+=3;            
+                }
 
                 menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_sprites,NULL,"%s",(vdp_9918a_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
                 menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
