@@ -24531,6 +24531,230 @@ void menu_file_col_browser_show(char *filename)
 
 }
 
+
+
+void menu_file_sms_browser_show(char *filename)
+{
+	
+	//Leemos cabecera archivo sms
+    FILE *ptr_file_z80_browser;
+
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+    //FRESULT fr;     /* FatFs return code */
+
+    int in_fatfs;
+
+
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_z80_browser,&fil)<0) {
+        debug_printf(VERBOSE_ERR,"Unable to open file");
+        return;
+    }
+
+    //Asignamos 32768 bytes (cabecera hasta 0x7fff)
+    z80_byte *buffer_cabecera;
+
+    buffer_cabecera=malloc(32768);
+
+    if (buffer_cabecera==NULL) cpu_panic("Can not allocate memory for file read");
+
+
+    int leidos;
+    
+    leidos=zvfs_fread(in_fatfs,buffer_cabecera,32768,ptr_file_z80_browser,&fil);
+    
+
+    if (leidos==0) {
+        debug_printf(VERBOSE_ERR,"Error reading file");
+        return;
+    }
+
+    zvfs_fclose(in_fatfs,ptr_file_z80_browser,&fil);
+
+    //The header can be at offset $1ff0, $3ff0 or $7ff0 in the ROM, 
+    //although only the last of these seems to be used in known software. 
+    //The header is 16 bytes long.
+
+    /*
+    TMR SEGA ($7ff0, 8 bytes)
+    The first eight bytes of the header are the ASCII text "TMR SEGA". 
+    The export Master System and Game Gear BIOSes require this to be present to indicate valid data.
+    */
+		
+
+    char *signature="TMR SEGA";
+
+    //Averiguar offset 0x1ff0, 0x3ff0 o 0x7ff0
+    int offset=-1;
+    if (!memcmp(signature,&buffer_cabecera[0x1ff0],8)) offset=0x1ff0;
+    else if (!memcmp(signature,&buffer_cabecera[0x3ff0],8)) offset=0x3ff0;
+    else if (!memcmp(signature,&buffer_cabecera[0x7ff0],8)) offset=0x7ff0;
+
+    if (offset==-1) {
+        menu_warn_message("No valid header found");
+    }
+
+    else {
+
+		
+
+	char texto_browser[MAX_TEXTO_BROWSER];
+    char buffer_texto[512];
+	int indice_buffer=0;
+
+	/*
+Checksum ($7ffa, 2 bytes)
+This little-endian word gives the ROM checksum for export SMS BIOSes. Game Gear and Japanese releases tend not to have a correct checksum there.
+The BIOS checksum routines compare the calculated value to this to determine if the cartridge data is valid.
+
+Product code ($7ffc, 2.5 bytes)
+The first 2 bytes are a Binary Coded Decimal representation of the last four digits of the product code. 
+Hence, data 26 70 gives a product code 7026.
+The high 4 bits of the next byte (hence, 0.5 bytes) are a hexadecimal representation of any remaining digits of the product code. 
+Hence, data 26 70 2 gives a product code of 27026 and 26 70 a gives a product code of 107026.
+
+Version ($7ffe, 0.5 bytes)
+The low 4 bits of the 15th byte of the header give a version number. 
+This is generally 0 for the first release and incremented for later revisions (which often have bugfixes).
+
+Region code (0x7fff, 0.5 bytes)
+The high 4 bits of the 16th byte of the header give the region and system for which the cartridge is intended:
+Value	System/region
+$3	SMS Japan
+$4	SMS Export
+$5	GG Japan
+$6	GG Export
+$7	GG International
+Only the export SMS BIOS actually checks this.
+
+ROM size (0x7fff, 0.5 bytes)
+The final 4 bits give the ROM size, which may be used by the BIOS to determine the range over which to perform the checksum. Values are:
+Value	Rom size	Comment
+$a	8KB	Unused
+$b	16KB	Unused
+$c	32KB	 
+$d	48KB	Unused, buggy
+$e	64KB	Rarely used
+$f	128KB	 
+$0	256KB	 
+$1	512KB	Rarely used
+$2	1MB	Unused, buggy
+
+	*/
+
+ 	sprintf(buffer_texto,"Checksum: %02X%02XH",buffer_cabecera[offset+0xa],buffer_cabecera[offset+0xb]);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+/*
+Product code ($7ffc, 2.5 bytes)
+The first 2 bytes are a Binary Coded Decimal representation of the last four digits of the product code. 
+Hence, data 26 70 gives a product code 7026.
+The high 4 bits of the next byte (hence, 0.5 bytes) are a hexadecimal representation of any remaining digits of the product code. 
+Hence, data 26 70 2 gives a product code of 27026 and 26 70 a gives a product code of 107026.
+*/
+ 	sprintf(buffer_texto,"Product Code: %02d%02X%02X",
+        (buffer_cabecera[offset+0xe] >>4) & 0xF,
+        buffer_cabecera[offset+0xd],
+        buffer_cabecera[offset+0xc]);
+
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
+
+
+    //Version ($7ffe, 0.5 bytes)
+ 	sprintf(buffer_texto,"Version: %d",buffer_cabecera[offset+0xe] & 0xF);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);   
+
+    z80_byte region_code=(buffer_cabecera[offset+0xf] >> 4) & 0xF;
+    char buffer_region[32];
+    strcpy(buffer_region,"Unknown");
+
+    switch (region_code) {
+        case 0x3:
+            strcpy(buffer_region,"SMS Japan");
+        break;
+
+        case 0x4:
+            strcpy(buffer_region,"SMS Export");
+        break;
+
+        case 0x5:
+            strcpy(buffer_region,"GG Japan");
+        break;
+
+        case 0x6:
+            strcpy(buffer_region,"GG Export");
+        break;
+
+        case 0x7:
+            strcpy(buffer_region,"GG International");
+        break;
+
+    }
+
+ 	sprintf(buffer_texto,"Region: %d %s",region_code,buffer_region);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);       
+
+    z80_byte rom_size=buffer_cabecera[offset+0xf] & 0xF;
+    int total_rom_size=0;
+
+    switch (rom_size) {
+
+
+        case 0xa:
+            total_rom_size=8;
+        break;
+
+        case 0xb:
+            total_rom_size=16;
+        break;
+
+        case 0xc:
+            total_rom_size=32;
+        break;
+        
+        case 0xd:
+            total_rom_size=48;
+        break;
+
+        case 0xe:
+            total_rom_size=64;
+        break;
+
+        case 0xf:
+            total_rom_size=128;
+        break;
+        
+        case 0x0:
+            total_rom_size=256;
+        break;
+        
+        case 0x1:
+            total_rom_size=512;
+        break;
+
+        case 0x2:
+            total_rom_size=1024;
+        break;
+
+
+    }
+
+ 	sprintf(buffer_texto,"ROM size: %d KB",total_rom_size);
+ 	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);       
+
+	texto_browser[indice_buffer]=0;
+	zxvision_generic_message_tooltip("SMS file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
+
+
+
+
+    }
+
+    free(buffer_cabecera);
+
+
+}
+
 void menu_file_tzx_browser_show(char *filename)
 {
 
@@ -27153,6 +27377,8 @@ void menu_file_viewer_read_file(char *title,char *file_name)
         else if (!util_compare_file_extension(file_name,"z80")) menu_file_z80_browser_show(file_name);
 
         else if (!util_compare_file_extension(file_name,"col")) menu_file_col_browser_show(file_name);
+
+        else if (!util_compare_file_extension(file_name,"sms")) menu_file_sms_browser_show(file_name);
 
         else if (!util_compare_file_extension(file_name,"sna")) menu_file_sna_browser_show(file_name);
 

@@ -387,7 +387,7 @@ void sms_set_mapper_mask_bits(void)
     }      
  
 
-    printf("Mapper type: %d mask %d\n",sms_mapper_type,sms_mapper_mask_bits);
+    //printf("Mapper type: %d mask %d\n",sms_mapper_type,sms_mapper_mask_bits);
 
 }
 

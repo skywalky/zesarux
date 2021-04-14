@@ -8079,7 +8079,7 @@ void out_port_sms_no_time(z80_int puerto,z80_byte value)
            The SN76489 can be accessed by writing to any I/O port between 0x40 and 0x7f, 
            although officially only 0x7f was recommended. A few games write to 0x7e.
         */
-       if (puerto>=0x40 && puerto<=0x7f) {
+       if (puerto_l>=0x40 && puerto_l<=0x7f) {
            //printf("Puerto sonido %04XH valor %02XH\n",puerto,value);
            sn_out_port_sound(value);
        }
@@ -8095,7 +8095,7 @@ void out_port_sms_no_time(z80_int puerto,z80_byte value)
                sms_out_port_vdp_command_status(value);
        }
 
-
+if (puerto_l!=0xBE && puerto_l!=0xBF && puerto_l!=0x7f) printf("Out Puerto %04XH valor %02XH\n",puerto,value);
 
 }
 
@@ -8116,7 +8116,7 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 	//65533 o 49149
 	//FFFDh (65533), BFFDh (49149)
 
-	//z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
 
 	//printf ("Lee puerto sms %04XH PC=%04XH\n",puerto,reg_pc);
@@ -8206,7 +8206,7 @@ $DD	All odd addresses from $C1 to $FF
 
 
 
-	//printf ("Lee puerto sms %02XH PC=%04XH\n",puerto_l,reg_pc);
+	printf ("Lee puerto sms %04XH PC=%04XH\n",puerto,reg_pc);
 
 
 	return 255;
