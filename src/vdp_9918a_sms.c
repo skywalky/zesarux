@@ -1099,7 +1099,7 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
 
                                 *destino_scanline_buffer_foreground=SMS_INDEX_FIRST_COLOR+color_paleta;
 
-                              
+
                             }
                         }
 
