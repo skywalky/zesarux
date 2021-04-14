@@ -8067,18 +8067,22 @@ void out_port_sms_no_time(z80_int puerto,z80_byte value)
 
 
 
-	//if (puerto_l==0x98) printf ("%c",
-	//  (value>=32 && value<=126 ? value : '?') );
-
-	//sms sound
-		   if (puerto_l==0x7F) {
+	    //sms sound
+        /*if (puerto_l==0x7F) {
 		   //printf ("Puerto sonido %04XH valor %02XH\n",puerto,value);
 		   sn_out_port_sound(value);
 
-           /*
-           The SN76489 can be accessed by writing to any I/O port between 0x40 and 0x7f, although officially only 0x7f was recommended. A few games write to 0x7e.
-           */
-	   }    
+           
+	   }  */  
+
+        /*
+           The SN76489 can be accessed by writing to any I/O port between 0x40 and 0x7f, 
+           although officially only 0x7f was recommended. A few games write to 0x7e.
+        */
+       if (puerto>=0x40 && puerto<=0x7f) {
+           //printf("Puerto sonido %04XH valor %02XH\n",puerto,value);
+           sn_out_port_sound(value);
+       }
 
    
        if (puerto_l==0xBE) {
@@ -8145,9 +8149,6 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 
            //return 0xB0; //sonic por ejemplo espera este valor
 
-           //temp
-           //Micromachines espera valor FF
-           //return 0xFF;
 
            //TODO
            /*
