@@ -2098,29 +2098,52 @@ void poke_byte_no_time_sms(z80_int dir,z80_byte valor)
 	z80_byte *puntero_memoria;
 	int tipo;
 
-    //Si actua sobre mappers
-    if (dir>=0xFFFC) {
+    //Si actua sobre mappers sega
+    if (sms_mapper_type==SMS_MAPPER_TYPE_SEGA) {
+        if (dir>=0xFFFC) {
+            //printf("Writing on sms mapper %X value %x\n",dir,valor);
+            switch (dir) {
+                case 0xFFFC:
+                    sms_mapper_FFFC=valor;
+                break;
+
+                case 0xFFFD:
+                    sms_mapper_FFFD=valor;
+                break;
+
+                case 0xFFFE:
+                    sms_mapper_FFFE=valor;
+                break;
+
+                case 0xFFFF:
+                    sms_mapper_FFFF=valor;
+                break;
+
+
+            } 
+        }
+    }
+
+    //Si actua sobre mappers code masters
+    if (sms_mapper_type==SMS_MAPPER_TYPE_CODEMASTERS) {
         //printf("Writing on sms mapper %X value %x\n",dir,valor);
         switch (dir) {
-            case 0xFFFC:
-                sms_mapper_FFFC=valor;
-            break;
-
-            case 0xFFFD:
+            case 0x0000:
                 sms_mapper_FFFD=valor;
             break;
 
-            case 0xFFFE:
+            case 0x4000:
                 sms_mapper_FFFE=valor;
             break;
 
-            case 0xFFFF:
+            case 0x8000:
                 sms_mapper_FFFF=valor;
             break;
 
 
         } 
-    }
+
+    }    
 
 	puntero_memoria=sms_return_segment_address(dir,&tipo);
 

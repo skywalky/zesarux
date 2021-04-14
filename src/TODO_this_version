@@ -208,3 +208,8 @@ micro machines
 
 
 -puertos SMS en ventana debug I/O
+
+
+-sega mapper: Because the control registers overlap in the memory map with a RAM mirror, 
+this mirrored RAM allows the last value written to each register to be read back (from the RAM copy). 
+The registers are, however, strictly write-only. Overwriting the RAM mirror at another address will not affect mapping.

@@ -42,6 +42,7 @@ extern z80_byte *sms_return_segment_address(z80_int direccion,int *tipo);
 
 #define SMS_MAPPER_TYPE_NONE 0
 #define SMS_MAPPER_TYPE_SEGA 1
+#define SMS_MAPPER_TYPE_CODEMASTERS 2
 
 extern z80_byte sms_mapper_type;
 extern int sms_cartridge_size;

@@ -118,7 +118,7 @@ z80_byte *sms_return_segment_address(z80_int direccion,int *tipo)
             *tipo=SMS_SLOT_MEMORY_TYPE_ROM;
 
             if (direccion<=0x3fff) {
-                //TODO: primer 1kb es siempre bloque 0
+                // primer 1kb es siempre bloque 0
                 if (direccion<=1023) {
                     bloque_entra=0;
                 }
@@ -171,6 +171,57 @@ z80_byte *sms_return_segment_address(z80_int direccion,int *tipo)
         }
 
         break;        
+
+        case SMS_MAPPER_TYPE_CODEMASTERS:
+        
+        /*
+        ROM mapping
+        This mapper presents three 16KB slots to the address bus as before. 
+        However, the control registers are mapped to the first byte of each bank and the first 1KB is no longer protected.
+        Control register	Slot
+        $0000	0 ($0000-$3fff)
+        $4000	1 ($4000-$7fff)
+        $8000	2 ($8000-$bfff)
+        The mapper is initialised with banks 0, 1 and 0 in slots 0, 1 and 2 respectively.
+        When using slot 0, care must be taken to replace interrupt vectors appropriately. 
+        Also note that there is no RAM mirroring of mapper writes so there is no way to retrieve the last value written.
+        */
+
+        //ROM
+        if (direccion<=0xbfff) {
+            *tipo=SMS_SLOT_MEMORY_TYPE_ROM;
+
+            if (direccion<=0x3fff) {
+                bloque_entra=sms_mapper_FFFD;
+            }
+
+            else if (direccion<=0x7fff) {
+                bloque_entra=sms_mapper_FFFE;
+            }
+
+            else {
+                bloque_entra=sms_mapper_FFFF;
+            }
+
+            //printf("dir=%d bloque_entra=%d\n",direccion,bloque_entra);
+
+            int offset=(bloque_entra & sms_mapper_mask_bits) * 16384;
+
+            return &memoria_spectrum[offset+(direccion & 16383)];
+        }
+
+        //TODO registro FFFC
+        //RAM 8 KB
+        else {
+            *tipo=SMS_SLOT_MEMORY_TYPE_RAM;
+
+            //total 1 MByte ROM + 8 kb RAM 
+
+            //Esto sin mapper:
+            return &memoria_spectrum[SMS_MAX_ROM_SIZE + (direccion & 8191)];
+        }
+
+        break;              
 
         //NONE o cualquier otro
         default:

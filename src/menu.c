@@ -18812,7 +18812,7 @@ void menu_sms_mapper_type(MENU_ITEM_PARAMETERS)
     sms_mapper_type++;
 
     //Si es mayor que el ultimo, resetear
-    if (sms_mapper_type>SMS_MAPPER_TYPE_SEGA) sms_mapper_type=SMS_MAPPER_TYPE_NONE; 
+    if (sms_mapper_type>SMS_MAPPER_TYPE_CODEMASTERS) sms_mapper_type=SMS_MAPPER_TYPE_NONE; 
 }
 
 void menu_sms_mapper_cartridge_size(MENU_ITEM_PARAMETERS)
@@ -18850,6 +18850,7 @@ void menu_msxcart(MENU_ITEM_PARAMETERS)
                     strcpy(buf_mapper_type,"None");
 
                     if (sms_mapper_type==SMS_MAPPER_TYPE_SEGA) strcpy(buf_mapper_type,"Sega");
+                    if (sms_mapper_type==SMS_MAPPER_TYPE_CODEMASTERS) strcpy(buf_mapper_type,"CodeMasters");
 
                     menu_add_item_menu_format(array_menu_msxcart,MENU_OPCION_NORMAL,menu_sms_mapper_type,NULL,"[%s] Mapper type",buf_mapper_type);
 
