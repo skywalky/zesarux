@@ -143,6 +143,17 @@ z80_byte *sms_return_segment_address(z80_int direccion,int *tipo)
         }
 
         //TODO registro FFFC
+        /*
+        Address $fffc: RAM mapping and miscellaneous functions
+Bit	Function
+7	"ROM write" enable
+6-5	Unused
+4	RAM enable ($c000-$ffff)
+3	RAM enable ($8000-$bfff)
+2	RAM bank select
+1-0	Bank shift
+
+        */
         //RAM 8 KB
         else {
             *tipo=SMS_SLOT_MEMORY_TYPE_RAM;

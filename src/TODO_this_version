@@ -192,9 +192,11 @@ strider: sin sonido
 rainbow islands: no se ve nada aunque parece que funciona juego, sonido etc. y luego deja el emulador que se ven mal todos
 road rash: se ralentiza mucho en juego y en intro 
 pitufos: fase dos en rio se ve raro
+master of darkness: al iniciar juego no lee teclas
+micromachines: no se oye musica. y se ve mal (pero esto creo que es debido a que usa mas de 192 lineas)
 
 -juegos sms que directamente no inician:
-micro machines
+golvellius
 
 -al seleccionar algun juego de sms que falla, deja emulacion que no funciona correctamente (parece error con vram), quiza el flag que habilita escritura en cram??
 
