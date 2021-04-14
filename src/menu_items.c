@@ -8558,7 +8558,8 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
 
                 if (MACHINE_HAS_VDP_9918A) {
 
-                    if (!vdp_9918a_si_sms_video_mode4()) {
+                    //if (!vdp_9918a_si_sms_video_mode4()) {
+                    if (!MACHINE_IS_SMS) {
 
                         //menu_escribe_linea_opcion(linea,-1,1,"Border: ");
                         zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
@@ -8577,22 +8578,13 @@ void menu_tsconf_layer_overlay_mostrar_texto(void)
                         zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Border: ");
                         linea +=3;
 
-                        char texto_tiles[32];
-                        strcpy(texto_tiles,"Tiles Background:");
-
-                        //Sin rainbow, las dos capas Foreground y Background son la misma
-                        if (rainbow_enabled.v==0) {
-                            strcpy(texto_tiles,"Tiles:");
-                        }
-
-                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,texto_tiles);
+                        zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Background:");
                         linea +=3;
 
-                        //Sin rainbow, las dos capas Foreground y Background son la misma
-                        if (rainbow_enabled.v) {
+
                             zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Tiles Foreground:");
                             linea +=3;
-                        }
+                        
 
 
                         zxvision_print_string_defaults_fillspc(menu_tsconf_layer_overlay_window,1,linea,"Sprites:");
@@ -8799,10 +8791,6 @@ void menu_sms_layer_settings_lock_scroll_vert(MENU_ITEM_PARAMETERS)
     vdp_9918a_sms_lock_scroll_vertical.v ^=1;
 }
 
-void menu_sms_layer_settings_tile_bg(MENU_ITEM_PARAMETERS)
-{
-    vdp_9918a_force_disable_layer_tile_bg.v ^=1;
-}
 
 void menu_sms_layer_settings_tile_fg(MENU_ITEM_PARAMETERS)
 {
@@ -8814,9 +8802,20 @@ void menu_sms_layer_reveal_tile_fg(MENU_ITEM_PARAMETERS)
     vdp_9918a_reveal_layer_tile_fg.v ^=1;
 }
 
+void menu_sms_layer_settings_tile_bg(MENU_ITEM_PARAMETERS)
+{
+    vdp_9918a_force_disable_layer_tile_bg.v ^=1;
+
+    //Para que tambien funcione en casos de SMS con modos no 4, en realvideo
+    vdp_9918a_force_disable_layer_ula.v=vdp_9918a_force_disable_layer_tile_bg.v;    
+}
+
 void menu_sms_layer_reveal_tile_bg(MENU_ITEM_PARAMETERS)
 {
     vdp_9918a_reveal_layer_tile_bg.v ^=1;
+
+    //Para que tambien funcione en casos de SMS con modos no 4, en realvideo
+    vdp_9918a_reveal_layer_ula.v=vdp_9918a_reveal_layer_tile_bg.v;    
 }
 
 void menu_sms_layer_force_bg_tiles(MENU_ITEM_PARAMETERS)
@@ -8846,7 +8845,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 	else if (MACHINE_HAS_VDP_9918A) {
 		alto=11;
 
-        if (vdp_9918a_si_sms_video_mode4()) {
+        if (MACHINE_IS_SMS) {
             //Para que quepa el show column 0, etc
             alto=21;
             ancho=32;
@@ -8956,7 +8955,8 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 
         if (MACHINE_HAS_VDP_9918A) {
 
-            if (!vdp_9918a_si_sms_video_mode4()) {
+            //if (!vdp_9918a_si_sms_video_mode4()) {
+            if (!MACHINE_IS_SMS) {
 
                 menu_add_item_menu_inicial_format(&array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_border,NULL,"%s",(vdp_9918a_force_disable_layer_border.v ? "Disabled" : "Enabled "));
                 menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
@@ -8988,8 +8988,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
                 lin+=3;
 
 
-                //Sin rainbow, las dos capas Foreground y Background son la misma
-                if (rainbow_enabled.v) {
+
                     menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_settings_tile_fg,NULL,"%s",(vdp_9918a_force_disable_layer_tile_fg.v ? "Disabled" : "Enabled "));
                     menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);
                     menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_reveal_tile_fg,NULL,"%s",(vdp_9918a_reveal_layer_tile_fg.v ? "Reveal" : "Normal"));
@@ -8997,7 +8996,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
                     menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_sms_layer_force_bg_tiles,NULL,"%s",(vdp_9918a_force_bg_tiles.v ? "AlwaysBack": "Normal    " ));
                     menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,20,lin);	
                     lin+=3;            
-                }
+                
 
                 menu_add_item_menu_format(array_menu_tsconf_layer_settings,MENU_OPCION_NORMAL,menu_msx_layer_settings_sprites,NULL,"%s",(vdp_9918a_force_disable_layer_sprites.v ? "Disabled" : "Enabled "));
                 menu_add_item_menu_tabulado(array_menu_tsconf_layer_settings,1,lin);

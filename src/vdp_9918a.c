@@ -456,10 +456,6 @@ void vdp_9918a_render_ula_no_rainbow(z80_byte *vram)
 
 	z80_byte video_mode=vdp_9918a_get_video_mode();
 
-    if (video_mode==128 && MACHINE_IS_SMS) {
-        vdp_9918a_render_ula_no_rainbow_sms(vram);
-        return;
-    }
 
 	//printf ("video_mode: %d\n",video_mode);
 

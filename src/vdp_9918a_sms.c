@@ -141,7 +141,8 @@ z80_byte vdp_9918a_sms_get_scroll_vertical(void)
     return vdp_9918a_registers[9];
 }
 
-void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram)
+//Dice si renderizamos la parte de tiles de foreground (1) o background (0)
+void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram,int render_tiles_foreground,int reveal,int forzada_negro)
 {
     //Modo 4 SMS. high-res mode, 256x192
 
@@ -323,6 +324,7 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
 
             int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
             
+            int priority_tile=(pattern_word & 0x1000);
 
             int scanline;
 
@@ -403,8 +405,30 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                             }
                         }  
 
+                        if (reveal) {
+                            int posx=xdestino&1;
+                            int posy=ydestino&1;
 
-                        scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
+                            //0,0: 0
+                            //0,1: 1
+                            //1,0: 1
+                            //1,0: 0
+                            //Es un xor
+
+                            int si_blanco_negro=posx ^ posy;
+
+                            //Color 0 o 63 (negro / blanco)
+                            color_paleta=si_blanco_negro*(SMS_TOTAL_PALETTE_COLOURS-1);                            
+                        }
+
+                        int dibujar=0;
+                        if (priority_tile && render_tiles_foreground) dibujar=1;
+                        if (!priority_tile && !render_tiles_foreground) dibujar=1;
+
+                        //Si capa forzada a negro
+                        if (forzada_negro) color_paleta=0;
+
+                        if (dibujar) scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
                     }
 
 
@@ -1502,58 +1526,21 @@ void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *sc
     }
 
  
-        //Render pixeles
-        if (vdp_9918a_force_disable_layer_ula.v==0 && vdp_9918a_reveal_layer_ula.v==0) {
-            vdp_9918a_render_rainbow_display_line_sms(y_display,sms_scanline_buffer_tiles_background,sms_scanline_buffer_tiles_foreground,vram_memory_pointer);
-        }
-
-        else {
-            //Capa desactivada o reveal
-            //Nos ubicamos en zona central
-            int inicio_buffer=screen_total_borde_izquierdo;
-
-          
+    //Render las dos capas de tiles
+    vdp_9918a_render_rainbow_display_line_sms(y_display,sms_scanline_buffer_tiles_background,sms_scanline_buffer_tiles_foreground,vram_memory_pointer);
+    
 
 
-            
-            for (i=0;i<256;i++) {
-
-                z80_int color=0;
-
-                if (vdp_9918a_reveal_layer_ula.v) {
-                    int posx=i&1;
-                    int posy=t_scanline_draw&1;
-
-                    int si_blanco_negro=posx ^ posy;
-
-                    //color 0 o 15
-                    color=si_blanco_negro*15;                    
-                }
-
-                sms_scanline_buffer_tiles_background[inicio_buffer+i]=VDP_9918_INDEX_FIRST_COLOR+color;
-                //TODO no actuar de momento sobre capa sms_scanline_buffer_tiles_foreground
-            }
-            
-
-        }
-
-
-
-
-
-        //Render sprites
-        if (vdp_9918a_force_disable_layer_sprites.v==0) {
-            vdp_9918a_render_rainbow_sprites_line_sms(y_display,sms_scanline_buffer_sprites,vram_memory_pointer);
-
-
-
-        }
+    //Render sprites
+    if (vdp_9918a_force_disable_layer_sprites.v==0) {
+        vdp_9918a_render_rainbow_sprites_line_sms(y_display,sms_scanline_buffer_sprites,vram_memory_pointer);
+    }
 
 
     //Mezclar las 3 capas
     z80_int color_capa_sprites;
     z80_int color_capa_tiles_foreground;
-    //z80_int color_capa_tiles_background;
+    z80_int color_capa_tiles_background;
 
     //No tocar zona izquierda y derecha que es el border.
     //Border no entra como un layer, sino que se renderiza directamente en scanline_buffer
@@ -1575,8 +1562,18 @@ void screen_store_scanline_rainbow_solo_display_vdp_9918a_sms_3layer(z80_int *sc
             color_capa_sprites=sms_scanline_buffer_sprites[i];
             if (color_capa_sprites!=SMS_3LAYERS_TRANSPARENT_COLOUR) scanline_buffer[i]=color_capa_sprites;            
             else {
-                //Finalmente sera el color de la capa de tiles de background
-                scanline_buffer[i]=sms_scanline_buffer_tiles_background[i];
+                //Capa background no transparente?
+                color_capa_tiles_background=sms_scanline_buffer_tiles_background[i];
+                if (color_capa_tiles_background!=SMS_3LAYERS_TRANSPARENT_COLOUR) {
+                    scanline_buffer[i]=color_capa_tiles_background;
+                }
+
+                //Finalmente sera color negro
+                else {
+                    scanline_buffer[i]=SMS_INDEX_FIRST_COLOR;
+                }
+
+
             }
         }
 

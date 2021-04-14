@@ -420,6 +420,7 @@ void sms_empty_romcartridge_space(void)
 void scr_refresca_pantalla_y_border_sms_no_rainbow(void)
 {
 
+    //Renderizar border
  
     //Si se desactiva el layer de border, lo que hara sera mostrarlo con color 0
     if (border_enabled.v) {
@@ -451,7 +452,16 @@ void scr_refresca_pantalla_y_border_sms_no_rainbow(void)
             }
         }
         else {
-            vdp_9918a_render_ula_no_rainbow(sms_vram_memory);
+            //Render SMS tiles background
+            //El parametro vdp_9918a_force_disable_layer_tile_bg aqui realmente no se usa,
+            //pues si la capa esta desactivada, ya no entra en esta condicion
+            //Se gestiona con la condicion de mas abajo, esto es por compatiblidad con ocultar dicha capa de tile
+            //en modos no SMS
+            if (vdp_9918a_si_sms_video_mode4()) vdp_9918a_render_ula_no_rainbow_sms(sms_vram_memory,0,vdp_9918a_reveal_layer_tile_bg.v,vdp_9918a_force_disable_layer_tile_bg.v);
+
+            //Render modos no SMS
+            else vdp_9918a_render_ula_no_rainbow(sms_vram_memory);
+
         }
     }
 
@@ -465,14 +475,27 @@ void scr_refresca_pantalla_y_border_sms_no_rainbow(void)
         }
     }
 
+    //Capa de foreground mostrada en background?
+    //Si es asi, dibujarlos antes que los Sprites
+    if (vdp_9918a_si_sms_video_mode4()) {
+        if (vdp_9918a_force_bg_tiles.v) {
+            vdp_9918a_render_ula_no_rainbow_sms(sms_vram_memory,1,vdp_9918a_reveal_layer_tile_fg.v,vdp_9918a_force_disable_layer_tile_fg.v);
+        }
+    }
 
+    //Renderizar Sprites
 
     if (vdp_9918a_force_disable_layer_sprites.v==0) {
         vdp_9918a_render_sprites_no_rainbow(sms_vram_memory);
     }
         
-        
 
+    //Renderizar tiles foreground. Esto solo para sms modo video 4  
+    if (vdp_9918a_si_sms_video_mode4()) {
+        if (vdp_9918a_force_bg_tiles.v==0) {
+            vdp_9918a_render_ula_no_rainbow_sms(sms_vram_memory,1,vdp_9918a_reveal_layer_tile_fg.v,vdp_9918a_force_disable_layer_tile_fg.v);
+        }
+    }
 
 }
 
