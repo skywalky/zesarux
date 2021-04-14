@@ -704,7 +704,7 @@ to be taken from the first 256 or last 256 of the 512 available patterns.
                                         color_sprite=si_blanco_negro*(SMS_TOTAL_PALETTE_COLOURS-1);
                                     }             
 
-                                    //TODO transparencia
+                                    //transparencia
                                     if (byte_color!=0) {          
 
                                         //if (x==0 && y==0) printf("Dibujando sprite %d\n",sprite);        
@@ -1405,7 +1405,7 @@ to be taken from the first 256 or last 256 of the 512 available patterns.
                                         color_sprite=si_blanco_negro*(SMS_TOTAL_PALETTE_COLOURS-1);
                                     }             
 
-                                    //TODO transparencia
+                                    //transparencia
                                     if (byte_color!=0) {          
 
                                         //if (x==0 && y==0) printf("Dibujando sprite %d\n",sprite);        
