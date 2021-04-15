@@ -1632,7 +1632,7 @@ int vdp_9918a_sms_get_final_color_border(void)
 
 z80_byte vdp_9918a_sms_raster_line_counter=0;
 
-void dp_9918a_sms_raster_line_reset(void)
+void vdp_9918a_sms_raster_line_reset(void)
 {
     vdp_9918a_sms_raster_line_counter=vdp_9918a_registers[10];
 }
