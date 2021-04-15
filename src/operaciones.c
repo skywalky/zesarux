@@ -8069,9 +8069,9 @@ void out_port_sms_no_time(z80_int puerto,z80_byte value)
         // The address decoding for the I/O ports is done with A7, A6, and A0 of
         // the Z80 address bus
 
-    z80_byte puerto_escrito=puerto_l & 0xC1;
+    z80_byte puerto_escrito_efectivo=puerto_l & 0xC1;
 
-    switch (puerto_escrito) {   
+    switch (puerto_escrito_efectivo) {   
      
         case 0x40:
         case 0x41:
@@ -8100,7 +8100,7 @@ void out_port_sms_no_time(z80_int puerto,z80_byte value)
        break;
 
        default:
-        printf("Unhandled out port %04XH value %02XH\n",puerto,value);
+        printf("Unhandled out port %04XH (effective %02XH) value %02XH\n",puerto,puerto_escrito_efectivo,value);
        break;
     }
 
@@ -8127,9 +8127,9 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 
 	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
-    z80_byte puerto_leido=puerto_l & 0xC1;
+    z80_byte puerto_leido_efectivo=puerto_l & 0xC1;
 
-    switch (puerto_leido) {
+    switch (puerto_leido_efectivo) {
 
        
        //printf ("In port : %04XH\n",puerto);
@@ -8196,7 +8196,7 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
         break;
 
        default:
-        printf("Unhandled in port %04XH\n",puerto);
+        printf("Unhandled in port %04XH (effective %02XH)\n",puerto,puerto_leido_efectivo);
        break;        
 
     }
