@@ -11836,6 +11836,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
       	size=0; //Mostrar zona de memoria de 256kb en caso de msx
       }     
 
+      if (MACHINE_IS_SMS) {
+          size=8192;
+      }
+
     break;
 
     //Zona rom
@@ -11901,6 +11905,10 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
 
       if (MACHINE_IS_Z88) {
       	size=0; //Solo zona memoria de 4 mb en caso de z88
+      }
+
+      if (MACHINE_IS_SMS) {
+          size=sms_cartridge_size;
       }
 
 
@@ -12242,6 +12250,10 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
       if (MACHINE_IS_SAM) {
 	z80_byte *start=sam_ram_memory[0];
         p=&start[address]; 
+      }
+
+      if (MACHINE_IS_SMS) {
+          p=&memoria_spectrum[SMS_MAX_ROM_SIZE + address];
       }
 
 

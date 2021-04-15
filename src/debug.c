@@ -100,6 +100,7 @@
 #include "ide.h"
 #include "mmc.h"
 #include "esxdos_handler.h"
+#include "sms.h"
 
 
 struct timeval debug_timer_antes, debug_timer_ahora;
@@ -4952,6 +4953,24 @@ void debug_get_ioports(char *stats_buffer)
 					sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
 			}		
 	}	 
+
+	if (MACHINE_IS_SMS) {
+        sprintf (buf_linea,"\nMapper registers:\n");
+        sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+        sprintf (buf_linea,"FFFC:  %02X\n",sms_mapper_FFFC);
+        sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+        sprintf (buf_linea,"FFFD:  %02X\n",sms_mapper_FFFD);
+        sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+        sprintf (buf_linea,"FFFE:  %02X\n",sms_mapper_FFFE);
+        sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+        sprintf (buf_linea,"FFFF:  %02X\n",sms_mapper_FFFF);
+        sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);
+
+    }
 	
 	if (MACHINE_IS_CPC) {
   			sprintf (buf_linea,"\nCRTC Registers:\n");
