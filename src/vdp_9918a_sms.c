@@ -1254,7 +1254,7 @@ in the 192-line display mode, in the 224 and 240-line modes a Y coordinate
 of $D0 has no special meaning.
     */
     
-    int maximo_sprites_por_linea=VDP_9918A_MAX_SPRITES_PER_LINE;
+    int maximo_sprites_por_linea=VDP_9918A_SMS_MAX_SPRITES_PER_LINE;
 
     //Si hay setting de no limite sprites por linea
     if (vdp_9918a_unlimited_sprites_line.v) {
