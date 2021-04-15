@@ -8066,51 +8066,45 @@ void out_port_sms_no_time(z80_int puerto,z80_byte value)
 	//z80_byte puerto_h=(puerto>>8)&0xFF;
 
 
-
-	    //sms sound
-        /*if (puerto_l==0x7F) {
-		   //printf ("Puerto sonido %04XH valor %02XH\n",puerto,value);
-		   sn_out_port_sound(value);
-
-           
-	   }  */  
-
         // The address decoding for the I/O ports is done with A7, A6, and A0 of
         // the Z80 address bus
 
+    z80_byte puerto_escrito=puerto_l & 0xC1;
+
+    switch (puerto_escrito) {   
+     
+        case 0x40:
+        case 0x41:
         /*
+            Typically 7E. SN76489 data (write)
            Typically 7F. SN76489 data (write, mirror)
         */
-       if ((puerto_l & 0xC1) == 0x41) {
+            //7E & 193 = 0x40
            //7F & 193 = 0x41
            //printf("Puerto sonido %04XH valor %02XH\n",puerto,value);
            sn_out_port_sound(value);
-       }
-
-        /*
-           Typically 7E. SN76489 data (write)
-        */
-       if ((puerto_l & 0xC1) == 0x40) {
-           //7E & 193 = 0x40
-           //printf("Puerto sonido %04XH valor %02XH\n",puerto,value);
-           sn_out_port_sound(value);
-       }
+       break;
 
 
-   
-       if ((puerto_l & 0xC1)==0x80) {
+        
+       case 0x80:
            //BEH & 193 = 0x80
               //printf ("VDP Video Ram Data\n");
                sms_out_port_vdp_data(value);
-       }
+       break;
 
-       if ((puerto_l & 0xC1)==0x81) {
+       case 0x81:
            //BFH & 193 = 0x81
                //printf ("VDP Command and status register\n");
                sms_out_port_vdp_command_status(value);
-       }
+       break;
 
-if (puerto_l!=0xBE && puerto_l!=0xBF && puerto_l!=0x7f) printf("Out Puerto %04XH valor %02XH\n",puerto,value);
+       default:
+        printf("Unhandled out port %04XH value %02XH\n",puerto,value);
+       break;
+    }
+
+        //if (puerto_l!=0xBE && puerto_l!=0xBF && puerto_l!=0x7f) printf("Out Puerto %04XH valor %02XH\n",puerto,value);
 
 }
 
@@ -8133,15 +8127,29 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 
 	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
+    z80_byte puerto_leido=puerto_l & 0xC1;
 
-
+    switch (puerto_leido) {
 
        
        //printf ("In port : %04XH\n",puerto);
 
+       case 0x40:
+           //7EH & 193 = 0x40
 
+            //0x7E : Reading: returns VDP V counter
+            //printf("scanline draw: %d\n",t_scanline_draw);
+            return t_scanline_draw;
 
-       if ((puerto_l & 0xC1)==0x80) {
+           //return 0xB0; //sonic por ejemplo espera este valor
+       break;
+
+       case 0x41:
+           //7FH & 193 = 0x41
+           //TODO: 0x7F : Reading: returns VDP H counter
+       break;
+
+       case 0x80:
            //BEH & 193 = 0x80
                //printf ("VDP Video Ram Data IN\n");
                //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
@@ -8158,9 +8166,9 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 */               
                vdp_9918a_last_command_status_bytes_counter=0;
                return sms_in_port_vdp_data();
-       }
+       break;
 
-       if ((puerto_l & 0xC1)==0x81) {
+       case 0x81:
                 //BFH & 193 = 0x81
                //printf ("VDP Status IN\n");
                //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
@@ -8168,48 +8176,32 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
                //Sin este reset, el rainbow islands no se ve nada
                vdp_9918a_last_command_status_bytes_counter=0;
                return sms_in_port_vdp_status();
-       }
+       break;
        
-       if ((puerto_l & 0xC1)==0x40) {
-           //7EH & 193 = 0x40
 
-            //0x7E : Reading: returns VDP V counter
-            //printf("scanline draw: %d\n",t_scanline_draw);
-            return t_scanline_draw;
-
-           //return 0xB0; //sonic por ejemplo espera este valor
-
-       }
-
-       if ((puerto_l & 0xC1)==0x41) {
-           //7FH & 193 = 0x41
-           //TODO: 0x7F : Reading: returns VDP H counter
-       }
-
+        case 0xC0:
 		//tipicamente DC
         // The address decoding for the I/O ports is done with A7, A6, and A0 of
         //the Z80 address bus
         //193 = 11000001
 
         //192 = 0xC0
-       if ((puerto_l & 0xC1) == 0xC0 ) {
 		   return sms_get_joypad_a();
+       break;
 
-             
-       }
-
-
+        case 0xC1:
 		//tipicamente DD
         //193 = 0xC1
-       if ((puerto_l & 0xC1) == 0xC1) {
 		   return sms_get_joypad_b();
+        break;
 
-             
-       }	   
+       default:
+        printf("Unhandled in port %04XH\n",puerto);
+       break;        
 
+    }
 
-
-	printf ("Lee puerto sms %04XH PC=%04XH\n",puerto,reg_pc);
+	//printf ("Lee puerto sms %04XH PC=%04XH\n",puerto,reg_pc);
 
 
 	return 255;
