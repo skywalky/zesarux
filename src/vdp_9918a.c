@@ -77,6 +77,8 @@ void vdp_9918a_reset(void)
 
     if (MACHINE_IS_SMS) vdp_9918a_sms_reset();
 
+    vdp_9918a_last_command_status_bytes_counter=0;
+
 }
 
 void vdp_9918a_out_vram_data(z80_byte *vram_memory,z80_byte value)

@@ -200,20 +200,12 @@ micromachines: se ve mal (pero esto creo que es debido a que usa mas de 192 line
 -juegos sms que directamente no inician:
 golvellius
 
--al seleccionar algun juego de sms que falla, deja emulacion que no funciona correctamente (parece error con vram), quiza el flag que habilita escritura en cram??
+-al seleccionar algun juego de sms que falla, deja emulacion que no funciona correctamente (parece error con vram), 
+quiza el flag que habilita escritura en cram??
 
 -visor de tiles para sms y demas maquinas (
-    
--Paleta colores gris sms probablemente no está bien
-
--Registro scroll en Y se actualiza solo al final de frame 
 
 -Agregar documento master system en extras 
 
 
--puertos SMS en ventana debug I/O
-
-
--sega mapper: Because the control registers overlap in the memory map with a RAM mirror, 
-this mirrored RAM allows the last value written to each register to be read back (from the RAM copy). 
-The registers are, however, strictly write-only. Overwriting the RAM mirror at another address will not affect mapping.
+-sms: visor de sprites, navegador de sprites y tiles
