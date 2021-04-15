@@ -362,9 +362,11 @@ void core_sms_fin_scanline(void)
             z80_byte registro_line_interrupt=vdp_9918a_registers[10];
 
             if (vdp_9918a_registers[0] & 0x10) {
-                if (registro_line_interrupt==linea_actual_interrupcion && linea_actual_interrupcion!=0) {
+                //TODO: no estoy seguro como funciona esto
+                if (registro_line_interrupt==linea_actual_interrupcion && linea_actual_interrupcion!=0 && iff1.v==1) {
                     printf("Line interrupt enabled. Y coincide linea: %d\n",linea_actual_interrupcion);
-                    sms_pending_line_interrupt=1;
+                    //sms_pending_line_interrupt=1;
+                    interrupcion_maskable_generada.v=1;
                 }
             }
 

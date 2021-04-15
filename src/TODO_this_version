@@ -220,35 +220,16 @@ quiza el flag que habilita escritura en cram??
 -line interrupts:
  Line interrupts
 
- The VDP has a counter that is loaded with the contents of register $0A on
- every line outside of the active display period excluding the line after
- the last line of the active display period. It is decremented on every
- line within the active display period including the line after the last
- line of the active display period.
-
- I'll admit that's a bad description, though I couldn't think of any other
- way to say it. To help you understand how this works, here is an example
- for a 192-line display on an NTSC machine that has 262 scanlines per frame:
-
- Out of lines 0-261:
- - The counter is decremented on lines 0-191 and 192.
- - The counter is reloaded on lines 193-261.
-
- When the counter underflows from $00 to $FF, it is reloaded with the last
- value written to register $0A. Writing to register $0A will not immediately
- change the contents of the counter, this only occurs when the counter is
- reloaded (meaning outside of the active display period as described above,
- or when the counter has underflows).
-
- When the counter underflows, the VDP sets an internal flag which I will
- call the line interrupt pending flag. This flag remains set until the
- control port is read.
-
- Bit 4 of register $00 acts like a on/off switch for the VDP's IRQ line.
- As long as the line interrupt pending flag is set, the VDP will assert the
- IRQ line if bit 4 of register $00 is set, and it will de-assert the IRQ line
- if the same bit is cleared.
-
-  Register $00 - Mode Control No. 1
+There is another vdp interrupt called the line interrupt. 
+This is a value set by the programmer which counts down during the active display period 
+(and the first line of the inactive display period)each time the vdp moves onto a new scanline. 
+This is so the programmer can be informed of when the vdp starts drawing a specific scanline. 
+When the line counter goes below zero then the vdp requests an interrupt 
+(only if the line interrupts are enabled by setting bit 4 of control register 0) 
+and the line counter is reset to the value of register 10. If the cpu decides to 
+ignore the vdp interrupt then the request is lost so this interrupt is either handled 
+straight away or not at all. The value of the line counter is set to the value of register 10 
+however the line counter is only set to the value of register 10 when the current scanline is 
+past the FIRST scanline of the inactive display period
 
  D4 - (IE1) 1= Line interrupt enable
