@@ -8059,15 +8059,15 @@ z80_byte lee_puerto_sg1000(z80_byte puerto_h,z80_byte puerto_l)
 void out_port_sms_no_time(z80_int puerto,z80_byte value)
 {
 
-	debug_fired_out=1;
-        //Los OUTS los capturan los diferentes interfaces que haya conectados, por tanto no hacer return en ninguno, para que se vayan comprobando
-        //uno despues de otro
-	z80_byte puerto_l=puerto&255;
-	//z80_byte puerto_h=(puerto>>8)&0xFF;
+    debug_fired_out=1;
+    //Los OUTS los capturan los diferentes interfaces que haya conectados, por tanto no hacer return en ninguno, para que se vayan comprobando
+    //uno despues de otro
+    z80_byte puerto_l=puerto&255;
+    //z80_byte puerto_h=(puerto>>8)&0xFF;
 
 
-        // The address decoding for the I/O ports is done with A7, A6, and A0 of
-        // the Z80 address bus
+    // The address decoding for the I/O ports is done with A7, A6, and A0 of
+    // the Z80 address bus
 
     z80_byte puerto_escrito_efectivo=puerto_l & 0xC1;
 
@@ -8075,33 +8075,32 @@ void out_port_sms_no_time(z80_int puerto,z80_byte value)
      
         case 0x40:
         case 0x41:
-        /*
-            Typically 7E. SN76489 data (write)
-           Typically 7F. SN76489 data (write, mirror)
-        */
+            /*
+                Typically 7E. SN76489 data (write)
+                Typically 7F. SN76489 data (write, mirror)
+            */
             //7E & 193 = 0x40
-           //7F & 193 = 0x41
-           //printf("Puerto sonido %04XH valor %02XH\n",puerto,value);
-           sn_out_port_sound(value);
-       break;
+            //7F & 193 = 0x41
+            //printf("Puerto sonido %04XH valor %02XH\n",puerto,value);
+            sn_out_port_sound(value);
+        break;
 
+    
+        case 0x80:
+            //BEH & 193 = 0x80
+            //printf ("VDP Video Ram Data\n");
+            sms_out_port_vdp_data(value);
+        break;
 
-        
-       case 0x80:
-           //BEH & 193 = 0x80
-              //printf ("VDP Video Ram Data\n");
-               sms_out_port_vdp_data(value);
-       break;
+        case 0x81:
+            //BFH & 193 = 0x81
+            //printf ("VDP Command and status register\n");
+            sms_out_port_vdp_command_status(value);
+        break;
 
-       case 0x81:
-           //BFH & 193 = 0x81
-               //printf ("VDP Command and status register\n");
-               sms_out_port_vdp_command_status(value);
-       break;
-
-       default:
-        printf("Unhandled out port %04XH (effective %02XH) value %02XH\n",puerto,puerto_escrito_efectivo,value);
-       break;
+        default:
+            printf("Unhandled out port %04XH (effective %02XH) value %02XH\n",puerto,puerto_escrito_efectivo,value);
+        break;
     }
 
         //if (puerto_l!=0xBE && puerto_l!=0xBF && puerto_l!=0x7f) printf("Out Puerto %04XH valor %02XH\n",puerto,value);
@@ -8120,84 +8119,84 @@ void out_port_sms(z80_int puerto,z80_byte value)
 z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 {
 
-	debug_fired_in=1;
-	//extern z80_byte in_port_ay(z80_int puerto);
-	//65533 o 49149
-	//FFFDh (65533), BFFDh (49149)
+    debug_fired_in=1;
+    //extern z80_byte in_port_ay(z80_int puerto);
+    //65533 o 49149
+    //FFFDh (65533), BFFDh (49149)
 
-	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+    z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
     z80_byte puerto_leido_efectivo=puerto_l & 0xC1;
 
     switch (puerto_leido_efectivo) {
 
        
-       //printf ("In port : %04XH\n",puerto);
+        //printf ("In port : %04XH\n",puerto);
 
-       case 0x40:
-           //7EH & 193 = 0x40
+        case 0x40:
+            //7EH & 193 = 0x40
 
             //0x7E : Reading: returns VDP V counter
             //printf("scanline draw: %d\n",t_scanline_draw);
             return t_scanline_draw;
 
-           //return 0xB0; //sonic por ejemplo espera este valor
-       break;
+            //return 0xB0; //sonic por ejemplo espera este valor
+        break;
 
-       case 0x41:
-           //7FH & 193 = 0x41
-           //TODO: 0x7F : Reading: returns VDP H counter
-       break;
+        case 0x41:
+            //7FH & 193 = 0x41
+            //TODO: 0x7F : Reading: returns VDP H counter
+        break;
 
-       case 0x80:
-           //BEH & 193 = 0x80
-               //printf ("VDP Video Ram Data IN\n");
-               //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
-               //Y no solo para SMS
-               //Sin este reset, el rainbow islands no se ve nada
-/*
- In order for the VDP to know if it is recieving the first or second byte
- of the command word, it has a flag which is set after the first one is sent,
- and cleared when the second byte is written. The flag is also cleared when
- the control port is read, and when the data port is read or written. This
- is primarily used to initialize the flag to zero after it has been modified
- unpredictably, such as after an interrupt routine has executed.
+        case 0x80:
+            //BEH & 193 = 0x80
+            //printf ("VDP Video Ram Data IN\n");
+            //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
+            //Y no solo para SMS
+            //Sin este reset, el rainbow islands no se ve nada
+            /*
+            In order for the VDP to know if it is recieving the first or second byte
+            of the command word, it has a flag which is set after the first one is sent,
+            and cleared when the second byte is written. The flag is also cleared when
+            the control port is read, and when the data port is read or written. This
+            is primarily used to initialize the flag to zero after it has been modified
+            unpredictably, such as after an interrupt routine has executed.
 
-*/               
-               vdp_9918a_last_command_status_bytes_counter=0;
-               return sms_in_port_vdp_data();
-       break;
+            */               
+            vdp_9918a_last_command_status_bytes_counter=0;
+            return sms_in_port_vdp_data();
+        break;
 
-       case 0x81:
-                //BFH & 193 = 0x81
-               //printf ("VDP Status IN\n");
-               //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
-               //Y no solo para SMS
-               //Sin este reset, el rainbow islands no se ve nada
-               vdp_9918a_last_command_status_bytes_counter=0;
-               return sms_in_port_vdp_status();
-       break;
+        case 0x81:
+            //BFH & 193 = 0x81
+            //printf ("VDP Status IN\n");
+            //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
+            //Y no solo para SMS
+            //Sin este reset, el rainbow islands no se ve nada
+            vdp_9918a_last_command_status_bytes_counter=0;
+            return sms_in_port_vdp_status();
+        break;
        
 
         case 0xC0:
-		//tipicamente DC
-        // The address decoding for the I/O ports is done with A7, A6, and A0 of
-        //the Z80 address bus
-        //193 = 11000001
+            //tipicamente DC
+            // The address decoding for the I/O ports is done with A7, A6, and A0 of
+            //the Z80 address bus
+            //193 = 11000001
 
-        //192 = 0xC0
-		   return sms_get_joypad_a();
-       break;
-
-        case 0xC1:
-		//tipicamente DD
-        //193 = 0xC1
-		   return sms_get_joypad_b();
+            //192 = 0xC0
+            return sms_get_joypad_a();
         break;
 
-       default:
-        printf("Unhandled in port %04XH (effective %02XH)\n",puerto,puerto_leido_efectivo);
-       break;        
+        case 0xC1:
+            //tipicamente DD
+            //193 = 0xC1
+            return sms_get_joypad_b();
+        break;
+
+        default:
+            printf("Unhandled in port %04XH (effective %02XH)\n",puerto,puerto_leido_efectivo);
+        break;        
 
     }
 
