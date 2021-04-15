@@ -8075,22 +8075,37 @@ void out_port_sms_no_time(z80_int puerto,z80_byte value)
            
 	   }  */  
 
+        // The address decoding for the I/O ports is done with A7, A6, and A0 of
+        // the Z80 address bus
+
         /*
-           The SN76489 can be accessed by writing to any I/O port between 0x40 and 0x7f, 
-           although officially only 0x7f was recommended. A few games write to 0x7e.
+           Typically 7F. SN76489 data (write, mirror)
         */
-       if (puerto_l>=0x40 && puerto_l<=0x7f) {
+       if ((puerto_l & 0xC1) == 0x41) {
+           //7F & 193 = 0x41
            //printf("Puerto sonido %04XH valor %02XH\n",puerto,value);
            sn_out_port_sound(value);
        }
 
+        /*
+           Typically 7E. SN76489 data (write)
+        */
+       if ((puerto_l & 0xC1) == 0x40) {
+           //7E & 193 = 0x40
+           //printf("Puerto sonido %04XH valor %02XH\n",puerto,value);
+           sn_out_port_sound(value);
+       }
+
+
    
-       if (puerto_l==0xBE) {
+       if ((puerto_l & 0xC1)==0x80) {
+           //BEH & 193 = 0x80
               //printf ("VDP Video Ram Data\n");
                sms_out_port_vdp_data(value);
        }
 
-       if (puerto_l==0xBF) {
+       if ((puerto_l & 0xC1)==0x81) {
+           //BFH & 193 = 0x81
                //printf ("VDP Command and status register\n");
                sms_out_port_vdp_command_status(value);
        }
@@ -8119,17 +8134,19 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 	z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
 
-	//printf ("Lee puerto sms %04XH PC=%04XH\n",puerto,reg_pc);
 
-	//if (puerto_l==0x98) printf ("VDP Video Ram Data\n");
-	//if (puerto_l==0x99) printf ("VDP Command and status register\n");	
-
-
-	//A8. 
-	//if (puerto==0xa8) return 0x50; //temporal
 
        
        //printf ("In port : %04XH\n",puerto);
+
+
+
+       if ((puerto_l & 0xC1)==0x80) {
+           //BEH & 193 = 0x80
+               //printf ("VDP Video Ram Data IN\n");
+               //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
+               //Y no solo para SMS
+               //Sin este reset, el rainbow islands no se ve nada
 /*
  In order for the VDP to know if it is recieving the first or second byte
  of the command word, it has a flag which is set after the first one is sent,
@@ -8138,18 +8155,13 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
  is primarily used to initialize the flag to zero after it has been modified
  unpredictably, such as after an interrupt routine has executed.
 
-*/
-
-       if (puerto_l==0xBE) {
-               //printf ("VDP Video Ram Data IN\n");
-               //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
-               //Y no solo para SMS
-               //Sin este reset, el rainbow islands no se ve nada
+*/               
                vdp_9918a_last_command_status_bytes_counter=0;
                return sms_in_port_vdp_data();
        }
 
-       if (puerto_l==0xBF) {
+       if ((puerto_l & 0xC1)==0x81) {
+                //BFH & 193 = 0x81
                //printf ("VDP Status IN\n");
                //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
                //Y no solo para SMS
@@ -8158,44 +8170,29 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
                return sms_in_port_vdp_status();
        }
        
-       //TODO
-       if (puerto_l==0x7E) {
+       if ((puerto_l & 0xC1)==0x40) {
+           //7EH & 193 = 0x40
 
-            //TODO aproximacion fea??
+            //0x7E : Reading: returns VDP V counter
             //printf("scanline draw: %d\n",t_scanline_draw);
             return t_scanline_draw;
 
            //return 0xB0; //sonic por ejemplo espera este valor
 
-
-           //TODO
-           /*
-           0x7E : Reading: returns VDP V counter. Writing: Writes data to Sound Chip.
-0x7F : Reading: returns VDP H counter. Writing: Writes data to Sound Chip (same as above).
-            */
        }
 
-       //FC- Reading this port gives the status of controller #1. (farthest from front)
-	   //Temporal fila de teclas
-       /*if (puerto_l==0xFC) {
-
-//puerto_63486    db              255  ; 5    4    3    2    1     ;3
-//puerto_61438    db              255  ; 6    7    8    9    0     ;4
-
-				//345 67890
-               return (puerto_61438 & 31) | ((puerto_63486<<3) & (128+64+32) );
-             
-       }*/
-	   /*
-	   Lee puerto sms 04DCH PC=1D7AH
-
-
-Lee puerto sms 03DDH PC=1D7DH
-Lee puerto sms 02DEH PC=1DBFH
-*/
+       if ((puerto_l & 0xC1)==0x41) {
+           //7FH & 193 = 0x41
+           //TODO: 0x7F : Reading: returns VDP H counter
+       }
 
 		//tipicamente DC
-       if ((puerto_l & 193) == 192 ) {
+        // The address decoding for the I/O ports is done with A7, A6, and A0 of
+        //the Z80 address bus
+        //193 = 11000001
+
+        //192 = 0xC0
+       if ((puerto_l & 0xC1) == 0xC0 ) {
 		   return sms_get_joypad_a();
 
              
@@ -8203,24 +8200,12 @@ Lee puerto sms 02DEH PC=1DBFH
 
 
 		//tipicamente DD
-       if ((puerto_l & 193) == 193) {
+        //193 = 0xC1
+       if ((puerto_l & 0xC1) == 0xC1) {
 		   return sms_get_joypad_b();
 
              
        }	   
-
-/*
-TODO??
-
-I/O port mirrors
-Master System, Master System II:
-Port	Mirrors
-$3F	All odd addresses from $01 to $3F
-$DC	All even addresses from $C0 to $FE
-$DD	All odd addresses from $C1 to $FF
-
-
-*/
 
 
 
