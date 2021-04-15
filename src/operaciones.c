@@ -8130,13 +8130,31 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 
        
        //printf ("In port : %04XH\n",puerto);
+/*
+ In order for the VDP to know if it is recieving the first or second byte
+ of the command word, it has a flag which is set after the first one is sent,
+ and cleared when the second byte is written. The flag is also cleared when
+ the control port is read, and when the data port is read or written. This
+ is primarily used to initialize the flag to zero after it has been modified
+ unpredictably, such as after an interrupt routine has executed.
+
+*/
+
        if (puerto_l==0xBE) {
                //printf ("VDP Video Ram Data IN\n");
+               //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
+               //Y no solo para SMS
+               //Sin este reset, el rainbow islands no se ve nada
+               vdp_9918a_last_command_status_bytes_counter=0;
                return sms_in_port_vdp_data();
        }
 
        if (puerto_l==0xBF) {
                //printf ("VDP Status IN\n");
+               //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
+               //Y no solo para SMS
+               //Sin este reset, el rainbow islands no se ve nada
+               vdp_9918a_last_command_status_bytes_counter=0;
                return sms_in_port_vdp_status();
        }
        

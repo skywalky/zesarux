@@ -320,7 +320,9 @@ void sms_out_port_vdp_data(z80_byte value)
         index_sms_escritura_cram++;
     }
 
-    else vdp_9918a_out_vram_data(sms_vram_memory,value);
+    else {
+        vdp_9918a_out_vram_data(sms_vram_memory,value);
+    }
 }
 
 

@@ -91,6 +91,8 @@ void vdp_9918a_out_vram_data(z80_byte *vram_memory,z80_byte value)
 
     vdp_9918a_last_vram_position++;
 
+    //printf("Escribiendo en posicion vram %d\n",posicion_escribir);
+
     //temp. simular retardo al escribir en vram
     //t_estados +=7;
 
