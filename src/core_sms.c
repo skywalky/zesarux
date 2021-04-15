@@ -214,8 +214,9 @@ void core_sms_fin_frame_pantalla(void)
 
 					//Avisar vsync en vdp
 					vdp_9918a_status_register |=128;
-				}							
+				}			
 
+                vdp_9918a_sms_raster_line_reset();
 
 				cpu_loop_refresca_pantalla();
 
@@ -358,18 +359,9 @@ void core_sms_fin_scanline(void)
 
             //line interrupts
             //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
-            int linea_actual_interrupcion=t_scanline_draw-screen_invisible_borde_superior-screen_borde_superior;
-            z80_byte registro_line_interrupt=vdp_9918a_registers[10];
 
-            if (vdp_9918a_registers[0] & 0x10) {
-                //TODO: no estoy seguro como funciona esto
-                if (registro_line_interrupt==linea_actual_interrupcion && linea_actual_interrupcion!=0 && iff1.v==1) {
-                    printf("Line interrupt enabled. Y coincide linea: %d\n",linea_actual_interrupcion);
-                    //sms_pending_line_interrupt=1;
-                    interrupcion_maskable_generada.v=1;
-                }
-            }
 
+            vdp_9918a_sms_handle_raster_interrupt();
 
 			//se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
 			//esperar para ver si se ha generado una interrupcion 1/50

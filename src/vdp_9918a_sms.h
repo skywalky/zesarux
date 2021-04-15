@@ -31,7 +31,8 @@
 #define VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS 32
 
 extern int sms_writing_cram;
-extern int sms_pending_line_interrupt;
+//extern int sms_pending_line_interrupt;
+//extern z80_byte vdp_9918a_sms_raster_line_counter;
 extern int index_sms_escritura_cram;
 extern z80_byte vdp_9918a_sms_cram[];
 extern void vdp_9918a_sms_reset(void);
