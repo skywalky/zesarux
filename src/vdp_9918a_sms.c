@@ -73,6 +73,8 @@ const char *s_vdp_9918a_video_mode_sms_4="4 - SMS Graphic 256x192";
 */
 z80_byte sms_next_scroll_vertical_value=0;
 
+int sms_pending_line_interrupt=0;
+
 int vdp_9918a_sms_get_cram_color(int index)
 {
     return vdp_9918a_sms_cram[index % VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS];
@@ -108,6 +110,7 @@ void vdp_9918a_sms_reset(void)
     }
 
     sms_next_scroll_vertical_value=0;
+    sms_pending_line_interrupt=0;
 }
 
 int vdp_9918a_si_sms_video_mode4(void)

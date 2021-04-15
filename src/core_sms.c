@@ -358,12 +358,13 @@ void core_sms_fin_scanline(void)
 
             //line interrupts
             //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
-            int linea_actual_interrupcion=t_scanline_draw-screen_invisible_borde_superior;
+            int linea_actual_interrupcion=t_scanline_draw-screen_invisible_borde_superior-screen_borde_superior;
             z80_byte registro_line_interrupt=vdp_9918a_registers[10];
 
             if (vdp_9918a_registers[0] & 0x10) {
-                if (registro_line_interrupt==linea_actual_interrupcion) {
+                if (registro_line_interrupt==linea_actual_interrupcion && linea_actual_interrupcion!=0) {
                     printf("Line interrupt enabled. Y coincide linea: %d\n",linea_actual_interrupcion);
+                    sms_pending_line_interrupt=1;
                 }
             }
 
