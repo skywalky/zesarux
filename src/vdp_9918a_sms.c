@@ -324,7 +324,7 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
 
             int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
             
-            int priority_tile=(pattern_word & 0x1000);
+            int priority_tile_bit=(pattern_word & 0x1000);
 
             int scanline;
 
@@ -365,6 +365,8 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                     
                 for (bit=0;bit<char_width;bit++) {
 
+                    int priority_pixel=priority_tile_bit;
+
                     int xdestino=x*char_width+bit-scroll_x_fino;
 
                     if (mirror_x) {
@@ -375,6 +377,16 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                         byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
                 
                     }
+
+                    //Si color 0 y capa en foreground, se pasa a background
+                        /*
+                        When a tile has its priority bit set, all pixels with index greater than 0 
+                        will be drawn on top of sprites. You must therefore choose a single colour 
+                        in palette position 0 to be the background colour for such tiles, and they 
+                        will have a "blank" background. Careful use of tile priority can make the 
+                        graphics seem more multi-layered.
+                        */                    
+                    if (priority_pixel && byte_color==0) priority_pixel=0;
 
 
                     int color_paleta=vdp_9918a_sms_cram[palette_offset+ (byte_color & 15)];
@@ -422,8 +434,8 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                         }
 
                         int dibujar=0;
-                        if (priority_tile && render_tiles_foreground) dibujar=1;
-                        if (!priority_tile && !render_tiles_foreground) dibujar=1;
+                        if (priority_pixel && render_tiles_foreground) dibujar=1;
+                        if (!priority_pixel && !render_tiles_foreground) dibujar=1;
 
                         //Si capa forzada a negro
                         if (forzada_negro) color_paleta=0;
@@ -980,9 +992,9 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
 
             int palette_offset=(pattern_word & 0x0800 ? 16 : 0);
 
-            int priority_tile=(pattern_word & 0x1000);
+            int priority_tile_bit=(pattern_word & 0x1000);
 
-            if (vdp_9918a_force_bg_tiles.v) priority_tile=0;
+            if (vdp_9918a_force_bg_tiles.v) priority_tile_bit=0;
             
 
             //z80_int pattern_address=(caracter*32+2048*tercio) ;
@@ -1029,6 +1041,8 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                     
                 for (bit=0;bit<char_width;bit++) {
 
+                    int priority_pixel=priority_tile_bit;
+
                     int xdestino=x*char_width+bit-scroll_x_fino;
 
                     if (mirror_x) {
@@ -1039,6 +1053,16 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                         byte_color=((byte_leido1>>7)&1) | ((byte_leido2>>6)&2) | ((byte_leido3>>5)&4) | ((byte_leido4>>4)&8);
                 
                     }
+
+                    //Si color 0 y capa en foreground, se pasa a background
+                        /*
+                        When a tile has its priority bit set, all pixels with index greater than 0 
+                        will be drawn on top of sprites. You must therefore choose a single colour 
+                        in palette position 0 to be the background colour for such tiles, and they 
+                        will have a "blank" background. Careful use of tile priority can make the 
+                        graphics seem more multi-layered.
+                        */                    
+                    if (priority_pixel && byte_color==0) priority_pixel=0;                    
 
 
                     int color_paleta=vdp_9918a_sms_cram[palette_offset+ (byte_color & 15)];
@@ -1072,14 +1096,8 @@ n = Pattern index, any one of 512 patterns in VRAM can be selected.
                         //printf("xdestino: %d\n",xdestino);
                         //scr_putpixel_zoom(xdestino,ydestino,SMS_INDEX_FIRST_COLOR+color_paleta);
                         //Tile con prioridad (arriba) y solo cuando su color no es 0
-                        /*
-                        When a tile has its priority bit set, all pixels with index greater than 0 
-                        will be drawn on top of sprites. You must therefore choose a single colour 
-                        in palette position 0 to be the background colour for such tiles, and they 
-                        will have a "blank" background. Careful use of tile priority can make the 
-                        graphics seem more multi-layered.
-                        */
-                        if (priority_tile && byte_color!=0) {
+
+                        if (priority_pixel) {
                             if (vdp_9918a_force_disable_layer_tile_fg.v==0) {
                                 if (vdp_9918a_reveal_layer_tile_fg.v) {
                                     int posx=xdestino&1;
