@@ -363,7 +363,7 @@ void core_sms_fin_scanline(void)
 
             if (vdp_9918a_registers[0] & 0x10) {
                 if (registro_line_interrupt==linea_actual_interrupcion) {
-                    printf("Line interrupt enabled. Y coincide linea: %d\",linea_actual_interrupcion);
+                    printf("Line interrupt enabled. Y coincide linea: %d\n",linea_actual_interrupcion);
                 }
             }
 
