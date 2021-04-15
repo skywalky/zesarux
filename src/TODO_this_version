@@ -185,7 +185,6 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 
 -fallos en varios juegos sms:
 
-wonder boy in monster world: no hace scroll
 outrun, F1: pista se desplaza raro al moverse izquierda/derecho
 creo que falla por esto ???:
  After each column is drawn, the starting column value is incremented by
@@ -203,7 +202,7 @@ micromachines: se ve mal (pero esto creo que es debido a que usa mas de 192 line
 bank panic: pitido continuo al empezar el juego y luego parece que se reinicia
 space harrier no va con line interrupt
 asterix: parece que ya va con line interrupt
-wonder boy: : parece que ya va con line interrupt
+wonder boy: : parece que ya va con line interrupt. pero se desplaza raro. quiza escrituras en registro scroll van retardadas?
 castle of ilusion: no parece pasar de la intro
 
 -juegos sms que directamente no inician:

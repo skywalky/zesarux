@@ -216,6 +216,7 @@ void core_sms_fin_frame_pantalla(void)
 					vdp_9918a_status_register |=128;
 				}			
 
+                printf("End frame\n");
                 vdp_9918a_sms_raster_line_reset();
 
 				cpu_loop_refresca_pantalla();
