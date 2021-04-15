@@ -194,13 +194,17 @@ creo que falla por esto ???:
  vertical scroll value will be set to zero on columns 24 to 31.
 
 
-streets of rage 2: pantalla tiembla 
-strider: sin sonido
+streets of rage 2: pantalla tiembla. parece que corregido con line interrupt
+strider: sin sonido. parece que corregido con line interrupt
 road rash: se ralentiza mucho en juego y en intro 
 pitufos: fase dos en rio se ve raro
-master of darkness: al iniciar juego no lee teclas
+master of darkness: al iniciar juego no lee teclas. con line interrupt ya va aunque scroll raro
 micromachines: se ve mal (pero esto creo que es debido a que usa mas de 192 lineas)
 bank panic: pitido continuo al empezar el juego y luego parece que se reinicia
+space harrier no va con line interrupt
+asterix: parece que ya va con line interrupt
+wonder boy: : parece que ya va con line interrupt
+castle of ilusion: no parece pasar de la intro
 
 -juegos sms que directamente no inician:
 cosmic spacehead
