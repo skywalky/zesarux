@@ -61,6 +61,11 @@ z80_bit vdp_9918a_reveal_layer_tile_bg={0};
 //Decimos que los tiles en foreground (con priority) pasen a background
 z80_bit vdp_9918a_force_bg_tiles={0};
 
+z80_bit sms_disable_raster_interrupt={0};
+
+//Setting para decir solo disparar 1 interrupcion por frame
+z80_bit sms_only_one_raster_int_frame={0};
+
 const char *s_vdp_9918a_video_mode_sms_4="4 - SMS Graphic 256x192";
 
 //Siguiente valor para scroll vertical que se actualiza a final de frame
@@ -111,6 +116,20 @@ void vdp_9918a_sms_reset(void)
 
     sms_next_scroll_vertical_value=0;
     sms_pending_line_interrupt=0;
+
+    //En SMS los registros se resetean asi:
+    vdp_9918a_registers[0]=0x36;
+    vdp_9918a_registers[1]=0xA0;
+    vdp_9918a_registers[2]=0xFF;
+    vdp_9918a_registers[3]=0xFF;
+    vdp_9918a_registers[4]=0xFF;
+    vdp_9918a_registers[5]=0xFF;
+    vdp_9918a_registers[6]=0xFB;
+    vdp_9918a_registers[7]=0x00;
+    vdp_9918a_registers[8]=0x00;
+    vdp_9918a_registers[9]=0x00;
+    vdp_9918a_registers[10]=0xFF;
+
 }
 
 int vdp_9918a_si_sms_video_mode4(void)
@@ -1642,6 +1661,8 @@ void vdp_9918a_sms_raster_line_reset(void)
 void vdp_9918a_sms_handle_raster_interrupt(void) 
 {
 
+    if (sms_disable_raster_interrupt.v) return;
+
     //Solo en zona de pantalla+1, no border
     int linea_actual_interrupcion=t_scanline_draw-screen_invisible_borde_superior-screen_borde_superior;
     if (linea_actual_interrupcion>=1 && linea_actual_interrupcion<=191) {
@@ -1651,10 +1672,17 @@ void vdp_9918a_sms_handle_raster_interrupt(void)
         if (vdp_9918a_sms_raster_line_counter==0) {
             vdp_9918a_sms_raster_line_reset();
 
+            if (sms_only_one_raster_int_frame.v) {
+                //Si setting de solo una interrupcion por frame,
+                //cuando se dispara la primera lo ponemos a valor mas alto, asi
+                //no llegara nunca a 0 en este frame (se decrementa 191 veces por frame, o sea no tiene tiempo a llegar a 0)
+                vdp_9918a_sms_raster_line_counter=255;
+            }
+
             if (vdp_9918a_registers[0] & 0x10) {
                 //TODO $FF turns off the interrupt requests
                 //master of madness no parece ir bien con esta condicion (scroll mal)
-                if (iff1.v==1/* && vdp_9918a_registers[10]!=0xFF*/) {
+                if (iff1.v==1 /*&& vdp_9918a_registers[10]!=0xFF*/) {
                     printf("Fired Line interrupt enabled. Reg10: %d tscanline: %d\n",vdp_9918a_registers[10],t_scanline_draw);
                     //sms_pending_line_interrupt=1;
                     interrupcion_maskable_generada.v=1;

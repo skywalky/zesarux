@@ -335,7 +335,9 @@ z80_byte sms_in_port_vdp_data(void)
 
 z80_byte sms_in_port_vdp_status(void)
 {
-    return vdp_9918a_in_vdp_status();
+    //Solo nos quedamos con los 3 bits superiores
+    //TODO: creo que en todas las maquinas con este VDP deberia ser asi
+    return (vdp_9918a_in_vdp_status() & (128+64+32));
 }
 
 void sms_out_port_vdp_command_status(z80_byte value)

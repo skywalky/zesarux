@@ -8170,7 +8170,7 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 
         case 0x81:
             //BFH & 193 = 0x81
-            //printf ("VDP Status IN\n");
+            printf ("VDP Status IN\n");
             //TODO: este reset de vdp_9918a_last_command_status_bytes_counter deberia estar en teoria para todas las maquinas con el vdp 9918a
             //Y no solo para SMS
             //Sin este reset, el rainbow islands no se ve nada

@@ -33,6 +33,8 @@
 extern int sms_writing_cram;
 //extern int sms_pending_line_interrupt;
 //extern z80_byte vdp_9918a_sms_raster_line_counter;
+extern z80_bit sms_disable_raster_interrupt;
+extern z80_bit sms_only_one_raster_int_frame;
 extern int index_sms_escritura_cram;
 extern z80_byte vdp_9918a_sms_cram[];
 extern void vdp_9918a_sms_reset(void);

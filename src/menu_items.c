@@ -10818,6 +10818,16 @@ void menu_display_vdp_9918a_unlimited_sprites_line(MENU_ITEM_PARAMETERS)
 	vdp_9918a_unlimited_sprites_line.v ^=1;
 }
 
+void menu_display_sms_disable_raster_interrupt(MENU_ITEM_PARAMETERS)
+{
+	sms_disable_raster_interrupt.v ^=1;
+}
+
+void menu_display_sms_only_one_raster_int_frame(MENU_ITEM_PARAMETERS)
+{
+    sms_only_one_raster_int_frame.v ^=1;
+}
+
 void menu_display_msx_loading_stripes(MENU_ITEM_PARAMETERS)
 {
 	msx_loading_stripes.v ^=1;
@@ -11261,6 +11271,15 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 
 		if (MACHINE_HAS_VDP_9918A) {
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_vdp_9918a_unlimited_sprites_line,NULL,"[%c] Unlimited sprites per line", (vdp_9918a_unlimited_sprites_line.v ? 'X' : ' ') );	
+		}
+
+        if (MACHINE_IS_SMS) {
+			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_sms_disable_raster_interrupt,NULL,"[%c] Disable raster interrupt", (sms_disable_raster_interrupt.v ? 'X' : ' ') );	
+
+            if (sms_disable_raster_interrupt.v==0) {
+                menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_sms_only_one_raster_int_frame,NULL,
+                    "[%c] One interrupt / frame", (sms_only_one_raster_int_frame.v ? 'X' : ' ') );	
+            }
 		}
 
 		if (MACHINE_IS_MSX) {

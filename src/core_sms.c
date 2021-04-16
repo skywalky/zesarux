@@ -117,140 +117,140 @@ void interrupcion_si_despues_lda_ir_sms(void)
 void core_sms_fin_frame_pantalla(void)
 {
 	//Siguiente frame de pantalla
-				timer_get_elapsed_core_frame_post();
+    timer_get_elapsed_core_frame_post();
 
 
+    if (rainbow_enabled.v==1) t_scanline_next_fullborder_sms();
 
-
-				//tsconf_last_frame_y=-1;
-
-				if (rainbow_enabled.v==1) t_scanline_next_fullborder_sms();
-
-		        t_scanline=0;
+    t_scanline=0;
 
 		      
-					set_t_scanline_draw_zero();
+    set_t_scanline_draw_zero();
 
-                    /*
+    /*
 
-                    En SMS modo video 4
-                     The vertical scroll value cannot be changed during the active display
- period, any changes made will be stored in a temporary location and
- used only when the active display period ends (prematurely blanking the
- screen with bit #6 of register #1 doesn't count).
+    En SMS modo video 4
+        The vertical scroll value cannot be changed during the active display
+    period, any changes made will be stored in a temporary location and
+    used only when the active display period ends (prematurely blanking the
+    screen with bit #6 of register #1 doesn't count).
 
 
+    */
 
-                    */
+    vdp_9918a_registers[9]=sms_next_scroll_vertical_value;
 
-                    vdp_9918a_registers[9]=sms_next_scroll_vertical_value;
+    printf("End frame\n");
+    vdp_9918a_sms_raster_line_reset();    
 
 		     
 
 
-                                //Parche para maquinas que no generan 312 lineas, porque si enviamos menos sonido se escuchara un click al final
-                                //Es necesario que cada frame de pantalla contenga 312 bytes de sonido
-                                //Igualmente en la rutina de envio_audio se vuelve a comprobar que todo el sonido a enviar
-                                //este completo; esto es necesario para Z88
+    //Parche para maquinas que no generan 312 lineas, porque si enviamos menos sonido se escuchara un click al final
+    //Es necesario que cada frame de pantalla contenga 312 bytes de sonido
+    //Igualmente en la rutina de envio_audio se vuelve a comprobar que todo el sonido a enviar
+    //este completo; esto es necesario para Z88
 
 
-                int linea_estados=t_estados/screen_testados_linea;
+    int linea_estados=t_estados/screen_testados_linea;
 
-                while (linea_estados<312) {
-					audio_send_stereo_sample(audio_valor_enviar_sonido_izquierdo,audio_valor_enviar_sonido_derecho);
-					//audio_send_mono_sample(audio_valor_enviar_sonido_izquierdo);
-                                        linea_estados++;
-                }
-
-
-
-
-                t_estados -=screen_testados_total;
-
-				//Para paperboy, thelosttapesofalbion0 y otros que hacen letras en el border, para que no se desplacen en diagonal
-				//t_estados=0;
-				//->paperboy queda fijo. thelosttapesofalbion0 no se desplaza, sino que tiembla si no forzamos esto
-
-				audio_tone_generator_last=-audio_tone_generator_last;
-
-
-				//Final de instrucciones ejecutadas en un frame de pantalla
-				if (iff1.v==1) {
-					interrupcion_maskable_generada.v=1;
-
-
-			
-
-
-					//Si la anterior instruccion ha tardado 32 ciclos o mas
-					if (duracion_ultimo_opcode_sms>=cpu_duracion_pulso_interrupcion) {
-						debug_printf (VERBOSE_PARANOID,"Losing last interrupt because last opcode lasts 32 t-states or more");
-						interrupcion_maskable_generada.v=0;
-					}
-				 	
+    while (linea_estados<312) {
+        audio_send_stereo_sample(audio_valor_enviar_sonido_izquierdo,audio_valor_enviar_sonido_derecho);
+        //audio_send_mono_sample(audio_valor_enviar_sonido_izquierdo);
+        linea_estados++;
+    }
 
 
 
 
-				}
+    t_estados -=screen_testados_total;
 
-				//Si se genera nmi mediante bit 5 de registro vdp 1
-				//VR1
-				//5    IE0        V-Blank Interrupt Enable   (0=Disable, 1=Enable)
+    //Para paperboy, thelosttapesofalbion0 y otros que hacen letras en el border, para que no se desplacen en diagonal
+    //t_estados=0;
+    //->paperboy queda fijo. thelosttapesofalbion0 no se desplaza, sino que tiembla si no forzamos esto
 
-				/*
-				Parece que a diferencia de colecovision, sms no genera nmi
-				if (vdp_9918a_registers[1] & 32) {
-					//printf ("Generando nmi\n");
-					generate_nmi();
-				}
-				*/
-
-				//Si se avisa de vsync
-				//VR1
-				//5    IE0        V-Blank Interrupt Enable   (0=Disable, 1=Enable)
-				if (vdp_9918a_registers[1] & 32) {
-					//printf ("Generando nmi\n");
-
-					//Avisar vsync en vdp
-					vdp_9918a_status_register |=128;
-				}			
-
-                printf("End frame\n");
-                vdp_9918a_sms_raster_line_reset();
-
-				cpu_loop_refresca_pantalla();
-
-				vofile_send_frame(rainbow_buffer);
+    audio_tone_generator_last=-audio_tone_generator_last;
 
 
-				siguiente_frame_pantalla();
+    //Final de instrucciones ejecutadas en un frame de pantalla
+    if (iff1.v==1) {
+        /*
+        IE (R1 bit 5) IE1 (R0 bit 4)
+        0               1           H-Line Interrupt only.
+        1               1           Both H-Line and VBLANK.
+        */
+
+        //Solo si los dos bits a 1
+        //Esto es documentacion oficial pero parece que no va del todo bien
+        //if ((vdp_9918a_registers[1] & 32) &&  (vdp_9918a_registers[0] & 16))
+        interrupcion_maskable_generada.v=1;
 
 
-				if (debug_registers) scr_debug_registers();
+        //Si la anterior instruccion ha tardado 32 ciclos o mas
+        if (duracion_ultimo_opcode_sms>=cpu_duracion_pulso_interrupcion) {
+            debug_printf (VERBOSE_PARANOID,"Losing last interrupt because last opcode lasts 32 t-states or more");
+            interrupcion_maskable_generada.v=0;
+        }
+        
 
-	  	                contador_parpadeo--;
-                        	//printf ("Parpadeo: %d estado: %d\n",contador_parpadeo,estado_parpadeo.v);
-	                        if (!contador_parpadeo) {
-        	                        contador_parpadeo=16;
-                	                estado_parpadeo.v ^=1;
-	                        }
+    }
+
+    //Si se genera nmi mediante bit 5 de registro vdp 1
+    //VR1
+    //5    IE0        V-Blank Interrupt Enable   (0=Disable, 1=Enable)
+
+    /*
+    Parece que a diferencia de colecovision, sms no genera nmi
+    if (vdp_9918a_registers[1] & 32) {
+        //printf ("Generando nmi\n");
+        generate_nmi();
+    }
+    */
+
+    //Si se avisa de vsync
+    //VR1
+    //5    IE0        V-Blank Interrupt Enable   (0=Disable, 1=Enable)
+    if (vdp_9918a_registers[1] & 32) {
+        //printf ("Generando nmi\n");
+
+        //Avisar vsync en vdp
+        vdp_9918a_status_register |=128;
+    }			
 
 
-				if (!interrupcion_timer_generada.v) {
-					//Llegado a final de frame pero aun no ha llegado interrupcion de timer. Esperemos...
-					//printf ("no demasiado\n");
-					esperando_tiempo_final_t_estados.v=1;
-				}
 
-				else {
-					//Llegado a final de frame y ya ha llegado interrupcion de timer. No esperamos.... Hemos tardado demasiado
-					//printf ("demasiado\n");
-					esperando_tiempo_final_t_estados.v=0;
-				}
+    cpu_loop_refresca_pantalla();
+
+    vofile_send_frame(rainbow_buffer);
 
 
-				core_end_frame_check_zrcp_zeng_snap.v=1;
+    siguiente_frame_pantalla();
+
+
+    if (debug_registers) scr_debug_registers();
+
+    contador_parpadeo--;
+    //printf ("Parpadeo: %d estado: %d\n",contador_parpadeo,estado_parpadeo.v);
+    if (!contador_parpadeo) {
+            contador_parpadeo=16;
+            estado_parpadeo.v ^=1;
+    }
+
+
+    if (!interrupcion_timer_generada.v) {
+        //Llegado a final de frame pero aun no ha llegado interrupcion de timer. Esperemos...
+        //printf ("no demasiado\n");
+        esperando_tiempo_final_t_estados.v=1;
+    }
+
+    else {
+        //Llegado a final de frame y ya ha llegado interrupcion de timer. No esperamos.... Hemos tardado demasiado
+        //printf ("demasiado\n");
+        esperando_tiempo_final_t_estados.v=0;
+    }
+
+
+    core_end_frame_check_zrcp_zeng_snap.v=1;
 
 
 }
