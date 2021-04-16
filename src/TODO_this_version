@@ -236,3 +236,6 @@ however the line counter is only set to the value of register 10 when the curren
 past the FIRST scanline of the inactive display period
 
  D4 - (IE1) 1= Line interrupt enable
+
+
+- quiza wonderboy falla porque cambia el scroll pero luego lo lee (de donde?) de algun sitio que se lee mal y lo cambia a 0??
