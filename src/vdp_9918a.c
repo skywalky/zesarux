@@ -222,6 +222,17 @@ void vdp_9918a_out_command_status(z80_byte value)
                             }
                     }
 
+                    if (vdp_register==0) {
+                        if ((next_value & 0x10)==0) {
+                            printf("Disabling raster interrupt t_scanline_draw=%d on PC=%04XH A=%02XH BC=%02XH\n",
+                                            t_scanline_draw,reg_pc,reg_a,BC);
+                        }
+                        else {
+                            printf("Enabling raster interrupt t_scanline_draw=%d on PC=%04XH A=%02XH BC=%02XH\n",
+                                            t_scanline_draw,reg_pc,reg_a,BC);
+                        }
+                    }
+
                             
                 }
 

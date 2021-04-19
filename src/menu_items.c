@@ -11286,8 +11286,11 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
                     "[%c] One interrupt / frame", (sms_only_one_raster_int_frame.v ? 'X' : ' ') );	
             }
 
-            menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_sms_wonderboy_scroll_hack,NULL,"[%c] Fix wonderboy scroll",
+            //wonder boy, astro flash, 
+            menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_sms_wonderboy_scroll_hack,NULL,"[%c] Fix some scrolls",
                 (sms_wonderboy_scroll_hack.v ? 'X' : ' ') );	
+            menu_add_item_menu_tooltip(array_menu_settings_display,"Fix scroll in some games, like Astro Flash or Wonder Boy in Monster World");
+            menu_add_item_menu_ayuda(array_menu_settings_display,"Fix scroll in some games, like Astro Flash or Wonder Boy in Monster World");
 		}
 
 		if (MACHINE_IS_MSX) {
