@@ -213,6 +213,7 @@ void vdp_9918a_out_command_status(z80_byte value)
                                             reg_pc,reg_a,BC);
                                             
                             //quiza si es 255 no altera su valor, solo desactiva la raster interrupt
+                            
                             if (vdp_9918a_last_command_status_bytes[0]==0xFF && sms_wonderboy_scroll_hack.v) {
                                 printf("Do not change raster line value as it is 0xFF\n");
                                 //vdp_9918a_registers[0] &=(255-0x10);
@@ -220,6 +221,7 @@ void vdp_9918a_out_command_status(z80_byte value)
                                 //master of madness no parece ir bien con esto (scroll mal)
                                 next_value=vdp_9918a_registers[vdp_register];
                             }
+                            
                     }
 
                     if (vdp_register==0) {

@@ -1697,8 +1697,18 @@ void vdp_9918a_sms_handle_raster_interrupt(void)
             if (vdp_9918a_registers[0] & 0x10) {
                 //TODO $FF turns off the interrupt requests
                 //master of madness no parece ir bien con esta condicion (scroll mal)
+
+                int disparar_interrupcion=0;
+                if (iff1.v) disparar_interrupcion=1;
+
+                /*
+                if (sms_wonderboy_scroll_hack.v && vdp_9918a_registers[10]==0xFF) {
+                    printf("---valor FF. Deshabilitadas\n");
+                    disparar_interrupcion=0;
+                }
+                */
                 
-                if (iff1.v==1 /*&& vdp_9918a_registers[10]!=0xFF*/) {
+                if (disparar_interrupcion) {
                     printf("Fired Line interrupt enabled. Reg10: %d tscanline: %d\n",vdp_9918a_registers[10],t_scanline_draw);
                     //sms_pending_line_interrupt=1;
                     interrupcion_maskable_generada.v=1;
