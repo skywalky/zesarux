@@ -10850,6 +10850,11 @@ void menu_display_tbblue_optimized_sprite_render(MENU_ITEM_PARAMETERS)
 //    cpc_endframe_workaround.v ^=1;
 //}
 
+void menu_display_sms_wonderboy_scroll_hack(MENU_ITEM_PARAMETERS)
+{
+    sms_wonderboy_scroll_hack.v ^=1;
+}
+
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
 {
@@ -11280,6 +11285,9 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_sms_only_one_raster_int_frame,NULL,
                     "[%c] One interrupt / frame", (sms_only_one_raster_int_frame.v ? 'X' : ' ') );	
             }
+
+            menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_sms_wonderboy_scroll_hack,NULL,"[%c] Fix wonderboy scroll",
+                (sms_wonderboy_scroll_hack.v ? 'X' : ' ') );	
 		}
 
 		if (MACHINE_IS_MSX) {

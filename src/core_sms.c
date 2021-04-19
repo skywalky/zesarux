@@ -140,7 +140,7 @@ void core_sms_fin_frame_pantalla(void)
 
     vdp_9918a_registers[9]=sms_next_scroll_vertical_value;
 
-    printf("End frame\n");
+    printf("--End frame\n");
     vdp_9918a_sms_raster_line_reset();    
 
 		     

@@ -69,7 +69,8 @@ extern void vdp_9918a_sms_set_writing_cram(z80_byte valor);
 extern int vdp_9918a_sms_get_final_color_border(void);
 
 extern void vdp_9918a_sms_raster_line_reset(void);
-
+extern z80_byte vdp_9918a_sms_raster_line_counter;
+extern z80_bit sms_wonderboy_scroll_hack;
 
 extern void vdp_9918a_sms_handle_raster_interrupt(void);
 

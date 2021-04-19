@@ -80,6 +80,9 @@ z80_byte sms_next_scroll_vertical_value=0;
 
 int sms_pending_line_interrupt=0;
 
+//Fix feo para el scroll del wonderboy
+z80_bit sms_wonderboy_scroll_hack={0};
+
 int vdp_9918a_sms_get_cram_color(int index)
 {
     return vdp_9918a_sms_cram[index % VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS];
@@ -1654,7 +1657,7 @@ z80_byte vdp_9918a_sms_raster_line_counter=0;
 void vdp_9918a_sms_raster_line_reset(void)
 {
     vdp_9918a_sms_raster_line_counter=vdp_9918a_registers[10];
-    printf("reset rasterline to %d\n",vdp_9918a_sms_raster_line_counter);
+    //printf("reset rasterline to %3d on PC=%04XH A=%02XH BC=%02XH\n",vdp_9918a_sms_raster_line_counter,reg_pc,reg_a,BC);
 }
 
 
@@ -1668,9 +1671,19 @@ void vdp_9918a_sms_handle_raster_interrupt(void)
     if (linea_actual_interrupcion>=1 && linea_actual_interrupcion<=191) {
 
         //printf("linea_actual_interrupcion %d\n",linea_actual_interrupcion);
+        //printf("rasterline %d\n",vdp_9918a_sms_raster_line_counter);
 
         if (vdp_9918a_sms_raster_line_counter==0) {
+            printf("raster counter is 0. set to new value %d\n",vdp_9918a_registers[10]);
+
+            //temp
+            //if (vdp_9918a_registers[10]==0xFF) vdp_9918a_registers[0] &=(255-0x10);
+
+
+            //else 
             vdp_9918a_sms_raster_line_reset();
+
+
 
             if (sms_only_one_raster_int_frame.v) {
                 //Si setting de solo una interrupcion por frame,
@@ -1679,9 +1692,12 @@ void vdp_9918a_sms_handle_raster_interrupt(void)
                 vdp_9918a_sms_raster_line_counter=255;
             }
 
+            printf("Possible Fire interrupt. Look iff1.v=%d vdp_9918a_registers[0] & 0x10 %d\n",iff1.v,vdp_9918a_registers[0] & 0x10);
+
             if (vdp_9918a_registers[0] & 0x10) {
                 //TODO $FF turns off the interrupt requests
                 //master of madness no parece ir bien con esta condicion (scroll mal)
+                
                 if (iff1.v==1 /*&& vdp_9918a_registers[10]!=0xFF*/) {
                     printf("Fired Line interrupt enabled. Reg10: %d tscanline: %d\n",vdp_9918a_registers[10],t_scanline_draw);
                     //sms_pending_line_interrupt=1;

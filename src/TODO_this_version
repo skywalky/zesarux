@@ -202,7 +202,13 @@ micromachines: se ve mal (pero esto creo que es debido a que usa mas de 192 line
 bank panic: pitido continuo al empezar el juego y luego parece que se reinicia
 space harrier no va con line interrupt
 asterix: parece que ya va con line interrupt
+
 wonder boy: : parece que ya va con line interrupt. pero se desplaza raro. quiza escrituras en registro scroll van retardadas?
+con frameskip 1 se corrige
+-va saltando un frame de video con scroll bien y otro que no, en el que no , pone raster line a 255, quiza es ese el problema.
+Que debe hacer en ese caso??
+
+
 castle of ilusion: no parece pasar de la intro
 
 -juegos sms que directamente no inician:
