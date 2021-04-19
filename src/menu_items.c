@@ -11279,6 +11279,7 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 		}
 
         if (MACHINE_IS_SMS) {
+            //Corrige tambien el cuelgue del space harrier al iniciar
 			menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_sms_disable_raster_interrupt,NULL,"[%c] Disable raster interrupt", (sms_disable_raster_interrupt.v ? 'X' : ' ') );	
 
             if (sms_disable_raster_interrupt.v==0) {
@@ -11286,7 +11287,8 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
                     "[%c] One interrupt / frame", (sms_only_one_raster_int_frame.v ? 'X' : ' ') );	
             }
 
-            //wonder boy, astro flash, 
+            //wonder boy, astro flash
+            //Esto corrige tambien el cuelgue del space harrier al iniciar
             menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_display_sms_wonderboy_scroll_hack,NULL,"[%c] Fix some scrolls",
                 (sms_wonderboy_scroll_hack.v ? 'X' : ' ') );	
             menu_add_item_menu_tooltip(array_menu_settings_display,"Fix scroll in some games, like Astro Flash or Wonder Boy in Monster World");
