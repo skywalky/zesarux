@@ -73,5 +73,6 @@ extern z80_byte vdp_9918a_sms_raster_line_counter;
 extern z80_bit sms_wonderboy_scroll_hack;
 
 extern void vdp_9918a_sms_handle_raster_interrupt(void);
+extern z80_byte vdp_9918a_sms_pre_write_reg(z80_byte vdp_register,z80_byte next_value);
 
 #endif

@@ -193,50 +193,8 @@ void vdp_9918a_out_command_status(z80_byte value)
 
                 z80_byte next_value=vdp_9918a_last_command_status_bytes[0];
                 
-
                 //Casos para Master System
-                if (MACHINE_IS_SMS) {
-                    if (vdp_register==9) {
-                        vdp9918a_sms_set_scroll_vertical(vdp_9918a_last_command_status_bytes[0]);
-                        //Para dejarlo igual
-                        next_value=vdp_9918a_registers[9];
-                    }
-
-
-
-                    if (vdp_register==8 && MACHINE_IS_SMS) printf("Change scroll horizontal to %3d t_scanline_draw=%d on PC=%04XH A=%02XH BC=%02XH\n",
-                                            vdp_9918a_last_command_status_bytes[0],t_scanline_draw,reg_pc,reg_a,BC);
-
-                    if (vdp_register==10 && MACHINE_IS_SMS) {
-                            printf("change raster register to %3d t_scanline_draw=%d raster_counter %d on PC=%04XH A=%02XH BC=%02XH\n",
-                                            vdp_9918a_last_command_status_bytes[0],t_scanline_draw,vdp_9918a_sms_raster_line_counter,
-                                            reg_pc,reg_a,BC);
-                                            
-                            //quiza si es 255 no altera su valor, solo desactiva la raster interrupt
-                            
-                            if (vdp_9918a_last_command_status_bytes[0]==0xFF && sms_wonderboy_scroll_hack.v) {
-                                printf("Do not change raster line value as it is 0xFF\n");
-                                //vdp_9918a_registers[0] &=(255-0x10);
-                                //Dejar mismo valor
-                                //master of madness no parece ir bien con esto (scroll mal)
-                                next_value=vdp_9918a_registers[vdp_register];
-                            }
-                            
-                    }
-
-                    if (vdp_register==0) {
-                        if ((next_value & 0x10)==0) {
-                            printf("Disabling raster interrupt t_scanline_draw=%d on PC=%04XH A=%02XH BC=%02XH\n",
-                                            t_scanline_draw,reg_pc,reg_a,BC);
-                        }
-                        else {
-                            printf("Enabling raster interrupt t_scanline_draw=%d on PC=%04XH A=%02XH BC=%02XH\n",
-                                            t_scanline_draw,reg_pc,reg_a,BC);
-                        }
-                    }
-
-                            
-                }
+                if (MACHINE_IS_SMS) next_value=vdp_9918a_sms_pre_write_reg(vdp_register,next_value);
 
                 vdp_9918a_registers[vdp_register]=next_value;
 
