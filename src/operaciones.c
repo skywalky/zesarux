@@ -8147,6 +8147,7 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
         case 0x41:
             //7FH & 193 = 0x41
             //TODO: 0x7F : Reading: returns VDP H counter
+            //printf("Reading unemulated port VDP H counter(%02XH)\n",puerto_l);
         break;
 
         case 0x80:
