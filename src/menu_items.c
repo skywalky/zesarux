@@ -24703,7 +24703,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		//Cargar el archivo bmp
 		/*
 		Deben ser, idealmente: 540x201.  (puede ser otro tamaño)
-		bmp. 256 colour (indexed)
+		bmp. 256 colour (indexed).  grabar con no-codificación run lenght,  y no sobreescribir la información de espacio de colores
 		*/
 
 		char nombrebmp[PATH_MAX];

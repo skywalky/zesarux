@@ -19706,9 +19706,17 @@ reserved	1 byte	 	unused (=0)
 */
 
         		int i;
-		int indice_paleta; //=0x36+4;
+		int indice_paleta;
 
-		indice_paleta=122;  //obtenido mediante restar el inicio de los pixeles (1146) - 1024 (1024 es lo que ocupa la tabla de colores)
+        //En posicion 0E, dword que indica tamaño de la segunda paleta. Luego vendra la paleta de colores
+        int size_info_header;
+
+        //TODO: asumimos tamaños pequeños de esa cabecera y por tanto solo leo 2 bytes de ese dword
+        size_info_header=mem[0x0E]+256*mem[0x0F];
+
+        indice_paleta=size_info_header;
+        indice_paleta +=0x0E;
+
 		//Orden BGR0
 		for (i=0;i<256;i++) {
 			int red=mem[indice_paleta+2];
@@ -19716,6 +19724,7 @@ reserved	1 byte	 	unused (=0)
 			int blue=mem[indice_paleta];
 
 			int color=(red<<16) | (green<<8) | blue;
+            debug_printf(VERBOSE_DEBUG,"Loading BMP palette. Index %d Value %06XH",i,color);
 
 					
 			screen_set_colour_normal(indice_inicio_color+i,color);
