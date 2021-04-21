@@ -42,24 +42,24 @@ Examples
 */
 
 
-//#define EMULATOR_VERSION "9.2-SN"
-//#define EMULATOR_VERSION "9.2-B1"
-//#define EMULATOR_VERSION "9.2-RC"
-#define EMULATOR_VERSION "9.2"
-//#define SNAPSHOT_VERSION
+#define EMULATOR_VERSION "9.3-SN"
+//#define EMULATOR_VERSION "9.3-B1"
+//#define EMULATOR_VERSION "9.3-RC"
+//#define EMULATOR_VERSION "9.3"
+#define SNAPSHOT_VERSION
 
-#define EMULATOR_DATE "05 April 2021"
-#define EMULATOR_SHORT_DATE "05/04/2021"
-#define EMULATOR_GAME_EDITION "Cliff Hanger"
+#define EMULATOR_DATE "21 April 2021"
+#define EMULATOR_SHORT_DATE "21/04/2021"
+#define EMULATOR_GAME_EDITION "xxxxx"
 #define EMULATOR_EDITION_NAME EMULATOR_GAME_EDITION " edition"
 #define ZESARUX_EXTRAS_HOST "github.com" 
 
 
 //testeo o para forzar una versión en develop
-//#define ZESARUX_EXTRAS_URL "https://github.com/chernandezba/zesarux/releases/download/9.1/ZEsarUX_extras-9.1.zip"
+#define ZESARUX_EXTRAS_URL "https://github.com/chernandezba/zesarux/releases/download/9.1/ZEsarUX_extras-9.2.zip"
 
 //final
-#define ZESARUX_EXTRAS_URL "/chernandezba/zesarux/releases/download/" EMULATOR_VERSION "/ZEsarUX_extras-" EMULATOR_VERSION ".zip"
+//#define ZESARUX_EXTRAS_URL "/chernandezba/zesarux/releases/download/" EMULATOR_VERSION "/ZEsarUX_extras-" EMULATOR_VERSION ".zip"
 
 
 //8 bits

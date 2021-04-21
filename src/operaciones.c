@@ -8125,7 +8125,7 @@ z80_byte lee_puerto_sms_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
     //65533 o 49149
     //FFFDh (65533), BFFDh (49149)
 
-    z80_int puerto=value_8_to_16(puerto_h,puerto_l);
+    //z80_int puerto=value_8_to_16(puerto_h,puerto_l);
 
     z80_byte puerto_leido_efectivo=puerto_l & 0xC1;
 
