@@ -196,15 +196,18 @@ creo que falla por esto ???:
 road rash: se ralentiza mucho en juego y en intro 
 pitufos: fase dos en rio se ve raro
 micromachines: se ve mal (pero esto creo que es debido a que usa mas de 192 lineas)
-bank panic: scroll mal, con setting de fix se ve menos mal
+bank panic: scroll mal, parece que se corrige con setting scroll hack
 space harrier: no va con line interrupt
 missile defense 3d: saltos de pantalla continuos
 
-wonder boy: : parece que se corrige con setting hack
+wonder boy: parece que se corrige con setting scroll hack
 
 -scroll incorrecto "parpadeo" con varios planos (algunos se corrige con setting wonder boy hack):
 aladdin
 astro flash
+missile defense 3d
+gp rider
+F1
 
 -scroll incorrecto "tipo juego carreras"
 out Run
