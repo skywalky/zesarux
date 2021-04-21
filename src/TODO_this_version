@@ -198,6 +198,7 @@ pitufos: fase dos en rio se ve raro
 micromachines: se ve mal (pero esto creo que es debido a que usa mas de 192 lineas)
 bank panic: scroll mal, con setting de fix se ve menos mal
 space harrier no va con line interrupt
+missile defense 3d: saltos de pantalla continuos
 
 wonder boy: : parece que ya va con line interrupt. pero se desplaza raro. quiza escrituras en registro scroll van retardadas?
 con frameskip 1 se corrige

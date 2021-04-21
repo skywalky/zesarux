@@ -24652,16 +24652,14 @@ Hence, data 26 70 gives a product code 7026.
 The high 4 bits of the next byte (hence, 0.5 bytes) are a hexadecimal representation of any remaining digits of the product code. 
 Hence, data 26 70 2 gives a product code of 27026 and 26 70 a gives a product code of 107026.
 */
- 	sprintf(buffer_texto,"Product Code: %02d%02X%02X",
-        (buffer_cabecera[offset+0xe] >>4) & 0xF,
+ 	sprintf(buffer_texto,"Serial Number: %02X%02X",
         buffer_cabecera[offset+0xd],
         buffer_cabecera[offset+0xc]);
 
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
 
-    //Version ($7ffe, 0.5 bytes)
- 	sprintf(buffer_texto,"Version: %d",buffer_cabecera[offset+0xe] & 0xF);
+ 	sprintf(buffer_texto,"Software Revision: %d",buffer_cabecera[offset+0xe]);
  	indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);   
 
     z80_byte region_code=(buffer_cabecera[offset+0xf] >> 4) & 0xF;
