@@ -1707,6 +1707,8 @@ void vdp_9918a_sms_handle_raster_interrupt(void)
                     disparar_interrupcion=0;
                 }
                 */
+
+               //if (vdp_9918a_registers[10]==0xFF) disparar_interrupcion=0;
                 
                 if (disparar_interrupcion) {
                     printf("Fired Line interrupt enabled. Reg10: %d tscanline: %d\n",vdp_9918a_registers[10],t_scanline_draw);
