@@ -193,8 +193,8 @@ void vdp_9918a_out_command_status(z80_byte value)
 
                 z80_byte next_value=vdp_9918a_last_command_status_bytes[0];
                 
-                //Casos para Master System
-                if (MACHINE_IS_SMS) next_value=vdp_9918a_sms_pre_write_reg(vdp_register,next_value);
+                //Casos para Master System modo video 4
+                if (vdp_9918a_si_sms_video_mode4() ) next_value=vdp_9918a_sms_pre_write_reg(vdp_register,next_value);
 
                 vdp_9918a_registers[vdp_register]=next_value;
 

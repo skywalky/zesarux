@@ -141,7 +141,7 @@ void core_sms_fin_frame_pantalla(void)
     vdp_9918a_registers[9]=sms_next_scroll_vertical_value;
 
     //printf("--End frame\n");
-    vdp_9918a_sms_raster_line_reset();    
+    if (vdp_9918a_si_sms_video_mode4() )vdp_9918a_sms_raster_line_reset();    
 
 		     
 
@@ -362,7 +362,7 @@ void core_sms_fin_scanline(void)
             //y_destino_rainbow=t_scanline_draw-screen_invisible_borde_superior;
 
 
-            vdp_9918a_sms_handle_raster_interrupt();
+            if (vdp_9918a_si_sms_video_mode4() ) vdp_9918a_sms_handle_raster_interrupt();
 
 			//se supone que hemos ejecutado todas las instrucciones posibles de toda la pantalla. refrescar pantalla y
 			//esperar para ver si se ha generado una interrupcion 1/50
