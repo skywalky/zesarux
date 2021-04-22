@@ -22212,7 +22212,7 @@ void menu_file_sp_browser_show(char *filename)
 	//menu_generic_message_tooltip("SP file browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("SP file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 
 }
@@ -22456,7 +22456,7 @@ Bytes   Content
 	//menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip(titulo_ventana , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 	free(mmc_file_memory);
 
@@ -22634,7 +22634,7 @@ void menu_file_trd_browser_show(char *filename,char *tipo_imagen)
 	//menu_generic_message_tooltip(titulo_ventana, 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip(titulo_ventana , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 	free(trd_file_memory);
 
@@ -23192,7 +23192,7 @@ After these 6 bytes, the data for the block comes.
 	//  menu_generic_message_tooltip("ZSF file browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("ZSF file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 	free(zsf_file_memory);
 
 }
@@ -23322,7 +23322,7 @@ Bitstreams
 	//  menu_generic_message_tooltip("ZX-Uno Flash browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("ZX-Uno Flash browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 	free(zxuno_flash_file_memory);
 
@@ -23772,7 +23772,7 @@ void menu_file_sna_browser_show(char *filename)
 	//menu_generic_message_tooltip("SNA file browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("SNA file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 
 }
@@ -24043,7 +24043,7 @@ void menu_file_spg_browser_show(char *filename)
 	//menu_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("SPG file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 
 }
@@ -24127,7 +24127,7 @@ void menu_file_nex_browser_show(char *filename)
 	//menu_generic_message_tooltip("SPG file browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("NEX file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 
 }
@@ -24246,7 +24246,7 @@ void menu_file_zx_browser_show(char *filename)
 	//menu_generic_message_tooltip("ZEsarUX ZX file browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("ZEsarUX ZX file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 
 }
@@ -24382,7 +24382,7 @@ void menu_file_z80_browser_show(char *filename)
 	//menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("Z80 file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 
 }
@@ -24526,7 +24526,7 @@ void menu_file_col_browser_show(char *filename)
 	//menu_generic_message_tooltip("Z80 file browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("Colecovision file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 
 }
@@ -24886,7 +24886,7 @@ void menu_file_tzx_browser_show(char *filename)
 
 				//Lo escribimos con espacio
 				buffer_bloque[0]=' ';
-			        //longitud_sub_bloque=util_tape_tap_get_info(&tzx_file_mem[puntero],&buffer_bloque[1]);
+			        
 				util_tape_get_info_tapeblock(&tzx_file_mem[puntero+3],tzx_file_mem[puntero+2],longitud_larga,&buffer_bloque[1]);
 
 				indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_bloque);
@@ -25635,7 +25635,7 @@ void menu_tape_browser_show(char *filename)
 	//menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", texto_browser);
 	zxvision_generic_message_tooltip("Tape browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
-	//int util_tape_tap_get_info(z80_byte *tape,char *texto)
+
 
 	free(taperead);
 
@@ -27274,8 +27274,7 @@ void menu_file_viewer_read_text_file(char *title,char *file_name)
                 util_tape_get_info_tapeblock((z80_byte *)file_read_memory,flag,longitud,buffer_texto);
 
 
-		//util_tape_tap_get_info((z80_byte *)file_read_memory,buffer_texto);
-		//menu_generic_message_tooltip("Tape browser", 0, 0, 1, NULL, "%s", buffer_texto);
+
 		zxvision_generic_message_tooltip("Tape browser" , 0 , 0, 0, 1, NULL, 1, "%s", buffer_texto);
 
 		
@@ -39304,7 +39303,6 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	//de momento nada mas
 	debug_printf(VERBOSE_DEBUG,"Preview File: %s",filesel_nombre_archivo_seleccionado);
-    //printf("Preview File: %s\n",filesel_nombre_archivo_seleccionado);
 
 	if (!strcmp(menu_filesel_last_preview_file,filesel_nombre_archivo_seleccionado)) {
 		debug_printf(VERBOSE_DEBUG,"File is the same as before. Do not do anything");

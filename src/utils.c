@@ -11390,7 +11390,10 @@ int util_tape_tap_get_info(z80_byte *tape,char *texto)
 
 	if (longitud<2) strcpy(texto,"Corrupt tape");
 	else {
-		util_tape_get_info_tapeblock(tape,flag,longitud,texto);
+        //Maximo 36 bytes (en una cabecera tipo SPED). Copiamos a buffer temporal para evitar que se salga puntero de sitio
+        z80_byte buffer_temp[36];
+        util_memcpy_protect_origin(buffer_temp, tape, 36, 0, 36);
+		util_tape_get_info_tapeblock(buffer_temp,flag,longitud,texto);
 
 		
 	}
@@ -13818,7 +13821,7 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 	}
 
 	//Leemos cinta en memoria
-	int total_mem=get_file_size(filename);
+	int total_file_size=get_file_size(filename);
 
 	z80_byte *taperead;
 
@@ -13847,11 +13850,12 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 	}
     */
 
-	taperead=malloc(total_mem);
+	taperead=malloc(total_file_size);
 	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser");
 
-	z80_byte *puntero_lectura;
-	puntero_lectura=taperead;
+	//z80_byte *puntero_lectura;
+	//puntero_lectura=taperead;
+    int nuevo_puntero_lectura=0;
 
         //Abrir fichero tzxfile si conviene convertir
         FILE *ptr_tzxfile;
@@ -13888,9 +13892,8 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
         int leidos;
         
 
-         leidos=zvfs_fread(in_fatfs,taperead,total_mem,ptr_tapebrowser,&fil);
+         leidos=zvfs_fread(in_fatfs,taperead,total_file_size,ptr_tapebrowser,&fil);
         
-        //leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
 
 	if (leidos==0) {
                 debug_printf(VERBOSE_ERR,"Error reading tape");
@@ -13913,9 +13916,15 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 	z80_byte previo_flag=255; //Almacena flag de bloque justo anterior 
 	z80_byte previo_tipo_bloque=255; //Almacena previo tipo bloque anterior (0, program, 3 bytes etc)
 
-	while(total_mem>0) {
-		z80_byte *copia_puntero=puntero_lectura;
-		longitud_bloque=util_tape_tap_get_info(puntero_lectura,buffer_texto);
+    int remaining_file_size=total_file_size;
+
+	while(remaining_file_size>0) {
+		//z80_byte *copia_puntero=puntero_lectura;
+        int nuevo_copia_puntero=nuevo_puntero_lectura;
+        //Buffer temporal para evitar que se salga de sitio
+        z80_byte buffer_temp[36]; //36 maximo en una cabecera tipo sped
+        util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,nuevo_puntero_lectura,36);
+		longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
                 //printf("longitud bloque: %d\n",longitud_bloque);
                 //printf("nombre: %s\n",buffer_texto);
 
@@ -13925,8 +13934,9 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
                         if (buffer_texto[i]=='/') buffer_texto[i]=' ';
                 }
 
-		total_mem-=longitud_bloque;
-		puntero_lectura +=longitud_bloque;
+		remaining_file_size-=longitud_bloque;
+
+		nuevo_puntero_lectura +=longitud_bloque;
 		//debug_printf (VERBOSE_DEBUG,"Tape browser. Block: %s",buffer_texto);
 
 
@@ -13936,11 +13946,10 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 		int longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
 
                 if (longitud_final>=0) {
-
                         z80_byte tipo_bloque=255;
 
                         //Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
-                        z80_byte flag=copia_puntero[2];
+                        z80_byte flag=util_get_byte_protect(taperead,total_file_size,nuevo_copia_puntero+2);
 
                         //printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
 
@@ -13949,12 +13958,13 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
                         if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
                                 if (tzxfile==NULL) sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdir,filenumber,buffer_texto);
 
-                                tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
+                                tipo_bloque=util_get_byte_protect(taperead,total_file_size,nuevo_copia_puntero+3); //0, program, 3 bytes etc
 
                                 //printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
 
                                 //Longitud segun cabecera
-                                longitud_segun_cabecera=value_8_to_16(copia_puntero[15],copia_puntero[14]);
+                                longitud_segun_cabecera=value_8_to_16(util_get_byte_protect(taperead,total_file_size,nuevo_copia_puntero+15),
+                                util_get_byte_protect(taperead,total_file_size,nuevo_copia_puntero+14));
                         
                         }
                         else {
@@ -13999,7 +14009,28 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
                         if (tzxfile==NULL) {
                                 //Generar bloque con datos, saltando los dos de cabecera y el flag
-                                util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+                                //Generamos bloque temporal para evitar segfaults en archivos corruptos
+
+                                
+                                z80_byte *temp_save_mem;
+                                
+                                temp_save_mem=malloc(longitud_final);
+                                //printf("\nAsignando %d bytes\n",longitud_final);
+                                if (temp_save_mem==NULL) cpu_panic("Can not allocate memory for file save");
+
+                                //printf("offset %d total_memoria %d longitud_bloque %d\n",nuevo_copia_puntero+3,total_file_size,longitud_final);
+                                //if (nuevo_copia_puntero+3+longitud_final>total_file_size) printf("POSIBLE ERROR\n");
+
+                                //printf("util_memcpy_protect_origin destino %p origen %p total_mem %d offset %d total_copiar %d\n",
+                                //       temp_save_mem,taperead,total_file_size,nuevo_copia_puntero+3,longitud_final); 
+
+                                util_memcpy_protect_origin(temp_save_mem,taperead,total_file_size,nuevo_copia_puntero+3,longitud_final);
+
+                                util_save_file(temp_save_mem,longitud_final,buffer_temp_file);
+
+                                free(temp_save_mem);
+
+                                
                         }
 
                         //Convertir a tzx
@@ -14020,8 +14051,19 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
 
                                 //Meter datos tal cual de tap: longitud, flag, datos, crc
 
-                                zvfs_fwrite(in_fatfs_tzxfile,copia_puntero,longitud_bloque,ptr_tzxfile,&fil_tzxfile);
-                                //fwrite(copia_puntero,1,longitud_bloque,ptr_tzxfile);
+                               //Generar bloque con datos, saltando los dos de cabecera y el flag
+
+
+                                //Generamos bloque temporal para evitar segfaults en archivos corruptos
+                                z80_byte *temp_save_mem=malloc(longitud_bloque);
+                                if (temp_save_mem==NULL) cpu_panic("Can not allocate memory for file save");
+                                util_memcpy_protect_origin(temp_save_mem,taperead,total_file_size,nuevo_copia_puntero,longitud_bloque);
+
+                          
+                                zvfs_fwrite(in_fatfs_tzxfile,temp_save_mem,longitud_bloque,ptr_tzxfile,&fil_tzxfile);
+                                
+
+                                free(temp_save_mem);
 
 
                         }                
@@ -14032,7 +14074,7 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
                         previo_longitud_segun_cabecera=longitud_segun_cabecera;
                         previo_tipo_bloque=tipo_bloque;
 
-                }
+                }           
 	}
 
 
@@ -20099,7 +20141,7 @@ z80_byte util_get_byte_protect(z80_byte *memoria,int total_size,int offset)
 void util_memcpy_protect_origin(z80_byte *destino,z80_byte *memoria,int total_size,int offset,int total_copiar)
 {
 
-    for (;total_copiar>=0;total_copiar--) {
+    for (;total_copiar>0;total_copiar--) {
         *destino=util_get_byte_protect(memoria,total_size,offset);
 
         destino++;
