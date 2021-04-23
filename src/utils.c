@@ -14473,7 +14473,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 	}
 
 	//Leemos cinta en memoria
-	int total_mem=get_file_size(filename);
+	int total_file_size=get_file_size(filename);
 
 	z80_byte *taperead;
 
@@ -14493,7 +14493,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 
 
-	taperead=malloc(total_mem);
+	taperead=malloc(total_file_size);
 	if (taperead==NULL) cpu_panic("Error allocating memory for tape browser/convert");
 
 	//z80_byte *puntero_lectura;
@@ -14523,7 +14523,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
     int leidos;
     
-    leidos=zvfs_fread(in_fatfs,taperead,total_mem,ptr_tapebrowser,&fil);
+    leidos=zvfs_fread(in_fatfs,taperead,total_file_size,ptr_tapebrowser,&fil);
     //leidos=fread(taperead,1,total_mem,ptr_tapebrowser);
 
 	if (leidos==0) {
@@ -14552,9 +14552,10 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 	int salir=0;
 
     z80_byte *copia_puntero;
-        
 
-	while(total_mem>0 && !salir) {
+    int remaining_file_size=total_file_size;        
+
+	while(remaining_file_size>0 && !salir) {
 
 
         char tag_name[5];
@@ -14577,7 +14578,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                     (taperead[puntero_lectura+3]*16777216);
         puntero_lectura +=4;
         
-        total_mem -=8; 
+        remaining_file_size -=8; 
 
 
         //Tratar cada tag
@@ -14650,17 +14651,17 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
             z80_byte *puntero_lectura_copia=memoria;
 
             
-            //128 mas que suficiente por si da la casualidad de cabecera sped (34 bytes)
+            //36 que suficiente por si da la casualidad de cabecera sped (34 bytes)
             //TODO: esto son los primeros pasos para evitar un segfault al hacer un preview de un pzx corrupto
             /*
-            z80_byte buffer_temp[128];
-            memcpy(buffer_temp,&taperead[puntero_lectura],128);
-
-
+            
+ 
             longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
             */
 
-            longitud_bloque=util_tape_tap_get_info(&taperead[puntero_lectura],buffer_texto);
+            z80_byte buffer_temp[36];
+            util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,puntero_lectura,36);
+            longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
             
 
 
@@ -14789,7 +14790,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
         //Y saltar al siguiente bloque
         puntero_lectura +=block_size;
         
-        total_mem -=block_size;
+        remaining_file_size -=block_size;
 
     }
 
