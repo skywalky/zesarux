@@ -39340,7 +39340,7 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 
 	debug_printf(VERBOSE_DEBUG,"Rendering file preview");
 
-	
+	long int file_size=get_file_size(filesel_nombre_archivo_seleccionado);
 
 	//Creamos carpeta temporal por si no existe
 	char tmpdir[PATH_MAX];
@@ -39453,8 +39453,13 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	}
 
 
-	//Si es scr
-	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"scr")) {
+	//Si es scr o tamaño 6912
+    //TODO: en el caso improbable que otro archivo que no sea una pantalla y ocupe 6912 bytes, se mostrara como pantalla
+    //esto lo hago porque por ejemplo si expandimos un dsk u otro archivo expandible que tiene dentro una pantalla,
+    //seguramente no tendra extension scr y queremos mostrar una pantalla que este dentro al expandir el archivo
+	else if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"scr")
+        || file_size==6912
+        ) {
 		debug_printf(VERBOSE_DEBUG,"File is a scr screen");
 
 		menu_filesel_preview_render_scr(filesel_nombre_archivo_seleccionado);
