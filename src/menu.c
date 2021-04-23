@@ -33601,6 +33601,11 @@ void menu_msx_loading_noise_reduction(MENU_ITEM_PARAMETERS)
 	msx_loading_noise_reduction.v ^=1;
 }
 
+void menu_tape_tzx_suppress_pause(MENU_ITEM_PARAMETERS)
+{
+    tzx_suppress_pause.v ^=1;
+}
+
 //menu tape settings
 void menu_settings_tape(MENU_ITEM_PARAMETERS)
 {
@@ -33641,6 +33646,11 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_simulate_real_load_fast,menu_tape_simulate_real_load_cond,"[%c] Fast Simulate real load", (tape_loading_simulate_fast.v==1 ? 'X' : ' '));
                         menu_add_item_menu_tooltip(array_menu_settings_tape,"Simulate sound and loading stripes at faster speed");
                         menu_add_item_menu_ayuda(array_menu_settings_tape,"Simulate sound and loading stripes at faster speed");
+
+			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_tzx_suppress_pause,NULL,"[%c] TZX delete pause", (tzx_suppress_pause.v==1 ? 'X' : ' '));
+                        menu_add_item_menu_tooltip(array_menu_settings_tape,"Do not follow pauses on TZX tapes");
+                        menu_add_item_menu_ayuda(array_menu_settings_tape,"Do not follow pauses on TZX tapes");
+
 
 
         	        menu_add_item_menu(array_menu_settings_tape,"",MENU_OPCION_SEPARADOR,NULL,NULL);

@@ -182,6 +182,8 @@ char autosave_snapshot_path_buffer[PATH_MAX];
 //Si el autoload (reset machine, load"") se lanza con top speed
 z80_bit fast_autoload={0};
 
+//Suprimir pausas de los archivos tzx
+z80_bit tzx_suppress_pause={0};
 
 
 //

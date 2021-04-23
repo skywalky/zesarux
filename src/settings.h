@@ -58,6 +58,7 @@ extern z80_bit autoload_snapshot_on_start;
 extern char autosave_snapshot_path_buffer[];
 
 extern z80_bit fast_autoload;
+extern z80_bit tzx_suppress_pause;
 
 extern z80_bit setting_mostrar_ay_piano_grafico;
 

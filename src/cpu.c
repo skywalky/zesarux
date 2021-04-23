@@ -1552,6 +1552,7 @@ printf (
         "--anyflagloading           Enables tape load routine to load without knowing block flag\n"
 		"--simulaterealload         Simulate real tape loading\n"
 		"--simulaterealloadfast     Enable fast simulate real tape loading\n"
+        "--deletetzxpauses          Do not follow pauses on TZX tapes\n"
 		"--realloadfast             Fast loading of real tape\n"
 		"--smartloadpath path       Select initial smartload path\n"
 		"--addlastfile file         Add a file to the last files used\n"
@@ -7476,6 +7477,10 @@ int parse_cmdline_options(void) {
 
                         else if (!strcmp(argv[puntero_parametro],"--simulaterealloadfast")) {
                                 tape_loading_simulate_fast.v=1;
+                        }
+
+                        else if (!strcmp(argv[puntero_parametro],"--deletetzxpauses")) {
+                                tzx_suppress_pause.v=1;
                         }
 
 

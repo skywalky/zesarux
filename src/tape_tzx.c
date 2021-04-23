@@ -35,6 +35,7 @@
 #include "debug.h"
 #include "utils.h"
 #include "zvfs.h"
+#include "settings.h"
 
 
 /*
@@ -198,6 +199,8 @@ int tape_block_tzx_read(void *dir,int longitud)
 					fread(read_buffer,1,2,ptr_mycinta_tzx);
 					//int tzx_pausa=value_8_to_16(read_buffer[1],read_buffer[0]);
 					last_tzx_pause=value_8_to_16(read_buffer[1],read_buffer[0]);
+
+                    if (last_tzx_pause>0 && tzx_suppress_pause.v) last_tzx_pause=0;
 
 					debug_printf(VERBOSE_DEBUG,"TZX Pause Readed: %d ms",last_tzx_pause);
 
