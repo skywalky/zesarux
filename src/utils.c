@@ -14551,7 +14551,8 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 	int salir=0;
 
-    z80_byte *copia_puntero;
+    //z80_byte *copia_puntero;
+    int copia_puntero;
 
     int remaining_file_size=total_file_size;        
 
@@ -14586,8 +14587,10 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
         if (!strcmp(tag_name,"DATA")) {
                     //convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
 
-            z80_byte *memoria;
-            memoria=&taperead[puntero_lectura];
+            //z80_byte *memoria;
+            //memoria=&taperead[puntero_lectura];
+
+            int memoria_lectura=puntero_lectura;
 
             int initial_pulse;
 
@@ -14596,24 +14599,24 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
             //int t_estado_actual=*p_t_estado_actual;
 
 
-            count=memoria[0]+
-                    (memoria[1]*256)+
-                    (memoria[2]*65536)+
-                    ((memoria[3]&127)*16777216); 
+            count=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
+                    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256)+
+                    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+2)*65536)+
+                    ((util_get_byte_protect(taperead,total_file_size,memoria_lectura+3)&127)*16777216); 
 
-            initial_pulse=(memoria[3]&128)>>7;
+            initial_pulse=(util_get_byte_protect(taperead,total_file_size,memoria_lectura+3)&128)>>7;
 
-            memoria +=4;
+            memoria_lectura +=4;
 
             //z80_int tail=memoria[0]+(memoria[1]*256);
 
-            memoria +=2;
+            memoria_lectura +=2;
             
-            z80_byte num_pulses_zero=*memoria;
-            memoria++;
+            z80_byte num_pulses_zero=util_get_byte_protect(taperead,total_file_size,memoria_lectura);
+            memoria_lectura++;
 
-            z80_byte num_pulses_one=*memoria;
-            memoria++;
+            z80_byte num_pulses_one=util_get_byte_protect(taperead,total_file_size,memoria_lectura);
+            memoria_lectura++;
 
             //Secuencias que identifican a un cero y un uno
             z80_int seq_pulses_zero[256];
@@ -14622,16 +14625,18 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
             //Metemos las secuencias de 0 y 1 en array
             int i;
             for (i=0;i<num_pulses_zero;i++) {
-                seq_pulses_zero[i]=memoria[0]+(memoria[1]*256);
+                seq_pulses_zero[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
+                    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
 
-                memoria +=2;
+                memoria_lectura +=2;
             }
 
 
             for (i=0;i<num_pulses_one;i++) {
-                seq_pulses_one[i]=memoria[0]+(memoria[1]*256);
+                seq_pulses_one[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
+                    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
 
-                memoria +=2;
+                memoria_lectura +=2;
             }
 
                     
@@ -14648,7 +14653,10 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
         
 
-            z80_byte *puntero_lectura_copia=memoria;
+            //z80_byte *puntero_lectura_copia=memoria;
+            int memoria_lectura_copia=memoria_lectura;
+
+            //util_get_byte_protect(taperead,total_file_size,memoria_lectura_copia+
 
             
             //36 que suficiente por si da la casualidad de cabecera sped (34 bytes)
@@ -14665,7 +14673,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
             
 
 
-            copia_puntero=puntero_lectura_copia-2;
+            copia_puntero=memoria_lectura_copia-2;
             longitud_bloque=count/8;
 
     
@@ -14680,7 +14688,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
             z80_byte tipo_bloque=255;
 
             //Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
-            z80_byte flag=copia_puntero[2];
+            z80_byte flag=util_get_byte_protect(taperead,total_file_size,copia_puntero+2);
 
             //printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
 
@@ -14690,17 +14698,26 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
                 if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
                     if (tapfile==NULL) {
-                        util_tape_get_info_tapeblock(&copia_puntero[3],flag,longitud_final+2,buffer_texto);
+
+                        //buffer temporal 34 bytes maximo
+                        z80_byte buffer_temp[34];
+                        util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,copia_puntero+3,34);
+
+
+                        util_tape_get_info_tapeblock(buffer_temp,flag,longitud_final+2,buffer_texto);
+
+
                         sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdirectory,filenumber,buffer_texto);
                         //printf ("%s/%02d-header-%s\n",tempdirectory,filenumber,buffer_texto);
                     }
 
-                    tipo_bloque=copia_puntero[3]; //0, program, 3 bytes etc
+                    tipo_bloque=util_get_byte_protect(taperead,total_file_size,copia_puntero+3); //0, program, 3 bytes etc
 
                     //printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
 
                     //Longitud segun cabecera
-                    longitud_segun_cabecera=value_8_to_16(copia_puntero[15],copia_puntero[14]);
+                    longitud_segun_cabecera=value_8_to_16(util_get_byte_protect(taperead,total_file_size,copia_puntero+15),
+                            util_get_byte_protect(taperead,total_file_size,copia_puntero+14));
 
                 }
                 else {
@@ -14745,7 +14762,16 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                 //Si expandir
                 if (tapfile==NULL) {
                     //Generar bloque con datos, saltando los dos de cabecera y el flag
-                    util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+
+                    //memoria temporal para ello
+                    z80_byte *buffer_temp=malloc(longitud_final);
+                    if (buffer_temp==NULL) cpu_panic("Can not allocate memory for pzx expansion");
+
+                    util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,copia_puntero+3,longitud_final);
+
+                    util_save_file(buffer_temp,longitud_final,buffer_temp_file);
+
+                    free(buffer_temp);
                 }
 
                 //Convertir a tap
@@ -14763,15 +14789,23 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 
                     //Meter datos
-                    zvfs_fwrite(in_fatfs_tapfile,copia_puntero+3,longitud_final,ptr_tapfile,&fil_tapfile);
+                    //memoria temporal para ello
+                    z80_byte *buffer_temp=malloc(longitud_final);
+                    if (buffer_temp==NULL) cpu_panic("Can not allocate memory for pzx expansion");
+                    util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,copia_puntero+3,longitud_final);
+
+                    zvfs_fwrite(in_fatfs_tapfile,buffer_temp,longitud_final,ptr_tapfile,&fil_tapfile);
                     //fwrite(copia_puntero+3,1,longitud_final,ptr_tapfile);
 
                     //Agregar CRC
-                    z80_byte byte_crc=*(copia_puntero+3+longitud_final);
+                    z80_byte byte_crc=util_get_byte_protect(taperead,total_file_size,copia_puntero+3+longitud_final);
+               
 
                     buffer_tap[0]=byte_crc;
                     zvfs_fwrite(in_fatfs_tapfile,buffer_tap,1,ptr_tapfile,&fil_tapfile);
                     //fwrite(buffer_tap,1,1,ptr_tapfile);
+
+                    free(buffer_temp);
 
                 }
 
