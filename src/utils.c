@@ -16011,10 +16011,10 @@ int util_extract_dsk(char *filename,char *tempdir)  {
 		return 0;
 	}
 
-        int longitud_dsk=bytes_to_load;
+    int longitud_dsk=bytes_to_load;
 	
 	//Leemos archivo dsk
-        FILE *ptr_file_dsk_browser;
+    FILE *ptr_file_dsk_browser;
 
     //Soporte para FatFS
     FIL fil;        /* File object */
@@ -16029,45 +16029,26 @@ int util_extract_dsk(char *filename,char *tempdir)  {
 		return 0;
     }
 
-    /*
-        ptr_file_dsk_browser=fopen(filename,"rb");
 
-        if (!ptr_file_dsk_browser) {
-		debug_printf(VERBOSE_ERR,"Unable to open file");
-		free(dsk_file_memory);
-		return 0;
-	}
-    */
-
-
-        int leidos;
+    int leidos;
         
-        leidos=zvfs_fread(in_fatfs,dsk_file_memory,bytes_to_load,ptr_file_dsk_browser,&fil);
-        //leidos=fread(dsk_file_memory,1,bytes_to_load,ptr_file_dsk_browser);
+    leidos=zvfs_fread(in_fatfs,dsk_file_memory,bytes_to_load,ptr_file_dsk_browser,&fil);
+    //leidos=fread(dsk_file_memory,1,bytes_to_load,ptr_file_dsk_browser);
 
 	if (leidos==0) {
-                debug_printf(VERBOSE_ERR,"Error reading file");
-                return 0;
-        }
+        debug_printf(VERBOSE_ERR,"Error reading file");
+        return 0;
+}
 
 
-        zvfs_fclose(in_fatfs,ptr_file_dsk_browser,&fil);
-        //fclose(ptr_file_dsk_browser);
+    zvfs_fclose(in_fatfs,ptr_file_dsk_browser,&fil);
+    //fclose(ptr_file_dsk_browser);
 
 
-        
-
+    
 
 	char buffer_texto[64]; //2 lineas, por si acaso
 
-	//int longitud_bloque;
-
-	//int longitud_texto;
-
-	//char texto_browser[MAX_TEXTO_BROWSER];
-	//int indice_buffer=0;
-
-	
 
 
  	//sprintf(buffer_texto,"DSK disk image");
@@ -16130,7 +16111,7 @@ int util_extract_dsk(char *filename,char *tempdir)  {
 
 
 	int puntero,i;
-	//puntero=0x201;
+	
 
 	puntero=menu_dsk_get_start_filesystem(dsk_file_memory,bytes_to_load);
 /*
@@ -16150,7 +16131,7 @@ Me encuentro con algunos discos en que empiezan en pista 1 y otros en pista 0 ??
 TODO. supuestamente entradas del directorio pueden ocupar 4 sectores. Actualmente solo hago 1
 */
 
-        //printf("puntero: %d\n",puntero);
+    //printf("puntero: %d\n",puntero);
 
 
 	if (puntero==-1) {
@@ -16158,30 +16139,32 @@ TODO. supuestamente entradas del directorio pueden ocupar 4 sectores. Actualment
 		//no encontrado. probar con lo habitual
 		puntero=0x200;
 	}
-	//else {
-		//Si contiene e5 en el nombre, nos vamos a pista 1
-        if (util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero+1)==0xe5) {
-		//if (dsk_file_memory[puntero+1]==0xe5) {
-			//printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
-                        int total_pistas=bytes_to_load/4864;
 
-                        puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0,longitud_dsk);
+    //Si contiene e5 en el nombre, nos vamos a pista 1
+    if (util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero+1)==0xe5) {
+    
+        //printf ("Filesystem doesnt seem to be at track 0. Trying with track 1\n");
+        int total_pistas=bytes_to_load/4864;
 
-			//printf ("puntero after menu_dsk_getoff_track_sector: %d\n",puntero);
+        puntero=menu_dsk_getoff_track_sector(dsk_file_memory,total_pistas,1,0,longitud_dsk);
 
-			if (puntero==-1) {
-		                //printf ("Filesystem track/sector 1/0 not found. Guessing it\n");
-		                //no encontrado. probar con lo habitual
-	                	puntero=0x200;
-			}
-			else 	{
-                                //printf ("Filesystem found at offset %XH\n",puntero);
-                        }
-		}
-		else {
-                        //printf ("Filesystem found at offset %XH\n",puntero);
-                }
-	//}
+        //printf ("puntero after menu_dsk_getoff_track_sector: %d\n",puntero);
+
+        if (puntero==-1) {
+            //printf ("Filesystem track/sector 1/0 not found. Guessing it\n");
+            //no encontrado. probar con lo habitual
+            puntero=0x200;
+        }
+        else 	{
+            //printf ("Filesystem found at offset %XH\n",puntero);
+        }
+    }
+
+
+    else {
+        //printf ("Filesystem found at offset %XH\n",puntero);
+    }
+
 	
 	puntero++; //Saltar el primer byte en la entrada de filesystem
 
@@ -16201,120 +16184,121 @@ en que empieza en 1300H. Porque??
 
                 //printf("entrada %d\n",i);
 
-                z80_byte file_is_deleted=util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero-1);
-                //printf("before menu_file_mmc_browser_show_file\n");
-                z80_byte buffer_nombre[12];
-                util_memcpy_protect_origin(buffer_nombre,dsk_file_memory,longitud_dsk,puntero,11);
+        z80_byte file_is_deleted=util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero-1);
+        //printf("before menu_file_mmc_browser_show_file\n");
+        z80_byte buffer_nombre[12];
+        util_memcpy_protect_origin(buffer_nombre,dsk_file_memory,longitud_dsk,puntero,11);
 		menu_file_mmc_browser_show_file(buffer_nombre,buffer_texto,1,11);
 
-                //printf("after menu_file_mmc_browser_show_file\n");
+        //printf("after menu_file_mmc_browser_show_file\n");
 
 		if (buffer_texto[0]!='?') {
-                if (file_is_deleted==0xE5) debug_printf (VERBOSE_DEBUG,"File %s is deleted. Skipping",buffer_texto);
-                else {
-			//indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-			debug_printf (VERBOSE_DEBUG,"File %s",buffer_texto);
+            if (file_is_deleted==0xE5) debug_printf (VERBOSE_DEBUG,"File %s is deleted. Skipping",buffer_texto);
+            else {
+                //indice_buffer +=util_add_string_newline(&texto_browser[indice_buffer],buffer_texto);
 
-                        //printf("puntero: %d\n",puntero);
+                debug_printf (VERBOSE_DEBUG,"File %s",buffer_texto);
 
-			z80_byte continuation_marker=util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero+12-1); //-1 porque empezamos el puntero en primera posicion
+                            //printf("puntero: %d\n",puntero);
 
-			//Averiguar inicio de los datos
-			//Es un poco mas complejo ya que hay que localizar cada sector donde esta ubicado
-			int total_bloques=1;
-			int bloque;
+                z80_byte continuation_marker=util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero+12-1); //-1 porque empezamos el puntero en primera posicion
 
-			bloque=util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero+15);
+                //Averiguar inicio de los datos
+                //Es un poco mas complejo ya que hay que localizar cada sector donde esta ubicado
+                int total_bloques=1;
+                int bloque;
 
-                        //printf("after dsk_file_memory[puntero+15];\n");
+                bloque=util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero+15);
 
-			//Este bloque indica el primer bloque de 1k del archivo. Esta ubicado en el principio de cada entrada de archivo+16
-			//(aqui hay 15 porque ya empezamos desplazados en 1 - 0x201)
-			//Luego se pueden guardar hasta 16 bloques en esa entrada
-			//Si el archivo ocupa mas de 16kb, se genera otra entrada con mismo nombre de archivo, con los siguientes bloques
-			//Si ocupa mas de 32 kb, otra entrada mas, etc
-			//Notas: archivo de 16 kb exactos, genera dos entradas de archivo, incluso ocupando un bloque del siguiente,
-			//dado que al principio esta la cabecera de plus3dos
-			//Desde la cabecera de plus3dos a los datos hay 0x80 bytes
+                //printf("after dsk_file_memory[puntero+15];\n");
 
-			z80_int longitud_real_archivo=0;
+                //Este bloque indica el primer bloque de 1k del archivo. Esta ubicado en el principio de cada entrada de archivo+16
+                //(aqui hay 15 porque ya empezamos desplazados en 1 - 0x201)
+                //Luego se pueden guardar hasta 16 bloques en esa entrada
+                //Si el archivo ocupa mas de 16kb, se genera otra entrada con mismo nombre de archivo, con los siguientes bloques
+                //Si ocupa mas de 32 kb, otra entrada mas, etc
+                //Notas: archivo de 16 kb exactos, genera dos entradas de archivo, incluso ocupando un bloque del siguiente,
+                //dado que al principio esta la cabecera de plus3dos
+                //Desde la cabecera de plus3dos a los datos hay 0x80 bytes
 
-			int destino_en_buffer_temp=0;
+                z80_int longitud_real_archivo=0;
 
-			do {
-			
-				int offset1,offset2;
+                int destino_en_buffer_temp=0;
 
-                                //printf("before menu_dsk_getoff_block\n");
-				menu_dsk_getoff_block(dsk_file_memory,bytes_to_load,bloque,&offset1,&offset2);
+                do {
+                
+                    int offset1,offset2;
 
-                                //printf("offset1 %d offset2 %d\n",offset1,offset2);
+                    //printf("before menu_dsk_getoff_block\n");
+                    menu_dsk_getoff_block(dsk_file_memory,bytes_to_load,bloque,&offset1,&offset2);
 
-                                if (offset1<0 || offset2<0) {
-                                        debug_printf(VERBOSE_DEBUG,"Error reading dsk offset block");
-                                        return 0; //TODO: O retornar error? 
-                                }
+                    //printf("offset1 %d offset2 %d\n",offset1,offset2);
 
-				//Sacar longitud real, de cabecera plus3dos. Solo el primer sector contiene cabecera plus3dos y la primera entrada del archivo,
-				//por tanto el primer sector contiene 512-128=384 datos, mientras que los siguientes,
-				//contienen 512 bytes de datos. El sector final puede contener 512 bytes o menos
-				if (total_bloques==1 && continuation_marker==0) {
-					int offset_a_longitud=offset1+16;
-					longitud_real_archivo=util_get_byte_protect(dsk_file_memory,longitud_dsk,offset_a_longitud)+256*util_get_byte_protect(dsk_file_memory,longitud_dsk,offset_a_longitud+1);
-					debug_printf (VERBOSE_DEBUG,"Real length file %s read from PLUS3DOS header: %d",buffer_texto,longitud_real_archivo);
+                    if (offset1<0 || offset2<0) {
+                        debug_printf(VERBOSE_DEBUG,"Error reading dsk offset block");
+                        return 0; //TODO: O retornar error? 
+                    }
 
-                    util_memcpy_protect_origin(buffer_temp,dsk_file_memory,longitud_dsk,offset1+128,512-128);
-					//memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
+                    //Sacar longitud real, de cabecera plus3dos. Solo el primer sector contiene cabecera plus3dos y la primera entrada del archivo,
+                    //por tanto el primer sector contiene 512-128=384 datos, mientras que los siguientes,
+                    //contienen 512 bytes de datos. El sector final puede contener 512 bytes o menos
+                    if (total_bloques==1 && continuation_marker==0) {
+                        int offset_a_longitud=offset1+16;
+                        longitud_real_archivo=util_get_byte_protect(dsk_file_memory,longitud_dsk,offset_a_longitud)+256*util_get_byte_protect(dsk_file_memory,longitud_dsk,offset_a_longitud+1);
+                        debug_printf (VERBOSE_DEBUG,"Real length file %s read from PLUS3DOS header: %d",buffer_texto,longitud_real_archivo);
 
-					destino_en_buffer_temp=destino_en_buffer_temp + (512-128);
+                        util_memcpy_protect_origin(buffer_temp,dsk_file_memory,longitud_dsk,offset1+128,512-128);
+                        //memcpy(buffer_temp,&dsk_file_memory[offset1+128],512-128);
 
-					//Siguiente sector
-                    util_memcpy_protect_origin(&buffer_temp[destino_en_buffer_temp],dsk_file_memory,longitud_dsk,offset2,512);
-					//memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
-					//printf ("Escribiendo sector 2\n");
+                        destino_en_buffer_temp=destino_en_buffer_temp + (512-128);
 
-                                        //printf("destino_en_buffer_temp 1 %d\n",destino_en_buffer_temp);
+                        //Siguiente sector
+                        util_memcpy_protect_origin(&buffer_temp[destino_en_buffer_temp],dsk_file_memory,longitud_dsk,offset2,512);
+                        //memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
+                        //printf ("Escribiendo sector 2\n");
 
-					destino_en_buffer_temp +=512;
+                        //printf("destino_en_buffer_temp 1 %d\n",destino_en_buffer_temp);
 
-                                        //printf("after memcpy 1\n");
+                        destino_en_buffer_temp +=512;
 
-
-				}
-
-				else {
-
-					//Los dos sectores
-                                        //printf("destino_en_buffer_temp 2 %d\n",destino_en_buffer_temp);
-
-                    util_memcpy_protect_origin(&buffer_temp[destino_en_buffer_temp],dsk_file_memory,longitud_dsk,offset1,512);
-					//memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset1],512);
-					destino_en_buffer_temp +=512;
-
-                    util_memcpy_protect_origin(&buffer_temp[destino_en_buffer_temp],dsk_file_memory,longitud_dsk,offset2,512);
-					//memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
-					destino_en_buffer_temp +=512;
-
-                                        //printf("after memcpy 2\n");
-				}
-
-			
-				//printf ("b:%02XH of:%XH %XH  ",bloque,offset1,offset2);
-				//Cada offset es un sector de 512 bytes
-
-				total_bloques++;
-				bloque=util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero+15-1+total_bloques);
+                                            //printf("after memcpy 1\n");
 
 
+                    }
 
-			} while (bloque!=0 && total_bloques<=16);
+                    else {
 
-			//Grabar archivo
-			char buffer_nombre_destino[PATH_MAX];
-			sprintf (buffer_nombre_destino,"%s/%s",tempdir,buffer_texto);
+                        //Los dos sectores
+                        //printf("destino_en_buffer_temp 2 %d\n",destino_en_buffer_temp);
 
-			//Ver si es primer entrada de archivo (con lo que sobreescribimos) o si es segunda y siguientes, hacer append
+                        util_memcpy_protect_origin(&buffer_temp[destino_en_buffer_temp],dsk_file_memory,longitud_dsk,offset1,512);
+                        //memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset1],512);
+                        destino_en_buffer_temp +=512;
+
+                        util_memcpy_protect_origin(&buffer_temp[destino_en_buffer_temp],dsk_file_memory,longitud_dsk,offset2,512);
+                        //memcpy(&buffer_temp[destino_en_buffer_temp],&dsk_file_memory[offset2],512);
+                        destino_en_buffer_temp +=512;
+
+                        //printf("after memcpy 2\n");
+                    }
+
+                
+                    //printf ("b:%02XH of:%XH %XH  ",bloque,offset1,offset2);
+                    //Cada offset es un sector de 512 bytes
+
+                    total_bloques++;
+                    bloque=util_get_byte_protect(dsk_file_memory,longitud_dsk,puntero+15-1+total_bloques);
+
+
+
+                } while (bloque!=0 && total_bloques<=16);
+
+                //Grabar archivo
+                char buffer_nombre_destino[PATH_MAX];
+                sprintf (buffer_nombre_destino,"%s/%s",tempdir,buffer_texto);
+
+			    //Ver si es primer entrada de archivo (con lo que sobreescribimos) o si es segunda y siguientes, hacer append
 /*
 
 Byte 12
@@ -16328,52 +16312,52 @@ Byte 12
    it is 01 for the second 02 and so on.
 */
 
-			int longitud_en_bloques=destino_en_buffer_temp; //(total_bloques-1)*1024;
+			    int longitud_en_bloques=destino_en_buffer_temp; //(total_bloques-1)*1024;
 
 
-			if (continuation_marker==0) {
-                                int longitud_final=longitud_en_bloques;
+			    if (continuation_marker==0) {
+                    int longitud_final=longitud_en_bloques;
 
-                                //printf("longitud_final: %d\n",longitud_final);
+                    //printf("longitud_final: %d\n",longitud_final);
 
-                                //En este caso, se ha grabado el archivo inicial y se sabe la longitud real segun cabecera plus3dos
-                                //si resulta que la longitud en bloques a guardar ahora es mayor que la cabecera, reducir
-                                if (longitud_final>longitud_real_archivo) longitud_final=longitud_real_archivo;
-				debug_printf (VERBOSE_DEBUG,"File entry is the first. Saving %d bytes on file",longitud_final);
-				util_save_file(buffer_temp,longitud_final,buffer_nombre_destino);
+                    //En este caso, se ha grabado el archivo inicial y se sabe la longitud real segun cabecera plus3dos
+                    //si resulta que la longitud en bloques a guardar ahora es mayor que la cabecera, reducir
+                    if (longitud_final>longitud_real_archivo) longitud_final=longitud_real_archivo;
+                    debug_printf (VERBOSE_DEBUG,"File entry is the first. Saving %d bytes on file",longitud_final);
+                    util_save_file(buffer_temp,longitud_final,buffer_nombre_destino);
 
 
-                                if (longitud_final==6912) {
-                                        //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
-                                        //usado en los previews
-                                        char buff_preview_scr[PATH_MAX];
-                                        sprintf(buff_preview_scr,"%s/%s",tempdir,MENU_SCR_INFO_FILE_NAME);
+                    if (longitud_final==6912) {
+                        //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
+                        //usado en los previews
+                        char buff_preview_scr[PATH_MAX];
+                        sprintf(buff_preview_scr,"%s/%s",tempdir,MENU_SCR_INFO_FILE_NAME);
 
-                                        //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
-                                        util_save_file((z80_byte *)buffer_nombre_destino,strlen(buffer_nombre_destino)+1,buff_preview_scr);
-                                }                                
-			}
+                        //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
+                        util_save_file((z80_byte *)buffer_nombre_destino,strlen(buffer_nombre_destino)+1,buff_preview_scr);
+                    }                                
+			    }
 			
-			else {
-				debug_printf (VERBOSE_DEBUG,"File entry is not the first. Adding %d bytes to the file",longitud_en_bloques);
-				util_file_append(buffer_nombre_destino,buffer_temp,longitud_en_bloques);
-                                //TODO: al guardar entradas de archivo diferentes a la primera, 
-                                //se agregan siempre longitudes en bloques de 1kb
-                                //por lo que el archivo acabará ocupando mas de lo que deberia
-			}
+                else {
+                    debug_printf (VERBOSE_DEBUG,"File entry is not the first. Adding %d bytes to the file",longitud_en_bloques);
+                    util_file_append(buffer_nombre_destino,buffer_temp,longitud_en_bloques);
+                    //TODO: al guardar entradas de archivo diferentes a la primera, 
+                    //se agregan siempre longitudes en bloques de 1kb
+                    //por lo que el archivo acabará ocupando mas de lo que deberia
+                }
 
 
 			debug_printf (VERBOSE_DEBUG,"Saving file %s",buffer_nombre_destino);
 
 		}
-                }
+    }
 
-		puntero +=tamanyo_dsk_entry;	
+    puntero +=tamanyo_dsk_entry;	
 
 
-		/*
-		Como saber, de cada archivo, donde está ubicado en disco, y su longitud?
-		Ejemplo:
+    /*
+    Como saber, de cada archivo, donde está ubicado en disco, y su longitud?
+    Ejemplo:
 
 00000200  00 4c 20 20 20 20 20 20  20 a0 a0 20 00 00 00 03  |.L       .. ....|
 00000210  02 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
@@ -16478,11 +16462,6 @@ c800h/1024=32h
 	}
 	
 
-
-	//texto_browser[indice_buffer]=0;
-
-
-	//menu_generic_message_tooltip("DSK file browser", 0, 0, 1, NULL, "%s", texto_browser);
 
 
 	free(dsk_file_memory);

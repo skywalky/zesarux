@@ -39363,11 +39363,8 @@ void menu_filesel_overlay_render_preview_in_memory(void)
 	// 
 	if (!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tap") ||
 		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"tzx") ||
-
-        //de momento pzx desactivado hasta corregir posibles problemas de segfault con pzx corruptos
-		//!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") ||
-        //de momento pzx desactivado hasta corregir posibles problemas de segfault con trd corruptos
-		//!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"trd") ||
+		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"pzx") ||
+		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"trd") ||
 		!util_compare_file_extension(filesel_nombre_archivo_seleccionado,"dsk") 
 	
 	) {
@@ -39563,11 +39560,11 @@ void menu_filesel_overlay(void)
 
 	//Y el procesado de nueva preview no tan seguido
 	//esto hara ejecutar esto 5 veces por segundo
-    
+
     //temp
-    //if (1) {  printf("Mostrando siempre\n");
+    if (1) {  printf("Mostrando siempre\n");
       
-	if ( ((contador_segundo%200) == 0 && menu_filesel_overlay_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+	//if ( ((contador_segundo%200) == 0 && menu_filesel_overlay_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 		menu_filesel_overlay_valor_contador_segundo_anterior=contador_segundo;
 
 		//renderizar preview en memoria si conviene
