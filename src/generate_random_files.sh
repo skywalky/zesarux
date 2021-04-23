@@ -20,21 +20,19 @@
 
 # Script to generate random files
 
-if [ $# != 1 ]; then
-	echo "$0 extension"
-	exit 1
-fi
-
-EXTENSION=$1
 
 while true; do
+
+	for EXTENSION in tap tzx pzx trd dsk scr sna sp z80 p zsf; do
 
 	NUMBER1=$RANDOM
 	NUMBER2=$RANDOM
 
 	SIZE=${NUMBER1}${NUMBER2}
 
-	TAMANYO=`echo $SIZE|cut -b 1-6`
+	for LONGITUD in 4 5 6; do
+
+	TAMANYO=`echo $SIZE|cut -b 1-$LONGITUD`
 
 	TEMPNAME=random_$TAMANYO.$EXTENSION
 
@@ -42,7 +40,11 @@ while true; do
 
 	dd if=/dev/urandom of=$TEMPNAME bs=1 count=$TAMANYO
 
+	done
+
 	sleep 0.1
+
+	done
 
 done
 
