@@ -37621,11 +37621,38 @@ switch (compressed_type) {
 
 }
 
+int menu_filesel_file_can_be_expanded(char *archivo)
+{
+    char *extensiones_validas[]={
+        "hdf","tap","tzx","cdt","pzx",
+        "trd","dsk","epr","eprom",
+        "flash","p","o","mdv","scl",
+        NULL
+    };
+
+    int i;
+
+    for (i=0;extensiones_validas[i]!=NULL;i++) {
+        if (!util_compare_file_extension(archivo,extensiones_validas[i]) ) {
+            return 1;
+        }
+    }
+
+    //Ver si comprimido
+    if (menu_filesel_is_compressed(archivo)) return 1;
+
+    return 0;
+}
 
 //Expandir archivos (no descomprimir, sino expandir por ejemplo un tap o un hdf)
 //Devuelve 0 si ok
 int menu_filesel_expand(char *archivo,char *tmpdir)
 {
+
+    if (!menu_filesel_file_can_be_expanded(archivo)) {
+        //printf("File can not be expanded\n");
+        return 1;
+    }
 
 	sprintf (tmpdir,"%s/%s",get_tmpdir_base(),archivo);
 	menu_filesel_mkdir(tmpdir);
