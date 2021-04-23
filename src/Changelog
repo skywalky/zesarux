@@ -5,7 +5,7 @@ Added .sms file viewer
 
 Added setting to disable TZX pauses
 
-Fixed .tap file previews when corrupted file
+Fixed file previews on corrupted files: pzx, tap
 
 Version 9.2 - Cliff Hanger edition. 05 April 2021
 

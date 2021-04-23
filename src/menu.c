@@ -39562,9 +39562,9 @@ void menu_filesel_overlay(void)
 	//esto hara ejecutar esto 5 veces por segundo
 
     //temp
-    if (1) {  printf("Mostrando siempre\n");
+    //if (1) {  printf("Mostrando siempre\n");
       
-	//if ( ((contador_segundo%200) == 0 && menu_filesel_overlay_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+	if ( ((contador_segundo%200) == 0 && menu_filesel_overlay_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 		menu_filesel_overlay_valor_contador_segundo_anterior=contador_segundo;
 
 		//renderizar preview en memoria si conviene

@@ -14558,274 +14558,288 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 	while(remaining_file_size>0 && !salir) {
 
+        //Comprobaciones para pzx corruptos
+        //total_file_size,remaining_file_size,puntero_lectura)
 
-        char tag_name[5];
-        tag_name[0]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+0);
-        tag_name[1]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+1);
-        tag_name[2]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+2);
-        tag_name[3]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+3);
-        tag_name[4]=0;
+        if (puntero_lectura<0 || puntero_lectura>=total_file_size) {
+            debug_printf(VERBOSE_DEBUG,"Finishing extracting pzx file as it seems corrupted");
+            //printf("total_size %d remaining_file_size %d puntero_lectura %d\n",total_file_size,remaining_file_size,puntero_lectura);
+            salir=1;
+        }
 
-        puntero_lectura +=4;
+        else {
 
+            char tag_name[5];
+            tag_name[0]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+0);
+            tag_name[1]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+1);
+            tag_name[2]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+2);
+            tag_name[3]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+3);
+            tag_name[4]=0;
 
-        z80_long_int block_size;
-
-
-
-        block_size=util_get_byte_protect(taperead,total_file_size,puntero_lectura+0)+
-                    (util_get_byte_protect(taperead,total_file_size,puntero_lectura+1)*256)+
-                    (util_get_byte_protect(taperead,total_file_size,puntero_lectura+2)*65536)+
-                    (util_get_byte_protect(taperead,total_file_size,puntero_lectura+3)*16777216);
-        puntero_lectura +=4;
-        
-        remaining_file_size -=8; 
+            puntero_lectura +=4;
 
 
-        //Tratar cada tag
-        
-        if (!strcmp(tag_name,"DATA")) {
-                    //convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
-
-            //z80_byte *memoria;
-            //memoria=&taperead[puntero_lectura];
-
-            int memoria_lectura=puntero_lectura;
-
-            int initial_pulse;
-
-            z80_long_int count;   
-
-            //int t_estado_actual=*p_t_estado_actual;
+            z80_long_int block_size;
 
 
-            count=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
-                    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256)+
-                    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+2)*65536)+
-                    ((util_get_byte_protect(taperead,total_file_size,memoria_lectura+3)&127)*16777216); 
 
-            initial_pulse=(util_get_byte_protect(taperead,total_file_size,memoria_lectura+3)&128)>>7;
-
-            memoria_lectura +=4;
-
-            //z80_int tail=memoria[0]+(memoria[1]*256);
-
-            memoria_lectura +=2;
+            block_size=util_get_byte_protect(taperead,total_file_size,puntero_lectura+0)+
+                        (util_get_byte_protect(taperead,total_file_size,puntero_lectura+1)*256)+
+                        (util_get_byte_protect(taperead,total_file_size,puntero_lectura+2)*65536)+
+                        (util_get_byte_protect(taperead,total_file_size,puntero_lectura+3)*16777216);
+            puntero_lectura +=4;
             
-            z80_byte num_pulses_zero=util_get_byte_protect(taperead,total_file_size,memoria_lectura);
-            memoria_lectura++;
+            remaining_file_size -=8; 
 
-            z80_byte num_pulses_one=util_get_byte_protect(taperead,total_file_size,memoria_lectura);
-            memoria_lectura++;
 
-            //Secuencias que identifican a un cero y un uno
-            z80_int seq_pulses_zero[256];
-            z80_int seq_pulses_one[256];
+            //Tratar cada tag
+            
+            if (!strcmp(tag_name,"DATA")) {
+                        //convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
 
-            //Metemos las secuencias de 0 y 1 en array
-            int i;
-            for (i=0;i<num_pulses_zero;i++) {
-                seq_pulses_zero[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
-                    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
+                //z80_byte *memoria;
+                //memoria=&taperead[puntero_lectura];
+
+                int memoria_lectura=puntero_lectura;
+
+                int initial_pulse;
+
+                z80_long_int count;   
+
+                //int t_estado_actual=*p_t_estado_actual;
+
+
+                count=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
+                        (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256)+
+                        (util_get_byte_protect(taperead,total_file_size,memoria_lectura+2)*65536)+
+                        ((util_get_byte_protect(taperead,total_file_size,memoria_lectura+3)&127)*16777216); 
+
+                initial_pulse=(util_get_byte_protect(taperead,total_file_size,memoria_lectura+3)&128)>>7;
+
+                memoria_lectura +=4;
+
+                //z80_int tail=memoria[0]+(memoria[1]*256);
 
                 memoria_lectura +=2;
-            }
+                
+                z80_byte num_pulses_zero=util_get_byte_protect(taperead,total_file_size,memoria_lectura);
+                memoria_lectura++;
+
+                z80_byte num_pulses_one=util_get_byte_protect(taperead,total_file_size,memoria_lectura);
+                memoria_lectura++;
+
+                //Secuencias que identifican a un cero y un uno
+                z80_int seq_pulses_zero[256];
+                z80_int seq_pulses_one[256];
+
+                //Metemos las secuencias de 0 y 1 en array
+                int i;
+                for (i=0;i<num_pulses_zero;i++) {
+                    seq_pulses_zero[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
+                        (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
+
+                    memoria_lectura +=2;
+                }
 
 
-            for (i=0;i<num_pulses_one;i++) {
-                seq_pulses_one[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
-                    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
+                for (i=0;i<num_pulses_one;i++) {
+                    seq_pulses_one[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
+                        (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
 
-                memoria_lectura +=2;
-            }
+                    memoria_lectura +=2;
+                }
 
-                    
-
-        
-            //Procesar el total de bits
-            //int bit_number=7;
-            //z80_byte processing_byte;
-
-            //z80_int *sequence_bit;
-            //int longitud_sequence_bit;
-
-            //z80_long_int total_bits_read; 
-
-        
-
-            //z80_byte *puntero_lectura_copia=memoria;
-            int memoria_lectura_copia=memoria_lectura;
-
-            //util_get_byte_protect(taperead,total_file_size,memoria_lectura_copia+
+                        
 
             
-            //36 que suficiente por si da la casualidad de cabecera sped (34 bytes)
-            //TODO: esto son los primeros pasos para evitar un segfault al hacer un preview de un pzx corrupto
-            /*
-            
- 
-            longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
-            */
+                //Procesar el total de bits
+                //int bit_number=7;
+                //z80_byte processing_byte;
 
-            z80_byte buffer_temp[36];
-            util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,puntero_lectura,36);
-            longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
+                //z80_int *sequence_bit;
+                //int longitud_sequence_bit;
+
+                //z80_long_int total_bits_read; 
+
             
 
+                //z80_byte *puntero_lectura_copia=memoria;
+                int memoria_lectura_copia=memoria_lectura;
 
-            copia_puntero=memoria_lectura_copia-2;
-            longitud_bloque=count/8;
+                //util_get_byte_protect(taperead,total_file_size,memoria_lectura_copia+
 
+                
+                //36 que suficiente por si da la casualidad de cabecera sped (34 bytes)
+                //TODO: esto son los primeros pasos para evitar un segfault al hacer un preview de un pzx corrupto
+                /*
+                
     
+                longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
+                */
 
-            char buffer_temp_file[PATH_MAX];
-            int longitud_final;
-
-            longitud_final=longitud_bloque-2;
-
-            //else longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
-
-            z80_byte tipo_bloque=255;
-
-            //Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
-            z80_byte flag=util_get_byte_protect(taperead,total_file_size,copia_puntero+2);
-
-            //printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
-
-            int longitud_segun_cabecera=-1;
-
-            if (longitud_final>=0) {
-
-                if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
-                    if (tapfile==NULL) {
-
-                        //buffer temporal 34 bytes maximo
-                        z80_byte buffer_temp[34];
-                        util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,copia_puntero+3,34);
+                z80_byte buffer_temp[36];
+                util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,puntero_lectura,36);
+                longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
+                
 
 
-                        util_tape_get_info_tapeblock(buffer_temp,flag,longitud_final+2,buffer_texto);
+                copia_puntero=memoria_lectura_copia-2;
+                longitud_bloque=count/8;
 
-
-                        sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdirectory,filenumber,buffer_texto);
-                        //printf ("%s/%02d-header-%s\n",tempdirectory,filenumber,buffer_texto);
-                    }
-
-                    tipo_bloque=util_get_byte_protect(taperead,total_file_size,copia_puntero+3); //0, program, 3 bytes etc
-
-                    //printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
-
-                    //Longitud segun cabecera
-                    longitud_segun_cabecera=value_8_to_16(util_get_byte_protect(taperead,total_file_size,copia_puntero+15),
-                            util_get_byte_protect(taperead,total_file_size,copia_puntero+14));
-
-                }
-                else {
-                    char extension_agregar[10];
-                    extension_agregar[0]=0; //Por defecto
-
-                    int era_pantalla=0;
-
-                    //Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0
-                    if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
-                        //Corresponde. Agregar extensiones bas o scr segun el caso
-                        if (previo_tipo_bloque==0) {
-                            //Basic
-                            strcpy(extension_agregar,".bas");
-                        }
-
-                        if (previo_tipo_bloque==3 && longitud_final==6912) {
-                            //Screen
-                            strcpy(extension_agregar,".scr");
-                        }
-                    }
-
-                    if (longitud_final==6912) era_pantalla=1;
-
-                    if (tapfile==NULL) {
-                        sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
-
-                        if (era_pantalla) {
-                            //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
-                            //usado en los previews
-                            char buff_preview_scr[PATH_MAX];
-                            sprintf(buff_preview_scr,"%s/%s",tempdirectory,MENU_SCR_INFO_FILE_NAME);
-
-                            //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
-                            util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
-                        }
-
-                    }
-                }
-
-
-                //Si expandir
-                if (tapfile==NULL) {
-                    //Generar bloque con datos, saltando los dos de cabecera y el flag
-
-                    //memoria temporal para ello
-                    z80_byte *buffer_temp=malloc(longitud_final);
-                    if (buffer_temp==NULL) cpu_panic("Can not allocate memory for pzx expansion");
-
-                    util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,copia_puntero+3,longitud_final);
-
-                    util_save_file(buffer_temp,longitud_final,buffer_temp_file);
-
-                    free(buffer_temp);
-                }
-
-                //Convertir a tap
-                else {
-                    //Generar bloque con datos
-                    //Meter longitud, flag
-                    z80_byte buffer_tap[3];
-                    z80_int longitud_cabecera_tap=longitud_final+2;
-                    buffer_tap[0]=value_16_to_8l(longitud_cabecera_tap);
-                    buffer_tap[1]=value_16_to_8h(longitud_cabecera_tap);
-                    buffer_tap[2]=flag;
-
-                    zvfs_fwrite(in_fatfs_tapfile,buffer_tap,3,ptr_tapfile,&fil_tapfile);
-                    //fwrite(buffer_tap,1,3,ptr_tapfile);
-
-
-                    //Meter datos
-                    //memoria temporal para ello
-                    z80_byte *buffer_temp=malloc(longitud_final);
-                    if (buffer_temp==NULL) cpu_panic("Can not allocate memory for pzx expansion");
-                    util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,copia_puntero+3,longitud_final);
-
-                    zvfs_fwrite(in_fatfs_tapfile,buffer_temp,longitud_final,ptr_tapfile,&fil_tapfile);
-                    //fwrite(copia_puntero+3,1,longitud_final,ptr_tapfile);
-
-                    //Agregar CRC
-                    z80_byte byte_crc=util_get_byte_protect(taperead,total_file_size,copia_puntero+3+longitud_final);
-               
-
-                    buffer_tap[0]=byte_crc;
-                    zvfs_fwrite(in_fatfs_tapfile,buffer_tap,1,ptr_tapfile,&fil_tapfile);
-                    //fwrite(buffer_tap,1,1,ptr_tapfile);
-
-                    free(buffer_temp);
-
-                }
-
-                filenumber++;
-
-                previo_flag=flag;
-                previo_longitud_segun_cabecera=longitud_segun_cabecera;
-                previo_tipo_bloque=tipo_bloque;
-
-            }
-
-        }   
-
-
-
-        //Y saltar al siguiente bloque
-        puntero_lectura +=block_size;
         
-        remaining_file_size -=block_size;
 
+                char buffer_temp_file[PATH_MAX];
+                int longitud_final;
+
+                longitud_final=longitud_bloque-2;
+
+                //else longitud_final=longitud_bloque-2-2; //Saltar los dos de cabecera, el de flag y el crc
+
+                z80_byte tipo_bloque=255;
+
+                //Si bloque de flag 0 y longitud 17 o longitud 34 (sped)
+                z80_byte flag=util_get_byte_protect(taperead,total_file_size,copia_puntero+2);
+
+                //printf ("flag %d previo_flag %d previolong %d longitud_final %d\n",flag,previo_flag,previo_longitud_segun_cabecera,longitud_final);
+
+                int longitud_segun_cabecera=-1;
+
+                if (longitud_final>=0) {
+
+                    if (flag==0 && (longitud_final==17 || longitud_final==34) ) {
+                        if (tapfile==NULL) {
+
+                            //buffer temporal 34 bytes maximo
+                            z80_byte buffer_temp[34];
+                            util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,copia_puntero+3,34);
+
+
+                            util_tape_get_info_tapeblock(buffer_temp,flag,longitud_final+2,buffer_texto);
+
+
+                            sprintf (buffer_temp_file,"%s/%02d-header-%s",tempdirectory,filenumber,buffer_texto);
+                            //printf ("%s/%02d-header-%s\n",tempdirectory,filenumber,buffer_texto);
+                        }
+
+                        tipo_bloque=util_get_byte_protect(taperead,total_file_size,copia_puntero+3); //0, program, 3 bytes etc
+
+                        //printf ("%s : tipo %d\n",buffer_temp_file,tipo_bloque);
+
+                        //Longitud segun cabecera
+                        longitud_segun_cabecera=value_8_to_16(util_get_byte_protect(taperead,total_file_size,copia_puntero+15),
+                                util_get_byte_protect(taperead,total_file_size,copia_puntero+14));
+
+                    }
+                    else {
+                        char extension_agregar[10];
+                        extension_agregar[0]=0; //Por defecto
+
+                        int era_pantalla=0;
+
+                        //Si bloque de flag 255, ver si corresponde al bloque anterior de flag 0
+                        if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
+                            //Corresponde. Agregar extensiones bas o scr segun el caso
+                            if (previo_tipo_bloque==0) {
+                                //Basic
+                                strcpy(extension_agregar,".bas");
+                            }
+
+                            if (previo_tipo_bloque==3 && longitud_final==6912) {
+                                //Screen
+                                strcpy(extension_agregar,".scr");
+                            }
+                        }
+
+                        if (longitud_final==6912) era_pantalla=1;
+
+                        if (tapfile==NULL) {
+                            sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
+
+                            if (era_pantalla) {
+                                //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
+                                //usado en los previews
+                                char buff_preview_scr[PATH_MAX];
+                                sprintf(buff_preview_scr,"%s/%s",tempdirectory,MENU_SCR_INFO_FILE_NAME);
+
+                                //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
+                                util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
+                            }
+
+                        }
+                    }
+
+
+                    //Si expandir
+                    if (tapfile==NULL) {
+                        //Generar bloque con datos, saltando los dos de cabecera y el flag
+
+                        //memoria temporal para ello
+                        z80_byte *buffer_temp=malloc(longitud_final);
+                        if (buffer_temp==NULL) cpu_panic("Can not allocate memory for pzx expansion");
+
+                        util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,copia_puntero+3,longitud_final);
+
+                        util_save_file(buffer_temp,longitud_final,buffer_temp_file);
+
+                        free(buffer_temp);
+                    }
+
+                    //Convertir a tap
+                    else {
+                        //Generar bloque con datos
+                        //Meter longitud, flag
+                        z80_byte buffer_tap[3];
+                        z80_int longitud_cabecera_tap=longitud_final+2;
+                        buffer_tap[0]=value_16_to_8l(longitud_cabecera_tap);
+                        buffer_tap[1]=value_16_to_8h(longitud_cabecera_tap);
+                        buffer_tap[2]=flag;
+
+                        zvfs_fwrite(in_fatfs_tapfile,buffer_tap,3,ptr_tapfile,&fil_tapfile);
+                        //fwrite(buffer_tap,1,3,ptr_tapfile);
+
+
+                        //Meter datos
+                        //memoria temporal para ello
+                        z80_byte *buffer_temp=malloc(longitud_final);
+                        if (buffer_temp==NULL) cpu_panic("Can not allocate memory for pzx expansion");
+                        util_memcpy_protect_origin(buffer_temp,taperead,total_file_size,copia_puntero+3,longitud_final);
+
+                        zvfs_fwrite(in_fatfs_tapfile,buffer_temp,longitud_final,ptr_tapfile,&fil_tapfile);
+                        //fwrite(copia_puntero+3,1,longitud_final,ptr_tapfile);
+
+                        //Agregar CRC
+                        z80_byte byte_crc=util_get_byte_protect(taperead,total_file_size,copia_puntero+3+longitud_final);
+                
+
+                        buffer_tap[0]=byte_crc;
+                        zvfs_fwrite(in_fatfs_tapfile,buffer_tap,1,ptr_tapfile,&fil_tapfile);
+                        //fwrite(buffer_tap,1,1,ptr_tapfile);
+
+                        free(buffer_temp);
+
+                    }
+
+                    filenumber++;
+
+                    previo_flag=flag;
+                    previo_longitud_segun_cabecera=longitud_segun_cabecera;
+                    previo_tipo_bloque=tipo_bloque;
+
+                }
+
+            }   
+
+
+
+            //Y saltar al siguiente bloque
+            puntero_lectura +=block_size;
+            
+            remaining_file_size -=block_size;
+
+
+
+
+        }
     }
 
 
