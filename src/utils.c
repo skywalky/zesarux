@@ -14560,10 +14560,10 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 
         char tag_name[5];
-        tag_name[0]=taperead[puntero_lectura+0];
-        tag_name[1]=taperead[puntero_lectura+1];
-        tag_name[2]=taperead[puntero_lectura+2];
-        tag_name[3]=taperead[puntero_lectura+3];
+        tag_name[0]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+0);
+        tag_name[1]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+1);
+        tag_name[2]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+2);
+        tag_name[3]=util_get_byte_protect(taperead,total_file_size,puntero_lectura+3);
         tag_name[4]=0;
 
         puntero_lectura +=4;
@@ -14573,10 +14573,10 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
 
 
-        block_size=taperead[puntero_lectura+0]+
-                    (taperead[puntero_lectura+1]*256)+
-                    (taperead[puntero_lectura+2]*65536)+
-                    (taperead[puntero_lectura+3]*16777216);
+        block_size=util_get_byte_protect(taperead,total_file_size,puntero_lectura+0)+
+                    (util_get_byte_protect(taperead,total_file_size,puntero_lectura+1)*256)+
+                    (util_get_byte_protect(taperead,total_file_size,puntero_lectura+2)*65536)+
+                    (util_get_byte_protect(taperead,total_file_size,puntero_lectura+3)*16777216);
         puntero_lectura +=4;
         
         remaining_file_size -=8; 
