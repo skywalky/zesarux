@@ -251,4 +251,5 @@ past the FIRST scanline of the inactive display period
 
 -help keyboard de sg1000, coleco
 
--quiza si archivo es de tamaño 6912 aunque no tenga extension .scr, hacer preview
+
+-quiza hacer que leyenda expand salga tambien para no file utilities

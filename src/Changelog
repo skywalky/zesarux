@@ -7,6 +7,7 @@ Added setting to disable TZX pauses
 
 Improved screen file previews: any file size of 6912 bytes is guessed as Spectrum screen
 Fixed file previews on corrupted files: pzx, tap
+Show in file utils when a file can be expanded
 
 Version 9.2 - Cliff Hanger edition. 05 April 2021
 

@@ -485,7 +485,7 @@ void menu_file_viewer_read_file(char *title,char *file_name);
 void menu_file_viewer_read_text_file(char *title,char *file_name);
 void menu_file_dsk_browser_show(char *filename);
 
-
+int menu_filesel_file_can_be_expanded(char *archivo);
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
 
@@ -36042,9 +36042,19 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
                 char buffer_temporal[100];
 
 
+                //Si se puede expandir
+                char buffer_expand[32];
+                buffer_expand[0]=0;
+
+                if (menu_filesel_file_can_be_expanded(item_seleccionado->d_name)) {
+                    strcpy(buffer_expand," ~^S~^P~^C: Expand");
+                }
+
+
                 //                         01234  567890  12345  678901  2345678901
-                sprintf(buffer_temporal,"%sM~^Kdr ~^Inf",
-                        (es_directorio ? "" : "~^View ~^Trunc C~^Onv ~^Filemem ")
+                sprintf(buffer_temporal,"%sM~^Kdr ~^Inf%s",
+                        (es_directorio ? "" : "~^View ~^Trunc C~^Onv ~^Filemem "),
+                        buffer_expand
                 );
 
                                                                 
