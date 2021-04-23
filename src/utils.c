@@ -14557,7 +14557,6 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 	while(total_mem>0 && !salir) {
 
 
-
         char tag_name[5];
         tag_name[0]=taperead[puntero_lectura+0];
         tag_name[1]=taperead[puntero_lectura+1];
@@ -14583,9 +14582,6 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
         //Tratar cada tag
         
-
-        
-
         if (!strcmp(tag_name,"DATA")) {
                     //convert_pzx_to_rwa_tag_data(&pzx_file_mem[puntero_lectura],block_size,ptr_destino,&estado_actual);
 
@@ -14661,7 +14657,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
             memcpy(buffer_temp,&taperead[puntero_lectura],128);
 
 
-                    longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
+            longitud_bloque=util_tape_tap_get_info(buffer_temp,buffer_texto);
             */
 
             longitud_bloque=util_tape_tap_get_info(&taperead[puntero_lectura],buffer_texto);
@@ -14716,13 +14712,13 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                     if (flag==255 && previo_flag==0 && previo_longitud_segun_cabecera==longitud_final) {
                         //Corresponde. Agregar extensiones bas o scr segun el caso
                         if (previo_tipo_bloque==0) {
-                                //Basic
-                                strcpy(extension_agregar,".bas");
+                            //Basic
+                            strcpy(extension_agregar,".bas");
                         }
 
                         if (previo_tipo_bloque==3 && longitud_final==6912) {
-                                //Screen
-                                strcpy(extension_agregar,".scr");
+                            //Screen
+                            strcpy(extension_agregar,".scr");
                         }
                     }
 
@@ -14732,13 +14728,13 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                         sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
 
                         if (era_pantalla) {
-                                //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
-                                //usado en los previews
-                                char buff_preview_scr[PATH_MAX];
-                                sprintf(buff_preview_scr,"%s/%s",tempdirectory,MENU_SCR_INFO_FILE_NAME);
+                            //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
+                            //usado en los previews
+                            char buff_preview_scr[PATH_MAX];
+                            sprintf(buff_preview_scr,"%s/%s",tempdirectory,MENU_SCR_INFO_FILE_NAME);
 
-                                //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
-                                util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
+                            //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
+                            util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
                         }
 
                     }
@@ -14747,8 +14743,8 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
                 //Si expandir
                 if (tapfile==NULL) {
-                        //Generar bloque con datos, saltando los dos de cabecera y el flag
-                        util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
+                    //Generar bloque con datos, saltando los dos de cabecera y el flag
+                    util_save_file(copia_puntero+3,longitud_final,buffer_temp_file);
                 }
 
                 //Convertir a tap
