@@ -15925,7 +15925,7 @@ int util_extract_trd(char *filename,char *tempdir)
 
     char buffer_temp_file[PATH_MAX];
 
-        //TODO: Total de archivos incluye los borrados??
+    //TODO: Total de archivos incluye los borrados??
 	for (i=0;i<files_on_disk+deleted_files_on_disk;i++) {
         z80_byte buffer_nombre[10];
         util_memcpy_protect_origin(buffer_nombre,trd_file_memory,bytes_to_load,puntero,9);
