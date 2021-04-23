@@ -23,7 +23,6 @@
 
 while true; do
 
-	for EXTENSION in tap tzx pzx trd dsk scr sna sp z80 p zsf; do
 
 	NUMBER1=$RANDOM
 	NUMBER2=$RANDOM
@@ -32,19 +31,21 @@ while true; do
 
 	for LONGITUD in 4 5 6; do
 
-	TAMANYO=`echo $SIZE|cut -b 1-$LONGITUD`
+		TAMANYO=`echo $SIZE|cut -b 1-$LONGITUD`
 
-	TEMPNAME=random_$TAMANYO.$EXTENSION
+		for EXTENSION in tap tzx pzx trd dsk scr sna sp z80 p zsf; do
 
-	echo $TEMPNAME
+	
+			TEMPNAME=random_$TAMANYO.$EXTENSION
 
-	dd if=/dev/urandom of=$TEMPNAME bs=1 count=$TAMANYO
+			echo $TEMPNAME
+
+			dd if=/dev/urandom of=$TEMPNAME bs=1 count=$TAMANYO
+		done
 
 	done
 
 	sleep 0.1
-
-	done
 
 done
 
