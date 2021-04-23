@@ -15875,42 +15875,33 @@ int util_extract_trd(char *filename,char *tempdir)
 	}
 	
 	//Leemos cabecera archivo trd
-        FILE *ptr_file_trd_browser;
+    FILE *ptr_file_trd_browser;
 
-        //Soporte para FatFS
-        FIL fil;        /* File object */
+    //Soporte para FatFS
+    FIL fil;        /* File object */
+
+    int in_fatfs;
+
+    if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_trd_browser,&fil)<0) {
+        debug_printf(VERBOSE_ERR,"Unable to open file");
+        free(trd_file_memory);
+        return 0;
+    }
+
+
+
+    int leidos;
     
-        int in_fatfs;
-
-        if (zvfs_fopen_read(filename,&in_fatfs,&ptr_file_trd_browser,&fil)<0) {
-            debug_printf(VERBOSE_ERR,"Unable to open file");
-            free(trd_file_memory);
-            return 0;
-        }
-
-        /*
-        ptr_file_trd_browser=fopen(filename,"rb");
-
-        if (!ptr_file_trd_browser) {
-		debug_printf(VERBOSE_ERR,"Unable to open file");
-		free(trd_file_memory);
-		return 0;
-	}
-        */
-
-
-        int leidos;
-        
-        leidos=zvfs_fread(in_fatfs,trd_file_memory,bytes_to_load,ptr_file_trd_browser,&fil);
-        //leidos=fread(trd_file_memory,1,bytes_to_load,ptr_file_trd_browser);
+    leidos=zvfs_fread(in_fatfs,trd_file_memory,bytes_to_load,ptr_file_trd_browser,&fil);
+    //leidos=fread(trd_file_memory,1,bytes_to_load,ptr_file_trd_browser);
 
 	if (leidos==0) {
-                debug_printf(VERBOSE_ERR,"Error reading file");
-                return 0;
-        }
+        debug_printf(VERBOSE_ERR,"Error reading file");
+        return 0;
+    }
 
-        zvfs_fclose(in_fatfs,ptr_file_trd_browser,&fil);
-        //fclose(ptr_file_trd_browser);
+    zvfs_fclose(in_fatfs,ptr_file_trd_browser,&fil);
+    //fclose(ptr_file_trd_browser);
 
      
 
@@ -15918,15 +15909,12 @@ int util_extract_trd(char *filename,char *tempdir)
 	char buffer_texto[64]; //2 lineas, por si acaso
 
 
-
-
 	int start_track_8=256*8;
 
 
-        z80_int files_on_disk=util_get_byte_protect(trd_file_memory,bytes_to_load,start_track_8+228);
+    z80_int files_on_disk=util_get_byte_protect(trd_file_memory,bytes_to_load,start_track_8+228);
 
-
-        z80_int deleted_files_on_disk=util_get_byte_protect(trd_file_memory,bytes_to_load,start_track_8+244);
+    z80_int deleted_files_on_disk=util_get_byte_protect(trd_file_memory,bytes_to_load,start_track_8+244);
 
 
 
@@ -15935,7 +15923,7 @@ int util_extract_trd(char *filename,char *tempdir)
 
 	puntero=0;
 
-        char buffer_temp_file[PATH_MAX];
+    char buffer_temp_file[PATH_MAX];
 
         //TODO: Total de archivos incluye los borrados??
 	for (i=0;i<files_on_disk+deleted_files_on_disk;i++) {
@@ -15944,54 +15932,53 @@ int util_extract_trd(char *filename,char *tempdir)
 		menu_file_mmc_browser_show_file(buffer_nombre,buffer_texto,1,9);
 		if (buffer_texto[0]!='?') {
 
-        		z80_byte start_sector=util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+14);
-	        	z80_byte start_track=util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+15);
-                        z80_int longitud_final=util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+11)+256*util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+12);
-	        	debug_printf (VERBOSE_DEBUG,"File %s starts at track %d sector %d size %d",buffer_texto,start_track,start_sector,longitud_final);
+            z80_byte start_sector=util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+14);
+            z80_byte start_track=util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+15);
+            z80_int longitud_final=util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+11)+256*util_get_byte_protect(trd_file_memory,bytes_to_load,puntero+12);
+            debug_printf (VERBOSE_DEBUG,"File %s starts at track %d sector %d size %d",buffer_texto,start_track,start_sector,longitud_final);
 
-                        //calcular offset
-                        /*
-                        TR-DOS disk specs v1.0 - last revised on 9-28-1997
+            //calcular offset
+            /*
+            TR-DOS disk specs v1.0 - last revised on 9-28-1997
 
-- Max disk sides are 2
-- Max logical tracks per side are 80
-- Logical sectors per track are 16
-- Sector dimension is 256 bytes
-- Root directory is 8 sectors long starting from track 0, sector 1
-- Max root entries are 128
-- Root entry dimension is 16 bytes
-- Logical sector 8 (9th physical) holds disc info
-- Logical sectors from 0 to 15 are unused
-- Files are *NOT* fragmented
+            - Max disk sides are 2
+            - Max logical tracks per side are 80
+            - Logical sectors per track are 16
+            - Sector dimension is 256 bytes
+            - Root directory is 8 sectors long starting from track 0, sector 1
+            - Max root entries are 128
+            - Root entry dimension is 16 bytes
+            - Logical sector 8 (9th physical) holds disc info
+            - Logical sectors from 0 to 15 are unused
+            - Files are *NOT* fragmented
 
-                        */
-                        int offset=16*256*start_track+256*start_sector;
+            */
+            int offset=16*256*start_track+256*start_sector;
 
-                        //grabar archivo
-                        sprintf (buffer_temp_file,"%s/%s",tempdir,buffer_texto);
+            //grabar archivo
+            sprintf (buffer_temp_file,"%s/%s",tempdir,buffer_texto);
 
-                        if (longitud_final==6912) {
-                                //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
-                                //usado en los previews
-                                char buff_preview_scr[PATH_MAX];
-                                sprintf(buff_preview_scr,"%s/%s",tempdir,MENU_SCR_INFO_FILE_NAME);
+            if (longitud_final==6912) {
+                //Indicar con un archivo en la propia carpeta cual es el archivo de pantalla
+                //usado en los previews
+                char buff_preview_scr[PATH_MAX];
+                sprintf(buff_preview_scr,"%s/%s",tempdir,MENU_SCR_INFO_FILE_NAME);
 
-                                //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
-                                util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
-                        }
-		
-                        //Creamos buffer temporal para esto
-                        z80_byte *buffer_temp_memoria;
-                        buffer_temp_memoria=malloc(longitud_final);
-                        if (buffer_temp_memoria==NULL) cpu_panic("Can not allocate memory for trd extract");
-                        util_memcpy_protect_origin(buffer_temp_memoria,trd_file_memory,bytes_to_load,offset,longitud_final);
+                //Meter en archivo MENU_SCR_INFO_FILE_NAME la ruta al archivo de pantalla
+                util_save_file((z80_byte *)buffer_temp_file,strlen(buffer_temp_file)+1,buff_preview_scr);
+            }
 
-                        util_save_file(buffer_temp_memoria,longitud_final,buffer_temp_file);
+            //Creamos buffer temporal para esto
+            z80_byte *buffer_temp_memoria;
+            buffer_temp_memoria=malloc(longitud_final);
+            if (buffer_temp_memoria==NULL) cpu_panic("Can not allocate memory for trd extract");
+            util_memcpy_protect_origin(buffer_temp_memoria,trd_file_memory,bytes_to_load,offset,longitud_final);
+
+            util_save_file(buffer_temp_memoria,longitud_final,buffer_temp_file);
 		}
 
 
 		puntero +=tamanyo_trd_entry;	
-
 
 
 	}
@@ -15999,7 +15986,7 @@ int util_extract_trd(char *filename,char *tempdir)
 
 	free(trd_file_memory);
 
-        return 0;
+    return 0;
 
 }
 
