@@ -23002,7 +23002,11 @@ void menu_display_window_rearrange(MENU_ITEM_PARAMETERS)
 	zxvision_rearrange_background_windows();
 }
 
-
+void menu_display_window_reduce_all_rearrange(MENU_ITEM_PARAMETERS)
+{
+    menu_display_window_reduce_all(0);
+    menu_display_window_rearrange(0);
+}
 
 void menu_windows(MENU_ITEM_PARAMETERS)
 {
@@ -23024,11 +23028,13 @@ void menu_windows(MENU_ITEM_PARAMETERS)
 
 				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_close_all,NULL,"Close all windows");
 
-				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_rearrange,NULL,"Rearrange windows");
-
 				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all,NULL,"Reduce windows");
 				menu_add_item_menu_tooltip(array_menu_common,"Reduce windows to maximum size 20x10");
 				menu_add_item_menu_ayuda(array_menu_common,"Reduce windows to maximum size 20x10");
+
+                menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_rearrange,NULL,"Rearrange windows");
+
+                menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all_rearrange,NULL,"Reduce+rearrange windows");
 			
 
                 menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_minimize_all,NULL,"Minimize all windows");
