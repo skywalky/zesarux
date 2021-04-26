@@ -11400,7 +11400,7 @@ void zxvision_rearrange_background_windows(void)
 		origen_y=EXT_DESKTOP_BUTTONS_TOTAL_SIZE/8;
 
         //Y quitamos ese alto disponible para no sobreescribir botones inferiores
-        yfinal-=(EXT_DESKTOP_BUTTONS_TOTAL_SIZE/8)*2;
+        yfinal-=EXT_DESKTOP_BUTTONS_TOTAL_SIZE/8;
 
 	}
 
@@ -11447,9 +11447,11 @@ void zxvision_rearrange_background_windows(void)
 			}
 
 			//Si volver al principio
+            //printf("y %d height %d final %d\n",y,ventana->visible_height,yfinal);
 			if (y+ventana->visible_height>yfinal) {
 
 				debug_printf (VERBOSE_DEBUG,"Restart x,y coordinates");
+                //printf ("Restart x,y coordinates. ventana %s\n",ventana->window_title);
 
 				//alternamos coordenadas origen, para darles cierto "movimiento", 4 caracteres derecha y abajo
 				cambio_coords_origen ^=4;
