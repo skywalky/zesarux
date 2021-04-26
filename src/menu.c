@@ -11495,9 +11495,42 @@ menu_item *menu_retorna_item_tabulado_xy(menu_item *m,int x,int y,int *linea_bus
 void menu_cpu_core_loop(void)
 {
     if (menu_multitarea==1) {
-        cpu_core_loop();
+        //multitarea en menu y emulacion en menu
+        if (!menu_emulation_paused) {
+            cpu_core_loop();
+        }
+
+
+        else {
+            //multitarea en menu aunque no emula cpu
+            //hay que leer timers, etc
+            timer_check_interrupt();
+
+            if (interrupcion_timer_generada.v==0) {
+                //printf("NO Interrupt\n");
+                //Esto suele hacer 1 ms de pausa
+                timer_pause_waiting_end_frame();
+            }
+
+            //Fin de frame de pantalla (han pasado 20 ms)
+            else {
+                //printf("Interrupt\n");
+                interrupcion_timer_generada.v=0;
+                scr_actualiza_tablas_teclado();
+                realjoystick_main();
+                scr_refresca_pantalla();
+
+                contador_parpadeo--;
+
+                if (!contador_parpadeo) {
+                    contador_parpadeo=16;
+                    estado_parpadeo.v ^=1;
+                }
+            }
+        }
     }
-    
+
+    //Sin multitarea: ni se emula cpu en menu, ni hay background de ventanas, ni timers, ni caracteres parpadeo etc
     else {
         scr_actualiza_tablas_teclado();
         realjoystick_main();
