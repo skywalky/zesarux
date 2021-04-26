@@ -11494,17 +11494,20 @@ menu_item *menu_retorna_item_tabulado_xy(menu_item *m,int x,int y,int *linea_bus
 
 void menu_cpu_core_loop(void)
 {
-                if (menu_multitarea==1) cpu_core_loop();
-                else {
-                        scr_actualiza_tablas_teclado();
-			realjoystick_main();
+    if (menu_multitarea==1) {
+        cpu_core_loop();
+    }
+    
+    else {
+        scr_actualiza_tablas_teclado();
+        realjoystick_main();
 
-                        //0.5 ms
-                        usleep(MENU_CPU_CORE_LOOP_SLEEP_NO_MULTITASK);
+        //0.5 ms
+        usleep(MENU_CPU_CORE_LOOP_SLEEP_NO_MULTITASK);
 
 
-			//printf ("en menu_cpu_core_loop\n");
-                }
+        //printf ("en menu_cpu_core_loop\n");
+    }
 
 }
 
