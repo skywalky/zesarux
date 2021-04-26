@@ -7,7 +7,7 @@ Added setting to disable TZX pauses
 
 Improved ZX Vision menu interface:
 -Added setting to pause cpu emulation on menu when multitask active
--Show in file utils when a file can be expanded
+-Show in file selector when a file can be expanded
 -Improved screen file previews: any file size of 6912 bytes is guessed as Spectrum screen
 
 

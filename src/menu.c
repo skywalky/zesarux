@@ -36085,19 +36085,9 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
         char buffer_temporal[100];
 
 
-        //Si se puede expandir
-        char buffer_expand[32];
-        buffer_expand[0]=0;
-
-        if (menu_filesel_file_can_be_expanded(item_seleccionado->d_name)) {
-            strcpy(buffer_expand," ~^S~^P~^C: Expand");
-        }
-
-
         //                         01234  567890  12345  678901  2345678901
-        sprintf(buffer_temporal,"%sM~^Kdr ~^Inf%s",
-                (es_directorio ? "" : "~^View ~^Trunc C~^Onv ~^Filemem "),
-                buffer_expand
+        sprintf(buffer_temporal,"%sM~^Kdr ~^Inf",
+                (es_directorio ? "" : "~^View ~^Trunc C~^Onv ~^Filemem ")
         );
 
                                                         
@@ -36129,10 +36119,21 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 	char leyenda_inferior[64];
 
 
+    //Si se puede expandir
+    char buffer_expand[32];
+    buffer_expand[0]=0;
+
+    if (!es_directorio) {
+        if (menu_filesel_file_can_be_expanded(item_seleccionado->d_name)) {
+            strcpy(buffer_expand," ~^S~^P~^C: Expand");
+        }
+    }    
+
+
 	//Drive también mostrado en Linux y Mac
     //01234567890123456789012345678901
     // TAB: Section R: Recent D: Drive
-	sprintf (leyenda_inferior,"~^T~^A~^B:Section ~^Recent ~^Drives");
+	sprintf (leyenda_inferior,"~^T~^A~^B:Section ~^Recent ~^Drives%s",buffer_expand);
 
 	zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,leyenda_inferior);
 
