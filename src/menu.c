@@ -4964,7 +4964,7 @@ void normal_overlay_texto_menu(void)
 	if (menu_allow_background_windows && 
 	  (menu_abierto || overlay_visible_when_menu_closed)
 	) {
-		printf("redrawing windows on normal_overlay\n");
+		//printf("redrawing windows on normal_overlay\n");
 		//Conservar estado de tecla pulsada o no para el speech
 		int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
 		menu_draw_background_windows_overlay_after_normal();
@@ -11544,7 +11544,15 @@ void menu_cpu_core_loop(void)
 
 }
 
+//Dice si o bien multitask esta desactivado o emulacion de cpu esta desactivado en menu,
+//para saber que la emulacion se pausa al abrir el menu, por cualquiera de las dos opciones
+int menu_if_emulation_paused(void)
+{
+    if (!menu_multitarea) return 1;
+    if (menu_emulation_paused_on_menu) return 1;
 
+    return 0;
+}
 
 int si_menu_mouse_en_ventana(void)
 {
@@ -29220,7 +29228,6 @@ void menu_interface_multitask(MENU_ITEM_PARAMETERS)
 
 	menu_multitarea=menu_multitarea^1;
 	if (menu_multitarea==0) {
-		//audio_thread_finish();
 		audio_playing.v=0;
 	}
 	timer_reset();
@@ -35217,9 +35224,8 @@ void menu_inicio(void)
 
 
 
-	if (menu_multitarea==0) {
+	if (menu_if_emulation_paused() ) {
 		audio_playing.v=0;
-		//audio_thread_finish();
 	}
 
 
