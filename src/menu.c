@@ -29828,6 +29828,12 @@ void menu_setting_select_machine_by_name(MENU_ITEM_PARAMETERS)
 void menu_interface_menu_emulation_paused(MENU_ITEM_PARAMETERS)
 {
     menu_emulation_paused_on_menu ^=1;
+
+	if (menu_emulation_paused_on_menu) {
+		audio_playing.v=0;
+	}    
+
+    timer_reset();
 }
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)

@@ -690,8 +690,6 @@ void audio_empty_buffer(void)
 
 }
 
-//esto se puede borrar
-//int temp_borrarrrr=0;
 
 void envio_audio(void)
 {
@@ -712,6 +710,13 @@ void envio_audio(void)
 
 	//Si aofile, silencio=0
 	if (aofile_inserted.v) silence_detection_counter=0;
+
+    //Si esta el menu abierto pero la emulacion en menu esta pausada, volver
+    //Nota: en el caso que no haya multitask, a esta funcion ya no se llama nunca
+    //aqui se llama desde timer_check_interrupt(), este se llama en emulacion con menu cerrado,
+    //con menu abierto y setting de emulacion en menu pausada,
+    //pero con menu abierto y setting de multitask off, no se llama nunca
+    if (menu_abierto && menu_emulation_paused_on_menu) return;
 
 
 	//Incrementar si conviene y avisar con mensaje por debug cuando se llega al maximo
