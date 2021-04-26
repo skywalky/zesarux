@@ -36057,98 +36057,87 @@ void filesel_return_free_mmc_mounted(int *total, int *free)
 void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 {
 
-                //Forzar a mostrar atajos
-                z80_bit antes_menu_writing_inverse_color;
-                antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-                menu_writing_inverse_color.v=1;
+    //Forzar a mostrar atajos
+    z80_bit antes_menu_writing_inverse_color;
+    antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+    menu_writing_inverse_color.v=1;
 
 	int posicion_leyenda=ZXVISION_POS_LEYENDA;
 	int posicion_filtros=ZXVISION_POS_FILTER;
 
 	char leyenda_inferior[64];
 
-	/*
-#ifdef MINGW
-
-			//01234567890123456789012345678901
-			// TAB: Section R: Recent D: Drive
-	sprintf (leyenda_inferior,"~~T~~A~~B:Section ~~Recent ~~Drive");
-#else
-	sprintf (leyenda_inferior,"~~T~~A~~B: Section ~~R: Recent");
-#endif
-
-*/
 
 	//Drive también mostrado en Linux y Mac
-			//01234567890123456789012345678901
-			// TAB: Section R: Recent D: Drive
+    //01234567890123456789012345678901
+    // TAB: Section R: Recent D: Drive
 	sprintf (leyenda_inferior,"~^T~^A~^B:Section ~^Recent ~^Drives");	
 
 	zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,leyenda_inferior);
 
 
-        if (menu_filesel_show_utils.v) {
+    if (menu_filesel_show_utils.v) {
 
-                //Obtener tipo de archivo al que apunta para saber si es archivo o directorio, para ocultar textos leyenda
-                int es_directorio=0;
+        //Obtener tipo de archivo al que apunta para saber si es archivo o directorio, para ocultar textos leyenda
+        int es_directorio=0;
 
-                filesel_item *item_seleccionado;
+        filesel_item *item_seleccionado;
 
-                item_seleccionado=menu_get_filesel_item_cursor();
-                if (item_seleccionado!=NULL) {
+        item_seleccionado=menu_get_filesel_item_cursor();
+        if (item_seleccionado!=NULL) {
 
-                    int tipo_archivo_seleccionado=get_file_type(item_seleccionado->d_name);
+            int tipo_archivo_seleccionado=get_file_type(item_seleccionado->d_name);
 
-                    //Si es directorio
-                    if (tipo_archivo_seleccionado==2) es_directorio=1;
-                }
-
-                char buffer_temporal[100];
-
-
-                //Si se puede expandir
-                char buffer_expand[32];
-                buffer_expand[0]=0;
-
-                if (menu_filesel_file_can_be_expanded(item_seleccionado->d_name)) {
-                    strcpy(buffer_expand," ~^S~^P~^C: Expand");
-                }
-
-
-                //                         01234  567890  12345  678901  2345678901
-                sprintf(buffer_temporal,"%sM~^Kdr ~^Inf%s",
-                        (es_directorio ? "" : "~^View ~^Trunc C~^Onv ~^Filemem "),
-                        buffer_expand
-                );
-
-                                                                
-                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,buffer_temporal);
-
-
-                char buffer_sync[32];
-                if (menu_mmc_image_montada) {
-                    strcpy(buffer_sync,"~^Umount ~^Sync ");
-                }
-                else {
-                    if (es_directorio) buffer_sync[0]=0;
-                    else strcpy(buffer_sync,"mo~^Unt ");
-                }
-
-                /*
-                sprintf(buffer_temporal,"%sD~^El Re~^N ~^Paste ~^Copy %s",
-                    //move, de momento  solo para archivos
-                    (es_directorio ? "" : "~^Move "),
-                    buffer_sync);
-                */
-
-                sprintf(buffer_temporal,"%sD~^El Re~^N ~^Paste ~^Copy ~^Move",buffer_sync);
-
-                zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_temporal);
-
+            //Si es directorio
+            if (tipo_archivo_seleccionado==2) es_directorio=1;
         }
 
-                //Restaurar comportamiento mostrar atajos
-                menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+        char buffer_temporal[100];
+
+
+        //Si se puede expandir
+        char buffer_expand[32];
+        buffer_expand[0]=0;
+
+        if (menu_filesel_file_can_be_expanded(item_seleccionado->d_name)) {
+            strcpy(buffer_expand," ~^S~^P~^C: Expand");
+        }
+
+
+        //                         01234  567890  12345  678901  2345678901
+        sprintf(buffer_temporal,"%sM~^Kdr ~^Inf%s",
+                (es_directorio ? "" : "~^View ~^Trunc C~^Onv ~^Filemem "),
+                buffer_expand
+        );
+
+                                                        
+        zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros-1,buffer_temporal);
+
+
+        char buffer_sync[32];
+        if (menu_mmc_image_montada) {
+            strcpy(buffer_sync,"~^Umount ~^Sync ");
+        }
+        else {
+            if (es_directorio) buffer_sync[0]=0;
+            else strcpy(buffer_sync,"mo~^Unt ");
+        }
+
+        /*
+        sprintf(buffer_temporal,"%sD~^El Re~^N ~^Paste ~^Copy %s",
+            //move, de momento  solo para archivos
+            (es_directorio ? "" : "~^Move "),
+            buffer_sync);
+        */
+
+        sprintf(buffer_temporal,"%sD~^El Re~^N ~^Paste ~^Copy ~^Move",buffer_sync);
+
+        zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_temporal);
+
+    }
+
+    //Restaurar comportamiento mostrar atajos
+    menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 }
 
 
