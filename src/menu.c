@@ -29844,7 +29844,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
         do {
 
 		//hotkeys usados:
-		//ocewsruitfalqh
+		//ocewsruitfalqhp
 
 		menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"[%c] M~~ultitask menu", (menu_multitarea==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'u');
@@ -29853,8 +29853,9 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
         if (menu_multitarea) {
-            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_menu_emulation_paused,NULL,"[%c] Stop emulation on menu",
+            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_menu_emulation_paused,NULL,"[%c] Sto~~p emulation on menu",
                 (menu_emulation_paused_on_menu ? 'X' : ' ' ));
+            menu_add_item_menu_shortcut(array_menu_interface_settings,'p');
             menu_add_item_menu_tooltip(array_menu_interface_settings,"When multitask is enabled, you can disable emulation when opening the menu");
             menu_add_item_menu_ayuda(array_menu_interface_settings,"When multitask is enabled, you can disable emulation when opening the menu");
         }
