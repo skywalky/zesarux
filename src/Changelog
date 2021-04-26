@@ -2,12 +2,17 @@ Version 9.3 - xxxx edition. 21 April 2021
 
 Added Sega Master System emulation
 Added .sms file viewer
-
 Added setting to disable TZX pauses
 
-Improved screen file previews: any file size of 6912 bytes is guessed as Spectrum screen
+
+Improved ZX Vision menu interface:
+-Added setting to pause cpu emulation on menu when multitask active
+-Show in file utils when a file can be expanded
+-Improved screen file previews: any file size of 6912 bytes is guessed as Spectrum screen
+
+
 Fixed file previews on corrupted files: pzx, tap
-Show in file utils when a file can be expanded
+
 
 Version 9.2 - Cliff Hanger edition. 05 April 2021
 

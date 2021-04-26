@@ -334,7 +334,7 @@ int menu_multitarea=1;
 //int menu_enable_timers_without_multitask=0;
 
 //emulacion en menu esta pausada
-int menu_emulation_paused=0;
+int menu_emulation_paused_on_menu=0;
 
 //Si se oculta la barra vertical en la zona de porcentaje de ventanas de texto o selector de archivos
 z80_bit menu_hide_vertical_percentaje_bar={0};
@@ -11496,7 +11496,7 @@ void menu_cpu_core_loop(void)
 {
     if (menu_multitarea==1) {
         //multitarea en menu y emulacion en menu
-        if (!menu_emulation_paused) {
+        if (!menu_emulation_paused_on_menu) {
             cpu_core_loop();
         }
 
@@ -29820,7 +29820,7 @@ void menu_setting_select_machine_by_name(MENU_ITEM_PARAMETERS)
 
 void menu_interface_menu_emulation_paused(MENU_ITEM_PARAMETERS)
 {
-    menu_emulation_paused ^=1;
+    menu_emulation_paused_on_menu ^=1;
 }
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
@@ -29835,12 +29835,15 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"[%c] M~~ultitask menu", (menu_multitarea==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'u');
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable menu with multitask");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Setting multitask on makes the emulation does not stop when the menu is active");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"When multitask is disabled, both emulation, background windows and other menu features are stopped when opening the menu");
+        menu_add_item_menu_ayuda(array_menu_interface_settings,"When multitask is disabled, both emulation, background windows and other menu features are stopped when opening the menu");
+
 
         if (menu_multitarea) {
             menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_menu_emulation_paused,NULL,"[%c] Stop emulation on menu",
-                (menu_emulation_paused ? 'X' : ' ' ));
+                (menu_emulation_paused_on_menu ? 'X' : ' ' ));
+            menu_add_item_menu_tooltip(array_menu_interface_settings,"When multitask is enabled, you can disable emulation when opening the menu");
+            menu_add_item_menu_ayuda(array_menu_interface_settings,"When multitask is enabled, you can disable emulation when opening the menu");
         }
 
 		/*

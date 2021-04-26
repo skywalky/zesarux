@@ -1798,8 +1798,9 @@ printf (
 		//"--overlayinfo              Overlay on screen some machine info, like when loading tape\n"
 
 		"--disablefooter            Disable window footer\n"
-		"--disablemultitaskmenu     Disable multitasking menu\n"
+		"--disablemultitaskmenu     When multitask is disabled, both emulation, background windows and other menu features are stopped when opening the menu\n"
 		//"--disablebw-no-multitask   Disable changing to black & white colours on the emulator machine when menu open and multitask is off\n"
+        "--stopemulationmenu        When multitask is enabled, you can disable emulation when opening the menu\n"
 		"--nosplash                 Disable all splash texts\n"
 #ifndef MINGW
 		"--no-cpu-usage             Do not show host CPU usage on footer\n"
@@ -5977,6 +5978,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--disablemultitaskmenu")) {
                 menu_multitarea=0;
 			}
+
+            else if (!strcmp(argv[puntero_parametro],"--stopemulationmenu")) {
+                menu_emulation_paused_on_menu=1;
+            }
 		
 			else if (!strcmp(argv[puntero_parametro],"--disablebw-no-multitask")) {
 				//Obsoleto

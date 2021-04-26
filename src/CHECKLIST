@@ -49,6 +49,7 @@ Drivers audio:
 -probar drivers sonido pulse, alsa, dsp, sdl, coreaudio, null. con y sin pthreads
 *por cada driver (incluido null) y con y sin pthreads:
 **quitar multitask de menu
+**activar stop emulation en menu
 **esperar a silencio
 **ver en todos casos usos de cpu
 **probar sonido Z88, Spectrum (beep y ay), ZX80/81 (vsync sound y ay)

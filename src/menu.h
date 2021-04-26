@@ -677,6 +677,7 @@ extern void menu_putstring_footer(int x,int y,char *texto,int tinta,int papel);
 extern void menu_footer_clear_bottom_line(void);
 extern void cls_menu_overlay(void);
 extern int menu_multitarea;
+extern int menu_emulation_paused_on_menu;
 extern int menu_abierto;
 
 extern void menu_muestra_pending_error_message(void);

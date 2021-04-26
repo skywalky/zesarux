@@ -3450,6 +3450,7 @@ int util_write_configfile(void)
 
   if (menu_footer==0)                         ADD_STRING_CONFIG,"--disablefooter");
   if (menu_multitarea==0)                     ADD_STRING_CONFIG,"--disablemultitaskmenu");
+  if (menu_emulation_paused_on_menu)          ADD_STRING_CONFIG,"--stopemulationmenu");
 
 
   //if (screen_bw_no_multitask_menu.v==0)       ADD_STRING_CONFIG,"--disablebw-no-multitask");
