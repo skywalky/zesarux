@@ -10034,10 +10034,13 @@ void zxvision_handle_maximize(zxvision_window *w)
 		
 		else {
 			debug_printf (VERBOSE_DEBUG,"Maximize window");
+			int max_width;
+			int max_height;
+
 			zxvision_set_x_position(w,0);
 			zxvision_set_y_position(w,0);
-			int max_width=scr_get_menu_width();
-			int max_height=scr_get_menu_height();
+			max_width=scr_get_menu_width();
+			max_height=scr_get_menu_height();
 			//printf ("visible width %d\n",max_width);
 			zxvision_set_visible_width(w,max_width);
 			zxvision_set_visible_height(w,max_height);
