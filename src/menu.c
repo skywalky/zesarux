@@ -36065,15 +36065,7 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 	int posicion_leyenda=ZXVISION_POS_LEYENDA;
 	int posicion_filtros=ZXVISION_POS_FILTER;
 
-	char leyenda_inferior[64];
 
-
-	//Drive también mostrado en Linux y Mac
-    //01234567890123456789012345678901
-    // TAB: Section R: Recent D: Drive
-	sprintf (leyenda_inferior,"~^T~^A~^B:Section ~^Recent ~^Drives");	
-
-	zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,leyenda_inferior);
 
 
     if (menu_filesel_show_utils.v) {
@@ -36135,6 +36127,16 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
         zxvision_print_string_defaults_fillspc(ventana,1,posicion_filtros,buffer_temporal);
 
     }
+
+	char leyenda_inferior[64];
+
+
+	//Drive también mostrado en Linux y Mac
+    //01234567890123456789012345678901
+    // TAB: Section R: Recent D: Drive
+	sprintf (leyenda_inferior,"~^T~^A~^B:Section ~^Recent ~^Drives");
+
+	zxvision_print_string_defaults_fillspc(ventana,1,posicion_leyenda,leyenda_inferior);
 
     //Restaurar comportamiento mostrar atajos
     menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
