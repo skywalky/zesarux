@@ -36065,24 +36065,22 @@ void zxvision_menu_filesel_print_legend(zxvision_window *ventana)
 	int posicion_leyenda=ZXVISION_POS_LEYENDA;
 	int posicion_filtros=ZXVISION_POS_FILTER;
 
+    //Obtener tipo de archivo al que apunta para saber si es archivo o directorio, para ocultar textos leyenda
+    int es_directorio=0;
 
+    filesel_item *item_seleccionado;
+
+    item_seleccionado=menu_get_filesel_item_cursor();
+    if (item_seleccionado!=NULL) {
+
+        int tipo_archivo_seleccionado=get_file_type(item_seleccionado->d_name);
+
+        //Si es directorio
+        if (tipo_archivo_seleccionado==2) es_directorio=1;
+    }
 
 
     if (menu_filesel_show_utils.v) {
-
-        //Obtener tipo de archivo al que apunta para saber si es archivo o directorio, para ocultar textos leyenda
-        int es_directorio=0;
-
-        filesel_item *item_seleccionado;
-
-        item_seleccionado=menu_get_filesel_item_cursor();
-        if (item_seleccionado!=NULL) {
-
-            int tipo_archivo_seleccionado=get_file_type(item_seleccionado->d_name);
-
-            //Si es directorio
-            if (tipo_archivo_seleccionado==2) es_directorio=1;
-        }
 
         char buffer_temporal[100];
 
