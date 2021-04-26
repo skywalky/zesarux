@@ -10036,12 +10036,43 @@ void zxvision_handle_maximize(zxvision_window *w)
 			debug_printf (VERBOSE_DEBUG,"Maximize window");
 			int max_width;
 			int max_height;
+            int xinicial;
+            int yinicial;
 
-			zxvision_set_x_position(w,0);
-			zxvision_set_y_position(w,0);
-			max_width=scr_get_menu_width();
-			max_height=scr_get_menu_height();
+            //Tratar esto diferente si hay zx desktop activado
+            if (if_zxdesktop_enabled_and_driver_allows()) {
+			    xinicial=menu_origin_x();
+			    yinicial=0;     
+
+                max_width=menu_get_width_characters_ext_desktop();      
+                max_height=scr_get_menu_height();     
+
+
+
+                //Si hay botones parte superior zxdesktop, origen_y lo incrementamos
+                if (menu_zxdesktop_buttons_enabled.v) {
+                    yinicial=EXT_DESKTOP_BUTTONS_TOTAL_SIZE/8;
+
+                    //Y quitamos ese alto disponible para no sobreescribir botones inferiores
+                    max_height-=(EXT_DESKTOP_BUTTONS_TOTAL_SIZE/8)*2;
+
+                }
+
+
+
+            }
+
+            else {
+			    xinicial=0;
+			    yinicial=0;
+			    max_width=scr_get_menu_width();
+			    max_height=scr_get_menu_height();
+            }
+
+
 			//printf ("visible width %d\n",max_width);
+            zxvision_set_x_position(w,xinicial);
+            zxvision_set_y_position(w,yinicial);            
 			zxvision_set_visible_width(w,max_width);
 			zxvision_set_visible_height(w,max_height);
 			
@@ -11367,7 +11398,14 @@ void zxvision_rearrange_background_windows(void)
 	//Si hay botones parte superior zxdesktop, origen_y lo incrementamos
 	if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() && menu_zxdesktop_buttons_enabled.v) {
 		origen_y=EXT_DESKTOP_BUTTONS_TOTAL_SIZE/8;
+
+        //Y quitamos ese alto disponible para no sobreescribir botones inferiores
+        yfinal-=(EXT_DESKTOP_BUTTONS_TOTAL_SIZE/8)*2;
+
 	}
+
+    //printf("origen y: %d\n",origen_y);
+    //printf("yfinal: %d\n",yfinal);
 
 	//Y de ahi para arriba
 	int x=origen_x;
