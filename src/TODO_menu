@@ -159,7 +159,7 @@ en la ventana del teclado ya se actualiza con la máquina actual
 
 
 -llamar a void timer_check_interrupt(void) desde menu_cpu_core_loop cuando no hay multitarea. Esto permitiria acceder a los timers desde menu
-sin que este multitarea. Efectos colaterales? Seguramente muchos
+sin que este multitarea. Efectos colaterales? Seguramente muchos?
 quiza llamar solo a una parte de timers que no son criticos, solo usados en menu y no en emulacion
 
 -temperatura cpu en mac

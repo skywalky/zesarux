@@ -330,6 +330,12 @@ z80_bit menu_desactivado_file_utilities={0};
 //indica que el menu aparece en modo multitarea - mientras ejecuta codigo de emulacion de cpu
 int menu_multitarea=1;
 
+//indica que aunque no hay multitarea se leen los timers
+//int menu_enable_timers_without_multitask=0;
+
+//emulacion en menu esta pausada
+int menu_emulation_paused=0;
+
 //Si se oculta la barra vertical en la zona de porcentaje de ventanas de texto o selector de archivos
 z80_bit menu_hide_vertical_percentaje_bar={0};
 
@@ -4958,7 +4964,7 @@ void normal_overlay_texto_menu(void)
 	if (menu_allow_background_windows && 
 	  (menu_abierto || overlay_visible_when_menu_closed)
 	) {
-		//printf("redrawing windows on normal_overlay\n");
+		printf("redrawing windows on normal_overlay\n");
 		//Conservar estado de tecla pulsada o no para el speech
 		int antes_menu_speech_tecla_pulsada=menu_speech_tecla_pulsada;
 		menu_draw_background_windows_overlay_after_normal();
@@ -29776,6 +29782,10 @@ void menu_setting_select_machine_by_name(MENU_ITEM_PARAMETERS)
 	setting_machine_selection_by_name.v ^=1;
 }
 
+void menu_interface_menu_emulation_paused(MENU_ITEM_PARAMETERS)
+{
+    menu_emulation_paused ^=1;
+}
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
@@ -29792,7 +29802,10 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable menu with multitask");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Setting multitask on makes the emulation does not stop when the menu is active");
 
-
+        if (menu_multitarea) {
+            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_menu_emulation_paused,NULL,"[%c] Stop emulation on menu",
+                (menu_emulation_paused ? 'X' : ' ' ));
+        }
 
 		/*
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_bw_no_multitask,NULL,"B&W when no multitask: %s",

@@ -253,3 +253,13 @@ past the FIRST scanline of the inactive display period
 
 
 -quiza hacer que leyenda expand salga tambien para no file utilities
+
+
+-nueva gestion multitarea en menu:
+
+si multitarea desactivada: menu no ejecuta cpu ni hay ventanas en background etc
+
+si multitarea activada: hay ventanas en background etc. Pero cpu se puede pausar al abrir el menu
+
+TODO: ver si en maquina Z88 por ejemplo, que la interrupcion es 4 veces mas frecuente, el parpadeo del cursor por ejemplo es mas rapido
+cuando emulacion pausada en menu
