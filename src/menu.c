@@ -6413,8 +6413,12 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 		char titulo_mostrar[ZXVISION_MAX_WINDOW_TITLE];
 		z80_byte caracter_cerrar=menu_retorna_caracter_cerrar();
 
-		if (menu_hide_close_button.v || ventana_es_background ) strcpy(titulo_mostrar,titulo);
-		else sprintf (titulo_mostrar,"%c %s",caracter_cerrar,titulo);
+		if (menu_hide_close_button.v || ventana_es_background ) {
+            strcpy(titulo_mostrar,titulo);
+        }
+		else {
+            sprintf (titulo_mostrar,"%c %s",caracter_cerrar,titulo);
+        }
 
 
         //y luego el texto. titulo mostrar solo lo que cabe de ancho
