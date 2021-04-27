@@ -449,6 +449,17 @@ const int turbovision_colortable_original[TURBOVISION_TOTAL_PALETTE_COLOURS]={
 
 };
 
+const int beos_colortable_original[BEOS_TOTAL_PALETTE_COLOURS]={
+
+0xffce00,  //Amarillo del titulo
+0x989898,  //Recuadro
+0xdedede,  //Gris menus
+0x9c9c9c, //Gris opcion seleccionada
+0xefefef  //Gris titulo ventana no seleccionada
+
+
+};
+
 //Tabla con los colores extra del Spectra.
 //Valores para intensidades de color:
 /*
@@ -8817,7 +8828,12 @@ G  G   R   R   B   B
                     //printf("i %d valorgris %d\n",i,valorgris);
 					VALOR_GRIS_A_R_G_B
 					screen_set_colour_normal(SMS_INDEX_FIRST_COLOR+i,(r<<16)|(g<<8)|b);					
-				}                
+				}   
+
+				//Colores BeOS. No los pasamos a grises estos
+				for (i=0;i<BEOS_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(BEOS_INDEX_FIRST_COLOR+i,beos_colortable_original[i]);
+				}	                             
 
 		}
 
@@ -9033,7 +9049,12 @@ Bit 6 GRN1 most  significant bit of green.
 
 					screen_set_colour_normal(SMS_INDEX_FIRST_COLOR+i, color32);
 
-				}                                 
+				} 
+
+				//Colores BeOS
+				for (i=0;i<BEOS_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(BEOS_INDEX_FIRST_COLOR+i,beos_colortable_original[i]);
+				}                                                   
 
 
 		}

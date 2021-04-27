@@ -787,14 +787,14 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         TURBOVISION_COLOUR_red //si texto inverso solo cambia color tinta
 		},    
 
-	{0,"BeOS",7,0,
+	{1,"BeOS",BEOS_COLOUR_grey_menu,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow,no mayusculas
-		5,0, 		//Colores para opcion seleccionada
-		7,2,5,2, 	//Colores para opcion no disponible
+		BEOS_COLOUR_grey_selection,0, 		//Colores para opcion seleccionada
+		BEOS_COLOUR_grey_menu,2,BEOS_COLOUR_grey_selection,2, 	//Colores para opcion no disponible
 
-		6+8,0,        	//Colores para el titulo ventana
-        0,              //Color recuadro
-		7,0,        	//Colores para el titulo ventana inactiva
+		BEOS_COLOUR_yellow,0,        	//Colores para el titulo ventana
+        BEOS_COLOUR_grey_box,              //Color recuadro
+		BEOS_COLOUR_grey_inactive_title,0,        	//Colores para el titulo ventana inactiva
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
