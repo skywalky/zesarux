@@ -560,7 +560,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'*',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 		},
 
     //Tema igual que ZEsarUX pero sin brillo. Y con color de visualmem cambiado
@@ -580,7 +581,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso
 		//colores de franjas invertidas, por defecto la oscura
         colores_franja_speccy_oscuro,colores_franja_speccy_brillo,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 		},
 	{0,"ZXSpectr",1,6,
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
@@ -597,7 +599,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'*',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 		},
 
         {0,"ZX80/81",7+8,0,
@@ -615,8 +618,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'.',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
-                },
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
+        },
 
 //Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
 //que no tienen esos colores en las fuentes
@@ -636,7 +640,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'*',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
                 },
 
 
@@ -655,7 +660,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'*',
 		2, //color de aviso
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
                 },
 
 		//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
@@ -674,7 +680,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 				'.',
 				2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 				colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
         },
 
 
@@ -693,7 +700,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'#',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
                 },
 
 						{0,"ManSoftware",7+8,0,
@@ -711,7 +719,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							'#',
 		3+8, //color de aviso, en este tema, magenta con brillo
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 							},
 
 
@@ -730,7 +739,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 					'*',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 								},
 
 	{0,"RetroMac",7,0,
@@ -748,7 +758,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'.',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        5+8 //si texto inverso solo cambia color tinta
+        5+8, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 		},
 
 {0,"Borland",1,7+8,
@@ -766,7 +777,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'*',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        2+8 //si texto inverso solo cambia color tinta
+        2+8, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 		},
 
 {1,"TurboVision",TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,
@@ -784,7 +796,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		140,
         2, //color de aviso. Seria TURBOVISION_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        TURBOVISION_COLOUR_red //si texto inverso solo cambia color tinta
+        TURBOVISION_COLOUR_red, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 		},    
 
 	{1,"BeOS",BEOS_COLOUR_grey_menu,0,
@@ -802,7 +815,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		139, //boton cerrar especial
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        1 //NO rellenar titulo
 		},            
 
 	// https://ethanschoonover.com/solarized/. Solo vale en video driver completo por los colores usados (primer valor de la estructura)
@@ -823,7 +837,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'*',
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 		},
 
 	//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
@@ -843,7 +858,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'*',
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
 		},
 
 
@@ -862,7 +878,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'X',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
                 },
 
         {0,"CleanInverse",0,7,
@@ -880,7 +897,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		'X',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1 //si texto inverso solo cambia color tinta
+        -1, //si texto inverso solo cambia color tinta
+        0 //rellenar titulo
                 },
 
 
@@ -6312,7 +6330,7 @@ z80_byte menu_retorna_caracter_cerrar(void)
 //contenido blanco
 //recuadro de lineas
 //Entrada: x,y posicion inicial. ancho, alto. Todo coordenadas en caracteres 0..31 y 0..23
-void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
+void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 {
 
 	//Para draw below windows, no mostrar error pendiente cuando esta dibujando ventanas de debajo
@@ -6320,13 +6338,18 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 	
 	//En el caso de stdout, solo escribimos el texto
         if (!strcmp(scr_new_driver_name,"stdout")) {
-                printf ("%s\n",titulo);
-		scrstdout_menu_print_speech_macro(titulo);
+                printf ("%s\n",titulo_original);
+		scrstdout_menu_print_speech_macro(titulo_original);
 		printf ("------------------------\n\n");
 		//paso de curses a stdout deja stdout que no hace flush nunca. forzar
 		fflush(stdout);
                 return;
         }
+
+    //Pasar titulo a string temporal. Agregamos un espacio al final en estilos que no rellenan toda la barra de titulo (como BeOS)
+    char titulo[ZXVISION_MAX_WINDOW_TITLE];
+
+    sprintf(titulo,"%s%s",titulo_original,(ESTILO_GUI_NO_RELLENAR_TITULO ? " " : "")  );
 
 	//printf ("valor menu_speech_tecla_pulsada: %d\n",menu_speech_tecla_pulsada);
 
@@ -6378,14 +6401,16 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 
         //titulo
         //primero franja toda negra normalmente en estilo ZEsarUX
-        for (i=0;i<ancho;i++) {
-			putchar_menu_overlay(x+i,y,' ',color_tinta_titulo,color_papel_titulo);
-		}
+        if (!ESTILO_GUI_NO_RELLENAR_TITULO) {
+            for (i=0;i<ancho;i++) {
+			    putchar_menu_overlay(x+i,y,' ',color_tinta_titulo,color_papel_titulo);
+		    }
+        }
 
 
 		int ancho_mostrar_titulo=menu_dibuja_ventana_ret_ancho_titulo(ancho,titulo);
 
-		char titulo_mostrar[64];
+		char titulo_mostrar[ZXVISION_MAX_WINDOW_TITLE];
 		z80_byte caracter_cerrar=menu_retorna_caracter_cerrar();
 
 		if (menu_hide_close_button.v || ventana_es_background ) strcpy(titulo_mostrar,titulo);

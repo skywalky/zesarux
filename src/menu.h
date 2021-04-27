@@ -55,7 +55,7 @@ typedef struct s_overlay_screen overlay_screen;
 //Tamaño maximo del nombre para la geometria
 #define MAX_NAME_WINDOW_GEOMETRY 100
 
-
+#define ZXVISION_MAX_WINDOW_TITLE 256
 
 //Nuevas ventanas zxvision
 struct s_zxvision_window {
@@ -73,7 +73,7 @@ struct s_zxvision_window {
 	int offset_x,offset_y;
 
 	int total_width,total_height;
-	char window_title[256];
+	char window_title[ZXVISION_MAX_WINDOW_TITLE];
 
 	//Para el guardado de geometria
 	char geometry_name[MAX_NAME_WINDOW_GEOMETRY];
@@ -845,6 +845,9 @@ struct s_estilos_gui {
     //si texto inverso solo cambia color tinta, en vez de invertir papel y tinta. -1 si no lo hace. Otro valor es el color de tinta
     int inverse_tinta;
 
+    //si no se rellena con espacios todo el titulo de la ventana. BeOS por ejemplo hace esto
+    int no_rellenar_titulo;
+
 };
 
 typedef struct s_estilos_gui estilos_gui;
@@ -926,6 +929,9 @@ extern z80_bit menu_ext_desktop_transparent_upper_icons;
 #define ESTILO_GUI_REQUIRE_COMPLETE_VIDEO_DRIVER (definiciones_estilos_gui[estilo_gui_activo].require_complete_video_driver)
 
 #define ESTILO_GUI_INVERSE_TINTA (definiciones_estilos_gui[estilo_gui_activo].inverse_tinta)
+
+
+#define ESTILO_GUI_NO_RELLENAR_TITULO (definiciones_estilos_gui[estilo_gui_activo].no_rellenar_titulo)
 
 
 #define MENU_ANCHO_FRANJAS_TITULO 5
