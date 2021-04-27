@@ -6414,7 +6414,9 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 		z80_byte caracter_cerrar=menu_retorna_caracter_cerrar();
 
 		if (menu_hide_close_button.v || ventana_es_background ) {
-            strcpy(titulo_mostrar,titulo);
+            //strcpy(titulo_mostrar,titulo);
+            //Ancho del titulo sera igual, aun sin el boton de cerrar
+            sprintf (titulo_mostrar,"  %s",titulo);
         }
 		else {
             sprintf (titulo_mostrar,"%c %s",caracter_cerrar,titulo);
@@ -38058,6 +38060,7 @@ void set_charset(void)
 	else if (estilo_gui_activo==ESTILO_GUI_QL) char_set=char_set_ql;
 	else if (estilo_gui_activo==ESTILO_GUI_RETROMAC) char_set=char_set_retromac;
     else if (estilo_gui_activo==ESTILO_GUI_TURBOVISION) char_set=char_set_retromac;
+    else if (estilo_gui_activo==ESTILO_GUI_BEOS) char_set=char_set_beos;
 	else char_set=char_set_spectrum;
 }
 

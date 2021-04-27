@@ -33,6 +33,7 @@ extern unsigned char char_set_mansoftware[];
 extern unsigned char char_set_ql[];
 extern unsigned char char_set_retromac[];
 extern unsigned char char_set_msx[];
+extern unsigned char char_set_beos[];
 
 #define MAX_CHARSET_GRAPHIC 140
 

@@ -864,6 +864,7 @@ typedef struct s_estilos_gui estilos_gui;
 #define ESTILO_GUI_QL 9
 #define ESTILO_GUI_RETROMAC 10
 #define ESTILO_GUI_TURBOVISION 12
+#define ESTILO_GUI_BEOS 13
 
 extern void estilo_gui_retorna_nombres(void);
 

@@ -267,4 +267,4 @@ cuando emulacion pausada en menu
 
 -captura master system en gitlab readme
 
--al pasar ventanas beos de activa a inactiva, como no hay boton de cerrado a la izquierda en la inactiva, deja "rastro" de 2 caracteres a la derecha
+-corregir algunas letras del charset de beos: p,q,g,y (o sea todas las que tienen trazo hacia abajo)
