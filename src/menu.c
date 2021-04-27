@@ -550,8 +550,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		5+8,0, 		//Colores para opcion seleccionada
 		7+8,2,7,2, 	//Colores para opcion no disponible
 
-		0,7+8,        	//Colores para el titulo y linea recuadro ventana
-		7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+		0,7+8,        	//Colores para el titulo ventana
+        0,              //Color recuadro
+		7+8,0,        	//Colores para el titulo ventana inactiva
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
@@ -568,8 +569,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		5,0, 		//Colores para opcion seleccionada
 		7,2,5,2, 	//Colores para opcion no disponible
 
-		0,7,        	//Colores para el titulo y linea recuadro ventana
-		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+		0,7,        	//Colores para el titulo ventana
+        0,              //Color recuadro
+		7,0,        	//Colores para el titulo ventana inactiva
 
 		1,		//Color waveform
 		4,		//Color para zona no usada en visualmem
@@ -584,8 +586,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
 		1+8,6,		//Colores para opcion seleccionada
 		1,6,1,6,	//Colores para opcion no disponible, iguales que para opcion disponible
-		6,1,		//Colores para el titulo y linea recuadro ventana
-		1,6,		//Colores para el titulo y linea recuadro ventana inactiva
+
+		6,1,		//Colores para el titulo ventana
+        6,              //Color recuadro
+		1,6,		//Colores para el titulo ventana inactiva
+
 		6,		//Color waveform
 		7,               //Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
@@ -599,8 +604,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow, solo mayusculas
                 0,7+8,          //Colores para opcion seleccionada
                 7+8,0,0,7+8,      //Colores para opcion no disponible
-                0,7+8,          //Colores para el titulo y linea recuadro ventana
-				7+8,0,          //Colores para el titulo y linea recuadro ventana inactiva
+
+                0,7+8,          //Colores para el titulo ventana
+                0,              //Color recuadro
+				7+8,0,          //Colores para el titulo ventana inactiva
+
                 0,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 7,0,		//Color para opcion marcada
@@ -617,8 +625,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
                 1,7,          //Colores para opcion seleccionada
                 7,2,1,2,      //Colores para opcion no disponible
-                0,7,          //Colores para el titulo y linea recuadro ventana
-				7,0,          //Colores para el titulo y linea recuadro ventana inactiva
+
+                0,7,          //Colores para el titulo ventana
+                0,              //Color recuadro
+				7,0,          //Colores para el titulo ventana inactiva
+
                 4,              //Color waveform
                 4,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
@@ -633,8 +644,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,1,1,0,          //No mostrar cursor,mostrar recuadro,mostrar rainbow
                 6+8,1,            //Colores para opcion seleccionada
                 1,2,6+8,2,        //Colores para opcion no disponible
-                6+8,1,            //Colores para el titulo y linea recuadro ventana
-				1,6+8,            //Colores para el titulo y linea recuadro ventana inactiva
+
+                6+8,1,            //Colores para el titulo ventana
+                6+8,              //Color recuadro
+				1,6+8,            //Colores para el titulo ventana inactiva
+
                 6+8,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
@@ -649,8 +663,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,1,0,0,          //No mostrar cursor,mostrar recuadro,no mostrar rainbow
                 VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para opcion seleccionada
                 VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+6,        //Colores para opcion no disponible
-                VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para el titulo y linea recuadro ventana
-				VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,            //Colores para el titulo y linea recuadro ventana inactiva
+
+                VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para el titulo ventana
+                VDP_9918_INDEX_FIRST_COLOR+15,              //Color recuadro
+				VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,            //Colores para el titulo ventana inactiva
+
                 VDP_9918_INDEX_FIRST_COLOR+15,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
@@ -665,8 +682,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,1,1,0,                //No mostrar cursor,mostrar recuadro,mostrar rainbow
                 5+8,0,          //Colores para opcion seleccionada
                 7+8,2,7,2,      //Colores para opcion no disponible
-                0,7+8,          //Colores para el titulo y linea recuadro ventana
-				7+8,0,          //Colores para el titulo y linea recuadro ventana inactiva
+
+                0,7+8,          //Colores para el titulo ventana
+                0,              //Color recuadro
+				7+8,0,          //Colores para el titulo ventana inactiva
+
                 1,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
@@ -680,8 +700,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 							0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 							5+8,0, 		//Colores para opcion seleccionada
 							7+8,3,7,3, 	//Colores para opcion no disponible
-							0,7+8,        	//Colores para el titulo y linea recuadro ventana
-							7+8,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+							0,7+8,        	//Colores para el titulo ventana
+                            0,              //Color recuadro
+							7+8,0,        	//Colores para el titulo ventana inactiva
+
 							1,		//Color waveform
 							7,		//Color para zona no usada en visualmem
 							3,7+8,		//Color para opcion marcada
@@ -696,8 +719,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 					0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 					4+8,0, 		//Colores para opcion seleccionada
 					7+8,2,7,2, 	//Colores para opcion no disponible
-					2,7+8,        	//Colores para el titulo y linea recuadro ventana
-					7+8,2,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+					2,7+8,        	//Colores para el titulo ventana
+                    2,              //Color recuadro
+					7+8,2,        	//Colores para el titulo ventana inactiva
+
 					4,		//Color waveform
 					7,		//Color para zona no usada en visualmem
 					2,7+8,		//Color para opcion marcada
@@ -711,8 +737,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		1+8,7+8, 		//Colores para opcion seleccionada
 		7,2,1+8,2, 	//Colores para opcion no disponible
-		7+8,0,        	//Colores para el titulo y linea recuadro ventana
-		7,0,    	//Colores para el titulo y linea recuadro ventana inactiva
+
+		7+8,0,        	//Colores para el titulo ventana
+        7+8,              //Color recuadro
+		7,0,    	//Colores para el titulo ventana inactiva
+
 		0,		//Color waveform
 		5+8,		//Color para zona no usada en visualmem
 		2,7,		//Color para opcion marcada
@@ -726,8 +755,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		4,1, 		//Colores para opcion seleccionada
 		1,7,7,1, 	//Colores para opcion no disponible
-		7+8,0,        	//Colores para el titulo y linea recuadro ventana
-		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+		7+8,0,        	//Colores para el titulo ventana
+        7+8,              //Color recuadro
+		7,0,        	//Colores para el titulo ventana inactiva
+
 		4,		//Color waveform
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
@@ -741,8 +773,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		TURBOVISION_COLOUR_green,TURBOVISION_COLOUR_black, 		//Colores para opcion seleccionada
 		TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_grey,TURBOVISION_COLOUR_green,TURBOVISION_COLOUR_grey, 	//Colores para opcion no disponible
-		TURBOVISION_COLOUR_lightwhite,TURBOVISION_COLOUR_black,        	//Colores para el titulo y linea recuadro ventana
-		TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+		TURBOVISION_COLOUR_lightwhite,TURBOVISION_COLOUR_black,        	//Colores para el titulo ventana
+        TURBOVISION_COLOUR_lightwhite,              //Color recuadro
+		TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,        	//Colores para el titulo ventana inactiva
+
 		TURBOVISION_COLOUR_blue,		//Color waveform
 		TURBOVISION_COLOUR_cyan,		//Color para zona no usada en visualmem
 		TURBOVISION_COLOUR_red,TURBOVISION_COLOUR_lightwhite,		//Color para opcion marcada
@@ -757,8 +792,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		5,0, 		//Colores para opcion seleccionada
 		7,2,5,2, 	//Colores para opcion no disponible
 
-		6+8,0,        	//Colores para el titulo y linea recuadro ventana
-		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+		6+8,0,        	//Colores para el titulo ventana
+        0,              //Color recuadro
+		7,0,        	//Colores para el titulo ventana inactiva
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
@@ -777,8 +813,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		SOLARIZED_COLOUR_base02,SOLARIZED_COLOUR_base0, 		//Colores para opcion seleccionada
 		SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_red,SOLARIZED_COLOUR_base02,SOLARIZED_COLOUR_red, 	//Colores para opcion no disponible
 
-		SOLARIZED_COLOUR_base0,SOLARIZED_COLOUR_base03,        	//Colores para el titulo y linea recuadro ventana
-		SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,        	//Colores para el titulo y linea recuadro ventana inactiva
+		SOLARIZED_COLOUR_base0,SOLARIZED_COLOUR_base03,        	//Colores para el titulo ventana
+        SOLARIZED_COLOUR_base0,              //Color recuadro
+		SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,        	//Colores para el titulo ventana inactiva
 
 		SOLARIZED_COLOUR_blue,		//Color waveform
 		7,		//Color para zona no usada en visualmem
@@ -796,8 +833,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		SOLARIZED_COLOUR_base2,SOLARIZED_COLOUR_base00, 		//Colores para opcion seleccionada
 		SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_red,SOLARIZED_COLOUR_base2,SOLARIZED_COLOUR_red, 	//Colores para opcion no disponible
 
-		SOLARIZED_COLOUR_base00,SOLARIZED_COLOUR_base3,        	//Colores para el titulo y linea recuadro ventana
-		SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_base00,        	//Colores para el titulo y linea recuadro ventana inactiva
+		SOLARIZED_COLOUR_base00,SOLARIZED_COLOUR_base3,        	//Colores para el titulo ventana
+        SOLARIZED_COLOUR_base00,              //Color recuadro
+		SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_base00,        	//Colores para el titulo ventana inactiva
 
 		SOLARIZED_COLOUR_blue,		//Color waveform
 		7,		//Color para zona no usada en visualmem
@@ -813,8 +851,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
                 0,7,          //Colores para opcion seleccionada
 		7,2,0,2, 	//Colores para opcion no disponible
-                0,7,          //Colores para el titulo y linea recuadro ventana
-				7,0,          //Colores para el titulo y linea recuadro ventana inactiva
+
+                0,7,          //Colores para el titulo ventana
+                0,              //Color recuadro
+				7,0,          //Colores para el titulo ventana inactiva
+
                 0,              //Color waveform
                 7+8,               //Color para zona no usada en visualmem
                 7+8,0,		//Color para opcion marcada
@@ -828,8 +869,11 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
                 0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
                 7,0,          //Colores para opcion seleccionada
 		0,2,7,2, 	//Colores para opcion no disponible
-                7,0,          //Colores para el titulo y linea recuadro ventana
-				0,7,          //Colores para el titulo y linea recuadro ventana inactiva
+
+                7,0,          //Colores para el titulo ventana
+                7,              //Color recuadro
+				0,7,          //Colores para el titulo ventana inactiva
+
                 7,              //Color waveform
                 7,               //Color para zona no usada en visualmem
                 0,7+8,		//Color para opcion marcada
@@ -4972,8 +5016,6 @@ void normal_overlay_texto_menu(void)
 	if (cuadrado_activo && ventana_tipo_activa) {
 		menu_dibuja_cuadrado(cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color);
 
-		//Y si tiene marca de redimensionado
-		//if (cuadrado_activo_resize) menu_dibuja_cuadrado_resize(cuadrado_x1,cuadrado_y1,cuadrado_x2,cuadrado_y2,cuadrado_color);
 	}
 
 	//Dibujar ventanas en background pero solo si menu está abierto, esto evita que aparezcan las ventanas cuando hay un 
@@ -6299,7 +6341,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 	current_win_alto=alto;
 
 	xpixel=x*menu_char_width;
-	ypixel=y*8;
+	ypixel=(y+1)*8; //La barra de titulo no tendra linea como tal
 	anchopixel=ancho*menu_char_width;
 	altopixel=alto*8;
 
@@ -6316,11 +6358,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 		}
 	}
 
-	//recuadro
-	//menu_establece_cuadrado(xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1,0);
-	//printf ("cuadrado: %d,%d %dX%d\n",xpixel,ypixel,xpixel+anchopixel-1,ypixel+altopixel-1);
-	
-	menu_establece_cuadrado(xpixel,ypixel,xderecha,ypixel+altopixel-1,ESTILO_GUI_PAPEL_TITULO);
+	menu_establece_cuadrado(xpixel,ypixel,xderecha,ypixel+altopixel-1-8,ESTILO_GUI_COLOR_RECUADRO);
 
 
 	int color_tinta_titulo;
@@ -29048,7 +29086,7 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
 
 
     int ancho=32;
-    int alto=21;
+    int alto=22;
     int x=menu_center_x()-ancho/2;
     int y=menu_center_y()-alto/2;
 
@@ -29075,7 +29113,9 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE,ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE,0,"Unavailable Selected Text");    
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO,0,"Title Text");    
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO,0,"Title Text");
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_COLOR_RECUADRO,ESTILO_GUI_PAPEL_NORMAL,0,"Window Box colour (this ink)");
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,0,"Inactive Title Text");
 

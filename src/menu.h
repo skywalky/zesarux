@@ -822,6 +822,7 @@ struct s_estilos_gui {
         int tinta_seleccionado_no_disponible;
 
         int papel_titulo, tinta_titulo;
+        int color_recuadro; //color del recuadro de ventana. Para la mayoria de estilos, es igual que papel_titulo
 		int papel_titulo_inactiva, tinta_titulo_inactiva; //Colores de titulo con ventana inactiva
 
         int color_waveform;  //Color para forma de onda en view waveform
@@ -900,6 +901,7 @@ extern z80_bit menu_ext_desktop_transparent_upper_icons;
 
 #define ESTILO_GUI_PAPEL_TITULO (definiciones_estilos_gui[estilo_gui_activo].papel_titulo)
 #define ESTILO_GUI_TINTA_TITULO (definiciones_estilos_gui[estilo_gui_activo].tinta_titulo)
+#define ESTILO_GUI_COLOR_RECUADRO (definiciones_estilos_gui[estilo_gui_activo].color_recuadro)
 
 #define ESTILO_GUI_PAPEL_TITULO_INACTIVA (definiciones_estilos_gui[estilo_gui_activo].papel_titulo_inactiva)
 #define ESTILO_GUI_TINTA_TITULO_INACTIVA (definiciones_estilos_gui[estilo_gui_activo].tinta_titulo_inactiva)
