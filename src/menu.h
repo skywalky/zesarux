@@ -831,7 +831,7 @@ struct s_estilos_gui {
 	int papel_opcion_marcada; //Color para opcion marcada, de momento solo usado en osd keyboard
 	int tinta_opcion_marcada; 
 
-	char boton_cerrar; //caracter de cerrado de ventana
+	z80_byte boton_cerrar; //caracter de cerrado de ventana
 
 	int color_aviso; //caracter de aviso de volumen alto, cpu alto, etc. normalmente rojo
 
@@ -849,7 +849,7 @@ struct s_estilos_gui {
 typedef struct s_estilos_gui estilos_gui;
 
 
-#define ESTILOS_GUI 17
+#define ESTILOS_GUI 18
 
 
 #define ESTILO_GUI_Z88 4

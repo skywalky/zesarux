@@ -746,11 +746,28 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		TURBOVISION_COLOUR_blue,		//Color waveform
 		TURBOVISION_COLOUR_cyan,		//Color para zona no usada en visualmem
 		TURBOVISION_COLOUR_red,TURBOVISION_COLOUR_lightwhite,		//Color para opcion marcada
-		'*',
+		140,
         2, //color de aviso. Seria TURBOVISION_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         TURBOVISION_COLOUR_red //si texto inverso solo cambia color tinta
-		},        
+		},    
+
+	{0,"BeOS",7,0,
+		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow,no mayusculas
+		5,0, 		//Colores para opcion seleccionada
+		7,2,5,2, 	//Colores para opcion no disponible
+
+		6+8,0,        	//Colores para el titulo y linea recuadro ventana
+		7,0,        	//Colores para el titulo y linea recuadro ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		2,7+8,		//Color para opcion marcada
+		139, //boton cerrar especial
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1 //si texto inverso solo cambia color tinta
+		},            
 
 	// https://ethanschoonover.com/solarized/. Solo vale en video driver completo por los colores usados (primer valor de la estructura)
 	{1,"Solarized Dark",SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,
@@ -6295,6 +6312,18 @@ void menu_dibuja_ventana_botones(void)
 //si no mostramos mensajes de error pendientes
 int no_dibuja_ventana_muestra_pending_error_message=0;
 
+//Retorna caracter cerrar
+z80_byte menu_retorna_caracter_cerrar(void)
+{
+
+    z80_byte caracter=ESTILO_GUI_BOTON_CERRAR;
+
+    //Si caracter es un udg especial y no es driver video completo, retornar por defecto
+    if (caracter>126 && !si_complete_video_driver()) return '*';
+
+    else return caracter;
+}
+
 //dibuja ventana de menu, con:
 //titulo
 //contenido blanco
@@ -6378,7 +6407,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo)
 		int ancho_mostrar_titulo=menu_dibuja_ventana_ret_ancho_titulo(ancho,titulo);
 
 		char titulo_mostrar[64];
-		char caracter_cerrar=ESTILO_GUI_BOTON_CERRAR;
+		z80_byte caracter_cerrar=menu_retorna_caracter_cerrar();
 
 		if (menu_hide_close_button.v || ventana_es_background ) strcpy(titulo_mostrar,titulo);
 		else sprintf (titulo_mostrar,"%c %s",caracter_cerrar,titulo);
@@ -10634,7 +10663,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 						//pulsado_boton_cerrar=1;
 						mouse_pressed_close_window=1;
 						//Mostrar boton cerrar pulsado
-						putchar_menu_overlay(w->x,w->y,ESTILO_GUI_BOTON_CERRAR,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
+						putchar_menu_overlay(w->x,w->y,menu_retorna_caracter_cerrar(),ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 					}
 
 					//Si pulsa zona background  window
