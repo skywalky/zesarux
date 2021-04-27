@@ -886,7 +886,7 @@ unsigned char char_set_spectrum[TOTAL_ASCII_CHARSET_ELEMENTS]={		0
 0x3c,0x42,0x42,0x7e,0x42,0x42,0x3c,0x00,
 
 //Caracter boton cierre BeOS - 139
-0,63,33,33,33,33,63,0,
+0,62,34,34,34,62,0,0,
 
 //Caracter boton cierre Turbovision - 140
 0,63,63,63,63,63,63,0
@@ -987,7 +987,7 @@ unsigned char char_set_cpc[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x3c,0x42,0x42,0x7e,0x42,0x42,0x3c,0x00,
 
 //Caracter boton cierre BeOS - 139
-0,63,33,33,33,33,63,0,
+0,62,34,34,34,62,0,0,
 
 //Caracter boton cierre Turbovision - 140
 0,63,63,63,63,63,63,0
@@ -1096,7 +1096,7 @@ unsigned char char_set_z88[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x3c,0x42,0x42,0x7e,0x42,0x42,0x3c,0x00,
 
 //Caracter boton cierre BeOS - 139
-0,63,33,33,33,33,63,0,
+0,62,34,34,34,62,0,0,
 
 //Caracter boton cierre Turbovision - 140
 0,63,63,63,63,63,63,0
@@ -1209,7 +1209,7 @@ unsigned char char_set_sam[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x3c,0x42,0x42,0x7e,0x42,0x42,0x3c,0x00,
 
 //Caracter boton cierre BeOS - 139
-0,63,33,33,33,33,63,0,
+0,62,34,34,34,62,0,0,
 
 //Caracter boton cierre Turbovision - 140
 0,63,63,63,63,63,63,0
@@ -1332,7 +1332,7 @@ unsigned char char_set_mansoftware[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x3c,0x42,0x42,0x7e,0x42,0x42,0x3c,0x00,
 
 //Caracter boton cierre BeOS - 139
-0,63,33,33,33,33,63,0,
+0,62,34,34,34,62,0,0,
 
 //Caracter boton cierre Turbovision - 140
 0,63,63,63,63,63,63,0
@@ -1444,7 +1444,7 @@ unsigned char char_set_ql[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x3c,0x42,0x42,0x7e,0x42,0x42,0x3c,0x00,
 
 //Caracter boton cierre BeOS - 139
-0,63,33,33,33,33,63,0,
+0,62,34,34,34,62,0,0,
 
 //Caracter boton cierre Turbovision - 140
 0,63,63,63,63,63,63,0
@@ -1595,7 +1595,7 @@ unsigned char char_set_retromac[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x3c,0x42,0x42,0x7e,0x42,0x42,0x3c,0x00,
 
 //Caracter boton cierre BeOS - 139
-0,63,33,33,33,33,63,0,
+0,62,34,34,34,62,0,0,
 
 //Caracter boton cierre Turbovision - 140
 0,63,63,63,63,63,63,0
@@ -1750,7 +1750,7 @@ unsigned char char_set_msx[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x3c,0x42,0x42,0x7e,0x42,0x42,0x3c,0x00,
 
 //Caracter boton cierre BeOS - 139
-0,63,33,33,33,33,63,0,
+0,62,34,34,34,62,0,0,
 
 //Caracter boton cierre Turbovision - 140
 0,63,63,63,63,63,63,0
