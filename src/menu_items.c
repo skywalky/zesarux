@@ -9095,6 +9095,8 @@ zxvision_window *menu_display_total_palette_draw_barras_window;
 //esto indica posiblemente movimiento o redimensionado de dicha ventana
 //en esos casos, mientras se redimensiona, no interesa redibujar todo el contenido
 //pues consume mucha cpu y no acaba viendose como se redimensiona
+//Esto logicamente no es perfecto pues simplemente pulsando con el raton dentro de la ventana,
+//se pensara que se redimensiona y por tanto no dibujara el contenido
 int window_colour_palette_left_mouse=0;
 
 //Muestra lista de colores o barras de colores, para una paleta total, o para la paleta mapeada
