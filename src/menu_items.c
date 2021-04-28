@@ -9091,9 +9091,20 @@ int menu_display_total_palette_get_total_colors(void)
 
 zxvision_window *menu_display_total_palette_draw_barras_window;
 
+//Indica si se esta pulsando boton de raton en ventana de Colour Palette
+//esto indica posiblemente movimiento o redimensionado de dicha ventana
+//en esos casos, mientras se redimensiona, no interesa redibujar todo el contenido
+//pues consume mucha cpu y no acaba viendose como se redimensiona
+int window_colour_palette_left_mouse=0;
+
 //Muestra lista de colores o barras de colores, para una paleta total, o para la paleta mapeada
 int menu_display_total_palette_lista_colores(int linea,int si_barras)
 {
+    
+
+    //Redibujar esto solo si no estamos redimensionando o arrastrando ventana
+    //esto solo lo hago para evitar sobrecargar la cpu y provocaria que no muestra nada al redimensionar
+    if (!window_colour_palette_left_mouse) {
 
 	char dumpmemoria[33];
 
@@ -9192,6 +9203,10 @@ int menu_display_total_palette_lista_colores(int linea,int si_barras)
 						zxvision_print_string_defaults_fillspc(menu_display_total_palette_draw_barras_window,1,linea++,dumpmemoria);
 					}
 		}
+
+
+    }
+
 
 	zxvision_draw_window_contents(menu_display_total_palette_draw_barras_window);
  
@@ -9325,17 +9340,24 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
     do {
 
-		//Borramos lista de colores con espacios por si hay estos de antes
+        int total_colores_por_ventana=(ventana->visible_height)-8;
+
+        //por si acaso
+        if (total_colores_por_ventana<1) total_colores_por_ventana=1;
+
+    //Redibujar esto solo si no estamos redimensionando o arrastrando ventana
+    //esto solo lo hago para evitar sobrecargar la cpu y provocaria que no muestra nada al redimensionar
+    if (!mouse_left) {
+        window_colour_palette_left_mouse=0;
+
+ 		//Borramos lista de colores con espacios por si hay estos de antes
 
         //Forzar a mostrar atajos
         z80_bit antes_menu_writing_inverse_color;
         antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
         menu_writing_inverse_color.v=1;		
 
-        int total_colores_por_ventana=(ventana->visible_height)-8;
 
-        //por si acaso
-        if (total_colores_por_ventana<1) total_colores_por_ventana=1;
 		
 		int i;
 		for (i=0;i<total_colores_por_ventana;i++) zxvision_print_string_defaults_fillspc(ventana,0,TOTAL_PALETTE_WINDOW_Y+3+i,"");
@@ -9396,6 +9418,14 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
         menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
 
 		zxvision_draw_window_contents(ventana);
+
+}
+
+    else {
+        window_colour_palette_left_mouse=1;
+    }
+
+
 			
 		tecla=zxvision_common_getkey_refresh();		
 
@@ -9506,6 +9536,9 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 
         } while (salir==0);
+
+    //Asegurarnos que al salir esto no queda activado, si no, el overlay no dibujaria nada
+    window_colour_palette_left_mouse=0;
 
 	//Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
 	zxvision_set_window_overlay_from_current(ventana);		
