@@ -9116,6 +9116,9 @@ int menu_display_total_palette_lista_colores(int linea,int si_barras)
 
     total_colores_mostrar=(menu_display_total_palette_draw_barras_window->visible_height)-8;
 
+    //por si acaso
+    if (total_colores_mostrar<0) total_colores_mostrar=1;    
+
 		for (linea_color=0;linea_color<total_colores_mostrar &&
 				menu_display_total_palette_current_colour+linea_color<limite;
 				linea_color++) {
@@ -9293,6 +9296,9 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
         menu_writing_inverse_color.v=1;		
 
         int total_colores_por_ventana=(ventana->visible_height)-8;
+
+        //por si acaso
+        if (total_colores_por_ventana<0) total_colores_por_ventana=1;
 		
 		int i;
 		for (i=0;i<total_colores_por_ventana;i++) zxvision_print_string_defaults_fillspc(ventana,0,TOTAL_PALETTE_WINDOW_Y+3+i,"");
