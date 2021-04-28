@@ -161,7 +161,6 @@ en la ventana del teclado ya se actualiza con la máquina actual
 -temperatura cpu en mac
 https://github.com/lavoiesl/osx-cpu-temp
 
--Color rojo de stick osd en tema clean, no se ve
 
 -En info file de file utils, decir tipo de archivo. Usar alguna llamada común para tipo archivo y visor archivo 
 

@@ -9399,6 +9399,8 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 			
 		tecla=zxvision_common_getkey_refresh();		
 
+        //printf("lee tecla %d\n",contador_segundo);
+
 		int aux_pgdnup;
 		int limite;
 
