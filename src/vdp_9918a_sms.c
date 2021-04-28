@@ -1674,7 +1674,7 @@ void vdp_9918a_sms_handle_raster_interrupt(void)
         //printf("rasterline %d\n",vdp_9918a_sms_raster_line_counter);
 
         if (vdp_9918a_sms_raster_line_counter==0) {
-            printf("raster counter is 0. set to new value %d\n",vdp_9918a_registers[10]);
+            //printf("raster counter is 0. set to new value %d\n",vdp_9918a_registers[10]);
 
             //temp
             //if (vdp_9918a_registers[10]==0xFF) vdp_9918a_registers[0] &=(255-0x10);
@@ -1711,7 +1711,7 @@ void vdp_9918a_sms_handle_raster_interrupt(void)
                //if (vdp_9918a_registers[10]==0xFF) disparar_interrupcion=0;
                 
                 if (disparar_interrupcion) {
-                    printf("Fired Line interrupt enabled. Reg10: %d tscanline: %d\n",vdp_9918a_registers[10],t_scanline_draw);
+                    //printf("Fired Line interrupt enabled. Reg10: %d tscanline: %d\n",vdp_9918a_registers[10],t_scanline_draw);
                     //sms_pending_line_interrupt=1;
                     interrupcion_maskable_generada.v=1;
                 }
@@ -1756,10 +1756,10 @@ z80_byte vdp_9918a_sms_pre_write_reg(z80_byte vdp_register,z80_byte next_value)
     }
 
     if (vdp_register==10) {
-        printf("change raster register to %3d (previous %3d) t_scanline_draw=%d raster_counter %d on PC=%04XH A=%02XH BC=%02XH\n",
+        /*printf("change raster register to %3d (previous %3d) t_scanline_draw=%d raster_counter %d on PC=%04XH A=%02XH BC=%02XH\n",
                         next_value,vdp_9918a_registers[10],t_scanline_draw,vdp_9918a_sms_raster_line_counter,
                         reg_pc,reg_a,BC);
-
+        */
         
 
         /*
