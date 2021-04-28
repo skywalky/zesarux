@@ -755,7 +755,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		0,		//Color waveform
 		5+8,		//Color para zona no usada en visualmem
 		2,7,		//Color para opcion marcada
-		'.',
+		141,
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         5+8, //si texto inverso solo cambia color tinta
@@ -815,7 +815,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		139, //boton cerrar especial
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
+        BEOS_COLOUR_blue_hotkey, //si texto inverso solo cambia color tinta
         1 //NO rellenar titulo
 		},            
 
@@ -29172,7 +29172,7 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Ascii table:");
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"!\"#$%&\'()*+,-./0123456789:;<=>");
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\");
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"]_`abcdefghijklmnopqrstuvwxyz");
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"]^_`abcdefghijklmnopqrstuvwxyz");
 
 
 

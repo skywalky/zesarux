@@ -606,13 +606,14 @@ extern void screen_switch_rainbow_buffer(void);
 #define SMS_TOTAL_PALETTE_COLOURS 64
 
 #define BEOS_INDEX_FIRST_COLOR (SMS_INDEX_FIRST_COLOR+SMS_TOTAL_PALETTE_COLOURS)
-#define BEOS_TOTAL_PALETTE_COLOURS 5
+#define BEOS_TOTAL_PALETTE_COLOURS 6
 
 #define BEOS_COLOUR_yellow (BEOS_INDEX_FIRST_COLOR+0)
 #define BEOS_COLOUR_grey_box (BEOS_INDEX_FIRST_COLOR+1)
 #define BEOS_COLOUR_grey_menu (BEOS_INDEX_FIRST_COLOR+2)
 #define BEOS_COLOUR_grey_selection (BEOS_INDEX_FIRST_COLOR+3)
 #define BEOS_COLOUR_grey_inactive_title (BEOS_INDEX_FIRST_COLOR+4)
+#define BEOS_COLOUR_blue_hotkey (BEOS_INDEX_FIRST_COLOR+5)
 
 //16 colores normales spectrum, 16 grises de modo scanline, 256 de gigascreen, 4 de z88, 16 de spectrum 17/48/+ real, 256 de ulaplus, 64 de spectra, 32 de CPC, 4096 de Prism, 128 de SAM, 256 de RGB8, 32768 de TSCONF, 16 de solarized
 //actualizar aqui y tambien estructura de total_palette_colours_array y #define TOTAL_PALETAS_COLORES 

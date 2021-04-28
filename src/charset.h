@@ -35,7 +35,7 @@ extern unsigned char char_set_retromac[];
 extern unsigned char char_set_msx[];
 extern unsigned char char_set_beos[];
 
-#define MAX_CHARSET_GRAPHIC 140
+#define MAX_CHARSET_GRAPHIC 141
 
 //Tamanyo de cada array para charset en menu, asi podemos saber si por error he metido mas elementos
 //(aunque el compilador no me avisa cuando hay menos elementos, que seria deseable)
