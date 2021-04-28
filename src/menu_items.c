@@ -9064,7 +9064,7 @@ void menu_tsconf_layer_settings(MENU_ITEM_PARAMETERS)
 #define TOTAL_PALETTE_WINDOW_Y 0
 #define TOTAL_PALETTE_WINDOW_ANCHO 32
 #define TOTAL_PALETTE_WINDOW_ALTO 24
-#define TOTAL_PALETTE_COLORS_PER_WINDOW 16
+//#define TOTAL_PALETTE_COLORS_PER_WINDOW 16
 
 
 
@@ -9108,7 +9108,15 @@ int menu_display_total_palette_lista_colores(int linea,int si_barras)
 	int indice_color_final_rgb;
 	int color_final_rgb;
 
-		for (linea_color=0;linea_color<TOTAL_PALETTE_COLORS_PER_WINDOW &&
+    int total_colores_mostrar;
+
+    //total_colores_mostrar=TOTAL_PALETTE_COLORS_PER_WINDOW;
+
+    //Con total visible 24, 16 colores 
+
+    total_colores_mostrar=(menu_display_total_palette_draw_barras_window->visible_height)-8;
+
+		for (linea_color=0;linea_color<total_colores_mostrar &&
 				menu_display_total_palette_current_colour+linea_color<limite;
 				linea_color++) {
 
@@ -9283,9 +9291,11 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
         z80_bit antes_menu_writing_inverse_color;
         antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
         menu_writing_inverse_color.v=1;		
+
+        int total_colores_por_ventana=(ventana->visible_height)-8;
 		
 		int i;
-		for (i=0;i<16;i++) zxvision_print_string_defaults_fillspc(ventana,0,TOTAL_PALETTE_WINDOW_Y+3+i,"");
+		for (i=0;i<total_colores_por_ventana;i++) zxvision_print_string_defaults_fillspc(ventana,0,TOTAL_PALETTE_WINDOW_Y+3+i,"");
 
         menu_speech_tecla_pulsada=0; //Que envie a speech
 
@@ -9327,7 +9337,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 		char buffer_linea[40];
 
-		linea=TOTAL_PALETTE_WINDOW_Y+TOTAL_PALETTE_COLORS_PER_WINDOW+4;
+		linea=TOTAL_PALETTE_WINDOW_Y+total_colores_por_ventana+4;
 
 															// 01234567890123456789012345678901
 		sprintf (buffer_linea,"Move: Cursors,Q,A,PgUp,PgDn");
@@ -9368,7 +9378,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 					case 24:
 						//PgUp
-						for (aux_pgdnup=0;aux_pgdnup<TOTAL_PALETTE_COLORS_PER_WINDOW;aux_pgdnup++) {
+						for (aux_pgdnup=0;aux_pgdnup<total_colores_por_ventana;aux_pgdnup++) {
 							menu_display_total_palette_cursor_arriba();
 						}
 
@@ -9376,7 +9386,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 					case 25:
 						//PgDn
-						for (aux_pgdnup=0;aux_pgdnup<TOTAL_PALETTE_COLORS_PER_WINDOW;aux_pgdnup++) {
+						for (aux_pgdnup=0;aux_pgdnup<total_colores_por_ventana;aux_pgdnup++) {
 							menu_display_total_palette_cursor_abajo();
 						}
 					
