@@ -9204,6 +9204,9 @@ int menu_display_total_palette_lista_colores(int linea,int si_barras)
 
 void menu_display_total_palette_draw_barras(void)
 {
+    //printf("redibujando\n");
+    //if (mouse_is_dragging) printf("arrastrando\n");
+
 
 				menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
