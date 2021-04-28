@@ -456,7 +456,8 @@ const int beos_colortable_original[BEOS_TOTAL_PALETTE_COLOURS]={
 0xdedede,  //Gris menus
 0x9c9c9c, //Gris opcion seleccionada
 0xefefef, //Gris titulo ventana no seleccionada
-0x639cce  //Azul hotkey
+//0x63bdce  //Azul hotkey
+0x00c000  //Verde hotkey
 
 
 };
