@@ -9230,6 +9230,15 @@ void menu_display_total_palette_cursor_abajo(void)
 
 }
 
+void menu_display_total_palette_crea_ventana(zxvision_window *ventana,int xventana,int yventana,int ancho_ventana,int alto_ventana)
+{
+    zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Colour palettes");
+	ventana->can_be_backgrounded=1;
+    //Permitir hotkeys desde raton
+    ventana->can_mouse_send_hotkeys=1;	    
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"displaypalettes");    
+}
 
 zxvision_window zxvision_window_display_palettes;
 
@@ -9250,22 +9259,38 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 	zxvision_delete_window_if_exists(ventana);	
 
 
-	int x,y,ancho,alto;
+	int xventana,yventana,ancho_ventana,alto_ventana;
 
-	if (!util_find_window_geometry("displaypalettes",&x,&y,&ancho,&alto)) {
-		x=TOTAL_PALETTE_WINDOW_X;
-		y=TOTAL_PALETTE_WINDOW_Y;
-		ancho=TOTAL_PALETTE_WINDOW_ANCHO;
-		alto=TOTAL_PALETTE_WINDOW_ALTO;
+	if (!util_find_window_geometry("displaypalettes",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+		xventana=TOTAL_PALETTE_WINDOW_X;
+		yventana=TOTAL_PALETTE_WINDOW_Y;
+		ancho_ventana=TOTAL_PALETTE_WINDOW_ANCHO;
+		alto_ventana=TOTAL_PALETTE_WINDOW_ALTO;
 	}
 
 
-    zxvision_new_window(ventana,x,y,ancho,alto,ancho-1,alto-2,"Colour palettes");
+    menu_display_total_palette_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+    /*
+    zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Colour palettes");
 	ventana->can_be_backgrounded=1;
     //Permitir hotkeys desde raton
     ventana->can_mouse_send_hotkeys=1;	    
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"displaypalettes");
+    */
+
+
+    //Para poder controlar redimensionamientos de ventana y recrearla de nuevo
+    //No es necesario, pero es mas bonito... asi se recrea la ventana, si era muy pequeña, hacerla mas grande
+    //garantiza que se podra leer todo el texto
+    //int alto_anterior=alto_ventana;
+    //int ancho_anterior=ancho_ventana;
+
+    int alto_anterior;
+    int ancho_anterior;
+
+    zxvision_window_save_size(ventana,&ancho_anterior,&alto_anterior);
+
 
 	zxvision_draw_window(ventana);
 
@@ -9442,6 +9467,28 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 						salir=1;
 					break;					
 				}
+
+                //Si ha cambiado el tamaño
+                alto_ventana=ventana->visible_height;
+                ancho_ventana=ventana->visible_width;
+                xventana=ventana->x;
+                yventana=ventana->y;
+                if (alto_ventana!=alto_anterior || ancho_ventana!=ancho_anterior) {
+                        //printf ("recrear ventana\n");
+                        //Recrear ventana
+                        
+
+                        zxvision_destroy_window(ventana);
+
+                        alto_anterior=alto_ventana;
+                        ancho_anterior=ancho_ventana;
+
+                        menu_display_total_palette_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+                        
+
+                        zxvision_window_save_size(ventana,&ancho_anterior,&alto_anterior);
+                        
+                }                
 
 
         } while (salir==0);
