@@ -12,6 +12,7 @@ Improved ZX Vision menu interface:
 -Maximizing windows now take care of size of zx desktop
 -Added item to reduce+rearrange windows
 -Added BeOS GUI Style
+-Colour palette window now shows all colours that fit in the window
 
 
 Fixed file previews on corrupted files: pzx, tap
