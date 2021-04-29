@@ -188,16 +188,19 @@ ZEsarUX-version-raspbian9.tar.gz
 con comandos:
 export CFLAGS=-O3
 export LDFLAGS=-O3
-./configure --enable-raspberry --spectrum-reduced-core --disable-xwindows --disable-caca --disable-aa --disable-pulse --disable-pcspeaker --disable-simpletext --disable-stdout --disable-cursesw --prefix /usr
+./configure --enable-raspberry --spectrum-reduced-core --enable-ssl --disable-xwindows --disable-caca --disable-aa --disable-pulse --disable-pcspeaker --disable-simpletext --disable-stdout --disable-cursesw --prefix /usr
 
 La salida debe ser similar a:
  Enabled Video output drivers: curses sdl fbdev null
- Disabled Video output drivers: stdout simpletext aa caca cocoa xwindows 
+ Disabled Video output drivers: stdout simpletext cursesw aa caca cocoa xwindows 
  Enabled Audio output drivers: dsp alsa sdl null
  Disabled Audio output drivers: pcspeaker pulse coreaudio 
  Enabled Audio File output drivers: raw 
  Disabled Audio File output drivers: wav 
  Pthreads support: yes
+ SSL support: yes
+ Networking support: yes
+ Remote command protocol support: yes 
  Linux real joystick support: yes
  MEMPTR emulation: no
  Visual memory option: no
@@ -205,6 +208,7 @@ La salida debe ser similar a:
  Raspberry extensions: yes
  Contended memory emulation: yes
  Putpixel cache: yes
+ Spectrum default core: Reduced
 
 Install prefix: /usr
 

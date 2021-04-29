@@ -2545,6 +2545,8 @@ zxvision_window *menu_about_core_statistics_overlay_window;
 //Contador de segundo para hacer que el overlay solo se redibuje un numero de veces por segundo y no siempre
 int menu_core_statistics_contador_segundo_anterior;
 
+int core_statistics_previo_audio_buffer=0;
+
 //La funcion de overlay
 void menu_about_core_statistics_overlay_window_overlay(void)
 {
@@ -2674,13 +2676,28 @@ Calculando ese tiempo: 12% cpu
 		audio_get_buffer_info(&tamanyo_buffer_audio,&posicion_buffer_audio);
 
         int perc_audio;
+        //mostrar una barra de llenado del buffer
+        //usa las mismas funciones de volumen de AY chip donde el maximo es 15
+        int barra_volumen;
 
-        if (tamanyo_buffer_audio==0) perc_audio=100;
+        if (tamanyo_buffer_audio==0) {
+            perc_audio=100;
+            barra_volumen=15;
+        }
 
-        else perc_audio=(posicion_buffer_audio*100)/tamanyo_buffer_audio;
+        else {
+            perc_audio=(posicion_buffer_audio*100)/tamanyo_buffer_audio;
+            barra_volumen=(posicion_buffer_audio*15)/tamanyo_buffer_audio;
+        }
 
-        sprintf (texto_buffer,"Audio Buffer: %d/%d (%3d%%)",posicion_buffer_audio,tamanyo_buffer_audio,perc_audio);
-        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);        
+        char buf_volumen_canal[32];
+        menu_string_volumen(buf_volumen_canal,barra_volumen,core_statistics_previo_audio_buffer);
+
+        core_statistics_previo_audio_buffer=barra_volumen;
+
+        sprintf (texto_buffer,"Audio Buffer: %d/%d (%3d%%) [%s]",posicion_buffer_audio,tamanyo_buffer_audio,perc_audio,buf_volumen_canal);
+        
+        zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);        
 
 		//Uso cpu no se ve en windows
 #ifndef MINGW
