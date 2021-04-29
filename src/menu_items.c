@@ -2670,6 +2670,18 @@ Calculando ese tiempo: 12% cpu
             media_cpu=cpu_use_total_acumulado/cpu_use_total_acumulado_medidas;
         }
 
+        int tamanyo_buffer_audio,posicion_buffer_audio;
+		audio_get_buffer_info(&tamanyo_buffer_audio,&posicion_buffer_audio);
+
+        int perc_audio;
+
+        if (tamanyo_buffer_audio==0) perc_audio=100;
+
+        else perc_audio=(posicion_buffer_audio*100)/tamanyo_buffer_audio;
+
+        sprintf (texto_buffer,"Audio Buffer: %d/%d (%3d%%)",posicion_buffer_audio,tamanyo_buffer_audio,perc_audio);
+        zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);        
+
 		//Uso cpu no se ve en windows
 #ifndef MINGW
         if (screen_show_cpu_usage.v && menu_footer) {
@@ -2713,7 +2725,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
 
     //Recuperar geometria
     if (!util_find_window_geometry("corestatistics",&x_ventana,&y_ventana,&ancho_ventana,&alto_ventana)) {
-        alto_ventana=13;
+        alto_ventana=14;
         ancho_ventana=32;
 
         x_ventana=menu_center_x()-ancho_ventana/2; 

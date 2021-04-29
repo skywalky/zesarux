@@ -149,11 +149,6 @@ https://github.com/lavoiesl/osx-cpu-temp
 
 -hex editor: muestra pagina entera cuando una zona de memoria por ejemplo solo es de 2 bytes. Probar por ejemplo con debug memory zone
 
--entradas de menu protegidas a lo ancho a mas de 32? En alto, si. pero y en ancho?
-->ahora ya no da el cpu_panic de Window out of bounds
-->y cuando x es 32 o mayor se controla desde void putchar_menu_overlay_parpadeo
-en cuanto a maximo de la string en memoria, vale MAX_TEXTO_OPCION=60
-
 
 -Mouse: para que no haga framedrop al moverse sobre un menu, quiza se deberia considerar cada x frames de tiempo.
 
@@ -184,8 +179,6 @@ Otros TODO menos prioritarios, de aqui hasta el final del archivo:
 
 
 *** Menu  ***
-
--explorador archivos imagenes mmc etc con chanfatfs?
 
 -poder usar kempston mouse desde menu si ventana de menu no tiene el foco (al igual que sucede con el teclado)
 
@@ -224,9 +217,6 @@ Hacer captura. Luego hacer captura de la derecha, etc
 -Convertir automático de cinta a wav, mediante uso de mantransfe
 
 -stdout file selector. Poder hacer ls, cd etc.
-
--online browser . Búsquedas con . Como chase h.q. corta en el
-Primer punto como si fuera extensión 
 
 -Alternativa en los menús tabulares tipo como el de sprites o colores, que usan cursores y pgup y down
 -usar otras acciones / hotkeys para eso
