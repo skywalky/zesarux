@@ -13,6 +13,7 @@ Improved ZX Vision menu interface:
 -Added item to reduce+rearrange windows
 -Added BeOS GUI Style
 -Colour palette window now shows all colours that fit in the window
+-View sprite legend now adapts to size
 
 
 Fixed file previews on corrupted files: pzx, tap

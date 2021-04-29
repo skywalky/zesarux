@@ -539,7 +539,7 @@ typedef int (*t_menu_funcion_activo)(void);
 
 
 //Aunque en driver xwindows no cabe mas de 30 caracteres, en stdout, por ejemplo, cabe mucho mas.
-#define MAX_TEXTO_OPCION 60
+#define MAX_TEXTO_OPCION 100
 #define MENU_MAX_TEXTO_MISC 1024
 
 struct s_menu_item {

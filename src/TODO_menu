@@ -52,8 +52,6 @@ O esta considerando mal el mostrar barras desplazamiento: quizá deberían salir
 -Ventana scanf con texto descriptivo dentro
 
 
--pantalla view sprites que adapte el texto leyenda al alto ventana
-
 -Visualmem mmc read/write en Windows no muestra bien posicion (siempre a 0). Probablemente porque es 32 bits y no gestiona bien
 valores long int
 
@@ -94,8 +92,6 @@ Este callback se le pasara el puntero a ventana y quizá eventos de ratón: que 
 
 -ventanas zxvision que puedan salir parcialmente fuera de pantalla.  seria tenerlas por debajo del limite de la ventana
 
--rueda de raton que haga scroll ventana en horizontal y vertical
-
 -zxvision_putpixel deja escribir pixeles mas alla de total_width o height. Esto no es un error en si
 Lo hace realmente con visible_width y visible_height
 
@@ -124,18 +120,9 @@ Un tercer botón que diga “take me there” para cuando sugiere menús, que te
 
 -poder extender texto de ventanas de simple message, están fijados siempre a 32
 
--tecla para poder cerrar todos los menus y volver a emulacion (como F5+ESC). Desaparecen las ventanas en background pero no las cierra realmente
-
--Poder ver ventanas en background con menú cerrado:
-esto se podria hacer poniendo menu_overlay_activo=1 y que en normal_overlay_texto_menu permita redibujado con el menu cerrado
-No se si serviria de mucho, al final es como abrir el menu, pulsar en ventana de maquina emulada: el menu sigue abierto,
-el foco en la maquina emulada, y se ven todas las ventanas de background
-
--ayuda teclados  +2, +2a/+3 en spanish
 
 -teclado en pantalla que se pueda pulsar en teclas
 
--alguna ventana que muestre volumenes de los dos canales estereo. o quiza wave shape con dos partes: izquierda y derecha
 
 -Ventana ayuda teclado:
 * que se pudiera hacer sin multiplicar por zoom_gui? asi en next, cpc, ql etc no se verian el doble de grande
