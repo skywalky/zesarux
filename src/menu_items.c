@@ -12061,7 +12061,8 @@ void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS)
 #define SPRITES_Y 0
 #define SPRITES_ANCHO 32
 #define SPRITES_ALTO 14
-#define SPRITES_ALTO_VENTANA (SPRITES_ALTO+10)
+//#define SPRITES_ALTO_VENTANA (SPRITES_ALTO+10)
+#define SPRITES_ALTO_VENTANA 24
 
 menu_z80_moto_int view_sprites_direccion=0;
 
@@ -13226,9 +13227,11 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_texto);
 
+        //int alto_ventana=SPRITES_ALTO_VENTANA
 
+		linea=(ventana->visible_height)-7;
 
-		linea=SPRITES_ALTO+3;
+    if (linea>=0) {
 
 		char buffer_primera_linea[64]; //dar espacio de mas para poder alojar el ~de los atajos
 		char buffer_segunda_linea[64];
@@ -13311,6 +13314,8 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 
 		//Restaurar comportamiento atajos
 		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;
+
+    }
 
 
 }
