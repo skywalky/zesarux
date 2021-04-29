@@ -2566,7 +2566,7 @@ void menu_about_core_statistics_overlay_window_overlay(void)
         //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
         int linea=0;
-        char texto_buffer[64];
+        char texto_buffer[100];
 
 
         //Empezar con espacio

@@ -75,7 +75,6 @@ o bien el mezclado de chip ay. Con que juegos se observa esto? O quiza con el te
 -detector de silencio en sdl2, en 48k, genera zumbido en Linux
 ver de momento workaround audio_using_sdl2
 
-
 -Salida 16 bits sonido?
 
 -con vo stdout y speech habilitado, parece que cambiar entre maquinas zx81 y spectrum, vuelve a decir texto de bienvenida. normal??

@@ -77,7 +77,6 @@ upara lightgun la mayoria de puertos son teclado o kempston, en que ya se contro
 
 -Salida de texto en simpletext y otros drivers texto: carácter 127 no es imprimible
 
-
 -Imagen estereoscopica. Tanto anaglifo (azul + rojo) como imagen separada en dos ventanas para dos ojos
 
 -En video init debe establecer a 1 o 0 cualquier variable de parámetro de video, como tiene-colores

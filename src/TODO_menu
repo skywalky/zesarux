@@ -238,7 +238,7 @@ TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, qu
 
 -eventos joystick para simular pgup, pgdn
 
--Estadísticas de diferentes componentes del core, ya sea cpu u otra cosa, como memoria usada para el rainbow buffer, el buffer de audio  y cosas así
+-Estadísticas de diferentes componentes del core, ya sea cpu u otra cosa, como memoria usada para el rainbow buffer,  y cosas así
 Info de tamaño ventana. Y tamaño ventana sin zoom
 
 
@@ -252,8 +252,6 @@ opcion tambien para bajar bit 7 final
 
 -Mostrar juego cargado en titulo ventana. Desaparece al hacer reset 
 
-
--poder redefinir las teclas que emulan el joystick, en especial la tecla de disparo (como por ejemplo ponerla a TAB)
 
 -poder hacer hotswap de una maquina a zx-uno
 
@@ -269,8 +267,6 @@ opcion tambien para bajar bit 7 final
 
 -lectura de nombre de archivo en fileselector para stdout no admite espacios
 
--zona en fileselector que muestre miniatura de: pantalla scr, snapshot, archivo de texto etc
-Quiza como ventana emergente al esperar unos segundos o bien a la derecha del selector, teniendo el filesel mas grande
 
 -sin multitask, no va repeticion de teclas. esto es porque no se ejecuta timer_check_interrupt
 quiza estas funciones de contadores deberian venir con el thread del timer? aunque luego en version
