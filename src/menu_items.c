@@ -23859,6 +23859,7 @@ void menu_ay_pianokeyboard_overlay(void)
 			sprintf(nota_c,"%s",get_note_name(freq_c) );
 
 			//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
+            /*
 			if (sn_chip_present.v) {
 				if ((sn_chip_registers[6] & 15)==15) nota_a[0]=0;
 				if ((sn_chip_registers[7] & 15)==15) nota_b[0]=0;
@@ -23880,6 +23881,17 @@ void menu_ay_pianokeyboard_overlay(void)
 				if (ay_3_8912_registros[chip][7]&2 || ay_3_8912_registros[chip][9]==0) nota_b[0]=0;
 				if (ay_3_8912_registros[chip][7]&4 || ay_3_8912_registros[chip][10]==0) nota_c[0]=0;
 			}
+            */
+
+            if (!audio_si_canal_tono(chip,0)) {
+                nota_a[0]=0;
+            }
+            if (!audio_si_canal_tono(chip,1)) {
+                nota_b[0]=0;
+            }
+            if (!audio_si_canal_tono(chip,2)) {
+                nota_c[0]=0;
+            }
 
 			int incremento_linea=3;
 

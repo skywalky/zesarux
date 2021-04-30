@@ -3554,6 +3554,68 @@ int audio_retorna_frecuencia_canal(int canal,int chip)
     return freq;
 }
 
+//dice si un canal del chip de sonido tiene tono habilitado
+//0: no tiene tono
+//1: tiene tono
+int audio_si_canal_tono(int chip,int canal)
+{
+    //Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
+    if (sn_chip_present.v) {
+        if (canal==0) {
+            if ((sn_chip_registers[6] & 15)==15) return 0;
+            else return 1;
+        }
+        if (canal==1) {
+            if ((sn_chip_registers[7] & 15)==15) return 0;
+            else return 1;
+        }
+        if (canal==2) {
+            if ((sn_chip_registers[8] & 15)==15) return 0;
+            else return 1;
+        }                
+        //otra cosa, 0
+        return 0;
+
+    }
+
+    else if (i8049_chip_present) {
+        if (canal==0) {
+            if (!ql_audio_playing) {
+                return 0;
+            }
+            else {
+                return 1;
+
+            }
+        }
+        
+        //otra cosa, 0
+        return 0;        
+
+    }            
+
+    else {
+        if (canal==0) {
+            if (ay_3_8912_registros[chip][7]&1 || ay_3_8912_registros[chip][8]==0) return 0;
+            else return 1;
+        }
+        if (canal==1) {
+            if (ay_3_8912_registros[chip][7]&2 || ay_3_8912_registros[chip][9]==0) return 0;
+            else return 1;
+        }
+        if (canal==2) {
+            if (ay_3_8912_registros[chip][7]&4 || ay_3_8912_registros[chip][10]==0) return 0;
+            else return 1;
+        }
+
+        //otra cosa, 0
+        return 0;            
+    }
+
+    //otra cosa, 0
+    return 0;        
+}
+
 void audio_midi_output_frame_event(void)
 {
 
@@ -3581,49 +3643,66 @@ void audio_midi_output_frame_event(void)
                 //printf("nota %s\n",nota);
 
 				//int reg_tono;
-				int reg_vol;
-
-				reg_vol=8+canal;
-
-				int mascara_mezclador=1|8;
-				int valor_esperado_mezclador=8; //Esperamos por defecto no ruido (bit3 a 1) y tono (bit0 a 0)
-
-				int valor_esperado_mezclador_tonoruido=0; //Canal con tono y ruido (bit3 a 0) y tono (bit0 a 0)
-
-	
-
-				/*
-				1xx1 -> no tono ni ruido
-				0xx1 -> ruido
-
-				0xx0 -> ruido+tono
-				1xx0 -> tono
-				*/
-
-
-				if (canal>0) {
-					mascara_mezclador=mascara_mezclador<<canal;
-					valor_esperado_mezclador=valor_esperado_mezclador<<canal;
-				}
-
 
 				//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
 				int suena_nota=0;
 
+                //tema de ruido solo con chip AY
+                if (ay_chip_present.v) {
 
-				if ( (ay_retorna_mixer_register(chip)&mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
+                    //TODO: no mirar tono aqui
 
-				//Se permite tono y ruido?
-				if (midi_output_record_noisetone.v) {
-					if ( (ay_retorna_mixer_register(chip)&mascara_mezclador)==valor_esperado_mezclador_tonoruido) {
-						suena_nota=1;
-						//printf ("tonoruido\n");
-					}
-				}
+                    int reg_vol;
+
+                    reg_vol=8+canal;
+
+                    int mascara_mezclador=1|8;
+                    int valor_esperado_mezclador=8; //Esperamos por defecto no ruido (bit3 a 1) y tono (bit0 a 0)
+
+                    int valor_esperado_mezclador_tonoruido=0; //Canal con tono y ruido (bit3 a 0) y tono (bit0 a 0)
+
+        
+
+                    /*
+                    1xx1 -> no tono ni ruido
+                    0xx1 -> ruido
+
+                    0xx0 -> ruido+tono
+                    1xx0 -> tono
+                    */
+
+
+                    if (canal>0) {
+                        mascara_mezclador=mascara_mezclador<<canal;
+                        valor_esperado_mezclador=valor_esperado_mezclador<<canal;
+                    }
+
+
+
+
+
+                    if ( (ay_retorna_mixer_register(chip)&mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
+
+                    //Se permite tono y ruido?
+                    if (midi_output_record_noisetone.v) {
+                        if ( (ay_retorna_mixer_register(chip)&mascara_mezclador)==valor_esperado_mezclador_tonoruido) {
+                            suena_nota=1;
+                            //printf ("tonoruido\n");
+                        }
+                    }
+
+                }
+
+                else {
+                    //Para el resto de chips asumimos que si hay sonido
+                    suena_nota=1;
+                }
 
 
 				//Pero si no hay volumen, no hay nota
-				if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
+				//if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
+
+                if (!audio_si_canal_tono(chip,canal)) suena_nota=0;
 
 
                 //TODO: hacer que suene siempre con chip SN y QL. Mejorar esto!! 
