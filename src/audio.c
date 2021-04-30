@@ -3702,7 +3702,10 @@ void audio_midi_output_frame_event(void)
 				//Pero si no hay volumen, no hay nota
 				//if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
 
-                if (!audio_si_canal_tono(chip,canal)) suena_nota=0;
+                if (!audio_si_canal_tono(chip,canal)) {
+                    //printf("audio to piano silencio canal %d\n",canal);
+                    suena_nota=0;
+                }
 
 
                 //TODO: hacer que suene siempre con chip SN y QL. Mejorar esto!! 

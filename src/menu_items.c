@@ -1668,7 +1668,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 #ifdef COMPILE_ALSA
 
-					menu_add_item_menu_ayuda(array_menu_settings_audio,"Direct AY music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.\n"
+					menu_add_item_menu_ayuda(array_menu_settings_audio,"Direct Audio Chip music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.\n"
 						"On Linux you can simulate an external midi device by using timidity. If you have it installed, it may probably be running in memory as "
 						"an alsa sequencer client. If not, run it with the command line:\n"
 						"timidity -iA -Os -B2,8 -EFreverb=0\n"
@@ -1677,7 +1677,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 					);
 
 #else
-					menu_add_item_menu_ayuda(array_menu_settings_audio,"Direct AY music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.");
+					menu_add_item_menu_ayuda(array_menu_settings_audio,"Direct Audio Chip music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.");
 #endif
 
 					menu_add_item_menu_shortcut(array_menu_settings_audio,'m');
@@ -23885,12 +23885,15 @@ void menu_ay_pianokeyboard_overlay(void)
 
             if (!audio_si_canal_tono(chip,0)) {
                 nota_a[0]=0;
+                //printf("audio piano canal 0 silencio\n");
             }
             if (!audio_si_canal_tono(chip,1)) {
                 nota_b[0]=0;
+                //printf("audio piano canal 1 silencio\n");
             }
             if (!audio_si_canal_tono(chip,2)) {
                 nota_c[0]=0;
+                //printf("audio piano canal 2 silencio\n");
             }
 
 			int incremento_linea=3;
