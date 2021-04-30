@@ -38,6 +38,8 @@
 #include "ay38912.h"
 #include "msx.h"
 #include "svi.h"
+#include "sn76489an.h"
+#include "ql_i8049.h"
 
 #include "audionull.h"
 
@@ -3514,6 +3516,44 @@ void audio_midi_output_beeper(char *nota_a)
 int contador_nota_igual_beeper=0;
 char nota_beeper_anterior[4]="";
 
+//Retorna numero de chips de sonido, para el tipo activo,
+//o sea, si es maquina con chip SN, retorna 1
+//o sea, si es maquina con chip de QL, retorna 1
+//si es maquina con chip AY, retornara el numero de chips AY segun el setting activo
+int audio_get_total_chips(void)
+{
+	int  total_chips=ay_retorna_numero_chips();
+
+	if (sn_chip_present.v) total_chips=1;
+
+    if (i8049_chip_present) total_chips=1;
+
+    return total_chips;
+
+}
+
+int audio_retorna_frecuencia_canal(int canal,int chip)
+{
+    int freq;
+    
+    if (sn_chip_present.v) {
+        freq=sn_retorna_frecuencia(canal);
+    }
+
+
+    else if (i8049_chip_present) {
+        if (canal==0) freq=ql_ipc_get_frecuency_sound_current_pitch();
+        else freq=0;
+
+    }            
+
+    else {
+        freq=ay_retorna_frecuencia(canal,chip);
+    }    
+
+    return freq;
+}
+
 void audio_midi_output_frame_event(void)
 {
 
@@ -3525,18 +3565,20 @@ void audio_midi_output_frame_event(void)
 
 		char nota[4];
 
+        printf("event output midi\n");
 
-		for (chip=0;chip<ay_retorna_numero_chips();chip++) {
+
+		for (chip=0;chip<audio_get_total_chips();chip++) {
 			int canal;
 			for (canal=0;canal<3;canal++) {
 
 
-				int freq=ay_retorna_frecuencia(canal,chip);
+				int freq=audio_retorna_frecuencia_canal(canal,chip);
 
 
 				sprintf(nota,"%s",get_note_name(freq) );
 
-
+                printf("nota %s\n",nota);
 
 				//int reg_tono;
 				int reg_vol;
@@ -3583,56 +3625,19 @@ void audio_midi_output_frame_event(void)
 				//Pero si no hay volumen, no hay nota
 				if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
 
-				//if (!suena_nota) printf ("no suena\n");
-				//else printf ("suena\n");
+
+//temp
+suena_nota=1;
 
 				if (!suena_nota) nota[0]=0;
+
+                printf("nota despues filtro %s\n",nota);                
 
 				int canal_final=3*chip+canal;
 
 				int nota_igual=0;
 
 				if (!strcasecmp(nota,midi_output_nota_sonando[canal_final])) nota_igual=1;
-
-
-				//temp probar beeper
-				/*
-				if (canal==0 && chip==0) {
-					audio_midi_output_beeper(nota);
-					printf ("nota %s\n",nota);
-					strcpy(nota_beeper_anterior,nota);
-
-					int canal_final=3*chip+canal;
-					if (!strcasecmp(nota,nota_beeper_anterior)) {
-						contador_nota_igual_beeper++;
-					}
-					else {
-						contador_nota_igual_beeper=0;
-					}
-
-					nota_igual=1;
-
-					if (contador_nota_igual_beeper>=5) {
-						//decir cambio de nota si es que es diferente de la que sonaba
-						if (strcasecmp(nota,midi_output_nota_sonando[canal_final])) {
-							nota_igual=0;
-							printf ("cambio nota %s %s\n",nota,midi_output_nota_sonando[canal_final]);
-							contador_nota_igual_beeper=0;
-						}
-						else {
-							printf ("misma nota que la anterior %s %s\n",nota,midi_output_nota_sonando[canal_final]);
-						}
-					}
-
-					//Guardar nota actual como la anterior
-					strcpy(midi_output_nota_sonando[canal_final],nota);
-
-						
-				}
-				//fin temp probar beeper
-				*/
-				
-
 
 
 

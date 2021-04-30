@@ -1660,7 +1660,8 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 
-            if (ay_chip_present.v) {
+            //if (ay_chip_present.v || sn_ch) {
+            if (1) {
 					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_midi_output,audio_midi_available,"AY to ~~MIDI Output");
 					menu_add_item_menu_tooltip(array_menu_settings_audio,"Direct AY music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.");
             
@@ -23796,14 +23797,18 @@ void menu_ay_pianokeyboard_overlay(void)
 
 	//char volumen[16],textovolumen[32],textotono[32];
 
-	int  total_chips=ay_retorna_numero_chips();
-	//Max 3 ay chips
-	if (total_chips>3) total_chips=3;
+	/*int  total_chips=ay_retorna_numero_chips();
+
 
 
 	if (sn_chip_present.v) total_chips=1;
 
     if (i8049_chip_present) total_chips=1;
+    */
+
+    int total_chips=audio_get_total_chips();
+	//Max 3 ay chips
+	if (total_chips>3) total_chips=3;    
 
 
 
@@ -23820,6 +23825,7 @@ void menu_ay_pianokeyboard_overlay(void)
 
 			int freq_a,freq_b,freq_c;
 
+            /*
 			if (sn_chip_present.v) {
 				freq_a=sn_retorna_frecuencia(0);
 				freq_b=sn_retorna_frecuencia(1);
@@ -23838,6 +23844,11 @@ void menu_ay_pianokeyboard_overlay(void)
 				freq_b=ay_retorna_frecuencia(1,chip);
 				freq_c=ay_retorna_frecuencia(2,chip);			
 			}
+            */
+
+            freq_a=audio_retorna_frecuencia_canal(0,chip);
+            freq_b=audio_retorna_frecuencia_canal(1,chip);
+            freq_c=audio_retorna_frecuencia_canal(2,chip);
 
 			char nota_a[4];
 			sprintf(nota_a,"%s",get_note_name(freq_a) );

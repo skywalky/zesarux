@@ -182,7 +182,7 @@ extern void audio_midi_output_reset(void);
 
 extern char *midi_instrument_list[];
 extern int si_audio_silenced(void);
-
+extern int audio_get_total_chips(void);
 
 //Para cuantas notas da esto aprox?
 #define MAX_MID_EXPORT_BUFFER 1000000
