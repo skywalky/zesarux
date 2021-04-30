@@ -1661,8 +1661,8 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
             if (ay_chip_present.v || sn_chip_present.v || i8049_chip_present) {
-					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_midi_output,audio_midi_available,"AY to ~~MIDI Output");
-					menu_add_item_menu_tooltip(array_menu_settings_audio,"Direct AY music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.");
+					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_midi_output,audio_midi_available,"Audio Chip to ~~MIDI Output");
+					menu_add_item_menu_tooltip(array_menu_settings_audio,"Direct Audio Chip (AY, SN or i8049) music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.");
             
 
 
@@ -19694,7 +19694,7 @@ void menu_direct_midi_output(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_direct_midi_output,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_direct_midi_output);
 
-                retorno_menu=menu_dibuja_menu(&direct_midi_output_opcion_seleccionada,&item_seleccionado,array_menu_direct_midi_output,"AY to MIDI output" );
+                retorno_menu=menu_dibuja_menu(&direct_midi_output_opcion_seleccionada,&item_seleccionado,array_menu_direct_midi_output,"Audio Chip to MIDI output" );
 
 
 
