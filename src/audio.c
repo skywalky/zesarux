@@ -3565,7 +3565,7 @@ void audio_midi_output_frame_event(void)
 
 		char nota[4];
 
-        printf("event output midi\n");
+        //printf("event output midi\n");
 
 
 		for (chip=0;chip<audio_get_total_chips();chip++) {
@@ -3578,7 +3578,7 @@ void audio_midi_output_frame_event(void)
 
 				sprintf(nota,"%s",get_note_name(freq) );
 
-                printf("nota %s\n",nota);
+                //printf("nota %s\n",nota);
 
 				//int reg_tono;
 				int reg_vol;
@@ -3626,12 +3626,12 @@ void audio_midi_output_frame_event(void)
 				if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
 
 
-//temp
-suena_nota=1;
+                //TODO: hacer que suene siempre con chip SN y QL. Mejorar esto!! 
+                if (sn_chip_present.v || i8049_chip_present) suena_nota=1;
 
 				if (!suena_nota) nota[0]=0;
 
-                printf("nota despues filtro %s\n",nota);                
+                //printf("nota despues filtro %s\n",nota);                
 
 				int canal_final=3*chip+canal;
 
