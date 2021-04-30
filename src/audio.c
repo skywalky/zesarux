@@ -690,6 +690,12 @@ void audio_empty_buffer(void)
 
 }
 
+int si_audio_silenced(void)
+{
+	if (silence_detection_counter==SILENCE_DETECTION_MAX) return 1;
+	else return 0;
+}
+
 
 void envio_audio(void)
 {

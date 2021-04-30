@@ -2547,6 +2547,8 @@ int menu_core_statistics_contador_segundo_anterior;
 
 int core_statistics_previo_audio_buffer=0;
 
+int core_statistics_previo_cpu=0;
+
 //La funcion de overlay
 void menu_about_core_statistics_overlay_window_overlay(void)
 {
@@ -2678,31 +2680,56 @@ Calculando ese tiempo: 12% cpu
         int perc_audio;
         //mostrar una barra de llenado del buffer
         //usa las mismas funciones de volumen de AY chip donde el maximo es 15
-        int barra_volumen;
+        //int barra_volumen;
 
         if (tamanyo_buffer_audio==0) {
             perc_audio=100;
-            barra_volumen=15;
+            //barra_volumen=15;
         }
 
         else {
             perc_audio=(posicion_buffer_audio*100)/tamanyo_buffer_audio;
-            barra_volumen=(posicion_buffer_audio*15)/tamanyo_buffer_audio;
+            //barra_volumen=(posicion_buffer_audio*15)/tamanyo_buffer_audio;
         }
 
         char buf_volumen_canal[32];
-        menu_string_volumen(buf_volumen_canal,barra_volumen,core_statistics_previo_audio_buffer);
+        //menu_string_volumen(buf_volumen_canal,barra_volumen,core_statistics_previo_audio_buffer);
 
-        core_statistics_previo_audio_buffer=barra_volumen;
+        //core_statistics_previo_audio_buffer=barra_volumen;
 
-        sprintf (texto_buffer,"Audio Buffer: %d/%d (%3d%%) [%s]",posicion_buffer_audio,tamanyo_buffer_audio,perc_audio,buf_volumen_canal);
+        core_statistics_previo_audio_buffer=menu_string_volumen_maxmin(buf_volumen_canal,posicion_buffer_audio,
+                                                    core_statistics_previo_audio_buffer,tamanyo_buffer_audio);
+
+
+        sprintf (texto_buffer,"Audio Buffer%s: %d/%d (%3d%%) [%s]",
+                    (si_audio_silenced() ? " (Silenced)" : ""),
+                    posicion_buffer_audio,tamanyo_buffer_audio,perc_audio,buf_volumen_canal);
         
         zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);        
 
 		//Uso cpu no se ve en windows
 #ifndef MINGW
         if (screen_show_cpu_usage.v && menu_footer) {
-            sprintf(texto_buffer,"Average CPU Use: %d%%",media_cpu);
+
+            //mostrar una barra de llenado del buffer
+            //usa las mismas funciones de volumen de AY chip donde el maximo es 15
+            char buf_barra_cpu[32];
+            /*
+            int barra_cpu;
+
+            barra_cpu=(media_cpu*15)/100;
+
+            
+            menu_string_volumen(buf_barra_cpu,barra_cpu,core_statistics_previo_cpu);
+
+            core_statistics_previo_cpu=barra_cpu;
+            */
+
+            core_statistics_previo_cpu=menu_string_volumen_maxmin(buf_barra_cpu,media_cpu,core_statistics_previo_cpu,100);
+
+
+
+            sprintf(texto_buffer,"Average CPU Use: %d%% [%s]",media_cpu,buf_barra_cpu);
             zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
         }
 #endif

@@ -14327,6 +14327,29 @@ void menu_string_volumen(char *texto,z80_byte registro_volumen,int indice_decae)
 }
 
 
+//llama a menu_string_volumen gestionando maximos. Retorna el valor escalado entre 0 y 15, para poder asignarlo como valor previo
+int menu_string_volumen_maxmin(char *texto,int valor_actual,int valor_previo,int valor_maximo)
+{
+    
+
+
+    int barra_volumen;
+
+    //Gestionar divisiones por cero y valores negativos y limites
+    if (valor_maximo<=0 || valor_actual<0 || valor_actual>valor_maximo) {
+        barra_volumen=15;
+    }
+
+    else {
+        barra_volumen=(valor_actual*15)/valor_maximo;
+    }
+
+    char buf_volumen_canal[32];
+    menu_string_volumen(texto,barra_volumen,valor_previo);
+
+    return barra_volumen;
+
+}
 
 
 
