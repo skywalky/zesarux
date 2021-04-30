@@ -1660,8 +1660,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
 
 
-            //if (ay_chip_present.v || sn_ch) {
-            if (1) {
+            if (ay_chip_present.v || sn_chip_present.v || i8049_chip_present) {
 					menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_direct_midi_output,audio_midi_available,"AY to ~~MIDI Output");
 					menu_add_item_menu_tooltip(array_menu_settings_audio,"Direct AY music output to a real MIDI device. Supported on Linux, Mac and Windows. On Linux, needs alsa driver compiled.");
             
