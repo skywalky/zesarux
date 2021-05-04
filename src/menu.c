@@ -14344,7 +14344,7 @@ int menu_string_volumen_maxmin(char *texto,int valor_actual,int valor_previo,int
         barra_volumen=(valor_actual*15)/valor_maximo;
     }
 
-    char buf_volumen_canal[32];
+    //char buf_volumen_canal[32];
     menu_string_volumen(texto,barra_volumen,valor_previo);
 
     return barra_volumen;
