@@ -3001,44 +3001,44 @@ void mid_frame_event(void)
                 //tema de ruido solo con chip AY
                 if (ay_chip_present.v) {
 
-                    //TODO: no mirar tono aqui                                
-				int reg_vol;
+                        //TODO: no mirar tono aqui                                
+                    int reg_vol;
 
-				reg_vol=8+canal;
+                    reg_vol=8+canal;
 
-				int mascara_mezclador=1|8; 
-				int valor_esperado_mezclador=8; //Esperamos por defecto no ruido (bit3 a 1) y tono (bit0 a 0)
+                    int mascara_mezclador=1|8; 
+                    int valor_esperado_mezclador=8; //Esperamos por defecto no ruido (bit3 a 1) y tono (bit0 a 0)
 
-				int valor_esperado_mezclador_tonoruido=0; //Canal con tono y ruido (bit3 a 0) y tono (bit0 a 0)
-
-
-				/*
-				1xx1 -> no tono ni ruido
-				0xx1 -> ruido
-
-				0xx0 -> ruido+tono
-				1xx0 -> tono
-				*/
+                    int valor_esperado_mezclador_tonoruido=0; //Canal con tono y ruido (bit3 a 0) y tono (bit0 a 0)
 
 
-				if (canal>0) {
-					mascara_mezclador=mascara_mezclador<<canal;
-					valor_esperado_mezclador=valor_esperado_mezclador<<canal;
-				}
+                    /*
+                    1xx1 -> no tono ni ruido
+                    0xx1 -> ruido
+
+                    0xx0 -> ruido+tono
+                    1xx0 -> tono
+                    */
 
 
+                    if (canal>0) {
+                        mascara_mezclador=mascara_mezclador<<canal;
+                        valor_esperado_mezclador=valor_esperado_mezclador<<canal;
+                    }
 
 
 
-				if ( (ay_retorna_mixer_register(chip) &mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
 
-				//Se permite tono y ruido?
-				if (mid_record_noisetone.v) {
-					if ( (ay_retorna_mixer_register(chip) &mascara_mezclador)==valor_esperado_mezclador_tonoruido) {
-						suena_nota=1;
-						//printf ("tonoruido\n");
-					}
-				}
+
+                    if ( (ay_retorna_mixer_register(chip) &mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
+
+                    //Se permite tono y ruido?
+                    if (mid_record_noisetone.v) {
+                        if ( (ay_retorna_mixer_register(chip) &mascara_mezclador)==valor_esperado_mezclador_tonoruido) {
+                            suena_nota=1;
+                            //printf ("tonoruido\n");
+                        }
+                    }
 
                 }
 
