@@ -18856,7 +18856,7 @@ void menu_plusthreedisk(MENU_ITEM_PARAMETERS)
 void menu_msxcart_load(MENU_ITEM_PARAMETERS)
 {
 
-        char *filtros[4];
+        char *filtros[5];
 
 		if (MACHINE_IS_COLECO) {
         	filtros[0]="col";
@@ -18875,7 +18875,8 @@ void menu_msxcart_load(MENU_ITEM_PARAMETERS)
         	filtros[1]="sg";
 			//Aunque extensión SC es de la sega sc3000, algunos cartuchos medio funcionan
 			filtros[2]="sc";
-			filtros[3]=0;
+            filtros[3]="bin";
+			filtros[4]=0;
 		}	        
 
 		else {
@@ -21643,7 +21644,7 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
 	menu_first_aid("smartload");
 
-        char *filtros[37];
+        char *filtros[38];
 
         filtros[0]="zx";
         filtros[1]="sp";
@@ -21704,7 +21705,9 @@ void menu_smartload(MENU_ITEM_PARAMETERS)
 
     filtros[35]="sms";
 
-	filtros[36]=0;
+    filtros[36]="bin";
+
+	filtros[37]=0;
 
 
         //guardamos directorio actual

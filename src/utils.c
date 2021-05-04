@@ -4689,6 +4689,7 @@ int quickload_valid_extension(char *nombre) {
     || !util_compare_file_extension(nombre,"col")
     || !util_compare_file_extension(nombre,"sg")
     || !util_compare_file_extension(nombre,"sms")
+    || !util_compare_file_extension(nombre,"bin")
     || !util_compare_file_extension(nombre,"sc")
     || !util_compare_file_extension(nombre,"cas")
 	) {
@@ -5196,6 +5197,7 @@ int quickload_continue(char *nombre) {
     //Cartuchos de SMS
 	else if (
                 !util_compare_file_extension(nombre,"sms")
+             || !util_compare_file_extension(nombre,"bin")
              
         ) {
 		//Aqui el autoload da igual. cambiamos siempre a sms si conviene

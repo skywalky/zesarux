@@ -185,10 +185,9 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 -sms: visor de sprites, navegador de sprites y tiles
 
 
-
 -captura master system en gitlab readme
 
 -mensajes splash en cambio de modo maquinas con vdp
 
+-Nuevo método real tape load como setting adicional
 
--no permitir acciones de AY en audio settings si hay chip sn o ql
