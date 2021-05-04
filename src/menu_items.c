@@ -1454,7 +1454,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_volume,NULL,"    Output ~~Volume [%d%%]", audiovolume);
 		menu_add_item_menu_shortcut(array_menu_settings_audio,'v');
 
-        if (!MACHINE_IS_QL) {
+        if (!MACHINE_IS_QL && sn_chip_present.v==0) {
             menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_ay_chip_autoenable,NULL,"[%c] A~~utoenable AY Chip",(autoenable_ay_chip.v==1 ? 'X' : ' '));
             menu_add_item_menu_shortcut(array_menu_settings_audio,'u');
             menu_add_item_menu_tooltip(array_menu_settings_audio,"Enable AY Chip automatically when it is needed");
@@ -1482,7 +1482,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
 
         }
 
-            else {
+            else if (MACHINE_IS_QL) {
                 menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_i8049_chip_present,NULL,"[%c] i8049 sound chip", (i8049_chip_present ? 'X' : ' '));
             }
 
@@ -19447,7 +19447,7 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_record_mid,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_record_mid);
 
-                retorno_menu=menu_dibuja_menu(&record_mid_opcion_seleccionada,&item_seleccionado,array_menu_record_mid,"AY to .mid" );
+                retorno_menu=menu_dibuja_menu(&record_mid_opcion_seleccionada,&item_seleccionado,array_menu_record_mid,"Audio Chip to .mid" );
 
                 
 
