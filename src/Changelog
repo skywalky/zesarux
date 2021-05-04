@@ -3,7 +3,7 @@ Version 9.3 - xxxx edition. 21 April 2021
 Added Sega Master System emulation
 Added .sms file viewer
 Added setting to disable TZX pauses
-Added midi support for QL and SN audio chips (Master System, SG1000, etc)
+Added midi output and .mid support for QL and SN audio chips (Master System, SG1000, etc)
 
 
 Improved ZX Vision menu interface:

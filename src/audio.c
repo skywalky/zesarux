@@ -2986,7 +2986,7 @@ void mid_frame_event(void)
 			for (canal=0;canal<3;canal++) {
 
 
-				int freq=ay_retorna_frecuencia(canal,chip);
+				int freq=audio_retorna_frecuencia_canal(canal,chip);
 
 
 				sprintf(nota,"%s",get_note_name(freq) );
@@ -2994,6 +2994,14 @@ void mid_frame_event(void)
 			
 				
 				//int reg_tono;
+
+				//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
+				int suena_nota=0;
+
+                //tema de ruido solo con chip AY
+                if (ay_chip_present.v) {
+
+                    //TODO: no mirar tono aqui                                
 				int reg_vol;
 
 				reg_vol=8+canal;
@@ -3019,8 +3027,7 @@ void mid_frame_event(void)
 				}
 
 
-				//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
-				int suena_nota=0;
+
 
 
 				if ( (ay_retorna_mixer_register(chip) &mascara_mezclador)==valor_esperado_mezclador) suena_nota=1; //Solo tono
@@ -3033,12 +3040,21 @@ void mid_frame_event(void)
 					}
 				}
 
+                }
+
+                else {
+                    //Para el resto de chips asumimos que si hay sonido
+                    suena_nota=1;
+                }                
 
 				//Pero si no hay volumen, no hay nota
-				if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
+				//if (ay_3_8912_registros[chip][reg_vol]==0) suena_nota=0;
 
-				//if (!suena_nota) printf ("no suena\n");
-				//else printf ("suena\n");
+
+                if (!audio_si_canal_tono(chip,canal)) {
+                    //printf("audio to piano silencio canal %d\n",canal);
+                    suena_nota=0;
+                }                
 
 				if (!suena_nota) nota[0]=0;
 
