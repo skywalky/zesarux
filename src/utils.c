@@ -14630,22 +14630,22 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                 memoria_lectura++;
 
                 //Secuencias que identifican a un cero y un uno
-                z80_int seq_pulses_zero[256];
-                z80_int seq_pulses_one[256];
+                //z80_int seq_pulses_zero[256];
+                //z80_int seq_pulses_one[256];
 
                 //Metemos las secuencias de 0 y 1 en array
                 int i;
                 for (i=0;i<num_pulses_zero;i++) {
-                    seq_pulses_zero[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
-                        (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
+                    //seq_pulses_zero[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
+                    //    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
 
                     memoria_lectura +=2;
                 }
 
 
                 for (i=0;i<num_pulses_one;i++) {
-                    seq_pulses_one[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
-                        (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
+                    //seq_pulses_one[i]=util_get_byte_protect(taperead,total_file_size,memoria_lectura+0)+
+                    //    (util_get_byte_protect(taperead,total_file_size,memoria_lectura+1)*256);
 
                     memoria_lectura +=2;
                 }
