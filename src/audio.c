@@ -3709,7 +3709,7 @@ void audio_midi_output_frame_event(void)
 
 
                 //TODO: hacer que suene siempre con chip SN y QL. Mejorar esto!! 
-                if (sn_chip_present.v || i8049_chip_present) suena_nota=1;
+                //if (sn_chip_present.v || i8049_chip_present) suena_nota=1;
 
 				if (!suena_nota) nota[0]=0;
 
@@ -3753,6 +3753,7 @@ void audio_midi_output_frame_event(void)
 
 					//note on si no es un silencio
 					if (nota[0]!=0) {
+                        debug_printf(VERBOSE_DEBUG,"Midi output. Sending note channel %d note %s",canal_final,nota);
                     	int nota_numero=get_mid_number_note(nota);
 
                         if (nota_numero<0) {
