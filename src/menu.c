@@ -3250,11 +3250,11 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 	//printf ("upper icons background. ancho boton: %d alto boton: %d\n",ancho_boton,alto_boton);
 
 
-	int nivel_zoom=1;
+	//int nivel_zoom=1;
 
 	//Si hay espacio para meter iconos con zoom 2
 	//6 pixeles de margen
-	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
+	//if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
 
 		int xinicio=screen_get_ext_desktop_start_x();
@@ -4130,11 +4130,11 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	//ancho_boton,alto_boton,total_botones,xfinal);
 
 
-	int nivel_zoom=1;
+	//int nivel_zoom=1;
 
 	//Si hay espacio para meter iconos con zoom 2
 	//6 pixeles de margen
-	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
+	//if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
 
 	int x;
@@ -9488,9 +9488,10 @@ void zxvision_get_character_at_mouse(zxvision_window *w,int x,int y,overlay_scre
 {
 
 
-	int width,height;
+	//int width;
+    int height;
 
-	width=zxvision_get_effective_width(w);
+	//width=zxvision_get_effective_width(w);
 
 	//Alto del contenido es 2 menos, por el titulo de ventana y la linea por debajo de margen
 	height=zxvision_get_effective_height(w);
@@ -9552,8 +9553,8 @@ void zxvision_get_character_at_mouse(zxvision_window *w,int x,int y,overlay_scre
 
 				z80_byte caracter_escribir=caracter->caracter;
 
-				int tinta=caracter->tinta;
-				int papel=caracter->papel;
+				//int tinta=caracter->tinta;
+				//int papel=caracter->papel;
 
 				//Si esta linea cursor visible
 				int linea_cursor=w->cursor_line;
@@ -9561,8 +9562,8 @@ void zxvision_get_character_at_mouse(zxvision_window *w,int x,int y,overlay_scre
 				linea_cursor +=w->lower_margin;
 				linea_cursor +=w->upper_margin;
 				if (w->visible_cursor && linea_cursor==offset_y_final) {
-					tinta=ESTILO_GUI_TINTA_SELECCIONADO;
-					papel=ESTILO_GUI_PAPEL_SELECCIONADO;
+					//tinta=ESTILO_GUI_TINTA_SELECCIONADO;
+					//papel=ESTILO_GUI_PAPEL_SELECCIONADO;
 				} 
 			
 				//Chapucilla para evitar que las ventanas en background sobreescriban a la current
@@ -25561,20 +25562,20 @@ void menu_file_pzx_browser_show(char *filename)
         memoria++;
 
         //Secuencias que identifican a un cero y un uno
-        z80_int seq_pulses_zero[256];
-        z80_int seq_pulses_one[256];
+        //z80_int seq_pulses_zero[256];
+        //z80_int seq_pulses_one[256];
 
         //Metemos las secuencias de 0 y 1 en array
         int i;
         for (i=0;i<num_pulses_zero;i++) {
-               seq_pulses_zero[i]=memoria[0]+(memoria[1]*256);
+               //seq_pulses_zero[i]=memoria[0]+(memoria[1]*256);
 
                 memoria +=2;
         }
 
 
         for (i=0;i<num_pulses_one;i++) {
-               seq_pulses_one[i]=memoria[0]+(memoria[1]*256);
+               //seq_pulses_one[i]=memoria[0]+(memoria[1]*256);
 
                 memoria +=2;
         }
