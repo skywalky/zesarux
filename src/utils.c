@@ -14603,7 +14603,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
 
                 int memoria_lectura=puntero_lectura;
 
-                int initial_pulse;
+                //int initial_pulse;
 
                 z80_long_int count;   
 
@@ -14615,7 +14615,7 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                         (util_get_byte_protect(taperead,total_file_size,memoria_lectura+2)*65536)+
                         ((util_get_byte_protect(taperead,total_file_size,memoria_lectura+3)&127)*16777216); 
 
-                initial_pulse=(util_get_byte_protect(taperead,total_file_size,memoria_lectura+3)&128)>>7;
+                //initial_pulse=(util_get_byte_protect(taperead,total_file_size,memoria_lectura+3)&128)>>7;
 
                 memoria_lectura +=4;
 
