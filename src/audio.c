@@ -3753,7 +3753,7 @@ void audio_midi_output_frame_event(void)
 
 					//note on si no es un silencio
 					if (nota[0]!=0) {
-                        debug_printf(VERBOSE_DEBUG,"Midi output. Sending note channel %d note %s",canal_final,nota);
+                        debug_printf(VERBOSE_DEBUG,"Midi output: sending note channel %d note %s",canal_final,nota);
                     	int nota_numero=get_mid_number_note(nota);
 
                         if (nota_numero<0) {

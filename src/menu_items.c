@@ -18887,6 +18887,12 @@ void menu_ay_partitura_overlay(void)
 
 			int freq_a,freq_b,freq_c;
 
+            freq_a=audio_retorna_frecuencia_canal(0,menu_ay_partitura_chip);
+            freq_b=audio_retorna_frecuencia_canal(1,menu_ay_partitura_chip);
+            freq_c=audio_retorna_frecuencia_canal(2,menu_ay_partitura_chip);        
+
+            /*    
+
 			if (sn_chip_present.v) {
 				freq_a=sn_retorna_frecuencia(0);
 				freq_b=sn_retorna_frecuencia(1);
@@ -18905,6 +18911,7 @@ void menu_ay_partitura_overlay(void)
 				freq_b=ay_retorna_frecuencia(1,menu_ay_partitura_chip);
 				freq_c=ay_retorna_frecuencia(2,menu_ay_partitura_chip);
 			}
+            */
 
 
 			sprintf(nota_a,"%s",get_note_name(freq_a) );
@@ -18916,6 +18923,17 @@ void menu_ay_partitura_overlay(void)
 			sprintf(nota_c,"%s",get_note_name(freq_c) );
 
 			//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
+            if (!audio_si_canal_tono(menu_ay_partitura_chip,0)) {
+                nota_a[0]=0;
+            }
+            if (!audio_si_canal_tono(menu_ay_partitura_chip,1)) {
+                nota_b[0]=0;
+            }
+            if (!audio_si_canal_tono(menu_ay_partitura_chip,2)) {
+                nota_c[0]=0;
+            }
+
+            /*
 			if (sn_chip_present.v) {
 				if ((sn_chip_registers[6] & 15)==15) nota_a[0]=0;
 				if ((sn_chip_registers[7] & 15)==15) nota_b[0]=0;
@@ -18940,7 +18958,7 @@ void menu_ay_partitura_overlay(void)
 				if (ay_3_8912_registros[menu_ay_partitura_chip][7]&4 || ay_3_8912_registros[menu_ay_partitura_chip][10]==0) nota_c[0]=0;
 			}
 
-
+            */
 	
 
 
@@ -23796,14 +23814,7 @@ void menu_ay_pianokeyboard_overlay(void)
 
 	//char volumen[16],textovolumen[32],textotono[32];
 
-	/*int  total_chips=ay_retorna_numero_chips();
 
-
-
-	if (sn_chip_present.v) total_chips=1;
-
-    if (i8049_chip_present) total_chips=1;
-    */
 
     int total_chips=audio_get_total_chips();
 	//Max 3 ay chips
@@ -23824,26 +23835,6 @@ void menu_ay_pianokeyboard_overlay(void)
 
 			int freq_a,freq_b,freq_c;
 
-            /*
-			if (sn_chip_present.v) {
-				freq_a=sn_retorna_frecuencia(0);
-				freq_b=sn_retorna_frecuencia(1);
-				freq_c=sn_retorna_frecuencia(2);			
-			}
-
-
-			else if (i8049_chip_present) {
-				freq_a=ql_ipc_get_frecuency_sound_current_pitch();
-				freq_b=0;
-				freq_c=0;			
-			}            
-
-			else {
-				freq_a=ay_retorna_frecuencia(0,chip);
-				freq_b=ay_retorna_frecuencia(1,chip);
-				freq_c=ay_retorna_frecuencia(2,chip);			
-			}
-            */
 
             freq_a=audio_retorna_frecuencia_canal(0,chip);
             freq_b=audio_retorna_frecuencia_canal(1,chip);
