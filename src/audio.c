@@ -3002,9 +3002,9 @@ void mid_frame_event(void)
                 if (ay_chip_present.v) {
 
                         //TODO: no mirar tono aqui                                
-                    int reg_vol;
+                    //int reg_vol;
 
-                    reg_vol=8+canal;
+                    //reg_vol=8+canal;
 
                     int mascara_mezclador=1|8; 
                     int valor_esperado_mezclador=8; //Esperamos por defecto no ruido (bit3 a 1) y tono (bit0 a 0)
@@ -3668,9 +3668,9 @@ void audio_midi_output_frame_event(void)
 
                     //TODO: no mirar tono aqui
 
-                    int reg_vol;
+                    //int reg_vol;
 
-                    reg_vol=8+canal;
+                    //reg_vol=8+canal;
 
                     int mascara_mezclador=1|8;
                     int valor_esperado_mezclador=8; //Esperamos por defecto no ruido (bit3 a 1) y tono (bit0 a 0)

@@ -48,6 +48,7 @@ extern char alsa_mid_device_out[];
 
 extern int alsa_midi_raw(z80_byte value);
 extern void alsa_midi_output_reset(void);
+extern int alsa_change_instrument(unsigned char instrument);
 
 //extern int alsa_midi_initialized;
 
