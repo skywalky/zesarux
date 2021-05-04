@@ -3315,11 +3315,11 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 	//printf ("lower icons background. ancho boton: %d alto boton: %d\n",ancho_boton,alto_boton);
 
 
-	int nivel_zoom=1;
+	//int nivel_zoom=1;
 
 	//Si hay espacio para meter iconos con zoom 2
 	//6 pixeles de margen
-	if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
+	//if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
 
 	//printf ("zoom lower icons background: %d\n",nivel_zoom);
 
