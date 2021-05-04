@@ -18997,9 +18997,9 @@ void util_daad_get_condact_message(char *buffer)
 	z80_byte opcode_daad=daad_peek(direccion_desensamblar);
 	z80_byte param_message=daad_peek(direccion_desensamblar+1);
 
-	int redireccion=0;
+	//int redireccion=0;
 	if (opcode_daad>127) {
-		redireccion=1;
+		//redireccion=1;
 		opcode_daad -=128;
 		param_message=util_daad_get_flag_value(param_message);
 	}
