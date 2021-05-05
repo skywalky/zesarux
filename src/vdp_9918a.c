@@ -149,6 +149,7 @@ z80_byte vdp_9918a_in_vdp_status(void)
 
 }
 
+z80_byte vdp_9918a_previous_video_mode_splash=255;
 
 void vdp_9918a_out_command_status(z80_byte value)
 {
@@ -203,6 +204,19 @@ void vdp_9918a_out_command_status(z80_byte value)
                     modificado_border.v=1;
                     //printf ("modificado border: %d\n",vdp_9918a_registers[7] &15);
                 }
+
+                //Splash de cambio de modo
+                if (vdp_register==0 || vdp_register==1) {
+                    z80_byte video_mode=vdp_9918a_get_video_mode();
+                    if (video_mode!=vdp_9918a_previous_video_mode_splash) {
+                        vdp_9918a_previous_video_mode_splash=video_mode;
+                        char buffer_mensaje[256];
+                        sprintf(buffer_mensaje,"Setting video mode %s",get_vdp_9918_string_video_mode());
+                        screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
+
+                    }
+                }
+                
 
                 //printf ("Write VDP Register register: %02XH value %02XH\n",vdp_register,vdp_9918a_last_command_status_bytes[0]);
 
