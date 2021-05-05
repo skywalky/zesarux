@@ -2912,8 +2912,8 @@ int realtape_get_current_bit_playing(void)
     
     if (realtape_algorithm_new.v) {
 
-        //Por ejemplo, acevaders no carga con este metodo
-        //orquesta no carga con este metodo
+        //acevaders no carga con este metodo a no ser que se tenga noise reduction a 20 o algo mas
+        //orquesta no carga con este metodo a no ser que se tenga noise reduction a 2 o algo mas
 
         //realmente no hace falta inicializarlo a 0 pues siempre retornara valor,
         //solo es para el compilador para que no se queje
