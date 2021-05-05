@@ -33783,6 +33783,16 @@ void menu_tape_tzx_suppress_pause(MENU_ITEM_PARAMETERS)
     tzx_suppress_pause.v ^=1;
 }
 
+void menu_realtape_algorithm_new(MENU_ITEM_PARAMETERS)
+{
+    realtape_algorithm_new.v ^=1;
+}
+
+void menu_realtape_algorithm_new_noise_reduction(MENU_ITEM_PARAMETERS)
+{
+    menu_ventana_scanf_numero_enhanced("Noise reduction",&realtape_algorithm_new_noise_reduction,4,+1,0,127,0);  
+}
+
 //menu tape settings
 void menu_settings_tape(MENU_ITEM_PARAMETERS)
 {
@@ -33841,14 +33851,26 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings_tape,"Enable loading sound");
 		menu_add_item_menu_ayuda(array_menu_settings_tape,"Enable loading sound. With sound disabled, the tape is also loaded");
 
+		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_algorithm_new,NULL,"[%c] Improved algorithm", (realtape_algorithm_new.v==1 ? 'X' : ' '));
+		menu_add_item_menu_tooltip(array_menu_settings_tape,"Use improved loading algorithm");
+		menu_add_item_menu_ayuda(array_menu_settings_tape,"Use improved loading algorithm. Gives better results with non-zero centered audio tapes but without noise");
+
+        if (realtape_algorithm_new.v) {
+            menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_algorithm_new_noise_reduction,NULL,"[%d] Noise reduction",realtape_algorithm_new_noise_reduction);
+            menu_add_item_menu_tooltip(array_menu_settings_tape,"Noise reduction value");
+            menu_add_item_menu_ayuda(array_menu_settings_tape,"Noise reduction value. Set a value >0 when you need to reduce noise");
+        }
 
 
-		menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_volumen,NULL,"[%s%d] Volume bit 1 range",(realtape_volumen>0 ? "+" : ""),realtape_volumen);
-		menu_add_item_menu_tooltip(array_menu_settings_tape,"Volume bit 1 starting range value");
-		menu_add_item_menu_ayuda(array_menu_settings_tape,"The input audio value read (considering range from -128 to +127) is treated "
-					"normally as 1 if the value is in range 0...+127, and 0 if it is in range -127...-1. This setting "
-					"increases this 0 (of range 0...+127) to consider it is a bit 1. I have found this value is better to be 0 "
-					"on Spectrum, and 2 on ZX80/81");
+        else {
+
+            menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_realtape_volumen,NULL,"[%s%d] Volume bit 1 range",(realtape_volumen>0 ? "+" : ""),realtape_volumen);
+            menu_add_item_menu_tooltip(array_menu_settings_tape,"Volume bit 1 starting range value");
+            menu_add_item_menu_ayuda(array_menu_settings_tape,"The input audio value read (considering range from -128 to +127) is treated "
+                        "normally as 1 if the value is in range 0...+127, and 0 if it is in range -127...-1. This setting "
+                        "increases this 0 (of range 0...+127) to consider it is a bit 1. I have found this value is better to be 0 "
+                        "on Spectrum, and 2 on ZX80/81");
+        }
 
 
 

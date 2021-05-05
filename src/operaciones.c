@@ -5107,7 +5107,7 @@ z80_byte lee_puerto_zx80_no_time(z80_byte puerto_h,z80_byte puerto_l)
 
 
                 if (realtape_inserted.v && realtape_playing.v) {
-			if (realtape_last_value>=realtape_volumen) {
+			if (realtape_get_current_bit_playing()) {
                                 valor=valor|128;
                                 //printf ("1 ");
                         }
@@ -5190,7 +5190,7 @@ Port FEh Read (or any Read with A0=0)
 
 
                 if (realtape_inserted.v && realtape_playing.v) {
-                        if (realtape_last_value>=realtape_volumen) {
+                        if (realtape_get_current_bit_playing()) {
                                 valor=valor|32;
                                 //printf ("1 ");
                         }

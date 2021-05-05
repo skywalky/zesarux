@@ -2901,9 +2901,10 @@ bit 1: 1710,1710
 
 }
 
-z80_bit realtape_algorithm_new={1};
+
 char realtape_previous_value=0;
 char realtape_previous_return_value=0;
+int realtape_algorithm_new_noise_reduction=0;
 
 //Retorna el siguiente bit de cinta realtape, si es 1 o 0
 int realtape_get_current_bit_playing(void)
@@ -2911,22 +2912,44 @@ int realtape_get_current_bit_playing(void)
     
     if (realtape_algorithm_new.v) {
 
-        char return_value;
+        //Por ejemplo, acevaders no carga con este metodo
+        //orquesta no carga con este metodo
 
-        //Si la onda "sube", es +1
-        if (realtape_last_value>realtape_previous_value) {
-            printf ("superior\n");
-            return_value=1;
-        }
-        //Si la onda "baja", es -1
-        else if (realtape_last_value<realtape_previous_value) {
-            return_value=0;
-            printf("inferior\n");
-        }
-        //Si la onda esta igual, damos valor anterior
-        else {
+        //realmente no hace falta inicializarlo a 0 pues siempre retornara valor,
+        //solo es para el compilador para que no se queje
+        char return_value=0;
+
+        //sacar diferencia valor anterior con actual
+        int diferencia=realtape_last_value-realtape_previous_value;
+
+        if (diferencia<0) diferencia=-diferencia;
+
+        //Si la onda esta mas o menos igual, damos valor anterior
+        if (diferencia<=realtape_algorithm_new_noise_reduction) {
             printf("igual\n");
-            return_value=realtape_previous_return_value;
+            return_value=realtape_previous_return_value;            
+        }
+
+        else {
+
+            //Si la onda "sube", es +1
+            if (realtape_last_value>realtape_previous_value) {
+                printf ("superior\n");
+                return_value=1;
+            }
+            //Si la onda "baja", es -1
+            else if (realtape_last_value<realtape_previous_value) {
+                return_value=0;
+                printf("inferior\n");
+            }
+
+            //Si la onda esta igual, damos valor anterior
+            //else {
+            //    printf("igual\n");
+            //    return_value=realtape_previous_return_value;
+            //}
+
+
         }
 
         realtape_previous_value=realtape_last_value;
@@ -2940,6 +2963,10 @@ int realtape_get_current_bit_playing(void)
 
     else {
                  
+        //Por ejemplo, al grabar con spectrum con audio to file, y no activar el "rom save filter", no carga con este algorimo,
+        //pues la onda no está centrada en 0
+
+
         if (realtape_last_value>=realtape_volumen) {
             printf ("1 \n");
             return 1;

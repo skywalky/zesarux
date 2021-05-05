@@ -3251,6 +3251,7 @@ void set_machine_params(void)
 		//2 para ZX81 mejor
 		//0 para spectrum mejor
 		realtape_volumen=0;
+        realtape_algorithm_new_noise_reduction=0;
 
 
 		//Resetear a zona memoria por defecto. Evita cuelgues al intentar usar una zona de memoria que ya no esta disponible,
@@ -3362,6 +3363,7 @@ void set_machine_params(void)
 			//2 para ZX81 mejor
 			//0 para spectrum mejor
 			realtape_volumen=2;
+            realtape_algorithm_new_noise_reduction=2;
 
 		}
 

@@ -886,7 +886,7 @@ I/O address	A9	A8	Description	Read/Write status	Used Direction	Used for
 			valor |=cpc_get_vsync_bit();
 
  			if (realtape_inserted.v && realtape_playing.v) {
-                        	if (realtape_last_value>=realtape_volumen) {
+                        	if (realtape_get_current_bit_playing()) {
                                 	valor=valor|128;
 	                                //printf ("1 ");
         	                }

@@ -59,6 +59,7 @@ extern char autosave_snapshot_path_buffer[];
 
 extern z80_bit fast_autoload;
 extern z80_bit tzx_suppress_pause;
+extern z80_bit realtape_algorithm_new;
 
 extern z80_bit setting_mostrar_ay_piano_grafico;
 
