@@ -145,12 +145,6 @@ Problema con el almacenamiento de los t-estados en snapshot
 
 -the next war: revisar border deberia desactivar. musica en menu no se oye bien
 
--cocoa: con pantallas retina se queda una pantalla de mitad abajo a la izquierda
-
-
--Opción activar nuevo algoritmo de carga según valor anterior como conversor 1 bit
-
-
 -eliminar parpadeos en fbdev usando doble buffer?
 
 
