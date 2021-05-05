@@ -33881,7 +33881,7 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_MSX) {
-			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_msx_loading_noise_reduction,NULL,"[%c] Loading noise reduction",
+			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_msx_loading_noise_reduction,NULL,"[%c] MSX Loading noise reduction",
 			(msx_loading_noise_reduction.v==1 ? 'X' : ' '));
 		}
 

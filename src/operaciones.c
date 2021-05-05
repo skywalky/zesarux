@@ -3531,7 +3531,7 @@ z80_byte lee_puerto_sam_no_time(z80_byte puerto_h,z80_byte puerto_l)
 		}
 
                 if (realtape_inserted.v && realtape_playing.v) {
-                        if (realtape_last_value>=realtape_volumen) {
+                        if (realtape_get_current_bit_playing()) {
                                 valor=valor|64;
                                 //printf ("1 ");
                         }
@@ -7563,7 +7563,7 @@ Bit	Description	Comment
 
 					border_reg &=0xF0;
 
-					if (realtape_last_value>=realtape_volumen) { 
+					if (realtape_get_current_bit_playing()) { 
 							valor=valor|128;
 							//printf ("1 ");
 							//valor=255;
@@ -7740,7 +7740,7 @@ z80_byte lee_puerto_svi_no_time(z80_byte puerto_h GCC_UNUSED,z80_byte puerto_l)
 			z80_byte valor=255;
 			if (realtape_inserted.v && realtape_playing.v) {
 				//printf ("%d ",realtape_last_value);
-					if (realtape_last_value>=realtape_volumen) { //-50
+					if (realtape_get_current_bit_playing() ) { //-50
 							valor=valor|128;
 							//printf ("1 \n");
 							//valor=255;

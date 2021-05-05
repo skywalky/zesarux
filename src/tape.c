@@ -2926,7 +2926,7 @@ int realtape_get_current_bit_playing(void)
 
         //Si la onda esta mas o menos igual, damos valor anterior
         if (diferencia<=realtape_algorithm_new_noise_reduction) {
-            printf("igual\n");
+            //printf("igual\n");
             return_value=realtape_previous_return_value;            
         }
 
@@ -2934,13 +2934,13 @@ int realtape_get_current_bit_playing(void)
 
             //Si la onda "sube", es +1
             if (realtape_last_value>realtape_previous_value) {
-                printf ("superior\n");
+                //printf ("superior\n");
                 return_value=1;
             }
             //Si la onda "baja", es -1
             else if (realtape_last_value<realtape_previous_value) {
                 return_value=0;
-                printf("inferior\n");
+                //printf("inferior\n");
             }
 
             //Si la onda esta igual, damos valor anterior
@@ -2955,7 +2955,7 @@ int realtape_get_current_bit_playing(void)
         realtape_previous_value=realtape_last_value;
         realtape_previous_return_value=return_value;
 
-        printf("retornar %d\n",return_value);
+        //printf("retornar %d\n",return_value);
 
         return return_value;
 
@@ -2968,12 +2968,12 @@ int realtape_get_current_bit_playing(void)
 
 
         if (realtape_last_value>=realtape_volumen) {
-            printf ("1 \n");
+            //printf ("1 \n");
             return 1;
             
         }
         else {
-            printf ("0 \n");
+            //printf ("0 \n");
             return 0;
         }
     }
