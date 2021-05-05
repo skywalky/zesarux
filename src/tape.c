@@ -2900,3 +2900,18 @@ bit 1: 1710,1710
         //Y a partir de aqui ya vienen los datos, que los escribe desde tape_block_pzx_save     
 
 }
+
+int realtape_get_current_bit_playing(void)
+{
+                 
+    if (realtape_last_value>=realtape_volumen) {
+        printf ("1 \n");
+        return 1;
+            
+    }
+    else {
+        printf ("0 \n");
+        return 0;
+    }
+                
+}

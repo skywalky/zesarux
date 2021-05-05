@@ -6422,7 +6422,7 @@ z80_byte lee_puerto_spectrum_ula(z80_byte puerto_h)
 
 
                 if (realtape_inserted.v && realtape_playing.v) {
-                        if (realtape_last_value>=realtape_volumen) {
+                        if (realtape_get_current_bit_playing()) {
                                 valor=valor|64;
                                 //printf ("1 ");
                         }
