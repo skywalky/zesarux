@@ -4486,9 +4486,11 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 		offset_vertical=offset_y/2;
 		linea=offset_vertical*2;
 
+        int ventana_alto_visible=menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window->visible_height;
 
+        int lineas_en_ventana=((ventana_alto_visible-2)/2)+1; //El maximo que cabe en pantalla, +1 para cuando se baja 1 posicion con cursor
 
-		limite_vertical=offset_vertical+((24-2)/2)+1; //El maximo que cabe en pantalla, +1 para cuando se baja 1 posicion con cursor
+		limite_vertical=offset_vertical+lineas_en_ventana;
 
 	}
 
