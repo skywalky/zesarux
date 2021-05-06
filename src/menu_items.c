@@ -4623,8 +4623,14 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 					}	
 
 					else if (MACHINE_IS_SMS) {
-                        //TODO SMS. Corregir esto para modo 4?
-						tnum=sms_read_vram_byte(msx_pattern_name_table+current_tile);	
+                        if (vdp_9918a_si_sms_video_mode4()) {
+                            int offset_tile=current_tile*2;	
+
+                            tnum=sms_read_vram_byte(msx_pattern_name_table+offset_tile)+256*sms_read_vram_byte(msx_pattern_name_table+offset_tile+1);
+
+                            tnum &=511;
+                        }
+						else tnum=sms_read_vram_byte(msx_pattern_name_table+current_tile);	
 					}	                    
 
 					else if (MACHINE_IS_SVI) {
@@ -4642,7 +4648,12 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 
 						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 
-						sprintf (dumpmemoria," Tile: %3d %c",tnum,(tnum>=33 && tnum<=126 ? tnum : ' ' ));
+                        if (vdp_9918a_si_sms_video_mode4()) {
+                            sprintf (dumpmemoria," Tile: %3d",tnum);
+                        }
+                        else {
+						    sprintf (dumpmemoria," Tile: %3d %c",tnum,(tnum>=33 && tnum<=126 ? tnum : ' ' ));
+                        }
 
 						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);						
 

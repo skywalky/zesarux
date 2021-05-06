@@ -341,6 +341,11 @@ int vdp_9918a_get_tile_width(void)
             width=32;
 		break;
 
+        //SMS video mode 4
+        case 128:
+            width=32;
+        break;
+
 
     }
 
