@@ -368,14 +368,19 @@ z80_byte vdp_9918a_get_foreground_color(void)
     return ink;
 }
 
+//Usado en el visor de tiles
 int vdp_9918a_get_tile_heigth(void)
 {
     //z80_byte video_mode=vdp_9918a_get_video_mode();
 
     //por defecto
-    int heigth=24;
+    int height=24;
 
-    return heigth;
+    if (vdp_9918a_si_sms_video_mode4()) {
+        height=28;
+    }
+
+    return height;
 
     //Incluso en 64x48, la definicion del tile es 32x24
 
