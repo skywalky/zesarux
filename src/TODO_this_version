@@ -172,12 +172,11 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 -poder cambiar instrumento midi en output a .mid
 
 
--visor de tiles para sms y demas maquinas (
-
 -Agregar documento master system en extras 
 
 -sms: visor de sprites
 
+-visor de tiles para sms y demas maquinas (en grafico, tal y como hace el visor de sprites)
 
 -captura master system en gitlab readme
 
