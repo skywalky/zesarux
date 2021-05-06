@@ -4612,6 +4612,13 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 
 					int tnum;	
 
+                    int sms_mirror_x;
+
+                    int sms_mirror_y;
+
+                    int sms_palette_offset;
+                    
+                    int sms_priority_tile_bit;
 
 
 					if (MACHINE_IS_COLECO) {
@@ -4624,11 +4631,19 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 
 					else if (MACHINE_IS_SMS) {
                         if (vdp_9918a_si_sms_video_mode4()) {
-                            int offset_tile=current_tile*2;	
+                            int offset_tile=current_tile*2;
 
-                            tnum=sms_read_vram_byte(msx_pattern_name_table+offset_tile)+256*sms_read_vram_byte(msx_pattern_name_table+offset_tile+1);
+                            z80_int pattern_word=sms_read_vram_byte(msx_pattern_name_table+offset_tile)+256*sms_read_vram_byte(msx_pattern_name_table+offset_tile+1);
 
-                            tnum &=511;
+                            tnum=pattern_word & 511;
+
+                            sms_mirror_x=(pattern_word & 0x0200);
+
+                            sms_mirror_y=(pattern_word & 0x0400);
+
+                            sms_palette_offset=(pattern_word & 0x0800 ? 16 : 0);
+                            
+                            sms_priority_tile_bit=(pattern_word & 0x1000);                            
                         }
 						else tnum=sms_read_vram_byte(msx_pattern_name_table+current_tile);	
 					}	                    
@@ -4649,7 +4664,12 @@ void menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles(void)
 						zxvision_print_string_defaults(menu_debug_tsconf_tbblue_msx_tilenav_lista_tiles_window,1,linea++,dumpmemoria);
 
                         if (vdp_9918a_si_sms_video_mode4()) {
-                            sprintf (dumpmemoria," Tile: %3d",tnum);
+                            sprintf (dumpmemoria," Tile: %3d %s %s %s Off: %2d",tnum,
+                                    (sms_mirror_x ? "MX" : "  "),
+                                    (sms_mirror_y ? "MY" : "  "),
+                                    (sms_priority_tile_bit ? "PRI" : "   "),
+                                    sms_palette_offset
+                            );
                         }
                         else {
 						    sprintf (dumpmemoria," Tile: %3d %c",tnum,(tnum>=33 && tnum<=126 ? tnum : ' ' ));
@@ -4892,6 +4912,8 @@ void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 
 		//tres mas para ubicar las lineas de leyenda
 		total_height+=3;
+
+        //total_height+=2;
 
 
 		int xventana,yventana,ancho_ventana,alto_ventana;
