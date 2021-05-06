@@ -3796,7 +3796,12 @@ int menu_debug_tsconf_tbblue_msx_spritenav_get_total_sprites(void)
 	limite=TSCONF_MAX_SPRITES; //85 sprites max
 
 	if (MACHINE_IS_TBBLUE) limite=TBBLUE_MAX_SPRITES;
-	else if (MACHINE_HAS_VDP_9918A) limite=VDP_9918A_MAX_SPRITES;
+	else if (MACHINE_HAS_VDP_9918A) {
+        if (vdp_9918a_si_sms_video_mode4() ) {
+            limite=VDP_9918A_SMS_MODE4_MAX_SPRITES;
+        }
+        else limite=VDP_9918A_MAX_SPRITES;
+    }
 
 	return limite;
 }
@@ -4083,6 +4088,7 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 			if (MACHINE_HAS_VDP_9918A) {
 				z80_int sprite_attribute_table=vdp_9918a_get_sprite_attribute_table();
+                z80_int orig_sprite_attribute_table=sprite_attribute_table;
 
 
 				int offset_sprite=current_sprite*4;
@@ -4100,18 +4106,35 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				else if (MACHINE_IS_SVI) vram_read_function_pointer=svi_read_vram_byte;
 				else vram_read_function_pointer=msx_read_vram_byte;
 								
+				z80_byte vert_pos;
+				z80_byte horiz_pos;
+				z80_byte sprite_name;
+				z80_byte attr_color_etc;
 
-				z80_byte vert_pos=vram_read_function_pointer(sprite_attribute_table);
-				z80_byte horiz_pos=vram_read_function_pointer(sprite_attribute_table+1);
-				z80_byte sprite_name=vram_read_function_pointer(sprite_attribute_table+2);
-				z80_byte attr_color_etc=vram_read_function_pointer(sprite_attribute_table+3);					
+                if (vdp_9918a_si_sms_video_mode4() ) {
+                    vert_pos=vram_read_function_pointer(orig_sprite_attribute_table+current_sprite);
+                    horiz_pos=vram_read_function_pointer(orig_sprite_attribute_table+0x80+current_sprite*2);
+                    sprite_name=vram_read_function_pointer(orig_sprite_attribute_table+0x80+current_sprite*2+1);
+                }
+                else {
+				    vert_pos=vram_read_function_pointer(sprite_attribute_table);
+				    horiz_pos=vram_read_function_pointer(sprite_attribute_table+1);
+				    sprite_name=vram_read_function_pointer(sprite_attribute_table+2);
+				    attr_color_etc=vram_read_function_pointer(sprite_attribute_table+3);
+                }
 
 				vert_pos++;
 				
 				if (menu_debug_spritenav_raw.v) {
 				
+                    if (vdp_9918a_si_sms_video_mode4() ) {
+                        sprintf (dumpmemoria,"%03d %02X %02X %02X",current_sprite,vert_pos,horiz_pos,sprite_name);
+                    }
+
+                    else  {
 				
-				sprintf (dumpmemoria,"%03d %02X %02X %02X %02X",current_sprite,vert_pos,horiz_pos,sprite_name,attr_color_etc);
+				        sprintf (dumpmemoria,"%03d %02X %02X %02X %02X",current_sprite,vert_pos,horiz_pos,sprite_name,attr_color_etc);
+                    }
 				
 				
 				
@@ -4120,14 +4143,21 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 				else {
 				
 
-				sprintf (dumpmemoria,"%02d X: %3d Y: %3d",
-					current_sprite,horiz_pos,vert_pos);
-				
-				zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+                    sprintf (dumpmemoria,"%02d X: %3d Y: %3d",
+                        current_sprite,horiz_pos,vert_pos);
 
-				sprintf (dumpmemoria," Name: %3d Color: %02d EC: %d",
-					sprite_name,attr_color_etc & 15,(attr_color_etc>>7) & 1);
-					
+                    zxvision_print_string_defaults_fillspc(menu_debug_tsconf_tbblue_msx_spritenav_draw_sprites_window,1,linea++,dumpmemoria);
+
+
+                    if (vdp_9918a_si_sms_video_mode4() ) {
+                        sprintf (dumpmemoria," Name: %3d",sprite_name);
+                    }
+                    else {
+
+                        sprintf (dumpmemoria," Name: %3d Color: %02d EC: %d",
+                            sprite_name,attr_color_etc & 15,(attr_color_etc>>7) & 1);
+                    }
+                        
 					
 				}
 				

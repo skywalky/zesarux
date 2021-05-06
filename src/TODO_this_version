@@ -183,3 +183,5 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 
 
 -snapshot en master system sonic2 al entrar restaura siempre al principio
+
+-estadisticas memoria etc con getrusage
