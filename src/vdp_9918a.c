@@ -410,6 +410,11 @@ z80_int vdp_9918a_get_pattern_base_address(void)
 
     z80_int pattern_base_address=(vdp_9918a_registers[4]&7) * 0x800; 
 
+    if (vdp_9918a_si_sms_video_mode4()) {
+        //TODO. esto siempre asi??
+        pattern_base_address=0;
+    }
+
     return pattern_base_address;
 }
 

@@ -179,20 +179,14 @@ void vdp_9918a_render_ula_no_rainbow_sms(z80_byte *vram,int render_tiles_foregro
 	z80_int pattern_base_address; 
 	z80_int pattern_name_table; 
 
-
-    pattern_base_address=vdp_9918a_get_pattern_base_address();
-
-
-
 	int char_width=8;
 
 	
 
-    z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
+    z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;    
 
 
-    //TODO. esto siempre asi??
-    pattern_base_address=0;
+    pattern_base_address=vdp_9918a_get_pattern_base_address();
 
 
     pattern_name_table=vdp_9918a_get_pattern_name_table();
@@ -831,8 +825,7 @@ void vdp_9918a_render_rainbow_display_line_sms(int scanline,z80_int *scanline_bu
     z80_byte byte_leido1,byte_leido2,byte_leido3,byte_leido4;
 
 
-    //TODO. esto siempre asi??
-    pattern_base_address=0;
+
 
 
     pattern_name_table=vdp_9918a_get_pattern_name_table();
