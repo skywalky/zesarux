@@ -5228,7 +5228,43 @@ else if (!strcmp(comando_sin_parametros,"smartload") || !strcmp(comando_sin_para
 
   }
 
+    else if (!strcmp(comando_sin_parametros,"snapshot-inram-get-index") ) {
+        //Retorna el indice al elemento N, donde 0 es el mas antiguo
 
+        remote_parse_commands_argvc(parametros);
+
+        if (remote_command_argc<1) {
+                escribir_socket(misocket,"ERROR. Needs one parameter");
+                return;
+        }
+
+        int index_int=parse_string_to_number(remote_command_argv[0]);
+
+        int indice_retorno=snapshot_in_ram_get_element(index_int);
+
+        escribir_socket_format(misocket,"%d",indice_retorno);        
+    }
+
+    else if (!strcmp(comando_sin_parametros,"snapshot-inram-load") ) {
+        //Carga el snapshot N de memoria, donde 0 es el mas antiguo
+
+        remote_parse_commands_argvc(parametros);
+
+        if (remote_command_argc<1) {
+            escribir_socket(misocket,"ERROR. Needs one parameter");
+            return;
+        }
+
+        int index_int=parse_string_to_number(remote_command_argv[0]);
+
+        int resultado=snapshot_in_ram_load(index_int);
+
+        if (resultado<0) escribir_socket_format(misocket,"Error loading snapshot from ram position %d",index_int);
+ 
+    }    
+
+
+    
 
   else if (!strcmp(comando_sin_parametros,"snapshot-load") ) {
 

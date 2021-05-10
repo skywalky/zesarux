@@ -1882,6 +1882,7 @@ int load_zsf_eof(FILE *ptr_zsf_file,int longitud_memoria)
 //Load snapshot de disco o desde memoria
 //Si leer de archivo, filename contiene nombre y no se usa origin_memory ni longitud_memoria
 //Si leer en memoria, filename es NULL y origin_memory contiene puntero origen memoria y longitud_memoria contiene longitud bloque memoria
+//Si modo rapido, no resetea maquina al cargar snapshot
 void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longitud_memoria,int load_fast_mode)
 {
 
@@ -3975,4 +3976,244 @@ void check_pending_zrcp_put_snapshot(void)
     pending_zrcp_put_snapshot_buffer_destino=NULL;
   }
 
+}
+
+
+//int temp_conta=0;
+//z80_byte *temp_puntero;
+//int temp_temp_longitud;
+
+//Crea un snapshot en ram y retorna puntero asociado a dicha memoria asignada
+//mete en *longitud la longitud de dicho snapshot
+z80_byte *save_zsf_snapshot_to_ram(int *p_longitud)
+{
+
+    //Asignamos primero lo máximo pues no sabemos cuanto ocupara nuestro snapshot
+    z80_byte *buffer_temp;
+    buffer_temp=malloc(MAX_ZSF_SNAPSHOT_SIZE); 
+    if (buffer_temp==NULL) cpu_panic("Can not allocate memory for save_zsf_snapshot_to_ram");
+
+    z80_byte *puntero=buffer_temp; 
+    int longitud;
+
+    save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
+
+    printf ("Saving snapshot to ram. Length: %d\n",longitud);
+
+    //Y luego asignamos ya la memoria definitiva y copiamos dicho snapshot
+
+    z80_byte *buffer_final;
+    buffer_final=malloc(longitud); 
+    if (buffer_final==NULL) cpu_panic("Can not allocate memory for save_zsf_snapshot_to_ram");
+
+    memcpy(buffer_final,buffer_temp,longitud);
+
+    *p_longitud=longitud;
+
+    free(buffer_temp);
+
+    //temp_conta++;
+
+
+    //prueba
+    //if (temp_conta==100) {
+        //apuntar referencia a ese snapshot
+    //    temp_puntero=buffer_final;
+    //    temp_temp_longitud=longitud;
+    //}
+
+    return buffer_final;
+}
+
+
+//Definir maximo 1000 slots para salvado automatico en RAM
+//constante definida con : MAX_SNAPSHOTS_IN_RAM
+
+//Esto se organiza en modo de lista, y cuando se llega al final, se sobreescribe el primero
+struct s_snapshots_in_ram snapshots_in_ram[MAX_TOTAL_SNAPSHOTS_IN_RAM];
+
+//primer elemento de la lista en snapshots. cuando se llena, se ira moviendo en adelante
+int snapshots_in_ram_first_element=0;
+
+//total de elementos en la lista
+int snapshots_in_ram_total_elements=0;
+
+//indice del elemento a escribir. Se podria deducir mediante el primero y el total, pero asi es mas facil usarlo
+int snapshots_in_ram_index_to_write=0;
+
+//total de snapshots que el usuario mantiene en ram
+int snapshots_in_ram_maximum=MAX_TOTAL_SNAPSHOTS_IN_RAM;
+
+//Inicializar todas variables
+void snapshots_in_ram_reset(void)
+{
+    snapshots_in_ram_first_element=0;
+    snapshots_in_ram_total_elements=0;
+    snapshots_in_ram_index_to_write=0;
+}
+
+//Meter un snapshot en elemento de la lista
+void snapshot_to_ram_element(int indice)
+{
+    z80_byte *puntero;
+
+    int longitud;
+
+    puntero=save_zsf_snapshot_to_ram(&longitud);
+
+    //TODO: agregar hora, minutos, segundos
+    snapshots_in_ram[indice].memoria=puntero;
+    snapshots_in_ram[indice].longitud=longitud;
+}
+
+//Incrementar el indice. Si llega al final, dar la vuelva
+int snapshot_increment_index(int indice)
+{
+    indice++;
+    if (indice==snapshots_in_ram_maximum) {
+        //el primero (el mas antiguo) vuelve a ser el 0
+        indice=0;
+    }
+
+    return indice;
+}
+
+int snapshot_in_ram_rewind_last_position;
+
+int snapshot_in_ram_rewind_initialized=0;
+
+int temp_conta;
+//Agregar snapshot en siguiente elemento de la lista
+void snapshot_add_in_ram(void)
+{
+
+    //temp. hacerlo 1 vez cada 50 frames
+    temp_conta++;
+
+    if ((temp_conta %50)!=0) return;
+
+    //Indice de donde escribir el snapshot
+    int indice_a_escribir;
+
+    //Si esta llena la lista, habrá que liberar el mas antiguo
+    if (snapshots_in_ram_total_elements==snapshots_in_ram_maximum) {
+        z80_byte *memoria_liberar;
+        memoria_liberar=snapshots_in_ram[snapshots_in_ram_first_element].memoria;
+        printf("Liberando memoria del snapshot mas antiguo: %p\n",memoria_liberar);
+        free(memoria_liberar);
+
+        //Y el primero avanza
+        snapshots_in_ram_first_element=snapshot_increment_index(snapshots_in_ram_first_element);
+        
+    }
+
+    else {
+        //Aun no esta lleno, hay 1 elemento mas
+        snapshots_in_ram_total_elements++;
+    }
+
+    indice_a_escribir=snapshots_in_ram_index_to_write;
+
+    //Y escribimos snapshot
+    snapshot_to_ram_element(indice_a_escribir);
+
+    //Y decimos el ultimo cual es
+    snapshots_in_ram_index_to_write=snapshot_increment_index(snapshots_in_ram_index_to_write);
+
+    printf("snapshot_add_in_ram. after add. snapshots_in_ram_index_to_write %d snapshots_in_ram_total_elements %d snapshots_in_ram_first_element %d\n",
+        snapshots_in_ram_index_to_write,snapshots_in_ram_total_elements,snapshots_in_ram_first_element);
+
+
+    //Y el contador de rewind se decrementa, pues va desplazandose atras en el tiempo
+    if (snapshot_in_ram_rewind_last_position>=0) snapshot_in_ram_rewind_last_position--;
+}
+
+//Retorna un indice a elemento snapshot dentro de la lista
+//0=el mas antiguo
+//retorna <0 si se va mas alla del tamaño escrito
+int snapshot_in_ram_get_element(int indice)
+{
+
+    if (indice>=snapshots_in_ram_total_elements) {
+        return -1;
+    }
+
+    //Si no esta lleno, es facil
+    /*if (snapshots_in_ram_total_elements!=MAX_SNAPSHOTS_IN_RAM) {
+        return indice;
+    }*/
+
+    //Y si esta lleno, dara la vuelta
+    //snapshots_in_ram_first_element
+
+    //Si le pedimos mas alla del array y da la vuelta
+    if (snapshots_in_ram_first_element+indice>=snapshots_in_ram_total_elements) {
+        int sumado=snapshots_in_ram_first_element+indice;
+
+        int resto=sumado-snapshots_in_ram_maximum;
+        return resto;
+        //Ejemplo: primer elemento en 998. Pedimos el elemento numero 7
+        //sumado=998+7=1005
+        //resto=1005-1000=5
+        //retorna 5
+    }
+    else {
+        //no da la vuelta
+        return snapshots_in_ram_first_element+indice;
+    }
+}
+
+//Recupera un snapshot de ram. posicion=0 es el mas antiguo
+//retorna <0 si error
+int snapshot_in_ram_load(int posicion)
+{
+    int indice=snapshot_in_ram_get_element(posicion);
+
+    if (indice<0) return -1;
+
+    z80_byte *puntero_memoria;
+    int longitud;
+
+    puntero_memoria=snapshots_in_ram[indice].memoria;
+    longitud=snapshots_in_ram[indice].longitud;
+
+    printf("snapshot_in_ram_load: load snapshot from memory %p length %d\n",puntero_memoria,longitud);
+
+    load_zsf_snapshot_file_mem(NULL,puntero_memoria,longitud,0);
+
+                    //z80_byte *temp_puntero;
+                    //int temp_temp_longitud;
+                //    load_zsf_snapshot_file_mem(NULL,temp_puntero,temp_temp_longitud,0);
+                //}
+
+    return 0;
+
+}
+
+
+
+
+
+//Accion de "rebobinar"
+void snapshot_in_ram_rewind(void)
+{
+    if (!snapshot_in_ram_rewind_initialized) {
+        printf("Not initialized yet.\n");
+
+        //posicion es la actual-1
+        //si total elementos=1, posicion actual=0
+        int posicion_actual=snapshots_in_ram_total_elements-1;
+
+        snapshot_in_ram_rewind_last_position=posicion_actual-1;
+
+        snapshot_in_ram_rewind_initialized=1;
+    }
+
+    if (snapshot_in_ram_rewind_last_position<0) {
+        printf("Can't rewind. It has been overwritten\n");
+        return;
+    }
+
+    //Restaurar ese snapshot
+    snapshot_in_ram_load(snapshot_in_ram_rewind_last_position);
 }

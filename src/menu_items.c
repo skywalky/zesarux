@@ -213,6 +213,8 @@ int fileselector_settings_opcion_seleccionada=0;
 
 int midi_output_instrument_opcion_seleccionada=0;
 
+int snapshot_rewind_opcion_seleccionada=0;
+
 
 //Fin opciones seleccionadas para cada menu
 
@@ -26609,5 +26611,97 @@ void menu_debug_load_source_code(MENU_ITEM_PARAMETERS)
         }
 
     }
+
+}
+
+void menu_snapshot_rewind_browse_select(MENU_ITEM_PARAMETERS)
+{
+    //Aplicar ese snapshot
+    snapshot_in_ram_load(valor_opcion); 
+}
+
+void menu_snapshot_rewind_browse(MENU_ITEM_PARAMETERS)
+{
+    menu_item *array_menu_comon;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    do {
+
+        //Inicializar el ultimo a 0 siempre
+        int snapshot_rewind_browse_opcion_seleccionada=0;
+
+        menu_add_item_menu_inicial(&array_menu_comon,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+
+        int i;
+        for (i=0;i<snapshots_in_ram_total_elements;i++) {
+
+            //char buffer_entrada[100];
+            int indice=snapshot_in_ram_get_element(i);
+
+             
+
+            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_browse_select,NULL,"%4d: %02d:%02d:%02d",
+                i,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);   
+            
+            menu_add_item_menu_valor_opcion(array_menu_comon,i);
+        }
+
+
+
+
+        menu_add_item_menu(array_menu_comon,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        menu_add_ESC_item(array_menu_comon);
+
+        retorno_menu=menu_dibuja_menu(&snapshot_rewind_browse_opcion_seleccionada,&item_seleccionado,array_menu_comon,"Rewind");
+
+
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+            }
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);   
+}
+
+
+void menu_snapshot_rewind(MENU_ITEM_PARAMETERS)
+{
+    menu_item *array_menu_comon;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    do {
+
+
+
+        menu_add_item_menu_inicial_format(&array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_browse,NULL,"Browse");
+
+
+
+
+        menu_add_item_menu(array_menu_comon,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        menu_add_ESC_item(array_menu_comon);
+
+        retorno_menu=menu_dibuja_menu(&snapshot_rewind_opcion_seleccionada,&item_seleccionado,array_menu_comon,"Rewind");
+
+
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+            }
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
