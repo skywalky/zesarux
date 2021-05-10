@@ -4110,10 +4110,12 @@ int snapshot_in_ram_rewind_initial_position=0;
 
 //char snapshot_in_ram_pending_message_footer_message[1000];
 
+z80_bit snapshot_in_ram_enabled={0};
 
 //Agregar snapshot en siguiente elemento de la lista
 void snapshot_add_in_ram(void)
 {
+    if (snapshot_in_ram_enabled.v==0) return;
 
     //Hacerlo 1 vez cada 50 frames
     snapshot_in_ram_frames_counter++;
@@ -4262,9 +4264,9 @@ void snapshot_in_ram_rewind(void)
     //Contar cuantos segundos atras sera eso
     int diferencia=snapshot_in_ram_rewind_initial_position-snapshot_in_ram_rewind_last_position;
 
-    int segundos=diferencia*snapshot_in_ram_interval_seconds;
+    int segundos=(diferencia+1)*snapshot_in_ram_interval_seconds;
 
-    sprintf(buffer_mensaje,"<<<< %d seconds (%02d:%02d:%02d)",segundos+1,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
+    sprintf(buffer_mensaje,"<<<< %d seconds (%02d:%02d:%02d)",segundos,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
 
 
     //TODO: al activarse esto con F-keys, no se ve el mensaje

@@ -26670,6 +26670,10 @@ void menu_snapshot_rewind_browse(MENU_ITEM_PARAMETERS)
     } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);   
 }
 
+void menu_snapshot_rewind_enable(MENU_ITEM_PARAMETERS)
+{
+    snapshot_in_ram_enabled.v ^=1;  
+}
 
 void menu_snapshot_rewind(MENU_ITEM_PARAMETERS)
 {
@@ -26680,9 +26684,14 @@ void menu_snapshot_rewind(MENU_ITEM_PARAMETERS)
 
 
 
-        menu_add_item_menu_inicial_format(&array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_browse,NULL,"Browse");
+        menu_add_item_menu_inicial_format(&array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_enable,NULL,"[%c] Enabled",
+        (snapshot_in_ram_enabled.v ? 'X' : ' ' ));
 
+        if (snapshot_in_ram_enabled.v) {
 
+            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_browse,NULL,"Browse");
+
+        }
 
 
         menu_add_item_menu(array_menu_comon,"",MENU_OPCION_SEPARADOR,NULL,NULL);
