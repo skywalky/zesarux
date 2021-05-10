@@ -4095,15 +4095,36 @@ int snapshot_in_ram_rewind_initialized=0;
 
 int snapshot_in_ram_enabled_timer=0;
 
-int temp_conta;
+//contador para hacer el evento cada 50 frames
+int snapshot_in_ram_frames_counter=0;
+
+//cada cuantos segundos se escribe
+int snapshot_in_ram_interval_seconds=2;
+
+int snapshot_in_ram_interval_seconds_counter=0;
+
+int snapshot_in_ram_rewind_initial_position=0;
+
+
+//int snapshot_in_ram_pending_message_footer=0;
+
+//char snapshot_in_ram_pending_message_footer_message[1000];
+
+
 //Agregar snapshot en siguiente elemento de la lista
 void snapshot_add_in_ram(void)
 {
 
-    //temp. hacerlo 1 vez cada 50 frames
-    temp_conta++;
+    //Hacerlo 1 vez cada 50 frames
+    snapshot_in_ram_frames_counter++;
 
-    if ((temp_conta %50)!=0) return;
+    if ((snapshot_in_ram_frames_counter %50)!=0) return;
+
+    snapshot_in_ram_interval_seconds_counter++;
+
+    if (snapshot_in_ram_interval_seconds_counter<snapshot_in_ram_interval_seconds) return;
+
+    snapshot_in_ram_interval_seconds_counter=0;
 
     //Indice de donde escribir el snapshot
     int indice_a_escribir;
@@ -4216,7 +4237,11 @@ void snapshot_in_ram_rewind(void)
         //si total elementos=1, posicion actual=0
         int posicion_actual=snapshots_in_ram_total_elements-1;
 
-        snapshot_in_ram_rewind_last_position=posicion_actual-1;
+        //Vamos al ultimo snapshot
+        snapshot_in_ram_rewind_last_position=posicion_actual; //-1;
+
+        //solo para mostrar este contador, pero no tiene uso real
+        snapshot_in_ram_rewind_initial_position=snapshot_in_ram_rewind_last_position;
 
         snapshot_in_ram_rewind_initialized=1;
     }
@@ -4228,20 +4253,34 @@ void snapshot_in_ram_rewind(void)
     }
 
     //Restaurar ese snapshot
-    printf("Restoring to snapshot number %d (0=oldest)\n",snapshot_in_ram_rewind_last_position);
+    //printf("Restoring to snapshot number %d (0=oldest)\n",snapshot_in_ram_rewind_last_position);
     snapshot_in_ram_load(snapshot_in_ram_rewind_last_position);
 
     char buffer_mensaje[100];
     int indice=snapshot_in_ram_get_element(snapshot_in_ram_rewind_last_position);
-    sprintf(buffer_mensaje,"Rewinding to %02d:%02d:%02d",snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
+
+    //Contar cuantos segundos atras sera eso
+    int diferencia=snapshot_in_ram_rewind_initial_position-snapshot_in_ram_rewind_last_position;
+
+    int segundos=diferencia*snapshot_in_ram_interval_seconds;
+
+    sprintf(buffer_mensaje,"<<<< %d seconds (%02d:%02d:%02d)",segundos+1,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
 
 
     //TODO: al activarse esto con F-keys, no se ve el mensaje
     //quiza meter en footer?
     //screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
 
-    //put_footer_first_message(buffer_mensaje);
+    
+
+    //TODO esto solo escribirlo cuando se pulsa tecla F, no con joystick
+
     printf("%s\n",buffer_mensaje);
+
+    put_footer_first_message(buffer_mensaje);
+
+    //snapshot_in_ram_pending_message_footer=1;
+
 
     //Activar un timer, y cuando pasen 10 segundos, se reinicializara
     snapshot_in_ram_enabled_timer=10;

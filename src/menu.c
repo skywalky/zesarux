@@ -35044,6 +35044,10 @@ menu_init_footer hace falta pues el layer de menu se borra y se queda negro en l
 		zxvision_redraw_all_windows();
 	}
 
+    //if (snapshot_in_ram_pending_message_footer) {
+    //   generic_footertext_print_operating("REWIND"); 
+    //}
+
 }
 
 void menu_process_f_function_pause(void)
