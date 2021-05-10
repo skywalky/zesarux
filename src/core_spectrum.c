@@ -410,7 +410,7 @@ void core_spectrum_fin_frame_pantalla(void)
 				core_end_frame_check_zrcp_zeng_snap.v=1;
 
 
-                //temp snapshot en ram
+                //snapshot en ram
                 snapshot_add_in_ram();
 
 
