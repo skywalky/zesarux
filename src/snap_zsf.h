@@ -86,6 +86,9 @@ extern struct s_snapshots_in_ram snapshots_in_ram[];
 extern int snapshots_in_ram_total_elements;
 extern int snapshot_in_ram_load(int posicion);
 //extern int snapshot_in_ram_pending_message_footer;
+extern void snapshot_add_in_ram(void);
+extern void snapshot_in_ram_rewind(void);
+extern void snapshot_in_ram_rewind_timer(void);
 
 extern int snapshot_in_ram_get_element(int indice);
 
