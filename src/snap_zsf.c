@@ -4044,12 +4044,39 @@ int snapshots_in_ram_index_to_write=0;
 //total de snapshots que el usuario mantiene en ram
 int snapshots_in_ram_maximum=MAX_TOTAL_SNAPSHOTS_IN_RAM;
 
+int snapshot_in_ram_rewind_last_position;
+
+int snapshot_in_ram_rewind_initialized=0;
+
+int snapshot_in_ram_enabled_timer=0;
+
+//contador para hacer el evento cada 50 frames
+int snapshot_in_ram_frames_counter=0;
+
+//cada cuantos segundos se escribe
+int snapshot_in_ram_interval_seconds=1;
+
+int snapshot_in_ram_interval_seconds_counter=0;
+
+int snapshot_in_ram_rewind_initial_position=0;
+
+//cuantos snapshots han pasado desde que se ha pulsado rewind. En cuanto llega mas alla del tamaño de la lista, no se puede seguir pulsando
+//el boton de rewind
+int snapshot_in_ram_rewind_cuantos_pasado=0;
+
+//int snapshot_in_ram_pending_message_footer=0;
+
+//char snapshot_in_ram_pending_message_footer_message[1000];
+
+z80_bit snapshot_in_ram_enabled={0};
+
 //Inicializar todas variables
 void snapshots_in_ram_reset(void)
 {
     snapshots_in_ram_first_element=0;
     snapshots_in_ram_total_elements=0;
     snapshots_in_ram_index_to_write=0;
+    snapshot_in_ram_rewind_initialized=0;
 }
 
 //Meter un snapshot en elemento de la lista
@@ -4089,28 +4116,7 @@ int snapshot_increment_index(int indice)
     return indice;
 }
 
-int snapshot_in_ram_rewind_last_position;
 
-int snapshot_in_ram_rewind_initialized=0;
-
-int snapshot_in_ram_enabled_timer=0;
-
-//contador para hacer el evento cada 50 frames
-int snapshot_in_ram_frames_counter=0;
-
-//cada cuantos segundos se escribe
-int snapshot_in_ram_interval_seconds=2;
-
-int snapshot_in_ram_interval_seconds_counter=0;
-
-int snapshot_in_ram_rewind_initial_position=0;
-
-
-//int snapshot_in_ram_pending_message_footer=0;
-
-//char snapshot_in_ram_pending_message_footer_message[1000];
-
-z80_bit snapshot_in_ram_enabled={0};
 
 //Agregar snapshot en siguiente elemento de la lista
 void snapshot_add_in_ram(void)
@@ -4160,6 +4166,7 @@ void snapshot_add_in_ram(void)
         snapshots_in_ram_index_to_write,snapshots_in_ram_total_elements,snapshots_in_ram_first_element);
 
 
+    snapshot_in_ram_rewind_cuantos_pasado++;
 
 }
 
@@ -4232,6 +4239,9 @@ int snapshot_in_ram_load(int posicion)
 //Accion de "rebobinar"
 void snapshot_in_ram_rewind(void)
 {
+
+    if (snapshot_in_ram_enabled.v==0) return;
+
     if (!snapshot_in_ram_rewind_initialized) {
         printf("Not initialized yet.\n");
 
@@ -4246,10 +4256,21 @@ void snapshot_in_ram_rewind(void)
         snapshot_in_ram_rewind_initial_position=snapshot_in_ram_rewind_last_position;
 
         snapshot_in_ram_rewind_initialized=1;
+
+
+        snapshot_in_ram_rewind_cuantos_pasado=0;
     }
 
+    //Esto sucedera cuando va pulsando rewind hasta ir mas alla del principio
     if (snapshot_in_ram_rewind_last_position<0) {
-        printf("Can't rewind. It has been overwritten\n");
+        printf("Can't rewind beyond beginning\n");
+        //snapshot_in_ram_rewind_initialized=0;
+        return;
+    }
+
+    //Esto sucedera cuando haya escrito X snapshots despues de pulsar rewind, donde X es el total de la lista
+    if (snapshot_in_ram_rewind_cuantos_pasado>=snapshots_in_ram_maximum) {
+        printf("Rewind snapshot reference has been overwritten, can not rewind\n");
         //snapshot_in_ram_rewind_initialized=0;
         return;
     }
@@ -4289,6 +4310,9 @@ void snapshot_in_ram_rewind(void)
 
     //Y el contador de rewind se decrementa, pues va desplazandose atras en el tiempo
     if (snapshot_in_ram_rewind_last_position>=0) snapshot_in_ram_rewind_last_position--;    
+
+    //Y esta mas lejos el snapshot de referencia, dado que hemos ido uno mas atras
+    snapshot_in_ram_rewind_cuantos_pasado++;
 }
 
 void snapshot_in_ram_rewind_timer(void)

@@ -89,6 +89,8 @@ extern int snapshot_in_ram_load(int posicion);
 extern void snapshot_add_in_ram(void);
 extern void snapshot_in_ram_rewind(void);
 extern void snapshot_in_ram_rewind_timer(void);
+extern int snapshot_in_ram_interval_seconds;
+extern int snapshots_in_ram_maximum;
 
 extern z80_bit snapshot_in_ram_enabled;
 
