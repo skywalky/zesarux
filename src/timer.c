@@ -709,6 +709,8 @@ void timer_check_interrupt(void)
                                         }
                                 }
 
+                //temporizador despues de pulsar rewind. Al cabo de 5 segundos se resetea la posicion
+                snapshot_in_ram_rewind_timer();
 
 
 				autosave_snapshot_at_fixed_interval();

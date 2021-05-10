@@ -4064,6 +4064,17 @@ void snapshot_to_ram_element(int indice)
     //TODO: agregar hora, minutos, segundos
     snapshots_in_ram[indice].memoria=puntero;
     snapshots_in_ram[indice].longitud=longitud;
+                
+                //fecha grabacion
+
+                time_t tiempo = time(NULL);
+                struct tm tm = *localtime(&tiempo);
+
+    snapshots_in_ram[indice].hora=tm.tm_hour;
+    snapshots_in_ram[indice].minuto=tm.tm_min;
+    snapshots_in_ram[indice].segundo=tm.tm_sec;
+
+                //printf("now: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
 //Incrementar el indice. Si llega al final, dar la vuelva
@@ -4081,6 +4092,8 @@ int snapshot_increment_index(int indice)
 int snapshot_in_ram_rewind_last_position;
 
 int snapshot_in_ram_rewind_initialized=0;
+
+int snapshot_in_ram_enabled_timer=0;
 
 int temp_conta;
 //Agregar snapshot en siguiente elemento de la lista
@@ -4124,8 +4137,7 @@ void snapshot_add_in_ram(void)
         snapshots_in_ram_index_to_write,snapshots_in_ram_total_elements,snapshots_in_ram_first_element);
 
 
-    //Y el contador de rewind se decrementa, pues va desplazandose atras en el tiempo
-    if (snapshot_in_ram_rewind_last_position>=0) snapshot_in_ram_rewind_last_position--;
+
 }
 
 //Retorna un indice a elemento snapshot dentro de la lista
@@ -4211,9 +4223,41 @@ void snapshot_in_ram_rewind(void)
 
     if (snapshot_in_ram_rewind_last_position<0) {
         printf("Can't rewind. It has been overwritten\n");
+        //snapshot_in_ram_rewind_initialized=0;
         return;
     }
 
     //Restaurar ese snapshot
+    printf("Restoring to snapshot number %d (0=oldest)\n",snapshot_in_ram_rewind_last_position);
     snapshot_in_ram_load(snapshot_in_ram_rewind_last_position);
+
+    char buffer_mensaje[100];
+    int indice=snapshot_in_ram_get_element(snapshot_in_ram_rewind_last_position);
+    sprintf(buffer_mensaje,"Rewinding to %02d:%02d:%02d",snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
+
+
+    //TODO: al activarse esto con F-keys, no se ve el mensaje
+    //quiza meter en footer?
+    //screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
+
+    //put_footer_first_message(buffer_mensaje);
+    printf("%s\n",buffer_mensaje);
+
+    //Activar un timer, y cuando pasen 10 segundos, se reinicializara
+    snapshot_in_ram_enabled_timer=10;
+
+    //Y el contador de rewind se decrementa, pues va desplazandose atras en el tiempo
+    if (snapshot_in_ram_rewind_last_position>=0) snapshot_in_ram_rewind_last_position--;    
+}
+
+void snapshot_in_ram_rewind_timer(void)
+{
+    //temporizador despues de pulsar rewind. Al cabo de 10 segundos se resetea la posicion
+    if (snapshot_in_ram_enabled_timer>=0) {
+        snapshot_in_ram_enabled_timer--;
+        if (snapshot_in_ram_enabled_timer==0) {
+            snapshot_in_ram_rewind_initialized=0;
+            printf("Reseting rewind position after 10 seconds\n");
+        }
+    }
 }
