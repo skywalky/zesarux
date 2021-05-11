@@ -387,7 +387,7 @@ extern void menu_first_aid_init(void);
 extern void menu_first_aid_random_startup(void);
 extern int menu_first_aid_title(char *key_setting,char *title);
 
-#define MAX_F_FUNCTIONS 29
+#define MAX_F_FUNCTIONS 30
 
 enum defined_f_function_ids {
 	//reset, hard-reset, nmi, open menu, ocr, smartload, osd keyboard, exitemulator.
@@ -402,21 +402,22 @@ enum defined_f_function_ids {
 	F_FUNCION_QUICKLOAD,
 	F_FUNCION_QUICKSAVE,
     F_FUNCION_REWIND,
-	F_FUNCION_LOADBINARY, //12
+    F_FUNCION_FFW,
+	F_FUNCION_LOADBINARY, //13
 	F_FUNCION_SAVEBINARY,
 	F_FUNCION_ZENG_SENDMESSAGE,
 	F_FUNCION_OSDKEYBOARD,
 	F_FUNCION_OSDTEXTKEYBOARD,
     F_FUNCION_SWITCHBORDER,
-	F_FUNCION_SWITCHFULLSCREEN, //18
+	F_FUNCION_SWITCHFULLSCREEN, //19
 	F_FUNCION_RELOADMMC, 
 	F_FUNCION_REINSERTTAPE, 
 	F_FUNCION_PAUSEUNPAUSETAPE,
-	F_FUNCION_DEBUGCPU,   //22
+	F_FUNCION_DEBUGCPU,   //23
 	F_FUNCION_PAUSE,    
 	F_FUNCION_TOPSPEED,  
  	F_FUNCION_EXITEMULATOR, 
-	F_FUNCION_BACKGROUND_WINDOW,  //26
+	F_FUNCION_BACKGROUND_WINDOW,  //27
 	F_FUNCION_OVERLAY_WINDOWS,
     F_FUNCION_CLOSE_ALL_MENUS,
     F_FUNCION_ZXUNO_PRISM

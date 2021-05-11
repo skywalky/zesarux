@@ -4315,6 +4315,80 @@ void snapshot_in_ram_rewind(void)
     snapshot_in_ram_rewind_cuantos_pasado++;
 }
 
+//Accion de "avanzar"
+void snapshot_in_ram_ffw(void)
+{
+
+    if (snapshot_in_ram_enabled.v==0) return;
+
+    if (!snapshot_in_ram_rewind_initialized) {
+        printf("Not initialized yet.\n");
+
+        return;
+    }
+
+    //Y el contador de rewind se incrementa, pues va desplazandose atras en el tiempo
+    if (snapshot_in_ram_rewind_last_position<snapshots_in_ram_maximum-1) {
+        snapshot_in_ram_rewind_last_position++;    
+    }
+
+    printf("snapshot_in_ram_rewind_last_position %d\n",snapshot_in_ram_rewind_last_position);    
+
+    //Esto sucedera cuando va pulsando ffw hasta ir mas alla del final
+    if (snapshot_in_ram_rewind_last_position>=snapshot_in_ram_rewind_initial_position) {
+        printf("Can't ffw beyond end\n");
+        //snapshot_in_ram_rewind_initialized=0;
+        return;
+    }
+
+    //Esto sucedera cuando haya escrito X snapshots despues de pulsar rewind, donde X es el total de la lista
+    if (snapshot_in_ram_rewind_cuantos_pasado>=snapshots_in_ram_maximum) {
+        printf("Rewind snapshot reference has been overwritten, can not rewind\n");
+        //snapshot_in_ram_rewind_initialized=0;
+        return;
+    }
+
+    //Restaurar ese snapshot
+    //printf("Restoring to snapshot number %d (0=oldest)\n",snapshot_in_ram_rewind_last_position);
+    snapshot_in_ram_load(snapshot_in_ram_rewind_last_position);
+
+    char buffer_mensaje[100];
+    int indice=snapshot_in_ram_get_element(snapshot_in_ram_rewind_last_position);
+
+    //Contar cuantos segundos atras sera eso
+    int diferencia=snapshot_in_ram_rewind_initial_position-snapshot_in_ram_rewind_last_position;
+
+    int segundos=(diferencia+1)*snapshot_in_ram_interval_seconds;
+
+    sprintf(buffer_mensaje,">>>> %d seconds (%02d:%02d:%02d)",segundos,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
+
+
+    //TODO: al activarse esto con F-keys, no se ve el mensaje
+    //quiza meter en footer?
+    //screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
+
+    
+
+    //TODO esto solo escribirlo cuando se pulsa tecla F, no con joystick
+
+    printf("%s\n",buffer_mensaje);
+
+    put_footer_first_message(buffer_mensaje);
+
+    //snapshot_in_ram_pending_message_footer=1;
+
+
+    //Activar un timer, y cuando pasen 10 segundos, se reinicializara
+    snapshot_in_ram_enabled_timer=10;
+
+
+
+    //Y esta mas cerca el snapshot de referencia, dado que hemos ido uno mas adelante
+    snapshot_in_ram_rewind_cuantos_pasado--;
+}
+
+
+
 void snapshot_in_ram_rewind_timer(void)
 {
     //temporizador despues de pulsar rewind. Al cabo de 10 segundos se resetea la posicion

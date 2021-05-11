@@ -190,7 +190,8 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"SmartLoad",F_FUNCION_SMARTLOAD},
 	{"Quickload",F_FUNCION_QUICKLOAD},
 	{"Quicksave",F_FUNCION_QUICKSAVE},
-    {"Rewind",F_FUNCION_REWIND},
+    {"SnapInRAMRewind",F_FUNCION_REWIND},
+    {"SnapInRAMFFW",F_FUNCION_FFW},
 	{"LoadBinary",F_FUNCION_LOADBINARY},
 	{"SaveBinary",F_FUNCION_SAVEBINARY},
 	{"ZengMessage",F_FUNCION_ZENG_SENDMESSAGE},
@@ -35137,6 +35138,10 @@ void menu_process_f_functions_by_action(int accion)
 
         case F_FUNCION_REWIND:
             snapshot_in_ram_rewind();
+        break;
+
+        case F_FUNCION_FFW:
+            snapshot_in_ram_ffw();
         break;
 
 		case F_FUNCION_LOADBINARY:
