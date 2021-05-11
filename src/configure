@@ -1624,7 +1624,7 @@ ds1307.o: ds1307.c ds1307.h cpu.h debug.h utils.h operaciones.h menu.h
 printers.o: printers.c printers.h cpu.h debug.h utils.h screen.h menu.h
 	\$(CC) \$(CFLAGS) -c printers.c
 
-realjoystick.o: realjoystick.c realjoystick.h cpu.h debug.h joystick.h menu.h utils.h  screen.h compileoptions.h
+realjoystick.o: realjoystick.c realjoystick.h cpu.h debug.h joystick.h menu.h utils.h  screen.h compileoptions.h snap_zsf.h
 	\$(CC) \$(CFLAGS) -c realjoystick.c
 
 ulaplus.o: ulaplus.c ulaplus.h cpu.h debug.h screen.h spectra.h menu.h

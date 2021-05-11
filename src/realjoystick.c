@@ -42,6 +42,7 @@
 #include "utils.h"
 #include "screen.h"
 #include "compileoptions.h"
+#include "snap_zsf.h"
 
 
 
@@ -136,7 +137,9 @@ char *realjoystick_event_names[]={
 	"Aux1",
 	"Aux2",
 	"Aux3",
-	"Aux4"
+	"Aux4",
+    "Rewind",
+    "FForward"
 };
 
 void realjoystick_print_event_keys(void)
@@ -672,6 +675,19 @@ void realjoystick_set_reset_action(int index,int value)
 				menu_button_smartload.v=1;
 			}
 		break;
+
+		case REALJOYSTICK_EVENT_REWIND:
+			if (value) {
+				snapshot_in_ram_rewind();
+			}
+		break;        
+
+		case REALJOYSTICK_EVENT_FFORWARD:
+			if (value) {
+				snapshot_in_ram_ffw();
+			}
+		break;        
+
 
 		case REALJOYSTICK_EVENT_QUICKSAVE:
 
