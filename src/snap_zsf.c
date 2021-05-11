@@ -4290,15 +4290,12 @@ void snapshot_in_ram_rewind(void)
     sprintf(buffer_mensaje,"<<<< %d seconds (%02d:%02d:%02d)",segundos,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
 
 
-    //TODO: al activarse esto con F-keys, no se ve el mensaje
-    //quiza meter en footer?
+    //TODO: este splash solo se ve cuando se acciona por accion de joystick,
+    //y no por F-key, porque al pulsar F-Key se abre y cierra el menu
     screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
 
-    
 
-    //TODO esto solo escribirlo cuando se pulsa tecla F, no con joystick
-
-    printf("%s\n",buffer_mensaje);
+    //printf("%s\n",buffer_mensaje);
 
     put_footer_first_message(buffer_mensaje);
 
@@ -4363,13 +4360,9 @@ void snapshot_in_ram_ffw(void)
     sprintf(buffer_mensaje,">>>> %d seconds (%02d:%02d:%02d)",segundos,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
 
 
-    //TODO: al activarse esto con F-keys, no se ve el mensaje
-    //quiza meter en footer?
-    //screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
-
-    
-
-    //TODO esto solo escribirlo cuando se pulsa tecla F, no con joystick
+    //TODO: este splash solo se ve cuando se acciona por accion de joystick,
+    //y no por F-key, porque al pulsar F-Key se abre y cierra el menu
+    screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
 
     printf("%s\n",buffer_mensaje);
 
