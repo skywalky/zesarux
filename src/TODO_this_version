@@ -188,3 +188,4 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 -variable para poder definir maximo de snaps en memoria (y maximo total 1000)
 
 -agregar llamar desde core a save snapshots to ram en todos los cores
+

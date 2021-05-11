@@ -4292,7 +4292,7 @@ void snapshot_in_ram_rewind(void)
 
     //TODO: al activarse esto con F-keys, no se ve el mensaje
     //quiza meter en footer?
-    //screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
+    screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
 
     
 
