@@ -4048,7 +4048,10 @@ int snapshot_in_ram_rewind_last_position;
 
 int snapshot_in_ram_rewind_initialized=0;
 
+//Contador desde pulsado rewind hasta que se libera la posicion
 int snapshot_in_ram_enabled_timer=0;
+
+int snapshot_in_ram_enabled_timer_timeout=10;
 
 //contador para hacer el evento cada 50 frames
 int snapshot_in_ram_frames_counter=0;
@@ -4243,7 +4246,13 @@ void snapshot_in_ram_rewind(void)
     if (snapshot_in_ram_enabled.v==0) return;
 
     if (!snapshot_in_ram_rewind_initialized) {
-        printf("Not initialized yet.\n");
+        printf("We don't have a initial rewind position. Generating it\n");
+
+        //Si no se ha generado ni el primero
+        if (snapshots_in_ram_total_elements==0) {
+            printf("We haven't generated any snapshot yet\n");
+            return;
+        }
 
         //posicion es la actual-1
         //si total elementos=1, posicion actual=0
@@ -4276,7 +4285,7 @@ void snapshot_in_ram_rewind(void)
     }
 
     //Restaurar ese snapshot
-    //printf("Restoring to snapshot number %d (0=oldest)\n",snapshot_in_ram_rewind_last_position);
+    printf("Restoring to snapshot number %d (0=oldest)\n\n",snapshot_in_ram_rewind_last_position);
     snapshot_in_ram_load(snapshot_in_ram_rewind_last_position);
 
     char buffer_mensaje[100];
@@ -4303,7 +4312,7 @@ void snapshot_in_ram_rewind(void)
 
 
     //Activar un timer, y cuando pasen 10 segundos, se reinicializara
-    snapshot_in_ram_enabled_timer=10;
+    snapshot_in_ram_enabled_timer=snapshot_in_ram_enabled_timer_timeout;
 
     //Y el contador de rewind se decrementa, pues va desplazandose atras en el tiempo
     if (snapshot_in_ram_rewind_last_position>=0) snapshot_in_ram_rewind_last_position--;    
@@ -4312,14 +4321,17 @@ void snapshot_in_ram_rewind(void)
     snapshot_in_ram_rewind_cuantos_pasado++;
 }
 
-//Accion de "avanzar"
+//Accion de "avanzar" dentro de un previo rewind
 void snapshot_in_ram_ffw(void)
 {
+
+    //TODO: al pulsar la primera vez FFW, restaura el mismo snapshot ultimo que se habia recuperado con rewind,
+    //esto es una pijada, se podria corregir, pero tampoco afecta mucho
 
     if (snapshot_in_ram_enabled.v==0) return;
 
     if (!snapshot_in_ram_rewind_initialized) {
-        printf("Not initialized yet.\n");
+        printf("We don't have a initial rewind position. Returning\n");
 
         return;
     }
@@ -4332,7 +4344,7 @@ void snapshot_in_ram_ffw(void)
     printf("snapshot_in_ram_rewind_last_position %d\n",snapshot_in_ram_rewind_last_position);    
 
     //Esto sucedera cuando va pulsando ffw hasta ir mas alla del final
-    if (snapshot_in_ram_rewind_last_position>=snapshot_in_ram_rewind_initial_position) {
+    if (snapshot_in_ram_rewind_last_position>snapshot_in_ram_rewind_initial_position) {
         printf("Can't ffw beyond end\n");
         //snapshot_in_ram_rewind_initialized=0;
         return;
@@ -4346,7 +4358,7 @@ void snapshot_in_ram_ffw(void)
     }
 
     //Restaurar ese snapshot
-    //printf("Restoring to snapshot number %d (0=oldest)\n",snapshot_in_ram_rewind_last_position);
+    printf("Restoring to snapshot number %d (0=oldest)\n\n",snapshot_in_ram_rewind_last_position);
     snapshot_in_ram_load(snapshot_in_ram_rewind_last_position);
 
     char buffer_mensaje[100];
@@ -4357,7 +4369,7 @@ void snapshot_in_ram_ffw(void)
 
     int segundos=(diferencia+1)*snapshot_in_ram_interval_seconds;
 
-    sprintf(buffer_mensaje,">>>> %d seconds (%02d:%02d:%02d)",segundos,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
+    sprintf(buffer_mensaje,"<<<< %d seconds (%02d:%02d:%02d)",segundos,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);
 
 
     //TODO: este splash solo se ve cuando se acciona por accion de joystick,
@@ -4372,7 +4384,7 @@ void snapshot_in_ram_ffw(void)
 
 
     //Activar un timer, y cuando pasen 10 segundos, se reinicializara
-    snapshot_in_ram_enabled_timer=10;
+    snapshot_in_ram_enabled_timer=snapshot_in_ram_enabled_timer_timeout;
 
 
 
@@ -4384,12 +4396,12 @@ void snapshot_in_ram_ffw(void)
 
 void snapshot_in_ram_rewind_timer(void)
 {
-    //temporizador despues de pulsar rewind. Al cabo de 10 segundos se resetea la posicion
+    //temporizador despues de pulsar rewind. Al cabo de 10 segundos (por defecto) se resetea la posicion
     if (snapshot_in_ram_enabled_timer>=0) {
         snapshot_in_ram_enabled_timer--;
         if (snapshot_in_ram_enabled_timer==0) {
             snapshot_in_ram_rewind_initialized=0;
-            printf("Reseting rewind position after 10 seconds\n");
+            printf("Reseting rewind position after %d seconds\n",snapshot_in_ram_enabled_timer_timeout);
         }
     }
 }

@@ -3554,15 +3554,21 @@ int util_write_configfile(void)
  	ADD_STRING_CONFIG,"--tempdir \"%s\"",buffer_temp);
   }
 
-  if (sna_setting_no_change_machine.v)      ADD_STRING_CONFIG,"--snap-no-change-machine");
+  if (sna_setting_no_change_machine.v)          ADD_STRING_CONFIG,"--snap-no-change-machine");
 
-  if (no_close_menu_after_smartload.v)      ADD_STRING_CONFIG,"--no-close-after-smartload");
-  		
+  if (no_close_menu_after_smartload.v)          ADD_STRING_CONFIG,"--no-close-after-smartload");
 
-  if (texto_artistico.v==0)                   ADD_STRING_CONFIG,"--disablearttext");
-                                              ADD_STRING_CONFIG,"--arttextthresold %d",umbral_arttext);
 
-  if (use_scrcursesw.v)                       ADD_STRING_CONFIG,"--curses-ext-utf");
+
+                                                ADD_STRING_CONFIG,"--snapram-interval %d",snapshot_in_ram_interval_seconds);
+                                                ADD_STRING_CONFIG,"--snapram-max %d",snapshots_in_ram_maximum);
+                                                ADD_STRING_CONFIG,"--snapram-rewind-timeout %d",snapshot_in_ram_enabled_timer_timeout);
+
+
+  if (texto_artistico.v==0)                     ADD_STRING_CONFIG,"--disablearttext");
+                                                ADD_STRING_CONFIG,"--arttextthresold %d",umbral_arttext);
+
+  if (use_scrcursesw.v)                         ADD_STRING_CONFIG,"--curses-ext-utf");
 
 
   if (chardetect_printchar_enabled.v)         ADD_STRING_CONFIG,"--enableprintchartrap");

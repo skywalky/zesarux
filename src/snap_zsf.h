@@ -93,6 +93,7 @@ extern void snapshot_in_ram_rewind_timer(void);
 extern int snapshot_in_ram_interval_seconds;
 extern int snapshots_in_ram_maximum;
 extern void snapshots_in_ram_reset(void);
+extern int snapshot_in_ram_enabled_timer_timeout;
 
 extern z80_bit snapshot_in_ram_enabled;
 

@@ -3,6 +3,7 @@ Version 9.3 - xxxx edition. 21 April 2021
 Added Sega Master System emulation
 Added .sms file viewer
 Added midi output and .mid support for QL and SN audio chips (Master System, SG1000, etc)
+Added Automatic Snapshots to RAM + Rewind feature
 Added new improved real tape loading algorithm
 Added setting to disable TZX pauses
 

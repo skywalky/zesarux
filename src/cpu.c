@@ -128,6 +128,7 @@
 #include "ql_qdos_handler.h"
 #include "ql_i8049.h"
 #include "samram.h"
+#include "snap_zsf.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -1563,7 +1564,10 @@ printf (
 		"--tempdir path             Folder to save temporary files. Folder must exist and have read and write permissions\n"
 		"--snap-no-change-machine   Do not change machine when loading sna or z80 snapshots. Just load it on memory\n"
 		"--no-close-after-smartload Do not close menu after SmartLoad\n"
-		
+        "--snapram-interval n         Generate a snapshot in ram every n seconds\n"
+        "--snapram-max n              Maximum snapshots to keep in memory\n"
+        "--snapram-rewind-timeout n   After this time pressed rewind action, the rewind position is reset to current\n"
+
 
 		"\n"
 		"\n"
@@ -6287,6 +6291,38 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--no-close-after-smartload")) {
 				no_close_menu_after_smartload.v=1;
 			}
+
+            else if (!strcmp(argv[puntero_parametro],"--snapram-interval")) {
+                siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<1 || valor>99) {
+					printf ("Invalid snapram-interval value. Must be between 1 and 99\n");
+					exit(1);
+				}
+				snapshot_in_ram_interval_seconds=valor;
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--snapram-max")) {
+                siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<1 || valor>MAX_TOTAL_SNAPSHOTS_IN_RAM) {
+					printf ("Invalid snapram-max value. Must be between 1 and %d\n",MAX_TOTAL_SNAPSHOTS_IN_RAM);
+					exit(1);
+				}
+				snapshots_in_ram_maximum=valor;
+            }
+
+            else if (!strcmp(argv[puntero_parametro],"--snapram-rewind-timeout")) {
+                siguiente_parametro_argumento();
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+				if (valor<1 || valor>99) {
+					printf ("Invalid snapram-rewind-timeout value. Must be between 1 and 99\n");
+					exit(1);
+				}
+				snapshot_in_ram_enabled_timer_timeout=valor;
+            }
+
+
 
 			else if (!strcmp(argv[puntero_parametro],"--loadbinary")) {
 				siguiente_parametro_argumento();

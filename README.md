@@ -32,6 +32,7 @@ And also:
 * Spectravideo 318/328
 * Colecovision
 * Sega SG1000
+* Sega Master System
 
 ZEsarUX source code and binaries are distributed under GNU GPL license. 
 ZEsarUX also includes a folder, "my_soft", which has some programs and data made by me. The entire folder is also covered by the GNU GPL license.
@@ -114,6 +115,7 @@ __FEATURES__
     * Spectravideo 318/328
     * Colecovision
     * Sega SG1000
+    * Sega Master System
 
 * Is the only emulator for machines: Chloe 140/280, Prism and Chrome
 
@@ -217,8 +219,6 @@ __FEATURES__
 
 * Emulates SN76489AN Audio Chip
 
-* Real time playback from AY Chip sound to external MIDI device 
-
 * Emulates Quicksilva, ZON-X81, and VSYNC-based sound on ZX80/81
 
 * Emulates Speaker and Soundbox sound on Jupiter Ace
@@ -261,15 +261,23 @@ __FEATURES__
 
 * Supports reading Pokes from .POK files
 
-* AY Chip Tools: AY Player, AY Sheet, AY Piano, AY Registers, export AY music to midi (.mid) files, AY Mixer
+* Audio Chip Tools: For the 3 emulated audio chips (AY-3-8912, SN76489AN, QL i8049): Sheet, Piano, Registers, export music to midi (.mid) files
+
+* Real time playback from Audio Chip Sound (AY-3-8912, SN76489AN, QL i8049) to external MIDI device
+
+* AY Player: allowing to play music from .AY files
+
+* AY Mixer
 
 * Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog) or just by using a telnet client.
 
 * Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
 
+* Can generate Automatic Snapshots to RAM and also do a Rewind operation
+
 * Powerful debug features: Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, verbose messages on console, DAAD/PAWS/Quill Debugger
 
-* File utilities menu: Allowing to view, expand and convert some common file formats: tap, tzx, trd, dsk, mdv, hdf, etc
+* File utilities menu: Allowing to view, expand and convert some common file formats: tap, tzx, trd, dsk, mdv, hdf, etc. Can also browse inside file system images (.mmc, .img, etc)
 
 * Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can also be read by a text-to-speech program.
 
