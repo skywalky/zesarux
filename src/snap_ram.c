@@ -42,51 +42,9 @@
 #include "autoselectoptions.h"
 
 
-//int temp_conta=0;
-//z80_byte *temp_puntero;
-//int temp_temp_longitud;
-
-//Crea un snapshot en ram y retorna puntero asociado a dicha memoria asignada
-//mete en *longitud la longitud de dicho snapshot
-z80_byte *save_zsf_snapshot_to_ram(int *p_longitud)
-{
-
-    //Asignamos primero lo máximo pues no sabemos cuanto ocupara nuestro snapshot
-    z80_byte *buffer_temp;
-    buffer_temp=malloc(MAX_ZSF_SNAPSHOT_SIZE); 
-    if (buffer_temp==NULL) cpu_panic("Can not allocate memory for save_zsf_snapshot_to_ram");
-
-    z80_byte *puntero=buffer_temp; 
-    int longitud;
-
-    save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
-
-    printf ("Saving snapshot to ram. Length: %d\n",longitud);
-
-    //Y luego asignamos ya la memoria definitiva y copiamos dicho snapshot
-
-    z80_byte *buffer_final;
-    buffer_final=malloc(longitud); 
-    if (buffer_final==NULL) cpu_panic("Can not allocate memory for save_zsf_snapshot_to_ram");
-
-    memcpy(buffer_final,buffer_temp,longitud);
-
-    *p_longitud=longitud;
-
-    free(buffer_temp);
-
-    //temp_conta++;
+//Snapshot to RAM functions
 
 
-    //prueba
-    //if (temp_conta==100) {
-        //apuntar referencia a ese snapshot
-    //    temp_puntero=buffer_final;
-    //    temp_temp_longitud=longitud;
-    //}
-
-    return buffer_final;
-}
 
 
 //Definir maximo 1000 slots para salvado automatico en RAM
@@ -135,6 +93,50 @@ int snapshot_in_ram_rewind_cuantos_pasado=0;
 //char snapshot_in_ram_pending_message_footer_message[1000];
 
 z80_bit snapshot_in_ram_enabled={0};
+
+
+//Crea un snapshot en ram y retorna puntero asociado a dicha memoria asignada
+//mete en *longitud la longitud de dicho snapshot
+z80_byte *save_zsf_snapshot_to_ram(int *p_longitud)
+{
+
+    //Asignamos primero lo máximo pues no sabemos cuanto ocupara nuestro snapshot
+    z80_byte *buffer_temp;
+    buffer_temp=malloc(MAX_ZSF_SNAPSHOT_SIZE); 
+    if (buffer_temp==NULL) cpu_panic("Can not allocate memory for save_zsf_snapshot_to_ram");
+
+    z80_byte *puntero=buffer_temp; 
+    int longitud;
+
+    save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
+
+    printf ("Saving snapshot to ram. Length: %d\n",longitud);
+
+    //Y luego asignamos ya la memoria definitiva y copiamos dicho snapshot
+
+    z80_byte *buffer_final;
+    buffer_final=malloc(longitud); 
+    if (buffer_final==NULL) cpu_panic("Can not allocate memory for save_zsf_snapshot_to_ram");
+
+    memcpy(buffer_final,buffer_temp,longitud);
+
+    *p_longitud=longitud;
+
+    free(buffer_temp);
+
+    //temp_conta++;
+
+
+    //prueba
+    //if (temp_conta==100) {
+        //apuntar referencia a ese snapshot
+    //    temp_puntero=buffer_final;
+    //    temp_temp_longitud=longitud;
+    //}
+
+    return buffer_final;
+}
+
 
 //Inicializar todas variables
 void snapshots_in_ram_reset(void)
