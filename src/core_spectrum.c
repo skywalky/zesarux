@@ -62,6 +62,7 @@
 #include "zeng.h"
 #include "ds1307.h"
 #include "gs.h"
+#include "snap_ram.h"
 
 z80_byte byte_leido_core_spectrum;
 

@@ -56,7 +56,7 @@
 #include "settings.h"
 #include "ql_i8049.h"
 #include "cpc.h"
-#include "snap_zsf.h"
+#include "snap_ram.h"
 
 #include "autoselectoptions.h"
 

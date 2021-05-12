@@ -128,7 +128,7 @@
 #include "ql_qdos_handler.h"
 #include "ql_i8049.h"
 #include "samram.h"
-#include "snap_zsf.h"
+#include "snap_ram.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"

@@ -121,6 +121,7 @@
 #include "ff.h"
 #include "diskio.h"
 #include "zvfs.h"
+#include "snap_ram.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;

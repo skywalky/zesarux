@@ -56,6 +56,7 @@
 #include "vdp_9918a.h"
 #include "sn76489an.h"
 #include "vdp_9918a_sms.h"
+#include "snap_ram.h"
 
 
 z80_byte byte_leido_core_sms;

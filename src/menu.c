@@ -114,6 +114,7 @@
 #include "ff.h"
 #include "diskio.h"
 #include "zvfs.h"
+#include "snap_ram.h"
 
 #if defined(__APPLE__)
 	#include <sys/syslimits.h>

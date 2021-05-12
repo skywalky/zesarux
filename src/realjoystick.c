@@ -42,7 +42,7 @@
 #include "utils.h"
 #include "screen.h"
 #include "compileoptions.h"
-#include "snap_zsf.h"
+#include "snap_ram.h"
 
 
 

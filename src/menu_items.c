@@ -115,6 +115,7 @@
 #include "gs.h"
 #include "zvfs.h"
 #include "vdp_9918a_sms.h"
+#include "snap_ram.h"
 
 #ifdef COMPILE_ALSA
 #include "audioalsa.h"

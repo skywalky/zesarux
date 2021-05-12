@@ -66,38 +66,12 @@
 
 #define MAX_ZSF_SNAPSHOT_SIZE 1024*1024*16
 
-//total de elementos en el array. El usuario puede cambiar el total que mantiene en ram pero no puede exceder este valor
-#define MAX_TOTAL_SNAPSHOTS_IN_RAM 1000
 
-//Estructura para salvado de snapshots en ram
 
-struct s_snapshots_in_ram {
-    //en donde esta asignada dicha memoria
-    z80_byte *memoria;
 
-    //longitud de ese snapshot
-    int longitud;
 
-    //cuando se ha generado 
-    int hora,minuto,segundo;
-};
 
-extern struct s_snapshots_in_ram snapshots_in_ram[];
-extern int snapshots_in_ram_total_elements;
-extern int snapshot_in_ram_load(int posicion);
-//extern int snapshot_in_ram_pending_message_footer;
-extern void snapshot_add_in_ram(void);
-extern void snapshot_in_ram_rewind(void);
-extern void snapshot_in_ram_ffw(void);
-extern void snapshot_in_ram_rewind_timer(void);
-extern int snapshot_in_ram_interval_seconds;
-extern int snapshots_in_ram_maximum;
-extern void snapshots_in_ram_reset(void);
-extern int snapshot_in_ram_enabled_timer_timeout;
 
-extern z80_bit snapshot_in_ram_enabled;
-
-extern int snapshot_in_ram_get_element(int indice);
 
 extern void load_zsf_snapshot(char *filename);
 extern void save_zsf_snapshot(char *filename);

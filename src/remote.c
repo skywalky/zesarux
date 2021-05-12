@@ -61,6 +61,7 @@
 #include "zeng.h"
 #include "ql_qdos_handler.h"
 #include "tape.h"
+#include "snap_ram.h"
 
 
 
