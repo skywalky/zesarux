@@ -950,6 +950,7 @@ creo que falla por esto ???:
  counter, not the starting column value, that is checked to see when the
  vertical scroll value will be set to zero on columns 24 to 31.
 
+terminator: se ven mal la mayoria de tiles
 
 road rash: se ralentiza mucho en juego y en intro 
 pitufos: fase dos en rio se ve raro
