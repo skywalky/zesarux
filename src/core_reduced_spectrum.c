@@ -59,7 +59,7 @@
 
 #include "snap_zsf.h"
 #include "zeng.h"
-
+#include "snap_ram.h"
 
 
 
@@ -322,6 +322,9 @@ void cpu_core_loop_reduced_spectrum(void)
 				}
 
 				core_end_frame_check_zrcp_zeng_snap.v=1;
+
+                //snapshot en ram
+                snapshot_add_in_ram();                
 
 			}
 			//Fin bloque final de pantalla

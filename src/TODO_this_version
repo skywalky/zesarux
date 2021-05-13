@@ -185,7 +185,9 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 
 -estadisticas memoria etc con getrusage
 
--poder redefinir cuanto tiempo despues de pulsar el rewind se vuelve a resetear posicion(ahora esta en 10 segundos)
+-Quizá cuando se ha pulsado rewind y hasta que no hay el timeout, no generar nuevos snapshots. 
+Si no, cuando pasa el timeout y se hace rewind, aparecen unos snapshot “temporales” que quizá el usuario 
+no quiere ver. O siempre así o igual personalizable. Probarlo
 
 -agregar llamar desde core a save snapshots to ram en todos los cores
 

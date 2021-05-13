@@ -53,7 +53,7 @@
 #include "ql_zx8302.h"
 #include "zeng.h"
 #include "snap_zsf.h"
-
+#include "snap_ram.h"
 
 
 z80_byte byte_leido_core_ql;
@@ -290,21 +290,24 @@ void cpu_core_loop_ql(void)
 pc_intr equ     $18021  bits 4..0 set as pending level 2 interrupts
 */
 
-      //Sirve para algo esto????
-			//ql_pc_intr |=31;
+                //Sirve para algo esto????
+                //ql_pc_intr |=31;
 
-            //hace que se lea tecla desde menu. Aunque con el 8 ya es suficiente
-            //ql_pc_intr |=2;
+                //hace que se lea tecla desde menu. Aunque con el 8 ya es suficiente
+                //ql_pc_intr |=2;
 
-            //frame. hace parpadear pantalla
-            ql_pc_intr |=8;
+                //frame. hace parpadear pantalla
+                ql_pc_intr |=8;
 
-            //No estoy seguro si esto son las interrupciones que genera el timer o no
-            //Esto acaba generando llamadas a leer PC_INTR		Interrupt register
-			m68k_set_irq(2);
-			
+                //No estoy seguro si esto son las interrupciones que genera el timer o no
+                //Esto acaba generando llamadas a leer PC_INTR		Interrupt register
+                m68k_set_irq(2);
 
-            core_end_frame_check_zrcp_zeng_snap.v=1;
+
+                core_end_frame_check_zrcp_zeng_snap.v=1;
+
+                //snapshot en ram
+                snapshot_add_in_ram();            
 
 			}
 

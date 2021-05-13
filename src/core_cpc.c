@@ -50,6 +50,7 @@
 
 #include "snap_zsf.h"
 #include "zeng.h"
+#include "snap_ram.h"
 
 z80_byte byte_leido_core_cpc;
 
@@ -137,6 +138,9 @@ void core_cpc_final_frame(void)
     }
 
     core_end_frame_check_zrcp_zeng_snap.v=1;
+
+    //snapshot en ram
+    snapshot_add_in_ram();    
 
 
 }

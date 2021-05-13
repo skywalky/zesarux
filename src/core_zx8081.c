@@ -49,6 +49,7 @@
 
 #include "snap_zsf.h"
 #include "zeng.h"
+#include "snap_ram.h"
 
 
 void init_zx8081_scanline_y_x(int y,int x,int ancho)
@@ -358,6 +359,9 @@ void cpu_core_loop_zx8081(void)
 				}
 
 				core_end_frame_check_zrcp_zeng_snap.v=1;
+
+                //snapshot en ram
+                snapshot_add_in_ram();                
 
 				//para el detector de vsync sound
 				if (zx8081_detect_vsync_sound.v) {

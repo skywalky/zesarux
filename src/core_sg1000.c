@@ -55,6 +55,7 @@
 #include "sg1000.h"
 #include "vdp_9918a.h"
 #include "sn76489an.h"
+#include "snap_ram.h"
 
 
 z80_byte byte_leido_core_sg1000;
@@ -234,6 +235,9 @@ void core_sg1000_fin_frame_pantalla(void)
 
 
 				core_end_frame_check_zrcp_zeng_snap.v=1;
+
+                //snapshot en ram
+                snapshot_add_in_ram();                
 
 
 }
