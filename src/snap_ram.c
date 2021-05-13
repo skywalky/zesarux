@@ -19,6 +19,11 @@
 
 */
 
+/*
+   Snapshot to RAM functions
+*/
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -40,9 +45,6 @@
 #include "snap_ram.h"
 #include "menu.h"
 #include "autoselectoptions.h"
-
-
-//Snapshot to RAM functions
 
 
 
@@ -110,7 +112,7 @@ z80_byte *save_zsf_snapshot_to_ram(int *p_longitud)
 
     save_zsf_snapshot_file_mem(NULL,puntero,&longitud);
 
-    printf ("Saving snapshot to ram. Length: %d\n",longitud);
+    debug_printf (VERBOSE_INFO,"Saving snapshot to ram. Length: %d",longitud);
 
     //Y luego asignamos ya la memoria definitiva y copiamos dicho snapshot
 
@@ -124,15 +126,7 @@ z80_byte *save_zsf_snapshot_to_ram(int *p_longitud)
 
     free(buffer_temp);
 
-    //temp_conta++;
 
-
-    //prueba
-    //if (temp_conta==100) {
-        //apuntar referencia a ese snapshot
-    //    temp_puntero=buffer_final;
-    //    temp_temp_longitud=longitud;
-    //}
 
     return buffer_final;
 }
@@ -156,20 +150,19 @@ void snapshot_to_ram_element(int indice)
 
     puntero=save_zsf_snapshot_to_ram(&longitud);
 
-    //TODO: agregar hora, minutos, segundos
     snapshots_in_ram[indice].memoria=puntero;
     snapshots_in_ram[indice].longitud=longitud;
                 
-                //fecha grabacion
-
-                time_t tiempo = time(NULL);
-                struct tm tm = *localtime(&tiempo);
+    //fecha grabacion
+    //agregar hora, minutos, segundos
+    time_t tiempo = time(NULL);
+    struct tm tm = *localtime(&tiempo);
 
     snapshots_in_ram[indice].hora=tm.tm_hour;
     snapshots_in_ram[indice].minuto=tm.tm_min;
     snapshots_in_ram[indice].segundo=tm.tm_sec;
 
-                //printf("now: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    //printf("now: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
 //Incrementar el indice. Si llega al final, dar la vuelva
@@ -209,7 +202,7 @@ void snapshot_add_in_ram(void)
     if (snapshots_in_ram_total_elements==snapshots_in_ram_maximum) {
         z80_byte *memoria_liberar;
         memoria_liberar=snapshots_in_ram[snapshots_in_ram_first_element].memoria;
-        printf("Liberando memoria del snapshot mas antiguo: %p\n",memoria_liberar);
+        debug_printf (VERBOSE_DEBUG,"Freeing oldest snapshot because the list is full");
         free(memoria_liberar);
 
         //Y el primero avanza
@@ -230,8 +223,8 @@ void snapshot_add_in_ram(void)
     //Y decimos el ultimo cual es
     snapshots_in_ram_index_to_write=snapshot_increment_index(snapshots_in_ram_index_to_write);
 
-    printf("snapshot_add_in_ram. after add. snapshots_in_ram_index_to_write %d snapshots_in_ram_total_elements %d snapshots_in_ram_first_element %d\n",
-        snapshots_in_ram_index_to_write,snapshots_in_ram_total_elements,snapshots_in_ram_first_element);
+    //printf("snapshot_add_in_ram. after add. snapshots_in_ram_index_to_write %d snapshots_in_ram_total_elements %d snapshots_in_ram_first_element %d\n",
+    //    snapshots_in_ram_index_to_write,snapshots_in_ram_total_elements,snapshots_in_ram_first_element);
 
 
     snapshot_in_ram_rewind_cuantos_pasado++;
@@ -287,7 +280,7 @@ int snapshot_in_ram_load(int posicion)
     puntero_memoria=snapshots_in_ram[indice].memoria;
     longitud=snapshots_in_ram[indice].longitud;
 
-    printf("snapshot_in_ram_load: load snapshot from memory %p length %d\n",puntero_memoria,longitud);
+    debug_printf(VERBOSE_INFO,"Loading snapshot from RAM length: %d",longitud);
 
     load_zsf_snapshot_file_mem(NULL,puntero_memoria,longitud,0);
 
@@ -311,11 +304,11 @@ void snapshot_in_ram_rewind(void)
     if (snapshot_in_ram_enabled.v==0) return;
 
     if (!snapshot_in_ram_rewind_initialized) {
-        printf("We don't have a initial rewind position. Generating it\n");
+        //printf("We don't have a initial rewind position. Generating it\n");
 
         //Si no se ha generado ni el primero
         if (snapshots_in_ram_total_elements==0) {
-            printf("We haven't generated any snapshot yet\n");
+            debug_printf (VERBOSE_INFO,"We haven't generated any snapshot yet");
             return;
         }
 
@@ -337,20 +330,20 @@ void snapshot_in_ram_rewind(void)
 
     //Esto sucedera cuando va pulsando rewind hasta ir mas alla del principio
     if (snapshot_in_ram_rewind_last_position<0) {
-        printf("Can't rewind beyond beginning\n");
+        debug_printf(VERBOSE_INFO,"Can't rewind beyond beginning");
         //snapshot_in_ram_rewind_initialized=0;
         return;
     }
 
     //Esto sucedera cuando haya escrito X snapshots despues de pulsar rewind, donde X es el total de la lista
     if (snapshot_in_ram_rewind_cuantos_pasado>=snapshots_in_ram_maximum) {
-        printf("Rewind snapshot reference has been overwritten, can not rewind\n");
+        debug_printf (VERBOSE_INFO,"Rewind snapshot reference has been overwritten, can not rewind");
         //snapshot_in_ram_rewind_initialized=0;
         return;
     }
 
     //Restaurar ese snapshot
-    printf("Restoring to snapshot number %d (0=oldest)\n\n",snapshot_in_ram_rewind_last_position);
+    debug_printf(VERBOSE_INFO,"Restoring to snapshot number %d (0=oldest)",snapshot_in_ram_rewind_last_position);
     snapshot_in_ram_load(snapshot_in_ram_rewind_last_position);
 
     char buffer_mensaje[100];
@@ -396,7 +389,7 @@ void snapshot_in_ram_ffw(void)
     if (snapshot_in_ram_enabled.v==0) return;
 
     if (!snapshot_in_ram_rewind_initialized) {
-        printf("We don't have a initial rewind position. Returning\n");
+        debug_printf(VERBOSE_INFO,"We don't have a initial rewind position. Returning");
 
         return;
     }
@@ -406,24 +399,24 @@ void snapshot_in_ram_ffw(void)
         snapshot_in_ram_rewind_last_position++;    
     }
 
-    printf("snapshot_in_ram_rewind_last_position %d\n",snapshot_in_ram_rewind_last_position);    
+    //printf("snapshot_in_ram_rewind_last_position %d\n",snapshot_in_ram_rewind_last_position);    
 
     //Esto sucedera cuando va pulsando ffw hasta ir mas alla del final
     if (snapshot_in_ram_rewind_last_position>snapshot_in_ram_rewind_initial_position) {
-        printf("Can't ffw beyond end\n");
+        debug_printf(VERBOSE_INFO,"Can't ffw beyond end");
         //snapshot_in_ram_rewind_initialized=0;
         return;
     }
 
     //Esto sucedera cuando haya escrito X snapshots despues de pulsar rewind, donde X es el total de la lista
     if (snapshot_in_ram_rewind_cuantos_pasado>=snapshots_in_ram_maximum) {
-        printf("Rewind snapshot reference has been overwritten, can not rewind\n");
+        debug_printf(VERBOSE_INFO,"Rewind snapshot reference has been overwritten, can not rewind");
         //snapshot_in_ram_rewind_initialized=0;
         return;
     }
 
     //Restaurar ese snapshot
-    printf("Restoring to snapshot number %d (0=oldest)\n\n",snapshot_in_ram_rewind_last_position);
+    debug_printf(VERBOSE_INFO,"Restoring to snapshot number %d (0=oldest)",snapshot_in_ram_rewind_last_position);
     snapshot_in_ram_load(snapshot_in_ram_rewind_last_position);
 
     char buffer_mensaje[100];
@@ -441,7 +434,7 @@ void snapshot_in_ram_ffw(void)
     //y no por F-key, porque al pulsar F-Key se abre y cierra el menu
     screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
 
-    printf("%s\n",buffer_mensaje);
+    //printf("%s\n",buffer_mensaje);
 
     put_footer_first_message(buffer_mensaje);
 
@@ -466,7 +459,7 @@ void snapshot_in_ram_rewind_timer(void)
         snapshot_in_ram_enabled_timer--;
         if (snapshot_in_ram_enabled_timer==0) {
             snapshot_in_ram_rewind_initialized=0;
-            printf("Reseting rewind position after %d seconds\n",snapshot_in_ram_enabled_timer_timeout);
+            debug_printf(VERBOSE_INFO,"Reseting rewind position after %d seconds",snapshot_in_ram_enabled_timer_timeout);
         }
     }
 }

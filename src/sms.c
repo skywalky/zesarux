@@ -19,6 +19,9 @@
 
 */
 
+/*
+   Sega master system emulation
+*/
 
 
 #include <stdio.h>
@@ -38,7 +41,6 @@
 #include "joystick.h"
 
 
-//Sega mater system emulation
 
 //Memory Map - Development - SMS Power!
 //https://www.smspower.org/Development/MemoryMap

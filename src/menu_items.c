@@ -19,6 +19,17 @@
 
 */
 
+/*
+   Menu entries
+*/
+
+//
+// Archivo para entradas de menu, excluyendo funciones auxiliares de soporte de menu
+// Las funciones auxiliares de menu estan en menu.c
+// Aunque aun falta mucho por mover, la mayoria de entradas de menu siguen en menu.c y habria que moverlas aqui
+//
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -156,11 +167,6 @@
 	#include "cursesw_ext.h"
 #endif
 
-//
-// Archivo para entradas de menu, excluyendo funciones auxiliares de soporte de menu
-// Las funciones auxiliares de menu estan en menu.c
-// Aunque aun falta mucho por mover, la mayoria de entradas de menu siguen en menu.c y habria que moverlas aqui
-//
 
 
 //Opciones seleccionadas para cada menu
@@ -26618,7 +26624,9 @@ void menu_debug_load_source_code(MENU_ITEM_PARAMETERS)
 void menu_snapshot_rewind_browse_select(MENU_ITEM_PARAMETERS)
 {
     //Aplicar ese snapshot
-    snapshot_in_ram_load(valor_opcion); 
+    snapshot_in_ram_load(valor_opcion);
+
+    menu_generic_message_splash("Load Snapshot","OK Snapshot loaded from RAM");
 }
 
 void menu_snapshot_rewind_browse(MENU_ITEM_PARAMETERS)
@@ -26661,7 +26669,7 @@ void menu_snapshot_rewind_browse(MENU_ITEM_PARAMETERS)
 
         menu_add_ESC_item(array_menu_comon);
 
-        retorno_menu=menu_dibuja_menu(&snapshot_rewind_browse_opcion_seleccionada,&item_seleccionado,array_menu_comon,"Rewind");
+        retorno_menu=menu_dibuja_menu(&snapshot_rewind_browse_opcion_seleccionada,&item_seleccionado,array_menu_comon,"Browse Snapshots");
 
 
 

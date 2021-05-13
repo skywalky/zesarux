@@ -19,6 +19,11 @@
 
 */
 
+/*
+   Sega Master System Core
+*/
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

@@ -19,6 +19,10 @@
 
 */
 
+/*
+   Main and initial ZEsarUX functions
+*/
+
 
 #include <stdlib.h>
 #include <stdio.h>

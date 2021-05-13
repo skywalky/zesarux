@@ -19,6 +19,9 @@
 
 */
 
+/*
+   Real joystick functions
+*/
 
 
 #include <stdio.h>

@@ -19,6 +19,16 @@
 
 */
 
+/*
+   Common menu interface functions
+*/
+
+//
+// Archivo para funciones auxiliares de soporte de menu, excluyendo entradas de menu
+// Las entradas de menu estan en menu_items.c
+// Aunque aun falta mucho por mover, la mayoria de entradas de menu siguen aqui y habria que moverlas al menu_items.c
+//
+
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -152,11 +162,7 @@
 
 
 
-//
-// Archivo para funciones auxiliares de soporte de menu, excluyendo entradas de menu
-// Las entradas de menu estan en menu_items.c
-// Aunque aun falta mucho por mover, la mayoria de entradas de menu siguen aqui y habria que moverlas al menu_items.c
-//
+
 
 
 
