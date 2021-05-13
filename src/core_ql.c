@@ -58,13 +58,7 @@
 
 z80_byte byte_leido_core_ql;
 
-//extern unsigned char ql_pc_intr;
 
-//int refresca=0;
-
-//char buffer_disassemble[100000];
-
-//int temporal_parpadeo_ql;
 
 /*
 void ql_chapuza_parpadeo_cursor(void)
