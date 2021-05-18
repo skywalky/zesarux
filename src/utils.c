@@ -15289,6 +15289,62 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
 
             break;
+
+            case ZSF_TBBLUE_RAMBLOCK:
+                /*
+
+                -Block ID 21: ZSF_TBBLUE_RAMBLOCK
+                A ram binary block for a tbblue. We store all the 2048 MB  (memoria_spectrum pointer). Total pages: 128
+                Byte Fields:
+                0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+                    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+                1,2: Block start address (currently unused)
+                3,4: Block lenght
+                5: ram block id (in blocks of 16kb)
+                6 and next bytes: data bytes
+                */
+
+                i=0;
+                block_flags=block_data[i];
+
+                //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 5 bytes
+
+                i++;
+                block_start=value_8_to_16(block_data[i+1],block_data[i]);
+                i +=2;
+                block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+                i+=2;
+
+                ram_page=block_data[i];
+                i++;
+
+                //Paginas de RAM en Next empiezan en offset 0x040000. 0x040000 / 16384 = 16. 16 + 5 = 21 (el 5 es de pagina 5 de ram)
+                if (ram_page==21) {
+                    //Ya tenemos pantalla
+                    salir=1;
+
+                    //Asignamos memoria temporal para el bloque
+                    z80_byte *buffer_memoria;
+
+                    //Por si acaso, el doble de lo que en teoria se necesita
+                    buffer_memoria=malloc(block_lenght*2);
+
+                    if (buffer_memoria==NULL) cpu_panic("Can not allocate memory for zsf convert");                
+
+                    debug_printf (VERBOSE_DEBUG,"Block ram_page: %d start: %d Length: %d Compressed: %s Length_source: %d",ram_page,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+                    longitud_original -=6;
+
+
+                    load_zsf_snapshot_block_data_addr(&block_data[i],buffer_memoria,block_lenght,longitud_original,block_flags&1);
+
+                    util_save_file(buffer_memoria,6912,archivo_destino);
+
+                    free(buffer_memoria);                
+                }
+
+            break;
         }
 
         
@@ -15301,10 +15357,6 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
         //case ZSF_CPC_RAMBLOCK:
         
-
-        //case ZSF_TBBLUE_RAMBLOCK:
-        
-
 
         if (block_lenght_zsf) free(block_data);
 
