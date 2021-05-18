@@ -33250,15 +33250,19 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 
 	menu_generic_message_format("Statistics",
 		"Source code lines: %d\n"
+        "Approximate TODOs: %d\n"
 		"Total time used on coding ZEsarUX: ^^%d^^ hours (and growing)\n"
 		"ZEsarUX yesterday users: %s\n"
-        "Approximate TODOs: %d\n"
+
 		"\n"
-		"Edited with VSCode, Working Copy and vim\n"
+		"Edited with VSCode and vim\n"
 		"Developed on macOS Catalina, Debian 10, Raspbian, FreeBSD 12, and MinGW environment on Windows\n"
-		,LINES_SOURCE,tiempo_trabajado_en_zesarux,
-		(stats_last_yesterday_users[0]==0 ? "Unknown" : stats_last_yesterday_users),
-        TOTAL_TODO_ITEMS
+		,
+        LINES_SOURCE,
+        TOTAL_TODO_ITEMS,
+        tiempo_trabajado_en_zesarux,
+		(stats_last_yesterday_users[0]==0 ? "Unknown" : stats_last_yesterday_users)
+        
 		);
 
 }

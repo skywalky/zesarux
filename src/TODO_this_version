@@ -172,8 +172,6 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 -poder cambiar instrumento midi en output a .mid
 
 
--Agregar documento master system en extras 
-
 -sms: visor de sprites
 
 -visor de tiles para sms y demas maquinas (en grafico, tal y como hace el visor de sprites)
@@ -189,7 +187,6 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 Si no, cuando pasa el timeout y se hace rewind, aparecen unos snapshot “temporales” que quizá el usuario 
 no quiere ver. O siempre así o igual personalizable. Probarlo
 
--agregar llamar desde core a save snapshots to ram en todos los cores
 
 -quiza un "code estatistics": total lines, total comments, total todos (en codigo y en archivos TODO_*, etc)
 
