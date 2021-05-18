@@ -6,6 +6,7 @@ Added midi output and .mid support for QL and SN audio chips (Master System, SG1
 Added Automatic Snapshots to RAM + Rewind feature
 Added new improved real tape loading algorithm
 Added setting to disable TZX pauses
+Added zsf to scr support for Next snapshots
 
 
 Improved ZX Vision menu interface:
