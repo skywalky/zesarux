@@ -191,3 +191,5 @@ no quiere ver. O siempre así o igual personalizable. Probarlo
 
 -agregar llamar desde core a save snapshots to ram en todos los cores
 
+-quiza un "code estatistics": total lines, total comments, total todos (en codigo y en archivos TODO_*, etc)
+
