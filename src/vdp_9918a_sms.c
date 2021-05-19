@@ -35,11 +35,9 @@
 //Rutinas del VDP de Sega Master System que extiende el vdp 9918a
 //La mayoría de cosas de aquí solo se aplican cuando se activa el modo 4 de la SMS
 
-
-//TODO mejorar nombre de esto
 int sms_writing_cram=0;
 
-int index_sms_escritura_cram=0;
+z80_byte index_sms_escritura_cram=0;
 
 z80_byte vdp_9918a_sms_cram[VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS];
 
@@ -78,7 +76,7 @@ const char *s_vdp_9918a_video_mode_sms_4="4 - SMS Graphic 256x192";
 */
 z80_byte sms_next_scroll_vertical_value=0;
 
-int sms_pending_line_interrupt=0;
+//int sms_pending_line_interrupt=0;
 
 //Fix feo para el scroll del wonderboy
 z80_bit sms_wonderboy_scroll_hack={0};
@@ -118,7 +116,7 @@ void vdp_9918a_sms_reset(void)
     }
 
     sms_next_scroll_vertical_value=0;
-    sms_pending_line_interrupt=0;
+    //sms_pending_line_interrupt=0;
 
     //En SMS los registros se resetean asi:
     vdp_9918a_registers[0]=0x36;

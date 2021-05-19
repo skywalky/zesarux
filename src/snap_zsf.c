@@ -371,8 +371,8 @@ Byte fields:
 
 
 
--Block ID 28: ZSF_MSX_VRAM
-VRAM contents for msx
+-Block ID 28: ZSF_VDP_9918A_VRAM
+VRAM contents for machine with vdp 9918a chip
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -470,6 +470,9 @@ Byte fields:
 2 sms_mapper_FFFD;
 3 sms_mapper_FFFE;
 4 sms_mapper_FFFF;
+5 flags:
+bit 0: Si sms_writing_cram
+6: index_sms_escritura_cram
 
 -Block ID 39: ZSF_SMS_CRAM
 CRAM colour palette
@@ -519,7 +522,7 @@ char *zsf_block_id_names[]={
   "ZSF_TIMEX",
   "ZSF_MSX_MEMBLOCK",
   "ZSF_MSX_CONF",
-  "ZSF_MSX_VRAM",
+  "ZSF_VDP_9918A_VRAM",
   "ZSF_GENERIC_LINEAR_MEM",
   "ZSF_VDP_9918A_CONF",
   "ZSF_SNCHIP",
@@ -1040,7 +1043,7 @@ void load_zsf_sms_ramblock_snapshot_block_data(z80_byte *block_data,int longitud
 void load_zsf_msx_snapshot_vram_data(z80_byte *block_data,int longitud_original)
 {
 /*
-VRAM contents for msx
+VRAM contents for machine with vdp 9918a chip
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -1562,6 +1565,9 @@ Byte fields:
 2 sms_mapper_FFFD;
 3 sms_mapper_FFFE;
 4 sms_mapper_FFFF;
+5 flags:
+bit 0: Si sms_writing_cram
+6: index_sms_escritura_cram
 */
 
   sms_mapper_type=header[0];
@@ -1569,6 +1575,8 @@ Byte fields:
   sms_mapper_FFFD=header[2];
   sms_mapper_FFFE=header[3];
   sms_mapper_FFFF=header[4];
+  sms_writing_cram=header[5]&1;
+  index_sms_escritura_cram=header[6];
 
 
  
@@ -2175,7 +2183,7 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
         load_zsf_msx_conf(block_data);
       break;   
 
-      case ZSF_MSX_VRAM:
+      case ZSF_VDP_9918A_VRAM:
         load_zsf_msx_snapshot_vram_data(block_data,block_lenght);
       break;  
 
@@ -2868,8 +2876,8 @@ int longitud_ram=16384;
   }
 
 /*
--Block ID 28: ZSF_MSX_VRAM
-VRAM contents for msx
+-Block ID 28: ZSF_VDP_9918A_VRAM
+VRAM contents for machine with vdp 9918a chip
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -2888,10 +2896,10 @@ Byte Fields:
         int longitud_bloque=save_zsf_copyblock_compress_uncompres(msx_vram_memory,&compressed_ramblock[5],longitud_ram,&si_comprimido);
         if (si_comprimido) compressed_ramblock[0]|=1;
 
-        debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_VRAM length: %d",longitud_bloque);
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_VDP_9918A_VRAM length: %d",longitud_bloque);
 
         
-        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_VRAM, longitud_bloque+5);
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_VDP_9918A_VRAM, longitud_bloque+5);
 
 
 
@@ -3007,8 +3015,8 @@ int longitud_ram=16384;
 
 
 /*
--Block ID 28: ZSF_MSX_VRAM
-VRAM contents for msx
+-Block ID 28: ZSF_VDP_9918A_VRAM
+VRAM contents for machine with vdp 9918a chip
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -3031,13 +3039,13 @@ Byte Fields:
         int longitud_bloque=save_zsf_copyblock_compress_uncompres(vram,&compressed_ramblock[5],longitud_ram,&si_comprimido);
         if (si_comprimido) compressed_ramblock[0]|=1;
 
-        debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_VRAM length: %d",longitud_bloque);
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_VDP_9918A_VRAM length: %d",longitud_bloque);
 
 
 
 
         
-        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_VRAM, longitud_bloque+5);
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_VDP_9918A_VRAM, longitud_bloque+5);
 
 
 
@@ -3121,8 +3129,8 @@ int longitud_ram=16384;
 
 
 /*
--Block ID 28: ZSF_MSX_VRAM
-VRAM contents for msx
+-Block ID 28: ZSF_VDP_9918A_VRAM
+VRAM contents for machine with vdp 9918a chip
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -3146,13 +3154,13 @@ Byte Fields:
         int longitud_bloque=save_zsf_copyblock_compress_uncompres(vram,&compressed_ramblock[5],longitud_ram,&si_comprimido);
         if (si_comprimido) compressed_ramblock[0]|=1;
 
-        debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_VRAM length: %d",longitud_bloque);
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_VDP_9918A_VRAM length: %d",longitud_bloque);
 
 
 
 
         
-        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_VRAM, longitud_bloque+5);
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_VDP_9918A_VRAM, longitud_bloque+5);
 
 
 
@@ -3210,7 +3218,7 @@ Byte Fields:
 
 if (MACHINE_IS_SMS) {
 
-    z80_byte smsconfblock[5];
+    z80_byte smsconfblock[7];
 
 /*
 -Block ID 38: ZSF_SMS_CONF
@@ -3221,6 +3229,9 @@ Byte fields:
 2 sms_mapper_FFFD;
 3 sms_mapper_FFFE;
 4 sms_mapper_FFFF;
+5 flags:
+bit 0: Si sms_writing_cram
+6: index_sms_escritura_cram
 */    
 
     smsconfblock[0]=sms_mapper_type;
@@ -3228,12 +3239,13 @@ Byte fields:
     smsconfblock[2]=sms_mapper_FFFD;
     smsconfblock[3]=sms_mapper_FFFE;
     smsconfblock[4]=sms_mapper_FFFF;
+    smsconfblock[5]=sms_writing_cram&1;
+    smsconfblock[6]=index_sms_escritura_cram;
 
 
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, smsconfblock,ZSF_SMS_CONF, 5);
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, smsconfblock,ZSF_SMS_CONF, 7);
 
     //Paleta. La podemos pillar de aqui directamente sin buffer intermedio
-    //TODO: Por ejemplo con los registros vdp_9918a_registers tambien se podria hacer lo mismo, no usar buffer intermedio
     zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdp_9918a_sms_cram,ZSF_SMS_CRAM, VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS);
 
 
@@ -3260,8 +3272,8 @@ int longitud_ram=16384;
 
 
 /*
--Block ID 28: ZSF_MSX_VRAM
-VRAM contents for msx
+-Block ID 28: ZSF_VDP_9918A_VRAM
+VRAM contents for machine with vdp 9918a chip
 Byte Fields:
 0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
     YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
@@ -3284,13 +3296,13 @@ Byte Fields:
         int longitud_bloque=save_zsf_copyblock_compress_uncompres(vram,&compressed_ramblock[5],longitud_ram,&si_comprimido);
         if (si_comprimido) compressed_ramblock[0]|=1;
 
-        debug_printf(VERBOSE_DEBUG,"Saving ZSF_MSX_VRAM length: %d",longitud_bloque);
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_VDP_9918A_VRAM length: %d",longitud_bloque);
 
 
 
 
         
-        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_MSX_VRAM, longitud_bloque+5);
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_VDP_9918A_VRAM, longitud_bloque+5);
 
 
 

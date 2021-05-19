@@ -434,8 +434,8 @@ void sms_insert_rom_cartridge(char *filename)
     ptr_cartridge=fopen(filename,"rb");
 
     if (!ptr_cartridge) {
-    debug_printf (VERBOSE_ERR,"Unable to open cartridge file %s",filename);
-            return;
+        debug_printf (VERBOSE_ERR,"Unable to open cartridge file %s",filename);
+        return;
     }
 
 
