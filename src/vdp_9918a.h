@@ -86,7 +86,10 @@ extern void vdp_9918a_reset(void);
 
 extern void vdp9918a_put_sprite_pixel(z80_int *destino,z80_int color);
 
-extern int vdp_9918a_last_command_status_bytes_counter;
+extern z80_byte vdp_9918a_last_command_status_bytes_counter;
+extern z80_int vdp_9918a_last_vram_position;
+extern z80_byte vdp_9918a_last_command_status_bytes[];
+extern z80_byte vdp_9918a_last_vram_bytes[];
 
 extern z80_bit vdp_9918a_force_disable_layer_ula;
 extern z80_bit vdp_9918a_force_disable_layer_sprites;

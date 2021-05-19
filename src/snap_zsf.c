@@ -395,7 +395,15 @@ Byte Fields:
 -Block ID 30: ZSF_VDP_9918A_CONF
 Ports and internal registers of VDP 9918A registers
 Byte fields:
-0: vdp_9918a_registers[16];
+0:      vdp_9918a_registers[16];
+16:     vdp_9918a_status_register;
+
+17,18:  vdp_9918a_last_command_status_bytes[2];
+19:     vdp_9918a_last_command_status_bytes_counter=0;
+
+20,21,22:   vdp_9918a_last_vram_bytes[3];
+
+23,24:  vdp_9918a_last_vram_position;
 
 
 -Block ID 31: ZSF_SNCHIP
@@ -1627,17 +1635,37 @@ void load_zsf_vdp_9918a_conf(z80_byte *header)
 
   /*
 -Block ID 30: ZSF_VDP_9918A_CONF
-Ports and internal registers of VDP 9918A
+Ports and internal registers of VDP 9918A registers
 Byte fields:
-0: vdp_9918a_registers[16];
+0:      vdp_9918a_registers[16];
+16:     vdp_9918a_status_register;
+
+17,18:  vdp_9918a_last_command_status_bytes[2];
+19:     vdp_9918a_last_command_status_bytes_counter=0;
+
+20,21,22:   vdp_9918a_last_vram_bytes[3];
+
+23,24:  vdp_9918a_last_vram_position;
 */
 
 
-  int i;
-  for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdp_9918a_registers[i]=header[i];
+    int i;
+    for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdp_9918a_registers[i]=header[i];
 
 
- 
+    vdp_9918a_status_register=header[VDP_9918A_TOTAL_REGISTERS];
+
+    vdp_9918a_last_command_status_bytes[0]=header[VDP_9918A_TOTAL_REGISTERS+1];
+    vdp_9918a_last_command_status_bytes[1]=header[VDP_9918A_TOTAL_REGISTERS+2];
+    vdp_9918a_last_command_status_bytes_counter=header[VDP_9918A_TOTAL_REGISTERS+3];
+
+    vdp_9918a_last_vram_bytes[0]=header[VDP_9918A_TOTAL_REGISTERS+4];
+    vdp_9918a_last_vram_bytes[1]=header[VDP_9918A_TOTAL_REGISTERS+5];
+    vdp_9918a_last_vram_bytes[2]=header[VDP_9918A_TOTAL_REGISTERS+6];
+    vdp_9918a_last_vram_position=value_8_to_16(header[VDP_9918A_TOTAL_REGISTERS+8],header[VDP_9918A_TOTAL_REGISTERS+7]);
+
+
+
 }
 
 
@@ -2336,7 +2364,43 @@ int save_zsf_copyblock_compress_uncompres(z80_byte *origen,z80_byte *destino,int
 
 
 
+void snap_aux_save_vdp_9918a_conf(z80_byte *vdpconfblock)
+{
 
+/*
+-Block ID 30: ZSF_VDP_9918A_CONF
+Ports and internal registers of VDP 9918A
+Byte fields:
+0:      vdp_9918a_registers[16];
+16:     vdp_9918a_status_register;
+
+17,18:  vdp_9918a_last_command_status_bytes[2];
+19:     vdp_9918a_last_command_status_bytes_counter=0;
+
+20,21,22:   vdp_9918a_last_vram_bytes[3];
+
+23,24:  vdp_9918a_last_vram_position;
+
+*/    
+
+
+    int i;
+    for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdpconfblock[i]=vdp_9918a_registers[i];
+
+    vdpconfblock[VDP_9918A_TOTAL_REGISTERS]=vdp_9918a_status_register;
+
+    vdpconfblock[VDP_9918A_TOTAL_REGISTERS+1]=vdp_9918a_last_command_status_bytes[0];
+    vdpconfblock[VDP_9918A_TOTAL_REGISTERS+2]=vdp_9918a_last_command_status_bytes[1];
+    vdpconfblock[VDP_9918A_TOTAL_REGISTERS+3]=vdp_9918a_last_command_status_bytes_counter;
+
+    vdpconfblock[VDP_9918A_TOTAL_REGISTERS+4]=vdp_9918a_last_vram_bytes[0];
+    vdpconfblock[VDP_9918A_TOTAL_REGISTERS+5]=vdp_9918a_last_vram_bytes[1];
+    vdpconfblock[VDP_9918A_TOTAL_REGISTERS+6]=vdp_9918a_last_vram_bytes[2];
+    vdpconfblock[VDP_9918A_TOTAL_REGISTERS+7]=value_16_to_8l(vdp_9918a_last_vram_position);
+    vdpconfblock[VDP_9918A_TOTAL_REGISTERS+8]=value_16_to_8h(vdp_9918a_last_vram_position);
+
+ 
+}
 
 
 //Guarda snapshot en disco on en memoria destino:
@@ -2783,22 +2847,13 @@ Byte fields:
 
 
 
-    z80_byte vdpconfblock[VDP_9918A_TOTAL_REGISTERS];
+    z80_byte vdpconfblock[VDP_9918A_TOTAL_REGISTERS+9];
 
-/*
--Block ID 30: ZSF_VDP_9918A_CONF
-Ports and internal registers of VDP 9918A
-Byte fields:
-0: vdp_9918a_registers[16];
-*/    
+    snap_aux_save_vdp_9918a_conf(vdpconfblock);
 
-
-    int i;
-    for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdpconfblock[i]=vdp_9918a_registers[i];
-
-
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, VDP_9918A_TOTAL_REGISTERS);  
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, VDP_9918A_TOTAL_REGISTERS+9);  
     
+
 
 
 
@@ -2929,21 +2984,12 @@ Byte fields:
     zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, sviconfblock,ZSF_SVI_CONF, 3);
 
 
-    z80_byte vdpconfblock[VDP_9918A_TOTAL_REGISTERS];
 
-/*
--Block ID 30: ZSF_VDP_9918A_CONF
-Ports and internal registers of VDP 9918A
-Byte fields:
-0: vdp_9918a_registers[16];
-*/    
+    z80_byte vdpconfblock[VDP_9918A_TOTAL_REGISTERS+9];
 
+    snap_aux_save_vdp_9918a_conf(vdpconfblock);
 
-    int i;
-    for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdpconfblock[i]=vdp_9918a_registers[i];
-
-
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, VDP_9918A_TOTAL_REGISTERS);  
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, VDP_9918A_TOTAL_REGISTERS+9);  
 
 
 
@@ -3052,21 +3098,12 @@ Byte Fields:
 if (MACHINE_IS_SG1000 || MACHINE_IS_COLECO) {
 
 
-    z80_byte vdpconfblock[VDP_9918A_TOTAL_REGISTERS];
 
-/*
--Block ID 30: ZSF_VDP_9918A_CONF
-Ports and internal registers of VDP 9918A
-Byte fields:
-0: vdp_9918a_registers[16];
-*/    
+    z80_byte vdpconfblock[VDP_9918A_TOTAL_REGISTERS+9];
 
+    snap_aux_save_vdp_9918a_conf(vdpconfblock);
 
-    int i;
-    for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdpconfblock[i]=vdp_9918a_registers[i];
-
-
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, VDP_9918A_TOTAL_REGISTERS);  
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, VDP_9918A_TOTAL_REGISTERS+9);  
 
 
 
@@ -3200,21 +3237,12 @@ Byte fields:
     zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdp_9918a_sms_cram,ZSF_SMS_CRAM, VDP_9918A_SMS_MODE4_MAPPED_PALETTE_COLOURS);
 
 
-    z80_byte vdpconfblock[VDP_9918A_TOTAL_REGISTERS];
 
-/*
--Block ID 30: ZSF_VDP_9918A_CONF
-Ports and internal registers of VDP 9918A
-Byte fields:
-0: vdp_9918a_registers[16];
-*/    
+    z80_byte vdpconfblock[VDP_9918A_TOTAL_REGISTERS+9];
 
+    snap_aux_save_vdp_9918a_conf(vdpconfblock);
 
-    int i;
-    for (i=0;i<VDP_9918A_TOTAL_REGISTERS;i++) vdpconfblock[i]=vdp_9918a_registers[i];
-
-
-    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, VDP_9918A_TOTAL_REGISTERS);  
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, vdpconfblock,ZSF_VDP_9918A_CONF, VDP_9918A_TOTAL_REGISTERS+9);   
 
 
 

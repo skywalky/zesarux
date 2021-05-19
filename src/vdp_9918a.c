@@ -47,7 +47,7 @@ z80_byte vdp_9918a_status_register=255;
 //Ultimos dos bytes enviados al puerto de comando/status
 z80_byte vdp_9918a_last_command_status_bytes[2];
 //Contador a ultima posicion
-int vdp_9918a_last_command_status_bytes_counter=0;
+z80_byte vdp_9918a_last_command_status_bytes_counter=0;
 
 //Ultimos 3 bytes enviados al puerto de datos. Realmente el 0 y 1 es el address pointer actual, y el 3 el ultimo byte enviado
 z80_byte vdp_9918a_last_vram_bytes[3];

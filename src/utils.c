@@ -15283,7 +15283,7 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
                     util_save_file(buffer_memoria,6912,archivo_destino);
 
-                    free(buffer_memoria);                
+                    free(buffer_memoria);
                 }
 
 
@@ -15341,7 +15341,7 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
                     util_save_file(buffer_memoria,6912,archivo_destino);
 
-                    free(buffer_memoria);                
+                    free(buffer_memoria);
                 }
 
             break;
@@ -15397,7 +15397,7 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
 
                     util_save_file(buffer_memoria,6912,archivo_destino);
 
-                    free(buffer_memoria);                
+                    free(buffer_memoria);
                 }
 
             break;       
@@ -15457,12 +15457,6 @@ int util_convert_zsf_to_scr(char *filename,char *archivo_destino)
             break;                    
         }
 
-        
-        //TODO Quedarian los posibles bloques de memoria de spectrum:
-
-                
-        
-        
 
         if (block_lenght_zsf) free(block_data);
 
