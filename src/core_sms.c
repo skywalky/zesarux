@@ -389,124 +389,108 @@ void core_sms_fin_scanline(void)
 
 void core_sms_handle_interrupts(void)
 {
-		debug_fired_interrupt=1;
+    debug_fired_interrupt=1;
 
-			//printf ("Generada interrupcion Z80\n");
+    //printf ("Generada interrupcion Z80\n");
+ 
 
-			
+    //if (interrupcion_non_maskable_generada.v) printf ("generada nmi\n");
 
-			//if (interrupcion_non_maskable_generada.v) printf ("generada nmi\n");
-
-                        //ver si esta en HALT
-                        if (z80_ejecutando_halt.v) {
-                                        z80_ejecutando_halt.v=0;
-                                        reg_pc++;
-                        }
-
-					
-
-			if (1==1) {
-
-					if (interrupcion_non_maskable_generada.v) {
-						debug_anota_retorno_step_nmi();
-						//printf ("generada nmi\n");
-                                                interrupcion_non_maskable_generada.v=0;
-
-
-                                                //NMI wait 14 estados
-                                                t_estados += 14;
-
-
-                                                
-
-												push_valor(reg_pc,PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT);
-
-
-                                                reg_r++;
-                                                iff1.v=0;
-                                                //printf ("Calling NMI with pc=0x%x\n",reg_pc);
-
-                                                //Otros 6 estados
-                                                t_estados += 6;
-
-                                                //Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
-                                                reg_pc= 0x66;
-
-												//printf ("generada nmi pc=%04XH\n",reg_pc);
-
-                                                //temp
-
-                                                t_estados -=15;
-
-											
-
-					
-
-						generate_nmi_prepare_fetch();
-
-
-					}
-
-					if (1==1) {
-					
-
-			
-
-
-					//justo despues de EI no debe generar interrupcion
-					//e interrupcion nmi tiene prioridad
-						if (interrupcion_maskable_generada.v && byte_leido_core_sms!=251) {
-
-						//printf ("Lanzada interrupcion spectrum normal\n");
-
-						debug_anota_retorno_step_maskable();
-						//Tratar interrupciones maskable
-						interrupcion_maskable_generada.v=0;
-
-						interrupcion_si_despues_lda_ir_sms();
-
-						
-
-						
-						push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
-
-						reg_r++;
-
-						
-
-
-
-						//desactivar interrupciones al generar una
-						iff1.v=iff2.v=0;
-						//Modelos spectrum
-
-						if (im_mode==0 || im_mode==1) {
-							cpu_common_jump_im01();
-						}
-						else {
-						//IM 2.
-
-							z80_int temp_i;
-							z80_byte dir_l,dir_h;
+    //ver si esta en HALT
+    if (z80_ejecutando_halt.v) {
+        z80_ejecutando_halt.v=0;
+        reg_pc++;
+    }
 
 							
 
-                            temp_i=reg_i*256+255;
-							dir_l=peek_byte(temp_i++);
-							dir_h=peek_byte(temp_i);
-							reg_pc=value_8_to_16(dir_h,dir_l);
-							t_estados += 7;
-
-							//Para mejorar demos ula128 y scroll2017
-							//Pero esto hace empeorar la demo ulatest3.tap
-							if (ula_im2_slow.v) t_estados++;
-						}
-
-					}
-				}
+    if (interrupcion_non_maskable_generada.v) {
+        debug_anota_retorno_step_nmi();
+        //printf ("generada nmi\n");
+        interrupcion_non_maskable_generada.v=0;
 
 
-			}
+        //NMI wait 14 estados
+        t_estados += 14;
+    
+
+        push_valor(reg_pc,PUSH_VALUE_TYPE_NON_MASKABLE_INTERRUPT);
+
+
+        reg_r++;
+        iff1.v=0;
+        //printf ("Calling NMI with pc=0x%x\n",reg_pc);
+
+        //Otros 6 estados
+        t_estados += 6;
+
+        //Total NMI: NMI WAIT 14 estados + NMI CALL 12 estados
+        reg_pc= 0x66;
+
+        //printf ("generada nmi pc=%04XH\n",reg_pc);
+
+        //temp
+
+        t_estados -=15;
+
+                            
+
+        generate_nmi_prepare_fetch();
+
+
+    }
+
+					
+					
+    //justo despues de EI no debe generar interrupcion
+    //e interrupcion nmi tiene prioridad
+    if (interrupcion_maskable_generada.v && byte_leido_core_sms!=251) {
+
+        //printf ("Lanzada interrupcion spectrum normal\n");
+
+        debug_anota_retorno_step_maskable();
+        //Tratar interrupciones maskable
+        interrupcion_maskable_generada.v=0;
+
+        interrupcion_si_despues_lda_ir_sms();
+
+        
+        
+        push_valor(reg_pc,PUSH_VALUE_TYPE_MASKABLE_INTERRUPT);
+
+        reg_r++;
+
+        
+
+        //desactivar interrupciones al generar una
+        iff1.v=iff2.v=0;
+        //Modelos spectrum
+
+        if (im_mode==0 || im_mode==1) {
+            cpu_common_jump_im01();
+        }
+        else {
+        //IM 2.
+
+            z80_int temp_i;
+            z80_byte dir_l,dir_h;
+
+            
+
+            temp_i=reg_i*256+255;
+            dir_l=peek_byte(temp_i++);
+            dir_h=peek_byte(temp_i);
+            reg_pc=value_8_to_16(dir_h,dir_l);
+            t_estados += 7;
+
+            //Para mejorar demos ula128 y scroll2017
+            //Pero esto hace empeorar la demo ulatest3.tap
+            if (ula_im2_slow.v) t_estados++;
+        }
+
+    }
+				
+			
 }
 
 
