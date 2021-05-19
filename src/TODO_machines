@@ -956,7 +956,8 @@ road rash: se ralentiza mucho en juego y en intro
 pitufos: fase dos en rio se ve raro
 micromachines: se ve mal (pero esto creo que es debido a que usa mas de 192 lineas)
 bank panic: scroll mal, parece que se corrige con setting scroll hack
-space harrier: no va con line interrupt
+space harrier: no va con line interrupt. hay que desactivarla para poder iniciar el juego y luego activarla para que se escuche musica,
+y haga efecto de cambio de colores en scanline concreto
 missile defense 3d: saltos de pantalla continuos
 
 wonder boy: parece que se corrige con setting scroll hack
