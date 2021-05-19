@@ -68,6 +68,7 @@
 #include "ds1307.h"
 #include "gs.h"
 #include "snap_ram.h"
+#include "codsinpr.h"
 
 z80_byte byte_leido_core_spectrum;
 
@@ -154,7 +155,7 @@ void t_scanline_next_fullborder(void)
 
 }
 
-extern z80_byte pref237_opcode_leido;
+
 void interrupcion_si_despues_lda_ir(void)
 {
 

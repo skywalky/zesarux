@@ -56,6 +56,7 @@
 
 #include "vdp_9918a.h"
 #include "snap_ram.h"
+#include "codsinpr.h"
 
 
 z80_byte byte_leido_core_svi;
@@ -89,7 +90,7 @@ void t_scanline_next_fullborder_svi(void)
 
 }
 
-extern z80_byte pref237_opcode_leido;
+
 void interrupcion_si_despues_lda_ir_svi(void)
 {
 

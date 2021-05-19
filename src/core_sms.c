@@ -62,6 +62,7 @@
 #include "sn76489an.h"
 #include "vdp_9918a_sms.h"
 #include "snap_ram.h"
+#include "codsinpr.h"
 
 
 z80_byte byte_leido_core_sms;
@@ -95,7 +96,7 @@ void t_scanline_next_fullborder_sms(void)
 
 }
 
-extern z80_byte pref237_opcode_leido;
+
 void interrupcion_si_despues_lda_ir_sms(void)
 {
 
