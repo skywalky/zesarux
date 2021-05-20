@@ -47,6 +47,7 @@ extern z80_byte vdp_9918a_sms_get_scroll_horizontal(void);
 extern z80_byte vdp_9918a_sms_get_scroll_vertical(void);
 
 extern int vdp_9918a_sms_get_sprite_height(void);
+extern z80_int vdp_9918a_get_sprite_pattern_table_sms_mode4(void);
 
 extern z80_bit vdp_9918a_sms_force_show_column_zero;
 extern z80_bit vdp_9918a_sms_lock_scroll_horizontal;

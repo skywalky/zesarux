@@ -12240,7 +12240,7 @@ int view_sprites_scr_sprite=0;
 int view_sprites_offset_palette=0;
 
 //Si leer color sprites como formato Master System
-int view_sprites_sms=1;
+int view_sprites_sms=0;
 
 
 //Retorna total de colores de una paleta mapeada
@@ -12890,44 +12890,68 @@ void menu_debug_draw_sprites(void)
 
 			puntero_inicio_linea=puntero;
 			finalx=xorigen;
+
+			menu_z80_moto_int puntero_final;            
+
+            //Para sprites sms modo 4
+            z80_byte byte_leido_sms_1,byte_leido_sms_2,byte_leido_sms_3,byte_leido_sms_4;
+
+				if (view_sprites_sms) {
+
+
+                    if (view_sprites_hardware) {
+                    //Caso de sprites Master System modo 4
+
+                    //Accedemos a la tabla de 64 sprites
+
+                    //menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+                    z80_int attribute_table=vdp_9918a_get_sprite_attribute_table();
+
+                    int numero_sprite=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+                    numero_sprite %=VDP_9918A_SMS_MODE4_MAX_SPRITES;
+
+                    
+
+                    attribute_table +=0x80+numero_sprite*2;
+
+                    //printf ("tabla atributo sprite: %04XH\n",attribute_table);
+
+                    //printf ("antes\n");
+                    //Obtener byte 2, sprite name
+                    z80_byte sprite_name=menu_debug_draw_sprites_get_byte(attribute_table+1);
+
+                    //printf ("numero sprite: %d sprite name: %d\n",numero_sprite,sprite_name);
+
+                    int offset_pattern_table=sprite_name*32+vdp_9918a_get_sprite_pattern_table_sms_mode4();
+                    puntero_final=offset_pattern_table+y*4;
+                    }
+
+                    else {
+                        puntero_final=view_sprites_direccion+y*4;
+                    }
+
+                    byte_leido_sms_1=menu_debug_draw_sprites_get_byte(puntero_final++);
+                    byte_leido_sms_2=menu_debug_draw_sprites_get_byte(puntero_final++);
+                    byte_leido_sms_3=menu_debug_draw_sprites_get_byte(puntero_final++);
+                    byte_leido_sms_4=menu_debug_draw_sprites_get_byte(puntero_final++);
+                }
+
+
 			for (x=0;x<view_sprites_ancho_sprite;) {
 				//printf ("puntero: %d\n",puntero);
 				puntero=adjust_address_memory_size(puntero);
 
 
-				menu_z80_moto_int puntero_final;
+
 
 				puntero_final=puntero;
 
 				//Alterar en el caso de VDP9918A, que es un tanto particular (sobretodo 16x16)
 				if (view_sprites_hardware && MACHINE_HAS_VDP_9918A) {
 
-                    //Caso de sprites Master System modo 4
-                    if (view_sprites_sms) {
-                        //Accedemos a la tabla de 64 sprites
-
-                        //menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
-
-                        z80_int attribute_table=vdp_9918a_get_sprite_attribute_table();
-
-                        int numero_sprite=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
-
-                        numero_sprite %=VDP_9918A_SMS_MODE4_MAX_SPRITES;
-
-                        
-
-                        attribute_table +=0x80+numero_sprite*2;
-
-                        //printf ("tabla atributo sprite: %04XH\n",attribute_table);
-
-                        //printf ("antes\n");
-                        //Obtener byte 2, sprite name
-                        z80_byte sprite_name=menu_debug_draw_sprites_get_byte(attribute_table+1);
-
-                        printf ("numero sprite: %d sprite name: %d\n",numero_sprite,sprite_name);
-                    }
-
-                    else {
+                    if (!view_sprites_sms) {
 
                         //Accedemos a la tabla de 32 sprites
 
@@ -13026,7 +13050,12 @@ void menu_debug_draw_sprites(void)
 
 				int incx=0;
 
-				for (bit=0;bit<8;bit+=view_sprites_bpp,incx++,finalx++,x++) {
+                int total_bpp=view_sprites_bpp;
+
+                //para sms, solo hacer este bucle 1 vez
+                if (view_sprites_sms) total_bpp=8;
+
+				for (bit=0;bit<8;bit+=total_bpp,incx++,finalx++,x++) {
 
 
 				
@@ -13072,9 +13101,23 @@ void menu_debug_draw_sprites(void)
 
 				}
 
+                if (view_sprites_sms) {
+                    z80_byte byte_color=((byte_leido_sms_1>>7)&1) | ((byte_leido_sms_2>>6)&2) | ((byte_leido_sms_3>>5)&4) | ((byte_leido_sms_4>>4)&8);
+                    z80_byte color_sprite=vdp_9918a_sms_cram[16 + (byte_color & 15)] & 63;
+                    //TODO: estoy usando colores paleta de sprites
+                    color=SMS_INDEX_FIRST_COLOR+color_sprite;
+                    //color=menu_debug_sprites_return_color_palette(view_sprites_palette,color_sprite+view_sprites_offset_palette);
+                }
+
 	            
 				zxvision_putpixel(menu_debug_draw_sprites_window,finalx,yorigen+y,color);
 			   }
+
+                byte_leido_sms_1=byte_leido_sms_1<<1;
+                byte_leido_sms_2=byte_leido_sms_2<<1;
+                byte_leido_sms_3=byte_leido_sms_3<<1;
+                byte_leido_sms_4=byte_leido_sms_4<<1;
+                                    
 			}
 
 			puntero=puntero_inicio_linea;
@@ -13299,11 +13342,22 @@ void menu_debug_sprites_get_parameters_hardware(void)
 			view_sprites_increment_cursor_vertical=1; //saltar de 1 en 1
 
 
+            if (view_sprites_sms) {
+                //4 bpp en caso de modo 4 sms
+			    view_sprites_bpp=4;
+			    view_sprites_ppb=2;
 
-			//Permitir solo 1bpp
+                	view_sprites_ancho_sprite=8;
 
-			view_sprites_bpp=1;
-			view_sprites_ppb=8;
+	                view_sprites_alto_sprite=vdp_9918a_sms_get_sprite_height();    
+            }
+
+            else {
+			    //Permitir solo 1bpp
+
+			    view_sprites_bpp=1;
+			    view_sprites_ppb=8;
+            }
 		
 
 
@@ -13367,6 +13421,7 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 
 			if (MACHINE_HAS_VDP_9918A) {
 				max_sprites=VDP_9918A_MAX_SPRITES;
+                if (view_sprites_sms) max_sprites=VDP_9918A_SMS_MODE4_MAX_SPRITES;
 			}
 			sprintf(texto_memptr,"%s: %3d",texto_sprite,view_sprites_direccion%max_sprites); //dos digitos, tsconf hace 85 y tbblue hace 64. suficiente
 		}
@@ -13408,7 +13463,7 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
 
 
-		char mensaje_texto_hardware[33];
+		char mensaje_texto_hardware[64];
 
 		//por defecto
 		mensaje_texto_hardware[0]=0;
@@ -13425,15 +13480,21 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 			sprintf(mensaje_texto_zx81_pseudohires,"[%c] Ps~~eudohires",(view_sprites_zx81_pseudohires.v ? 'X' : ' ') );
 		}
 		
-		sprintf(buffer_primera_linea,"~~memptr In~~c+%d ~~o~~p~~q~~a:Size ~~bpp %s%s",
+		sprintf(buffer_primera_linea,"~~memptr In~~c+%d ~~o~~p~~q~~a:Size ~~bpp %s",
 		view_sprite_incremento,
-        (view_sprites_sms ? "sms " : ""),
 		(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~save " : ""));
 
-		sprintf(buffer_segunda_linea, "[%c] ~~inv [%c] Sc~~r %s%s",
+        char mensaje_texto_sms[32];
+		//por defecto
+		mensaje_texto_sms[0]=0;   
+
+        if (MACHINE_IS_SMS) sprintf(mensaje_texto_sms," [%c] SMS Mo~~de 4",(view_sprites_sms ? 'X' : ' '));
+
+
+		sprintf(buffer_segunda_linea, "[%c] ~~inv [%c] Sc~~r %s%s%s",
 					(view_sprites_inverse.v ? 'X' : ' '),
 					(view_sprites_scr_sprite ? 'X' : ' '),
-					mensaje_texto_hardware,mensaje_texto_zx81_pseudohires);
+					mensaje_texto_hardware,mensaje_texto_sms,mensaje_texto_zx81_pseudohires);
 
 
 		zxvision_print_string_defaults_fillspc(ventana,1,linea++,buffer_primera_linea);
@@ -13614,6 +13675,10 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					case 'b':
 						menu_debug_sprites_change_bpp();
 					break;
+
+					case 'd':
+                        if (MACHINE_IS_SMS) view_sprites_sms ^=1;
+					break;                    
 
 					case 'f':
 						view_sprites_offset_palette++;
