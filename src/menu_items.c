@@ -12240,6 +12240,7 @@ int view_sprites_scr_sprite=0;
 int view_sprites_offset_palette=0;
 
 //Si leer color sprites y tiles como formato Master System
+//Si vale 1 o 2, ordenan diferente el sprite en pantalla
 int view_sprites_sms_tiles=0;
 
 
@@ -12993,30 +12994,57 @@ void menu_debug_draw_sprites(void)
 
                     else {
                         //Ejemplo para sprite de ancho 32 y alto 16,
-                        //Mostrar el sprite ordenado asi:
+                        //Mostrar el sprite ordenado asi: (Modo "A"). En pantalla lo indica con ">" de flecha derecha
+                        //Asi se ve bien en Streets of Rage
                         // 0 1 2 3
                         // 4 5 6 7 
+                        //donde 0 es el primer sprite, 1 el segundo, etc
 
                         //a cada "salto" de columna salta 32 bytes (1 sprite)
                         //a cada "salto" de fila salta (en este ejemplo) 32*4
 
-                        //Es una suposicion para intentar mostrar en sprite en pantalla agrupado,
-                        //pero en los juegos no tiene porque estar unido así un sprite "grande" al juntar sus sprites pequeños
-                        //TODO: muy complejo, poder indicar la distrubucion de como se muestran en el visor, por ejemplo otra alternativa:
+                        //Modo "B": En pantalla lo indica con "v" de flecha abajo
+                        //Asi se ve bien en Sonic
                         // 0 2 4 6
                         // 1 3 5 7
 
+                        //Nota: en caso de sprites de 8x8 sera:
+                        // 0 
 
-                        //donde 0 es el primer sprite, 1 el segundo, etc
-                        int sprites_en_fila=view_sprites_ancho_sprite/8;
+                        //Y en caso de 8x16 sera:
+                        // 0
+                        // 1
+
+                        //Por tanto en esos casos no le afecta el modo A o B. En sprites por hardware es 8x8 o 8x16 por tanto da igual el modo A o B
+                        //Lo que haremos en ese modo hardware es no mostrar > o v, simplemente activo (X)
+
 
                         int fila=y/8;
                         int columna=x/8;
 
                         int tamanyo_sprite=32;
 
-                        //Donde apunta el principio del sprite 
-                        int offset_sprite=(fila*sprites_en_fila)+columna;
+                        
+                        //Usado en modo "A"
+                        int sprites_en_fila=view_sprites_ancho_sprite/8;        
+
+                        //Usado en modo "B"
+                        int sprites_en_columna=view_sprites_alto_sprite/8;   
+
+                        int offset_sprite;                                     
+
+                        if (view_sprites_sms_tiles==1) {
+                            //Donde apunta el principio del sprite. modo A
+                            offset_sprite=(fila*sprites_en_fila)+columna;
+                        }
+
+                        else {
+                            //view_sprites_sms_tiles sera 2
+                            //Donde apunta el principio del sprite. modo B
+                            offset_sprite=(columna*sprites_en_columna)+fila;
+                        }
+
+
 
                         offset_sprite *=tamanyo_sprite;
 
@@ -13028,6 +13056,9 @@ void menu_debug_draw_sprites(void)
                         //int incremento_linea=(y/8)+
                         //int offset_linea=(view_sprites_ancho_sprite/8)*32;
                         puntero_final=view_sprites_direccion+offset_sprite;
+
+
+                        
                     }
 
                     byte_leido_sms_1=menu_debug_draw_sprites_get_byte(puntero_final++);
@@ -13193,10 +13224,8 @@ void menu_debug_draw_sprites(void)
                 if (view_sprites_sms_tiles) {
                     z80_byte byte_color=((byte_leido_sms_1>>7)&1) | ((byte_leido_sms_2>>6)&2) | ((byte_leido_sms_3>>5)&4) | ((byte_leido_sms_4>>4)&8);
 
-                    //usamos el offset de view_sprites_offset_palette. offset par sera 0 (para tiles normalmente), offset impar sera 16 (para sprites)
-                    int off_paleta=view_sprites_offset_palette & 1;
-                    off_paleta *=16;
-                    z80_byte color_sprite=vdp_9918a_sms_cram[off_paleta + (byte_color & 15)] & 63;
+                    
+                    z80_byte color_sprite=vdp_9918a_sms_cram[view_sprites_offset_palette + (byte_color & 15)] & 63;
                     
                     color=SMS_INDEX_FIRST_COLOR+color_sprite;
                    
@@ -13584,7 +13613,14 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		//por defecto
 		mensaje_texto_sms[0]=0;   
 
-        if (MACHINE_IS_SMS) sprintf(mensaje_texto_sms," [%c] SMS Mo~~de 4",(view_sprites_sms_tiles ? 'X' : ' '));
+        if (MACHINE_IS_SMS) {
+            if (view_sprites_sms_tiles==0) sprintf(mensaje_texto_sms," [ ] SMS Mo~~de 4");
+
+            //Con tipo hardware y habilitado view_sprites_sms_tiles, da igual el modo
+            else if (view_sprites_hardware) sprintf(mensaje_texto_sms," [X] SMS Mo~~de 4");
+
+            else sprintf(mensaje_texto_sms," [%c] SMS Mo~~de 4",(view_sprites_sms_tiles==1 ? '>' : 'v') );
+        }
 
 
 		sprintf(buffer_segunda_linea, "[%c] ~~inv [%c] Sc~~r %s%s%s",
@@ -13773,12 +13809,31 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					break;
 
 					case 'd':
-                        if (MACHINE_IS_SMS) view_sprites_sms_tiles ^=1;
+                        if (MACHINE_IS_SMS) {
+                            view_sprites_sms_tiles++;
+                            //En modo hardware solo tendra dos valores, 0 y 1
+                            if (view_sprites_hardware) {
+                                if (view_sprites_sms_tiles>=2) view_sprites_sms_tiles=0;
+                            }
+
+                            //Y en modo no hardware, se permiten valores 0, 1 y 2
+                            else {
+                                if (view_sprites_sms_tiles==3) view_sprites_sms_tiles=0;
+                            }
+                        }
 					break;                    
 
 					case 'f':
-						view_sprites_offset_palette++;
-						if (view_sprites_offset_palette>=256) view_sprites_offset_palette=0;
+                        //En modo sms solo permitimos dos offset distintos, 0 y 16
+                        if (view_sprites_sms_tiles) {
+                            view_sprites_offset_palette +=16;
+                            if (view_sprites_offset_palette>16) view_sprites_offset_palette=0;
+                        }   
+                        else {                 
+						    view_sprites_offset_palette++;
+
+						    if (view_sprites_offset_palette>=256) view_sprites_offset_palette=0;
+                        }
 					break;
 
 
