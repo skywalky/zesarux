@@ -12239,8 +12239,8 @@ int view_sprites_scr_sprite=0;
 
 int view_sprites_offset_palette=0;
 
-//Si leer color sprites como formato Master System
-int view_sprites_sms=0;
+//Si leer color sprites y tiles como formato Master System
+int view_sprites_sms_tiles=0;
 
 
 //Retorna total de colores de una paleta mapeada
@@ -12896,7 +12896,7 @@ void menu_debug_draw_sprites(void)
             //Para sprites sms modo 4
             z80_byte byte_leido_sms_1,byte_leido_sms_2,byte_leido_sms_3,byte_leido_sms_4;
 
-				if (view_sprites_sms) {
+				if (view_sprites_sms_tiles) {
 
 
                     if (view_sprites_hardware) {
@@ -12951,7 +12951,7 @@ void menu_debug_draw_sprites(void)
 				//Alterar en el caso de VDP9918A, que es un tanto particular (sobretodo 16x16)
 				if (view_sprites_hardware && MACHINE_HAS_VDP_9918A) {
 
-                    if (!view_sprites_sms) {
+                    if (!view_sprites_sms_tiles) {
 
                         //Accedemos a la tabla de 32 sprites
 
@@ -13053,7 +13053,7 @@ void menu_debug_draw_sprites(void)
                 int total_bpp=view_sprites_bpp;
 
                 //para sms, solo hacer este bucle 1 vez
-                if (view_sprites_sms) total_bpp=8;
+                if (view_sprites_sms_tiles) total_bpp=8;
 
 				for (bit=0;bit<8;bit+=total_bpp,incx++,finalx++,x++) {
 
@@ -13101,12 +13101,16 @@ void menu_debug_draw_sprites(void)
 
 				}
 
-                if (view_sprites_sms) {
+                if (view_sprites_sms_tiles) {
                     z80_byte byte_color=((byte_leido_sms_1>>7)&1) | ((byte_leido_sms_2>>6)&2) | ((byte_leido_sms_3>>5)&4) | ((byte_leido_sms_4>>4)&8);
-                    z80_byte color_sprite=vdp_9918a_sms_cram[16 + (byte_color & 15)] & 63;
-                    //TODO: estoy usando colores paleta de sprites
+
+                    //usamos el offset de view_sprites_offset_palette. offset par sera 0 (para tiles normalmente), offset impar sera 16 (para sprites)
+                    int off_paleta=view_sprites_offset_palette & 1;
+                    off_paleta *=16;
+                    z80_byte color_sprite=vdp_9918a_sms_cram[off_paleta + (byte_color & 15)] & 63;
+                    
                     color=SMS_INDEX_FIRST_COLOR+color_sprite;
-                    //color=menu_debug_sprites_return_color_palette(view_sprites_palette,color_sprite+view_sprites_offset_palette);
+                   
                 }
 
 	            
@@ -13342,7 +13346,7 @@ void menu_debug_sprites_get_parameters_hardware(void)
 			view_sprites_increment_cursor_vertical=1; //saltar de 1 en 1
 
 
-            if (view_sprites_sms) {
+            if (view_sprites_sms_tiles) {
                 //4 bpp en caso de modo 4 sms
 			    view_sprites_bpp=4;
 			    view_sprites_ppb=2;
@@ -13350,6 +13354,9 @@ void menu_debug_sprites_get_parameters_hardware(void)
                 	view_sprites_ancho_sprite=8;
 
 	                view_sprites_alto_sprite=vdp_9918a_sms_get_sprite_height();    
+
+                //Y offset en este caso 1 (o sea, 16)
+                view_sprites_offset_palette=1;
             }
 
             else {
@@ -13421,7 +13428,7 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 
 			if (MACHINE_HAS_VDP_9918A) {
 				max_sprites=VDP_9918A_MAX_SPRITES;
-                if (view_sprites_sms) max_sprites=VDP_9918A_SMS_MODE4_MAX_SPRITES;
+                if (view_sprites_sms_tiles) max_sprites=VDP_9918A_SMS_MODE4_MAX_SPRITES;
 			}
 			sprintf(texto_memptr,"%s: %3d",texto_sprite,view_sprites_direccion%max_sprites); //dos digitos, tsconf hace 85 y tbblue hace 64. suficiente
 		}
@@ -13488,7 +13495,7 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		//por defecto
 		mensaje_texto_sms[0]=0;   
 
-        if (MACHINE_IS_SMS) sprintf(mensaje_texto_sms," [%c] SMS Mo~~de 4",(view_sprites_sms ? 'X' : ' '));
+        if (MACHINE_IS_SMS) sprintf(mensaje_texto_sms," [%c] SMS Mo~~de 4",(view_sprites_sms_tiles ? 'X' : ' '));
 
 
 		sprintf(buffer_segunda_linea, "[%c] ~~inv [%c] Sc~~r %s%s%s",
@@ -13677,7 +13684,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 					break;
 
 					case 'd':
-                        if (MACHINE_IS_SMS) view_sprites_sms ^=1;
+                        if (MACHINE_IS_SMS) view_sprites_sms_tiles ^=1;
 					break;                    
 
 					case 'f':
