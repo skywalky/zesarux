@@ -12929,69 +12929,69 @@ void menu_debug_draw_sprites(void)
 
                     else {
 
-					//Accedemos a la tabla de 32 sprites
+                        //Accedemos a la tabla de 32 sprites
 
-					//menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+                        //menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
 
-					z80_int attribute_table=vdp_9918a_get_sprite_attribute_table();
+                        z80_int attribute_table=vdp_9918a_get_sprite_attribute_table();
 
-					int numero_sprite=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+                        int numero_sprite=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
 
-					numero_sprite %=32;
+                        numero_sprite %=32;
 
-					//printf ("numero sprite: %d\n",numero_sprite);
+                        //printf ("numero sprite: %d\n",numero_sprite);
 
-					attribute_table +=numero_sprite*4;
+                        attribute_table +=numero_sprite*4;
 
-					//printf ("tabla atributo sprite: %04XH\n",attribute_table);
+                        //printf ("tabla atributo sprite: %04XH\n",attribute_table);
 
-					//printf ("antes\n");
-					//Obtener byte 2, sprite name
-					z80_byte sprite_name=menu_debug_draw_sprites_get_byte(attribute_table+2);
+                        //printf ("antes\n");
+                        //Obtener byte 2, sprite name
+                        z80_byte sprite_name=menu_debug_draw_sprites_get_byte(attribute_table+2);
 
 
-					//printf ("despues\n");
+                        //printf ("despues\n");
 
-					//TODO: asumimos sprites 16x16
-					//TODO: colores del sprite
+                        //TODO: asumimos sprites 16x16
+                        //TODO: colores del sprite
 
-					menu_z80_moto_int puntero_orig=sprite_name *8;
-					/*
-					QUADRANT   AC
-					           BD
+                        menu_z80_moto_int puntero_orig=sprite_name *8;
+                        /*
+                        QUADRANT   AC
+                                BD
 
-					Orden en memoria:
-					A   0
-					B   8
-					C   16 
-					D   24
-					*/
-					//y<8
+                        Orden en memoria:
+                        A   0
+                        B   8
+                        C   16 
+                        D   24
+                        */
+                        //y<8
 
-					//Quad A
-					if (y<=7 && x<=7) {
-						puntero_final=puntero_orig+y;
-					}
+                        //Quad A
+                        if (y<=7 && x<=7) {
+                            puntero_final=puntero_orig+y;
+                        }
 
-					//Quad B
-					else if (y>=8 && y<=15 && x<=7) {
-						puntero_final=puntero_orig+y;
-					}		
+                        //Quad B
+                        else if (y>=8 && y<=15 && x<=7) {
+                            puntero_final=puntero_orig+y;
+                        }		
 
-					//Quad C
-					else if (y<=7 && x>=8 && x<=15) {
-						puntero_final=puntero_orig+16+y;
-					}	
+                        //Quad C
+                        else if (y<=7 && x>=8 && x<=15) {
+                            puntero_final=puntero_orig+16+y;
+                        }	
 
-					//Quad D		
-					else  {
-						puntero_final=puntero_orig+16+y;
-					}												
+                        //Quad D		
+                        else  {
+                            puntero_final=puntero_orig+16+y;
+                        }												
 
-		
-					puntero_final +=vdp_9918a_get_sprite_pattern_table();
+            
+                        puntero_final +=vdp_9918a_get_sprite_pattern_table();
 
-					//printf ("puntero final: %04XH\n",puntero_final);
+                        //printf ("puntero final: %04XH\n",puntero_final);
 
 
                     }
