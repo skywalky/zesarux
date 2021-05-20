@@ -12896,6 +12896,7 @@ void menu_debug_draw_sprites(void)
             //Para sprites sms modo 4
             z80_byte byte_leido_sms_1,byte_leido_sms_2,byte_leido_sms_3,byte_leido_sms_4;
 
+                /*
 				if (view_sprites_sms_tiles) {
 
 
@@ -12924,7 +12925,11 @@ void menu_debug_draw_sprites(void)
 
                     //printf ("numero sprite: %d sprite name: %d\n",numero_sprite,sprite_name);
 
-                    int offset_pattern_table=sprite_name*32+vdp_9918a_get_sprite_pattern_table_sms_mode4();
+                    //Si ancho > 8, a la derecha mostramos el siguiente sprite
+
+                    int offset_sprite=sprite_name+x/8;
+
+                    int offset_pattern_table=offset_sprite*32+vdp_9918a_get_sprite_pattern_table_sms_mode4();
                     puntero_final=offset_pattern_table+y*4;
                     }
 
@@ -12937,6 +12942,7 @@ void menu_debug_draw_sprites(void)
                     byte_leido_sms_3=menu_debug_draw_sprites_get_byte(puntero_final++);
                     byte_leido_sms_4=menu_debug_draw_sprites_get_byte(puntero_final++);
                 }
+                */
 
 
 			for (x=0;x<view_sprites_ancho_sprite;) {
@@ -12947,6 +12953,88 @@ void menu_debug_draw_sprites(void)
 
 
 				puntero_final=puntero;
+
+                if (view_sprites_sms_tiles && (x%8)==0) {
+
+
+                    if (view_sprites_hardware) {                    
+                        //Caso de sprites Master System modo 4
+
+                        //Accedemos a la tabla de 64 sprites
+
+                        //menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+                        z80_int attribute_table=vdp_9918a_get_sprite_attribute_table();
+
+                        int numero_sprite=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+                        numero_sprite %=VDP_9918A_SMS_MODE4_MAX_SPRITES;
+
+                        
+
+                        attribute_table +=0x80+numero_sprite*2;
+
+                        //printf ("tabla atributo sprite: %04XH\n",attribute_table);
+
+                        //printf ("antes\n");
+                        //Obtener byte 2, sprite name
+                        z80_byte sprite_name=menu_debug_draw_sprites_get_byte(attribute_table+1);
+
+                        //printf ("numero sprite: %d sprite name: %d\n",numero_sprite,sprite_name);
+
+                        //Si ancho > 8, a la derecha mostramos el siguiente sprite
+
+                        int offset_sprite=sprite_name;
+
+                        int offset_pattern_table=offset_sprite*32+vdp_9918a_get_sprite_pattern_table_sms_mode4();
+                        puntero_final=offset_pattern_table+y*4;
+                    }
+
+                    else {
+                        //Ejemplo para sprite de ancho 32 y alto 16,
+                        //Mostrar el sprite ordenado asi:
+                        // 0 1 2 3
+                        // 4 5 6 7 
+
+                        //a cada "salto" de columna salta 32 bytes (1 sprite)
+                        //a cada "salto" de fila salta (en este ejemplo) 32*4
+
+                        //Es una suposicion para intentar mostrar en sprite en pantalla agrupado,
+                        //pero en los juegos no tiene porque estar unido así un sprite "grande" al juntar sus sprites pequeños
+                        //TODO: muy complejo, poder indicar la distrubucion de como se muestran en el visor, por ejemplo otra alternativa:
+                        // 0 2 4 6
+                        // 1 3 5 7
+
+
+                        //donde 0 es el primer sprite, 1 el segundo, etc
+                        int sprites_en_fila=view_sprites_ancho_sprite/8;
+
+                        int fila=y/8;
+                        int columna=x/8;
+
+                        int tamanyo_sprite=32;
+
+                        //Donde apunta el principio del sprite 
+                        int offset_sprite=(fila*sprites_en_fila)+columna;
+
+                        offset_sprite *=tamanyo_sprite;
+
+                        //Aqui estaremos siempre a principio de columna (x divisible entre 8)
+                        //sumamos y
+                        offset_sprite +=(y & 7)*4;
+
+
+                        //int incremento_linea=(y/8)+
+                        //int offset_linea=(view_sprites_ancho_sprite/8)*32;
+                        puntero_final=view_sprites_direccion+offset_sprite;
+                    }
+
+                    byte_leido_sms_1=menu_debug_draw_sprites_get_byte(puntero_final++);
+                    byte_leido_sms_2=menu_debug_draw_sprites_get_byte(puntero_final++);
+                    byte_leido_sms_3=menu_debug_draw_sprites_get_byte(puntero_final++);
+                    byte_leido_sms_4=menu_debug_draw_sprites_get_byte(puntero_final++);                        
+                    
+                }                
 
 				//Alterar en el caso de VDP9918A, que es un tanto particular (sobretodo 16x16)
 				if (view_sprites_hardware && MACHINE_HAS_VDP_9918A) {
