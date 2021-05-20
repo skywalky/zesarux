@@ -12239,6 +12239,9 @@ int view_sprites_scr_sprite=0;
 
 int view_sprites_offset_palette=0;
 
+//Si leer color sprites como formato Master System
+int view_sprites_sms=1;
+
 
 //Retorna total de colores de una paleta mapeada
 int menu_debug_sprites_total_colors_mapped_palette(int paleta)
@@ -12899,6 +12902,32 @@ void menu_debug_draw_sprites(void)
 				//Alterar en el caso de VDP9918A, que es un tanto particular (sobretodo 16x16)
 				if (view_sprites_hardware && MACHINE_HAS_VDP_9918A) {
 
+                    //Caso de sprites Master System modo 4
+                    if (view_sprites_sms) {
+                        //Accedemos a la tabla de 64 sprites
+
+                        //menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+                        z80_int attribute_table=vdp_9918a_get_sprite_attribute_table();
+
+                        int numero_sprite=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
+
+                        numero_sprite %=VDP_9918A_SMS_MODE4_MAX_SPRITES;
+
+                        
+
+                        attribute_table +=0x80+numero_sprite*2;
+
+                        //printf ("tabla atributo sprite: %04XH\n",attribute_table);
+
+                        //printf ("antes\n");
+                        //Obtener byte 2, sprite name
+                        z80_byte sprite_name=menu_debug_draw_sprites_get_byte(attribute_table+1);
+
+                        printf ("numero sprite: %d sprite name: %d\n",numero_sprite,sprite_name);
+                    }
+
+                    else {
 
 					//Accedemos a la tabla de 32 sprites
 
@@ -12965,7 +12994,7 @@ void menu_debug_draw_sprites(void)
 					//printf ("puntero final: %04XH\n",puntero_final);
 
 
-					
+                    }
 		
 
 				}
@@ -13396,8 +13425,9 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 			sprintf(mensaje_texto_zx81_pseudohires,"[%c] Ps~~eudohires",(view_sprites_zx81_pseudohires.v ? 'X' : ' ') );
 		}
 		
-		sprintf(buffer_primera_linea,"~~memptr In~~c+%d ~~o~~p~~q~~a:Size ~~bpp %s",
+		sprintf(buffer_primera_linea,"~~memptr In~~c+%d ~~o~~p~~q~~a:Size ~~bpp %s%s",
 		view_sprite_incremento,
+        (view_sprites_sms ? "sms " : ""),
 		(view_sprites_bpp==1 && !view_sprites_scr_sprite ? "~~save " : ""));
 
 		sprintf(buffer_segunda_linea, "[%c] ~~inv [%c] Sc~~r %s%s",
