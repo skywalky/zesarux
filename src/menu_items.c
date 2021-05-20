@@ -12954,6 +12954,7 @@ void menu_debug_draw_sprites(void)
 
 				puntero_final=puntero;
 
+                //Hacer esto a cada salto de x 0,8, etc
                 if (view_sprites_sms_tiles && (x%8)==0) {
 
 
