@@ -178,9 +178,6 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 
 -captura master system en gitlab readme
 
-
--snapshot en master system sonic2 al entrar restaura siempre al principio
-
 -estadisticas memoria etc con getrusage
 
 -Quizá cuando se ha pulsado rewind y hasta que no hay el timeout, no generar nuevos snapshots. 

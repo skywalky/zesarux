@@ -372,6 +372,11 @@ Sega SG-1000
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_sg1000.png "Sega SG-1000")
 
 
+Sega Master System
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_sms.png "Sega Master System")
+
+
 Do you want to know how ZEsarUX looked like in the past? See this:
 [PREVIOUS_SCREENSHOTS](https://github.com/chernandezba/zesarux/blob/master/PREVIOUS_SCREENSHOTS.md)
 

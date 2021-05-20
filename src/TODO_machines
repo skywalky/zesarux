@@ -1002,3 +1002,7 @@ past the FIRST scanline of the inactive display period
 
 - quiza wonderboy falla porque cambia el scroll pero luego lo lee (de donde?) de algun sitio que se lee mal y lo cambia a 0??
 
+
+
+-snapshot en master system sonic2 al entrar restaura siempre al principio (grabando desde la intro del juego por ejemplo): quizá falta algún estado/registro de hardware que no se guarda en snapshot,
+o bien algo de proceso de grabado/carga del snapshot que no se hace bien
