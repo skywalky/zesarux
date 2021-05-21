@@ -13221,6 +13221,9 @@ void menu_debug_draw_sprites(void)
 
 				}
 
+                //En el caso de modo sms sprites modo 4, lo anterior realizado no sirve de mucho, pues vamos a sacar el color del pixel de otra manera
+                //TODO: hacer que el código anterior no se ejecute si estamos en dicho modo, realmente no afecta pero es absurdo ejecutar eso
+                //si el color lo recalculamos de otra manera
                 if (view_sprites_sms_tiles) {
                     z80_byte byte_color=((byte_leido_sms_1>>7)&1) | ((byte_leido_sms_2>>6)&2) | ((byte_leido_sms_3>>5)&4) | ((byte_leido_sms_4>>4)&8);
 
@@ -13585,7 +13588,14 @@ void menu_debug_view_sprites_textinfo(zxvision_window *ventana)
 		char nombre_paleta[33];
 		menu_debug_sprites_get_palette_name(view_sprites_palette,nombre_paleta);
 
-		sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
+        //En el caso de usar modo sms sprites modo 4, paleta es siempre fija
+        //Ademas indicar si offset es de Tiles o Sprites
+        if (view_sprites_sms_tiles) {
+            sprintf(buffer_tercera_linea,"Pa~~l.: SMS Mode 4. O~~ff:%d (%s)",view_sprites_offset_palette,
+            (view_sprites_offset_palette == 0 ? "Tiles" : "Sprites"));
+        }
+
+		else sprintf(buffer_tercera_linea,"Pa~~l.: %s. O~~ff:%d",nombre_paleta,view_sprites_offset_palette);
 
 
 		char mensaje_texto_hardware[64];
