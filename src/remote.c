@@ -849,6 +849,8 @@ struct s_items_ayuda items_ayuda[]={
   {"smartload","|sl","file","Smart-loads a file. If the cpu is not in cpu-step mode, it will change to cpu-step before loading, and exit cpu-step mode after loading; if it was already on cpu-step mode, it will be on cpu-step mode after loading. Use with care, may produce unexpected behaviour when emulator is doing a machine reset for example"},
   {"snapshot-load",NULL,"file","Loads a snapshot. If the cpu is not in cpu-step mode, it will change to cpu-step before loading, and exit cpu-step mode after loading; if it was already on cpu-step mode, it will be on cpu-step mode after loading"},
   {"snapshot-save",NULL,"file","Saves a snapshot"},
+  {"snapshot-inram-get-index",NULL,"position","Returns index to a RAM snapshot position, where 0 is the oldest position"},
+  {"snapshot-inram-load",NULL,"position","Loads the RAM snapshot from position, where 0 is the oldest position"},
   {"speech-empty-fifo",NULL,NULL,"Empty speech fifo"},
   {"speech-send",NULL,"message","Sends message to speech"},
 

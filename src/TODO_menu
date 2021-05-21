@@ -63,8 +63,6 @@ valores long int
 Así sabremos la longitud de aquellos caracteres que si que imprimimos. Los que no, será 1 y interrogante 
 
 -Osd keyboard sin multitarea en ZX81 no va fino
-
--Ventana scanf no se deja mover bien cuando multitask off. Quizá no llama bien a handle mouse?
  
 -Sin multitarea, pulsaciones sobre la zona de scroll, hace efectivo el scroll cuando se mueve el raton o se pulsa boton o tecla
 
@@ -223,7 +221,7 @@ Hacer captura. Luego hacer captura de la derecha, etc
 -agregar un handler especial para esas teclas. Pero entonces como se mueve uno por los ítems? Con tecla tab?
 Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En menú tabular, el tab sale?
 
--F1 ayuda extensa en debug cpu, dentro de ventana y Antes en el ítem de menú 
+-F1 ayuda extensa en debug cpu, dentro de ventana y antes en el ítem de menú 
 
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
@@ -241,8 +239,6 @@ TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, qu
 -Estadísticas de diferentes componentes del core, ya sea cpu u otra cosa, como memoria usada para el rainbow buffer,  y cosas así
 Info de tamaño ventana. Y tamaño ventana sin zoom
 
-
-
 -mejorar deteccion frecuencia sonido en audio wave form
 
 
@@ -251,7 +247,6 @@ opcion tambien para bajar bit 7 final
 -Buscar bytes (mas de uno)
 
 -Mostrar juego cargado en titulo ventana. Desaparece al hacer reset 
-
 
 -poder hacer hotswap de una maquina a zx-uno
 
@@ -264,9 +259,7 @@ opcion tambien para bajar bit 7 final
 -visualmem podria tener en cuenta toda la ram de una maquina: 128kb en +2, Z88 etc.... aunque dificil para +2 y Z88.... y necesario?
 -visualmem que siga memory zone 
 
-
 -lectura de nombre de archivo en fileselector para stdout no admite espacios
-
 
 -sin multitask, no va repeticion de teclas. esto es porque no se ejecuta timer_check_interrupt
 quiza estas funciones de contadores deberian venir con el thread del timer? aunque luego en version

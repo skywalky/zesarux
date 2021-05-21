@@ -5,7 +5,6 @@ Que sea un tiempo que se acumule. Para hacer cálculos con más tiempo de muestr
 Parecido a core statistics pero con más sondas 
 Quizá algunos que sólo se habiliten mediante variable de debug puesta a mano en compileoptions.h
 
-
 -128ke parecido a +2B
 http://scratchpad.wikia.com/wiki/ZX_Spectrum_128Ke
 Rom derby
@@ -39,12 +38,10 @@ Si al final es saber por donde se ha estado ejecutando un programa, se puede usa
 -It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could
  read/write to that were made available to the emulated machine.
 
-
 -Multiface 128 falla en algunos juegos, como abadia del crimen. En eightyone tambien falla en este caso
 
 -Borrar enterrom y exitrom como debug breakpoint, que ya no tienen sentido
  
-
 -Opción de transaction log adicional que permita ir hacia atrás en el tiempo:
 *apuntar en cada momento valores registros
 *si hay modificación de memoria, apuntarse valor anterior a la escritura 
@@ -61,16 +58,13 @@ Si al final es saber por donde se ha estado ejecutando un programa, se puede usa
 
 -remote command info: ultimo uso cpu, últimos fps, velocidad relativa cpu
 
-
 -Enabling RAM refresh lo hace mediante cambio de funcion peek. Deberia hacerlo mediante funciones nested
 
 -top speed para Z88
 
 -top speed spectrum con threads es el doble mas rapido que sin threads
 
-
 -quiza tambien poder poner breakpoint y que vuelva a rutina que ha llamado (es decir, buscar en la pila la direccion de retorno y esperar a que vuelva ahi)
-
 
 -Nuevas variables para breakpoint:
 Modo de vídeo timex /Spectra/etc
@@ -91,8 +85,5 @@ probado - Variable traps que se activa por si hay load o save- hará que vaya m�
 
 -Lec-80 rom y Soporte 80 kb
 
-
 -Que algunas tareas como store scanline se hagan en thread aparte. Problema: que la mayoria de datos de ese scanline
 pueden variar mientras se está ejecutando el thread con el loop del siguiente scanline
-
-
