@@ -12897,53 +12897,6 @@ void menu_debug_draw_sprites(void)
             //Para sprites sms modo 4
             z80_byte byte_leido_sms_1,byte_leido_sms_2,byte_leido_sms_3,byte_leido_sms_4;
 
-                /*
-				if (view_sprites_sms_tiles) {
-
-
-                    if (view_sprites_hardware) {
-                    //Caso de sprites Master System modo 4
-
-                    //Accedemos a la tabla de 64 sprites
-
-                    //menu_z80_moto_int puntero_orig=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
-
-                    z80_int attribute_table=vdp_9918a_get_sprite_attribute_table();
-
-                    int numero_sprite=menu_debug_draw_sprites_get_pointer_offset(view_sprites_direccion);
-
-                    numero_sprite %=VDP_9918A_SMS_MODE4_MAX_SPRITES;
-
-                    
-
-                    attribute_table +=0x80+numero_sprite*2;
-
-                    //printf ("tabla atributo sprite: %04XH\n",attribute_table);
-
-                    //printf ("antes\n");
-                    //Obtener byte 2, sprite name
-                    z80_byte sprite_name=menu_debug_draw_sprites_get_byte(attribute_table+1);
-
-                    //printf ("numero sprite: %d sprite name: %d\n",numero_sprite,sprite_name);
-
-                    //Si ancho > 8, a la derecha mostramos el siguiente sprite
-
-                    int offset_sprite=sprite_name+x/8;
-
-                    int offset_pattern_table=offset_sprite*32+vdp_9918a_get_sprite_pattern_table_sms_mode4();
-                    puntero_final=offset_pattern_table+y*4;
-                    }
-
-                    else {
-                        puntero_final=view_sprites_direccion+y*4;
-                    }
-
-                    byte_leido_sms_1=menu_debug_draw_sprites_get_byte(puntero_final++);
-                    byte_leido_sms_2=menu_debug_draw_sprites_get_byte(puntero_final++);
-                    byte_leido_sms_3=menu_debug_draw_sprites_get_byte(puntero_final++);
-                    byte_leido_sms_4=menu_debug_draw_sprites_get_byte(puntero_final++);
-                }
-                */
 
 
 			for (x=0;x<view_sprites_ancho_sprite;) {
@@ -12957,10 +12910,10 @@ void menu_debug_draw_sprites(void)
 
                 //Hacer esto a cada salto de x 0,8, etc
                 if (view_sprites_sms_tiles && (x%8)==0) {
-
+                    //Caso de sprites Master System modo 4
 
                     if (view_sprites_hardware) {                    
-                        //Caso de sprites Master System modo 4
+                        //Activado setting de hardware.
 
                         //Accedemos a la tabla de 64 sprites
 

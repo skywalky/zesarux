@@ -132,13 +132,13 @@ https://foro.speccy.org/viewtopic.php?t=1502
 
 
 
-Quizá versión en un futuro en que al pulsar escape cierra todos los menús. 
+-Quizá versión en un futuro en que al pulsar escape cierra todos los menús. 
 Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 
 
 
 
-Problema con el almacenamiento de los t-estados en snapshot 
+-Problema con el almacenamiento de los t-estados en snapshot 
 
 -sprite disabling window tambien para tsconf y maquinas con chip vdp (msx, etc)
 
@@ -170,13 +170,6 @@ hace que se arranque la ventana en tamaño spectrum y despues de unos segundos s
 Activando el maximo turbo permitido, tambien hace una franja negra en el border, arriba del todo
 
 -poder cambiar instrumento midi en output a .mid
-
-
--sms: visor de sprites
-
--visor de tiles para sms y demas maquinas (en grafico, tal y como hace el visor de sprites)
-
--captura master system en gitlab readme
 
 -estadisticas memoria etc con getrusage
 
