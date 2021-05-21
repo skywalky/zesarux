@@ -16,7 +16,6 @@ final de frame. Y al no haberlo , si metemos un refresco de pantalla al final de
 el refresco de pantalla y por tanto, se ralentiza todo y acaba yendo mas o menos a velocidad normal en vez de top speed
 
 
-
 -watermark sin realvideo no hace zoom. importante???
 
 Opcion desactivar colores que solo va en realvideo off:
@@ -148,15 +147,14 @@ Por drivers:
 
 -En overscan con curses salen colores con ??? a la derecha fuera de pantalla 
 
-- curses: con ventana ay piano en background, al ir a Smartload se mezcla texto de ventana ay piano en Smartload
+-Con ventana ay piano en background, al ir a Smartload se mezcla texto de ventana ay piano en Smartload
 
-
-- curses: en menú no aparece carácter “.” (Punto)
+-En menú no aparece carácter “.” (Punto)
 
 -Permitir ZX desktop en curses? Cuidado porque igual intenta usar putpixel para dibujar las franjas de colores por defecto del fondo de ZX desktop
 
-
 -Utf blocky : A veces salen interrogantes. Probado en linux y no sale. Quiza es el cliente ssh contra remoto el que falla con esto a veces
+
 
 --stdout--
 

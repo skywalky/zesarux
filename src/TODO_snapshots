@@ -1,4 +1,3 @@
-
 --- ZSF ---
 
 -parece que ZSF no guarda estado ulaplus o timex. probar con view8x1.tap
@@ -69,9 +68,7 @@ Quiza habria que parsear algunos parametros del .config tambien despues de carga
 ---------------
 
 
-
 Otros TODO menos prioritarios, de aqui hasta el final del archivo:
-
 
 -Opción para formato de grabación de autosave snap
 
@@ -108,7 +105,4 @@ Esto es un nuevo tipo de campo en ZSF. Como se pide? Al guardar un snapshot o de
 Quizá desde menú y con un first aid que lo explique
 
 --ZSF tbblue: * estado dma (esto no solo afecta a tbblue sino a todos. tener en cuenta grabar tambien valor datagear_dma_tbblue_prescaler)
-
-
-
 

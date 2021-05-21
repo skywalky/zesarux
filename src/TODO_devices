@@ -1,8 +1,6 @@
 
-
 -datagear dma: timing (puesto tiempos arbitrarios), demos que hacen out no se ven bien, modo turbo next afecta a timing?
 Y montones de flags y parámetros de dma que de momento no gestiono
-
 
 
 --- Sprite Chip ZGX ---
@@ -15,6 +13,7 @@ Y montones de flags y parámetros de dma que de momento no gestiono
 -Sprites de 16x16?
 
 -----------------------
+
 
 --- +3 ---
 -+3: funcionan :
@@ -174,7 +173,6 @@ carpeta aux_zesarux/zx81/sound_demo  tambien
 
 -Zxpand+ nuevo firmware?
 https://github.com/charlierobson/ZXpand-Vitamins/wiki/ZXpand---Online-Manual
-
 
 
 

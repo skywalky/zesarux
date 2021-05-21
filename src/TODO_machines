@@ -216,15 +216,13 @@ http://speccy.info/Pentagon
 Misma wiki para info de cosas de TSConf, como el z controller ide 
 
 
+-Quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200, 
 
-
--tsconf: quiza algunas demos no se ven bien efectos de linea debidos al turbo? se ven mas arriba: ejemplos chess, 200, 
-
--Tsconf render modo spectrum compatible debería leer de buffer atributos y pixeles ; para que demos como overscan se vean bien
+-Render modo spectrum compatible debería leer de buffer atributos y pixeles ; para que demos como overscan se vean bien
 
 -tsconf y tr-dos no deberia hacer nested_core, solo detectar cuando se esta en core trdos
 
--tsconf sin real video no borra border. al menos en demo carousel.spg
+-sin real video no borra border. al menos en demo carousel.spg
 
 -mmc. Esto tambien para baseconf. Parece que envia un comando FF invalido y luego se queda en un bucle
 
@@ -646,7 +644,6 @@ http://velesoft.speccy.cz/sam_zx128.htm
 
 -ay player en modo cpc no borra debajo de pantalla diferentes ventanas
 --machine cpc464 en aa,caca en consola de texto real da segmentation fault
--dibujado de border cuando pantalla es menor de lo habitual, temporal, no va bien en casos como paperboy. Esto seria mejor para solucionarlo implementar realvideo
 -Que pasa con keymap y otras teclas de cpc en drivers que no soportan keymap
 -Hardware scroll no va fino
 -Paginación de memoria cpc en la función por defecto array que tenga: 0,1,2,3
@@ -834,8 +831,6 @@ hay por ahi alguna epr de 16 kb??
 
 
 
-
-
 --- Mejoras especificas de Z88 ---
 
 -tarjeta hibrida ram+flash:
@@ -919,8 +914,6 @@ Como ejemplo, el Toshiba HX-10 (un modelo de 64KB) tiene esta configuración d
 * 		Páginas 2 y 3 del slot 0 no se usan.
 
 -teclas que falten por emular.  cuales mas?
-
-
 
 
 -------------

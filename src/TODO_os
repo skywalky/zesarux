@@ -1,6 +1,4 @@
-
 --- Mac OS X ---
-
 
 -Poder asignar extensiones para abrir con zesarux en Mac OS X. Y de paso eliminar warnings de línea de comandos
 -cocoa: En Mac, si se pone en .zesaruxrc: --vo curses Inicializa la ventana en blanco de Cocoa y luego abre ventana de curses donde transcurre todo...
@@ -74,9 +72,6 @@ Es mas complicado pues luego va a buscar librerias de /usr/local/Cellar/openssl
 ----Fin Mac SSL
 
 
-
-
-
 ------------------
 
 --- windows - mingw - fallos ---
@@ -136,7 +131,6 @@ Fifosdlbuffersize 4 y sdlsamplesize 2048
 
 
 -Windows no es capaz de usar imagen mmc de 2 GB. Quiza porque es un compilado para 32 bits?
-
 
 
 ------------------
