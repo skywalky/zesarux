@@ -13476,8 +13476,8 @@ void menu_debug_sprites_get_parameters_hardware(void)
 
 	                view_sprites_alto_sprite=vdp_9918a_sms_get_sprite_height();    
 
-                //Y offset en este caso 1 (o sea, 16)
-                view_sprites_offset_palette=1;
+                //Indicamos el offset de la paleta a 16, el de sprites
+                view_sprites_offset_palette=16;
             }
 
             else {
@@ -13505,6 +13505,14 @@ void menu_debug_sprites_get_parameters_hardware(void)
 	}
 
 	else {
+        //En caso de sms video mode 4, cambiamos los bpp a 4. Esto es solo identificativo para el usuario
+        //porque realmente no lo lee cuando muestra los sprites en ese modo
+        if (MACHINE_IS_SMS && view_sprites_sms_tiles) {
+            //4 bpp en caso de modo 4 sms
+            view_sprites_bpp=4;
+            view_sprites_ppb=2;
+        }
+
 		view_sprites_bytes_por_linea=view_sprites_ancho_sprite/view_sprites_ppb;
 		view_sprites_bytes_por_ventana=view_sprites_bytes_por_linea*view_sprites_alto_sprite;
 		view_sprites_increment_cursor_vertical=view_sprites_bytes_por_linea;
