@@ -1939,7 +1939,7 @@ printf (
                 "--zx8081ram8K2000          Emulate 8K RAM in 2000H for ZX80/ZX81\n"
                 "--zx8081ram16K8000         Emulate 16K RAM in 8000H for ZX80/ZX81\n"
                 "--zx8081ram16KC000         Emulate 16K RAM in C000H for ZX80/ZX81\n"
-		"--acemem n                 Emulate 3, 19 or 35 kb of memory on Jupiter Ace\n"
+		"--acemem n                 Emulate 3, 19, 35 or 51 kb of memory on Jupiter Ace\n"
 
 		"--128kmem n                Set more than 128k RAM for 128k machines. Allowed values: 128, 256, 512"
 
@@ -5622,7 +5622,7 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--acemem")) {
                                 siguiente_parametro_argumento();
                                 int valor=atoi(argv[puntero_parametro]);
-                                if (valor!=3 && valor!=19 && valor!=35) {
+                                if (valor!=3 && valor!=19 && valor!=35 && valor!=51) {
                                         printf ("Invalid RAM value\n");
                                         exit(1);
                                 }

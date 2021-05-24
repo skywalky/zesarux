@@ -42,14 +42,16 @@ int da_amplitud_speaker_ace(void)
 }
 
 
-//Establece tamanyo ram Valor entre 3 y 35
+//Establece tamanyo ram Valor entre 3 y 51
 void set_ace_ramtop(z80_byte valor)
 {
-        if (valor<3 || valor>35) {
-                cpu_panic("Cannot set ACE RAM");
-        }
+    if (valor<3 || valor>51) {
+            cpu_panic("Cannot set ACE RAM");
+    }
 
-        ramtop_ace=16383+1024*(valor-3);
+    ramtop_ace=16383+1024*(valor-3);
+
+    //printf("ramtop ace: %d\n",ramtop_ace);
 }
 
 int get_ram_ace(void)

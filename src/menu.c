@@ -16429,14 +16429,14 @@ void menu_hardware_ace_ramtop(MENU_ITEM_PARAMETERS)
         sprintf (string_ramtop,"%d",valor_antes_ramtop);
 
 
-        menu_ventana_scanf("RAM? (3, 19 or 35)",string_ramtop,3);
+        menu_ventana_scanf("RAM? (3, 19, 35 or 51)",string_ramtop,3);
 
         int valor_leido_ramtop=parse_string_to_number(string_ramtop);
 
         //si mismo valor volver
         if (valor_leido_ramtop==valor_antes_ramtop) return;
 
-	if (valor_leido_ramtop!=3 && valor_leido_ramtop!=19 && valor_leido_ramtop!=35) {
+	if (valor_leido_ramtop!=3 && valor_leido_ramtop!=19 && valor_leido_ramtop!=35 && valor_leido_ramtop!=51) {
 		debug_printf (VERBOSE_ERR,"Invalid RAM value");
 		return;
 	}

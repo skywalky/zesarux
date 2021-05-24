@@ -7,7 +7,7 @@ Added Automatic Snapshots to RAM + Rewind feature
 Added new improved real tape loading algorithm
 Added setting to disable TZX pauses
 Added zsf to scr support for Next, ZX-Uno and TSConf snapshots
-
+Added Jupiter Ace 51 KB RAM emulation
 
 Improved ZX Vision menu interface:
 -Added setting to pause cpu emulation on menu when multitask active
