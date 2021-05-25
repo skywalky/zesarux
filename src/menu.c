@@ -35527,8 +35527,11 @@ void menu_inicio(void)
 
 			//menu_espera_no_tecla();
       //desactivamos multitarea, guardando antes estado multitarea
-			int antes_menu_multitarea=menu_multitarea;
-      			menu_multitarea=0;
+
+
+            int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+            menu_emulation_paused_on_menu=1;
+
       			audio_playing.v=0;
 			//printf ("pc: %d\n",reg_pc);
 
@@ -35539,7 +35542,7 @@ void menu_inicio(void)
 
 			//restaurar estado multitarea
 
-			menu_multitarea=antes_menu_multitarea;
+			menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 
       cls_menu_overlay();
 
