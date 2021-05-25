@@ -17077,6 +17077,7 @@ void menu_debug_registers_if_cls(void)
             //menu_espera_no_tecla_no_cpu_loop();
             menu_espera_no_tecla();
             menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
+            //printf ("Despues esperamos cpu_step_mode=1\n");
         }
         else {
             //printf ("Esperamos cpu_step_mode.v=0\n");
@@ -17973,11 +17974,16 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			//Esperamos tecla
 			if (continuous_step==0)
 			{ 
-				menu_espera_tecla_no_cpu_loop();
+
+
+				//menu_espera_tecla_no_cpu_loop();
 					
 				//No quiero que se llame a core loop si multitarea esta activo pero aqui estamos en cpu step
 				int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
 				menu_emulation_paused_on_menu=1;
+
+                menu_espera_tecla();
+
 				//tecla=zxvision_common_getkey_refresh();
 				tecla=zxvision_common_getkey_refresh_noesperanotec();
 				menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
