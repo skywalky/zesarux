@@ -17062,15 +17062,27 @@ void menu_debug_registers_if_cls(void)
 		//printf ("refrescando pantalla\n");
 	}
 
+    if (menu_multitarea==0) {
+        //printf ("Esperamos menu_multitarea=0\n");
+        menu_espera_no_tecla_no_cpu_loop();
+    }
 
-	if (cpu_step_mode.v==1 || menu_multitarea==0) {
-		//printf ("Esperamos tecla NO cpu loop\n");
-		menu_espera_no_tecla_no_cpu_loop();
-	}
-	else {
-		//printf ("Esperamos tecla SI cpu loop\n");
-		menu_espera_no_tecla();
-	}
+
+    else {
+        if (cpu_step_mode.v==1) {
+            //printf ("Esperamos cpu_step_mode=1\n");
+            //menu_emulation_paused_on_menu
+            int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+            menu_emulation_paused_on_menu=1;
+            //menu_espera_no_tecla_no_cpu_loop();
+            menu_espera_no_tecla();
+            menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
+        }
+        else {
+            //printf ("Esperamos cpu_step_mode.v=0\n");
+            menu_espera_no_tecla();
+        }
+    }
 
 
 }
@@ -17554,8 +17566,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	char buffer_mensaje[64];
 
-	//Si no esta multitarea activa, modo por defecto es step to step
-	if (menu_multitarea==0) cpu_step_mode.v=1;
+	//Si no esta multitarea activa o pause emulation en menu, modo por defecto es step to step
+	if (menu_multitarea==0 || menu_emulation_paused_on_menu) cpu_step_mode.v=1;
 
 
 	//zxvision_window ventana;
