@@ -17063,7 +17063,7 @@ void menu_debug_registers_if_cls(void)
 	}
 
     if (menu_multitarea==0) {
-        //printf ("Esperamos menu_multitarea=0\n");
+        //printf ("Esperamos menu_multitarea = 0\n");
         menu_espera_no_tecla_no_cpu_loop();
     }
 
@@ -17976,11 +17976,11 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				menu_espera_tecla_no_cpu_loop();
 					
 				//No quiero que se llame a core loop si multitarea esta activo pero aqui estamos en cpu step
-				int antes_menu_multitarea=menu_multitarea;
-				menu_multitarea=0;
+				int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+				menu_emulation_paused_on_menu=1;
 				//tecla=zxvision_common_getkey_refresh();
 				tecla=zxvision_common_getkey_refresh_noesperanotec();
-				menu_multitarea=antes_menu_multitarea;
+				menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 
 				//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
 				if (tecla==0) {
@@ -18032,8 +18032,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				if (tecla=='z') {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
 
                     menu_debug_change_memory_zone();
 
@@ -18045,14 +18045,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 					//Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
                     //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 
 				}								
 
                 if (tecla=='b') {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
 
                     menu_breakpoints(0);
 
@@ -18065,14 +18065,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                     //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
                     //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 					
                 }
 
                 if (tecla=='w') {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
 
 					//La cerramos pues el envio de watches a background no funciona bien si hay otra ventana detras
 					zxvision_destroy_window(ventana);
@@ -18087,14 +18087,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                     //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
                     //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
                 }
 
 
                 if (tecla=='i') {
                 	//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
 				
 					last_debug_poke_dir=menu_debug_memory_pointer;
 					if (menu_debug_registers_current_view==8) {
@@ -18110,7 +18110,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                     //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
                     //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
                 }
 
 
@@ -18126,8 +18126,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				//Mensaje al que apunta instruccion de condact
 				if (tecla=='m' && menu_debug_registers_current_view==8 && util_daad_condact_uses_message() ) {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
 
                     menu_debug_daad_get_condact_message();
 
@@ -18139,15 +18139,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                     //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
                     //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 
                 }
 
 				//Lista de todos mensajes
 				if (tecla=='e' && menu_debug_registers_current_view==8) {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
 
                     menu_debug_daad_view_messages_ask();
 
@@ -18159,7 +18159,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                     //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
                     //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 
                 }				
 
@@ -18245,8 +18245,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		        if (tecla=='t') {
                     menu_debug_follow_pc.v=0; //se deja de seguir pc
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
                     menu_debug_registers_change_ptr();
 
                     //Decimos que no hay tecla pulsada
@@ -18257,7 +18257,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                     //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
                     //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
                 }
 
 				//Daad breakpoint
@@ -18281,8 +18281,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                 if (tecla=='r') {
                 	//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
-					int antes_menu_multitarea=menu_multitarea;
-					menu_multitarea=0;
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
 
                     menu_debug_change_registers();
 
@@ -18294,7 +18294,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 					//Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
 					//de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
-					menu_multitarea=antes_menu_multitarea;
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
                 }
 
 
