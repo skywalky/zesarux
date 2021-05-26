@@ -2871,7 +2871,8 @@ void mid_export_put_cambio_instrumento(int canal)
 
     //Si hay cambio instrumento
     if (mid_cambiado_instrumento[canal]==0) {
-        printf("Cambio instrumento en canal %d\n",canal);
+        debug_printf(VERBOSE_INFO,"Sending instrument change .mid event: channel: %d instrument: %s",
+                    canal,midi_instrument_list[mid_instrument]);
         //printf("indice antes: %d\n",indice);
         //En tiempo 0. simultaneamente con anterior evento (un note on)
         indice +=mid_mete_instrumento(&mid_memoria_export[canal][indice],0,canal,mid_instrument); 
