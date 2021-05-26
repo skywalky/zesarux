@@ -2948,7 +2948,7 @@ void mid_export_put_note(int canal,char *nota,int duracion)
 
 
     //Y enviamos cambio de instrumento si conviene
-    mid_export_put_cambio_instrumento(canal);
+    //mid_export_put_cambio_instrumento(canal);
 	
 }
 
@@ -3145,14 +3145,10 @@ void mid_frame_event(void)
 					//printf ("nota diferente canal %d. nueva [%s]\n",canal_final,nota);
 
 					//Metemos nota.
-                    //printf("nota indice antes canal %d : %d\n",canal_final,mid_indices_actuales[canal_final]);
+                    //Antes indicamos cambio de instrumento si conviene
+                    mid_export_put_cambio_instrumento(canal_final);
+
 					mid_export_put_note(canal_final,mid_nota_sonando[canal_final],mid_nota_sonando_duracion[canal_final]);
-                    //printf("nota indice despues canal %d : %d\n",canal_final,mid_indices_actuales[canal_final]);
-
-                    //printf("cambio instrumento indice antes canal %d : %d\n",canal_final,mid_indices_actuales[canal_final]);
-                    //mid_export_put_cambio_instrumento(canal_final);
-                    //printf("cambio instrumento ndice despues canal %d : %d\n",canal_final,mid_indices_actuales[canal_final]);
-
 
 					mid_nota_sonando_duracion[canal_final]=1;
 					strcpy(mid_nota_sonando[canal_final],nota);
