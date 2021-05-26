@@ -2645,6 +2645,22 @@ void mid_mete_longitud_pista(z80_byte *mem,int longitud)
 
 
 //Mete nota mid. Devuelve longitud en bytes
+int mid_mete_instrumento(z80_byte *mem,int silencio_anterior,int canal_midi,z80_byte instrumento)
+{
+
+    int indice=0;
+
+    indice +=util_int_variable_length(silencio_anterior,&mem[indice]);
+   
+    mem[indice++]=0xC0 | (canal_midi & 0xf);
+    mem[indice++]=instrumento;
+    //mem[indice++]=0; //no usado
+
+
+    return indice;
+}
+
+//Mete nota mid. Devuelve longitud en bytes
 int mid_mete_nota(z80_byte *mem,int silencio_anterior,int duracion,int canal_midi,int keynote,int velocity)
 {
 
@@ -2702,6 +2718,11 @@ int mid_indices_actuales[MAX_AY_CHIPS*3];
 //Silencios acumulados en cada canal
 int mid_silencios_acumulados[MAX_AY_CHIPS*3];
 
+//cambios de instrumento
+int mid_cambiado_instrumento[MAX_AY_CHIPS*3];
+
+//instrumento seleccionado en mid
+z80_byte mid_instrument=0;
 
 
 int mid_parm_division=50;
@@ -2765,6 +2786,17 @@ int mid_max_buffer(void)
 
 }
 
+//Indicar que las siguientes notas de todos los canales llevarán asociados un cambio de instrumento
+void mid_set_cambio_instrumento(void)
+{
+
+	int total_pistas=3*mid_chips_al_start;
+
+    int canal;
+    for (canal=0;canal<total_pistas;canal++) {    
+        mid_cambiado_instrumento[canal]=0;
+    }
+}
 
 void mid_initialize_export(void)
 {
@@ -2817,6 +2849,8 @@ void mid_initialize_export(void)
 				
 			}
 
+    mid_set_cambio_instrumento();
+
 
 }
 
@@ -2825,6 +2859,30 @@ int mid_has_been_initialized(void)
 	//Solo con que el primer buffer apunte a algun sitio
 	if (mid_memoria_export[0]!=NULL) return 1;
 	else return 0;
+}
+
+void mid_export_put_cambio_instrumento(int canal)
+{
+
+
+	//Leer indice actual
+	int indice=mid_indices_actuales[canal];
+
+
+    //Si hay cambio instrumento
+    if (mid_cambiado_instrumento[canal]==0) {
+        printf("Cambio instrumento en canal %d\n",canal);
+        //printf("indice antes: %d\n",indice);
+        //En tiempo 0. simultaneamente con anterior evento (un note on)
+        indice +=mid_mete_instrumento(&mid_memoria_export[canal][indice],0,canal,mid_instrument); 
+        //printf("indice despues: %d\n",indice);
+        mid_cambiado_instrumento[canal]=1;
+    }
+
+
+	//Guardar indice 
+	mid_indices_actuales[canal]=indice;	
+	
 }
 
 
@@ -2886,8 +2944,16 @@ void mid_export_put_note(int canal,char *nota,int duracion)
 
 	//Guardar indice 
 	mid_indices_actuales[canal]=indice;	
+
+
+    //Y enviamos cambio de instrumento si conviene
+    mid_export_put_cambio_instrumento(canal);
 	
 }
+
+
+
+
 
 //Cierra pistas y graba a disco
 void mid_flush_file(void)
@@ -3077,8 +3143,14 @@ void mid_frame_event(void)
 
 					//printf ("nota diferente canal %d. nueva [%s]\n",canal_final,nota);
 
-					//Metemos nota
+					//Metemos nota.
+                    //printf("nota indice antes canal %d : %d\n",canal_final,mid_indices_actuales[canal_final]);
 					mid_export_put_note(canal_final,mid_nota_sonando[canal_final],mid_nota_sonando_duracion[canal_final]);
+                    //printf("nota indice despues canal %d : %d\n",canal_final,mid_indices_actuales[canal_final]);
+
+                    //printf("cambio instrumento indice antes canal %d : %d\n",canal_final,mid_indices_actuales[canal_final]);
+                    //mid_export_put_cambio_instrumento(canal_final);
+                    //printf("cambio instrumento ndice despues canal %d : %d\n",canal_final,mid_indices_actuales[canal_final]);
 
 
 					mid_nota_sonando_duracion[canal_final]=1;

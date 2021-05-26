@@ -194,6 +194,7 @@ int watches_opcion_seleccionada=0;
 int breakpoints_opcion_seleccionada=0;
 int menu_watches_opcion_seleccionada=0;
 int record_mid_opcion_seleccionada=0;
+int record_mid_instrument_opcion_seleccionada=0;
 
 
 int direct_midi_output_opcion_seleccionada=0;
@@ -19687,6 +19688,51 @@ void menu_record_mid_noisetone(MENU_ITEM_PARAMETERS)
 	mid_record_noisetone.v ^=1;	
 }
 
+
+void menu_record_mid_instrument(MENU_ITEM_PARAMETERS)
+{
+
+
+    //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+    menu_item *array_menu_common;
+    menu_item item_seleccionado;
+    int retorno_menu;
+
+
+    do {
+                
+        menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+        int i;
+
+        for (i=0;i<128;i++) {                
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,midi_instrument_list[i]);
+
+        }
+
+
+
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        menu_add_ESC_item(array_menu_common);
+
+        retorno_menu=menu_dibuja_menu(&record_mid_instrument_opcion_seleccionada,&item_seleccionado,array_menu_common,"Instrument");
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //Cambiar instrumento y salir
+            mid_instrument=record_mid_instrument_opcion_seleccionada;
+            mid_set_cambio_instrumento();
+            menu_generic_message_splash("Change instrument","OK. Instrument changed");
+            return;
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+}
+
+
 void menu_record_mid(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_record_mid;
@@ -19718,7 +19764,10 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 
 						else {
 							menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_pause_unpause,menu_cond_ay_or_sn_chip,"Resume Recording");
-						}					
+						}		
+
+
+                        
 					}
 
 					//No dejamos grabar hasta que no se haga stop
@@ -19733,6 +19782,9 @@ void menu_record_mid(MENU_ITEM_PARAMETERS)
 						(mid_record_noisetone.v ? 'X' : ' ') );
 					menu_add_item_menu_tooltip(array_menu_record_mid,"Record also channels enabled as tone+noise");
 					menu_add_item_menu_ayuda(array_menu_record_mid,"Record also channels enabled as tone+noise");
+
+
+                    menu_add_item_menu_format(array_menu_record_mid,MENU_OPCION_NORMAL,menu_record_mid_instrument,NULL,"Change Instrument");			
 
 					if (mid_notes_recorded) {
 
