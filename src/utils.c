@@ -19104,7 +19104,7 @@ char *plot_moves[]= {
         //---x---- Bit 4 (0x10) : inverse / flags      |
         //--x----- Bit 5 (0x20): flags                 |  Parametro 0 ("value")
         //-x------ Bit 6 (0x40): signo parametro 1    -|
-        //x------- Bit 7 (0x80): signo parametro 2    
+        //x------- Bit 7 (0x80): signo parametro 2 / flags   
 
         int i;
         for (i=0;i<8;i++) neg[i]=0;
