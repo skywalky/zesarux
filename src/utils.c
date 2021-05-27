@@ -19098,6 +19098,14 @@ char *plot_moves[]= {
 
         int estexto=0;
 
+        //Formato del byte con el comando:
+        //-----xxx 3 bits inferiores: comando
+        //----x--- Bit 3 (0x08) : over / flags 
+        //---x---- Bit 4 (0x10) : inverse / flags
+        //--x----- Bit 5 (0x20): flags
+        //-x------ Bit 6 (0x40): signo parametro 1
+        //x------- Bit 7 (0x80): signo parametro 2
+
         int i;
         for (i=0;i<8;i++) neg[i]=0;
 
