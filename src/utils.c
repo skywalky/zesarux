@@ -19084,13 +19084,20 @@ char *plot_moves[]= {
         util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);    
 
     printf("quill version: %d\n",quillversion);
-    
+
+
     while (!salir) {
+
         z80_byte gflag=peek_byte_no_time(graphics);
         z80_byte nargs;
 
         z80_byte value;
         char inv, ovr;
+
+        int estexto=0;
+
+        int i;
+        for (i=0;i<8;i++) neg[i]=0;
 
 	       inv = ' '; ovr = ' ';
 	       if ((gflag & 8) != 0) ovr = 'o';
@@ -19177,6 +19184,7 @@ char *plot_moves[]= {
                      {
                        nargs = 3;
                        printf("TEXT    %c%c %d ",ovr,inv,value/4);
+                       estexto=1;
                      }
                      else
                      {
@@ -19184,7 +19192,7 @@ char *plot_moves[]= {
                        printf("RPLOT   %c%c %s",ovr,inv,plot_moves[value/4]);
                      }
                      
-                nargs=0;
+            
 
 		    break;
 
@@ -19218,10 +19226,23 @@ char *plot_moves[]= {
         }
 
         graphics++;
-        int i;
+        
 
         for (i=0;i<nargs;i++) {
-            printf("%d ",peek_byte_no_time(graphics));
+            z80_byte byte_leido=peek_byte_no_time(graphics);
+            if (estexto && i==0) {
+                if (byte_leido>=32 && byte_leido<=126) printf("%d('%c') ",byte_leido,byte_leido);
+                else printf("%d ",byte_leido);
+            }
+
+            else {
+                printf("%c%d ",(neg[i]!=0 ? '-' : ' ' ), byte_leido);
+
+	       //for m := 0 to nargs-1 do
+           //     Write(FOut, Select(neg[m]<>0, '-',' '), IntToStr2(Peek(Offs+1+m),3,true),' ');
+	       //WriteLn(Fout);
+
+            }
 
             graphics++;
         }
