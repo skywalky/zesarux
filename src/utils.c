@@ -19050,6 +19050,8 @@ void util_daad_get_locat_message(z80_byte index,char *texto)
 void util_daad_get_graphics_location(z80_byte index,char *texto)
 {
 
+//See https://github.com/Utodev/unPAWs/blob/master/Unpaws.pas
+
         z80_int table_dir=util_daad_get_start_graphics();
         //TODO: OffAttr
 
