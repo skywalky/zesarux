@@ -19061,8 +19061,30 @@ void util_daad_get_graphics_location(z80_byte index,char *texto)
         printf("Start graphics location %d: %d\n",index,graphics);
         //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
 
+char *plot_moves[]= {
+" 001  000",
+" 001  001",
+" 000  001",
+"-001  001",
+"-001  000",
+"-001 -001",
+" 000 -001",
+" 001 -001" 
+}; 
+
     int salir=0;
 
+    z80_int neg[8];
+
+        z80_int maintop;
+        z80_int mainattr;
+
+        int quillversion;
+
+        util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);    
+
+    printf("quill version: %d\n",quillversion);
+    
     while (!salir) {
         z80_byte gflag=peek_byte_no_time(graphics);
         z80_byte nargs;
@@ -19090,78 +19112,78 @@ void util_daad_get_graphics_location(z80_byte index,char *texto)
 
 	         case 1: 
                      nargs = 2;
-                     /*
-                     if ((gflag and $40 <>0 then neg[0] := 1;
-                     if gflag and $80 <>0 then neg[1] := 1;
+                     
+                     if ((gflag & 0x40) != 0) neg[0] = 1;
+                     if ((gflag & 0x80) != 0) neg[1] = 1;
 
-		     if (ovr='o') and (inv='i') THEN
-                       opcode := 'REL MOVE   '
+		     if (ovr=='o' && inv=='i') 
+                       printf ("REL MOVE   ");
 		     else
-                       opcode := 'LINE    '+ ovr+inv+' ';
-                       */
+                       printf ("LINE    %c%c ",ovr,inv);
+                       
 		    break;
 
 
                 case 2:
-                /*
+                
 	         
-                     if (gflag and $10 <>0) and (gflag and $20 <>0) then
-		      begin
-                            if gflag and $40 <>0 then neg[0] := 1;
-                            if gflag and $80 <>0 then neg[1] := 1;
-                        */
+                     if ((gflag & 0x10)!=0  && (gflag & 0x20)!=0) 
+		      {
+                            if ((gflag & 0x40) !=0) neg[0] = 1;
+                            if ((gflag & 0x80) !=0) neg[1] = 1;
+                        
 			    nargs = 3;
-                /*
-                            if QuillVersion=0 then
-                             opcode := 'SHADE   '+ovr+inv+' '
+                
+                            if (quillversion==0) 
+                             printf("SHADE   %c%c ",ovr,inv);
                             else
-                             opcode := 'BSHADE     ';
-		      end
+                             printf("BSHADE     ");
+		      }
 		     else
-                     if gflag and $10 <>0 then
-                      begin
-		       nargs := 4;
-                       opcode := 'BLOCK      ';
-                      end
+                     if ((gflag & 0x10) !=0)
+                      {
+		                nargs = 4;
+                       printf("BLOCK      ");
+                      }
 		     else
-                     if gflag and $20 <>0 then
-		      begin
-                            if gflag and $40 <>0 then neg[0] := 1;
-                            if gflag and $80 <>0 then neg[1] := 1;
-			    nargs := 3;
-                            opcode := 'SHADE   '+ovr+inv+' ';
-		      end
+                     if ((gflag & 0x20) !=0)
+		      {
+                            if ((gflag & 0x40) !=0 ) neg[0] = 1;
+                            if ((gflag & 0x80) !=0 ) neg[1] = 1;
+			    nargs = 3;
+                            printf("SHADE   %c%c ",ovr,inv);
+		      }
 		     else
-		      begin
-                            if gflag and $40 <>0 then neg[0] := 1;
-                            if gflag and $80 <>0 then neg[1] := 1;
-			    nargs := 2;
-                            opcode := 'FILL       ';
-		      end;
-		    end;
-            */
+		      {
+                            if ((gflag & 0x40) !=0 ) neg[0] = 1;
+                            if ((gflag & 0x80) !=0 ) neg[1] = 1;
+			    nargs = 2;
+                            printf("FILL       ");
+		      }
+		    
+            
             break;
 
 
 	         case 3: 
                      nargs = 1;
-                     printf("GOSUB ");
-                     //opcode :='GOSUB    sc='+ IntToStr2(value and 7,3, true)+' ';
+                     printf("GOSUB    sc=%d",value & 7);
+                    
 		    break;
 
             case 4:
-            /*
-                     if QuillVersion=0 then
-                     begin
-                       nargs := 3;
-                       opcode := 'TEXT    '+ovr+inv+'  '+IntToStr2(value div 4,3, true)+' ';
-                     end
+            
+                     if (quillversion==0)
+                     {
+                       nargs = 3;
+                       printf("TEXT    %c%c %d ",ovr,inv,value/4);
+                     }
                      else
-                     begin
-                       nargs:=0;
-                       opcode := 'RPLOT   '+ovr+inv+'  '+plot_moves[value div 4]+' ';
-                     end;
-                     */
+                     {
+                       nargs=0;
+                       printf("RPLOT   %c%c %s",ovr,inv,plot_moves[value/4]);
+                     }
+                     
                 nargs=0;
 
 		    break;
@@ -19169,23 +19191,23 @@ void util_daad_get_graphics_location(z80_byte index,char *texto)
 	        case 5:
 
                      nargs = 0;
-                     /*
-		     if gflag and $80 <>0 then
-                      opcode :=  'BRIGHT      '+IntToStr2(value and 15, 3, true)
+                     
+		     if ((gflag & 0x80) !=0) 
+                      printf("BRIGHT      %d",value & 15);
                      else
-                      opcode := 'PAPER       '+IntToStr2(value and 15, 3, true);
-		    end;
-            */
+                      printf("PAPER      %d",value & 15);
+        
+            
            break;
 
            case 6: 
                      nargs = 0;
-                     /*
-		     if gflag and $80 <>0 then
-                      opcode := 'FLASH       '+IntToStr2(value and 15, 3, true)
+                     
+		     if ((gflag & 0x80) !=0) 
+                      printf ("FLASH       %d",value & 15);
                      else
-                      opcode := 'INK         '+IntToStr2(value and 15, 3, true);
-                      */
+                      printf ("INK         %d",value & 15);
+                      
 		    
             break;
             case 7:
