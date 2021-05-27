@@ -18688,6 +18688,29 @@ z80_int util_daad_get_start_locat_messages(void)
         return dir;
 }
 
+//Comun para daad y paws
+z80_int util_daad_get_start_graphics(void)
+{
+
+        z80_int puntero;
+
+        z80_int dir;
+
+        if (util_daad_detect()) {
+            //de momento en daad no saco graficos
+            dir=0;
+        //puntero=util_daad_get_start_pointers()+14;
+        //dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        }
+        else {
+                //Paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_OffGraph;
+        }
+
+
+        return dir;
+}
 
 //Comun para daad y paws
 z80_int util_daad_get_start_user_messages(void)
@@ -19022,6 +19045,169 @@ void util_daad_get_locat_message(z80_byte index,char *texto)
         util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
 }
 
+
+
+void util_daad_get_graphics_location(z80_byte index,char *texto)
+{
+
+        z80_int table_dir=util_daad_get_start_graphics();
+        //TODO: OffAttr
+
+        printf("OffGraph: %d\n",table_dir);
+
+        //Inicio tabla graficos
+        z80_int graphics=peek_word_no_time(table_dir+index*2);
+
+        printf("Start graphics location %d: %d\n",index,graphics);
+        //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
+
+    int salir=0;
+
+    while (!salir) {
+        z80_byte gflag=peek_byte_no_time(graphics);
+        z80_byte nargs;
+
+        z80_byte value;
+        char inv, ovr;
+
+	       inv = ' '; ovr = ' ';
+	       if ((gflag & 8) != 0) ovr = 'o';
+	       if ((gflag & 16) !=0) inv = 'i';
+	       value = gflag /  8;
+               nargs=0;        
+
+        switch (gflag & 7) {
+	         case 0:
+
+                     nargs = 2;
+		     if ((ovr=='o') && (inv=='i')) {
+                       printf ("ABS MOVE   ");
+             }
+             else {
+                       printf ("PLOT    %c%c ",ovr,inv);
+             }
+            break;
+
+	         case 1: 
+                     nargs = 2;
+                     /*
+                     if ((gflag and $40 <>0 then neg[0] := 1;
+                     if gflag and $80 <>0 then neg[1] := 1;
+
+		     if (ovr='o') and (inv='i') THEN
+                       opcode := 'REL MOVE   '
+		     else
+                       opcode := 'LINE    '+ ovr+inv+' ';
+                       */
+		    break;
+
+
+                case 2:
+                /*
+	         
+                     if (gflag and $10 <>0) and (gflag and $20 <>0) then
+		      begin
+                            if gflag and $40 <>0 then neg[0] := 1;
+                            if gflag and $80 <>0 then neg[1] := 1;
+                        */
+			    nargs = 3;
+                /*
+                            if QuillVersion=0 then
+                             opcode := 'SHADE   '+ovr+inv+' '
+                            else
+                             opcode := 'BSHADE     ';
+		      end
+		     else
+                     if gflag and $10 <>0 then
+                      begin
+		       nargs := 4;
+                       opcode := 'BLOCK      ';
+                      end
+		     else
+                     if gflag and $20 <>0 then
+		      begin
+                            if gflag and $40 <>0 then neg[0] := 1;
+                            if gflag and $80 <>0 then neg[1] := 1;
+			    nargs := 3;
+                            opcode := 'SHADE   '+ovr+inv+' ';
+		      end
+		     else
+		      begin
+                            if gflag and $40 <>0 then neg[0] := 1;
+                            if gflag and $80 <>0 then neg[1] := 1;
+			    nargs := 2;
+                            opcode := 'FILL       ';
+		      end;
+		    end;
+            */
+            break;
+
+
+	         case 3: 
+                     nargs = 1;
+                     printf("GOSUB ");
+                     //opcode :='GOSUB    sc='+ IntToStr2(value and 7,3, true)+' ';
+		    break;
+
+            case 4:
+            /*
+                     if QuillVersion=0 then
+                     begin
+                       nargs := 3;
+                       opcode := 'TEXT    '+ovr+inv+'  '+IntToStr2(value div 4,3, true)+' ';
+                     end
+                     else
+                     begin
+                       nargs:=0;
+                       opcode := 'RPLOT   '+ovr+inv+'  '+plot_moves[value div 4]+' ';
+                     end;
+                     */
+                nargs=0;
+
+		    break;
+
+	        case 5:
+
+                     nargs = 0;
+                     /*
+		     if gflag and $80 <>0 then
+                      opcode :=  'BRIGHT      '+IntToStr2(value and 15, 3, true)
+                     else
+                      opcode := 'PAPER       '+IntToStr2(value and 15, 3, true);
+		    end;
+            */
+           break;
+
+           case 6: 
+                     nargs = 0;
+                     /*
+		     if gflag and $80 <>0 then
+                      opcode := 'FLASH       '+IntToStr2(value and 15, 3, true)
+                     else
+                      opcode := 'INK         '+IntToStr2(value and 15, 3, true);
+                      */
+		    
+            break;
+            case 7:
+                printf("END ");
+                salir=1;
+                nargs=0;
+            break;
+        }
+
+        graphics++;
+        int i;
+
+        for (i=0;i<nargs;i++) {
+            printf("%d ",peek_byte_no_time(graphics));
+
+            graphics++;
+        }
+        printf("\n");
+
+    }
+
+}
 
 
 //Retorna un mensaje token de daad, que finaliza con bit 7 alzado

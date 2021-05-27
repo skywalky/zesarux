@@ -154,7 +154,6 @@ Otros TODO menos prioritarios, de aqui hasta el final del archivo:
  O quizá sí que necesita el setting, dado que necesita que real Joystick este activado 
 
 
-
 -página man de ZEsarUX. que no diga opciones, que haga referencia a --help y --experthelp
 
 
@@ -223,8 +222,6 @@ Lo que pasa es que cuando asigno memoria vram hago los 32 k de golpe, por eso cu
 -permitir que las direcciones de breakpoints se pongan con 0xNNNN ademas de NNNNh y decimal
 incluso con $NNNN
 
--Estadísticas de uso:
--uso medio de cpu?
 
 -sumas md5 que ya no se usan de autoselect. Ver si hay archivos .config alternativos para todo esto
 

@@ -848,6 +848,9 @@ extern int util_daad_condact_uses_message(void);
 
 extern void util_daad_get_condact_message(char *buffer);
 
+//temporal. posiblemente esto luego ya no se llame asi
+extern void util_daad_get_graphics_location(z80_byte index,char *texto);
+
 extern z80_byte daad_peek(z80_int dir);
 extern void daad_poke(z80_int dir,z80_byte value);
 extern z80_int util_daad_get_pc_parser(void);

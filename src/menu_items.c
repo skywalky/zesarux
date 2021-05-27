@@ -17330,6 +17330,7 @@ void menu_debug_daad_edit_flagobject(void)
 //3=Locations messages
 //4=Compressed messages
 //5=Vocabulary
+//6=Graphics
 void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 {
 
@@ -17389,6 +17390,13 @@ void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 	texto[0]=0;
 
 	int resultado=0;
+
+    //temporal de momento graficos aqui, luego lo movere
+    if (valor_opcion==6) { 
+        int localizaciones=util_daad_get_num_locat_messages();
+        util_daad_get_graphics_location(2,texto); //pruebo con location 2
+        return;
+    }
 
 	if (valor_opcion==5) { 
 			if (util_daad_detect() ) util_daad_dump_vocabulary(1,texto,MAX_TEXTO_GENERIC_MESSAGE);
@@ -17453,6 +17461,10 @@ void menu_debug_daad_view_messages_ask(void)
 		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Vocabulary");
 		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'v');
 		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,5);
+
+		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Graphics");
+		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'g');
+		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,6);        
 
 
         menu_add_item_menu(array_menu_daad_tipo_mensaje,"",MENU_OPCION_SEPARADOR,NULL,NULL);
