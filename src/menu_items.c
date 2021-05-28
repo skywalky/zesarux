@@ -17701,6 +17701,15 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 paws_render_ink=gflag & 7;
 paws_render_paper=(gflag >> 3) & 7;
 
+//Rellenamos ventana con color indicado
+int rellena_x,rellena_y;
+for (rellena_y=0;rellena_y<24;rellena_y++) {
+    for (rellena_x=0;rellena_x<32;rellena_x++) {
+        zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink,paws_render_paper,0,' ');
+    }
+}
+
+
 
 
     util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
