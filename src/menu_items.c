@@ -17516,8 +17516,12 @@ void menu_debug_daad_view_graphics(void)
 	int resultado=0;
 
 
-        int localizaciones=util_daad_get_num_locat_messages();
-        util_daad_get_graphics_location(2,texto); //pruebo con location 2
+        int max_localizaciones=util_daad_get_num_locat_messages();
+
+    int localizacion=0;
+    menu_ventana_scanf_numero_enhanced("Graph number",&localizacion,4,+1,0,max_localizaciones-1,0);
+
+        util_daad_get_graphics_location(localizacion,texto); 
         menu_generic_message("Graphics",texto);
         return;
 
