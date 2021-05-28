@@ -17922,7 +17922,7 @@ char *plot_moves[]= {
                                     //p[offset_caracter].papel=paws_render_paper;
                                     //p[offset_caracter].tinta=paws_render_ink;
 
-                                //zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink,paws_render_paper,0,' ');
+                                //zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink,paws_render_paper,0,'X');
                             }
                         }
 
