@@ -17505,7 +17505,534 @@ void menu_debug_daad_get_condact_message(void)
 
 }
 
+//extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 
+void render_paws_putpixel(zxvision_window *w,int x,int y,int color)
+{
+    //putpixel teniendo el 0 abajo del todo
+    zxvision_putpixel(w,x,175-y,color);
+}
+
+//typedef funcion_putpixel
+
+void menu_line(zxvision_window *w,int x1,int y1,int x2,int y2,int c, void (*fun_putpixel) (zxvision_window *w,int x,int y,int color) )
+{
+ int x,y,dx,dy,dx1,dy1,px,py,xe,ye,i;
+ dx=x2-x1;
+ dy=y2-y1;
+ dx1=util_abs(dx);
+ dy1=util_abs(dy);
+ px=2*dy1-dx1;
+ py=2*dx1-dy1;
+ if(dy1<=dx1)
+ {
+  if(dx>=0)
+  {
+   x=x1;
+   y=y1;
+   xe=x2;
+  }
+  else
+  {
+   x=x2;
+   y=y2;
+   xe=x1;
+  }
+  fun_putpixel(w,x,y,c);
+  for(i=0;x<xe;i++)
+  {
+   x=x+1;
+   if(px<0)
+   {
+    px=px+2*dy1;
+   }
+   else
+   {
+    if((dx<0 && dy<0) || (dx>0 && dy>0))
+    {
+     y=y+1;
+    }
+    else
+    {
+     y=y-1;
+    }
+    px=px+2*(dy1-dx1);
+   }
+   //delay(0);
+   fun_putpixel(w,x,y,c);
+  }
+ }
+ else
+ {
+  if(dy>=0)
+  {
+   x=x1;
+   y=y1;
+   ye=y2;
+  }
+  else
+  {
+   x=x2;
+   y=y2;
+   ye=y1;
+  }
+  fun_putpixel(w,x,y,c);
+  for(i=0;y<ye;i++)
+  {
+   y=y+1;
+   if(py<=0)
+   {
+    py=py+2*dx1;
+   }
+   else
+   {
+    if((dx<0 && dy<0) || (dx>0 && dy>0))
+    {
+     x=x+1;
+    }
+    else
+    {
+     x=x-1;
+    }
+    py=py+2*(dx1-dy1);
+   }
+   //delay(0);
+   fun_putpixel(w,x,y,c);
+  }
+ }
+}
+
+
+
+zxvision_window zxvision_window_paws_render;
+
+zxvision_window *menu_debug_daad_view_graphics_render_overlay_window;
+
+
+int menu_debug_daad_view_graphics_render_localizacion=0;
+
+
+void menu_debug_daad_view_graphics_render_overlay(void)
+{
+
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+    zxvision_window *w;
+
+    w=menu_debug_daad_view_graphics_render_overlay_window;
+
+    printf("overlay\n");
+
+    
+
+    int i;
+
+/*
+    for (i=0;i<30;i++) {
+        printf("putpixel %d\n",i);
+    zxvision_putpixel(w,i,i,i&15);
+    }
+
+    menu_line(w,60,90,0,0,2);
+*/
+
+    //Por compatibilidad temporal
+        char texto[MAX_TEXTO_GENERIC_MESSAGE];
+        texto[0]=0;
+
+    int paws_render_last_x=0;
+    int paws_render_last_y=0;
+    int paws_render_ink=0;
+    int paws_render_paper=7;
+
+
+
+    //menu_line(w,40,0, 0,100,2);
+
+    //menu_line(w,0,8,1,247,2);
+
+
+//0 8 hasta 1 247
+
+
+    z80_byte location=menu_debug_daad_view_graphics_render_localizacion;
+
+
+   z80_int table_dir=util_daad_get_start_graphics();
+
+    if (table_dir==0) {
+        //menu_error_message("Graphics not found");
+        zxvision_draw_window_contents(w);
+        return;
+    }
+
+    z80_byte gflag;
+
+    char buffer_temporal[200];        
+
+
+    z80_int table_attr=util_daad_get_start_graphics_attr();
+
+    if (table_attr==0) {
+        //menu_error_message("Graphics attributes not found");
+        zxvision_draw_window_contents(w);
+        return;
+    }        
+
+    //Write(FOut,'Location ',n:3, ' graphics flags: ');
+    gflag = peek_byte_no_time(table_attr+location);
+
+
+    /*
+       if (gflag & 0x80)  
+           Write(FOut,'Picture.    ')
+       else
+           Write(FOut,'Subroutine. ');
+
+       WriteLn(FOut, 'Ink=',gflag mod 8 ,' Paper=',
+               (gflag and $3f) div 8, ' Bit6=', (gflag and 64) div  64);*/
+
+            
+    sprintf(buffer_temporal,"Location %-3d graphics flags: %s Ink=%d Paper=%d Bit6=%d\n",location,
+        (gflag & 0x80 ? "Picture.    " : "Subroutine. "),
+        gflag & 7, (gflag >> 3) & 7, (gflag>>6) & 1 
+    );
+
+paws_render_ink=gflag & 7;
+paws_render_paper=(gflag >> 3) & 7;
+
+
+
+    util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+        
+
+        printf("OffGraph: %d\n",table_dir);
+
+        //Inicio tabla graficos
+        z80_int graphics=peek_word_no_time(table_dir+location*2);
+
+        printf("Start graphics location %d: %d\n",location,graphics);
+        //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
+
+char *plot_moves[]= {
+" 001  000",
+" 001  001",
+" 000  001",
+"-001  001",
+"-001  000",
+"-001 -001",
+" 000 -001",
+" 001 -001" 
+}; 
+
+    int salir=0;
+
+    z80_int neg[8];
+
+    z80_int maintop;
+    z80_int mainattr;
+
+    int quillversion;
+
+    util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);    
+
+    //printf("quill version: %d\n",quillversion);
+
+
+    
+
+    while (!salir) {
+
+        gflag=peek_byte_no_time(graphics);
+        z80_byte nargs;
+
+        z80_byte value;
+        char inv, ovr;
+
+        int estexto=0;
+
+        //Formato del byte con el comando:
+        //-----xxx 3 bits inferiores: comando
+        //----x--- Bit 3 (0x08) : over / flags        -|
+        //---x---- Bit 4 (0x10) : inverse / flags      |
+        //--x----- Bit 5 (0x20): flags                 |  Parametro 0 ("value")
+        //-x------ Bit 6 (0x40): signo parametro 1    -|
+        //x------- Bit 7 (0x80): signo parametro 2 / flags   
+
+        int i;
+        for (i=0;i<8;i++) neg[i]=0;
+
+        inv = ' '; ovr = ' ';
+        if ((gflag & 8) != 0) ovr = 'o';
+        if ((gflag & 16) !=0) inv = 'i';
+        value = gflag /  8;
+        nargs=0;    
+
+        int dibujar;    
+
+        graphics++;
+
+        switch (gflag & 7) {
+	         case 0:
+
+                nargs = 2;
+                dibujar=1;
+                if ((ovr=='o') && (inv=='i')) {
+                    sprintf (buffer_temporal,"ABS MOVE   ");
+                    printf("ABS MOVE\n");
+                    dibujar=0;
+                }
+                else {
+                    sprintf (buffer_temporal,"PLOT    %c%c ",ovr,inv);
+                    printf("PLOT\n");
+                }
+                    paws_render_last_x=peek_byte_no_time(graphics);
+                    paws_render_last_y=peek_byte_no_time(graphics+1);
+                    printf("PLOT/ABS MOVE %d %d\n",paws_render_last_x,paws_render_last_y);
+                    if (dibujar) render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink); 
+                
+            break;
+
+	         case 1: 
+                nargs = 2;
+                
+                if ((gflag & 0x40) != 0) neg[0] = 1;
+                if ((gflag & 0x80) != 0) neg[1] = 1;
+
+                dibujar=1;
+
+		     if (ovr=='o' && inv=='i') {
+                       sprintf (buffer_temporal,"REL MOVE   ");
+                       printf("REL MOVE\n");
+                       dibujar=0; //solo mover
+             }
+		     else {
+                       sprintf (buffer_temporal,"LINE    %c%c ",ovr,inv);
+                       printf("LINE\n");
+             }
+                       int parm1,parm2;
+                       parm1=peek_byte_no_time(graphics);
+                       if (neg[0]) parm1=-parm1;
+
+                       parm2=peek_byte_no_time(graphics+1);
+                       if (neg[1]) parm2=-parm2;
+
+                       printf("LINE / REL MOVE %d %d\n",parm1,parm2);
+
+                       int x1=paws_render_last_x;
+                       int y1=paws_render_last_y;
+
+                       int x2=x1+parm1;
+                       int y2=y1+parm2;
+
+                       if (dibujar) {
+                           printf("linea desde %d %d hasta %d %d\n",x1,y1,x2,y2);
+                           menu_line(w,x1,y1,x2,y2,paws_render_ink,render_paws_putpixel);
+                       }
+
+                       paws_render_last_x=x2;
+                       paws_render_last_y=y2;
+
+
+             
+                       
+		    break;
+
+
+                case 2:
+                
+	         
+                     if ((gflag & 0x10)!=0  && (gflag & 0x20)!=0) 
+		      {
+                            if ((gflag & 0x40) !=0) neg[0] = 1;
+                            if ((gflag & 0x80) !=0) neg[1] = 1;
+                        
+			    nargs = 3;
+                
+                            if (quillversion==0) 
+                             sprintf (buffer_temporal,"SHADE   %c%c ",ovr,inv);
+                            else
+                             sprintf (buffer_temporal,"BSHADE     ");
+		      }
+		     else
+                     if ((gflag & 0x10) !=0)
+                      {
+		                nargs = 4;
+                       sprintf (buffer_temporal,"BLOCK      ");
+                      }
+		     else
+                     if ((gflag & 0x20) !=0)
+		      {
+                            if ((gflag & 0x40) !=0 ) neg[0] = 1;
+                            if ((gflag & 0x80) !=0 ) neg[1] = 1;
+			    nargs = 3;
+                            sprintf (buffer_temporal,"SHADE   %c%c ",ovr,inv);
+		      }
+		     else
+		      {
+                            if ((gflag & 0x40) !=0 ) neg[0] = 1;
+                            if ((gflag & 0x80) !=0 ) neg[1] = 1;
+			    nargs = 2;
+                            sprintf (buffer_temporal,"FILL       ");
+		      }
+		    
+            
+            break;
+
+
+	         case 3: 
+                     nargs = 1;
+                     sprintf (buffer_temporal,"GOSUB    sc=%d",value & 7);
+                    
+		    break;
+
+            case 4:
+            
+                     if (quillversion==0)
+                     {
+                       nargs = 3;
+                       sprintf (buffer_temporal,"TEXT    %c%c %d ",ovr,inv,value/4);
+                       estexto=1;
+
+                       z80_byte parm1,parm2,parm3;
+                       parm1=peek_byte_no_time(graphics);                       
+                       parm2=peek_byte_no_time(graphics+1);                       
+                       parm3=peek_byte_no_time(graphics+2);                       
+
+                       zxvision_print_char_simple(w,parm2,parm3,paws_render_ink,paws_render_paper,0,parm1);
+                       printf("TEXTO x %d y %d char %c\n",parm2,parm3,parm1);
+                     }
+                     else
+                     {
+                       nargs=0;
+                       sprintf (buffer_temporal,"RPLOT   %c%c %s",ovr,inv,plot_moves[value/4]);
+                     }
+                     
+            
+
+		    break;
+
+	        case 5: 
+
+                     nargs = 0;
+                     
+		     if ((gflag & 0x80) !=0) 
+                      sprintf (buffer_temporal,"BRIGHT      %d",value & 15);
+                     else {
+                      sprintf (buffer_temporal,"PAPER      %d",value & 15);
+
+                      paws_render_paper=value & 15;
+                      printf("PAPER %d\n",paws_render_paper);                           
+                     }
+        
+            
+           break;
+
+           case 6: 
+                     nargs = 0;
+                     
+		     if ((gflag & 0x80) !=0)  {
+                      sprintf (buffer_temporal,"FLASH       %d",value & 15);
+
+                 
+             }
+                     else {
+                      sprintf (buffer_temporal,"INK         %d",value & 15);
+                      
+                      
+                      paws_render_ink=value & 15;
+                      printf("INK %d\n",paws_render_ink);
+                     }
+                      
+		    
+            break;
+            case 7:
+                sprintf (buffer_temporal,"END ");
+                salir=1;
+                nargs=0;
+            break;
+        }
+
+        
+        
+        util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+
+        for (i=0;i<nargs;i++) {
+            z80_byte byte_leido=peek_byte_no_time(graphics);
+            if (estexto && i==0) {
+                if (byte_leido>=32 && byte_leido<=126) sprintf(buffer_temporal,"%d('%c') ",byte_leido,byte_leido);
+                else sprintf(buffer_temporal,"%3d ",byte_leido);
+            }
+
+            else {
+                sprintf(buffer_temporal,"%c%-3d ",(neg[i]!=0 ? '-' : ' ' ), byte_leido);
+
+	       //for m := 0 to nargs-1 do
+           //     Write(FOut, Select(neg[m]<>0, '-',' '), IntToStr2(Peek(Offs+1+m),3,true),' ');
+	       //WriteLn(Fout);
+
+            }
+
+            util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+
+            graphics++;
+        }
+        //printf("\n");
+        util_concat_string(texto,"\n",MAX_TEXTO_GENERIC_MESSAGE);
+
+    }
+
+
+
+    zxvision_draw_window_contents(w);
+}
+
+void menu_debug_daad_view_graphics_render(int localizacion)
+{
+    //Renderizar un grafico de paws
+
+    menu_espera_no_tecla();
+    menu_reset_counters_tecla_repeticion();    
+
+    zxvision_window *ventana;
+    ventana=&zxvision_window_paws_render; 
+
+
+    int xventana,yventana,ancho_ventana,alto_ventana;
+
+    xventana=0;
+    yventana=0;
+    ancho_ventana=(256/menu_char_width)+2; //para hacer 256 de ancho
+    alto_ventana=26;
+
+    zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"PAWS Graphics Render");   
+
+    zxvision_draw_window(ventana);
+
+
+    menu_debug_daad_view_graphics_render_localizacion=localizacion;
+
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de audio waveform
+    menu_debug_daad_view_graphics_render_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui    
+
+    set_menu_overlay_function(menu_debug_daad_view_graphics_render_overlay);
+
+
+    zxvision_wait_until_esc(ventana);
+
+
+        //restauramos modo normal de texto de menu
+    set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+    //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
+    cls_menu_overlay();
+
+
+
+    zxvision_destroy_window(ventana);            
+}
 
 void menu_debug_daad_view_graphics(void)
 {
@@ -17523,6 +18050,10 @@ void menu_debug_daad_view_graphics(void)
 
         util_daad_get_graphics_location(localizacion,texto); 
         menu_generic_message("Graphics",texto);
+
+
+        menu_debug_daad_view_graphics_render(localizacion);
+
         return;
 
 

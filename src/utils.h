@@ -851,6 +851,10 @@ extern void util_daad_get_condact_message(char *buffer);
 //temporal. posiblemente esto luego ya no se llame asi
 extern void util_daad_get_graphics_location(z80_byte index,char *texto);
 
+extern z80_int util_daad_get_start_graphics(void);
+extern z80_int util_daad_get_start_graphics_attr(void);
+extern void util_unpaws_get_maintop_mainattr(z80_int *final_maintop,z80_int *final_mainattr,int *final_quillversion);
+
 extern z80_byte daad_peek(z80_int dir);
 extern void daad_poke(z80_int dir,z80_byte value);
 extern z80_int util_daad_get_pc_parser(void);
@@ -961,5 +965,6 @@ extern void util_copy_files_to_mmc_doit(void);
 
 extern z80_byte util_get_byte_protect(z80_byte *memoria,int total_size,int offset);
 extern void util_memcpy_protect_origin(z80_byte *destino,z80_byte *memoria,int total_size,int offset,int total_copiar);
+extern int util_abs(int v);
 
 #endif

@@ -20616,3 +20616,9 @@ void util_memcpy_protect_origin(z80_byte *destino,z80_byte *memoria,int total_si
     }
 
 }
+
+int util_abs(int v)
+{
+    if (v<0) return -v;
+    else return v;
+}
