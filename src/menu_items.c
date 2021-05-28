@@ -17902,9 +17902,10 @@ char *plot_moves[]= {
                         //estoy cambiando el texto cuando hay caracter pero no cambia en este caso el color de una posible linea
                         //esto es casi imposible de hacer tal y como dibujo lineas
                         //probar grafico 20 en firfurcio
+                        //o grafico 4 de juanito
 
                                 int total_width=w->total_width;
-                            int total_height=w->total_height;
+                            //int total_height=w->total_height;
 
                         rellena_y=y1;
                         for (;rellena_y<=y2;rellena_y++) {
@@ -17916,8 +17917,10 @@ char *plot_moves[]= {
                                     //TODO: hacer funcion zxvision para esto
                                     overlay_screen *p;
                                     p=w->memory;
-                                    p[offset_caracter].papel=paws_render_paper;
-                                    p[offset_caracter].tinta=paws_render_ink;
+
+                                    //de momento desactivado
+                                    //p[offset_caracter].papel=paws_render_paper;
+                                    //p[offset_caracter].tinta=paws_render_ink;
 
                                 //zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink,paws_render_paper,0,' ');
                             }
