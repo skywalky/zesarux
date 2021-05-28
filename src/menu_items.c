@@ -16996,8 +16996,8 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 		case 2:
 
 			if (menu_debug_registers_current_view==8) {
-				if (util_daad_condact_uses_message() ) sprintf(s,"cond~~Message");
-				else sprintf(s,"");
+				if (util_daad_condact_uses_message() ) sprintf(s,"~~Graphics cond~~Message");
+				else sprintf(s,"~~Graphics");
 				return;
 			}
 
@@ -17330,7 +17330,6 @@ void menu_debug_daad_edit_flagobject(void)
 //3=Locations messages
 //4=Compressed messages
 //5=Vocabulary
-//6=Graphics
 void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 {
 
@@ -17391,12 +17390,6 @@ void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 
 	int resultado=0;
 
-    //temporal de momento graficos aqui, luego lo movere
-    if (valor_opcion==6) { 
-        int localizaciones=util_daad_get_num_locat_messages();
-        util_daad_get_graphics_location(2,texto); //pruebo con location 2
-        return;
-    }
 
 	if (valor_opcion==5) { 
 			if (util_daad_detect() ) util_daad_dump_vocabulary(1,texto,MAX_TEXTO_GENERIC_MESSAGE);
@@ -17461,11 +17454,7 @@ void menu_debug_daad_view_messages_ask(void)
 		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Vocabulary");
 		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'v');
 		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,5);
-
-		menu_add_item_menu_format(array_menu_daad_tipo_mensaje,MENU_OPCION_NORMAL,menu_debug_daad_view_messages,NULL,"~~Graphics");
-		menu_add_item_menu_shortcut(array_menu_daad_tipo_mensaje,'g');
-		menu_add_item_menu_valor_opcion(array_menu_daad_tipo_mensaje,6);        
-
+    
 
         menu_add_item_menu(array_menu_daad_tipo_mensaje,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 		menu_add_ESC_item(array_menu_daad_tipo_mensaje);
@@ -17515,6 +17504,77 @@ void menu_debug_daad_get_condact_message(void)
 
 
 }
+
+
+
+void menu_debug_daad_view_graphics(void)
+{
+
+    	char texto[MAX_TEXTO_GENERIC_MESSAGE];
+	texto[0]=0;
+
+	int resultado=0;
+
+
+        int localizaciones=util_daad_get_num_locat_messages();
+        util_daad_get_graphics_location(2,texto); //pruebo con location 2
+        menu_generic_message("Graphics",texto);
+        return;
+
+
+    /*
+    menu_item *array_menu_comon;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    do {
+
+
+
+        menu_add_item_menu_inicial_format(&array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_enable,NULL,"[%c] Enabled",
+        (snapshot_in_ram_enabled.v ? 'X' : ' ' ));
+
+
+        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_interval,NULL,"[%d] Interval (seconds)",snapshot_in_ram_interval_seconds);
+
+        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_maximum,NULL,"[%d] Maximum snapshots",snapshots_in_ram_maximum);
+        menu_add_item_menu_tooltip(array_menu_comon,"Maximum snapshots to keep in memory");
+        menu_add_item_menu_ayuda(array_menu_comon,"Maximum snapshots to keep in memory. When reached the maximum, the oldest will be deleted");
+
+
+        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_timer_timeout,NULL,"[%d] Rewind timeout (seconds)",snapshot_in_ram_enabled_timer_timeout);
+        menu_add_item_menu_tooltip(array_menu_comon,"After this time pressed rewind action, the rewind position is reset to current");
+        menu_add_item_menu_ayuda(array_menu_comon,"After this time pressed rewind action, the rewind position is reset to current");
+
+
+        if (snapshot_in_ram_enabled.v) {
+
+            menu_add_item_menu(array_menu_comon,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_browse,NULL,"Browse");
+
+        }
+
+
+        menu_add_item_menu(array_menu_comon,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        menu_add_ESC_item(array_menu_comon);
+
+        retorno_menu=menu_dibuja_menu(&snapshot_rewind_opcion_seleccionada,&item_seleccionado,array_menu_comon,"Snapshots to RAM");
+
+
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+            }
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    */
+}
+
 
 void menu_debug_registers_zxvision_save_size(zxvision_window *ventana,int *ventana_ancho_antes,int *ventana_alto_antes)
 {
@@ -18187,7 +18247,27 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
 					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 
-                }				
+                }			
+
+				//Graficos paws/quill/daad
+				if (tecla=='g' && menu_debug_registers_current_view==8) {
+					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
+
+                    menu_debug_daad_view_graphics();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
+
+                }	                	
 
 		        if (tecla=='l' && menu_debug_registers_current_view==1) {
                     menu_debug_toggle_breakpoint();

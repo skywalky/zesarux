@@ -18713,6 +18713,30 @@ z80_int util_daad_get_start_graphics(void)
 }
 
 //Comun para daad y paws
+z80_int util_daad_get_start_graphics_attr(void)
+{
+
+        z80_int puntero;
+
+        z80_int dir;
+
+        if (util_daad_detect()) {
+            //de momento en daad no saco graficos
+            dir=0;
+        //puntero=util_daad_get_start_pointers()+14;
+        //dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        }
+        else {
+                //Paws
+                util_unpaws_init_parameters();
+                dir=util_unpaws_OffGraphAttr;
+        }
+
+
+        return dir;
+}
+
+//Comun para daad y paws
 z80_int util_daad_get_start_user_messages(void)
 {
 
@@ -19047,20 +19071,58 @@ void util_daad_get_locat_message(z80_byte index,char *texto)
 
 
 
-void util_daad_get_graphics_location(z80_byte index,char *texto)
+void util_daad_get_graphics_location(z80_byte location,char *texto)
 {
 
 //See https://github.com/Utodev/unPAWs/blob/master/Unpaws.pas
 
-        z80_int table_dir=util_daad_get_start_graphics();
-        //TODO: OffAttr
+    z80_int table_dir=util_daad_get_start_graphics();
+
+    if (table_dir==0) {
+        menu_error_message("Graphics not found");
+        return;
+    }
+
+    z80_byte gflag;
+
+    char buffer_temporal[200];        
+
+
+    z80_int table_attr=util_daad_get_start_graphics_attr();
+
+    if (table_attr==0) {
+        menu_error_message("Graphics attributes not found");
+        return;
+    }        
+
+    //Write(FOut,'Location ',n:3, ' graphics flags: ');
+    gflag = peek_byte_no_time(table_attr+location);
+
+
+    /*
+       if (gflag & 0x80)  
+           Write(FOut,'Picture.    ')
+       else
+           Write(FOut,'Subroutine. ');
+
+       WriteLn(FOut, 'Ink=',gflag mod 8 ,' Paper=',
+               (gflag and $3f) div 8, ' Bit6=', (gflag and 64) div  64);*/
+
+            
+    sprintf(buffer_temporal,"Location %-3d graphics flags: %s Ink=%d Paper=%d Bit6=%d\n",location,
+        (gflag & 0x80 ? "Picture.    " : "Subroutine. "),
+        gflag & 7, (gflag >> 3) & 7, (gflag>>6) & 1 
+    );
+
+    util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+        
 
         printf("OffGraph: %d\n",table_dir);
 
         //Inicio tabla graficos
-        z80_int graphics=peek_word_no_time(table_dir+index*2);
+        z80_int graphics=peek_word_no_time(table_dir+location*2);
 
-        printf("Start graphics location %d: %d\n",index,graphics);
+        printf("Start graphics location %d: %d\n",location,graphics);
         //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
 
 char *plot_moves[]= {
@@ -19078,19 +19140,21 @@ char *plot_moves[]= {
 
     z80_int neg[8];
 
-        z80_int maintop;
-        z80_int mainattr;
+    z80_int maintop;
+    z80_int mainattr;
 
-        int quillversion;
+    int quillversion;
 
-        util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);    
+    util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);    
 
-    printf("quill version: %d\n",quillversion);
+    //printf("quill version: %d\n",quillversion);
+
+
 
 
     while (!salir) {
 
-        z80_byte gflag=peek_byte_no_time(graphics);
+        gflag=peek_byte_no_time(graphics);
         z80_byte nargs;
 
         z80_byte value;
@@ -19109,34 +19173,34 @@ char *plot_moves[]= {
         int i;
         for (i=0;i<8;i++) neg[i]=0;
 
-	       inv = ' '; ovr = ' ';
-	       if ((gflag & 8) != 0) ovr = 'o';
-	       if ((gflag & 16) !=0) inv = 'i';
-	       value = gflag /  8;
-               nargs=0;        
+        inv = ' '; ovr = ' ';
+        if ((gflag & 8) != 0) ovr = 'o';
+        if ((gflag & 16) !=0) inv = 'i';
+        value = gflag /  8;
+        nargs=0;        
 
         switch (gflag & 7) {
 	         case 0:
 
-                     nargs = 2;
-		     if ((ovr=='o') && (inv=='i')) {
-                       printf ("ABS MOVE   ");
-             }
-             else {
-                       printf ("PLOT    %c%c ",ovr,inv);
-             }
+                nargs = 2;
+                if ((ovr=='o') && (inv=='i')) {
+                    sprintf (buffer_temporal,"ABS MOVE   ");
+                }
+                else {
+                    sprintf (buffer_temporal,"PLOT    %c%c ",ovr,inv);
+                }
             break;
 
 	         case 1: 
-                     nargs = 2;
-                     
-                     if ((gflag & 0x40) != 0) neg[0] = 1;
-                     if ((gflag & 0x80) != 0) neg[1] = 1;
+                nargs = 2;
+                
+                if ((gflag & 0x40) != 0) neg[0] = 1;
+                if ((gflag & 0x80) != 0) neg[1] = 1;
 
 		     if (ovr=='o' && inv=='i') 
-                       printf ("REL MOVE   ");
+                       sprintf (buffer_temporal,"REL MOVE   ");
 		     else
-                       printf ("LINE    %c%c ",ovr,inv);
+                       sprintf (buffer_temporal,"LINE    %c%c ",ovr,inv);
                        
 		    break;
 
@@ -19152,15 +19216,15 @@ char *plot_moves[]= {
 			    nargs = 3;
                 
                             if (quillversion==0) 
-                             printf("SHADE   %c%c ",ovr,inv);
+                             sprintf (buffer_temporal,"SHADE   %c%c ",ovr,inv);
                             else
-                             printf("BSHADE     ");
+                             sprintf (buffer_temporal,"BSHADE     ");
 		      }
 		     else
                      if ((gflag & 0x10) !=0)
                       {
 		                nargs = 4;
-                       printf("BLOCK      ");
+                       sprintf (buffer_temporal,"BLOCK      ");
                       }
 		     else
                      if ((gflag & 0x20) !=0)
@@ -19168,14 +19232,14 @@ char *plot_moves[]= {
                             if ((gflag & 0x40) !=0 ) neg[0] = 1;
                             if ((gflag & 0x80) !=0 ) neg[1] = 1;
 			    nargs = 3;
-                            printf("SHADE   %c%c ",ovr,inv);
+                            sprintf (buffer_temporal,"SHADE   %c%c ",ovr,inv);
 		      }
 		     else
 		      {
                             if ((gflag & 0x40) !=0 ) neg[0] = 1;
                             if ((gflag & 0x80) !=0 ) neg[1] = 1;
 			    nargs = 2;
-                            printf("FILL       ");
+                            sprintf (buffer_temporal,"FILL       ");
 		      }
 		    
             
@@ -19184,7 +19248,7 @@ char *plot_moves[]= {
 
 	         case 3: 
                      nargs = 1;
-                     printf("GOSUB    sc=%d",value & 7);
+                     sprintf (buffer_temporal,"GOSUB    sc=%d",value & 7);
                     
 		    break;
 
@@ -19193,13 +19257,13 @@ char *plot_moves[]= {
                      if (quillversion==0)
                      {
                        nargs = 3;
-                       printf("TEXT    %c%c %d ",ovr,inv,value/4);
+                       sprintf (buffer_temporal,"TEXT    %c%c %d ",ovr,inv,value/4);
                        estexto=1;
                      }
                      else
                      {
                        nargs=0;
-                       printf("RPLOT   %c%c %s",ovr,inv,plot_moves[value/4]);
+                       sprintf (buffer_temporal,"RPLOT   %c%c %s",ovr,inv,plot_moves[value/4]);
                      }
                      
             
@@ -19211,9 +19275,9 @@ char *plot_moves[]= {
                      nargs = 0;
                      
 		     if ((gflag & 0x80) !=0) 
-                      printf("BRIGHT      %d",value & 15);
+                      sprintf (buffer_temporal,"BRIGHT      %d",value & 15);
                      else
-                      printf("PAPER      %d",value & 15);
+                      sprintf (buffer_temporal,"PAPER      %d",value & 15);
         
             
            break;
@@ -19222,14 +19286,14 @@ char *plot_moves[]= {
                      nargs = 0;
                      
 		     if ((gflag & 0x80) !=0) 
-                      printf ("FLASH       %d",value & 15);
+                      sprintf (buffer_temporal,"FLASH       %d",value & 15);
                      else
-                      printf ("INK         %d",value & 15);
+                      sprintf (buffer_temporal,"INK         %d",value & 15);
                       
 		    
             break;
             case 7:
-                printf("END ");
+                sprintf (buffer_temporal,"END ");
                 salir=1;
                 nargs=0;
             break;
@@ -19237,16 +19301,17 @@ char *plot_moves[]= {
 
         graphics++;
         
+        util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
 
         for (i=0;i<nargs;i++) {
             z80_byte byte_leido=peek_byte_no_time(graphics);
             if (estexto && i==0) {
-                if (byte_leido>=32 && byte_leido<=126) printf("%d('%c') ",byte_leido,byte_leido);
-                else printf("%d ",byte_leido);
+                if (byte_leido>=32 && byte_leido<=126) sprintf(buffer_temporal,"%d('%c') ",byte_leido,byte_leido);
+                else sprintf(buffer_temporal,"%3d ",byte_leido);
             }
 
             else {
-                printf("%c%d ",(neg[i]!=0 ? '-' : ' ' ), byte_leido);
+                sprintf(buffer_temporal,"%c%-3d ",(neg[i]!=0 ? '-' : ' ' ), byte_leido);
 
 	       //for m := 0 to nargs-1 do
            //     Write(FOut, Select(neg[m]<>0, '-',' '), IntToStr2(Peek(Offs+1+m),3,true),' ');
@@ -19254,9 +19319,12 @@ char *plot_moves[]= {
 
             }
 
+            util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+
             graphics++;
         }
-        printf("\n");
+        //printf("\n");
+        util_concat_string(texto,"\n",MAX_TEXTO_GENERIC_MESSAGE);
 
     }
 
