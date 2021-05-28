@@ -17868,6 +17868,61 @@ char *plot_moves[]= {
                       {
 		                nargs = 4;
                        sprintf (buffer_temporal,"BLOCK      ");
+                        
+
+                        z80_byte x1,y1,x2,y2;
+
+                        x1=peek_byte_no_time(graphics);
+                        y1=peek_byte_no_time(graphics+1);
+                        x2=peek_byte_no_time(graphics+2);
+                        y2=peek_byte_no_time(graphics+3);
+
+                        
+
+                        printf("-----BLOCK %d %d %d %d\n",x1,y1,x2,y2);
+
+                        //ordenado
+                        if (x1>x2) {
+                            z80_byte temp_valor=x1;
+                            x1=x2;
+                            x2=temp_valor;
+                        }
+
+                        if (y1>y2) {
+                            z80_byte temp_valor=y1;
+                            y1=y2;
+                            y2=temp_valor;
+                        }
+
+
+                        //Rellenamos trozo con color indicado
+                        int rellena_x,rellena_y;
+
+                        //TODO: eso realmente tiene que cambiar los atributos de una sección
+                        //estoy cambiando el texto cuando hay caracter pero no cambia en este caso el color de una posible linea
+                        //esto es casi imposible de hacer tal y como dibujo lineas
+                        //probar grafico 20 en firfurcio
+
+                                int total_width=w->total_width;
+                            int total_height=w->total_height;
+
+                        rellena_y=y1;
+                        for (;rellena_y<=y2;rellena_y++) {
+                            int rellena_x=x1;
+                            for (;rellena_x<=x2;rellena_x++) {
+                                    //de momento desactivado
+
+                                    int offset_caracter=(total_width*rellena_y)+rellena_x;
+                                    //TODO: hacer funcion zxvision para esto
+                                    overlay_screen *p;
+                                    p=w->memory;
+                                    p[offset_caracter].papel=paws_render_paper;
+                                    p[offset_caracter].tinta=paws_render_ink;
+
+                                //zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink,paws_render_paper,0,' ');
+                            }
+                        }
+
                       }
 		     else
                      if ((gflag & 0x20) !=0)
