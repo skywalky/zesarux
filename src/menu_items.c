@@ -17872,10 +17872,14 @@ char *plot_moves[]= {
 
                         z80_byte x1,y1,x2,y2;
 
-                        x1=peek_byte_no_time(graphics);
-                        y1=peek_byte_no_time(graphics+1);
-                        x2=peek_byte_no_time(graphics+2);
-                        y2=peek_byte_no_time(graphics+3);
+                        x1=peek_byte_no_time(graphics+2);
+                        y1=peek_byte_no_time(graphics+3);
+
+                        z80_byte ancho,alto;
+                        ancho=peek_byte_no_time(graphics+1);
+                        x2=x1+ancho;
+                        alto=peek_byte_no_time(graphics);
+                        y2=y1+alto;
 
                         
 
@@ -17919,8 +17923,8 @@ char *plot_moves[]= {
                                     p=w->memory;
 
                                     //de momento desactivado
-                                    //p[offset_caracter].papel=paws_render_paper;
-                                    //p[offset_caracter].tinta=paws_render_ink;
+                                    p[offset_caracter].papel=paws_render_paper;
+                                    p[offset_caracter].tinta=paws_render_ink;
 
                                 //zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink,paws_render_paper,0,'X');
                             }
