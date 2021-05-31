@@ -17507,10 +17507,14 @@ void menu_debug_daad_get_condact_message(void)
 
 //extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 
+#define RENDER_PAWS_START_Y_DRAW 2
+
 void render_paws_putpixel(zxvision_window *w,int x,int y,int color)
 {
     //putpixel teniendo el 0 abajo del todo
-    zxvision_putpixel(w,x,175-y,color);
+
+    //y teniendo en cuenta margen de inicio pantalla
+    zxvision_putpixel(w,x,(175-y)+RENDER_PAWS_START_Y_DRAW*8,color);
 }
 
 //typedef funcion_putpixel
@@ -17611,39 +17615,28 @@ zxvision_window *menu_debug_daad_view_graphics_render_overlay_window;
 
 int menu_debug_daad_view_graphics_render_localizacion=0;
 
+//Para poder llamar de manera recursiva, estos parámetros se definen fuera
+int paws_render_last_x=0;
+int paws_render_last_y=0;
+int paws_render_ink=0;
+int paws_render_paper=7;
+int paws_render_bright=0;
 
-void menu_debug_daad_view_graphics_render_overlay(void)
+
+void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte location,int nivel_recursivo)
 {
-
-    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
-
-    zxvision_window *w;
-
-    w=menu_debug_daad_view_graphics_render_overlay_window;
-
-    printf("overlay\n");
 
     
 
+
     int i;
 
-/*
-    for (i=0;i<30;i++) {
-        printf("putpixel %d\n",i);
-    zxvision_putpixel(w,i,i,i&15);
-    }
-
-    menu_line(w,60,90,0,0,2);
-*/
 
     //Por compatibilidad temporal
         char texto[MAX_TEXTO_GENERIC_MESSAGE];
         texto[0]=0;
 
-    int paws_render_last_x=0;
-    int paws_render_last_y=0;
-    int paws_render_ink=0;
-    int paws_render_paper=7;
+
 
 
 
@@ -17655,7 +17648,6 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 //0 8 hasta 1 247
 
 
-    z80_byte location=menu_debug_daad_view_graphics_render_localizacion;
 
 
    z80_int table_dir=util_daad_get_start_graphics();
@@ -17670,6 +17662,8 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 
     char buffer_temporal[200];        
 
+    int esdaad=util_daad_detect();    
+
 
     z80_int table_attr=util_daad_get_start_graphics_attr();
 
@@ -17680,7 +17674,12 @@ void menu_debug_daad_view_graphics_render_overlay(void)
     }        
 
     //Write(FOut,'Location ',n:3, ' graphics flags: ');
-    gflag = peek_byte_no_time(table_attr+location);
+    if (esdaad) {
+        gflag = peek_byte_no_time(table_attr+location*5);    
+    }
+    else {    
+        gflag = peek_byte_no_time(table_attr+location);
+    }
 
 
     /*
@@ -17692,22 +17691,37 @@ void menu_debug_daad_view_graphics_render_overlay(void)
        WriteLn(FOut, 'Ink=',gflag mod 8 ,' Paper=',
                (gflag and $3f) div 8, ' Bit6=', (gflag and 64) div  64);*/
 
+    int is_picture=gflag & 0x80;
             
     sprintf(buffer_temporal,"Location %-3d graphics flags: %s Ink=%d Paper=%d Bit6=%d\n",location,
-        (gflag & 0x80 ? "Picture.    " : "Subroutine. "),
+        (is_picture ? "Picture.    " : "Subroutine. "),
         gflag & 7, (gflag >> 3) & 7, (gflag>>6) & 1 
     );
 
-paws_render_ink=gflag & 7;
-paws_render_paper=(gflag >> 3) & 7;
-
-//Rellenamos ventana con color indicado
-int rellena_x,rellena_y;
-for (rellena_y=0;rellena_y<24;rellena_y++) {
-    for (rellena_x=0;rellena_x<32;rellena_x++) {
-        zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink,paws_render_paper,0,' ');
+    //Solo hacer cambio de ink y paper si no es subrutina
+    if (is_picture) {
+        paws_render_ink=gflag & 7;
+        paws_render_paper=(gflag >> 3) & 7;
+  
+        //Rellenamos ventana con color indicado
+        int rellena_x,rellena_y;
+        for (rellena_y=0;rellena_y<24;rellena_y++) {
+            for (rellena_x=0;rellena_x<32;rellena_x++) {
+                zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,' ');
+            }
+        }
     }
-}
+
+    else {
+        //Si es subrutina y se empieza renderizando esta subrutina, por si acaso posicionar en centro pantalla
+        //TODO: poder cambiar esto desde ventana menu
+
+        if (nivel_recursivo==0) {
+            paws_render_last_x=128;
+            paws_render_last_y=88;
+        }
+    }
+
 
 
 
@@ -17751,7 +17765,7 @@ char *plot_moves[]= {
     
 
     while (!salir) {
-
+        int line_comprimido=0;
         gflag=peek_byte_no_time(graphics);
         z80_byte nargs;
 
@@ -17798,7 +17812,7 @@ char *plot_moves[]= {
                     paws_render_last_x=peek_byte_no_time(graphics);
                     paws_render_last_y=peek_byte_no_time(graphics+1);
                     printf("PLOT/ABS MOVE %d %d\n",paws_render_last_x,paws_render_last_y);
-                    if (dibujar) render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink); 
+                    if (dibujar) render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8); 
                 
             break;
 
@@ -17819,12 +17833,31 @@ char *plot_moves[]= {
                        sprintf (buffer_temporal,"LINE    %c%c ",ovr,inv);
                        printf("LINE\n");
              }
+
+                       if (esdaad) {
+                           //Ver si tiene compresion
+                           if (gflag & 0x20) {
+                               line_comprimido=1;
+                               nargs=1;
+                           }
+                       }                       
+             
                        int parm1,parm2;
+                       if (line_comprimido) {
+                           printf("comprimido\n");
+                       parm1=((peek_byte_no_time(graphics))>>4)&0xF;
+                       if (neg[0]) parm1=-parm1;
+
+                       parm2=(peek_byte_no_time(graphics))&0xF;
+                       if (neg[1]) parm2=-parm2;
+                       }
+                       else {
                        parm1=peek_byte_no_time(graphics);
                        if (neg[0]) parm1=-parm1;
 
                        parm2=peek_byte_no_time(graphics+1);
                        if (neg[1]) parm2=-parm2;
+                       }
 
                        printf("LINE / REL MOVE %d %d\n",parm1,parm2);
 
@@ -17836,7 +17869,7 @@ char *plot_moves[]= {
 
                        if (dibujar) {
                            printf("linea desde %d %d hasta %d %d\n",x1,y1,x2,y2);
-                           menu_line(w,x1,y1,x2,y2,paws_render_ink,render_paws_putpixel);
+                           menu_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
                        }
 
                        paws_render_last_x=x2;
@@ -17917,14 +17950,14 @@ char *plot_moves[]= {
                             for (;rellena_x<=x2;rellena_x++) {
                                     //de momento desactivado
 
-                                    int offset_caracter=(total_width*rellena_y)+rellena_x;
+                                    int offset_caracter=(total_width*(rellena_y+RENDER_PAWS_START_Y_DRAW))+rellena_x;
                                     //TODO: hacer funcion zxvision para esto
                                     overlay_screen *p;
                                     p=w->memory;
 
                                     //de momento desactivado
-                                    p[offset_caracter].papel=paws_render_paper;
-                                    p[offset_caracter].tinta=paws_render_ink;
+                                    p[offset_caracter].papel=paws_render_paper+paws_render_bright*8;
+                                    p[offset_caracter].tinta=paws_render_ink+paws_render_bright*8;
 
                                 //zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink,paws_render_paper,0,'X');
                             }
@@ -17954,6 +17987,15 @@ char *plot_moves[]= {
 	         case 3: 
                      nargs = 1;
                      sprintf (buffer_temporal,"GOSUB    sc=%d",value & 7);
+
+                     //Saltar a subrutina
+                     if (nivel_recursivo>=16) {
+                         printf("Maximum nested gosub reached\n");
+                     }
+                     else {
+                         z80_byte nueva_ubicacion=peek_byte_no_time(graphics);
+                         menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1);
+                     }
                     
 		    break;
 
@@ -17970,7 +18012,7 @@ char *plot_moves[]= {
                        parm2=peek_byte_no_time(graphics+1);                       
                        parm3=peek_byte_no_time(graphics+2);                       
 
-                       zxvision_print_char_simple(w,parm2,parm3,paws_render_ink,paws_render_paper,0,parm1);
+                       zxvision_print_char_simple(w,parm2,parm3,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,parm1);
                        printf("TEXTO x %d y %d char %c\n",parm2,parm3,parm1);
                      }
                      else
@@ -17987,8 +18029,11 @@ char *plot_moves[]= {
 
                      nargs = 0;
                      
-		     if ((gflag & 0x80) !=0) 
+		     if ((gflag & 0x80) !=0) {
                       sprintf (buffer_temporal,"BRIGHT      %d",value & 15);
+
+                      paws_render_bright=value&1;
+             }
                      else {
                       sprintf (buffer_temporal,"PAPER      %d",value & 15);
 
@@ -18028,6 +18073,11 @@ char *plot_moves[]= {
         
         util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
 
+        if (line_comprimido) {
+            graphics++;
+        }
+        else {
+
         for (i=0;i<nargs;i++) {
             z80_byte byte_leido=peek_byte_no_time(graphics);
             if (estexto && i==0) {
@@ -18048,17 +18098,76 @@ char *plot_moves[]= {
 
             graphics++;
         }
+        }
         //printf("\n");
         util_concat_string(texto,"\n",MAX_TEXTO_GENERIC_MESSAGE);
 
     }
 
+}
 
+
+void menu_debug_daad_view_graphics_render_overlay(void)
+{
+
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+    zxvision_window *w;
+
+    w=menu_debug_daad_view_graphics_render_overlay_window;
+
+    printf("overlay\n");
+
+
+    //Por defecto
+    paws_render_last_x=0;
+    paws_render_last_y=0;
+    paws_render_ink=0;
+    paws_render_paper=7;
+    paws_render_bright=0;    
+
+
+
+    //Si intenta renderizar mas alla de las pantallas definidas
+    int max_localizaciones=util_daad_get_num_locat_messages();
+
+    if (menu_debug_daad_view_graphics_render_localizacion>=max_localizaciones-1) {
+        printf("limit reached\n");
+        menu_debug_daad_view_graphics_render_localizacion=0;
+    }
+
+
+    z80_byte location=menu_debug_daad_view_graphics_render_localizacion;
+
+    menu_debug_daad_view_graphics_render_recursive(w,location,0);
 
     zxvision_draw_window_contents(w);
 }
 
-void menu_debug_daad_view_graphics_render(int localizacion)
+void menu_debug_daad_view_graphics_render_next(MENU_ITEM_PARAMETERS)
+{
+    int max_localizaciones=util_daad_get_num_locat_messages();
+
+    if (menu_debug_daad_view_graphics_render_localizacion<max_localizaciones-1) {
+        menu_debug_daad_view_graphics_render_localizacion++;
+    }
+}
+
+void menu_debug_daad_view_graphics_render_prev(MENU_ITEM_PARAMETERS)
+{
+    if (menu_debug_daad_view_graphics_render_localizacion>0) menu_debug_daad_view_graphics_render_localizacion--;
+}
+
+void menu_debug_daad_view_graphics_render_list_commands(MENU_ITEM_PARAMETERS)
+{
+    char texto[MAX_TEXTO_GENERIC_MESSAGE];
+	texto[0]=0;
+
+    util_daad_get_graphics_location(menu_debug_daad_view_graphics_render_localizacion,texto); 
+    menu_generic_message("Graphics commands",texto);
+}
+
+void menu_debug_daad_view_graphics(void)
 {
     //Renderizar un grafico de paws
 
@@ -18074,14 +18183,14 @@ void menu_debug_daad_view_graphics_render(int localizacion)
     xventana=0;
     yventana=0;
     ancho_ventana=(256/menu_char_width)+2; //para hacer 256 de ancho
-    alto_ventana=26;
+    alto_ventana=26+RENDER_PAWS_START_Y_DRAW;
 
     zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"PAWS Graphics Render");   
 
     zxvision_draw_window(ventana);
 
 
-    menu_debug_daad_view_graphics_render_localizacion=localizacion;
+    //menu_debug_daad_view_graphics_render_localizacion=localizacion;
 
     //Cambiamos funcion overlay de texto de menu
     //Se establece a la de funcion de audio waveform
@@ -18090,8 +18199,49 @@ void menu_debug_daad_view_graphics_render(int localizacion)
     set_menu_overlay_function(menu_debug_daad_view_graphics_render_overlay);
 
 
-    zxvision_wait_until_esc(ventana);
+    //zxvision_wait_until_esc(ventana);
 
+
+
+	//Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+	menu_item *array_menu_common;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+	int comun_opcion_seleccionada=0;
+
+    do {
+
+        char buffer_linea[100];
+        sprintf(buffer_linea,"Location: %d",menu_debug_daad_view_graphics_render_localizacion);
+
+        zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_linea);
+
+
+		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_prev,NULL,"Prev");
+		menu_add_item_menu_tabulado(array_menu_common,1,1);    
+
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_next,NULL,"Next");
+		menu_add_item_menu_tabulado(array_menu_common,6,1);            
+
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_list_commands,NULL,"List commands");
+        menu_add_item_menu_tabulado(array_menu_common,11,1);   
+
+
+		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"PAWS Graphics Render");
+
+			
+			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+					//llamamos por valor de funcion
+					if (item_seleccionado.menu_funcion!=NULL) {
+							//printf ("actuamos por funcion\n");
+							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+							
+					}
+			}
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
         //restauramos modo normal de texto de menu
     set_menu_overlay_function(normal_overlay_texto_menu);
@@ -18105,6 +18255,7 @@ void menu_debug_daad_view_graphics_render(int localizacion)
     zxvision_destroy_window(ventana);            
 }
 
+/*
 void menu_debug_daad_view_graphics(void)
 {
 
@@ -18128,58 +18279,9 @@ void menu_debug_daad_view_graphics(void)
         return;
 
 
-    /*
-    menu_item *array_menu_comon;
-    menu_item item_seleccionado;
-    int retorno_menu;
-    do {
 
-
-
-        menu_add_item_menu_inicial_format(&array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_enable,NULL,"[%c] Enabled",
-        (snapshot_in_ram_enabled.v ? 'X' : ' ' ));
-
-
-        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_interval,NULL,"[%d] Interval (seconds)",snapshot_in_ram_interval_seconds);
-
-        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_maximum,NULL,"[%d] Maximum snapshots",snapshots_in_ram_maximum);
-        menu_add_item_menu_tooltip(array_menu_comon,"Maximum snapshots to keep in memory");
-        menu_add_item_menu_ayuda(array_menu_comon,"Maximum snapshots to keep in memory. When reached the maximum, the oldest will be deleted");
-
-
-        menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_timer_timeout,NULL,"[%d] Rewind timeout (seconds)",snapshot_in_ram_enabled_timer_timeout);
-        menu_add_item_menu_tooltip(array_menu_comon,"After this time pressed rewind action, the rewind position is reset to current");
-        menu_add_item_menu_ayuda(array_menu_comon,"After this time pressed rewind action, the rewind position is reset to current");
-
-
-        if (snapshot_in_ram_enabled.v) {
-
-            menu_add_item_menu(array_menu_comon,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_browse,NULL,"Browse");
-
-        }
-
-
-        menu_add_item_menu(array_menu_comon,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-        menu_add_ESC_item(array_menu_comon);
-
-        retorno_menu=menu_dibuja_menu(&snapshot_rewind_opcion_seleccionada,&item_seleccionado,array_menu_comon,"Snapshots to RAM");
-
-
-
-        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-            //llamamos por valor de funcion
-            if (item_seleccionado.menu_funcion!=NULL) {
-                //printf ("actuamos por funcion\n");
-                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-
-            }
-        }
-
-    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-    */
 }
+*/
 
 
 void menu_debug_registers_zxvision_save_size(zxvision_window *ventana,int *ventana_ancho_antes,int *ventana_alto_antes)

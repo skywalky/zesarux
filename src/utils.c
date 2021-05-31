@@ -18697,10 +18697,11 @@ z80_int util_daad_get_start_graphics(void)
         z80_int dir;
 
         if (util_daad_detect()) {
-            //de momento en daad no saco graficos
-            dir=0;
-        //puntero=util_daad_get_start_pointers()+14;
-        //dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        puntero=65521;
+        dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+
+        //temp
+        //dir=63308;
         }
         else {
                 //Paws
@@ -18721,10 +18722,9 @@ z80_int util_daad_get_start_graphics_attr(void)
         z80_int dir;
 
         if (util_daad_detect()) {
-            //de momento en daad no saco graficos
-            dir=0;
         //puntero=util_daad_get_start_pointers()+14;
-        //dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
+        puntero=65523;
+        dir=value_8_to_16(daad_peek(puntero+1),daad_peek(puntero));
         }
         else {
                 //Paws
@@ -19085,7 +19085,9 @@ void util_daad_get_graphics_location(z80_byte location,char *texto)
 
     z80_byte gflag;
 
-    char buffer_temporal[200];        
+    char buffer_temporal[200];       
+
+    int esdaad=util_daad_detect();     
 
 
     z80_int table_attr=util_daad_get_start_graphics_attr();
@@ -19096,7 +19098,12 @@ void util_daad_get_graphics_location(z80_byte location,char *texto)
     }        
 
     //Write(FOut,'Location ',n:3, ' graphics flags: ');
-    gflag = peek_byte_no_time(table_attr+location);
+    if (esdaad) {
+        gflag = peek_byte_no_time(table_attr+location*5);    
+    }
+    else {
+        gflag = peek_byte_no_time(table_attr+location);
+    }
 
 
     /*
@@ -19150,7 +19157,7 @@ char *plot_moves[]= {
     //printf("quill version: %d\n",quillversion);
 
 
-
+    
 
     while (!salir) {
 
@@ -19161,6 +19168,8 @@ char *plot_moves[]= {
         char inv, ovr;
 
         int estexto=0;
+
+        int line_comprimido=0;
 
         //Formato del byte con el comando:
         //-----xxx 3 bits inferiores: comando
@@ -19199,8 +19208,18 @@ char *plot_moves[]= {
 
 		     if (ovr=='o' && inv=='i') 
                        sprintf (buffer_temporal,"REL MOVE   ");
-		     else
+		     else {
                        sprintf (buffer_temporal,"LINE    %c%c ",ovr,inv);
+             }
+
+                       if (esdaad) {
+                           //Ver si tiene compresion
+                           if (gflag & 0x20) {
+                               line_comprimido=1;
+                               nargs=1;
+                           }
+                       }
+             
                        
 		    break;
 
@@ -19303,6 +19322,21 @@ char *plot_moves[]= {
         
         util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
 
+        if (line_comprimido) {
+            z80_byte byte_leido=peek_byte_no_time(graphics);
+
+            z80_byte arg1=(byte_leido >> 4)&0xF;
+            z80_byte arg2=byte_leido  &0xF ;
+
+
+            sprintf(buffer_temporal,"%c%-3d ",(neg[0]!=0 ? '-' : ' ' ), arg1);
+            util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+            sprintf(buffer_temporal,"%c%-3d ",(neg[1]!=0 ? '-' : ' ' ), arg2);
+            util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);            
+            graphics++;
+        }
+
+        else {
         for (i=0;i<nargs;i++) {
             z80_byte byte_leido=peek_byte_no_time(graphics);
             if (estexto && i==0) {
@@ -19322,6 +19356,7 @@ char *plot_moves[]= {
             util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
 
             graphics++;
+        }
         }
         //printf("\n");
         util_concat_string(texto,"\n",MAX_TEXTO_GENERIC_MESSAGE);
