@@ -17628,6 +17628,8 @@ int paws_render_last_y=0;
 int paws_render_ink=0;
 int paws_render_paper=7;
 int paws_render_bright=0;
+int paws_render_mirror_x=+1;
+int paws_render_mirror_y=+1;
 
 //Habilitar/deshabilitar comandos en render
 z80_bit paws_render_disable_block={0};
@@ -17888,6 +17890,9 @@ char *plot_moves[]= {
                        int x1=paws_render_last_x;
                        int y1=paws_render_last_y;
 
+                       parm1 *=paws_render_mirror_x;
+                       parm2 *=paws_render_mirror_y;
+
                        int x2=x1+parm1;
                        int y2=y1+parm2;
 
@@ -18010,6 +18015,13 @@ char *plot_moves[]= {
                      nargs = 1;
                      sprintf (buffer_temporal,"GOSUB    sc=%d",value & 7);
 
+                     int mirror_x=(gflag&64 ? -1 : +1);
+                     int mirror_y=(gflag&128 ? -1 : +1);
+
+                    if (!esdaad) mirror_x=mirror_y=+1;
+ 
+                     //Chichen itza, localizacion 4 utiliza esto
+                   
                         if (paws_render_disable_gosub.v==0) {
 
                         //Saltar a subrutina
@@ -18018,7 +18030,17 @@ char *plot_moves[]= {
                         }
                         else {
                             z80_byte nueva_ubicacion=peek_byte_no_time(graphics);
+                            //cambio temporal mirror
+
+                            int antes_paws_render_mirror_x=paws_render_mirror_x;
+                            int antes_paws_render_mirror_y=paws_render_mirror_y;
+
+                            paws_render_mirror_x=mirror_x;
+                            paws_render_mirror_y=mirror_y;
                             menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1);
+
+                            paws_render_mirror_x=antes_paws_render_mirror_x;
+                            paws_render_mirror_y=antes_paws_render_mirror_y;
                         }
                      }
                     
@@ -18150,6 +18172,8 @@ void menu_debug_daad_view_graphics_render_overlay(void)
     paws_render_ink=0;
     paws_render_paper=7;
     paws_render_bright=0;    
+    paws_render_mirror_x=+1;
+    paws_render_mirror_y=+1;
 
 
 

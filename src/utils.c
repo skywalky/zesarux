@@ -19296,7 +19296,16 @@ char *plot_moves[]= {
 
 	         case 3: 
                      nargs = 1;
-                     sprintf (buffer_temporal,"GOSUB    sc=%d",value & 7);
+                     int mirror_x=gflag&64;
+                     int mirror_y=gflag&128;
+
+                    if (!esdaad) mirror_x=mirror_y=0;
+ 
+                     //Chichen itza, localizacion 4 utiliza esto
+                     sprintf (buffer_temporal,"GOSUB    sc=%d %s %s",value & 7,
+                        (mirror_x ? "MX" : "  "),
+                        (mirror_y ? "MY" : "  ")
+                     );
                     
 		    break;
 
