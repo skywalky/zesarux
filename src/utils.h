@@ -850,6 +850,7 @@ extern void util_daad_get_condact_message(char *buffer);
 
 //temporal. posiblemente esto luego ya no se llame asi
 extern void util_daad_get_graphics_location(z80_byte index,char *texto);
+extern z80_int util_daad_get_graphics_attr(z80_byte location,int *ink,int *paper,int *is_picture);
 
 extern z80_int util_daad_get_start_graphics(void);
 extern z80_int util_daad_get_start_graphics_attr(void);

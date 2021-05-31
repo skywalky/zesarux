@@ -18736,6 +18736,35 @@ z80_int util_daad_get_start_graphics_attr(void)
         return dir;
 }
 
+//Retorna table_attr. 0 si no se encuentra
+z80_int util_daad_get_graphics_attr(z80_byte location,int *ink,int *paper,int *is_picture)
+{
+
+    int esdaad=util_daad_detect();
+
+    z80_int table_attr=util_daad_get_start_graphics_attr();
+
+    if (table_attr==0) {
+        return 0;
+    }    
+
+    z80_byte gflag;    
+
+    if (esdaad) {
+        gflag = peek_byte_no_time(table_attr+location*5);    
+    }
+    else {    
+        gflag = peek_byte_no_time(table_attr+location);
+    }
+
+    *is_picture=gflag & 0x80;
+    *ink=gflag & 7;
+    *paper=(gflag >> 3) & 7;
+            
+
+    return table_attr;
+}
+
 //Comun para daad y paws
 z80_int util_daad_get_start_user_messages(void)
 {

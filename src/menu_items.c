@@ -17507,7 +17507,7 @@ void menu_debug_daad_get_condact_message(void)
 
 //extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 
-#define RENDER_PAWS_START_Y_DRAW 3
+#define RENDER_PAWS_START_Y_DRAW 4
 
 void render_paws_putpixel(zxvision_window *w,int x,int y,int color)
 {
@@ -17635,6 +17635,9 @@ z80_bit paws_render_disable_gosub={0};
 z80_bit paws_render_disable_plot={0};
 z80_bit paws_render_disable_line={0};
 z80_bit paws_render_disable_text={0};
+z80_bit paws_render_disable_ink={0};
+z80_bit paws_render_disable_bright={0};
+z80_bit paws_render_disable_paper={0};
 
 
 void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte location,int nivel_recursivo)
@@ -17679,7 +17682,11 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
     int esdaad=util_daad_detect();    
 
 
-    z80_int table_attr=util_daad_get_start_graphics_attr();
+    //z80_int table_attr=util_daad_get_start_graphics_attr();
+
+    int tinta_attr,paper_attr;
+    int is_picture;
+    z80_int table_attr=util_daad_get_graphics_attr(location,&tinta_attr,&paper_attr,&is_picture);    
 
     if (table_attr==0) {
         //menu_error_message("Graphics attributes not found");
@@ -17688,6 +17695,7 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
     }        
 
     //Write(FOut,'Location ',n:3, ' graphics flags: ');
+    /*
     if (esdaad) {
         gflag = peek_byte_no_time(table_attr+location*5);    
     }
@@ -17696,26 +17704,28 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
     }
 
 
-    /*
-       if (gflag & 0x80)  
-           Write(FOut,'Picture.    ')
-       else
-           Write(FOut,'Subroutine. ');
-
-       WriteLn(FOut, 'Ink=',gflag mod 8 ,' Paper=',
-               (gflag and $3f) div 8, ' Bit6=', (gflag and 64) div  64);*/
-
-    int is_picture=gflag & 0x80;
+    //int is_picture=gflag & 0x80;
             
     sprintf(buffer_temporal,"Location %-3d graphics flags: %s Ink=%d Paper=%d Bit6=%d\n",location,
         (is_picture ? "Picture.    " : "Subroutine. "),
         gflag & 7, (gflag >> 3) & 7, (gflag>>6) & 1 
     );
+    */
+
+
+
+
 
     //Solo hacer cambio de ink y paper si no es subrutina
     if (is_picture) {
-        paws_render_ink=gflag & 7;
-        paws_render_paper=(gflag >> 3) & 7;
+        paws_render_ink=tinta_attr;
+        paws_render_paper=paper_attr;
+
+        if (paws_render_disable_ink.v) {
+            paws_render_ink=0;
+            paws_render_paper=7;
+            paws_render_bright=0;
+        }
   
         //Rellenamos ventana con color indicado
         int rellena_x,rellena_y;
@@ -18047,12 +18057,12 @@ char *plot_moves[]= {
 		     if ((gflag & 0x80) !=0) {
                       sprintf (buffer_temporal,"BRIGHT      %d",value & 15);
 
-                      paws_render_bright=value&1;
+                      if (paws_render_disable_bright.v==0) paws_render_bright=value&1;
              }
                      else {
                       sprintf (buffer_temporal,"PAPER      %d",value & 15);
 
-                      paws_render_paper=value & 15;
+                      if (paws_render_disable_paper.v==0) paws_render_paper=value & 15;
                       printf("PAPER %d\n",paws_render_paper);                           
                      }
         
@@ -18071,7 +18081,7 @@ char *plot_moves[]= {
                       sprintf (buffer_temporal,"INK         %d",value & 15);
                       
                       
-                      paws_render_ink=value & 15;
+                      if (paws_render_disable_ink.v==0) paws_render_ink=value & 15;
                       printf("INK %d\n",paws_render_ink);
                      }
                       
@@ -18219,6 +18229,21 @@ void menu_debug_daad_view_graphics_render_disable_text(MENU_ITEM_PARAMETERS)
     paws_render_disable_text.v ^=1;
 }  
 
+void menu_debug_daad_view_graphics_render_disable_ink(MENU_ITEM_PARAMETERS)
+{
+    paws_render_disable_ink.v ^=1;
+}  
+
+void menu_debug_daad_view_graphics_render_disable_paper(MENU_ITEM_PARAMETERS)
+{
+    paws_render_disable_paper.v ^=1;
+}  
+
+void menu_debug_daad_view_graphics_render_disable_bright(MENU_ITEM_PARAMETERS)
+{
+    paws_render_disable_bright.v ^=1;
+}  
+
 void menu_debug_daad_view_graphics(void)
 {
     //Renderizar un grafico de paws
@@ -18230,14 +18255,24 @@ void menu_debug_daad_view_graphics(void)
     ventana=&zxvision_window_paws_render; 
 
 
-    int xventana,yventana,ancho_ventana,alto_ventana;
+    int ancho_ventana,alto_ventana;
 
-    xventana=0;
-    yventana=0;
-    ancho_ventana=(256/menu_char_width)+2; //para hacer 256 de ancho
+    //xventana=0;
+    //yventana=0;
+    ancho_ventana=(256/menu_char_width)+7; //para hacer 32+7=39 en una ventana de char width = 8
+
+    //Minimo 39 para que quepa todo el texto de opciones
+    if (ancho_ventana<39) ancho_ventana=39;
+
     alto_ventana=26+RENDER_PAWS_START_Y_DRAW;
 
-    zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"PAWS Graphics Render");   
+    int xventana=menu_center_x()-ancho_ventana/2;
+    int yventana=menu_center_y()-alto_ventana/2;
+
+    char titulo_ventana[100];
+    sprintf(titulo_ventana,"%s Graphics Render",util_undaad_unpaws_get_parser_name() );
+
+    zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,titulo_ventana);   
 
     zxvision_draw_window(ventana);
 
@@ -18268,45 +18303,80 @@ void menu_debug_daad_view_graphics(void)
         zxvision_cls(ventana);
 
         char buffer_linea[100];
-        sprintf(buffer_linea,"Location: %d",menu_debug_daad_view_graphics_render_localizacion);
+
+        int tinta,papel,is_picture;
+        z80_int table_attr=util_daad_get_graphics_attr(menu_debug_daad_view_graphics_render_localizacion,&tinta,&papel,&is_picture); 
+        sprintf(buffer_linea,"Location: %d %s Ink %d Paper %d",menu_debug_daad_view_graphics_render_localizacion,
+            (is_picture ? "Picture   " : "Subroutine"),tinta,papel);
 
         zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_linea);
 
 
-		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_prev,NULL,"Prev");
-		menu_add_item_menu_tabulado(array_menu_common,1,1);    
+		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_prev,NULL,"~~Prev");
+		menu_add_item_menu_tabulado(array_menu_common,1,1);   
+        menu_add_item_menu_shortcut(array_menu_common,'p'); 
 
-		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_next,NULL,"Next");
-		menu_add_item_menu_tabulado(array_menu_common,6,1);        
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_next,NULL,"~~Next");
+		menu_add_item_menu_tabulado(array_menu_common,6,1); 
+        menu_add_item_menu_shortcut(array_menu_common,'n');
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_set,NULL,"Set");
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_set,NULL,"~~Set");
 		menu_add_item_menu_tabulado(array_menu_common,11,1);      
+        menu_add_item_menu_shortcut(array_menu_common,'s');
 
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_list_commands,NULL,"List commands");
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_list_commands,NULL,"List ~~commands");
         menu_add_item_menu_tabulado(array_menu_common,15,1);   
+        menu_add_item_menu_shortcut(array_menu_common,'c');
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_block,NULL,
-            "[%c] Block",(paws_render_disable_block.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,1,2);   
+
+        //012345678901234567890123456789012345678
+        // [X] Gosub [X] Block [X] Text [X] Plot
+        // [X] Line [X] Ink [X] Paper [X] Bright
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_gosub,NULL,
-            "[%c] Gosub",(paws_render_disable_gosub.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,11,2);   
-        
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_plot,NULL,
-            "[%c] Plot",(paws_render_disable_plot.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,21,2);   
+            "[%c] ~~Gosub",(paws_render_disable_gosub.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_tabulado(array_menu_common,1,2);   
+        menu_add_item_menu_shortcut(array_menu_common,'g');
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_line,NULL,
-            "[%c] Line",(paws_render_disable_line.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,28,2);   
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_block,NULL,
+            "[%c] ~~Block",(paws_render_disable_block.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_tabulado(array_menu_common,11,2);   
+        menu_add_item_menu_shortcut(array_menu_common,'b');
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_text,NULL,
-            "[%c] Text",(paws_render_disable_text.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,11,2);                   
+            "[%c] ~~Text",(paws_render_disable_text.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_tabulado(array_menu_common,21,2);   
+        menu_add_item_menu_shortcut(array_menu_common,'t');
+        
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_plot,NULL,
+            "[%c] Pl~~ot",(paws_render_disable_plot.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_tabulado(array_menu_common,30,2);   
+        menu_add_item_menu_shortcut(array_menu_common,'o');
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_line,NULL,
+            "[%c] ~~Line",(paws_render_disable_line.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_tabulado(array_menu_common,1,3);   
+        menu_add_item_menu_shortcut(array_menu_common,'l');
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_ink,NULL,
+            "[%c] ~~Ink",(paws_render_disable_ink.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_tabulado(array_menu_common,10,3);   
+        menu_add_item_menu_shortcut(array_menu_common,'i');
+                
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_paper,NULL,
+            "[%c] P~~aper",(paws_render_disable_paper.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_tabulado(array_menu_common,18,3);   
+        menu_add_item_menu_shortcut(array_menu_common,'a');
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_bright,NULL,
+            "[%c] B~~right",(paws_render_disable_bright.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_tabulado(array_menu_common,28,3);   
+        menu_add_item_menu_shortcut(array_menu_common,'r');
+
 
 		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"PAWS Graphics Render");
+
 
 			
 			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
