@@ -17732,9 +17732,12 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
         }
   
         //Rellenamos ventana con color indicado
+        //tener en cuenta char width
+        int ancho_rellenar=256/menu_char_width;
+        
         int rellena_x,rellena_y;
         for (rellena_y=RENDER_PAWS_START_Y_DRAW;rellena_y<RENDER_PAWS_START_Y_DRAW+24;rellena_y++) {
-            for (rellena_x=0;rellena_x<32;rellena_x++) {
+            for (rellena_x=0;rellena_x<ancho_rellenar;rellena_x++) {
                 zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,' ');
             }
         }
@@ -17950,10 +17953,20 @@ char *plot_moves[]= {
                         z80_byte x1,y1,x2,y2;
 
                         x1=peek_byte_no_time(graphics+2);
+
+                        //Tener en cuenta char width
+                        int temp_x=(x1*8)/menu_char_width;
+                        x1=temp_x;
+
                         y1=peek_byte_no_time(graphics+3);
 
                         z80_byte ancho,alto;
                         ancho=peek_byte_no_time(graphics+1);
+                        //Tener en cuenta char width
+
+                        int temp_ancho=(ancho*8)/menu_char_width;
+                        ancho=temp_ancho;
+
                         x2=x1+ancho;
                         alto=peek_byte_no_time(graphics);
                         y2=y1+alto;
@@ -18078,9 +18091,14 @@ char *plot_moves[]= {
                        z80_byte parm1,parm2,parm3;
                        parm1=peek_byte_no_time(graphics);                       
                        parm2=peek_byte_no_time(graphics+1);                       
-                       parm3=peek_byte_no_time(graphics+2);                       
+                       parm3=peek_byte_no_time(graphics+2);  
 
-                       if (paws_render_disable_text.v==0) zxvision_print_char_simple(w,parm2,parm3+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,parm1);
+                       //ajustar x a char width
+                       int posx=parm2;
+                       posx *=8;
+                       posx /= menu_char_width;
+
+                       if (paws_render_disable_text.v==0) zxvision_print_char_simple(w,posx,parm3+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,parm1);
                        printf("TEXTO x %d y %d char %c\n",parm2,parm3,parm1);
                      }
                      else
