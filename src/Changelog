@@ -20,6 +20,7 @@ Improved ZX Vision menu interface:
 -View sprite legend now adapts to size
 
 Improved Audio to .mid exporter: allow changing instrument
+Improved DAAD/PAWS/Quill Debugger: Now can render any localization graph in a Text Adventure
 
 Fixed file previews on corrupted files: pzx, tap
 Fixed rearranging windows and using total window height

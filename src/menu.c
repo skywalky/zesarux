@@ -9627,6 +9627,31 @@ void zxvision_draw_window_contents_no_speech(zxvision_window *ventana)
 
 }
 
+//Alterar atributos de caracteres en la memoria de la ventana
+//Escribir caracter en la memoria de la ventana
+void zxvision_set_attr(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo)
+{
+	//Comprobar limites
+	if (x>=w->total_width || x<0 || y>=w->total_height || y<0) return;
+
+	//Sacamos offset
+	int offset=(y*w->total_width)+x;
+
+
+
+	//Puntero
+	overlay_screen *p;
+
+	p=w->memory; //Puntero inicial
+
+	p=&p[offset]; //Puntero con offset
+
+	p->tinta=tinta;
+	p->papel=papel;
+	p->parpadeo=parpadeo;
+
+	
+}
 
 //Escribir caracter en la memoria de la ventana
 void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter)

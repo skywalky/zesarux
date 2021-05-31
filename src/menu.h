@@ -254,6 +254,7 @@ extern void zxvision_new_window_nocheck_staticsize(zxvision_window *w,int x,int 
 extern void zxvision_cls(zxvision_window *w);
 extern void zxvision_destroy_window(zxvision_window *w);
 extern void zxvision_draw_window(zxvision_window *w);
+extern void zxvision_set_attr(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo);
 extern void zxvision_print_char(zxvision_window *w,int x,int y,overlay_screen *caracter);
 extern void zxvision_print_char_simple(zxvision_window *w,int x,int y,int tinta,int papel,int parpadeo,z80_byte caracter);
 extern void zxvision_draw_window_contents(zxvision_window *w);
