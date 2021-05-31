@@ -17630,6 +17630,7 @@ int paws_render_paper=7;
 int paws_render_bright=0;
 int paws_render_mirror_x=+1;
 int paws_render_mirror_y=+1;
+int paws_render_escala=0;
 
 //Habilitar/deshabilitar comandos en render
 z80_bit paws_render_disable_block={0};
@@ -17898,6 +17899,15 @@ char *plot_moves[]= {
                        parm1 *=paws_render_mirror_x;
                        parm2 *=paws_render_mirror_y;
 
+                     //-firfurcio localizacion 11 usa varios gosub con scale
+                        int multpli=paws_render_escala;
+                        if (multpli==0) multpli=8;
+
+                       
+                           parm1=(parm1*multpli)/8;
+                           parm2=(parm2*multpli)/8;
+                       
+
                        int x2=x1+parm1;
                        int y2=y1+parm2;
 
@@ -18024,8 +18034,11 @@ char *plot_moves[]= {
                      int mirror_y=(gflag&128 ? -1 : +1);
 
                     if (!esdaad) mirror_x=mirror_y=+1;
+
+                    int escala=value&7;
+                    
  
-                     //Chichen itza, localizacion 4 utiliza esto
+                     //Chichen itza, localizacion 4 utiliza mirror_x
                    
                         if (paws_render_disable_gosub.v==0) {
 
@@ -18039,13 +18052,16 @@ char *plot_moves[]= {
 
                             int antes_paws_render_mirror_x=paws_render_mirror_x;
                             int antes_paws_render_mirror_y=paws_render_mirror_y;
+                            int antes_paws_render_escala=paws_render_escala;
 
                             paws_render_mirror_x=mirror_x;
                             paws_render_mirror_y=mirror_y;
+                            paws_render_escala=escala;
                             menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1);
 
                             paws_render_mirror_x=antes_paws_render_mirror_x;
                             paws_render_mirror_y=antes_paws_render_mirror_y;
+                            paws_render_escala=antes_paws_render_escala;
                         }
                      }
                     
@@ -18179,6 +18195,7 @@ void menu_debug_daad_view_graphics_render_overlay(void)
     paws_render_bright=0;    
     paws_render_mirror_x=+1;
     paws_render_mirror_y=+1;
+    paws_render_escala=0;
 
 
 
