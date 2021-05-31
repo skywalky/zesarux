@@ -13405,7 +13405,9 @@ int util_concat_string(char *original,char *string_to_add,int limite)
 
         char *offset_add;
         offset_add=&original[longitud_original];
+        //printf("before strcpy [%s] [%s]\n",original,string_to_add);
         strcpy(offset_add,string_to_add);
+        //printf("after strcpy\n");
 
         return 0;
 }

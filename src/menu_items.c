@@ -17652,8 +17652,8 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 
 
     //Por compatibilidad temporal
-        char texto[MAX_TEXTO_GENERIC_MESSAGE];
-        texto[0]=0;
+        //char texto[MAX_TEXTO_GENERIC_MESSAGE];
+        //texto[0]=0;
 
 
 
@@ -17673,7 +17673,8 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 
     if (table_dir==0) {
         //menu_error_message("Graphics not found");
-        zxvision_draw_window_contents(w);
+        printf("Graphics not found\n");
+        //zxvision_draw_window_contents(w);
         return;
     }
 
@@ -17692,7 +17693,8 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 
     if (table_attr==0) {
         //menu_error_message("Graphics attributes not found");
-        zxvision_draw_window_contents(w);
+        printf("Graphics attributes not found\n");
+        //zxvision_draw_window_contents(w);
         return;
     }        
 
@@ -17713,7 +17715,6 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
         gflag & 7, (gflag >> 3) & 7, (gflag>>6) & 1 
     );
     */
-
 
 
 
@@ -17750,9 +17751,13 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 
 
 
+    printf("before concat string\n");
 
+   
 
-    util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+    //util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+
+     printf("after concat string\n");
         
 
         printf("OffGraph: %d\n",table_dir);
@@ -18118,7 +18123,7 @@ char *plot_moves[]= {
 
         
         
-        util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+        //util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
 
         if (line_comprimido) {
             graphics++;
@@ -18141,13 +18146,13 @@ char *plot_moves[]= {
 
             }
 
-            util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+            //util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
 
             graphics++;
         }
         }
         //printf("\n");
-        util_concat_string(texto,"\n",MAX_TEXTO_GENERIC_MESSAGE);
+        //util_concat_string(texto,"\n",MAX_TEXTO_GENERIC_MESSAGE);
 
     }
 
@@ -18188,9 +18193,12 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 
     z80_byte location=menu_debug_daad_view_graphics_render_localizacion;
 
+    printf("before render\n");
     menu_debug_daad_view_graphics_render_recursive(w,location,0);
+    printf("after render\n");
 
     zxvision_draw_window_contents(w);
+    printf("after zxvision_draw_window_contents\n");
 }
 
 void menu_debug_daad_view_graphics_render_next(MENU_ITEM_PARAMETERS)
@@ -18222,9 +18230,11 @@ void menu_debug_daad_view_graphics_render_set(MENU_ITEM_PARAMETERS)
 
         int max_localizaciones=util_daad_get_num_locat_messages();
 
+        printf("antes graph number\n");
+
     menu_ventana_scanf_numero_enhanced("Graph number",&menu_debug_daad_view_graphics_render_localizacion,4,+1,0,max_localizaciones-1,0);
 
-
+    printf("despues graph number\n");
 
 }
 
