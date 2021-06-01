@@ -16996,8 +16996,14 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 		case 2:
 
 			if (menu_debug_registers_current_view==8) {
-				if (util_daad_condact_uses_message() ) sprintf(s,"~~Graphics cond~~Message");
-				else sprintf(s,"~~Graphics");
+
+                char buffer_temp_graphics[100];
+                buffer_temp_graphics[0]=0;
+
+                if (util_daad_has_graphics()) strcpy(buffer_temp_graphics,"~~Graphics");
+
+				if (util_daad_condact_uses_message() ) sprintf(s,"%s cond~~Message",buffer_temp_graphics);
+				else sprintf(s,"%s",buffer_temp_graphics);
 				return;
 			}
 
@@ -17507,6 +17513,7 @@ void menu_debug_daad_get_condact_message(void)
 
 //extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 
+#define RENDER_PAWS_START_X_DRAW 1
 #define RENDER_PAWS_START_Y_DRAW 4
 
 void render_paws_putpixel(zxvision_window *w,int x,int y,int color)
@@ -17514,14 +17521,15 @@ void render_paws_putpixel(zxvision_window *w,int x,int y,int color)
     //putpixel teniendo el 0 abajo del todo
     y=175-y;
 
-    //Si sale de margen superior, no hacer putpixel
-    if (y<0) return;
+    //Si sale de margenes, no hacer putpixel
+    if (y<0 || y>175 || x<0 || x>255) return;
 
     //Y sumar margen inicio pantalla
     int y_final=y+RENDER_PAWS_START_Y_DRAW*8;
+    int x_final=x+RENDER_PAWS_START_X_DRAW*menu_char_width;
 
 
-    zxvision_putpixel(w,x,y_final,color);
+    zxvision_putpixel(w,x_final,y_final,color);
 }
 
 //typedef funcion_putpixel
@@ -17632,6 +17640,10 @@ int paws_render_mirror_x=+1;
 int paws_render_mirror_y=+1;
 int paws_render_escala=0;
 
+//Coordenadas iniciales, importantes para cuando no hay un plot inicial (sobretodo subrutinas pero tambien algun picture)
+int paws_render_initial_x=0;
+int paws_render_initial_y=0;
+
 //Habilitar/deshabilitar comandos en render
 z80_bit paws_render_disable_block={0};
 z80_bit paws_render_disable_gosub={0};
@@ -17643,7 +17655,10 @@ z80_bit paws_render_disable_bright={0};
 z80_bit paws_render_disable_paper={0};
 
 
-void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte location,int nivel_recursivo)
+//Renderiza y/o retorna lista de comandos de una pantalla grafica
+//si buffer_texto_comandos=NULL, no rellena texto
+//si w==NULL, no dibuja nada
+void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte location,int nivel_recursivo,char *buffer_texto_comandos)
 {
 
     
@@ -17737,39 +17752,30 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
         
         int rellena_x,rellena_y;
         for (rellena_y=RENDER_PAWS_START_Y_DRAW;rellena_y<RENDER_PAWS_START_Y_DRAW+24;rellena_y++) {
-            for (rellena_x=0;rellena_x<ancho_rellenar;rellena_x++) {
+            for (rellena_x=RENDER_PAWS_START_X_DRAW;rellena_x<RENDER_PAWS_START_X_DRAW+ancho_rellenar;rellena_x++) {
                 zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,' ');
             }
         }
     }
 
-    else {
-        //Si es subrutina y se empieza renderizando esta subrutina, por si acaso posicionar en centro pantalla
-        //TODO: poder cambiar esto desde ventana menu
-
-        if (nivel_recursivo==0) {
-            paws_render_last_x=128;
-            paws_render_last_y=88;
-        }
-    }
 
 
 
-    printf("before concat string\n");
 
    
 
     //util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
 
-     printf("after concat string\n");
         
 
-        printf("OffGraph: %d\n",table_dir);
+        //printf("OffGraph: %d\n",table_dir);
 
-        //Inicio tabla graficos
-        z80_int graphics=peek_word_no_time(table_dir+location*2);
+        //Puntero a ese grafico concreto
+        //z80_int graphics=peek_word_no_time(table_dir+location*2);
 
-        printf("Start graphics location %d: %d\n",location,graphics);
+        z80_int graphics=util_daad_get_graphics_location(location);
+
+        //printf("Start graphics location %d: %d\n",location,graphics);
         //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
 
 char *plot_moves[]= {
@@ -17837,16 +17843,16 @@ char *plot_moves[]= {
                 dibujar=1;
                 if ((ovr=='o') && (inv=='i')) {
                     sprintf (buffer_temporal,"ABS MOVE   ");
-                    printf("ABS MOVE\n");
+                    //printf("ABS MOVE\n");
                     dibujar=0;
                 }
                 else {
                     sprintf (buffer_temporal,"PLOT    %c%c ",ovr,inv);
-                    printf("PLOT\n");
+                    //printf("PLOT\n");
                 }
                     paws_render_last_x=peek_byte_no_time(graphics);
                     paws_render_last_y=peek_byte_no_time(graphics+1);
-                    printf("PLOT/ABS MOVE %d %d\n",paws_render_last_x,paws_render_last_y);
+                    //printf("PLOT/ABS MOVE %d %d\n",paws_render_last_x,paws_render_last_y);
                     if (dibujar && paws_render_disable_plot.v==0) render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8); 
                 
             break;
@@ -17861,12 +17867,12 @@ char *plot_moves[]= {
 
 		     if (ovr=='o' && inv=='i') {
                        sprintf (buffer_temporal,"REL MOVE   ");
-                       printf("REL MOVE\n");
+                       //printf("REL MOVE\n");
                        dibujar=0; //solo mover
              }
 		     else {
                        sprintf (buffer_temporal,"LINE    %c%c ",ovr,inv);
-                       printf("LINE\n");
+                       //printf("LINE\n");
              }
 
                        if (esdaad) {
@@ -17879,22 +17885,23 @@ char *plot_moves[]= {
              
                        int parm1,parm2;
                        if (line_comprimido) {
-                           printf("comprimido\n");
-                       parm1=((peek_byte_no_time(graphics))>>4)&0xF;
-                       if (neg[0]) parm1=-parm1;
+                            //printf("comprimido\n");
+                            parm1=((peek_byte_no_time(graphics))>>4)&0xF;
+                            if (neg[0]) parm1=-parm1;
 
-                       parm2=(peek_byte_no_time(graphics))&0xF;
-                       if (neg[1]) parm2=-parm2;
+                            parm2=(peek_byte_no_time(graphics))&0xF;
+                            if (neg[1]) parm2=-parm2;
+                        }
+
+                        else {
+                            parm1=peek_byte_no_time(graphics);
+                            if (neg[0]) parm1=-parm1;
+
+                            parm2=peek_byte_no_time(graphics+1);
+                            if (neg[1]) parm2=-parm2;
                        }
-                       else {
-                       parm1=peek_byte_no_time(graphics);
-                       if (neg[0]) parm1=-parm1;
 
-                       parm2=peek_byte_no_time(graphics+1);
-                       if (neg[1]) parm2=-parm2;
-                       }
-
-                       printf("LINE / REL MOVE %d %d\n",parm1,parm2);
+                       //printf("LINE / REL MOVE %d %d\n",parm1,parm2);
 
                        int x1=paws_render_last_x;
                        int y1=paws_render_last_y;
@@ -17915,7 +17922,7 @@ char *plot_moves[]= {
                        int y2=y1+parm2;
 
                        if (dibujar && paws_render_disable_line.v==0) {
-                           printf("linea desde %d %d hasta %d %d\n",x1,y1,x2,y2);
+                           //printf("linea desde %d %d hasta %d %d\n",x1,y1,x2,y2);
                            menu_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
                        }
 
@@ -17955,7 +17962,7 @@ char *plot_moves[]= {
                         x1=peek_byte_no_time(graphics+2);
 
                         //Tener en cuenta char width
-                        int temp_x=(x1*8)/menu_char_width;
+                        int temp_x=((x1+RENDER_PAWS_START_X_DRAW)*8)/menu_char_width;
                         x1=temp_x;
 
                         y1=peek_byte_no_time(graphics+3);
@@ -17973,7 +17980,7 @@ char *plot_moves[]= {
 
                         
 
-                        printf("-----BLOCK %d %d %d %d\n",x1,y1,x2,y2);
+                        //printf("-----BLOCK %d %d %d %d\n",x1,y1,x2,y2);
 
                         //ordenado
                         if (x1>x2) {
@@ -18056,8 +18063,8 @@ char *plot_moves[]= {
                         if (paws_render_disable_gosub.v==0) {
 
                         //Saltar a subrutina
-                        if (nivel_recursivo>=16) {
-                            printf("Maximum nested gosub reached\n");
+                        if (nivel_recursivo>=10) {
+                            //printf("Maximum nested gosub reached\n");
                         }
                         else {
                             z80_byte nueva_ubicacion=peek_byte_no_time(graphics);
@@ -18070,7 +18077,9 @@ char *plot_moves[]= {
                             paws_render_mirror_x=mirror_x;
                             paws_render_mirror_y=mirror_y;
                             paws_render_escala=escala;
-                            menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1);
+                            //Al llamar a subrutina pone buffer a texto a null, para que no meta
+                            //lista de comandos de la subrutina
+                            menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1,NULL);
 
                             paws_render_mirror_x=antes_paws_render_mirror_x;
                             paws_render_mirror_y=antes_paws_render_mirror_y;
@@ -18094,17 +18103,19 @@ char *plot_moves[]= {
                        parm3=peek_byte_no_time(graphics+2);  
 
                        //ajustar x a char width
-                       int posx=parm2;
+                       int posx=parm2+RENDER_PAWS_START_X_DRAW;
                        posx *=8;
                        posx /= menu_char_width;
 
                        if (paws_render_disable_text.v==0) zxvision_print_char_simple(w,posx,parm3+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,parm1);
-                       printf("TEXTO x %d y %d char %c\n",parm2,parm3,parm1);
+                       //printf("TEXTO x %d y %d char %c\n",parm2,parm3,parm1);
                      }
                      else
                      {
                        nargs=0;
                        sprintf (buffer_temporal,"RPLOT   %c%c %s",ovr,inv,plot_moves[value/4]);
+
+                       //printf ("RPLOT   %c%c %s\n",ovr,inv,plot_moves[value/4]);
                      }
                      
             
@@ -18124,7 +18135,7 @@ char *plot_moves[]= {
                       sprintf (buffer_temporal,"PAPER      %d",value & 15);
 
                       if (paws_render_disable_paper.v==0) paws_render_paper=value & 15;
-                      printf("PAPER %d\n",paws_render_paper);                           
+                      //printf("PAPER %d\n",paws_render_paper);                           
                      }
         
             
@@ -18143,7 +18154,7 @@ char *plot_moves[]= {
                       
                       
                       if (paws_render_disable_ink.v==0) paws_render_ink=value & 15;
-                      printf("INK %d\n",paws_render_ink);
+                      //printf("INK %d\n",paws_render_ink);
                      }
                       
 		    
@@ -18206,8 +18217,10 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 
 
     //Por defecto
-    paws_render_last_x=0;
-    paws_render_last_y=0;
+    //paws_render_last_x=0;
+    //paws_render_last_y=0;
+    paws_render_last_x=paws_render_initial_x;
+    paws_render_last_y=paws_render_initial_y;    
     paws_render_ink=0;
     paws_render_paper=7;
     paws_render_bright=0;    
@@ -18218,7 +18231,7 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 
 
     //Si intenta renderizar mas alla de las pantallas definidas
-    int max_localizaciones=util_daad_get_num_locat_messages();
+    int max_localizaciones=util_daad_get_total_graphics();
 
     if (menu_debug_daad_view_graphics_render_localizacion>=max_localizaciones) {
         printf("limit reached\n");
@@ -18228,17 +18241,14 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 
     z80_byte location=menu_debug_daad_view_graphics_render_localizacion;
 
-    printf("before render\n");
-    menu_debug_daad_view_graphics_render_recursive(w,location,0);
-    printf("after render\n");
+    menu_debug_daad_view_graphics_render_recursive(w,location,0,NULL);
 
     zxvision_draw_window_contents(w);
-    printf("after zxvision_draw_window_contents\n");
 }
 
 void menu_debug_daad_view_graphics_render_next(MENU_ITEM_PARAMETERS)
 {
-    int max_localizaciones=util_daad_get_num_locat_messages();
+    int max_localizaciones=util_daad_get_total_graphics();
 
     if (menu_debug_daad_view_graphics_render_localizacion<max_localizaciones-1) {
         menu_debug_daad_view_graphics_render_localizacion++;
@@ -18255,7 +18265,7 @@ void menu_debug_daad_view_graphics_render_list_commands(MENU_ITEM_PARAMETERS)
     char texto[MAX_TEXTO_GENERIC_MESSAGE];
 	texto[0]=0;
 
-    util_daad_get_graphics_location(menu_debug_daad_view_graphics_render_localizacion,texto); 
+    util_daad_get_graphics_list_commands(menu_debug_daad_view_graphics_render_localizacion,texto); 
     menu_generic_message("Graphics commands",texto);
 }
 
@@ -18263,13 +18273,11 @@ void menu_debug_daad_view_graphics_render_list_commands(MENU_ITEM_PARAMETERS)
 void menu_debug_daad_view_graphics_render_set(MENU_ITEM_PARAMETERS)
 {
 
-        int max_localizaciones=util_daad_get_num_locat_messages();
+        int max_localizaciones=util_daad_get_total_graphics();
 
-        printf("antes graph number\n");
 
     menu_ventana_scanf_numero_enhanced("Graph number",&menu_debug_daad_view_graphics_render_localizacion,4,+1,0,max_localizaciones-1,0);
 
-    printf("despues graph number\n");
 
 }
 
@@ -18313,6 +18321,21 @@ void menu_debug_daad_view_graphics_render_disable_bright(MENU_ITEM_PARAMETERS)
     paws_render_disable_bright.v ^=1;
 }  
 
+
+void menu_debug_daad_view_graphics_render_initial_x(MENU_ITEM_PARAMETERS)
+{
+
+    menu_ventana_scanf_numero_enhanced("Initial X",&paws_render_initial_x,4,+1,0,255,0);
+
+}
+
+void menu_debug_daad_view_graphics_render_initial_y(MENU_ITEM_PARAMETERS)
+{
+
+    menu_ventana_scanf_numero_enhanced("Initial Y",&paws_render_initial_y,4,+1,0,175,0);
+
+}
+
 void menu_debug_daad_view_graphics(void)
 {
     //Renderizar un grafico de paws
@@ -18328,10 +18351,13 @@ void menu_debug_daad_view_graphics(void)
 
     //xventana=0;
     //yventana=0;
-    ancho_ventana=(256/menu_char_width)+7; //para hacer 32+7=39 en una ventana de char width = 8
+
+    int ancho_minimo_deseado=41+RENDER_PAWS_START_X_DRAW;
+
+    ancho_ventana=(256/menu_char_width)+7+RENDER_PAWS_START_X_DRAW; //para hacer 32+7=39 en una ventana de char width = 8
 
     //Minimo 39 para que quepa todo el texto de opciones
-    if (ancho_ventana<39) ancho_ventana=39;
+    if (ancho_ventana<ancho_minimo_deseado) ancho_ventana=ancho_minimo_deseado;
 
     alto_ventana=26+RENDER_PAWS_START_Y_DRAW;
 
@@ -18375,7 +18401,8 @@ void menu_debug_daad_view_graphics(void)
 
         int tinta,papel,is_picture;
         z80_int table_attr=util_daad_get_graphics_attr(menu_debug_daad_view_graphics_render_localizacion,&tinta,&papel,&is_picture); 
-        sprintf(buffer_linea,"Location: %d %s Ink %d Paper %d",menu_debug_daad_view_graphics_render_localizacion,
+        sprintf(buffer_linea,"Location: %d/%d %s Ink %d Paper %d",menu_debug_daad_view_graphics_render_localizacion,
+        util_daad_get_total_graphics(),
             (is_picture ? "Picture   " : "Subroutine"),tinta,papel);
 
         zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_linea);
@@ -18393,13 +18420,22 @@ void menu_debug_daad_view_graphics(void)
 		menu_add_item_menu_tabulado(array_menu_common,11,1);      
         menu_add_item_menu_shortcut(array_menu_common,'s');
 
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_x,NULL,
+                                    "~~x %3d",paws_render_initial_x);
+        menu_add_item_menu_tabulado(array_menu_common,15,1);
+        menu_add_item_menu_shortcut(array_menu_common,'x');
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_y,NULL,
+                                    "~~y %3d",paws_render_initial_y);
+        menu_add_item_menu_tabulado(array_menu_common,21,1);
+        menu_add_item_menu_shortcut(array_menu_common,'y');
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_list_commands,NULL,"List ~~commands");
-        menu_add_item_menu_tabulado(array_menu_common,15,1);   
-        menu_add_item_menu_shortcut(array_menu_common,'c');
+        menu_add_item_menu_tabulado(array_menu_common,27,1);   
+        menu_add_item_menu_shortcut(array_menu_common,'c');        
 
 
-        //012345678901234567890123456789012345678
+        //0123456789012345678901234567890123456789
         // [X] Gosub [X] Block [X] Text [X] Plot
         // [X] Line [X] Ink [X] Paper [X] Bright
 
@@ -19148,7 +19184,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }			
 
 				//Graficos paws/quill/daad
-				if (tecla=='g' && menu_debug_registers_current_view==8) {
+				if (tecla=='g' && menu_debug_registers_current_view==8 && util_daad_has_graphics() ) {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
 					menu_emulation_paused_on_menu=1;

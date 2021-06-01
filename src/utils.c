@@ -18715,6 +18715,32 @@ z80_int util_daad_get_start_graphics(void)
         return dir;
 }
 
+z80_int util_daad_get_graphics_location(z80_byte location)
+{
+    z80_int table_dir=util_daad_get_start_graphics();
+    if (table_dir==0) return 0;
+
+    z80_int graphics=peek_word_no_time(table_dir+location*2);
+
+    return graphics;
+}
+
+z80_int util_daad_get_total_graphics(void)
+{
+    //TODO
+    //de momento
+    //return util_daad_get_num_locat_messages();
+
+    //buscar hasta puntero 0
+    int i=0;
+
+    for (i=0;util_daad_get_graphics_location(i)!=0;i++);
+
+    //printf("total locations: %d\n",i);
+
+    return i;
+}
+
 //Comun para daad y paws
 z80_int util_daad_get_start_graphics_attr(void)
 {
@@ -18765,6 +18791,16 @@ z80_int util_daad_get_graphics_attr(z80_byte location,int *ink,int *paper,int *i
             
 
     return table_attr;
+}
+
+//Dice si la aventura tiene graficos o no
+int util_daad_has_graphics(void)
+{
+   z80_int table_dir=util_daad_get_start_graphics();
+   z80_int table_attr=util_daad_get_start_graphics_attr();
+
+    if (table_dir==0 || table_attr==0) return 0;
+    else return 1;    
 }
 
 //Comun para daad y paws
@@ -19102,7 +19138,7 @@ void util_daad_get_locat_message(z80_byte index,char *texto)
 
 
 
-void util_daad_get_graphics_location(z80_byte location,char *texto)
+void util_daad_get_graphics_list_commands(z80_byte location,char *texto)
 {
 
 //See https://github.com/Utodev/unPAWs/blob/master/Unpaws.pas

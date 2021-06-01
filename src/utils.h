@@ -839,6 +839,7 @@ extern void util_daad_get_compressed_message(z80_byte index,char *texto);
 extern z80_int util_daad_get_num_user_messages(void);
 extern z80_int util_daad_get_num_sys_messages(void);
 extern z80_int util_daad_get_num_locat_messages(void);
+extern z80_int util_daad_get_total_graphics(void);
 
 extern void util_daad_get_user_message(z80_byte index,char *texto);
 extern void util_daad_get_sys_message(z80_byte index,char *texto);
@@ -848,9 +849,9 @@ extern int util_daad_condact_uses_message(void);
 
 extern void util_daad_get_condact_message(char *buffer);
 
-//temporal. posiblemente esto luego ya no se llame asi
-extern void util_daad_get_graphics_location(z80_byte index,char *texto);
 extern z80_int util_daad_get_graphics_attr(z80_byte location,int *ink,int *paper,int *is_picture);
+extern int util_daad_has_graphics(void);
+extern z80_int util_daad_get_graphics_location(z80_byte location);
 
 extern z80_int util_daad_get_start_graphics(void);
 extern z80_int util_daad_get_start_graphics_attr(void);

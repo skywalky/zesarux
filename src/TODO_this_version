@@ -180,3 +180,12 @@ no quiere ver. O siempre así o igual personalizable. Probarlo
 -quiza un "code estatistics": total lines, total comments, total todos (en codigo y en archivos TODO_*, etc)
 
 -paws renderer probar diferentes char width
+
+-render paws
+rplot reducido con 1 byte hacerlo 
+*chichen itza localizacion 21 lo usa
+
+-paws Dump toda tabla procesos 
+-total graphs es incorrecto. Por ejemplo en Bugsy (quill)
+
+-unificar funcion render con listado de comandos
