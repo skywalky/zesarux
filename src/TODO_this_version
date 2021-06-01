@@ -188,6 +188,5 @@ rplot reducido con 1 byte hacerlo
 -paws Dump toda tabla procesos 
 -total graphs es incorrecto. Por ejemplo en Bugsy (quill)
 
--unificar funcion render con listado de comandos
 
 -borrar util_daad_get_graphics_list_commands cuando ya no se use
