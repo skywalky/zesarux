@@ -17691,11 +17691,10 @@ char *plot_moves[]= {
 
         int mirror_x,mirror_y;
 
-        //int parm2;
+        //int parm3;
         int parm0;
         int parm1;
-        
-        int parm3;
+        int parm2;
                 
 
         int estexto=0;
@@ -17841,15 +17840,15 @@ char *plot_moves[]= {
                         
                     parm0=parm0_byte*signo[0];
                     parm1=parm1_byte*signo[1];
-                    parm3=parm2_byte;
+                    parm2=parm2_byte;
 
                     puntero_grafico +=3;
         
                     if (quillversion==0) {
-                        sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm0,parm1,parm3);
+                        sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm0,parm1,parm2);
                     }
                     else {
-                        sprintf (buffer_temporal,"BSHADE     %4d %4d %4d\n",parm0,parm1,parm3);
+                        sprintf (buffer_temporal,"BSHADE     %4d %4d %4d\n",parm0,parm1,parm2);
                     }
                 }
 
@@ -17933,11 +17932,11 @@ char *plot_moves[]= {
 
                 parm0=parm0_byte*signo[0];
                 parm1=parm1_byte*signo[1];
-                parm3=parm2_byte;
+                parm2=parm2_byte;
 
                 puntero_grafico +=3;
 
-                sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm0,parm1,parm3);
+                sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm0,parm1,parm2);
             }
 
             else {
@@ -17945,7 +17944,7 @@ char *plot_moves[]= {
                 if ((gflag & 0x80) !=0 ) signo[1] = -1;
                 
                 parm0=parm0_byte*signo[0];
-                int parm1=parm1_byte*signo[1];
+                parm1=parm1_byte*signo[1];
 
                 puntero_grafico +=2;
 
@@ -18023,13 +18022,13 @@ char *plot_moves[]= {
                     
                     parm0=parm0_byte;                       
                     parm1=parm1_byte;                       
-                    parm3=parm2_byte;  
+                    parm2=parm2_byte;  
 
                     puntero_grafico +=3;
 
                     sprintf (buffer_temporal,"TEXT %c%c    %4d %4d(%c) %d %d\n",ovr,inv,value/4,parm0,
                             (parm0>=32 && parm0<=126 ? parm0 : '?'),
-                            parm1,parm3);
+                            parm1,parm2);
 
                     //ajustar x a char width
                     int posx=parm1+RENDER_PAWS_START_X_DRAW;
@@ -18037,7 +18036,7 @@ char *plot_moves[]= {
                     posx /= menu_char_width;
 
                     if (paws_render_disable_text.v==0 && w!=NULL) {
-                        zxvision_print_char_simple(w,posx,parm3+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,
+                        zxvision_print_char_simple(w,posx,parm2+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,
                             paws_render_paper+paws_render_bright*8,0,parm0);
                     }
 
