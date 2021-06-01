@@ -17966,14 +17966,18 @@ char *plot_moves[]= {
                     
  
                 //Chichen itza, localizacion 4 utiliza mirror_x
+
+                //No hacemos recursivo si no hay puntero zxvision, pues es en el unico modo que tiene sentido,
+                //ya que cuando solo se saca la lista de comandos (sin dibujar) no queremos saltar con gosub                
             
-                if (paws_render_disable_gosub.v==0) {
+                if (paws_render_disable_gosub.v==0 && w!=NULL) {
 
                     //Saltar a subrutina
                     if (nivel_recursivo>=10) {
                         //printf("Maximum nested gosub reached\n");
                     }
-                    else {                             
+                    else {                         
+
                         //cambio temporal mirror
                         int antes_paws_render_mirror_x=paws_render_mirror_x;
                         int antes_paws_render_mirror_y=paws_render_mirror_y;
@@ -17982,13 +17986,19 @@ char *plot_moves[]= {
                         paws_render_mirror_x=mirror_x;
                         paws_render_mirror_y=mirror_y;
                         paws_render_escala=escala;
+
+
                         //Al llamar a subrutina pone buffer a texto a null, para que no meta
                         //lista de comandos de la subrutina
+                        //Esto solo cambiaria algo en el supuesto caso en que dibujamos con putpixel (w no es NULL) y
+                        //aqui buffer_texto_comandos viene con no NULL (o sea, que dibujamos y listamos texto)
                         menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1,NULL);
+                        //printf("llamar recursivo text=%p w=%p\n",buffer_texto_comandos,w);
 
                         paws_render_mirror_x=antes_paws_render_mirror_x;
                         paws_render_mirror_y=antes_paws_render_mirror_y;
                         paws_render_escala=antes_paws_render_escala;
+                        
                     }
                 }
                     
@@ -18087,7 +18097,7 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 
     w=menu_debug_daad_view_graphics_render_overlay_window;
 
-    printf("overlay\n");
+    //printf("overlay\n");
 
 
     //Por defecto
