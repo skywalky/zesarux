@@ -17690,7 +17690,11 @@ char *plot_moves[]= {
         char inv, ovr;
 
         int mirror_x,mirror_y;
-        int parm1,parm2,parm3;
+
+        //int parm1;
+        int parm0;
+        
+        int parm2,parm3;
                 
 
         int estexto=0;
@@ -17768,8 +17772,8 @@ char *plot_moves[]= {
                 
                 if (line_comprimido) {
                     //Formato comprimido usando solo 1 byte para desplazamiento x,y
-                    parm1=(parm0_byte>>4)&0xF;
-                    parm1 *=signo[0];
+                    parm0=(parm0_byte>>4)&0xF;
+                    parm0 *=signo[0];
 
                     parm2=(parm0_byte)&0xF;
                     parm2 *=signo[1];
@@ -17778,8 +17782,8 @@ char *plot_moves[]= {
                 }
 
                 else {
-                    parm1=parm0_byte;
-                    parm1 *=signo[0];
+                    parm0=parm0_byte;
+                    parm0 *=signo[0];
 
                     parm2=parm1_byte;
                     parm2 *=signo[1];
@@ -17789,18 +17793,18 @@ char *plot_moves[]= {
 
 
                 if (ovr=='o' && inv=='i') {
-                        sprintf (buffer_temporal,"REL MOVE   %4d %4d\n",parm1,parm2);
+                        sprintf (buffer_temporal,"REL MOVE   %4d %4d\n",parm0,parm2);
                         dibujar=0; //solo mover
                 }
                 else {
-                        sprintf (buffer_temporal,"LINE  %c%c   %4d %4d\n",ovr,inv,parm1,parm2);
+                        sprintf (buffer_temporal,"LINE  %c%c   %4d %4d\n",ovr,inv,parm0,parm2);
                 }
 
 
                 int x1=paws_render_last_x;
                 int y1=paws_render_last_y;
 
-                parm1 *=paws_render_mirror_x;
+                parm0 *=paws_render_mirror_x;
                 parm2 *=paws_render_mirror_y;
 
                 //-firfurcio localizacion 11 usa varios gosub con scale
@@ -17808,11 +17812,11 @@ char *plot_moves[]= {
                 int multpli=paws_render_escala;
                 if (multpli==0) multpli=8;
 
-                parm1=(parm1*multpli)/8;
+                parm0=(parm0*multpli)/8;
                 parm2=(parm2*multpli)/8;
                        
                 //Punto final
-                int x2=x1+parm1;
+                int x2=x1+parm0;
                 int y2=y1+parm2;
 
                 if (dibujar && paws_render_disable_line.v==0) {
@@ -17834,17 +17838,17 @@ char *plot_moves[]= {
                     if ((gflag & 0x40) !=0) signo[0] = -1;
                     if ((gflag & 0x80) !=0) signo[1] = -1;
                         
-                    parm1=parm0_byte*signo[0];
+                    parm0=parm0_byte*signo[0];
                     parm2=parm1_byte*signo[1];
                     parm3=parm2_byte;
 
                     puntero_grafico +=3;
         
                     if (quillversion==0) {
-                        sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm1,parm2,parm3);
+                        sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm0,parm2,parm3);
                     }
                     else {
-                        sprintf (buffer_temporal,"BSHADE     %4d %4d %4d\n",parm1,parm2,parm3);
+                        sprintf (buffer_temporal,"BSHADE     %4d %4d %4d\n",parm0,parm2,parm3);
                     }
                 }
 
@@ -17926,20 +17930,20 @@ char *plot_moves[]= {
                 if ((gflag & 0x40) !=0 ) signo[0] = -1;
                 if ((gflag & 0x80) !=0 ) signo[1] = -1;
 
-                parm1=parm0_byte*signo[0];
+                parm0=parm0_byte*signo[0];
                 parm2=parm1_byte*signo[1];
                 parm3=parm2_byte;
 
                 puntero_grafico +=3;
 
-                sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm1,parm2,parm3);
+                sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm0,parm2,parm3);
             }
 
             else {
                 if ((gflag & 0x40) !=0 ) signo[0] = -1;
                 if ((gflag & 0x80) !=0 ) signo[1] = -1;
                 
-                int parm0=parm0_byte*signo[0];
+                parm0=parm0_byte*signo[0];
                 int parm1=parm1_byte*signo[1];
 
                 puntero_grafico +=2;
@@ -18016,14 +18020,14 @@ char *plot_moves[]= {
             
                 if (quillversion==0) {
                     
-                    parm1=parm0_byte;                       
+                    parm0=parm0_byte;                       
                     parm2=parm1_byte;                       
                     parm3=parm2_byte;  
 
                     puntero_grafico +=3;
 
-                    sprintf (buffer_temporal,"TEXT %c%c    %4d %4d(%c) %d %d\n",ovr,inv,value/4,parm1,
-                            (parm1>=32 && parm1<=126 ? parm1 : '?'),
+                    sprintf (buffer_temporal,"TEXT %c%c    %4d %4d(%c) %d %d\n",ovr,inv,value/4,parm0,
+                            (parm0>=32 && parm0<=126 ? parm0 : '?'),
                             parm2,parm3);
 
                     //ajustar x a char width
@@ -18032,7 +18036,8 @@ char *plot_moves[]= {
                     posx /= menu_char_width;
 
                     if (paws_render_disable_text.v==0 && w!=NULL) {
-                        zxvision_print_char_simple(w,posx,parm3+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,parm1);
+                        zxvision_print_char_simple(w,posx,parm3+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,
+                            paws_render_paper+paws_render_bright*8,0,parm0);
                     }
 
                 }
