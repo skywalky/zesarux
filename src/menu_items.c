@@ -17718,11 +17718,11 @@ char *plot_moves[]= {
         puntero_grafico++;
 
 
-        //Leer los siguientes 3 parámetros, algunos usados en diferentes comandos
-        z80_byte parm1_byte=peek_byte_no_time(puntero_grafico);                       
-        z80_byte parm2_byte=peek_byte_no_time(puntero_grafico+1);                       
-        z80_byte parm3_byte=peek_byte_no_time(puntero_grafico+2);
-        z80_byte parm4_byte=peek_byte_no_time(puntero_grafico+3);
+        //Leer los siguientes 4 parámetros, algunos usados en diferentes comandos
+        z80_byte parm0_byte=peek_byte_no_time(puntero_grafico);                       
+        z80_byte parm1_byte=peek_byte_no_time(puntero_grafico+1);                       
+        z80_byte parm2_byte=peek_byte_no_time(puntero_grafico+2);
+        z80_byte parm3_byte=peek_byte_no_time(puntero_grafico+3);
 
         switch (gflag & 7) {
 
@@ -17731,8 +17731,8 @@ char *plot_moves[]= {
 
                 dibujar=1;
 
-                paws_render_last_x=parm1_byte;
-                paws_render_last_y=parm2_byte;
+                paws_render_last_x=parm0_byte;
+                paws_render_last_y=parm1_byte;
 
                 if ((ovr=='o') && (inv=='i')) {
                     sprintf (buffer_temporal,"ABS MOVE   %4d %4d\n",paws_render_last_x,paws_render_last_y);
@@ -17768,20 +17768,20 @@ char *plot_moves[]= {
                 
                 if (line_comprimido) {
                     //Formato comprimido usando solo 1 byte para desplazamiento x,y
-                    parm1=(parm1_byte>>4)&0xF;
+                    parm1=(parm0_byte>>4)&0xF;
                     parm1 *=signo[0];
 
-                    parm2=(parm1_byte)&0xF;
+                    parm2=(parm0_byte)&0xF;
                     parm2 *=signo[1];
 
                     puntero_grafico +=1;
                 }
 
                 else {
-                    parm1=parm1_byte;
+                    parm1=parm0_byte;
                     parm1 *=signo[0];
 
-                    parm2=parm2_byte;
+                    parm2=parm1_byte;
                     parm2 *=signo[1];
 
                     puntero_grafico +=2;
@@ -17834,9 +17834,9 @@ char *plot_moves[]= {
                     if ((gflag & 0x40) !=0) signo[0] = -1;
                     if ((gflag & 0x80) !=0) signo[1] = -1;
                         
-                    parm1=parm1_byte*signo[0];
-                    parm2=parm2_byte*signo[1];
-                    parm3=parm3_byte;
+                    parm1=parm0_byte*signo[0];
+                    parm2=parm1_byte*signo[1];
+                    parm3=parm2_byte;
 
                     puntero_grafico +=3;
         
@@ -17854,10 +17854,10 @@ char *plot_moves[]= {
                     z80_byte x1,y1,x2,y2;
                     z80_byte ancho,alto;
 
-                    x1=parm3_byte;
-                    y1=parm4_byte;
-                    ancho=parm2_byte;
-                    alto=parm1_byte;
+                    x1=parm2_byte;
+                    y1=parm3_byte;
+                    ancho=parm1_byte;
+                    alto=parm0_byte;
 
                     puntero_grafico +=4;
 
@@ -17926,9 +17926,9 @@ char *plot_moves[]= {
                 if ((gflag & 0x40) !=0 ) signo[0] = -1;
                 if ((gflag & 0x80) !=0 ) signo[1] = -1;
 
-                parm1=peek_byte_no_time(puntero_grafico)*signo[0];
-                parm2=peek_byte_no_time(puntero_grafico+1)*signo[1];
-                parm3=peek_byte_no_time(puntero_grafico+2);
+                parm1=parm0_byte*signo[0];
+                parm2=parm1_byte*signo[1];
+                parm3=parm2_byte;
 
                 puntero_grafico +=3;
 
@@ -17939,12 +17939,12 @@ char *plot_moves[]= {
                 if ((gflag & 0x40) !=0 ) signo[0] = -1;
                 if ((gflag & 0x80) !=0 ) signo[1] = -1;
                 
-                int parm1=peek_byte_no_time(puntero_grafico)*signo[0];
-                int parm2=peek_byte_no_time(puntero_grafico+1)*signo[1];
+                int parm0=parm0_byte*signo[0];
+                int parm1=parm1_byte*signo[1];
 
                 puntero_grafico +=2;
 
-                sprintf (buffer_temporal,"FILL       %4d %4d\n",parm1,parm2);
+                sprintf (buffer_temporal,"FILL       %4d %4d\n",parm0,parm1);
             }
 		    
             
@@ -17956,7 +17956,7 @@ char *plot_moves[]= {
                 mirror_x=(gflag&64 ? -1 : +1);
                 mirror_y=(gflag&128 ? -1 : +1);
 
-                z80_byte nueva_ubicacion=peek_byte_no_time(puntero_grafico);
+                z80_byte nueva_ubicacion=parm0_byte;
 
                 puntero_grafico +=1;
 
@@ -18016,9 +18016,9 @@ char *plot_moves[]= {
             
                 if (quillversion==0) {
                     
-                    parm1=peek_byte_no_time(puntero_grafico);                       
-                    parm2=peek_byte_no_time(puntero_grafico+1);                       
-                    parm3=peek_byte_no_time(puntero_grafico+2);  
+                    parm1=parm0_byte;                       
+                    parm2=parm1_byte;                       
+                    parm3=parm2_byte;  
 
                     puntero_grafico +=3;
 
