@@ -18130,7 +18130,7 @@ void menu_debug_daad_view_graphics_render_overlay(void)
     int max_localizaciones=util_daad_get_total_graphics();
 
     if (menu_debug_daad_view_graphics_render_localizacion>=max_localizaciones) {
-        printf("limit reached\n");
+        //printf("limit reached\n");
         menu_debug_daad_view_graphics_render_localizacion=0;
     }
 
