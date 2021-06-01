@@ -17669,7 +17669,9 @@ char *plot_moves[]= {
 
     int salir=0;
 
-    z80_int neg[2];
+    //z80_int neg[2];
+
+    int signo[2];
 
     z80_int maintop;
     z80_int mainattr;
@@ -17682,10 +17684,13 @@ char *plot_moves[]= {
     while (!salir) {
         int line_comprimido=0;
         gflag=peek_byte_no_time(graphics);
-        z80_byte nargs;
+        //z80_byte nargs;
 
         z80_byte value;
         char inv, ovr;
+
+        int mirror_x,mirror_y;
+                
 
         int estexto=0;
 
@@ -17697,13 +17702,15 @@ char *plot_moves[]= {
         //-x------ Bit 6 (0x40): signo parametro 1    -|
         //x------- Bit 7 (0x80): signo parametro 2 / flags   
 
-        neg[0]=neg[1]=0;
+        //neg[0]=neg[1]=0;
+        signo[0]=signo[1]=+1;
 
         inv = ' '; ovr = ' ';
         if ((gflag & 8) != 0) ovr = 'o';
         if ((gflag & 16) !=0) inv = 'i';
         value = gflag /  8;
-        nargs=0;    
+        
+        //nargs=0;    
 
         int dibujar;    
 
@@ -17712,11 +17719,13 @@ char *plot_moves[]= {
         switch (gflag & 7) {
 	         case 0:
 
-                nargs = 2;
+                //nargs = 2;
                 dibujar=1;
 
                 paws_render_last_x=peek_byte_no_time(graphics);
                 paws_render_last_y=peek_byte_no_time(graphics+1);
+
+                
 
                 if ((ovr=='o') && (inv=='i')) {
                     sprintf (buffer_temporal,"ABS MOVE   %d %d\n",paws_render_last_x,paws_render_last_y);
@@ -17728,14 +17737,16 @@ char *plot_moves[]= {
                 }
 
                 if (dibujar && paws_render_disable_plot.v==0 && w!=NULL) render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8); 
+
+                graphics +=2;
                 
             break;
 
             case 1: 
-                nargs = 2;
+                //nargs = 2;
                 
-                if ((gflag & 0x40) != 0) neg[0] = 1;
-                if ((gflag & 0x80) != 0) neg[1] = 1;
+                if ((gflag & 0x40) != 0) signo[0] = -1;
+                if ((gflag & 0x80) != 0) signo[1] = -1;
 
                 dibujar=1;
 
@@ -17745,7 +17756,7 @@ char *plot_moves[]= {
                     //Ver si tiene compresion
                     if (gflag & 0x20) {
                         line_comprimido=1;
-                        nargs=1;
+                        //nargs=1;
                     }
                 }                       
              
@@ -17753,18 +17764,22 @@ char *plot_moves[]= {
                 if (line_comprimido) {
                     //printf("comprimido\n");
                     parm1=((peek_byte_no_time(graphics))>>4)&0xF;
-                    if (neg[0]) parm1=-parm1;
+                    parm1 *=signo[0];
 
                     parm2=(peek_byte_no_time(graphics))&0xF;
-                    if (neg[1]) parm2=-parm2;
+                    parm2 *=signo[1];
+
+                    graphics +=1;
                 }
 
                 else {
                     parm1=peek_byte_no_time(graphics);
-                    if (neg[0]) parm1=-parm1;
+                    parm1 *=signo[0];
 
                     parm2=peek_byte_no_time(graphics+1);
-                    if (neg[1]) parm2=-parm2;
+                    parm2 *=signo[1];
+
+                    graphics +=2;
                 }
 
 
@@ -17805,6 +17820,8 @@ char *plot_moves[]= {
                 paws_render_last_y=y2;
 
           
+
+          
 		    break;
 
 
@@ -17813,14 +17830,16 @@ char *plot_moves[]= {
 	         
                 if ((gflag & 0x10)!=0  && (gflag & 0x20)!=0)  {
 		      
-                    if ((gflag & 0x40) !=0) neg[0] = 1;
-                    if ((gflag & 0x80) !=0) neg[1] = 1;
+                    if ((gflag & 0x40) !=0) signo[0] = -1;
+                    if ((gflag & 0x80) !=0) signo[1] = -1;
                         
-                    nargs = 3;
+                    //nargs = 3;
 
-                    int parm1=peek_byte_no_time(graphics);
-                    int parm2=peek_byte_no_time(graphics+1);
+                    int parm1=peek_byte_no_time(graphics)*signo[0];
+                    int parm2=peek_byte_no_time(graphics+1)*signo[1];
                     int parm3=peek_byte_no_time(graphics+2);
+
+                    graphics +=3;
         
                     if (quillversion==0) {
                         sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
@@ -17832,7 +17851,7 @@ char *plot_moves[]= {
 
 
 		        else if ((gflag & 0x10) !=0) {
-                    nargs = 4;
+                    //nargs = 4;
                     
                     
 
@@ -17843,6 +17862,8 @@ char *plot_moves[]= {
                     y1=peek_byte_no_time(graphics+3);
                     ancho=peek_byte_no_time(graphics+1);
                     alto=peek_byte_no_time(graphics);
+
+                    graphics +=4;
 
                     sprintf (buffer_temporal,"BLOCK      %d %d %d %d\n",x1,y1,ancho,alto);
 
@@ -17908,22 +17929,26 @@ char *plot_moves[]= {
 
                 }
             else if ((gflag & 0x20) !=0) {
-                if ((gflag & 0x40) !=0 ) neg[0] = 1;
-                if ((gflag & 0x80) !=0 ) neg[1] = 1;
+                if ((gflag & 0x40) !=0 ) signo[0] = -1;
+                if ((gflag & 0x80) !=0 ) signo[1] = -1;
 
-                nargs = 3;
-                int parm1=peek_byte_no_time(graphics);
-                int parm2=peek_byte_no_time(graphics+1);
+                //nargs = 3;
+                int parm1=peek_byte_no_time(graphics)*signo[0];
+                int parm2=peek_byte_no_time(graphics+1)*signo[1];
                 int parm3=peek_byte_no_time(graphics+2);
+
+                graphics +=3;
 
                 sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
             }
             else {
-                if ((gflag & 0x40) !=0 ) neg[0] = 1;
-                if ((gflag & 0x80) !=0 ) neg[1] = 1;
-                nargs = 2;
-                int parm1=peek_byte_no_time(graphics);
-                int parm2=peek_byte_no_time(graphics+1);
+                if ((gflag & 0x40) !=0 ) signo[0] = -1;
+                if ((gflag & 0x80) !=0 ) signo[1] = -1;
+                //nargs = 2;
+                int parm1=peek_byte_no_time(graphics)*signo[0];
+                int parm2=peek_byte_no_time(graphics+1)*signo[1];
+
+                graphics +=2;
 
                 sprintf (buffer_temporal,"FILL       %d %d\n",parm1,parm2);
             }
@@ -17933,13 +17958,14 @@ char *plot_moves[]= {
 
 
             case 3: 
-                nargs = 1;
+                //nargs = 1;
                                 
-
-                int mirror_x=(gflag&64 ? -1 : +1);
-                int mirror_y=(gflag&128 ? -1 : +1);
+                mirror_x=(gflag&64 ? -1 : +1);
+                mirror_y=(gflag&128 ? -1 : +1);
 
                 z80_byte nueva_ubicacion=peek_byte_no_time(graphics);
+
+                graphics +=1;
 
                 if (!esdaad) mirror_x=mirror_y=+1;
 
@@ -17987,7 +18013,7 @@ char *plot_moves[]= {
             case 4:
             
                 if (quillversion==0) {
-                    nargs = 3;
+                    //nargs = 3;
                     
                     estexto=1;
 
@@ -17996,7 +18022,11 @@ char *plot_moves[]= {
                     parm2=peek_byte_no_time(graphics+1);                       
                     parm3=peek_byte_no_time(graphics+2);  
 
-                    sprintf (buffer_temporal,"TEXT    %c%c %d %d %d %d\n",ovr,inv,value/4,parm1,parm2,parm3);
+                    graphics +=3;
+
+                    sprintf (buffer_temporal,"TEXT    %c%c %d %d(%c) %d %d\n",ovr,inv,value/4,parm1,
+                            (parm1>=32 && parm1<=126 ? parm1 : '?'),
+                            parm2,parm3);
 
                     //ajustar x a char width
                     int posx=parm2+RENDER_PAWS_START_X_DRAW;
@@ -18010,7 +18040,7 @@ char *plot_moves[]= {
                 }
 
                 else {
-                    nargs=0;
+                    //nargs=0;
                     sprintf (buffer_temporal,"RPLOT   %c%c %s\n",ovr,inv,plot_moves[value/4]);
                 }
                             
@@ -18019,7 +18049,7 @@ char *plot_moves[]= {
 
 	        case 5: 
 
-                nargs = 0;
+                //nargs = 0;
                     
                 if ((gflag & 0x80) !=0) {
                     sprintf (buffer_temporal,"BRIGHT      %d\n",value & 15);
@@ -18038,7 +18068,7 @@ char *plot_moves[]= {
             break;
 
             case 6: 
-                nargs = 0;
+                //nargs = 0;
                 
                 if ((gflag & 0x80) !=0)  {
                     sprintf (buffer_temporal,"FLASH       %d\n",value & 15);
@@ -18057,45 +18087,27 @@ char *plot_moves[]= {
             case 7:
                 sprintf (buffer_temporal,"END\n");
                 salir=1;
-                nargs=0;
+                //nargs=0;
             break;
         }
 
         
     
-
+        /*
         if (line_comprimido) {
             graphics++;
         }
         else {
 
-            for (i=0;i<nargs;i++) {
-                z80_byte byte_leido=peek_byte_no_time(graphics);
-                if (estexto && i==0) {
-                    //if (byte_leido>=32 && byte_leido<=126) sprintf(buffer_temporal,"%d('%c') ",byte_leido,byte_leido);
-                    //else sprintf(buffer_temporal,"%3d ",byte_leido);
-                }
+            graphics +=nargs;
 
-                else {
-                    //sprintf(buffer_temporal,"%c%-3d ",(neg[i]!=0 ? '-' : ' ' ), byte_leido);
-
-                    //for m := 0 to nargs-1 do
-                    //     Write(FOut, Select(neg[m]<>0, '-',' '), IntToStr2(Peek(Offs+1+m),3,true),' ');
-                    //WriteLn(Fout);
-
-                }
-
-                //util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
-
-                graphics++;
-            }
         }
+        */
 
         if (buffer_texto_comandos!=NULL) {
             util_concat_string(buffer_texto_comandos,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
         }
-        //printf("\n");
-        //util_concat_string(texto,"\n",MAX_TEXTO_GENERIC_MESSAGE);
+
 
     }
 
