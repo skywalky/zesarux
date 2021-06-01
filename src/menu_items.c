@@ -17728,11 +17728,11 @@ char *plot_moves[]= {
                 paws_render_last_y=peek_byte_no_time(puntero_grafico+1);
 
                 if ((ovr=='o') && (inv=='i')) {
-                    sprintf (buffer_temporal,"ABS MOVE   %d %d\n",paws_render_last_x,paws_render_last_y);
+                    sprintf (buffer_temporal,"ABS MOVE   %4d %4d\n",paws_render_last_x,paws_render_last_y);
                     dibujar=0;
                 }
                 else {
-                    sprintf (buffer_temporal,"PLOT    %c%c %d %d\n",ovr,inv,paws_render_last_x,paws_render_last_y);
+                    sprintf (buffer_temporal,"PLOT  %c%c   %4d %4d\n",ovr,inv,paws_render_last_x,paws_render_last_y);
                 }
 
                 if (dibujar && paws_render_disable_plot.v==0 && w!=NULL) {
@@ -17782,11 +17782,11 @@ char *plot_moves[]= {
 
 
                 if (ovr=='o' && inv=='i') {
-                        sprintf (buffer_temporal,"REL MOVE     %d %d\n",parm1,parm2);
+                        sprintf (buffer_temporal,"REL MOVE   %4d %4d\n",parm1,parm2);
                         dibujar=0; //solo mover
                 }
                 else {
-                        sprintf (buffer_temporal,"LINE    %c%c %d %d\n",ovr,inv,parm1,parm2);
+                        sprintf (buffer_temporal,"LINE  %c%c   %4d %4d\n",ovr,inv,parm1,parm2);
                 }
 
 
@@ -17834,10 +17834,10 @@ char *plot_moves[]= {
                     puntero_grafico +=3;
         
                     if (quillversion==0) {
-                        sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
+                        sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm1,parm2,parm3);
                     }
                     else {
-                        sprintf (buffer_temporal,"BSHADE       %d %d %d\n",parm1,parm2,parm3);
+                        sprintf (buffer_temporal,"BSHADE     %4d %4d %4d\n",parm1,parm2,parm3);
                     }
                 }
 
@@ -17854,7 +17854,7 @@ char *plot_moves[]= {
 
                     puntero_grafico +=4;
 
-                    sprintf (buffer_temporal,"BLOCK      %d %d %d %d\n",x1,y1,ancho,alto);
+                    sprintf (buffer_temporal,"BLOCK      %4d %4d %4d %4d\n",x1,y1,ancho,alto);
 
                     //Tener en cuenta char width
                     int temp_x=((x1+RENDER_PAWS_START_X_DRAW)*8)/menu_char_width;
@@ -17925,7 +17925,7 @@ char *plot_moves[]= {
 
                 puntero_grafico +=3;
 
-                sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
+                sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm1,parm2,parm3);
             }
 
             else {
@@ -17937,7 +17937,7 @@ char *plot_moves[]= {
 
                 puntero_grafico +=2;
 
-                sprintf (buffer_temporal,"FILL       %d %d\n",parm1,parm2);
+                sprintf (buffer_temporal,"FILL       %4d %4d\n",parm1,parm2);
             }
 		    
             
@@ -17956,7 +17956,7 @@ char *plot_moves[]= {
                 if (!esdaad) mirror_x=mirror_y=+1;
 
                 //Chichen itza, localizacion 4 utiliza esto
-                sprintf (buffer_temporal,"GOSUB    sc=%d %s %s %d\n",value & 7,
+                sprintf (buffer_temporal,"GOSUB sc=%d %s %s %4d\n",value & 7,
                         (mirror_x==-1 ? "MX" : "  "),
                         (mirror_y==-1 ? "MY" : "  "),
                         nueva_ubicacion
@@ -18005,7 +18005,7 @@ char *plot_moves[]= {
 
                     puntero_grafico +=3;
 
-                    sprintf (buffer_temporal,"TEXT    %c%c %d %d(%c) %d %d\n",ovr,inv,value/4,parm1,
+                    sprintf (buffer_temporal,"TEXT %c%c    %4d %4d(%c) %d %d\n",ovr,inv,value/4,parm1,
                             (parm1>=32 && parm1<=126 ? parm1 : '?'),
                             parm2,parm3);
 
@@ -18021,7 +18021,7 @@ char *plot_moves[]= {
                 }
 
                 else {
-                    sprintf (buffer_temporal,"RPLOT   %c%c %s\n",ovr,inv,plot_moves[value/4]);
+                    sprintf (buffer_temporal,"RPLOT %c%c   %s\n",ovr,inv,plot_moves[value/4]);
                 }
                             
 
@@ -18031,16 +18031,15 @@ char *plot_moves[]= {
 	        case 5: 
             
                 if ((gflag & 0x80) !=0) {
-                    sprintf (buffer_temporal,"BRIGHT      %d\n",value & 15);
+                    sprintf (buffer_temporal,"BRIGHT     %4d\n",value & 15);
 
                     if (paws_render_disable_bright.v==0) paws_render_bright=value&1;
                 }
 
                 else {
-                    sprintf (buffer_temporal,"PAPER      %d\n",value & 15);
+                    sprintf (buffer_temporal,"PAPER      %4d\n",value & 15);
 
-                    if (paws_render_disable_paper.v==0) paws_render_paper=value & 15;
-                    //printf("PAPER %d\n",paws_render_paper);                           
+                    if (paws_render_disable_paper.v==0) paws_render_paper=value & 15;                         
                 }
         
             
@@ -18050,11 +18049,11 @@ char *plot_moves[]= {
             case 6: 
                 
                 if ((gflag & 0x80) !=0)  {
-                    sprintf (buffer_temporal,"FLASH       %d\n",value & 15);
+                    sprintf (buffer_temporal,"FLASH      %4d\n",value & 15);
                 }
 
                 else {
-                    sprintf (buffer_temporal,"INK         %d\n",value & 15);  
+                    sprintf (buffer_temporal,"INK        %4d\n",value & 15);  
                     if (paws_render_disable_ink.v==0) paws_render_ink=value & 15;
                 }
                       
