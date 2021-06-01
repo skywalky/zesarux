@@ -17651,7 +17651,7 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
     //Puntero a ese grafico concreto
 
 
-    z80_int graphics=util_daad_get_graphics_location(location);
+    z80_int puntero_grafico=util_daad_get_graphics_location(location);
 
     //printf("Start graphics location %d: %d\n",location,graphics);
     //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
@@ -17683,7 +17683,7 @@ char *plot_moves[]= {
     
     while (!salir) {
         int line_comprimido=0;
-        gflag=peek_byte_no_time(graphics);
+        gflag=peek_byte_no_time(puntero_grafico);
         //z80_byte nargs;
 
         z80_byte value;
@@ -17714,7 +17714,7 @@ char *plot_moves[]= {
 
         int dibujar;    
 
-        graphics++;
+        puntero_grafico++;
 
         switch (gflag & 7) {
 	         case 0:
@@ -17722,8 +17722,8 @@ char *plot_moves[]= {
                 //nargs = 2;
                 dibujar=1;
 
-                paws_render_last_x=peek_byte_no_time(graphics);
-                paws_render_last_y=peek_byte_no_time(graphics+1);
+                paws_render_last_x=peek_byte_no_time(puntero_grafico);
+                paws_render_last_y=peek_byte_no_time(puntero_grafico+1);
 
                 
 
@@ -17738,7 +17738,7 @@ char *plot_moves[]= {
 
                 if (dibujar && paws_render_disable_plot.v==0 && w!=NULL) render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8); 
 
-                graphics +=2;
+                puntero_grafico +=2;
                 
             break;
 
@@ -17763,23 +17763,23 @@ char *plot_moves[]= {
                 int parm1,parm2;
                 if (line_comprimido) {
                     //printf("comprimido\n");
-                    parm1=((peek_byte_no_time(graphics))>>4)&0xF;
+                    parm1=((peek_byte_no_time(puntero_grafico))>>4)&0xF;
                     parm1 *=signo[0];
 
-                    parm2=(peek_byte_no_time(graphics))&0xF;
+                    parm2=(peek_byte_no_time(puntero_grafico))&0xF;
                     parm2 *=signo[1];
 
-                    graphics +=1;
+                    puntero_grafico +=1;
                 }
 
                 else {
-                    parm1=peek_byte_no_time(graphics);
+                    parm1=peek_byte_no_time(puntero_grafico);
                     parm1 *=signo[0];
 
-                    parm2=peek_byte_no_time(graphics+1);
+                    parm2=peek_byte_no_time(puntero_grafico+1);
                     parm2 *=signo[1];
 
-                    graphics +=2;
+                    puntero_grafico +=2;
                 }
 
 
@@ -17835,11 +17835,11 @@ char *plot_moves[]= {
                         
                     //nargs = 3;
 
-                    int parm1=peek_byte_no_time(graphics)*signo[0];
-                    int parm2=peek_byte_no_time(graphics+1)*signo[1];
-                    int parm3=peek_byte_no_time(graphics+2);
+                    int parm1=peek_byte_no_time(puntero_grafico)*signo[0];
+                    int parm2=peek_byte_no_time(puntero_grafico+1)*signo[1];
+                    int parm3=peek_byte_no_time(puntero_grafico+2);
 
-                    graphics +=3;
+                    puntero_grafico +=3;
         
                     if (quillversion==0) {
                         sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
@@ -17858,12 +17858,12 @@ char *plot_moves[]= {
                     z80_byte x1,y1,x2,y2;
                     z80_byte ancho,alto;
 
-                    x1=peek_byte_no_time(graphics+2);
-                    y1=peek_byte_no_time(graphics+3);
-                    ancho=peek_byte_no_time(graphics+1);
-                    alto=peek_byte_no_time(graphics);
+                    x1=peek_byte_no_time(puntero_grafico+2);
+                    y1=peek_byte_no_time(puntero_grafico+3);
+                    ancho=peek_byte_no_time(puntero_grafico+1);
+                    alto=peek_byte_no_time(puntero_grafico);
 
-                    graphics +=4;
+                    puntero_grafico +=4;
 
                     sprintf (buffer_temporal,"BLOCK      %d %d %d %d\n",x1,y1,ancho,alto);
 
@@ -17933,11 +17933,11 @@ char *plot_moves[]= {
                 if ((gflag & 0x80) !=0 ) signo[1] = -1;
 
                 //nargs = 3;
-                int parm1=peek_byte_no_time(graphics)*signo[0];
-                int parm2=peek_byte_no_time(graphics+1)*signo[1];
-                int parm3=peek_byte_no_time(graphics+2);
+                int parm1=peek_byte_no_time(puntero_grafico)*signo[0];
+                int parm2=peek_byte_no_time(puntero_grafico+1)*signo[1];
+                int parm3=peek_byte_no_time(puntero_grafico+2);
 
-                graphics +=3;
+                puntero_grafico +=3;
 
                 sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
             }
@@ -17945,10 +17945,10 @@ char *plot_moves[]= {
                 if ((gflag & 0x40) !=0 ) signo[0] = -1;
                 if ((gflag & 0x80) !=0 ) signo[1] = -1;
                 //nargs = 2;
-                int parm1=peek_byte_no_time(graphics)*signo[0];
-                int parm2=peek_byte_no_time(graphics+1)*signo[1];
+                int parm1=peek_byte_no_time(puntero_grafico)*signo[0];
+                int parm2=peek_byte_no_time(puntero_grafico+1)*signo[1];
 
-                graphics +=2;
+                puntero_grafico +=2;
 
                 sprintf (buffer_temporal,"FILL       %d %d\n",parm1,parm2);
             }
@@ -17963,9 +17963,9 @@ char *plot_moves[]= {
                 mirror_x=(gflag&64 ? -1 : +1);
                 mirror_y=(gflag&128 ? -1 : +1);
 
-                z80_byte nueva_ubicacion=peek_byte_no_time(graphics);
+                z80_byte nueva_ubicacion=peek_byte_no_time(puntero_grafico);
 
-                graphics +=1;
+                puntero_grafico +=1;
 
                 if (!esdaad) mirror_x=mirror_y=+1;
 
@@ -18018,11 +18018,11 @@ char *plot_moves[]= {
                     estexto=1;
 
                     z80_byte parm1,parm2,parm3;
-                    parm1=peek_byte_no_time(graphics);                       
-                    parm2=peek_byte_no_time(graphics+1);                       
-                    parm3=peek_byte_no_time(graphics+2);  
+                    parm1=peek_byte_no_time(puntero_grafico);                       
+                    parm2=peek_byte_no_time(puntero_grafico+1);                       
+                    parm3=peek_byte_no_time(puntero_grafico+2);  
 
-                    graphics +=3;
+                    puntero_grafico +=3;
 
                     sprintf (buffer_temporal,"TEXT    %c%c %d %d(%c) %d %d\n",ovr,inv,value/4,parm1,
                             (parm1>=32 && parm1<=126 ? parm1 : '?'),
@@ -18095,11 +18095,11 @@ char *plot_moves[]= {
     
         /*
         if (line_comprimido) {
-            graphics++;
+            puntero_grafico++;
         }
         else {
 
-            graphics +=nargs;
+            puntero_grafico +=nargs;
 
         }
         */
@@ -18311,7 +18311,9 @@ void menu_debug_daad_view_graphics(void)
         char buffer_linea[100];
 
         int tinta,papel,is_picture;
-        z80_int table_attr=util_daad_get_graphics_attr(menu_debug_daad_view_graphics_render_localizacion,&tinta,&papel,&is_picture); 
+
+        util_daad_get_graphics_attr(menu_debug_daad_view_graphics_render_localizacion,&tinta,&papel,&is_picture); 
+
         sprintf(buffer_linea,"Location: %d/%d %s Ink %d Paper %d",menu_debug_daad_view_graphics_render_localizacion,
         util_daad_get_total_graphics(),
             (is_picture ? "Picture   " : "Subroutine"),tinta,papel);
