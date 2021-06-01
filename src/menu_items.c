@@ -17532,94 +17532,6 @@ void render_paws_putpixel(zxvision_window *w,int x,int y,int color)
     zxvision_putpixel(w,x_final,y_final,color);
 }
 
-//typedef funcion_putpixel
-
-void menu_line(zxvision_window *w,int x1,int y1,int x2,int y2,int c, void (*fun_putpixel) (zxvision_window *w,int x,int y,int color) )
-{
- int x,y,dx,dy,dx1,dy1,px,py,xe,ye,i;
- dx=x2-x1;
- dy=y2-y1;
- dx1=util_abs(dx);
- dy1=util_abs(dy);
- px=2*dy1-dx1;
- py=2*dx1-dy1;
- if(dy1<=dx1)
- {
-  if(dx>=0)
-  {
-   x=x1;
-   y=y1;
-   xe=x2;
-  }
-  else
-  {
-   x=x2;
-   y=y2;
-   xe=x1;
-  }
-  fun_putpixel(w,x,y,c);
-  for(i=0;x<xe;i++)
-  {
-   x=x+1;
-   if(px<0)
-   {
-    px=px+2*dy1;
-   }
-   else
-   {
-    if((dx<0 && dy<0) || (dx>0 && dy>0))
-    {
-     y=y+1;
-    }
-    else
-    {
-     y=y-1;
-    }
-    px=px+2*(dy1-dx1);
-   }
-   //delay(0);
-   fun_putpixel(w,x,y,c);
-  }
- }
- else
- {
-  if(dy>=0)
-  {
-   x=x1;
-   y=y1;
-   ye=y2;
-  }
-  else
-  {
-   x=x2;
-   y=y2;
-   ye=y1;
-  }
-  fun_putpixel(w,x,y,c);
-  for(i=0;y<ye;i++)
-  {
-   y=y+1;
-   if(py<=0)
-   {
-    py=py+2*dx1;
-   }
-   else
-   {
-    if((dx<0 && dy<0) || (dx>0 && dy>0))
-    {
-     x=x+1;
-    }
-    else
-    {
-     x=x-1;
-    }
-    py=py+2*(dx1-dy1);
-   }
-   //delay(0);
-   fun_putpixel(w,x,y,c);
-  }
- }
-}
 
 
 
@@ -17662,30 +17574,11 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 {
 
     
-
-
     int i;
 
 
-    //Por compatibilidad temporal
-        //char texto[MAX_TEXTO_GENERIC_MESSAGE];
-        //texto[0]=0;
 
-
-
-
-
-    //menu_line(w,40,0, 0,100,2);
-
-    //menu_line(w,0,8,1,247,2);
-
-
-//0 8 hasta 1 247
-
-
-
-
-   z80_int table_dir=util_daad_get_start_graphics();
+    z80_int table_dir=util_daad_get_start_graphics();
 
     if (table_dir==0) {
         //menu_error_message("Graphics not found");
@@ -17714,24 +17607,6 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
         return;
     }        
 
-    //Write(FOut,'Location ',n:3, ' graphics flags: ');
-    /*
-    if (esdaad) {
-        gflag = peek_byte_no_time(table_attr+location*5);    
-    }
-    else {    
-        gflag = peek_byte_no_time(table_attr+location);
-    }
-
-
-    //int is_picture=gflag & 0x80;
-            
-    sprintf(buffer_temporal,"Location %-3d graphics flags: %s Ink=%d Paper=%d Bit6=%d\n",location,
-        (is_picture ? "Picture.    " : "Subroutine. "),
-        gflag & 7, (gflag >> 3) & 7, (gflag>>6) & 1 
-    );
-    */
-
 
    //Nota: El bit 6 del byte de attr no sé para que sirve y por tanto no lo muestro
 
@@ -17740,8 +17615,9 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
         tinta_attr, paper_attr 
     );
 
-    if (buffer_texto_comandos!=NULL)
-    util_concat_string(buffer_texto_comandos,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+    if (buffer_texto_comandos!=NULL) {
+        util_concat_string(buffer_texto_comandos,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+    }
 
 
 
@@ -17772,22 +17648,13 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 
 
 
+    //Puntero a ese grafico concreto
 
-   
 
-    //util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+    z80_int graphics=util_daad_get_graphics_location(location);
 
-        
-
-        //printf("OffGraph: %d\n",table_dir);
-
-        //Puntero a ese grafico concreto
-        //z80_int graphics=peek_word_no_time(table_dir+location*2);
-
-        z80_int graphics=util_daad_get_graphics_location(location);
-
-        //printf("Start graphics location %d: %d\n",location,graphics);
-        //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
+    //printf("Start graphics location %d: %d\n",location,graphics);
+    //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
 
 char *plot_moves[]= {
 " 001  000",
@@ -17802,7 +17669,7 @@ char *plot_moves[]= {
 
     int salir=0;
 
-    z80_int neg[8];
+    z80_int neg[2];
 
     z80_int maintop;
     z80_int mainattr;
@@ -17811,11 +17678,7 @@ char *plot_moves[]= {
 
     util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);    
 
-    //printf("quill version: %d\n",quillversion);
-
-
     
-
     while (!salir) {
         int line_comprimido=0;
         gflag=peek_byte_no_time(graphics);
@@ -17834,8 +17697,7 @@ char *plot_moves[]= {
         //-x------ Bit 6 (0x40): signo parametro 1    -|
         //x------- Bit 7 (0x80): signo parametro 2 / flags   
 
-        int i;
-        for (i=0;i<8;i++) neg[i]=0;
+        neg[0]=neg[1]=0;
 
         inv = ' '; ovr = ' ';
         if ((gflag & 8) != 0) ovr = 'o';
@@ -17858,7 +17720,6 @@ char *plot_moves[]= {
 
                 if ((ovr=='o') && (inv=='i')) {
                     sprintf (buffer_temporal,"ABS MOVE   %d %d\n",paws_render_last_x,paws_render_last_y);
-                    
                     dibujar=0;
                 }
                 else {
@@ -17866,12 +17727,11 @@ char *plot_moves[]= {
 
                 }
 
-                //printf("PLOT/ABS MOVE %d %d\n",paws_render_last_x,paws_render_last_y);
                 if (dibujar && paws_render_disable_plot.v==0 && w!=NULL) render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8); 
                 
             break;
 
-	         case 1: 
+            case 1: 
                 nargs = 2;
                 
                 if ((gflag & 0x40) != 0) neg[0] = 1;
@@ -17881,339 +17741,319 @@ char *plot_moves[]= {
 
 
 
-                       if (esdaad) {
-                           //Ver si tiene compresion
-                           if (gflag & 0x20) {
-                               line_comprimido=1;
-                               nargs=1;
-                           }
-                       }                       
+                if (esdaad) {
+                    //Ver si tiene compresion
+                    if (gflag & 0x20) {
+                        line_comprimido=1;
+                        nargs=1;
+                    }
+                }                       
              
-                       int parm1,parm2;
-                       if (line_comprimido) {
-                            //printf("comprimido\n");
-                            parm1=((peek_byte_no_time(graphics))>>4)&0xF;
-                            if (neg[0]) parm1=-parm1;
+                int parm1,parm2;
+                if (line_comprimido) {
+                    //printf("comprimido\n");
+                    parm1=((peek_byte_no_time(graphics))>>4)&0xF;
+                    if (neg[0]) parm1=-parm1;
 
-                            parm2=(peek_byte_no_time(graphics))&0xF;
-                            if (neg[1]) parm2=-parm2;
-                        }
+                    parm2=(peek_byte_no_time(graphics))&0xF;
+                    if (neg[1]) parm2=-parm2;
+                }
 
-                        else {
-                            parm1=peek_byte_no_time(graphics);
-                            if (neg[0]) parm1=-parm1;
+                else {
+                    parm1=peek_byte_no_time(graphics);
+                    if (neg[0]) parm1=-parm1;
 
-                            parm2=peek_byte_no_time(graphics+1);
-                            if (neg[1]) parm2=-parm2;
-                       }
-
-
-                        if (ovr=='o' && inv=='i') {
-                                sprintf (buffer_temporal,"REL MOVE     %d %d\n",parm1,parm2);
-                                //printf("REL MOVE\n");
-                                dibujar=0; //solo mover
-                        }
-                        else {
-                                sprintf (buffer_temporal,"LINE    %c%c %d %d\n",ovr,inv,parm1,parm2);
-                                //printf("LINE\n");
-                        }
+                    parm2=peek_byte_no_time(graphics+1);
+                    if (neg[1]) parm2=-parm2;
+                }
 
 
-                       //printf("LINE / REL MOVE %d %d\n",parm1,parm2);
+                if (ovr=='o' && inv=='i') {
+                        sprintf (buffer_temporal,"REL MOVE     %d %d\n",parm1,parm2);
+                        dibujar=0; //solo mover
+                }
+                else {
+                        sprintf (buffer_temporal,"LINE    %c%c %d %d\n",ovr,inv,parm1,parm2);
+                }
 
-                       int x1=paws_render_last_x;
-                       int y1=paws_render_last_y;
 
-                       parm1 *=paws_render_mirror_x;
-                       parm2 *=paws_render_mirror_y;
 
-                     //-firfurcio localizacion 11 usa varios gosub con scale
-                        //aplicar escala en curso
-                        int multpli=paws_render_escala;
-                        if (multpli==0) multpli=8;
+                int x1=paws_render_last_x;
+                int y1=paws_render_last_y;
 
-                           parm1=(parm1*multpli)/8;
-                           parm2=(parm2*multpli)/8;
+                parm1 *=paws_render_mirror_x;
+                parm2 *=paws_render_mirror_y;
+
+                //-firfurcio localizacion 11 usa varios gosub con scale
+                //aplicar escala en curso
+                int multpli=paws_render_escala;
+                if (multpli==0) multpli=8;
+
+                parm1=(parm1*multpli)/8;
+                parm2=(parm2*multpli)/8;
                        
-                        //Punto final
-                       int x2=x1+parm1;
-                       int y2=y1+parm2;
+                //Punto final
+                int x2=x1+parm1;
+                int y2=y1+parm2;
 
-                       if (dibujar && paws_render_disable_line.v==0) {
-                           //printf("linea desde %d %d hasta %d %d\n",x1,y1,x2,y2);
-                           if (w!=NULL) menu_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
-                       }
+                if (dibujar && paws_render_disable_line.v==0) {
+                    //printf("linea desde %d %d hasta %d %d\n",x1,y1,x2,y2);
+                    if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                }
 
-                       paws_render_last_x=x2;
-                       paws_render_last_y=y2;
+                paws_render_last_x=x2;
+                paws_render_last_y=y2;
 
-
-             
-                       
+          
 		    break;
 
 
-                case 2:
+            case 2:
                 
 	         
-                     if ((gflag & 0x10)!=0  && (gflag & 0x20)!=0)  {
+                if ((gflag & 0x10)!=0  && (gflag & 0x20)!=0)  {
 		      
-                            if ((gflag & 0x40) !=0) neg[0] = 1;
-                            if ((gflag & 0x80) !=0) neg[1] = 1;
+                    if ((gflag & 0x40) !=0) neg[0] = 1;
+                    if ((gflag & 0x80) !=0) neg[1] = 1;
                         
-			                nargs = 3;
+                    nargs = 3;
 
-                            int parm1=peek_byte_no_time(graphics);
-                            int parm2=peek_byte_no_time(graphics+1);
-                            int parm3=peek_byte_no_time(graphics+2);
-                
-                            if (quillversion==0) {
-                             sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
-                            }
-                            else {
-                             sprintf (buffer_temporal,"BSHADE       %d %d %d\n",parm1,parm2,parm3);
-                            }
+                    int parm1=peek_byte_no_time(graphics);
+                    int parm2=peek_byte_no_time(graphics+1);
+                    int parm3=peek_byte_no_time(graphics+2);
+        
+                    if (quillversion==0) {
+                        sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
+                    }
+                    else {
+                        sprintf (buffer_temporal,"BSHADE       %d %d %d\n",parm1,parm2,parm3);
+                    }
+                }
+
+
+		        else if ((gflag & 0x10) !=0) {
+                    nargs = 4;
+                    
+                    
+
+                    z80_byte x1,y1,x2,y2;
+                    z80_byte ancho,alto;
+
+                    x1=peek_byte_no_time(graphics+2);
+                    y1=peek_byte_no_time(graphics+3);
+                    ancho=peek_byte_no_time(graphics+1);
+                    alto=peek_byte_no_time(graphics);
+
+                    sprintf (buffer_temporal,"BLOCK      %d %d %d %d\n",x1,y1,ancho,alto);
+
+                    //Tener en cuenta char width
+                    int temp_x=((x1+RENDER_PAWS_START_X_DRAW)*8)/menu_char_width;
+                    x1=temp_x;
+
+                        
+             
+                    //Tener en cuenta char width
+
+                    int temp_ancho=(ancho*8)/menu_char_width;
+                    ancho=temp_ancho;
+
+                    x2=x1+ancho;
+                    
+                    y2=y1+alto;
+
+                    
+
+                    //ordenado
+                    if (x1>x2) {
+                        z80_byte temp_valor=x1;
+                        x1=x2;
+                        x2=temp_valor;
+                    }
+
+                    if (y1>y2) {
+                        z80_byte temp_valor=y1;
+                        y1=y2;
+                        y2=temp_valor;
                     }
 
 
-		     else
-                     if ((gflag & 0x10) !=0)
-                      {
-		                nargs = 4;
-                       
-                        
+                    //Rellenamos trozo con color indicado
+                    int rellena_x,rellena_y;
 
-                        z80_byte x1,y1,x2,y2;
-                        z80_byte ancho,alto;
+                    //TODO: eso realmente tiene que cambiar los atributos de una sección
+                    //estoy cambiando el texto cuando hay caracter pero no cambia en este caso el color de una posible linea
+                    //esto es casi imposible de hacer tal y como dibujo lineas
+                    //probar grafico 20 en firfurcio
+                    //o grafico 4 de juanito
 
-                        x1=peek_byte_no_time(graphics+2);
-                        y1=peek_byte_no_time(graphics+3);
-                        ancho=peek_byte_no_time(graphics+1);
-                        alto=peek_byte_no_time(graphics);
-
-                        sprintf (buffer_temporal,"BLOCK      %d %d %d %d\n",x1,y1,ancho,alto);
-
-                        //Tener en cuenta char width
-                        int temp_x=((x1+RENDER_PAWS_START_X_DRAW)*8)/menu_char_width;
-                        x1=temp_x;
-
-                        
-
-                        
-                        
-                        //Tener en cuenta char width
-
-                        int temp_ancho=(ancho*8)/menu_char_width;
-                        ancho=temp_ancho;
-
-                        x2=x1+ancho;
-                        
-                        y2=y1+alto;
-
-                        
-
-                        //printf("-----BLOCK %d %d %d %d\n",x1,y1,x2,y2);
-
-                        //ordenado
-                        if (x1>x2) {
-                            z80_byte temp_valor=x1;
-                            x1=x2;
-                            x2=temp_valor;
-                        }
-
-                        if (y1>y2) {
-                            z80_byte temp_valor=y1;
-                            y1=y2;
-                            y2=temp_valor;
-                        }
+                  
 
 
-                        //Rellenamos trozo con color indicado
-                        int rellena_x,rellena_y;
+                    if (paws_render_disable_block.v==0) {
+                        rellena_y=y1;
+                        for (;rellena_y<=y2;rellena_y++) {
+                            int rellena_x=x1;
+                            for (;rellena_x<=x2;rellena_x++) {
 
-                        //TODO: eso realmente tiene que cambiar los atributos de una sección
-                        //estoy cambiando el texto cuando hay caracter pero no cambia en este caso el color de una posible linea
-                        //esto es casi imposible de hacer tal y como dibujo lineas
-                        //probar grafico 20 en firfurcio
-                        //o grafico 4 de juanito
+                                    if (w!=NULL) {
+                                        zxvision_set_attr(w,rellena_x,rellena_y+RENDER_PAWS_START_Y_DRAW,
+                                            paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0);
+                                    }
+                                    
 
-                                int total_width=w->total_width;
-                            //int total_height=w->total_height;
-
-
-                        if (paws_render_disable_block.v==0) {
-                            rellena_y=y1;
-                            for (;rellena_y<=y2;rellena_y++) {
-                                int rellena_x=x1;
-                                for (;rellena_x<=x2;rellena_x++) {
-
-                                        if (w!=NULL) {
-                                            zxvision_set_attr(w,rellena_x,rellena_y+RENDER_PAWS_START_Y_DRAW,
-                                                paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0);
-                                        }
-                                        
-
-                                
-                                }
+                            
                             }
                         }
+                    }
 
-                      }
-		     else
-                     if ((gflag & 0x20) !=0)
-		      {
-                            if ((gflag & 0x40) !=0 ) neg[0] = 1;
-                            if ((gflag & 0x80) !=0 ) neg[1] = 1;
-			    nargs = 3;
-                            int parm1=peek_byte_no_time(graphics);
-                            int parm2=peek_byte_no_time(graphics+1);
-                            int parm3=peek_byte_no_time(graphics+2);
+                }
+            else if ((gflag & 0x20) !=0) {
+                if ((gflag & 0x40) !=0 ) neg[0] = 1;
+                if ((gflag & 0x80) !=0 ) neg[1] = 1;
 
-                            sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
-		      }
-		     else
-		      {
-                            if ((gflag & 0x40) !=0 ) neg[0] = 1;
-                            if ((gflag & 0x80) !=0 ) neg[1] = 1;
-			    nargs = 2;
-                            int parm1=peek_byte_no_time(graphics);
-                            int parm2=peek_byte_no_time(graphics+1);
+                nargs = 3;
+                int parm1=peek_byte_no_time(graphics);
+                int parm2=peek_byte_no_time(graphics+1);
+                int parm3=peek_byte_no_time(graphics+2);
 
-                            sprintf (buffer_temporal,"FILL       %d %d\n",parm1,parm2);
-		      }
+                sprintf (buffer_temporal,"SHADE   %c%c %d %d %d\n",ovr,inv,parm1,parm2,parm3);
+            }
+            else {
+                if ((gflag & 0x40) !=0 ) neg[0] = 1;
+                if ((gflag & 0x80) !=0 ) neg[1] = 1;
+                nargs = 2;
+                int parm1=peek_byte_no_time(graphics);
+                int parm2=peek_byte_no_time(graphics+1);
+
+                sprintf (buffer_temporal,"FILL       %d %d\n",parm1,parm2);
+            }
 		    
             
             break;
 
 
-	         case 3: 
-                     nargs = 1;
-                                      
+            case 3: 
+                nargs = 1;
+                                
 
-                     int mirror_x=(gflag&64 ? -1 : +1);
-                     int mirror_y=(gflag&128 ? -1 : +1);
+                int mirror_x=(gflag&64 ? -1 : +1);
+                int mirror_y=(gflag&128 ? -1 : +1);
 
-                     z80_byte nueva_ubicacion=peek_byte_no_time(graphics);
+                z80_byte nueva_ubicacion=peek_byte_no_time(graphics);
 
-                    if (!esdaad) mirror_x=mirror_y=+1;
+                if (!esdaad) mirror_x=mirror_y=+1;
 
-                     //Chichen itza, localizacion 4 utiliza esto
-                     sprintf (buffer_temporal,"GOSUB    sc=%d %s %s %d\n",value & 7,
-                        (mirror_x==-1 ? "MX" : "  "),
-                        (mirror_y==-1 ? "MY" : "  "),
-                        nueva_ubicacion
-                     );                        
+                //Chichen itza, localizacion 4 utiliza esto
+                sprintf (buffer_temporal,"GOSUB    sc=%d %s %s %d\n",value & 7,
+                (mirror_x==-1 ? "MX" : "  "),
+                (mirror_y==-1 ? "MY" : "  "),
+                nueva_ubicacion
+                );                        
 
-                    int escala=value&7;
+                int escala=value&7;
                     
  
-                     //Chichen itza, localizacion 4 utiliza mirror_x
-                   
-                        if (paws_render_disable_gosub.v==0) {
+                //Chichen itza, localizacion 4 utiliza mirror_x
+            
+                if (paws_render_disable_gosub.v==0) {
 
-                        //Saltar a subrutina
-                        if (nivel_recursivo>=10) {
-                            //printf("Maximum nested gosub reached\n");
-                        }
-                        else {
-                            
-                            //cambio temporal mirror
+                    //Saltar a subrutina
+                    if (nivel_recursivo>=10) {
+                        //printf("Maximum nested gosub reached\n");
+                    }
+                    else {
+                                
+                        //cambio temporal mirror
 
-                            int antes_paws_render_mirror_x=paws_render_mirror_x;
-                            int antes_paws_render_mirror_y=paws_render_mirror_y;
-                            int antes_paws_render_escala=paws_render_escala;
+                        int antes_paws_render_mirror_x=paws_render_mirror_x;
+                        int antes_paws_render_mirror_y=paws_render_mirror_y;
+                        int antes_paws_render_escala=paws_render_escala;
 
-                            paws_render_mirror_x=mirror_x;
-                            paws_render_mirror_y=mirror_y;
-                            paws_render_escala=escala;
-                            //Al llamar a subrutina pone buffer a texto a null, para que no meta
-                            //lista de comandos de la subrutina
-                            menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1,NULL);
+                        paws_render_mirror_x=mirror_x;
+                        paws_render_mirror_y=mirror_y;
+                        paws_render_escala=escala;
+                        //Al llamar a subrutina pone buffer a texto a null, para que no meta
+                        //lista de comandos de la subrutina
+                        menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1,NULL);
 
-                            paws_render_mirror_x=antes_paws_render_mirror_x;
-                            paws_render_mirror_y=antes_paws_render_mirror_y;
-                            paws_render_escala=antes_paws_render_escala;
-                        }
-                     }
+                        paws_render_mirror_x=antes_paws_render_mirror_x;
+                        paws_render_mirror_y=antes_paws_render_mirror_y;
+                        paws_render_escala=antes_paws_render_escala;
+                    }
+                }
                     
 		    break;
 
             case 4:
             
-                     if (quillversion==0)
-                     {
-                       nargs = 3;
-                       
-                       estexto=1;
+                if (quillversion==0) {
+                    nargs = 3;
+                    
+                    estexto=1;
 
-                       z80_byte parm1,parm2,parm3;
-                       parm1=peek_byte_no_time(graphics);                       
-                       parm2=peek_byte_no_time(graphics+1);                       
-                       parm3=peek_byte_no_time(graphics+2);  
+                    z80_byte parm1,parm2,parm3;
+                    parm1=peek_byte_no_time(graphics);                       
+                    parm2=peek_byte_no_time(graphics+1);                       
+                    parm3=peek_byte_no_time(graphics+2);  
 
-                       sprintf (buffer_temporal,"TEXT    %c%c %d %d %d %d\n",ovr,inv,value/4,parm1,parm2,parm3);
+                    sprintf (buffer_temporal,"TEXT    %c%c %d %d %d %d\n",ovr,inv,value/4,parm1,parm2,parm3);
 
-                       //ajustar x a char width
-                       int posx=parm2+RENDER_PAWS_START_X_DRAW;
-                       posx *=8;
-                       posx /= menu_char_width;
+                    //ajustar x a char width
+                    int posx=parm2+RENDER_PAWS_START_X_DRAW;
+                    posx *=8;
+                    posx /= menu_char_width;
 
-                       if (paws_render_disable_text.v==0 && w!=NULL) {
-                           zxvision_print_char_simple(w,posx,parm3+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,parm1);
-                       }
-                       //printf("TEXTO x %d y %d char %c\n",parm2,parm3,parm1);
-                     }
-                     else
-                     {
-                       nargs=0;
-                       sprintf (buffer_temporal,"RPLOT   %c%c %s\n",ovr,inv,plot_moves[value/4]);
+                    if (paws_render_disable_text.v==0 && w!=NULL) {
+                        zxvision_print_char_simple(w,posx,parm3+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,paws_render_paper+paws_render_bright*8,0,parm1);
+                    }
 
-                       //printf ("RPLOT   %c%c %s\n",ovr,inv,plot_moves[value/4]);
-                     }
-                     
-            
+                }
+
+                else {
+                    nargs=0;
+                    sprintf (buffer_temporal,"RPLOT   %c%c %s\n",ovr,inv,plot_moves[value/4]);
+                }
+                            
 
 		    break;
 
 	        case 5: 
 
-                     nargs = 0;
-                     
-                    if ((gflag & 0x80) !=0) {
-                            sprintf (buffer_temporal,"BRIGHT      %d\n",value & 15);
+                nargs = 0;
+                    
+                if ((gflag & 0x80) !=0) {
+                    sprintf (buffer_temporal,"BRIGHT      %d\n",value & 15);
 
-                            if (paws_render_disable_bright.v==0) paws_render_bright=value&1;
-                    }
+                    if (paws_render_disable_bright.v==0) paws_render_bright=value&1;
+                }
 
-                    else {
-                            sprintf (buffer_temporal,"PAPER      %d\n",value & 15);
+                else {
+                    sprintf (buffer_temporal,"PAPER      %d\n",value & 15);
 
-                            if (paws_render_disable_paper.v==0) paws_render_paper=value & 15;
-                            //printf("PAPER %d\n",paws_render_paper);                           
-                    }
+                    if (paws_render_disable_paper.v==0) paws_render_paper=value & 15;
+                    //printf("PAPER %d\n",paws_render_paper);                           
+                }
         
             
-           break;
+            break;
 
-           case 6: 
-                     nargs = 0;
-                     
-		            if ((gflag & 0x80) !=0)  {
-                      sprintf (buffer_temporal,"FLASH       %d\n",value & 15);
+            case 6: 
+                nargs = 0;
+                
+                if ((gflag & 0x80) !=0)  {
+                    sprintf (buffer_temporal,"FLASH       %d\n",value & 15);
 
-                 
-                    }
+                }
 
-                     else {
-                      sprintf (buffer_temporal,"INK         %d\n",value & 15);
-                      
-                      
-                      if (paws_render_disable_ink.v==0) paws_render_ink=value & 15;
-                      //printf("INK %d\n",paws_render_ink);
-                     }
+                else {
+                    sprintf (buffer_temporal,"INK         %d\n",value & 15);
+                    
+                    if (paws_render_disable_ink.v==0) paws_render_ink=value & 15;
+                }
                       
 		    
             break;
+
             case 7:
                 sprintf (buffer_temporal,"END\n");
                 salir=1;
@@ -18222,8 +18062,7 @@ char *plot_moves[]= {
         }
 
         
-        
-        //util_concat_string(texto,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
+    
 
         if (line_comprimido) {
             graphics++;
