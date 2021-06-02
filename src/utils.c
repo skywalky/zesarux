@@ -18727,9 +18727,6 @@ z80_int util_daad_get_graphics_location(z80_byte location)
 
 z80_int util_daad_get_total_graphics(void)
 {
-    //TODO
-    //de momento
-    //return util_daad_get_num_locat_messages();
 
     //buscar hasta puntero 0
     int i=0;
