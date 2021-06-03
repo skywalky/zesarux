@@ -186,7 +186,6 @@ rplot reducido con 1 byte hacerlo
 *chichen itza localizacion 21 lo usa
 
 -paws Dump toda tabla procesos 
--total graphs es incorrecto. Por ejemplo en Bugsy (quill)
 
 
 -borrar util_daad_get_graphics_list_commands cuando ya no se use
