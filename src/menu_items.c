@@ -17588,16 +17588,13 @@ z80_bit paws_render_disable_ellipse={0};
 void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_byte location,int nivel_recursivo,char *buffer_texto_comandos)
 {
 
-    
-    int i;
+ 
 
     z80_int puntero_grafico;
-    int esdaad;
+
     z80_byte gflag;
     char buffer_temporal[200];    
 
-    //temporal forzado modo gac
-    int esgac=1;
 
     //int contador_habitacion_gac=0;
 
@@ -17704,48 +17701,8 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
 
 
-    int salir=0;
-
-
-
-    z80_int maintop;
-    z80_int mainattr;
-
-    int quillversion;
-
-    util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);    
-
 
     while (longitud_habitacion_gac>0) {
-        int line_comprimido=0;
-
-        /*
-        if (longitud_habitacion_gac==0) {
-            //puntero_grafico--; //retroceder
-            //siguiente grafico
-            if (location==contador_habitacion_gac) {
-                printf("salir\n");
-                sprintf (buffer_temporal,"END\n");
-                salir=1;
-            }
-
-            else {
-                contador_habitacion_gac++;
-                //siguiente grafico
-                printf("location: %d\n",peek_word_no_time(puntero_grafico));
-
-                puntero_grafico +=2;
-
-                int tamanyo_longitud_habitacion_gac=peek_word_no_time(puntero_grafico);
-                puntero_grafico +=2;
-
-                longitud_habitacion_gac=peek_byte_no_time(puntero_grafico);
-                printf("longitud: %d\n",longitud_habitacion_gac);
-                puntero_grafico++;
-            }
-        }
-        */
-        
 
         gflag=peek_byte_no_time(puntero_grafico++);
 
@@ -17753,20 +17710,10 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
         //z80_byte nargs;
 
-        z80_byte value;
-        char inv, ovr;
 
-        int mirror_x,mirror_y;
-
-        //int parm3;
-        int parm0;
-        int parm1;
-        int parm2;
 
         int x1,x2,y1,y2;
                 
-
-        int estexto=0;
 
 
         z80_int id_localizacion;  
@@ -17959,7 +17906,7 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 {
 
     
-    int i;
+    //int i;
 
 
     z80_int table_dir=util_daad_get_start_graphics();
@@ -18081,7 +18028,7 @@ char *plot_moves[]= {
         int parm2;
                 
 
-        int estexto=0;
+        //int estexto=0;
 
         //Formato del byte con el comando:
         //-----xxx 3 bits inferiores: comando
@@ -18293,7 +18240,7 @@ char *plot_moves[]= {
                     if (paws_render_disable_block.v==0) {
                         rellena_y=y1;
                         for (;rellena_y<=y2;rellena_y++) {
-                            int rellena_x=x1;
+                            rellena_x=x1;
                             for (;rellena_x<=x2;rellena_x++) {
 
                                     if (w!=NULL) {
