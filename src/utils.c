@@ -17248,6 +17248,7 @@ int util_unpaws_get_version(void)
 char *util_unpaws_const_parser_paws="Paws";
 char *util_unpaws_const_parser_quill="Quill";
 char *util_unpaws_const_parser_daad="Daad";
+char *util_unpaws_const_parser_gac="Gac";
 
 char *util_unpaws_get_parser_name(void)
 {
@@ -17270,8 +17271,11 @@ int util_undaad_unpaws_is_quill(void)
 
 }
 
-char *util_undaad_unpaws_get_parser_name(void)
+char *util_undaad_unpaws_ungac_get_parser_name(void)
 {
+
+    if (util_gac_detect() ) return util_unpaws_const_parser_gac;
+
         if (util_daad_detect()) return util_unpaws_const_parser_daad;
 	else return util_unpaws_get_parser_name();
 }
@@ -17866,6 +17870,14 @@ int util_gac_detect_version(void)
 
         return version;
 
+}
+
+int util_gac_detect(void)
+{
+    if (util_gac_detect_version()>=0) {
+        return 1;
+    }
+    else return 0;
 }
 
 
@@ -18799,6 +18811,88 @@ int util_daad_has_graphics(void)
     if (table_dir==0 || table_attr==0) return 0;
     else return 1;    
 }
+
+z80_int util_gac_get_start_graphics(void)
+{
+    return peek_word_no_time(0xA52F);
+}
+
+z80_int util_gac_get_graphics_location(int location)
+{
+    z80_int table_dir=util_gac_get_start_graphics();
+    if (table_dir==0) return 0;
+
+    //Info:
+    //word: location
+    //word: longitud contando estos 4 bytes
+    //byte: numero comandos
+    //comandos...
+
+    int i;
+
+    printf("inicio tabla: %d\n",table_dir);
+
+    //hasta que se llegue a direccion o table_dir "de la vuelta" (salte a rom)
+    for (i=0;i<location && table_dir>16383;i++) {
+        z80_int longitud=peek_word_no_time(table_dir+2);
+        printf("tabla: %d longitud: %d\n",table_dir,longitud);
+        table_dir +=longitud;
+    }
+
+    printf("tabla final: %d\n",table_dir);
+
+    if (table_dir<16384) return 0;
+
+    //retornamos al byte de numero comandos
+    else return table_dir+4;
+
+}
+
+z80_int util_gac_get_total_graphics(void)
+{
+    z80_int table_dir=util_gac_get_start_graphics();
+    if (table_dir==0) return 0;
+
+    //Info:
+    //word: id location
+    //word: longitud contando estos 4 bytes
+    //byte: numero comandos
+    //comandos...
+
+    int i;
+
+    printf("inicio tabla: %d\n",table_dir);
+
+    //hasta que id_location sea 0 o contador "de la vuelta"
+    for (i=0;peek_word_no_time(table_dir)!=0 && table_dir>16383;i++) {
+        z80_int longitud=peek_word_no_time(table_dir+2);
+        printf("tabla: %d longitud: %d\n",table_dir,longitud);
+        table_dir +=longitud;
+    }
+
+    printf("tabla final: %d\n",table_dir);
+
+    return i;
+
+}
+
+//comun para gac y daad/paws/quill
+z80_int util_gac_daad_get_total_graphics(void)
+{
+
+    int max_localizaciones;
+
+    if (util_gac_detect() ) {
+        max_localizaciones=util_gac_get_total_graphics();
+    }  
+    else {
+        max_localizaciones=util_daad_get_total_graphics();
+    }    
+
+    return max_localizaciones;
+}
+
+
 
 //Comun para daad y paws
 z80_int util_daad_get_start_user_messages(void)

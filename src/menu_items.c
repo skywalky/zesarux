@@ -15905,7 +15905,7 @@ void menu_debug_registers_set_title(zxvision_window *w)
 
 	//En vista daad, meter otro titulo
 	if (menu_debug_registers_current_view==8) {
-		sprintf(w->window_title,"%s Debug",util_undaad_unpaws_get_parser_name() );
+		sprintf(w->window_title,"%s Debug",util_undaad_unpaws_ungac_get_parser_name() );
 		return;
 	}
 
@@ -17010,14 +17010,25 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 			char buffer_intermedio_short[128];
 			char buffer_intermedio_long[128];
 
+            //Tecla graficos para GAC
+            char buffer_temp_gac_short[32];
+            char buffer_temp_gac_long[32];
+            buffer_temp_gac_short[0]=0;
+            buffer_temp_gac_long[0]=0;
+
+            if (util_gac_detect() ) {
+                strcpy(buffer_temp_gac_short,"~~Gph ");
+                strcpy(buffer_temp_gac_long,"~~Graphics ");
+            }
+
 			if (cpu_step_mode.v) {
 
 							//01234567890123456789012345678901
 							// ClrTstPart Write VScr MemZn 99	
-				sprintf (buffer_intermedio_short,"ClrTst~~Part Wr~~ite ~~VScr Mem~~Zm %d",menu_debug_memory_zone);
+				sprintf (buffer_intermedio_short,"ClrTst~~Part Wr~~ite ~~VScr %sMem~~Zn %d",buffer_temp_gac_short,menu_debug_memory_zone);
 							//012345678901234567890123456789012345678901234567890123456789012
 							// ClearTstatesPartial Write ViewScreen MemoryZone 99	
-				sprintf (buffer_intermedio_long,"ClearTstates~~Partial Wr~~ite ~~ViewScreen Memory~~Zone %d",menu_debug_memory_zone);
+				sprintf (buffer_intermedio_long,"ClearTstates~~Partial Wr~~ite ~~ViewScreen %sMemory~~Zone %d",buffer_temp_gac_long,menu_debug_memory_zone);
 
 
 				menu_debug_get_legend_short_long(s,ancho_visible,buffer_intermedio_short,buffer_intermedio_long);
@@ -17025,11 +17036,11 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 			else {
 							//01234567890123456789012345678901
 							// Clrtstpart Write MemZone 99
-				sprintf (buffer_intermedio_short,"ClrTst~~Part Wr~~ite Mem~~Zone %d",menu_debug_memory_zone);
+				sprintf (buffer_intermedio_short,"ClrTst~~Part Wr~~ite %sMem~~Zone %d",buffer_temp_gac_short,menu_debug_memory_zone);
 
 							//012345678901234567890123456789012345678901234567890123456789012
 							// ClearTstatesPartial Write MemoryZone 99	
-				sprintf (buffer_intermedio_long,"ClearTstates~~Partial Wr~~ite Memory~~Zone %d",menu_debug_memory_zone);
+				sprintf (buffer_intermedio_long,"ClearTstates~~Partial Wr~~ite %sMemory~~Zone %d",buffer_temp_gac_long,menu_debug_memory_zone);
 
 				menu_debug_get_legend_short_long(s,ancho_visible,buffer_intermedio_short,buffer_intermedio_long);
 
@@ -17345,7 +17356,7 @@ void menu_debug_daad_view_messages(MENU_ITEM_PARAMETERS)
 
 	char titulo_parser[20];
 
-	strcpy(titulo_parser,util_undaad_unpaws_get_parser_name() );
+	strcpy(titulo_parser,util_undaad_unpaws_ungac_get_parser_name() );
 	//char *entry_message;
 
 	switch (valor_opcion) {
@@ -17585,12 +17596,12 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
     //temporal forzado modo gac
     int esgac=1;
 
-    int contador_habitacion_gac=0;
+    //int contador_habitacion_gac=0;
 
     int longitud_habitacion_gac;
 
 
-    if (esgac) {
+
 
 
         //temporal
@@ -17602,16 +17613,13 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
         puntero_grafico=peek_word_no_time(0xA52F);
 
-            paws_render_ink=0;
-            paws_render_paper=7;
-            paws_render_bright=0;   
-
         //Info:
         //word: location
         //word: longitud contando estos 4 bytes
         //byte: numero comandos
         //comandos...
 
+        /*
         sprintf(buffer_temporal,"Location %d\n",peek_word_no_time(puntero_grafico));
         printf("location: %d\n",peek_word_no_time(puntero_grafico));
 
@@ -17627,38 +17635,25 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
         if (buffer_texto_comandos!=NULL) {
             printf("Agregando texto inicial\n");
             util_concat_string(buffer_texto_comandos,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
-        }        
-    }
-    else {
+        } 
+        */       
 
-    z80_int table_dir=util_daad_get_start_graphics();
+        puntero_grafico=util_gac_get_graphics_location(location);
 
-    if (table_dir==0) {
-        //menu_error_message("Graphics not found");
-        printf("Graphics not found\n");
-        //zxvision_draw_window_contents(w);
-        return;
-    }
-
+        longitud_habitacion_gac=peek_byte_no_time(puntero_grafico++);
+        printf("longitud habitacion: %d\n",longitud_habitacion_gac);
     
-
-    
-
-    esdaad=util_daad_detect();    
 
 
     //z80_int table_attr=util_daad_get_start_graphics_attr();
 
     int tinta_attr,paper_attr;
     int is_picture;
-    z80_int table_attr=util_daad_get_graphics_attr(location,&tinta_attr,&paper_attr,&is_picture);    
 
-    if (table_attr==0) {
-        //menu_error_message("Graphics attributes not found");
-        printf("Graphics attributes not found\n");
-        //zxvision_draw_window_contents(w);
-        return;
-    }        
+    //temp
+    is_picture=1;
+    tinta_attr=0;
+    paper_attr=7;
 
 
    //Nota: El bit 6 del byte de attr no sé para que sirve y por tanto no lo muestro
@@ -17687,6 +17682,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
   
         //Rellenamos ventana con color indicado
         //tener en cuenta char width
+        /*
         int ancho_rellenar=256/menu_char_width;
         
         int rellena_x,rellena_y;
@@ -17696,40 +17692,15 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
                             paws_render_paper+paws_render_bright*8,0,' ');
             }
         }
+        */
     }
 
 
 
 
-    //Puntero a ese grafico concreto
-
-
-    puntero_grafico=util_daad_get_graphics_location(location);
-
-
-    } //fin temporal GAC
-
-
-
-    //printf("Start graphics location %d: %d\n",location,graphics);
-    //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
-
-char *plot_moves[]= {
-" 001  000",
-" 001  001",
-" 000  001",
-"-001  001",
-"-001  000",
-"-001 -001",
-" 000 -001",
-" 001 -001" 
-}; 
-
     int salir=0;
 
-    //z80_int neg[2];
 
-    int signo[2];
 
     z80_int maintop;
     z80_int mainattr;
@@ -17739,10 +17710,10 @@ char *plot_moves[]= {
     util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);    
 
 
-    while (!salir) {
+    while (longitud_habitacion_gac>0) {
         int line_comprimido=0;
 
-      
+        /*
         if (longitud_habitacion_gac==0) {
             //puntero_grafico--; //retroceder
             //siguiente grafico
@@ -17767,9 +17738,13 @@ char *plot_moves[]= {
                 puntero_grafico++;
             }
         }
+        */
         
 
-        gflag=peek_byte_no_time(puntero_grafico);
+        gflag=peek_byte_no_time(puntero_grafico++);
+
+        longitud_habitacion_gac--;
+
         //z80_byte nargs;
 
         z80_byte value;
@@ -17785,29 +17760,9 @@ char *plot_moves[]= {
 
         int estexto=0;
 
-        //Formato del byte con el comando:
-        //-----xxx 3 bits inferiores: comando
-        //----x--- Bit 3 (0x08) : over / flags        -|
-        //---x---- Bit 4 (0x10) : inverse / flags      |
-        //--x----- Bit 5 (0x20): flags                 |  Parametro 0 ("value")
-        //-x------ Bit 6 (0x40): signo parametro 1    -|
-        //x------- Bit 7 (0x80): signo parametro 2 / flags   
 
-        //neg[0]=neg[1]=0;
-        signo[0]=signo[1]=+1;
-
-        inv = ' '; ovr = ' ';
-        if ((gflag & 8) != 0) ovr = 'o';
-        if ((gflag & 16) !=0) inv = 'i';
-        value = gflag /  8;
-        
-        //nargs=0;    
 
         int dibujar;    
-
-        puntero_grafico++;
-
-        longitud_habitacion_gac--;
 
 
         //Leer los siguientes 4 parámetros, algunos usados en diferentes comandos
@@ -17832,8 +17787,6 @@ char *plot_moves[]= {
 
                     dibujar=1;
 
-                    if (contador_habitacion_gac==location) dibujar=1;
-                    else dibujar=0;
 
                     paws_render_last_x=parm0_byte;
                     paws_render_last_y=parm1_byte;    
@@ -17862,7 +17815,7 @@ char *plot_moves[]= {
                 puntero_grafico += 2;
                 break;
         case 0x07:
-                printf( "CALL\t%d\n", parm1_byte * 256 + parm0_byte);
+                sprintf(buffer_temporal,"CALL %d\n", parm1_byte * 256 + parm0_byte);
                 puntero_grafico += 2;
                 break;
         case 0x08:
@@ -17877,8 +17830,7 @@ char *plot_moves[]= {
                         parm2_byte, parm3_byte);
                 puntero_grafico += 4;
 
-                    if (contador_habitacion_gac==location) dibujar=1;
-                    else dibujar=0;
+                    dibujar=1;
 
                     int x1=parm0_byte;
                     int y1=parm1_byte;
@@ -18488,9 +18440,9 @@ void menu_debug_daad_view_graphics_render_overlay(void)
     paws_render_escala=0;
 
 
-
     //Si intenta renderizar mas alla de las pantallas definidas
-    int max_localizaciones=util_daad_get_total_graphics();
+    int max_localizaciones=util_gac_daad_get_total_graphics();
+
 
     if (menu_debug_daad_view_graphics_render_localizacion>=max_localizaciones) {
         //printf("limit reached\n");
@@ -18500,10 +18452,8 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 
     z80_byte location=menu_debug_daad_view_graphics_render_localizacion;
 
-    //TODO: deteccion gac, maximo localizaciones gac
-    int esgac=0;
 
-    if (esgac) {
+    if (util_gac_detect() ) {
         menu_debug_daad_view_graphics_render_recursive_gac(w,location,0,NULL);
     }
 
@@ -18514,7 +18464,7 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 
 void menu_debug_daad_view_graphics_render_next(MENU_ITEM_PARAMETERS)
 {
-    int max_localizaciones=util_daad_get_total_graphics();
+    int max_localizaciones=util_gac_daad_get_total_graphics();
 
     if (menu_debug_daad_view_graphics_render_localizacion<max_localizaciones-1) {
         menu_debug_daad_view_graphics_render_localizacion++;
@@ -18531,7 +18481,12 @@ void menu_debug_daad_view_graphics_render_list_commands(MENU_ITEM_PARAMETERS)
     char texto[MAX_TEXTO_GENERIC_MESSAGE];
 	texto[0]=0;
 
-    menu_debug_daad_view_graphics_render_recursive(NULL,menu_debug_daad_view_graphics_render_localizacion,0,texto);
+
+    if (util_gac_detect() ) {
+        menu_debug_daad_view_graphics_render_recursive_gac(NULL,menu_debug_daad_view_graphics_render_localizacion,0,texto);
+    }
+    else menu_debug_daad_view_graphics_render_recursive(NULL,menu_debug_daad_view_graphics_render_localizacion,0,texto);
+
     //util_daad_get_graphics_list_commands(menu_debug_daad_view_graphics_render_localizacion,texto); 
     menu_generic_message("Graphics commands",texto);
 }
@@ -18540,7 +18495,7 @@ void menu_debug_daad_view_graphics_render_list_commands(MENU_ITEM_PARAMETERS)
 void menu_debug_daad_view_graphics_render_set(MENU_ITEM_PARAMETERS)
 {
 
-        int max_localizaciones=util_daad_get_total_graphics();
+        int max_localizaciones=util_gac_daad_get_total_graphics();
 
 
     menu_ventana_scanf_numero_enhanced("Graph number",&menu_debug_daad_view_graphics_render_localizacion,4,+1,0,max_localizaciones-1,0);
@@ -18632,7 +18587,7 @@ void menu_debug_daad_view_graphics(void)
     int yventana=menu_center_y()-alto_ventana/2;
 
     char titulo_ventana[100];
-    sprintf(titulo_ventana,"%s Graphics Render",util_undaad_unpaws_get_parser_name() );
+    sprintf(titulo_ventana,"%s Graphics Render",util_undaad_unpaws_ungac_get_parser_name() );
 
     zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,titulo_ventana);   
 
@@ -18671,7 +18626,7 @@ void menu_debug_daad_view_graphics(void)
         util_daad_get_graphics_attr(menu_debug_daad_view_graphics_render_localizacion,&tinta,&papel,&is_picture); 
 
         sprintf(buffer_linea,"Location: %d/%d %s Ink %d Paper %d",menu_debug_daad_view_graphics_render_localizacion,
-        util_daad_get_total_graphics(),
+        util_gac_daad_get_total_graphics(),
             (is_picture ? "Picture   " : "Subroutine"),tinta,papel);
 
         zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_linea);
@@ -19049,6 +19004,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
 				}
+
+                //Graficos gac. No necesita vista 8 y se puede hacer tambien sin step mode
+				if (tecla=='g'  && util_gac_detect() ) {
+                    menu_debug_daad_view_graphics();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;                    
+                }
 
 				if (tecla=='u' && menu_debug_registers_current_view==1) {
 					menu_debug_runto();
@@ -19452,8 +19415,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                 }			
 
-				//Graficos paws/quill/daad
-				if (tecla=='g' && menu_debug_registers_current_view==8 && util_daad_has_graphics() ) {
+				//Graficos paws/quill/daad y gac
+				if (tecla=='g'  && (
+                                    (menu_debug_registers_current_view==8 && util_daad_has_graphics() ) 
+                                    ||
+                                    (util_gac_detect() )
+                                    )
+                ) {
+
+
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
 					menu_emulation_paused_on_menu=1;

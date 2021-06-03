@@ -897,7 +897,7 @@ extern z80_int util_paws_get_pc_parser(void);
 #define QUILL_LONGITUD_PALABRAS 4
 
 extern char *util_unpaws_get_parser_name(void);
-extern char *util_undaad_unpaws_get_parser_name(void);
+extern char *util_undaad_unpaws_ungac_get_parser_name(void);
 extern int util_paws_is_in_parser(void);
 
 extern void util_str_add_char(char *texto,int posicion,char letra);

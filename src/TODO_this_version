@@ -190,3 +190,6 @@ rplot reducido con 1 byte hacerlo
 
 
 -borrar util_daad_get_graphics_list_commands cuando ya no se use
+
+-puntos de paro con raton
+-en debug resaltar registros que se vayan a cambiar . en rojo?. Por ejemplo, si hay un "INC C" resaltar registro C
