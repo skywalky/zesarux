@@ -1518,6 +1518,19 @@ void codetests_get_note_table_ql(void)
 }
 */
 
+void codetests_cosine_table(void)
+{
+    int i;
+
+    for (i=0;i<360;i++) {
+        printf ("cosine %3d %5d\n",i,util_get_cosine(i));
+    }
+
+    for (i=0;i<360;i++) {
+        printf ("sine %3d %5d\n",i,util_get_sine(i));
+    }    
+}
+
 void codetests_main(int main_argc,char *main_argv[])
 {
 
@@ -1603,6 +1616,9 @@ void codetests_main(int main_argc,char *main_argv[])
 
 	printf ("\nRunning code tests tbblue_set_ram_blocks\n");
 	codetests_tbblue_set_ram_blocks();
+
+    printf("\nRunnign cosine table tests\n");
+    codetests_cosine_table();
 
     //printf("\nRunning get note table ql test\n");
     //codetests_get_note_table_ql();

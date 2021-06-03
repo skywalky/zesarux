@@ -20861,3 +20861,134 @@ int util_abs(int v)
     if (v<0) return -v;
     else return v;
 }
+
+
+int util_cosine_table[91]={
+
+10000,  //0
+ 9998,
+ 9994,
+ 9986,
+ 9976,
+ 9962,
+ 9945,
+ 9925,
+ 9903,
+ 9877,
+ 9848,
+ 9816,
+ 9781,
+ 9744,
+ 9703,
+
+ 9659, //15
+ 9613,
+ 9563,
+ 9511,
+ 9455,
+ 9397,
+ 9336,
+ 9272,
+ 9205,
+ 9135,
+ 9063,
+ 8988,
+ 8910,
+ 8829,
+ 8746,
+
+ 8660, //30,
+ 8572,
+ 8480,
+ 8387,
+ 8290,
+ 8192,
+ 8090,
+ 7986,
+ 7880,
+ 7771,
+ 7660,
+ 7547,
+ 7431,
+ 7314,
+ 7193,
+
+ 7071, //45
+ 6947,
+ 6820,
+ 6691,
+ 6561,
+ 6428,
+ 6293,
+ 6157,
+ 6018,
+ 5878,
+ 5736,
+ 5592,
+ 5446,
+ 5299,
+ 5150,
+
+ 5000, //60
+ 4848,
+ 4695,
+ 4540,
+ 4384,
+ 4226,
+ 4067,
+ 3907,
+ 3746,
+ 3584,
+ 3420,
+ 3256,
+ 3090,
+ 2924,
+ 2756,
+
+ 2588, //75
+ 2419,
+ 2250,
+ 2079,
+ 1908,
+ 1736,
+ 1564,
+ 1392,
+ 1219,
+ 1045,
+  872,
+  698,
+  523,
+  349,
+  175,
+    0  //90
+};
+
+
+//Retorna el coseno de un grado, multiplicado por 10000
+int util_get_cosine(int degrees)
+{
+
+    //Ajustar a 360
+    degrees = degrees % 360;
+
+    //Hacerlo positivo
+    if (degrees<0) degrees=360+degrees;
+
+
+    if (degrees>=91 && degrees<=180) {
+        return -util_cosine_table[180-degrees];
+    }
+    else if (degrees>=181 && degrees<=270) {
+        return -util_cosine_table[degrees-180];
+    }
+    else if (degrees>=271 && degrees<=359) {
+        return util_cosine_table[360-degrees];
+    }
+    else return util_cosine_table[degrees];
+}
+
+//Retorna el seno de un grado, multiplicado por 10000
+int util_get_sine(int degrees)
+{
+    return util_get_cosine(90-degrees);
+}
