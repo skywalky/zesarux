@@ -17577,6 +17577,8 @@ z80_bit paws_render_disable_ink={0};
 z80_bit paws_render_disable_bright={0};
 z80_bit paws_render_disable_paper={0};
 
+z80_bit paws_render_disable_rectangle={0};
+
 
 
 //Renderiza y/o retorna lista de comandos de una pantalla grafica en GAC
@@ -17638,7 +17640,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
         } 
         */       
 
-        z80_int location_id;
+        int location_id;
 
         puntero_grafico=util_gac_get_graphics_location(location,&location_id);
 
@@ -17759,13 +17761,13 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
         int parm0;
         int parm1;
         int parm2;
+
+        int x1,x2,y1,y2;
                 
 
         int estexto=0;
 
 
-
-        int dibujar;  
         z80_int id_localizacion;  
 
 
@@ -17789,13 +17791,13 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
                     sprintf(buffer_temporal,"PLOT %d,%d\n", parm0_byte, parm1_byte);
                     puntero_grafico += 2;
 
-                        dibujar=1;
+                        
 
 
                         paws_render_last_x=parm0_byte;
                         paws_render_last_y=parm1_byte;    
 
-                        if (dibujar && paws_render_disable_plot.v==0 && w!=NULL) {
+                        if (paws_render_disable_plot.v==0 && w!=NULL) {
                             render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8);
                         }      
 
@@ -17849,28 +17851,49 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
                 }
 
 
-                    break;
+            break;
+
+
             case 0x08:
                     sprintf(buffer_temporal,"RECT %d,%d %d,%d\n",
                             parm0_byte, parm1_byte,
                             parm2_byte, parm3_byte);
                     puntero_grafico += 4;
-                    break;
+
+                        x1=parm0_byte;
+                        y1=parm1_byte;
+
+                        x2=parm2_byte;
+                        y2=parm3_byte;                        
+
+                        if (paws_render_disable_rectangle.v==0 && w!=NULL) {
+                            //Abajo                        
+                            zxvision_draw_line(w,x1,y1,x2,y1,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                            //Arriba
+                            zxvision_draw_line(w,x1,y2,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                            //Izquierda
+                            zxvision_draw_line(w,x1,y1,x1,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                            //Derecha
+                            zxvision_draw_line(w,x2,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                        }                    
+            break;
+
+            
             case 0x09:
                     sprintf(buffer_temporal,"LINE %d,%d %d,%d\n",
                             parm0_byte, parm1_byte,
                             parm2_byte, parm3_byte);
                     puntero_grafico += 4;
 
-                        dibujar=1;
+                        
 
-                        int x1=parm0_byte;
-                        int y1=parm1_byte;
+                        x1=parm0_byte;
+                        y1=parm1_byte;
 
-                        int x2=parm2_byte;
-                        int y2=parm3_byte;                        
+                        x2=parm2_byte;
+                        y2=parm3_byte;                        
 
-                        if (dibujar && paws_render_disable_line.v==0) {
+                        if (paws_render_disable_line.v==0) {
                             if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
                         }
 
@@ -18575,6 +18598,10 @@ void menu_debug_daad_view_graphics_render_disable_bright(MENU_ITEM_PARAMETERS)
     paws_render_disable_bright.v ^=1;
 }  
 
+void menu_debug_daad_view_graphics_render_disable_rectangle(MENU_ITEM_PARAMETERS)
+{
+    paws_render_disable_rectangle.v ^=1;
+} 
 
 void menu_debug_daad_view_graphics_render_initial_x(MENU_ITEM_PARAMETERS)
 {
@@ -18700,15 +18727,27 @@ void menu_debug_daad_view_graphics(void)
         menu_add_item_menu_tabulado(array_menu_common,1,2);   
         menu_add_item_menu_shortcut(array_menu_common,'g');
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_block,NULL,
-            "[%c] ~~Block",(paws_render_disable_block.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,11,2);   
-        menu_add_item_menu_shortcut(array_menu_common,'b');
+        if (util_gac_detect() ) {
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_rectangle,NULL,
+                "[%c] R~~ect",(paws_render_disable_rectangle.v==0 ? 'X' : ' ') );
+            menu_add_item_menu_tabulado(array_menu_common,11,2);   
+            menu_add_item_menu_shortcut(array_menu_common,'e');            
+        }
+        else {
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_block,NULL,
+                "[%c] ~~Block",(paws_render_disable_block.v==0 ? 'X' : ' ') );
+            menu_add_item_menu_tabulado(array_menu_common,11,2);   
+            menu_add_item_menu_shortcut(array_menu_common,'b');
+        }
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_text,NULL,
-            "[%c] ~~Text",(paws_render_disable_text.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,21,2);   
-        menu_add_item_menu_shortcut(array_menu_common,'t');
+        if (util_gac_detect() ) {
+        }
+        else {
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_text,NULL,
+                "[%c] ~~Text",(paws_render_disable_text.v==0 ? 'X' : ' ') );
+            menu_add_item_menu_tabulado(array_menu_common,21,2);   
+            menu_add_item_menu_shortcut(array_menu_common,'t');
+        }
         
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_plot,NULL,
             "[%c] Pl~~ot",(paws_render_disable_plot.v==0 ? 'X' : ' ') );
