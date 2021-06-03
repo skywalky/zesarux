@@ -17638,7 +17638,9 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
         } 
         */       
 
-        puntero_grafico=util_gac_get_graphics_location(location);
+        z80_int location_id;
+
+        puntero_grafico=util_gac_get_graphics_location(location,&location_id);
 
         longitud_habitacion_gac=peek_byte_no_time(puntero_grafico++);
         printf("longitud habitacion: %d\n",longitud_habitacion_gac);
@@ -17658,7 +17660,8 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
    //Nota: El bit 6 del byte de attr no sé para que sirve y por tanto no lo muestro
 
-    sprintf(buffer_temporal,"Location %-3d graphics flags: %s Ink=%d Paper=%d\n",location,
+    sprintf(buffer_temporal,"Location %-3d ID %d graphics flags: %s Ink=%d Paper=%d\n",location,
+        location_id,
         (is_picture ? "Picture " : "Subroutine "),
         tinta_attr, paper_attr 
     );
@@ -17762,7 +17765,8 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
 
 
-        int dibujar;    
+        int dibujar;  
+        z80_int id_localizacion;  
 
 
         //Leer los siguientes 4 parámetros, algunos usados en diferentes comandos
@@ -17774,96 +17778,124 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
 
         switch (gflag) {
-        default: printf("OP%02x\n", gflag);
-                break;
+            default: sprintf(buffer_temporal,"OP%02x\n", gflag);
+                    break;
 
-        case 0x01:
-                printf("BORDER\t%d\n", parm0_byte);
-                puntero_grafico++;
-                break;
-        case 0x02:
-                printf("PLOT\t%d,%d\n", parm0_byte, parm1_byte);
-                puntero_grafico += 2;
+            case 0x01:
+                    sprintf(buffer_temporal,"BORDER %d\n", parm0_byte);
+                    puntero_grafico++;
+                    break;
+            case 0x02:
+                    sprintf(buffer_temporal,"PLOT %d,%d\n", parm0_byte, parm1_byte);
+                    puntero_grafico += 2;
 
-                    dibujar=1;
+                        dibujar=1;
 
 
-                    paws_render_last_x=parm0_byte;
-                    paws_render_last_y=parm1_byte;    
+                        paws_render_last_x=parm0_byte;
+                        paws_render_last_y=parm1_byte;    
 
-                    if (dibujar && paws_render_disable_plot.v==0 && w!=NULL) {
-                        render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8);
-                    }      
+                        if (dibujar && paws_render_disable_plot.v==0 && w!=NULL) {
+                            render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8);
+                        }      
 
-                break;
-        case 0x03:
-                printf( "ELLIPSE\t%d,%d %d,%d\n",
-                        parm0_byte, parm1_byte,
-                        parm2_byte, parm3_byte);
-                puntero_grafico += 4;
-                break;
-        case 0x04:
-                printf( "FILL\t%d,%d\n", parm0_byte, parm1_byte); 
-                puntero_grafico += 2;
-                break;
-        case 0x05:
-                printf( "BGFILL\t%d,%d\n", parm0_byte, parm1_byte); 
-                puntero_grafico += 2;
-                break;
-        case 0x06:
-                printf( "SHADE\t%d,%d\n", parm0_byte, parm1_byte); 
-                puntero_grafico += 2;
-                break;
-        case 0x07:
-                sprintf(buffer_temporal,"CALL %d\n", parm1_byte * 256 + parm0_byte);
-                puntero_grafico += 2;
-                break;
-        case 0x08:
-                printf( "RECT\t%d,%d %d,%d\n",
-                        parm0_byte, parm1_byte,
-                        parm2_byte, parm3_byte);
-                puntero_grafico += 4;
-                break;
-        case 0x09:
-                sprintf(buffer_temporal,"LINE %d,%d %d,%d\n",
-                        parm0_byte, parm1_byte,
-                        parm2_byte, parm3_byte);
-                puntero_grafico += 4;
+                    break;
+            case 0x03:
+                    sprintf(buffer_temporal,"ELLIPSE %d,%d %d,%d\n",
+                            parm0_byte, parm1_byte,
+                            parm2_byte, parm3_byte);
+                    puntero_grafico += 4;
+                    break;
+            case 0x04:
+                    sprintf(buffer_temporal,"FILL %d,%d\n", parm0_byte, parm1_byte); 
+                    puntero_grafico += 2;
+                    break;
+            case 0x05:
+                    sprintf(buffer_temporal,"BGFILL %d,%d\n", parm0_byte, parm1_byte); 
+                    puntero_grafico += 2;
+                    break;
+            case 0x06:
+                    sprintf(buffer_temporal,"SHADE\t%d,%d\n", parm0_byte, parm1_byte); 
+                    puntero_grafico += 2;
+                    break;
+            case 0x07:
+                    id_localizacion=parm1_byte * 256 + parm0_byte;
+                    sprintf(buffer_temporal,"CALL %d\n", id_localizacion);
+                    puntero_grafico += 2;
 
-                    dibujar=1;
 
-                    int x1=parm0_byte;
-                    int y1=parm1_byte;
+                if (paws_render_disable_gosub.v==0 && w!=NULL) {
 
-                    int x2=parm2_byte;
-                    int y2=parm3_byte;                        
-
-                    if (dibujar && paws_render_disable_line.v==0) {
-                        if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                    //Saltar a subrutina
+                    if (nivel_recursivo>=10) {
+                        //printf("Maximum nested gosub reached\n");
                     }
+                    else {                         
 
-                break;
-        case 0x10:
-                printf( "INK\t%d\n", parm0_byte);
+                        //Buscar el numero de habitacion
+                        int nueva_ubicacion=util_gac_get_index_location_by_id(id_localizacion);
+                        printf("Call. Nueva ubicacion para indice %d es %d\n",id_localizacion,nueva_ubicacion);
+                        if (nueva_ubicacion>=0) {
+
+                            //Al llamar a subrutina pone buffer a texto a null, para que no meta
+                            //lista de comandos de la subrutina
+                            //Esto solo cambiaria algo en el supuesto caso en que dibujamos con putpixel (w no es NULL) y
+                            //aqui buffer_texto_comandos viene con no NULL (o sea, que dibujamos y listamos texto)
+                            menu_debug_daad_view_graphics_render_recursive_gac(w,nueva_ubicacion,nivel_recursivo+1,NULL);
+                            //printf("llamar recursivo text=%p w=%p\n",buffer_texto_comandos,w);
+                        }
+                        
+                    }
+                }
+
+
+                    break;
+            case 0x08:
+                    sprintf(buffer_temporal,"RECT %d,%d %d,%d\n",
+                            parm0_byte, parm1_byte,
+                            parm2_byte, parm3_byte);
+                    puntero_grafico += 4;
+                    break;
+            case 0x09:
+                    sprintf(buffer_temporal,"LINE %d,%d %d,%d\n",
+                            parm0_byte, parm1_byte,
+                            parm2_byte, parm3_byte);
+                    puntero_grafico += 4;
+
+                        dibujar=1;
+
+                        int x1=parm0_byte;
+                        int y1=parm1_byte;
+
+                        int x2=parm2_byte;
+                        int y2=parm3_byte;                        
+
+                        if (dibujar && paws_render_disable_line.v==0) {
+                            if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                        }
+
+                    break;
+            case 0x10:
                     sprintf (buffer_temporal,"INK        %4d\n",parm0_byte);  
                     if (paws_render_disable_ink.v==0) paws_render_ink=parm0_byte;                
-                ++puntero_grafico;
-                break;
-        case 0x11:
-                printf( "PAPER\t%d\n", parm0_byte);
-                ++puntero_grafico;
-                break;
-        case 0x12:
-                printf( "BRIGHT\t%d\n", parm0_byte);
-                ++puntero_grafico;
-                break;
-        case 0x13:
-                printf( "FLASH\t%d\n", parm0_byte);
-                ++puntero_grafico;
-                break;
+                    ++puntero_grafico;
+                    break;
+            case 0x11:
+                    sprintf(buffer_temporal,"PAPER %d\n", parm0_byte);
+                    if (paws_render_disable_paper.v==0) paws_render_paper=parm0_byte;                
+                    ++puntero_grafico;
+                    break;
+            case 0x12:
+                    sprintf(buffer_temporal,"BRIGHT %d\n", parm0_byte);
+                    ++puntero_grafico;
+                    break;
+            case 0x13:
+                    sprintf(buffer_temporal,"FLASH %d\n", parm0_byte);
+                    ++puntero_grafico;
+                    break;
 
 
-            }
+        }
             
         
 
