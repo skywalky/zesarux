@@ -10045,6 +10045,20 @@ void zxvision_draw_line(zxvision_window *w,int x1,int y1,int x2,int y2,int c, vo
  }
 }
 
+//Funcion para trazar una elipse
+//TODO: si el radio es muy grande, se vera punteada. Se deberia mejorar haciendo lineas entre esos puntos intermedios
+void zxvision_draw_ellipse(zxvision_window *w,int x1,int y1,int radius_x,int radius_y,int c, void (*fun_putpixel) (zxvision_window *w,int x,int y,int color) )
+{
+
+    int grados;
+
+    for (grados=0;grados<360;grados++) {
+        int xdestino=x1+((radius_x*util_get_cosine(grados))/10000);
+        int ydestino=y1+((radius_y*util_get_sine(grados))/10000);
+        fun_putpixel(w,xdestino,ydestino,c);
+    }
+
+}
 
 
 int mouse_is_dragging=0;

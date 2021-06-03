@@ -17578,6 +17578,7 @@ z80_bit paws_render_disable_bright={0};
 z80_bit paws_render_disable_paper={0};
 
 z80_bit paws_render_disable_rectangle={0};
+z80_bit paws_render_disable_ellipse={0};
 
 
 
@@ -17807,6 +17808,19 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
                             parm0_byte, parm1_byte,
                             parm2_byte, parm3_byte);
                     puntero_grafico += 4;
+
+                    x1=parm0_byte;
+                    y1=parm1_byte;
+
+                    int radio_x=parm2_byte-x1;
+                    int radio_y=parm3_byte-y1;
+
+                    if (paws_render_disable_ellipse.v==0 && w!=NULL) {
+                        zxvision_draw_ellipse(w,x1,y1,radio_x,radio_y,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                    }
+
+                    //zxvision_draw_ellipse(w,128,88,100,50,0,render_paws_putpixel);
+
                     break;
             case 0x04:
                     sprintf(buffer_temporal,"FILL %d,%d\n", parm0_byte, parm1_byte); 
@@ -18601,6 +18615,11 @@ void menu_debug_daad_view_graphics_render_disable_bright(MENU_ITEM_PARAMETERS)
 void menu_debug_daad_view_graphics_render_disable_rectangle(MENU_ITEM_PARAMETERS)
 {
     paws_render_disable_rectangle.v ^=1;
+}
+
+void menu_debug_daad_view_graphics_render_disable_ellipse(MENU_ITEM_PARAMETERS)
+{
+    paws_render_disable_ellipse.v ^=1;
 } 
 
 void menu_debug_daad_view_graphics_render_initial_x(MENU_ITEM_PARAMETERS)
@@ -18729,25 +18748,28 @@ void menu_debug_daad_view_graphics(void)
 
         if (util_gac_detect() ) {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_rectangle,NULL,
-                "[%c] R~~ect",(paws_render_disable_rectangle.v==0 ? 'X' : ' ') );
+                "[%c] Rec~~t",(paws_render_disable_rectangle.v==0 ? 'X' : ' ') );
             menu_add_item_menu_tabulado(array_menu_common,11,2);   
-            menu_add_item_menu_shortcut(array_menu_common,'e');            
+            menu_add_item_menu_shortcut(array_menu_common,'t');       
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_ellipse,NULL,
+                "[%c] ~~Ellip",(paws_render_disable_ellipse.v==0 ? 'X' : ' ') );
+            menu_add_item_menu_tabulado(array_menu_common,20,2);   
+            menu_add_item_menu_shortcut(array_menu_common,'e');                       
         }
         else {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_block,NULL,
                 "[%c] ~~Block",(paws_render_disable_block.v==0 ? 'X' : ' ') );
             menu_add_item_menu_tabulado(array_menu_common,11,2);   
             menu_add_item_menu_shortcut(array_menu_common,'b');
-        }
 
-        if (util_gac_detect() ) {
-        }
-        else {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_text,NULL,
                 "[%c] ~~Text",(paws_render_disable_text.v==0 ? 'X' : ' ') );
             menu_add_item_menu_tabulado(array_menu_common,21,2);   
-            menu_add_item_menu_shortcut(array_menu_common,'t');
+            menu_add_item_menu_shortcut(array_menu_common,'t');            
         }
+
+
         
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_plot,NULL,
             "[%c] Pl~~ot",(paws_render_disable_plot.v==0 ? 'X' : ' ') );
