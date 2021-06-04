@@ -17861,7 +17861,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
                     break;
             case 0x10:
                     sprintf (buffer_temporal,"INK        %4d\n",parm0_byte);  
-                    if (paws_render_disable_ink.v==0) paws_render_ink=parm0_byte;                
+                    if (paws_render_disable_ink.v==0) paws_render_ink=parm0_byte & 7;
                     ++puntero_grafico;
                     break;
             case 0x11:
@@ -17872,6 +17872,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             case 0x12:
                     sprintf(buffer_temporal,"BRIGHT %d\n", parm0_byte);
                     ++puntero_grafico;
+                    if (paws_render_disable_bright.v==0) paws_render_bright=parm0_byte&1;
                     break;
             case 0x13:
                     sprintf(buffer_temporal,"FLASH %d\n", parm0_byte);
