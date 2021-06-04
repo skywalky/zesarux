@@ -9,6 +9,8 @@ Added setting to disable TZX pauses
 Added zsf to scr support for Next, ZX-Uno and TSConf snapshots
 Added Jupiter Ace 51 KB RAM emulation
 
+Improved Debugging: now you can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
+
 Improved ZX Vision menu interface:
 -Added setting to pause cpu emulation on menu when multitask active
 -Show in file selector when a file can be expanded
@@ -20,7 +22,6 @@ Improved ZX Vision menu interface:
 -View sprite legend now adapts to size
 
 Improved Audio to .mid exporter: allow changing instrument
-Improved DAAD/PAWS/Quill Debugger: Now can render any localization graph in a Text Adventure
 
 Fixed file previews on corrupted files: pzx, tap
 Fixed rearranging windows and using total window height

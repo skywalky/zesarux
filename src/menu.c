@@ -33355,6 +33355,11 @@ void menu_about_license_grackle(MENU_ITEM_PARAMETERS)
         menu_about_read_file("grackle License","licenses/LICENSE_grackle",1);
 }
 
+void menu_about_license_ungac(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("ungac License","licenses/LICENSE_ungac",1);
+}
+
 void menu_about_license_qemu(MENU_ITEM_PARAMETERS)
 {
         menu_about_read_file("Qemu License","licenses/LICENSE_qemu",1);
@@ -33743,6 +33748,9 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu(array_menu_common,"~~Fuse disassembler",MENU_OPCION_NORMAL,menu_about_license_fuse,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'f');	
 
+			menu_add_item_menu(array_menu_common,"~~grackle",MENU_OPCION_NORMAL,menu_about_license_grackle,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'g');
+
 			menu_add_item_menu(array_menu_common,"~~Hilow",MENU_OPCION_NORMAL,menu_about_license_hilow,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'h');
 
@@ -33767,8 +33775,8 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu(array_menu_common,"~~undaad",MENU_OPCION_NORMAL,menu_about_license_undaad,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'u');		
 			
-			menu_add_item_menu(array_menu_common,"un~~gac",MENU_OPCION_NORMAL,menu_about_license_grackle,NULL);
-			menu_add_item_menu_shortcut(array_menu_common,'g');
+			menu_add_item_menu(array_menu_common,"u~~ngac",MENU_OPCION_NORMAL,menu_about_license_ungac,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'n');
 
 			menu_add_item_menu(array_menu_common,"unpa~~ws/unquill",MENU_OPCION_NORMAL,menu_about_license_unpaws,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'w');						

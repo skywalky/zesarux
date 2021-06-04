@@ -488,6 +488,23 @@ note 1: This function is not available in the Gate-Array, but is performed by a 
 		break;
 		
 		case 2:
+
+                /*
+
+                Registro 2:
+
+                Bit	Value	Function
+                7	1	Gate Array function
+                6	0
+                5	-	not used
+                4	x	Interrupt generation control
+                3	x	1=Upper ROM area disable, 0=Upper ROM area enable
+                2	x	1=Lower ROM area disable, 0=Lower ROM area enable
+                1	x	Screen Mode slection
+                0	x
+
+                */
+
 			//Cambio paginacion y modo video y gestion interrupcion
 			cpc_set_memory_pages();
 
