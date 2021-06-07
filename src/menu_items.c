@@ -18576,21 +18576,25 @@ void menu_debug_daad_view_graphics(void)
 
 
     int ancho_ventana,alto_ventana;
+    int xventana,yventana;    
 
-    //xventana=0;
-    //yventana=0;
 
-    int ancho_minimo_deseado=42+RENDER_PAWS_START_X_DRAW;
 
-    ancho_ventana=(256/menu_char_width)+7+RENDER_PAWS_START_X_DRAW; //para hacer 32+7=39 en una ventana de char width = 8
+    if (!util_find_window_geometry("textadvgraphics",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+        int ancho_minimo_deseado=42+RENDER_PAWS_START_X_DRAW;
 
-    //Minimo para que quepa todo el texto de opciones
-    if (ancho_ventana<ancho_minimo_deseado) ancho_ventana=ancho_minimo_deseado;
+        ancho_ventana=(256/menu_char_width)+7+RENDER_PAWS_START_X_DRAW; //para hacer 32+7=39 en una ventana de char width = 8
 
-    alto_ventana=26+RENDER_PAWS_START_Y_DRAW;
+        //Minimo para que quepa todo el texto de opciones
+        if (ancho_ventana<ancho_minimo_deseado) ancho_ventana=ancho_minimo_deseado;
 
-    int xventana=menu_center_x()-ancho_ventana/2;
-    int yventana=menu_center_y()-alto_ventana/2;
+        alto_ventana=26+RENDER_PAWS_START_Y_DRAW;
+
+
+        xventana=menu_center_x()-ancho_ventana/2;
+        yventana=menu_center_y()-alto_ventana/2;
+
+    }    
 
     char titulo_ventana[100];
     sprintf(titulo_ventana,"%s Graphics Render",util_undaad_unpaws_ungac_get_parser_name() );
@@ -18598,6 +18602,8 @@ void menu_debug_daad_view_graphics(void)
     zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,titulo_ventana);   
 
     zxvision_draw_window(ventana);
+    //indicar nombre del grabado de geometria
+    strcpy(ventana->geometry_name,"textadvgraphics");    
 
 
     //menu_debug_daad_view_graphics_render_localizacion=localizacion;
@@ -18779,7 +18785,10 @@ void menu_debug_daad_view_graphics(void)
     //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
     cls_menu_overlay();
 
+    //Grabar geometria ventana
+    util_add_window_geometry_compact(ventana);    
 
+    //printf("salir_todos_menus %d\n",salir_todos_menus);
 
     zxvision_destroy_window(ventana);            
 }

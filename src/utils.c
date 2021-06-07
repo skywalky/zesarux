@@ -18830,16 +18830,16 @@ z80_int util_gac_get_graphics_location(int location,int *location_id)
 
     int i;
 
-    printf("inicio tabla: %d\n",table_dir);
+    //printf("inicio tabla: %d\n",table_dir);
 
     //hasta que se llegue a direccion o table_dir "de la vuelta" (salte a rom)
     for (i=0;i<location && table_dir>16383;i++) {
         z80_int longitud=peek_word_no_time(table_dir+2);
-        printf("tabla: %d longitud: %d\n",table_dir,longitud);
+        //printf("tabla: %d longitud: %d\n",table_dir,longitud);
         table_dir +=longitud;
     }
 
-    printf("tabla final: %d\n",table_dir);
+    //printf("tabla final: %d\n",table_dir);
 
     if (table_dir<16384) return 0;
 
@@ -18887,16 +18887,16 @@ int util_gac_get_index_location_by_id(int location_id)
 
     int i;
 
-    printf("inicio tabla: %d\n",table_dir);
+    //printf("inicio tabla: %d\n",table_dir);
 
     //hasta que se llegue a direccion o table_dir "de la vuelta" (salte a rom)
     for (i=0;peek_word_no_time(table_dir)!=location_id && table_dir>16383;i++) {
         z80_int longitud=peek_word_no_time(table_dir+2);
-        printf("tabla: %d longitud: %d\n",table_dir,longitud);
+        //printf("tabla: %d longitud: %d\n",table_dir,longitud);
         table_dir +=longitud;
     }
 
-    printf("tabla final: %d\n",table_dir);
+    //printf("tabla final: %d\n",table_dir);
 
     if (table_dir<16384) return -1;
 
@@ -18919,16 +18919,16 @@ z80_int util_gac_get_total_graphics(void)
 
     int i;
 
-    printf("inicio tabla: %d\n",table_dir);
+    //printf("inicio tabla: %d\n",table_dir);
 
     //hasta que id_location sea 0 o contador "de la vuelta"
     for (i=0;peek_word_no_time(table_dir)!=0 && table_dir>16383;i++) {
         z80_int longitud=peek_word_no_time(table_dir+2);
-        printf("tabla: %d longitud: %d\n",table_dir,longitud);
+        //printf("tabla: %d longitud: %d\n",table_dir,longitud);
         table_dir +=longitud;
     }
 
-    printf("tabla final: %d\n",table_dir);
+    //printf("tabla final: %d\n",table_dir);
 
     return i;
 
