@@ -17554,6 +17554,8 @@ zxvision_window *menu_debug_daad_view_graphics_render_overlay_window;
 int menu_debug_daad_view_graphics_render_localizacion=0;
 
 //Para poder llamar de manera recursiva, estos parámetros se definen fuera
+
+//x,y ultima no se usa en gac
 int paws_render_last_x=0;
 int paws_render_last_y=0;
 int paws_render_ink=0;
@@ -17562,6 +17564,9 @@ int paws_render_bright=0;
 int paws_render_mirror_x=+1;
 int paws_render_mirror_y=+1;
 int paws_render_escala=0;
+
+int gac_render_default_ink=0;
+int gac_render_default_paper=7;
 
 //Coordenadas iniciales, importantes para cuando no hay un plot inicial (sobretodo subrutinas pero tambien algun picture)
 int paws_render_initial_x=0;
@@ -17601,70 +17606,31 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
     int longitud_habitacion_gac;
 
 
+        
+
+    //ungac de https://www.seasip.info/Unix/UnQuill/
+
+    puntero_grafico=peek_word_no_time(0xA52F);
+
+    //Info:
+    //word: location
+    //word: longitud contando estos 4 bytes
+    //byte: numero comandos
+    //comandos...
 
 
 
-        //temporal
-            paws_render_ink=0;
-            paws_render_paper=7;
-            paws_render_bright=0;        
+    int location_id;
 
-        //ungac de https://www.seasip.info/Unix/UnQuill/
+    puntero_grafico=util_gac_get_graphics_location(location,&location_id);
 
-        puntero_grafico=peek_word_no_time(0xA52F);
-
-        //Info:
-        //word: location
-        //word: longitud contando estos 4 bytes
-        //byte: numero comandos
-        //comandos...
-
-        /*
-        sprintf(buffer_temporal,"Location %d\n",peek_word_no_time(puntero_grafico));
-        printf("location: %d\n",peek_word_no_time(puntero_grafico));
-
-        puntero_grafico +=2;
-
-        int tamanyo_longitud_habitacion_gac=peek_word_no_time(puntero_grafico);
-        puntero_grafico +=2;
-
-        longitud_habitacion_gac=peek_byte_no_time(puntero_grafico);
-        printf("longitud: %d\n",longitud_habitacion_gac);
-        puntero_grafico++;
-
-        if (buffer_texto_comandos!=NULL) {
-            printf("Agregando texto inicial\n");
-            util_concat_string(buffer_texto_comandos,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
-        } 
-        */       
-
-        int location_id;
-
-        puntero_grafico=util_gac_get_graphics_location(location,&location_id);
-
-        longitud_habitacion_gac=peek_byte_no_time(puntero_grafico++);
-        printf("longitud habitacion: %d\n",longitud_habitacion_gac);
+    longitud_habitacion_gac=peek_byte_no_time(puntero_grafico++);
+    printf("longitud habitacion: %d\n",longitud_habitacion_gac);
     
 
 
-    //z80_int table_attr=util_daad_get_start_graphics_attr();
-
-    int tinta_attr,paper_attr;
-    int is_picture;
-
-    //temp
-    is_picture=1;
-    tinta_attr=0;
-    paper_attr=7;
-
-
-   //Nota: El bit 6 del byte de attr no sé para que sirve y por tanto no lo muestro
-
-    sprintf(buffer_temporal,"Location %-3d ID %d graphics flags: %s Ink=%d Paper=%d\n",location,
-        location_id,
-        (is_picture ? "Picture " : "Subroutine "),
-        tinta_attr, paper_attr 
-    );
+    sprintf(buffer_temporal,"Location %-3d ID %d\n",location,
+        location_id);
 
     if (buffer_texto_comandos!=NULL) {
         util_concat_string(buffer_texto_comandos,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
@@ -17673,29 +17639,33 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
 
     //Solo hacer cambio de ink y paper si no es subrutina
-    if (is_picture) {
-        paws_render_ink=tinta_attr;
-        paws_render_paper=paper_attr;
+    if (nivel_recursivo==0) {
+        paws_render_ink=gac_render_default_ink;
+        paws_render_paper=gac_render_default_paper;
+        paws_render_bright=0;
 
+        /*
         if (paws_render_disable_ink.v) {
             paws_render_ink=0;
             paws_render_paper=7;
             paws_render_bright=0;
         }
+        */
   
         //Rellenamos ventana con color indicado
         //tener en cuenta char width
-        /*
+       
+       
         int ancho_rellenar=256/menu_char_width;
         
         int rellena_x,rellena_y;
         for (rellena_y=RENDER_PAWS_START_Y_DRAW;rellena_y<RENDER_PAWS_START_Y_DRAW+24;rellena_y++) {
             for (rellena_x=RENDER_PAWS_START_X_DRAW;rellena_x<RENDER_PAWS_START_X_DRAW+ancho_rellenar;rellena_x++) {
-                if (w!=NULL) zxvision_print_char_simple(w,rellena_x,rellena_y,paws_render_ink+paws_render_bright*8,
-                            paws_render_paper+paws_render_bright*8,0,' ');
+                if (w!=NULL) zxvision_print_char_simple(w,rellena_x,rellena_y,gac_render_default_ink,
+                            gac_render_default_paper,0,' ');
             }
         }
-        */
+         
     }
 
 
@@ -17740,14 +17710,9 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
                     puntero_grafico += 2;
 
                         
-
-
-                        paws_render_last_x=parm0_byte;
-                        paws_render_last_y=parm1_byte;    
-
-                        if (paws_render_disable_plot.v==0 && w!=NULL) {
-                            render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8);
-                        }      
+                    if (paws_render_disable_plot.v==0 && w!=NULL) {
+                        render_paws_putpixel(w,parm0_byte,parm1_byte,paws_render_ink+paws_render_bright*8);
+                    }      
 
                     break;
             case 0x03:
@@ -17765,8 +17730,6 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
                     if (paws_render_disable_ellipse.v==0 && w!=NULL) {
                         zxvision_draw_ellipse(w,x1,y1,radio_x,radio_y,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
                     }
-
-                    //zxvision_draw_ellipse(w,128,88,100,50,0,render_paws_putpixel);
 
                     break;
             case 0x04:
@@ -17846,21 +17809,20 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
                             parm2_byte, parm3_byte);
                     puntero_grafico += 4;
 
-                        
+                    
+                    x1=parm0_byte;
+                    y1=parm1_byte;
 
-                        x1=parm0_byte;
-                        y1=parm1_byte;
+                    x2=parm2_byte;
+                    y2=parm3_byte;                        
 
-                        x2=parm2_byte;
-                        y2=parm3_byte;                        
-
-                        if (paws_render_disable_line.v==0) {
-                            if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
-                        }
+                    if (paws_render_disable_line.v==0) {
+                        if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                    }
 
                     break;
             case 0x10:
-                    sprintf (buffer_temporal,"INK        %4d\n",parm0_byte);  
+                    sprintf (buffer_temporal,"INK %d\n",parm0_byte);  
                     if (paws_render_disable_ink.v==0) paws_render_ink=parm0_byte & 7;
                     ++puntero_grafico;
                     break;
@@ -17882,9 +17844,6 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
         }
             
-        
-
-
      
         if (buffer_texto_comandos!=NULL) {
             printf("Agregando texto %s\n",buffer_temporal);
@@ -18584,6 +18543,21 @@ void menu_debug_daad_view_graphics_render_initial_y(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_debug_daad_view_graphics_render_initial_ink(MENU_ITEM_PARAMETERS)
+{
+
+    menu_ventana_scanf_numero_enhanced("Default ink",&gac_render_default_ink,2,+1,0,7,0);
+
+}
+
+void menu_debug_daad_view_graphics_render_initial_paper(MENU_ITEM_PARAMETERS)
+{
+
+    menu_ventana_scanf_numero_enhanced("Default paper",&gac_render_default_paper,2,+1,0,7,0);
+
+}
+
+
 void menu_debug_daad_view_graphics(void)
 {
     //Renderizar un grafico de paws
@@ -18651,9 +18625,22 @@ void menu_debug_daad_view_graphics(void)
 
         util_daad_get_graphics_attr(menu_debug_daad_view_graphics_render_localizacion,&tinta,&papel,&is_picture); 
 
-        sprintf(buffer_linea,"Location: %d/%d %s Ink %d Paper %d",menu_debug_daad_view_graphics_render_localizacion,
-        util_gac_daad_get_total_graphics(),
-            (is_picture ? "Picture   " : "Subroutine"),tinta,papel);
+        int es_gac=util_gac_detect();
+
+        if (es_gac) {
+            int location_id;
+
+            util_gac_get_graphics_location(menu_debug_daad_view_graphics_render_localizacion,&location_id);
+
+            sprintf(buffer_linea,"Location: %d/%d ID: %d",menu_debug_daad_view_graphics_render_localizacion,
+            util_gac_daad_get_total_graphics(), location_id);
+        }
+
+        else {
+            sprintf(buffer_linea,"Location: %d/%d %s Ink %d Paper %d",menu_debug_daad_view_graphics_render_localizacion,
+            util_gac_daad_get_total_graphics(),
+                (is_picture ? "Picture   " : "Subroutine"),tinta,papel);
+        }
 
         zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_linea);
 
@@ -18670,15 +18657,30 @@ void menu_debug_daad_view_graphics(void)
 		menu_add_item_menu_tabulado(array_menu_common,11,1);      
         menu_add_item_menu_shortcut(array_menu_common,'s');
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_x,NULL,
-                                    "~~x %3d",paws_render_initial_x);
-        menu_add_item_menu_tabulado(array_menu_common,15,1);
-        menu_add_item_menu_shortcut(array_menu_common,'x');
+        if (es_gac) {
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_ink,NULL,
+                                        "Ink %d",gac_render_default_ink);
+            menu_add_item_menu_tabulado(array_menu_common,15,1);
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_y,NULL,
-                                    "~~y %3d",paws_render_initial_y);
-        menu_add_item_menu_tabulado(array_menu_common,21,1);
-        menu_add_item_menu_shortcut(array_menu_common,'y');
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_paper,NULL,
+                                        "Pap %d",gac_render_default_paper);
+            menu_add_item_menu_tabulado(array_menu_common,21,1);
+
+        }
+
+        else {
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_x,NULL,
+                                        "~~x %3d",paws_render_initial_x);
+            menu_add_item_menu_tabulado(array_menu_common,15,1);
+            menu_add_item_menu_shortcut(array_menu_common,'x');
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_y,NULL,
+                                        "~~y %3d",paws_render_initial_y);
+            menu_add_item_menu_tabulado(array_menu_common,21,1);
+            menu_add_item_menu_shortcut(array_menu_common,'y');
+        }
+
+
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_list_commands,NULL,"List ~~commands");
         menu_add_item_menu_tabulado(array_menu_common,27,1);   
