@@ -17698,56 +17698,59 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
 
         switch (gflag) {
-            default: sprintf(buffer_temporal,"OP%02x\n", gflag);
-                    break;
-
             case 0x01:
-                    sprintf(buffer_temporal,"BORDER %d\n", parm0_byte);
-                    puntero_grafico++;
-                    break;
+                sprintf(buffer_temporal,"BORDER  %4d\n", parm0_byte);
+                puntero_grafico++;
+            break;
+
             case 0x02:
-                    sprintf(buffer_temporal,"PLOT %d,%d\n", parm0_byte, parm1_byte);
-                    puntero_grafico += 2;
+                sprintf(buffer_temporal,"PLOT    %4d %4d\n", parm0_byte, parm1_byte);
+                puntero_grafico += 2;
 
-                        
-                    if (paws_render_disable_plot.v==0 && w!=NULL) {
-                        render_paws_putpixel(w,parm0_byte,parm1_byte,paws_render_ink+paws_render_bright*8);
-                    }      
+                    
+                if (paws_render_disable_plot.v==0 && w!=NULL) {
+                    render_paws_putpixel(w,parm0_byte,parm1_byte,paws_render_ink+paws_render_bright*8);
+                }      
 
-                    break;
+            break;
+
             case 0x03:
-                    sprintf(buffer_temporal,"ELLIPSE %d,%d %d,%d\n",
-                            parm0_byte, parm1_byte,
-                            parm2_byte, parm3_byte);
-                    puntero_grafico += 4;
+                sprintf(buffer_temporal,"ELLIPSE %4d %4d %4d %4d\n",
+                        parm0_byte, parm1_byte,
+                        parm2_byte, parm3_byte);
+                puntero_grafico += 4;
 
-                    x1=parm0_byte;
-                    y1=parm1_byte;
+                x1=parm0_byte;
+                y1=parm1_byte;
 
-                    int radio_x=parm2_byte-x1;
-                    int radio_y=parm3_byte-y1;
+                int radio_x=parm2_byte-x1;
+                int radio_y=parm3_byte-y1;
 
-                    if (paws_render_disable_ellipse.v==0 && w!=NULL) {
-                        zxvision_draw_ellipse(w,x1,y1,radio_x,radio_y,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
-                    }
+                if (paws_render_disable_ellipse.v==0 && w!=NULL) {
+                    zxvision_draw_ellipse(w,x1,y1,radio_x,radio_y,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                }
 
-                    break;
+            break;
+
             case 0x04:
-                    sprintf(buffer_temporal,"FILL %d,%d\n", parm0_byte, parm1_byte); 
-                    puntero_grafico += 2;
-                    break;
+                sprintf(buffer_temporal,"FILL    %4d %4d\n", parm0_byte, parm1_byte); 
+                puntero_grafico += 2;
+            break;
+
             case 0x05:
-                    sprintf(buffer_temporal,"BGFILL %d,%d\n", parm0_byte, parm1_byte); 
-                    puntero_grafico += 2;
-                    break;
+                sprintf(buffer_temporal,"BGFILL  %4d %4d\n", parm0_byte, parm1_byte); 
+                puntero_grafico += 2;
+            break;
+            
             case 0x06:
-                    sprintf(buffer_temporal,"SHADE\t%d,%d\n", parm0_byte, parm1_byte); 
-                    puntero_grafico += 2;
-                    break;
+                sprintf(buffer_temporal,"SHADE   %4d %4d\n", parm0_byte, parm1_byte); 
+                puntero_grafico += 2;
+            break;
+
             case 0x07:
-                    id_localizacion=parm1_byte * 256 + parm0_byte;
-                    sprintf(buffer_temporal,"CALL %d\n", id_localizacion);
-                    puntero_grafico += 2;
+                id_localizacion=parm1_byte * 256 + parm0_byte;
+                sprintf(buffer_temporal,"CALL    %d\n", id_localizacion);
+                puntero_grafico += 2;
 
 
                 if (paws_render_disable_gosub.v==0 && w!=NULL) {
@@ -17760,7 +17763,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
                         //Buscar el numero de habitacion
                         int nueva_ubicacion=util_gac_get_index_location_by_id(id_localizacion);
-                        printf("Call. Nueva ubicacion para indice %d es %d\n",id_localizacion,nueva_ubicacion);
+                        //printf("Call. Nueva ubicacion para indice %d es %d\n",id_localizacion,nueva_ubicacion);
                         if (nueva_ubicacion>=0) {
 
                             //Al llamar a subrutina pone buffer a texto a null, para que no meta
@@ -17777,76 +17780,83 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
             break;
 
-
             case 0x08:
-                    sprintf(buffer_temporal,"RECT %d,%d %d,%d\n",
-                            parm0_byte, parm1_byte,
-                            parm2_byte, parm3_byte);
-                    puntero_grafico += 4;
+                sprintf(buffer_temporal,"RECT    %4d %4d %4d %4d\n",
+                        parm0_byte, parm1_byte,
+                        parm2_byte, parm3_byte);
+                puntero_grafico += 4;
 
-                        x1=parm0_byte;
-                        y1=parm1_byte;
+                x1=parm0_byte;
+                y1=parm1_byte;
 
-                        x2=parm2_byte;
-                        y2=parm3_byte;                        
+                x2=parm2_byte;
+                y2=parm3_byte;                        
 
-                        if (paws_render_disable_rectangle.v==0 && w!=NULL) {
-                            //Abajo                        
-                            zxvision_draw_line(w,x1,y1,x2,y1,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
-                            //Arriba
-                            zxvision_draw_line(w,x1,y2,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
-                            //Izquierda
-                            zxvision_draw_line(w,x1,y1,x1,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
-                            //Derecha
-                            zxvision_draw_line(w,x2,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
-                        }                    
+                if (paws_render_disable_rectangle.v==0 && w!=NULL) {
+                    //Abajo                        
+                    zxvision_draw_line(w,x1,y1,x2,y1,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                    //Arriba
+                    zxvision_draw_line(w,x1,y2,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                    //Izquierda
+                    zxvision_draw_line(w,x1,y1,x1,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                    //Derecha
+                    zxvision_draw_line(w,x2,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                }                    
             break;
 
-            
             case 0x09:
-                    sprintf(buffer_temporal,"LINE %d,%d %d,%d\n",
-                            parm0_byte, parm1_byte,
-                            parm2_byte, parm3_byte);
-                    puntero_grafico += 4;
+                sprintf(buffer_temporal,"LINE    %4d %4d %4d %4d\n",
+                        parm0_byte, parm1_byte,
+                        parm2_byte, parm3_byte);
+                puntero_grafico += 4;
 
-                    
-                    x1=parm0_byte;
-                    y1=parm1_byte;
+                
+                x1=parm0_byte;
+                y1=parm1_byte;
 
-                    x2=parm2_byte;
-                    y2=parm3_byte;                        
+                x2=parm2_byte;
+                y2=parm3_byte;                        
 
-                    if (paws_render_disable_line.v==0) {
-                        if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
-                    }
+                if (paws_render_disable_line.v==0) {
+                    if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                }
 
-                    break;
+            break;
+
             case 0x10:
-                    sprintf (buffer_temporal,"INK %d\n",parm0_byte);  
-                    if (paws_render_disable_ink.v==0) paws_render_ink=parm0_byte & 7;
-                    ++puntero_grafico;
-                    break;
+                sprintf (buffer_temporal,"INK     %4d\n",parm0_byte);  
+                if (paws_render_disable_ink.v==0) paws_render_ink=parm0_byte & 7;
+                puntero_grafico++;
+            break;
+
             case 0x11:
-                    sprintf(buffer_temporal,"PAPER %d\n", parm0_byte);
-                    if (paws_render_disable_paper.v==0) paws_render_paper=parm0_byte;                
-                    ++puntero_grafico;
-                    break;
+                sprintf(buffer_temporal,"PAPER   %4d\n", parm0_byte);
+                if (paws_render_disable_paper.v==0) paws_render_paper=parm0_byte;                
+                puntero_grafico++;
+            break;
+
             case 0x12:
-                    sprintf(buffer_temporal,"BRIGHT %d\n", parm0_byte);
-                    ++puntero_grafico;
-                    if (paws_render_disable_bright.v==0) paws_render_bright=parm0_byte&1;
-                    break;
+                sprintf(buffer_temporal,"BRIGHT  %4d\n", parm0_byte);
+                puntero_grafico++;
+                if (paws_render_disable_bright.v==0) paws_render_bright=parm0_byte&1;
+            break;
+
             case 0x13:
-                    sprintf(buffer_temporal,"FLASH %d\n", parm0_byte);
-                    ++puntero_grafico;
-                    break;
+                sprintf(buffer_temporal,"FLASH   %4d\n", parm0_byte);
+                puntero_grafico++;
+            break;
+
+            default: 
+                sprintf(buffer_temporal,"OP%02x\n", gflag);
+            
+            break;                    
 
 
         }
             
      
         if (buffer_texto_comandos!=NULL) {
-            printf("Agregando texto %s\n",buffer_temporal);
+            //printf("Agregando texto %s\n",buffer_temporal);
             util_concat_string(buffer_texto_comandos,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
         }
 
@@ -18400,12 +18410,8 @@ void menu_debug_daad_view_graphics_render_overlay(void)
 
     w=menu_debug_daad_view_graphics_render_overlay_window;
 
-    //printf("overlay\n");
-
 
     //Por defecto
-    //paws_render_last_x=0;
-    //paws_render_last_y=0;
     paws_render_last_x=paws_render_initial_x;
     paws_render_last_y=paws_render_initial_y;    
     paws_render_ink=0;

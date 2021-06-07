@@ -19265,8 +19265,8 @@ void util_daad_get_locat_message(z80_byte index,char *texto)
 }
 
 
-
-void util_daad_get_graphics_list_commands(z80_byte location,char *texto)
+//Funcionalidad reemplazada con menu_debug_daad_view_graphics_render_recursive
+void old_delete_util_daad_get_graphics_list_commands(z80_byte location,char *texto)
 {
 
 //See https://github.com/Utodev/unPAWs/blob/master/Unpaws.pas
