@@ -1513,7 +1513,7 @@ void menu_settings_audio(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_general_sound_enable,NULL,"[%c] General Sound", (gs_enabled.v ? 'X' : ' '));
 
             if (gs_enabled.v) {
-                menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_general_sound_mem,NULL,"[%3d KB] General Sound RAM",
+                menu_add_item_menu_format(array_menu_settings_audio,MENU_OPCION_NORMAL,menu_audio_general_sound_mem,NULL,"[%4d KB] General Sound RAM",
                 (gs_memory_mapping_mask_pages+1)*32 );
             }
         }
@@ -3168,7 +3168,7 @@ M1-M0= mode bits:
 			int freq_env_10=freq_envelope/10;
 			int freq_env_decimal=freq_envelope-(freq_env_10*10);
 
-			sprintf (textotono,"Freq Envelope:   %3d.%1d Hz",freq_env_10,freq_env_decimal);
+			sprintf (textotono,"Freq Envelope:   %4d.%1d Hz",freq_env_10,freq_env_decimal);
       		//menu_escribe_linea_opcion(linea++,-1,1,textotono);
 			zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 
@@ -3558,15 +3558,15 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 
 					int off_layer2_x=tbblue_registers[22] + (tbblue_registers[113]&1)*256;
-					sprintf (texto_buffer,"Layer2:     X=%3d  Y=%3d",off_layer2_x,tbblue_registers[23]);
+					sprintf (texto_buffer,"Layer2:     X=%4d  Y=%3d",off_layer2_x,tbblue_registers[23]);
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
 
-					sprintf (texto_buffer,"ULA/LoRes:  X=%3d  Y=%3d",tbblue_registers[50],tbblue_registers[51]);
+					sprintf (texto_buffer,"ULA/LoRes:  X=%4d  Y=%3d",tbblue_registers[50],tbblue_registers[51]);
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
 					//Offset X puede llegar hasta 1023. Por tanto 4 cifras. El resto X solo 3 cifras, pero los dejamos a 4 para que formato quede igual en pantalla
-					sprintf (texto_buffer,"Tilemap:    X=%3d  Y=%3d",tbblue_registers[48]+256*(tbblue_registers[47]&3),tbblue_registers[49]);
+					sprintf (texto_buffer,"Tilemap:    X=%4d  Y=%3d",tbblue_registers[48]+256*(tbblue_registers[47]&3),tbblue_registers[49]);
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);					
 
 				}
@@ -11877,7 +11877,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (screen_ext_desktop_enabled) {
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,menu_ext_desktop_cond,"[%3d] Width",screen_ext_desktop_width);
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,menu_ext_desktop_cond,"[%4d] Width",screen_ext_desktop_width);
 			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Tells the width of the ZX Desktop space");
 			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Final width is this value in pixels X current horizontal zoom");
 
@@ -17699,12 +17699,12 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
         switch (gflag) {
             case 0x01:
-                sprintf(buffer_temporal,"BORDER  %3d\n", parm0_byte);
+                sprintf(buffer_temporal,"BORDER  %4d\n", parm0_byte);
                 puntero_grafico++;
             break;
 
             case 0x02:
-                sprintf(buffer_temporal,"PLOT    %3d %3d\n", parm0_byte, parm1_byte);
+                sprintf(buffer_temporal,"PLOT    %4d %4d\n", parm0_byte, parm1_byte);
                 puntero_grafico += 2;
 
                     
@@ -17715,7 +17715,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x03:
-                sprintf(buffer_temporal,"ELLIPSE %3d %3d %3d %3d\n",
+                sprintf(buffer_temporal,"ELLIPSE %4d %4d %4d %4d\n",
                         parm0_byte, parm1_byte,
                         parm2_byte, parm3_byte);
                 puntero_grafico += 4;
@@ -17733,17 +17733,17 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x04:
-                sprintf(buffer_temporal,"FILL    %3d %3d\n", parm0_byte, parm1_byte); 
+                sprintf(buffer_temporal,"FILL    %4d %4d\n", parm0_byte, parm1_byte); 
                 puntero_grafico += 2;
             break;
 
             case 0x05:
-                sprintf(buffer_temporal,"BGFILL  %3d %3d\n", parm0_byte, parm1_byte); 
+                sprintf(buffer_temporal,"BGFILL  %4d %4d\n", parm0_byte, parm1_byte); 
                 puntero_grafico += 2;
             break;
             
             case 0x06:
-                sprintf(buffer_temporal,"SHADE   %3d %3d\n", parm0_byte, parm1_byte); 
+                sprintf(buffer_temporal,"SHADE   %4d %4d\n", parm0_byte, parm1_byte); 
                 puntero_grafico += 2;
             break;
 
@@ -17781,7 +17781,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x08:
-                sprintf(buffer_temporal,"RECT    %3d %3d %3d %3d\n",
+                sprintf(buffer_temporal,"RECT    %4d %4d %4d %4d\n",
                         parm0_byte, parm1_byte,
                         parm2_byte, parm3_byte);
                 puntero_grafico += 4;
@@ -17805,7 +17805,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x09:
-                sprintf(buffer_temporal,"LINE    %3d %3d %3d %3d\n",
+                sprintf(buffer_temporal,"LINE    %4d %4d %4d %4d\n",
                         parm0_byte, parm1_byte,
                         parm2_byte, parm3_byte);
                 puntero_grafico += 4;
@@ -17824,25 +17824,25 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x10:
-                sprintf (buffer_temporal,"INK     %3d\n",parm0_byte);  
+                sprintf (buffer_temporal,"INK     %4d\n",parm0_byte);  
                 if (paws_render_disable_ink.v==0) paws_render_ink=parm0_byte & 7;
                 puntero_grafico++;
             break;
 
             case 0x11:
-                sprintf(buffer_temporal,"PAPER   %3d\n", parm0_byte);
+                sprintf(buffer_temporal,"PAPER   %4d\n", parm0_byte);
                 if (paws_render_disable_paper.v==0) paws_render_paper=parm0_byte;                
                 puntero_grafico++;
             break;
 
             case 0x12:
-                sprintf(buffer_temporal,"BRIGHT  %3d\n", parm0_byte);
+                sprintf(buffer_temporal,"BRIGHT  %4d\n", parm0_byte);
                 puntero_grafico++;
                 if (paws_render_disable_bright.v==0) paws_render_bright=parm0_byte&1;
             break;
 
             case 0x13:
-                sprintf(buffer_temporal,"FLASH   %3d\n", parm0_byte);
+                sprintf(buffer_temporal,"FLASH   %4d\n", parm0_byte);
                 puntero_grafico++;
             break;
 
@@ -18040,11 +18040,11 @@ char *plot_moves[]= {
                 paws_render_last_y=parm1_byte;
 
                 if ((ovr=='o') && (inv=='i')) {
-                    sprintf (buffer_temporal,"ABS MOVE   %3d %3d\n",paws_render_last_x,paws_render_last_y);
+                    sprintf (buffer_temporal,"ABS MOVE   %4d %4d\n",paws_render_last_x,paws_render_last_y);
                     dibujar=0;
                 }
                 else {
-                    sprintf (buffer_temporal,"PLOT  %c%c   %3d %3d\n",ovr,inv,paws_render_last_x,paws_render_last_y);
+                    sprintf (buffer_temporal,"PLOT  %c%c   %4d %4d\n",ovr,inv,paws_render_last_x,paws_render_last_y);
                 }
 
                 if (dibujar && paws_render_disable_plot.v==0 && w!=NULL) {
@@ -18094,11 +18094,11 @@ char *plot_moves[]= {
 
 
                 if (ovr=='o' && inv=='i') {
-                        sprintf (buffer_temporal,"REL MOVE   %3d %3d\n",parm0,parm1);
+                        sprintf (buffer_temporal,"REL MOVE   %4d %4d\n",parm0,parm1);
                         dibujar=0; //solo mover
                 }
                 else {
-                        sprintf (buffer_temporal,"LINE  %c%c   %3d %3d\n",ovr,inv,parm0,parm1);
+                        sprintf (buffer_temporal,"LINE  %c%c   %4d %4d\n",ovr,inv,parm0,parm1);
                 }
 
 
@@ -18146,10 +18146,10 @@ char *plot_moves[]= {
                     puntero_grafico +=3;
         
                     if (quillversion==0) {
-                        sprintf (buffer_temporal,"SHADE %c%c   %3d %3d %3d\n",ovr,inv,parm0,parm1,parm2);
+                        sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm0,parm1,parm2);
                     }
                     else {
-                        sprintf (buffer_temporal,"BSHADE     %3d %3d %3d\n",parm0,parm1,parm2);
+                        sprintf (buffer_temporal,"BSHADE     %4d %4d %4d\n",parm0,parm1,parm2);
                     }
                 }
 
@@ -18166,7 +18166,7 @@ char *plot_moves[]= {
 
                     puntero_grafico +=4;
 
-                    sprintf (buffer_temporal,"BLOCK      %3d %3d %3d %3d\n",x1,y1,ancho,alto);
+                    sprintf (buffer_temporal,"BLOCK      %4d %4d %4d %4d\n",x1,y1,ancho,alto);
 
                     //Tener en cuenta char width
                     int temp_x=((x1+RENDER_PAWS_START_X_DRAW)*8)/menu_char_width;
@@ -18237,7 +18237,7 @@ char *plot_moves[]= {
 
                 puntero_grafico +=3;
 
-                sprintf (buffer_temporal,"SHADE %c%c   %3d %3d %3d\n",ovr,inv,parm0,parm1,parm2);
+                sprintf (buffer_temporal,"SHADE %c%c   %4d %4d %4d\n",ovr,inv,parm0,parm1,parm2);
             }
 
             else {
@@ -18249,7 +18249,7 @@ char *plot_moves[]= {
 
                 puntero_grafico +=2;
 
-                sprintf (buffer_temporal,"FILL       %3d %3d\n",parm0,parm1);
+                sprintf (buffer_temporal,"FILL       %4d %4d\n",parm0,parm1);
             }
 		    
             
@@ -18268,7 +18268,7 @@ char *plot_moves[]= {
                 if (!esdaad) mirror_x=mirror_y=+1;
 
                 //Chichen itza, localizacion 4 utiliza esto
-                sprintf (buffer_temporal,"GOSUB sc=%d %s %s %3d\n",value & 7,
+                sprintf (buffer_temporal,"GOSUB sc=%d %s %s %4d\n",value & 7,
                         (mirror_x==-1 ? "MX" : "  "),
                         (mirror_y==-1 ? "MY" : "  "),
                         nueva_ubicacion
@@ -18327,7 +18327,7 @@ char *plot_moves[]= {
 
                     puntero_grafico +=3;
 
-                    sprintf (buffer_temporal,"TEXT %c%c    %3d %3d(%c) %d %d\n",ovr,inv,value/4,parm0,
+                    sprintf (buffer_temporal,"TEXT %c%c    %4d %4d(%c) %d %d\n",ovr,inv,value/4,parm0,
                             (parm0>=32 && parm0<=126 ? parm0 : '?'),
                             parm1,parm2);
 
@@ -18354,13 +18354,13 @@ char *plot_moves[]= {
 	        case 5: 
             
                 if ((gflag & 0x80) !=0) {
-                    sprintf (buffer_temporal,"BRIGHT     %3d\n",value & 15);
+                    sprintf (buffer_temporal,"BRIGHT     %4d\n",value & 15);
 
                     if (paws_render_disable_bright.v==0) paws_render_bright=value&1;
                 }
 
                 else {
-                    sprintf (buffer_temporal,"PAPER      %3d\n",value & 15);
+                    sprintf (buffer_temporal,"PAPER      %4d\n",value & 15);
 
                     if (paws_render_disable_paper.v==0) paws_render_paper=value & 15;                         
                 }
@@ -18372,11 +18372,11 @@ char *plot_moves[]= {
             case 6: 
                 
                 if ((gflag & 0x80) !=0)  {
-                    sprintf (buffer_temporal,"FLASH      %3d\n",value & 15);
+                    sprintf (buffer_temporal,"FLASH      %4d\n",value & 15);
                 }
 
                 else {
-                    sprintf (buffer_temporal,"INK        %3d\n",value & 15);  
+                    sprintf (buffer_temporal,"INK        %4d\n",value & 15);  
                     if (paws_render_disable_ink.v==0) paws_render_ink=value & 15;
                 }
                       
@@ -28264,7 +28264,7 @@ void menu_snapshot_rewind_browse(MENU_ITEM_PARAMETERS)
 
              
 
-            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_browse_select,NULL,"%3d: %02d:%02d:%02d",
+            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_snapshot_rewind_browse_select,NULL,"%4d: %02d:%02d:%02d",
                 i,snapshots_in_ram[indice].hora,snapshots_in_ram[indice].minuto,snapshots_in_ram[indice].segundo);   
             
             menu_add_item_menu_valor_opcion(array_menu_comon,i);
