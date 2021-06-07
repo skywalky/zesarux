@@ -19812,9 +19812,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 		}
 
-	//Hacer mientras step mode este activo o no haya tecla pulsada
+	//Hacer mientras step mode este activo o no haya tecla pulsada o no haya un salir_todos_menus
 	//printf ("acumulado %d cpu_ste_mode: %d\n",acumulado,cpu_step_mode.v);
-    } while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA || cpu_step_mode.v==1);
+    //} while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA || cpu_step_mode.v==1);
+    } while ( ((acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA || cpu_step_mode.v==1) && !salir_todos_menus);
 
 	//Si no estamos haciendo stepping de daad, quitar breakpoint del parser
 	if (debug_stepping_daad.v==0) {
@@ -19837,8 +19838,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	util_add_window_geometry_compact(ventana);
 
 
-
-	if (tecla==3) {
+    //Caso especial. Pulsada tecla background o salir_todos_menus (que se ha pulsado tecla closeallmenus por ejemplo desde ventana breakpoints)
+	if (tecla==3 || salir_todos_menus) {
 		//En este caso, dado que no hay overlay, borramos contenido de la ventana
 		//para que el usuario no piense que se esta actualizando continuamente
 		zxvision_cls(ventana);
