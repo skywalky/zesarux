@@ -17525,7 +17525,7 @@ void menu_debug_daad_get_condact_message(void)
 //extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 
 #define RENDER_PAWS_START_X_DRAW 1
-#define RENDER_PAWS_START_Y_DRAW 4
+#define RENDER_PAWS_START_Y_DRAW 5
 
 void render_paws_putpixel(zxvision_window *w,int x,int y,int color)
 {
@@ -17872,7 +17872,8 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 //Renderiza y/o retorna lista de comandos de una pantalla grafica de quill, paws o daad
 //si buffer_texto_comandos=NULL, no rellena texto
 //si w==NULL, no dibuja nada
-void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte location,int nivel_recursivo,char *buffer_texto_comandos)
+//retorna en p_total_comandos, p_total_tamanyo si no son NULL, total de comandos del dibujo y total de bytes
+void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte location,int nivel_recursivo,char *buffer_texto_comandos,int *p_total_comandos,int *p_total_tamanyo)
 {
 
     
@@ -17883,7 +17884,7 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 
     if (table_dir==0) {
         //menu_error_message("Graphics not found");
-        printf("Graphics not found\n");
+        //printf("Graphics not found\n");
         //zxvision_draw_window_contents(w);
         return;
     }
@@ -17903,7 +17904,7 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 
     if (table_attr==0) {
         //menu_error_message("Graphics attributes not found");
-        printf("Graphics attributes not found\n");
+        //printf("Graphics attributes not found\n");
         //zxvision_draw_window_contents(w);
         return;
     }        
@@ -17954,6 +17955,8 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
 
     z80_int puntero_grafico=util_daad_get_graphics_location(location);
 
+    z80_int original_puntero_grafico=puntero_grafico;
+
     //printf("Start graphics location %d: %d\n",location,graphics);
     //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
 
@@ -17979,13 +17982,17 @@ char *plot_moves[]= {
 
     int quillversion;
 
-    util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);    
+    util_unpaws_get_maintop_mainattr(&maintop,&mainattr,&quillversion);
+
+    int total_comandos_parseados=0;
 
 
     while (!salir) {
         int line_comprimido=0;
         gflag=peek_byte_no_time(puntero_grafico);
         //z80_byte nargs;
+
+        total_comandos_parseados++;
 
         z80_byte value;
         char inv, ovr;
@@ -18304,7 +18311,7 @@ char *plot_moves[]= {
                         //lista de comandos de la subrutina
                         //Esto solo cambiaria algo en el supuesto caso en que dibujamos con putpixel (w no es NULL) y
                         //aqui buffer_texto_comandos viene con no NULL (o sea, que dibujamos y listamos texto)
-                        menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1,NULL);
+                        menu_debug_daad_view_graphics_render_recursive(w,nueva_ubicacion,nivel_recursivo+1,NULL,NULL,NULL);
                         //printf("llamar recursivo text=%p w=%p\n",buffer_texto_comandos,w);
 
                         paws_render_mirror_x=antes_paws_render_mirror_x;
@@ -18398,6 +18405,14 @@ char *plot_moves[]= {
 
     }
 
+    if (p_total_comandos!=NULL) {
+        *p_total_comandos=total_comandos_parseados;
+    }
+
+    if (p_total_tamanyo!=NULL) {
+        *p_total_tamanyo=puntero_grafico-original_puntero_grafico;
+    } 
+
 }
 
 
@@ -18439,7 +18454,7 @@ void menu_debug_daad_view_graphics_render_overlay(void)
         menu_debug_daad_view_graphics_render_recursive_gac(w,location,0,NULL);
     }
 
-    else menu_debug_daad_view_graphics_render_recursive(w,location,0,NULL);
+    else menu_debug_daad_view_graphics_render_recursive(w,location,0,NULL,NULL,NULL);
 
     zxvision_draw_window_contents(w);
 }
@@ -18467,7 +18482,7 @@ void menu_debug_daad_view_graphics_render_list_commands(MENU_ITEM_PARAMETERS)
     if (util_gac_detect() ) {
         menu_debug_daad_view_graphics_render_recursive_gac(NULL,menu_debug_daad_view_graphics_render_localizacion,0,texto);
     }
-    else menu_debug_daad_view_graphics_render_recursive(NULL,menu_debug_daad_view_graphics_render_localizacion,0,texto);
+    else menu_debug_daad_view_graphics_render_recursive(NULL,menu_debug_daad_view_graphics_render_localizacion,0,texto,NULL,NULL);
 
     //util_daad_get_graphics_list_commands(menu_debug_daad_view_graphics_render_localizacion,texto); 
     menu_generic_message("Graphics commands",texto);
@@ -18581,7 +18596,7 @@ void menu_debug_daad_view_graphics(void)
 
 
     if (!util_find_window_geometry("textadvgraphics",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
-        int ancho_minimo_deseado=42+RENDER_PAWS_START_X_DRAW;
+        int ancho_minimo_deseado=41+RENDER_PAWS_START_X_DRAW;
 
         ancho_ventana=(256/menu_char_width)+7+RENDER_PAWS_START_X_DRAW; //para hacer 32+7=39 en una ventana de char width = 8
 
@@ -18644,62 +18659,94 @@ void menu_debug_daad_view_graphics(void)
 
             util_gac_get_graphics_location(menu_debug_daad_view_graphics_render_localizacion,&location_id);
 
+
+            sprintf(buffer_linea,"Location: %d/%d ID location: %d",menu_debug_daad_view_graphics_render_localizacion,
+            util_gac_daad_get_total_graphics(), location_id);
+
+            zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_linea);
+
             int location_commands,location_size;
 
-            util_gac_get_graphics_size(menu_debug_daad_view_graphics_render_localizacion,&location_commands,&location_size);
+            util_gac_get_graphics_size(menu_debug_daad_view_graphics_render_localizacion,&location_commands,&location_size);            
 
-            sprintf(buffer_linea,"Location: %d/%d ID: %d Size: %d (%d B)",menu_debug_daad_view_graphics_render_localizacion,
-            util_gac_daad_get_total_graphics(), location_id, location_commands, location_size);
+            sprintf(buffer_linea,"Size: %d (%d B)",location_commands, location_size);
+
+            zxvision_print_string_defaults_fillspc(ventana,1,1,buffer_linea);            
         }
 
         else {
-            sprintf(buffer_linea,"Location: %d/%d %s Ink %d Paper %d",menu_debug_daad_view_graphics_render_localizacion,
+            //obtener tamanyo en bytes y comandos
+            //desactivar los gosub temporalmente
+            int antes_paws_render_disable_gosub=paws_render_disable_gosub.v;
+            paws_render_disable_gosub.v=1;
+
+            int location_commands,location_size;
+
+            menu_debug_daad_view_graphics_render_recursive(NULL,menu_debug_daad_view_graphics_render_localizacion,0,NULL,&location_commands,&location_size);
+            paws_render_disable_gosub.v=antes_paws_render_disable_gosub;
+
+            //printf("comandos: %d size %d\n",location_commands,location_size);
+
+
+            //sprintf(buffer_linea,"Location: %d/%d %s Ink %d Paper %d"
+
+            sprintf(buffer_linea,"Location: %d/%d %s",menu_debug_daad_view_graphics_render_localizacion,
             util_gac_daad_get_total_graphics(),
-                (is_picture ? "Picture   " : "Subroutine"),tinta,papel);
+                (is_picture ? "Picture   " : "Subroutine"));
+
+            zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_linea);
+
+            sprintf(buffer_linea,"Size %d (%d B) Ink %d Paper %d",
+                location_commands,location_size,
+                tinta,papel);
+
+            zxvision_print_string_defaults_fillspc(ventana,1,1,buffer_linea);            
         }
 
-        zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_linea);
+        
+
+        int linea=2;
 
 
 		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_prev,NULL,"~~Prev");
-		menu_add_item_menu_tabulado(array_menu_common,1,1);   
+		menu_add_item_menu_tabulado(array_menu_common,1,linea);   
         menu_add_item_menu_shortcut(array_menu_common,'p'); 
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_next,NULL,"~~Next");
-		menu_add_item_menu_tabulado(array_menu_common,6,1); 
+		menu_add_item_menu_tabulado(array_menu_common,6,linea); 
         menu_add_item_menu_shortcut(array_menu_common,'n');
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_set,NULL,"~~Set");
-		menu_add_item_menu_tabulado(array_menu_common,11,1);      
+		menu_add_item_menu_tabulado(array_menu_common,11,linea);      
         menu_add_item_menu_shortcut(array_menu_common,'s');
 
         if (es_gac) {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_ink,NULL,
                                         "Ink %d",gac_render_default_ink);
-            menu_add_item_menu_tabulado(array_menu_common,15,1);
+            menu_add_item_menu_tabulado(array_menu_common,15,linea);
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_paper,NULL,
                                         "Pap %d",gac_render_default_paper);
-            menu_add_item_menu_tabulado(array_menu_common,21,1);
+            menu_add_item_menu_tabulado(array_menu_common,21,linea);
 
         }
 
         else {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_x,NULL,
                                         "~~x %3d",paws_render_initial_x);
-            menu_add_item_menu_tabulado(array_menu_common,15,1);
+            menu_add_item_menu_tabulado(array_menu_common,15,linea);
             menu_add_item_menu_shortcut(array_menu_common,'x');
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_initial_y,NULL,
                                         "~~y %3d",paws_render_initial_y);
-            menu_add_item_menu_tabulado(array_menu_common,21,1);
+            menu_add_item_menu_tabulado(array_menu_common,21,linea);
             menu_add_item_menu_shortcut(array_menu_common,'y');
         }
 
 
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_list_commands,NULL,"List ~~commands");
-        menu_add_item_menu_tabulado(array_menu_common,27,1);   
+        menu_add_item_menu_tabulado(array_menu_common,27,linea);   
         menu_add_item_menu_shortcut(array_menu_common,'c');        
 
 
@@ -18709,29 +18756,29 @@ void menu_debug_daad_view_graphics(void)
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_gosub,NULL,
             "[%c] ~~Gosub",(paws_render_disable_gosub.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,1,2);   
+        menu_add_item_menu_tabulado(array_menu_common,1,linea+1);   
         menu_add_item_menu_shortcut(array_menu_common,'g');
 
         if (util_gac_detect() ) {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_rectangle,NULL,
                 "[%c] Rec~~t",(paws_render_disable_rectangle.v==0 ? 'X' : ' ') );
-            menu_add_item_menu_tabulado(array_menu_common,11,2);   
+            menu_add_item_menu_tabulado(array_menu_common,11,linea+1);   
             menu_add_item_menu_shortcut(array_menu_common,'t');       
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_ellipse,NULL,
                 "[%c] ~~Ellip",(paws_render_disable_ellipse.v==0 ? 'X' : ' ') );
-            menu_add_item_menu_tabulado(array_menu_common,20,2);   
+            menu_add_item_menu_tabulado(array_menu_common,20,linea+1);   
             menu_add_item_menu_shortcut(array_menu_common,'e');                       
         }
         else {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_block,NULL,
                 "[%c] ~~Block",(paws_render_disable_block.v==0 ? 'X' : ' ') );
-            menu_add_item_menu_tabulado(array_menu_common,11,2);   
+            menu_add_item_menu_tabulado(array_menu_common,11,linea+1);   
             menu_add_item_menu_shortcut(array_menu_common,'b');
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_text,NULL,
                 "[%c] ~~Text",(paws_render_disable_text.v==0 ? 'X' : ' ') );
-            menu_add_item_menu_tabulado(array_menu_common,21,2);   
+            menu_add_item_menu_tabulado(array_menu_common,21,linea+1);   
             menu_add_item_menu_shortcut(array_menu_common,'t');            
         }
 
@@ -18739,27 +18786,29 @@ void menu_debug_daad_view_graphics(void)
         
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_plot,NULL,
             "[%c] Pl~~ot",(paws_render_disable_plot.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,30,2);   
+        menu_add_item_menu_tabulado(array_menu_common,30,linea+1);   
         menu_add_item_menu_shortcut(array_menu_common,'o');
+
+
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_line,NULL,
             "[%c] ~~Line",(paws_render_disable_line.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,1,3);   
+        menu_add_item_menu_tabulado(array_menu_common,1,linea+2);   
         menu_add_item_menu_shortcut(array_menu_common,'l');
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_ink,NULL,
             "[%c] ~~Ink",(paws_render_disable_ink.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,10,3);   
+        menu_add_item_menu_tabulado(array_menu_common,10,linea+2);   
         menu_add_item_menu_shortcut(array_menu_common,'i');
                 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_paper,NULL,
             "[%c] P~~aper",(paws_render_disable_paper.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,18,3);   
+        menu_add_item_menu_tabulado(array_menu_common,18,linea+2);   
         menu_add_item_menu_shortcut(array_menu_common,'a');
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_disable_bright,NULL,
             "[%c] B~~right",(paws_render_disable_bright.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_tabulado(array_menu_common,28,3);   
+        menu_add_item_menu_tabulado(array_menu_common,28,linea+2);   
         menu_add_item_menu_shortcut(array_menu_common,'r');
 
 
