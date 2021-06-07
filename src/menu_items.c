@@ -17699,12 +17699,12 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
 
         switch (gflag) {
             case 0x01:
-                sprintf(buffer_temporal,"BORDER  %4d\n", parm0_byte);
+                sprintf(buffer_temporal,"BORDER  %3d\n", parm0_byte);
                 puntero_grafico++;
             break;
 
             case 0x02:
-                sprintf(buffer_temporal,"PLOT    %4d %4d\n", parm0_byte, parm1_byte);
+                sprintf(buffer_temporal,"PLOT    %3d %3d\n", parm0_byte, parm1_byte);
                 puntero_grafico += 2;
 
                     
@@ -17715,7 +17715,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x03:
-                sprintf(buffer_temporal,"ELLIPSE %4d %4d %4d %4d\n",
+                sprintf(buffer_temporal,"ELLIPSE %3d %3d %3d %3d\n",
                         parm0_byte, parm1_byte,
                         parm2_byte, parm3_byte);
                 puntero_grafico += 4;
@@ -17733,17 +17733,17 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x04:
-                sprintf(buffer_temporal,"FILL    %4d %4d\n", parm0_byte, parm1_byte); 
+                sprintf(buffer_temporal,"FILL    %3d %3d\n", parm0_byte, parm1_byte); 
                 puntero_grafico += 2;
             break;
 
             case 0x05:
-                sprintf(buffer_temporal,"BGFILL  %4d %4d\n", parm0_byte, parm1_byte); 
+                sprintf(buffer_temporal,"BGFILL  %3d %3d\n", parm0_byte, parm1_byte); 
                 puntero_grafico += 2;
             break;
             
             case 0x06:
-                sprintf(buffer_temporal,"SHADE   %4d %4d\n", parm0_byte, parm1_byte); 
+                sprintf(buffer_temporal,"SHADE   %3d %3d\n", parm0_byte, parm1_byte); 
                 puntero_grafico += 2;
             break;
 
@@ -17781,7 +17781,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x08:
-                sprintf(buffer_temporal,"RECT    %4d %4d %4d %4d\n",
+                sprintf(buffer_temporal,"RECT    %3d %3d %3d %3d\n",
                         parm0_byte, parm1_byte,
                         parm2_byte, parm3_byte);
                 puntero_grafico += 4;
@@ -17805,7 +17805,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x09:
-                sprintf(buffer_temporal,"LINE    %4d %4d %4d %4d\n",
+                sprintf(buffer_temporal,"LINE    %3d %3d %3d %3d\n",
                         parm0_byte, parm1_byte,
                         parm2_byte, parm3_byte);
                 puntero_grafico += 4;
@@ -17824,25 +17824,25 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
             break;
 
             case 0x10:
-                sprintf (buffer_temporal,"INK     %4d\n",parm0_byte);  
+                sprintf (buffer_temporal,"INK     %3d\n",parm0_byte);  
                 if (paws_render_disable_ink.v==0) paws_render_ink=parm0_byte & 7;
                 puntero_grafico++;
             break;
 
             case 0x11:
-                sprintf(buffer_temporal,"PAPER   %4d\n", parm0_byte);
+                sprintf(buffer_temporal,"PAPER   %3d\n", parm0_byte);
                 if (paws_render_disable_paper.v==0) paws_render_paper=parm0_byte;                
                 puntero_grafico++;
             break;
 
             case 0x12:
-                sprintf(buffer_temporal,"BRIGHT  %4d\n", parm0_byte);
+                sprintf(buffer_temporal,"BRIGHT  %3d\n", parm0_byte);
                 puntero_grafico++;
                 if (paws_render_disable_bright.v==0) paws_render_bright=parm0_byte&1;
             break;
 
             case 0x13:
-                sprintf(buffer_temporal,"FLASH   %4d\n", parm0_byte);
+                sprintf(buffer_temporal,"FLASH   %3d\n", parm0_byte);
                 puntero_grafico++;
             break;
 
