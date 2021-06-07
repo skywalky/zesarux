@@ -852,6 +852,7 @@ extern void util_daad_get_condact_message(char *buffer);
 extern z80_int util_daad_get_graphics_attr(z80_byte location,int *ink,int *paper,int *is_picture);
 extern int util_daad_has_graphics(void);
 extern z80_int util_gac_get_graphics_location(int location,int *location_id);
+extern void util_gac_get_graphics_size(int location,int *location_commands,int *location_size);
 extern z80_int util_gac_daad_get_total_graphics(void);
 extern int util_gac_detect(void);
 extern int util_gac_get_index_location_by_id(int location_id);

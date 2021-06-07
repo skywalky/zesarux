@@ -17625,7 +17625,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
     puntero_grafico=util_gac_get_graphics_location(location,&location_id);
 
     longitud_habitacion_gac=peek_byte_no_time(puntero_grafico++);
-    printf("longitud habitacion: %d\n",longitud_habitacion_gac);
+    //printf("longitud habitacion: %d\n",longitud_habitacion_gac);
     
 
 
@@ -18580,11 +18580,11 @@ void menu_debug_daad_view_graphics(void)
     //xventana=0;
     //yventana=0;
 
-    int ancho_minimo_deseado=41+RENDER_PAWS_START_X_DRAW;
+    int ancho_minimo_deseado=42+RENDER_PAWS_START_X_DRAW;
 
     ancho_ventana=(256/menu_char_width)+7+RENDER_PAWS_START_X_DRAW; //para hacer 32+7=39 en una ventana de char width = 8
 
-    //Minimo 39 para que quepa todo el texto de opciones
+    //Minimo para que quepa todo el texto de opciones
     if (ancho_ventana<ancho_minimo_deseado) ancho_ventana=ancho_minimo_deseado;
 
     alto_ventana=26+RENDER_PAWS_START_Y_DRAW;
@@ -18638,8 +18638,12 @@ void menu_debug_daad_view_graphics(void)
 
             util_gac_get_graphics_location(menu_debug_daad_view_graphics_render_localizacion,&location_id);
 
-            sprintf(buffer_linea,"Location: %d/%d ID: %d",menu_debug_daad_view_graphics_render_localizacion,
-            util_gac_daad_get_total_graphics(), location_id);
+            int location_commands,location_size;
+
+            util_gac_get_graphics_size(menu_debug_daad_view_graphics_render_localizacion,&location_commands,&location_size);
+
+            sprintf(buffer_linea,"Location: %d/%d ID: %d Size: %d (%d B)",menu_debug_daad_view_graphics_render_localizacion,
+            util_gac_daad_get_total_graphics(), location_id, location_commands, location_size);
         }
 
         else {

@@ -18851,6 +18851,27 @@ z80_int util_gac_get_graphics_location(int location,int *location_id)
 
 }
 
+//Retorna el tamaño de un grafico, en comandos y en bytes
+void util_gac_get_graphics_size(int location,int *location_commands,int *location_size)
+{
+    int location_id;
+
+    z80_int table_dir=util_gac_get_graphics_location(location,&location_id);
+
+    if (table_dir==0) {
+        *location_commands=0;
+        *location_size=0;
+        return;
+    }
+    else {
+        *location_commands=peek_byte_no_time(table_dir);
+        *location_size=peek_word_no_time(table_dir-2);
+        return;
+    }
+
+
+}
+
 //Retorna en que posicion (0,1,...) esta el id de habitacion indicado
 //-1 si no existe
 int util_gac_get_index_location_by_id(int location_id)
