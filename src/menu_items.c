@@ -18410,7 +18410,11 @@ char *plot_moves[]= {
     }
 
     if (p_total_tamanyo!=NULL) {
-        *p_total_tamanyo=puntero_grafico-original_puntero_grafico;
+        int resta=puntero_grafico-original_puntero_grafico;
+        //esto sucede en imagenes corruptas
+        //da la vuelta. el valor no es real pero para evitar poner un valor negativo
+        if (resta<0) resta=65536-original_puntero_grafico;
+        *p_total_tamanyo=resta;
     } 
 
 }
@@ -18669,7 +18673,7 @@ void menu_debug_daad_view_graphics(void)
 
             util_gac_get_graphics_size(menu_debug_daad_view_graphics_render_localizacion,&location_commands,&location_size);            
 
-            sprintf(buffer_linea,"Size: %d (%d B)",location_commands, location_size);
+            sprintf(buffer_linea,"Size: %d commands (%d Bytes)",location_commands, location_size);
 
             zxvision_print_string_defaults_fillspc(ventana,1,1,buffer_linea);            
         }
@@ -18696,7 +18700,7 @@ void menu_debug_daad_view_graphics(void)
 
             zxvision_print_string_defaults_fillspc(ventana,1,0,buffer_linea);
 
-            sprintf(buffer_linea,"Size %d (%d B) Ink %d Paper %d",
+            sprintf(buffer_linea,"Size %d commands (%d B) Ink %d Paper %d",
                 location_commands,location_size,
                 tinta,papel);
 
