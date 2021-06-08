@@ -17974,14 +17974,14 @@ char *plot_moves[]= {
 */ 
 
 int new_plot_moves[8][2]={
-    {1,  0},
-    {1,  1},
-    {0,  1},
-    {-1, 1},
-    {-1, 0},
-    {-1,-1},
-    {0, -1},
-    {1, -1}     
+    {0,   1},
+    {1,   1},
+    {1,   0},
+    {-1,  1},
+    {0,  -1},
+    {-1, -1},
+    {-1,  0},
+    {1,  -1}     
 };
 
     int salir=0;
@@ -18374,6 +18374,8 @@ int new_plot_moves[8][2]={
                     paws_render_last_y +=parm1;
 
                     //TODO: no estoy seguro de que el funcionamiento de rplot sea este precisamente
+
+                    //Se puede probar en bugsy localizaciones 50 y 51
 
                     if (paws_render_disable_plot.v==0 && w!=NULL) {
                         render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8);
