@@ -17960,6 +17960,7 @@ void menu_debug_daad_view_graphics_render_recursive(zxvision_window *w,z80_byte 
     //printf("Start graphics location %d: %d\n",location,graphics);
     //util_daad_get_message_table_lookup(index,table_dir,texto,util_daad_get_num_locat_messages() );
 
+/*
 char *plot_moves[]= {
 " 001  000",
 " 001  001",
@@ -17969,7 +17970,19 @@ char *plot_moves[]= {
 "-001 -001",
 " 000 -001",
 " 001 -001" 
-}; 
+};
+*/ 
+
+int new_plot_moves[8][2]={
+    {1,  0},
+    {1,  1},
+    {0,  1},
+    {-1, 1},
+    {-1, 0},
+    {-1,-1},
+    {0, -1},
+    {1, -1}     
+};
 
     int salir=0;
 
@@ -18351,7 +18364,21 @@ char *plot_moves[]= {
                 }
 
                 else {
-                    sprintf (buffer_temporal,"RPLOT %c%c   %s\n",ovr,inv,plot_moves[value/4]);
+                    parm0=new_plot_moves[value/4][0];
+                    parm1=new_plot_moves[value/4][1];
+
+                    sprintf (buffer_temporal,"RPLOT %c%c   %4d %4d\n",ovr,inv,parm0,parm1);
+                    printf("RPLOT location %d %d %d\n",location,parm0,parm1);
+
+                    paws_render_last_x +=parm0;
+                    paws_render_last_y +=parm1;
+
+                    //TODO: no estoy seguro de que el funcionamiento de rplot sea este precisamente
+
+                    if (paws_render_disable_plot.v==0 && w!=NULL) {
+                        render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8);
+                    }
+
                 }
                             
 
