@@ -18147,7 +18147,8 @@ int new_plot_moves[8][2]={
 
                 if (dibujar && paws_render_disable_line.v==0) {
                     int color_tinta=paws_render_ink+paws_render_bright*8;
-                    if (inv=='i' && paws_render_disable_ink.v==0) color_tinta=paws_render_paper+paws_render_bright*8;                    
+                    if (inv=='i' && paws_render_disable_ink.v==0) color_tinta=paws_render_paper+paws_render_bright*8;
+                    //Juanito y su baloncito tiene alguna pantalla con inverse (la 4)      
 
                     if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,color_tinta,render_paws_putpixel);
                 }
