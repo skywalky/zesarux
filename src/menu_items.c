@@ -18002,6 +18002,7 @@ int new_plot_moves[8][2]={
 
     while (!salir) {
         int line_comprimido=0;
+        //printf("%d\n",puntero_grafico);
         gflag=peek_byte_no_time(puntero_grafico);
         //z80_byte nargs;
 
@@ -18368,7 +18369,7 @@ int new_plot_moves[8][2]={
                     parm1=new_plot_moves[value/4][1];
 
                     sprintf (buffer_temporal,"RPLOT %c%c   %4d %4d\n",ovr,inv,parm0,parm1);
-                    printf("RPLOT location %d %d %d\n",location,parm0,parm1);
+                    //printf("RPLOT location %d %d %d\n",location,parm0,parm1);
 
                     paws_render_last_x +=parm0;
                     paws_render_last_y +=parm1;
@@ -18376,6 +18377,7 @@ int new_plot_moves[8][2]={
                     //TODO: no estoy seguro de que el funcionamiento de rplot sea este precisamente
 
                     //Se puede probar en bugsy localizaciones 50 y 51
+                    //(se llaman desde la primera pantalla del juego)
 
                     if (paws_render_disable_plot.v==0 && w!=NULL) {
                         render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8);
@@ -18430,7 +18432,7 @@ int new_plot_moves[8][2]={
         if (buffer_texto_comandos!=NULL) {
             util_concat_string(buffer_texto_comandos,buffer_temporal,MAX_TEXTO_GENERIC_MESSAGE);
         }
-
+        //printf("%d %s\n",puntero_grafico,buffer_temporal);
 
     }
 
@@ -18735,8 +18737,6 @@ void menu_debug_daad_view_graphics(void)
 
             zxvision_print_string_defaults_fillspc(ventana,1,1,buffer_linea);            
         }
-
-        
 
         int linea=2;
 

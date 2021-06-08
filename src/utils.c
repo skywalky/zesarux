@@ -18732,7 +18732,15 @@ z80_int util_daad_get_graphics_location(z80_byte location)
     z80_int table_dir=util_daad_get_start_graphics();
     if (table_dir==0) return 0;
 
-    z80_int graphics=peek_word_no_time(table_dir+location*2);
+    int offset=table_dir+location*2;
+    //printf("offset location %d: %d\n",location,offset);
+
+    if (offset>65533) {
+        //Tabla se iria mas alla del limite. Decir fin
+        return 0;
+    }
+
+    z80_int graphics=peek_word_no_time(offset);
 
     return graphics;
 }
@@ -18743,7 +18751,9 @@ z80_int util_daad_get_total_graphics(void)
     //buscar hasta puntero 0
     int i=0;
 
-    for (i=0;util_daad_get_graphics_location(i)!=0;i++);
+    for (i=0;util_daad_get_graphics_location(i)!=0 && i<255;i++) {
+        //printf("i %d\n",i);
+    }
 
     //printf("total locations: %d\n",i);
 
