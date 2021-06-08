@@ -18368,7 +18368,7 @@ int new_plot_moves[8][2]={
                     parm0=new_plot_moves[value/4][0];
                     parm1=new_plot_moves[value/4][1];
 
-                    sprintf (buffer_temporal,"RPLOT %c%c   %4d %4d\n",ovr,inv,parm0,parm1);
+                    sprintf (buffer_temporal,"FREEHAND %c%c  %2d   %2d\n",ovr,inv,parm0,parm1);
                     //printf("RPLOT location %d %d %d\n",location,parm0,parm1);
 
                     paws_render_last_x +=parm0;
