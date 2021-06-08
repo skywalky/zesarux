@@ -18069,7 +18069,11 @@ int new_plot_moves[8][2]={
                 }
 
                 if (dibujar && paws_render_disable_plot.v==0 && w!=NULL) {
-                    render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8);
+
+                    int color_tinta=paws_render_ink+paws_render_bright*8;
+                    if (inv=='i') color_tinta=paws_render_paper+paws_render_bright*8;
+
+                    render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,color_tinta);
                 }
 
                 puntero_grafico +=2;
@@ -18142,7 +18146,10 @@ int new_plot_moves[8][2]={
                 int y2=y1+parm1;
 
                 if (dibujar && paws_render_disable_line.v==0) {
-                    if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                    int color_tinta=paws_render_ink+paws_render_bright*8;
+                    if (inv=='i') color_tinta=paws_render_paper+paws_render_bright*8;                    
+
+                    if (w!=NULL) zxvision_draw_line(w,x1,y1,x2,y2,color_tinta,render_paws_putpixel);
                 }
 
                 paws_render_last_x=x2;
@@ -18358,8 +18365,15 @@ int new_plot_moves[8][2]={
                     posx /= menu_char_width;
 
                     if (paws_render_disable_text.v==0 && w!=NULL) {
-                        zxvision_print_char_simple(w,posx,parm2+RENDER_PAWS_START_Y_DRAW,paws_render_ink+paws_render_bright*8,
-                            paws_render_paper+paws_render_bright*8,0,parm0);
+                        int color_tinta=paws_render_ink+paws_render_bright*8;
+                        int color_papel=paws_render_paper+paws_render_bright*8;
+                        if (inv=='i') {
+                            color_tinta=paws_render_paper+paws_render_bright*8;
+                            color_papel=paws_render_ink+paws_render_bright*8;
+                        }
+
+                        zxvision_print_char_simple(w,posx,parm2+RENDER_PAWS_START_Y_DRAW,color_tinta,
+                            color_papel,0,parm0);
                     }
 
                 }
@@ -18380,7 +18394,10 @@ int new_plot_moves[8][2]={
                     //(se llaman desde la primera pantalla del juego)
 
                     if (paws_render_disable_plot.v==0 && w!=NULL) {
-                        render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,paws_render_ink+paws_render_bright*8);
+                        int color_tinta=paws_render_ink+paws_render_bright*8;
+                        if (inv=='i') color_tinta=paws_render_paper+paws_render_bright*8;                            
+
+                        render_paws_putpixel(w,paws_render_last_x,paws_render_last_y,color_tinta);
                     }
 
                 }
