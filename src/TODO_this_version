@@ -215,3 +215,7 @@ Deberia mirar ese bit esta a 1 para poner el contador a 0?
 en 38H, y darle enter en modo step, casi nunca avanza de esa direccion (porque salta de nuevo el breakpoint)
 
 -listado de breakpoints: que liste mas alla de 10 (que salga hasta el ultimo definido)
+
+-Quizá al mover rueda de ratón tiene que volver de menú espera tecla
+
+-confirmar parametros de Freehand en quill. crear grafico en illustrator y hacer las 8 posibles combinaciones
