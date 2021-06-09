@@ -19503,7 +19503,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                 menu_espera_tecla();
 
-                printf("Despues espera tecla en modo step\n");
+                //printf("Despues espera tecla en modo step\n");
                 int accion_mouse_pulsado=0;
 
                 //Si se pulsa raton en vista 1
@@ -19520,7 +19520,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				//tecla=zxvision_common_getkey_refresh();
 				if (!accion_mouse_pulsado) {
                     tecla=zxvision_common_getkey_refresh_noesperanotec();
-                    printf("tecla pulsada en modo step: %d\n",tecla);
+                    //printf("tecla pulsada en modo step: %d\n",tecla);
                 }
 				menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 
@@ -19964,7 +19964,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				//Cualquier tecla no enter, no ejecuta instruccion
 				if (tecla!=13) {
-                    printf("tecla no es enter. no ejecutar instruccion\n");
+                    //printf("tecla no es enter. no ejecutar instruccion\n");
                     si_ejecuta_una_instruccion=0;
                 }
 
