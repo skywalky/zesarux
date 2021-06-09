@@ -14323,6 +14323,27 @@ int get_menu_debug_num_lineas_full(zxvision_window *w)
 	return lineas;
 }
 
+int get_menu_debug_columna_registros(zxvision_window *w)
+{
+    //A partir de que columna aparecen los registros a la derecha
+    //dependera del tamaño de la ventana
+    int columna_registros;
+
+
+    columna_registros=w->visible_width-13;   //32-13
+    if (CPU_IS_MOTOROLA) columna_registros=w->visible_width-12; //32-12
+
+
+    //Revisar un minimo y maximo
+    if (columna_registros<19) columna_registros=19;
+
+    //20 caracteres dan mas que de sobra para el texto de registros
+    if (columna_registros>MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-20) columna_registros=MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-20;
+
+    return columna_registros;
+
+}
+
 
 void menu_debug_registers_print_register_aux_moto(zxvision_window *w,char *textoregistros,int *linea,int numero,m68k_register_t registro_direccion,m68k_register_t registro_dato)
 {
@@ -15374,19 +15395,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 				//A partir de que columna aparecen los registros a la derecha
 				//dependera del tamaño de la ventana
-				int columna_registros;
-
-
-				columna_registros=w->visible_width-13;   //32-13
-				if (CPU_IS_MOTOROLA) columna_registros=w->visible_width-12; //32-12
-
-
-				//Revisar un minimo y maximo
-				if (columna_registros<19) columna_registros=19;
-
-				//20 caracteres dan mas que de sobra para el texto de registros
-				if (columna_registros>MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-20) columna_registros=MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH-20;
-
+				int columna_registros=get_menu_debug_columna_registros(w);
 
 
 				//Mi valor ptr
@@ -18907,6 +18916,99 @@ void menu_debug_registers_zxvision_save_size(zxvision_window *ventana,int *venta
 
 zxvision_window zxvision_window_menu_debug_registers;
 
+z80_byte menu_debug_cpu_handle_mouse(zxvision_window *ventana)
+{
+    //printf("menu mouse x %d y %d\n",menu_mouse_x,menu_mouse_y);
+
+    //printf("wheel vertical: %d\n",mouse_wheel_vertical);
+
+    if (!mouse_left) {
+        //no pulsado boton izquierdo
+
+        //movida rueda
+        //TODO: en modo step to step esto no se lee a no ser que se mueva rueda y ademas se mueva raton,
+        //esto es debido a que el "menu_espera_tecla" no parece retornar cuando solo se mueve la rueda
+        if (mouse_wheel_vertical) {
+            int desplazamiento=0; //+1 = abajo, -1=arriba
+            if (mouse_wheel_vertical<0) {
+                //normalmente abajo
+               
+                desplazamiento=+1;
+            }
+            if (mouse_wheel_vertical>0) {
+                //normalmente arriba
+
+                desplazamiento=-1;
+            }
+
+            mouse_wheel_vertical=0;
+            //teclas
+            //10 cursor down
+            //11 cursor up
+
+            if (menu_invert_mouse_scroll.v) desplazamiento=-desplazamiento;
+
+            if (desplazamiento>0) {
+                //printf("abajo\n");
+                return 10; 
+            }
+            else {
+                //printf("arriba\n");
+                return 11;
+            }
+
+        }
+
+        return 0;
+        
+    }
+
+    //Pulsado boton izquierdo
+    else {
+
+        int inicio_disassemble=2+1; //linea 0 de mouse es el titulo. Contamos desde la 1
+
+        int final_disassemble=inicio_disassemble+get_menu_debug_num_lineas_full(ventana);
+
+        int columna_registros=get_menu_debug_columna_registros(ventana);
+
+        if (menu_mouse_y>=inicio_disassemble && menu_mouse_y<final_disassemble) {
+            //printf("mouse pulsado en seccion disassemble o registros\n");
+            //Si zona registros
+            if (menu_mouse_x>=columna_registros) {
+                //printf("mouse pulsado en seccion registros\n");
+                return 'r';
+            }
+
+            //printf("mouse pulsado en seccion disassemble\n");
+            //obtener desplazamiento cursor
+            int offset_cursor=menu_mouse_y-inicio_disassemble;
+
+
+            //menu_debug_follow_pc.v=0; //se deja de seguir pc
+
+            //Primero nos posicionamos en la direccion de arriba del todo
+            //TODO: lo mejor sería tener una variable que cuando muestre vista 1 indique la direccion de memoria de la primera linea,
+            //para no tener que recalcularla aqui 
+            menu_debug_memory_pointer=menu_debug_disassemble_subir_veces(menu_debug_memory_pointer,menu_debug_line_cursor);
+
+            //Cursor a 0
+            menu_debug_line_cursor=0;
+
+            //Y bajar hasta donde haya pulsado el raton
+
+            int i;
+            for (i=0;i<offset_cursor;i++) {
+                menu_debug_cursor_down(ventana);
+            }
+
+            return 'l';
+        }
+    }
+
+    return 0;
+}
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -19104,10 +19206,26 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                	acumulado=0;
 	        }
 
+            int accion_mouse_pulsado=0;
+
+            //printf("Despues menu_da_todas_teclas en modo no step\n");
+            //Si se pulsa raton en vista 1
+            if ((mouse_left || mouse_wheel_vertical) && menu_debug_registers_current_view==1) {
+                tecla=menu_debug_cpu_handle_mouse(ventana);
+                if (tecla!=0) {
+                    accion_mouse_pulsado=1;
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA ^255; //cualquier variacion sobre MENU_PUERTO_TECLADO_NINGUNA nos vale
+                    //printf("Accion mouse en modo no step\n");
+                    //menu_espera_no_tecla();
+                }
+            }
+
 			//Hay tecla pulsada
 			if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
 				//tecla=zxvision_common_getkey_refresh();
-				tecla=zxvision_common_getkey_refresh_noesperanotec();
+                if (!accion_mouse_pulsado) {
+				    tecla=zxvision_common_getkey_refresh_noesperanotec();
+                }
 
             	//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
                 if (tecla==0) {
@@ -19385,8 +19503,25 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                 menu_espera_tecla();
 
+                printf("Despues espera tecla en modo step\n");
+                int accion_mouse_pulsado=0;
+
+                //Si se pulsa raton en vista 1
+                if ((mouse_left || mouse_wheel_vertical) && menu_debug_registers_current_view==1) {
+                    tecla=menu_debug_cpu_handle_mouse(ventana);
+
+                    if (tecla!=0) {
+                        accion_mouse_pulsado=1;
+                        //printf("Accion mouse en modo step\n");
+                    }                    
+                }     
+
+
 				//tecla=zxvision_common_getkey_refresh();
-				tecla=zxvision_common_getkey_refresh_noesperanotec();
+				if (!accion_mouse_pulsado) {
+                    tecla=zxvision_common_getkey_refresh_noesperanotec();
+                    printf("tecla pulsada en modo step: %d\n",tecla);
+                }
 				menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 
 				//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla
@@ -19828,7 +19963,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				}				
 
 				//Cualquier tecla no enter, no ejecuta instruccion
-				if (tecla!=13) si_ejecuta_una_instruccion=0;
+				if (tecla!=13) {
+                    printf("tecla no es enter. no ejecutar instruccion\n");
+                    si_ejecuta_una_instruccion=0;
+                }
 
 			}
 
@@ -19865,7 +20003,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 			//1 instruccion cpu
 			if (si_ejecuta_una_instruccion) {
-				//printf ("ejecutando instruccion en step-to-step o continuous\n");
+				printf ("ejecutando instruccion en step-to-step o continuous. PC=%d\n",reg_pc);
 				debug_core_lanzado_inter.v=0;
 
 				screen_force_refresh=1; //Para que no haga frameskip y almacene los pixeles/atributos en buffer rainbow
@@ -19883,7 +20021,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					
                 }					
 
-				else cpu_core_loop();
+				else {
+                    printf("ejecutando cpu_core_loop\n");
+                    cpu_core_loop();
+                }
 
 				//Ver si se ha disparado interrupcion (nmi o maskable)
 				//if (debug_core_lanzado_inter.v && debug_core_evitamos_inter.v) {
