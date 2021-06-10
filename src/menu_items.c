@@ -16829,6 +16829,18 @@ int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
 
 				char maxima_vista='7';
 
+                //temporal. poner esto con una opcion visible
+                //agregar tambien idioma parser. spanish, english, unknown
+                if (util_daad_detect() ) {
+                    int official_version;
+                    
+                    int version_pointers;
+
+                    util_daad_get_version_daad(&official_version,&version_pointers);
+
+                    printf("version parser: %d version pointers: %d\n",official_version,version_pointers);
+                }
+
 				if (util_daad_detect() || util_paws_detect() ) maxima_vista='8';
 
 								sprintf(buffer_mensaje_short,"P~~tr:%sH [%c] ~~FlwPC ~~1-~~%c:View",

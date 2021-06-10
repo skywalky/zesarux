@@ -866,6 +866,7 @@ extern z80_byte daad_peek(z80_int dir);
 extern void daad_poke(z80_int dir,z80_byte value);
 extern z80_int util_daad_get_pc_parser(void);
 extern z80_int util_paws_get_pc_parser(void); 
+extern void util_daad_get_version_daad(int *official_version,int *version_pointers);
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 

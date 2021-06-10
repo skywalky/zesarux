@@ -18127,6 +18127,13 @@ int util_has_daad_signature(z80_int dir)
 
 z80_int util_daad_get_start_pointers(void)
 {
+    /*
+    1) En la dirección 0x8400 ha de haber un 1 o un 2. Si son juegos DAAD hechos hoy en día habrá un 2, si son antiguos habrá un 1. 
+    2) En la siguiente direccion debe conterner un 0x10 o un 0x11 (marca que es juego de spectrum en ingles la primera, juego de Spectrum en español la segunda)
+    Para Amstrad, 0x31/0x30 en el 0x2882 en lugar de 0x11/0x10
+    3) En la siguiente direccion lo normal es encontrar un 95 decimal. 
+
+    */    
         if (MACHINE_IS_CPC) return 0x2880;
 
         else {
@@ -18142,6 +18149,30 @@ z80_int util_daad_get_start_pointers(void)
         }
 }
 
+void util_daad_get_version_daad(int *official_version,int *version_pointers)
+{
+    z80_int dir=util_daad_get_start_pointers();
+
+    int version=daad_peek(dir);
+
+    *official_version=version;
+
+    switch (dir) {
+        case 0x8380:
+            *version_pointers=1;
+        break;
+
+        case 0x8480:
+            *version_pointers=2;
+        break;
+
+        default:
+            *version_pointers=0;
+        break;
+    }
+
+}
+
 //Detecta si juego cargado en memoria está hecho con daad
 //Condicion primera es que maquina actual sea spectrum
 int util_daad_detect(void)
@@ -18149,13 +18180,7 @@ int util_daad_detect(void)
 
 
         if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
-                /*
-                1) En la dirección 0x8400 ha de haber un 1 o un 2. Si son juegos DAAD hechos hoy en día habrá un 2, si son antiguos habrá un 1. 
-                2) En la siguiente direccion debe conterner un 0x10 o un 0x11 (marca que es juego de spectrum en ingles la primera, juego de Spectrum en español la segunda)
-                Para Amstrad, 0x31/0x30 en el 0x2882 en lugar de 0x11/0x10
-                3) En la siguiente direccion lo normal es encontrar un 95 decimal. 
- 
-                */
+
 
                 z80_int dir=util_daad_get_start_pointers();
 
@@ -18424,8 +18449,18 @@ z80_int util_daad_get_start_flags(void)
                 if (MACHINE_IS_CPC) return 0x23c9;
 
                 else  {
-                        if (util_daad_is_spanish()) return 0x7f1c;
-                        else return 0x7e55;
+                    if (util_daad_is_spanish()) {
+                        z80_int dir=util_daad_get_start_pointers();
+                        printf("dir: %x\n",dir);
+                        
+                        //excepciones
+                        if (dir==0x8480) return 0x8171;
+
+                        if (dir==0x8380) return 0x80fa;
+
+                        return 0x7f1c;
+                    }
+                    else return 0x7e55;
                 }
 
         }
@@ -19136,7 +19171,15 @@ z80_int util_daad_get_num_sys_messages(void)
 z80_int util_daad_get_pc_parser(void)
 {
         if (MACHINE_IS_CPC) return DAAD_PARSER_BREAKPOINT_PC_CPC;
-        else return DAAD_PARSER_BREAKPOINT_PC_SPECTRUM;
+        else {
+            z80_int dir=util_daad_get_start_pointers();
+
+            if (dir==0x8380) return 0x6360;
+
+            if (dir==0x8480) return 0x647b;
+
+            return DAAD_PARSER_BREAKPOINT_PC_SPECTRUM;
+        }
 }
 
 int util_paws_is_opcodes_parser(z80_int dir)
