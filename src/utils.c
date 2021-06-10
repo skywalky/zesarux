@@ -18106,14 +18106,40 @@ int get_cpu_frequency(void)
         return cpu_hz;
 }
 
+int util_has_daad_signature(z80_int dir)
+{
 
+    z80_byte first_byte=daad_peek(dir);
+    z80_byte second_byte=daad_peek(dir+1);
+    z80_byte third_byte=daad_peek(dir+2);
+
+    if (first_byte==1 || first_byte==2) {
+            if (second_byte==0x10 || second_byte==0x11 || second_byte==0x30 || second_byte==0x31) {
+                    if (third_byte==95) {
+                            return 1;
+                    }
+            }
+    }
+
+    return 0;    
+}
 
 
 z80_int util_daad_get_start_pointers(void)
 {
         if (MACHINE_IS_CPC) return 0x2880;
 
-        else return 0x8400;
+        else {
+            //normalmente 0x8400, pero en algunos (la diosa de cozumel) es 0x8380
+            if (util_has_daad_signature(0x8380)) return 0x8380;
+
+            //aventura original
+            if (util_has_daad_signature(0x8480)) return 0x8480;
+
+            //la mayoria
+            return 0x8400;
+
+        }
 }
 
 //Detecta si juego cargado en memoria está hecho con daad
@@ -18133,19 +18159,10 @@ int util_daad_detect(void)
 
                 z80_int dir=util_daad_get_start_pointers();
 
-                z80_byte first_byte=daad_peek(dir);
-                z80_byte second_byte=daad_peek(dir+1);
-                z80_byte third_byte=daad_peek(dir+2);
-
-                if (first_byte==1 || first_byte==2) {
-                       if (second_byte==0x10 || second_byte==0x11 || second_byte==0x30 || second_byte==0x31) {
-                               if (third_byte==95) {
-                                       return 1;
-                                }
-                        }
-                }
-
-                return 0;
+                //Nota: esto es un poco redundante porque en util_daad_get_start_pointers ya se llama a util_has_daad_signature
+                //esto venia porque antes el puntero por defecto en spectrum siempre lo tenia al mismo 0x8400,
+                //pero luego agregue deteccion de varias posibles direcciones
+                return util_has_daad_signature(dir);
 
         }
 

@@ -9,8 +9,11 @@ Added setting to disable TZX pauses
 Added zsf to scr support for Next, ZX-Uno and TSConf snapshots
 Added Jupiter Ace 51 KB RAM emulation
 
-Improved Debugging: 
+Improved Text Aventure Debugging: 
+-Improved detection of Daad aventures
 -Now you can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
+
+Improved Debugging: 
 -Mouse accions: click (toggle breakpoint, change registers), Scroll up/down by using the mouse wheel
 
 Improved ZX Vision menu interface:

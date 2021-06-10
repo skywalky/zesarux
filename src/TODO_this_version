@@ -186,7 +186,6 @@ no quiere ver. O siempre así o igual personalizable. Probarlo
 
 -borrar util_daad_get_graphics_list_commands cuando ya no se use
 
--puntos de paro con raton
 -en debug resaltar registros que se vayan a cambiar . en rojo?. Por ejemplo, si hay un "INC C" resaltar registro C
 
 
@@ -214,8 +213,24 @@ Deberia mirar ese bit esta a 1 para poner el contador a 0?
 -debug cpu. parece que desde el cambio de gestion step to step (con setting disable cpu emulation) ahora al poner un breakpoint
 en 38H, y darle enter en modo step, casi nunca avanza de esa direccion (porque salta de nuevo el breakpoint)
 
--listado de breakpoints: que liste mas alla de 10 (que salga hasta el ultimo definido)
+-listado de breakpoints: que liste mas alla de 10 (que salga hasta el ultimo definido). O que salgan todos directamente, con opciones de menu que no son listado arriba del todo
 
 -Quizá al mover rueda de ratón tiene que volver de menú espera tecla
 
 -confirmar parametros de Freehand en quill. crear grafico en illustrator y hacer las 8 posibles combinaciones
+
+-Concepto ventanas en segundo plano en documentación: multitarea cooperativa (Cooperative multitasking)
+
+-Documentación ZEsarUX. Dispositivos que estén en funcionamiento salen en color inverso 
+
+-Soporte ATM turbo
+
+https://www.zxuno.com/forum/viewtopic.php?t=4091
+
+-Número gráficos limitar a maximo 256 (en quill, paws, daad, gac)
+
+-Examinar variables basic
+
+-Mejor detección aventuras daad
+-variantes de punteros daad no detectan el parser. y los flags y objetos?
+-Agregar mostrar versión daad, idioma

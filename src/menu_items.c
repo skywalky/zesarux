@@ -20003,7 +20003,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 			//1 instruccion cpu
 			if (si_ejecuta_una_instruccion) {
-				printf ("ejecutando instruccion en step-to-step o continuous. PC=%d\n",reg_pc);
+				//printf ("ejecutando instruccion en step-to-step o continuous. PC=%d\n",reg_pc);
 				debug_core_lanzado_inter.v=0;
 
 				screen_force_refresh=1; //Para que no haga frameskip y almacene los pixeles/atributos en buffer rainbow
@@ -20022,7 +20022,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }					
 
 				else {
-                    printf("ejecutando cpu_core_loop\n");
+                    //printf("ejecutando cpu_core_loop\n");
                     cpu_core_loop();
                 }
 
