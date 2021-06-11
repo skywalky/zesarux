@@ -27324,7 +27324,72 @@ int menu_find_bytes_process(z80_byte byte_to_find)
 	return menu_find_bytes_process_from(byte_to_find,0);
 }
 
-void menu_find_bytes_find(MENU_ITEM_PARAMETERS)
+//Busqueda desde direccion indicada una lista de bytes
+//menu_z80_moto_int dir,int *lista,int total_items
+int menu_find_bytes_list_from(int *lista,int total_items,int inicio)
+{
+	int dir;
+	int total_items_found=0;
+	int final_find=get_efectivo_tamanyo_find_buffer();
+
+	//Busqueda con array no inicializado
+	if (menu_find_bytes_empty) {
+
+					debug_printf (VERBOSE_INFO,"Starting Search with no previous results");
+
+
+					//asumimos que no va a encontrar nada
+					menu_find_bytes_empty=1;
+
+					for (dir=inicio;dir<final_find;dir++) {
+                                    if (util_compare_bytes_address(dir,lista,total_items)) {
+									//if (peek_byte_z80_moto(dir)==byte_to_find) {
+													menu_find_bytes_mem_pointer[dir]=1;
+
+													//al menos hay un resultado
+													menu_find_bytes_empty=0;
+
+													//incrementamos contador de resultados para mostrar al final
+													total_items_found++;
+									}
+					}
+
+	}
+
+	else {
+					//Busqueda con array ya con contenido
+					//examinar solo las direcciones que indique el array
+
+					debug_printf (VERBOSE_INFO,"Starting Search using previous results");
+
+					//asumimos que no va a encontrar nada
+					menu_find_bytes_empty=1;
+
+					int i;
+					for (i=0;i<final_find;i++) {
+									if (menu_find_bytes_mem_pointer[i]) {
+													//Ver el contenido de esa direccion
+                                                    if (util_compare_bytes_address(i,lista,total_items)) {
+													//if (peek_byte_z80_moto(i)==byte_to_find) {
+																	//al menos hay un resultado
+																	menu_find_bytes_empty=0;
+																	//incrementamos contador de resultados para mostrar al final
+																	total_items_found++;
+													}
+													else {
+																	//el byte ya no esta en esa direccion
+																	menu_find_bytes_mem_pointer[i]=0;
+													}
+									}
+					}
+	}
+
+	return total_items_found;
+
+}
+
+//Antiguo para buscar 1 solo byte
+void old_delete_menu_find_bytes_find(MENU_ITEM_PARAMETERS)
 {
 
         //Buscar en la memoria direccionable (0...65535) si se encuentra el byte
@@ -27357,8 +27422,78 @@ void menu_find_bytes_find(MENU_ITEM_PARAMETERS)
 
 }
 
+//Para buscar mas de 1 byte separado por espacio
+void menu_find_bytes_find(MENU_ITEM_PARAMETERS)
+{
+
+    //maximos bytes a buscar
+    #define MAX_BYTES_FIND 30
+
+    #define MAX_STRING_FIND_BUFFER (MAX_BYTES_FIND*4)
+    
+    int lista[MAX_BYTES_FIND];
+
+    //Buscar en la memoria direccionable (0...65535) si se encuentran los bytes indicados
+    //z80_byte byte_to_find;
 
 
+    char string_find[MAX_STRING_FIND_BUFFER];
+
+    string_find[0]=0;
+
+    menu_ventana_scanf("Values space separated",string_find,MAX_STRING_FIND_BUFFER);
+
+    //ir procesando cada valor
+    int i;
+
+    int longitud=strlen(string_find);
+
+    //indice al string 
+    int indice_numero=0;
+
+    int total_numeros=0;
+
+    int salir=0;
+
+    i=0;
+
+    //for (i=0;i<longitud;i++) {
+    while (!salir) {
+        if (string_find[i]==0) salir=1;
+
+        if (string_find[i]==' ' || string_find[i]==0) {
+
+            if (total_numeros==MAX_BYTES_FIND) {
+                menu_error_message("Maximum bytes in list reached");
+                return;
+            }
+
+            string_find[i]=0;
+            int valor_find=parse_string_to_number(&string_find[indice_numero]);
+
+            lista[total_numeros]=valor_find;
+            //printf("numero: %d\n",valor_find);
+
+            indice_numero=i+1;
+            total_numeros++;
+
+        }
+
+        i++;
+    }
+
+
+
+    int total_items_found;
+
+    //total_items_found=menu_find_bytes_process(byte_to_find);
+
+    total_items_found=menu_find_bytes_list_from(lista,total_numeros,0);
+
+    menu_generic_message_format("Find","Total addresses found: %d",total_items_found);
+
+
+}
 //int total_tamanyo_find_buffer=0;
 
 void menu_find_bytes_alloc_if_needed(void)
@@ -27390,10 +27525,10 @@ void menu_find_bytes(MENU_ITEM_PARAMETERS)
 
         do {
 
-                menu_add_item_menu_inicial_format(&array_menu_find_bytes,MENU_OPCION_NORMAL,menu_find_bytes_find,NULL,"Find byte");
-                menu_add_item_menu_tooltip(array_menu_find_bytes,"Find one byte on memory");
-                menu_add_item_menu_ayuda(array_menu_find_bytes,"Find one byte on the 64 KB of mapped memory, considering the last address found (if any).\n"
-                        "It can be used to find POKEs, it's very easy: \n"
+                menu_add_item_menu_inicial_format(&array_menu_find_bytes,MENU_OPCION_NORMAL,menu_find_bytes_find,NULL,"Find bytes");
+                menu_add_item_menu_tooltip(array_menu_find_bytes,"Find several byte on memory");
+                menu_add_item_menu_ayuda(array_menu_find_bytes,"Find some bytes on the 64 KB of mapped memory, considering the last address found (if any).\n"
+                        "It can also be used to find POKEs, it's very easy: \n"
                         "I first recommend to disable Multitasking menu, to avoid losing lives where in the menu.\n"
                         "As an example, you are in a game with 4 lives. Enter find byte "
                         "with value 4. It will find a lot of addresses, don't panic.\n"

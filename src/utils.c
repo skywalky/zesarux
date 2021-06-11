@@ -21145,3 +21145,19 @@ int util_get_sine(int degrees)
 {
     return util_get_cosine(90-degrees);
 }
+
+
+//Dice si la direccion de memoria dir contiene los bytes de la lista. 
+int util_compare_bytes_address(menu_z80_moto_int dir,int *lista,int total_items)
+{
+    int i;
+
+    for (i=0;i<total_items;i++) {
+        if (peek_byte_z80_moto(dir+i)!=lista[i]) {
+            //printf("Not equal address %d\n",dir);
+            return 0;
+        }
+    }
+
+    return 1;
+}

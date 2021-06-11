@@ -980,5 +980,6 @@ extern void util_memcpy_protect_origin(z80_byte *destino,z80_byte *memoria,int t
 extern int util_abs(int v);
 extern int util_get_cosine(int degrees);
 extern int util_get_sine(int degrees);
+extern int util_compare_bytes_address(menu_z80_moto_int dir,int *lista,int total_items);
 
 #endif

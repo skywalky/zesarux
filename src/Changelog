@@ -17,6 +17,8 @@ Improved Text Aventure Debugging:
 Improved Debugging: 
 -Mouse accions: click (toggle breakpoint, change registers), Scroll up/down by using the mouse wheel
 
+Improved Find menu: now can find several bytes
+
 Improved ZX Vision menu interface:
 -Added setting to pause cpu emulation on menu when multitask active
 -Show in file selector when a file can be expanded
