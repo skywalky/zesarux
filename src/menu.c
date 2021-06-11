@@ -570,7 +570,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_spectrum
 		},
 
     //Tema igual que ZEsarUX pero sin brillo. Y con color de visualmem cambiado
@@ -591,7 +592,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		//colores de franjas invertidas, por defecto la oscura
         colores_franja_speccy_oscuro,colores_franja_speccy_brillo,
         -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_spectrum
 		},
 	{0,"ZXSpectr",1,6,
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
@@ -609,8 +611,29 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_spectrum
 		},
+
+						{0,"ManSoftware",7+8,0,
+							0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+							5+8,0, 		//Colores para opcion seleccionada
+							7+8,3,7,3, 	//Colores para opcion no disponible
+
+							0,7+8,        	//Colores para el titulo ventana
+                            0,              //Color recuadro
+							7+8,0,        	//Colores para el titulo ventana inactiva
+
+							1,		//Color waveform
+							7,		//Color para zona no usada en visualmem
+							3,7+8,		//Color para opcion marcada
+							'#',
+		3+8, //color de aviso, en este tema, magenta con brillo
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_mansoftware
+							},        
 
         {0,"ZX80/81",7+8,0,
                 1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow, solo mayusculas
@@ -628,30 +651,74 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_spectrum
         },
+
+
+
+			{0,"QL",7+8,0,
+					0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+					4+8,0, 		//Colores para opcion seleccionada
+					7+8,2,7,2, 	//Colores para opcion no disponible
+
+					2,7+8,        	//Colores para el titulo ventana
+                    2,              //Color recuadro
+					7+8,2,        	//Colores para el titulo ventana inactiva
+
+					4,		//Color waveform
+					7,		//Color para zona no usada en visualmem
+					2,7+8,		//Color para opcion marcada
+					'*',
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_ql
+								},        
 
 //Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
 //que no tienen esos colores en las fuentes
 //Al menos hacemos colores sin brillo
         {0,"Z88",7,0,
-                0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
-                1,7,          //Colores para opcion seleccionada
-                7,2,1,2,      //Colores para opcion no disponible
+            0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
+            1,7,          //Colores para opcion seleccionada
+            7,2,1,2,      //Colores para opcion no disponible
 
-                0,7,          //Colores para el titulo ventana
+            0,7,          //Colores para el titulo ventana
+            0,              //Color recuadro
+            7,0,          //Colores para el titulo ventana inactiva
+
+            4,              //Color waveform
+            4,               //Color para zona no usada en visualmem
+            2,7+8,		//Color para opcion marcada
+            '*',
+            2, //color de aviso
+            colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+            -1, //si texto inverso solo cambia color tinta
+            0, //rellenar titulo
+            char_set_z88
+                },
+
+        {0,"Sam",7+8,0,
+                0,1,1,0,                //No mostrar cursor,mostrar recuadro,mostrar rainbow
+                5+8,0,          //Colores para opcion seleccionada
+                7+8,2,7,2,      //Colores para opcion no disponible
+
+                0,7+8,          //Colores para el titulo ventana
                 0,              //Color recuadro
-				7,0,          //Colores para el titulo ventana inactiva
+				7+8,0,          //Colores para el titulo ventana inactiva
 
-                4,              //Color waveform
-                4,               //Color para zona no usada en visualmem
+                1,              //Color waveform
+                7,               //Color para zona no usada en visualmem
                 2,7+8,		//Color para opcion marcada
-		'*',
+		'#',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
-                },
+        0, //rellenar titulo
+        char_set_sam
+                },                
 
 
         {0,"CPC",1,6+8,
@@ -670,7 +737,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro,
         -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_cpc
                 },
 
 		//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
@@ -690,67 +758,12 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 				2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 				colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_msx
         },
 
 
-        {0,"Sam",7+8,0,
-                0,1,1,0,                //No mostrar cursor,mostrar recuadro,mostrar rainbow
-                5+8,0,          //Colores para opcion seleccionada
-                7+8,2,7,2,      //Colores para opcion no disponible
 
-                0,7+8,          //Colores para el titulo ventana
-                0,              //Color recuadro
-				7+8,0,          //Colores para el titulo ventana inactiva
-
-                1,              //Color waveform
-                7,               //Color para zona no usada en visualmem
-                2,7+8,		//Color para opcion marcada
-		'#',
-		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
-                },
-
-						{0,"ManSoftware",7+8,0,
-							0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-							5+8,0, 		//Colores para opcion seleccionada
-							7+8,3,7,3, 	//Colores para opcion no disponible
-
-							0,7+8,        	//Colores para el titulo ventana
-                            0,              //Color recuadro
-							7+8,0,        	//Colores para el titulo ventana inactiva
-
-							1,		//Color waveform
-							7,		//Color para zona no usada en visualmem
-							3,7+8,		//Color para opcion marcada
-							'#',
-		3+8, //color de aviso, en este tema, magenta con brillo
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
-							},
-
-
-			{0,"QL",7+8,0,
-					0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-					4+8,0, 		//Colores para opcion seleccionada
-					7+8,2,7,2, 	//Colores para opcion no disponible
-
-					2,7+8,        	//Colores para el titulo ventana
-                    2,              //Color recuadro
-					7+8,2,        	//Colores para el titulo ventana inactiva
-
-					4,		//Color waveform
-					7,		//Color para zona no usada en visualmem
-					2,7+8,		//Color para opcion marcada
-					'*',
-		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
-								},
 
 	{0,"RetroMac",7,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -768,8 +781,29 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         5+8, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_retromac
 		},
+
+	{1,"BeOS",BEOS_COLOUR_grey_menu,0,
+		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow,no mayusculas
+		BEOS_COLOUR_grey_selection,0, 		//Colores para opcion seleccionada
+		BEOS_COLOUR_grey_menu,2,BEOS_COLOUR_grey_selection,2, 	//Colores para opcion no disponible
+
+		BEOS_COLOUR_yellow,0,        	//Colores para el titulo ventana
+        BEOS_COLOUR_grey_box,              //Color recuadro
+		BEOS_COLOUR_grey_inactive_title,0,        	//Colores para el titulo ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		2,7+8,		//Color para opcion marcada
+		139, //boton cerrar especial
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        BEOS_COLOUR_blue_hotkey, //si texto inverso solo cambia color tinta
+        1, //NO rellenar titulo
+        char_set_beos
+		},         
 
 {0,"Borland",1,7+8,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -787,7 +821,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         2+8, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_spectrum
 		},
 
 {1,"TurboVision",TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,
@@ -806,28 +841,177 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         2, //color de aviso. Seria TURBOVISION_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         TURBOVISION_COLOUR_red, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_retromac
 		},    
 
-	{1,"BeOS",BEOS_COLOUR_grey_menu,0,
-		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow,no mayusculas
-		BEOS_COLOUR_grey_selection,0, 		//Colores para opcion seleccionada
-		BEOS_COLOUR_grey_menu,2,BEOS_COLOUR_grey_selection,2, 	//Colores para opcion no disponible
+   
+	{0,"Ocean",1,7,
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		4,0, 		//Colores para opcion seleccionada
+		1,6,4,6, 	//Colores para opcion no disponible
 
-		BEOS_COLOUR_yellow,0,        	//Colores para el titulo ventana
-        BEOS_COLOUR_grey_box,              //Color recuadro
-		BEOS_COLOUR_grey_inactive_title,0,        	//Colores para el titulo ventana inactiva
+		1+8,7+8,        	//Colores para el titulo ventana
+        1+8,              //Color recuadro
+		1,0,        	//Colores para el titulo ventana inactiva
+
+		4,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		1,7+8,		//Color para opcion marcada
+		'*',
+		6, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+		},        
+
+
+	{0,"Bloody",2,7,
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		1,7, 		//Colores para opcion seleccionada
+		2,6,1,6, 	//Colores para opcion no disponible
+
+		2+8,7+8,        	//Colores para el titulo ventana
+        2+8,              //Color recuadro
+		2,0,        	//Colores para el titulo ventana inactiva
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
 		2,7+8,		//Color para opcion marcada
-		139, //boton cerrar especial
+		'*',
+		6, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+		},        
+
+
+	{0,"Panther",3,7,
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		1,7, 		//Colores para opcion seleccionada
+		3,6,1,6, 	//Colores para opcion no disponible
+
+		3+8,7+8,        	//Colores para el titulo ventana
+        3+8,              //Color recuadro
+		3,0,        	//Colores para el titulo ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		3,7+8,		//Color para opcion marcada
+		'*',
+		6, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+		},     
+
+
+	{0,"Grass",4,0,
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		1,7, 		//Colores para opcion seleccionada
+		4,6,1,6, 	//Colores para opcion no disponible
+
+		4+8,0,        	//Colores para el titulo ventana
+        4+8,              //Color recuadro
+		4,7,        	//Colores para el titulo ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		4,7+8,		//Color para opcion marcada
+		'*',
+		6, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+		},    
+
+
+	{0,"Sky",5,0,
+		0,5,5,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		4,0, 		//Colores para opcion seleccionada
+		5,2,4,2, 	//Colores para opcion no disponible
+
+		5+8,0,        	//Colores para el titulo ventana
+        5+8,              //Color recuadro
+		5,0,        	//Colores para el titulo ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+		5,7+8,		//Color para opcion marcada
+		'*',
+		1, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+		},                         
+
+
+	{0,"Sunny",6,0,
+		0,6,6,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		4,0, 		//Colores para opcion seleccionada
+		6,2,4,2, 	//Colores para opcion no disponible
+
+		6+8,0,        	//Colores para el titulo ventana
+        6+8,              //Color recuadro
+		6,0,        	//Colores para el titulo ventana inactiva
+
+		4,		//Color waveform
+		5,		//Color para zona no usada en visualmem
+		6,7+8,		//Color para opcion marcada
+		'*',
+		1, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+		},    
+
+        {0,"Clean",7,0,
+                0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
+                0,7,          //Colores para opcion seleccionada
+		7,2,0,2, 	//Colores para opcion no disponible
+
+                0,7,          //Colores para el titulo ventana
+                0,              //Color recuadro
+				7,0,          //Colores para el titulo ventana inactiva
+
+                0,              //Color waveform
+                7+8,               //Color para zona no usada en visualmem
+                7+8,0,		//Color para opcion marcada
+		'X',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        BEOS_COLOUR_blue_hotkey, //si texto inverso solo cambia color tinta
-        1 //NO rellenar titulo
-		},            
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+                },
 
+        {0,"CleanInverse",0,7,
+                0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
+                7,0,          //Colores para opcion seleccionada
+		0,2,7,2, 	//Colores para opcion no disponible
+
+                7,0,          //Colores para el titulo ventana
+                7,              //Color recuadro
+				0,7,          //Colores para el titulo ventana inactiva
+
+                7,              //Color waveform
+                7,               //Color para zona no usada en visualmem
+                0,7+8,		//Color para opcion marcada
+		'X',
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+                },              
+
+  
 	// https://ethanschoonover.com/solarized/. Solo vale en video driver completo por los colores usados (primer valor de la estructura)
 	{1,"Solarized Dark",SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,
 
@@ -847,7 +1031,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
+        0, //rellenar titulo
+        char_set_spectrum
 		},
 
 	//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
@@ -868,47 +1053,12 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
-		},
+        0, //rellenar titulo
+        char_set_spectrum
+		}
 
 
-        {0,"Clean",7,0,
-                0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
-                0,7,          //Colores para opcion seleccionada
-		7,2,0,2, 	//Colores para opcion no disponible
 
-                0,7,          //Colores para el titulo ventana
-                0,              //Color recuadro
-				7,0,          //Colores para el titulo ventana inactiva
-
-                0,              //Color waveform
-                7+8,               //Color para zona no usada en visualmem
-                7+8,0,		//Color para opcion marcada
-		'X',
-		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
-                },
-
-        {0,"CleanInverse",0,7,
-                0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
-                7,0,          //Colores para opcion seleccionada
-		0,2,7,2, 	//Colores para opcion no disponible
-
-                7,0,          //Colores para el titulo ventana
-                7,              //Color recuadro
-				0,7,          //Colores para el titulo ventana inactiva
-
-                7,              //Color waveform
-                7,               //Color para zona no usada en visualmem
-                0,7+8,		//Color para opcion marcada
-		'X',
-		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0 //rellenar titulo
-                },
 
 
 };
@@ -29324,7 +29474,15 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL,0,"Waveform colour (this ink)");
 
     //tinta 0 - negro es la de intensidad mas baja. papel el del unused
-    zxvision_print_string(&ventana,1,linea++,0,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,0,"Unused visualmem (this paper)");
+    //Poner una tinta negra normalmente a no ser que el papel vaya a ser negro tambien
+    //Aunque no debería indicar color de zona usada visualmem en negro, pues en la ventana es el color al que se llegara (dependiendo intensidad),
+    //segun la cantidad de accesos a memoria
+    int tinta_visualmem_text=0;
+    if (ESTILO_GUI_COLOR_UNUSED_VISUALMEM==0) {
+        tinta_visualmem_text=7;
+    }
+
+    zxvision_print_string(&ventana,1,linea++,tinta_visualmem_text,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,0,"Unused visualmem (this paper)");
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0,"Marked Text");
 
@@ -38272,16 +38430,19 @@ void estilo_gui_retorna_nombres(void)
 void set_charset(void)
 {
 
-	if (estilo_gui_activo==ESTILO_GUI_CPC) char_set=char_set_cpc;
-	else if (estilo_gui_activo==ESTILO_GUI_MSX) char_set=char_set_msx;
-	else if (estilo_gui_activo==ESTILO_GUI_Z88) char_set=char_set_z88;
-	else if (estilo_gui_activo==ESTILO_GUI_SAM) char_set=char_set_sam;
-	else if (estilo_gui_activo==ESTILO_GUI_MANSOFTWARE) char_set=char_set_mansoftware;
-	else if (estilo_gui_activo==ESTILO_GUI_QL) char_set=char_set_ql;
-	else if (estilo_gui_activo==ESTILO_GUI_RETROMAC) char_set=char_set_retromac;
-    else if (estilo_gui_activo==ESTILO_GUI_TURBOVISION) char_set=char_set_retromac;
-    else if (estilo_gui_activo==ESTILO_GUI_BEOS) char_set=char_set_beos;
-	else char_set=char_set_spectrum;
+	//if (estilo_gui_activo==ESTILO_GUI_CPC) char_set=char_set_cpc;
+	//else if (estilo_gui_activo==ESTILO_GUI_MSX) char_set=char_set_msx;
+	//else if (estilo_gui_activo==ESTILO_GUI_Z88) char_set=char_set_z88;
+	//else if (estilo_gui_activo==ESTILO_GUI_SAM) char_set=char_set_sam;
+	//else if (estilo_gui_activo==ESTILO_GUI_MANSOFTWARE) char_set=char_set_mansoftware;
+	//else if (estilo_gui_activo==ESTILO_GUI_QL) char_set=char_set_ql;
+	//else if (estilo_gui_activo==ESTILO_GUI_RETROMAC) char_set=char_set_retromac;
+    //else if (estilo_gui_activo==ESTILO_GUI_TURBOVISION) char_set=char_set_retromac;
+    //else if (estilo_gui_activo==ESTILO_GUI_BEOS) char_set=char_set_beos;
+	//else char_set=char_set_spectrum;
+
+
+    char_set=ESTILO_GUI_CHARSET;
 }
 
 void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)

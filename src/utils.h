@@ -800,6 +800,8 @@ extern int util_get_available_drives(char *texto);
 
 extern int get_cpu_frequency(void);
 
+extern z80_int util_daad_get_start_pointers(void);
+extern void util_daad_get_language_parser(char *texto);
 extern int util_daad_detect(void);
 extern int util_paws_detect(void);
 extern z80_int util_daad_get_start_vocabulary(void);
@@ -867,6 +869,8 @@ extern void daad_poke(z80_int dir,z80_byte value);
 extern z80_int util_daad_get_pc_parser(void);
 extern z80_int util_paws_get_pc_parser(void); 
 extern void util_daad_get_version_daad(int *official_version,int *version_pointers);
+
+extern void util_unpaws_daad_get_version_string(char *texto);
 
 #define MEMORY_ZONE_NUM_FILE_ZONE 16
 #define MEMORY_ZONE_NUM_TBBLUE_COPPER 17 

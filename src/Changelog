@@ -8,6 +8,7 @@ Added new improved real tape loading algorithm
 Added setting to disable TZX pauses
 Added zsf to scr support for Next, ZX-Uno and TSConf snapshots
 Added Jupiter Ace 51 KB RAM emulation
+Added GUI styles: Bloody, Grass, Ocean, Sunny, Panther, Sky
 
 Improved Text Aventure Debugging: 
 -Improved detection of Daad aventures

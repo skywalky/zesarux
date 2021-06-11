@@ -15376,7 +15376,21 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 						direccion_desensamblar +=longitud_op;
 
 				
-		}
+		        }
+
+                //Obtener versión parser
+                char buffer_version[100];
+                util_unpaws_daad_get_version_string(buffer_version);
+                
+                char buffer_idioma[100];
+                buffer_idioma[0]=0;
+                if (util_daad_detect() ) {
+                    util_daad_get_language_parser(buffer_idioma);
+                }
+
+
+                sprintf(buffer_linea,"Info Parser: %s %s",buffer_version,buffer_idioma);
+                zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 
 				
 
@@ -16829,17 +16843,6 @@ int menu_debug_registers_show_ptr_text(zxvision_window *w,int linea)
 
 				char maxima_vista='7';
 
-                //temporal. poner esto con una opcion visible
-                //agregar tambien idioma parser. spanish, english, unknown
-                if (util_daad_detect() ) {
-                    int official_version;
-                    
-                    int version_pointers;
-
-                    util_daad_get_version_daad(&official_version,&version_pointers);
-
-                    printf("version parser: %d version pointers: %d\n",official_version,version_pointers);
-                }
 
 				if (util_daad_detect() || util_paws_detect() ) maxima_vista='8';
 

@@ -853,14 +853,18 @@ struct s_estilos_gui {
     //si no se rellena con espacios todo el titulo de la ventana. BeOS por ejemplo hace esto
     int no_rellenar_titulo;
 
+    //charset usado
+    unsigned char *style_char_set;
+
 };
 
 typedef struct s_estilos_gui estilos_gui;
 
 
-#define ESTILOS_GUI 18
+#define ESTILOS_GUI 24
 
 
+/*
 #define ESTILO_GUI_Z88 4
 #define ESTILO_GUI_CPC 5
 #define ESTILO_GUI_MSX 6
@@ -870,6 +874,7 @@ typedef struct s_estilos_gui estilos_gui;
 #define ESTILO_GUI_RETROMAC 10
 #define ESTILO_GUI_TURBOVISION 12
 #define ESTILO_GUI_BEOS 13
+*/
 
 extern void estilo_gui_retorna_nombres(void);
 
@@ -938,6 +943,8 @@ extern z80_bit menu_ext_desktop_transparent_upper_icons;
 
 
 #define ESTILO_GUI_NO_RELLENAR_TITULO (definiciones_estilos_gui[estilo_gui_activo].no_rellenar_titulo)
+
+#define ESTILO_GUI_CHARSET (definiciones_estilos_gui[estilo_gui_activo].style_char_set)
 
 
 #define MENU_ANCHO_FRANJAS_TITULO 5

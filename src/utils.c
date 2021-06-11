@@ -17142,7 +17142,7 @@ void util_unpawsgac_add_word_kb(char *palabra)
 }
 
 char *quillversions_strings[]={
-        "PAW",
+        "Paws",
         "Quill.A",
         "Unkown version 2",
         "Quill.C"
@@ -17405,6 +17405,90 @@ void util_unpaws_init_parameters(void)
 } 
 
 
+}
+
+void util_daad_get_version_daad(int *official_version,int *version_pointers)
+{
+    z80_int dir=util_daad_get_start_pointers();
+
+    int version=daad_peek(dir);
+
+    *official_version=version;
+
+    //Nota: Puede que haya una versión oficial 2.0 pero no publicada
+    //Nota2: mi "version_pointers" al final se muestra como PTR version, o sea:
+    //Version= official_version PTR v.version_pointers
+    //La 2.1 oficial corresponde con mi 2 PTR v1, luego salen otras variantes, que posiblemente no sean valores oficiales de versión:
+    //Cozumel retorna 2 PTR v2
+    //Aventura original retorna 1 PTR v3
+    //Y el resto son 2 PTR v1
+
+    switch (dir) {
+        case 0x8380:
+            *version_pointers=2;
+        break;
+
+        case 0x8480:
+            *version_pointers=3;
+        break;
+
+        default:
+            *version_pointers=1;
+        break;
+    }
+
+}
+
+void util_daad_get_language_parser(char *texto)
+{
+    z80_int dir=util_daad_get_start_pointers();
+
+    z80_byte language=daad_peek(dir+1);
+
+    /*
+     2) En la siguiente direccion debe conterner un 0x10 o un 0x11 (marca que es juego de spectrum en ingles la primera, 
+     juego de Spectrum en español la segunda)
+    Para Amstrad, 0x31/0x30 en el 0x2882 en lugar de 0x11/0x10   
+    */    
+
+   z80_byte id_english=0x10;
+   z80_byte id_spanish=0x11;
+
+    if (MACHINE_IS_CPC) {
+        id_english=0x30;
+        id_spanish=0x31;
+    }
+
+    if (language==id_english) {
+        strcpy(texto,"English");
+    }
+    else if (language==id_spanish) {
+        strcpy(texto,"Spanish");
+    }
+    else strcpy(texto,"Language Unknown");
+
+}
+
+void util_unpaws_daad_get_version_string(char *texto)
+{
+    if (util_daad_detect() ) {
+        int official_version;
+        int version_pointers;
+
+        util_daad_get_version_daad(&official_version,&version_pointers);
+        sprintf(texto,"Daad %d (PTR v%d)",official_version,version_pointers);
+        return;
+    }
+    else {
+        int quillversion=util_unpaws_get_version();
+
+        if (quillversion>=0) {
+            strcpy (texto,quillversions_strings[quillversion]);
+            return;
+        }
+    }
+
+    strcpy(texto,"Unknown");
 }
 
 int util_unpaws_detect_version(z80_int *p_mainattr)
@@ -18149,29 +18233,7 @@ z80_int util_daad_get_start_pointers(void)
         }
 }
 
-void util_daad_get_version_daad(int *official_version,int *version_pointers)
-{
-    z80_int dir=util_daad_get_start_pointers();
 
-    int version=daad_peek(dir);
-
-    *official_version=version;
-
-    switch (dir) {
-        case 0x8380:
-            *version_pointers=1;
-        break;
-
-        case 0x8480:
-            *version_pointers=2;
-        break;
-
-        default:
-            *version_pointers=0;
-        break;
-    }
-
-}
 
 //Detecta si juego cargado en memoria está hecho con daad
 //Condicion primera es que maquina actual sea spectrum
@@ -18451,7 +18513,7 @@ z80_int util_daad_get_start_flags(void)
                 else  {
                     if (util_daad_is_spanish()) {
                         z80_int dir=util_daad_get_start_pointers();
-                        printf("dir: %x\n",dir);
+                        //printf("dir: %x\n",dir);
                         
                         //excepciones
                         if (dir==0x8480) return 0x8171;

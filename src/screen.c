@@ -2743,7 +2743,7 @@ int scr_putchar_menu_comun_zoom_reduce_charwidth(int bit)
 	saltar_pixeles_size5[2]=7;	
 
 	//Segun tipo de letra
-	if (estilo_gui_activo==ESTILO_GUI_MSX)	{
+	if (ESTILO_GUI_CHARSET==char_set_msx)	{
 		saltar_pixeles_size7=7;
 
 		saltar_pixeles_size6[0]=7;	
@@ -2754,7 +2754,7 @@ int scr_putchar_menu_comun_zoom_reduce_charwidth(int bit)
 		saltar_pixeles_size5[2]=5;			
 	}
 
-	if (estilo_gui_activo==ESTILO_GUI_Z88)	{
+	if (ESTILO_GUI_CHARSET==char_set_z88)	{
 		saltar_pixeles_size7=0;
 
 		saltar_pixeles_size6[0]=0;	
@@ -2765,7 +2765,7 @@ int scr_putchar_menu_comun_zoom_reduce_charwidth(int bit)
 		saltar_pixeles_size5[2]=2;			
 	}	
 
-	if (estilo_gui_activo==ESTILO_GUI_SAM) {
+	if (ESTILO_GUI_CHARSET==char_set_sam) {
 		saltar_pixeles_size7=0;
 
 		saltar_pixeles_size6[0]=0;	
@@ -2776,7 +2776,7 @@ int scr_putchar_menu_comun_zoom_reduce_charwidth(int bit)
 		saltar_pixeles_size5[2]=7;			
 	}
 
-    if (estilo_gui_activo==ESTILO_GUI_RETROMAC || estilo_gui_activo==ESTILO_GUI_TURBOVISION) {
+    if (ESTILO_GUI_CHARSET==char_set_retromac) {
         saltar_pixeles_size7=7;
 
         saltar_pixeles_size6[0]=6;
