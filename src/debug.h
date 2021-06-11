@@ -495,7 +495,7 @@ extern int remote_find_label_source_code(char *label_to_find);
 extern int remote_load_source_code(char *archivo);
 
 extern int debug_load_source_code_skip_columns;
-
+extern void debug_view_basic_variables(char *results_buffer);
 
 
 #ifdef TIMESENSORS_ENABLED

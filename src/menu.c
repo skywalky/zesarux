@@ -27904,6 +27904,10 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu(array_menu_debug_settings,"View ~~Basic",MENU_OPCION_NORMAL,menu_debug_view_basic,menu_debug_view_basic_cond);
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'b');
 
+        if (MACHINE_IS_SPECTRUM) {
+		    menu_add_item_menu(array_menu_debug_settings,"View Basic variables",MENU_OPCION_NORMAL,menu_debug_view_basic_variables,NULL);      
+        }
+
 		if (si_complete_video_driver() ) {
 			menu_add_item_menu(array_menu_debug_settings,"View ~~Sprites",MENU_OPCION_NORMAL,menu_debug_view_sprites,NULL);
 			menu_add_item_menu_shortcut(array_menu_debug_settings,'s');

@@ -136,5 +136,7 @@ extern menu_z80_moto_int menu_debug_hexdump_direccion;
 
 extern void menu_find(MENU_ITEM_PARAMETERS);
 
+extern void menu_debug_view_basic_variables(MENU_ITEM_PARAMETERS);
+
 #endif
 

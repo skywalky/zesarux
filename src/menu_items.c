@@ -29360,3 +29360,13 @@ void menu_find(MENU_ITEM_PARAMETERS)
 
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
+
+
+void menu_debug_view_basic_variables(MENU_ITEM_PARAMETERS)
+{
+
+	char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
+	debug_view_basic_variables(results_buffer);
+
+  menu_generic_message_format("Basic Variables","%s",results_buffer);
+}

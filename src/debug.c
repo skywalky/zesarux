@@ -6839,6 +6839,130 @@ int remote_parsed_source_code_indexes_total;
 
 
 
+//tipo: tipo maquina: 0: spectrum. 1: zx80. 2: zx81
+void debug_view_basic_variables(char *results_buffer)
+{
+
+
+    #define MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH 100
+	z80_int dir;
+
+  	dir=peek_word_no_time(23627);
+    char buffer_linea[MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH+1];
+
+    int index_buffer=0;
+
+    z80_byte letra_variable;
+
+    int salir=0;
+    int i;
+
+    z80_int longitud_variable;
+
+  	while (peek_byte_no_time(dir)!=128 && !salir) {
+        z80_byte first_byte=peek_byte_no_time(dir++);
+        z80_byte first_byte_letter=first_byte & 31;
+        z80_byte variable_type=((first_byte>>5))&7;
+
+        switch (variable_type) {
+        //Variable alfanumerica (p ej A$)
+            case 2:
+                letra_variable=first_byte_letter+96;
+                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+
+                sprintf (buffer_linea,"%c$=\"",letra_variable);
+
+                longitud_variable=peek_word_no_time(dir);
+
+                dir +=2;
+
+                
+                int maximo_mostrar=longitud_variable;
+
+                int limite_alcanzado=0;
+
+                //Para que quepa a$=""
+                if (maximo_mostrar>MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH-10) {
+                    maximo_mostrar=MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH-10;
+                    limite_alcanzado=1;
+                }
+
+                for (i=0;i<maximo_mostrar;i++) {
+                    buffer_linea[4+i]=peek_byte_no_time(dir+i);
+                }
+
+                if (limite_alcanzado) {
+                    buffer_linea[4+i]='.';
+                    i++;
+                    buffer_linea[4+i]='.';
+                    i++;
+                    buffer_linea[4+i]='.';
+                    i++;
+                }
+
+                buffer_linea[4+i]='"';
+                buffer_linea[4+i+1]='\n';
+                buffer_linea[4+i+2]=0;
+
+                //Siguiente variable
+                dir +=longitud_variable;
+
+                
+
+                strcpy(&results_buffer[index_buffer],buffer_linea);
+                
+                index_buffer +=strlen(buffer_linea);        
+            break;
+
+            case 6:
+                letra_variable=first_byte_letter+96;
+                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+
+                sprintf (buffer_linea,"DIM %c$=\"",letra_variable);
+
+                longitud_variable=peek_word_no_time(dir);
+
+                dir +=2;    
+
+                //TODO
+
+                //Siguiente variable
+                dir +=longitud_variable;
+ 
+
+                strcpy(&results_buffer[index_buffer],buffer_linea);
+                
+                index_buffer +=strlen(buffer_linea);     
+
+            break;    
+
+            default:
+                sprintf (buffer_linea,"Unknown variable type %d\n",variable_type);
+                strcpy(&results_buffer[index_buffer],buffer_linea);
+                
+                index_buffer +=strlen(buffer_linea);     
+
+            break;
+        }
+
+  		
+        //controlar maximo
+        //1024 bytes de margen
+        if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-1024) {
+                debug_printf (VERBOSE_ERR,"Too many results to show. Showing only the first ones");
+                //forzar salir
+                salir=1;
+        }
+
+
+  	}
+
+
+    results_buffer[index_buffer]=0;
+
+}
+
+
 
 //Rutinas de timesensors. Agrega un define TIMESENSORS_ENABLED en compileoptions.h para activarlo y lanza make
 #ifdef TIMESENSORS_ENABLED
