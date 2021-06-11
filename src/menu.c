@@ -572,7 +572,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},
+    },
 
     //Tema igual que ZEsarUX pero sin brillo. Y con color de visualmem cambiado
 	{0,"ZEsarUX Matte",7,0,
@@ -594,7 +594,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},
+    },
+
 	{0,"ZXSpectr",1,6,
 		1,1,0,0,		//Mostrar cursor >, mostrar recuadro, no mostrar rainbow
 		1+8,6,		//Colores para opcion seleccionada
@@ -613,157 +614,151 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},
+    },
 
-						{0,"ManSoftware",7+8,0,
-							0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-							5+8,0, 		//Colores para opcion seleccionada
-							7+8,3,7,3, 	//Colores para opcion no disponible
+    {0,"ManSoftware",7+8,0,
+        0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+        5+8,0, 		//Colores para opcion seleccionada
+        7+8,3,7,3, 	//Colores para opcion no disponible
 
-							0,7+8,        	//Colores para el titulo ventana
-                            0,              //Color recuadro
-							7+8,0,        	//Colores para el titulo ventana inactiva
+        0,7+8,        	//Colores para el titulo ventana
+        0,              //Color recuadro
+        7+8,0,        	//Colores para el titulo ventana inactiva
 
-							1,		//Color waveform
-							7,		//Color para zona no usada en visualmem
-							3,7+8,		//Color para opcion marcada
-							'#',
+        1,		//Color waveform
+        7,		//Color para zona no usada en visualmem
+        3,7+8,		//Color para opcion marcada
+        '#',
 		3+8, //color de aviso, en este tema, magenta con brillo
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_mansoftware
-							},        
+    },        
 
-        {0,"ZX80/81",7+8,0,
-                1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow, solo mayusculas
-                0,7+8,          //Colores para opcion seleccionada
-                7+8,0,0,7+8,      //Colores para opcion no disponible
+    {0,"ZX80/81",7+8,0,
+        1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow, solo mayusculas
+        0,7+8,          //Colores para opcion seleccionada
+        7+8,0,0,7+8,      //Colores para opcion no disponible
 
-                0,7+8,          //Colores para el titulo ventana
-                0,              //Color recuadro
-				7+8,0,          //Colores para el titulo ventana inactiva
+        0,7+8,          //Colores para el titulo ventana
+        0,              //Color recuadro
+        7+8,0,          //Colores para el titulo ventana inactiva
 
-                0,              //Color waveform
-                7,               //Color para zona no usada en visualmem
-                7,0,		//Color para opcion marcada
+        0,              //Color waveform
+        7,               //Color para zona no usada en visualmem
+        7,0,		//Color para opcion marcada
 		'.',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-        },
+    },
 
+    {0,"QL",7+8,0,
+        0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+        4+8,0, 		//Colores para opcion seleccionada
+        7+8,2,7,2, 	//Colores para opcion no disponible
 
+        2,7+8,        	//Colores para el titulo ventana
+        2,              //Color recuadro
+        7+8,2,        	//Colores para el titulo ventana inactiva
 
-			{0,"QL",7+8,0,
-					0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-					4+8,0, 		//Colores para opcion seleccionada
-					7+8,2,7,2, 	//Colores para opcion no disponible
-
-					2,7+8,        	//Colores para el titulo ventana
-                    2,              //Color recuadro
-					7+8,2,        	//Colores para el titulo ventana inactiva
-
-					4,		//Color waveform
-					7,		//Color para zona no usada en visualmem
-					2,7+8,		//Color para opcion marcada
-					'*',
+        4,		//Color waveform
+        7,		//Color para zona no usada en visualmem
+        2,7+8,		//Color para opcion marcada
+        '*',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_ql
-								},        
+    },        
 
 //Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
 //que no tienen esos colores en las fuentes
 //Al menos hacemos colores sin brillo
-        {0,"Z88",7,0,
-            0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
-            1,7,          //Colores para opcion seleccionada
-            7,2,1,2,      //Colores para opcion no disponible
+    {0,"Z88",7,0,
+        0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
+        1,7,          //Colores para opcion seleccionada
+        7,2,1,2,      //Colores para opcion no disponible
 
-            0,7,          //Colores para el titulo ventana
-            0,              //Color recuadro
-            7,0,          //Colores para el titulo ventana inactiva
+        0,7,          //Colores para el titulo ventana
+        0,              //Color recuadro
+        7,0,          //Colores para el titulo ventana inactiva
 
-            4,              //Color waveform
-            4,               //Color para zona no usada en visualmem
-            2,7+8,		//Color para opcion marcada
-            '*',
-            2, //color de aviso
-            colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-            -1, //si texto inverso solo cambia color tinta
-            0, //rellenar titulo
-            char_set_z88
-                },
+        4,              //Color waveform
+        4,               //Color para zona no usada en visualmem
+        2,7+8,		//Color para opcion marcada
+        '*',
+        2, //color de aviso
+        colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_z88
+    },
 
-        {0,"Sam",7+8,0,
-                0,1,1,0,                //No mostrar cursor,mostrar recuadro,mostrar rainbow
-                5+8,0,          //Colores para opcion seleccionada
-                7+8,2,7,2,      //Colores para opcion no disponible
+    {0,"Sam",7+8,0,
+        0,1,1,0,                //No mostrar cursor,mostrar recuadro,mostrar rainbow
+        5+8,0,          //Colores para opcion seleccionada
+        7+8,2,7,2,      //Colores para opcion no disponible
 
-                0,7+8,          //Colores para el titulo ventana
-                0,              //Color recuadro
-				7+8,0,          //Colores para el titulo ventana inactiva
+        0,7+8,          //Colores para el titulo ventana
+        0,              //Color recuadro
+        7+8,0,          //Colores para el titulo ventana inactiva
 
-                1,              //Color waveform
-                7,               //Color para zona no usada en visualmem
-                2,7+8,		//Color para opcion marcada
+        1,              //Color waveform
+        7,               //Color para zona no usada en visualmem
+        2,7+8,		//Color para opcion marcada
 		'#',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_sam
-                },                
+    },                
 
+    {0,"CPC",1,6+8,
+        0,1,1,0,          //No mostrar cursor,mostrar recuadro,mostrar rainbow
+        6+8,1,            //Colores para opcion seleccionada
+        1,2,6+8,2,        //Colores para opcion no disponible
 
-        {0,"CPC",1,6+8,
-                0,1,1,0,          //No mostrar cursor,mostrar recuadro,mostrar rainbow
-                6+8,1,            //Colores para opcion seleccionada
-                1,2,6+8,2,        //Colores para opcion no disponible
+        6+8,1,            //Colores para el titulo ventana
+        6+8,              //Color recuadro
+        1,6+8,            //Colores para el titulo ventana inactiva
 
-                6+8,1,            //Colores para el titulo ventana
-                6+8,              //Color recuadro
-				1,6+8,            //Colores para el titulo ventana inactiva
-
-                6+8,              //Color waveform
-                7,               //Color para zona no usada en visualmem
-                2,7+8,		//Color para opcion marcada
+        6+8,              //Color waveform
+        7,               //Color para zona no usada en visualmem
+        2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_cpc
-                },
+    },
 
 		//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
-        {1,"MSX",VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,
-                0,1,0,0,          //No mostrar cursor,mostrar recuadro,no mostrar rainbow
-                VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para opcion seleccionada
-                VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+6,        //Colores para opcion no disponible
+    {1,"MSX",VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,
+        0,1,0,0,          //No mostrar cursor,mostrar recuadro,no mostrar rainbow
+        VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para opcion seleccionada
+        VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+6,        //Colores para opcion no disponible
 
-                VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para el titulo ventana
-                VDP_9918_INDEX_FIRST_COLOR+15,              //Color recuadro
-				VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,            //Colores para el titulo ventana inactiva
+        VDP_9918_INDEX_FIRST_COLOR+15,VDP_9918_INDEX_FIRST_COLOR+4,            //Colores para el titulo ventana
+        VDP_9918_INDEX_FIRST_COLOR+15,              //Color recuadro
+        VDP_9918_INDEX_FIRST_COLOR+4,VDP_9918_INDEX_FIRST_COLOR+15,            //Colores para el titulo ventana inactiva
 
-                VDP_9918_INDEX_FIRST_COLOR+15,              //Color waveform
-                7,               //Color para zona no usada en visualmem
-                VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
-				'.',
-				2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
-				colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        VDP_9918_INDEX_FIRST_COLOR+15,              //Color waveform
+        7,               //Color para zona no usada en visualmem
+        VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
+        '.',
+        2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
+        colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_msx
-        },
-
-
-
+    },
 
 	{0,"RetroMac",7,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -783,7 +778,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         5+8, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_retromac
-		},
+    },
 
 	{1,"BeOS",BEOS_COLOUR_grey_menu,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow,no mayusculas
@@ -803,9 +798,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         BEOS_COLOUR_blue_hotkey, //si texto inverso solo cambia color tinta
         1, //NO rellenar titulo
         char_set_beos
-		},         
+    },         
 
-{0,"Borland",1,7+8,
+    {0,"Borland",1,7+8,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		4,1, 		//Colores para opcion seleccionada
 		1,7,7,1, 	//Colores para opcion no disponible
@@ -823,9 +818,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         2+8, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},
+    },
 
-{1,"TurboVision",TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,
+    {1,"TurboVision",TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		TURBOVISION_COLOUR_green,TURBOVISION_COLOUR_black, 		//Colores para opcion seleccionada
 		TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_grey,TURBOVISION_COLOUR_green,TURBOVISION_COLOUR_grey, 	//Colores para opcion no disponible
@@ -843,9 +838,8 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         TURBOVISION_COLOUR_red, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_retromac
-		},    
+    },    
 
-   
 	{0,"Ocean",1,7,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		4,0, 		//Colores para opcion seleccionada
@@ -864,8 +858,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},        
-
+    },        
 
 	{0,"Bloody",2,7,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -885,8 +878,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},        
-
+    },        
 
 	{0,"Panther",3,7,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -906,8 +898,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},     
-
+    },     
 
 	{0,"Grass",4,0,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -927,8 +918,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},    
-
+    },    
 
 	{0,"Sky",5,0,
 		0,5,5,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -948,8 +938,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},                         
-
+    },                         
 
 	{0,"Sunny",6,0,
 		0,6,6,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -969,52 +958,50 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},    
+    },    
 
-        {0,"Clean",7,0,
-                0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
-                0,7,          //Colores para opcion seleccionada
+    {0,"Clean",7,0,
+        0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
+        0,7,          //Colores para opcion seleccionada
 		7,2,0,2, 	//Colores para opcion no disponible
 
-                0,7,          //Colores para el titulo ventana
-                0,              //Color recuadro
-				7,0,          //Colores para el titulo ventana inactiva
+        0,7,          //Colores para el titulo ventana
+        0,              //Color recuadro
+        7,0,          //Colores para el titulo ventana inactiva
 
-                0,              //Color waveform
-                7+8,               //Color para zona no usada en visualmem
-                7+8,0,		//Color para opcion marcada
+        0,              //Color waveform
+        7+8,               //Color para zona no usada en visualmem
+        7+8,0,		//Color para opcion marcada
 		'X',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-                },
+    },
 
-        {0,"CleanInverse",0,7,
-                0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
-                7,0,          //Colores para opcion seleccionada
+    {0,"CleanInverse",0,7,
+        0,1,0,0,          //No Mostrar cursor >, mostrar recuadro, no mostrar rainbow
+        7,0,          //Colores para opcion seleccionada
 		0,2,7,2, 	//Colores para opcion no disponible
 
-                7,0,          //Colores para el titulo ventana
-                7,              //Color recuadro
-				0,7,          //Colores para el titulo ventana inactiva
+        7,0,          //Colores para el titulo ventana
+        7,              //Color recuadro
+        0,7,          //Colores para el titulo ventana inactiva
 
-                7,              //Color waveform
-                7,               //Color para zona no usada en visualmem
-                0,7+8,		//Color para opcion marcada
+        7,              //Color waveform
+        7,               //Color para zona no usada en visualmem
+        0,7+8,		//Color para opcion marcada
 		'X',
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-                },              
+    },              
 
-  
 	// https://ethanschoonover.com/solarized/. Solo vale en video driver completo por los colores usados (primer valor de la estructura)
 	{1,"Solarized Dark",SOLARIZED_COLOUR_base03,SOLARIZED_COLOUR_base0,
-
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 
 		SOLARIZED_COLOUR_base02,SOLARIZED_COLOUR_base0, 		//Colores para opcion seleccionada
@@ -1033,7 +1020,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		},
+    },
 
 	//Solo vale en video driver completo por los colores usados (primer valor de la estructura)
 	{1,"Solarized Light",SOLARIZED_COLOUR_base3,SOLARIZED_COLOUR_base00,
@@ -1055,10 +1042,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-		}
-
-
-
+    }
 
 
 };
