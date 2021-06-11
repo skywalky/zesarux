@@ -28778,6 +28778,8 @@ void menu_find_bytes_view_results(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_find_bytes_open_hexviewer,NULL,"%d",index_find);
                         menu_add_item_menu_valor_opcion(array_menu_common,index_find);
+                        menu_add_item_menu_tooltip(array_menu_common,"Press Enter to open Hexadecimal Editor on this address");
+                        menu_add_item_menu_ayuda(array_menu_common,"Press Enter to open Hexadecimal Editor on this address");
 
                         total_items++;
                         
