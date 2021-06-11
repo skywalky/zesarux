@@ -244,7 +244,6 @@ Info de tamaño ventana. Y tamaño ventana sin zoom
 
 -Poder buscar cadenas de texto en find byte. Al estilo de strings de linux, es decir, indicarle un minimo de caracteres juntos y saque todas las cadenas de texto
 opcion tambien para bajar bit 7 final
--Buscar bytes (mas de uno)
 
 -Mostrar juego cargado en titulo ventana. Desaparece al hacer reset 
 
