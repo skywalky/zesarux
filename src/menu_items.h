@@ -134,5 +134,7 @@ extern void menu_snapshot_rewind(MENU_ITEM_PARAMETERS);
 
 extern menu_z80_moto_int menu_debug_hexdump_direccion;
 
+extern void menu_find(MENU_ITEM_PARAMETERS);
+
 #endif
 
