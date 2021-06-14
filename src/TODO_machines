@@ -556,7 +556,7 @@ Hay una lista de capas de prioridades en el codigo fuente de la fpga. Segun src/
 -Allow config mode banking to reach the entire 2MB memory space (nextreg 0x04)
 
 
-Implementar bit 4 puerto layer2 0x123B:
+Implementar 48KB puerto layer2 0x123B:
 -0x123B Layer 2 control
 (R/W) If bit 4 = 0:
   (soft reset = 0)
