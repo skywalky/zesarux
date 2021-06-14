@@ -2588,6 +2588,42 @@ IMMEDIATE
 
 }
 
+int tbblue_get_total_offset_layer2(void)
+{
+    int offset=tbblue_get_offset_start_layer2();     
+
+    
+        
+        //Bit 2-0	16ki bank relative offset (+0 .. +7) applied to Layer 2 memory mapping
+        z80_byte offset_16k=tbblue_port_123b_second_byte&7;
+        //printf("offset: %d\n",offset_16k);
+        offset +=offset_16k*16384;
+        //printf("offset: %d\n",offset);
+    
+
+        
+
+        //printf("tbblue: %d\n",tbblue_port_123b);
+
+        
+
+        z80_byte region=tbblue_port_123b&(64+128);
+        switch (region) {
+            case 64:
+                offset +=16384;
+            break;
+
+            case 128: //TODO: en la documentacion dice 192... tiene logica???
+                offset +=32768;
+            break;
+        }
+
+    
+
+
+    return offset;
+}
+
 void poke_byte_no_time_tbblue(z80_int dir,z80_byte valor)
 {
 
@@ -2667,38 +2703,8 @@ IMMEDIATE
 
             if (escribir) {
 
-                int offset=tbblue_get_offset_start_layer2();     
-
+                int offset=tbblue_get_total_offset_layer2();
                 
-
-                //sumar desplazamiento de manera distinta si bit 4=1
-                if (tbblue_port_123b & 16) {
-                    
-                    //Bit 2-0	16ki bank relative offset (+0 .. +7) applied to Layer 2 memory mapping
-                    z80_byte offset_16k=tbblue_port_123b&7;
-                    //printf("offset: %d\n",offset_16k);
-                    offset +=offset_16k*16384;
-                    //printf("offset: %d\n",offset);
-                }
-
-                else {       
-
-                    //printf("tbblue: %d\n",tbblue_port_123b);
-
-                    
-
-                    z80_byte region=tbblue_port_123b&(64+128);
-                    switch (region) {
-                        case 64:
-                            offset +=16384;
-                        break;
-
-                        case 128: //TODO: en la documentacion dice 192... tiene logica???
-                            offset +=32768;
-                        break;
-                    }
-
-                }
 
                 offset +=dir;
                 memoria_spectrum[offset]=valor;
@@ -2753,6 +2759,14 @@ z80_byte peek_byte_no_time_tbblue(z80_int dir)
 	#ifdef EMULATE_VISUALMEM
 		set_visualmemreadbuffer(dir);
 	#endif
+
+    //Si esta layer2 visible para lectura
+    if (dir<16384 && (tbblue_port_123b & 4)) {
+        int offset=tbblue_get_total_offset_layer2();
+        
+        offset +=dir;
+        return memoria_spectrum[offset];
+    }
 
 		z80_byte *puntero;
 		puntero=tbblue_return_segment_memory(dir);

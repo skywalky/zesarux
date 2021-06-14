@@ -273,6 +273,7 @@ Then load the demo program and will work
 z80_byte tbblue_port_123b;
 
 
+z80_byte tbblue_port_123b_second_byte;
 
 
 //
@@ -1190,10 +1191,7 @@ void tbsprite_increment_index_303b() {
 
 int tbblue_write_on_layer2(void)
 {
-	if ( (tbblue_port_123b & 16)==0 && (tbblue_port_123b &1) ) return 1;
-
-    //comprobar si esto esta ok
-    if (tbblue_port_123b &16) return 1;
+	if (tbblue_port_123b &1) return 1;
 
 
 	return 0;
@@ -1201,10 +1199,7 @@ int tbblue_write_on_layer2(void)
 
 int tbblue_is_active_layer2(void)
 {
-	if ((tbblue_port_123b & 16)==0 && (tbblue_port_123b & 2)) return 1;
-
-    //comprobar si esto esta ok
-    if (tbblue_port_123b &16) return 1;
+	if (tbblue_port_123b & 2) return 1;
 
 	return 0;
 }
@@ -1248,14 +1243,10 @@ int tbblue_get_offset_start_layer2_reg(z80_byte register_value)
 int tbblue_get_offset_start_layer2(void)
 {
 
-    if ((tbblue_port_123b & 16)==0) {
 
-	    if (tbblue_port_123b & 8 ) return tbblue_get_offset_start_layer2_reg(tbblue_registers[19]);
-	    else return tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
-    }
-    else {
-        return tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
-    }
+    if (tbblue_port_123b & 8 ) return tbblue_get_offset_start_layer2_reg(tbblue_registers[19]);
+    else return tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
+
 
 }
 
@@ -2571,6 +2562,9 @@ z80_byte tbblue_get_port_layer2_value(void)
 
 void tbblue_out_port_layer2_value(z80_byte value)
 {
+
+    if ((value & 16)==0) {
+
 	tbblue_port_123b=value;
 
 	//Sincronizar bit layer2
@@ -2589,6 +2583,11 @@ void tbblue_out_port_layer2_value(z80_byte value)
 			if (value&2) tbblue_registers[105]|=128;
 
 	//printf ("valor a 123b: %02XH\n",value);
+    }
+
+    else {
+        tbblue_port_123b_second_byte=value;
+    }
 }
 
 
@@ -3778,6 +3777,7 @@ void tbblue_hard_reset(void)
 	tbblue_reset_palette_write_state();
 
 	tbblue_port_123b=0;
+    tbblue_port_123b_second_byte=0;
 
 
 	if (tbblue_fast_boot_mode.v) {
