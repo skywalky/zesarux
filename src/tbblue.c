@@ -6414,29 +6414,26 @@ void tbblue_do_ula_standard_overlay()
 
 
 	/*
-	(R/W) 0x32 (50) => ULA / LoRes Offset X
-bits 7-0 = X Offset (0-255)(Reset to 0 after a reset)
-ULA can only scroll in multiples of 8 pixels so the lowest 3 bits have no effect at this time.
+0x26 (38) => ULA X Scroll
+(R/W)
+  bits 7:0 = X Offset (0-255) (soft reset = 0)
+
 	*/
 
 	//entonces sumar 1 posicion por cada 8 del scroll
 
-	z80_byte ula_offset_x=tbblue_registers[50];
-	ula_offset_x /=8;
+	z80_byte ula_offset_x=tbblue_registers[38];
 	int indice_origen_bytes=ula_offset_x*2; //*2 dado que leemos del puntero_buffer_atributos que guarda 2 bytes: pixel y atributo	
 
 	/*
-	(R/W) 0x33 (51) => ULA / LoRes Offset Y
-bits 7-0 = Y Offset (0-191)(Reset to 0 after a reset)
+0x27 (39) => ULA Y Scroll
+(R/W)
+  bits 7:0 = Y Offset (0-191) (soft reset = 0)
 
-
-	linea_lores +=tbblue_registers[0x33];
-
-	linea_lores=linea_lores % 192;
 
 	*/
 
-	z80_byte tbblue_scroll_y=tbblue_registers[51];
+	z80_byte tbblue_scroll_y=tbblue_registers[39];
 	
 
 	scanline_copia +=tbblue_scroll_y;

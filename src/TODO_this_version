@@ -230,6 +230,10 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 -Número gráficos limitar a maximo 256 (en quill, paws, daad, gac)
 
 -Examinar variables basic: completar
+En ver variables basic usar útil concat string para agregar texto. Y strlen para ver si se aproxima al límite 
+En ver variables que diga puntero vars donde está y a donde apunta
+
+-Quizá por defecto en next limitar turbo en rom
 
 
 -estilos gui en documentación
