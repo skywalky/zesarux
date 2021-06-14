@@ -3563,15 +3563,19 @@ z80_byte clip_windows[TBBLUE_CLIP_WINDOW_TILEMAP][4];
 
 
 					int off_layer2_x=tbblue_registers[22] + (tbblue_registers[113]&1)*256;
-					sprintf (texto_buffer,"Layer2:     X=%4d  Y=%3d",off_layer2_x,tbblue_registers[23]);
+					sprintf (texto_buffer,"Layer2:  X=%4d  Y=%3d",off_layer2_x,tbblue_registers[23]);
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
 
-					sprintf (texto_buffer,"ULA/LoRes:  X=%4d  Y=%3d",tbblue_registers[50],tbblue_registers[51]);
+					sprintf (texto_buffer,"LoRes:   X=%4d  Y=%3d",tbblue_registers[50],tbblue_registers[51]);
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
+					sprintf (texto_buffer,"ULA:     X=%4d  Y=%3d",tbblue_registers[38],tbblue_registers[39]);
+					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
+
 
 					//Offset X puede llegar hasta 1023. Por tanto 4 cifras. El resto X solo 3 cifras, pero los dejamos a 4 para que formato quede igual en pantalla
-					sprintf (texto_buffer,"Tilemap:    X=%4d  Y=%3d",tbblue_registers[48]+256*(tbblue_registers[47]&3),tbblue_registers[49]);
+					sprintf (texto_buffer,"Tilemap: X=%4d  Y=%3d",tbblue_registers[48]+256*(tbblue_registers[47]&3),tbblue_registers[49]);
 					zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);					
 
 				}
@@ -3704,7 +3708,6 @@ void menu_debug_tsconf_tbblue_msx_videoregisters(MENU_ITEM_PARAMETERS)
 		xventana=menu_center_x()-ancho_ventana/2;
 
 		if (MACHINE_IS_TBBLUE) {
-			//yventana=0;
 			alto_ventana=24;
 		}
 
