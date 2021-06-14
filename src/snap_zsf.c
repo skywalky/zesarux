@@ -1709,12 +1709,13 @@ void load_zsf_tbblue_conf(z80_byte *header)
 
    tbblue_bootrom.v=header[257];
   tbblue_port_123b=header[258];
+  tbblue_port_123b_second_byte=header[259];
  
-  load_zsf_diviface_conf(&header[259]);
+  load_zsf_diviface_conf(&header[260]);
 
-  tbblue_copper_pc=value_8_to_16(header[263],header[262]);
+  tbblue_copper_pc=value_8_to_16(header[264],header[263]);
   for (i=0;i<2048;i++) {
-    tbblue_copper_memory[i]=header[264+i];
+    tbblue_copper_memory[i]=header[265+i];
   }
   
 
@@ -3379,7 +3380,7 @@ Byte Fields:
 
 if (MACHINE_IS_TBBLUE) {
 
-  #define TBBLUECONFBLOCKSIZE (1+256+1+1+3+2+2048)
+  #define TBBLUECONFBLOCKSIZE (1+256+1+1+1+3+2+2048)
     //z80_byte tbblueconfblock[TBBLUECONFBLOCKSIZE];
 
     z80_byte *tbblueconfblock;
@@ -3396,7 +3397,8 @@ if (MACHINE_IS_TBBLUE) {
 1-256: 256 internal TBBLUE registers
 257: tbblue_bootrom_flag
 258: tbblue_port_123b
-259: Same 3 bytes as ZSF_DIVIFACE_CONF:
+259: tbblue_port_123b_2
+260: Same 3 bytes as ZSF_DIVIFACE_CONF:
 
   0: Memory size: Value of 2=32 kb, 3=64 kb, 4=128 kb, 5=256 kb, 6=512 kb
   1: Diviface control register
@@ -3408,9 +3410,9 @@ if (MACHINE_IS_TBBLUE) {
     Bit 4=If divide ports are enabled
     Bits 5-7: unused by now
 
-262: Word: Copper PC
-264: Byte: Copper memory (currently 2048 bytes)
-2312:
+263: Word: Copper PC
+265: Byte: Copper memory (currently 2048 bytes)
+2313:
 ....
 
 
@@ -3423,16 +3425,17 @@ if (MACHINE_IS_TBBLUE) {
 
   tbblueconfblock[257]=tbblue_bootrom.v;
   tbblueconfblock[258]=tbblue_port_123b;
+  tbblueconfblock[259]=tbblue_port_123b_second_byte;
 
-  tbblueconfblock[259+0]=diviface_current_ram_memory_bits;
-  tbblueconfblock[259+1]=diviface_control_register;
-  tbblueconfblock[259+2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
+  tbblueconfblock[260+0]=diviface_current_ram_memory_bits;
+  tbblueconfblock[260+1]=diviface_control_register;
+  tbblueconfblock[260+2]=diviface_paginacion_automatica_activa.v | (divmmc_diviface_enabled.v<<1) | (divmmc_mmc_ports_enabled.v<<2) | (divide_diviface_enabled.v<<3) | (divide_ide_ports_enabled.v<<4); 
 
-  tbblueconfblock[262]=value_16_to_8l(tbblue_copper_pc);
-  tbblueconfblock[262+1]=value_16_to_8h(tbblue_copper_pc);
+  tbblueconfblock[263]=value_16_to_8l(tbblue_copper_pc);
+  tbblueconfblock[263+1]=value_16_to_8h(tbblue_copper_pc);
 
   for (i=0;i<2048;i++) {
-    tbblueconfblock[264+i]=tbblue_copper_memory[i];
+    tbblueconfblock[265+i]=tbblue_copper_memory[i];
   }
 
   zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, tbblueconfblock,ZSF_TBBLUE_CONF, TBBLUECONFBLOCKSIZE);
