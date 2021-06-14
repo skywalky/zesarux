@@ -2667,17 +2667,37 @@ IMMEDIATE
 
             if (escribir) {
 
-                int offset=tbblue_get_offset_start_layer2();
+                int offset=tbblue_get_offset_start_layer2();     
 
-                z80_byte region=tbblue_port_123b&(64+128);
-                switch (region) {
-                    case 64:
-                        offset +=16384;
-                    break;
+                
 
-                    case 128: //TODO: en la documentacion dice 192... tiene logica???
-                        offset +=32768;
-                    break;
+                //sumar desplazamiento de manera distinta si bit 4=1
+                if (tbblue_port_123b & 16) {
+                    
+                    //Bit 2-0	16ki bank relative offset (+0 .. +7) applied to Layer 2 memory mapping
+                    z80_byte offset_16k=tbblue_port_123b&7;
+                    //printf("offset: %d\n",offset_16k);
+                    offset +=offset_16k*16384;
+                    //printf("offset: %d\n",offset);
+                }
+
+                else {       
+
+                    //printf("tbblue: %d\n",tbblue_port_123b);
+
+                    
+
+                    z80_byte region=tbblue_port_123b&(64+128);
+                    switch (region) {
+                        case 64:
+                            offset +=16384;
+                        break;
+
+                        case 128: //TODO: en la documentacion dice 192... tiene logica???
+                            offset +=32768;
+                        break;
+                    }
+
                 }
 
                 offset +=dir;

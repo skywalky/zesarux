@@ -1190,13 +1190,22 @@ void tbsprite_increment_index_303b() {
 
 int tbblue_write_on_layer2(void)
 {
-	if (tbblue_port_123b &1) return 1;
+	if ( (tbblue_port_123b & 16)==0 && (tbblue_port_123b &1) ) return 1;
+
+    //comprobar si esto esta ok
+    if (tbblue_port_123b &16) return 1;
+
+
 	return 0;
 }
 
 int tbblue_is_active_layer2(void)
 {
-	if (tbblue_port_123b & 2) return 1;
+	if ((tbblue_port_123b & 16)==0 && (tbblue_port_123b & 2)) return 1;
+
+    //comprobar si esto esta ok
+    if (tbblue_port_123b &16) return 1;
+
 	return 0;
 }
 
@@ -1238,8 +1247,15 @@ int tbblue_get_offset_start_layer2_reg(z80_byte register_value)
 
 int tbblue_get_offset_start_layer2(void)
 {
-	if (tbblue_port_123b & 8 ) return tbblue_get_offset_start_layer2_reg(tbblue_registers[19]);
-	else return tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
+
+    if ((tbblue_port_123b & 16)==0) {
+
+	    if (tbblue_port_123b & 8 ) return tbblue_get_offset_start_layer2_reg(tbblue_registers[19]);
+	    else return tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
+    }
+    else {
+        return tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
+    }
 
 }
 

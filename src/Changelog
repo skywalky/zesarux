@@ -33,6 +33,7 @@ Improved Audio to .mid exporter: allow changing instrument
 
 Fixed file previews on corrupted files: pzx, tap
 Fixed rearranging windows and using total window height
+Fixed Next ULA Scroll to use registers 0x26 and 0x27
 
 
 Version 9.2 - Cliff Hanger edition. 05 April 2021
