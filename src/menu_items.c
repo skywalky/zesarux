@@ -2554,6 +2554,8 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 }
 
+#define GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH 30
+
 void menu_core_statistics_draw_meter(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int longitud_linea,int grados,int color_linea,int color_contorno)
 {
         //calcular punto final linea. Algo menos para que no toque con el contorno
@@ -2580,7 +2582,7 @@ void menu_core_statistics_draw_metter_common(zxvision_window *ventana,int xorige
     int grados=180-(percentaje*180)/100;
     //printf("%s: %d grados : %d\n",texto,percentaje,grados);        
 
-    int longitud_linea=30;
+    int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
            
     menu_core_statistics_draw_meter(ventana,xorigen_linea,yorigen_linea,longitud_linea,grados,color_linea,color_contorno);        
 
@@ -2808,7 +2810,7 @@ Calculando ese tiempo: 12% cpu
         int fila_texto=14;
         int margen_horizontal=30;
         
-        int longitud_linea=30;
+        int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
 
         //char buffer_texto_meters[30];
 
@@ -2828,7 +2830,7 @@ Calculando ese tiempo: 12% cpu
     int xorigen_linea=menu_char_width+longitud_linea; //Para ajustarlo por la derecha
     
     int color=ESTILO_GUI_COLOR_WAVEFORM;
-    if (core_statistics_ultimo_cpu_use_mostrado>70) color=ESTILO_GUI_COLOR_AVISO;
+    if (core_statistics_ultimo_cpu_use_mostrado>=75) color=ESTILO_GUI_COLOR_AVISO;
      
     menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"CPU",core_statistics_ultimo_cpu_use_mostrado,color,color);                   
 
@@ -2839,7 +2841,7 @@ Calculando ese tiempo: 12% cpu
     xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
 
     color=ESTILO_GUI_COLOR_WAVEFORM;
-    if (core_statistics_last_perc_audio>70) color=ESTILO_GUI_COLOR_AVISO;        
+    if (core_statistics_last_perc_audio>=75) color=ESTILO_GUI_COLOR_AVISO;        
 
     menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Audio",core_statistics_last_perc_audio,color,color);           
 
@@ -2850,7 +2852,7 @@ Calculando ese tiempo: 12% cpu
     xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
 
     color=ESTILO_GUI_COLOR_WAVEFORM;
-    if (core_statistics_last_perc_dropped>70) color=ESTILO_GUI_COLOR_AVISO;              
+    if (core_statistics_last_perc_dropped>=75) color=ESTILO_GUI_COLOR_AVISO;              
     
     menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Dropped",core_statistics_last_perc_dropped,color,color);
 
@@ -3319,7 +3321,7 @@ M1-M0= mode bits:
             //if (chip==0) {
                 int margen_horizontal=30;
                 
-                int longitud_linea=30;
+                int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
 
                 //fila inicial segun total de chips
                 int fila_texto=12;
