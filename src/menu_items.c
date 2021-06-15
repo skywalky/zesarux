@@ -2570,6 +2570,24 @@ void menu_core_statistics_draw_meter(zxvision_window *ventana,int xorigen_linea,
         zxvision_draw_line(ventana,xorigen_linea,yorigen_linea,xfinal_linea,yfinal_linea,color_linea,zxvision_putpixel);    
 }
 
+void menu_core_statistics_draw_metter_common(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int columna_texto,int fila_texto,char *texto,int percentaje,int color_linea,int color_contorno)
+{
+
+    //180 grados = 0%
+    //0 grados=100%
+    int grados=180-(percentaje*180)/100;
+    //printf("%s: %d grados : %d\n",texto,percentaje,grados);        
+
+    int longitud_linea=30;
+           
+    menu_core_statistics_draw_meter(ventana,xorigen_linea,yorigen_linea,longitud_linea,grados,color_linea,color_contorno);        
+
+    char buffer_texto_meters[100];
+
+    sprintf(buffer_texto_meters,"%s %3d%%",texto,percentaje);
+    zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);       
+}
+
 //Indica a la funcion de overlay cual es la ventana
 zxvision_window *menu_about_core_statistics_overlay_window;
 
@@ -2584,7 +2602,7 @@ int core_statistics_last_perc_audio=0;
 
 int core_statistics_last_perc_dropped=0;
 
-//int core_statistics_ultimo_cpu_use_mostrado=0;
+int core_statistics_ultimo_cpu_use_mostrado=0;
 
 //La funcion de overlay
 void menu_about_core_statistics_overlay_window_overlay(void)
@@ -2769,7 +2787,7 @@ Calculando ese tiempo: 12% cpu
             */
 
             core_statistics_previo_cpu=menu_string_volumen_maxmin(buf_barra_cpu,media_cpu,core_statistics_previo_cpu,100);
-            //core_statistics_ultimo_cpu_use_mostrado=media_cpu;
+            core_statistics_ultimo_cpu_use_mostrado=media_cpu;
 
 
 
@@ -2784,66 +2802,56 @@ Calculando ese tiempo: 12% cpu
 
         //Prueba medidores de rendimiento
         //de momento desactivado
-        /*
+        
         int fila_texto=14;
         int margen_horizontal=30;
-        int pos_x=1;
+        
         int longitud_linea=30;
 
-        zxvision_print_string_defaults(ventana,pos_x,fila_texto,"CPU");
+        //char buffer_texto_meters[30];
 
-        pos_x += (longitud_linea*2+margen_horizontal)/menu_char_width;
-        zxvision_print_string_defaults(ventana,pos_x,fila_texto,"Audio Buff");
         
-        pos_x += (longitud_linea*2+margen_horizontal)/menu_char_width;
-        zxvision_print_string_defaults(ventana,pos_x,fila_texto,"DROPPED");
         
-        //CPU USE
-        int grados;
+        //int grados;
         //0 grados=0%
         //180 grados=100%
 
-        //TODO: esto solo sirve si el footer y el uso de cpu estan habilitados
-
-        //mejor usar este core_statistics_ultimo_cpu_use_mostrado
-        
-        grados=(footer_last_cpu_use*180)/100;
-        printf("cpu: %d grados : %d\n",footer_last_cpu_use,grados);
-
-        
-        int xorigen_linea=menu_char_width+longitud_linea; //Para ajustarlo por la derecha
-        int yorigen_linea=(fila_texto*8)+longitud_linea+16;
-
         
 
-        int color=ESTILO_GUI_COLOR_WAVEFORM;
-        if (footer_last_cpu_use>70) color=ESTILO_GUI_COLOR_AVISO;
+        
+    int yorigen_linea=(fila_texto*8)+longitud_linea+16;        
 
-        menu_core_statistics_draw_meter(ventana,xorigen_linea,yorigen_linea,longitud_linea,grados,color,color);
+    //CPU USE
+    int pos_x=1;
+    int xorigen_linea=menu_char_width+longitud_linea; //Para ajustarlo por la derecha
+    
+    int color=ESTILO_GUI_COLOR_WAVEFORM;
+    if (core_statistics_ultimo_cpu_use_mostrado>70) color=ESTILO_GUI_COLOR_AVISO;
+     
+    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"CPU",core_statistics_ultimo_cpu_use_mostrado,color,color);                   
 
-        //AUDIO BUFFER
-        //core_statistics_last_perc_audio
 
-        grados=(core_statistics_last_perc_audio*180)/100;
-        printf("audio: %d grados : %d\n",core_statistics_last_perc_audio,grados);        
+    //AUDIO BUFFER
+    pos_x += (longitud_linea*2+margen_horizontal)/menu_char_width;
 
-        longitud_linea=30;
-        xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
-        //yorigen_linea=150;
+    xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
 
-        menu_core_statistics_draw_meter(ventana,xorigen_linea,yorigen_linea,longitud_linea,grados,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_COLOR_WAVEFORM);        
+    color=ESTILO_GUI_COLOR_WAVEFORM;
+    if (core_statistics_last_perc_audio>70) color=ESTILO_GUI_COLOR_AVISO;        
 
-        //DROPPED FRAMES
-        //core_statistics_last_perc_dropped
-        grados=(core_statistics_last_perc_dropped*180)/100;
-        printf("dropped: %d grados : %d\n",core_statistics_last_perc_dropped,grados);        
+    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Audio",core_statistics_last_perc_audio,color,color);           
 
-        longitud_linea=30;
-        xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
-        //yorigen_linea=150;
 
-        menu_core_statistics_draw_meter(ventana,xorigen_linea,yorigen_linea,longitud_linea,grados,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_COLOR_WAVEFORM);        
-        */
+    //DROPPED FRAMES
+    pos_x += (longitud_linea*2+margen_horizontal)/menu_char_width;
+
+    xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
+
+    color=ESTILO_GUI_COLOR_WAVEFORM;
+    if (core_statistics_last_perc_dropped>70) color=ESTILO_GUI_COLOR_AVISO;              
+    
+    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Dropped",core_statistics_last_perc_dropped,color,color);
+
 
 
 
@@ -3304,6 +3312,60 @@ M1-M0= mode bits:
                         //menu_escribe_linea_opcion(linea++,-1,1,textotono);
 						zxvision_print_string_defaults(menu_ay_registers_overlay_window,1,linea++,textotono);
 			}
+
+            //Contadores graficos 
+            //if (chip==0) {
+                int margen_horizontal=30;
+                
+                int longitud_linea=30;
+
+                //fila inicial segun total de chips
+                int fila_texto=12;
+                if (total_chips==2) fila_texto=23;
+                if (total_chips==3) fila_texto=22;
+
+                //Y desplazamiento vertical segun donde ubicamos el contador grafico segun el contador de chip
+                fila_texto +=((longitud_linea/8)+4)*chip;
+
+               //TODO: con 3 chips no cabe en vertical todo
+                int yorigen_linea=(fila_texto*8)+longitud_linea+16;
+
+                char buffer_texto_meter[100];
+                
+
+                //Volumen A
+                int columna_texto=1;
+                int xorigen_linea=40;
+                int porcentaje=((ay_3_8912_registros[chip][8]&15)*100)/15;
+                sprintf(buffer_texto_meter,"A[%d]",chip);
+                int color=ESTILO_GUI_COLOR_WAVEFORM;
+                if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;
+
+                menu_core_statistics_draw_metter_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
+                    columna_texto,fila_texto,buffer_texto_meter,porcentaje,color,color);    
+
+                //Volumen B
+                columna_texto += (longitud_linea*2+margen_horizontal)/menu_char_width;
+                xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
+                porcentaje=((ay_3_8912_registros[chip][9]&15)*100)/15;
+                sprintf(buffer_texto_meter,"B[%d]",chip);
+                color=ESTILO_GUI_COLOR_WAVEFORM;
+                if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;                
+
+                menu_core_statistics_draw_metter_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
+                    columna_texto,fila_texto,buffer_texto_meter,porcentaje,color,color);              
+
+                //Volumen C
+                columna_texto += (longitud_linea*2+margen_horizontal)/menu_char_width;
+                xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
+                porcentaje=((ay_3_8912_registros[chip][10]&15)*100)/15;
+                sprintf(buffer_texto_meter,"C[%d]",chip);
+                color=ESTILO_GUI_COLOR_WAVEFORM;
+                if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;                
+
+                menu_core_statistics_draw_metter_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
+                    columna_texto,fila_texto,buffer_texto_meter,porcentaje,color,color);                                          
+            //}
 
 	}
 
