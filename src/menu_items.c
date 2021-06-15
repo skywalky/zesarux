@@ -2841,7 +2841,8 @@ Calculando ese tiempo: 12% cpu
     xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
 
     color=ESTILO_GUI_COLOR_WAVEFORM;
-    if (core_statistics_last_perc_audio>=75) color=ESTILO_GUI_COLOR_AVISO;        
+    //es tan malo como que este lleno como vacio
+    if (core_statistics_last_perc_audio>=90 || core_statistics_last_perc_audio<=10) color=ESTILO_GUI_COLOR_AVISO;        
 
     menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Audio",core_statistics_last_perc_audio,color,color);           
 
