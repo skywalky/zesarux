@@ -2554,6 +2554,22 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_core_statistics_draw_meter(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int longitud_linea,int grados,int color_linea,int color_contorno)
+{
+        //calcular punto final linea
+        int xfinal_linea=xorigen_linea+longitud_linea*util_get_cosine(grados)/10000;
+
+        int yfinal_linea=yorigen_linea-longitud_linea*util_get_sine(grados)/10000;
+
+        int centro_x=xorigen_linea;
+        int centro_y=yorigen_linea;
+        int radio=longitud_linea;
+
+        zxvision_draw_ellipse(ventana,centro_x,centro_y,radio,-radio,color_contorno,zxvision_putpixel,180);
+
+        zxvision_draw_line(ventana,xorigen_linea,yorigen_linea,xfinal_linea,yfinal_linea,color_linea,zxvision_putpixel);    
+}
+
 //Indica a la funcion de overlay cual es la ventana
 zxvision_window *menu_about_core_statistics_overlay_window;
 
@@ -2563,6 +2579,12 @@ int menu_core_statistics_contador_segundo_anterior;
 int core_statistics_previo_audio_buffer=0;
 
 int core_statistics_previo_cpu=0;
+
+int core_statistics_last_perc_audio=0;
+
+int core_statistics_last_perc_dropped=0;
+
+//int core_statistics_ultimo_cpu_use_mostrado=0;
 
 //La funcion de overlay
 void menu_about_core_statistics_overlay_window_overlay(void)
@@ -2579,6 +2601,7 @@ void menu_about_core_statistics_overlay_window_overlay(void)
 
     //esto hara ejecutar esto 2 veces por segundo
     if ( ((contador_segundo%500) == 0 && menu_core_statistics_contador_segundo_anterior!=contador_segundo) ) {
+
         menu_core_statistics_contador_segundo_anterior=contador_segundo;
         //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
@@ -2681,6 +2704,7 @@ Calculando ese tiempo: 12% cpu
         else perc_dropped=(stats_frames_total_dropped*100)/stats_frames_total;
 
         sprintf (texto_buffer," Dropped: %d (%3d%%)",stats_frames_total_dropped,perc_dropped);
+        core_statistics_last_perc_dropped=perc_dropped;
         zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
         int media_cpu=0;
@@ -2719,8 +2743,12 @@ Calculando ese tiempo: 12% cpu
         sprintf (texto_buffer,"Audio Buffer%s: %d/%d (%3d%%) [%s]",
                     (si_audio_silenced() ? " (Silenced)" : ""),
                     posicion_buffer_audio,tamanyo_buffer_audio,perc_audio,buf_volumen_canal);
+
+        core_statistics_last_perc_audio=perc_audio;
         
-        zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);        
+        zxvision_print_string_defaults_fillspc(ventana,1,linea++,texto_buffer);     
+
+
 
 		//Uso cpu no se ve en windows
 #ifndef MINGW
@@ -2741,6 +2769,7 @@ Calculando ese tiempo: 12% cpu
             */
 
             core_statistics_previo_cpu=menu_string_volumen_maxmin(buf_barra_cpu,media_cpu,core_statistics_previo_cpu,100);
+            //core_statistics_ultimo_cpu_use_mostrado=media_cpu;
 
 
 
@@ -2751,6 +2780,73 @@ Calculando ese tiempo: 12% cpu
         
 
     }
+
+
+        //Prueba medidores de rendimiento
+        //de momento desactivado
+        /*
+        int fila_texto=14;
+        int margen_horizontal=30;
+        int pos_x=1;
+        int longitud_linea=30;
+
+        zxvision_print_string_defaults(ventana,pos_x,fila_texto,"CPU");
+
+        pos_x += (longitud_linea*2+margen_horizontal)/menu_char_width;
+        zxvision_print_string_defaults(ventana,pos_x,fila_texto,"Audio Buff");
+        
+        pos_x += (longitud_linea*2+margen_horizontal)/menu_char_width;
+        zxvision_print_string_defaults(ventana,pos_x,fila_texto,"DROPPED");
+        
+        //CPU USE
+        int grados;
+        //0 grados=0%
+        //180 grados=100%
+
+        //TODO: esto solo sirve si el footer y el uso de cpu estan habilitados
+
+        //mejor usar este core_statistics_ultimo_cpu_use_mostrado
+        
+        grados=(footer_last_cpu_use*180)/100;
+        printf("cpu: %d grados : %d\n",footer_last_cpu_use,grados);
+
+        
+        int xorigen_linea=menu_char_width+longitud_linea; //Para ajustarlo por la derecha
+        int yorigen_linea=(fila_texto*8)+longitud_linea+16;
+
+        
+
+        int color=ESTILO_GUI_COLOR_WAVEFORM;
+        if (footer_last_cpu_use>70) color=ESTILO_GUI_COLOR_AVISO;
+
+        menu_core_statistics_draw_meter(ventana,xorigen_linea,yorigen_linea,longitud_linea,grados,color,color);
+
+        //AUDIO BUFFER
+        //core_statistics_last_perc_audio
+
+        grados=(core_statistics_last_perc_audio*180)/100;
+        printf("audio: %d grados : %d\n",core_statistics_last_perc_audio,grados);        
+
+        longitud_linea=30;
+        xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
+        //yorigen_linea=150;
+
+        menu_core_statistics_draw_meter(ventana,xorigen_linea,yorigen_linea,longitud_linea,grados,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_COLOR_WAVEFORM);        
+
+        //DROPPED FRAMES
+        //core_statistics_last_perc_dropped
+        grados=(core_statistics_last_perc_dropped*180)/100;
+        printf("dropped: %d grados : %d\n",core_statistics_last_perc_dropped,grados);        
+
+        longitud_linea=30;
+        xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
+        //yorigen_linea=150;
+
+        menu_core_statistics_draw_meter(ventana,xorigen_linea,yorigen_linea,longitud_linea,grados,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_COLOR_WAVEFORM);        
+        */
+
+
+
     //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
     //y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
     //En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
@@ -17759,7 +17855,7 @@ void menu_debug_daad_view_graphics_render_recursive_gac(zxvision_window *w,z80_b
                 int radio_y=parm3_byte-y1;
 
                 if (paws_render_disable_ellipse.v==0 && w!=NULL) {
-                    zxvision_draw_ellipse(w,x1,y1,radio_x,radio_y,paws_render_ink+paws_render_bright*8,render_paws_putpixel);
+                    zxvision_draw_ellipse(w,x1,y1,radio_x,radio_y,paws_render_ink+paws_render_bright*8,render_paws_putpixel,360);
                 }
 
             break;

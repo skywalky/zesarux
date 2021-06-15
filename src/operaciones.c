@@ -2672,66 +2672,70 @@ IMMEDIATE
 
 
 
-		//Si se escribe en memoria layer2
-		if (dir<16384 && tbblue_write_on_layer2() ) {
+    //Si se escribe en memoria layer2
+    if (dir<tbblue_layer2_size_mapped() && tbblue_write_on_layer2() ) {
 
-            //Pero si no hay por encima la memoria divmmc encima:
-            /*
-               -- memory decode order
-   --
-   -- 0-16k:
-   --   1. bootrom
-   --   2. machine config mapping
-   --   3. multiface
-   --   4. divmmc
-   --   5. layer 2 mapping
-   --   6. mmu
-   --   7. romcs expansion bus
-   --   8. rom
-            */
+        //Pero si no hay por encima la memoria divmmc encima:
+        /*
+            -- memory decode order
+--
+-- 0-16k:
+--   1. bootrom
+--   2. machine config mapping
+--   3. multiface
+--   4. divmmc
+--   5. layer 2 mapping
+--   6. mmu
+--   7. romcs expansion bus
+--   8. rom
+        */
 
-            int escribir=1;
+        int escribir=1;
 
-      
-        
+    
+        if (tbblue_layer2_size_mapped()==16384) {
             if ((diviface_control_register&128) || diviface_paginacion_automatica_activa.v==1) {
                 //printf("no escribir pues divmmc activo. dir: %d\n",dir);
                 escribir=0;
             }
-                
-         
+        }
+            
+        
 
-            if (escribir) {
+        if (escribir) {
 
-                int offset=tbblue_get_total_offset_layer2();
-                
+            int offset=tbblue_get_total_offset_layer2();
+            
 
-                offset +=dir;
-                memoria_spectrum[offset]=valor;
+            offset +=dir;
+            memoria_spectrum[offset]=valor;
 
-            }
+            //Y volvemos pues no hay que escribir en otras rams que estén mapeadas aquí
+            return;
 
-			//printf ("Escribiendo layer 2 direccion %d valor %d offset %d region %d\n",dir,valor,offset,region);
-		}
+        }
 
-		//Si se puede escribir en espacio ROM (0-16383)
-		if (dir<16384) {
-			if (tbblue_low_segment_writable.v==0) {
-				//Aqui puede pasar que por MMU si se permita (registro 80/81 a valor no 255)
-				//printf ("No se puede escribir en la rom. Dir=%d PC=%d\n",dir,reg_pc);
-				if (!tbblue_is_writable_segment_mmu_rom_space(dir) ) return;
-			}
-		}
+        //printf ("Escribiendo layer 2 direccion %d valor %d offset %d region %d\n",dir,valor,offset,region);
+    }
 
-		//if (dir<16384) printf ("Writing on tbblue rom address %XH value %XH\n",dir,valor);
+    //Si se puede escribir en espacio ROM (0-16383)
+    if (dir<16384) {
+        if (tbblue_low_segment_writable.v==0) {
+            //Aqui puede pasar que por MMU si se permita (registro 80/81 a valor no 255)
+            //printf ("No se puede escribir en la rom. Dir=%d PC=%d\n",dir,reg_pc);
+            if (!tbblue_is_writable_segment_mmu_rom_space(dir) ) return;
+        }
+    }
 
-		z80_byte *puntero;
-		puntero=tbblue_return_segment_memory(dir);
+    //if (dir<16384) printf ("Writing on tbblue rom address %XH value %XH\n",dir,valor);
 
-		dir = dir & 8191;
-		puntero=puntero+dir;
+    z80_byte *puntero;
+    puntero=tbblue_return_segment_memory(dir);
 
-		*puntero=valor;
+    dir = dir & 8191;
+    puntero=puntero+dir;
+
+    *puntero=valor;
 
 }
 
@@ -2761,7 +2765,7 @@ z80_byte peek_byte_no_time_tbblue(z80_int dir)
 	#endif
 
     //Si esta layer2 visible para lectura
-    if (dir<16384 && (tbblue_port_123b & 4)) {
+    if (dir<tbblue_layer2_size_mapped() && tbblue_read_on_layer2() ) {
         int offset=tbblue_get_total_offset_layer2();
         
         offset +=dir;

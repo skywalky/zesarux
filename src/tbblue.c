@@ -1197,6 +1197,26 @@ int tbblue_write_on_layer2(void)
 	return 0;
 }
 
+int tbblue_read_on_layer2(void)
+{
+	if (tbblue_port_123b & 4) return 1;
+
+
+	return 0;
+}
+
+//Retorna si hay mapeados 16kb o 48kb en espacio de memoria
+int tbblue_layer2_size_mapped(void)
+{
+    z80_byte region=tbblue_port_123b&(64+128);
+
+    if (region==128+64) {
+        //printf("mapeados 48kb\n");
+        return 49152;
+    }
+    else return 16384;
+}
+
 int tbblue_is_active_layer2(void)
 {
 	if (tbblue_port_123b & 2) return 1;
@@ -6200,7 +6220,9 @@ void tbblue_do_layer2_overlay(int linea_render)
 		
 
 		//Obtener inicio pantalla layer2
-		int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
+		//int tbblue_layer2_offset=tbblue_get_offset_start_layer2();
+
+        int tbblue_layer2_offset=tbblue_get_offset_start_layer2_reg(tbblue_registers[18]);
 
 
 		//Scroll vertical

@@ -4830,6 +4830,8 @@ void menu_get_cpu_use_perc(void)
 int cpu_use_total_acumulado=0;
 int cpu_use_total_acumulado_medidas=0;
 
+int footer_last_cpu_use=0;
+
 void menu_draw_cpu_use_last(void)
 {
 
@@ -4850,6 +4852,8 @@ void menu_draw_cpu_use_last(void)
 
 	char buffer_perc[9];
 	sprintf (buffer_perc,"%3d%% CPU",cpu_use);
+
+    footer_last_cpu_use=cpu_use;
 
 	int x;
 
@@ -10178,12 +10182,12 @@ void zxvision_draw_line(zxvision_window *w,int x1,int y1,int x2,int y2,int c, vo
 
 //Funcion para trazar una elipse
 //TODO: si el radio es muy grande, se vera punteada. Se deberia mejorar haciendo lineas entre esos puntos intermedios
-void zxvision_draw_ellipse(zxvision_window *w,int x1,int y1,int radius_x,int radius_y,int c, void (*fun_putpixel) (zxvision_window *w,int x,int y,int color) )
+void zxvision_draw_ellipse(zxvision_window *w,int x1,int y1,int radius_x,int radius_y,int c, void (*fun_putpixel) (zxvision_window *w,int x,int y,int color) ,int limite_grados)
 {
 
     int grados;
 
-    for (grados=0;grados<360;grados++) {
+    for (grados=0;grados<limite_grados;grados++) {
         int xdestino=x1+((radius_x*util_get_cosine(grados))/10000);
         int ydestino=y1+((radius_y*util_get_sine(grados))/10000);
         fun_putpixel(w,xdestino,ydestino,c);

@@ -4750,7 +4750,7 @@ void debug_get_ioports(char *stats_buffer)
     }
 
   	if (MACHINE_IS_TBBLUE) {
-		sprintf (buf_linea,"\nTBBlue port 123b: %02X\n",tbblue_port_123b);
+		sprintf (buf_linea,"\nTBBlue port 123b:   %02X\n",tbblue_port_123b);
   		sprintf (&stats_buffer[index_buffer],"%s",buf_linea); index_buffer +=strlen(buf_linea);  
 
 		sprintf (buf_linea,"TBBlue port 123b_2: %02X\n",tbblue_port_123b_second_byte);

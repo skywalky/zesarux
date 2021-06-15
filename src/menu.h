@@ -350,7 +350,7 @@ extern void menu_calculate_mouse_xy_absolute_interface_pixel(int *resultado_x,in
 extern void zxvision_putpixel(zxvision_window *w,int x,int y,int color);
 extern void zxvision_putpixel_no_zoom(zxvision_window *w,int x,int y,int color);
 extern void zxvision_draw_line(zxvision_window *w,int x1,int y1,int x2,int y2,int c, void (*fun_putpixel) (zxvision_window *w,int x,int y,int color) );
-extern void zxvision_draw_ellipse(zxvision_window *w,int x1,int y1,int radius_x,int radius_y,int c, void (*fun_putpixel) (zxvision_window *w,int x,int y,int color) );
+extern void zxvision_draw_ellipse(zxvision_window *w,int x1,int y1,int radius_x,int radius_y,int c, void (*fun_putpixel) (zxvision_window *w,int x,int y,int color) ,int limite_grados);
 
 extern z80_byte zxvision_read_keyboard(void);
 void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla);
@@ -684,6 +684,7 @@ extern void cls_menu_overlay(void);
 extern int menu_multitarea;
 extern int menu_emulation_paused_on_menu;
 extern int menu_abierto;
+extern int footer_last_cpu_use;
 
 extern void menu_muestra_pending_error_message(void);
 
