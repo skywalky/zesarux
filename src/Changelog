@@ -26,6 +26,7 @@ Improved ZX Vision menu interface:
 -Maximizing windows now take care of size of zx desktop
 -Added item to reduce+rearrange windows
 -Added BeOS GUI Style
+-Added some graphical meters on AY Registers, Core Statistics
 -Colour palette window now shows all colours that fit in the window
 -View sprite legend now adapts to size
 
