@@ -2556,18 +2556,20 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 void menu_core_statistics_draw_meter(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int longitud_linea,int grados,int color_linea,int color_contorno)
 {
-        //calcular punto final linea
-        int xfinal_linea=xorigen_linea+longitud_linea*util_get_cosine(grados)/10000;
+        //calcular punto final linea. Algo menos para que no toque con el contorno
+        int xfinal_linea=xorigen_linea+(longitud_linea-5)*util_get_cosine(grados)/10000;
 
-        int yfinal_linea=yorigen_linea-longitud_linea*util_get_sine(grados)/10000;
+        int yfinal_linea=yorigen_linea-(longitud_linea-5)*util_get_sine(grados)/10000;
 
+        zxvision_draw_line(ventana,xorigen_linea,yorigen_linea,xfinal_linea,yfinal_linea,color_linea,zxvision_putpixel);   
+
+        //Y el contorno
         int centro_x=xorigen_linea;
         int centro_y=yorigen_linea;
         int radio=longitud_linea;
 
         zxvision_draw_ellipse(ventana,centro_x,centro_y,radio,-radio,color_contorno,zxvision_putpixel,180);
-
-        zxvision_draw_line(ventana,xorigen_linea,yorigen_linea,xfinal_linea,yfinal_linea,color_linea,zxvision_putpixel);    
+     
 }
 
 void menu_core_statistics_draw_metter_common(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int columna_texto,int fila_texto,char *texto,int percentaje,int color_linea,int color_contorno)
