@@ -238,6 +238,7 @@ En ver variables que diga puntero vars donde está y a donde apunta
 
 -estilos gui en documentación
 
+-debug variables soportar numeros coma flotante
 
 -al hacer assemble se debe poner en modo step si estaba en modo step
 
