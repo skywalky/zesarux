@@ -6840,25 +6840,223 @@ int remote_parsed_source_code_indexes_total;
 
 }
 
+void debug_view_basic_variables_print_number(z80_int dir,char *buffer_linea)
+{
+    
+    //Si es de 16 bits entera, primer byte a 0
+    z80_byte number_type=peek_byte_no_time(dir);
+    if (number_type==0) {
+        int variable_value=peek_word_no_time(dir+2);
+        
+        //negativo
+        if (peek_byte_no_time(dir+1)==0xFF) {
+            variable_value=-(65536-variable_value);
+        }
+        sprintf(buffer_linea,"(int)%d",variable_value);
+    }
+    else {
+        //floating
+        //TODO valor
+        sprintf(buffer_linea,"(float)?");
+    }    
+}
 
+#define MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH 100
 
-//tipo: tipo maquina: 0: spectrum. 1: zx80. 2: zx81
-void debug_view_basic_variables(char *results_buffer)
+int debug_view_basic_variables_print_string(z80_int dir,int longitud_variable,char *results_buffer,int maxima_longitud_texto)
 {
 
+    char buffer_linea[MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH+1];
+    sprintf (buffer_linea,"\"");
+    util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);    
 
-    #define MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH 100
+    int resultado=0;
+
+    int maximo_mostrar=longitud_variable;
+
+    int limite_alcanzado=0;
+
+    //Para que quepa a$=""
+    if (maximo_mostrar>MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH-10) {
+        maximo_mostrar=MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH-10;
+        limite_alcanzado=1;
+    }
+
+    int i;
+
+    for (i=0;i<maximo_mostrar;i++) {
+        buffer_linea[i]=peek_byte_no_time(dir+i);
+    }
+
+    if (limite_alcanzado) {
+        buffer_linea[i]='.';
+        i++;
+        buffer_linea[i]='.';
+        i++;
+        buffer_linea[i]='.';
+        i++;
+    }
+
+    buffer_linea[i]='"';
+    buffer_linea[i+1]='\n';
+    buffer_linea[i+2]=0;
+
+    resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);  
+
+    return resultado;    
+}
+
+int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int puntero,int total_dimensiones,
+    int dimensiones[],int indice,int posicion_actual[],int total_offset,int maxima_longitud_texto)
+{
+    /*
+    Esta funcion recursiva seguro que se puede optimizar pero... de momento funciona
+    Recorre un array alfanumerico de varias dimensiones
+
+    Variables:
+    results_buffer: string donde ir guardando el texto
+    puntero: apunta a direccion inicial donde esta el primer caracter
+    total_dimensiones: de cuantas dimensiones es el array. por ejemplo DIM a$(9,8,7). el total_dimensiones es 3
+    dimensiones: tamanyo de cada dimension, con el ejemplo anterior: dimensiones[0]=9. dimensiones[1]=8. dimensiones[2]=7.
+    indice: en que dimension nos fijamos. se incrementar cada vez que se llama a la funcion recursivamente
+    array posicion_actual: dice en que elemento nos fijamos. por ejempoo si miramos el elemento (2,5,7), el array contiene:
+        posicion_actual[0]=2;
+        posicion_actual[1]=5;
+        posicion_actual[2]=7;
+    total_offset: indica el desplazamiento donde esta ubicada la letra que mostraremos en pantalla
+    maxima_longitud_texto: maxima longitud que permite escribir en el string results_buffer
+     */
+    
+    int i;
+
+    /*
+    La idea es recorrer todos los elementos de cada dimension, o sea, para un array de DIM A$(2,3) haremos:
+    A$(1,1)
+    A$(1,2)
+    A$(1,3)
+    A$(2,1)
+    A$(2,2)
+    A$(2,3)
+    Para un array de DIM B$(2,3,4) haremos:
+    A$(1,1,1)
+    A$(1,1,2)
+    A$(1,1,3)
+    A$(1,1,4)
+
+    A$(1,2,1)
+    A$(1,2,2)
+    A$(1,2,3)
+    A$(1,2,4)
+
+    A$(1,3,1)
+    A$(1,3,2)
+    A$(1,3,3)
+    A$(1,3,4)
+
+    A$(2,1,1)
+    A$(2,1,2)
+    A$(2,1,3)
+    A$(2,1,4)
+
+    A$(2,2,1)
+    A$(2,2,2)
+    A$(2,2,3)
+    A$(2,2,4)
+
+    A$(2,3,1)
+    A$(2,3,2)
+    A$(2,3,3)
+    A$(2,3,4)
+
+
+    for (i=0;i<dimensiones[indice];i++) {
+        //printf("%d(%d) ",i,indice);
+        posicion_actual[indice]=i;
+        if (indice<total_dimensiones-1) {
+            total_offset=debug_view_basic_variables_print_dim_alpha(results_buffer,puntero,total_dimensiones,dimensiones,
+                        indice+1,posicion_actual,total_offset,maxima_longitud_texto);
+        }
+        else {
+            //
+            //printf(".");
+            char buffer_linea[100];
+
+            printf("(");
+            util_concat_string(results_buffer,"(",maxima_longitud_texto);
+            int j;
+            for (j=0;j<total_dimensiones;j++) {
+                
+                char final_char=(j<total_dimensiones-1 ? ',' : ')');
+                printf("%d%c",posicion_actual[j]+1,final_char);
+
+                sprintf(buffer_linea,"%d%c",posicion_actual[j]+1,final_char);
+                util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+            }
+            z80_byte letra_leida=peek_byte_no_time(puntero+total_offset);
+            if (letra_leida<32 || letra_leida>126) letra_leida='?';
+
+
+            printf(" (offset=%d) (=%c)\n",total_offset,letra_leida);
+
+
+            sprintf(buffer_linea,"=\"%c\"\n",letra_leida);
+            util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+            total_offset++;
+        }
+        //printf("\n");
+    }
+
+    printf("\n");
+
+    return total_offset;
+}
+
+//2,3=
+//1,1
+//1,2
+//1,3
+//2,1
+//2,2
+//2,3
+
+//2,3,4=
+//1,1,1,
+//1,1,2
+//1,1,3
+//1,1,4
+
+//1,2,1
+//1,2,2
+//...
+
+//tipo: tipo maquina: 0: spectrum. 1: zx80. 2: zx81
+void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
+{
+
+    //Cadena vacia inicialmente
+    results_buffer[0]=0;
+
+
+    
 	z80_int dir;
 
   	dir=peek_word_no_time(23627);
     char buffer_linea[MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH+1];
 
-    int index_buffer=0;
+    sprintf(buffer_linea,"VARS(23627)=%d\n",dir);
+
+    util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+
+    //int index_buffer=0;
 
     z80_byte letra_variable;
 
+    z80_byte number_type;
+
     int salir=0;
     int i;
+
+    int resultado=0;
 
     z80_int longitud_variable;
 
@@ -6868,18 +7066,23 @@ void debug_view_basic_variables(char *results_buffer)
         z80_byte variable_type=((first_byte>>5))&7;
 
         switch (variable_type) {
-        //Variable alfanumerica (p ej A$)
+        
             case 2:
+                //Variable alfanumerica (p ej A$)
                 letra_variable=first_byte_letter+96;
                 if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
 
-                sprintf (buffer_linea,"%c$=\"",letra_variable);
+                sprintf (buffer_linea,"%c$=",letra_variable);
+                util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
                 longitud_variable=peek_word_no_time(dir);
 
                 dir +=2;
 
+
+                int resultado=debug_view_basic_variables_print_string(dir,longitud_variable,results_buffer,maxima_longitud_texto);
                 
+                /*
                 int maximo_mostrar=longitud_variable;
 
                 int limite_alcanzado=0;
@@ -6907,52 +7110,126 @@ void debug_view_basic_variables(char *results_buffer)
                 buffer_linea[4+i+1]='\n';
                 buffer_linea[4+i+2]=0;
 
+                resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+                */                       
+
                 //Siguiente variable
                 dir +=longitud_variable;
 
-                
-
-                strcpy(&results_buffer[index_buffer],buffer_linea);
-                
-                index_buffer +=strlen(buffer_linea);        
+                             
             break;
 
-            case 6:
+            case 3:
+                //Variable numérica identificada con un solo caracter
                 letra_variable=first_byte_letter+96;
                 if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
 
-                sprintf (buffer_linea,"DIM %c$=\"",letra_variable);
+            
+                char buf_numero[30];
+                
+                debug_view_basic_variables_print_number(dir,buf_numero);
+
+                sprintf(buffer_linea,"%c=%s\n",letra_variable,buf_numero);
+
+                dir +=5;
+
+                resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);                
+
+
+            break;
+
+            case 6:
+                //Matriz alfanumérica
+                letra_variable=first_byte_letter+96;
+                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+
+                sprintf (buffer_linea,"DIM %c$(",letra_variable);
+                util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
                 longitud_variable=peek_word_no_time(dir);
 
                 dir +=2;    
 
-                //TODO
+                //TODO. dimensiones...
+                z80_byte total_dimensiones=peek_byte_no_time(dir);
+                printf("total_dimensiones: %d\n",total_dimensiones);
+
+                int dimensiones[256];
+
+                
+
+                int i;
+                for (i=0;i<total_dimensiones;i++) {
+                    z80_int dimension=peek_word_no_time(dir+1+(i*2));
+                    dimensiones[i]=dimension;
+
+                    char relleno=(i<total_dimensiones-1 ? ',' : ')');
+                    sprintf (buffer_linea,"%d%c",dimension,relleno);
+                    util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+                }
+
+                sprintf (buffer_linea,"=\n");
+                util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+
+                //Y ahora imprimir cadenas de texto
+                int inicio_texto=dir+1+(i*2);
+                //sprintf (buffer_linea,"%c%c",peek_byte_no_time(inicio_texto),peek_byte_no_time(inicio_texto+1));
+                //util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+
+                int posicion_actual[256];
+
+                debug_view_basic_variables_print_dim_alpha(results_buffer,inicio_texto,total_dimensiones,&dimensiones[0],0,&posicion_actual[0],0,maxima_longitud_texto);
 
                 //Siguiente variable
                 dir +=longitud_variable;
+
+                resultado=util_concat_string(results_buffer,"\n",maxima_longitud_texto);
  
 
-                strcpy(&results_buffer[index_buffer],buffer_linea);
-                
-                index_buffer +=strlen(buffer_linea);     
+            break;   
 
-            break;    
+            case 7:
+                //Iterador en bloque FOR/NEXT
+                letra_variable=first_byte_letter+96;
+                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+
+                //Inicio, final, step, linea, sentencia    
+                char buf_inicio[30];
+                debug_view_basic_variables_print_number(dir,buf_inicio);
+                dir +=5;
+
+                char buf_final[30];
+                debug_view_basic_variables_print_number(dir,buf_final);
+                dir +=5;                
+
+                char buf_step[30];
+                debug_view_basic_variables_print_number(dir,buf_step);
+                dir +=5;                
+
+                z80_int linea=peek_word_no_time(dir);
+                dir+=2;
+
+                z80_byte sentencia=peek_byte_no_time(dir);
+                dir++;
+
+                sprintf(buffer_linea,"FOR %c=%s TO %s STEP %s LINE %d:%d\n",letra_variable,buf_inicio,buf_final,buf_step,linea,sentencia);
+
+                resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+
+               
+            break; 
 
             default:
                 sprintf (buffer_linea,"Unknown variable type %d\n",variable_type);
-                strcpy(&results_buffer[index_buffer],buffer_linea);
-                
-                index_buffer +=strlen(buffer_linea);     
+                resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
             break;
         }
 
   		
         //controlar maximo
-        //1024 bytes de margen
-        if (index_buffer>MAX_TEXTO_GENERIC_MESSAGE-1024) {
-                debug_printf (VERBOSE_ERR,"Too many results to show. Showing only the first ones");
+        if (resultado) {
+            debug_printf(VERBOSE_ERR,"Reached maximum text size. Showing only allowed text");
                 //forzar salir
                 salir=1;
         }
@@ -6961,8 +7238,7 @@ void debug_view_basic_variables(char *results_buffer)
   	}
 
 
-    results_buffer[index_buffer]=0;
-
+    
 }
 
 

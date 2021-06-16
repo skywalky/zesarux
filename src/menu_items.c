@@ -29532,7 +29532,7 @@ void menu_debug_view_basic_variables(MENU_ITEM_PARAMETERS)
 {
 
 	char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
-	debug_view_basic_variables(results_buffer);
+	debug_view_basic_variables(results_buffer,MAX_TEXTO_GENERIC_MESSAGE);
 
   menu_generic_message_format("Basic Variables","%s",results_buffer);
 }
