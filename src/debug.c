@@ -6969,6 +6969,8 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
     A$(2,3,4)
     */
 
+    //Nota: aqui no gestionamos el resultado de error de util_concat_string por no hacer mas complicada la llamada recursiva
+    //aunque logicamente el limite se controla, si esta al maximo de longitud permitida, util_concat_string no escribira nada
 
     for (i=0;i<dimensiones[indice];i++) {
         //printf("%d(%d) ",i,indice);
@@ -7059,7 +7061,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
   	dir=peek_word_no_time(23627);
     char buffer_linea[MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH+1];
 
-    sprintf(buffer_linea,"VARS(23627)=%d\n",dir);
+    sprintf(buffer_linea,"VARS(23627)=%d\n\n",dir);
 
     util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
@@ -7084,7 +7086,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
     char buf_numero[30];
             
 
-z80_byte total_dimensiones;                
+    z80_byte total_dimensiones;                
 
   	while (peek_byte_no_time(dir)!=128 && !salir) {
         z80_byte first_byte=peek_byte_no_time(dir++);
@@ -7106,7 +7108,7 @@ z80_byte total_dimensiones;
                 dir +=2;
 
 
-                int resultado=debug_view_basic_variables_print_string(dir,longitud_variable,results_buffer,maxima_longitud_texto);
+                resultado=debug_view_basic_variables_print_string(dir,longitud_variable,results_buffer,maxima_longitud_texto);
                 
                                    
 
