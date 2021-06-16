@@ -676,17 +676,15 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         char_set_ql
     },        
 
-//Lo ideal en Z88 seria mismos colores que Z88... Pero habria que revisar para otros drivers, tal como curses o cacalib
-//que no tienen esos colores en las fuentes
-//Al menos hacemos colores sin brillo
-    {0,"Z88",7,0,
-        0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
-        1,7,          //Colores para opcion seleccionada
-        7,2,1,2,      //Colores para opcion no disponible
 
-        0,7,          //Colores para el titulo ventana
-        0,              //Color recuadro
-        7,0,          //Colores para el titulo ventana inactiva
+    {1,"Z88",Z88_PXCOLOFF,Z88_PXCOLON,
+        0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
+        Z88_PXCOLON,Z88_PXCOLOFF,          //Colores para opcion seleccionada
+        Z88_PXCOLOFF,Z88_PXCOLGREY,Z88_PXCOLON,Z88_PXCOLGREY,      //Colores para opcion no disponible
+
+        Z88_PXCOLON,Z88_PXCOLOFF,          //Colores para el titulo ventana
+        Z88_PXCOLON,              //Color recuadro
+        Z88_PXCOLGREY,Z88_PXCOLOFF,          //Colores para el titulo ventana inactiva
 
         4,              //Color waveform
         4,               //Color para zona no usada en visualmem
