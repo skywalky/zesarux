@@ -6967,6 +6967,7 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
     A$(2,3,2)
     A$(2,3,3)
     A$(2,3,4)
+    */
 
 
     for (i=0;i<dimensiones[indice];i++) {
