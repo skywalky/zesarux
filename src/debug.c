@@ -7164,10 +7164,10 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
                 //no admitimos barbaridades...
 
-                if (total_dimensiones>20) {
+                /*if (total_dimensiones>20) {
                     total_dimensiones=20;
                     debug_printf(VERBOSE_ERR,"Too much dimensions for array");
-                }
+                }*/
 
                 int total_tamanyo=1;
                 
