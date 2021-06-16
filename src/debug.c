@@ -7089,6 +7089,9 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
     z80_byte total_dimensiones;                
 
   	while (peek_byte_no_time(dir)!=128 && !salir) {
+        sprintf (buffer_linea,"%d: ",dir);
+        util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);        
+
         z80_byte first_byte=peek_byte_no_time(dir++);
         z80_byte first_byte_letter=first_byte & 31;
         z80_byte variable_type=((first_byte>>5))&7;
@@ -7211,7 +7214,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                         fin_nombre=1;
                         letra_variable &=127;
                     }
-                    if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+                    if (letra_variable<32 || letra_variable>126) letra_variable='?';
 
                     buf_nombre_variable[indice_nombre++]=letra_variable;
 
