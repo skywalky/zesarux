@@ -6907,7 +6907,7 @@ int debug_view_basic_variables_print_string(z80_int dir,int longitud_variable,ch
 }
 
 int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int puntero,int total_dimensiones,
-    int dimensiones[],int indice,int posicion_actual[],int total_offset,int maxima_longitud_texto)
+    int dimensiones[],int indice,int posicion_actual[],int total_offset,int maxima_longitud_texto,int es_array_numero)
 {
     /*
     Esta funcion recursiva seguro que se puede optimizar pero... de momento funciona
@@ -6975,7 +6975,7 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
         posicion_actual[indice]=i;
         if (indice<total_dimensiones-1) {
             total_offset=debug_view_basic_variables_print_dim_alpha(results_buffer,puntero,total_dimensiones,dimensiones,
-                        indice+1,posicion_actual,total_offset,maxima_longitud_texto);
+                        indice+1,posicion_actual,total_offset,maxima_longitud_texto,es_array_numero);
         }
         else {
             //
@@ -6993,15 +6993,30 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
                 sprintf(buffer_linea,"%d%c",posicion_actual[j]+1,final_char);
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
             }
-            z80_byte letra_leida=peek_byte_no_time(puntero+total_offset);
-            if (letra_leida<32 || letra_leida>126) letra_leida='?';
+
+            
+            if (es_array_numero) {
+                z80_int offset_numero=puntero+total_offset*5;
+                debug_view_basic_variables_print_number(offset_numero,buffer_linea);
+
+                util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+
+                util_concat_string(results_buffer,"\n",maxima_longitud_texto);
+            }
+            else {
+                z80_byte letra_leida=peek_byte_no_time(puntero+total_offset);
+                if (letra_leida<32 || letra_leida>126) letra_leida='?';
 
 
-            printf(" (offset=%d) (=%c)\n",total_offset,letra_leida);
+                printf(" (offset=%d) (=%c)\n",total_offset,letra_leida);
 
 
-            sprintf(buffer_linea,"=\"%c\"\n",letra_leida);
-            util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+                sprintf(buffer_linea,"=\"%c\"\n",letra_leida);
+
+                util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+
+            }
+            
             total_offset++;
         }
         //printf("\n");
@@ -7061,6 +7076,14 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
     z80_int longitud_variable;
 
+    int dimensiones[256];
+    int posicion_actual[256];    
+
+    int inicio_texto;    
+            
+
+z80_byte total_dimensiones;                
+
   	while (peek_byte_no_time(dir)!=128 && !salir) {
         z80_byte first_byte=peek_byte_no_time(dir++);
         z80_byte first_byte_letter=first_byte & 31;
@@ -7083,36 +7106,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
                 int resultado=debug_view_basic_variables_print_string(dir,longitud_variable,results_buffer,maxima_longitud_texto);
                 
-                /*
-                int maximo_mostrar=longitud_variable;
-
-                int limite_alcanzado=0;
-
-                //Para que quepa a$=""
-                if (maximo_mostrar>MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH-10) {
-                    maximo_mostrar=MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH-10;
-                    limite_alcanzado=1;
-                }
-
-                for (i=0;i<maximo_mostrar;i++) {
-                    buffer_linea[4+i]=peek_byte_no_time(dir+i);
-                }
-
-                if (limite_alcanzado) {
-                    buffer_linea[4+i]='.';
-                    i++;
-                    buffer_linea[4+i]='.';
-                    i++;
-                    buffer_linea[4+i]='.';
-                    i++;
-                }
-
-                buffer_linea[4+i]='"';
-                buffer_linea[4+i+1]='\n';
-                buffer_linea[4+i+2]=0;
-
-                resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
-                */                       
+                                   
 
                 //Siguiente variable
                 dir +=longitud_variable;
@@ -7139,27 +7133,31 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
             break;
 
+            case 4:
             case 6:
-                //Matriz alfanumérica
+                //Matriz numérica(4) o alfanumerica(6)
                 letra_variable=first_byte_letter+96;
                 if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
 
-                sprintf (buffer_linea,"DIM %c$(",letra_variable);
+                if (variable_type==4) {
+                    sprintf (buffer_linea,"DIM %c(",letra_variable);
+                }
+                else {
+                    sprintf (buffer_linea,"DIM %c$(",letra_variable);
+                }
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
                 longitud_variable=peek_word_no_time(dir);
 
                 dir +=2;    
 
-                //TODO. dimensiones...
-                z80_byte total_dimensiones=peek_byte_no_time(dir);
+                
+                total_dimensiones=peek_byte_no_time(dir);
                 printf("total_dimensiones: %d\n",total_dimensiones);
-
-                int dimensiones[256];
 
                 
 
-                int i;
+                
                 for (i=0;i<total_dimensiones;i++) {
                     z80_int dimension=peek_word_no_time(dir+1+(i*2));
                     dimensiones[i]=dimension;
@@ -7173,13 +7171,14 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
                 //Y ahora imprimir cadenas de texto
-                int inicio_texto=dir+1+(i*2);
-                //sprintf (buffer_linea,"%c%c",peek_byte_no_time(inicio_texto),peek_byte_no_time(inicio_texto+1));
-                //util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+                inicio_texto=dir+1+(i*2);
 
-                int posicion_actual[256];
 
-                debug_view_basic_variables_print_dim_alpha(results_buffer,inicio_texto,total_dimensiones,&dimensiones[0],0,&posicion_actual[0],0,maxima_longitud_texto);
+                int es_numerico=0;
+                if (variable_type==4) es_numerico=1;
+
+                debug_view_basic_variables_print_dim_alpha(results_buffer,inicio_texto,total_dimensiones,&dimensiones[0],
+                        0,&posicion_actual[0],0,maxima_longitud_texto,es_numerico);
 
                 //Siguiente variable
                 dir +=longitud_variable;
@@ -7188,6 +7187,57 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
  
 
             break;   
+
+            /*
+            case 6:
+                //Matriz alfanumérica
+                letra_variable=first_byte_letter+96;
+                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+
+                sprintf (buffer_linea,"DIM %c$(",letra_variable);
+                util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+
+                longitud_variable=peek_word_no_time(dir);
+
+                dir +=2;    
+
+                total_dimensiones=peek_byte_no_time(dir);
+                printf("total_dimensiones: %d\n",total_dimensiones);
+
+                
+
+                
+
+                
+                for (i=0;i<total_dimensiones;i++) {
+                    z80_int dimension=peek_word_no_time(dir+1+(i*2));
+                    dimensiones[i]=dimension;
+
+                    char relleno=(i<total_dimensiones-1 ? ',' : ')');
+                    sprintf (buffer_linea,"%d%c",dimension,relleno);
+                    util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+                }
+
+                sprintf (buffer_linea,"=\n");
+                util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+
+                //Y ahora imprimir cadenas de texto
+                inicio_texto=dir+1+(i*2);
+
+
+
+
+                debug_view_basic_variables_print_dim_alpha(results_buffer,inicio_texto,total_dimensiones,&dimensiones[0],
+                        0,&posicion_actual[0],0,maxima_longitud_texto,0);
+
+                //Siguiente variable
+                dir +=longitud_variable;
+
+                resultado=util_concat_string(results_buffer,"\n",maxima_longitud_texto);
+ 
+
+            break;  
+            */ 
 
             case 7:
                 //Iterador en bloque FOR/NEXT
