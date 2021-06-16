@@ -6907,7 +6907,7 @@ int debug_view_basic_variables_print_string(z80_int dir,int longitud_variable,ch
 }
 
 int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int puntero,int total_dimensiones,
-    int dimensiones[],int indice,int posicion_actual[],int total_offset,int maxima_longitud_texto,int es_array_numero)
+    int dimensiones[],int indice,int posicion_actual[],z80_int total_offset,int maxima_longitud_texto,int es_array_numero)
 {
     /*
     Esta funcion recursiva seguro que se puede optimizar pero... de momento funciona
@@ -6923,7 +6923,7 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
         posicion_actual[0]=2;
         posicion_actual[1]=5;
         posicion_actual[2]=7;
-    total_offset: indica el desplazamiento donde esta ubicada la letra que mostraremos en pantalla
+    total_offset: indica el desplazamiento en memoria donde esta ubicada la letra que mostraremos en pantalla
     maxima_longitud_texto: maxima longitud que permite escribir en el string results_buffer
      */
     
@@ -7096,6 +7096,8 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
         z80_byte first_byte_letter=first_byte & 31;
         z80_byte variable_type=((first_byte>>5))&7;
 
+        printf("dir: %d %d\n",dir,variable_type);
+
         switch (variable_type) {
         
             case 2:
@@ -7160,16 +7162,30 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 total_dimensiones=peek_byte_no_time(dir);
                 printf("total_dimensiones: %d\n",total_dimensiones);
 
-                
+                //no admitimos barbaridades...
+
+                if (total_dimensiones>20) {
+                    total_dimensiones=20;
+                    debug_printf(VERBOSE_ERR,"Too much dimensions for array");
+                }
+
+                int total_tamanyo=1;
                 
                 for (i=0;i<total_dimensiones;i++) {
                     z80_int dimension=peek_word_no_time(dir+1+(i*2));
                     dimensiones[i]=dimension;
 
+                    if (dimension>0 && total_tamanyo<65536) {
+                        total_tamanyo*=dimension;
+                        printf("tama %d\n",total_tamanyo);
+                    }
+
                     char relleno=(i<total_dimensiones-1 ? ',' : ')');
                     sprintf (buffer_linea,"%d%c",dimension,relleno);
                     util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
                 }
+
+
 
                 sprintf (buffer_linea,"=\n");
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
@@ -7181,8 +7197,19 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 int es_numerico=0;
                 if (variable_type==4) es_numerico=1;
 
-                debug_view_basic_variables_print_dim_alpha(results_buffer,inicio_texto,total_dimensiones,&dimensiones[0],
+                printf("total:%d\n",total_tamanyo);
+                //sleep(5);
+
+                if (total_tamanyo>65535) {
+                    debug_printf(VERBOSE_ERR,"Array exceeds 64k (%d)",total_tamanyo);
+                }
+
+                else {
+
+                    debug_view_basic_variables_print_dim_alpha(results_buffer,inicio_texto,total_dimensiones,&dimensiones[0],
                         0,&posicion_actual[0],0,maxima_longitud_texto,es_numerico);
+
+                }
 
                 //Siguiente variable
                 dir +=longitud_variable;
