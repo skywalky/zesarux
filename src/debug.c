@@ -6840,6 +6840,7 @@ int remote_parsed_source_code_indexes_total;
 
 }
 
+/*
 z80_byte debug_view_basic_variables_util_invert_nibble(z80_byte valor)
 {
     z80_byte high=(valor>>4)& 0xF;
@@ -6847,6 +6848,8 @@ z80_byte debug_view_basic_variables_util_invert_nibble(z80_byte valor)
 
     return high|(low<<4);
 }
+*/
+
 
 void  debug_view_basic_variables_util_final_division(char *buffer,int exponente_final,int total_mantissa,int signo_exponente,int signo_valor_final)
 {
@@ -6902,14 +6905,23 @@ NO se debe tomar como una función perfecta sino como algo que nos da un indicat
 void debug_view_basic_variables_print_number(z80_int dir,char *buffer_linea)
 {
     
-    //Si es de 16 bits entera, primer byte a 0
+    //Si es de 16 bits entera o ZX80, primer byte a 0
     z80_byte number_type=peek_byte_no_time(dir);
-    if (number_type==0) {
-        int variable_value=peek_word_no_time(dir+2);
+    if (number_type==0 || MACHINE_IS_ZX80) {
+        int variable_value;
+
+        if (MACHINE_IS_ZX80) {
+            variable_value=peek_word_no_time(dir);
+        }
+
+        else {
+
+            variable_value=peek_word_no_time(dir+2);
         
-        //negativo
-        if (peek_byte_no_time(dir+1)==0xFF) {
-            variable_value=-(65536-variable_value);
+            //negativo
+            if (peek_byte_no_time(dir+1)==0xFF) {
+                variable_value=-(65536-variable_value);
+            }
         }
         sprintf(buffer_linea,"(int)%d",variable_value);
     }
@@ -7021,7 +7033,7 @@ void debug_view_basic_variables_print_number(z80_int dir,char *buffer_linea)
 //Convertir caracter a espacio ascii segun si spectrum o zx81
 z80_byte debug_view_basic_variables_getchar(z80_byte caracter)
 {
-    if (MACHINE_IS_ZX81) {
+    if (MACHINE_IS_ZX8081) {
         if (caracter>=64) caracter='.';
         else caracter=da_codigo_zx81_no_artistic(caracter);
     }
@@ -7037,7 +7049,7 @@ z80_byte debug_view_basic_variables_letra_variable(z80_byte first_byte_letter)
 {
     z80_byte letra_variable;
 
-    if (MACHINE_IS_ZX81) {
+    if (MACHINE_IS_ZX8081) {
         letra_variable=first_byte_letter+59;
         if (letra_variable<'A' || letra_variable>'Z') letra_variable='?';  
     }
@@ -7189,7 +7201,11 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
             
             if (es_array_numero) {
                 util_concat_string(results_buffer,"=",maxima_longitud_texto);
-                z80_int offset_numero=puntero+total_offset*5;
+                int tamanyo_numero=5;
+
+                if (MACHINE_IS_ZX80) tamanyo_numero=2;
+
+                z80_int offset_numero=puntero+total_offset*tamanyo_numero;
                 debug_view_basic_variables_print_number(offset_numero,buffer_linea);
 
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
@@ -7250,6 +7266,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
     z80_int vars_pointer=23627;
 
     if (MACHINE_IS_ZX81) vars_pointer=16400;
+    if (MACHINE_IS_ZX80) vars_pointer=16392;
     
 	z80_int dir;
 
@@ -7281,7 +7298,20 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
     char buf_numero[100];
             
 
-    z80_byte total_dimensiones;                
+    z80_byte total_dimensiones;   
+
+
+    z80_byte id_variable_alfanum=2;       
+    z80_byte id_matriz_num=4;
+    z80_byte id_matriz_alfanum=6;
+    z80_byte id_variable_num=3;
+    z80_byte id_variable_num_mascar=5;
+    z80_byte id_variable_fornext=7;
+
+    if (MACHINE_IS_ZX80) {
+        id_variable_alfanum=4;
+        id_matriz_num=5;
+    }      
 
   	while (peek_byte_no_time(dir)!=128 && !salir) {
         sprintf (buffer_linea,"%d: ",dir);
@@ -7293,9 +7323,9 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
         //printf("dir: %d %d\n",dir,variable_type);
 
-        switch (variable_type) {
         
-            case 2:
+        
+            if (variable_type==id_variable_alfanum) {
                 //Variable alfanumerica (p ej A$)
                 letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
 
@@ -7315,9 +7345,9 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 dir +=longitud_variable;
 
                              
-            break;
+            }
 
-            case 3:
+            else if (variable_type==id_variable_num) {
                 //Variable numérica identificada con un solo caracter
                 letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
     
@@ -7326,20 +7356,20 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
                 sprintf(buffer_linea,"%c=%s\n",letra_variable,buf_numero);
 
-                dir +=5;
+                if (MACHINE_IS_ZX80) dir+=2;
+                else dir +=5;
 
                 resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);                
 
 
-            break;
+            }
 
-            case 4:
-            case 6:
+            else if (variable_type==id_matriz_num || variable_type==id_matriz_alfanum) {
                 //Matriz numérica(4) o alfanumerica(6)
                 letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
                 //if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
 
-                if (variable_type==4) {
+                if (variable_type==id_matriz_num) {
                     sprintf (buffer_linea,"DIM %c(",letra_variable);
                 }
                 else {
@@ -7404,11 +7434,11 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 resultado=util_concat_string(results_buffer,"\n",maxima_longitud_texto);
  
 
-            break;   
+            }  
 
      
 
-            case 5:
+            else if (variable_type==id_variable_num_mascar) {
                 //Variable numérica identificada de mas de un solo caracter
                 letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
 
@@ -7441,34 +7471,39 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
                 sprintf(buffer_linea,"%s=%s\n",buf_nombre_variable,buf_numero);
 
-                dir +=5;
+                if (MACHINE_IS_ZX80) dir+=2;
+                else dir +=5;
 
                 resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);                
 
 
-            break;           
+            }           
 
-            case 7:
+            else if (variable_type==id_variable_fornext) {
                 //Iterador en bloque FOR/NEXT
                 letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
+
+                int tamanyo_numero=5;
+
+                if (MACHINE_IS_ZX80) tamanyo_numero=2;
 
                 //Inicio, final, step, linea, sentencia    
                 char buf_inicio[100];
                 debug_view_basic_variables_print_number(dir,buf_inicio);
-                dir +=5;
+                dir +=tamanyo_numero;
 
                 char buf_final[100];
                 debug_view_basic_variables_print_number(dir,buf_final);
-                dir +=5;                
+                dir +=tamanyo_numero;                
 
                 char buf_step[100];
                 debug_view_basic_variables_print_number(dir,buf_step);
-                dir +=5;                
+                dir +=tamanyo_numero;                
 
                 z80_int linea=peek_word_no_time(dir);
                 dir+=2;
 
-                if (MACHINE_IS_ZX81) {
+                if (MACHINE_IS_ZX8081) {
                     //printf("FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);
 
                     sprintf(buffer_linea,"FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);                    
@@ -7485,14 +7520,14 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
                
-            break; 
+            }
 
-            default:
+            else {
                 sprintf (buffer_linea,"Unknown variable type %d\n",variable_type);
                 resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
-            break;
-        }
+            }
+        
 
   		
         //controlar maximo
