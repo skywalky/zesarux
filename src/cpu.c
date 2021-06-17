@@ -1789,6 +1789,8 @@ printf (
 		"--zxdesktop-disable-buttons            Disable ZX Desktop direct access buttons\n"
 		"--zxdesktop-transparent-upper-buttons  Make ZX Desktop upper buttons transparent\n"
 		"--zxdesktop-transparent-lower-buttons  Make ZX Desktop lower buttons transparent\n"
+        "--zxdesktop-disable-box-upper-buttons  Disable box around ZX Desktop upper buttons\n"
+        "--zxdesktop-disable-box-lower-buttons  Disable box around ZX Desktop lower buttons\n"  
 
 				
 
@@ -5484,7 +5486,15 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-transparent-lower-buttons")) {
 				menu_ext_desktop_transparent_lower_icons.v=1;
-			}		
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-disable-box-upper-buttons")) {
+				menu_ext_desktop_disable_box_upper_icons.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-disable-box-lower-buttons")) {
+				menu_ext_desktop_disable_box_lower_icons.v=1;
+			}
 
 
 			else if (!strcmp(argv[puntero_parametro],"--watermark-position")) {

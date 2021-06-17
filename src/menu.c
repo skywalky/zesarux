@@ -3369,6 +3369,23 @@ int menu_si_dibujar_boton(int numero_boton)
     return mostrar;
 }	
 
+void menu_draw_ext_desktop_recuadro_button(int xinicio,int yinicio,int ancho_boton,int alto_boton,int color_recuadro)
+{
+
+    int x,y;
+
+    //Horizontal
+    for (x=xinicio+1;x<xinicio+ancho_boton-1;x++) {
+        scr_putpixel(x,yinicio+1,color_recuadro);   
+        scr_putpixel(x,yinicio+alto_boton-2,color_recuadro);    
+    }
+
+    //Vertical
+    for (y=yinicio+1;y<yinicio+alto_boton-1;y++) {
+        scr_putpixel(xinicio+1,y,color_recuadro);   
+        scr_putpixel(xinicio+ancho_boton-2,y,color_recuadro);   
+    }    
+}
 
 void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 {
@@ -3403,13 +3420,19 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 	int x,y;
 
 	//Rectangulo alrededor. Dejando margen de 1 pixel alrededor sin tocar
-	//Horizontal
+	
 
 	int color_recuadro=0;
 	int color_relleno=7;
 
 	if (pulsado) color_recuadro=7;
 
+    if (menu_ext_desktop_disable_box_upper_icons.v==0) {
+        menu_draw_ext_desktop_recuadro_button(xinicio,yinicio,ancho_boton,alto_boton,color_recuadro);
+    }
+
+/*
+    //Horizontal
 	for (x=xinicio+1;x<xinicio+ancho_boton-1;x++) {
 		scr_putpixel(x,yinicio+1,color_recuadro);	
 		scr_putpixel(x,yinicio+alto_boton-2,color_recuadro);	
@@ -3420,6 +3443,7 @@ void menu_draw_ext_desktop_one_button_background(int contador_boton,int pulsado)
 		scr_putpixel(xinicio+1,y,color_recuadro);	
 		scr_putpixel(xinicio+ancho_boton-2,y,color_recuadro);	
 	}
+*/
 
 	//Se rellena solo cuando se pulsa el botón o cuando no hay transparencia
 	if (pulsado || menu_ext_desktop_transparent_upper_icons.v==0) {
@@ -3469,13 +3493,20 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 	int x,y;
 
 	//Rectangulo alrededor. Dejando margen de 1 pixel alrededor sin tocar
-	//Horizontal
+	
 
 	int color_recuadro=0;
 	int color_relleno=7;
 
 	if (pulsado) color_recuadro=7;
 
+    if (menu_ext_desktop_disable_box_lower_icons.v==0) {
+        menu_draw_ext_desktop_recuadro_button(xinicio,yinicio,ancho_boton,alto_boton,color_recuadro);
+    }
+
+
+/*
+    //Horizontal
 	for (x=xinicio+1;x<xinicio+ancho_boton-1;x++) {
 		scr_putpixel(x,yinicio+1,color_recuadro);	
 		scr_putpixel(x,yinicio+alto_boton-2,color_recuadro);	
@@ -3486,6 +3517,7 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 		scr_putpixel(xinicio+1,y,color_recuadro);	
 		scr_putpixel(xinicio+ancho_boton-2,y,color_recuadro);	
 	}
+*/
 
 	//Se rellena solo cuando se pulsa el botón o cuando no hay transparencia
 	if (pulsado || menu_ext_desktop_transparent_lower_icons.v==0) {
@@ -4340,6 +4372,9 @@ int menu_ext_desktop_fill_second_color=13;
 
 z80_bit menu_ext_desktop_transparent_upper_icons={0};
 z80_bit menu_ext_desktop_transparent_lower_icons={0};
+
+z80_bit menu_ext_desktop_disable_box_upper_icons={0};
+z80_bit menu_ext_desktop_disable_box_lower_icons={0};
 
 int menu_ext_desktop_fill_rainbow_counter;
 

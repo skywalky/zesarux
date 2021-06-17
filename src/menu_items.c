@@ -12029,6 +12029,16 @@ void menu_ext_desk_settings_lower_transparent(MENU_ITEM_PARAMETERS)
 	menu_ext_desktop_transparent_lower_icons.v ^=1;
 }
 
+void menu_ext_desk_settings_upper_box(MENU_ITEM_PARAMETERS)
+{
+	menu_ext_desktop_disable_box_upper_icons.v ^=1;
+}
+
+void menu_ext_desk_settings_lower_box(MENU_ITEM_PARAMETERS)
+{
+	menu_ext_desktop_disable_box_lower_icons.v ^=1;
+}
+
 int menu_ext_desktop_cond(void)
 {
 	if (ventana_fullscreen) return 0;
@@ -12112,7 +12122,10 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 			if (menu_zxdesktop_buttons_enabled.v) {
 				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_upper_transparent,NULL,"[%c] Transparent upper buttons",(menu_ext_desktop_transparent_upper_icons.v ? 'X' : ' ' ) );
+                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_upper_box,NULL,"[%c] Box on upper buttons",(menu_ext_desktop_disable_box_upper_icons.v ? ' ' : 'X' ) );
+
 				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_transparent,NULL,"[%c] Transparent lower buttons",(menu_ext_desktop_transparent_lower_icons.v ? 'X' : ' ' ) );
+                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_box,NULL,"[%c] Box on lower buttons",(menu_ext_desktop_disable_box_lower_icons.v ? ' ' : 'X' ) );
 			}
 
 			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);

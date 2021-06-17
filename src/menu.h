@@ -899,6 +899,9 @@ extern int menu_ext_desktop_fill_second_color;
 extern z80_bit menu_ext_desktop_transparent_lower_icons;
 extern z80_bit menu_ext_desktop_transparent_upper_icons;
 
+extern z80_bit menu_ext_desktop_disable_box_upper_icons;
+extern z80_bit menu_ext_desktop_disable_box_lower_icons;
+
 
 #define ESTILO_GUI_PAPEL_NORMAL (definiciones_estilos_gui[estilo_gui_activo].papel_normal)
 #define ESTILO_GUI_TINTA_NORMAL (definiciones_estilos_gui[estilo_gui_activo].tinta_normal)
