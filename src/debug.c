@@ -7312,6 +7312,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
         id_variable_alfanum=4;
         id_matriz_num=5;
         id_variable_num_mascar=2;
+        //no hay matrices alfanum en zx80??
     }      
 
   	while (peek_byte_no_time(dir)!=128 && !salir) {
