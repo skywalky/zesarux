@@ -27906,7 +27906,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu(array_menu_debug_settings,"View ~~Basic",MENU_OPCION_NORMAL,menu_debug_view_basic,menu_debug_view_basic_cond);
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'b');
 
-        if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX81) {
+        if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081) {
 		    menu_add_item_menu(array_menu_debug_settings,"View Basic variab~~les",MENU_OPCION_NORMAL,menu_debug_view_basic_variables,NULL);
             menu_add_item_menu_shortcut(array_menu_debug_settings,'l');
         }

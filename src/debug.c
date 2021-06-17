@@ -6884,7 +6884,7 @@ void  debug_view_basic_variables_util_final_division(char *buffer,int exponente_
 
     }
 
-    printf("entero: %d\n",entero);
+    //printf("entero: %d\n",entero);
 
     if (signo_valor_final<0) sprintf(buffer,"-%d.%04d",entero,decimales);
     else sprintf(buffer,"%d.%04d",entero,decimales);    
@@ -6974,7 +6974,7 @@ void debug_view_basic_variables_print_number(z80_int dir,char *buffer_linea)
         //mirar si esto excede un valor final mayor de 31 bits aprox
         //mantisa maxima 4000 aprox
         //2^31 / 4000 = 536870. usa hasta bit 24
-        printf("exponente %d mantissa %d signo %d\n",exponente,total_mantissa,signo_valor_final);
+        //printf("exponente %d mantissa %d signo %d\n",exponente,total_mantissa,signo_valor_final);
         if (exponente>18) {
             if (signo_exponente>0) {
                 if (signo_valor_final<0) sprintf(buffer_linea,"(float approx)(-%d X 2^%d)/10000",total_mantissa,exponente);    
@@ -7002,14 +7002,14 @@ void debug_view_basic_variables_print_number(z80_int dir,char *buffer_linea)
 
         //valor_total=(exponente_final*total_mantissa)/10000;
 
-        printf("(float) Exp:%02XH Mant: %02X%02X%02X%02XH Aprox: %s\n",
+        /*printf("(float) Exp:%02XH Mant: %02X%02X%02X%02XH Aprox: %s\n",
             peek_byte_no_time(dir),
             peek_byte_no_time(dir+1),
             peek_byte_no_time(dir+2),
             peek_byte_no_time(dir+3),
             peek_byte_no_time(dir+4),
             buffer_valor_total
-        );
+        );*/
 
         sprintf(buffer_linea,"(float approx)%s",buffer_valor_total);
         
@@ -7174,13 +7174,13 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
             //printf(".");
             char buffer_linea[100];
 
-            printf("(");
+            //printf("(");
             util_concat_string(results_buffer,"(",maxima_longitud_texto);
             int j;
             for (j=0;j<total_dimensiones;j++) {
                 
                 char final_char=(j<total_dimensiones-1 ? ',' : ')');
-                printf("%d%c",posicion_actual[j]+1,final_char);
+                //printf("%d%c",posicion_actual[j]+1,final_char);
 
                 sprintf(buffer_linea,"%d%c",posicion_actual[j]+1,final_char);
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
@@ -7202,7 +7202,7 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
                 if (letra_leida<32 || letra_leida>126) letra_leida='?';
 
 
-                printf(" (offset=%d) (=%c)\n",total_offset,letra_leida);
+                //printf(" (offset=%d) (=%c)\n",total_offset,letra_leida);
 
 
                 sprintf(buffer_linea,"=\"%c\"\n",letra_leida);
@@ -7216,7 +7216,7 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
         //printf("\n");
     }
 
-    printf("\n");
+    //printf("\n");
 
     return total_offset;
 }
@@ -7291,7 +7291,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
         z80_byte first_byte_letter=first_byte & 31;
         z80_byte variable_type=((first_byte>>5))&7;
 
-        printf("dir: %d %d\n",dir,variable_type);
+        //printf("dir: %d %d\n",dir,variable_type);
 
         switch (variable_type) {
         
@@ -7353,15 +7353,9 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
                 
                 total_dimensiones=peek_byte_no_time(dir);
-                printf("total_dimensiones: %d\n",total_dimensiones);
+                //printf("total_dimensiones: %d\n",total_dimensiones);
 
-                //no admitimos barbaridades...
-
-                /*if (total_dimensiones>20) {
-                    total_dimensiones=20;
-                    debug_printf(VERBOSE_ERR,"Too much dimensions for array");
-                }*/
-
+ 
                 int total_tamanyo=1;
                 
                 for (i=0;i<total_dimensiones;i++) {
@@ -7370,7 +7364,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
                     if (dimension>0 && total_tamanyo<65536) {
                         total_tamanyo*=dimension;
-                        printf("tama %d\n",total_tamanyo);
+                        //printf("tama %d\n",total_tamanyo);
                     }
 
                     char relleno=(i<total_dimensiones-1 ? ',' : ')');
@@ -7390,7 +7384,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 int es_numerico=0;
                 if (variable_type==4) es_numerico=1;
 
-                printf("total:%d\n",total_tamanyo);
+                //printf("total:%d\n",total_tamanyo);
                 //sleep(5);
 
                 if (total_tamanyo>65535) {
@@ -7459,37 +7453,31 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
 
                 //Inicio, final, step, linea, sentencia    
-                printf("inicio for\n");
                 char buf_inicio[100];
                 debug_view_basic_variables_print_number(dir,buf_inicio);
                 dir +=5;
 
-                printf("end for\n");
                 char buf_final[100];
                 debug_view_basic_variables_print_number(dir,buf_final);
-                printf("end for: %s\n",buf_final);
                 dir +=5;                
 
-                printf("step for\n");
                 char buf_step[100];
                 debug_view_basic_variables_print_number(dir,buf_step);
                 dir +=5;                
 
-                printf("line for\n");
                 z80_int linea=peek_word_no_time(dir);
                 dir+=2;
 
                 if (MACHINE_IS_ZX81) {
-                    printf("FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);
+                    //printf("FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);
 
                     sprintf(buffer_linea,"FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);                    
                 }
                 else {
-                    printf("sentence for\n");
                     z80_byte sentencia=peek_byte_no_time(dir);
                     dir++;
 
-                    printf("FOR %c=%s TO %s STEP %s LINE %d:%d\n",letra_variable,buf_inicio,buf_final,buf_step,linea,sentencia);
+                    //printf("FOR %c=%s TO %s STEP %s LINE %d:%d\n",letra_variable,buf_inicio,buf_final,buf_step,linea,sentencia);
 
                     sprintf(buffer_linea,"FOR %c=%s TO %s STEP %s LINE %d:%d\n",letra_variable,buf_inicio,buf_final,buf_step,linea,sentencia);
                 }
