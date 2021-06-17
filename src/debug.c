@@ -7301,16 +7301,17 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
     z80_byte total_dimensiones;   
 
 
-    z80_byte id_variable_alfanum=2;       
+    z80_byte id_variable_alfanum=2; 
+    z80_byte id_variable_num=3;      
     z80_byte id_matriz_num=4;
-    z80_byte id_matriz_alfanum=6;
-    z80_byte id_variable_num=3;
     z80_byte id_variable_num_mascar=5;
+    z80_byte id_matriz_alfanum=6;
     z80_byte id_variable_fornext=7;
 
     if (MACHINE_IS_ZX80) {
         id_variable_alfanum=4;
         id_matriz_num=5;
+        id_variable_num_mascar=2;
     }      
 
   	while (peek_byte_no_time(dir)!=128 && !salir) {
@@ -7332,17 +7333,35 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 sprintf (buffer_linea,"%c$=",letra_variable);
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
-                longitud_variable=peek_word_no_time(dir);
+                //En zx80, no indica longitud sino que acaba con byte 1
+                if (MACHINE_IS_ZX80) {
+                    util_concat_string(results_buffer,"\"",maxima_longitud_texto);
+                    while (peek_byte_no_time(dir)!=1) {
+                        z80_byte letra=peek_byte_no_time(dir++);
+                        letra=debug_view_basic_variables_getchar(letra);
 
-                dir +=2;
+                        sprintf (buffer_linea,"%c",letra);
+                        util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);     
+                    }
+
+                    util_concat_string(results_buffer,"\"\n",maxima_longitud_texto);
+                    dir++;
+
+                }
+
+                else {
+                    longitud_variable=peek_word_no_time(dir);
+
+                    dir +=2;
 
 
-                resultado=debug_view_basic_variables_print_string(dir,longitud_variable,results_buffer,maxima_longitud_texto);
+                    resultado=debug_view_basic_variables_print_string(dir,longitud_variable,results_buffer,maxima_longitud_texto);
                 
                                    
 
-                //Siguiente variable
-                dir +=longitud_variable;
+                    //Siguiente variable
+                    dir +=longitud_variable;
+                }
 
                              
             }
@@ -7377,29 +7396,64 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 }
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
-                longitud_variable=peek_word_no_time(dir);
+                int total_tamanyo;
 
-                dir +=2;    
+                //En zx80 solo tienen una dimension
+                if (MACHINE_IS_ZX80) {
+                    total_dimensiones=1;
 
-                
-                total_dimensiones=peek_byte_no_time(dir);
-                //printf("total_dimensiones: %d\n",total_dimensiones);
+                    z80_byte dimension;
 
- 
-                int total_tamanyo=1;
-                
-                for (i=0;i<total_dimensiones;i++) {
-                    z80_int dimension=peek_word_no_time(dir+1+(i*2));
-                    dimensiones[i]=dimension;
-
-                    if (dimension>0 && total_tamanyo<65536) {
-                        total_tamanyo*=dimension;
-                        //printf("tama %d\n",total_tamanyo);
+                    if (variable_type==id_matriz_num) {
+                        dimension=peek_byte_no_time(dir++);
+                        total_tamanyo=dimension;
+                        dimensiones[0]=dimension;
+                        //2 ceros mas
+                        dir +=2;
+                        inicio_texto=dir;
                     }
 
-                    char relleno=(i<total_dimensiones-1 ? ',' : ')');
-                    sprintf (buffer_linea,"%d%c",dimension,relleno);
-                    util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+                    if (variable_type==id_matriz_alfanum) {
+                        dimension=peek_byte_no_time(dir++);
+                        total_tamanyo=dimension;
+                        dimensiones[0]=dimension;
+                        //2 ceros mas
+                        dir +=2;
+                        inicio_texto=dir;
+                    }     
+
+                    sprintf (buffer_linea,"%d)",dimension);
+                    util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);  
+                    longitud_variable=dimension*2;                                 
+                }
+                else {
+                    longitud_variable=peek_word_no_time(dir);
+
+                    dir +=2;    
+
+                
+                    total_dimensiones=peek_byte_no_time(dir);
+                    //printf("total_dimensiones: %d\n",total_dimensiones);
+                
+
+ 
+                    total_tamanyo=1;
+                    
+                    for (i=0;i<total_dimensiones;i++) {
+                        z80_int dimension=peek_word_no_time(dir+1+(i*2));
+                        dimensiones[i]=dimension;
+
+                        if (dimension>0 && total_tamanyo<65536) {
+                            total_tamanyo*=dimension;
+                            //printf("tama %d\n",total_tamanyo);
+                        }
+
+                        char relleno=(i<total_dimensiones-1 ? ',' : ')');
+                        sprintf (buffer_linea,"%d%c",dimension,relleno);
+                        util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
+                    }
+                    //Y ahora imprimir cadenas de texto / valores numericos
+                    inicio_texto=dir+1+(i*2);                    
                 }
 
 
@@ -7407,12 +7461,11 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 sprintf (buffer_linea,"=\n");
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
-                //Y ahora imprimir cadenas de texto / valores numericos
-                inicio_texto=dir+1+(i*2);
+
 
 
                 int es_numerico=0;
-                if (variable_type==4) es_numerico=1;
+                if (variable_type==id_matriz_num) es_numerico=1;
 
                 //printf("total:%d\n",total_tamanyo);
                 //sleep(5);
@@ -7497,16 +7550,20 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                 dir +=tamanyo_numero;                
 
                 char buf_step[100];
-                debug_view_basic_variables_print_number(dir,buf_step);
-                dir +=tamanyo_numero;                
+                if (!MACHINE_IS_ZX80) {
+                    debug_view_basic_variables_print_number(dir,buf_step);
+                    dir +=tamanyo_numero;                
+                }
 
                 z80_int linea=peek_word_no_time(dir);
                 dir+=2;
 
                 if (MACHINE_IS_ZX8081) {
                     //printf("FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);
-
-                    sprintf(buffer_linea,"FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);                    
+                    if (MACHINE_IS_ZX80) {
+                        sprintf(buffer_linea,"FOR %c=%s TO %s LINE %d\n",letra_variable,buf_inicio,buf_final,linea);                    
+                    }
+                    else sprintf(buffer_linea,"FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);                    
                 }
                 else {
                     z80_byte sentencia=peek_byte_no_time(dir);
