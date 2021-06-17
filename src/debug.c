@@ -6912,6 +6912,10 @@ void debug_view_basic_variables_print_number(z80_int dir,char *buffer_linea)
 
         if (MACHINE_IS_ZX80) {
             variable_value=peek_word_no_time(dir);
+            if (variable_value>32767) {
+                //negativo
+                variable_value=-(65536-variable_value);
+            }
         }
 
         else {

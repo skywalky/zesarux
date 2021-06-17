@@ -229,17 +229,19 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 
 -Número gráficos limitar a maximo 256 (en quill, paws, daad, gac)
 
--Examinar variables basic: completar
-En ver variables basic usar útil concat string para agregar texto. Y strlen para ver si se aproxima al límite 
-En ver variables que diga puntero vars donde está y a donde apunta
 
 -Quizá por defecto en next limitar turbo en rom
 
-
 -estilos gui en documentación
 
--debug variables soportar numeros coma flotante
 
 -al hacer assemble se debe poner en modo step si estaba en modo step
 
 -modos adicionales Next layer 2
+
+-nuevo modulo sensors.c para integrar lecturas de sensores de cpu, audio buffer, etc para poder estandarizar las vistas de contadores de rendimiento
+ 
+
+problema con parametros que son contadores, donde almacenar tiempo y contador anterior? si se consulta desde dos sitios distintos puede generar problemas. o quiza esos valores los debe generar siempre el timer y el modulo de sensors solo debe leerlos
+
+con nombre identificativo de sensor, nombre corto, rango de valores (y/o porcentaje). y una funcion para poderlos retornar todos y el usuario escoja ?
