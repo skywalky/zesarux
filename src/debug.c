@@ -7404,21 +7404,22 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
                     z80_byte dimension;
 
+                    //En zx80, un dim a(0), indica 1 de tamanyo, y el primer dato esta en a(0)
                     if (variable_type==id_matriz_num) {
-                        dimension=peek_byte_no_time(dir++);
+                        dimension=1+peek_byte_no_time(dir++);
                         total_tamanyo=dimension;
                         dimensiones[0]=dimension;
                         //2 ceros mas
-                        dir +=2;
+                        //dir +=2;
                         inicio_texto=dir;
                     }
 
                     if (variable_type==id_matriz_alfanum) {
-                        dimension=peek_byte_no_time(dir++);
+                        dimension=1+peek_byte_no_time(dir++);
                         total_tamanyo=dimension;
                         dimensiones[0]=dimension;
                         //2 ceros mas
-                        dir +=2;
+                        //dir +=2;
                         inicio_texto=dir;
                     }     
 
