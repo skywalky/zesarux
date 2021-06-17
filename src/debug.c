@@ -6840,6 +6840,65 @@ int remote_parsed_source_code_indexes_total;
 
 }
 
+z80_byte debug_view_basic_variables_util_invert_nibble(z80_byte valor)
+{
+    z80_byte high=(valor>>4)& 0xF;
+    z80_byte low=valor & 0xF;
+
+    return high|(low<<4);
+}
+
+void  debug_view_basic_variables_util_final_division(char *buffer,int exponente_final,int total_mantissa,int signo_exponente,int signo_valor_final)
+{
+
+    int entero;
+
+
+    int decimales;    
+
+    if (signo_exponente>0) {
+
+
+
+        int multiplicado=exponente_final*total_mantissa;
+
+        //Sacar decimales
+        entero=multiplicado/10000;
+
+        decimales=entero*10000;
+
+        decimales=multiplicado-decimales;
+
+
+    }
+
+    else {
+        int division=total_mantissa/exponente_final;
+
+        entero=division/10000;
+
+
+        decimales=entero*10000;
+
+        decimales=division-decimales;
+
+    }
+
+    printf("entero: %d\n",entero);
+
+    if (signo_valor_final<0) sprintf(buffer,"-%d.%04d",entero,decimales);
+    else sprintf(buffer,"%d.%04d",entero,decimales);    
+
+}
+
+/*
+Funcion para mostrar el valor numérico en pantalla
+
+Toda la parte de coma flotante se puede mejorar y corregir mucho, he evitado usar variables tipo float de C,
+esta todo obtenido mediante enteros de 32 bits, trabajando con tablas de mantisa multiplicadas por 10000
+Además sólo tengo en cuenta 16 de los 32 bits posibles de la mantisa, por tanto los valores muchas veces son aproximados
+NO se debe tomar como una función perfecta sino como algo que nos da un indicativo del valor APROXIMADO de la variable en coma flotante 
+*/
 void debug_view_basic_variables_print_number(z80_int dir,char *buffer_linea)
 {
     
@@ -6856,12 +6915,140 @@ void debug_view_basic_variables_print_number(z80_int dir,char *buffer_linea)
     }
     else {
         //floating
-        //TODO valor
-        sprintf(buffer_linea,"(float)?");
+
+        int signo_valor_final=+1;
+
+        //Aproximacion muy bruta
+        int total_mantissa=5000;  //0.5
+        
+        z80_byte mant1=peek_byte_no_time(dir+1);
+
+        //total_mantissa valores multiplicados por 10000
+
+        //Estos valores obtenidos desde el propio basic del Spectrum, manipulando los bytes de valores de variables
+        //y viendo el valor que obtienen en pantalla
+        
+        
+        if (mant1 & 128) signo_valor_final=-1;  //Valor negativo
+
+        //                              0.0000
+        if (mant1 & 64) total_mantissa += 2500;  //10000 * 0.25
+        if (mant1 & 32) total_mantissa += 1250;  //10000 * 0.125
+        if (mant1 & 16) total_mantissa +=  625;  //10000 * 0.0625
+        if (mant1 & 8)  total_mantissa +=  312;  //10000 * 0.03125 
+        if (mant1 & 4)  total_mantissa +=  156;  //10000 * 0.015625
+        if (mant1 & 2)  total_mantissa +=   78;  //10000 * 0.0078125
+        if (mant1 & 1)  total_mantissa +=   39;  //10000 * 0.00390625
+
+        z80_byte mant2=peek_byte_no_time(dir+2);
+
+        //                               0.0000
+        if (mant2 & 128) total_mantissa +=   19;  //10000 * 0.00195
+        if (mant2 & 64) total_mantissa  +=   10;  //10000 * 0.00097
+        if (mant2 & 32) total_mantissa  +=    5;  //10000 * 0.00048
+        if (mant2 & 16) total_mantissa  +=    2;  //10000 * 0.00024
+        if (mant2 & 8)  total_mantissa  +=    1;  //10000 * 0.00012
+
+        //Cualquiera de los otros bits son aproximaciones de 0.00xx y no tenemos precision (contando enteros X 10000) para usarlos
+        //por tanto los descarto
+
+
+        int exponente=peek_byte_no_time(dir);
+
+        int signo_exponente;
+
+        if (exponente>=0x80) {
+            signo_exponente=+1;
+            exponente -=0x80;
+        }
+        else {
+            signo_exponente=-1;
+            exponente=0x80-exponente;
+        }
+
+
+        int exponente_final=1;
+        int i;
+
+
+        //mirar si esto excede un valor final mayor de 31 bits aprox
+        //mantisa maxima 4000 aprox
+        //2^31 / 4000 = 536870. usa hasta bit 24
+        printf("exponente %d mantissa %d signo %d\n",exponente,total_mantissa,signo_valor_final);
+        if (exponente>18) {
+            if (signo_exponente>0) {
+                if (signo_valor_final<0) sprintf(buffer_linea,"(float approx)(-%d X 2^%d)/10000",total_mantissa,exponente);    
+                else sprintf(buffer_linea,"(float approx)(%d X 2^%d)/10000",total_mantissa,exponente);    
+            }
+            else {
+                if (signo_valor_final<0) sprintf(buffer_linea,"(float approx)(-%d / 2^%d)/10000",total_mantissa,exponente);    
+                else sprintf(buffer_linea,"(float approx)(%d / 2^%d)/10000",total_mantissa,exponente); 
+            }
+            return;            
+        }
+
+
+
+        //rotar 1<<
+        for (i=0;i<exponente;i++) {
+            exponente_final=exponente_final<<1;
+        }
+
+
+        //int valor_total;
+
+        char buffer_valor_total[100];
+        debug_view_basic_variables_util_final_division(buffer_valor_total,exponente_final,total_mantissa,signo_exponente,signo_valor_final);
+
+        //valor_total=(exponente_final*total_mantissa)/10000;
+
+        printf("(float) Exp:%02XH Mant: %02X%02X%02X%02XH Aprox: %s\n",
+            peek_byte_no_time(dir),
+            peek_byte_no_time(dir+1),
+            peek_byte_no_time(dir+2),
+            peek_byte_no_time(dir+3),
+            peek_byte_no_time(dir+4),
+            buffer_valor_total
+        );
+
+        sprintf(buffer_linea,"(float approx)%s",buffer_valor_total);
+        
     }    
 }
 
-#define MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH 100
+#define MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH 300
+
+//Convertir caracter a espacio ascii segun si spectrum o zx81
+z80_byte debug_view_basic_variables_getchar(z80_byte caracter)
+{
+    if (MACHINE_IS_ZX81) {
+        if (caracter>=64) caracter='.';
+        else caracter=da_codigo_zx81_no_artistic(caracter);
+    }
+
+    if (caracter<32 || caracter>126) caracter='.';    
+
+    return caracter;
+}
+
+
+//da la letra de la primera variable seugn si spectrum o zx81
+z80_byte debug_view_basic_variables_letra_variable(z80_byte first_byte_letter)
+{
+    z80_byte letra_variable;
+
+    if (MACHINE_IS_ZX81) {
+        letra_variable=first_byte_letter+59;
+        if (letra_variable<'A' || letra_variable>'Z') letra_variable='?';  
+    }
+
+    else {
+        letra_variable=first_byte_letter+96;
+        if (letra_variable<'a' || letra_variable>'z') letra_variable='?';    
+    }
+
+    return letra_variable;
+}
 
 int debug_view_basic_variables_print_string(z80_int dir,int longitud_variable,char *results_buffer,int maxima_longitud_texto)
 {
@@ -6885,7 +7072,10 @@ int debug_view_basic_variables_print_string(z80_int dir,int longitud_variable,ch
     int i;
 
     for (i=0;i<maximo_mostrar;i++) {
-        buffer_linea[i]=peek_byte_no_time(dir+i);
+        z80_byte caracter=peek_byte_no_time(dir+i);
+        caracter=debug_view_basic_variables_getchar(caracter);
+
+        buffer_linea[i]=caracter;
     }
 
     if (limite_alcanzado) {
@@ -6998,6 +7188,7 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
 
             
             if (es_array_numero) {
+                util_concat_string(results_buffer,"=",maxima_longitud_texto);
                 z80_int offset_numero=puntero+total_offset*5;
                 debug_view_basic_variables_print_number(offset_numero,buffer_linea);
 
@@ -7007,6 +7198,7 @@ int debug_view_basic_variables_print_dim_alpha(char *results_buffer,z80_int punt
             }
             else {
                 z80_byte letra_leida=peek_byte_no_time(puntero+total_offset);
+                letra_leida=debug_view_basic_variables_getchar(letra_leida);
                 if (letra_leida<32 || letra_leida>126) letra_leida='?';
 
 
@@ -7055,13 +7247,16 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
     results_buffer[0]=0;
 
 
+    z80_int vars_pointer=23627;
+
+    if (MACHINE_IS_ZX81) vars_pointer=16400;
     
 	z80_int dir;
 
-  	dir=peek_word_no_time(23627);
+  	dir=peek_word_no_time(vars_pointer);
     char buffer_linea[MAX_DEBUG_BASIC_VARIABLES_LINE_LENGTH+1];
 
-    sprintf(buffer_linea,"VARS(23627)=%d\n\n",dir);
+    sprintf(buffer_linea,"VARS(%d)=%d\n\n",vars_pointer,dir);
 
     util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 
@@ -7069,7 +7264,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
     z80_byte letra_variable;
 
-    z80_byte number_type;
+    //z80_byte number_type;
 
     int salir=0;
     int i;
@@ -7083,7 +7278,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
     int inicio_texto;    
 
-    char buf_numero[30];
+    char buf_numero[100];
             
 
     z80_byte total_dimensiones;                
@@ -7102,8 +7297,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
         
             case 2:
                 //Variable alfanumerica (p ej A$)
-                letra_variable=first_byte_letter+96;
-                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+                letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
 
                 sprintf (buffer_linea,"%c$=",letra_variable);
                 util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
@@ -7125,8 +7319,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
             case 3:
                 //Variable numérica identificada con un solo caracter
-                letra_variable=first_byte_letter+96;
-                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+                letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
     
                 
                 debug_view_basic_variables_print_number(dir,buf_numero);
@@ -7143,8 +7336,8 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
             case 4:
             case 6:
                 //Matriz numérica(4) o alfanumerica(6)
-                letra_variable=first_byte_letter+96;
-                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+                letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
+                //if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
 
                 if (variable_type==4) {
                     sprintf (buffer_linea,"DIM %c(",letra_variable);
@@ -7223,8 +7416,7 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
             case 5:
                 //Variable numérica identificada de mas de un solo caracter
-                letra_variable=first_byte_letter+96;
-                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+                letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
 
                 char buf_nombre_variable[256];
                 buf_nombre_variable[0]=letra_variable;
@@ -7241,7 +7433,8 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
                         fin_nombre=1;
                         letra_variable &=127;
                     }
-                    if (letra_variable<32 || letra_variable>126) letra_variable='?';
+                    letra_variable=debug_view_basic_variables_getchar(letra_variable);
+                    //if (letra_variable<32 || letra_variable>126) letra_variable='?';
 
                     buf_nombre_variable[indice_nombre++]=letra_variable;
 
@@ -7263,29 +7456,43 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
 
             case 7:
                 //Iterador en bloque FOR/NEXT
-                letra_variable=first_byte_letter+96;
-                if (letra_variable<'a' || letra_variable>'z') letra_variable='?';
+                letra_variable=debug_view_basic_variables_letra_variable(first_byte_letter);
 
                 //Inicio, final, step, linea, sentencia    
-                char buf_inicio[30];
+                printf("inicio for\n");
+                char buf_inicio[100];
                 debug_view_basic_variables_print_number(dir,buf_inicio);
                 dir +=5;
 
-                char buf_final[30];
+                printf("end for\n");
+                char buf_final[100];
                 debug_view_basic_variables_print_number(dir,buf_final);
+                printf("end for: %s\n",buf_final);
                 dir +=5;                
 
-                char buf_step[30];
+                printf("step for\n");
+                char buf_step[100];
                 debug_view_basic_variables_print_number(dir,buf_step);
                 dir +=5;                
 
+                printf("line for\n");
                 z80_int linea=peek_word_no_time(dir);
                 dir+=2;
 
-                z80_byte sentencia=peek_byte_no_time(dir);
-                dir++;
+                if (MACHINE_IS_ZX81) {
+                    printf("FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);
 
-                sprintf(buffer_linea,"FOR %c=%s TO %s STEP %s LINE %d:%d\n",letra_variable,buf_inicio,buf_final,buf_step,linea,sentencia);
+                    sprintf(buffer_linea,"FOR %c=%s TO %s STEP %s LINE %d\n",letra_variable,buf_inicio,buf_final,buf_step,linea);                    
+                }
+                else {
+                    printf("sentence for\n");
+                    z80_byte sentencia=peek_byte_no_time(dir);
+                    dir++;
+
+                    printf("FOR %c=%s TO %s STEP %s LINE %d:%d\n",letra_variable,buf_inicio,buf_final,buf_step,linea,sentencia);
+
+                    sprintf(buffer_linea,"FOR %c=%s TO %s STEP %s LINE %d:%d\n",letra_variable,buf_inicio,buf_final,buf_step,linea,sentencia);
+                }
 
                 resultado=util_concat_string(results_buffer,buffer_linea,maxima_longitud_texto);
 

@@ -16,7 +16,7 @@ Improved Text Aventure Debugging:
 
 Improved Debugging: 
 -Mouse accions: click (toggle breakpoint, change registers), Scroll up/down by using the mouse wheel
--Can now browse Basic variables
+-Can now browse Basic variables on ZX Spectrum and ZX81
 
 Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
 

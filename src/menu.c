@@ -27906,8 +27906,9 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu(array_menu_debug_settings,"View ~~Basic",MENU_OPCION_NORMAL,menu_debug_view_basic,menu_debug_view_basic_cond);
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'b');
 
-        if (MACHINE_IS_SPECTRUM) {
-		    menu_add_item_menu(array_menu_debug_settings,"View Basic variables",MENU_OPCION_NORMAL,menu_debug_view_basic_variables,NULL);      
+        if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX81) {
+		    menu_add_item_menu(array_menu_debug_settings,"View Basic variab~~les",MENU_OPCION_NORMAL,menu_debug_view_basic_variables,NULL);
+            menu_add_item_menu_shortcut(array_menu_debug_settings,'l');
         }
 
 		if (si_complete_video_driver() ) {
@@ -38426,7 +38427,8 @@ char *first_aid_string_download_spectrumcomputing="This downloaded file is hoste
 int first_aid_no_search_zxinfo=0;
 char *first_aid_string_search_zxinfo="This search engine is hosted in zxinfo.dk website. Thanks to Thomas Heckmann for allowing it"; 
 
-
+int first_aid_no_debug_variables=0;
+char *first_aid_string_debug_variables="Browsing the floating point numeric variables is not accurate, please take the numbers as approximate"; 
 //Items que se disparan en startup
 
 
@@ -38524,6 +38526,7 @@ void menu_first_aid_init(void)
     menu_first_aid_add("mount_mmc_fileutils",&first_aid_no_mount_mmc_fileutils,first_aid_string_mount_mmc_fileutils,0);
     menu_first_aid_add("download_spectrumcomputing",&first_aid_no_download_spectrumcomputing,first_aid_string_download_spectrumcomputing,0);
     menu_first_aid_add("search_zxinfo",&first_aid_no_search_zxinfo,first_aid_string_search_zxinfo,0);
+    menu_first_aid_add("debug_variables",&first_aid_no_debug_variables,first_aid_string_debug_variables,0);
 
 
 	//Items que se disparan en startup

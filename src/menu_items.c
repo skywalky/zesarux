@@ -29531,6 +29531,8 @@ void menu_find(MENU_ITEM_PARAMETERS)
 void menu_debug_view_basic_variables(MENU_ITEM_PARAMETERS)
 {
 
+    menu_first_aid("debug_variables");
+
 	char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
 	debug_view_basic_variables(results_buffer,MAX_TEXTO_GENERIC_MESSAGE);
 
