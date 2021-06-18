@@ -32,7 +32,7 @@
 #include "menu.h"
 
 
-#define TOTAL_SENSORS 6
+
 
 int sensor_fps_funcion_get_value(int id)
 {
@@ -146,11 +146,8 @@ int sensor_get_value(char *short_name)
 }
 
 //Retorna valor porcentaje sensor. 0 si no encontrado
-int sensor_get_percentaje_value(char *short_name)
+int sensor_get_percentaje_value_by_id(int indice)
 {
-    int indice=sensor_find(short_name);
-
-    if (indice<0) return 0;
 
     int current_value=sensor_get_value_by_id(indice);
 
@@ -173,4 +170,15 @@ int sensor_get_percentaje_value(char *short_name)
     if (porcentaje>100) return 100;
 
     return porcentaje;
+}
+
+//Retorna valor porcentaje sensor. 0 si no encontrado
+int sensor_get_percentaje_value(char *short_name)
+{
+    int indice=sensor_find(short_name);
+
+    if (indice<0) return 0;
+
+    return sensor_get_percentaje_value_by_id(indice);
+
 }

@@ -22,6 +22,8 @@
 #ifndef SENSORS_H
 #define SENSORS_H
 
+#define TOTAL_SENSORS 6
+
 struct s_sensor_item {
     //Nombre corto del sensor
     char short_name[32];
@@ -43,7 +45,10 @@ struct s_sensor_item {
 
 typedef struct s_sensor_item sensor_item;
 
+extern sensor_item sensors_array[];
+
 extern int sensor_get_value(char *short_name);
 extern int sensor_get_percentaje_value(char *short_name);
+extern int sensor_get_percentaje_value_by_id(int indice);
 
 #endif

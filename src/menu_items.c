@@ -29572,6 +29572,11 @@ zxvision_window *menu_debug_view_sensors_overlay_window;
 int menu_debug_view_sensors_contador_segundo_anterior;
 
 
+
+//TODO esto para hacer una prueba rapida. finalmente esto se hara guardando el short_name de cada sensor
+int temporal_current_view_sensors_actual=0;
+
+
 //La funcion de overlay
 void menu_debug_view_sensors_overlay_window_overlay(void)
 {
@@ -29607,7 +29612,7 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
         //Prueba medidores de rendimiento
         //de momento desactivado
         
-        int fila_texto=14;
+        int fila_texto=4;
         int margen_horizontal=30;
         
         int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
@@ -29622,7 +29627,9 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
 
         
 
-    int media_cpu=sensor_get_percentaje_value("instant_avg_cpu");
+    //int media_cpu=sensor_get_percentaje_value("instant_avg_cpu");
+
+    int media_cpu=sensor_get_percentaje_value_by_id(temporal_current_view_sensors_actual);
 
     int yorigen_linea=(fila_texto*8)+longitud_linea+16;        
 
@@ -29632,11 +29639,12 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
     
     int color=ESTILO_GUI_COLOR_WAVEFORM;
     if (media_cpu>=75) color=ESTILO_GUI_COLOR_AVISO;
+
+    //temporal esto hacerlo luego mejor
+    char *texto_sensor;
+    texto_sensor=sensors_array[temporal_current_view_sensors_actual].short_name;
      
-    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"CPU",media_cpu,color,color);                   
-
-
-
+    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,texto_sensor,media_cpu,color,color);                   
 
 
     //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
@@ -29647,6 +29655,15 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
 
 //La ventana tal cual que creamos. Es la estructura, no un puntero
 zxvision_window zxvision_window_view_sensors;
+
+
+
+void menu_debug_view_sensors_next_sensor(MENU_ITEM_PARAMETERS)
+{
+    temporal_current_view_sensors_actual++;
+
+    if (temporal_current_view_sensors_actual>=TOTAL_SENSORS) temporal_current_view_sensors_actual=0;
+}
 
 void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 {
@@ -29703,6 +29720,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
         return;
     }    
 
+/*
     z80_byte tecla;
 
     //Y esperar escape (2) o tecla background (3)
@@ -29711,6 +29729,63 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
             zxvision_handle_cursors_pgupdn(ventana,tecla);
             //printf ("tecla: %d\n",tecla);
     } while (tecla!=2 && tecla!=3);
+*/
+
+
+//Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+	menu_item *array_menu_common;
+	menu_item item_seleccionado;
+	int retorno_menu;
+
+	int comun_opcion_seleccionada=0;
+
+    do {
+
+        //borrar rastros de textos anteriores
+        zxvision_cls(ventana);
+
+        int linea=2;
+
+
+		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_debug_view_sensors_next_sensor,
+            NULL,sensors_array[temporal_current_view_sensors_actual].long_name);
+
+		menu_add_item_menu_tabulado(array_menu_common,1,linea);   
+        menu_add_item_menu_shortcut(array_menu_common,'p'); 
+
+		/*menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_next,NULL,"~~Next");
+		menu_add_item_menu_tabulado(array_menu_common,6,linea); 
+        menu_add_item_menu_shortcut(array_menu_common,'n');
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_set,NULL,"~~Set");
+		menu_add_item_menu_tabulado(array_menu_common,11,linea);      
+        menu_add_item_menu_shortcut(array_menu_common,'s');
+        */
+
+ 
+
+
+		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"View Sensors");
+
+
+			
+			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+					//llamamos por valor de funcion
+					if (item_seleccionado.menu_funcion!=NULL) {
+							//printf ("actuamos por funcion\n");
+							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+							
+					}
+			}
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+
+
+          
+
+
+
 
     //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
     zxvision_set_window_overlay_from_current(ventana);
@@ -29722,7 +29797,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
     cls_menu_overlay();
     util_add_window_geometry_compact(ventana);
 
-    if (tecla==3) {
+    if (retorno_menu==MENU_RETORNO_BACKGROUND) {
             zxvision_message_put_window_background();
     }
 
