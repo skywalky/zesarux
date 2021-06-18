@@ -30,13 +30,19 @@
 #include "ay38912.h"
 
 
-#define TOTAL_SENSORS 2
+#define TOTAL_SENSORS 3
 
+
+//Retorna volumen de un canal AY
+//Id es:
+//(chip*4) + canal
 int sensor_ay_vol_chip_funcion_get_value(int id)
 {
-    int chip=0;
+    int chip=id/4;
 
-    return (ay_3_8912_registros[chip][8+id]&15);
+    int canal=id & 3;
+
+    return (ay_3_8912_registros[chip][8+canal]&15);
 
     //TODO otros dos chips
 
@@ -45,15 +51,22 @@ int sensor_ay_vol_chip_funcion_get_value(int id)
 sensor_item sensors_array[TOTAL_SENSORS]={
     {
     "ay_vol_chip0_chan_A","AY Volume Chip 0 Channel A",
-    sensor_ay_vol_chip_funcion_get_value,0,
-    0,15
+    0,15,
+    sensor_ay_vol_chip_funcion_get_value,0
+    
     },
 
     {
     "ay_vol_chip0_chan_B","AY Volume Chip 0 Channel B",
-    sensor_ay_vol_chip_funcion_get_value,1,
-    0,15
+    0,15,
+    sensor_ay_vol_chip_funcion_get_value,1
     },
+
+    {
+    "ay_vol_chip0_chan_B","AY Volume Chip 0 Channel C",
+    0,15,
+    sensor_ay_vol_chip_funcion_get_value,2
+    },    
 
 
 };
@@ -68,6 +81,7 @@ int sensor_find(char *short_name)
         if (!strcasecmp(short_name,sensors_array[i].short_name)) return i;
     }
 
+    debug_printf(VERBOSE_DEBUG,"Sensor name %s not found",short_name);
     return -1;
 }
 
@@ -92,4 +106,34 @@ int sensor_get_value(char *short_name)
     if (indice<0) return 0;
 
     return sensor_get_value_by_id(indice);
+}
+
+//Retorna valor porcentaje sensor. 0 si no encontrado
+int sensor_get_percentaje_value(char *short_name)
+{
+    int indice=sensor_find(short_name);
+
+    if (indice<0) return 0;
+
+    int current_value=sensor_get_value_by_id(indice);
+
+    int min_value=sensors_array[indice].min_value;
+
+    int max_value=sensors_array[indice].max_value;
+
+    //Obtener el total de values desde min a max
+    int total_valores=max_value-min_value;
+
+    if (total_valores==0) return 0; //Evitar divisiones por 0
+
+    //Obtener diferencia desde el minimo al valor actual
+    int offset_valor=current_value-min_value;
+
+    int porcentaje=(offset_valor*100)/total_valores;
+
+    //Controlar limites
+    if (porcentaje<0) return 0;
+    if (porcentaje>100) return 100;
+
+    return porcentaje;
 }

@@ -27,6 +27,10 @@ struct s_sensor_item {
     char short_name[32];
     //Nombre largo del sensor
     char long_name[100];
+
+    int min_value;
+    int max_value;
+
     //Funcion que retorna el valor del sensor
     //...
     int (*f_funcion_get_value)(int id);
@@ -34,10 +38,12 @@ struct s_sensor_item {
     //Id para la funcion usado sobretodo en sensors del mismo tipo: por ejemplo ay_vol_chip0_chan_A, ay_vol_chip0_chan_B, el id sera 0,1, etc
     int id_parameter;
 
-    int min_value;
-    int max_value;
+
 };
 
 typedef struct s_sensor_item sensor_item;
+
+extern int sensor_get_value(char *short_name);
+extern int sensor_get_percentaje_value(char *short_name);
 
 #endif
