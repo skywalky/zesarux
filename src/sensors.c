@@ -27,18 +27,69 @@
 #include "cpu.h"
 #include "sensors.h"
 #include "debug.h"
+#include "ay38912.h"
 
 
 #define TOTAL_SENSORS 2
 
+int sensor_ay_vol_chip_funcion_get_value(int id)
+{
+    int chip=0;
+
+    return (ay_3_8912_registros[chip][8+id]&15);
+
+    //TODO otros dos chips
+
+}
+
 sensor_item sensors_array[TOTAL_SENSORS]={
     {
-    "ay_vol_chip0_chan_A","AY Volume Chip 0 Channel A",0,15
+    "ay_vol_chip0_chan_A","AY Volume Chip 0 Channel A",
+    sensor_ay_vol_chip_funcion_get_value,0,
+    0,15
     },
 
     {
-    "ay_vol_chip0_chan_B","AY Volume Chip 0 Channel B",0,15
+    "ay_vol_chip0_chan_B","AY Volume Chip 0 Channel B",
+    sensor_ay_vol_chip_funcion_get_value,1,
+    0,15
     },
 
 
 };
+
+//Encuentra la posicion en el array de sensores segun su nombre corto
+//retorna -1 si no encontrado
+int sensor_find(char *short_name)
+{
+    int i;
+
+    for (i=0;i<TOTAL_SENSORS;i++) {
+        if (!strcasecmp(short_name,sensors_array[i].short_name)) return i;
+    }
+
+    return -1;
+}
+
+//Retorna valor sensor segun id del array
+int sensor_get_value_by_id(int indice)
+{
+    if (indice<0 || indice>=TOTAL_SENSORS) {
+        debug_printf(VERBOSE_DEBUG,"Sensor index %d beyond limit",indice);
+        return 0;
+    }
+
+    int id_parameter=sensors_array[indice].id_parameter;
+
+    return sensors_array[indice].f_funcion_get_value(id_parameter);
+}
+
+//Retorna valor sensor. 0 si no encontrado
+int sensor_get_value(char *short_name)
+{
+    int indice=sensor_find(short_name);
+
+    if (indice<0) return 0;
+
+    return sensor_get_value_by_id(indice);
+}

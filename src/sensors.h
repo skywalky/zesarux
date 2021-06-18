@@ -23,8 +23,17 @@
 #define SENSORS_H
 
 struct s_sensor_item {
+    //Nombre corto del sensor
     char short_name[32];
+    //Nombre largo del sensor
     char long_name[100];
+    //Funcion que retorna el valor del sensor
+    //...
+    int (*f_funcion_get_value)(int id);
+
+    //Id para la funcion usado sobretodo en sensors del mismo tipo: por ejemplo ay_vol_chip0_chan_A, ay_vol_chip0_chan_B, el id sera 0,1, etc
+    int id_parameter;
+
     int min_value;
     int max_value;
 };
