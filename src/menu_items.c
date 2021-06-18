@@ -2736,7 +2736,7 @@ Calculando ese tiempo: 12% cpu
             media_cpu=cpu_use_total_acumulado/cpu_use_total_acumulado_medidas;
         }*/
 
-        int media_cpu=sensor_get_percentaje_value("total_avg_cpu");
+        int media_cpu=sensor_get_percentaje_value("instant_avg_cpu");
 
         int tamanyo_buffer_audio,posicion_buffer_audio;
 		audio_get_buffer_info(&tamanyo_buffer_audio,&posicion_buffer_audio);
