@@ -2730,11 +2730,13 @@ Calculando ese tiempo: 12% cpu
         core_statistics_last_perc_dropped=perc_dropped;
         zxvision_print_string_defaults(ventana,1,linea++,texto_buffer);
 
-        int media_cpu=0;
+        /*int media_cpu=0;
 
         if (cpu_use_total_acumulado_medidas>0) {
             media_cpu=cpu_use_total_acumulado/cpu_use_total_acumulado_medidas;
-        }
+        }*/
+
+        int media_cpu=sensor_get_percentaje_value("total_avg_cpu");
 
         int tamanyo_buffer_audio,posicion_buffer_audio;
 		audio_get_buffer_info(&tamanyo_buffer_audio,&posicion_buffer_audio);
@@ -3374,7 +3376,7 @@ M1-M0= mode bits:
                 //porcentaje=((ay_3_8912_registros[chip][10]&15)*100)/15;
 
                 porcentaje=sensor_get_percentaje_value("ay_vol_chip0_chan_C");
-                
+
                 sprintf(buffer_texto_meter,"C[%d]",chip);
                 color=ESTILO_GUI_COLOR_WAVEFORM;
                 if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;                

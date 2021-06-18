@@ -33132,11 +33132,13 @@ void menu_about_running_info(MENU_ITEM_PARAMETERS)
 	//int cpu_use_total_acumulado=0;
 	//int cpu_use_total_acumulado_medidas=0;
 
-	int media_cpu=0;
+	/*int media_cpu=0;
 
 	if (cpu_use_total_acumulado_medidas>0) {
 		media_cpu=cpu_use_total_acumulado/cpu_use_total_acumulado_medidas;
-	}
+	}*/
+
+    int media_cpu=sensor_get_percentaje_value("total_avg_cpu");
 
 	char mensaje_cpu_usage[100];
 

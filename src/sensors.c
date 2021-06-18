@@ -29,15 +29,32 @@
 #include "debug.h"
 #include "ay38912.h"
 #include "screen.h"
+#include "menu.h"
 
 
-#define TOTAL_SENSORS 4
+#define TOTAL_SENSORS 6
 
 int sensor_fps_funcion_get_value(int id)
 {
     return ultimo_fps;
 }
 
+int sensor_total_average_cpu_get_value(int id)
+{
+	int media_cpu=0;
+
+	if (cpu_use_total_acumulado_medidas>0) {
+		media_cpu=cpu_use_total_acumulado/cpu_use_total_acumulado_medidas;
+	}
+
+    return media_cpu;
+}
+
+int sensor_instant_average_cpu_get_value(int id)
+{
+
+    return menu_last_cpu_use;
+}
 
 //Retorna volumen de un canal AY
 //Id es:
@@ -49,8 +66,6 @@ int sensor_ay_vol_chip_funcion_get_value(int id)
     int canal=id & 3;
 
     return (ay_3_8912_registros[chip][8+canal]&15);
-
-    //TODO otros dos chips
 
 }
 
@@ -79,6 +94,17 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     sensor_fps_funcion_get_value,0
     },
 
+    {
+    "total_avg_cpu","Total average cpu use",
+    0,100,
+    sensor_total_average_cpu_get_value,0
+    },
+
+   {
+    "instant_avg_cpu","Instant average cpu use",
+    0,100,
+    sensor_instant_average_cpu_get_value,0
+    }    
 
 };
 

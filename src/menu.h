@@ -1091,6 +1091,8 @@ extern void menu_debug_daad_init_flagobject(void);
 extern void menu_draw_last_fps(void);
 extern void menu_draw_cpu_use_last(void);
 
+extern int menu_last_cpu_use;
+
 extern int cpu_use_total_acumulado;
 extern int cpu_use_total_acumulado_medidas;
 
