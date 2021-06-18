@@ -239,9 +239,13 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 
 -modos adicionales Next layer 2
 
--nuevo modulo sensors.c para integrar lecturas de sensores de cpu, audio buffer, etc para poder estandarizar las vistas de contadores de rendimiento
+-nuevo modulo sensors.c para integrar lecturas de sensores de cpu, audio buffer, etc 
+para poder estandarizar las vistas de contadores de rendimiento
  
 
-problema con parametros que son contadores, donde almacenar tiempo y contador anterior? si se consulta desde dos sitios distintos puede generar problemas. o quiza esos valores los debe generar siempre el timer y el modulo de sensors solo debe leerlos
+problema con parametros que son contadores, donde almacenar tiempo y contador anterior? 
+si se consulta desde dos sitios distintos puede generar problemas. o quiza esos valores los 
+debe generar siempre el timer y el modulo de sensors solo debe leerlos
 
-con nombre identificativo de sensor, nombre corto, rango de valores (y/o porcentaje). y una funcion para poderlos retornar todos y el usuario escoja ?
+con nombre identificativo de sensor, nombre corto, rango de valores (y/o porcentaje). 
+y una funcion para poderlos retornar todos y el usuario escoja ?
