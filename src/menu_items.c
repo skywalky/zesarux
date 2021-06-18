@@ -2572,6 +2572,8 @@ void menu_core_statistics_draw_meter(zxvision_window *ventana,int xorigen_linea,
         int radio=longitud_linea;
 
         zxvision_draw_ellipse(ventana,centro_x,centro_y,radio,-radio,color_contorno,zxvision_putpixel,180);
+        //doble contorno
+        zxvision_draw_ellipse(ventana,centro_x,centro_y,radio+1,-radio-1,color_contorno,zxvision_putpixel,180);
      
 }
 
@@ -29638,7 +29640,7 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
     int xorigen_linea=menu_char_width+longitud_linea; //Para ajustarlo por la derecha
     
     int color=ESTILO_GUI_COLOR_WAVEFORM;
-    if (media_cpu>=75) color=ESTILO_GUI_COLOR_AVISO;
+    if (media_cpu>=85) color=ESTILO_GUI_COLOR_AVISO;
 
     //temporal esto hacerlo luego mejor
     char *texto_sensor;
