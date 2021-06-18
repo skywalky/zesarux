@@ -53,7 +53,6 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     "ay_vol_chip0_chan_A","AY Volume Chip 0 Channel A",
     0,15,
     sensor_ay_vol_chip_funcion_get_value,0
-    
     },
 
     {
@@ -63,7 +62,7 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     },
 
     {
-    "ay_vol_chip0_chan_B","AY Volume Chip 0 Channel C",
+    "ay_vol_chip0_chan_C","AY Volume Chip 0 Channel C",
     0,15,
     sensor_ay_vol_chip_funcion_get_value,2
     },    
