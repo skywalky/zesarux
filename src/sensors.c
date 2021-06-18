@@ -28,9 +28,15 @@
 #include "sensors.h"
 #include "debug.h"
 #include "ay38912.h"
+#include "screen.h"
 
 
-#define TOTAL_SENSORS 3
+#define TOTAL_SENSORS 4
+
+int sensor_fps_funcion_get_value(int id)
+{
+    return ultimo_fps;
+}
 
 
 //Retorna volumen de un canal AY
@@ -65,7 +71,13 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     "ay_vol_chip0_chan_C","AY Volume Chip 0 Channel C",
     0,15,
     sensor_ay_vol_chip_funcion_get_value,2
-    },    
+    },   
+    
+    {
+    "fps","Frames per second",
+    0,50,
+    sensor_fps_funcion_get_value,0
+    },
 
 
 };

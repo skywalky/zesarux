@@ -125,6 +125,7 @@
 #include "diskio.h"
 #include "zvfs.h"
 #include "snap_ram.h"
+#include "sensors.h"
 
 #if defined(__APPLE__)
 	#include <sys/syslimits.h>
@@ -5033,7 +5034,8 @@ void menu_draw_last_fps(void)
 {
 
 
-        int fps=ultimo_fps;
+        //int fps=ultimo_fps;
+        int fps=sensor_get_value("fps");
         debug_printf (VERBOSE_PARANOID,"FPS: %d",fps);
 
         //algun error al leer fps
