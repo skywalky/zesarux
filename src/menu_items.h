@@ -138,5 +138,7 @@ extern void menu_find(MENU_ITEM_PARAMETERS);
 
 extern void menu_debug_view_basic_variables(MENU_ITEM_PARAMETERS);
 
+extern void menu_debug_view_sensors(MENU_ITEM_PARAMETERS);
+
 #endif
 

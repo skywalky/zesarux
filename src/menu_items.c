@@ -29564,3 +29564,173 @@ void menu_debug_view_basic_variables(MENU_ITEM_PARAMETERS)
 
   menu_generic_message_format("Basic Variables","%s",results_buffer);
 }
+
+//Indica a la funcion de overlay cual es la ventana
+zxvision_window *menu_debug_view_sensors_overlay_window;
+
+//Contador de segundo para hacer que el overlay solo se redibuje un numero de veces por segundo y no siempre
+int menu_debug_view_sensors_contador_segundo_anterior;
+
+
+//La funcion de overlay
+void menu_debug_view_sensors_overlay_window_overlay(void)
+{
+    if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+    menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+    zxvision_window *ventana;
+
+    ventana=menu_debug_view_sensors_overlay_window;    
+
+
+
+    //esto hara ejecutar esto 2 veces por segundo
+    if ( ((contador_segundo%500) == 0 && menu_debug_view_sensors_contador_segundo_anterior!=contador_segundo) ) {
+
+        menu_debug_view_sensors_contador_segundo_anterior=contador_segundo;
+        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+        int linea=0;
+        char texto_buffer[100];
+
+
+        //Empezar con espacio
+        texto_buffer[0]=' ';                
+
+
+        
+
+    }
+
+
+        //Prueba medidores de rendimiento
+        //de momento desactivado
+        
+        int fila_texto=14;
+        int margen_horizontal=30;
+        
+        int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
+
+        //char buffer_texto_meters[30];
+
+        
+        
+        //int grados;
+        //0 grados=0%
+        //180 grados=100%
+
+        
+
+    int media_cpu=sensor_get_percentaje_value("instant_avg_cpu");
+
+    int yorigen_linea=(fila_texto*8)+longitud_linea+16;        
+
+    //CPU USE
+    int pos_x=1;
+    int xorigen_linea=menu_char_width+longitud_linea; //Para ajustarlo por la derecha
+    
+    int color=ESTILO_GUI_COLOR_WAVEFORM;
+    if (media_cpu>=75) color=ESTILO_GUI_COLOR_AVISO;
+     
+    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"CPU",media_cpu,color,color);                   
+
+
+
+
+
+    //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
+    //y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
+    //En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
+    zxvision_draw_window_contents(ventana);
+}
+
+//La ventana tal cual que creamos. Es la estructura, no un puntero
+zxvision_window zxvision_window_view_sensors;
+
+void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
+{
+
+    menu_espera_no_tecla();
+	menu_reset_counters_tecla_repeticion();
+
+    if (!menu_multitarea) {
+        menu_warn_message("This window needs multitask enabled");
+        return;
+    }
+
+    //Nuestro puntero apunta a la estructura que hay fuera, por comodidad de usar el nombre de puntero "ventana"
+    zxvision_window *ventana;
+    ventana=&zxvision_window_view_sensors;    
+
+    //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+    //si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+    //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+    zxvision_delete_window_if_exists(ventana);    
+
+    int x_ventana,y_ventana,ancho_ventana,alto_ventana;
+
+    //Recuperar geometria
+    if (!util_find_window_geometry("viewsensors",&x_ventana,&y_ventana,&ancho_ventana,&alto_ventana)) {
+        alto_ventana=14;
+        ancho_ventana=32;
+
+        x_ventana=menu_center_x()-ancho_ventana/2; 
+        y_ventana=menu_center_y()-alto_ventana/2; 
+    }    
+
+    //Crear ventana
+	zxvision_new_window(ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,
+							ancho_ventana-1,alto_ventana-2,"View Sensors");
+
+    //Se puede ir a background
+    ventana->can_be_backgrounded=1;
+    //indicar nombre del grabado de geometria
+    strcpy(ventana->geometry_name,"viewsensors");
+    //Y dibujar la ventana
+    zxvision_draw_window(ventana);
+
+
+    menu_debug_view_sensors_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+    //Cambiamos funcion overlay de texto de menu
+    set_menu_overlay_function(menu_debug_view_sensors_overlay_window_overlay);
+
+    //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+    //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+    if (zxvision_currently_restoring_windows_on_start) {
+        //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+        return;
+    }    
+
+    z80_byte tecla;
+
+    //Y esperar escape (2) o tecla background (3)
+    do {
+            tecla=zxvision_common_getkey_refresh();
+            zxvision_handle_cursors_pgupdn(ventana,tecla);
+            //printf ("tecla: %d\n",tecla);
+    } while (tecla!=2 && tecla!=3);
+
+    //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+    zxvision_set_window_overlay_from_current(ventana);
+
+    //restauramos modo normal de texto de menu
+    set_menu_overlay_function(normal_overlay_texto_menu);
+
+
+    cls_menu_overlay();
+    util_add_window_geometry_compact(ventana);
+
+    if (tecla==3) {
+            zxvision_message_put_window_background();
+    }
+
+    else {
+            zxvision_destroy_window(ventana);
+    }
+
+
+}
+
+
