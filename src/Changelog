@@ -30,6 +30,7 @@ Improved ZX Vision menu interface:
 -Added some graphical meters on AY Registers, Core Statistics
 -Colour palette window now shows all colours that fit in the window
 -View sprite legend now adapts to size
+-Added setting to disable boxes around lower and upper buttons
 
 Improved Audio to .mid exporter: allow changing instrument
 
@@ -37,6 +38,7 @@ Fixed file previews on corrupted files: pzx, tap
 Fixed rearranging windows and using total window height
 Fixed Next ULA Scroll to use registers 0x26 and 0x27
 Fixed Next tbblue port 123b behaviour: 48kb ram paging, shadow display, 3bit offset, read access
+
 
 
 Version 9.2 - Cliff Hanger edition. 05 April 2021
