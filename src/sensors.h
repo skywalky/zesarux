@@ -33,6 +33,15 @@ struct s_sensor_item {
     int min_value;
     int max_value;
 
+    //Umbrales de aviso de porcentaje (si excede o si menor que)
+    int upper_warning_perc;
+    int lower_warning_perc;
+
+    //Umbrales de aviso de valor (si excede o si menor que)
+    int upper_warning_value;
+    int lower_warning_value;
+
+
     //Funcion que retorna el valor del sensor
     //...
     int (*f_funcion_get_value)(int id);
@@ -47,7 +56,9 @@ typedef struct s_sensor_item sensor_item;
 
 extern sensor_item sensors_array[];
 
+extern int sensor_find(char *short_name);
 extern int sensor_get_value(char *short_name);
+extern int sensor_get_value_by_id(int indice);
 extern int sensor_get_percentaje_value(char *short_name);
 extern int sensor_get_percentaje_value_by_id(int indice);
 

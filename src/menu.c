@@ -10232,6 +10232,158 @@ void zxvision_draw_ellipse(zxvision_window *w,int x1,int y1,int radius_x,int rad
 }
 
 
+
+
+void zxvision_widgets_draw_speedometer(zxvision_window *ventana,int xcentro_widget,int ycentro_widget,int longitud_linea,int grados,int color_linea,int color_contorno)
+{
+        //calcular punto final linea. Algo menos para que no toque con el contorno
+        int xfinal_linea=xcentro_widget+(longitud_linea-5)*util_get_cosine(grados)/10000;
+
+        int yfinal_linea=ycentro_widget-(longitud_linea-5)*util_get_sine(grados)/10000;
+
+        zxvision_draw_line(ventana,xcentro_widget,ycentro_widget,xfinal_linea,yfinal_linea,color_linea,zxvision_putpixel);   
+
+        //Y el contorno
+        int centro_x=xcentro_widget;
+        int centro_y=ycentro_widget;
+        int radio=longitud_linea;
+
+        zxvision_draw_ellipse(ventana,centro_x,centro_y,radio,-radio,color_contorno,zxvision_putpixel,180);
+        //doble contorno. Con radio algo menor
+        zxvision_draw_ellipse(ventana,centro_x,centro_y,radio-1,-radio+1,color_contorno,zxvision_putpixel,180);
+     
+}
+
+void zxvision_widgets_draw_speedometer_common(zxvision_window *ventana,int xcentro_widget,int ycentro_widget,int columna_texto,int fila_texto,char *texto,int percentaje,int color_linea,int color_contorno)
+{
+
+    //180 grados = 0%
+    //0 grados=100%
+    int grados=180-(percentaje*180)/100;
+    //printf("%s: %d grados : %d\n",texto,percentaje,grados);        
+
+    int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
+           
+    zxvision_widgets_draw_speedometer(ventana,xcentro_widget,ycentro_widget,longitud_linea,grados,color_linea,color_contorno);        
+
+    char buffer_texto_meters[100];
+
+    sprintf(buffer_texto_meters,"%s %3d%%",texto,percentaje);
+    zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);       
+}
+
+
+void zxvision_widgets_draw_volumen(char *texto,int valor,int longitud_texto)
+{
+
+		
+    int i;
+    int destino;
+    
+
+    for (i=0,destino=0;i<valor;i++) {
+        texto[destino++]='=';
+
+    }
+
+    for (;i<longitud_texto;i++) {
+        texto[destino++]=' ';
+    }
+
+    texto[destino]=0;
+
+}
+
+
+
+void zxvision_widgets_draw_volumen_maxmin(zxvision_window *ventana,int columna_texto,int fila_texto,
+    int tinta,int papel,int valor_actual,int max_longitud_texto,char *texto)
+{
+    
+    char buffer_texto_meters[100];
+    sprintf(buffer_texto_meters,"%s %3d%%",texto,valor_actual);
+    zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);      
+
+    int barra_volumen;
+
+    //Gestionar valores negativos y limites
+    if (valor_actual<0 || valor_actual>100) {
+        barra_volumen=max_longitud_texto;
+    }
+
+    else {
+        barra_volumen=(valor_actual*max_longitud_texto)/100;
+    }
+
+    char buffer_texto[32];
+
+    zxvision_widgets_draw_volumen(buffer_texto,barra_volumen,max_longitud_texto);
+
+
+    zxvision_print_string(ventana,columna_texto,fila_texto+1,tinta,papel,0,buffer_texto);
+}
+
+
+
+void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,int columna_texto,int fila_texto,char *short_name,int tipo)
+{
+    
+
+    int sensor_id=sensor_find(short_name);
+
+    if (sensor_id<0) return;
+
+    int media_cpu_perc=sensor_get_percentaje_value_by_id(sensor_id);
+
+
+    int tinta_texto=ESTILO_GUI_TINTA_NORMAL;
+    int color_pixeles=ESTILO_GUI_COLOR_WAVEFORM;
+
+    //Obtener umbrales de aviso. Por porcentajes
+    int upper_warning_perc=sensors_array[sensor_id].upper_warning_perc;
+    int lower_warning_perc=sensors_array[sensor_id].lower_warning_perc;
+
+    if (media_cpu_perc>upper_warning_perc || media_cpu_perc<lower_warning_perc) {
+        color_pixeles=ESTILO_GUI_COLOR_AVISO;
+        tinta_texto=ESTILO_GUI_COLOR_AVISO;
+    }
+
+    //Obtener umbrales de aviso. Por valores
+    int valor_cpu=sensor_get_value_by_id(sensor_id);
+    int upper_warning_value=sensors_array[sensor_id].upper_warning_value;
+    int lower_warning_value=sensors_array[sensor_id].lower_warning_value;
+
+    if (valor_cpu>upper_warning_value || valor_cpu<lower_warning_value) {
+        color_pixeles=ESTILO_GUI_COLOR_AVISO;    
+        tinta_texto=ESTILO_GUI_COLOR_AVISO;
+    }
+
+
+    if (tipo==ZXVISION_WIDGET_TYPE_SPEEDOMETER) {
+        int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
+
+        int yorigen_linea=(fila_texto*8)+longitud_linea+16;  //+16 para que este dos lineas por debajo del texto
+        int xcentro_widget=(columna_texto*menu_char_width)+longitud_linea; //Para ajustarlo por la derecha
+
+        zxvision_widgets_draw_speedometer_common(ventana,xcentro_widget,yorigen_linea,columna_texto,fila_texto,short_name,media_cpu_perc,color_pixeles,color_pixeles);                   
+
+    }
+
+    if (tipo==ZXVISION_WIDGET_TYPE_VOLUME) {
+        //char buffer_texto[32];
+        
+        //zxvision_widgets_draw_volumen_maxmin(buffer_texto,media_cpu_perc,15);
+
+        //zxvision_print_string(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,0,buffer_texto);
+
+        zxvision_widgets_draw_volumen_maxmin(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,media_cpu_perc,15,short_name);
+
+    }
+
+
+}
+
+
 int mouse_is_dragging=0;
 int window_is_being_moved=0;
 int window_is_being_resized=0;

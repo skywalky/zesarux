@@ -2555,45 +2555,6 @@ void menu_zxvision_test(MENU_ITEM_PARAMETERS)
 
 }
 
-#define GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH 30
-
-void menu_core_statistics_draw_meter(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int longitud_linea,int grados,int color_linea,int color_contorno)
-{
-        //calcular punto final linea. Algo menos para que no toque con el contorno
-        int xfinal_linea=xorigen_linea+(longitud_linea-5)*util_get_cosine(grados)/10000;
-
-        int yfinal_linea=yorigen_linea-(longitud_linea-5)*util_get_sine(grados)/10000;
-
-        zxvision_draw_line(ventana,xorigen_linea,yorigen_linea,xfinal_linea,yfinal_linea,color_linea,zxvision_putpixel);   
-
-        //Y el contorno
-        int centro_x=xorigen_linea;
-        int centro_y=yorigen_linea;
-        int radio=longitud_linea;
-
-        zxvision_draw_ellipse(ventana,centro_x,centro_y,radio,-radio,color_contorno,zxvision_putpixel,180);
-        //doble contorno
-        zxvision_draw_ellipse(ventana,centro_x,centro_y,radio+1,-radio-1,color_contorno,zxvision_putpixel,180);
-     
-}
-
-void menu_core_statistics_draw_metter_common(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int columna_texto,int fila_texto,char *texto,int percentaje,int color_linea,int color_contorno)
-{
-
-    //180 grados = 0%
-    //0 grados=100%
-    int grados=180-(percentaje*180)/100;
-    //printf("%s: %d grados : %d\n",texto,percentaje,grados);        
-
-    int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
-           
-    menu_core_statistics_draw_meter(ventana,xorigen_linea,yorigen_linea,longitud_linea,grados,color_linea,color_contorno);        
-
-    char buffer_texto_meters[100];
-
-    sprintf(buffer_texto_meters,"%s %3d%%",texto,percentaje);
-    zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);       
-}
 
 //Indica a la funcion de overlay cual es la ventana
 zxvision_window *menu_about_core_statistics_overlay_window;
@@ -2810,10 +2771,9 @@ Calculando ese tiempo: 12% cpu
 
 
         //Prueba medidores de rendimiento
-        //de momento desactivado
         
         int fila_texto=14;
-        int margen_horizontal=30;
+        int margen_horizontal=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
         
         int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
 
@@ -2837,7 +2797,7 @@ Calculando ese tiempo: 12% cpu
     int color=ESTILO_GUI_COLOR_WAVEFORM;
     if (core_statistics_ultimo_cpu_use_mostrado>=75) color=ESTILO_GUI_COLOR_AVISO;
      
-    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"CPU",core_statistics_ultimo_cpu_use_mostrado,color,color);                   
+    zxvision_widgets_draw_speedometer_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"CPU",core_statistics_ultimo_cpu_use_mostrado,color,color);                   
 
 
     //AUDIO BUFFER
@@ -2849,7 +2809,7 @@ Calculando ese tiempo: 12% cpu
     //es tan malo como que este lleno como vacio
     if (core_statistics_last_perc_audio>=90 || core_statistics_last_perc_audio<=10) color=ESTILO_GUI_COLOR_AVISO;        
 
-    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Audio",core_statistics_last_perc_audio,color,color);           
+    zxvision_widgets_draw_speedometer_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Audio",core_statistics_last_perc_audio,color,color);           
 
 
     //DROPPED FRAMES
@@ -2860,7 +2820,7 @@ Calculando ese tiempo: 12% cpu
     color=ESTILO_GUI_COLOR_WAVEFORM;
     if (core_statistics_last_perc_dropped>=75) color=ESTILO_GUI_COLOR_AVISO;              
     
-    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Dropped",core_statistics_last_perc_dropped,color,color);
+    zxvision_widgets_draw_speedometer_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Dropped",core_statistics_last_perc_dropped,color,color);
 
 
 
@@ -3355,7 +3315,7 @@ M1-M0= mode bits:
                 int color=ESTILO_GUI_COLOR_WAVEFORM;
                 if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;
 
-                menu_core_statistics_draw_metter_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
+                zxvision_widgets_draw_speedometer_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
                     columna_texto,fila_texto,buffer_texto_meter,porcentaje,color,color);    
 
                 //Volumen B
@@ -3369,7 +3329,7 @@ M1-M0= mode bits:
                 color=ESTILO_GUI_COLOR_WAVEFORM;
                 if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;                
 
-                menu_core_statistics_draw_metter_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
+                zxvision_widgets_draw_speedometer_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
                     columna_texto,fila_texto,buffer_texto_meter,porcentaje,color,color);              
 
                 //Volumen C
@@ -3383,7 +3343,7 @@ M1-M0= mode bits:
                 color=ESTILO_GUI_COLOR_WAVEFORM;
                 if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;                
 
-                menu_core_statistics_draw_metter_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
+                zxvision_widgets_draw_speedometer_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
                     columna_texto,fila_texto,buffer_texto_meter,porcentaje,color,color);                                          
             //}
 
@@ -29578,6 +29538,10 @@ int menu_debug_view_sensors_contador_segundo_anterior;
 //TODO esto para hacer una prueba rapida. finalmente esto se hara guardando el short_name de cada sensor
 int temporal_current_view_sensors_actual=0;
 
+//Usado para el meter de tipo volumen
+//int menu_debug_view_sensors_valor_anterior=0;
+
+int menu_debug_view_sensors_tipo=0;
 
 //La funcion de overlay
 void menu_debug_view_sensors_overlay_window_overlay(void)
@@ -29611,43 +29575,51 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
     }
 
 
-        //Prueba medidores de rendimiento
-        //de momento desactivado
-        
-        int fila_texto=4;
-        int margen_horizontal=30;
-        
-        int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
 
-        //char buffer_texto_meters[30];
 
-        
-        
-        //int grados;
-        //0 grados=0%
-        //180 grados=100%
+    int fila_texto=5;
+    int columna_texto=1;
 
-        
+    char *short_name;
+    //temporal esto hacerlo luego mejor
+    short_name=sensors_array[temporal_current_view_sensors_actual].short_name;    
 
-    //int media_cpu=sensor_get_percentaje_value("instant_avg_cpu");
+    zxvision_widgets_draw_metter_common_by_shortname
+        (ventana,columna_texto,fila_texto,short_name,menu_debug_view_sensors_tipo);
+
+/*
+    int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
 
     int media_cpu=sensor_get_percentaje_value_by_id(temporal_current_view_sensors_actual);
 
-    int yorigen_linea=(fila_texto*8)+longitud_linea+16;        
+    int yorigen_linea=(fila_texto*8)+longitud_linea+16;  //+16 para que este dos lineas por debajo del texto
 
-    //CPU USE
-    int pos_x=1;
-    int xorigen_linea=menu_char_width+longitud_linea; //Para ajustarlo por la derecha
+
+    int xcentro_widget=(columna_texto*menu_char_width)+longitud_linea; //Para ajustarlo por la derecha
+    //printf("centro: %d\n",xcentro_widget);
     
     int color=ESTILO_GUI_COLOR_WAVEFORM;
-    if (media_cpu>=85) color=ESTILO_GUI_COLOR_AVISO;
+
+    //Obtener umbrales de aviso. Por porcentajes
+    int upper_warning_perc=sensors_array[temporal_current_view_sensors_actual].upper_warning_perc;
+    int lower_warning_perc=sensors_array[temporal_current_view_sensors_actual].lower_warning_perc;
+
+    if (media_cpu>upper_warning_perc || media_cpu<lower_warning_perc) color=ESTILO_GUI_COLOR_AVISO;
+
+    //Obtener umbrales de aviso. Por valores
+    int valor_cpu=sensor_get_value_by_id(temporal_current_view_sensors_actual);
+    int upper_warning_value=sensors_array[temporal_current_view_sensors_actual].upper_warning_value;
+    int lower_warning_value=sensors_array[temporal_current_view_sensors_actual].lower_warning_value;
+
+    if (valor_cpu>upper_warning_value || valor_cpu<lower_warning_value) color=ESTILO_GUI_COLOR_AVISO;    
 
     //temporal esto hacerlo luego mejor
     char *texto_sensor;
     texto_sensor=sensors_array[temporal_current_view_sensors_actual].short_name;
-     
-    menu_core_statistics_draw_metter_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,texto_sensor,media_cpu,color,color);                   
 
+     
+    zxvision_widgets_draw_speedometer_common(ventana,xcentro_widget,yorigen_linea,columna_texto,fila_texto,texto_sensor,media_cpu,color,color);                   
+*/
 
     //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
     //y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
@@ -29665,6 +29637,13 @@ void menu_debug_view_sensors_next_sensor(MENU_ITEM_PARAMETERS)
     temporal_current_view_sensors_actual++;
 
     if (temporal_current_view_sensors_actual>=TOTAL_SENSORS) temporal_current_view_sensors_actual=0;
+}
+
+
+void menu_debug_view_sensors_type_sensor(MENU_ITEM_PARAMETERS)
+{
+    menu_debug_view_sensors_tipo++;
+    if (menu_debug_view_sensors_tipo>ZXVISION_WIDGET_TYPE_VOLUME) menu_debug_view_sensors_tipo=0;
 }
 
 void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
@@ -29752,19 +29731,15 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_debug_view_sensors_next_sensor,
             NULL,sensors_array[temporal_current_view_sensors_actual].long_name);
 
+		menu_add_item_menu_tabulado(array_menu_common,1,linea++);   
+
+
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_view_sensors_type_sensor,
+            NULL,"Type: %d",menu_debug_view_sensors_tipo);
+
 		menu_add_item_menu_tabulado(array_menu_common,1,linea);   
-        menu_add_item_menu_shortcut(array_menu_common,'p'); 
 
-		/*menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_next,NULL,"~~Next");
-		menu_add_item_menu_tabulado(array_menu_common,6,linea); 
-        menu_add_item_menu_shortcut(array_menu_common,'n');
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_debug_daad_view_graphics_render_set,NULL,"~~Set");
-		menu_add_item_menu_tabulado(array_menu_common,11,linea);      
-        menu_add_item_menu_shortcut(array_menu_common,'s');
-        */
-
- 
 
 
 		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"View Sensors");
