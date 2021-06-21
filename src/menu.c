@@ -10333,6 +10333,9 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
 
     if (sensor_id<0) return;
 
+    char *display_name;
+    display_name=sensors_array[sensor_id].display_short_name;    
+
     int media_cpu_perc=sensor_get_percentaje_value_by_id(sensor_id);
 
 
@@ -10365,18 +10368,12 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
         int yorigen_linea=(fila_texto*8)+longitud_linea+16;  //+16 para que este dos lineas por debajo del texto
         int xcentro_widget=(columna_texto*menu_char_width)+longitud_linea; //Para ajustarlo por la derecha
 
-        zxvision_widgets_draw_speedometer_common(ventana,xcentro_widget,yorigen_linea,columna_texto,fila_texto,short_name,media_cpu_perc,color_pixeles,color_pixeles);                   
+        zxvision_widgets_draw_speedometer_common(ventana,xcentro_widget,yorigen_linea,columna_texto,fila_texto,display_name,media_cpu_perc,color_pixeles,color_pixeles);                   
 
     }
 
     if (tipo==ZXVISION_WIDGET_TYPE_VOLUME) {
-        //char buffer_texto[32];
-        
-        //zxvision_widgets_draw_volumen_maxmin(buffer_texto,media_cpu_perc,15);
-
-        //zxvision_print_string(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,0,buffer_texto);
-
-        zxvision_widgets_draw_volumen_maxmin(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,media_cpu_perc,15,short_name);
+        zxvision_widgets_draw_volumen_maxmin(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,media_cpu_perc,15,display_name);
 
     }
 

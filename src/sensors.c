@@ -71,7 +71,7 @@ int sensor_ay_vol_chip_funcion_get_value(int id)
 
 sensor_item sensors_array[TOTAL_SENSORS]={
     {
-    "ay_vol_chip0_chan_A","AY Volume Chip 0 Channel A",
+    "ay_vol_chip0_chan_A","AY Volume Chip 0 Channel A","VolA[0]",
     0,15,
     84,-9999,
     9999,-9999,
@@ -79,7 +79,7 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     },
 
     {
-    "ay_vol_chip0_chan_B","AY Volume Chip 0 Channel B",
+    "ay_vol_chip0_chan_B","AY Volume Chip 0 Channel B","VolB[0]",
     0,15,
     84,-9999,
     9999,-9999,
@@ -87,7 +87,7 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     },
 
     {
-    "ay_vol_chip0_chan_C","AY Volume Chip 0 Channel C",
+    "ay_vol_chip0_chan_C","AY Volume Chip 0 Channel C","VolC[0]",
     0,15,
     84,-9999,
     9999,-9999,
@@ -95,7 +95,7 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     },   
     
     {
-    "fps","Frames per second",
+    "fps","Frames per second","FPS",
     0,50,
     9999,-9999,
     9999,25,
@@ -103,7 +103,7 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     },
 
     {
-    "total_avg_cpu","Total average cpu use",
+    "total_avg_cpu","Total average cpu use","TotalCPU",
     0,100,
     84,-9999,
     9999,-9999,
@@ -111,7 +111,7 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     },
 
    {
-    "instant_avg_cpu","Instant average cpu use",
+    "instant_avg_cpu","Instant average cpu use","CPU",
     0,100,
     84,-9999,
     9999,-9999,

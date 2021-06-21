@@ -24,11 +24,16 @@
 
 #define TOTAL_SENSORS 6
 
+#define SENSORS_MAX_SHORT_NAME 32
+
 struct s_sensor_item {
-    //Nombre corto del sensor
-    char short_name[32];
+    //Nombre corto del sensor utilizado como identificador
+    char short_name[SENSORS_MAX_SHORT_NAME];
     //Nombre largo del sensor
     char long_name[100];
+
+    //nombre corto para display
+    char display_short_name[20];
 
     int min_value;
     int max_value;
