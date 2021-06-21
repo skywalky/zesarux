@@ -30,6 +30,7 @@
 #include "ay38912.h"
 #include "screen.h"
 #include "menu.h"
+#include "timer.h"
 
 
 
@@ -67,6 +68,21 @@ int sensor_ay_vol_chip_funcion_get_value(int id)
 
     return (ay_3_8912_registros[chip][8+canal]&15);
 
+}
+
+int sensor_time_betw_frames_get_value(int id)
+{
+    return core_cpu_timer_each_frame_difftime;
+}
+
+int sensor_last_core_frame_get_value(int id)
+{
+    return core_cpu_timer_frame_difftime;
+}
+
+int sensor_last_full_render_get_value(int id)
+{
+    return core_cpu_timer_refresca_pantalla_difftime;
 }
 
 sensor_item sensors_array[TOTAL_SENSORS]={
@@ -169,7 +185,36 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     84,-9999,
     9999,-9999,
     sensor_instant_average_cpu_get_value,0
-    }    
+    },
+
+    //En este el tiempo maximo y los porcentajes no tienen mucho sentido
+    //core_cpu_timer_frame_difftime
+   {
+    "last_core_frame","Last Core Frame","CoreFrame",
+    0,20000, 
+    9999,-9999,
+    10000,-9999,
+    sensor_last_core_frame_get_value,0
+    },    
+
+    //En este el tiempo maximo y los porcentajes no tienen mucho sentido
+    //core_cpu_timer_refresca_pantalla_difftime
+   {
+    "last_full_render","Last Full Render","FullRender",
+    0,20000, 
+    9999,-9999,
+    10000,-9999,
+    sensor_last_full_render_get_value,0
+    },            
+
+    //En este el tiempo maximo y los porcentajes no tienen mucho sentido
+   {
+    "time_betw_frames","Time between frames","TBFrames",
+    0,40000, //lo ajusto a 40000 porque el tiempo ideal es 20000 o sea que idealmente flucturara sobre 50% el porcentaje
+    9999,-9999,
+    22000,-9999,
+    sensor_time_betw_frames_get_value,0
+    },    
 
 };
 

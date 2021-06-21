@@ -29545,7 +29545,7 @@ int menu_debug_view_sensors_tipo=0;
 
 //array de sensores en pantalla
 
-
+#define MENU_VIEW_SENSORS_START_Y 3
 
 struct s_menu_debug_view_sensors_list {
     char short_name[SENSORS_MAX_SHORT_NAME];
@@ -29615,7 +29615,7 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
         for (columna=0;columna<3;columna++) {
             int offset_array=fila*3+columna;
 
-            fila_texto=5+menu_debug_view_sensors_list_sensors[offset_array].fila;
+            fila_texto=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
             columna_texto=1+menu_debug_view_sensors_list_sensors[offset_array].columna;
 
             //fila_texto=5+fila*separacion_filas;
@@ -29741,15 +29741,14 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
             int offset_array=fila*3+columna;
 
-            fila_texto=5+menu_debug_view_sensors_list_sensors[offset_array].fila;
+            fila_texto=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
 
             fila_texto--; //selector arriba
 
             columna_texto=1+menu_debug_view_sensors_list_sensors[offset_array].columna;
 
-
-            zxvision_print_string_defaults(ventana,columna_texto,fila_texto,"---");
-
+            //zxvision_print_string_defaults(ventana,columna_texto,fila_texto,"vvvvvvvvv");
+            zxvision_print_string(ventana,columna_texto,fila_texto,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE,0,"vvvvvvvvv");
 
 
             tecla=zxvision_common_getkey_refresh();
