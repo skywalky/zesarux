@@ -93,6 +93,59 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     9999,-9999,
     sensor_ay_vol_chip_funcion_get_value,2
     },   
+
+
+    {
+    "ay_vol_chip1_chan_A","AY Volume Chip 1 Channel A","VolA[1]",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_ay_vol_chip_funcion_get_value,4
+    },
+
+    {
+    "ay_vol_chip1_chan_B","AY Volume Chip 1 Channel B","VolB[1]",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_ay_vol_chip_funcion_get_value,5
+    },
+
+    {
+    "ay_vol_chip1_chan_C","AY Volume Chip 1 Channel C","VolC[1]",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_ay_vol_chip_funcion_get_value,6
+    },  
+
+
+
+    {
+    "ay_vol_chip2_chan_A","AY Volume Chip 2 Channel A","VolA[2]",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_ay_vol_chip_funcion_get_value,8
+    },
+
+    {
+    "ay_vol_chip2_chan_B","AY Volume Chip 2 Channel B","VolB[2]",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_ay_vol_chip_funcion_get_value,9
+    },
+
+    {
+    "ay_vol_chip2_chan_C","AY Volume Chip 2 Channel C","VolC[2]",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_ay_vol_chip_funcion_get_value,10
+    },      
+
+
     
     {
     "fps","Frames per second","FPS",

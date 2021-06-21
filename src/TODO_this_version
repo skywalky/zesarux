@@ -249,3 +249,5 @@ debe generar siempre el timer y el modulo de sensors solo debe leerlos
 
 con nombre identificativo de sensor, nombre corto, rango de valores (y/o porcentaje). 
 y una funcion para poderlos retornar todos y el usuario escoja ?
+
+-al pulsar enter en un sensor, que salga lista de nombres largos

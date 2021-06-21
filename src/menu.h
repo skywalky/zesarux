@@ -355,6 +355,7 @@ extern void zxvision_draw_ellipse(zxvision_window *w,int x1,int y1,int radius_x,
 
 #define ZXVISION_WIDGET_TYPE_SPEEDOMETER 0
 #define ZXVISION_WIDGET_TYPE_VOLUME 1
+#define ZXVISION_WIDGET_TYPE_VALUE 2
 #define GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH 32
 
 extern void zxvision_widgets_draw_speedometer_common(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int columna_texto,int fila_texto,char *texto,int percentaje,int color_linea,int color_contorno);

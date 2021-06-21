@@ -10377,6 +10377,14 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
 
     }
 
+    if (tipo==ZXVISION_WIDGET_TYPE_VALUE) {
+        char buffer_texto_meters[100];
+        sprintf(buffer_texto_meters,"%s %d",display_name,valor_cpu);
+        zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);              
+        //zxvision_widgets_draw_volumen_maxmin(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,media_cpu_perc,15,display_name);
+
+    }    
+
 
 }
 
