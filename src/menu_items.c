@@ -29552,6 +29552,7 @@ struct s_menu_debug_view_sensors_list {
     int fila;
     int columna;
     int tipo;
+    int valor_en_vez_de_perc;
 };
 
 typedef struct s_menu_debug_view_sensors_list menu_debug_view_sensors_list;
@@ -29562,15 +29563,15 @@ typedef struct s_menu_debug_view_sensors_list menu_debug_view_sensors_list;
 //...
 //4=fila 1, columna 0
 menu_debug_view_sensors_list menu_debug_view_sensors_list_sensors[9]={
-    {"ay_vol_chip0_chan_A",0,0,0},
-    {"ay_vol_chip0_chan_B",0,16,0},
-    {"",0,32,0},
-    {"",10,0,0},
-    {"",10,16,0},
-    {"",10,32,0},
-    {"",20,0,0},
-    {"",20,16,0},
-    {"",20,32,0}
+    {"ay_vol_chip0_chan_A",0,0,0,0},
+    {"ay_vol_chip0_chan_B",0,16,0,0},
+    {"",0,32,0,0},
+    {"",10,0,0,0},
+    {"",10,16,0,0},
+    {"",10,32,0,0},
+    {"",20,0,0,0},
+    {"",20,16,0,0},
+    {"",20,32,0,0}
 };
 
 //La funcion de overlay
@@ -29624,9 +29625,10 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
             //temporal esto hacerlo luego mejor
             short_name=menu_debug_view_sensors_list_sensors[offset_array].short_name; 
             int tipo=menu_debug_view_sensors_list_sensors[offset_array].tipo;   
+            int valor_en_vez_de_perc=menu_debug_view_sensors_list_sensors[offset_array].valor_en_vez_de_perc;
             if (short_name[0]) {
                 zxvision_widgets_draw_metter_common_by_shortname
-                    (ventana,columna_texto,fila_texto,short_name,tipo);            
+                    (ventana,columna_texto,fila_texto,short_name,tipo,valor_en_vez_de_perc);            
             }
         }
     }
@@ -29646,7 +29648,7 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
 zxvision_window zxvision_window_view_sensors;
 
 
-
+/*
 void menu_debug_view_sensors_next_sensor(MENU_ITEM_PARAMETERS)
 {
     temporal_current_view_sensors_actual++;
@@ -29660,7 +29662,7 @@ void menu_debug_view_sensors_type_sensor(MENU_ITEM_PARAMETERS)
     menu_debug_view_sensors_tipo++;
     if (menu_debug_view_sensors_tipo>ZXVISION_WIDGET_TYPE_VOLUME) menu_debug_view_sensors_tipo=0;
 }
-
+*/
 
 
 void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
@@ -29730,7 +29732,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
                 //borrar rastros de textos anteriores
         zxvision_cls(ventana);
 
-        zxvision_print_string_defaults(ventana,1,0,"Cursors, Enter, t");
+        zxvision_print_string_defaults(ventana,1,0,"Cursors, Enter, t, v");
 
         int fila_texto,columna_texto;
 
@@ -29806,6 +29808,9 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
                     menu_debug_view_sensors_list_sensors[offset_array].tipo=menu_debug_view_sensors_tipo;
                 break;
 
+                case 'v':
+                    menu_debug_view_sensors_list_sensors[offset_array].valor_en_vez_de_perc ^=1;
+                break;
 
 
             }

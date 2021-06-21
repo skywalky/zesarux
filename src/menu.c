@@ -10266,10 +10266,10 @@ void zxvision_widgets_draw_speedometer_common(zxvision_window *ventana,int xcent
            
     zxvision_widgets_draw_speedometer(ventana,xcentro_widget,ycentro_widget,longitud_linea,grados,color_linea,color_contorno);        
 
-    char buffer_texto_meters[100];
+    //char buffer_texto_meters[100];
 
-    sprintf(buffer_texto_meters,"%s %3d%%",texto,percentaje);
-    zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);       
+    //sprintf(buffer_texto_meters,"%s %3d%%",texto,percentaje);
+    //zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);       
 }
 
 
@@ -10300,9 +10300,9 @@ void zxvision_widgets_draw_volumen_maxmin(zxvision_window *ventana,int columna_t
     int tinta,int papel,int valor_actual,int max_longitud_texto,char *texto)
 {
     
-    char buffer_texto_meters[100];
-    sprintf(buffer_texto_meters,"%s %3d%%",texto,valor_actual);
-    zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);      
+    //char buffer_texto_meters[100];
+    //sprintf(buffer_texto_meters,"%s %3d%%",texto,valor_actual);
+    //zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);      
 
     int barra_volumen;
 
@@ -10325,7 +10325,7 @@ void zxvision_widgets_draw_volumen_maxmin(zxvision_window *ventana,int columna_t
 
 
 
-void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,int columna_texto,int fila_texto,char *short_name,int tipo)
+void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,int columna_texto,int fila_texto,char *short_name,int tipo,int valor_en_vez_de_perc)
 {
     
 
@@ -10361,6 +10361,14 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
         tinta_texto=ESTILO_GUI_COLOR_AVISO;
     }
 
+    char buffer_texto_meters[100];
+    if (valor_en_vez_de_perc) {
+        sprintf(buffer_texto_meters,"%s %d ",display_name,valor_cpu);
+    }
+    else {
+        sprintf(buffer_texto_meters,"%s %3d%%",display_name,media_cpu_perc);
+    }
+    zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);     
 
     if (tipo==ZXVISION_WIDGET_TYPE_SPEEDOMETER) {
         int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
@@ -10378,9 +10386,7 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
     }
 
     if (tipo==ZXVISION_WIDGET_TYPE_VALUE) {
-        char buffer_texto_meters[100];
-        sprintf(buffer_texto_meters,"%s %d",display_name,valor_cpu);
-        zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);              
+        //Solo texto. Sin dibujo
         //zxvision_widgets_draw_volumen_maxmin(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,media_cpu_perc,15,display_name);
 
     }    
