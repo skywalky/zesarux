@@ -29723,6 +29723,33 @@ int menu_debug_view_sensors_get_sensor_item(int sensor_id)
 
 }
 
+void menu_debug_view_sensors_print_cursor_texto(zxvision_window *ventana,int fila,int columna,char *texto,int tinta,int papel)
+{
+    int offset_array=fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+columna;
+
+    int fila_texto,columna_texto;
+
+    fila_texto=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
+
+    fila_texto--; //selector arriba
+
+    columna_texto=1+menu_debug_view_sensors_list_sensors[offset_array].columna;
+
+    //zxvision_print_string_defaults(ventana,columna_texto,fila_texto,"vvvvvvvvv");
+    zxvision_print_string(ventana,columna_texto,fila_texto,tinta,papel,0,texto);
+
+}
+
+void menu_debug_view_sensors_print_cursor(zxvision_window *ventana,int fila,int columna)
+{
+    menu_debug_view_sensors_print_cursor_texto(ventana,fila,columna,"vvvvvvvvv",ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO);
+}
+
+void menu_debug_view_sensors_clear_cursor(zxvision_window *ventana,int fila,int columna)
+{
+    menu_debug_view_sensors_print_cursor_texto(ventana,fila,columna,"         ",ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
+}
+
 
 void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 {
@@ -29798,8 +29825,12 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
         char *short_name;
         int menu_debug_view_sensors_tipo;
 
+        menu_debug_view_sensors_print_cursor(ventana,fila,columna);
+
+        
             int offset_array=fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+columna;
 
+        /*
             fila_texto=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
 
             fila_texto--; //selector arriba
@@ -29808,7 +29839,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
             //zxvision_print_string_defaults(ventana,columna_texto,fila_texto,"vvvvvvvvv");
             zxvision_print_string(ventana,columna_texto,fila_texto,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE,0,"vvvvvvvvv");
-
+        */
 
             tecla=zxvision_common_getkey_refresh();
             zxvision_handle_cursors_pgupdn(ventana,tecla);
@@ -29894,7 +29925,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
 
     
-
+    menu_debug_view_sensors_clear_cursor(ventana,fila,columna);
 
 
     //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
