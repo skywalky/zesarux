@@ -31,6 +31,8 @@
 #include "screen.h"
 #include "menu.h"
 #include "timer.h"
+#include "stats.h"
+#include "audio.h"
 
 
 
@@ -83,6 +85,45 @@ int sensor_last_core_frame_get_value(int id)
 int sensor_last_full_render_get_value(int id)
 {
     return core_cpu_timer_refresca_pantalla_difftime;
+}
+
+int sensor_dropped_frames_get_value(int id)
+{
+
+    int perc_dropped;
+
+    //Lo ideal es que el valor maximo definido en el array fuese stats_frames_total en vez de 100,
+    //para poder retornar aquí el valor tal cual de stats_frames_total_dropped
+    //pero dado que ese stats_frames_total no es un valor constante no puede indicarse en el array,
+    //y aqui ya retornamos el tanto por ciento tal cual
+
+    //Evitar división por cero
+    if (stats_frames_total==0) perc_dropped=0;
+
+    else perc_dropped=(stats_frames_total_dropped*100)/stats_frames_total;    
+
+    return perc_dropped;
+}
+
+int sensor_audio_buffer_get_value(int id)
+{
+
+    //Igual que sensor_dropped_frames_get_value, retornamos tanto por ciento tal cual en vez de valor absoluto
+
+    int tamanyo_buffer_audio,posicion_buffer_audio;
+    audio_get_buffer_info(&tamanyo_buffer_audio,&posicion_buffer_audio);
+
+    int perc_audio;
+
+    if (tamanyo_buffer_audio==0) {
+        perc_audio=0;
+    }
+
+    else {
+        perc_audio=(posicion_buffer_audio*100)/tamanyo_buffer_audio;
+    }
+
+    return perc_audio;
 }
 
 sensor_item sensors_array[TOTAL_SENSORS]={
@@ -215,6 +256,22 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     22000,-9999,
     sensor_time_betw_frames_get_value,0
     },    
+
+   {
+    "perc_dropped_frames","Percent Dropped Video Frames","%DropFrame",
+    0,100, 
+    50,-9999,
+    9999,-9999,
+    sensor_dropped_frames_get_value,0
+    },     
+
+   {
+    "perc_audio_buffer","Percent Audio Buffer","%AudioBuff",
+    0,100, 
+    85,15,
+    9999,-9999,
+    sensor_audio_buffer_get_value,0
+    },        
 
 };
 

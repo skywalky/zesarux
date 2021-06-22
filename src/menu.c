@@ -10254,7 +10254,7 @@ void zxvision_widgets_draw_speedometer(zxvision_window *ventana,int xcentro_widg
      
 }
 
-void zxvision_widgets_draw_speedometer_common(zxvision_window *ventana,int xcentro_widget,int ycentro_widget,int columna_texto,int fila_texto,char *texto,int percentaje,int color_linea,int color_contorno)
+void zxvision_widgets_draw_speedometer_common(zxvision_window *ventana,int xcentro_widget,int ycentro_widget,int percentaje,int color_linea,int color_contorno)
 {
 
     //180 grados = 0%
@@ -10262,16 +10262,58 @@ void zxvision_widgets_draw_speedometer_common(zxvision_window *ventana,int xcent
     int grados=180-(percentaje*180)/100;
     //printf("%s: %d grados : %d\n",texto,percentaje,grados);        
 
-    int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
+    int longitud_linea=ZXVISION_WIDGET_TYPE_SPEEDOMETER_LINE_LENGTH;
            
     zxvision_widgets_draw_speedometer(ventana,xcentro_widget,ycentro_widget,longitud_linea,grados,color_linea,color_contorno);        
 
-    //char buffer_texto_meters[100];
-
-    //sprintf(buffer_texto_meters,"%s %3d%%",texto,percentaje);
-    //zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);       
+   
 }
 
+void zxvision_widgets_draw_circle_ellipse(zxvision_window *ventana,int x,int y,int percentaje,int color,int radio_total_x,int radio_total_y,int concentrico)
+{
+
+    int radio_porcentaje_x=(radio_total_x*percentaje)/100;
+    int radio_porcentaje_y=(radio_total_y*percentaje)/100;
+   
+
+    zxvision_draw_ellipse(ventana,x,y,radio_porcentaje_x,radio_porcentaje_y,color,zxvision_putpixel,360);           
+          
+    //Y rellenar
+    if (concentrico) {
+        int i;
+        for (i=2;i<5;i++) {
+            zxvision_draw_ellipse(ventana,x,y,radio_porcentaje_x/i,radio_porcentaje_y/i,color,zxvision_putpixel,360);        
+        }
+    }
+   
+}
+
+void zxvision_widgets_draw_curve_common(zxvision_window *ventana,int xinicio_widget,int ycentro_widget,int percentaje,int color,int longitud_linea)
+{
+
+
+    int radio_total=longitud_linea;
+
+    int radio_porcentaje=(radio_total*percentaje)/100;
+
+    
+    int centro_widget=xinicio_widget+radio_total;
+
+    //Hacer 180 grados de curva
+    zxvision_draw_ellipse(ventana,centro_widget,ycentro_widget,radio_porcentaje,-radio_porcentaje,color,zxvision_putpixel,180);
+
+    //Y lineas izquierda y derecha
+    int trozo_linea=longitud_linea-radio_porcentaje;
+    int xfinal_linea=xinicio_widget+trozo_linea;
+    zxvision_draw_line(ventana,xinicio_widget,ycentro_widget,xfinal_linea,ycentro_widget,color,zxvision_putpixel);   
+
+    xfinal_linea=xinicio_widget+longitud_linea*2;
+    int xinicio_linea=xfinal_linea-trozo_linea; //centro_widget+radio_porcentaje;
+    zxvision_draw_line(ventana,xinicio_linea,ycentro_widget,xfinal_linea,ycentro_widget,color,zxvision_putpixel);   
+        
+
+ 
+}
 
 void zxvision_widgets_draw_volumen(char *texto,int valor,int longitud_texto)
 {
@@ -10371,14 +10413,77 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
     zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);     
 
     if (tipo==ZXVISION_WIDGET_TYPE_SPEEDOMETER) {
-        int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
+        int longitud_linea=ZXVISION_WIDGET_TYPE_SPEEDOMETER_LINE_LENGTH;
 
         int yorigen_linea=(fila_texto*8)+longitud_linea+16;  //+16 para que este dos lineas por debajo del texto
         int xcentro_widget=(columna_texto*menu_char_width)+longitud_linea; //Para ajustarlo por la derecha
 
-        zxvision_widgets_draw_speedometer_common(ventana,xcentro_widget,yorigen_linea,columna_texto,fila_texto,display_name,media_cpu_perc,color_pixeles,color_pixeles);                   
+        zxvision_widgets_draw_speedometer_common(ventana,xcentro_widget,yorigen_linea,media_cpu_perc,color_pixeles,color_pixeles);                   
 
     }
+
+    if (tipo==ZXVISION_WIDGET_TYPE_SPEAKER) {
+        int concentrico=1;
+
+        int radio_circulo=ZXVISION_WIDGET_TYPE_SPEAKER_RADIUS;
+
+        //Cuadrado
+        int xorig=(columna_texto*menu_char_width);
+        int yorig=(fila_texto*8)+8;
+        int ancho=radio_circulo*2;
+        int alto=radio_circulo*2+8;
+
+        int x,y;
+        for (y=0;y<alto;y++) {
+            //un poco redondeado por arriba
+            if (y==0 || y==alto-1) zxvision_draw_line(ventana,xorig+1,yorig+y,xorig+ancho-1,yorig+y,ESTILO_GUI_TINTA_NORMAL,zxvision_putpixel); 
+            else zxvision_draw_line(ventana,xorig,yorig+y,xorig+ancho,yorig+y,ESTILO_GUI_TINTA_NORMAL,zxvision_putpixel); 
+        }
+
+        int ycirculo=(fila_texto*8)+(radio_circulo)+16;  //+16 para que este dos lineas por debajo del texto
+        int xcirculo=(columna_texto*menu_char_width)+radio_circulo;
+
+        zxvision_widgets_draw_circle_ellipse(ventana,xcirculo,ycirculo,media_cpu_perc,color_pixeles,radio_circulo-3,radio_circulo-3,concentrico); 
+
+        //Y subwoofer fijo
+        zxvision_draw_ellipse(ventana,xcirculo,yorig+5,4,4,color_pixeles,zxvision_putpixel,360);                  
+
+    }       
+
+    if (tipo==ZXVISION_WIDGET_TYPE_CIRCLE || tipo==ZXVISION_WIDGET_TYPE_CIRCLE_CONCEN) {
+        int concentrico=(tipo==ZXVISION_WIDGET_TYPE_CIRCLE_CONCEN ? 1 : 0);
+
+        int radio_circulo=ZXVISION_WIDGET_TYPE_CIRCLE_RADIUS;
+
+        int ycirculo=(fila_texto*8)+(radio_circulo)+16;  //+16 para que este dos lineas por debajo del texto
+        int xcirculo=(columna_texto*menu_char_width)+radio_circulo;
+
+        zxvision_widgets_draw_circle_ellipse(ventana,xcirculo,ycirculo,media_cpu_perc,color_pixeles,radio_circulo,radio_circulo,concentrico);                   
+
+    }       
+
+    if (tipo==ZXVISION_WIDGET_TYPE_ELLIPSE || tipo==ZXVISION_WIDGET_TYPE_ELLIPSE_CONCEN) {
+        int concentrico=(tipo==ZXVISION_WIDGET_TYPE_ELLIPSE_CONCEN ? 1 : 0);
+
+        int radio_circulo_x=ZXVISION_WIDGET_TYPE_CIRCLE_RADIUS*2;
+        int radio_circulo_y=ZXVISION_WIDGET_TYPE_CIRCLE_RADIUS;
+
+        int ycirculo=(fila_texto*8)+(radio_circulo_y)+16;  //+16 para que este dos lineas por debajo del texto
+        int xcirculo=(columna_texto*menu_char_width)+radio_circulo_x;
+
+        zxvision_widgets_draw_circle_ellipse(ventana,xcirculo,ycirculo,media_cpu_perc,color_pixeles,radio_circulo_x,radio_circulo_y,concentrico);                   
+
+    }      
+
+    if (tipo==ZXVISION_WIDGET_TYPE_CURVE) {
+        int longitud_linea=ZXVISION_WIDGET_TYPE_CURVE_LENGTH;
+
+        int yorigen_linea=(fila_texto*8)+longitud_linea+16;  //+16 para que este dos lineas por debajo del texto
+        int xorigen_widget=(columna_texto*menu_char_width);
+
+        zxvision_widgets_draw_curve_common(ventana,xorigen_widget,yorigen_linea,media_cpu_perc,color_pixeles,longitud_linea);                   
+
+    }    
 
     if (tipo==ZXVISION_WIDGET_TYPE_VOLUME) {
         zxvision_widgets_draw_volumen_maxmin(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,media_cpu_perc,15,display_name);

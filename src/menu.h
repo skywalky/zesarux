@@ -353,12 +353,25 @@ extern void zxvision_draw_line(zxvision_window *w,int x1,int y1,int x2,int y2,in
 extern void zxvision_draw_ellipse(zxvision_window *w,int x1,int y1,int radius_x,int radius_y,int c, void (*fun_putpixel) (zxvision_window *w,int x,int y,int color) ,int limite_grados);
 
 
+#define ZXVISION_TOTAL_WIDGET_TYPES 9
 #define ZXVISION_WIDGET_TYPE_SPEEDOMETER 0
-#define ZXVISION_WIDGET_TYPE_VOLUME 1
-#define ZXVISION_WIDGET_TYPE_VALUE 2
-#define GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH 32
+#define ZXVISION_WIDGET_TYPE_SPEAKER 1
+#define ZXVISION_WIDGET_TYPE_CIRCLE 2
+#define ZXVISION_WIDGET_TYPE_CIRCLE_CONCEN 3
+#define ZXVISION_WIDGET_TYPE_ELLIPSE 4
+#define ZXVISION_WIDGET_TYPE_ELLIPSE_CONCEN 5
+#define ZXVISION_WIDGET_TYPE_CURVE 6
+#define ZXVISION_WIDGET_TYPE_VOLUME 7
+#define ZXVISION_WIDGET_TYPE_VALUE 8
 
-extern void zxvision_widgets_draw_speedometer_common(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int columna_texto,int fila_texto,char *texto,int percentaje,int color_linea,int color_contorno);
+
+#define ZXVISION_WIDGET_TYPE_SPEEDOMETER_LINE_LENGTH 32
+//#define GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH 32
+#define ZXVISION_WIDGET_TYPE_SPEAKER_RADIUS 16
+#define ZXVISION_WIDGET_TYPE_CIRCLE_RADIUS 16
+#define ZXVISION_WIDGET_TYPE_CURVE_LENGTH 32
+
+extern void zxvision_widgets_draw_speedometer_common(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int percentaje,int color_linea,int color_contorno);
 extern void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,int columna_texto,int fila_texto,char *short_name,int tipo,int valor_en_vez_de_perc);
 
 extern z80_byte zxvision_read_keyboard(void);

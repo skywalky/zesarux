@@ -2710,7 +2710,7 @@ Calculando ese tiempo: 12% cpu
         //int barra_volumen;
 
         if (tamanyo_buffer_audio==0) {
-            perc_audio=100;
+            perc_audio=0;
             //barra_volumen=15;
         }
 
@@ -2770,23 +2770,22 @@ Calculando ese tiempo: 12% cpu
     }
 
 
-        //Prueba medidores de rendimiento
-        
-        int fila_texto=14;
-        int margen_horizontal=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
-        
-        int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
+    //Prueba medidores de rendimiento
+    
+    int fila_texto=14;
+    int margen_horizontal=ZXVISION_WIDGET_TYPE_SPEEDOMETER_LINE_LENGTH;
+    
+    int longitud_linea=ZXVISION_WIDGET_TYPE_SPEEDOMETER_LINE_LENGTH;
 
-        //char buffer_texto_meters[30];
+    //char buffer_texto_meters[30];
 
-        
-        
-        //int grados;
-        //0 grados=0%
-        //180 grados=100%
+    
+    
+    //int grados;
+    //0 grados=0%
+    //180 grados=100%
 
-        
-
+    
         
     int yorigen_linea=(fila_texto*8)+longitud_linea+16;        
 
@@ -2796,8 +2795,9 @@ Calculando ese tiempo: 12% cpu
     
     int color=ESTILO_GUI_COLOR_WAVEFORM;
     if (core_statistics_ultimo_cpu_use_mostrado>=75) color=ESTILO_GUI_COLOR_AVISO;
-     
-    zxvision_widgets_draw_speedometer_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"CPU",core_statistics_ultimo_cpu_use_mostrado,color,color);                   
+    
+    zxvision_print_string_defaults(ventana,pos_x,fila_texto,"CPU");
+    zxvision_widgets_draw_speedometer_common(ventana,xorigen_linea,yorigen_linea,core_statistics_ultimo_cpu_use_mostrado,color,color);                   
 
 
     //AUDIO BUFFER
@@ -2809,7 +2809,8 @@ Calculando ese tiempo: 12% cpu
     //es tan malo como que este lleno como vacio
     if (core_statistics_last_perc_audio>=90 || core_statistics_last_perc_audio<=10) color=ESTILO_GUI_COLOR_AVISO;        
 
-    zxvision_widgets_draw_speedometer_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Audio",core_statistics_last_perc_audio,color,color);           
+    zxvision_print_string_defaults(ventana,pos_x,fila_texto,"Audio");
+    zxvision_widgets_draw_speedometer_common(ventana,xorigen_linea,yorigen_linea,core_statistics_last_perc_audio,color,color);           
 
 
     //DROPPED FRAMES
@@ -2820,7 +2821,8 @@ Calculando ese tiempo: 12% cpu
     color=ESTILO_GUI_COLOR_WAVEFORM;
     if (core_statistics_last_perc_dropped>=75) color=ESTILO_GUI_COLOR_AVISO;              
     
-    zxvision_widgets_draw_speedometer_common(ventana,xorigen_linea,yorigen_linea,pos_x,fila_texto,"Dropped",core_statistics_last_perc_dropped,color,color);
+    zxvision_print_string_defaults(ventana,pos_x,fila_texto,"Dropped");
+    zxvision_widgets_draw_speedometer_common(ventana,xorigen_linea,yorigen_linea,core_statistics_last_perc_dropped,color,color);
 
 
 
@@ -3287,7 +3289,7 @@ M1-M0= mode bits:
             //if (chip==0) {
                 int margen_horizontal=30;
                 
-                int longitud_linea=GRAPHIC_METER_SPEEDOMETER_LINE_LENGTH;
+                int longitud_linea=ZXVISION_WIDGET_TYPE_SPEEDOMETER_LINE_LENGTH;
 
                 //fila inicial segun total de chips
                 int fila_texto=12;
@@ -3315,8 +3317,9 @@ M1-M0= mode bits:
                 int color=ESTILO_GUI_COLOR_WAVEFORM;
                 if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;
 
+                zxvision_print_string_defaults(menu_ay_registers_overlay_window,columna_texto,fila_texto,buffer_texto_meter);
                 zxvision_widgets_draw_speedometer_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
-                    columna_texto,fila_texto,buffer_texto_meter,porcentaje,color,color);    
+                    porcentaje,color,color);    
 
                 //Volumen B
                 columna_texto += (longitud_linea*2+margen_horizontal)/menu_char_width;
@@ -3329,8 +3332,9 @@ M1-M0= mode bits:
                 color=ESTILO_GUI_COLOR_WAVEFORM;
                 if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;                
 
+                zxvision_print_string_defaults(menu_ay_registers_overlay_window,columna_texto,fila_texto,buffer_texto_meter);
                 zxvision_widgets_draw_speedometer_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
-                    columna_texto,fila_texto,buffer_texto_meter,porcentaje,color,color);              
+                    porcentaje,color,color);              
 
                 //Volumen C
                 columna_texto += (longitud_linea*2+margen_horizontal)/menu_char_width;
@@ -3343,8 +3347,9 @@ M1-M0= mode bits:
                 color=ESTILO_GUI_COLOR_WAVEFORM;
                 if (porcentaje>=85) color=ESTILO_GUI_COLOR_AVISO;                
 
+                zxvision_print_string_defaults(menu_ay_registers_overlay_window,columna_texto,fila_texto,buffer_texto_meter);
                 zxvision_widgets_draw_speedometer_common(menu_ay_registers_overlay_window,xorigen_linea,yorigen_linea,
-                    columna_texto,fila_texto,buffer_texto_meter,porcentaje,color,color);                                          
+                    porcentaje,color,color);                                          
             //}
 
 	}
@@ -29557,21 +29562,34 @@ struct s_menu_debug_view_sensors_list {
 
 typedef struct s_menu_debug_view_sensors_list menu_debug_view_sensors_list;
 
-//3x3
+//5x3
 //0=fila 0, columna 0
 //1=fila 0, columna 1
 //...
-//4=fila 1, columna 0
-menu_debug_view_sensors_list menu_debug_view_sensors_list_sensors[9]={
-    {"ay_vol_chip0_chan_A",0,0,0,0},
-    {"ay_vol_chip0_chan_B",0,16,0,0},
-    {"",0,32,0,0},
+//6=fila 1, columna 0
+#define MENU_VIEW_SENSORS_TOTAL_COLUMNS 5
+#define MENU_VIEW_SENSORS_TOTAL_ROWS 3
+
+#define MENU_VIEW_SENSORS_TOTAL_ELEMENTS (MENU_VIEW_SENSORS_TOTAL_COLUMNS*MENU_VIEW_SENSORS_TOTAL_ROWS)
+
+menu_debug_view_sensors_list menu_debug_view_sensors_list_sensors[MENU_VIEW_SENSORS_TOTAL_ELEMENTS]={
+    {"ay_vol_chip0_chan_A",0,0,ZXVISION_WIDGET_TYPE_SPEEDOMETER,0},
+    {"ay_vol_chip0_chan_B",0,16,ZXVISION_WIDGET_TYPE_SPEEDOMETER,0},
+    {"ay_vol_chip0_chan_C",0,32,ZXVISION_WIDGET_TYPE_SPEEDOMETER,0},
+    {"",0,48,0,0},
+    {"",0,64,0,0},
+
     {"",10,0,0,0},
     {"",10,16,0,0},
     {"",10,32,0,0},
+    {"",10,48,0,0},
+    {"",10,64,0,0},
+
     {"",20,0,0,0},
     {"",20,16,0,0},
-    {"",20,32,0,0}
+    {"",20,32,0,0},
+    {"",20,48,0,0},
+    {"",20,64,0,0}
 };
 
 //La funcion de overlay
@@ -29611,9 +29629,9 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
 
     int fila,columna;
 
-    for (fila=0;fila<3;fila++) {
-        for (columna=0;columna<3;columna++) {
-            int offset_array=fila*3+columna;
+    for (fila=0;fila<MENU_VIEW_SENSORS_TOTAL_ROWS;fila++) {
+        for (columna=0;columna<MENU_VIEW_SENSORS_TOTAL_COLUMNS;columna++) {
+            int offset_array=fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+columna;
 
             fila_texto=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
             columna_texto=1+menu_debug_view_sensors_list_sensors[offset_array].columna;
@@ -29648,21 +29666,88 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
 zxvision_window zxvision_window_view_sensors;
 
 
-/*
-void menu_debug_view_sensors_next_sensor(MENU_ITEM_PARAMETERS)
-{
-    temporal_current_view_sensors_actual++;
 
-    if (temporal_current_view_sensors_actual>=TOTAL_SENSORS) temporal_current_view_sensors_actual=0;
+
+int menu_debug_view_sensors_get_sensor_tipo(int tipo)
+{
+    int opcion_seleccionada=tipo;
+
+    menu_item *array_menu_common;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    
+
+    menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+
+    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Speedometer");
+    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Speaker");
+    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Circle");
+    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Circle Concentric");
+    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Ellipse");
+    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Ellipse Concentric");
+    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Curve");
+    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Volume");
+    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Value");
+
+
+    menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+    
+    menu_add_ESC_item(array_menu_common);
+
+    retorno_menu=menu_dibuja_menu(&opcion_seleccionada,&item_seleccionado,array_menu_common,"Meter Type" );
+
+
+
+    if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+        //Si se pulsa Enter
+        return opcion_seleccionada;
+    }
+
+    return -1;   
 }
 
-
-void menu_debug_view_sensors_type_sensor(MENU_ITEM_PARAMETERS)
+//Retorna:
+//0 si selecciona vacio
+//1... si selecciona un sensor
+//-1 si sale con ESC
+int menu_debug_view_sensors_get_sensor_item(int sensor_id)
 {
-    menu_debug_view_sensors_tipo++;
-    if (menu_debug_view_sensors_tipo>ZXVISION_WIDGET_TYPE_VOLUME) menu_debug_view_sensors_tipo=0;
+        
+
+    int opcion_seleccionada=sensor_id;
+
+    menu_item *array_menu_common;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    
+
+    menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"(Empty)");    
+
+    int i;
+    for (i=0;i<TOTAL_SENSORS;i++) {
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,sensors_array[i].long_name);
+
+    }
+
+
+    menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+    
+    menu_add_ESC_item(array_menu_common);
+
+    retorno_menu=menu_dibuja_menu(&opcion_seleccionada,&item_seleccionado,array_menu_common,"Sensors" );
+
+
+
+    if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+        //Si se pulsa Enter
+        return opcion_seleccionada;
+    }
+
+    return -1;
+
 }
-*/
 
 
 void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
@@ -29739,7 +29824,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
         char *short_name;
         int menu_debug_view_sensors_tipo;
 
-            int offset_array=fila*3+columna;
+            int offset_array=fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+columna;
 
             fila_texto=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
 
@@ -29760,7 +29845,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
                 break;
 
                 case 9:
-                    if (columna<2) columna++;
+                    if (columna<MENU_VIEW_SENSORS_TOTAL_COLUMNS-1) columna++;
                 break;
 
                 case 11:
@@ -29768,13 +29853,15 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
                 break;
 
                 case 10:
-                    if (fila<2) fila++;
+                    if (fila<MENU_VIEW_SENSORS_TOTAL_ROWS-1) fila++;
                 break;        
 
                 case 13:
                     //buscar el id para ese nombre de sensor
                     short_name=menu_debug_view_sensors_list_sensors[offset_array].short_name;
                     int sensor_id;
+
+                    
 
                     //estaba vacio. asignar
                     if (short_name[0]==0) {
@@ -29784,31 +29871,46 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
                         sensor_id=sensor_find(short_name);
                         sensor_id++;
                         //invalido
-                        if (sensor_id<0) sensor_id=0;
-                        
+                        if (sensor_id<0) sensor_id=0;                        
                     }
 
-                    //mas alla del final. desactivar
-                    if (sensor_id>=TOTAL_SENSORS) {
-                        strcpy(menu_debug_view_sensors_list_sensors[offset_array].short_name,"");
+                    sensor_id=menu_debug_view_sensors_get_sensor_item(sensor_id);
+
+                    if (sensor_id>=0) {
+                        if (sensor_id==0) {
+                            //vacio
+                            strcpy(menu_debug_view_sensors_list_sensors[offset_array].short_name,"");
+                        }
+                        else {
+                            //indice-1
+                            sensor_id--;
+                            short_name=sensors_array[sensor_id].short_name;
+                            strcpy(menu_debug_view_sensors_list_sensors[offset_array].short_name,short_name);                            
+                        }
                     }
-                    else {
-                        //Y meterlo en la lista de nuestros sensores de este menu
-                        short_name=sensors_array[sensor_id].short_name;
-                        strcpy(menu_debug_view_sensors_list_sensors[offset_array].short_name,short_name);
-                    }
+
                 break;
 
                 case 't':
                     menu_debug_view_sensors_tipo=menu_debug_view_sensors_list_sensors[offset_array].tipo;
-                    menu_debug_view_sensors_tipo++;
-                    if (menu_debug_view_sensors_tipo>ZXVISION_WIDGET_TYPE_VALUE) menu_debug_view_sensors_tipo=0;
 
-                    menu_debug_view_sensors_list_sensors[offset_array].tipo=menu_debug_view_sensors_tipo;
+                    menu_debug_view_sensors_tipo=menu_debug_view_sensors_get_sensor_tipo(menu_debug_view_sensors_tipo);
+
+                    //menu_debug_view_sensors_tipo++;
+                    //if (menu_debug_view_sensors_tipo>=ZXVISION_TOTAL_WIDGET_TYPES) menu_debug_view_sensors_tipo=0;
+
+                    if (menu_debug_view_sensors_tipo>=0) menu_debug_view_sensors_list_sensors[offset_array].tipo=menu_debug_view_sensors_tipo;
                 break;
 
                 case 'v':
                     menu_debug_view_sensors_list_sensors[offset_array].valor_en_vez_de_perc ^=1;
+                    if (menu_debug_view_sensors_list_sensors[offset_array].valor_en_vez_de_perc) {
+                        menu_generic_message_splash("Display value","OK Showing absolute value instead of percentage");
+                    }
+                    else {
+                        menu_generic_message_splash("Display percentage","OK Showing percentage instead of absolute value");
+                    }
+
                 break;
 
 
@@ -29818,69 +29920,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
 
     
-    //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
-/*	menu_item *array_menu_common;
-	menu_item item_seleccionado;
-	int retorno_menu;
 
-	int comun_opcion_seleccionada=0;
-
-    do {
-
-        //borrar rastros de textos anteriores
-        zxvision_cls(ventana);
-
-        int linea=2;
-
-        menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
-
-   
-
-    
-
-
-    for (fila=0;fila<3;fila++) {
-        for (columna=0;columna<3;columna++) {
-            int offset_array=fila*3+columna;
-
-            fila_texto=5+menu_debug_view_sensors_list_sensors[offset_array].fila;
-
-            fila_texto--; //selector arriba
-
-            columna_texto=1+menu_debug_view_sensors_list_sensors[offset_array].columna;
-
-
-            char *short_name;
-            //temporal esto hacerlo luego mejor
-            short_name=menu_debug_view_sensors_list_sensors[offset_array].short_name; 
-            int tipo=menu_debug_view_sensors_list_sensors[offset_array].tipo;   
-            if (short_name[0]) {
-                zxvision_widgets_draw_metter_common_by_shortname
-                    (ventana,columna_texto,fila_texto,short_name,tipo);            
-            }
-        }
-    }
-
-
-
-
-
-		retorno_menu=menu_dibuja_menu(&comun_opcion_seleccionada,&item_seleccionado,array_menu_common,"View Sensors");
-
-
-			
-			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-					//llamamos por valor de funcion
-					if (item_seleccionado.menu_funcion!=NULL) {
-							//printf ("actuamos por funcion\n");
-							item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-							
-					}
-			}
-
-    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-*/
 
 
     //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background

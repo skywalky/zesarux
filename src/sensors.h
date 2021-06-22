@@ -22,15 +22,17 @@
 #ifndef SENSORS_H
 #define SENSORS_H
 
-#define TOTAL_SENSORS 15
+#define TOTAL_SENSORS 17
 
 #define SENSORS_MAX_SHORT_NAME 32
+
+#define SENSORS_MAX_LONG_NAME 100
 
 struct s_sensor_item {
     //Nombre corto del sensor utilizado como identificador
     char short_name[SENSORS_MAX_SHORT_NAME];
     //Nombre largo del sensor
-    char long_name[100];
+    char long_name[SENSORS_MAX_LONG_NAME];
 
     //nombre corto para display
     char display_short_name[20];
