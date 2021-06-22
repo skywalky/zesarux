@@ -251,3 +251,5 @@ con nombre identificativo de sensor, nombre corto, rango de valores (y/o porcent
 y una funcion para poderlos retornar todos y el usuario escoja ?
 
 -al pulsar enter en un sensor, que salga lista de nombres largos
+
+-agregar sensor temperatura cpu linux
