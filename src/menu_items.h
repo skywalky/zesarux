@@ -23,6 +23,7 @@
 #define MENU_ITEMS_H
 
 #include "cpu.h"
+#include "sensors.h"
 
 
 extern void menu_poke(MENU_ITEM_PARAMETERS);
@@ -139,6 +140,32 @@ extern void menu_find(MENU_ITEM_PARAMETERS);
 extern void menu_debug_view_basic_variables(MENU_ITEM_PARAMETERS);
 
 extern void menu_debug_view_sensors(MENU_ITEM_PARAMETERS);
+
+struct s_menu_debug_view_sensors_list {
+    char short_name[SENSORS_MAX_SHORT_NAME];
+    int fila;
+    int columna;
+    //tipo de widget
+    int tipo;
+    int valor_en_vez_de_perc;
+};
+
+typedef struct s_menu_debug_view_sensors_list menu_debug_view_sensors_list;
+
+//5x3
+//0=fila 0, columna 0
+//1=fila 0, columna 1
+//...
+//6=fila 1, columna 0
+#define MENU_VIEW_SENSORS_TOTAL_COLUMNS 5
+#define MENU_VIEW_SENSORS_TOTAL_ROWS 3
+
+#define MENU_VIEW_SENSORS_TOTAL_ELEMENTS (MENU_VIEW_SENSORS_TOTAL_COLUMNS*MENU_VIEW_SENSORS_TOTAL_ROWS)
+
+#define MENU_VIEW_SENSORS_START_Y 3
+
+
+extern menu_debug_view_sensors_list menu_debug_view_sensors_list_sensors[];
 
 #endif
 

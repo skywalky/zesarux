@@ -127,6 +127,7 @@
 #include "diskio.h"
 #include "zvfs.h"
 #include "snap_ram.h"
+#include "menu_items.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -3978,6 +3979,17 @@ int util_write_configfile(void)
   }
 
 
+    //Sensores en la ventana de debug view sensors
+    for (i=0;i<MENU_VIEW_SENSORS_TOTAL_ELEMENTS;i++) {
+        if (menu_debug_view_sensors_list_sensors[i].short_name[0]) {
+            ADD_STRING_CONFIG,"--sensor-set %d \"%s\" ",i,menu_debug_view_sensors_list_sensors[i].short_name);
+            int widget_id=menu_debug_view_sensors_list_sensors[i].tipo;
+            //printf("id: %d\n",widget_id);
+            ADD_STRING_CONFIG,"--sensor-set-widget %d \"%s\" ",i,zxvision_widget_types_names[widget_id]);
+
+            if (menu_debug_view_sensors_list_sensors[i].valor_en_vez_de_perc) ADD_STRING_CONFIG,"--sensor-set-value %d",i);
+        }
+    }
 
   for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {
     enum defined_f_function_ids accion=defined_f_functions_keys_array[i];

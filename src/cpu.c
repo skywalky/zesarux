@@ -133,6 +133,7 @@
 #include "ql_i8049.h"
 #include "samram.h"
 #include "snap_ram.h"
+#include "menu_items.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -2216,6 +2217,10 @@ printf (
 		//"--codetests                Run develoment code tests\n"
 		"--tonegenerator n          Enable tone generator. Possible values: 1: generate max, 2: generate min, 3: generate min/max at 50 Hz\n"
 
+        "--sensor-set position type   Set sensor for menu View sensors. On position with type\n"
+        "--sensor-set position type   Set widget type sensor for menu View sensors. On position with type\n"
+        "--sensor-set-value position  Set widget type value instead of percentaje menu View sensors. On position\n"
+ 
 
 		"\n\n"
 
@@ -8068,6 +8073,61 @@ int parse_cmdline_options(void) {
 				audio_tone_generator=valor;
 			}
 
+            //sensor-set position type
+			else if (!strcmp(argv[puntero_parametro],"--sensor-set")) {
+				siguiente_parametro_argumento();
+                int numero_sensor=parse_string_to_number(argv[puntero_parametro]); 
+                if (numero_sensor<0 || numero_sensor>=MENU_VIEW_SENSORS_TOTAL_ELEMENTS) {
+                    printf ("Invalid value %d for setting --sensor-set\n",numero_sensor);
+                    exit(1);
+                }
+
+                siguiente_parametro_argumento();
+                char *sensor_type=argv[puntero_parametro];
+
+                int sensor_id=sensor_find(sensor_type);
+                if (sensor_id<0) {
+                    printf ("Invalid sensor type %s for setting --sensor-set\n",sensor_type);
+                    exit(1);                    
+                }
+
+				strcpy (menu_debug_view_sensors_list_sensors[numero_sensor].short_name,sensor_type);
+			}
+
+            //sensor-set-widget position type
+			else if (!strcmp(argv[puntero_parametro],"--sensor-set-widget")) {
+				siguiente_parametro_argumento();
+                int numero_sensor=parse_string_to_number(argv[puntero_parametro]); 
+                if (numero_sensor<0 || numero_sensor>=MENU_VIEW_SENSORS_TOTAL_ELEMENTS) {
+                    printf ("Invalid value %d for setting --sensor-set-widget\n",numero_sensor);
+                    exit(1);
+                }
+
+                siguiente_parametro_argumento();
+                char *sensor_type=argv[puntero_parametro];
+
+                int widget_id=zxvision_widget_find_name_type(sensor_type);
+                if (widget_id<0) {
+                    printf ("Invalid sensor widget type %s for setting --sensor-set-widget\n",sensor_type);
+                    exit(1);                    
+                }
+
+				menu_debug_view_sensors_list_sensors[numero_sensor].tipo=widget_id;
+			}        
+
+            //mostrar valor en vez de porcentaje
+           //sensor-set-value position 
+			else if (!strcmp(argv[puntero_parametro],"--sensor-set-value")) {
+				siguiente_parametro_argumento();
+                int numero_sensor=parse_string_to_number(argv[puntero_parametro]); 
+                if (numero_sensor<0 || numero_sensor>=MENU_VIEW_SENSORS_TOTAL_ELEMENTS) {
+                    printf ("Invalid value %d for setting --sensor-set-value\n",numero_sensor);
+                    exit(1);
+                }
+
+                menu_debug_view_sensors_list_sensors[numero_sensor].valor_en_vez_de_perc=1;
+
+			}                    
 
 
 			//autodetectar que el parametro es un snap o cinta. Esto tiene que ser siempre el ultimo else if

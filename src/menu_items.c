@@ -29550,32 +29550,10 @@ int menu_debug_view_sensors_tipo=0;
 
 //array de sensores en pantalla
 
-#define MENU_VIEW_SENSORS_START_Y 3
-
-struct s_menu_debug_view_sensors_list {
-    char short_name[SENSORS_MAX_SHORT_NAME];
-    int fila;
-    int columna;
-    int tipo;
-    int valor_en_vez_de_perc;
-};
-
-typedef struct s_menu_debug_view_sensors_list menu_debug_view_sensors_list;
-
-//5x3
-//0=fila 0, columna 0
-//1=fila 0, columna 1
-//...
-//6=fila 1, columna 0
-#define MENU_VIEW_SENSORS_TOTAL_COLUMNS 5
-#define MENU_VIEW_SENSORS_TOTAL_ROWS 3
-
-#define MENU_VIEW_SENSORS_TOTAL_ELEMENTS (MENU_VIEW_SENSORS_TOTAL_COLUMNS*MENU_VIEW_SENSORS_TOTAL_ROWS)
-
 menu_debug_view_sensors_list menu_debug_view_sensors_list_sensors[MENU_VIEW_SENSORS_TOTAL_ELEMENTS]={
-    {"ay_vol_chip0_chan_A",0,0,ZXVISION_WIDGET_TYPE_SPEEDOMETER,0},
-    {"ay_vol_chip0_chan_B",0,16,ZXVISION_WIDGET_TYPE_SPEEDOMETER,0},
-    {"ay_vol_chip0_chan_C",0,32,ZXVISION_WIDGET_TYPE_SPEEDOMETER,0},
+    {"",0,0,0,0},
+    {"",0,16,0,0},
+    {"",0,32,0,0},
     {"",0,48,0,0},
     {"",0,64,0,0},
 
@@ -29679,16 +29657,12 @@ int menu_debug_view_sensors_get_sensor_tipo(int tipo)
 
     menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
+    int i;
 
-    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Speedometer");
-    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Speaker");
-    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Circle");
-    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Circle Concentric");
-    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Ellipse");
-    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Ellipse Concentric");
-    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Curve");
-    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Volume");
-    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,"Value");
+    for (i=0;i<ZXVISION_TOTAL_WIDGET_TYPES;i++) {
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,zxvision_widget_types_names[i]);
+    }
+
 
 
     menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);

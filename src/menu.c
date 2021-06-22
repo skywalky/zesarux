@@ -10366,6 +10366,31 @@ void zxvision_widgets_draw_volumen_maxmin(zxvision_window *ventana,int columna_t
 }
 
 
+char *zxvision_widget_types_names[ZXVISION_TOTAL_WIDGET_TYPES]={
+    "Speedometer",
+    "Speaker",
+    "Circle",
+    "Circle Concentric",
+    "Ellipse",
+    "Ellipse Concentric",
+    "Curve",
+    "Volume",
+    "Value"
+};
+
+int zxvision_widget_find_name_type(char *name)
+{
+    int i;
+
+    for (i=0;i<ZXVISION_TOTAL_WIDGET_TYPES;i++) {
+        if (!strcasecmp(name,zxvision_widget_types_names[i])) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 
 void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,int columna_texto,int fila_texto,char *short_name,int tipo,int valor_en_vez_de_perc)
 {
