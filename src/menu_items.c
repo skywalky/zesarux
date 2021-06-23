@@ -29615,8 +29615,6 @@ void menu_debug_view_sensors_print_cursor(zxvision_window *ventana)
 
 
 
-    int franja_color_y_inicio;
-    int i;
 /*
     //Rellenar cuadrado de color del cursor
     //Nota: no puedo rellenar todo el texto simplemente con lineas porque esto ocultaria el texto del sensor,
@@ -29677,8 +29675,6 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
     int fila_texto;
     int columna_texto;
 
-    int separacion_columnas=10;
-    int separacion_filas=7;
 
     int fila,columna;
 

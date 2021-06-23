@@ -10339,7 +10339,7 @@ void zxvision_widgets_draw_volumen(char *texto,int valor,int longitud_texto)
 
 
 void zxvision_widgets_draw_volumen_maxmin(zxvision_window *ventana,int columna_texto,int fila_texto,
-    int tinta,int papel,int valor_actual,int max_longitud_texto,char *texto)
+    int tinta,int papel,int valor_actual,int max_longitud_texto)
 {
     
     //char buffer_texto_meters[100];
@@ -10466,7 +10466,7 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
         int ancho=radio_circulo*2;
         int alto=radio_circulo*2+8;
 
-        int x,y;
+        int y;
         for (y=0;y<alto;y++) {
             //un poco redondeado por arriba
             if (y==0 || y==alto-1) zxvision_draw_line(ventana,xorig+1,yorig+y,xorig+ancho-1,yorig+y,ESTILO_GUI_TINTA_NORMAL,zxvision_putpixel); 
@@ -10519,7 +10519,7 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
     }    
 
     if (tipo==ZXVISION_WIDGET_TYPE_VOLUME) {
-        zxvision_widgets_draw_volumen_maxmin(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,media_cpu_perc,15,display_name);
+        zxvision_widgets_draw_volumen_maxmin(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,media_cpu_perc,15);
 
     }
 
