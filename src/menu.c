@@ -10378,6 +10378,18 @@ char *zxvision_widget_types_names[ZXVISION_TOTAL_WIDGET_TYPES]={
     "Only Value"
 };
 
+void widget_list_print(void)
+{
+    
+    int i;
+
+    for (i=0;i<ZXVISION_TOTAL_WIDGET_TYPES;i++) {
+        printf("%s%c ",zxvision_widget_types_names[i],(i==ZXVISION_TOTAL_WIDGET_TYPES-1 ? ' ' :','));
+    }
+
+
+}
+
 int zxvision_widget_find_name_type(char *name)
 {
     int i;

@@ -366,6 +366,8 @@ extern void zxvision_draw_ellipse(zxvision_window *w,int x1,int y1,int radius_x,
 
 extern char *zxvision_widget_types_names[];
 
+extern void widget_list_print(void);
+
 extern int zxvision_widget_find_name_type(char *name);
 
 #define ZXVISION_WIDGET_TYPE_SPEEDOMETER_LINE_LENGTH 32

@@ -1893,6 +1893,12 @@ printf (
 printf (
 		"--text-keyboard-finalspc   Sends a space after every word on the Adventure Text OSD Keyboard\n"
 		//"--text-keyboard-clear      Clear all entries of the Adventure Text Keyboard\n"
+
+		"--windowgeometry s x y w h Set window geometry. Parameters: window name (s), x coord, y coord, width (w), height (h)\n"
+		"--enable-restore-windows   Allow restore windows on start\n"
+        "--restorewindow s          Restore window s on start\n"
+		"--clear-all-windowgeometry Clear all windows geometry thay may be loaded from the configuration file\n"
+
 		"\n"
 		"\n"
 		"Hardware Settings\n"
@@ -2202,30 +2208,27 @@ printf (
 		"--last-version s           String which identifies last version run. Usually doesnt need to change it, used to show the start popup of the new version changes\n"
 		"--no-show-changelog        Do not show changelog when updating version\n"
 		"--disablebetawarning text  Do not pause beta warning message on boot for version named as that parameter text\n"
-		"--windowgeometry s x y w h Set window geometry. Parameters: window name (s), x coord, y coord, width (w), height (h)\n"
-		"--enable-restore-windows   Allow restore windows on start\n"
-        "--restorewindow s          Restore window s on start\n"
-		
-
-		"--clear-all-windowgeometry Clear all windows geometry thay may be loaded from the configuration file\n"
-
-
 
 		"--tbblue-autoconfigure-sd-already-asked     Do not ask to autoconfigure tbblue initial SD image\n"
 		
 		//Esto no hace falta que lo vea un usuario, solo lo uso yo para probar partes del emulador 
 		//"--codetests                Run develoment code tests\n"
-		"--tonegenerator n          Enable tone generator. Possible values: 1: generate max, 2: generate min, 3: generate min/max at 50 Hz\n"
+		"--tonegenerator n          Enable tone generator. Possible values: 1: generate max, 2: generate min, 3: generate min/max at 50 Hz\n");
 
-        "--sensor-set position type   Set sensor for menu View sensors. On position with type one of:\n");
+        printf(
+        "--sensor-set position type          Set sensor for menu View sensors. position must be 0 to %d. type must be one of:\n",MENU_VIEW_SENSORS_TOTAL_ELEMENTS-1);
 
         sensor_list_print();
 
         printf("\n"
-        "--sensor-set position type   Set widget type sensor for menu View sensors. On position with type\n"
-        "--sensor-set-abs position    Set widget type absolute instead of percentaje for menu View sensors. On position\n"
- 
+        "--sensor-set-widget position type   Set widget type sensor for menu View sensors. position must be 0 to %d. type must be one of:\n",MENU_VIEW_SENSORS_TOTAL_ELEMENTS-1);
 
+        widget_list_print();
+
+        printf("\n"
+        "--sensor-set-abs position           Set widget type absolute instead of percentaje for menu View sensors. position must be 0 to %d\n",MENU_VIEW_SENSORS_TOTAL_ELEMENTS-1);
+ 
+        printf(
 		"\n\n"
 
 	);
