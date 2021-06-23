@@ -29548,27 +29548,105 @@ int temporal_current_view_sensors_actual=0;
 
 int menu_debug_view_sensors_tipo=0;
 
+#define MENU_VIEW_SENSORS_START_X 1
+#define MENU_VIEW_SENSORS_START_Y 3
+
 //array de sensores en pantalla
 
+#define MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS 16
+#define MENU_SENSORS_SEPARACION_ENTRE_FILAS 10
+
 menu_debug_view_sensors_list menu_debug_view_sensors_list_sensors[MENU_VIEW_SENSORS_TOTAL_ELEMENTS]={
-    {"",0,0,0,0},
-    {"",0,16,0,0},
-    {"",0,32,0,0},
-    {"",0,48,0,0},
-    {"",0,64,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*0,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*0,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*0,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*1,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*0,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*2,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*0,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*3,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*0,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*4,0,0},
 
-    {"",10,0,0,0},
-    {"",10,16,0,0},
-    {"",10,32,0,0},
-    {"",10,48,0,0},
-    {"",10,64,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*1,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*0,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*1,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*1,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*1,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*2,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*1,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*3,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*1,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*4,0,0},
 
-    {"",20,0,0,0},
-    {"",20,16,0,0},
-    {"",20,32,0,0},
-    {"",20,48,0,0},
-    {"",20,64,0,0}
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*2,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*0,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*2,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*1,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*2,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*2,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*2,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*3,0,0},
+    {"",MENU_SENSORS_SEPARACION_ENTRE_FILAS*2,MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS*4,0,0},        
+
 };
+
+int menu_view_sensors_cursor_fila=0;
+int menu_view_sensors_cursor_columna=0;
+int menu_view_sensors_cursor_visible=0;
+
+void menu_debug_view_sensors_print_cursor(zxvision_window *ventana)
+{
+    
+    int fila=menu_view_sensors_cursor_fila;
+    int columna=menu_view_sensors_cursor_columna;
+
+    /*
+    puntos del cuadrado:
+
+      x1,y1      x2,y1
+       -----------
+       |         |
+       |         |
+       -----------
+      x1,y2      x2,y2
+    */
+
+    int x1=(MENU_VIEW_SENSORS_START_X+columna* MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS)*menu_char_width-1; //-1 para que no roce por la izquierda con el texto
+    int y1=(MENU_VIEW_SENSORS_START_Y-1+fila * MENU_SENSORS_SEPARACION_ENTRE_FILAS)   *8;
+
+    int x2=(MENU_VIEW_SENSORS_START_X+(columna+1)* MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS)*menu_char_width-1; //-1 para que no toque el pixel siguiente
+    int y2=(MENU_VIEW_SENSORS_START_Y-2+(fila+1) * MENU_SENSORS_SEPARACION_ENTRE_FILAS)   *8-1; //-1 para que no toque el pixel siguiente
+
+    //arriba
+    zxvision_draw_line(ventana,x1,y1,x2,y1,ESTILO_GUI_TINTA_NORMAL,zxvision_putpixel);
+    //abajo
+    zxvision_draw_line(ventana,x1,y2,x2,y2,ESTILO_GUI_TINTA_NORMAL,zxvision_putpixel);
+    //izquierda
+    zxvision_draw_line(ventana,x1,y1,x1,y2,ESTILO_GUI_TINTA_NORMAL,zxvision_putpixel);
+    //derecha
+    zxvision_draw_line(ventana,x2,y1,x2,y2,ESTILO_GUI_TINTA_NORMAL,zxvision_putpixel);
+
+
+
+    int franja_color_y_inicio;
+    int i;
+/*
+    //Rellenar cuadrado de color del cursor
+    //Nota: no puedo rellenar todo el texto simplemente con lineas porque esto ocultaria el texto del sensor,
+    //pues al hacer render de pantalla siempre primero se escribe el texto y luego la rutina de overlay (o sea esta)
+    //Parte de arriba hasta texto. 8 pixeles de alto
+    franja_color_y_inicio=y1+1;
+    for (i=franja_color_y_inicio;i<=franja_color_y_inicio+6;i++) {        
+        zxvision_draw_line(ventana,x1+1,i,x2-1,i,ESTILO_GUI_PAPEL_SELECCIONADO,zxvision_putpixel);
+    }      
+
+    //Parte desde abajo del texto incluyendo sensor
+    franja_color_y_inicio=y1+16;
+    for (i=franja_color_y_inicio;i<=y2-1;i++) {        
+        zxvision_draw_line(ventana,x1+1,i,x2-1,i,ESTILO_GUI_PAPEL_SELECCIONADO,zxvision_putpixel);
+    }    
+
+    //Si sensor vacio, si que dibujamos esa franja
+    int offset_array=menu_view_sensors_cursor_fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+menu_view_sensors_cursor_columna;
+
+    if (menu_debug_view_sensors_list_sensors[offset_array].short_name[0]==0) {
+        franja_color_y_inicio=y1+8;
+        for (i=franja_color_y_inicio;i<=franja_color_y_inicio+7;i++) {        
+            zxvision_draw_line(ventana,x1+1,i,x2-1,i,ESTILO_GUI_PAPEL_SELECCIONADO,zxvision_putpixel);
+        }            
+    }   
+    */  
+
+}
+
+
 
 //La funcion de overlay
 void menu_debug_view_sensors_overlay_window_overlay(void)
@@ -29589,14 +29667,11 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
         menu_debug_view_sensors_contador_segundo_anterior=contador_segundo;
         //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-        int linea=0;
-        char texto_buffer[100];
-
-
-        //Empezar con espacio
-        texto_buffer[0]=' ';                
+              
 
     }
+
+    if (menu_view_sensors_cursor_visible) menu_debug_view_sensors_print_cursor(ventana);    
 
 
     int fila_texto;
@@ -29612,25 +29687,46 @@ void menu_debug_view_sensors_overlay_window_overlay(void)
             int offset_array=fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+columna;
 
             fila_texto=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
-            columna_texto=1+menu_debug_view_sensors_list_sensors[offset_array].columna;
-
-            //fila_texto=5+fila*separacion_filas;
-            //columna_texto=1+columna*separacion_columnas;
+            columna_texto=MENU_VIEW_SENSORS_START_X+menu_debug_view_sensors_list_sensors[offset_array].columna;
 
             char *short_name;
             //temporal esto hacerlo luego mejor
             short_name=menu_debug_view_sensors_list_sensors[offset_array].short_name; 
             int tipo=menu_debug_view_sensors_list_sensors[offset_array].tipo;   
             int valor_en_vez_de_perc=menu_debug_view_sensors_list_sensors[offset_array].valor_en_vez_de_perc;
+
+            
+            int tinta_texto=ESTILO_GUI_TINTA_NORMAL;
+            int papel_texto=ESTILO_GUI_PAPEL_NORMAL;         
+
+            //Cambio color si cursor ahi
+            if (fila==menu_view_sensors_cursor_fila && columna==menu_view_sensors_cursor_columna && menu_view_sensors_cursor_visible) {
+                //texto en color inverso si esta el cursor ahi
+                tinta_texto=ESTILO_GUI_TINTA_SELECCIONADO;
+                papel_texto=ESTILO_GUI_PAPEL_SELECCIONADO;
+
+                /*int i,j;
+                for (j=0;j<MENU_SENSORS_SEPARACION_ENTRE_FILAS-1;j++) {
+                    for (i=0;i<MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS;i++) {
+                        zxvision_print_char_simple(ventana,columna_texto+i,fila_texto+j-1,tinta_texto,papel_texto,0,'X');
+                    }                
+                }
+                */
+            }               
+
             if (short_name[0]) {
+
                 zxvision_widgets_draw_metter_common_by_shortname
-                    (ventana,columna_texto,fila_texto,short_name,tipo,valor_en_vez_de_perc);            
+                    (ventana,columna_texto,fila_texto,short_name,tipo,valor_en_vez_de_perc,tinta_texto,papel_texto,
+                    MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS);            
             }
+
+
         }
     }
 
 
-
+    
 
 
 
@@ -29723,32 +29819,27 @@ int menu_debug_view_sensors_get_sensor_item(int sensor_id)
 
 }
 
-void menu_debug_view_sensors_print_cursor_texto(zxvision_window *ventana,int fila,int columna,char *texto,int tinta,int papel)
+
+void menu_view_sensors_fondo_cursor(zxvision_window *ventana,int tinta,int papel)
 {
-    int offset_array=fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+columna;
 
-    int fila_texto,columna_texto;
+    int offset_array=menu_view_sensors_cursor_fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+menu_view_sensors_cursor_columna;
 
-    fila_texto=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
+    int fila_texto_cursor,columna_texto_cursor;
+    //Rellenar color fondo donde esta cursor
+    fila_texto_cursor=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
+    columna_texto_cursor=MENU_VIEW_SENSORS_START_X+menu_debug_view_sensors_list_sensors[offset_array].columna;
 
-    fila_texto--; //selector arriba
 
-    columna_texto=1+menu_debug_view_sensors_list_sensors[offset_array].columna;
-
-    //zxvision_print_string_defaults(ventana,columna_texto,fila_texto,"vvvvvvvvv");
-    zxvision_print_string(ventana,columna_texto,fila_texto,tinta,papel,0,texto);
-
+    int i,j;
+    for (j=0;j<MENU_SENSORS_SEPARACION_ENTRE_FILAS-1;j++) {
+        for (i=0;i<MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS;i++) {
+            zxvision_print_char_simple(ventana,columna_texto_cursor+i,fila_texto_cursor+j-1,
+                    tinta,papel,0,' ');
+        }                
+    }
 }
 
-void menu_debug_view_sensors_print_cursor(zxvision_window *ventana,int fila,int columna)
-{
-    menu_debug_view_sensors_print_cursor_texto(ventana,fila,columna,"vvvvvvvvv",ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO);
-}
-
-void menu_debug_view_sensors_clear_cursor(zxvision_window *ventana,int fila,int columna)
-{
-    menu_debug_view_sensors_print_cursor_texto(ventana,fila,columna,"         ",ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
-}
 
 
 void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
@@ -29806,9 +29897,8 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
         return;
     }    
 
-    int fila=0;
-    int columna=0;
 
+    menu_view_sensors_cursor_visible=1;
 
     z80_byte tecla;
 
@@ -29820,45 +29910,52 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
         zxvision_print_string_defaults(ventana,1,0,"Cursors, Enter, t, v");
 
-        int fila_texto,columna_texto;
+        
 
         char *short_name;
         int menu_debug_view_sensors_tipo;
 
-        menu_debug_view_sensors_print_cursor(ventana,fila,columna);
+        //menu_debug_view_sensors_print_cursor(ventana,menu_view_sensors_cursor_fila,menu_view_sensors_cursor_columna);
 
         
-            int offset_array=fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+columna;
+            int offset_array=menu_view_sensors_cursor_fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+menu_view_sensors_cursor_columna;
 
-        /*
-            fila_texto=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
+            menu_view_sensors_fondo_cursor(ventana,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO);
+            /*
 
-            fila_texto--; //selector arriba
+            int fila_texto_cursor,columna_texto_cursor;
+            //Rellenar color fondo donde esta cursor
+            fila_texto_cursor=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
+            columna_texto_cursor=MENU_VIEW_SENSORS_START_X+menu_debug_view_sensors_list_sensors[offset_array].columna;
 
-            columna_texto=1+menu_debug_view_sensors_list_sensors[offset_array].columna;
 
-            //zxvision_print_string_defaults(ventana,columna_texto,fila_texto,"vvvvvvvvv");
-            zxvision_print_string(ventana,columna_texto,fila_texto,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE,0,"vvvvvvvvv");
-        */
-
+            int i,j;
+            for (j=0;j<MENU_SENSORS_SEPARACION_ENTRE_FILAS-1;j++) {
+                for (i=0;i<MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS;i++) {
+                    zxvision_print_char_simple(ventana,columna_texto_cursor+i,fila_texto_cursor+j-1,
+                            ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,0,' ');
+                }                
+            }
+            */
+       
             tecla=zxvision_common_getkey_refresh();
             zxvision_handle_cursors_pgupdn(ventana,tecla);
 
             switch(tecla) {
                 case 8:
-                    if (columna>0) columna--;
+                    if (menu_view_sensors_cursor_columna>0) menu_view_sensors_cursor_columna--;
                 break;
 
                 case 9:
-                    if (columna<MENU_VIEW_SENSORS_TOTAL_COLUMNS-1) columna++;
+                    if (menu_view_sensors_cursor_columna<MENU_VIEW_SENSORS_TOTAL_COLUMNS-1) menu_view_sensors_cursor_columna++;
                 break;
 
                 case 11:
-                    if (fila>0) fila--;
+                    if (menu_view_sensors_cursor_fila>0) menu_view_sensors_cursor_fila--;
                 break;
 
                 case 10:
-                    if (fila<MENU_VIEW_SENSORS_TOTAL_ROWS-1) fila++;
+                    if (menu_view_sensors_cursor_fila<MENU_VIEW_SENSORS_TOTAL_ROWS-1) menu_view_sensors_cursor_fila++;
                 break;        
 
                 case 13:
@@ -29925,7 +30022,11 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
 
     
-    menu_debug_view_sensors_clear_cursor(ventana,fila,columna);
+    //menu_debug_view_sensors_clear_cursor(ventana,menu_view_sensors_cursor_fila,menu_view_sensors_cursor_columna);
+    menu_view_sensors_cursor_visible=0;
+
+    //borrar fondo cursor
+    menu_view_sensors_fondo_cursor(ventana,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL);
 
 
     //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background

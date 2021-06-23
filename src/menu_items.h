@@ -162,7 +162,7 @@ typedef struct s_menu_debug_view_sensors_list menu_debug_view_sensors_list;
 
 #define MENU_VIEW_SENSORS_TOTAL_ELEMENTS (MENU_VIEW_SENSORS_TOTAL_COLUMNS*MENU_VIEW_SENSORS_TOTAL_ROWS)
 
-#define MENU_VIEW_SENSORS_START_Y 3
+
 
 
 extern menu_debug_view_sensors_list menu_debug_view_sensors_list_sensors[];

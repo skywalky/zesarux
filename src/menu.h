@@ -375,7 +375,7 @@ extern int zxvision_widget_find_name_type(char *name);
 #define ZXVISION_WIDGET_TYPE_CURVE_LENGTH 32
 
 extern void zxvision_widgets_draw_speedometer_common(zxvision_window *ventana,int xorigen_linea,int yorigen_linea,int percentaje,int color_linea,int color_contorno);
-extern void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,int columna_texto,int fila_texto,char *short_name,int tipo,int valor_en_vez_de_perc);
+extern void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,int columna_texto,int fila_texto,char *short_name,int tipo,int valor_en_vez_de_perc,int tinta_texto_descripcion,int papel_texto_descripcion,int escribir_espacios);
 
 extern z80_byte zxvision_read_keyboard(void);
 void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla);

@@ -10392,7 +10392,7 @@ int zxvision_widget_find_name_type(char *name)
 }
 
 
-void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,int columna_texto,int fila_texto,char *short_name,int tipo,int valor_en_vez_de_perc)
+void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,int columna_texto,int fila_texto,char *short_name,int tipo,int valor_en_vez_de_perc,int tinta_texto_descripcion,int papel_texto_descripcion,int escribir_espacios)
 {
     
 
@@ -10435,7 +10435,15 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
     else {
         sprintf(buffer_texto_meters,"%s %3d%%",display_name,media_cpu_perc);
     }
-    zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);     
+    //zxvision_print_string_defaults(ventana,columna_texto,fila_texto,buffer_texto_meters);     
+
+    //Rellenar primero con espacios
+    int i;
+    for (i=0;i<escribir_espacios;i++) {
+        zxvision_print_char_simple(ventana,columna_texto+i,fila_texto,tinta_texto_descripcion,papel_texto_descripcion,0,' ');
+    }
+
+    zxvision_print_string(ventana,columna_texto,fila_texto,tinta_texto_descripcion,papel_texto_descripcion,0,buffer_texto_meters);
 
     if (tipo==ZXVISION_WIDGET_TYPE_SPEEDOMETER) {
         int longitud_linea=ZXVISION_WIDGET_TYPE_SPEEDOMETER_LINE_LENGTH;
