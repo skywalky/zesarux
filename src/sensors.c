@@ -289,6 +289,16 @@ int sensor_find(char *short_name)
     return -1;
 }
 
+void sensor_list_print(void)
+{
+    int i;
+
+    for (i=0;i<TOTAL_SENSORS;i++) {
+        printf("%s%c ",sensors_array[i].short_name,(i==TOTAL_SENSORS-1 ? ' ' :','));
+    }
+
+}
+
 //Retorna valor sensor segun id del array
 int sensor_get_value_by_id(int indice)
 {

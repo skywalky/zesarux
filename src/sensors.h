@@ -64,6 +64,7 @@ typedef struct s_sensor_item sensor_item;
 extern sensor_item sensors_array[];
 
 extern int sensor_find(char *short_name);
+extern void sensor_list_print(void);
 extern int sensor_get_value(char *short_name);
 extern int sensor_get_value_by_id(int indice);
 extern int sensor_get_percentaje_value(char *short_name);

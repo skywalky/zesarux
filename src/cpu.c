@@ -2217,7 +2217,11 @@ printf (
 		//"--codetests                Run develoment code tests\n"
 		"--tonegenerator n          Enable tone generator. Possible values: 1: generate max, 2: generate min, 3: generate min/max at 50 Hz\n"
 
-        "--sensor-set position type   Set sensor for menu View sensors. On position with type\n"
+        "--sensor-set position type   Set sensor for menu View sensors. On position with type one of:\n");
+
+        sensor_list_print();
+
+        printf("\n"
         "--sensor-set position type   Set widget type sensor for menu View sensors. On position with type\n"
         "--sensor-set-abs position    Set widget type absolute instead of percentaje for menu View sensors. On position\n"
  
