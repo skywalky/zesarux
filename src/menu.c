@@ -10375,7 +10375,7 @@ char *zxvision_widget_types_names[ZXVISION_TOTAL_WIDGET_TYPES]={
     "Ellipse Concentric",
     "Curve",
     "Volume",
-    "Value"
+    "Only Value"
 };
 
 int zxvision_widget_find_name_type(char *name)

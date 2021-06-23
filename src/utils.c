@@ -3987,7 +3987,7 @@ int util_write_configfile(void)
             //printf("id: %d\n",widget_id);
             ADD_STRING_CONFIG,"--sensor-set-widget %d \"%s\" ",i,zxvision_widget_types_names[widget_id]);
 
-            if (menu_debug_view_sensors_list_sensors[i].valor_en_vez_de_perc) ADD_STRING_CONFIG,"--sensor-set-value %d",i);
+            if (menu_debug_view_sensors_list_sensors[i].valor_en_vez_de_perc) ADD_STRING_CONFIG,"--sensor-set-abs %d",i);
         }
     }
 

@@ -2219,7 +2219,7 @@ printf (
 
         "--sensor-set position type   Set sensor for menu View sensors. On position with type\n"
         "--sensor-set position type   Set widget type sensor for menu View sensors. On position with type\n"
-        "--sensor-set-value position  Set widget type value instead of percentaje menu View sensors. On position\n"
+        "--sensor-set-abs position    Set widget type absolute instead of percentaje for menu View sensors. On position\n"
  
 
 		"\n\n"
@@ -8116,12 +8116,12 @@ int parse_cmdline_options(void) {
 			}        
 
             //mostrar valor en vez de porcentaje
-           //sensor-set-value position 
-			else if (!strcmp(argv[puntero_parametro],"--sensor-set-value")) {
+           //sensor-set-abs position 
+			else if (!strcmp(argv[puntero_parametro],"--sensor-set-abs")) {
 				siguiente_parametro_argumento();
                 int numero_sensor=parse_string_to_number(argv[puntero_parametro]); 
                 if (numero_sensor<0 || numero_sensor>=MENU_VIEW_SENSORS_TOTAL_ELEMENTS) {
-                    printf ("Invalid value %d for setting --sensor-set-value\n",numero_sensor);
+                    printf ("Invalid value %d for setting --sensor-set-abs\n",numero_sensor);
                     exit(1);
                 }
 

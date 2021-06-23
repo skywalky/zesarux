@@ -29877,6 +29877,8 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
     ventana->can_be_backgrounded=1;
     //indicar nombre del grabado de geometria
     strcpy(ventana->geometry_name,"viewsensors");
+    //Permitir hotkeys desde raton. Parece que incompatible con pulsar boton y simular enter
+    //ventana->can_mouse_send_hotkeys=1;    
     //Y dibujar la ventana
     zxvision_draw_window(ventana);
 
@@ -29898,13 +29900,15 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
     z80_byte tecla;
 
+    int antes_mouse_left=0;
+
     //Y esperar escape (2) o tecla background (3)
     do {
 
                 //borrar rastros de textos anteriores
         zxvision_cls(ventana);
 
-        zxvision_print_string_defaults(ventana,1,0,"Cursors, Enter, t, v");
+        zxvision_print_string_defaults(ventana,1,0,"Move: Cursors. ~~E~~n~~t~~e~~r: Select Sensor. ~~Type. ~~Abs/Perc");
 
         
 
@@ -29937,6 +29941,23 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
             tecla=zxvision_common_getkey_refresh();
             zxvision_handle_cursors_pgupdn(ventana,tecla);
 
+            printf("mouse_left: %d tecla: %d\n",mouse_left,tecla);
+            /*if (antes_mouse_left && mouse_left==0 && tecla==0) {
+                printf("liberado left\n");
+                //menu_espera_no_tecla();
+                tecla=13;
+            }*/
+
+            if (mouse_left && tecla==0) {
+                printf("pulsado left\n");
+                //menu_espera_no_tecla();
+                tecla=13;
+            }
+
+            antes_mouse_left=mouse_left;
+
+            //gestionar movimiento cursor
+
             switch(tecla) {
                 case 8:
                     if (menu_view_sensors_cursor_columna>0) menu_view_sensors_cursor_columna--;
@@ -29955,6 +29976,10 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
                 break;        
 
                 case 13:
+                    
+                    //necesario cuando viene de pulsar boton izquierdo con raton
+                    menu_espera_no_tecla();
+
                     //buscar el id para ese nombre de sensor
                     short_name=menu_debug_view_sensors_list_sensors[offset_array].short_name;
                     int sensor_id;
@@ -30000,7 +30025,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
                     if (menu_debug_view_sensors_tipo>=0) menu_debug_view_sensors_list_sensors[offset_array].tipo=menu_debug_view_sensors_tipo;
                 break;
 
-                case 'v':
+                case 'a':
                     menu_debug_view_sensors_list_sensors[offset_array].valor_en_vez_de_perc ^=1;
                     if (menu_debug_view_sensors_list_sensors[offset_array].valor_en_vez_de_perc) {
                         menu_generic_message_splash("Display value","OK Showing absolute value instead of percentage");
