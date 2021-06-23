@@ -29853,11 +29853,11 @@ int menu_view_sensors_mouse_in_zone_widgets(int *columna,int *fila)
         cursor_mouse_x /=MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS;
         cursor_mouse_y /=MENU_SENSORS_SEPARACION_ENTRE_FILAS;
 
-        printf("widget %d %d\n",cursor_mouse_x,cursor_mouse_y);
+        //printf("widget %d %d\n",cursor_mouse_x,cursor_mouse_y);
 
         if (cursor_mouse_x>=0 && cursor_mouse_x<MENU_VIEW_SENSORS_TOTAL_COLUMNS &&
             cursor_mouse_y>=0 && cursor_mouse_y<MENU_VIEW_SENSORS_TOTAL_ROWS) {
-                printf("en rango\n");
+                //printf("en rango\n");
 
                 //movemos cursor
                 if (columna!=NULL) *columna=cursor_mouse_x;
@@ -29956,48 +29956,29 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
             int offset_array=menu_view_sensors_cursor_fila*MENU_VIEW_SENSORS_TOTAL_COLUMNS+menu_view_sensors_cursor_columna;
 
             menu_view_sensors_fondo_cursor(ventana,ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO);
-            /*
-
-            int fila_texto_cursor,columna_texto_cursor;
-            //Rellenar color fondo donde esta cursor
-            fila_texto_cursor=MENU_VIEW_SENSORS_START_Y+menu_debug_view_sensors_list_sensors[offset_array].fila;
-            columna_texto_cursor=MENU_VIEW_SENSORS_START_X+menu_debug_view_sensors_list_sensors[offset_array].columna;
-
-
-            int i,j;
-            for (j=0;j<MENU_SENSORS_SEPARACION_ENTRE_FILAS-1;j++) {
-                for (i=0;i<MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS;i++) {
-                    zxvision_print_char_simple(ventana,columna_texto_cursor+i,fila_texto_cursor+j-1,
-                            ESTILO_GUI_TINTA_SELECCIONADO,ESTILO_GUI_PAPEL_SELECCIONADO,0,' ');
-                }                
-            }
-            */
+            
        
             tecla=zxvision_common_getkey_refresh();
             zxvision_handle_cursors_pgupdn(ventana,tecla);
 
-            printf("mouse_left: %d tecla: %d\n",mouse_left,tecla);
-            /*if (antes_mouse_left && mouse_left==0 && tecla==0) {
-                printf("liberado left\n");
-                //menu_espera_no_tecla();
-                tecla=13;
-            }*/
+            //printf("mouse_left: %d tecla: %d\n",mouse_left,tecla);
+         
 
             //Si se pulsa boton y esta en rango
             if (mouse_left && tecla==0 && menu_view_sensors_mouse_in_zone_widgets(NULL,NULL) ) {
-                printf("pulsado left\n");
+                //printf("pulsado left\n");
                 //menu_espera_no_tecla();
                 tecla=13;
             }
 
-            printf("mouse %d %d\n",menu_mouse_x,menu_mouse_y);
+            //printf("mouse %d %d\n",menu_mouse_x,menu_mouse_y);
 
             antes_mouse_left=mouse_left;
 
             //gestionar movimiento cursor
             //Solo si se ha movido
             if (antes_menu_mouse_x!=menu_mouse_x || antes_menu_mouse_y!=menu_mouse_y) {
-                printf("mouse movido\n");
+                //printf("mouse movido\n");
 
                 int cursor_mouse_x,cursor_mouse_y;
 
@@ -30007,32 +29988,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
                     menu_view_sensors_cursor_fila=cursor_mouse_y;
                 }
 
-                /*
-                int cursor_mouse_y=menu_mouse_y;
-                //empieza dentro de ventana en la 1
-                cursor_mouse_y--;
-
-                int cursor_mouse_x=menu_mouse_x;
-
-                cursor_mouse_x -=MENU_VIEW_SENSORS_START_X;
-                cursor_mouse_y -=(MENU_VIEW_SENSORS_START_Y-1); //-1 porque el cursor esta 1 fila por encima
-
-                if (cursor_mouse_x>=0 && cursor_mouse_y>=0) {
-
-                    //Ajustar a que widget apuntamos
-                    cursor_mouse_x /=MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS;
-                    cursor_mouse_y /=MENU_SENSORS_SEPARACION_ENTRE_FILAS;
-
-                    printf("widget %d %d\n",cursor_mouse_x,cursor_mouse_y);
-
-                    if (cursor_mouse_x>=0 && cursor_mouse_x<MENU_VIEW_SENSORS_TOTAL_COLUMNS &&
-                        cursor_mouse_y>=0 && cursor_mouse_y<MENU_VIEW_SENSORS_TOTAL_ROWS) {
-                            printf("en rango\n");
-
-
-                        }
-                }
-                */
+               
             }
 
             antes_menu_mouse_x=menu_mouse_x;
