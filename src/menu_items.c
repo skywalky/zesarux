@@ -29794,6 +29794,19 @@ int menu_debug_view_sensors_get_sensor_item(int sensor_id)
     for (i=0;i<TOTAL_SENSORS;i++) {
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,NULL,NULL,sensors_array[i].long_name);
+        //menu_add_item_menu_tooltip(array_menu_common,"Sensors that return times, they are expressed in microseconds");
+        menu_add_item_menu_ayuda(array_menu_common,
+            "Sensors may be type:\n"
+            "- A natural value, like FPS, Render time, or Volume of an Audio Chip Channel\n"
+            "- A percentage value, like %CPU usage\n"
+            "\n"
+            "Sensors that return times, they are expressed in microseconds\n"
+            "\n"
+            "Sensors can be shown on the window by the sensor value or a calculated percentage, for example:\n"
+            "If a sensor returns time in microseconds, and the sensor is 10000, the calculated percentage of a total 20000, will be 50%\n"
+            "These sensors which are naturally a percentage value (like %CPU usage) showing the absolute value or a calculated percentage, "
+            "will show exactly the same value (which is totally logic by the way)"   
+            );
 
     }
 
@@ -29894,12 +29907,16 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
     //Recuperar geometria
     if (!util_find_window_geometry("viewsensors",&x_ventana,&y_ventana,&ancho_ventana,&alto_ventana)) {
-        alto_ventana=14;
-        ancho_ventana=32;
-
-        x_ventana=menu_center_x()-ancho_ventana/2; 
+        alto_ventana=MENU_VIEW_SENSORS_TOTAL_ROWS*MENU_SENSORS_SEPARACION_ENTRE_FILAS+MENU_VIEW_SENSORS_START_Y;
+        ancho_ventana=MENU_VIEW_SENSORS_TOTAL_COLUMNS*MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS+MENU_VIEW_SENSORS_START_X+1;
+        
+        x_ventana=scr_get_menu_width()-ancho_ventana; //Al ser tan ancho no cabe centrado. Hacemos que quede pegado a la derecha 
         y_ventana=menu_center_y()-alto_ventana/2; 
-    }    
+
+        
+    }   
+
+    //printf("%d %d %d %d\n",x_ventana,y_ventana,ancho_ventana,alto_ventana); 
 
     //Crear ventana
 	zxvision_new_window(ventana,x_ventana,y_ventana,ancho_ventana,alto_ventana,

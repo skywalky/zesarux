@@ -9342,7 +9342,30 @@ int screen_if_refresh(void)
 	return 0;
 }
 
+void screen_before_menu_overlay_timer(void)
+{
+    //Calcular tiempo usado en refrescar pantalla
+	timer_stats_current_time(&core_render_menu_overlay_antes);    
+}
+ 
+void screen_after_menu_overlay_timer(void)
+{
+            
+    //Calcular tiempo usado en refrescar pantalla
+    core_render_menu_overlay_difftime=timer_stats_diference_time(&core_render_menu_overlay_antes,&core_render_menu_overlay_despues);
 
+    //media de tiempo. 
+    core_render_menu_overlay_media=(core_render_menu_overlay_media+core_render_menu_overlay_difftime)/2;
+}
+
+void screen_render_menu_overlay_if_active(void)
+{
+	if (menu_overlay_activo) {
+        screen_before_menu_overlay_timer();
+        menu_overlay_function();
+        screen_after_menu_overlay_timer();
+    }
+}
 
 void cpu_loop_refresca_pantalla_return(void)
 {

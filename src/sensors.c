@@ -87,6 +87,16 @@ int sensor_last_full_render_get_value(int id)
     return core_cpu_timer_refresca_pantalla_difftime;
 }
 
+int sensor_last_menu_overlay_render_get_value(int id)
+{
+    return core_render_menu_overlay_difftime;
+}
+
+int sensor_avg_menu_overlay_render_get_value(int id)
+{
+    return core_render_menu_overlay_media;
+}
+
 int sensor_dropped_frames_get_value(int id)
 {
 
@@ -246,7 +256,25 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     9999,-9999,
     10000,-9999,
     sensor_last_full_render_get_value,0
-    },            
+    },
+
+    //En este el tiempo maximo y los porcentajes no tienen mucho sentido
+   {
+    "last_menu_overlay_render","Last Menu Overlay Render","OvlMenRnd",
+    0,20000, 
+    9999,-9999,
+    10000,-9999,
+    sensor_last_menu_overlay_render_get_value,0
+    },        
+
+    //En este el tiempo maximo y los porcentajes no tienen mucho sentido
+   {
+    "avg_menu_overlay_render","Average Menu Overlay Render","AOvlMenRnd",
+    0,20000, 
+    9999,-9999,
+    10000,-9999,
+    sensor_avg_menu_overlay_render_get_value,0
+    },                  
 
     //En este el tiempo maximo y los porcentajes no tienen mucho sentido
    {

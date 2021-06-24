@@ -6998,7 +6998,7 @@ void zxvision_new_window_check_range(int *x,int *y,int *visible_width,int *visib
 	)
 		{
                 debug_printf (VERBOSE_INFO,"zxvision_new_window: window out of range: %d,%d %dx%d. Returning fixed safe values",*x,*y,*visible_width,*visible_height);
-				//printf ("zxvision_new_window: window out of range: %d,%d %dx%d\n",*x,*y,*visible_width,*visible_height);
+                //printf ("zxvision_new_window: window out of range: %d,%d %dx%d. Returning fixed safe values\n",*x,*y,*visible_width,*visible_height);
                 *x=0;
                 *y=0;
                 *visible_width=ZXVISION_MAX_ANCHO_VENTANA;
@@ -10365,6 +10365,87 @@ void zxvision_widgets_draw_volumen_maxmin(zxvision_window *ventana,int columna_t
     zxvision_print_string(ventana,columna_texto,fila_texto+1,tinta,papel,0,buffer_texto);
 }
 
+//Conversion de coordenadas 3D a 2D. Conversion muy simple
+void zxvision_widgets_draw_particles_3d_convert(int x,int y,int z,int *xfinal,int *yfinal)
+{
+    /*
+
+                z
+
+                ^
+                |
+                |
+                |
+                |
+                |
+                ----------------->  x
+               /
+              /
+             /
+            /
+           v
+
+          y
+    */ 
+    *xfinal=x-y/2;
+    *yfinal=z-y/2;
+}
+
+void zxvision_widgets_draw_particles(zxvision_window *ventana,int xinicio_widget,int ycentro_widget,int percentaje,int color,int longitud_linea)
+{
+
+
+    int radio_total=longitud_linea;
+
+    //int radio_porcentaje=(radio_total*percentaje)/100;
+
+    
+    int x_centro_widget=xinicio_widget+radio_total;
+
+    //radio total * 100 para poder usar "decimales"
+
+    radio_total *=100;
+
+    int grados;
+
+    int z=0;  //Z estara multiplicada por 100
+
+    int vueltas;
+
+    int max_vueltas;
+
+    max_vueltas=radio_total/360; //para que al acabar la figura, este con radio 0
+
+    for (vueltas=0;vueltas<max_vueltas;vueltas++) {
+
+        for (grados=0;grados<360;grados++) {
+            int xdestino=((radio_total/100)*util_get_cosine(grados))/10000;
+            int ydestino=((radio_total/100)*util_get_sine(grados))/10000;
+
+            int xplano,yplano;
+            zxvision_widgets_draw_particles_3d_convert(xdestino,ydestino,z/100,&xplano,&yplano);
+            //printf("%d %d\n",xplano,yplano);
+            zxvision_putpixel(ventana,x_centro_widget+xplano,ycentro_widget-yplano,color); //es -yplano porque si y es positiva, restamos (hacia arriba, pues el 0 de la y esta arriba del todo)
+
+            //cada grado, reducir radio
+            if (radio_total>=0) radio_total--;
+            
+
+            //cada 1/4 vuelta, aumentar Z segun porcentaje
+            if ((grados % 90)==0) {
+                z +=percentaje;
+            }            
+        }
+
+        
+    }
+
+
+
+
+ 
+}
+
 
 char *zxvision_widget_types_names[ZXVISION_TOTAL_WIDGET_TYPES]={
     "Speedometer",
@@ -10374,6 +10455,7 @@ char *zxvision_widget_types_names[ZXVISION_TOTAL_WIDGET_TYPES]={
     "Ellipse",
     "Ellipse Concentric",
     "Curve",
+    "3DParticles",
     "Volume",
     "Only Value"
 };
@@ -10529,6 +10611,16 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
         zxvision_widgets_draw_curve_common(ventana,xorigen_widget,yorigen_linea,media_cpu_perc,color_pixeles,longitud_linea);                   
 
     }    
+
+    if (tipo==ZXVISION_WIDGET_TYPE_PARTICLES) {
+        int longitud_linea=ZXVISION_WIDGET_TYPE_PARTICLES_RADIUS;
+
+        int yorigen_linea=(fila_texto*8)+longitud_linea+16;  //+16 para que este dos lineas por debajo del texto
+        int xorigen_widget=(columna_texto*menu_char_width);
+
+        zxvision_widgets_draw_particles(ventana,xorigen_widget,yorigen_linea,media_cpu_perc,color_pixeles,longitud_linea);                   
+
+    }     
 
     if (tipo==ZXVISION_WIDGET_TYPE_VOLUME) {
         zxvision_widgets_draw_volumen_maxmin(ventana,columna_texto,fila_texto,tinta_texto,ESTILO_GUI_PAPEL_NORMAL,media_cpu_perc,15);
@@ -33396,7 +33488,7 @@ void menu_about_statistics(MENU_ITEM_PARAMETERS)
 		"ZEsarUX yesterday users: %s\n"
 
 		"\n"
-		"Edited with VSCode and vim\n"
+		"Edited with Visual Studio Code and vim\n"
 		"Developed on macOS Catalina, Debian 10, Raspbian, FreeBSD 12, and MinGW environment on Windows\n"
 		,
         LINES_SOURCE,

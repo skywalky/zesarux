@@ -402,9 +402,7 @@ void scrsdl_refresca_pantalla(void)
 
         //printf ("%d\n",spectrum_colortable[1]);
 
-        if (menu_overlay_activo) {
-                menu_overlay_function();
-        }
+	screen_render_menu_overlay_if_active();
 
 
         //Escribir footer

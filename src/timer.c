@@ -150,6 +150,14 @@ long core_cpu_timer_each_frame_difftime;
 long core_cpu_timer_each_frame_media=0;
 
 
+//Tiempo de renderizado de la funcion de overlay
+struct timeval core_render_menu_overlay_antes,core_render_menu_overlay_despues;
+//Ultimo intervalo de tiempo
+long core_render_menu_overlay_difftime;
+//Media de todos los intervalos
+long core_render_menu_overlay_media=0;
+
+
 void timer_stats_current_time(struct timeval *tiempo)
 {
 	gettimeofday(tiempo, NULL);

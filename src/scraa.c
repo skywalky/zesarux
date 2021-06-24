@@ -350,7 +350,7 @@ void scraa_refresca_pantalla(void)
 	}
 
 
-	if (menu_overlay_activo) menu_overlay_function();
+	screen_render_menu_overlay_if_active();
 
 	
         //Escribir footer

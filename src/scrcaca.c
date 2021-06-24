@@ -339,7 +339,7 @@ if (caca_last_message_shown_timer) {
 
 
 
-	if (menu_overlay_activo) menu_overlay_function();
+	screen_render_menu_overlay_if_active();
 
         //Escribir footer
         draw_middle_footer();

@@ -72,6 +72,12 @@ extern long core_cpu_timer_each_frame_difftime;
 extern long core_cpu_timer_each_frame_media;
 
 
+extern struct timeval core_render_menu_overlay_antes;
+extern struct timeval core_render_menu_overlay_despues;
+extern long core_render_menu_overlay_difftime;
+extern long core_render_menu_overlay_media;
+
+
 extern int timer_on_screen_key;
 extern int timer_on_screen_adv_key;
 
