@@ -28,6 +28,7 @@
 #include "sensors.h"
 #include "debug.h"
 #include "ay38912.h"
+#include "sn76489an.h"
 #include "screen.h"
 #include "menu.h"
 #include "timer.h"
@@ -70,6 +71,17 @@ int sensor_ay_vol_chip_funcion_get_value(int id)
 
     return (ay_3_8912_registros[chip][8+canal]&15);
 
+}
+
+
+int sensor_sn_vol_chip_funcion_get_value(int id)
+{
+    return 15 - (sn_chip_registers[6+id] & 15);
+}
+
+int sensor_sn_noise_chip_funcion_get_value(int id)
+{
+    return 15 - (sn_chip_registers[10] & 15);
 }
 
 int sensor_time_betw_frames_get_value(int id)
@@ -213,6 +225,39 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     },      
 
 
+
+    {
+    "sn_vol_chan_A","SN Volume Channel A","SNVolA",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_sn_vol_chip_funcion_get_value,0
+    },
+
+    {
+    "sn_vol_chan_B","SN Volume Channel B","SNVolB",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_sn_vol_chip_funcion_get_value,1
+    },
+
+    {
+    "sn_vol_chan_C","SN Volume Channel C","SNVolC",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_sn_vol_chip_funcion_get_value,2
+    },
+
+
+    {
+    "sn_noise","SN Noise Channel","SNNoise",
+    0,15,
+    84,-9999,
+    9999,-9999,
+    sensor_sn_noise_chip_funcion_get_value,0
+    },
     
     {
     "fps","Frames per second","FPS",
