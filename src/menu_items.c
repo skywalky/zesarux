@@ -29801,6 +29801,7 @@ int menu_debug_view_sensors_get_sensor_item(int sensor_id)
             "- A percentage value, like %CPU usage\n"
             "\n"
             "Sensors that return times, they are expressed in microseconds\n"
+            "Some sensors will change its colour to a warning colour (usually red) when they are beyond normal values\n"
             "\n"
             "Sensors can be shown on the window by the sensor value or a calculated percentage, for example:\n"
             "If a sensor returns time in microseconds, and the sensor is 10000, the calculated percentage of a total 20000, will be 50%\n"
