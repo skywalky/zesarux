@@ -1,4 +1,4 @@
-Version 9.3 - xxxx edition. 09 June 2021
+Version 9.3 - xxxx edition. 25 June 2021
 
 Added Sega Master System emulation
 Added .sms file viewer
@@ -8,37 +8,39 @@ Added new improved real tape loading algorithm
 Added setting to disable TZX pauses
 Added zsf to scr support for Next, ZX-Uno and TSConf snapshots
 Added Jupiter Ace 51 KB RAM emulation
-Added GUI styles: Bloody, Grass, Ocean, Sunny, Panther, Sky
+Added GUI styles: BeOS, Bloody, Grass, Ocean, Sunny, Panther, Sky
 
+
+Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
+Improved Audio to .mid exporter: allow changing instrument
 Improved Text Aventure Debugging: 
 -Improved detection of Daad aventures
 -Now you can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
 
 Improved Debugging: 
--Mouse accions: click (toggle breakpoint, change registers), Scroll up/down by using the mouse wheel
+-Mouse accions: click (toggle breakpoint, change registers), scrolling up/down by using the mouse wheel
 -Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80
 -Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
-
-Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
 
 Improved ZX Vision menu interface:
 -Added setting to pause cpu emulation on menu when multitask active
 -Show in file selector when a file can be expanded
 -Improved screen file previews: any file size of 6912 bytes is guessed as Spectrum screen
--Maximizing windows now take care of size of zx desktop
+-Maximizing windows now take care of size of ZX Desktop
 -Added item to reduce+rearrange windows
--Added BeOS GUI Style
 -Added some graphical meters on AY Registers, Core Statistics
 -Colour palette window now shows all colours that fit in the window
 -View sprite legend now adapts to size
--Added setting to disable boxes around lower and upper buttons
+-Added setting to disable boxes around lower and upper ZX Desktop Buttons
 
-Improved Audio to .mid exporter: allow changing instrument
 
 Fixed file previews on corrupted files: pzx, tap
 Fixed rearranging windows and using total window height
 Fixed Next ULA Scroll to use registers 0x26 and 0x27
 Fixed Next tbblue port 123b behaviour: 48kb ram paging, shadow display, 3bit offset, read access
+
+
+Some other minor bugfixes and improvements
 
 
 

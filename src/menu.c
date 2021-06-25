@@ -10524,7 +10524,7 @@ void zxvision_widgets_draw_metter_common_by_shortname(zxvision_window *ventana,i
 
     char buffer_texto_meters[100];
     if (valor_en_vez_de_perc) {
-        sprintf(buffer_texto_meters,"%s %d ",display_name,valor_cpu);
+        sprintf(buffer_texto_meters,"%s %d",display_name,valor_cpu);
     }
     else {
         sprintf(buffer_texto_meters,"%s %3d%%",display_name,media_cpu_perc);

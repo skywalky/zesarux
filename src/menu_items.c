@@ -29960,9 +29960,15 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
                 //borrar rastros de textos anteriores
         zxvision_cls(ventana);
 
+        //Forzar a mostrar atajos
+		z80_bit antes_menu_writing_inverse_color;
+		antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+		menu_writing_inverse_color.v=1;
+
         zxvision_print_string_defaults(ventana,1,0,"Move: Cursors. ~~E~~n~~t~~e~~r: Select Sensor. ~~Type. ~~Abs/Perc");
 
-        
+        //Restaurar comportamiento atajos
+		menu_writing_inverse_color.v=antes_menu_writing_inverse_color.v;        
 
         char *short_name;
         int menu_debug_view_sensors_tipo;

@@ -38,12 +38,12 @@
 
 
 
-int sensor_fps_funcion_get_value(int id)
+int sensor_fps_funcion_get_value(int id GCC_UNUSED)
 {
     return ultimo_fps;
 }
 
-int sensor_total_average_cpu_get_value(int id)
+int sensor_total_average_cpu_get_value(int id GCC_UNUSED)
 {
 	int media_cpu=0;
 
@@ -54,7 +54,7 @@ int sensor_total_average_cpu_get_value(int id)
     return media_cpu;
 }
 
-int sensor_instant_average_cpu_get_value(int id)
+int sensor_instant_average_cpu_get_value(int id GCC_UNUSED)
 {
 
     return menu_last_cpu_use;
@@ -73,43 +73,61 @@ int sensor_ay_vol_chip_funcion_get_value(int id)
 
 }
 
+//Retorna frecuencia de un canal AY
+//Id es:
+//(chip*4) + canal
+/*
+Como las frecuencias de notas no siguen un factor lineal, quiza no tienen mucho uso como sensores,
+pues de una octava a la otra es el doble de valor
+int sensor_ay_freq_chip_funcion_get_value(int id)
+{
+    int chip=id/4;
+
+    int canal=id & 3;
+
+    return ay_retorna_frecuencia(canal,chip);
+
+
+}
+*/
+
 
 int sensor_sn_vol_chip_funcion_get_value(int id)
 {
     return 15 - (sn_chip_registers[6+id] & 15);
 }
 
-int sensor_sn_noise_chip_funcion_get_value(int id)
+int sensor_sn_noise_chip_funcion_get_value(int id GCC_UNUSED)
 {
     return 15 - (sn_chip_registers[10] & 15);
 }
 
-int sensor_time_betw_frames_get_value(int id)
+int sensor_time_betw_frames_get_value(int id GCC_UNUSED)
 {
     return core_cpu_timer_each_frame_difftime;
 }
 
-int sensor_last_core_frame_get_value(int id)
+int sensor_last_core_frame_get_value(int id GCC_UNUSED)
 {
     return core_cpu_timer_frame_difftime;
 }
 
-int sensor_last_full_render_get_value(int id)
+int sensor_last_full_render_get_value(int id GCC_UNUSED)
 {
     return core_cpu_timer_refresca_pantalla_difftime;
 }
 
-int sensor_last_menu_overlay_render_get_value(int id)
+int sensor_last_menu_overlay_render_get_value(int id GCC_UNUSED)
 {
     return core_render_menu_overlay_difftime;
 }
 
-int sensor_avg_menu_overlay_render_get_value(int id)
+int sensor_avg_menu_overlay_render_get_value(int id GCC_UNUSED)
 {
     return core_render_menu_overlay_media;
 }
 
-int sensor_dropped_frames_get_value(int id)
+int sensor_dropped_frames_get_value(int id GCC_UNUSED)
 {
 
     int perc_dropped;
@@ -127,7 +145,7 @@ int sensor_dropped_frames_get_value(int id)
     return perc_dropped;
 }
 
-int sensor_audio_buffer_get_value(int id)
+int sensor_audio_buffer_get_value(int id GCC_UNUSED)
 {
 
     //Igual que sensor_dropped_frames_get_value, retornamos tanto por ciento tal cual en vez de valor absoluto
@@ -224,7 +242,17 @@ sensor_item sensors_array[TOTAL_SENSORS]={
     sensor_ay_vol_chip_funcion_get_value,10
     },      
 
-
+/*
+Como las frecuencias de notas no siguen un factor lineal, quiza no tienen mucho uso como sensores,
+pues de una octava a la otra es el doble de valor
+    {
+    "ay_freq_chip0_chan_A","AY Frequency Chip 0 Channel A","FreqA[0]",
+    0,7902, //max freq indicamos la nota B octava 8, aunque el chip puede ir mucho mas alla
+    9999,-9999,
+    999999,-999999,
+    sensor_ay_freq_chip_funcion_get_value,0
+    },
+*/
 
     {
     "sn_vol_chan_A","SN Volume Channel A","SNVolA",
@@ -252,7 +280,7 @@ sensor_item sensors_array[TOTAL_SENSORS]={
 
 
     {
-    "sn_noise","SN Noise Channel","SNNoise",
+    "sn_noise","SN Volume Noise Channel","SNNoise",
     0,15,
     84,-9999,
     9999,-9999,
