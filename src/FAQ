@@ -600,11 +600,15 @@ A: Please think that emulation has a cost, mostly cpu use. Also, the NextOS runs
 comparing with a normal Speccy, it's 8 times faster. So, it will need, at least, 8 times more real cpu than emulating a real speccy (and I'm not considering here all the extra video modes, Sprites, copper etc). So you can't compare a Spectrum emulator with ZEsarUX emulating the Spectrum Next. Emulating all the Next core needs a lot of cpu power.
 However, there are some settings that you can tune to reduce the cpu needed.
 You can change the following settings:
--Settings->CPU. Set the setting "deny turbo on ROM". And set the cpu speed to x1. That will set maximum cpu speed to x1 but only on the NexOS,
-games and programs can change the cpu speed.
+-Settings->CPU. Set the setting "deny turbo on ROM". And set the cpu speed to x1. That will set maximum cpu speed to x1 but only on the NexZXOS,
+games and programs out of NextZXOS can change the cpu speed.
 -Settings->Display. Disable real video. This will disable viewing of sprites, layer 2, etc (anything that extends the Next).
 
 The first setting will make the nextos less laggy. The second one will also improve performance, but you should enable it when running Next games.
+
+
+Q: On NextZXOS everything seems to run slower than the real machine
+A: Verify setting Settings->CPU->Limit turbo on ROM. Starting from ZEsarUX 9.3, that setting is enabled by default and limits the maximum turbo speed the NextZXOS can set (does not apply to games/programs out of NextZXOS). That's enabled by default to limit the total amount of real cpu that needs NextZXOS (at least 8 times more than a regular emulated Spectrum), and could notice a performance problem in some machines. If your machine is fast enough, disable that setting (or increase the setting Settings->CPU->Max turbo allowed) to try to run at real Next speed.
 
 
 ----------------------------------------------------------------------------

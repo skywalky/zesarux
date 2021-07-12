@@ -10334,6 +10334,8 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 
 					if (tbblue_deny_turbo_rom.v) {
 						menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom_max_allowed,NULL,"[%d] Max turbo allowed",tbblue_deny_turbo_rom_max_allowed);
+                        menu_add_item_menu_tooltip(array_menu_cpu_settings,"Max turbo value allowed on Next ROM.");
+                        menu_add_item_menu_ayuda(array_menu_cpu_settings,"Max turbo value allowed on Next ROM.");
 					}
 	  }	  
 

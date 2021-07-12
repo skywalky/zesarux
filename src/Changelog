@@ -17,6 +17,9 @@ Improved Text Aventure Debugging:
 -Improved detection of Daad aventures
 -Now you can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
 
+Improved TBBlue turbo setting: make it by default limited on NextZXOS
+Improved TBBlue .zsf snapshots to include all info from port 123b (previous TBBlue .zsf snapshots are incompatible with this version, sorry!)
+
 Improved Debugging: 
 -Mouse accions: click (toggle breakpoint, change registers), scrolling up/down by using the mouse wheel
 -Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80

@@ -100,10 +100,11 @@ z80_byte *tbblue_memory_paged[8];
 z80_bit tbblue_fast_boot_mode={0};
 
 
-z80_bit tbblue_deny_turbo_rom={0};
+//Por defecto denegado
+z80_bit tbblue_deny_turbo_rom={1};
 
-//Maximo turbo permitido al habilitar tbblue_deny_turbo_rom. Por defecto maximo 1X
-int tbblue_deny_turbo_rom_max_allowed=1;
+//Maximo turbo permitido al habilitar tbblue_deny_turbo_rom. Por defecto maximo 2X
+int tbblue_deny_turbo_rom_max_allowed=2;
 
 
 //

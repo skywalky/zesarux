@@ -1540,8 +1540,9 @@ printf (
 		"--cpuspeed n               Set CPU speed in percentage\n"
 		"--denyturbozxunoboot       Deny setting turbo mode on ZX-Uno boot\n"
 
-		"--denyturbotbbluerom       Limit setting turbo mode on TBBlue ROM\n"
-		"--tbblue-max-turbo-rom n   Max allowed turbo speed mode on TBBlue ROM when enabling --denyturbotbbluerom"
+		"--denyturbotbbluerom       Limit setting turbo mode on TBBlue ROM (default setting denied)\n"
+        "--allowturbotbbluerom      Do not limit setting turbo mode on TBBlue ROM\n"
+		"--tbblue-max-turbo-rom n   Max allowed turbo speed mode on TBBlue ROM when enabling --denyturbotbbluerom (default value: 2)"
 
 		"--tbblue-fast-boot-mode    Boots tbblue directly to a 48 rom but with all the Next features enabled (except divmmc)\n"
 		//no uso esto de momento "--tbblue-123b-port n        Sets the initial value for port 123b on hard reset, for tbblue-fast-boot-mode\n"
@@ -5604,6 +5605,12 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--denyturbotbbluerom")) {
 					tbblue_deny_turbo_rom.v=1;
 			}		
+
+            //Contemplamos los dos setting de deny y allow para compatibilidad con versiones previas a ZEsarUX 9.3, donde antes
+            //estaba permitido por defecto
+			else if (!strcmp(argv[puntero_parametro],"--allowturbotbbluerom")) {
+					tbblue_deny_turbo_rom.v=0;
+			}
 
 			else if (!strcmp(argv[puntero_parametro],"--tbblue-max-turbo-rom")) {
 				
