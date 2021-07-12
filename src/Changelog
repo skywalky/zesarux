@@ -41,6 +41,7 @@ Fixed file previews on corrupted files: pzx, tap
 Fixed rearranging windows and using total window height
 Fixed Next ULA Scroll to use registers 0x26 and 0x27
 Fixed Next tbblue port 123b behaviour: 48kb ram paging, shadow display, 3bit offset, read access
+Fixed cpu-step behaviour the first time it's executed
 
 
 Some other minor bugfixes and improvements

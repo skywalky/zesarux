@@ -677,7 +677,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"dump-scanline-buffer",NULL,NULL,"Shows internal scanline rainbow buffer, pixel and atribute byte pairs"},
   {"enable-breakpoint","|eb","index","Enable specific breakpoint"},
   {"enable-breakpoints",NULL,NULL,"Enable breakpoints"},
-  {"enter-cpu-step",NULL,NULL,"Enter cpu step to step mode"},
+  {"enter-cpu-step","|encs",NULL,"Enter cpu step to step mode"},
 	{"esxdoshandler-get-open-files","|esxgof",NULL,"Gets a list of open files and directories on the esxdos handler"},
   {"evaluate","|e","expression","Evaluate expression. It's the same parser as using breakpoints on the debug menu"},
   //{"evaluate-condition","|ec","condition","Evaluate condition. It's the same as using evaluate condition on the breakpoints debug menu"},
@@ -1976,10 +1976,11 @@ void remote_cpu_after_core_loop(void)
 
 
 //Ejecuta core_loop y si parametro update esta activo, actualiza pantalla al momento y muestra electron si conviene
-void remote_core_loop_if_update_immediately(int update)
+void remote_core_loop_if_update_immediately(int update,int nowait_endframe)
 {
 		if (update) screen_force_refresh=1; //Para que no haga frameskip y almacene los pixeles/atributos en buffer rainbow
-	  cpu_core_loop();
+    if (nowait_endframe) menu_debug_registers_run_cpu_opcode();
+	else cpu_core_loop();
 		if (update) {
 			menu_debug_registers_show_scan_position();
 			menu_refresca_pantalla();
@@ -1995,7 +1996,7 @@ void remote_cpu_step(int misocket) {
   }
   debug_core_lanzado_inter.v=0;
   //cpu_core_loop();
-	remote_core_loop_if_update_immediately(1);
+	remote_core_loop_if_update_immediately(1,1);
 
   if (debug_core_lanzado_inter.v && (remote_debug_settings&32)) {
 	  debug_run_until_return_interrupt();
@@ -2104,12 +2105,8 @@ void remote_cpu_run_loop(int misocket,int verbose,int limite,int datos_vuelve,in
 	  }
 	  debug_core_lanzado_inter.v=0;
 
-		//int actualiza_al_momento=0;
-		//if (verbose || limite) actualiza_al_momento=1;
 
-		//temp
-		//actualiza_al_momento=0;
-		remote_core_loop_if_update_immediately(actualiza_al_momento);
+		remote_core_loop_if_update_immediately(actualiza_al_momento,0);
 
 	  if (debug_core_lanzado_inter.v && (remote_debug_settings&32)) {
 			debug_run_until_return_interrupt();
@@ -3946,7 +3943,7 @@ void interpreta_comando(char *comando,int misocket)
 
     }
 
-  else if (!strcmp(comando_sin_parametros,"enter-cpu-step")) {
+  else if (!strcmp(comando_sin_parametros,"enter-cpu-step") || !strcmp(comando_sin_parametros,"encs")) {
     remote_cpu_enter_step(misocket);
   }
 

@@ -262,3 +262,5 @@ en 38H, y darle enter en modo step, casi nunca avanza de esa direccion (porque s
 
 Quizá para corregir El Paso a paso cuando hay breakpoints de por medio sería llamar a la función de core pero que 
 hay por debajo del breakpoint. Aunque esto antes funcionaba bien 
+
+->sucede cuando coincide esperando_tiempo_final_t_estados.v

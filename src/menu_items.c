@@ -19190,6 +19190,14 @@ z80_byte menu_debug_cpu_handle_mouse(zxvision_window *ventana)
     return 0;
 }
 
+void menu_debug_registers_run_cpu_opcode(void)
+{
+    //Decirle que no esperamos final de frame ya
+    interrupcion_timer_generada.v=1;
+    esperando_tiempo_final_t_estados.v=0;
+    cpu_core_loop();
+}
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -20184,7 +20192,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 			//1 instruccion cpu
 			if (si_ejecuta_una_instruccion) {
-				//printf ("ejecutando instruccion en step-to-step o continuous. PC=%d\n",reg_pc);
+				//printf ("ejecutando instruccion en step-to-step o continuous. PC=%XH\n",reg_pc);
 				debug_core_lanzado_inter.v=0;
 
 				screen_force_refresh=1; //Para que no haga frameskip y almacene los pixeles/atributos en buffer rainbow
@@ -20203,8 +20211,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }					
 
 				else {
-                    //printf("ejecutando cpu_core_loop\n");
-                    cpu_core_loop();
+                    //printf("ejecutando cpu_core_loop. PC=%XH\n",reg_pc);
+                    menu_debug_registers_run_cpu_opcode();
+                    //printf("despues ejecutando cpu_core_loop. PC=%XH\n",reg_pc);
                 }
 
 				//Ver si se ha disparado interrupcion (nmi o maskable)

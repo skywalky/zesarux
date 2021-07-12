@@ -946,9 +946,15 @@ void cpu_core_loop_spectrum(void)
 		else {
 			if (esperando_tiempo_final_t_estados.v==0) {
 				TIMESENSOR_ENTRY_PRE(TIMESENSOR_ID_core_spectrum_ciclo_fetch);
+                //printf("antes ciclo fetch PC=%XH\n",reg_pc);
 				core_spectrum_ciclo_fetch();
+                //printf("despues ciclo fetch PC=%XH\n",reg_pc);
 				TIMESENSOR_ENTRY_POST(TIMESENSOR_ID_core_spectrum_ciclo_fetch);
             }
+
+            //else {
+            //    printf("esperando final t estados PC=%XH\n",reg_pc);
+            //}
 
         }
 
