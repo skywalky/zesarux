@@ -14252,6 +14252,14 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_breakpoints,"Evaluate expression using parser");
 		menu_add_item_menu_ayuda(array_menu_breakpoints,"Evaluate expression using parser. It's the same parser as breakpoint conditions below");
 
+
+		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_mem_breakpoints,NULL,"~~Memory breakpoints");
+		menu_add_item_menu_shortcut(array_menu_breakpoints,'m');
+
+		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_clear_all_breakpoints,NULL,"Clear all breakpoints");
+
+
+
 #define MAX_BRK_SHOWN_MENU 10		
 
 		//Para mostrar los tooltip de cada linea, como contenido del breakpoint
@@ -14308,15 +14316,13 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 			if (buffer_temp_breakpoint_array[i][0]) {
 				menu_add_item_menu_tooltip(array_menu_breakpoints,buffer_temp_breakpoint_array[i]);
 			}
-			else menu_add_item_menu_tooltip(array_menu_breakpoints,"Set a condition breakpoint. Press Space to disable or enable. Only 10 shown here. "
-						"If you want to use more, connect to ZRCP");
+			else menu_add_item_menu_tooltip(array_menu_breakpoints,"Set a condition breakpoint. Press Space to disable or enable");
 
 			menu_add_item_menu_espacio(array_menu_breakpoints,menu_breakpoints_condition_enable_disable);
 
 			menu_add_item_menu_valor_opcion(array_menu_breakpoints,i);
 
-			menu_add_item_menu_ayuda(array_menu_breakpoints,"Set a condition breakpoint and its action. Press Space to disable or enable. Only 10 shown here. "
-                                                "If you want to use more, connect to ZRCP.\n"
+			menu_add_item_menu_ayuda(array_menu_breakpoints,"Set a condition breakpoint and its action. Press Space to disable or enable.\n"
 						HELP_MESSAGE_CONDITION_BREAKPOINT
 						"\n\n\n"
 						HELP_MESSAGE_BREAKPOINT_ACTION
@@ -14325,31 +14331,29 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 
         }
 
-		menu_add_item_menu(array_menu_breakpoints,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_mem_breakpoints,NULL,"~~Memory breakpoints");
-		menu_add_item_menu_shortcut(array_menu_breakpoints,'m');
+		//menu_add_item_menu(array_menu_breakpoints,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-		menu_add_item_menu_format(array_menu_breakpoints,MENU_OPCION_NORMAL,menu_clear_all_breakpoints,NULL,"Clear all breakpoints");
 
 
-                menu_add_item_menu(array_menu_breakpoints,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                menu_add_ESC_item(array_menu_breakpoints);
-                retorno_menu=menu_dibuja_menu(&breakpoints_opcion_seleccionada,&item_seleccionado,array_menu_breakpoints,"Breakpoints" );
+
+
+        menu_add_item_menu(array_menu_breakpoints,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+        menu_add_ESC_item(array_menu_breakpoints);
+        retorno_menu=menu_dibuja_menu(&breakpoints_opcion_seleccionada,&item_seleccionado,array_menu_breakpoints,"Breakpoints" );
 
                 
 
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                //llamamos por valor de funcion
+                if (item_seleccionado.menu_funcion!=NULL) {
+                        //printf ("actuamos por funcion\n");
+                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                        
                 }
+        }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
 

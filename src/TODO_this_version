@@ -213,7 +213,8 @@ Deberia mirar ese bit esta a 1 para poner el contador a 0?
 
 
 
--listado de breakpoints: que liste mas alla de 10 (que salga hasta el ultimo definido). O que salgan todos directamente, con opciones de menu que no son listado arriba del todo
+-listado de breakpoints: que liste mas alla de 10 (que salga hasta el ultimo definido). 
+O que salgan todos directamente, con opciones de menu que no son listado arriba del todo
 
 -Quizá al mover rueda de ratón tiene que volver de menú espera tecla
 
@@ -229,10 +230,6 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 
 -Número gráficos limitar a maximo 256 (en quill, paws, daad, gac)
 
-
--Quizá por defecto en next limitar turbo en rom
-
-
 -al hacer assemble se debe poner en modo step si estaba en modo step
 
 -modos adicionales Next layer 2
@@ -244,9 +241,6 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 -ay player en modo "jukebox" que permita agregar canciones ay a la lista
 
 -frecuencias chips audio como sensores?
-
--En test style gui mostrar texto con tinta normal y papel el de waveform (o al reves, tinta waveform y papel el de tinta normal)
-Esto permite saber si los dos son iguales cosa perjudicial en el widget tipo speaker 
 
 
 -Revisar tbblue dma con efectos sonido cuadragon next
