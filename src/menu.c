@@ -29404,16 +29404,31 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     linea++;
 
 
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE,ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE,0,"Unavailable Selected Text");
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_SEL_NO_DISPONIBLE,ESTILO_GUI_PAPEL_SEL_NO_DISPONIBLE,0,"Unavailable Selected Text");    
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0,"Marked Text");
+
+    //Así es tal como lo muestra en texto de volumen
+    char warn_colour='0'+ESTILO_GUI_COLOR_AVISO;
+    char buffer_text[64];
+    sprintf(buffer_text,"$$%cWarning text",warn_colour);
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_text);
+
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"~~Hotkey");
+
+
+    //El parpadeo es igual en todos los temas (de momento) pero también lo mostramos
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"Flashing Text");
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO,0,"Title Text");
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_COLOR_RECUADRO,ESTILO_GUI_PAPEL_NORMAL,0,"Window Box colour (this ink)");
-
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,0,"Inactive Title Text");
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_PAPEL_NORMAL,0,"Waveform colour (this ink)");
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_COLOR_RECUADRO,0,"Window Box colour (this paper)");
+
+    //tinta waveform y tinta normal se usan a la vez en widget tipo speaker. por tanto interesa que no sean iguales
+    //asi este item lo mostramos combinando los dos colores
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_COLOR_WAVEFORM,0,"Waveform colour (this paper)");
 
     //tinta 0 - negro es la de intensidad mas baja. papel el del unused
     //Poner una tinta negra normalmente a no ser que el papel vaya a ser negro tambien
@@ -29425,20 +29440,6 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     }
 
     zxvision_print_string(&ventana,1,linea++,tinta_visualmem_text,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,0,"Unused visualmem (this paper)");
-
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0,"Marked Text");
-
-    //Así es tal como lo muestra en texto de volumen
-    char warn_colour='0'+ESTILO_GUI_COLOR_AVISO;
-    char buffer_text[64];
-    sprintf(buffer_text,"$$%cWarning text",warn_colour);
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,buffer_text);  
-
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"~~Hotkey");  
-
-
-    //El parpadeo es igual en todos los temas (de momento) pero también lo mostramos
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"Flashing Text");
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Ascii table:");
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"!\"#$%&\'()*+,-./0123456789:;<=>");
