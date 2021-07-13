@@ -7312,6 +7312,12 @@ void debug_view_basic_variables(char *results_buffer,int maxima_longitud_texto)
     z80_byte id_matriz_alfanum=6;
     z80_byte id_variable_fornext=7;
 
+    /*
+    Nota: funciones (DEF FN) no se definen como variables, solo estan definidas en la linea en la que estan escritas
+    Asi cuando invocamos a una función (por ejemplo PRINT FN x(3)), el interprete Basic recorre todas las lineas
+    desde el principio hasta que encuentra la DEF FN correspondiente
+    */
+
     if (MACHINE_IS_ZX80) {
         id_variable_alfanum=4;
         id_matriz_num=5;

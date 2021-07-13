@@ -19193,6 +19193,8 @@ z80_byte menu_debug_cpu_handle_mouse(zxvision_window *ventana)
 void menu_debug_registers_run_cpu_opcode(void)
 {
     //Decirle que no esperamos final de frame ya
+    //Si no hicieramos esto, podria pasar que el core estuviera en final de ejecucion de instrucciones
+    //de un frame pero esperando el tiempo del final de ese frame, y por tanto, al lanzar un step de cpu, no ejecutaria ninguna instruccion
     interrupcion_timer_generada.v=1;
     esperando_tiempo_final_t_estados.v=0;
     cpu_core_loop();

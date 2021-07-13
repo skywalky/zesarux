@@ -232,10 +232,6 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 
 -Quizá por defecto en next limitar turbo en rom
 
--estilos gui en documentación
-
--Variables def fn en spectrum como se guardan??
-
 
 -al hacer assemble se debe poner en modo step si estaba en modo step
 
@@ -243,8 +239,6 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 
 
 -agregar sensor temperatura cpu linux
-
--ayuda gui estilos agregar mas... You can switch between:...
 
 
 -ay player en modo "jukebox" que permita agregar canciones ay a la lista
@@ -257,10 +251,3 @@ Esto permite saber si los dos son iguales cosa perjudicial en el widget tipo spe
 
 -Revisar tbblue dma con efectos sonido cuadragon next
 
--debug cpu. parece que desde el cambio de gestion step to step (con setting disable cpu emulation) ahora al poner un breakpoint
-en 38H, y darle enter en modo step, casi nunca avanza de esa direccion (porque salta de nuevo el breakpoint)
-
-Quizá para corregir El Paso a paso cuando hay breakpoints de por medio sería llamar a la función de core pero que 
-hay por debajo del breakpoint. Aunque esto antes funcionaba bien 
-
-->sucede cuando coincide esperando_tiempo_final_t_estados.v
