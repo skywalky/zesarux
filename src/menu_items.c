@@ -4158,10 +4158,10 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
 				int sprite_es_4bpp=0;
 				int offset_4bpp_N6=0;
-                int sprite_es_relative=0; 
+                //int sprite_es_relative=0; 
 
-                int sprite_es_relative_composite=0; 
-                int sprite_es_relative_unified=0;
+                //int sprite_es_relative_composite=0; 
+                //int sprite_es_relative_unified=0;
 
 				char buf_subindex_4_bit[10];
 
@@ -4187,7 +4187,7 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
 
                 if ((byte_5 & (128+64)) == 64) {
                     //sprite relative
-                    sprite_es_relative=1;
+                    //sprite_es_relative=1;
                     strcpy(buf_relative_type,"REL");
                 }
                 else {
@@ -4197,11 +4197,11 @@ void menu_debug_tsconf_tbblue_msx_spritenav_lista_sprites(void)
                     //El tipo de sprite relativo (unified o composite) se define en el anchor,
                     //no en los bits del sprite relativo                
                     if (byte_5 & 32) {
-                        sprite_es_relative_unified=1;
+                        //sprite_es_relative_unified=1;
                         strcpy(buf_relative_type,"UNI");
                     }
                     else {
-                        sprite_es_relative_composite=1;
+                        //sprite_es_relative_composite=1;
                         strcpy(buf_relative_type,"CMP");
                     }                        
 
@@ -28919,7 +28919,7 @@ void menu_find_bytes_view_results(MENU_ITEM_PARAMETERS)
 
 
 
-        int index_find,index_buffer;
+        int index_find;
 
         //char results_buffer[MAX_TEXTO_GENERIC_MESSAGE];
 
@@ -28927,7 +28927,7 @@ void menu_find_bytes_view_results(MENU_ITEM_PARAMETERS)
         //direccion+salto linea+codigo 0
         //char buf_linea[9];
 
-        index_buffer=0;
+        //index_buffer=0;
 
         //int encontrados=0;
 
@@ -29956,7 +29956,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
     z80_byte tecla;
 
-    int antes_mouse_left=0;
+    //int antes_mouse_left=0;
 
     int antes_menu_mouse_x=menu_mouse_x;
     int antes_menu_mouse_y=menu_mouse_y;
@@ -30003,7 +30003,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 
             //printf("mouse %d %d\n",menu_mouse_x,menu_mouse_y);
 
-            antes_mouse_left=mouse_left;
+            //antes_mouse_left=mouse_left;
 
             //gestionar movimiento cursor
             //Solo si se ha movido

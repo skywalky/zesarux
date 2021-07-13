@@ -1,34 +1,5 @@
 Para esta version 9.2:
 
--Ventanas con contadores de rendimiento y estado, tipo kms/h y cosas así
-Ver ejemplos de grafana
-Por ejemplo uno circular con aguja que indique el volumen de la señal de salida
-Otro el uso de cpu
-Etc
-
-Quizá ventana con vistas configurables. Poder agregar diferentes sensores numéricos con diferente estilo:
--kms/h
--vumeter
--gráfica con tiempo en la horizontal
--valor instantáneo
-Poder indicar tiempo de refresco 
-
-Centralizarlo en una función que tenga sensores, que retorne máximo y mínimo valor posible. Y nombre de sensores 
-
-Nombre de esa ventana?
-ZX Graph
-ZEsarUX graph
-Emu Graph
-Emu view
-Emu sensors
-ZEsarUX sensors
-Etc... 
-
-
--Widget uso cpu con aguja. Igual para sonido. Quizá común para una variable concreto 
-
-
-
 
 -Meter file browser zxuno en imagen zxuno mmc
 
@@ -130,15 +101,12 @@ https://foro.speccy.org/viewtopic.php?t=1502
 - meter en extras de docs Benchmark legacy tbblue: de momento está en el código, en el menú como comentarios
 
 
-
-
 -Quizá versión en un futuro en que al pulsar escape cierra todos los menús. 
 Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
 
 
 
-
--Problema con el almacenamiento de los t-estados en snapshot 
+-Problema con el almacenamiento de los t-estados en snapshot .zsf: no se guarda
 
 -sprite disabling window tambien para tsconf y maquinas con chip vdp (msx, etc)
 
@@ -170,7 +138,6 @@ hace que se arranque la ventana en tamaño spectrum y despues de unos segundos s
 Activando el maximo turbo permitido, tambien hace una franja negra en el border, arriba del todo
 
 
--estadisticas memoria etc con getrusage
 
 -Quizá cuando se ha pulsado rewind y hasta que no hay el timeout, no generar nuevos snapshots. 
 Si no, cuando pasa el timeout y se hace rewind, aparecen unos snapshot “temporales” que quizá el usuario 
@@ -183,8 +150,6 @@ no quiere ver. O siempre así o igual personalizable. Probarlo
 
 -paws Dump toda tabla procesos 
 
-
--borrar util_daad_get_graphics_list_commands cuando ya no se use
 
 -en debug resaltar registros que se vayan a cambiar . en rojo?. Por ejemplo, si hay un "INC C" resaltar registro C
 
@@ -211,10 +176,6 @@ Bit	Value	Function
 Deberia mirar ese bit esta a 1 para poner el contador a 0?
 
 
-
-
--listado de breakpoints: que liste mas alla de 10 (que salga hasta el ultimo definido). 
-O que salgan todos directamente, con opciones de menu que no son listado arriba del todo
 
 -Quizá al mover rueda de ratón tiene que volver de menú espera tecla
 
@@ -244,4 +205,6 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 
 
 -Revisar tbblue dma con efectos sonido cuadragon next
+
+-estadisticas memoria etc con getrusage: aunque esto solo vale para Linux
 

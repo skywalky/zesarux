@@ -1954,13 +1954,13 @@ void cpc_putpixel_zoom_rainbow(int x,z80_int *puntero_buf_rainbow,int color)
 
 void screen_store_scanline_rainbow_solo_border_cpc(void)
 {
-    int alto_caracter,ancho_total,total_alto,offset_x;
+    int ancho_total,total_alto,offset_x;
 
 
 
             //sacar los limites pero sin fijar a 640x200 como en el caso de no rainbow
 
-        alto_caracter=cpc_crtc_get_height_character();
+        //alto_caracter=cpc_crtc_get_height_character();
 
         ancho_total=cpc_crtc_get_total_pixels_horizontal();
         total_alto=cpc_crtc_get_total_pixels_vertical();         

@@ -1988,7 +1988,7 @@ void tbsprite_do_overlay(void)
     //int relative_sprite=0;
 
     //Esto se conserva el valor anterior del anterior anchor
-    int sprite_es_relative_composite=0; 
+    //int sprite_es_relative_composite=0; 
     int sprite_es_relative_unified=0;        
 
     int ultimo_sprite=TBBLUE_MAX_SPRITES-1;
@@ -2113,12 +2113,12 @@ If the display of the sprites on the border is disabled, the coordinates of the 
             //con la condicion al reves para que se arregla un poco 
             //if (!(spr_attr_4 & 32)) {                                
                 sprite_es_relative_unified=1;
-                sprite_es_relative_composite=0;
+                //sprite_es_relative_composite=0;
                 //printf("sprite unified en %d\n",conta_sprites);
             }
             else {
                 sprite_es_relative_unified=0;
-                sprite_es_relative_composite=1;
+                //sprite_es_relative_composite=1;
             }                               
         }
 
