@@ -10792,8 +10792,9 @@ void zxvision_handle_maximize(zxvision_window *w)
             int xinicial;
             int yinicial;
 
-            //Tratar esto diferente si hay zx desktop activado
-            if (if_zxdesktop_enabled_and_driver_allows()) {
+            //Tratar esto diferente si hay zx desktop activado y si la apertura de ventanas es en zx desktop
+            //En ese caso obtiene el maximo que cabe en zxdesktop
+            if (if_zxdesktop_enabled_and_driver_allows() && screen_ext_desktop_place_menu) {
 			    xinicial=menu_origin_x();
 			    yinicial=0;     
 
@@ -10815,6 +10816,7 @@ void zxvision_handle_maximize(zxvision_window *w)
 
             }
 
+            //En este caso obtiene el maximo total en pantalla
             else {
 			    xinicial=0;
 			    yinicial=0;
@@ -33743,7 +33745,7 @@ void menu_about_help(MENU_ITEM_PARAMETERS)
 			"On ZX-Vision windows:\n"
 			"- Use mouse to move windows dragging from the title bar\n"
 			"- Drag mouse from the bottom-right part of the window to resize it\n"
-			"- Doble click on the title bar to mazimize/restore\n"
+			"- Double click on the title bar to intelligent maximize/restore (depending on menu windows appear on ZX Desktop or not)\n"
 			"- Click out of the window to put the focus on the emulated machine and send there keyboard presses\n"
 			"- Can also be moved with the keyboard: Shift+QAOP\n"
 			"- Can also be resized with the keyboard: Shift+WSKL\n"
