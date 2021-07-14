@@ -4589,11 +4589,16 @@ void menu_draw_ext_desktop(void)
 
 
                 //multiplicar por el color deseado. pillar color primario del setting menu_ext_desktop_fill_first_color
-                //de la lista de 8 colores del spectrum
-                //paleta grb
-                int componente_r=(menu_ext_desktop_fill_first_color>>1)&1;
-                int componente_g=(menu_ext_desktop_fill_first_color>>2)&1;
-                int componente_b=menu_ext_desktop_fill_first_color&1;
+                //de la lista de 8 colores del spectrum (paleta grb), ignorando brillos
+
+                int color_basico=menu_ext_desktop_fill_first_color & 7;
+
+                //en el caso particular del color 0 negro, hacemos que se comporte como 7 blanco... si no, que degradado habria de negro??
+                if (color_basico==0) color_basico=7;
+
+                int componente_r=(color_basico>>1)&1;
+                int componente_g=(color_basico>>2)&1;
+                int componente_b=color_basico&1;
 
                 componente_r *=posicion_color;
                 componente_g *=posicion_color;
