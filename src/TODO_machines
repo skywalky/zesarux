@@ -101,8 +101,6 @@ http://www.dilwyn.me.uk/downloads.html
 
 -Pendiente todo lo relacionado con texto: drivers modo texto para curses, stdout, ocr, input spool file, etc
 
--Emulacion microdrive y/o floppy. Mediante traps a la rom
-
 -Trap de F1 y F2 servirá para cuando se quiera hacer autoload. Por tanto no quitar estos traps
 
 -Combinación de teclas de QL que... resetea el IPC? Mencionado en manual
@@ -606,7 +604,7 @@ Which card is activated, sets bit 4 port # 7FFD.?? -> pendiente
 
 -real video
 -Alt derecha en PC es altgr?
--soporte snapshot .zx
+-soporte snapshot .zsf
 -refresco en curses:
 *al pulsar esc en curses en sam se queda pulsado??
 -refresco curses, text, stdout, F4
