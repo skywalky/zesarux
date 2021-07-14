@@ -4366,6 +4366,7 @@ void menu_ext_desktop_get_logo_coords(int *x,int *y)
 //4=ajedrez
 //5=Grid
 //6=Random
+//7=Degraded
 int menu_ext_desktop_fill=1;
 int menu_ext_desktop_fill_first_color=5;
 int menu_ext_desktop_fill_second_color=13;
@@ -4571,7 +4572,46 @@ void menu_draw_ext_desktop(void)
 				}
 			}
 
-		}					
+		}
+
+		//Degraded
+		if (menu_ext_desktop_fill==7) {
+
+			for (y=yinicio;y<yinicio+alto;y++) {
+
+                
+                //usamos esa paleta de colores de 5 bits por componente, por tanto, 32 colores maximo por componente
+                int offset_y=y-yinicio;
+                //dividir alto total en 32 segmentos
+                int divisor=alto/32;
+
+                int posicion_color=offset_y/divisor; //ahi tenemos un valor entre 0 y 31
+
+
+                //multiplicar por el color deseado. pillar color primario del setting menu_ext_desktop_fill_first_color
+                //de la lista de 8 colores del spectrum
+                //paleta grb
+                int componente_r=(menu_ext_desktop_fill_first_color>>1)&1;
+                int componente_g=(menu_ext_desktop_fill_first_color>>2)&1;
+                int componente_b=menu_ext_desktop_fill_first_color&1;
+
+                componente_r *=posicion_color;
+                componente_g *=posicion_color;
+                componente_b *=posicion_color;
+
+                //poner cada componente en su posicion final
+                int color_tsconf=(componente_b)|(componente_g<<5)|(componente_r<<10);
+
+                int color=TSCONF_INDEX_FIRST_COLOR+color_tsconf;
+
+				for (x=xinicio;x<xinicio+ancho;x++) {
+
+					scr_putpixel(x,y,color);
+
+				}
+			}
+
+		}
 
 
 	//Agregamos logo ZEsarUX en esquina inferior derecha, con margen, solo si menu esta abierto

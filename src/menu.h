@@ -919,7 +919,7 @@ extern void menu_draw_ext_desktop(void);
 extern int menu_ext_desktop_enabled_place_menu(void);
 extern int menu_get_width_characters_ext_desktop(void);
 
-#define MENU_MAX_EXT_DESKTOP_FILL_NUMBER 6
+#define MENU_MAX_EXT_DESKTOP_FILL_NUMBER 7
 
 extern int menu_ext_desktop_fill;
 extern int menu_ext_desktop_fill_first_color;

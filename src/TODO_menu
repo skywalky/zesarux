@@ -4,7 +4,6 @@
 ---Imagen. BMP?
 ---Miniatura de pantalla spectrum
 ---Imagen. SCR
----Degradado vertical usando alguna tabla de colores concreta ya existente
 ---Anaglifo usando segunda pantalla o extensión Desktop 
 --Fbdev debe permitir ZX Desktop?
 --sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana

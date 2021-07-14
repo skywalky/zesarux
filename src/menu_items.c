@@ -12086,6 +12086,12 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 					strcpy(fill_type_name,"Random");
 				break;		
 
+				case 7:
+					strcpy(fill_type_name,"Degraded");
+                    seleccion_primary=1;
+				break;
+
+
 				default:
 					strcpy(fill_type_name,"Unknown");
 				break;
@@ -12116,7 +12122,12 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%s] Fill type",fill_type_name);
 			
 			if (seleccion_primary) {
-				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,"[%s] Primary Fill Color",spectrum_colour_names[menu_ext_desktop_fill_first_color]);
+                //en tipo degraded, no tiene sentido mostrar los colores bright
+
+                int color_primario=menu_ext_desktop_fill_first_color;
+                if (menu_ext_desktop_fill==7) color_primario &=7;
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor,NULL,
+                        "[%s] Primary Fill Color",spectrum_colour_names[color_primario]);
 			}
 
 			if (seleccion_secondary) {

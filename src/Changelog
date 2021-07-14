@@ -25,9 +25,11 @@ Improved Debugging:
 -Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80
 -Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
 -Allow to define up to 100 breakpoints from menu
+-Preserve step mode when assembling
 
 Improved ZX Vision menu interface:
 -Added setting to pause cpu emulation on menu when multitask active
+-Added Degraded ZX Desktop Fill Type
 -Show in file selector when a file can be expanded
 -Improved screen file previews: any file size of 6912 bytes is guessed as Spectrum screen
 -Maximizing windows now take care of size of ZX Desktop, when setting "Open menu on ZX Desktop" is enabled
