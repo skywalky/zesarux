@@ -4,8 +4,6 @@
 -cocoa: En Mac, si se pone en .zesaruxrc: --vo curses Inicializa la ventana en blanco de Cocoa y luego abre ventana de curses donde transcurre todo...
 Es poder saber antes las opciones de configuracion dado que la comprobacion del driver video (--vo) se hace en el main del scrcocoa.m
 
--full screen con cocoa gl. desde menu, no redimensiona ventana
-y haciendo maximize desde ventana, hace full screen pero distorsionado
 
 -script de speech say falla cuando texto empieza con "-", como en README
 -con app de "loopback audio", ejecutando ZEsarUX como app de Mac se oye diferente. ->  Desinstalando "loopback audio" no pasa
