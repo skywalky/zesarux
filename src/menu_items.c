@@ -228,6 +228,10 @@ int find_opcion_seleccionada=0;
 int find_bytes_opcion_seleccionada=0;
 int find_lives_opcion_seleccionada=0;
 
+int accessibility_settings_opcion_seleccionada=0;
+int chardetection_settings_opcion_seleccionada=0;
+int textspeech_opcion_seleccionada=0;
+
 
 
 //Fin opciones seleccionadas para cada menu
@@ -30157,3 +30161,650 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_textspeech_filter_program(MENU_ITEM_PARAMETERS)
+{
+
+	char *filtros[2];
+
+        filtros[0]="";
+        filtros[1]=0;
+
+/*
+	char string_program[PATH_MAX];
+	if (textspeech_filter_program!=NULL) {
+		sprintf (string_program,"%s",textspeech_filter_program);
+	}
+
+	else {
+		string_program[0]=0;
+	}
+
+
+
+	int ret=menu_filesel("Select Speech Program",filtros,string_program);
+
+
+	if (ret==1) {
+		sprintf (menu_buffer_textspeech_filter_program,"%s",string_program);
+		textspeech_filter_program=menu_buffer_textspeech_filter_program;
+		textspeech_filter_program_check_spaces();
+	}
+
+	else {
+		textspeech_filter_program=NULL;
+	}
+*/
+
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+        //Obtenemos directorio de speech program
+        //si no hay directorio, vamos a rutas predefinidas
+        if (textspeech_filter_program==NULL) menu_chdir_sharedfiles();
+        else {
+                char directorio[PATH_MAX];
+                util_get_dir(textspeech_filter_program,directorio);
+                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+                //cambiamos a ese directorio, siempre que no sea nulo
+                if (directorio[0]!=0) {
+                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        zvfs_chdir(directorio);
+                }
+        }
+
+        int ret;
+
+        ret=menu_filesel("Select Speech Program",filtros,menu_buffer_textspeech_filter_program);
+        //volvemos a directorio inicial
+        zvfs_chdir(directorio_actual);
+
+
+        if (ret==1) {
+
+                textspeech_filter_program=menu_buffer_textspeech_filter_program;
+					textspeech_filter_program_check_spaces();
+			}
+
+		else {
+			textspeech_filter_program=NULL;
+        }
+
+
+
+}
+
+void menu_textspeech_stop_filter_program(MENU_ITEM_PARAMETERS)
+{
+
+        char *filtros[2];
+
+        filtros[0]="";
+        filtros[1]=0;
+
+
+/*
+        char string_program[PATH_MAX];
+        if (textspeech_stop_filter_program!=NULL) {
+                sprintf (string_program,"%s",textspeech_stop_filter_program);
+        }
+
+        else {
+                string_program[0]=0;
+        }
+
+
+
+        int ret=menu_filesel("Select Stop Speech Prg",filtros,string_program);
+
+
+        if (ret==1) {
+                sprintf (menu_buffer_textspeech_stop_filter_program,"%s",string_program);
+                textspeech_stop_filter_program=menu_buffer_textspeech_stop_filter_program;
+                textspeech_stop_filter_program_check_spaces();
+        }
+
+        else {
+                textspeech_stop_filter_program=NULL;
+        }
+*/
+
+        //guardamos directorio actual
+        char directorio_actual[PATH_MAX];
+        getcwd(directorio_actual,PATH_MAX);
+
+        //Obtenemos directorio de speech program
+        //si no hay directorio, vamos a rutas predefinidas
+        if (textspeech_stop_filter_program==NULL) menu_chdir_sharedfiles();
+        else {
+                char directorio[PATH_MAX];
+                util_get_dir(textspeech_stop_filter_program,directorio);
+                //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+                //cambiamos a ese directorio, siempre que no sea nulo
+                if (directorio[0]!=0) {
+                        debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+                        zvfs_chdir(directorio);
+                }
+        }
+
+        int ret;
+
+        ret=menu_filesel("Select Stop Speech Prg",filtros,menu_buffer_textspeech_stop_filter_program);
+        //volvemos a directorio inicial
+        zvfs_chdir(directorio_actual);
+
+
+        if (ret==1) {
+
+                textspeech_stop_filter_program=menu_buffer_textspeech_stop_filter_program;
+                                        textspeech_stop_filter_program_check_spaces();
+                        }
+
+                else {
+                        textspeech_stop_filter_program=NULL;
+        }
+
+
+
+
+}
+
+void menu_textspeech_filter_timeout(MENU_ITEM_PARAMETERS)
+{
+
+       int valor;
+
+        char string_value[3];
+
+        sprintf (string_value,"%d",textspeech_timeout_no_enter);
+
+
+        menu_ventana_scanf("Timeout (0=never)",string_value,3);
+
+        valor=parse_string_to_number(string_value);
+
+	if (valor<0) debug_printf (VERBOSE_ERR,"Timeout must be 0 minimum");
+
+	else textspeech_timeout_no_enter=valor;
+
+
+}
+
+void menu_textspeech_program_wait(MENU_ITEM_PARAMETERS)
+{
+	textspeech_filter_program_wait.v ^=1;
+}
+
+void menu_textspeech_send_menu(MENU_ITEM_PARAMETERS)
+{
+        textspeech_also_send_menu.v ^=1;
+}
+
+
+#ifdef COMPILE_STDOUT
+void menu_display_stdout_send_speech_debug(MENU_ITEM_PARAMETERS)
+{
+	scrstdout_also_send_speech_debug_messages.v ^=1;
+}
+#endif
+
+
+void menu_textspeech(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_textspeech;
+        menu_item item_seleccionado;
+        int retorno_menu;
+
+        do {
+
+
+
+                char string_filterprogram_shown[14];
+		char string_stop_filterprogram_shown[14];
+
+		if (textspeech_filter_program!=NULL) {
+	                menu_tape_settings_trunc_name(textspeech_filter_program,string_filterprogram_shown,14);
+		}
+
+		else {
+		sprintf (string_filterprogram_shown,"None");
+		}
+
+
+
+                if (textspeech_stop_filter_program!=NULL) {
+                        menu_tape_settings_trunc_name(textspeech_stop_filter_program,string_stop_filterprogram_shown,14);
+                }
+
+                else {
+                sprintf (string_stop_filterprogram_shown,"None");
+                }
+
+
+                        menu_add_item_menu_inicial_format(&array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_filter_program,NULL,"~~Speech program [%s]",string_filterprogram_shown);
+			menu_add_item_menu_shortcut(array_menu_textspeech,'s');
+        	        menu_add_item_menu_tooltip(array_menu_textspeech,"Specify which program to send generated text");
+        	        menu_add_item_menu_ayuda(array_menu_textspeech,"Specify which program to send generated text. Text is send to the program "
+						"to its standard input on Unix versions (Linux, Mac, etc) or sent as the first parameter on "
+						"Windows (MINGW) version\n"
+						"Pressing a key on the menu (or ESC with menu closed) forces the following queded speech entries to flush, and running the "
+						"Stop Program to stop the current speech script.\n");
+
+
+			if (textspeech_filter_program!=NULL) {
+
+				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_stop_filter_program,NULL,"Stop program [%s]",string_stop_filterprogram_shown);
+
+        	                menu_add_item_menu_tooltip(array_menu_textspeech,"Specify a path to a program or script in charge of stopping the running speech program");
+                	        menu_add_item_menu_ayuda(array_menu_textspeech,"Specify a path to a program or script in charge of stopping the running speech program. If not specified, the current speech script can't be stopped");
+
+
+				menu_add_item_menu(array_menu_textspeech,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_filter_timeout,NULL,"[%d] ~~Timeout no enter",textspeech_timeout_no_enter);
+				menu_add_item_menu_shortcut(array_menu_textspeech,'t');
+				menu_add_item_menu_tooltip(array_menu_textspeech,"After some seconds the text will be sent to the Speech program when no "
+						"new line is sent");
+				menu_add_item_menu_ayuda(array_menu_textspeech,"After some seconds the text will be sent to the Speech program when no "
+						"new line is sent. 0=never");
+
+
+
+				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_program_wait,NULL,"[%c] ~~Wait program to exit",(textspeech_filter_program_wait.v ? 'X' : ' ' ) );
+				menu_add_item_menu_shortcut(array_menu_textspeech,'w');
+                	        menu_add_item_menu_tooltip(array_menu_textspeech,"Wait and pause the emulator until the Speech program returns");
+                        	menu_add_item_menu_ayuda(array_menu_textspeech,"Wait and pause the emulator until the Speech program returns");
+
+
+				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_send_menu,NULL,"[%c] Also send ~~menu",(textspeech_also_send_menu.v ? 'X' : ' ' ));
+				menu_add_item_menu_shortcut(array_menu_textspeech,'m');
+				menu_add_item_menu_tooltip(array_menu_textspeech,"Also send text menu entries to Speech program");
+				menu_add_item_menu_ayuda(array_menu_textspeech,"Also send text menu entries to Speech program");
+
+#ifdef COMPILE_STDOUT
+				if (menu_cond_stdout() ) {
+							menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_display_stdout_send_speech_debug,NULL,"[%c] Also send debug messages", (scrstdout_also_send_speech_debug_messages.v==1 ? 'X' : ' '));
+							menu_add_item_menu_tooltip(array_menu_textspeech,"Also send debug messages to speech");
+							menu_add_item_menu_ayuda(array_menu_textspeech,"Also send debug messages to speech");
+
+				}
+
+#endif
+
+			}
+
+
+          menu_add_item_menu(array_menu_textspeech,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_textspeech,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_textspeech);
+
+                retorno_menu=menu_dibuja_menu(&textspeech_opcion_seleccionada,&item_seleccionado,array_menu_textspeech,"Text to Speech" );
+
+                
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
+
+
+void menu_chardetection_settings_trap_rst16(MENU_ITEM_PARAMETERS)
+{
+        chardetect_printchar_enabled.v ^=1;
+}
+
+
+
+void menu_chardetection_settings_second_trap(MENU_ITEM_PARAMETERS)
+{
+
+        char string_dir[6];
+
+        int dir;
+
+
+        sprintf (string_dir,"%d",chardetect_second_trap_char_dir);
+
+        menu_ventana_scanf("Address (0=none)",string_dir,6);
+
+        dir=parse_string_to_number(string_dir);
+
+        if (dir<0 || dir>65535) {
+                debug_printf (VERBOSE_ERR,"Invalid address %d",dir);
+                return;
+        }
+
+        chardetect_second_trap_char_dir=dir;
+
+}
+
+void menu_chardetection_settings_third_trap(MENU_ITEM_PARAMETERS)
+{
+
+        char string_dir[6];
+
+        int dir;
+
+
+        sprintf (string_dir,"%d",chardetect_third_trap_char_dir);
+
+        menu_ventana_scanf("Address (0=none)",string_dir,6);
+
+        dir=parse_string_to_number(string_dir);
+
+        if (dir<0 || dir>65535) {
+                debug_printf (VERBOSE_ERR,"Invalid address %d",dir);
+                return;
+        }
+
+        chardetect_third_trap_char_dir=dir;
+
+}
+
+void menu_chardetection_settings_stdout_trap_detection(MENU_ITEM_PARAMETERS)
+{
+
+
+        trap_char_detection_routine_number++;
+        if (trap_char_detection_routine_number==TRAP_CHAR_DETECTION_ROUTINES_TOTAL) trap_char_detection_routine_number=0;
+
+        chardetect_init_trap_detection_routine();
+
+}
+
+void menu_chardetection_settings_chardetect_char_filter(MENU_ITEM_PARAMETERS)
+{
+        chardetect_char_filter++;
+        if (chardetect_char_filter==CHAR_FILTER_TOTAL) chardetect_char_filter=0;
+}
+
+void menu_chardetection_settings_stdout_line_width(MENU_ITEM_PARAMETERS)
+{
+
+        char string_width[3];
+
+        int width;
+
+
+        sprintf (string_width,"%d",chardetect_line_width);
+
+        menu_ventana_scanf("Line width 0=no limit",string_width,3);
+
+        width=parse_string_to_number(string_width);
+
+        //if (width>999) {
+        //        debug_printf (VERBOSE_ERR,"Invalid width %d",width);
+        //        return;
+        //}
+        chardetect_line_width=width;
+
+}
+
+void menu_chardetection_settings_second_trap_sum32(MENU_ITEM_PARAMETERS)
+{
+
+        chardetect_second_trap_sum32.v ^=1;
+
+        //y ponemos el contador al maximo para que no se cambie por si solo
+        chardetect_second_trap_sum32_counter=MAX_STDOUT_SUM32_COUNTER;
+
+
+}
+
+
+void menu_chardetection_settings_second_trap_range_min(MENU_ITEM_PARAMETERS)
+{
+
+        char string_dir[6];
+
+        int dir;
+
+
+        sprintf (string_dir,"%d",chardetect_second_trap_detect_pc_min);
+
+        menu_ventana_scanf("Address",string_dir,6);
+
+        dir=parse_string_to_number(string_dir);
+
+        if (dir<0 || dir>65535) {
+                debug_printf (VERBOSE_ERR,"Invalid address %d",dir);
+                return;
+        }
+
+        chardetect_second_trap_detect_pc_min=dir;
+
+}
+
+void menu_chardetection_settings_second_trap_range_max(MENU_ITEM_PARAMETERS)
+{
+
+        char string_dir[6];
+
+        int dir;
+
+
+        sprintf (string_dir,"%d",chardetect_second_trap_detect_pc_max);
+
+        menu_ventana_scanf("Address",string_dir,6);
+
+        dir=parse_string_to_number(string_dir);
+
+        if (dir<0 || dir>65535) {
+                debug_printf (VERBOSE_ERR,"Invalid address %d",dir);
+                return;
+        }
+
+        chardetect_second_trap_detect_pc_max=dir;
+
+}
+
+
+void menu_chardetection_settings_stdout_line_witdh_space(MENU_ITEM_PARAMETERS)
+{
+        chardetect_line_width_wait_space.v ^=1;
+}
+
+
+void menu_chardetection_settings_enable(MENU_ITEM_PARAMETERS)
+{
+	chardetect_detect_char_enabled.v ^=1;
+}
+
+
+
+//menu chardetection settings
+void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_chardetection_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                        menu_add_item_menu_inicial_format(&array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_trap_rst16,NULL,"[%c] ~~Trap print", (chardetect_printchar_enabled.v==1 ? 'X' : ' ' ));
+			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'t');
+                        menu_add_item_menu_tooltip(array_menu_chardetection_settings,"It enables the emulator to show the text sent to standard rom print call routines and non standard, generated from some games, specially text adventures");
+                        menu_add_item_menu_ayuda(array_menu_chardetection_settings,"It enables the emulator to show the text sent to standard rom print call routines and generated from some games, specially text adventures. "
+                                                "On Spectrum, ZX80, ZX81 machines, standard rom calls are RST 10H. On Z88, it traps OS_OUT and some other calls. Non standard calls are the ones indicated on Second and Third trap");
+
+
+			if (chardetect_printchar_enabled.v) {
+
+
+	                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap,NULL,"~~Second trap address [%d]",chardetect_second_trap_char_dir);
+				menu_add_item_menu_shortcut(array_menu_chardetection_settings,'s');
+        	                menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Address of the second print routine");
+                	        menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Address of the second print routine");
+
+	                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap_sum32,NULL,"[%c] Second trap s~~um 32",(chardetect_second_trap_sum32.v ? 'X' : ' '));
+				menu_add_item_menu_shortcut(array_menu_chardetection_settings,'u');
+				menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Sums 32 to the ASCII value read");
+				menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Sums 32 to the ASCII value read");
+
+
+        	                menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_third_trap,NULL,"T~~hird trap address [%d]",chardetect_third_trap_char_dir);
+				menu_add_item_menu_shortcut(array_menu_chardetection_settings,'h');
+                	        menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Address of the third print routine");
+                        	menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Address of the third print routine");
+
+       menu_add_item_menu(array_menu_chardetection_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);							
+
+                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_width,NULL,"[%d] Line ~~width",chardetect_line_width);
+			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'w');
+			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Line width");
+			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Line width. Setting 0 means no limit, so "
+						"even when a carriage return is received, the text will not be sent unless a Enter "
+						"key is pressed or when timeout no enter no text to speech is reached\n");
+
+
+                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_witdh_space,NULL,"[%c] Line width w~~ait space",(chardetect_line_width_wait_space.v==1 ? 'X' : ' '));
+			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'a');
+			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Wait for a space before jumping to a new line");
+			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Wait for a space before jumping to a new line");
+
+
+                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_chardetect_char_filter,NULL,"Char ~~filter [%s]",chardetect_char_filter_names[chardetect_char_filter]);
+			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'f');
+			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Send characters to an internal filter");
+			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Send characters to an internal filter");
+
+
+			}
+
+                menu_add_item_menu(array_menu_chardetection_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+
+			menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_enable,NULL,"[%c] Enable 2nd trap ~~detection",(chardetect_detect_char_enabled.v ? 'X' : ' '));
+			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'d');
+			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Enable char detection method to guess Second Trap address");
+			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Enable char detection method to guess Second Trap address");
+
+
+
+
+
+			if (chardetect_detect_char_enabled.v) {
+
+
+	                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_trap_detection,NULL,"Detect ~~routine [%s]",trap_char_detection_routines_texto[trap_char_detection_routine_number]);
+				menu_add_item_menu_shortcut(array_menu_chardetection_settings,'r');
+        			 menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Selects method for second trap character routine detection");
+	                        menu_add_item_menu_ayuda(array_menu_chardetection_settings,"This function enables second trap character routine detection for programs "
+                                                "that does not use RST16 calls to ROM for printing characters, on Spectrum models. "
+                                                "It tries to guess where the printing "
+                                                "routine is located and set Second Trap address when it finds it. This function has some pre-defined known "
+                                                "detection call printing routines (for example AD Adventures) and one other totally automatic method, "
+                                        	"which first tries to find automatically an aproximate range where the routine is, and then, "
+						"it finds which routine is, trying all on this list. "
+						"This automatic method "
+                                                "makes writing operations a bit slower (only while running the detection routine)");
+
+
+        	                if (trap_char_detection_routine_number!=TRAP_CHAR_DETECTION_ROUTINE_AUTOMATIC && trap_char_detection_routine_number!=TRAP_CHAR_DETECTION_ROUTINE_NONE)  {
+                        	        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap_range_min,NULL,"Detection routine mi~~n [%d]",chardetect_second_trap_detect_pc_min);
+					menu_add_item_menu_shortcut(array_menu_chardetection_settings,'n');
+					menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Lower address limit to find character routine");
+					menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Lower address limit to find character routine");
+
+
+                	                menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_second_trap_range_max,NULL,"Detection routine ma~~x [%d]",chardetect_second_trap_detect_pc_max);
+					menu_add_item_menu_shortcut(array_menu_chardetection_settings,'x');
+					menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Higher address limit to find character routine");
+					menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Higher address limit to find character routine");
+	                        }
+
+
+			}
+
+
+
+
+
+
+                menu_add_item_menu(array_menu_chardetection_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_chardetection_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_chardetection_settings);
+
+                retorno_menu=menu_dibuja_menu(&chardetection_settings_opcion_seleccionada,&item_seleccionado,array_menu_chardetection_settings,"Print char traps" );
+
+                
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
+
+void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_accessibility_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+
+                menu_add_item_menu_inicial_format(&array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_chardetection_settings,NULL,"~~Print char traps");
+                        menu_add_item_menu_shortcut(array_menu_accessibility_settings,'p');
+                        menu_add_item_menu_tooltip(array_menu_accessibility_settings,"Settings on capture print character routines");
+                        menu_add_item_menu_ayuda(array_menu_accessibility_settings,"Settings on capture print character routines");
+
+
+                        menu_add_item_menu_format(array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_textspeech,NULL,"~~Text to speech");
+                        menu_add_item_menu_shortcut(array_menu_accessibility_settings,'t');
+                        menu_add_item_menu_tooltip(array_menu_accessibility_settings,"Specify a script or program to send all text generated, "
+                                                "from Spectrum display or emulator menu, "
+                                                "usually used on text to speech");
+                        menu_add_item_menu_ayuda(array_menu_accessibility_settings,"Specify a script or program to send all text generated, "
+                                                "from Spectrum display or emulator menu, "
+                                                "usually used on text to speech. "
+                                                "When running the script: \n"
+                                                "ESC means abort next executions on queue.\n"
+                                                "Enter means run pending execution.\n");
+
+
+
+
+
+   menu_add_item_menu(array_menu_accessibility_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_accessibility_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_accessibility_settings);
+
+                retorno_menu=menu_dibuja_menu(&accessibility_settings_opcion_seleccionada,&item_seleccionado,array_menu_accessibility_settings,"Accessibility Settings");
+
+                
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
