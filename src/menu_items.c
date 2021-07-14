@@ -30759,52 +30759,52 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 
 void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_accessibility_settings;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
+    menu_item *array_menu_accessibility_settings;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    do {
 
 
 
-                menu_add_item_menu_inicial_format(&array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_chardetection_settings,NULL,"~~Print char traps");
-                        menu_add_item_menu_shortcut(array_menu_accessibility_settings,'p');
-                        menu_add_item_menu_tooltip(array_menu_accessibility_settings,"Settings on capture print character routines");
-                        menu_add_item_menu_ayuda(array_menu_accessibility_settings,"Settings on capture print character routines");
+        menu_add_item_menu_inicial_format(&array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_chardetection_settings,NULL,"~~Print char traps");
+        menu_add_item_menu_shortcut(array_menu_accessibility_settings,'p');
+        menu_add_item_menu_tooltip(array_menu_accessibility_settings,"Settings on capture print character routines");
+        menu_add_item_menu_ayuda(array_menu_accessibility_settings,"Settings on capture print character routines");
 
 
-                        menu_add_item_menu_format(array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_textspeech,NULL,"~~Text to speech");
-                        menu_add_item_menu_shortcut(array_menu_accessibility_settings,'t');
-                        menu_add_item_menu_tooltip(array_menu_accessibility_settings,"Specify a script or program to send all text generated, "
-                                                "from Spectrum display or emulator menu, "
-                                                "usually used on text to speech");
-                        menu_add_item_menu_ayuda(array_menu_accessibility_settings,"Specify a script or program to send all text generated, "
-                                                "from Spectrum display or emulator menu, "
-                                                "usually used on text to speech. "
-                                                "When running the script: \n"
-                                                "ESC means abort next executions on queue.\n"
-                                                "Enter means run pending execution.\n");
+        menu_add_item_menu_format(array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_textspeech,NULL,"~~Text to speech");
+        menu_add_item_menu_shortcut(array_menu_accessibility_settings,'t');
+        menu_add_item_menu_tooltip(array_menu_accessibility_settings,"Specify a script or program to send all text generated, "
+                                "from Spectrum display or emulator menu, "
+                                "usually used on text to speech");
+        menu_add_item_menu_ayuda(array_menu_accessibility_settings,"Specify a script or program to send all text generated, "
+                                "from Spectrum display or emulator menu, "
+                                "usually used on text to speech. "
+                                "When running the script: \n"
+                                "ESC means abort next executions on queue.\n"
+                                "Enter means run pending execution.\n");
 
 
 
 
 
-   menu_add_item_menu(array_menu_accessibility_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_accessibility_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-                menu_add_ESC_item(array_menu_accessibility_settings);
+        menu_add_item_menu(array_menu_accessibility_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+        //menu_add_item_menu(array_menu_accessibility_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+        menu_add_ESC_item(array_menu_accessibility_settings);
 
-                retorno_menu=menu_dibuja_menu(&accessibility_settings_opcion_seleccionada,&item_seleccionado,array_menu_accessibility_settings,"Accessibility Settings");
+        retorno_menu=menu_dibuja_menu(&accessibility_settings_opcion_seleccionada,&item_seleccionado,array_menu_accessibility_settings,"Accessibility Settings");
 
-                
+    
 
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                //llamamos por valor de funcion
+                if (item_seleccionado.menu_funcion!=NULL) {
+                        //printf ("actuamos por funcion\n");
+                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                        
                 }
+        }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
