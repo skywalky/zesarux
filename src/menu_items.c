@@ -30811,6 +30811,15 @@ void menu_accessibility_menu_hotkeys(MENU_ITEM_PARAMETERS)
     menu_generic_message_splash("Force hotkeys","OK. Forced hotkeys");
 }
 
+void menu_accessibility_menu_disable_back(MENU_ITEM_PARAMETERS)
+{
+	menu_interface_allow_background_windows_delete_windows();
+
+	menu_allow_background_windows=0;
+
+    menu_generic_message_splash("Disable background windows","OK. Disabled background windows");
+}
+
 void menu_accessibility_menu(MENU_ITEM_PARAMETERS)
 {
 
@@ -30834,6 +30843,10 @@ void menu_accessibility_menu(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
 
 
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_disable_back,NULL,"Disable background windows");
+        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");        
+
         if (screen_ext_desktop_enabled) {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_zxdesktop_clean,NULL,"ZX Desktop clean fill");
             menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
@@ -30848,7 +30861,7 @@ void menu_accessibility_menu(MENU_ITEM_PARAMETERS)
 
         menu_add_ESC_item(array_menu_common);
 
-        retorno_menu=menu_dibuja_menu(&accessibility_menu_opcion_seleccionada,&item_seleccionado,array_menu_common,"Menu accessibility");
+        retorno_menu=menu_dibuja_menu(&accessibility_menu_opcion_seleccionada,&item_seleccionado,array_menu_common,"GUI accessibility");
 
 
 
@@ -30892,7 +30905,10 @@ void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
                                 "ESC means abort next executions on queue.\n"
                                 "Enter means run pending execution.\n");
 
-        menu_add_item_menu_format(array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_accessibility_menu,NULL,"Menu accessibility");
+        menu_add_item_menu_format(array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_accessibility_menu,NULL,"~~GUI");
+        menu_add_item_menu_shortcut(array_menu_accessibility_settings,'g');
+        menu_add_item_menu_tooltip(array_menu_accessibility_settings,"Settings to improve accessibility on ZEsarUX GUI");
+        menu_add_item_menu_ayuda(array_menu_accessibility_settings,"Settings to improve accessibility on ZEsarUX GUI");
 
 
 

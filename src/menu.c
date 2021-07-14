@@ -29534,13 +29534,18 @@ void menu_interface_restore_windows_geometry(MENU_ITEM_PARAMETERS)
 	}
 }
 
+void menu_interface_allow_background_windows_delete_windows(void)
+{
+    zxvision_window_delete_all_windows();
+    cls_menu_overlay();    
+}
+
 void menu_interface_allow_background_windows(MENU_ITEM_PARAMETERS)
 {
 
 	//Borrar todas si vamos a desactivarlo
 	if (menu_allow_background_windows) {
-		zxvision_window_delete_all_windows();
-		cls_menu_overlay();
+		menu_interface_allow_background_windows_delete_windows();
 	}
 
 	menu_allow_background_windows ^=1;

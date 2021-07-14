@@ -1042,6 +1042,7 @@ extern void menu_smartload(MENU_ITEM_PARAMETERS);
 extern void menu_dandanator(MENU_ITEM_PARAMETERS);
 extern void menu_interface_change_gui_style_apply(MENU_ITEM_PARAMETERS);
 extern void menu_interface_charwidth_after_width_change(void);
+extern void menu_interface_allow_background_windows_delete_windows(void);
 
 extern int timer_osd_keyboard_menu;
 
