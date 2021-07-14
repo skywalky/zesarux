@@ -231,6 +231,7 @@ int find_lives_opcion_seleccionada=0;
 int accessibility_settings_opcion_seleccionada=0;
 int chardetection_settings_opcion_seleccionada=0;
 int textspeech_opcion_seleccionada=0;
+int accessibility_menu_opcion_seleccionada=0;
 
 
 
@@ -30755,6 +30756,113 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_accessibility_menu_high_contrast(MENU_ITEM_PARAMETERS)
+{
+
+    int indice=menu_get_gui_index_by_name("Clean");
+    if (indice<0) {
+        debug_printf(VERBOSE_ERR,"Invalid gui style");
+        return;
+    }
+
+    menu_interface_change_gui_style_apply(indice);
+
+    menu_generic_message_splash("Set high contrast style","OK. Style applied");
+
+
+}
+
+void menu_accessibility_menu_big_font(MENU_ITEM_PARAMETERS)
+{
+    menu_char_width=8;
+
+	menu_interface_charwidth_after_width_change();
+
+    menu_generic_message_splash("Set big font","OK. Big font applied");
+}
+
+void menu_accessibility_menu_zxdesktop_clean(MENU_ITEM_PARAMETERS)
+{
+    //color solido
+    menu_ext_desktop_fill=0;
+    //y color blanco
+    menu_ext_desktop_fill_first_color=7;
+
+    menu_generic_message_splash("ZX Desktop clean fill","OK. Clean ZX Desktop applied");
+}
+
+
+void menu_accessibility_menu_zxdesktop_button_boxes(MENU_ITEM_PARAMETERS)
+{
+    menu_ext_desktop_disable_box_upper_icons.v=0;
+    menu_ext_desktop_disable_box_lower_icons.v=0;
+
+    //Y no transparentes
+    menu_ext_desktop_transparent_upper_icons.v=0;
+    menu_ext_desktop_transparent_lower_icons.v=0;
+
+    menu_generic_message_splash("ZX Desktop buttons","OK. Enabled boxes and disable transparency on ZX Desktop buttons");
+}
+
+void menu_accessibility_menu_hotkeys(MENU_ITEM_PARAMETERS)
+{
+    menu_force_writing_inverse_color.v=1;
+
+    menu_generic_message_splash("Force hotkeys","OK. Forced hotkeys");
+}
+
+void menu_accessibility_menu(MENU_ITEM_PARAMETERS)
+{
+
+    menu_item *array_menu_common;
+    menu_item item_seleccionado;
+    int retorno_menu;
+
+    do {
+
+        menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_high_contrast,NULL,"Set high contrast style");
+        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_big_font,NULL,"Set big font");
+        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_hotkeys,NULL,"Force hotkeys");
+        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+
+
+        if (screen_ext_desktop_enabled) {
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_zxdesktop_clean,NULL,"ZX Desktop clean fill");
+            menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+            menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_zxdesktop_button_boxes,NULL,"ZX Desktop buttons");
+            menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+            menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+        }
+ 
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        menu_add_ESC_item(array_menu_common);
+
+        retorno_menu=menu_dibuja_menu(&accessibility_menu_opcion_seleccionada,&item_seleccionado,array_menu_common,"Menu accessibility");
+
+
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+            }
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+}                        
 
 
 void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
@@ -30784,7 +30892,7 @@ void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
                                 "ESC means abort next executions on queue.\n"
                                 "Enter means run pending execution.\n");
 
-
+        menu_add_item_menu_format(array_menu_accessibility_settings,MENU_OPCION_NORMAL,menu_accessibility_menu,NULL,"Menu accessibility");
 
 
 

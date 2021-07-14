@@ -7619,6 +7619,17 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--gui-style")) {
 				siguiente_parametro_argumento();
+                int indice=menu_get_gui_index_by_name(argv[puntero_parametro]);
+                if (indice<0) {
+					printf ("Invalid GUI style: %s\n",argv[puntero_parametro]);
+					exit(1);
+				}
+
+                estilo_gui_activo=indice;
+                set_charset();                
+
+                /*
+
 				int i;
 				for (i=0;i<ESTILOS_GUI;i++) {
 					if (!strcasecmp(argv[puntero_parametro],definiciones_estilos_gui[i].nombre_estilo)) {
@@ -7631,7 +7642,9 @@ int parse_cmdline_options(void) {
 					printf ("Invalid GUI style: %s\n",argv[puntero_parametro]);
 					exit(1);
 				}
-                        }
+
+                */
+            }
 
 
 			else if (!strcmp(argv[puntero_parametro],"--keyboardspoolfile")) {

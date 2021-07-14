@@ -29421,14 +29421,21 @@ void menu_colour_settings(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_interface_charwidth_after_width_change(void)
+{
+	//Reorganizar ventanas en background segun nuevo tamaño caracter
+	if (menu_allow_background_windows) zxvision_rearrange_background_windows();	
+}
+
 void menu_interface_charwidth(MENU_ITEM_PARAMETERS)
 {
 	menu_char_width--;
 
 	if (menu_char_width==4) menu_char_width=8;
 
-	//Reorganizar ventanas en background segun nuevo tamaño caracter
-	if (menu_allow_background_windows) zxvision_rearrange_background_windows();	
+    menu_interface_charwidth_after_width_change();
+
+
 }
 
 void menu_window_settings_reduce_075(MENU_ITEM_PARAMETERS)
@@ -40497,4 +40504,18 @@ void last_filesused_insert(char *s)
 void menu_network_error(int error)
 {
 	menu_error_message(z_sock_get_error(error));
+}
+
+//Retorna indice del estilo. -1 si no existe
+int menu_get_gui_index_by_name(char *nombre)
+{
+    int i;
+    for (i=0;i<ESTILOS_GUI;i++) {
+        if (!strcasecmp(nombre,definiciones_estilos_gui[i].nombre_estilo)) {
+            return i;
+        }
+    }
+
+    return -1;
+ 
 }

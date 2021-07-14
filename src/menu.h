@@ -1040,6 +1040,8 @@ extern z80_bit menu_disable_special_chars;
 extern void menu_onscreen_keyboard(MENU_ITEM_PARAMETERS);
 extern void menu_smartload(MENU_ITEM_PARAMETERS);
 extern void menu_dandanator(MENU_ITEM_PARAMETERS);
+extern void menu_interface_change_gui_style_apply(MENU_ITEM_PARAMETERS);
+extern void menu_interface_charwidth_after_width_change(void);
 
 extern int timer_osd_keyboard_menu;
 
@@ -1128,6 +1130,8 @@ extern int cpu_use_total_acumulado_medidas;
 extern void putchar_footer_array(int x,int y,z80_byte caracter,int tinta,int papel,int parpadeo);
 extern void redraw_footer(void);
 extern void cls_footer(void);
+
+extern int menu_get_gui_index_by_name(char *nombre);
 
 extern int menu_center_x(void);
 extern int menu_origin_x(void);
