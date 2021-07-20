@@ -14702,104 +14702,104 @@ z80_byte dir_l,dir_h;
 
 	if (CPU_IS_Z80) {
 
-	switch (linea) {
-		case 0:
-			sprintf (textoregistros,"PC %04X",get_pc_register() );
-		break;
+        switch (linea) {
+            case 0:
+                sprintf (textoregistros,"PC %04X",get_pc_register() );
+            break;
 
-		case 1:
-			sprintf (textoregistros,"SP %04X",reg_sp);
-		break;
+            case 1:
+                sprintf (textoregistros,"SP %04X",reg_sp);
+            break;
 
-		case 2:
-			sprintf (textoregistros,"AF %02X%02X'%02X%02X",reg_a,Z80_FLAGS,reg_a_shadow,Z80_FLAGS_SHADOW);
-		break;
+            case 2:
+                sprintf (textoregistros,"AF %02X%02X'%02X%02X",reg_a,Z80_FLAGS,reg_a_shadow,Z80_FLAGS_SHADOW);
+            break;
 
-		case 3:
-			sprintf (textoregistros,"%c%c%c%c%c%c%c%c",DEBUG_STRING_FLAGS);
-		break;		
+            case 3:
+                sprintf (textoregistros,"%c%c%c%c%c%c%c%c",DEBUG_STRING_FLAGS);
+            break;		
 
-		case 4:
-			sprintf (textoregistros,"HL %04X'%02X%02X",HL,reg_h_shadow,reg_l_shadow);
-		break;
+            case 4:
+                sprintf (textoregistros,"HL %04X'%02X%02X",HL,reg_h_shadow,reg_l_shadow);
+            break;
 
-		case 5:
-			sprintf (textoregistros,"DE %04X'%02X%02X",DE,reg_d_shadow,reg_e_shadow);
-		break;
+            case 5:
+                sprintf (textoregistros,"DE %04X'%02X%02X",DE,reg_d_shadow,reg_e_shadow);
+            break;
 
-		case 6:
-			sprintf (textoregistros,"BC %04X'%02X%02X",BC,reg_b_shadow,reg_c_shadow);
-		break;
+            case 6:
+                sprintf (textoregistros,"BC %04X'%02X%02X",BC,reg_b_shadow,reg_c_shadow);
+            break;
 
-		case 7:
-			sprintf (textoregistros,"IX %04X",reg_ix);
-		break;
+            case 7:
+                sprintf (textoregistros,"IX %04X",reg_ix);
+            break;
 
-		case 8:
-			sprintf (textoregistros,"IY %04X",reg_iy);
-		break;
+            case 8:
+                sprintf (textoregistros,"IY %04X",reg_iy);
+            break;
 
-		case 9:
-			sprintf (textoregistros,"IR %02X%02X%s",reg_i,(reg_r&127)|(reg_r_bit7&128) , string_vector_int);
-		break;
+            case 9:
+                sprintf (textoregistros,"IR %02X%02X%s",reg_i,(reg_r&127)|(reg_r_bit7&128) , string_vector_int);
+            break;
 
-		case 10:
-			sprintf (textoregistros,"IM%d IFF%c%c",im_mode,DEBUG_STRING_IFF12 );
-		break;
+            case 10:
+                sprintf (textoregistros,"IM%d IFF%c%c",im_mode,DEBUG_STRING_IFF12 );
+            break;
 
-		/*case 12:
-		case 13:
-			menu_debug_get_memory_pages(textopaginasmem);
-			menu_util_cut_line_at_spaces(12,textopaginasmem,textopaginasmem_linea1,textopaginasmem_linea2);
-			if (linea==12) sprintf (textoregistros,"%s",textopaginasmem_linea1 );
-			if (linea==13) sprintf (textoregistros,"%s",textopaginasmem_linea2 );
-		break;*/
+            /*case 12:
+            case 13:
+                menu_debug_get_memory_pages(textopaginasmem);
+                menu_util_cut_line_at_spaces(12,textopaginasmem,textopaginasmem_linea1,textopaginasmem_linea2);
+                if (linea==12) sprintf (textoregistros,"%s",textopaginasmem_linea1 );
+                if (linea==13) sprintf (textoregistros,"%s",textopaginasmem_linea2 );
+            break;*/
 
-		case 11:
-		case 12:
-		case 13:
-		case 14:
-			//Por defecto, cad
-			//Mostrar en una linea, dos bloques de memoria mapeadas
-			offset_bloque=linea-11;
-			
-			offset_bloque *=2; //2 bloques por cada linea
-			//primer bloque
-			if (offset_bloque<total_segmentos) {
-				sprintf (textoregistros,"[%s]",segmentos[offset_bloque].shortname);
-				offset_bloque++;
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+                //Por defecto, cad
+                //Mostrar en una linea, dos bloques de memoria mapeadas
+                offset_bloque=linea-11;
+                
+                offset_bloque *=2; //2 bloques por cada linea
+                //primer bloque
+                if (offset_bloque<total_segmentos) {
+                    sprintf (textoregistros,"[%s]",segmentos[offset_bloque].shortname);
+                    offset_bloque++;
 
-				//Segundo bloque
-				if (offset_bloque<total_segmentos) {
-					int longitud=strlen(textoregistros);
-					sprintf (&textoregistros[longitud],"[%s]",segmentos[offset_bloque].shortname);
-				}
-			}
-		break;
-/*
-//Retorna paginas mapeadas (nombres cortos)
-void menu_debug_get_memory_pages(char *s)
-{
+                    //Segundo bloque
+                    if (offset_bloque<total_segmentos) {
+                        int longitud=strlen(textoregistros);
+                        sprintf (&textoregistros[longitud],"[%s]",segmentos[offset_bloque].shortname);
+                    }
+                }
+            break;
+    /*
+    //Retorna paginas mapeadas (nombres cortos)
+    void menu_debug_get_memory_pages(char *s)
+    {
 
-        int i;
-        int longitud;
-        int indice=0;
+            int i;
+            int longitud;
+            int indice=0;
 
-        for (i=0;i<total_segmentos;i++) {
-                longitud=strlen(segmentos[i].shortname)+1;
-                sprintf(&s[indice],"%s ",segmentos[i].shortname);
+            for (i=0;i<total_segmentos;i++) {
+                    longitud=strlen(segmentos[i].shortname)+1;
+                    sprintf(&s[indice],"%s ",segmentos[i].shortname);
 
-                indice +=longitud;
+                    indice +=longitud;
+
+            }
+
+    }
+    */
+
+                    
+            
 
         }
-
-}
-*/
-
-                
-		
-
-	}
 
 	}
 
