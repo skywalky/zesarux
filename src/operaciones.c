@@ -6360,12 +6360,16 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
             //Down -> 6
             if ((puerto_especial_joystick&4)) {
-                acumulado &=(255-16);
+                //En jupiter ace es con el 7
+                if (MACHINE_IS_ACE) acumulado &=(255-8);
+                else acumulado &=(255-16);
             }
 
             //Up -> 7
             if ((puerto_especial_joystick&8)) {
-                acumulado &=(255-8);
+                //En jupiter ace es con el 6
+                if (MACHINE_IS_ACE) acumulado &=(255-16);
+                else acumulado &=(255-8);
             }
 
             //Fire -> 0
