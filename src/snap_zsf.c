@@ -479,6 +479,11 @@ CRAM colour palette
 Byte fields:
 0...31
 
+-Block ID 40: ZSF_ACE_CONF 
+Byte fields:
+0 ((ramtop_ace-16383)/1024)+3;
+
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -491,7 +496,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 39
+#define MAX_ZSF_BLOCK_ID_NAMES 40
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -534,6 +539,7 @@ char *zsf_block_id_names[]={
   "ZSF_SMS_RAMBLOCK",
   "ZSF_SMS_CONF",
   "ZSF_SMS_CRAM",
+  "ZSF_ACE_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -1595,7 +1601,13 @@ void load_zsf_sms_cram(z80_byte *header)
  
 }
 
+void load_zsf_ace_conf(z80_byte *header)
+{
+    z80_byte aceram=header[0];
+    debug_printf(VERBOSE_DEBUG,"Setting Jupiter Ace ram to %d kb",aceram);
+    set_ace_ramtop(aceram);
 
+}
 
 
 
@@ -2230,7 +2242,11 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
 
       case ZSF_SMS_CRAM:
         load_zsf_sms_cram(block_data);
-      break;                                  
+      break;
+
+      case ZSF_ACE_CONF:
+        load_zsf_ace_conf(block_data);
+      break;
 
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
@@ -2556,8 +2572,20 @@ Byte fields:
   }
 
 
-  //Maquinas Spectrum de 48kb y zx80/81
-  if (MACHINE_IS_SPECTRUM_16_48 || MACHINE_IS_ZX8081) {
+  //Algunos flags ace
+  if (MACHINE_IS_ACE) {
+    z80_byte aceconfblock[1];
+
+    z80_byte ram_ace=((ramtop_ace-16383)/1024)+3;
+    aceconfblock[0]=ram_ace;
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, aceconfblock,ZSF_ACE_CONF, 1);
+
+  }
+
+
+  //Maquinas Spectrum de 48kb y zx80/81 y Ace
+  if (MACHINE_IS_SPECTRUM_16_48 || MACHINE_IS_ZX8081 || MACHINE_IS_ACE) {
 
 	  int inicio_ram=16384;
 	  int longitud_ram=49152;
@@ -2573,6 +2601,11 @@ Byte fields:
       int final_ram=get_ramtop_with_rampacks()+1;
       if (ram_in_8192.v) inicio_ram=8192;
       longitud_ram=final_ram-inicio_ram;
+    }
+
+    if (MACHINE_IS_ACE) {
+        inicio_ram=8192;
+        longitud_ram=65536-inicio_ram;
     }
 
     //Test. Save 48kb block
@@ -2609,6 +2642,7 @@ Byte fields:
     if (si_comprimido) compressed_ramblock[0]|=1;
 
     //Store block to file
+    debug_printf(VERBOSE_DEBUG,"Saving ZSF_RAMBLOCK start %d length: %d",inicio_ram,longitud_bloque);
     zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_RAMBLOCK, longitud_bloque+5);
 
     free(compressed_ramblock);
