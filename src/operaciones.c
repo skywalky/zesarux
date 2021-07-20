@@ -6349,10 +6349,10 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
         }
         //cursor joystick 5 iz 8 der 6 abajo 7 arriba 0 fire
         if (joystick_emulation==JOYSTICK_CURSOR  || joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT) {
-                if ((puerto_especial_joystick&1)) acumulado &=(255-4);
-                if ((puerto_especial_joystick&4)) acumulado &=(255-16);
-                if ((puerto_especial_joystick&8)) acumulado &=(255-8);
-                if ((puerto_especial_joystick&16)) acumulado &=(255-1);
+            if ((puerto_especial_joystick&1)) acumulado &=(255-4);
+            if ((puerto_especial_joystick&4)) acumulado &=(255-16);
+            if ((puerto_especial_joystick&8)) acumulado &=(255-8);
+            if ((puerto_especial_joystick&16)) acumulado &=(255-1);
         }
 
 
