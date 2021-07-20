@@ -207,3 +207,13 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 
 -estadisticas memoria etc con getrusage: aunque esto solo vale para Linux
 
+-quiza hacer que si ventana debug cpu es suficientemente grande, en vez de mostrar en registros:
+
+AF 0000'0000
+
+mostrar:
+
+AF 0000 AF' 00000
+
+Aunque esto obliga revisar las funciones que escriben esos registros, los maximos de los buffers, y enviar el ancho de ventana
+a la función que lo escribe. Por otra parte puede provocar confusión al usuario...
