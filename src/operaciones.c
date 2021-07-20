@@ -6212,205 +6212,201 @@ z80_byte teclado_matrix_puerto_final(z80_byte puerto_h)
 
 }
 
-//comun para spectrum y zx80/81 y sam
+//comun para spectrum y zx80/81 y sam y ace
 z80_byte lee_puerto_teclado(z80_byte puerto_h)
 {
 
-			z80_byte acumulado;
+    z80_byte acumulado;
 
-                if (initial_tap_load.v==1 && initial_tap_sequence) {
-			if (MACHINE_IS_SPECTRUM) {
-	                        return envia_jload_pp_spectrum(puerto_h);
-			}
-			else {
-				if (MACHINE_IS_ZX80) return envia_load_pp_zx80(puerto_h);
-				else return envia_load_pp_zx81(puerto_h);
-			}
-                }
+    if (initial_tap_load.v==1 && initial_tap_sequence) {
+        if (MACHINE_IS_SPECTRUM) {
+            return envia_jload_pp_spectrum(puerto_h);
+        }
+        else {
+            if (MACHINE_IS_ZX80) return envia_load_pp_zx80(puerto_h);
+            else return envia_load_pp_zx81(puerto_h);
+        }
+    }
 
-                //puerto teclado
+    //puerto teclado
 
-                //si estamos en el menu, no devolver tecla
-                if (zxvision_key_not_sent_emulated_mach() ) return 255;
-
-
-		//Si esta spool file activo, generar siguiente tecla
-		if (input_file_keyboard_is_playing() ) {
-			if (input_file_keyboard_turbo.v==0) {
-				input_file_keyboard_get_key();
-			}
-
-			else {
-				//en modo turbo enviamos cualquier tecla pero la rom realmente lee de la direccion 23560
-				ascii_to_keyboard_port(' ');
-			}
-		}
+    //si estamos en el menu, no devolver tecla
+    if (zxvision_key_not_sent_emulated_mach() ) return 255;
 
 
+    //Si esta spool file activo, generar siguiente tecla
+    if (input_file_keyboard_is_playing() ) {
+        if (input_file_keyboard_turbo.v==0) {
+            input_file_keyboard_get_key();
+        }
 
-                        acumulado=255;
-
-            puerto_h=teclado_matrix_puerto_final(puerto_h);
-
-                        //A zero in one of the five lowest bits means that the corresponding key is pressed. 
-                        //If more than one address line is made low, the result is the logical AND of all single inputs, 
-                        //so a zero in a bit means that at least one of the appropriate keys is pressed. 
-                        //For example, only if each of the five lowest bits of the result from reading from Port 00FE 
-                        //(for instance by XOR A/IN A,(FE)) is one, no key is pressed
-
-            if ((puerto_h & 1) == 0)   {
-				if (MACHINE_IS_ACE) {
-					acumulado &=jupiter_ace_retorna_puerto_65278();
-				}
-				else acumulado &=puerto_65278;
-
-                //acumulado=teclado_matrix_error(puerto_65278,acumulado);
-
-				//Si hay alguna tecla del joystick cursor pulsada, enviar tambien shift
-//z80_byte puerto_65278=255; //    db    255  ; V    C    X    Z    Sh    ;0
-				if (joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT && puerto_especial_joystick!=0) {
-					acumulado &=(255-1);
-				}
-			}
+        else {
+            //en modo turbo enviamos cualquier tecla pero la rom realmente lee de la direccion 23560
+            ascii_to_keyboard_port(' ');
+        }
+    }
 
 
-            if ((puerto_h & 2) == 0)   {
-				acumulado &=puerto_65022;
-                //acumulado=teclado_matrix_error(puerto_65022,acumulado);
 
-                                //OPQASPACE Joystick
-                                if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
-                                        if ((puerto_especial_joystick&4)) acumulado &=(255-1);
-                                }
+    acumulado=255;
 
-			}
+    puerto_h=teclado_matrix_puerto_final(puerto_h);
 
+    //A zero in one of the five lowest bits means that the corresponding key is pressed. 
+    //If more than one address line is made low, the result is the logical AND of all single inputs, 
+    //so a zero in a bit means that at least one of the appropriate keys is pressed. 
+    //For example, only if each of the five lowest bits of the result from reading from Port 00FE 
+    //(for instance by XOR A/IN A,(FE)) is one, no key is pressed
 
-            if ((puerto_h & 4) == 0)   {
-				acumulado &=puerto_64510;
-                //acumulado=teclado_matrix_error(puerto_64510,acumulado);
+    //puerto_65278   db    255  ; V    C    X    Z    Sh    ;0
+    if ((puerto_h & 1) == 0)   {
+        if (MACHINE_IS_ACE) {
+            acumulado &=jupiter_ace_retorna_puerto_65278();
+        }
+        else acumulado &=puerto_65278;
 
-                                //OPQASPACE Joystick
-                                if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
-                                        if ((puerto_especial_joystick&8)) acumulado &=(255-1);
-                                }
+        //acumulado=teclado_matrix_error(puerto_65278,acumulado);
 
-			}
+        //Si hay alguna tecla del joystick cursor pulsada, enviar tambien shift
+        if (joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT && puerto_especial_joystick!=0) {
+            acumulado &=(255-1);
+        }
+    }
 
+    //puerto_65022   db    255  ; G    F    D    S    A     ;1
+    if ((puerto_h & 2) == 0)   {
+        acumulado &=puerto_65022;
+        //acumulado=teclado_matrix_error(puerto_65022,acumulado);
+
+        //OPQASPACE Joystick
+        if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
+                if ((puerto_especial_joystick&4)) acumulado &=(255-1);
+        }
+
+    }
+
+    //puerto_64510    db              255  ; T    R    E    W    Q     ;2
+    if ((puerto_h & 4) == 0)   {
+        acumulado &=puerto_64510;
+        //acumulado=teclado_matrix_error(puerto_64510,acumulado);
+
+        //OPQASPACE Joystick
+        if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
+                if ((puerto_especial_joystick&8)) acumulado &=(255-1);
+        }
+
+    }
 
 
 
 //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
 
-			//Para cursor, sinclair joystick
-//z80_byte puerto_63486=255; //    db              255  ; 5    4    3    2    1     ;3
+    //Para cursor, sinclair joystick
+    //z80_byte puerto_63486=255; //    db              255  ; 5    4    3    2    1     ;3
+    if ((puerto_h & 8) == 0)   {
+        acumulado &=puerto_63486;
+        //acumulado=teclado_matrix_error(puerto_63486,acumulado);
+        //sinclair 2 joystick
+        if (joystick_emulation==JOYSTICK_SINCLAIR_2) {
+            if ((puerto_especial_joystick&1)) acumulado &=(255-2);
+            if ((puerto_especial_joystick&2)) acumulado &=(255-1);
+            if ((puerto_especial_joystick&4)) acumulado &=(255-4);
+            if ((puerto_especial_joystick&8)) acumulado &=(255-8);
+            if ((puerto_especial_joystick&16)) acumulado &=(255-16);
+        }
+
+        //cursor joystick 5 iz 8 der 6 abajo 7 arriba 0 fire
+        if (joystick_emulation==JOYSTICK_CURSOR || joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT) {
+            if ((puerto_especial_joystick&2)) acumulado &=(255-16);
+        }
+
+        //gunstick
+        if (gunstick_emulation==GUNSTICK_SINCLAIR_2) {
+            if (mouse_left!=0) {
+
+                acumulado &=(255-1);
+
+                if (gunstick_view_white()) acumulado &=(255-4);
 
 
-            if ((puerto_h & 8) == 0)   {
-				acumulado &=puerto_63486;
-                //acumulado=teclado_matrix_error(puerto_63486,acumulado);
-				//sinclair 2 joystick
-				if (joystick_emulation==JOYSTICK_SINCLAIR_2) {
-					if ((puerto_especial_joystick&1)) acumulado &=(255-2);
-					if ((puerto_especial_joystick&2)) acumulado &=(255-1);
-					if ((puerto_especial_joystick&4)) acumulado &=(255-4);
-					if ((puerto_especial_joystick&8)) acumulado &=(255-8);
-					if ((puerto_especial_joystick&16)) acumulado &=(255-16);
-				}
-
-				//cursor joystick 5 iz 8 der 6 abajo 7 arriba 0 fire
-				if (joystick_emulation==JOYSTICK_CURSOR || joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT) {
-					if ((puerto_especial_joystick&2)) acumulado &=(255-16);
-				}
-
-		                //gunstick
-                                if (gunstick_emulation==GUNSTICK_SINCLAIR_2) {
-                                        if (mouse_left!=0) {
-
-                                                acumulado &=(255-1);
-
-                                                if (gunstick_view_white()) acumulado &=(255-4);
-
-
-                                        }
-                                }
-
-			}
-
-//z80_byte puerto_61438=255; //    db              255  ; 6    7    8    9    0     ;4
-
-
-            if ((puerto_h & 16) == 0)  {
-				acumulado &=puerto_61438;
-                //acumulado=teclado_matrix_error(puerto_61438,acumulado);
-
-				//sinclair 1 joystick
-				if (joystick_emulation==JOYSTICK_SINCLAIR_1) {
-					if ((puerto_especial_joystick&1)) acumulado &=(255-8);
-					if ((puerto_especial_joystick&2)) acumulado &=(255-16);
-					if ((puerto_especial_joystick&4)) acumulado &=(255-4);
-					if ((puerto_especial_joystick&8)) acumulado &=(255-2);
-					if ((puerto_especial_joystick&16)) acumulado &=(255-1);
-				}
-				//cursor joystick 5 iz 8 der 6 abajo 7 arriba 0 fire
-                                if (joystick_emulation==JOYSTICK_CURSOR  || joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT) {
-                                        if ((puerto_especial_joystick&1)) acumulado &=(255-4);
-                                        if ((puerto_especial_joystick&4)) acumulado &=(255-16);
-                                        if ((puerto_especial_joystick&8)) acumulado &=(255-8);
-                                        if ((puerto_especial_joystick&16)) acumulado &=(255-1);
-                                }
-
-
-				//gunstick
-				if (gunstick_emulation==GUNSTICK_SINCLAIR_1) {
-					if (mouse_left!=0) {
-
-						acumulado &=(255-1);
-
-						if (gunstick_view_white()) acumulado &=(255-4);
-
-
-					}
-				}
-			}
-
-
-            if ((puerto_h & 32) == 0)  {
-				acumulado &=puerto_57342;
-                //acumulado=teclado_matrix_error(puerto_57342,acumulado);
-
-                                //OPQASPACE Joystick
-                                if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
-                                        if ((puerto_especial_joystick&1)) acumulado &=(255-1);
-                                        if ((puerto_especial_joystick&2)) acumulado &=(255-2);
-                                }
-
-
-			}
-
-            if ((puerto_h & 64) == 0)  {
-                acumulado &=puerto_49150;
-                //acumulado=teclado_matrix_error(puerto_49150,acumulado);
             }
+        }
+
+    }
+
+    //z80_byte puerto_61438=255; //    db              255  ; 6    7    8    9    0     ;4
+    if ((puerto_h & 16) == 0)  {
+        acumulado &=puerto_61438;
+        //acumulado=teclado_matrix_error(puerto_61438,acumulado);
+
+        //sinclair 1 joystick
+        if (joystick_emulation==JOYSTICK_SINCLAIR_1) {
+            if ((puerto_especial_joystick&1)) acumulado &=(255-8);
+            if ((puerto_especial_joystick&2)) acumulado &=(255-16);
+            if ((puerto_especial_joystick&4)) acumulado &=(255-4);
+            if ((puerto_especial_joystick&8)) acumulado &=(255-2);
+            if ((puerto_especial_joystick&16)) acumulado &=(255-1);
+        }
+        //cursor joystick 5 iz 8 der 6 abajo 7 arriba 0 fire
+        if (joystick_emulation==JOYSTICK_CURSOR  || joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT) {
+                if ((puerto_especial_joystick&1)) acumulado &=(255-4);
+                if ((puerto_especial_joystick&4)) acumulado &=(255-16);
+                if ((puerto_especial_joystick&8)) acumulado &=(255-8);
+                if ((puerto_especial_joystick&16)) acumulado &=(255-1);
+        }
 
 
-            if ((puerto_h & 128) == 0) {
-				if (MACHINE_IS_ACE) {
-					acumulado &=jupiter_ace_retorna_puerto_32766();
-				}
-				else acumulado &=puerto_32766;
+        //gunstick
+        if (gunstick_emulation==GUNSTICK_SINCLAIR_1) {
+            if (mouse_left!=0) {
 
-                //acumulado=teclado_matrix_error(puerto_32766,acumulado);
+                acumulado &=(255-1);
 
-				//OPQASPACE Joystick
-				if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
-					if ((puerto_especial_joystick&16)) acumulado &=(255-1);
-				}
-
-			}
+                if (gunstick_view_white()) acumulado &=(255-4);
 
 
-            return acumulado;
+            }
+        }
+    }
+
+    //puerto_57342    db              255  ; Y    U    I    O    P     ;5
+    if ((puerto_h & 32) == 0)  {
+        acumulado &=puerto_57342;
+        //acumulado=teclado_matrix_error(puerto_57342,acumulado);
+
+        //OPQASPACE Joystick
+        if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
+                if ((puerto_especial_joystick&1)) acumulado &=(255-1);
+                if ((puerto_especial_joystick&2)) acumulado &=(255-2);
+        }
+
+
+    }
+
+    //puerto_49150    db              255  ; H                J         K      L    Enter ;6
+    if ((puerto_h & 64) == 0)  {
+        acumulado &=puerto_49150;
+        //acumulado=teclado_matrix_error(puerto_49150,acumulado);
+    }
+
+    //puerto_32766    db              255  ; B    N    M    Simb Space ;7
+    if ((puerto_h & 128) == 0) {
+        if (MACHINE_IS_ACE) {
+            acumulado &=jupiter_ace_retorna_puerto_32766();
+        }
+        else acumulado &=puerto_32766;
+
+        //acumulado=teclado_matrix_error(puerto_32766,acumulado);
+
+        //OPQASPACE Joystick
+        if (joystick_emulation==JOYSTICK_OPQA_SPACE) {
+            if ((puerto_especial_joystick&16)) acumulado &=(255-1);
+        }
+
+    }
+
+
+    return acumulado;
 
 
 }
