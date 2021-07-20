@@ -6317,6 +6317,9 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
         //cursor joystick 5 iz 8 der 6 abajo 7 arriba 0 fire
         if (joystick_emulation==JOYSTICK_CURSOR || joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT) {
+            //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
+
+            //Left
             if ((puerto_especial_joystick&2)) acumulado &=(255-16);
         }
 
@@ -6341,6 +6344,7 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
 
         //sinclair 1 joystick
         if (joystick_emulation==JOYSTICK_SINCLAIR_1) {
+            //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
             if ((puerto_especial_joystick&1)) acumulado &=(255-8);
             if ((puerto_especial_joystick&2)) acumulado &=(255-16);
             if ((puerto_especial_joystick&4)) acumulado &=(255-4);
@@ -6349,9 +6353,22 @@ z80_byte lee_puerto_teclado(z80_byte puerto_h)
         }
         //cursor joystick 5 iz 8 der 6 abajo 7 arriba 0 fire
         if (joystick_emulation==JOYSTICK_CURSOR  || joystick_emulation==JOYSTICK_CURSOR_WITH_SHIFT) {
+            //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
+
+            //Right -> 8
             if ((puerto_especial_joystick&1)) acumulado &=(255-4);
-            if ((puerto_especial_joystick&4)) acumulado &=(255-16);
-            if ((puerto_especial_joystick&8)) acumulado &=(255-8);
+
+            //Down -> 6
+            if ((puerto_especial_joystick&4)) {
+                acumulado &=(255-16);
+            }
+
+            //Up -> 7
+            if ((puerto_especial_joystick&8)) {
+                acumulado &=(255-8);
+            }
+
+            //Fire -> 0
             if ((puerto_especial_joystick&16)) acumulado &=(255-1);
         }
 
