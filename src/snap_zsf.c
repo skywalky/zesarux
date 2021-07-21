@@ -493,6 +493,75 @@ Byte Fields:
 3,4: Block lenght
 5: bank
 
+-Block ID 42: ZSF_Z88_CONF
+Byte fields:
+0: Z88 Internal ROM size (divided by 16384)
+1: Z88 Internal RAM size (divided by 16384)
+2: Indicates which types of slots are inserted. If some slot doesn't have card, type has no sense. Value is codificated as:
+  Bit Description
+  6-7 Unused
+  4-5 Slot 3 Memory type
+  2-3 Slot 2 Memory type
+  0-1 Slot 1 Memory type
+  Type can be:
+
+  0: RAM
+  1: Hybrid RAM+EPROM 
+  2: EPROM
+  3: FLASH
+  Note: EPROM, Hybrid EPROM+RAM or FLASH on slot 3 are not saved on zsf snapshots, 
+  but are indicated here to warn user that it must be inserted manually an eprom or flash
+
+3: Z88 Slot 1 size (divided by 16384)
+4: Z88 Slot 2 size (divided by 16384)
+5: Z88 Slot 3 size (divided by 16384)
+6: low 8 bits of blink_pixel_base[0]
+7: high 8 bits of blink_pixel_base[0]
+
+8: low 8 bits of blink_pixel_base[1]
+9: high 8 bits of blink_pixel_base[1]
+
+10: low 8 bits of blink_pixel_base[2]
+11: high 8 bits of blink_pixel_base[2]
+
+12: low 8 bits of blink_pixel_base[3]
+13: high 8 bits of blink_pixel_base[3]
+
+14: low 8 bits of blink_sbr
+15: high 8 bits of blink_sbr
+
+16: blink_com
+17: blink_int
+
+18: blink_sta
+19: blink_epr
+
+20: blink_tmk
+21: blink_tsta
+
+22: blink_mapped_memory_banks[0]
+23: blink_mapped_memory_banks[1]
+24: blink_mapped_memory_banks[2]
+25: blink_mapped_memory_banks[3]
+
+26: blink_tim[0]
+27: blink_tim[1]
+28: blink_tim[2]
+29: blink_tim[3]
+30: blink_tim[4]
+
+31: blink_rxd
+32: blink_rxe
+
+33: blink_rxc
+34: blink_txd
+
+35: blink_txc
+36: blink_umk
+
+37: blink_uit
+
+
 
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
