@@ -851,6 +851,34 @@ void load_zsf_zxuno_snapshot_block_data(z80_byte *block_data,int longitud_origin
 
 }
 
+void load_zsf_z88_snapshot_block_data(z80_byte *block_data,int longitud_original)
+{
+
+
+
+  int i=0;
+  z80_byte block_flags=block_data[i];
+
+  //longitud_original : tamanyo que ocupa todo el bloque con la cabecera de 5 bytes
+
+  i++;
+  z80_int block_start=value_8_to_16(block_data[i+1],block_data[i]);
+  i +=2;
+  z80_int block_lenght=value_8_to_16(block_data[i+1],block_data[i]);
+  i+=2;
+
+  z80_byte bank=block_data[i];
+  i++;
+
+  debug_printf (VERBOSE_DEBUG,"Block bank: %d start: %d Length: %d Compressed: %s Length_source: %d",bank,block_start,block_lenght,(block_flags&1 ? "Yes" : "No"),longitud_original);
+
+
+  longitud_original -=6;
+
+
+  load_zsf_snapshot_block_data_addr(&block_data[i],&memoria_spectrum[bank*16384],block_lenght,longitud_original,block_flags&1);
+
+}
 
 void load_zsf_msx_snapshot_block_data(z80_byte *block_data,int longitud_original)
 {
@@ -2259,6 +2287,10 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
         load_zsf_ace_conf(block_data);
       break;
 
+      case ZSF_Z88_MEMBLOCK:
+        load_zsf_z88_snapshot_block_data(block_data,block_lenght);
+      break;      
+
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
       break;
@@ -2908,24 +2940,80 @@ Byte Fields:
     int i;
     for (i=0;i<bancos_total;i++) {
 
+        z80_byte bank=i;
         compressed_ramblock[0]=0;
         compressed_ramblock[1]=value_16_to_8l(16384);
         compressed_ramblock[2]=value_16_to_8h(16384);
         compressed_ramblock[3]=value_16_to_8l(longitud_ram);
         compressed_ramblock[4]=value_16_to_8h(longitud_ram);
-        compressed_ramblock[5]=i;
+        compressed_ramblock[5]=bank;
 
         int si_comprimido;
-        int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384*i],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384*bank],&compressed_ramblock[6],longitud_ram,&si_comprimido);
         if (si_comprimido) compressed_ramblock[0]|=1;
 
-        debug_printf(VERBOSE_DEBUG,"Saving ZSF_Z88_MEMBLOCK bank: %d length: %d",i,longitud_bloque);
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_Z88_MEMBLOCK bank: %d length: %d",bank,longitud_bloque);
 
         //Store block to file
         zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_Z88_MEMBLOCK, longitud_bloque+6);
 
 
     }
+
+
+    //Grabar RAM interna
+    //calculo numero de bancos
+    bancos_total=(z88_internal_ram_size+1)/16384;
+
+    for (i=0;i<bancos_total;i++) {
+        z80_byte bank=0x20+i;
+
+        compressed_ramblock[5]=bank;
+
+        int si_comprimido;
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384*bank],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+        if (si_comprimido) compressed_ramblock[0]|=1;
+
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_Z88_MEMBLOCK bank: %d length: %d",bank,longitud_bloque);
+
+        //Store block to file
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_Z88_MEMBLOCK, longitud_bloque+6);
+
+    }
+
+
+    //Los 3 slots y siempre que que size!=0 y no haya eprom ni flash en slot 3
+    int slot;
+    for (slot=1;slot<=3;slot++) {
+        if (z88_memory_slots[slot].size!=0) {
+            //Hay algo. Si es slot 3, que no sea eprom ni flash
+            if (slot==3 && (z88_memory_slots[slot].type==2 || z88_memory_slots[slot].type==3 || z88_memory_slots[slot].type==4) ) {
+                debug_printf (VERBOSE_DEBUG,"Do not save eprom/flash on slot 3");
+            }
+
+            else {
+
+                //calculo numero de bancos
+                bancos_total=(z88_memory_slots[slot].size+1)/16384;
+                for (i=0;i<bancos_total;i++) {
+                    //save_zx_snapshot_bytes_z88(ptr_zxfile,0x40*slot+i);
+                    z80_byte bank=0x40*slot+i;
+
+                    compressed_ramblock[5]=bank;
+
+                    int si_comprimido;
+                    int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384*bank],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+                    if (si_comprimido) compressed_ramblock[0]|=1;
+
+                    debug_printf(VERBOSE_DEBUG,"Saving ZSF_Z88_MEMBLOCK bank: %d length: %d",bank,longitud_bloque);
+
+                    //Store block to file
+                    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_Z88_MEMBLOCK, longitud_bloque+6);
+                }
+            }
+        }
+    }
+
 
 
 
