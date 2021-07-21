@@ -484,6 +484,16 @@ Byte fields:
 0 ((ramtop_ace-16383)/1024)+3;
 
 
+-Block ID 41: ZSF_Z88_MEMBLOCK
+A ram binary block for a z88
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: bank
+
+
 -Como codificar bloques de memoria para Spectrum 128k, zxuno, tbblue, tsconf, etc?
 Con un numero de bloque (0...255) pero... que tamaño de bloque? tbblue usa paginas de 8kb, tsconf usa paginas de 16kb
 Quizá numero de bloque y parametro que diga tamaño, para tener un block id comun para todos ellos
@@ -496,7 +506,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 40
+#define MAX_ZSF_BLOCK_ID_NAMES 41
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -540,6 +550,7 @@ char *zsf_block_id_names[]={
   "ZSF_SMS_CONF",
   "ZSF_SMS_CRAM",
   "ZSF_ACE_CONF",
+  "ZSF_Z88_MEMBLOCK",
 
   "Unknown"  //Este siempre al final
 };
@@ -2860,6 +2871,64 @@ Byte Fields:
     zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_ZXUNO_RAMBLOCK, longitud_bloque+6);
 
   }
+
+  free(compressed_ramblock);
+
+
+  }
+
+  if (MACHINE_IS_Z88) {
+
+   int longitud_ram=16384;
+
+  
+   //Para el bloque comprimido
+   z80_byte *compressed_ramblock=malloc(longitud_ram*2);
+  if (compressed_ramblock==NULL) {
+    debug_printf (VERBOSE_ERR,"Error allocating memory");
+    return;
+  }
+
+  /*
+
+-Block ID 41: ZSF_Z88_MEMBLOCK
+A ram binary block for a z88
+Byte Fields:
+0: Flags. Currently: bit 0: if compressed with repetition block DD DD YY ZZ, where
+    YY is the byte to repeat and ZZ the number of repetitions (0 means 256)
+1,2: Block start address (currently unused)
+3,4: Block lenght
+5: bank
+  */
+
+    //Grabar ROM interna
+    //calculo numero de bancos
+    z80_byte bancos_total=(z88_internal_rom_size+1)/16384;
+
+    int i;
+    for (i=0;i<bancos_total;i++) {
+
+        compressed_ramblock[0]=0;
+        compressed_ramblock[1]=value_16_to_8l(16384);
+        compressed_ramblock[2]=value_16_to_8h(16384);
+        compressed_ramblock[3]=value_16_to_8l(longitud_ram);
+        compressed_ramblock[4]=value_16_to_8h(longitud_ram);
+        compressed_ramblock[5]=i;
+
+        int si_comprimido;
+        int longitud_bloque=save_zsf_copyblock_compress_uncompres(&memoria_spectrum[16384*i],&compressed_ramblock[6],longitud_ram,&si_comprimido);
+        if (si_comprimido) compressed_ramblock[0]|=1;
+
+        debug_printf(VERBOSE_DEBUG,"Saving ZSF_Z88_MEMBLOCK bank: %d length: %d",i,longitud_bloque);
+
+        //Store block to file
+        zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, compressed_ramblock,ZSF_Z88_MEMBLOCK, longitud_bloque+6);
+
+
+    }
+
+
+
 
   free(compressed_ramblock);
 
