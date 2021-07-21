@@ -506,7 +506,7 @@ Por otra parte, tener bloques diferentes ayuda a saber mejor qué tipos de bloqu
 #define MAX_ZSF_BLOCK_ID_NAMELENGTH 30
 
 //Total de nombres sin contar el unknown final
-#define MAX_ZSF_BLOCK_ID_NAMES 41
+#define MAX_ZSF_BLOCK_ID_NAMES 42
 char *zsf_block_id_names[]={
  //123456789012345678901234567890
   "ZSF_NOOP",
@@ -551,6 +551,7 @@ char *zsf_block_id_names[]={
   "ZSF_SMS_CRAM",
   "ZSF_ACE_CONF",
   "ZSF_Z88_MEMBLOCK",
+  "ZSF_Z88_CONF",
 
   "Unknown"  //Este siempre al final
 };
@@ -1575,6 +1576,124 @@ Byte fields:
 }
 
 
+void load_zsf_z88_conf(z80_byte *header)
+{
+
+
+    z88_internal_rom_size=(header[0]*16384)-1;
+    debug_printf(VERBOSE_DEBUG,"Setting Z88 Internal ROM Size to %d",z88_internal_rom_size+1);
+    z88_internal_ram_size=(header[1]*16384)-1;
+    debug_printf(VERBOSE_DEBUG,"Setting Z88 Internal RAM Size to %d",z88_internal_ram_size+1);
+
+
+
+
+    int slot_leido=1;
+    z88_memory_slots[slot_leido].type=header[2] & 3;
+    //si hay alguna tarjeta de memoria de tipo 1 es hibrida ram+eprom
+    if (z88_memory_slots[slot_leido].type==1) z88_memory_slots[slot_leido].type=4;
+
+    debug_printf(VERBOSE_DEBUG,"Setting Z88 Slot 1 Memory type to: %s",z88_memory_types[z88_memory_slots[1].type]);
+    slot_leido++;
+
+    z88_memory_slots[slot_leido].type=(header[2]>>2) & 3;
+    //si hay alguna tarjeta de memoria de tipo 1 es hibrida ram+eprom
+    if (z88_memory_slots[slot_leido].type==1) z88_memory_slots[slot_leido].type=4;
+
+    debug_printf(VERBOSE_DEBUG,"Setting Z88 Slot 2 Memory type to: %s",z88_memory_types[z88_memory_slots[2].type]);
+    slot_leido++;
+
+    z88_memory_slots[slot_leido].type=(header[2]>>4) & 3;
+    //si hay alguna tarjeta de memoria de tipo 1 es hibrida ram+eprom
+    if (z88_memory_slots[slot_leido].type==1) z88_memory_slots[slot_leido].type=4;
+
+    debug_printf(VERBOSE_DEBUG,"Setting Z88 Slot 3 Memory type to: %s",z88_memory_types[z88_memory_slots[3].type]);
+
+
+    if (header[3]) z88_memory_slots[1].size=(header[3]*16384)-1;
+    else z88_memory_slots[1].size=0;
+
+    if (header[4]) z88_memory_slots[2].size=(header[4]*16384)-1;
+    else z88_memory_slots[2].size=0;
+
+    if (header[5]) z88_memory_slots[3].size=(header[5]*16384)-1;
+    else z88_memory_slots[3].size=0;
+
+    //Si hay EPROM o Flash en slot 3, cambiarlo a RAM y size 0
+
+    int avisarerror=0;
+    int i=3;
+        if (z88_memory_slots[i].type==2 || z88_memory_slots[i].type==3 || z88_memory_slots[i].type==4) {
+            if (z88_memory_slots[i].size!=0) {
+
+                z88_memory_slots[i].size=0;
+                avisarerror=1;
+            }
+
+            z88_memory_slots[i].type=0;
+        }
+
+    if (avisarerror) {
+        debug_printf (VERBOSE_ERR,"Snapshot had an EPROM or Flash card on Slot 3. It is NOT loaded. You must insert it manually");
+    }
+
+
+    //Mostrar en debug tamanyo slots
+    z80_long_int size;
+    int sl;
+    for (sl=1;sl<=3;sl++) {
+        size=z88_memory_slots[sl].size;
+        debug_printf(VERBOSE_DEBUG,"Setting Z88 Slot %d Size to: %d",sl,(size ? size +1 : 0));
+
+    }
+
+
+    //Leer registros del blink
+
+
+    blink_pixel_base[0]=value_8_to_16(header[7],header[6]);
+    blink_pixel_base[1]=value_8_to_16(header[9],header[8]);
+    blink_pixel_base[2]=value_8_to_16(header[11],header[10]);
+    blink_pixel_base[3]=value_8_to_16(header[13],header[12]);
+
+    blink_sbr=value_8_to_16(header[15],header[14]);
+
+
+    blink_com=header[16];
+    blink_int=header[17];
+
+    blink_sta=header[18];
+    blink_epr=header[19];
+
+    blink_tmk=header[20];
+    blink_tsta=header[21];
+
+    blink_mapped_memory_banks[0]=header[22];
+    blink_mapped_memory_banks[1]=header[23];
+    blink_mapped_memory_banks[2]=header[24];
+    blink_mapped_memory_banks[3]=header[25];
+
+    blink_tim[0]=header[26];
+    blink_tim[1]=header[27];
+    blink_tim[2]=header[28];
+    blink_tim[3]=header[29];
+    blink_tim[4]=header[30];
+
+    blink_rxd=header[31];
+    blink_rxe=header[32];
+
+    blink_rxc=header[33];
+    blink_txd=header[34];
+
+    blink_txc=header[35];
+    blink_umk=header[36];
+
+    blink_uit=header[37];
+
+
+}
+
+
 void load_zsf_msx_conf(z80_byte *header)
 {
 
@@ -2291,6 +2410,10 @@ void load_zsf_snapshot_file_mem(char *filename,z80_byte *origin_memory,int longi
         load_zsf_z88_snapshot_block_data(block_data,block_lenght);
       break;      
 
+      case ZSF_Z88_CONF:
+        load_zsf_z88_conf(block_data);
+      break;      
+
       default:
         debug_printf(VERBOSE_ERR,"Unknown ZSF Block ID: %u. Continue anyway",block_id);
       break;
@@ -2911,6 +3034,91 @@ Byte Fields:
 
   if (MACHINE_IS_Z88) {
 
+    z80_byte z88confblock[38];
+
+   
+    z88confblock[0]=(z88_internal_rom_size+1)/16384;
+    z88confblock[1]=(z88_internal_ram_size+1)/16384;
+
+
+    //Si hay algun slot tipo hibrido, cambiar numeracion
+    z80_byte mem_types[3];
+    mem_types[0]=z88_memory_slots[1].type;
+    mem_types[1]=z88_memory_slots[2].type;
+    mem_types[2]=z88_memory_slots[3].type;
+
+    int i;
+    for (i=0;i<3;i++) {
+        if (mem_types[i]==4) {
+            mem_types[i]=1;
+        }
+    }
+
+    z88confblock[2]=(mem_types[0]) | (mem_types[1]<<2) | (mem_types[2]<<4);
+
+
+    if (z88_memory_slots[1].size) z88confblock[3]=(z88_memory_slots[1].size+1)/16384;
+    else z88confblock[3]=0;
+
+    if (z88_memory_slots[2].size) z88confblock[4]=(z88_memory_slots[2].size+1)/16384;
+    else z88confblock[4]=0;
+
+    if (z88_memory_slots[3].size) z88confblock[5]=(z88_memory_slots[3].size+1)/16384;
+    else z88confblock[5]=0;
+
+    //Grabar registros del Blink
+    //z80_int blink_pixel_base[4];
+    z88confblock[6]=value_16_to_8l(blink_pixel_base[0]);
+    z88confblock[7]=value_16_to_8h(blink_pixel_base[0]);
+
+    z88confblock[8]=value_16_to_8l(blink_pixel_base[1]);
+    z88confblock[9]=value_16_to_8h(blink_pixel_base[1]);
+
+    z88confblock[10]=value_16_to_8l(blink_pixel_base[2]);
+    z88confblock[11]=value_16_to_8h(blink_pixel_base[2]);
+
+    z88confblock[12]=value_16_to_8l(blink_pixel_base[3]);
+    z88confblock[13]=value_16_to_8h(blink_pixel_base[3]);
+
+    z88confblock[14]=value_16_to_8l(blink_sbr);
+    z88confblock[15]=value_16_to_8h(blink_sbr);
+
+    z88confblock[16]=blink_com;
+    z88confblock[17]=blink_int;
+
+    z88confblock[18]=blink_sta;
+    z88confblock[19]=blink_epr;
+
+    z88confblock[20]=blink_tmk;
+    z88confblock[21]=blink_tsta;
+
+    z88confblock[22]=blink_mapped_memory_banks[0];
+    z88confblock[23]=blink_mapped_memory_banks[1];
+    z88confblock[24]=blink_mapped_memory_banks[2];
+    z88confblock[25]=blink_mapped_memory_banks[3];
+
+    z88confblock[26]=blink_tim[0];
+    z88confblock[27]=blink_tim[1];
+    z88confblock[28]=blink_tim[2];
+    z88confblock[29]=blink_tim[3];
+    z88confblock[30]=blink_tim[4];
+
+    z88confblock[31]=blink_rxd;
+    z88confblock[32]=blink_rxe;
+
+    z88confblock[33]=blink_rxc;
+    z88confblock[34]=blink_txd;
+
+    z88confblock[35]=blink_txc;
+    z88confblock[36]=blink_umk;
+
+    z88confblock[37]=blink_uit;
+	
+
+    zsf_write_block(ptr_zsf_file,&destination_memory,longitud_total, z88confblock,ZSF_Z88_CONF, 38);
+
+
+
    int longitud_ram=16384;
 
   
@@ -2937,7 +3145,7 @@ Byte Fields:
     //calculo numero de bancos
     z80_byte bancos_total=(z88_internal_rom_size+1)/16384;
 
-    int i;
+    
     for (i=0;i<bancos_total;i++) {
 
         z80_byte bank=i;

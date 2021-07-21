@@ -10,7 +10,7 @@ Added zsf to scr support for Next, ZX-Uno and TSConf snapshots
 Added Jupiter Ace 51 KB RAM emulation
 Added GUI styles: BeOS, Bloody, Grass, Ocean, Sunny, Panther, Sky
 Added Fuzix ide image on the zesarux-extras package
-Added Jupiter Ace support to ZSF snapshots
+Added ZSF snapshot support for Jupiter Ace, Z88
 
 
 Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
