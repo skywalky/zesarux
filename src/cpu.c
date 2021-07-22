@@ -8621,6 +8621,22 @@ tooltip_enabled.v=1;
 				customconfigfile=main_argv[2];
                         }
 
+                        //Si help es el primer parametro, procesarlo aquí y no parsear config file ni hacer nada mas
+                        //Nota: esto no sería estrictamente necesario, el help también se procesa en parse_cmdline_options,
+                        //pero si tenemos setting verbose en el archivo de config, antes del help se ven por consola
+                        //varios mensajes referentes a insert recent file, setting joystick type, etc
+                        //asi mejor el help lo proceso aqui y evito todos esos mensajes por consola al usuario
+                        if (!strcmp(main_argv[1],"--help")) {
+                            cpu_help();
+                            exit(1);
+                        }
+
+                        //Lo mismo para experthelp
+                        if (!strcmp(main_argv[1],"--experthelp")) {
+                            cpu_help_expert();
+                            exit(1);
+                        }
+
                 }
 
 

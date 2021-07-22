@@ -257,7 +257,6 @@ TODO: algunos valores de xor 255 no son realmente xor 255. Quizá son letras con
 -quiza redibujar archivo logo tal cual con el boot logo
 -Posible ocr con traducción de cirílico?
 
--Si hay error en config file no hace experthelp
 
 
 -reorganizar capturas de pantalla del readme.md para que esten todas las maquinas

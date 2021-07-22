@@ -42,6 +42,8 @@ Improved ZX Vision menu interface:
 -View sprite legend now adapts to size
 -Added setting to disable boxes around lower and upper ZX Desktop Buttons
 
+Improve --help and --experthelp settings: do not parse configuration file when showing help
+
 
 Fixed file previews on corrupted files: pzx, tap
 Fixed rearranging windows and using total window height
