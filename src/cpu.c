@@ -8664,14 +8664,14 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 
   	if (parse_cmdline_options()) {
 		printf ("\n\n");
-        	cpu_help();
-        	exit(1);
+        cpu_help();
+        exit(1);
 	}
 
 	if (test_config_and_exit.v) exit(0);
 
 	//Init random value. Usado en AY Chip y Random ram y mensajes "kidding"
-init_randomize_noise_value();
+    init_randomize_noise_value();
 
 #ifdef SNAPSHOT_VERSION
 	printf ("Build number: " BUILDNUMBER "\n");
@@ -8701,18 +8701,15 @@ init_randomize_noise_value();
 
 
 
-		//guardamos zoom original. algunos drivers, como fbdev, lo modifican.
-                zoom_x_original=zoom_x;
-                zoom_y_original=zoom_y;
+    //guardamos zoom original. algunos drivers, como fbdev, lo modifican.
+    zoom_x_original=zoom_x;
+    zoom_y_original=zoom_y;
 
 
-		//Pausa para leer texto de inicio, copyright, etc
-		//desactivada sleep(1);
+    //Pausa para leer texto de inicio, copyright, etc
+    //desactivada sleep(1);
 
-		//Inicializacion maquina
-
-
-
+    //Inicializacion maquina
 
 
 
@@ -8727,7 +8724,7 @@ init_randomize_noise_value();
 		//init_cpc_rgb_table();
 	screen_init_colour_table();
 
-  screen_init_ext_desktop();
+    screen_init_ext_desktop();
 	init_screen_addr_table();
 
 	init_cpc_line_display_table();
@@ -8792,24 +8789,24 @@ init_randomize_noise_value();
 	if (command_line_zx8081_vsync_sound.v) zx8081_vsync_sound.v=1;
 
 
-  //Inicializamos Video antes que el resto de cosas.
-  main_init_video();
+    //Inicializamos Video antes que el resto de cosas.
+    main_init_video();
 
-  //llamar a set_menu_gui_zoom para establecer zoom menu. Ya se ha llamado desde set_machine pero como no hay driver de video aun ahi,
-  //no se aplica zoom de gui dado que eso solo es para driver xwindows, sdl etc y no para curses y otros
-  set_menu_gui_zoom();
+    //llamar a set_menu_gui_zoom para establecer zoom menu. Ya se ha llamado desde set_machine pero como no hay driver de video aun ahi,
+    //no se aplica zoom de gui dado que eso solo es para driver xwindows, sdl etc y no para curses y otros
+    set_menu_gui_zoom();
 
   //Activar deteccion automatica de rutina de impresion de caracteres, si conviene
 	//Esto se hace tambien al inicializar cpu... Pero como al inicializar cpu aun no hemos inicializado driver video,
 	//y por tanto no se sabe si hay stdout... Entonces hacemos esto justo despues de inicializar video
   //Activar deteccion automatica de rutina de impresion de caracteres, si conviene
-  if (chardetect_detect_char_enabled.v) {
-  	chardetect_init_automatic_char_detection();
-  }
+    if (chardetect_detect_char_enabled.v) {
+        chardetect_init_automatic_char_detection();
+    }
 
 
 
-  set_putpixel_zoom();
+    set_putpixel_zoom();
 	menu_init_footer();
 
 
@@ -8819,7 +8816,7 @@ init_randomize_noise_value();
 
 	tape_init();
 
-  tape_out_init();
+    tape_out_init();
 
 	//Si hay realtape insertado
 	if (realtape_name!=NULL) realtape_insert();
@@ -8848,9 +8845,9 @@ init_randomize_noise_value();
 			init_aofile();
 	}
 
-  if (vofilename!=NULL) {
-      init_vofile();
-  }
+    if (vofilename!=NULL) {
+        init_vofile();
+    }
 
 
 
@@ -8876,7 +8873,7 @@ init_randomize_noise_value();
   //Capturar sigbus. 
   //desactivado normalmente en versiones snapshot
 #ifndef MINGW	
-  signal(SIGBUS, sigbus_signal_handler);	
+    signal(SIGBUS, sigbus_signal_handler);	
 #endif
 
 	//Capturar segint (CTRL+C)
@@ -8985,7 +8982,7 @@ init_randomize_noise_value();
 	if (command_line_divide.v) {
 		divide_ide_ports_enable();
 		divide_diviface_enable();
-  }
+    }
 
 
 
@@ -9082,7 +9079,7 @@ init_randomize_noise_value();
 
 	else {
 		debug_printf(VERBOSE_INFO,"See if we have to load snapshot...");
-	  snapshot_load();
+	    snapshot_load();
 	}
 
     //Ver si hay que insertar slot de z88
@@ -9162,14 +9159,14 @@ init_randomize_noise_value();
 
 	#ifdef USE_COCOA
 
-		//Si hay soporte COCOA, dejar solo el thread con el main loop y volver a main (de scrcocoa)
+    //Si hay soporte COCOA, dejar solo el thread con el main loop y volver a main (de scrcocoa)
 
 	#else
-		//Bucle cerrado con sleep. El bucle main se ha lanzado como thread
-		while (1) {
-			timer_sleep(1000);
-			//printf ("bucle con sleep\n");
-		}
+    //Bucle cerrado con sleep. El bucle main se ha lanzado como thread
+    while (1) {
+        timer_sleep(1000);
+        //printf ("bucle con sleep\n");
+    }
 	#endif
 
 
