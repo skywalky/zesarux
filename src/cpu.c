@@ -593,6 +593,9 @@ z80_byte *memoria_spectrum;
 z80_bit quickload_inicial;
 char *quickload_nombre;
 
+z80_bit z88_slotcard_inicial;
+char *z88_slotcard_inicial_nombre;
+int z88_slotcard_inicial_slot;
 
 //Si no cambiamos parametros de frameskip y otros cuando es maquina lenta (raspberry, cocoa mac os x, etc)
 z80_bit no_cambio_parametros_maquinas_lentas={0};
@@ -1320,17 +1323,18 @@ char *string_machines_list_description=
 void cpu_help(void)
 {
 	printf ("Usage:\n"
-		"[--tape] file      Insert input standard tape file. Supported formats: Spectrum: .TAP, .TZX -- ZX80: .O, .80, .Z81 -- ZX81: .P, .81, .Z81 -- All machines: .RWA, .SMP, .WAV\n"
-		"[--realtape] file  Insert input real tape file. Supported formats: Spectrum: .TAP, .TZX -- ZX80: .O, .80, .Z81 -- ZX81: .P, .81, .Z81 -- All machines: .RWA, .SMP, .WAV\n"
-		"[--snap] file      Load snapshot file. Supported formats: Spectrum: .Z80, .ZX, .SP, .SNA -- ZX80: .ZX, .O, .80 -- ZX81: .ZX, .P, .81, .Z81\n"
-		"[--slotcard] file  Insert Z88 EPROM/Flash file. Supported formats: .EPR, .63, .EPROM, .FLASH\n"
+		"[--tape] file           Insert input standard tape file. Supported formats: Spectrum: .TAP, .TZX -- ZX80: .O, .80, .Z81 -- ZX81: .P, .81, .Z81 -- All machines: .RWA, .SMP, .WAV\n"
+		"[--realtape] file       Insert input real tape file. Supported formats: Spectrum: .TAP, .TZX -- ZX80: .O, .80, .Z81 -- ZX81: .P, .81, .Z81 -- All machines: .RWA, .SMP, .WAV\n"
+		"[--snap] file           Load snapshot file. Supported formats: Spectrum: .Z80, .ZX, .SP, .SNA -- ZX80: .ZX, .O, .80 -- ZX81: .ZX, .P, .81, .Z81\n"
+		"[--slotcard] file       Insert Z88 EPROM/Flash file in the first slot. Supported formats: .EPR, .63, .EPROM, .FLASH\n"
 		"Note: if you write a tape/snapshot/card file name without --tape, --realtape, --snap or --slotcard parameters, the emulator will try to guess file type (it's the same as SmartLoad on the menu)\n"
 		"\n"
+        "--slotcard-num file n   Same as --slotcard but insert card on the slot number n (1,2 or 3)\n"
 
-		"--outtape file     Insert output standard tape file. Supported formats: Spectrum: .TAP, .TZX -- ZX80: .O -- ZX81: .P\n"
+		"--outtape file          Insert output standard tape file. Supported formats: Spectrum: .TAP, .TZX -- ZX80: .O -- ZX81: .P\n"
 
-		"--zoom n           Total Zoom Factor\n"
-		"--vo driver        Video output driver. Valid drivers: ");
+		"--zoom n                Total Zoom Factor\n"
+		"--vo driver             Video output driver. Valid drivers: ");
 
 #ifdef USE_COCOA
 	printf ("cocoa ");
@@ -1375,12 +1379,12 @@ void cpu_help(void)
 	printf ("null\n");
 
 
-	printf ("--vofile file      Also output video to raw file\n");
-	printf ("--vofilefps n      FPS of the output video [1|2|5|10|25|50] (default:5)\n");
+	printf ("--vofile file           Also output video to raw file\n");
+	printf ("--vofilefps n           FPS of the output video [1|2|5|10|25|50] (default:5)\n");
 
 
 
-	printf ("--ao driver        Audio output driver. Valid drivers: ");
+	printf ("--ao driver             Audio output driver. Valid drivers: ");
 
 #ifdef COMPILE_PULSE
         printf ("pulse ");
@@ -1413,25 +1417,25 @@ void cpu_help(void)
 
 
 #ifdef USE_SNDFILE
-	printf ("--aofile file      Also output sound to wav or raw file\n");
+	printf ("--aofile file           Also output sound to wav or raw file\n");
 #else
-	printf ("--aofile file      Also output sound to raw file\n");
+	printf ("--aofile file           Also output sound to raw file\n");
 #endif
 
-	printf ("--version          Get emulator version and exit. Must be the first command line setting\n");
+	printf ("--version               Get emulator version and exit. Must be the first command line setting\n");
 
 	printf ("\n");
 
-	printf ("--machine          Machine type: \n");
+	printf ("--machine               Machine type: \n");
 
 	printf ("%s",string_machines_list_description);
 
 
 
 		printf ("\n"
-		"--noconfigfile     Do not load configuration file. This parameter must be the first and it's ignored if written on config file\n"
-		"--configfile f     Use the specified config file. This parameter must be the first and it's ignored if written on config file\n"
-		"--experthelp       Show expert options\n"
+		"--noconfigfile          Do not load configuration file. This parameter must be the first and it's ignored if written on config file\n"
+		"--configfile f          Use the specified config file. This parameter must be the first and it's ignored if written on config file\n"
+		"--experthelp            Show expert options\n"
 		"\n"
 		"Any command line setting shown here or on experthelp can be written on a configuration file,\n"
 		"this configuration file is on your home directory with name: " DEFAULT_ZESARUX_CONFIG_FILE "\n"
@@ -5765,11 +5769,38 @@ int parse_cmdline_options(void) {
 					quickload_nombre=argv[puntero_parametro];
 				}
 				else {
-                                        printf ("Invalid extension for eprom/flash card\n");
+                    printf ("Invalid extension for eprom/flash card\n");
 					exit(1);
 				}
 
-                        }
+            }
+
+			else if (!strcmp(argv[puntero_parametro],"--slotcard-num")) {
+                siguiente_parametro_argumento();
+				//ver si extension valida
+				if (
+				      !util_compare_file_extension(argv[puntero_parametro],"epr")
+				 ||   !util_compare_file_extension(argv[puntero_parametro],"63")
+				 ||   !util_compare_file_extension(argv[puntero_parametro],"eprom")
+				 ||   !util_compare_file_extension(argv[puntero_parametro],"flash")
+
+				 ){
+					z88_slotcard_inicial.v=1;
+					z88_slotcard_inicial_nombre=argv[puntero_parametro];
+
+                    siguiente_parametro_argumento();
+                    z88_slotcard_inicial_slot=parse_string_to_number(argv[puntero_parametro]);
+                    if (z88_slotcard_inicial_slot<1 || z88_slotcard_inicial_slot>3) {
+                        printf("Invalid slot number\n");
+                        exit(1);
+                    }
+				}
+				else {
+                    printf ("Invalid extension for eprom/flash card\n");
+					exit(1);
+				}
+
+            }            
 
 
                         else if (!strcmp(argv[puntero_parametro],"--vo")) {
@@ -8546,6 +8577,7 @@ tooltip_enabled.v=1;
 
 
 	quickload_inicial.v=0;
+    z88_slotcard_inicial.v=0;
 
 //Establecer rutas de utilidades externas
 #if defined(__APPLE__)
@@ -9037,6 +9069,15 @@ init_randomize_noise_value();
 	  snapshot_load();
 	}
 
+    //Ver si hay que insertar slot de z88
+    if (z88_slotcard_inicial.v) {
+        if (!MACHINE_IS_Z88) {
+            debug_printf(VERBOSE_ERR,"Trying to insert a Z88 slot but current machine is not Z88");
+        }
+        else {
+            z88_load_eprom_card(z88_slotcard_inicial_nombre,z88_slotcard_inicial_slot);
+        }
+    }
 
 	//Poner esto aqui porque se resetea al establecer parametros maquina en set_machine_params
 	if (command_line_vsync_minimum_lenght) {

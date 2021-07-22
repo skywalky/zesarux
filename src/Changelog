@@ -11,7 +11,7 @@ Added Jupiter Ace 51 KB RAM emulation
 Added GUI styles: BeOS, Bloody, Grass, Ocean, Sunny, Panther, Sky
 Added Fuzix ide image on the zesarux-extras package
 Added ZSF snapshot support for Jupiter Ace, Z88
-
+Added --slotcard-num setting to insert a Z88 card in a numbered slot (1, 2 or 3)
 
 Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
 Improved Audio to .mid exporter: allow changing instrument
