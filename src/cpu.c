@@ -8303,13 +8303,13 @@ int zesarux_main (int main_argc,char *main_argv[]) {
 	}
 
 
-                if (main_argc>1) {
-                        if (!strcmp(main_argv[1],"--codetests")) {
-                                codetests_main(main_argc,main_argv);
-                                exit(1);
-                        }
+    if (main_argc>1) {
+            if (!strcmp(main_argv[1],"--codetests")) {
+                    codetests_main(main_argc,main_argv);
+                    exit(1);
+            }
 
-                }
+    }
 
 
 	//de momento ponemos esto a null y los mensajes siempre saldran por un printf normal
@@ -8378,10 +8378,10 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 
 		
 
-		  //printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n"
-			printf ("ZEsarUX v." EMULATOR_VERSION " - " EMULATOR_EDITION_NAME ". " EMULATOR_DATE  "\n"
-			
-					"\n");
+    //printf ("ZEsarUX Version: " EMULATOR_VERSION " Date: " EMULATOR_DATE " - " EMULATOR_EDITION_NAME "\n"
+    printf ("ZEsarUX v." EMULATOR_VERSION " - " EMULATOR_EDITION_NAME ". " EMULATOR_DATE  "\n"
+    
+            "\n");
 
 
 //End Copyright message
@@ -8391,9 +8391,9 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 
 
 #ifdef DEBUG_SECOND_TRAP_STDOUT
-		printf ("\n\nWARNING!!!! DEBUG_SECOND_TRAP_STDOUT enabled!!\n"
-			"Enable this only when you want to find printing routines\n\n");
-		sleep (3);
+    printf ("\n\nWARNING!!!! DEBUG_SECOND_TRAP_STDOUT enabled!!\n"
+        "Enable this only when you want to find printing routines\n\n");
+    sleep (3);
 #endif
 
 
@@ -8461,46 +8461,46 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 	tape_loading_simulate_fast.v=0;
 
 
-//Valores de ZX80/81
-//ZX80/81 con 16 kb
-ramtop_zx8081=16383+16384;
-ram_in_8192.v=0;
-ram_in_32768.v=0;
-ram_in_49152.v=0;
-wrx_present.v=0;
-zx8081_vsync_sound.v=0;
-//video_zx8081_shows_vsync_on_display.v=0;
-video_zx8081_estabilizador_imagen.v=1;
-//video_zx8081_decremento_x_cuando_mayor=8;
+    //Valores de ZX80/81
+    //ZX80/81 con 16 kb
+    ramtop_zx8081=16383+16384;
+    ram_in_8192.v=0;
+    ram_in_32768.v=0;
+    ram_in_49152.v=0;
+    wrx_present.v=0;
+    zx8081_vsync_sound.v=0;
+    //video_zx8081_shows_vsync_on_display.v=0;
+    video_zx8081_estabilizador_imagen.v=1;
+    //video_zx8081_decremento_x_cuando_mayor=8;
 
-//19KB (3+16)
-ramtop_ace=16383+16384;
+    //19KB (3+16)
+    ramtop_ace=16383+16384;
 
-try_fallback_video.v=1;
-try_fallback_audio.v=1;
+    try_fallback_video.v=1;
+    try_fallback_audio.v=1;
 
-video_fast_mode_emulation.v=0;
+    video_fast_mode_emulation.v=0;
 
-simulate_lost_vsync.v=0;
-
-
-last_x_atributo=0;
-
-snow_effect_enabled.v=0;
-
-inverse_video.v=0;
-
-kempston_mouse_emulation.v=0;
+    simulate_lost_vsync.v=0;
 
 
-scr_set_driver_name("");
-audio_set_driver_name("");
+    last_x_atributo=0;
 
-transaction_log_filename[0]=0;
+    snow_effect_enabled.v=0;
 
-debug_printf_sem_init();
+    inverse_video.v=0;
 
-debug_unnamed_console_init();
+    kempston_mouse_emulation.v=0;
+
+
+    scr_set_driver_name("");
+    audio_set_driver_name("");
+
+    transaction_log_filename[0]=0;
+
+    debug_printf_sem_init();
+
+    debug_unnamed_console_init();
 
 
 #ifdef COMPILE_XWINDOWS
@@ -8511,20 +8511,20 @@ debug_unnamed_console_init();
 #endif
 
 
-texto_artistico.v=1;
+    texto_artistico.v=1;
 
 
-rainbow_enabled.v=0;
-autodetect_rainbow.v=1;
-autodetect_wrx.v=0;
+    rainbow_enabled.v=0;
+    autodetect_rainbow.v=1;
+    autodetect_wrx.v=0;
 
-contend_enabled.v=1;
+    contend_enabled.v=1;
 
-zxprinter_enabled.v=0;
-zxprinter_motor.v=0;
-zxprinter_power.v=0;
+    zxprinter_enabled.v=0;
+    zxprinter_motor.v=0;
+    zxprinter_power.v=0;
 
-tooltip_enabled.v=1;
+    tooltip_enabled.v=1;
 
 	autosave_snapshot_on_exit.v=0;
 	autoload_snapshot_on_start.v=0;
@@ -8581,8 +8581,8 @@ tooltip_enabled.v=1;
 
 //Establecer rutas de utilidades externas
 #if defined(__APPLE__)
-                sprintf (external_tool_tar,"/usr/bin/tar");
-                sprintf (external_tool_gunzip,"/usr/bin/gunzip");
+    sprintf (external_tool_tar,"/usr/bin/tar");
+    sprintf (external_tool_gunzip,"/usr/bin/gunzip");
 #endif
 
 	//antiguo
@@ -8592,7 +8592,7 @@ tooltip_enabled.v=1;
 	realjoystick_init_events_keys_tables();
 
 
-		//por si lanzamos un cpu_panic antes de inicializar video, que esto este a NULL y podamos detectarlo para no ejecutarlo
+    //por si lanzamos un cpu_panic antes de inicializar video, que esto este a NULL y podamos detectarlo para no ejecutarlo
 	scr_end_pantalla=NULL;
 	memoria_spectrum=NULL;
 
@@ -8600,60 +8600,60 @@ tooltip_enabled.v=1;
 	//Primero parseamos archivo de configuracion
 	debug_parse_config_file.v=0;
 
-		//Si hay parametro de debug parse config file...
-		//main_argc,char *main_argv[])
-		//printf ("%d\n",main_argc);
-		if (main_argc>1) {
-			if (!strcmp(main_argv[1],"--debugconfigfile")) {
-				debug_parse_config_file.v=1;
-			}
-		}
+    //Si hay parametro de debug parse config file...
+    //main_argc,char *main_argv[])
+    //printf ("%d\n",main_argc);
+    if (main_argc>1) {
+        if (!strcmp(main_argv[1],"--debugconfigfile")) {
+            debug_parse_config_file.v=1;
+        }
+    }
 
 
 	int noconfigfile=0;
 
-                if (main_argc>1) {
-                        if (!strcmp(main_argv[1],"--noconfigfile")) {
-				noconfigfile=1;
-                        }
+    if (main_argc>1) {
+        if (!strcmp(main_argv[1],"--noconfigfile")) {
+            noconfigfile=1;
+        }
 
-                        if (!strcmp(main_argv[1],"--configfile")) {
-				customconfigfile=main_argv[2];
-                        }
+        if (!strcmp(main_argv[1],"--configfile")) {
+            customconfigfile=main_argv[2];
+        }
 
-                        //Si help es el primer parametro, procesarlo aquí y no parsear config file ni hacer nada mas
-                        //Nota: esto no sería estrictamente necesario, el help también se procesa en parse_cmdline_options,
-                        //pero si tenemos setting verbose en el archivo de config, antes del help se ven por consola
-                        //varios mensajes referentes a insert recent file, setting joystick type, etc
-                        //asi mejor el help lo proceso aqui y evito todos esos mensajes por consola al usuario
-                        if (!strcmp(main_argv[1],"--help")) {
-                            cpu_help();
-                            exit(1);
-                        }
+        //Si help es el primer parametro, procesarlo aquí y no parsear config file ni hacer nada mas
+        //Nota: esto no sería estrictamente necesario, el help también se procesa en parse_cmdline_options,
+        //pero si tenemos setting verbose en el archivo de config, antes del help se ven por consola
+        //varios mensajes referentes a insert recent file, setting joystick type, etc
+        //asi mejor el help lo proceso aqui y evito todos esos mensajes por consola al usuario
+        if (!strcmp(main_argv[1],"--help")) {
+            cpu_help();
+            exit(1);
+        }
 
-                        //Lo mismo para experthelp
-                        if (!strcmp(main_argv[1],"--experthelp")) {
-                            cpu_help_expert();
-                            exit(1);
-                        }
+        //Lo mismo para experthelp
+        if (!strcmp(main_argv[1],"--experthelp")) {
+            cpu_help_expert();
+            exit(1);
+        }
 
-                }
+    }
 
 
 
 	if (noconfigfile==0) {
-			//parametros del archivo de configuracion
-			configfile_parse();
+        //parametros del archivo de configuracion
+        configfile_parse();
 
-        	        argc=configfile_argc;
-                	argv=configfile_argv;
-			puntero_parametro=0;
+        argc=configfile_argc;
+        argv=configfile_argv;
+        puntero_parametro=0;
 
-        	        if (parse_cmdline_options()) {
-				//debug_printf(VERBOSE_ERR,"Error parsing configuration file. Disabling autosave feature");
-				//Desactivamos autoguardado para evitar que se genere una configuración incompleta
-				save_configuration_file_on_exit.v=0;
-			}
+        if (parse_cmdline_options()) {
+            //debug_printf(VERBOSE_ERR,"Error parsing configuration file. Disabling autosave feature");
+            //Desactivamos autoguardado para evitar que se genere una configuración incompleta
+            save_configuration_file_on_exit.v=0;
+        }
 	}
 
 
