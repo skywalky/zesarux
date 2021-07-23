@@ -1406,6 +1406,12 @@ void z88_open_flap(void)
 
 	z88_pausa_open_close_flap();
 
+    /*
+    En la apertura de flap se interesa que haga esto precisamente:
+    - Abrir tapa
+    - Ejecutar unos ciclos de cpu (z88_pausa_open_close_flap) para que el sistema se entere que se ha abierto la tapa
+    */
+
 
 }
 
@@ -1423,6 +1429,13 @@ void z88_close_flap(void)
 	blink_sta &=(255-128-32);
 
 	menu_footer_z88();
+
+    /*
+    En el cierre de flap se interesa que haga esto precisamente:
+    - Ejecutar unos ciclos de cpu (z88_pausa_open_close_flap) para que el sistema se entere del evento que se ha producido: insertar/quitar cartucho, hard reset
+    - Cerrar tapa
+    */
+
 
 }
 
