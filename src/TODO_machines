@@ -812,7 +812,7 @@ pero si se hace asi, lemmings no va, tampoco dstar, pipedream se bloquea...
 -al insertar eprom, por ejemplo, cuando abre flap, no parece que detenga el sistema... por ejemplo, si estoy con un juego con musica,
 e inserto una eprom, la musica no se corta en absoluto... creo que al abrir flap (y con la pausa que hay) se deberia detener todo un rato
 
--forzado low battery y no aparece.
+-forzado low battery y no aparece: parece que se activa momentáneamente al abrir flap cuando el bit de STA está forzado (blink_sta |=8)
 
 -comprobar al cargar eproms o flash tamanyo maximo de archivo:
 flash entre 512 y 1024

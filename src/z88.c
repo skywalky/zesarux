@@ -969,6 +969,43 @@ void z88_generar_maskable_si_top_speed(void)
 
 }
 
+void z88_set_low_battery(void)
+{
+    blink_sta |=8;
+
+    printf("blink_sta %02XH blink_int %02XH\n",blink_sta,blink_int);
+
+    //blink_sta |=32;
+
+    //blink_sta |=128;
+
+    //con esto aparece low battery pero se cuelga
+    //blink_sta &=(255-1);
+
+    /*
+    open flap
+    	blink_sta |=128+32;
+	blink_sta &=(255-1);
+
+    close flap
+    	//Notificar cierre tapa
+	blink_sta &=(255-128-32);
+
+
+    The STA ($B1) register provides information about which interrupt has actually occurred:
+
+BIT         NAME        Function
+7           FLAPOPEN    If set, flap open else flap closed
+6           A19         If set, high level on A19 occurred during coma
+5           FLAP        If set, positive edge has occurred on FLAPOPEN
+4           UART        If set, an enabled UART interrupt is active
+3           BTL         If set, battery low pin is active
+2           KEY         If set, a column has gone low in snooze (or coma)
+1           -           -
+0           TIME        If set, an enabled TIME interrupt is active
+    */
+}
+
 z80_byte lee_puerto_z88_no_time(z80_byte puerto_h,z80_byte puerto_l)
 {
 
@@ -1158,7 +1195,7 @@ $74         SBR, screen base reg.   -
 		case 0xB1:
 			blink_int=value;
 			//debug_printf (VERBOSE_DEBUG,"establecer puerto b1 a valor: 0x%x",value);
-			//printf ("establecer blink_int a valor: %d\n",value);
+			//printf ("establecer blink_int a valor: %02XH\n",value);
 		break;
 
 
@@ -1186,7 +1223,9 @@ $74         SBR, screen base reg.   -
 			//ozvm lo hace de esta manera pero no se porque:
 		        //if ((blink_sta & value ) == 0) blink_sta &= ~value;
 
+            //printf("antes B6 blink_sta=%02XH. value=%02XH\n",blink_sta,value);
 			blink_sta &= ~value;
+            //printf("despues B6 blink_sta=%02XH\n",blink_sta);
 
 		break;
 

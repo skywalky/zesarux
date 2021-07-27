@@ -13,6 +13,7 @@ Added Fuzix ide image on the zesarux-extras package
 Added ZSF snapshot support for Jupiter Ace, Z88
 Added --slotcard-num setting to insert a Z88 card in a numbered slot (1, 2 or 3)
 
+
 Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
 Improved Audio to .mid exporter: allow changing instrument
 Improved Text Aventure Debugging: 
@@ -42,8 +43,6 @@ Improved ZX Vision menu interface:
 -View sprite legend now adapts to size
 -Added setting to disable boxes around lower and upper ZX Desktop Buttons
 
-Improve --help and --experthelp settings: do not parse configuration file when showing help
-
 
 Fixed file previews on corrupted files: pzx, tap
 Fixed rearranging windows and using total window height
@@ -51,6 +50,7 @@ Fixed Next ULA Scroll to use registers 0x26 and 0x27
 Fixed Next tbblue port 123b behaviour: 48kb ram paging, shadow display, 3bit offset, read access
 Fixed cpu-step behaviour the first time it's executed
 Fixed cursor keys up/down on Jupiter Ace
+Fixed --help and --experthelp settings: do not parse configuration file when showing help
 
 
 Some other minor bugfixes and improvements
