@@ -4005,6 +4005,17 @@ void tbblue_splash_monitor_mode(void)
 	screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
 }
 
+void tbblue_splash_layer2_mode(void)
+{
+
+    char buffer_mensaje[100];
+
+    sprintf(buffer_mensaje,"Setting Layer 2 mode %s",tbblue_get_layer2_mode_name() );
+
+
+    screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,buffer_mensaje);
+}
+
 void tbblue_get_string_palette_format(char *texto)
 {
 //if (value&128) screen_print_splash_text_center(ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,"Enabling lores video mode. 128x96 256 colours");
@@ -4341,6 +4352,7 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 	z80_byte last_register_66=tbblue_registers[66];
 	z80_byte last_register_67=tbblue_registers[67];
 	z80_byte last_register_99=tbblue_registers[99];
+    z80_byte last_register_112=tbblue_registers[112];
 	
 	//z80_byte aux_divmmc;
 
@@ -4811,7 +4823,12 @@ Bit	Function
 
 		tbblue_sync_display1_reg_to_others(value);
 
-		break;	
+		break; 
+
+
+        case 112:
+            if ((last_register_112&(16+32))!=(value&(16+32))) tbblue_splash_layer2_mode();
+        break;
 
 
 		case 140:
