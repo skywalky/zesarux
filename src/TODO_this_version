@@ -197,20 +197,12 @@ https://www.zxuno.com/forum/viewtopic.php?t=4091
 
 -ay player en modo "jukebox" que permita agregar canciones ay a la lista, o bien una carpeta entera
 
--frecuencias chips audio como sensores?
+-frecuencias chips audio como sensores? no sé si vale la pena pues los valores de frecuencias son exponenciales y por ejemplo
+las ultimas dos notas, una es el doble de la otra. Por tanto si usamos un widget de speedometer, estaria casi al 0 siempre excepto para 
+frecuencias muy altas.
 
 
 -Revisar tbblue dma con efectos sonido cuadragon next
 
 -estadisticas memoria etc con getrusage: aunque esto solo vale para Linux
 
--quiza hacer que si ventana debug cpu es suficientemente grande, en vez de mostrar en registros:
-
-AF 0000'0000
-
-mostrar:
-
-AF 0000 AF' 00000
-
-Aunque esto obliga revisar las funciones que escriben esos registros, los maximos de los buffers, y enviar el ancho de ventana
-a la función que lo escribe. Por otra parte puede provocar confusión al usuario...
