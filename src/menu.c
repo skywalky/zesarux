@@ -4600,6 +4600,12 @@ void menu_draw_ext_desktop(void)
                 componente_g *=posicion_color;
                 componente_b *=posicion_color;
 
+                //cada componente maximo 5 bits (valor 31). sucede que con el calculo anterior, puede llegar a ser mayor que 31,
+                //por ejemplo con maquina jupiter ace (debido al tamaño de ventana de dicha máquina)
+                if (componente_r>31) componente_r=31;
+                if (componente_g>31) componente_g=31;
+                if (componente_b>31) componente_b=31;
+
                 //poner cada componente en su posicion final
                 int color_tsconf=(componente_b)|(componente_g<<5)|(componente_r<<10);
 

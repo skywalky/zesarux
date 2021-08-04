@@ -1,4 +1,4 @@
-Para esta version 9.2:
+Para esta version 9.3:
 
 
 -Meter file browser zxuno en imagen zxuno mmc
@@ -101,10 +101,6 @@ https://foro.speccy.org/viewtopic.php?t=1502
 - meter en extras de docs Benchmark legacy tbblue: de momento está en el código, en el menú como comentarios
 
 
--Quizá versión en un futuro en que al pulsar escape cierra todos los menús. 
-Aunque lo que son ventanas no de menú debería cerrar la actual y no todas?
-
-
 
 -Problema con el almacenamiento de los t-estados en snapshot .zsf: no se guarda
 
@@ -139,11 +135,6 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 
 
 
--Quizá cuando se ha pulsado rewind y hasta que no hay el timeout, no generar nuevos snapshots. 
-Si no, cuando pasa el timeout y se hace rewind, aparecen unos snapshot “temporales” que quizá el usuario 
-no quiere ver. O siempre así o igual personalizable. Probarlo
-
-
 -quiza un "code estatistics": total lines, total comments, total todos (en codigo y en archivos TODO_*, etc)
 
 -paws renderer probar diferentes char width
@@ -152,28 +143,6 @@ no quiere ver. O siempre así o igual personalizable. Probarlo
 
 
 -en debug resaltar registros que se vayan a cambiar . en rojo?. Por ejemplo, si hay un "INC C" resaltar registro C
-
-
--revisar cpc:
-
-https://www.cpc-power.com/cpcarchives/index.php?page=articles&num=67
-
-When the interrupt is acknowledged, this is sensed by the Gate-Array. The top bit (bit 5), of the counter is set to "0" and the interrupt request is cleared. This prevents the next interrupt from occuring closer than 32 HSYNCs time.
-If bit 4 of the "Select screen mode and rom configuration" register of the Gate-Array (bit 7="1" and bit 6="0") 
-is set to "1" then the interrupt request is cleared and the 6-bit counter is reset to "0".
-
-no estoy haciendo caso del bit del gate array registro 2:
-
-Registro 2:
-
-Bit	Value	Function
-7	1	Gate Array function
-6	0
-5	-	not used
-4	x	Interrupt generation control
-...
-
-Deberia mirar ese bit esta a 1 para poner el contador a 0?
 
 
 
@@ -204,5 +173,9 @@ frecuencias muy altas.
 
 -Revisar tbblue dma con efectos sonido cuadragon next
 
--estadisticas memoria etc con getrusage: aunque esto solo vale para Linux
 
+-quizá imagenes zxuno.mmc y tbblue.mmc que se generen:
+-- de una carpeta del proyecto, que se cree un archivo mmc mediante herramientas de acceso chan fat fs y luego una copia recursiva. y la partición como crearla?
+
+
+-ZSF: soporte para TS2068, Sam coupe, Chloe, Prism, Chrome, MK14

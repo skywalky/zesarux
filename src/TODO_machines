@@ -694,6 +694,27 @@ http://www.cpcwiki.eu/index.php/Format:TAP_tape_image_file_format
 http://www.spinpoint.org/2016/05/06/m4-board-retrofun-8-bit-amstrad-cpc-wifi/#comment-69
 
 
+-revisar cpc:
+
+https://www.cpc-power.com/cpcarchives/index.php?page=articles&num=67
+
+When the interrupt is acknowledged, this is sensed by the Gate-Array. The top bit (bit 5), of the counter is set to "0" and the interrupt request is cleared. This prevents the next interrupt from occuring closer than 32 HSYNCs time.
+If bit 4 of the "Select screen mode and rom configuration" register of the Gate-Array (bit 7="1" and bit 6="0") 
+is set to "1" then the interrupt request is cleared and the 6-bit counter is reset to "0".
+
+no estoy haciendo caso del bit del gate array registro 2:
+
+Registro 2:
+
+Bit	Value	Function
+7	1	Gate Array function
+6	0
+5	-	not used
+4	x	Interrupt generation control
+...
+
+Deberia mirar ese bit esta a 1 para poner el contador a 0?
+
 
 -------------
 

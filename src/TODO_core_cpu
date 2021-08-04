@@ -87,3 +87,7 @@ probado - Variable traps que se activa por si hay load o save- hará que vaya m�
 
 -Que algunas tareas como store scanline se hagan en thread aparte. Problema: que la mayoria de datos de ese scanline
 pueden variar mientras se está ejecutando el thread con el loop del siguiente scanline
+
+-Quizá cuando se ha pulsado rewind y hasta que no hay el timeout, no generar nuevos snapshots. 
+Si no, cuando pasa el timeout y se hace rewind, aparecen unos snapshot “temporales” que quizá el usuario 
+no quiere ver. O siempre así o igual personalizable. Probarlo

@@ -37,6 +37,10 @@ Seria dificil de corregir, al conmutar de ventana y volver, realmente se crea un
 y en esa geometria no se indica que estaba minimizada antes o no. Quiza un parametro mas en la geometria que indique minimizada o no
 Aunque tambien habria que guardar tamaño de antes de minimizar
 
+-Quizá versión en un futuro en que al pulsar escape cierra todos los menús. 
+Aunque lo que son ventanas no de menú debería cerrar la actual y no todas? Además tendria que haber una tecla para solo cerrar la ventana en curso.
+
+
 -cuando una tecla F no esta como default, no la envia a maquina emulada: ejemplo MSX F2, QL F5
 
 -First aid de f keys. Cuando se pulse una f por primera vez
@@ -248,6 +252,9 @@ TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, qu
 
 -Estadísticas de diferentes componentes del core, ya sea cpu u otra cosa, como memoria usada para el rainbow buffer,  y cosas así
 Info de tamaño ventana. Y tamaño ventana sin zoom
+
+-estadisticas memoria etc con getrusage: aunque esto solo vale para Linux
+
 
 -mejorar deteccion frecuencia sonido en audio wave form
 
