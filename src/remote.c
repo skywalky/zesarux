@@ -67,6 +67,7 @@
 #include "ql_qdos_handler.h"
 #include "tape.h"
 #include "snap_ram.h"
+#include "mmc.h"
 
 
 
@@ -747,6 +748,7 @@ struct s_items_ayuda items_ayuda[]={
 	{"load-binary",NULL,"file addr len","Load binary file \"file\" at address \"addr\" with length \"len\", on the current memory zone. Set ln to 0 to load the entire file in memory"},
 	{"load-source-code","|lsc","file","Load source file to be used on disassemble opcode functions"},
 	{"ls",NULL,NULL,"Minimal command list"},
+    {"mmc-reload",NULL,NULL,"Reload MMC file"},
 	{"noop",NULL,NULL,"This command does nothing"},
 	{"print-footer",NULL,"message","Prints message on footer"},
 	{"put-snapshot",NULL,NULL,"Puts a zsf snapshot from console. Contents must be hexadecimal characters without spaces"}, 
@@ -4584,6 +4586,21 @@ void interpreta_comando(char *comando,int misocket)
 
 	else if (!strcmp(comando_sin_parametros,"ls")) {
 			remote_simple_help(misocket);
+	}
+
+	else if (!strcmp(comando_sin_parametros,"mmc-reload")) {
+        if (mmc_enabled.v==0) {
+            escribir_socket(misocket,"ERROR. MMC is not enabled");
+        }
+
+        else {
+            if (mmc_read_file_to_memory()==0) {
+                escribir_socket(misocket,"OK. MMC file reloaded");
+            }
+            else {
+               escribir_socket(misocket,"ERROR reloading MMC");
+            }
+        }
 	}
 
 	else if (!strcmp(comando_sin_parametros,"noop")) {
