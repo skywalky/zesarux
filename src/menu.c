@@ -18706,6 +18706,11 @@ void menu_storage_hilow_insert(MENU_ITEM_PARAMETERS)
     hilow_cinta_insertada.v ^=1;
 }
 
+void menu_storage_hilow_cover(MENU_ITEM_PARAMETERS)
+{
+    hilow_tapa_abierta.v ^=1;
+}
+
 void menu_hilow(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_hilow;
@@ -18721,6 +18726,9 @@ void menu_hilow(MENU_ITEM_PARAMETERS)
 
             menu_add_item_menu_format(array_menu_hilow,MENU_OPCION_NORMAL,menu_storage_hilow_insert,NULL,"[%c] Tape ~~inserted", (hilow_cinta_insertada.v ? 'X' : ' '));
             menu_add_item_menu_shortcut(array_menu_hilow,'i');
+
+            menu_add_item_menu_format(array_menu_hilow,MENU_OPCION_NORMAL,menu_storage_hilow_cover,NULL,"[%c] Cover ~~open", (hilow_tapa_abierta.v ? 'X' : ' '));
+            menu_add_item_menu_shortcut(array_menu_hilow,'o');            
 
 /*
 			menu_add_item_menu_format(array_menu_hilow,MENU_OPCION_NORMAL,menu_storage_hilow_press_button,menu_storage_hilow_press_button_cond,"~~Press button");

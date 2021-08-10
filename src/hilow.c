@@ -58,6 +58,8 @@ z80_bit hilow_mapped_ram={0};
 //Esto de momento se puede conmutar pero luego ira asociado a una cinta real
 z80_bit hilow_cinta_insertada={1};
 
+z80_bit hilow_tapa_abierta={0};
+
 int hilow_check_if_rom_area(z80_int dir)
 {
     if (dir<8192 && hilow_mapped_rom.v) {
@@ -376,7 +378,7 @@ Parece que van controlados mediante valores de comando:
 00H: ??
 22H: ??
 26H: leer sector??
-28H: cancelacion?? fin de operacion??
+28H: cancelacion?? fin de operacion?? pasar a modo "inicial"?
 
 80H: Format?
 A8H: ??
@@ -408,11 +410,13 @@ z80_byte hilow_read_port_ff(z80_int puerto)
 /*
 Lectura:
 
+Bit 7: ??
 Bit 6: A 1 si grabador encendido
-Bit 3: A 1 si se abre la tapa
+Bit 5: ??
+Bit 4: ??
+Bit 3: A 1 si tapa cerrada?? fin de cinta??
 Bit 2: A 1 si hay cinta insertada
-
-
+Bit 1: ??
 Bit 0: A 1 cuando esta listo para leer?
 
 L1C03:          IN      A,(HLWPORT)
@@ -431,7 +435,7 @@ L1C03:          IN      A,(HLWPORT)
 
     if (hilow_cinta_insertada.v) valor_retorno |=4; //Hay cinta insertada
 
-    //valor_retorno |=8; //tapa abierta
+    if (hilow_tapa_abierta.v==0) valor_retorno |=8; //tapa cerrada??
 
     valor_retorno |=64; //grabador encendido
 

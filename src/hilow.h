@@ -49,6 +49,6 @@ extern z80_byte hilow_read_port_ff(z80_int puerto);
 extern void hilow_write_port_ff(z80_int port,z80_byte value);
 
 extern z80_bit hilow_cinta_insertada;
-
+extern z80_bit hilow_tapa_abierta;
 
 #endif
