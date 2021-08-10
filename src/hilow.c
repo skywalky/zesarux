@@ -55,6 +55,9 @@ z80_bit hilow_mapped_rom={0};
 z80_bit hilow_mapped_ram={0};
 
 
+//Esto de momento se puede conmutar pero luego ira asociado a una cinta real
+z80_bit hilow_cinta_insertada={1};
+
 int hilow_check_if_rom_area(z80_int dir)
 {
     if (dir<8192 && hilow_mapped_rom.v) {
@@ -363,9 +366,26 @@ void hilow_reset(void)
 }
 
 
-void hilow_write_port_ff(z80_byte value)
+void hilow_write_port_ff(z80_int port,z80_byte value)
 {
-	printf ("Writing hilow port ff value %02XH from PC=%04XH\n",value,reg_pc);
+/*
+Escritura:
+
+Parece que van controlados mediante valores de comando:
+
+00H: ??
+22H: ??
+26H: leer sector??
+28H: cancelacion?? fin de operacion??
+
+80H: Format?
+A8H: ??
+
+
+Bit de valor 08H tambien parece tener algo que ver
+Puede que esos comandos sea combinacion de bits
+*/
+	printf ("Writing hilow port %04XH value %02XH from PC=%04XH\n",port,value,reg_pc);
 }
 
 
@@ -384,16 +404,43 @@ z80_byte hilow_read_port_ff(z80_int puerto)
 	Tiene que estar bit 2 a 1 para indicar que hay cinta
 
 	*/
-	printf ("Reading hilow port ff value from PC=%04XH\n",reg_pc);
 
-	//Parche absurdo. Y digo absurdo porque hilow solo mira los 8 bits inferiores
-	//pero de momento parece que la rom, cuando va a mirar si hay cinta insertada, lo hace con puerto 00FF
-	//En otros casos no se como actua
-	if (puerto==0xFF) return 4; //Hay cinta insertada
+/*
+Lectura:
+
+Bit 6: A 1 si grabador encendido
+Bit 3: A 1 si se abre la tapa
+Bit 2: A 1 si hay cinta insertada
+
+
+Bit 0: A 1 cuando esta listo para leer?
+
+L1C03:          IN      A,(HLWPORT)
+                BIT     0,A
+                RET     NZ
+                DJNZ    L1C03
+                RET
+
+
+*/
+
+	printf ("Reading hilow port %04XH value from PC=%04XH\n",puerto,reg_pc);
+
+
+    z80_byte valor_retorno=0;
+
+    if (hilow_cinta_insertada.v) valor_retorno |=4; //Hay cinta insertada
+
+    //valor_retorno |=8; //tapa abierta
+
+    valor_retorno |=64; //grabador encendido
+
+
+    valor_retorno |=1; //listo
+
+    return valor_retorno; 
 
 
 
-	//Random basicamente
-	else return idle_bus_port(puerto);
 
 }

@@ -9325,7 +9325,7 @@ Allowed to read / write port # xx57 teams INIR and OTIR. Example of reading the 
 
 	//Puerto Hilow
 	if (hilow_enabled.v && puerto_l==0xFF) {
-		hilow_write_port_ff(value);
+		hilow_write_port_ff(puerto,value);
 	}
 
 

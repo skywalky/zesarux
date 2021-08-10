@@ -18701,6 +18701,11 @@ void menu_storage_hilow_emulation(MENU_ITEM_PARAMETERS)
 	else hilow_enable();
 }
 
+void menu_storage_hilow_insert(MENU_ITEM_PARAMETERS)
+{
+    hilow_cinta_insertada.v ^=1;
+}
+
 void menu_hilow(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_hilow;
@@ -18709,10 +18714,13 @@ void menu_hilow(MENU_ITEM_PARAMETERS)
         do {
 
 
-                        			menu_add_item_menu_inicial_format(&array_menu_hilow,MENU_OPCION_NORMAL,menu_storage_hilow_emulation,NULL,"[%c] ~~Hilow Enabled", (hilow_enabled.v ? 'X' : ' '));
-                        menu_add_item_menu_shortcut(array_menu_hilow,'h');
-                        menu_add_item_menu_tooltip(array_menu_hilow,"Enable hilow");
-                        menu_add_item_menu_ayuda(array_menu_hilow,"Enable hilow");
+            menu_add_item_menu_inicial_format(&array_menu_hilow,MENU_OPCION_NORMAL,menu_storage_hilow_emulation,NULL,"[%c] ~~Hilow Enabled", (hilow_enabled.v ? 'X' : ' '));
+            menu_add_item_menu_shortcut(array_menu_hilow,'h');
+            menu_add_item_menu_tooltip(array_menu_hilow,"Enable hilow");
+            menu_add_item_menu_ayuda(array_menu_hilow,"Enable hilow");
+
+            menu_add_item_menu_format(array_menu_hilow,MENU_OPCION_NORMAL,menu_storage_hilow_insert,NULL,"[%c] Tape ~~inserted", (hilow_cinta_insertada.v ? 'X' : ' '));
+            menu_add_item_menu_shortcut(array_menu_hilow,'i');
 
 /*
 			menu_add_item_menu_format(array_menu_hilow,MENU_OPCION_NORMAL,menu_storage_hilow_press_button,menu_storage_hilow_press_button_cond,"~~Press button");
