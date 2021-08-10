@@ -225,6 +225,13 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
 
 		hilow_automap_unmap_memory(reg_pc);
 
+
+        //debug de rutinas
+        if (reg_pc==0x186D && hilow_mapped_rom.v) {
+            //probablemente esta direccion NO es lectura de sector
+            printf("Entering READ_SECTOR. A=%02XH IX=%04XH\n",reg_a,reg_ix);
+        }
+
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
 
