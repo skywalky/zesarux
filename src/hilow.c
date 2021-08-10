@@ -393,19 +393,7 @@ Puede que esos comandos sea combinacion de bits
 
 z80_byte hilow_read_port_ff(z80_int puerto)
 {
-	/*
-	INSERT_TAPE
-	                IN      A,(HLWPORT)
-                RRA
-                RRA
-                RRA
-                RET
 
-
-
-	Tiene que estar bit 2 a 1 para indicar que hay cinta
-
-	*/
 
 /*
 Lectura:

@@ -895,6 +895,8 @@ extern void util_unpaws_daad_get_version_string(char *texto);
 
 #define MEMORY_ZONE_SMS_VRAM 32
 
+#define MEMORY_ZONE_HILOW_RAM 33
+
 
 #define DAAD_PARSER_BREAKPOINT_PC_SPECTRUM 0x617c
 

@@ -128,6 +128,7 @@
 #include "zvfs.h"
 #include "snap_ram.h"
 #include "menu_items.h"
+#include "hilow.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -12211,6 +12212,15 @@ unsigned int machine_get_memory_zone_attrib(int zone, int *readwrite)
     break;
 
 
+    //hilow ram
+    case MEMORY_ZONE_HILOW_RAM:
+        if (hilow_enabled.v) {
+            *readwrite=1;      
+            size=HILOW_RAM_SIZE;
+        }
+    break;    
+
+
   }
 
   return size;
@@ -12584,6 +12594,15 @@ z80_byte *machine_get_memory_zone_pointer(int zone, int address)
 
         }
     break; 
+
+
+    //hilow ram
+    case MEMORY_ZONE_HILOW_RAM:
+        if (hilow_enabled.v) {
+	        //La RAM esta despues de los 8kb de rom
+            p=&hilow_memory_pointer[8192+address];             
+        }
+    break;      
 
   }
 
@@ -12976,6 +12995,13 @@ void machine_get_memory_zone_name(int zone, char *name)
             strcpy(name,"TBBlue sprites");  
         }
     break;     
+
+    //hilow ram
+    case MEMORY_ZONE_HILOW_RAM:
+        if (hilow_enabled.v) {
+            strcpy(name,"Hilow RAM");
+        }
+    break;      
 
   }
 
