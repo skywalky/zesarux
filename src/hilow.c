@@ -58,7 +58,8 @@ z80_bit hilow_mapped_ram={0};
 //Esto de momento se puede conmutar pero luego ira asociado a una cinta real
 z80_bit hilow_cinta_insertada={1};
 
-z80_bit hilow_tapa_abierta={0};
+//de momento asi abierta para probar
+z80_bit hilow_tapa_abierta={1};
 
 int hilow_check_if_rom_area(z80_int dir)
 {
@@ -230,7 +231,88 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
         if (reg_pc==0x186D && hilow_mapped_rom.v) {
             //probablemente esta direccion NO es lectura de sector
             printf("Entering READ_SECTOR. A=%02XH IX=%04XH\n",reg_a,reg_ix);
+
+            //pruebas de handler. Le escribo datos y retorno de dicha funcion
+            int i;
+
+            for (i=0;i<2048;i++) {
+                //poke_byte_no_time(reg_ix+i,'!');
+                //reg_de?
+                hilow_poke_ram(8192+i,'!');
+            }
+
+            //primera entrada 
+            hilow_poke_ram(8192+12,'A');
+
+            
+            //tamaño
+            hilow_poke_ram(8192+12+10+2,4);
+            hilow_poke_ram(8192+12+10+3,2);
+            
+            //atributo? valor 3 (o bits 0 y 1 activos)= directorio?
+            hilow_poke_ram(8192+12+10,0);
+
+            //tipo archivo
+            //0=bas
+            //1=num
+            //2=chr
+            //3=cod
+            //4=nmi
+            //hilow_poke_ram(8192+11,0);
+            hilow_poke_ram(8192+11,3);
+            //for (i=8192+12+10+4;i<8192+2048;i++) {
+            //    hilow_poke_ram(i,0);
+            //}
+
+            //segunda entrada. cada entrada 45 bytes aparentemente
+            hilow_poke_ram(8192+12+45,'B');
+
+            //nombre cinta
+            hilow_poke_ram(8192+2,'0');
+
+            //numero entradas
+            hilow_poke_ram(8192+0,2);
+            hilow_poke_ram(8192+1,10);
+
+            reg_pc=pop_valor();
         }
+
+        //debug de rutinas
+        if (reg_pc==0x16D0 && hilow_mapped_rom.v) {
+            
+            printf("Entering WRITE_SECTOR. A=%02XH IX=%04XH DE=%04XH\n",reg_a,reg_ix,reg_de);
+
+            //mostrar algunos caracteres
+            int i;
+            for (i=0;i<100;i++) {
+                z80_byte c=hilow_read_ram_byte(i);
+                printf("%c",(c>=32 && c<=126 ? c : '.'));
+            }
+            printf("\n");
+
+            reg_pc=pop_valor();
+        }        
+
+        if (reg_pc==0x1A9E && hilow_mapped_rom.v) {
+            
+            printf("Entering POST_FORMAT. A=%02XH IX=%04XH DE=%04XH\n",reg_a,reg_ix,reg_de);
+
+            //saltar adelante en codigo. feo....
+            //reg_pc=0x1ad8;
+            reg_pc=0x1ac8;
+            reg_pc=0x1acf;
+        }              
+
+        if (reg_pc==0x1AC0 && hilow_mapped_rom.v) {
+            
+            printf("Entering POST_FORMAT2. A=%02XH IX=%04XH DE=%04XH\n",reg_a,reg_ix,reg_de);
+
+            //saltar adelante en codigo. feo....
+            //reg_pc=0x1ad8;
+            reg_pc=0x1ac8;
+            reg_pc=0x1acf;
+        }              
+
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;
