@@ -230,7 +230,12 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
         //debug de rutinas
         if (reg_pc==0x186D && hilow_mapped_rom.v) {
             //probablemente esta direccion NO es lectura de sector
-            printf("Entering READ_SECTOR. A=%02XH IX=%04XH DE=%04XH HL=%04XH\n",reg_a,reg_ix,reg_de,reg_hl);
+            printf("Entering READ_SECTOR. A=%02XH IX=%04XH DE=%04XH HL=%04XH BC=%04XH\n",reg_a,reg_ix,reg_de,reg_hl,reg_bc);
+
+            char buffer[2048];
+            print_registers(buffer);
+
+            printf ("%s\n",buffer);
 
             //mostrar algunos caracteres
             int i;
@@ -248,10 +253,10 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             for (i=0;i<2048;i++) {
                 //poke_byte_no_time(reg_ix+i,'!');
                 //reg_de?
-                hilow_poke_ram(inicio_datos+i,'!');
+                poke_byte_no_time(inicio_datos+i,'!');
 
 
-                //hilow_poke_ram(inicio_datos+i,0);
+                //poke_byte_no_time(inicio_datos+i,0);
             }
 
             //TODO: en algun punto dice los KB libres de la cinta...
@@ -261,19 +266,19 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             //inicio_datos=8192+reg_de;
 
             //numero entradas en cinta?
-            hilow_poke_ram(inicio_datos+0,2);
-            hilow_poke_ram(inicio_datos+1,10);            
+            poke_byte_no_time(inicio_datos+0,2);
+            poke_byte_no_time(inicio_datos+1,10);            
 
             //nombre cinta
-            hilow_poke_ram(inicio_datos+2,'Z');
-            hilow_poke_ram(inicio_datos+3,'E');
-            hilow_poke_ram(inicio_datos+4,'s');
-            hilow_poke_ram(inicio_datos+5,'a');
-            hilow_poke_ram(inicio_datos+6,'r');
-            hilow_poke_ram(inicio_datos+7,'U');
-            hilow_poke_ram(inicio_datos+8,'X');
-            hilow_poke_ram(inicio_datos+9,'D');
-            hilow_poke_ram(inicio_datos+10,'D');
+            poke_byte_no_time(inicio_datos+2,'Z');
+            poke_byte_no_time(inicio_datos+3,'E');
+            poke_byte_no_time(inicio_datos+4,'s');
+            poke_byte_no_time(inicio_datos+5,'a');
+            poke_byte_no_time(inicio_datos+6,'r');
+            poke_byte_no_time(inicio_datos+7,'U');
+            poke_byte_no_time(inicio_datos+8,'X');
+            poke_byte_no_time(inicio_datos+9,'D');
+            poke_byte_no_time(inicio_datos+10,'D');
 
 
 
@@ -287,47 +292,47 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             //3=cod
             //4=nmi
             //FF=borrado? fin de directorio?
-            hilow_poke_ram(inicio_datos+11,3);            
-            hilow_poke_ram(inicio_datos+11+1,'A');
-            hilow_poke_ram(inicio_datos+11+2,'0');
-            hilow_poke_ram(inicio_datos+11+3,'1');
-            hilow_poke_ram(inicio_datos+11+4,'2');
-            hilow_poke_ram(inicio_datos+11+5,'3');
-            hilow_poke_ram(inicio_datos+11+6,'4');
-            hilow_poke_ram(inicio_datos+11+7,'5');
-            hilow_poke_ram(inicio_datos+11+8,'6');
-            hilow_poke_ram(inicio_datos+11+9,'7');
-            hilow_poke_ram(inicio_datos+11+10,'8');
+            poke_byte_no_time(inicio_datos+11,3);            
+            poke_byte_no_time(inicio_datos+11+1,'A');
+            poke_byte_no_time(inicio_datos+11+2,'0');
+            poke_byte_no_time(inicio_datos+11+3,'1');
+            poke_byte_no_time(inicio_datos+11+4,'2');
+            poke_byte_no_time(inicio_datos+11+5,'3');
+            poke_byte_no_time(inicio_datos+11+6,'4');
+            poke_byte_no_time(inicio_datos+11+7,'5');
+            poke_byte_no_time(inicio_datos+11+8,'6');
+            poke_byte_no_time(inicio_datos+11+9,'7');
+            poke_byte_no_time(inicio_datos+11+10,'8');
 
             //tamaño archivo. 
-            hilow_poke_ram(inicio_datos+11+11,1); 
-            hilow_poke_ram(inicio_datos+11+12,3); 
+            poke_byte_no_time(inicio_datos+11+11,1); 
+            poke_byte_no_time(inicio_datos+11+12,3); 
 
             //primer parametro de cabecera de cinta: direccion, line, etc
-            hilow_poke_ram(inicio_datos+11+13,4);
-            hilow_poke_ram(inicio_datos+11+14,2);
+            poke_byte_no_time(inicio_datos+11+13,4);
+            poke_byte_no_time(inicio_datos+11+14,2);
             
             //atributo? valor 3 (o bits 0 y 1 activos)= directorio?
             //for (i=11+15;i<11+45;i++) {
-            //    hilow_poke_ram(inicio_datos+i,0);
+            //    poke_byte_no_time(inicio_datos+i,0);
             //}
 
 
             //for (i=inicio_datos+12+10+4;i<inicio_datos+2048;i++) {
-            //    hilow_poke_ram(i,0);
+            //    poke_byte_no_time(i,0);
             //}
 
             //segunda entrada. cada entrada 45 bytes aparentemente
-            hilow_poke_ram(inicio_datos+11+45,0);
-            hilow_poke_ram(inicio_datos+11+46,'B');
+            poke_byte_no_time(inicio_datos+11+45,0);
+            poke_byte_no_time(inicio_datos+11+46,'B');
 
             //tercera entrada. cada entrada 45 bytes aparentemente
-            hilow_poke_ram(inicio_datos+11+45+45,0);
-            hilow_poke_ram(inicio_datos+11+45+46,'C');
+            poke_byte_no_time(inicio_datos+11+45+45,0);
+            poke_byte_no_time(inicio_datos+11+45+46,'C');
 
             //cuarta entrada. cada entrada 45 bytes aparentemente. Indicamos con FF final de entradas
-            hilow_poke_ram(inicio_datos+11+45+45+45,0xFF);
-            hilow_poke_ram(inicio_datos+11+45+46,'D');
+            poke_byte_no_time(inicio_datos+11+45+45+45,0xFF);
+            poke_byte_no_time(inicio_datos+11+45+46,'D');
 
 
             reg_pc=pop_valor();
