@@ -250,90 +250,98 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
 
             z80_int inicio_datos=8192;
 
-            for (i=0;i<2048;i++) {
-                //poke_byte_no_time(reg_ix+i,'!');
-                //reg_de?
-                poke_byte_no_time(inicio_datos+i,'!');
+            if (reg_a==0) { //Sector 0 directorio
+
+                for (i=0;i<2048;i++) {
+                    //poke_byte_no_time(reg_ix+i,'!');
+                    //reg_de?
+                    poke_byte_no_time(inicio_datos+i,'!');
 
 
-                //poke_byte_no_time(inicio_datos+i,0);
+                    //poke_byte_no_time(inicio_datos+i,0);
+                }
+
+                //TODO: en algun punto dice los KB libres de la cinta...
+
+                
+
+                //inicio_datos=8192+reg_de;
+
+                //numero entradas en cinta?
+                poke_byte_no_time(inicio_datos+0,2);
+                poke_byte_no_time(inicio_datos+1,10);            
+
+                //nombre cinta
+                poke_byte_no_time(inicio_datos+2,'Z');
+                poke_byte_no_time(inicio_datos+3,'E');
+                poke_byte_no_time(inicio_datos+4,'s');
+                poke_byte_no_time(inicio_datos+5,'a');
+                poke_byte_no_time(inicio_datos+6,'r');
+                poke_byte_no_time(inicio_datos+7,'U');
+                poke_byte_no_time(inicio_datos+8,'X');
+                poke_byte_no_time(inicio_datos+9,'D');
+                poke_byte_no_time(inicio_datos+10,'D');
+
+
+
+
+
+                //primera entrada cinta
+                //tipo archivo
+                //0=bas
+                //1=num
+                //2=chr
+                //3=cod
+                //4=nmi
+                //FF=borrado? fin de directorio?
+                poke_byte_no_time(inicio_datos+11,3);            
+                poke_byte_no_time(inicio_datos+11+1,'A');
+                poke_byte_no_time(inicio_datos+11+2,'0');
+                poke_byte_no_time(inicio_datos+11+3,'1');
+                poke_byte_no_time(inicio_datos+11+4,'2');
+                poke_byte_no_time(inicio_datos+11+5,'3');
+                poke_byte_no_time(inicio_datos+11+6,'4');
+                poke_byte_no_time(inicio_datos+11+7,'5');
+                poke_byte_no_time(inicio_datos+11+8,'6');
+                poke_byte_no_time(inicio_datos+11+9,'7');
+                poke_byte_no_time(inicio_datos+11+10,'8');
+
+                //tamaño archivo. 
+                poke_byte_no_time(inicio_datos+11+11,1); 
+                poke_byte_no_time(inicio_datos+11+12,3); 
+
+                //primer parametro de cabecera de cinta: direccion, line, etc
+                poke_byte_no_time(inicio_datos+11+13,4);
+                poke_byte_no_time(inicio_datos+11+14,2);
+                
+                //atributo? valor 3 (o bits 0 y 1 activos)= directorio?
+                //for (i=11+15;i<11+45;i++) {
+                //    poke_byte_no_time(inicio_datos+i,0);
+                //}
+
+
+                //for (i=inicio_datos+12+10+4;i<inicio_datos+2048;i++) {
+                //    poke_byte_no_time(i,0);
+                //}
+
+                //segunda entrada. cada entrada 45 bytes aparentemente
+                poke_byte_no_time(inicio_datos+11+45,0);
+                poke_byte_no_time(inicio_datos+11+46,'B');
+
+                //tercera entrada. cada entrada 45 bytes aparentemente
+                poke_byte_no_time(inicio_datos+11+45+45,0);
+                poke_byte_no_time(inicio_datos+11+45+46,'C');
+
+                //cuarta entrada. cada entrada 45 bytes aparentemente. Indicamos con FF final de entradas
+                poke_byte_no_time(inicio_datos+11+45+45+45,0xFF);
+                poke_byte_no_time(inicio_datos+11+45+46,'D');
+
             }
 
-            //TODO: en algun punto dice los KB libres de la cinta...
-
-            
-
-            //inicio_datos=8192+reg_de;
-
-            //numero entradas en cinta?
-            poke_byte_no_time(inicio_datos+0,2);
-            poke_byte_no_time(inicio_datos+1,10);            
-
-            //nombre cinta
-            poke_byte_no_time(inicio_datos+2,'Z');
-            poke_byte_no_time(inicio_datos+3,'E');
-            poke_byte_no_time(inicio_datos+4,'s');
-            poke_byte_no_time(inicio_datos+5,'a');
-            poke_byte_no_time(inicio_datos+6,'r');
-            poke_byte_no_time(inicio_datos+7,'U');
-            poke_byte_no_time(inicio_datos+8,'X');
-            poke_byte_no_time(inicio_datos+9,'D');
-            poke_byte_no_time(inicio_datos+10,'D');
-
-
-
-
-
-            //primera entrada cinta
-            //tipo archivo
-            //0=bas
-            //1=num
-            //2=chr
-            //3=cod
-            //4=nmi
-            //FF=borrado? fin de directorio?
-            poke_byte_no_time(inicio_datos+11,3);            
-            poke_byte_no_time(inicio_datos+11+1,'A');
-            poke_byte_no_time(inicio_datos+11+2,'0');
-            poke_byte_no_time(inicio_datos+11+3,'1');
-            poke_byte_no_time(inicio_datos+11+4,'2');
-            poke_byte_no_time(inicio_datos+11+5,'3');
-            poke_byte_no_time(inicio_datos+11+6,'4');
-            poke_byte_no_time(inicio_datos+11+7,'5');
-            poke_byte_no_time(inicio_datos+11+8,'6');
-            poke_byte_no_time(inicio_datos+11+9,'7');
-            poke_byte_no_time(inicio_datos+11+10,'8');
-
-            //tamaño archivo. 
-            poke_byte_no_time(inicio_datos+11+11,1); 
-            poke_byte_no_time(inicio_datos+11+12,3); 
-
-            //primer parametro de cabecera de cinta: direccion, line, etc
-            poke_byte_no_time(inicio_datos+11+13,4);
-            poke_byte_no_time(inicio_datos+11+14,2);
-            
-            //atributo? valor 3 (o bits 0 y 1 activos)= directorio?
-            //for (i=11+15;i<11+45;i++) {
-            //    poke_byte_no_time(inicio_datos+i,0);
-            //}
-
-
-            //for (i=inicio_datos+12+10+4;i<inicio_datos+2048;i++) {
-            //    poke_byte_no_time(i,0);
-            //}
-
-            //segunda entrada. cada entrada 45 bytes aparentemente
-            poke_byte_no_time(inicio_datos+11+45,0);
-            poke_byte_no_time(inicio_datos+11+46,'B');
-
-            //tercera entrada. cada entrada 45 bytes aparentemente
-            poke_byte_no_time(inicio_datos+11+45+45,0);
-            poke_byte_no_time(inicio_datos+11+45+46,'C');
-
-            //cuarta entrada. cada entrada 45 bytes aparentemente. Indicamos con FF final de entradas
-            poke_byte_no_time(inicio_datos+11+45+45+45,0xFF);
-            poke_byte_no_time(inicio_datos+11+45+46,'D');
-
+            //no error?
+            //Z80_FLAGS=(Z80_FLAGS & (255-FLAG_C));
+            //Z80_FLAGS |=FLAG_C;
+            reg_a=0;
 
             reg_pc=pop_valor();
         }
