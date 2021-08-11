@@ -2072,6 +2072,8 @@ printf (
                 "--trd-write-protection     Enable TRD write protection\n"
 		"--trd-no-persistent-writes Disable TRD persistent writes\n"
 
+        "--enable-hilow             Enable hilow\n"
+
 		"--enable-ql-mdv-flp        Enable QL Microdrive & Floppy emulation\n"
 		"--ql-mdv1-root-dir p       Set QL mdv1 root directory\n"
 		"--ql-mdv2-root-dir p       Set QL mdv2 root directory\n"
@@ -5334,6 +5336,7 @@ z80_bit command_line_ifrom={0};
 z80_bit command_line_betadisk={0};
 z80_bit command_line_trd={0};
 z80_bit command_line_dsk={0};
+z80_bit command_line_hilow={0};
 
 z80_bit command_line_set_breakpoints={0};
 
@@ -6613,6 +6616,10 @@ int parse_cmdline_options(void) {
 				dskplusthree_persistent_writes.v=0;
 			}
 
+
+                        else if (!strcmp(argv[puntero_parametro],"--enable-hilow")) {
+                                command_line_hilow.v=1;
+                        }
 
 			else if (!strcmp(argv[puntero_parametro],"--trd-file")) {
 				siguiente_parametro_argumento();
@@ -9024,6 +9031,12 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 	if (command_line_trd.v) trd_enable();
 
 	if (command_line_dsk.v) dskplusthree_enable();
+
+    //hilow
+    if (command_line_hilow.v) {
+        printf("Enabling hilow\n");
+        hilow_enable();
+    }
 
 	if (command_line_set_breakpoints.v) {
 		if (debug_breakpoints_enabled.v==0) {
