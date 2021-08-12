@@ -258,7 +258,7 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
                     poke_byte_no_time(inicio_datos+i,'!');
 
 
-                    poke_byte_no_time(inicio_datos+i,1);
+                    poke_byte_no_time(inicio_datos+i,3);
                 }
 
                 //TODO: en algun punto dice los KB libres de la cinta...
@@ -296,15 +296,15 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
                 //FF=borrado? fin de directorio?
                 poke_byte_no_time(inicio_datos+11,3);            
                 poke_byte_no_time(inicio_datos+11+1,'A');
-                poke_byte_no_time(inicio_datos+11+2,'0');
-                poke_byte_no_time(inicio_datos+11+3,'1');
-                poke_byte_no_time(inicio_datos+11+4,'2');
-                poke_byte_no_time(inicio_datos+11+5,'3');
-                poke_byte_no_time(inicio_datos+11+6,'4');
-                poke_byte_no_time(inicio_datos+11+7,'5');
-                poke_byte_no_time(inicio_datos+11+8,'6');
-                poke_byte_no_time(inicio_datos+11+9,'7');
-                poke_byte_no_time(inicio_datos+11+10,'8');
+                poke_byte_no_time(inicio_datos+11+2,'1');
+                poke_byte_no_time(inicio_datos+11+3,'2');
+                poke_byte_no_time(inicio_datos+11+4,'3');
+                poke_byte_no_time(inicio_datos+11+5,'4');
+                poke_byte_no_time(inicio_datos+11+6,'5');
+                poke_byte_no_time(inicio_datos+11+7,'6');
+                poke_byte_no_time(inicio_datos+11+8,'7');
+                poke_byte_no_time(inicio_datos+11+9,'8');
+                poke_byte_no_time(inicio_datos+11+10,' ');
 
                 //tamaño archivo. 
                 poke_byte_no_time(inicio_datos+11+11,1); 
@@ -326,16 +326,57 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
 
                 //segunda entrada. cada entrada 45 bytes aparentemente
                 poke_byte_no_time(inicio_datos+11+45,0);
-                poke_byte_no_time(inicio_datos+11+46,'B');
+                poke_byte_no_time(inicio_datos+11+45+1,'B');
+                poke_byte_no_time(inicio_datos+11+45+2,' ');
+                poke_byte_no_time(inicio_datos+11+45+3,' ');
+                poke_byte_no_time(inicio_datos+11+45+4,' ');
+                poke_byte_no_time(inicio_datos+11+45+5,' ');
+                poke_byte_no_time(inicio_datos+11+45+6,' ');
+                poke_byte_no_time(inicio_datos+11+45+7,' ');
+                poke_byte_no_time(inicio_datos+11+45+8,' ');
+                poke_byte_no_time(inicio_datos+11+45+9,' ');
+                poke_byte_no_time(inicio_datos+11+45+10,' ');
 
                 //tercera entrada. cada entrada 45 bytes aparentemente
                 poke_byte_no_time(inicio_datos+11+45+45,0);
-                poke_byte_no_time(inicio_datos+11+45+46,'C');
+                poke_byte_no_time(inicio_datos+11+45+45+1,'C');
+                poke_byte_no_time(inicio_datos+11+45+45+2,' ');
+                poke_byte_no_time(inicio_datos+11+45+45+3,' ');
+                poke_byte_no_time(inicio_datos+11+45+45+4,' ');
+                poke_byte_no_time(inicio_datos+11+45+45+5,' ');
+                poke_byte_no_time(inicio_datos+11+45+45+6,' ');
+                poke_byte_no_time(inicio_datos+11+45+45+7,' ');
+                poke_byte_no_time(inicio_datos+11+45+45+8,' ');
+                poke_byte_no_time(inicio_datos+11+45+45+9,' ');
+                poke_byte_no_time(inicio_datos+11+45+45+10,' ');
+
 
                 //cuarta entrada. cada entrada 45 bytes aparentemente. Indicamos con FF final de entradas
+                //La FF es de final y por tanto no se ve
                 poke_byte_no_time(inicio_datos+11+45+45+45,0xFF);
-                poke_byte_no_time(inicio_datos+11+45+46,'D');
+                poke_byte_no_time(inicio_datos+11+45+45+46,'D');
 
+            }
+
+            else {
+                //sector no 0
+                poke_byte_no_time(reg_ix,34);
+                /*
+                un solo load code de un archivo de 769 bytes, cargado en 16384 hace:
+
+                Entering READ_SECTOR. A=03H IX=4000H DE=0800H HL=0800H BC=0003H
+                PC=186d SP=3fd4 AF=0301 BC=0003 HL=0800 DE=0800 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=5d  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
+                ..ZEsarUXDD.A12345678 ...................................B         .................................
+
+                Returning to address 1D52H
+                Entering READ_SECTOR. A=03H IX=4000H DE=0800H HL=0800H BC=0003H
+                PC=186d SP=3fd8 AF=0301 BC=0003 HL=0800 DE=0800 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=6a  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
+                ".ZEsarUXDD.A12345678 ...................................B         .................................
+
+                Returning to address 1D52H
+                Entering READ_SECTOR. A=03H IX=4000H DE=0301H HL=0800H BC=0003H
+                PC=186d SP=3fdc AF=0301 BC=0003 HL=0800 DE=0301 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=77  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
+                */
             }
 
             //no error?
