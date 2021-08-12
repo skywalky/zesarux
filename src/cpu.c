@@ -1528,6 +1528,8 @@ printf(
 
 printf (
 	  "--set-mem-breakpoint a n   Set memory breakpoint at address a for type n\n"
+      "--load-source-code f       Load source code from file\n"
+      
 	  "--hardware-debug-ports     These ports are used to interact with ZEsarUX, for example showing a ASCII character on console, read ZEsarUX version, etc. "
 		"Read file extras/docs/zesarux_zxi_registers.txt for more information\n"
 	  "--hardware-debug-ports-byte-file f  Sets the file used on register HARDWARE_DEBUG_BYTE_FILE\n"
@@ -5337,6 +5339,8 @@ z80_bit command_line_betadisk={0};
 z80_bit command_line_trd={0};
 z80_bit command_line_dsk={0};
 z80_bit command_line_hilow={0};
+z80_bit command_line_load_source_code={0};
+char *command_line_load_source_code_file;
 
 z80_bit command_line_set_breakpoints={0};
 
@@ -6620,6 +6624,14 @@ int parse_cmdline_options(void) {
                         else if (!strcmp(argv[puntero_parametro],"--enable-hilow")) {
                                 command_line_hilow.v=1;
                         }
+
+            else if (!strcmp(argv[puntero_parametro],"--load-source-code")) {
+                    command_line_load_source_code.v=1;
+
+                    siguiente_parametro_argumento();
+
+                    command_line_load_source_code_file=argv[puntero_parametro];
+            }                        
 
 			else if (!strcmp(argv[puntero_parametro],"--trd-file")) {
 				siguiente_parametro_argumento();
@@ -9037,6 +9049,14 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
         printf("Enabling hilow\n");
         hilow_enable();
     }
+
+    //load source code
+    if (command_line_load_source_code.v) {
+        int retorno=remote_load_source_code(command_line_load_source_code_file);
+        if (retorno) {
+            debug_printf(VERBOSE_ERR,"Error loading source code from file %s",command_line_load_source_code_file);
+        }
+    }    
 
 	if (command_line_set_breakpoints.v) {
 		if (debug_breakpoints_enabled.v==0) {

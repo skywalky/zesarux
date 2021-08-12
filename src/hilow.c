@@ -258,7 +258,7 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
                     poke_byte_no_time(inicio_datos+i,'!');
 
 
-                    //poke_byte_no_time(inicio_datos+i,0);
+                    poke_byte_no_time(inicio_datos+i,1);
                 }
 
                 //TODO: en algun punto dice los KB libres de la cinta...
@@ -343,7 +343,11 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             //Z80_FLAGS |=FLAG_C;
             reg_a=0;
 
+            //valor distinto de 0 retorna el error "Error en la cinta"
+            //reg_a=1;
+
             reg_pc=pop_valor();
+            printf("Returning to address %04XH\n",reg_pc);
         }
 
         //debug de rutinas

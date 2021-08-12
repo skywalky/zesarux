@@ -28665,6 +28665,12 @@ void menu_fileselector_settings(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_debug_unload_source_code(MENU_ITEM_PARAMETERS)
+{
+    load_source_code_eject();
+
+    menu_generic_message_splash("Unload Soure Code","OK File unloaded");
+}
 
 
 void menu_debug_load_source_code(MENU_ITEM_PARAMETERS)

@@ -275,6 +275,9 @@ int *remote_parsed_source_code_indexes_pointer=NULL;
 //Tamanyo de ese array
 int remote_parsed_source_code_indexes_total;
 
+//ruta al último código fuente cargado
+char last_source_code_file[PATH_MAX];
+
 
 //mostrar ademas mensajes de debug en consola con printf, adicionalmente de donde lo muestre ya (en curses, aa, caca salen en dentro ventana)
 z80_bit debug_always_show_messages_in_console={0};
@@ -6662,6 +6665,12 @@ int remote_disassemble_find_label(unsigned int direccion)
    
 }
 
+//expulsar/desactivar source code
+void load_source_code_eject(void)
+{
+    remote_tamanyo_archivo_raw_source_code=0;    
+}
+
 	
 //Retorna 0 si no hay error
 int remote_load_source_code(char *archivo)
@@ -6671,6 +6680,8 @@ int remote_load_source_code(char *archivo)
 		debug_printf(VERBOSE_ERR,"ERROR. File %s not found",archivo);
 		return 1;
 	}
+
+    strcpy(last_source_code_file,archivo);
 
 	remote_tamanyo_archivo_raw_source_code=0;
 

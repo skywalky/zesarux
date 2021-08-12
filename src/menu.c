@@ -28338,7 +28338,11 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
             "sjasmplus inputfile.asm --lst=output_extended.asm\n"
             "That output_extended.asm will have labels/addresses on every line. Then go to Debug settings, and uncheck "
             "'Source code L Prefix'. You need also to adjust 'Source code skip cols' to discard X characters from the beginning "
-            "of the line until the label/address is located, typically 6 or 7 characters");                
+            "of the line until the label/address is located, typically 6 or 7 characters");   
+
+        if (remote_tamanyo_archivo_raw_source_code) {
+            menu_add_item_menu(array_menu_debug_settings,"Unload Source Code",MENU_OPCION_NORMAL,menu_debug_unload_source_code,NULL); 
+        }     
 
 		if (MACHINE_IS_TSCONF || MACHINE_IS_ZXUNO || datagear_dma_emulation.v) {
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_dma_tsconf_zxuno,NULL,"Debug D~~MA");

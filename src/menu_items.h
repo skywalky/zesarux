@@ -131,6 +131,8 @@ extern void menu_fileselector_settings(MENU_ITEM_PARAMETERS);
 
 extern void menu_debug_load_source_code(MENU_ITEM_PARAMETERS);
 
+extern void menu_debug_unload_source_code(MENU_ITEM_PARAMETERS);
+
 extern void menu_snapshot_rewind(MENU_ITEM_PARAMETERS);
 
 extern menu_z80_moto_int menu_debug_hexdump_direccion;

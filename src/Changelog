@@ -32,6 +32,7 @@ Improved Debugging:
 -Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
 -Allow to define up to 100 breakpoints from menu
 -Preserve step mode when assembling
+-Added command line setting to load source code
 
 Improved ZX Vision menu interface:
 -Added setting to pause cpu emulation on menu when multitask active
