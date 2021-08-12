@@ -217,6 +217,23 @@ void hilow_automap_unmap_memory(z80_int dir)
 
 }
 
+z80_byte temp_hilow_buffer[1024*1024];
+
+void temp_hilow_write(int sector,int offset,z80_byte valor)
+{
+    offset +=(sector*2048);
+
+    temp_hilow_buffer[offset]=valor;
+}
+
+z80_byte temp_hilow_read(int sector,int offset)
+{
+    offset +=(sector*2048);
+
+    return temp_hilow_buffer[offset];
+}
+
+
 z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC_UNUSED)
 {
 
@@ -250,6 +267,17 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
 
             z80_int inicio_datos=8192;
 
+                for (i=0;i<2048;i++) {
+                    //poke_byte_no_time(reg_ix+i,'!');
+                    //reg_de?
+                    //poke_byte_no_time(inicio_datos+i,'!');
+
+
+                    poke_byte_no_time(inicio_datos+i,temp_hilow_read(reg_a,i));
+                }            
+
+            /*
+
             if (reg_a==0) { //Sector 0 directorio
 
                 for (i=0;i<2048;i++) {
@@ -258,7 +286,7 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
                     poke_byte_no_time(inicio_datos+i,'!');
 
 
-                    poke_byte_no_time(inicio_datos+i,3);
+                    poke_byte_no_time(inicio_datos+i,255);
                 }
 
                 //TODO: en algun punto dice los KB libres de la cinta...
@@ -361,23 +389,24 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             else {
                 //sector no 0
                 poke_byte_no_time(reg_ix,34);
-                /*
-                un solo load code de un archivo de 769 bytes, cargado en 16384 hace:
+                
+                //un solo load code de un archivo de 769 bytes, cargado en 16384 hace:
 
-                Entering READ_SECTOR. A=03H IX=4000H DE=0800H HL=0800H BC=0003H
-                PC=186d SP=3fd4 AF=0301 BC=0003 HL=0800 DE=0800 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=5d  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
-                ..ZEsarUXDD.A12345678 ...................................B         .................................
+                //Entering READ_SECTOR. A=03H IX=4000H DE=0800H HL=0800H BC=0003H
+                //PC=186d SP=3fd4 AF=0301 BC=0003 HL=0800 DE=0800 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=5d  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
+                //..ZEsarUXDD.A12345678 ...................................B         .................................
 
-                Returning to address 1D52H
-                Entering READ_SECTOR. A=03H IX=4000H DE=0800H HL=0800H BC=0003H
-                PC=186d SP=3fd8 AF=0301 BC=0003 HL=0800 DE=0800 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=6a  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
-                ".ZEsarUXDD.A12345678 ...................................B         .................................
+                //Returning to address 1D52H
+                //Entering READ_SECTOR. A=03H IX=4000H DE=0800H HL=0800H BC=0003H
+                //PC=186d SP=3fd8 AF=0301 BC=0003 HL=0800 DE=0800 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=6a  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
+                //".ZEsarUXDD.A12345678 ...................................B         .................................
 
-                Returning to address 1D52H
-                Entering READ_SECTOR. A=03H IX=4000H DE=0301H HL=0800H BC=0003H
-                PC=186d SP=3fdc AF=0301 BC=0003 HL=0800 DE=0301 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=77  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
-                */
+                //Returning to address 1D52H
+                //Entering READ_SECTOR. A=03H IX=4000H DE=0301H HL=0800H BC=0003H
+                //PC=186d SP=3fdc AF=0301 BC=0003 HL=0800 DE=0301 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=77  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
+                
             }
+            */
 
             //no error?
             //Z80_FLAGS=(Z80_FLAGS & (255-FLAG_C));
@@ -400,11 +429,28 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             int i;
             for (i=0;i<100;i++) {
                 z80_byte c=hilow_read_ram_byte(i);
-                printf("%c",(c>=32 && c<=126 ? c : '.'));
+                if (c>=32 && c<=126) printf("%c",c);
+                else printf(" %02XH ",c);
             }
             printf("\n");
 
+            //sector 1=0??
+            int sector=reg_a;
+
+            if (sector==1) sector=0;
+
+            for (i=0;i<2048;i++) {
+                z80_byte c=hilow_read_ram_byte(i);
+                temp_hilow_write(sector,i,c);
+            }            
+
+            //no error?
+            reg_a=0;
+
             reg_pc=pop_valor();
+            printf("Returning to address %04XH\n",reg_pc);
+
+
         }        
 
         if (reg_pc==0x1A9E && hilow_mapped_rom.v) {
@@ -427,6 +473,13 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             reg_pc=0x1acf;
         }              
 
+        if (reg_pc==0x1AF1 && hilow_mapped_rom.v) {
+            
+            printf("Entering POST_FORMAT3. A=%02XH IX=%04XH DE=%04XH\n",reg_a,reg_ix,reg_de);
+
+            //engañar... para saltar una condicion que hace cancelar el bucle de sectores 1,2,3,...
+            Z80_FLAGS |=FLAG_Z;
+        }     
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
         return 0;

@@ -183,3 +183,5 @@ frecuencias muy altas.
 -tecla en debug para ir al siguiente/anterior breakpoint en orden
 -tecla para cambiar PC con direccion apuntada por Pointer
 
+-hilow: cargar ok. grabar no ok, error fuera rango, quiza por error en el sector 0 simulado
+formatear da error despues de escribir pista 1. quiza algun registro de retorno?
