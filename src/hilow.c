@@ -274,10 +274,26 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
 
 
                     poke_byte_no_time(inicio_datos+i,temp_hilow_read(reg_a,i));
-                }            
+                }     
 
-            /*
+                //trampeamos los dos primeros bytes que da espacio ocupado??
+                if (reg_a==0) {
+                 //   poke_byte_no_time(inicio_datos+0,2);   
+                   // poke_byte_no_time(inicio_datos+1,10);   
 
+
+                    //en algun punto de esta zona debe estar a 255 para que retorne 510 KB libres
+                    for (i=1000;i<2048;i++) {
+                        //poke_byte_no_time(reg_ix+i,'!');
+
+
+                        poke_byte_no_time(inicio_datos+i,255);
+                    }                   
+                }
+
+
+            
+/*            
             if (reg_a==0) { //Sector 0 directorio
 
                 for (i=0;i<2048;i++) {
@@ -406,7 +422,7 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
                 //PC=186d SP=3fdc AF=0301 BC=0003 HL=0800 DE=0301 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=77  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
                 
             }
-            */
+ */           
 
             //no error?
             //Z80_FLAGS=(Z80_FLAGS & (255-FLAG_C));
@@ -427,7 +443,7 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
 
             //mostrar algunos caracteres
             int i;
-            for (i=0;i<100;i++) {
+            for (i=0;i<2048;i++) {
                 z80_byte c=hilow_read_ram_byte(i);
                 if (c>=32 && c<=126) printf("%c",c);
                 else printf(" %02XH ",c);
@@ -478,7 +494,7 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             printf("Entering POST_FORMAT3. A=%02XH IX=%04XH DE=%04XH\n",reg_a,reg_ix,reg_de);
 
             //engañar... para saltar una condicion que hace cancelar el bucle de sectores 1,2,3,...
-            Z80_FLAGS |=FLAG_Z;
+            //Z80_FLAGS |=FLAG_Z;
         }     
 
         //Para que no se queje el compilador, aunque este valor de retorno no lo usamos
