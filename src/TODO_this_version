@@ -210,5 +210,5 @@ timeout no enter: 2
 opciones desde linewidth hasta timeout no enter quiza irian en text to speech settings
 porque el print en consola es independiente de esto
 
--debug console window hacer scroll automatico
-
+- proceso speech se deberia lanzar en segundo plano. Probar tambien en Linux. Alternativa para Windows?
+- parece que llega a un limite de archivos o pipes abiertas? faltara cerrar alguna seguramente...

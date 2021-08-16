@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Script para enviar texto a speech y tambien traduccion
+# Entrada: texto por stdin a traducir
+# Salida: a partir de ZEsarUX 9.3, texto traducido, que se recoge desde ventana Debug console window.
+
 LOGFILE=/tmp/traduccion.log
 TEXTO=`cat`
 
@@ -22,15 +26,19 @@ if [ "$TEXTO" != "" ]; then
 	#con aws, traducir english a spanish
 	#https://docs.aws.amazon.com/translate/latest/dg/get-started-cli.html
 	#eliminamos las " del propio mensaje de retorno
-	TRADUCIDO=`aws translate translate-text             --region eu-west-3            --source-language-code "en"             --target-language-code "es"             --text "$TEXTO"|grep TranslatedText|cut -d ':' -f2|sed 's/"//g'`
+	#quitamos la , del final
+	TRADUCIDO=`aws translate translate-text --region eu-west-3 --source-language-code "en" --target-language-code "es" --text "$TEXTO"|grep TranslatedText|cut -d ':' -f2|sed 's/"//g'|sed 's/,$//'`
 
 
 	echo "$TRADUCIDO" >> $LOGFILE
 
 	#sacarlo por consola de vuelta a ZEsarUX. Requiere ZEsarUX version >= 9.3
+	#el script se puede ejecutar en ZEsarUX version < 9.3, aunque para ver el texto traducido en ZEsarUX, requiere >=9.3
+	# se puede simplemente hacer un tail -f de LOGFILE para verlo en console
 	echo "$TRADUCIDO"
 
 	# enviar texto a speech para escuchar la traduccion
+	# de momento desactivo el envio a speech para que sea mas rapido
 	echo "$TRADUCIDO"|say -f -
 
 
