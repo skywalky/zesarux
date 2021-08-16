@@ -910,27 +910,7 @@ int debug_unnamed_console_modified=0;
 
 z80_bit debug_unnamed_console_enabled={1};
 
-void debug_unnamed_console_init(void)
-{
 
-    if (debug_unnamed_console_enabled.v==0) return;
-
-    //printf("on debug_unnamed_console_init\n");
-
-    int total_mem=DEBUG_UNNAMED_CONSOLE_WIDTH*DEBUG_UNNAMED_CONSOLE_HEIGHT;
-
-    debug_unnamed_console_memory_pointer=malloc(total_mem);
-
-    if (debug_unnamed_console_memory_pointer==NULL) cpu_panic("Can not allocate memory for unnamed console");
-
-    //Inicializar coordenadas
-    debug_unnamed_console_current_x=debug_unnamed_console_current_y=0;
-
-    //Escribir espacios
-    int i;
-    for (i=0;i<total_mem;i++) debug_unnamed_console_memory_pointer[i]=' ';
-
-}
 
 void debug_unnamed_console_end(void)
 {
@@ -994,7 +974,8 @@ void debug_unnamed_console_printchar(char c)
         return;
     }
 
-    if (c<32 || c>126) c='?';
+    //no hacemos este filtro, asi podemos meter caracteres utf, etc
+    //if (c<32 || c>126) c='?';
 
     int offset=(debug_unnamed_console_current_y*DEBUG_UNNAMED_CONSOLE_WIDTH)+debug_unnamed_console_current_x;
 
@@ -1018,6 +999,37 @@ void debug_unnamed_console_print(char *s)
 
     //Y salto de linea
     debug_unnamed_console_printchar('\n');
+}
+
+void debug_unnamed_console_init(void)
+{
+
+    if (debug_unnamed_console_enabled.v==0) return;
+
+    //printf("on debug_unnamed_console_init\n");
+
+    int total_mem=DEBUG_UNNAMED_CONSOLE_WIDTH*DEBUG_UNNAMED_CONSOLE_HEIGHT;
+
+    debug_unnamed_console_memory_pointer=malloc(total_mem);
+
+    if (debug_unnamed_console_memory_pointer==NULL) cpu_panic("Can not allocate memory for unnamed console");
+
+    //Inicializar coordenadas
+    debug_unnamed_console_current_x=debug_unnamed_console_current_y=0;
+
+    //Escribir espacios
+    int i;
+    for (i=0;i<total_mem;i++) debug_unnamed_console_memory_pointer[i]=' ';
+
+
+    //Metemos texto ya inicial llenando la ventana asi los primeros mensajes estaran abajo
+    debug_unnamed_console_print("Scroll to the bottom to read first messages");
+
+
+    for (i=0;i<DEBUG_UNNAMED_CONSOLE_HEIGHT-10;i++) {
+        debug_unnamed_console_print("");
+    }
+
 }
 
 

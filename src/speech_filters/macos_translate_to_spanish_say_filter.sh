@@ -3,15 +3,14 @@
 LOGFILE=/tmp/traduccion.log
 TEXTO=`cat`
 
-#echo hola
-#sleep 3
-#exit 
-
 echo "Linea" >> $LOGFILE
 echo "$TEXTO" >> $LOGFILE
 echo  >> $LOGFILE
 
+#echo "Pruebas"
+
 #salir de momento
+#echo "á é í ó ú ñ Ñ ñ ñ ñ ñ ñ ñ « » "
 #exit
 
 # si texto no vacio
@@ -22,7 +21,8 @@ if [ "$TEXTO" != "" ]; then
 
 	#con aws, traducir english a spanish
 	#https://docs.aws.amazon.com/translate/latest/dg/get-started-cli.html
-	TRADUCIDO=`aws translate translate-text             --region eu-west-3            --source-language-code "en"             --target-language-code "es"             --text "$TEXTO"|grep TranslatedText|cut -d ':' -f2`
+	#eliminamos las " del propio mensaje de retorno
+	TRADUCIDO=`aws translate translate-text             --region eu-west-3            --source-language-code "en"             --target-language-code "es"             --text "$TEXTO"|grep TranslatedText|cut -d ':' -f2|sed 's/"//g'`
 
 
 	echo "$TRADUCIDO" >> $LOGFILE

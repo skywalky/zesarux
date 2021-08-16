@@ -27551,13 +27551,22 @@ void menu_debug_unnamed_console_overlay(void)
 
     //DEBUG_UNNAMED_CONSOLE_WIDTH*DEBUG_UNNAMED_CONSOLE_HEIGHT
     for (y=0;y<DEBUG_UNNAMED_CONSOLE_HEIGHT;y++) {
+        char buffer_linea[DEBUG_UNNAMED_CONSOLE_WIDTH+1];
         for (x=0;x<DEBUG_UNNAMED_CONSOLE_WIDTH;x++) {
             //printf("%c",*puntero);
 
             //Empieza en x+1 para dejar 1 caracter margen izquierda
-            zxvision_print_char_defaults(ventana,x+1,y+2,*puntero);
+            //zxvision_print_char_defaults(ventana,x+1,y+2,*puntero);
+
+            //Hay que guardarlo como string para poder visualizar caracteres utf-8 etc
+            buffer_linea[x]=*puntero;
+
+
             puntero++;
         }
+        buffer_linea[x]=0;
+        //Empieza en x+1 para dejar 1 caracter margen izquierda
+        zxvision_print_string_defaults(ventana,1,y+2,buffer_linea);
         //printf("\n");
     }
 

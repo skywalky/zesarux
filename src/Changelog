@@ -46,6 +46,7 @@ Improved ZX Vision menu interface:
 -Colour palette window now shows all colours that fit in the window
 -View sprite legend now adapts to size
 -Added setting to disable boxes around lower and upper ZX Desktop Buttons
+-Added support for accentuated characters
 
 
 Fixed file previews on corrupted files: pzx, tap

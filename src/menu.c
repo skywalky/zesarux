@@ -5386,23 +5386,100 @@ void menu_convierte_texto_sin_modificadores(char *texto,char *texto_destino)
 
 int menu_es_prefijo_utf(z80_byte caracter)
 {
-	if (caracter==0xD0 || caracter==0xD1 || caracter==0xC3 || caracter==0xC9 || caracter==0xCE) return 1;
+	if (caracter==0xD0 || caracter==0xD1 || caracter==0xC2 || caracter==0xC3 || caracter==0xC9 || caracter==0xCE) return 1;
 	else return 0;
 }
 
 unsigned char menu_escribe_texto_convert_utf(unsigned char prefijo_utf,unsigned char caracter)
 {
 
+
+	if (prefijo_utf==0xC2) {
+
+		if (caracter==0xAB) {
+            //«
+            //no hay caracter raro, siempre es "
+            return '"'; 
+        }    
+
+		if (caracter==0xBB) {
+            //»
+            //no hay caracter raro, siempre es "
+            return '"'; 
+        }       
+    }    
+
 	if (prefijo_utf==0xC3) {
+
+		if (caracter==0x91) {
+			//Eñe mayuscula
+			if (si_complete_video_driver()) {
+                return 147; //Eñe mayuscula
+            }
+            else {
+                return 'N';
+            }
+        }
+
 		if (caracter==0xB1) {
 			//Eñe
 			if (si_complete_video_driver()) {
-                                return 129; //Eñe
-                        }
-                        else {
-                                return 'n';
-                        }
-                }
+                return 129; //Eñe
+            }
+            else {
+                return 'n';
+            }
+        }
+
+		if (caracter==0xA1) {
+			//á a acentuada
+			if (si_complete_video_driver()) {
+                return 142; 
+            }
+            else {
+                return 'a';
+            }
+        }
+
+		if (caracter==0xA9) {
+			//é e acentuada
+			if (si_complete_video_driver()) {
+                return 143; 
+            }
+            else {
+                return 'e';
+            }
+        }
+
+		if (caracter==0xAD) {
+			//í i acentuada
+			if (si_complete_video_driver()) {
+                return 144; 
+            }
+            else {
+                return 'i';
+            }
+        }    
+
+		if (caracter==0xB3) {
+			//ó o acentuada
+			if (si_complete_video_driver()) {
+                return 145; 
+            }
+            else {
+                return 'o';
+            }
+        }     
+
+		if (caracter==0xBA) {
+			//ú u acentuada
+			if (si_complete_video_driver()) {
+                return 146; 
+            }
+            else {
+                return 'u';
+            }
+        }                     
 
 	}
 
@@ -33058,21 +33135,31 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
 {
 
 	char mensaje_about[1024];
-	unsigned char letra_enye;
+	unsigned char letra_enye,letra_e_acentuada,letra_a_acentuada,letra_o_acentuada;
+
 
 	if (si_complete_video_driver() ) {
-		//mensaje completo con enye en segundo apellido
+		//mensaje completo con enye en segundo apellido y acentos
+        //TODO: arreglar los charset para que los acentos sean letras igual en cada charset con acento
+        //TODO: hacer lo mismo cuando zx desktop activo (menu_about_new)
 		letra_enye=129;
+        letra_e_acentuada=143;
+        letra_a_acentuada=142;
+        letra_o_acentuada=145;
 	}
 
 	else {
-		//mensaje con n en vez de enye
+		//mensaje con n en vez de enye, y acentos
 		letra_enye='n';
+        letra_e_acentuada='e';
+        letra_a_acentuada='a';
+        letra_o_acentuada='o';        
 	} 
 
 	sprintf (mensaje_about,"ZEsarUX v." EMULATOR_VERSION " (" EMULATOR_SHORT_DATE ")\n"
         " - " EMULATOR_EDITION_NAME " - \n"
         "(C) 2013 Cesar Hernandez Ba%co\n"
+        //"(C) 2013 C%csar Hern%cndez Ba%c%c\n"
 
 #ifdef SNAPSHOT_VERSION
         "Build number: " BUILDNUMBER "\n"
@@ -33080,6 +33167,7 @@ void menu_about_about(MENU_ITEM_PARAMETERS)
 
                         
         ,letra_enye);
+        //,letra_e_acentuada,letra_a_acentuada,letra_enye,letra_o_acentuada);
                                         
 
 	

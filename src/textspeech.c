@@ -474,7 +474,7 @@ void scrtextspeech_filter_run_pending(void)
                         //Si longitud es cero, no tiene sentido enviar nada
                         if (longit>0 && textspeech_get_stdout.v) {
 
-                            printf("antes de read stdout. text sent: (length: %d)\n",longit);
+                            //printf("antes de read stdout. text sent: (length: %d)\n",longit);
                             write(STDOUT_FILENO,buffer_speech_lineas[fifo_buffer_speech_read],longit);
                             //waitpid (proceso_hijo_speech, NULL, WNOHANG)
                             //buffer de retorno del script
@@ -491,32 +491,38 @@ void scrtextspeech_filter_run_pending(void)
                                     ssize_t count = read(fds_output[0], buffer, sizeof(buffer));
 
                                     //mostrar el texto hacia la consola de debug window
-                                    debug_printf(VERBOSE_SILENT,"%s",buffer);
+                                    //poner 0 al final
+                                    if (count>0) {
+                                        buffer[count]=0;
+                                        //Si final caracter es 10 13, eliminarlo
+                                        if (buffer[count-1]==10 || buffer[count-1]==13) buffer[count-1]=0;
+                                        debug_printf(VERBOSE_SILENT,"%s",buffer);
+                                    }
                                     
                                     //debug_unnamed_console_print(buffer);
                                     salir=1;
                                 }
 
                                 if (!salir) {
-                                    printf("waiting data...\n");
+                                    //printf("waiting data...\n");
                                     usleep(100000); //0.1 segundo
                                     timeout++;
                                     if (timeout>50) salir=1; //5 segundos maximo
                                 }
 
                             } while (!salir);
-                            printf("despues de read stdout\n");
+                            //printf("despues de read stdout\n");
 
                         }
 
-                       printf("antes de waitpid. %d\n",timer_get_current_seconds());
+                       //printf("antes de waitpid. %d\n",timer_get_current_seconds());
 
                         if (esperarhijo) {
                                 debug_printf (VERBOSE_DEBUG,"Wait for text filter child");
                                 waitpid (proceso_hijo_speech, NULL, 0);
                         }
 
-                        printf("despues de waitpid. %d\n",timer_get_current_seconds());
+                        //printf("despues de waitpid. %d\n",timer_get_current_seconds());
                         break;
 
         }
