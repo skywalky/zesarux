@@ -13,6 +13,7 @@ Added Fuzix ide image on the zesarux-extras package
 Added ZSF snapshot support for Jupiter Ace, Z88
 Added --slotcard-num setting to insert a Z88 card in a numbered slot (1, 2 or 3)
 Added ZRCP command mmc-reload to reload MMC image
+Added speech scripts to realtime translation from one language to another of a text adventure game
 
 
 Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
