@@ -3601,7 +3601,13 @@ int util_write_configfile(void)
                                               ADD_STRING_CONFIG,"--automaticdetectchar");
   if (chardetect_second_trap_char_dir)        ADD_STRING_CONFIG,"--secondtrapchar %d",chardetect_second_trap_char_dir);
   if (chardetect_third_trap_char_dir)         ADD_STRING_CONFIG,"--thirdtrapchar %d",chardetect_third_trap_char_dir);
+
+  if (chardetect_ignore_newline.v)            ADD_STRING_CONFIG,"--chardetectignorenl");
+
+  if (textspeech_get_stdout.v) ADD_STRING_CONFIG,"--textspeechgetstdout");
+
   if (chardetect_line_width_wait_space.v)     ADD_STRING_CONFIG,"--linewidthwaitspace");
+  if (chardetect_line_width_wait_dot.v)     ADD_STRING_CONFIG,"--linewidthwaitdot");
   if (chardetect_second_trap_sum32.v)         ADD_STRING_CONFIG,"--secondtrapsum32");
   if (textspeech_filter_program!=NULL)        ADD_STRING_CONFIG,"--textspeechprogram \"%s\"",textspeech_filter_program);
   if (textspeech_stop_filter_program!=NULL)   ADD_STRING_CONFIG,"--textspeechstopprogram \"%s\"",textspeech_stop_filter_program);

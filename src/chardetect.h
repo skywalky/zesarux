@@ -62,6 +62,8 @@ extern char *chardetect_char_filter_names[];
 #define MAX_DEBUG_POKE_DISPLAY 8*32*10
 
 extern z80_bit chardetect_line_width_wait_space;
+extern z80_bit chardetect_line_width_wait_dot;
+extern z80_bit chardetect_ignore_newline;
 
 extern int chardetect_second_trap_sum32_counter;
 

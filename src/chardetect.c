@@ -91,6 +91,9 @@ z80_int chardetect_third_trap_char_dir=0;
 z80_bit chardetect_second_trap_sum32={0};
 z80_byte chardetect_char_filter=0;
 
+//ignorar saltos de linea
+z80_bit chardetect_ignore_newline={0};
+
 
 //rangos iniciales minimo y maximo
 int chardetect_second_trap_detect_pc_min=65535;
@@ -107,8 +110,11 @@ z80_byte chardetect_line_width=32;
 int chardetect_x_position=0;
 
 
-//si el ancho de linea antes de cortar debe esperar a un espacio de separacion de palabras o un punto o una coma o un ;
+//si el ancho de linea antes de cortar debe esperar a un espacio de separacion de palabras o una coma o un ;
 z80_bit chardetect_line_width_wait_space={0};
+
+//si el ancho de linea antes de cortar debe esperar a un punto
+z80_bit chardetect_line_width_wait_dot={0};
 
 
 //Si hay que llamar a rutinas de deteccion de caracteres
@@ -727,27 +733,51 @@ int chardetect_printchar_letras_e_seguidas=0;
 
 void chardetect_printchar_caracter_imprimible(z80_byte c)
 {
-	//printf ("%c",c);
+	
+    //Escribirlo en consola
 	scr_detectedchar_print(c);
 	chardetect_x_position++;
 	
 
-	textspeech_add_character(c);	
+    //printf ("caracter: %d\n",c);
+    //Y pasarlo al buffer de speech
+	textspeech_add_character(c);
+
+    //printf("chardetect_line_width %d\n",chardetect_line_width);
 	
 	if (chardetect_line_width) {
+        //printf("chardetect_x_position %d\n",chardetect_x_position);
 		if (chardetect_x_position>=chardetect_line_width) {
 			int saltar=0;
+
+            //printf("caracter: %c\n",c);
 			
-			//con texto justificado, no cortar si no hay espacio o punto o , o ;
-			if (chardetect_line_width_wait_space.v==1) {
-				if (c==' ' || c=='.' || c==',' || c==';') saltar=1;
+			//con texto justificado, no cortar si no hay espacio o , o ; o .
+			if (chardetect_line_width_wait_space.v==1 || chardetect_line_width_wait_dot.v==1) {
+                if (chardetect_line_width_wait_space.v) {
+				    if (c==' ' || c==',' || c==';') saltar=1;
+                }
+
+                if (chardetect_line_width_wait_dot.v==1) {
+                    if (c=='.') saltar=1;
+                }                  
 			}
-			
-			else saltar=1;
-			
+
+            else saltar=1;
+						
 			if (saltar) {
 				chardetect_x_position=0;
-				scr_detectedchar_print ('\n');
+
+                //No queremos forzar salto de linea en consola
+                //esto se enviaba en versiones previas a 9.3
+				//scr_detectedchar_print ('\n');
+
+
+                //enviar speech a consola debug window si conviene
+                //if (textspeech_get_stdout.v) {
+                //    textspeech_add_speech_fifo_debugconsole_yesno(1);
+                //}
+
 				textspeech_add_speech_fifo();
 			}
 		}
@@ -972,6 +1002,11 @@ void chardetect_printchar_caracter(z80_byte c)
 	if (c!=0) {
 		//Codigo 22 (AT) equivaldra a mismo salto de linea
 		if (c==22) c=13;
+
+
+            //ignorar saltos de linea
+            //printf("Ignoramos salto de linea\n");
+            if (chardetect_ignore_newline.v && c==13) c=32;        
 
 
 		if (c>31 && c<127) {

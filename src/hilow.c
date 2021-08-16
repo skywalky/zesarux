@@ -217,6 +217,8 @@ void hilow_automap_unmap_memory(z80_int dir)
 
 }
 
+//temporal para guardar la imagen del datadrive
+//esto probablemente deberia ser 512 kb: 256 sectores X 2048 bytes/sector = 512 KB
 z80_byte temp_hilow_buffer[1024*1024];
 
 void temp_hilow_write(int sector,int offset,z80_byte valor)
@@ -272,7 +274,10 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
                     //reg_de?
                     //poke_byte_no_time(inicio_datos+i,'!');
 
+                    //todo a 255
+                    //poke_byte_no_time(inicio_datos+i,255);
 
+                    //lectura de la imagen de memoria
                     poke_byte_no_time(inicio_datos+i,temp_hilow_read(reg_a,i));
                 }     
 
@@ -293,7 +298,7 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
 
 
             
-/*            
+            /* 
             if (reg_a==0) { //Sector 0 directorio
 
                 for (i=0;i<2048;i++) {
@@ -422,7 +427,7 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
                 //PC=186d SP=3fdc AF=0301 BC=0003 HL=0800 DE=0301 IX=4000 IY=5c3a AF'=0301 BC'=1721 HL'=ffff DE'=369b I=3f R=77  F=-------C F'=-------C MEMPTR=186d IM1 IFF-- VPS: 0 MMU=00000000000000000000000000000000
                 
             }
- */           
+            */
 
             //no error?
             //Z80_FLAGS=(Z80_FLAGS & (255-FLAG_C));
@@ -433,6 +438,11 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             //reg_a=1;
 
             reg_pc=pop_valor();
+
+            //reg_pc=0x1927;
+
+            //reg_pc=0x18a3;
+
             printf("Returning to address %04XH\n",reg_pc);
         }
 
@@ -477,6 +487,8 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             //reg_pc=0x1ad8;
             reg_pc=0x1ac8;
             reg_pc=0x1acf;
+
+            printf("Returning to address %04XH\n",reg_pc);
         }              
 
         if (reg_pc==0x1AC0 && hilow_mapped_rom.v) {
@@ -487,6 +499,8 @@ z80_byte cpu_core_loop_spectrum_hilow(z80_int dir GCC_UNUSED, z80_byte value GCC
             //reg_pc=0x1ad8;
             reg_pc=0x1ac8;
             reg_pc=0x1acf;
+
+            printf("Returning to address %04XH\n",reg_pc);
         }              
 
         if (reg_pc==0x1AF1 && hilow_mapped_rom.v) {

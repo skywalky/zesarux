@@ -34679,7 +34679,7 @@ void menu_inicio_bucle(void)
     //Ya no se deberia mostrar boton de cerrar todos menus
     menu_mostrar_boton_close_all_menus.v=0;
 
-	textspeech_print_speech("Closing emulator menu and going back to emulated machine");
+	if (textspeech_also_send_menu.v) textspeech_print_speech("Closing emulator menu and going back to emulated machine");
 	        
 
 }
@@ -35695,9 +35695,11 @@ void set_welcome_message(void)
 	if (!strcmp(scr_new_driver_name,"stdout")) return;
 	if (!strcmp(scr_new_driver_name,"simpletext")) return;
 
-	textspeech_print_speech(texto_welcome);
-	textspeech_print_speech(texto_edition);
-	textspeech_print_speech(texto_esc_menu);
+    if (textspeech_also_send_menu.v) {
+	    textspeech_print_speech(texto_welcome);
+	    textspeech_print_speech(texto_edition);
+	    textspeech_print_speech(texto_esc_menu);
+    }
 
 }
 

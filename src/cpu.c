@@ -1971,18 +1971,23 @@ printf (
 		"--enableprintchartrap      Enable traps for standard ROM print char calls and non standard second & third traps. On Spectrum, ZX80, ZX81 machines, standard ROM calls are those using RST10H. On Z88, are those using OS_OUT and some other functions. Note: it is enabled by default on stdout & simpletext drivers\n"
 		"--disableprintchartrap     Disable traps for ROM print char calls and second & third traps.\n"
 
-		"--linewidth n              Print char line width\n"
+		
 
 		"--automaticdetectchar      Enable automatic detection & try all method to find print character routines, for games not using RST 10H\n"
 		"--secondtrapchar n         Print Char second trap address\n"
 		"--secondtrapsum32          Print Char second trap sum 32 to character\n"
 		"--thirdtrapchar n          Print Char third trap address\n"
-		"--linewidthwaitspace       Print Char wait for a space, or a comma, or a dot, or a semicolon, to end a line\n"
+        "--chardetectignorenl       Ignore new line characters (13, 10) on char detection\n"
+        "--linewidth n              Print char line width\n"        
+		"--linewidthwaitspace       Text will be sent to speech when line is larger than line width and a space, comma or semicolon is detected\n"
+        "--linewidthwaitdot         Text will be sent to speech when line is larger than line width and dot is detected\n"
 		"--textspeechprogram p      Specify a path to a program or script to be sent the emulator text shown. For example, for text to speech: speech_filters/festival_filter.sh or speech_filters/macos_say_filter.sh\n"
 		"--textspeechstopprogram p  Specify a path to a program or script in charge of stopping the running speech program. For example, speech_filters/stop_festival_filter.sh\n"
+        "--textspeechgetstdout      Send stdout from script to debug console window\n"
 		"--textspeechwait           Wait and pause the emulator until the Speech program returns\n"
 		"--textspeechmenu           Also send text menu entries to Speech program\n"
 		"--textspeechtimeout n      After some seconds the text will be sent to the Speech program when no new line is sent. Between 0 and 99. 0 means never\n"
+        
 
 
 
@@ -6436,6 +6441,10 @@ int parse_cmdline_options(void) {
 				command_line_chardetect_printchar_enabled=1;
                         }
 
+                else if (!strcmp(argv[puntero_parametro],"--chardetectignorenl")) {
+                        chardetect_ignore_newline.v=1;
+                }
+
 
 		        else if (!strcmp(argv[puntero_parametro],"--autoredrawstdout")) {
 				stdout_simpletext_automatic_redraw.v=1;
@@ -6481,6 +6490,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--linewidthwaitspace")) {
 				chardetect_line_width_wait_space.v=1;
 			}
+
+			else if (!strcmp(argv[puntero_parametro],"--linewidthwaitdot")) {
+				chardetect_line_width_wait_dot.v=1;
+			}            
 
 			else if (!strcmp(argv[puntero_parametro],"--secondtrapsum32")) {
 				chardetect_second_trap_sum32.v=1;
@@ -6545,6 +6558,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--textspeechmenu")) {
                                 textspeech_also_send_menu.v=1;
 			}
+
+            else if (!strcmp(argv[puntero_parametro],"--textspeechgetstdout")) {
+                textspeech_get_stdout.v=1;
+            }
 
 			else if (!strcmp(argv[puntero_parametro],"--textspeechtimeout")) {
                                 siguiente_parametro_argumento();

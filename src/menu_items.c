@@ -30349,6 +30349,44 @@ void menu_textspeech_send_menu(MENU_ITEM_PARAMETERS)
         textspeech_also_send_menu.v ^=1;
 }
 
+void menu_chardetection_settings_stdout_line_witdh_space(MENU_ITEM_PARAMETERS)
+{
+        chardetect_line_width_wait_space.v ^=1;
+}
+
+void menu_chardetection_settings_stdout_line_witdh_dot(MENU_ITEM_PARAMETERS)
+{
+        chardetect_line_width_wait_dot.v ^=1;
+}
+
+void menu_chardetection_settings_stdout_line_width(MENU_ITEM_PARAMETERS)
+{
+
+        char string_width[3];
+
+        int width;
+
+
+        sprintf (string_width,"%d",chardetect_line_width);
+
+        menu_ventana_scanf("Line width 0=no limit",string_width,3);
+
+        width=parse_string_to_number(string_width);
+
+        //if (width>999) {
+        //        debug_printf (VERBOSE_ERR,"Invalid width %d",width);
+        //        return;
+        //}
+        chardetect_line_width=width;
+
+}
+
+
+void menu_chardetection_settings_send_consolewindow(MENU_ITEM_PARAMETERS)
+{
+    textspeech_get_stdout.v ^=1;
+}
+
 
 #ifdef COMPILE_STDOUT
 void menu_display_stdout_send_speech_debug(MENU_ITEM_PARAMETERS)
@@ -30411,13 +30449,6 @@ void menu_textspeech(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu(array_menu_textspeech,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_filter_timeout,NULL,"[%d] ~~Timeout no enter",textspeech_timeout_no_enter);
-				menu_add_item_menu_shortcut(array_menu_textspeech,'t');
-				menu_add_item_menu_tooltip(array_menu_textspeech,"After some seconds the text will be sent to the Speech program when no "
-						"new line is sent");
-				menu_add_item_menu_ayuda(array_menu_textspeech,"After some seconds the text will be sent to the Speech program when no "
-						"new line is sent. 0=never");
-
 
 
 				menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_program_wait,NULL,"[%c] ~~Wait program to exit",(textspeech_filter_program_wait.v ? 'X' : ' ' ) );
@@ -30441,8 +30472,53 @@ void menu_textspeech(MENU_ITEM_PARAMETERS)
 
 #endif
 
-			}
+			
 
+            if (chardetect_printchar_enabled.v) {
+                menu_add_item_menu(array_menu_textspeech,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+                menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,NULL,NULL,"--Trap print to speech--");
+                menu_add_item_menu_tooltip(array_menu_textspeech,"Settings for texto coming from trap print and sent to speech");
+                menu_add_item_menu_ayuda(array_menu_textspeech,"Settings for texto coming from trap print and sent to speech");
+
+                    menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_width,NULL,"[%d] Line w~~idth",chardetect_line_width);
+                menu_add_item_menu_shortcut(array_menu_textspeech,'i');
+                menu_add_item_menu_tooltip(array_menu_textspeech,"The minimum characters to detect as a line text");
+                menu_add_item_menu_ayuda(array_menu_textspeech,"The minimum characters to detect as a line text. Setting 0 means no limit, so "
+                            "even when a carriage return is received, the text will not be sent unless a Enter "
+                            "key is pressed or when timeout no enter is reached\n");
+
+
+                if (chardetect_line_width!=0) {
+                    menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_witdh_space,NULL,"[%c] End line with s~~pace",(chardetect_line_width_wait_space.v==1 ? 'X' : ' '));
+                    menu_add_item_menu_shortcut(array_menu_textspeech,'p');
+                    menu_add_item_menu_tooltip(array_menu_textspeech,"Text will be sent to speech when line is larger than line width and a space, comma or semicolon is detected");
+                    menu_add_item_menu_ayuda(array_menu_textspeech,"Text will be sent to speech when line is larger than line width and a space, comma or semicolon is detected");
+
+
+                    menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_witdh_dot,NULL,"[%c] End line with d~~ot",(chardetect_line_width_wait_dot.v==1 ? 'X' : ' '));
+                    menu_add_item_menu_shortcut(array_menu_textspeech,'o');
+                    menu_add_item_menu_tooltip(array_menu_textspeech,"Text will be sent to speech when line is larger than line width and a dot is detected");
+                    menu_add_item_menu_ayuda(array_menu_textspeech,"Text will be sent to speech when line is larger than line width and a dot is detected");
+
+                }
+
+                menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_textspeech_filter_timeout,NULL,"[%d] ~~Timeout no enter",textspeech_timeout_no_enter);
+                menu_add_item_menu_shortcut(array_menu_textspeech,'t');
+                menu_add_item_menu_tooltip(array_menu_textspeech,"After some seconds the text will be sent to the Speech program when no "
+                        "new line is sent");
+                menu_add_item_menu_ayuda(array_menu_textspeech,"After some seconds the text will be sent to the Speech program when no "
+                        "new line is sent. 0=never. A new line could also be detected by a space, comma, semicolon or dot depending on previous choices in this menu");
+
+
+                
+                menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_chardetection_settings_send_consolewindow,NULL,"[%c] Send to debug console too",(textspeech_get_stdout.v==1 ? 'X' : ' '));                    
+                menu_add_item_menu_tooltip(array_menu_textspeech,"If detected characters going to speech are also send to debug console window");
+                menu_add_item_menu_ayuda(array_menu_textspeech,"If detected characters going to speech are also send to debug console window");
+                
+            }
+
+        }
 
           menu_add_item_menu(array_menu_textspeech,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_textspeech,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -30538,27 +30614,7 @@ void menu_chardetection_settings_chardetect_char_filter(MENU_ITEM_PARAMETERS)
         if (chardetect_char_filter==CHAR_FILTER_TOTAL) chardetect_char_filter=0;
 }
 
-void menu_chardetection_settings_stdout_line_width(MENU_ITEM_PARAMETERS)
-{
 
-        char string_width[3];
-
-        int width;
-
-
-        sprintf (string_width,"%d",chardetect_line_width);
-
-        menu_ventana_scanf("Line width 0=no limit",string_width,3);
-
-        width=parse_string_to_number(string_width);
-
-        //if (width>999) {
-        //        debug_printf (VERBOSE_ERR,"Invalid width %d",width);
-        //        return;
-        //}
-        chardetect_line_width=width;
-
-}
 
 void menu_chardetection_settings_second_trap_sum32(MENU_ITEM_PARAMETERS)
 {
@@ -30619,10 +30675,6 @@ void menu_chardetection_settings_second_trap_range_max(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_chardetection_settings_stdout_line_witdh_space(MENU_ITEM_PARAMETERS)
-{
-        chardetect_line_width_wait_space.v ^=1;
-}
 
 
 void menu_chardetection_settings_enable(MENU_ITEM_PARAMETERS)
@@ -30630,6 +30682,10 @@ void menu_chardetection_settings_enable(MENU_ITEM_PARAMETERS)
 	chardetect_detect_char_enabled.v ^=1;
 }
 
+void menu_chardetection_chardetect_ignore_newline(MENU_ITEM_PARAMETERS)
+{
+    chardetect_ignore_newline.v ^=1;
+}
 
 
 //menu chardetection settings
@@ -30642,8 +30698,8 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 
                         menu_add_item_menu_inicial_format(&array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_trap_rst16,NULL,"[%c] ~~Trap print", (chardetect_printchar_enabled.v==1 ? 'X' : ' ' ));
 			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'t');
-                        menu_add_item_menu_tooltip(array_menu_chardetection_settings,"It enables the emulator to show the text sent to standard rom print call routines and non standard, generated from some games, specially text adventures");
-                        menu_add_item_menu_ayuda(array_menu_chardetection_settings,"It enables the emulator to show the text sent to standard rom print call routines and generated from some games, specially text adventures. "
+                        menu_add_item_menu_tooltip(array_menu_chardetection_settings,"It enables the emulator to show and send to speech the text sent to standard rom print call routines and non standard, generated from some games, specially text adventures");
+                        menu_add_item_menu_ayuda(array_menu_chardetection_settings,"It enables the emulator to show and send to speech the text sent to standard rom print call routines and generated from some games, specially text adventures. "
                                                 "On Spectrum, ZX80, ZX81 machines, standard rom calls are RST 10H. On Z88, it traps OS_OUT and some other calls. Non standard calls are the ones indicated on Second and Third trap");
 
 
@@ -30666,20 +30722,11 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
                 	        menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Address of the third print routine");
                         	menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Address of the third print routine");
 
-       menu_add_item_menu(array_menu_chardetection_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);							
-
-                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_width,NULL,"[%d] Line ~~width",chardetect_line_width);
-			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'w');
-			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Line width");
-			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Line width. Setting 0 means no limit, so "
-						"even when a carriage return is received, the text will not be sent unless a Enter "
-						"key is pressed or when timeout no enter no text to speech is reached\n");
+       menu_add_item_menu(array_menu_chardetection_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);			
 
 
-                        menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_stdout_line_witdh_space,NULL,"[%c] Line width w~~ait space",(chardetect_line_width_wait_space.v==1 ? 'X' : ' '));
-			menu_add_item_menu_shortcut(array_menu_chardetection_settings,'a');
-			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Wait for a space before jumping to a new line");
-			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Wait for a space before jumping to a new line");
+
+      
 
 
                         menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_settings_chardetect_char_filter,NULL,"Char ~~filter [%s]",chardetect_char_filter_names[chardetect_char_filter]);
@@ -30687,6 +30734,11 @@ void menu_chardetection_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Send characters to an internal filter");
 			menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Send characters to an internal filter");
 
+               
+
+            menu_add_item_menu_format(array_menu_chardetection_settings,MENU_OPCION_NORMAL,menu_chardetection_chardetect_ignore_newline,NULL,"[%c] ~~Ignore new line character", (chardetect_ignore_newline.v==1 ? 'X' : ' ' ));     
+            menu_add_item_menu_tooltip(array_menu_chardetection_settings,"Just ignore new line characters");
+            menu_add_item_menu_ayuda(array_menu_chardetection_settings,"Just ignore new line characters");
 
 			}
 

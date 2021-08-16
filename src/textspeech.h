@@ -47,6 +47,8 @@ extern void scrtextspeech_filter_run_pending(void);
 extern void textspeech_empty_speech_fifo(void);
 
 extern void textspeech_add_speech_fifo(void);
+extern void textspeech_add_speech_fifo_debugconsole_yesno(int also_send_to_debug_console);
+extern z80_bit textspeech_get_stdout;
 
 extern int scrtextspeech_filter_counter;
 

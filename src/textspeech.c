@@ -29,10 +29,14 @@
 #include "menu.h"
 #include "utils.h"
 #include "sam.h"
+#include "chardevice.h"
 
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
+
+//para fcntl
+#include <fcntl.h>
 
 #ifndef MINGW
 	//Para waitpid
@@ -96,6 +100,9 @@ int textspeech_operating_counter=0;
 
 //Enviar tambien el texto que genera el menu a rutinas de Filter text program
 z80_bit textspeech_also_send_menu={0};
+
+//Si el texto de vuelta del script de speech, se envia tambien a ventana debug console
+z80_bit textspeech_get_stdout={0};
 
 
 //Rutinas que solo existen en Windows
@@ -370,6 +377,20 @@ void textspeech_stop_filter_program_check_spaces(void)
 #endif
 }
 
+
+void set_nonblock_flag(int desc)
+{
+#ifndef MINGW
+        int oldflags = fcntl(desc, F_GETFL, 0);
+        if (oldflags == -1)
+                return;
+      
+        oldflags |= O_NONBLOCK;
+
+        fcntl(desc, F_SETFL, oldflags);
+#endif
+}
+
 void scrtextspeech_filter_run_pending(void)
 {
 
@@ -387,6 +408,8 @@ void scrtextspeech_filter_run_pending(void)
 		textspeech_print_operating();
 	}
 
+
+
         int esperarhijo=0;
         if (fifo_buffer_speech_size==MAX_LINES_BUFFER) esperarhijo=1;
         if (textspeech_filter_program_wait.v) esperarhijo=1;
@@ -399,6 +422,18 @@ void scrtextspeech_filter_run_pending(void)
                 debug_printf (VERBOSE_ERR,"Can not make pipe to speech");
                 return;
         }
+
+        //para capturar la salida
+        int fds_output[2];
+        if (textspeech_get_stdout.v) {
+            if (pipe(fds_output)<0) {
+                    debug_printf (VERBOSE_ERR,"Can not make pipe to speech");
+                    return;
+            }      
+        }
+
+        set_nonblock_flag(fds_output[0]);
+        set_nonblock_flag(fds_output[1]);
 
         proceso_hijo_speech = fork();
 
@@ -414,13 +449,19 @@ void scrtextspeech_filter_run_pending(void)
                         dup (fds[0]);
                         close(fds[1]);
 
+                        //para capturar el stdout
+                        if (textspeech_get_stdout.v) {
+                            dup2(fds_output[1], STDOUT_FILENO);
+                            close(fds_output[1]);
+                        }
+
                         execlp(textspeech_filter_program,textspeech_filter_program,NULL);
 
                         //Si se llega aqui es que ha habido un error al executar programa filtro
                         exit(0);
                         break;
                 default:
-			close(fds[0]);
+			            close(fds[0]);
                         //longit=strlen(buffer_speech_lineas[fifo_buffer_speech_read]);
                         write(fds[1],buffer_speech_lineas[fifo_buffer_speech_read],longit);
                         close(fds[1]);
@@ -430,10 +471,52 @@ void scrtextspeech_filter_run_pending(void)
 
                         if (fifo_buffer_speech_size>=0) fifo_buffer_speech_size--;
 
+                        //Si longitud es cero, no tiene sentido enviar nada
+                        if (longit>0 && textspeech_get_stdout.v) {
+
+                            printf("antes de read stdout. text sent: (length: %d)\n",longit);
+                            write(STDOUT_FILENO,buffer_speech_lineas[fifo_buffer_speech_read],longit);
+                            //waitpid (proceso_hijo_speech, NULL, WNOHANG)
+                            //buffer de retorno del script
+                            char buffer[4096];
+
+                            int salir=0;
+                            int timeout=0;
+                            do {
+
+                                int status=chardevice_status(fds_output[0]);
+
+                                if (status & CHDEV_ST_RD_AVAIL_DATA) {
+
+                                    ssize_t count = read(fds_output[0], buffer, sizeof(buffer));
+
+                                    //mostrar el texto hacia la consola de debug window
+                                    debug_printf(VERBOSE_SILENT,"%s",buffer);
+                                    
+                                    //debug_unnamed_console_print(buffer);
+                                    salir=1;
+                                }
+
+                                if (!salir) {
+                                    printf("waiting data...\n");
+                                    usleep(100000); //0.1 segundo
+                                    timeout++;
+                                    if (timeout>50) salir=1; //5 segundos maximo
+                                }
+
+                            } while (!salir);
+                            printf("despues de read stdout\n");
+
+                        }
+
+                       printf("antes de waitpid. %d\n",timer_get_current_seconds());
+
                         if (esperarhijo) {
                                 debug_printf (VERBOSE_DEBUG,"Wait for text filter child");
                                 waitpid (proceso_hijo_speech, NULL, 0);
                         }
+
+                        printf("despues de waitpid. %d\n",timer_get_current_seconds());
                         break;
 
         }
@@ -568,6 +651,7 @@ void textspeech_add_speech_fifo_filter_unknown(void)
 	}
 }
 
+//void textspeech_add_speech_fifo_debugconsole_yesno(int also_send_to_debug_console)
 void textspeech_add_speech_fifo(void)
 {
 
@@ -591,6 +675,11 @@ void textspeech_add_speech_fifo(void)
                 buffer_speech[longitud]=0;
                 index_buffer_speech=0;
                 sprintf (buffer_speech_lineas[fifo_buffer_speech_write],"%s",buffer_speech);
+
+                //enviar speech a consola debug window si conviene
+                //if (also_send_to_debug_console) {
+                //    if (buffer_speech[0]!=0) debug_printf(VERBOSE_INFO,buffer_speech);
+                //}
 
                 //Avanzar puntero escritura
                 fifo_buffer_speech_write++;
@@ -621,6 +710,12 @@ void textspeech_add_speech_fifo(void)
 
 }
 
+/*
+void textspeech_add_speech_fifo(void)
+{
+    textspeech_add_speech_fifo_debugconsole_yesno(0);
+}
+*/
 
 //Usado en funciones de print, para que hagan speech
 void textspeech_print_speech(char *texto)
@@ -694,6 +789,7 @@ void textspeech_add_character(z80_byte c)
 void textspeech_send_new_line(void)
 {
                                 //printf ("salto de linea");
+                                //printf("reset chardetect_x_position on textspeech_send_new_line\n");
                                 chardetect_x_position=0;
 
                                 textspeech_add_speech_fifo();

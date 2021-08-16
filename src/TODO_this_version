@@ -184,6 +184,8 @@ frecuencias muy altas.
 -tecla para cambiar PC con direccion apuntada por Pointer
 
 -hilow: cargar ok. 
+quiza el punto de entrada a READ_SECTOR no es exactamente ese o bien volver con algo distinto de un RET
+
 grabar no ok, error fuera rango, quiza por error en el sector 0 simulado. aunque pongo un sector 0 bueno y siempre da fuera de rango. por que?
 quiza el salto a write sector es otro
 
@@ -193,3 +195,20 @@ parece que la grabacion peta con break debido a:
 L08F7:          IN      A,(HLWPORT)
                 BIT     3,A
                 JP      Z,BREAKCONT
+
+
+-ajustar chardetect_line_width (5) y parametros de final de space (quiza nunca) y punto (siempre) al autodetectar aventuras
+en autoselectoptions que queda?
+
+Tambien, hacer por defecto:
+
+line width: 5
+wait dot enabled -> quiza no, porque si no en basic, esperariamos siempre a . para escribir, para stdout es un problema
+wait space disabled
+timeout no enter: 2
+
+opciones desde linewidth hasta timeout no enter quiza irian en text to speech settings
+porque el print en consola es independiente de esto
+
+-debug console window hacer scroll automatico
+
