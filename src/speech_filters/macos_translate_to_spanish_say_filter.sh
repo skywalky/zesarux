@@ -31,7 +31,7 @@ if [ "$TEXTO" != "" ]; then
 	echo "$TRADUCIDO"
 
 	# enviar texto a speech para escuchar la traduccion
-	#echo "$TRADUCIDO"|say -f -
+	echo "$TRADUCIDO"|say -f -
 
 
 	#contar caracteres para saber si llegamos a un limite de la api y/o facturacion
