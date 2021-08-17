@@ -438,6 +438,10 @@ int textspeech_get_stdout_childs(void)
             buffer[count]=0;
             //Si final caracter es 10 13, eliminarlo
             if (buffer[count-1]==10 || buffer[count-1]==13) buffer[count-1]=0;
+            //windows puede acabar con los dos, por tanto mirar hacia atras tambien
+            if (count>1) {
+                if (buffer[count-2]==10 || buffer[count-2]==13) buffer[count-2]=0;
+            }
             debug_printf(VERBOSE_ONLY_DEBUG_CONSOLE_WINDOW,"%s",buffer); 
 
             return 1;           
