@@ -645,13 +645,17 @@ void timer_check_interrupt(void)
                 //Si hay finalizado el proceso hijo
                 //printf ("esperar\n");
                 if (textspeech_finalizado_hijo_speech() ) {
+
+                    //recoger texto de salida
+                    textspeech_get_stdout_childs();
+
 			//printf ("desde timer\n");
                         scrtextspeech_filter_run_pending();
                 }
 
-                if (textspeech_get_stdout_childs()) {
+                //if (textspeech_get_stdout_childs()) {
                     //printf("processed stdout from timer\n");
-                }
+                //}
         }
 
 			//Cosas que suceden cada 1 segundo
