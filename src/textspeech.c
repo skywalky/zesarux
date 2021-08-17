@@ -396,8 +396,9 @@ void set_nonblock_flag(int desc)
 #endif
 }
 
-//para capturar la salida
+//para capturar la salida, pipes que se crean una sola vez y luego se leen siempre
 int textspeech_fds_output[2];
+
 int textspeech_fds_output_initialized=0;
 
 
@@ -405,9 +406,12 @@ int textspeech_fds_output_initialized=0;
 //retorna 1 si habia salida
 int textspeech_get_stdout_childs(void)
 {
+    //printf("start textspeech_get_stdout_childs\n");
 
     //volver si no se ha inicializado las pipes
     if (!textspeech_fds_output_initialized) return 0;
+
+    //printf("start2 textspeech_get_stdout_childs\n");
 
     if (textspeech_get_stdout.v) {
         int status=chardevice_status(textspeech_fds_output[0]);
@@ -428,8 +432,6 @@ int textspeech_get_stdout_childs(void)
                 debug_printf(VERBOSE_SILENT,"%s",buffer);
             }
             
-            //ya podemos cerrarlo
-            //close(fds_output[0]);
 
             return 1;
         }        
@@ -456,8 +458,6 @@ void scrtextspeech_filter_run_pending(void)
 		textspeech_operating_counter=3;
 		textspeech_print_operating();
 	}
-
-
 
         int esperarhijo=0;
         if (fifo_buffer_speech_size==MAX_LINES_BUFFER) esperarhijo=1;
@@ -526,7 +526,7 @@ void scrtextspeech_filter_run_pending(void)
 
                         if (fifo_buffer_speech_size>=0) fifo_buffer_speech_size--;
 
-                        //este no se usa
+                        //mantengo las pipes abiertas siempre
                         //if (textspeech_get_stdout.v) close(fds_output[1]);
 
                         //Si longitud es cero, no tiene sentido enviar nada
@@ -717,7 +717,6 @@ void textspeech_add_speech_fifo_filter_unknown(void)
 	}
 }
 
-//void textspeech_add_speech_fifo_debugconsole_yesno(int also_send_to_debug_console)
 void textspeech_add_speech_fifo(void)
 {
 
@@ -742,10 +741,6 @@ void textspeech_add_speech_fifo(void)
                 index_buffer_speech=0;
                 sprintf (buffer_speech_lineas[fifo_buffer_speech_write],"%s",buffer_speech);
 
-                //enviar speech a consola debug window si conviene
-                //if (also_send_to_debug_console) {
-                //    if (buffer_speech[0]!=0) debug_printf(VERBOSE_INFO,buffer_speech);
-                //}
 
                 //Avanzar puntero escritura
                 fifo_buffer_speech_write++;
@@ -776,12 +771,6 @@ void textspeech_add_speech_fifo(void)
 
 }
 
-/*
-void textspeech_add_speech_fifo(void)
-{
-    textspeech_add_speech_fifo_debugconsole_yesno(0);
-}
-*/
 
 //Usado en funciones de print, para que hagan speech
 void textspeech_print_speech(char *texto)
