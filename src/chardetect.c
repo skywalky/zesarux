@@ -236,6 +236,7 @@ void chardetect_detect_char(void)
 					chardetect_char_filter=CHAR_FILTER_AD42;
 					chardetect_line_width_wait_space.v=0;
                     chardetect_line_width_wait_dot.v=1;
+                    chardetect_ignore_newline.v=1;
 				}		
 				
 				break;
@@ -265,6 +266,7 @@ void chardetect_detect_char(void)
 					chardetect_char_filter=CHAR_FILTER_GENERIC;
 					chardetect_line_width_wait_space.v=0;
                     chardetect_line_width_wait_dot.v=1;
+                    chardetect_ignore_newline.v=1;
 				}
 				
 				break;
@@ -299,6 +301,7 @@ void chardetect_detect_char(void)
 					chardetect_char_filter=CHAR_FILTER_GENERIC;
 					chardetect_line_width_wait_space.v=0;
                     chardetect_line_width_wait_dot.v=1;
+                    chardetect_ignore_newline.v=1;
 				}
 				
 				break;
@@ -329,6 +332,7 @@ void chardetect_detect_char(void)
 					chardetect_char_filter=CHAR_FILTER_GENERIC;
 					chardetect_line_width_wait_space.v=0;
                     chardetect_line_width_wait_dot.v=1;
+                    chardetect_ignore_newline.v=1;
 				}
 				
 				break;
@@ -361,6 +365,7 @@ void chardetect_detect_char(void)
 					chardetect_char_filter=CHAR_FILTER_GENERIC;
 					chardetect_line_width_wait_space.v=0;
                     chardetect_line_width_wait_dot.v=1;
+                    chardetect_ignore_newline.v=1;
 				}
 				
 				break;
@@ -396,6 +401,7 @@ void chardetect_detect_char(void)
 					chardetect_char_filter=CHAR_FILTER_GENERIC;
 					chardetect_line_width_wait_space.v=0;
                     chardetect_line_width_wait_dot.v=1;
+                    chardetect_ignore_newline.v=1;
 				}
 				
 				break;
@@ -430,6 +436,7 @@ void chardetect_detect_char(void)
 					chardetect_char_filter=CHAR_FILTER_GENERIC;
 					chardetect_line_width_wait_space.v=0;
                     chardetect_line_width_wait_dot.v=1;
+                    chardetect_ignore_newline.v=1;
 				}       
 				
 				break;
@@ -464,6 +471,7 @@ void chardetect_detect_char(void)
 							chardetect_char_filter=CHAR_FILTER_GENERIC;
 							chardetect_line_width_wait_space.v=0;
                             chardetect_line_width_wait_dot.v=1;
+                            chardetect_ignore_newline.v=1;
 						}
 					}       
 				}
