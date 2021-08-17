@@ -649,7 +649,9 @@ void timer_check_interrupt(void)
                         scrtextspeech_filter_run_pending();
                 }
 
-                textspeech_get_stdout_childs();
+                if (textspeech_get_stdout_childs()) {
+                    //printf("processed stdout from timer\n");
+                }
         }
 
 			//Cosas que suceden cada 1 segundo

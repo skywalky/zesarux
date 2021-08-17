@@ -1023,11 +1023,12 @@ void debug_unnamed_console_init(void)
 
 
     //Metemos texto ya inicial llenando la ventana asi los primeros mensajes estaran abajo
-    debug_unnamed_console_print("Scroll to the bottom to read first messages");
+    //debug_unnamed_console_print("Scroll to the bottom to read first messages");
 
-
-    for (i=0;i<DEBUG_UNNAMED_CONSOLE_HEIGHT-10;i++) {
-        debug_unnamed_console_print("");
+    //hacemos salto de linea de ventana asi los primeros mensajes estaran abajo
+    for (i=0;i<DEBUG_UNNAMED_CONSOLE_HEIGHT;i++) {
+        //debug_unnamed_console_print("");
+        debug_unnamed_console_new_line();
     }
 
 }
@@ -1092,8 +1093,11 @@ void debug_printf (int debuglevel, const char * format , ...)
 
     	else sprintf (buffer_final,"%s%s",verbose_message,buffer_inicial);
 
-    	if (scr_messages_debug!=NULL) scr_messages_debug (buffer_final);
-    	else printf ("%s\n",buffer_final);
+        //lanzarlo a consola a traves del driver de video. Siempre que verbose no sea only_debug_console_window
+        if (debuglevel!=VERBOSE_SILENT) {
+    	    if (scr_messages_debug!=NULL) scr_messages_debug (buffer_final);
+    	    else printf ("%s\n",buffer_final);
+        }
 
 		//Si tambien queremos mostrar log en consola,
 		//esto es un caso un tanto especial pues la mayoria de drivers ya muestra mensajes en consola,

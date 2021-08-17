@@ -31,10 +31,6 @@
 #include "sam.h"
 #include "chardevice.h"
 
-//temporal
-#include "timer.h"
-
-
 #include <string.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -147,12 +143,12 @@ void textspeech_mete_comillas(char *origen,char *destino)
 void textspeech_cambia_barra(char *texto)
 {
 
-                int i;
-                char c;
-                for (i=0;texto[i];i++) {
-                        c=texto[i];
-                        if (c=='/') texto[i]='\\';
-                }
+    int i;
+    char c;
+    for (i=0;texto[i];i++) {
+            c=texto[i];
+            if (c=='/') texto[i]='\\';
+    }
 
 }
 
@@ -163,8 +159,8 @@ void textspeech_cambia_barra(char *texto)
 void textspeech_ver_si_stop_finalizado(void)
 {
 #ifndef MINGW
-        //Recogemos valor de retorno de proceso stop speech
-        if (textspeech_stop_filter_program!=NULL) {
+    //Recogemos valor de retorno de proceso stop speech
+    if (textspeech_stop_filter_program!=NULL) {
 
 		//printf ("esperar a que stop script acabe\n");
 
@@ -193,7 +189,7 @@ void textspeech_ver_si_stop_finalizado(void)
 			debug_printf (VERBOSE_DEBUG,"Stop Script Filter not ended after timeout. It can generate Zombie processes");
 		}
 
-        }
+    }
 #endif
 }
 
@@ -215,26 +211,27 @@ void textspeech_empty_speech_fifo(void)
 
 	textspeech_ver_si_stop_finalizado();
 
-        proceso_stop_filtro = fork();
+    proceso_stop_filtro = fork();
 
 
-        switch (proceso_stop_filtro) {
+    switch (proceso_stop_filtro) {
 
-                case -1:
-                        debug_printf (VERBOSE_ERR,"Can not run fork to stop program");
-                        break;
+            case -1:
+                debug_printf (VERBOSE_ERR,"Can not run fork to stop program");
+            break;
 
-                case 0:
-                        execlp(textspeech_stop_filter_program,textspeech_stop_filter_program,NULL);
+            case 0:
+                execlp(textspeech_stop_filter_program,textspeech_stop_filter_program,NULL);
 
-                        //Si se llega aqui es que ha habido un error al executar programa filtro
-                        exit(0);
-                        break;
-                default:
-                        //Aqui esta el proceso padre. No hacer nada
-                        break;
+                //Si se llega aqui es que ha habido un error al executar programa filtro
+                exit(0);
+            break;
 
-        }
+            default:
+                    //Aqui esta el proceso padre. No hacer nada
+            break;
+
+    }
 
 #else
 
@@ -266,45 +263,45 @@ int textspeech_finalizado_hijo_speech(void)
 #ifndef MINGW
 
 
-        if (proceso_hijo_speech!=0) {
-                int status;
-                if (waitpid (proceso_hijo_speech, &status, WNOHANG)) {
+    if (proceso_hijo_speech!=0) {
+        int status;
+        if (waitpid (proceso_hijo_speech, &status, WNOHANG)) {
 
-                        //if (WIFEXITED(status)) {
-                        //printf ("child ha finalizado\n");
-                        proceso_hijo_speech=0;
-                        return 1;
-                }
-
-                else {
-                        //printf ("child no ha finalizado\n");
-                        return 0;
-                }
+            //if (WIFEXITED(status)) {
+            //printf ("child ha finalizado\n");
+            proceso_hijo_speech=0;
+            return 1;
         }
+
+        else {
+            //printf ("child no ha finalizado\n");
+            return 0;
+        }
+    }
 
 
 #else
 //Para Windows
-        if (proceso_hijo_speech!=0) {
-                if (!si_existe_archivo(get_speech_windows_lock_file()) ) {
+    if (proceso_hijo_speech!=0) {
+        if (!si_existe_archivo(get_speech_windows_lock_file()) ) {
 
-                        //printf ("child ha finalizado\n");
-                        proceso_hijo_speech=0;
-                        return 1;
-                }
-
-                else {
-                        //printf ("child no ha finalizado\n");
-                        return 0;
-                }
+            //printf ("child ha finalizado\n");
+            proceso_hijo_speech=0;
+            return 1;
         }
+
+        else {
+            //printf ("child no ha finalizado\n");
+            return 0;
+        }
+    }
 
 
 
 #endif
 
-        //no hay proceso hijo. volver
-        return 1;
+    //no hay proceso hijo. volver
+    return 1;
 
 }
 
@@ -365,20 +362,20 @@ void textspeech_filter_program_check_spaces(void)
 void textspeech_stop_filter_program_check_spaces(void)
 {
 #ifdef MINGW
-        int i;
-        int tiene_espacios=0;
-        for (i=0;textspeech_stop_filter_program[i];i++) {
-                if (textspeech_stop_filter_program[i]==' ') {
-                        tiene_espacios=1;
-                        break;
-                }
+    int i;
+    int tiene_espacios=0;
+    for (i=0;textspeech_stop_filter_program[i];i++) {
+        if (textspeech_stop_filter_program[i]==' ') {
+            tiene_espacios=1;
+            break;
         }
+    }
 
-        if (tiene_espacios) {
-                debug_printf (VERBOSE_ERR,"Full path to Text to Speech Stop program %s has spaces. It won't work on Windows.",
-                        textspeech_stop_filter_program);
-                textspeech_stop_filter_program=NULL;
-        }
+    if (tiene_espacios) {
+        debug_printf (VERBOSE_ERR,"Full path to Text to Speech Stop program %s has spaces. It won't work on Windows.",
+                textspeech_stop_filter_program);
+        textspeech_stop_filter_program=NULL;
+    }
 #endif
 }
 
@@ -386,13 +383,12 @@ void textspeech_stop_filter_program_check_spaces(void)
 void set_nonblock_flag(int desc)
 {
 #ifndef MINGW
-        int oldflags = fcntl(desc, F_GETFL, 0);
-        if (oldflags == -1)
-                return;
-      
-        oldflags |= O_NONBLOCK;
+    int oldflags = fcntl(desc, F_GETFL, 0);
+    if (oldflags == -1) return;
+    
+    oldflags |= O_NONBLOCK;
 
-        fcntl(desc, F_SETFL, oldflags);
+    fcntl(desc, F_SETFL, oldflags);
 #endif
 }
 
@@ -418,7 +414,7 @@ int textspeech_get_stdout_childs(void)
 
         if (status & CHDEV_ST_RD_AVAIL_DATA) {
 
-            printf("Getting data from child stdout\n");
+            //printf("Getting data from child stdout\n");
             char buffer[4096];
 
             ssize_t count = read(textspeech_fds_output[0], buffer, sizeof(buffer));
@@ -445,11 +441,11 @@ int textspeech_get_stdout_childs(void)
 void scrtextspeech_filter_run_pending(void)
 {
 
-        if (textspeech_filter_program==NULL) return;
+    if (textspeech_filter_program==NULL) return;
 
-        if (fifo_buffer_speech_size==0) return;
+    if (fifo_buffer_speech_size==0) return;
 
-        int longit;
+    int longit;
 	longit=strlen(buffer_speech_lineas[fifo_buffer_speech_read]);
 
 	debug_printf (VERBOSE_DEBUG,"Run pending text filter with text: %s",buffer_speech_lineas[fifo_buffer_speech_read]);
@@ -459,93 +455,92 @@ void scrtextspeech_filter_run_pending(void)
 		textspeech_print_operating();
 	}
 
-        int esperarhijo=0;
-        if (fifo_buffer_speech_size==MAX_LINES_BUFFER) esperarhijo=1;
-        if (textspeech_filter_program_wait.v) esperarhijo=1;
+    int esperarhijo=0;
+    if (fifo_buffer_speech_size==MAX_LINES_BUFFER) esperarhijo=1;
+    if (textspeech_filter_program_wait.v) esperarhijo=1;
 
 #ifndef MINGW
 
-        int fds[2];
+    int fds[2];
 
-        if (pipe(fds)<0) {
-                debug_printf (VERBOSE_ERR,"Can not make pipe to speech for sending text");
-                return;
+    if (pipe(fds)<0) {
+            debug_printf (VERBOSE_ERR,"Can not make pipe to speech for sending text");
+            return;
+    }
+
+    //para capturar la salida
+    //int fds_output[2];
+    if (textspeech_get_stdout.v) {
+        if (!textspeech_fds_output_initialized) {
+            
+            if (pipe(textspeech_fds_output)<0) {
+                    debug_printf (VERBOSE_ERR,"Can not make pipe to speech for receiving text");
+                    return;
+            } 
+            set_nonblock_flag(textspeech_fds_output[0]);
+            set_nonblock_flag(textspeech_fds_output[1]);
+
+            textspeech_fds_output_initialized=1;
         }
+    }
 
-        //para capturar la salida
-        //int fds_output[2];
-        if (textspeech_get_stdout.v) {
-            if (!textspeech_fds_output_initialized) {
-                
-                if (pipe(textspeech_fds_output)<0) {
-                        debug_printf (VERBOSE_ERR,"Can not make pipe to speech for receiving text");
-                        return;
-                } 
-                set_nonblock_flag(textspeech_fds_output[0]);
-                set_nonblock_flag(textspeech_fds_output[1]);
 
-                textspeech_fds_output_initialized=1;
+    //printf("Launching child process\n");
+    proceso_hijo_speech = fork();
+
+
+    switch (proceso_hijo_speech) {
+
+        case -1:
+            debug_printf (VERBOSE_ERR,"Can not run fork to speech");
+        break;
+
+        case 0:
+            close (0);
+            dup (fds[0]);
+            close(fds[1]);
+
+            //para capturar el stdout
+            if (textspeech_get_stdout.v) {
+                dup2(textspeech_fds_output[1], STDOUT_FILENO);
+                close(textspeech_fds_output[1]);
             }
-        }
 
+            execlp(textspeech_filter_program,textspeech_filter_program,NULL);
 
-        printf("Launching child process\n");
-        proceso_hijo_speech = fork();
+            //Si se llega aqui es que ha habido un error al executar programa filtro
+            exit(0);
+        break;
 
+        default:
+            close(fds[0]);
+            //longit=strlen(buffer_speech_lineas[fifo_buffer_speech_read]);
+            write(fds[1],buffer_speech_lineas[fifo_buffer_speech_read],longit);
+            close(fds[1]);
 
-        switch (proceso_hijo_speech) {
+            fifo_buffer_speech_read++;
+            if (fifo_buffer_speech_read==MAX_LINES_BUFFER) fifo_buffer_speech_read=0;
 
-                case -1:
-                        debug_printf (VERBOSE_ERR,"Can not run fork to speech");
-                        break;
+            if (fifo_buffer_speech_size>=0) fifo_buffer_speech_size--;
 
-                case 0:
-                        close (0);
-                        dup (fds[0]);
-                        close(fds[1]);
-
-                        //para capturar el stdout
-                        if (textspeech_get_stdout.v) {
-                            dup2(textspeech_fds_output[1], STDOUT_FILENO);
-                            close(textspeech_fds_output[1]);
-                        }
-
-                        execlp(textspeech_filter_program,textspeech_filter_program,NULL);
-
-                        //Si se llega aqui es que ha habido un error al executar programa filtro
-                        exit(0);
-                        break;
-                default:
-			            close(fds[0]);
-                        //longit=strlen(buffer_speech_lineas[fifo_buffer_speech_read]);
-                        write(fds[1],buffer_speech_lineas[fifo_buffer_speech_read],longit);
-                        close(fds[1]);
-
-                        fifo_buffer_speech_read++;
-                        if (fifo_buffer_speech_read==MAX_LINES_BUFFER) fifo_buffer_speech_read=0;
-
-                        if (fifo_buffer_speech_size>=0) fifo_buffer_speech_size--;
-
-                        //mantengo las pipes abiertas siempre
-                        //if (textspeech_get_stdout.v) close(fds_output[1]);
+            //mantengo las pipes abiertas siempre
+            //if (textspeech_get_stdout.v) close(fds_output[1]);
 
 
 
-                        printf("antes de waitpid. %ld\n",timer_get_current_seconds());
+            //printf("antes de waitpid\n");
 
-                        if (esperarhijo) {
-                                debug_printf (VERBOSE_DEBUG,"Wait for text filter child");
-                                waitpid (proceso_hijo_speech, NULL, 0);
-                        }
+            if (esperarhijo) {
+                    debug_printf (VERBOSE_DEBUG,"Wait for text filter child");
+                    waitpid (proceso_hijo_speech, NULL, 0);
+            }
 
-                        printf("despues de waitpid. %ld\n",timer_get_current_seconds());
+            //printf("despues de waitpid\n");
 
-                       
+                
+        break;
 
-                        
-                        break;
-
-        }
+    }
 
 #else
 
@@ -580,30 +575,30 @@ P_DETACH 	the child is run in background without access to the console or keyboa
 		proceso_hijo_speech=1;
 
 		//Creamos archivo de lock
-	        FILE *ptr_lockfile;
-	        ptr_lockfile=fopen(get_speech_windows_lock_file(),"wb");
+        FILE *ptr_lockfile;
+        ptr_lockfile=fopen(get_speech_windows_lock_file(),"wb");
 
-	        if (ptr_lockfile==NULL) 	{
-        	        debug_printf (VERBOSE_ERR,"Error writing lockfile %s",get_speech_windows_lock_file());
-	        }
+        if (ptr_lockfile==NULL) 	{
+                debug_printf (VERBOSE_ERR,"Error writing lockfile %s",get_speech_windows_lock_file());
+        }
 
-	        else {
+        else {
 			fclose(ptr_lockfile);
 		}
 
 
 		//Crear archivo tempspeechfile.out con texto para reproducir
-                FILE *ptr_speechfile;
-                ptr_speechfile=fopen(get_speech_windows_text_file(),"wb");
+        FILE *ptr_speechfile;
+        ptr_speechfile=fopen(get_speech_windows_text_file(),"wb");
 
-                if (ptr_speechfile==NULL)         {
-                        debug_printf (VERBOSE_ERR,"Error writing speechfile %s",get_speech_windows_text_file());
-                }
+        if (ptr_speechfile==NULL)         {
+            debug_printf (VERBOSE_ERR,"Error writing speechfile %s",get_speech_windows_text_file());
+        }
 
-                else {
-			fwrite(buffer_texto, 1, longit, ptr_speechfile);
-                        fclose(ptr_speechfile);
-                }
+        else {
+            fwrite(buffer_texto, 1, longit, ptr_speechfile);
+            fclose(ptr_speechfile);
+        }
 
 
 
@@ -656,10 +651,10 @@ P_DETACH 	the child is run in background without access to the console or keyboa
 	}
 
 
-        fifo_buffer_speech_read++;
-        if (fifo_buffer_speech_read==MAX_LINES_BUFFER) fifo_buffer_speech_read=0;
+    fifo_buffer_speech_read++;
+    if (fifo_buffer_speech_read==MAX_LINES_BUFFER) fifo_buffer_speech_read=0;
 
-        if (fifo_buffer_speech_size>=0) fifo_buffer_speech_size--;
+    if (fifo_buffer_speech_size>=0) fifo_buffer_speech_size--;
 
 
 #endif
@@ -680,52 +675,44 @@ void textspeech_add_speech_fifo_filter_unknown(void)
 void textspeech_add_speech_fifo(void)
 {
 
-        if (textspeech_filter_program==NULL) return;
+    if (textspeech_filter_program==NULL) return;
 
-				//Filtrar de la cadena de speech caracteres <32 o >126 u otros
-				textspeech_add_speech_fifo_filter_unknown();
-
-
-        //printf ("buffer fifo size: %d\n",fifo_buffer_speech_size);
-
-	//printf ("enviando %s\n",buffer_speech);
-
-        scrtextspeech_filter_counter=0;
-
-        //do {
-
-        //Meter texto en fifo. Si hay espacio
-        if (fifo_buffer_speech_size<MAX_LINES_BUFFER) {
-                int longitud=index_buffer_speech;
-                buffer_speech[longitud]=0;
-                index_buffer_speech=0;
-                sprintf (buffer_speech_lineas[fifo_buffer_speech_write],"%s",buffer_speech);
+    //Filtrar de la cadena de speech caracteres <32 o >126 u otros
+    textspeech_add_speech_fifo_filter_unknown();
 
 
-                //Avanzar puntero escritura
-                fifo_buffer_speech_write++;
-                if (fifo_buffer_speech_write==MAX_LINES_BUFFER) fifo_buffer_speech_write=0;
+    //printf ("buffer fifo size: %d\n",fifo_buffer_speech_size);
 
-                fifo_buffer_speech_size++;
+    //printf ("enviando %s\n",buffer_speech);
 
-                return;
+    scrtextspeech_filter_counter=0;
 
-        }
 
-        else {
+    //Meter texto en fifo. Si hay espacio
+    if (fifo_buffer_speech_size<MAX_LINES_BUFFER) {
+        int longitud=index_buffer_speech;
+        buffer_speech[longitud]=0;
+        index_buffer_speech=0;
+        sprintf (buffer_speech_lineas[fifo_buffer_speech_write],"%s",buffer_speech);
+
+
+        //Avanzar puntero escritura
+        fifo_buffer_speech_write++;
+        if (fifo_buffer_speech_write==MAX_LINES_BUFFER) fifo_buffer_speech_write=0;
+
+        fifo_buffer_speech_size++;
+
+        return;
+
+    }
+
+    else {
                 //Si no hay espacio en la fifo, esperar
 		//no mostrar mensaje mediante debug_printf dado que esto, en stdout y si esta verbose 3 al menos,
 		//generaria un mensaje a enviar a speech, y volveriamos a entrar aqui, de manera recursiva,
 		//hasta que peta con segmentation fault (porque se ha llenado el stack de llamadas)
-                printf ("Text to Speech filter fifo full\n");
-        }
-
-        //} while (fifo_buffer_speech_size==MAX_LINES_BUFFER);
-
-
-        //Si el proceso hijo aun esta en ejecucion, volver
-        //if (!textspeech_finalizado_hijo_speech()) return;
-
+        printf ("Text to Speech filter fifo full\n");
+    }
 
 
 
@@ -736,40 +723,40 @@ void textspeech_add_speech_fifo(void)
 void textspeech_print_speech(char *texto)
 {
 	if (textspeech_filter_program==NULL) return;
-        //fflush(stdout);
-        index_buffer_speech=strlen(texto);
+    //fflush(stdout);
+    index_buffer_speech=strlen(texto);
 
 
 	//printf ("longitud speech: %d\n",index_buffer_speech);
 
-        if (index_buffer_speech>MAX_BUFFER_SPEECH) {
-                sprintf (buffer_speech,"%s","Sorry, text is too large to for the text filter");
-                index_buffer_speech=strlen(buffer_speech);
+    if (index_buffer_speech>MAX_BUFFER_SPEECH) {
+            sprintf (buffer_speech,"%s","Sorry, text is too large to for the text filter");
+            index_buffer_speech=strlen(buffer_speech);
+    }
+
+    else {
+
+        //Si es todo espacios sin ningun caracter, no enviar
+        int vacio=1;
+        int indice;
+        for (indice=0;texto[indice]!=0;indice++) {
+        //printf ("%d",texto[indice]);
+                if (texto[indice]!=' ' && texto[indice]!=10) {
+                        vacio=0;
+                        break;
+                }
         }
 
-        else {
-
-	        //Si es todo espacios sin ningun caracter, no enviar
-        	int vacio=1;
-		int indice;
-        	for (indice=0;texto[indice]!=0;indice++) {
-			//printf ("%d",texto[indice]);
-	                if (texto[indice]!=' ' && texto[indice]!=10) {
-        	                vacio=0;
-                	        break;
-	                }
-        	}
-
-		if (vacio) {
-			debug_printf (VERBOSE_DEBUG,"Contents sent to textspeech_print_speech is blank. Do not send");
-			return;
-		}
-
-                sprintf (buffer_speech,"%s",texto);
+        if (vacio) {
+            debug_printf (VERBOSE_DEBUG,"Contents sent to textspeech_print_speech is blank. Do not send");
+            return;
         }
 
+        sprintf (buffer_speech,"%s",texto);
+    }
 
-        textspeech_add_speech_fifo();
+
+    textspeech_add_speech_fifo();
 }
 
 
@@ -792,29 +779,29 @@ void textspeech_add_character(z80_byte c)
 
 	}
 
-        buffer_speech[index_buffer_speech++]=c;
-        //si llega al limite
-        //if (index_buffer_speech==MAX_BUFFER_SPEECH || c==10) {
-        if (index_buffer_speech==MAX_BUFFER_SPEECH) {
-                textspeech_add_speech_fifo();
-        }
+    buffer_speech[index_buffer_speech++]=c;
+    //si llega al limite
+    //if (index_buffer_speech==MAX_BUFFER_SPEECH || c==10) {
+    if (index_buffer_speech==MAX_BUFFER_SPEECH) {
+        textspeech_add_speech_fifo();
+    }
 
 }
 
 void textspeech_send_new_line(void)
 {
-                                //printf ("salto de linea");
-                                //printf("reset chardetect_x_position on textspeech_send_new_line\n");
-                                chardetect_x_position=0;
+    //printf ("salto de linea");
+    //printf("reset chardetect_x_position on textspeech_send_new_line\n");
+    chardetect_x_position=0;
 
-                                textspeech_add_speech_fifo();
+    textspeech_add_speech_fifo();
 }
 
 
 
 void textspeech_print_operating(void)
 {
-        generic_footertext_print_operating("SPEECH");
+    generic_footertext_print_operating("SPEECH");
 
 }
 
@@ -847,7 +834,7 @@ int textspeech_enviar_speech_da_ancho(void)
 
 void textspeech_enviar_speech_pantalla_printf (z80_byte c)
 {
-        //printf ("%c",c);
+    //printf ("%c",c);
 	scr_detectedchar_print(c);
 	buffer_pantalla_speech[index_buffer_pantalla_speech]=c;
 
@@ -865,7 +852,7 @@ void textspeech_enviar_speech_pantalla_printf (z80_byte c)
 void textspeech_enviar_speech_pantalla_spectrum(void)
 {
 
-        screen_text_repinta_pantalla_spectrum_comun(0,textspeech_enviar_speech_pantalla_printf,1);
+    screen_text_repinta_pantalla_spectrum_comun(0,textspeech_enviar_speech_pantalla_printf,1);
 }
 
 void textspeech_refresca_pantalla_sam_modo_013_fun_color(z80_byte color GCC_UNUSED, int *brillo GCC_UNUSED, int *parpadeo GCC_UNUSED)
@@ -879,9 +866,9 @@ int textspeech_refresca_pantalla_sam_modo_013_last_y=-1;
 void textspeech_refresca_pantalla_sam_modo_013_fun_caracter(int x GCC_UNUSED,int y,int brillo GCC_UNUSED, unsigned char inv GCC_UNUSED,z80_byte caracter )
 {
 
-        if (y!=textspeech_refresca_pantalla_sam_modo_013_last_y) textspeech_enviar_speech_pantalla_printf ('\n');
+    if (y!=textspeech_refresca_pantalla_sam_modo_013_last_y) textspeech_enviar_speech_pantalla_printf ('\n');
 
-        textspeech_enviar_speech_pantalla_printf(caracter);
+    textspeech_enviar_speech_pantalla_printf(caracter);
 
 	textspeech_refresca_pantalla_sam_modo_013_last_y=y;
 
@@ -889,12 +876,12 @@ void textspeech_refresca_pantalla_sam_modo_013_fun_caracter(int x GCC_UNUSED,int
 
 void textspeech_refresca_pantalla_sam_modo_2(void)
 {
-        scr_refresca_pantalla_sam_modo_2(textspeech_refresca_pantalla_sam_modo_013_fun_color,textspeech_refresca_pantalla_sam_modo_013_fun_caracter);
+    scr_refresca_pantalla_sam_modo_2(textspeech_refresca_pantalla_sam_modo_013_fun_color,textspeech_refresca_pantalla_sam_modo_013_fun_caracter);
 }
 
 void textspeech_refresca_pantalla_sam_modo_013(int modo)
 {
-        scr_refresca_pantalla_sam_modo_013(modo,textspeech_refresca_pantalla_sam_modo_013_fun_color,textspeech_refresca_pantalla_sam_modo_013_fun_caracter);
+    scr_refresca_pantalla_sam_modo_013(modo,textspeech_refresca_pantalla_sam_modo_013_fun_color,textspeech_refresca_pantalla_sam_modo_013_fun_caracter);
 }
 
 
@@ -903,22 +890,22 @@ void textspeech_enviar_speech_pantalla_sam(void)
 	z80_byte modo_video=(sam_vmpr>>5)&3;
 
 	switch (modo_video) {
-                case 0:
-                        textspeech_refresca_pantalla_sam_modo_013(0);
-                break;
+        case 0:
+                textspeech_refresca_pantalla_sam_modo_013(0);
+        break;
 
-                case 1:
-                        textspeech_refresca_pantalla_sam_modo_013(1);
-                break;
+        case 1:
+                textspeech_refresca_pantalla_sam_modo_013(1);
+        break;
 
-                case 2:
-                        textspeech_refresca_pantalla_sam_modo_2();
-                break;
+        case 2:
+                textspeech_refresca_pantalla_sam_modo_2();
+        break;
 
-                case 3:
-                        textspeech_refresca_pantalla_sam_modo_013(3);
-                break;
-        }
+        case 3:
+                textspeech_refresca_pantalla_sam_modo_013(3);
+        break;
+    }
 
 }
 
@@ -960,27 +947,27 @@ void textspeech_enviar_speech_pantalla_zx8081(void)
 
 void textspeech_enviar_speech_pantalla_z88_printf_newline(struct s_z88_return_character_atributes *z88_caracter GCC_UNUSED)
 {
-        textspeech_enviar_speech_pantalla_printf('\n');
+    textspeech_enviar_speech_pantalla_printf('\n');
 }
 
 void textspeech_enviar_speech_pantalla_z88_printf(struct s_z88_return_character_atributes *z88_caracter)
 {
 
-                      //Si caracter no es nulo
-                        if (z88_caracter->null_caracter==0) {
-				textspeech_enviar_speech_pantalla_printf(z88_caracter->ascii_caracter);
-                        }
+    //Si caracter no es nulo
+    if (z88_caracter->null_caracter==0) {
+        textspeech_enviar_speech_pantalla_printf(z88_caracter->ascii_caracter);
+    }
 }
 
 
 void textspeech_enviar_speech_pantalla_z88(void)
 {
-        struct s_z88_return_character_atributes z88_caracter;
+    struct s_z88_return_character_atributes z88_caracter;
 
-        z88_caracter.f_new_line=textspeech_enviar_speech_pantalla_z88_printf_newline;
-        z88_caracter.f_print_char=textspeech_enviar_speech_pantalla_z88_printf;
+    z88_caracter.f_new_line=textspeech_enviar_speech_pantalla_z88_printf_newline;
+    z88_caracter.f_print_char=textspeech_enviar_speech_pantalla_z88_printf;
 
-        screen_repinta_pantalla_z88(&z88_caracter);
+    screen_repinta_pantalla_z88(&z88_caracter);
 
 }
 
@@ -1013,7 +1000,7 @@ int ocr_index_position;
 
 void ocr_enviar_printf (z80_byte c)
 {
-        ocr_text_buffer[ocr_index_position++]=c;
+    ocr_text_buffer[ocr_index_position++]=c;
 }
 
 
@@ -1022,15 +1009,15 @@ void ocr_enviar_printf (z80_byte c)
 void ocr_z88_printf(struct s_z88_return_character_atributes *z88_caracter)
 {
 
-                      //Si caracter no es nulo
-                        if (z88_caracter->null_caracter==0) {
-				ocr_enviar_printf(z88_caracter->ascii_caracter);
-                        }
+    //Si caracter no es nulo
+    if (z88_caracter->null_caracter==0) {
+        ocr_enviar_printf(z88_caracter->ascii_caracter);
+    }
 }
 
 void ocr_z88_printf_newline(struct s_z88_return_character_atributes *z88_caracter GCC_UNUSED)
 {
-        ocr_enviar_printf('\n');
+    ocr_enviar_printf('\n');
 }
 
 void ocr_pantalla_sam_modo_013_fun_color(z80_byte color GCC_UNUSED, int *brillo GCC_UNUSED, int *parpadeo GCC_UNUSED)
@@ -1044,22 +1031,22 @@ int ocr_pantalla_sam_modo_013_last_y=-1;
 void ocr_pantalla_sam_modo_013_fun_caracter(int x GCC_UNUSED,int y,int brillo GCC_UNUSED, unsigned char inv GCC_UNUSED,z80_byte caracter )
 {
 
-  if (y!=ocr_pantalla_sam_modo_013_last_y) ocr_enviar_printf ('\n');
+    if (y!=ocr_pantalla_sam_modo_013_last_y) ocr_enviar_printf ('\n');
 
-  ocr_enviar_printf(caracter);
+    ocr_enviar_printf(caracter);
 
-	ocr_pantalla_sam_modo_013_last_y=y;
+    ocr_pantalla_sam_modo_013_last_y=y;
 
 }
 
 void ocr_pantalla_sam_modo_2(void)
 {
-        scr_refresca_pantalla_sam_modo_2(ocr_pantalla_sam_modo_013_fun_color,ocr_pantalla_sam_modo_013_fun_caracter);
+    scr_refresca_pantalla_sam_modo_2(ocr_pantalla_sam_modo_013_fun_color,ocr_pantalla_sam_modo_013_fun_caracter);
 }
 
 void ocr_pantalla_sam_modo_013(int modo)
 {
-        scr_refresca_pantalla_sam_modo_013(modo,ocr_pantalla_sam_modo_013_fun_color,ocr_pantalla_sam_modo_013_fun_caracter);
+    scr_refresca_pantalla_sam_modo_013(modo,ocr_pantalla_sam_modo_013_fun_color,ocr_pantalla_sam_modo_013_fun_caracter);
 }
 
 
@@ -1068,22 +1055,22 @@ void ocr_enviar_speech_pantalla_sam(void)
 	z80_byte modo_video=(sam_vmpr>>5)&3;
 
 	switch (modo_video) {
-                case 0:
-                        ocr_pantalla_sam_modo_013(0);
-                break;
+        case 0:
+                ocr_pantalla_sam_modo_013(0);
+        break;
 
-                case 1:
-                        ocr_pantalla_sam_modo_013(1);
-                break;
+        case 1:
+                ocr_pantalla_sam_modo_013(1);
+        break;
 
-                case 2:
-                        ocr_pantalla_sam_modo_2();
-                break;
+        case 2:
+                ocr_pantalla_sam_modo_2();
+        break;
 
-                case 3:
-                        ocr_pantalla_sam_modo_013(3);
-                break;
-        }
+        case 3:
+                ocr_pantalla_sam_modo_013(3);
+        break;
+    }
 
 }
 
@@ -1125,17 +1112,17 @@ void ocr_get_text(char *s)
     if (MACHINE_IS_SPECTRUM) screen_text_repinta_pantalla_spectrum_comun(0,ocr_enviar_printf,1);
     else if (MACHINE_IS_ZX8081) screen_text_repinta_pantalla_zx81_comun(0,ocr_enviar_printf,1);
     else if (MACHINE_IS_Z88) {
-			struct s_z88_return_character_atributes z88_caracter;
+        struct s_z88_return_character_atributes z88_caracter;
 
-			z88_caracter.f_new_line=ocr_z88_printf_newline;
-			z88_caracter.f_print_char=ocr_z88_printf;
+        z88_caracter.f_new_line=ocr_z88_printf_newline;
+        z88_caracter.f_print_char=ocr_z88_printf;
 
-			screen_repinta_pantalla_z88(&z88_caracter);
+        screen_repinta_pantalla_z88(&z88_caracter);
 
 		}
     else if (MACHINE_IS_SAM) {
-			ocr_enviar_speech_pantalla_sam();
-		}
+        ocr_enviar_speech_pantalla_sam();
+    }
 
     else if (MACHINE_IS_CPC) ocr_enviar_speech_pantalla_cpc();
 

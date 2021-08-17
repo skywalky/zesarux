@@ -38402,6 +38402,11 @@ char *first_aid_string_search_zxinfo="This search engine is hosted in zxinfo.dk 
 
 int first_aid_no_debug_variables=0;
 char *first_aid_string_debug_variables="Browsing the floating point numeric variables is not accurate, please take the numbers as approximate"; 
+
+int first_aid_no_debug_console=0;
+char *first_aid_string_debug_console="First messages appear at the bottom of the window";
+
+
 //Items que se disparan en startup
 
 
@@ -38500,6 +38505,7 @@ void menu_first_aid_init(void)
     menu_first_aid_add("download_spectrumcomputing",&first_aid_no_download_spectrumcomputing,first_aid_string_download_spectrumcomputing,0);
     menu_first_aid_add("search_zxinfo",&first_aid_no_search_zxinfo,first_aid_string_search_zxinfo,0);
     menu_first_aid_add("debug_variables",&first_aid_no_debug_variables,first_aid_string_debug_variables,0);
+    menu_first_aid_add("debug_console",&first_aid_no_debug_console,first_aid_string_debug_console,0);
 
 
 	//Items que se disparan en startup

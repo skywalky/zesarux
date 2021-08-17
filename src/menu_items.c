@@ -27665,7 +27665,9 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
     if (zxvision_currently_restoring_windows_on_start) {
         //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
         return;
-    }     
+    }
+
+    menu_first_aid("debug_console");
 
     z80_byte tecla;
     do {

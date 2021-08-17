@@ -42,6 +42,8 @@ extern void textspeech_print_speech(char *texto);
 
 extern int textspeech_finalizado_hijo_speech(void);
 
+extern int textspeech_get_stdout_childs(void);
+
 extern void scrtextspeech_filter_run_pending(void);
 
 extern void textspeech_empty_speech_fifo(void);
