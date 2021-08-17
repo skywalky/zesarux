@@ -271,13 +271,13 @@ int textspeech_finalizado_hijo_speech(void)
                 if (waitpid (proceso_hijo_speech, &status, WNOHANG)) {
 
                         //if (WIFEXITED(status)) {
-                        printf ("child ha finalizado\n");
+                        //printf ("child ha finalizado\n");
                         proceso_hijo_speech=0;
                         return 1;
                 }
 
                 else {
-                        printf ("child no ha finalizado\n");
+                        //printf ("child no ha finalizado\n");
                         return 0;
                 }
         }
@@ -529,44 +529,20 @@ void scrtextspeech_filter_run_pending(void)
                         //mantengo las pipes abiertas siempre
                         //if (textspeech_get_stdout.v) close(fds_output[1]);
 
+
                         //Si longitud es cero, no tiene sentido enviar nada
+                        /*
                         if (longit>0 && textspeech_get_stdout.v) {
 
                             printf("antes de read stdout. text sent: (length: %d). timer: %ld\n",longit,timer_get_current_seconds());
                            
-                            write(STDOUT_FILENO,buffer_speech_lineas[fifo_buffer_speech_read],longit);
+                            //write(STDOUT_FILENO,buffer_speech_lineas[fifo_buffer_speech_read],longit);
+                            //write(STDOUT_FILENO,"blabla\n",8);
 
 
-                            //leer retorno desde aqui cuando no tenemos pthreads
-                            /*
-                            if (!textspeech_has_pthreads) {
-
-                                //waitpid (proceso_hijo_speech, NULL, WNOHANG)
-                                //buffer de retorno del script
-                                char buffer[4096];
-
-                                int salir=0;
-                                int timeout=0;
-                                do {
-
-                                    printf("getting stdout from NON threaded function\n");
-                                    if (textspeech_get_stdout_childs()) salir=1;
-                                 
-
-                                    if (!salir) {
-                                        //printf("waiting data...\n");
-                                        usleep(100000); //0.1 segundo
-                                        timeout++;
-                                        if (timeout>50) salir=1; //5 segundos maximo
-                                    }
-
-                                } while (!salir);
-                                printf("despues de read stdout. timer: %d\n",timer_get_current_seconds());
-
-                            }
-                            */
-
+                    
                         }
+                        */
 
                        
 
