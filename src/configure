@@ -1643,7 +1643,7 @@ autoselectoptions.o: autoselectoptions.c autoselectoptions.h debug.h zx8081.h cp
 chardetect.o: chardetect.c chardetect.h cpu.h operaciones.h debug.h screen.h textspeech.h disassemble.h menu.h settings.h
 	\$(CC) \$(CFLAGS) -c chardetect.c
 
-textspeech.o: textspeech.c textspeech.h cpu.h operaciones.h debug.h screen.h chardetect.h menu.h utils.h sam.h
+textspeech.o: textspeech.c textspeech.h cpu.h operaciones.h debug.h screen.h chardetect.h menu.h utils.h sam.h compileoptions.h
 	\$(CC) \$(CFLAGS) -c textspeech.c
 
 

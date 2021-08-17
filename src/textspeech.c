@@ -30,6 +30,7 @@
 #include "utils.h"
 #include "sam.h"
 #include "chardevice.h"
+#include "compileoptions.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -53,6 +54,14 @@
 
 #endif
 
+#ifdef USE_PTHREADS
+
+#include <pthread.h>
+#include <sys/types.h>
+
+
+
+#endif
 
 //programa para pasar texto a speech
 //NOTA: Aunque las funciones se llamen speech, el programa de filtro puede ser cualquier cosa,
@@ -266,13 +275,13 @@ int textspeech_finalizado_hijo_speech(void)
                 if (waitpid (proceso_hijo_speech, &status, WNOHANG)) {
 
                         //if (WIFEXITED(status)) {
-                        //printf ("child ha finalizado\n");
+                        printf ("child ha finalizado\n");
                         proceso_hijo_speech=0;
                         return 1;
                 }
 
                 else {
-                        //printf ("child no ha finalizado\n");
+                        printf ("child no ha finalizado\n");
                         return 0;
                 }
         }
@@ -391,6 +400,83 @@ void set_nonblock_flag(int desc)
 #endif
 }
 
+//para capturar la salida
+int textspeech_fds_output[2];
+int textspeech_fds_output_initialized=0;
+
+
+
+//retorna 1 si habia salida
+int textspeech_get_stdout_childs(void)
+{
+    if (textspeech_get_stdout.v) {
+        int status=chardevice_status(textspeech_fds_output[0]);
+
+        if (status & CHDEV_ST_RD_AVAIL_DATA) {
+
+            printf("Getting data from child stdout\n");
+            char buffer[4096];
+
+            ssize_t count = read(textspeech_fds_output[0], buffer, sizeof(buffer));
+
+            //mostrar el texto hacia la consola de debug window
+            //poner 0 al final
+            if (count>0) {
+                buffer[count]=0;
+                //Si final caracter es 10 13, eliminarlo
+                if (buffer[count-1]==10 || buffer[count-1]==13) buffer[count-1]=0;
+                debug_printf(VERBOSE_SILENT,"%s",buffer);
+            }
+            
+            //ya podemos cerrarlo
+            //close(fds_output[0]);
+
+            return 1;
+        }        
+    }
+
+    return 0;
+}
+
+#ifdef USE_PTHREADS
+int textspeech_has_pthreads=1;
+
+pthread_t thread_textspeech_get_stdout;
+
+//hilo que se encarga de leer de la pipe de salida de textspeech_fds_output y lo va enviando a consola debug
+//en el caso de una compilacion sin threads, se lee la salida directamente desde la llamada al script
+//TODO: tecnicamente la salida se recibe desordenada, o sea que en teoria se podria leer los textos de retorno desordenados,
+//aunque no seria lo comun, pues se lanza un proceso, se genera stdout en algun momento, se lanza otro proceso, y el stdout que genera
+//probablemente sera posterior al primero. Se podria dar el caso que si el proceso anterior tarda mas en generar salida que el segundo,
+//recibiriamos texto del segundo antes
+//Es mas, no se recibira desordenado pues las llamadas a scrtextspeech_filter_run_pending se lanzan cuando el proceso hijo ha finalizado
+//y por tanto nunca deberiamos tener dos procesos hijo a la vez en memoria (excepto desde llamadas desde menu)
+void *textspeech_get_stdout_pthread(void *nada GCC_UNUSED)
+{
+    while (1) {
+        //printf("Getting stdout from thread\n");
+        if (textspeech_get_stdout_childs()) {
+            printf("Got text from stdout thread\n");
+        }
+        usleep(100000); //0.1 segundo
+    }
+}
+
+#else
+int textspeech_has_pthreads=0;
+#endif
+
+
+void textspeech_create_pthread_getstdout(void)
+{
+    #ifdef USE_PTHREADS
+        printf("Creating pthread of getting stdout\n");
+        if (pthread_create( &thread_textspeech_get_stdout, NULL, &textspeech_get_stdout_pthread, NULL) ) {
+                debug_printf(VERBOSE_ERR,"Can not create textspeech_get_stdout pthread");
+        }    
+    #endif
+}
+
 void scrtextspeech_filter_run_pending(void)
 {
 
@@ -419,22 +505,29 @@ void scrtextspeech_filter_run_pending(void)
         int fds[2];
 
         if (pipe(fds)<0) {
-                debug_printf (VERBOSE_ERR,"Can not make pipe to speech");
+                debug_printf (VERBOSE_ERR,"Can not make pipe to speech for sending text");
                 return;
         }
 
         //para capturar la salida
-        int fds_output[2];
+        //int fds_output[2];
         if (textspeech_get_stdout.v) {
-            if (pipe(fds_output)<0) {
-                    debug_printf (VERBOSE_ERR,"Can not make pipe to speech");
-                    return;
-            }      
+            if (!textspeech_fds_output_initialized) {
+                textspeech_fds_output_initialized=1;
+                if (pipe(textspeech_fds_output)<0) {
+                        debug_printf (VERBOSE_ERR,"Can not make pipe to speech for receiving text");
+                        return;
+                } 
+                set_nonblock_flag(textspeech_fds_output[0]);
+                set_nonblock_flag(textspeech_fds_output[1]);
+
+                //crear pthread de lectura de stdout si conviene
+                if (textspeech_has_pthreads) textspeech_create_pthread_getstdout();
+            }
         }
 
-        set_nonblock_flag(fds_output[0]);
-        set_nonblock_flag(fds_output[1]);
 
+        printf("Launching child process\n");
         proceso_hijo_speech = fork();
 
 
@@ -451,8 +544,8 @@ void scrtextspeech_filter_run_pending(void)
 
                         //para capturar el stdout
                         if (textspeech_get_stdout.v) {
-                            dup2(fds_output[1], STDOUT_FILENO);
-                            close(fds_output[1]);
+                            dup2(textspeech_fds_output[1], STDOUT_FILENO);
+                            close(textspeech_fds_output[1]);
                         }
 
                         execlp(textspeech_filter_program,textspeech_filter_program,NULL);
@@ -471,58 +564,87 @@ void scrtextspeech_filter_run_pending(void)
 
                         if (fifo_buffer_speech_size>=0) fifo_buffer_speech_size--;
 
+                        //este no se usa
+                        //if (textspeech_get_stdout.v) close(fds_output[1]);
+
                         //Si longitud es cero, no tiene sentido enviar nada
                         if (longit>0 && textspeech_get_stdout.v) {
 
-                            //printf("antes de read stdout. text sent: (length: %d)\n",longit);
+                            printf("antes de read stdout. text sent: (length: %d). timer: %d\n",longit,timer_get_current_seconds());
+                           
                             write(STDOUT_FILENO,buffer_speech_lineas[fifo_buffer_speech_read],longit);
-                            //waitpid (proceso_hijo_speech, NULL, WNOHANG)
-                            //buffer de retorno del script
-                            char buffer[4096];
 
-                            int salir=0;
-                            int timeout=0;
-                            do {
 
-                                int status=chardevice_status(fds_output[0]);
+                            //leer retorno desde aqui cuando no tenemos pthreads
+                            if (!textspeech_has_pthreads) {
 
-                                if (status & CHDEV_ST_RD_AVAIL_DATA) {
+                                //waitpid (proceso_hijo_speech, NULL, WNOHANG)
+                                //buffer de retorno del script
+                                char buffer[4096];
 
-                                    ssize_t count = read(fds_output[0], buffer, sizeof(buffer));
+                                int salir=0;
+                                int timeout=0;
+                                do {
 
-                                    //mostrar el texto hacia la consola de debug window
-                                    //poner 0 al final
-                                    if (count>0) {
-                                        buffer[count]=0;
-                                        //Si final caracter es 10 13, eliminarlo
-                                        if (buffer[count-1]==10 || buffer[count-1]==13) buffer[count-1]=0;
-                                        debug_printf(VERBOSE_SILENT,"%s",buffer);
+                                    printf("getting stdout from NON threaded function\n");
+                                    if (textspeech_get_stdout_childs()) salir=1;
+                                    /*
+
+                                    int status=chardevice_status(textspeech_fds_output[0]);
+
+                                    if (status & CHDEV_ST_RD_AVAIL_DATA) {
+
+                                        ssize_t count = read(textspeech_fds_output[0], buffer, sizeof(buffer));
+
+                                        //mostrar el texto hacia la consola de debug window
+                                        //poner 0 al final
+                                        if (count>0) {
+                                            buffer[count]=0;
+                                            //Si final caracter es 10 13, eliminarlo
+                                            if (buffer[count-1]==10 || buffer[count-1]==13) buffer[count-1]=0;
+                                            debug_printf(VERBOSE_SILENT,"%s",buffer);
+                                        }
+                                        
+                                        //ya podemos cerrarlo
+                                        //close(fds_output[0]);
+
+                                        //debug_unnamed_console_print(buffer);
+                                        salir=1;
                                     }
-                                    
-                                    //debug_unnamed_console_print(buffer);
-                                    salir=1;
-                                }
+                                    */
 
-                                if (!salir) {
-                                    //printf("waiting data...\n");
-                                    usleep(100000); //0.1 segundo
-                                    timeout++;
-                                    if (timeout>50) salir=1; //5 segundos maximo
-                                }
+                                    if (!salir) {
+                                        //printf("waiting data...\n");
+                                        usleep(100000); //0.1 segundo
+                                        timeout++;
+                                        if (timeout>50) salir=1; //5 segundos maximo
+                                    }
 
-                            } while (!salir);
-                            //printf("despues de read stdout\n");
+                                } while (!salir);
+                                printf("despues de read stdout. timer: %d\n",timer_get_current_seconds());
+
+                            }
 
                         }
 
-                       //printf("antes de waitpid. %d\n",timer_get_current_seconds());
+                       
 
-                        if (esperarhijo) {
-                                debug_printf (VERBOSE_DEBUG,"Wait for text filter child");
-                                waitpid (proceso_hijo_speech, NULL, 0);
-                        }
 
-                        //printf("despues de waitpid. %d\n",timer_get_current_seconds());
+                        //esperar hijo desde aqui cuando no tenemos pthreads
+                       if (!textspeech_has_pthreads) {
+
+                           printf("antes de waitpid. %d\n",timer_get_current_seconds());
+
+                            if (esperarhijo) {
+                                    debug_printf (VERBOSE_DEBUG,"Wait for text filter child");
+                                    waitpid (proceso_hijo_speech, NULL, 0);
+                            }
+
+                            printf("despues de waitpid. %d\n",timer_get_current_seconds());
+
+                       }
+
+                        
                         break;
 
         }

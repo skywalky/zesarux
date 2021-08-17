@@ -11,7 +11,9 @@ echo "Linea" >> $LOGFILE
 echo "$TEXTO" >> $LOGFILE
 echo  >> $LOGFILE
 
-#echo "Pruebas"
+#sleep 3
+#echo "Pruebas" `date +%s`
+#exit
 
 #salir de momento
 #echo "á é í ó ú ñ Ñ ñ ñ ñ ñ ñ ñ « » "

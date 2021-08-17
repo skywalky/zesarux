@@ -30521,9 +30521,9 @@ void menu_textspeech(MENU_ITEM_PARAMETERS)
 
 
                 
-                menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_chardetection_settings_send_consolewindow,NULL,"[%c] Send to debug console too",(textspeech_get_stdout.v==1 ? 'X' : ' '));                    
-                menu_add_item_menu_tooltip(array_menu_textspeech,"If detected characters going to speech are also send to debug console window");
-                menu_add_item_menu_ayuda(array_menu_textspeech,"If detected characters going to speech are also send to debug console window");
+                menu_add_item_menu_format(array_menu_textspeech,MENU_OPCION_NORMAL,menu_chardetection_settings_send_consolewindow,NULL,"[%c] Get stdout from script",(textspeech_get_stdout.v==1 ? 'X' : ' '));                    
+                menu_add_item_menu_tooltip(array_menu_textspeech,"Send stdout from script to debug console window");
+                menu_add_item_menu_ayuda(array_menu_textspeech,"Send stdout from script to debug console window");
                 
             }
 
