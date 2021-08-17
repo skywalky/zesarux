@@ -402,7 +402,7 @@ int textspeech_fds_output[2];
 int textspeech_fds_output_initialized=0;
 
 
-
+//Ver si hay texto en la pipe
 //retorna 1 si habia salida
 int textspeech_get_stdout_childs(void)
 {
@@ -530,31 +530,15 @@ void scrtextspeech_filter_run_pending(void)
                         //if (textspeech_get_stdout.v) close(fds_output[1]);
 
 
-                        //Si longitud es cero, no tiene sentido enviar nada
-                        /*
-                        if (longit>0 && textspeech_get_stdout.v) {
 
-                            printf("antes de read stdout. text sent: (length: %d). timer: %ld\n",longit,timer_get_current_seconds());
-                           
-                            //write(STDOUT_FILENO,buffer_speech_lineas[fifo_buffer_speech_read],longit);
-                            //write(STDOUT_FILENO,"blabla\n",8);
+                        printf("antes de waitpid. %ld\n",timer_get_current_seconds());
 
-
-                    
+                        if (esperarhijo) {
+                                debug_printf (VERBOSE_DEBUG,"Wait for text filter child");
+                                waitpid (proceso_hijo_speech, NULL, 0);
                         }
-                        */
 
-                       
-
-
-                           printf("antes de waitpid. %ld\n",timer_get_current_seconds());
-
-                            if (esperarhijo) {
-                                    debug_printf (VERBOSE_DEBUG,"Wait for text filter child");
-                                    waitpid (proceso_hijo_speech, NULL, 0);
-                            }
-
-                            printf("despues de waitpid. %ld\n",timer_get_current_seconds());
+                        printf("despues de waitpid. %ld\n",timer_get_current_seconds());
 
                        
 
