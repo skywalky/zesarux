@@ -139,7 +139,7 @@ char *get_speech_windows_stdout_file(void)
 {
 	//Si esta vacio, hacer el sprintf la primera vez solo
 	if (speech_windows_stdout_file[0]==0) {
-		sprintf (speech_windows_stdouf_file,"%s\\zesarux_temp_speech_stdout.lock",get_tmpdir_base() );
+		sprintf (speech_windows_stdout_file,"%s\\zesarux_temp_speech_stdout.lock",get_tmpdir_base() );
 		debug_printf (VERBOSE_DEBUG,"Getting first time speech_windows_stdout_file: %s",speech_windows_stdout_file);
 	}
 	return speech_windows_stdout_file;
@@ -624,7 +624,7 @@ P_DETACH 	the child is run in background without access to the console or keyboa
 		//Parametro 2 es la ruta al archivo de lock
         //Parametro 3 es la ruta al archivo de stdout. El script debe escribir ahi el texto que se quiera de vuelta para el emulador,
         //por ejemplo texto traducido que se puede mostrar en debug console window
-        
+
 		//importante las comillas cuando hay rutas con espacios
 		//Al script de windows le llegan las comillas tal cual,
 		//por tanto los parametros en un .bat de windows se deben usar tal cual %1 y no "%1", sino le meteria doble comillas ""%1""
