@@ -424,7 +424,7 @@ int textspeech_get_stdout_childs(void)
 
 #ifdef MINGW
     //En Windows, leemos stdout de un archivo, siempre que tenga longitud >0
-    if (si_existe(get_speech_windows_stdout_file())) {
+    if (si_existe_archivo(get_speech_windows_stdout_file())) {
         long int count=get_file_size(get_speech_windows_stdout_file());
         if (count>0) {
             //leemos archivo
@@ -436,7 +436,9 @@ int textspeech_get_stdout_childs(void)
             buffer[count]=0;
             //Si final caracter es 10 13, eliminarlo
             if (buffer[count-1]==10 || buffer[count-1]==13) buffer[count-1]=0;
-            debug_printf(VERBOSE_ONLY_DEBUG_CONSOLE_WINDOW,"%s",buffer);            
+            debug_printf(VERBOSE_ONLY_DEBUG_CONSOLE_WINDOW,"%s",buffer); 
+
+            return 1;           
         }
     }
 
