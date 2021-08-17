@@ -1044,9 +1044,9 @@ void debug_printf (int debuglevel, const char * format , ...)
 
   	copia_verbose_level=verbose_level;
 
-    //VERBOSE_SILENT siempre muestra el mensaje y no indica en el texto la prioridad (Error, Warning, etc del mensaje)
+    //VERBOSE_ONLY_DEBUG_CONSOLE_WINDOW siempre muestra el mensaje y no indica en el texto la prioridad (Error, Warning, etc del mensaje)
 
-  	if (debuglevel<=copia_verbose_level || debuglevel==VERBOSE_SILENT) {
+  	if (debuglevel<=copia_verbose_level || debuglevel==VERBOSE_ONLY_DEBUG_CONSOLE_WINDOW) {
 		//tamaño del buffer bastante mas grande que el valor constante definido
 	    char buffer_final[DEBUG_MAX_MESSAGE_LENGTH*2];
 	    char buffer_inicial[DEBUG_MAX_MESSAGE_LENGTH*2+64];
@@ -1087,14 +1087,14 @@ void debug_printf (int debuglevel, const char * format , ...)
 
     	}
 
-        if (debuglevel==VERBOSE_SILENT) {
+        if (debuglevel==VERBOSE_ONLY_DEBUG_CONSOLE_WINDOW) {
             sprintf (buffer_final,"%s",buffer_inicial);
         }
 
     	else sprintf (buffer_final,"%s%s",verbose_message,buffer_inicial);
 
         //lanzarlo a consola a traves del driver de video. Siempre que verbose no sea only_debug_console_window
-        if (debuglevel!=VERBOSE_SILENT) {
+        if (debuglevel!=VERBOSE_ONLY_DEBUG_CONSOLE_WINDOW) {
     	    if (scr_messages_debug!=NULL) scr_messages_debug (buffer_final);
     	    else printf ("%s\n",buffer_final);
         }

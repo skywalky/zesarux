@@ -425,7 +425,7 @@ int textspeech_get_stdout_childs(void)
                 buffer[count]=0;
                 //Si final caracter es 10 13, eliminarlo
                 if (buffer[count-1]==10 || buffer[count-1]==13) buffer[count-1]=0;
-                debug_printf(VERBOSE_SILENT,"%s",buffer);
+                debug_printf(VERBOSE_ONLY_DEBUG_CONSOLE_WINDOW,"%s",buffer);
             }
             
 
