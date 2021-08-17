@@ -415,8 +415,7 @@ int textspeech_get_stdout_childs(void)
 {
     //printf("start textspeech_get_stdout_childs\n");
 
-    //volver si no se ha inicializado las pipes
-    if (!textspeech_fds_output_initialized) return 0;
+
 
     //printf("start2 textspeech_get_stdout_childs\n");
 
@@ -433,6 +432,9 @@ int textspeech_get_stdout_childs(void)
             if (count>4095) count=4095;
             lee_archivo(get_speech_windows_stdout_file(),buffer,count);
 
+            //y borrar dicho archivo de stdout
+            unlink(get_speech_windows_stdout_file());
+
             buffer[count]=0;
             //Si final caracter es 10 13, eliminarlo
             if (buffer[count-1]==10 || buffer[count-1]==13) buffer[count-1]=0;
@@ -443,6 +445,9 @@ int textspeech_get_stdout_childs(void)
     }
 
 #else
+        //volver si no se ha inicializado las pipes
+        if (!textspeech_fds_output_initialized) return 0;
+
         int status=chardevice_status(textspeech_fds_output[0]);
 
         if (status & CHDEV_ST_RD_AVAIL_DATA) {
