@@ -648,6 +648,8 @@ void timer_check_interrupt(void)
 			//printf ("desde timer\n");
                         scrtextspeech_filter_run_pending();
                 }
+
+                textspeech_get_stdout_childs();
         }
 
 			//Cosas que suceden cada 1 segundo
