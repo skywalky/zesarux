@@ -139,7 +139,7 @@ char *get_speech_windows_stdout_file(void)
 {
 	//Si esta vacio, hacer el sprintf la primera vez solo
 	if (speech_windows_stdout_file[0]==0) {
-		sprintf (speech_windows_stdout_file,"%s\\zesarux_temp_speech_stdout.lock",get_tmpdir_base() );
+		sprintf (speech_windows_stdout_file,"%s\\zesarux_temp_speech_stdout.out",get_tmpdir_base() );
 		debug_printf (VERBOSE_DEBUG,"Getting first time speech_windows_stdout_file: %s",speech_windows_stdout_file);
 	}
 	return speech_windows_stdout_file;
@@ -421,6 +421,26 @@ int textspeech_get_stdout_childs(void)
     //printf("start2 textspeech_get_stdout_childs\n");
 
     if (textspeech_get_stdout.v) {
+
+#ifdef MINGW
+    //En Windows, leemos stdout de un archivo, siempre que tenga longitud >0
+    if (si_existe(get_speech_windows_stdout_file)) {
+        long int count=get_file_size(get_speech_windows_stdout_file);
+        if (count>0) {
+            //leemos archivo
+            char buffer[4096];
+
+            if (count>4095) count=4095;
+            lee_archivo(get_speech_windows_stdout_file(),buffer,count);
+
+            buffer[count]=0;
+            //Si final caracter es 10 13, eliminarlo
+            if (buffer[count-1]==10 || buffer[count-1]==13) buffer[count-1]=0;
+            debug_printf(VERBOSE_ONLY_DEBUG_CONSOLE_WINDOW,"%s",buffer);            
+        }
+    }
+
+#else
         int status=chardevice_status(textspeech_fds_output[0]);
 
         if (status & CHDEV_ST_RD_AVAIL_DATA) {
@@ -441,7 +461,9 @@ int textspeech_get_stdout_childs(void)
             
 
             return 1;
-        }        
+        }      
+#endif
+
     }
 
     return 0;
