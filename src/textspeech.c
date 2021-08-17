@@ -424,8 +424,8 @@ int textspeech_get_stdout_childs(void)
 
 #ifdef MINGW
     //En Windows, leemos stdout de un archivo, siempre que tenga longitud >0
-    if (si_existe(get_speech_windows_stdout_file)) {
-        long int count=get_file_size(get_speech_windows_stdout_file);
+    if (si_existe(get_speech_windows_stdout_file())) {
+        long int count=get_file_size(get_speech_windows_stdout_file());
         if (count>0) {
             //leemos archivo
             char buffer[4096];
