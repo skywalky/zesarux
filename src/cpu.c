@@ -1979,8 +1979,15 @@ printf (
 		"--thirdtrapchar n          Print Char third trap address\n"
         "--chardetectignorenl       Ignore new line characters (13, 10) on char detection\n"
         "--linewidth n              Print char line width\n"        
+
+        //estos dos settings tienen tambien opcion para desactivar el setting por cambios en valor por defecto a partir ZEsarUX 9.3
 		"--linewidthwaitspace       Text will be sent to speech when line is larger than line width and a space, comma or semicolon is detected\n"
+        "--linewidthnowaitspace     Just disable previous setting\n"
+
         "--linewidthwaitdot         Text will be sent to speech when line is larger than line width and dot is detected\n"
+        "--linewidthnowaitdot       Just disable previous setting\n"
+
+
 		"--textspeechprogram p      Specify a path to a program or script to be sent the emulator text shown. For example, for text to speech: speech_filters/festival_filter.sh or speech_filters/macos_say_filter.sh\n"
 		"--textspeechstopprogram p  Specify a path to a program or script in charge of stopping the running speech program. For example, speech_filters/stop_festival_filter.sh\n"
         "--textspeechgetstdout      Send stdout from script to debug console window\n"
@@ -6491,9 +6498,17 @@ int parse_cmdline_options(void) {
 				chardetect_line_width_wait_space.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--linewidthnowaitspace")) {
+				chardetect_line_width_wait_space.v=0;
+			}            
+
 			else if (!strcmp(argv[puntero_parametro],"--linewidthwaitdot")) {
 				chardetect_line_width_wait_dot.v=1;
-			}            
+			}           
+
+			else if (!strcmp(argv[puntero_parametro],"--linewidthnowaitdot")) {
+				chardetect_line_width_wait_dot.v=0;
+			}                  
 
 			else if (!strcmp(argv[puntero_parametro],"--secondtrapsum32")) {
 				chardetect_second_trap_sum32.v=1;

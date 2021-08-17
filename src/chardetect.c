@@ -106,7 +106,7 @@ int chardetect_char_detection_automatic_finding_range=0;
 int chardetect_second_trap_sum32_counter=0;
 
 
-z80_byte chardetect_line_width=32;
+z80_byte chardetect_line_width=5;
 int chardetect_x_position=0;
 
 
@@ -114,7 +114,7 @@ int chardetect_x_position=0;
 z80_bit chardetect_line_width_wait_space={0};
 
 //si el ancho de linea antes de cortar debe esperar a un punto
-z80_bit chardetect_line_width_wait_dot={0};
+z80_bit chardetect_line_width_wait_dot={1};
 
 
 //Si hay que llamar a rutinas de deteccion de caracteres

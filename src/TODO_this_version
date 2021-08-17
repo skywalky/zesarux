@@ -197,20 +197,3 @@ L08F7:          IN      A,(HLWPORT)
                 JP      Z,BREAKCONT
 
 
--ajustar chardetect_line_width (5) y parametros de final de space (quiza nunca) y punto (siempre) al autodetectar aventuras
-en autoselectoptions que queda?
-
-Tambien, hacer por defecto:
-
-line width: 5
-wait dot enabled -> quiza no, porque si no en basic, esperariamos siempre a . para escribir, para stdout es un problema
-wait space disabled
-timeout no enter: 2
-
-opciones desde linewidth hasta timeout no enter quiza irian en text to speech settings
-porque el print en consola es independiente de esto
-
-- proceso speech se deberia lanzar en segundo plano. Probar tambien en Linux. Alternativa para Windows?
-- recoger estado procesos hijo? antes ni se hacia a no ser que se marcase opcion de "wait program to exit"
-con lo que asumo que genera procesos zombies siempre-> quiza no, porque se leen desde
-textspeech_finalizado_hijo_speech

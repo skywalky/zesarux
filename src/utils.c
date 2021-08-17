@@ -3596,7 +3596,7 @@ int util_write_configfile(void)
                                               ADD_STRING_CONFIG,"--textfps %d",50/scrstdout_simpletext_refresh_factor);
 
 
-  if (chardetect_line_width!=32)              ADD_STRING_CONFIG,"--linewidth %d",chardetect_line_width);
+  if (chardetect_line_width)                  ADD_STRING_CONFIG,"--linewidth %d",chardetect_line_width);
   if (chardetect_detect_char_enabled.v && trap_char_detection_routine_number==TRAP_CHAR_DETECTION_ROUTINE_AUTOMATIC)
                                               ADD_STRING_CONFIG,"--automaticdetectchar");
   if (chardetect_second_trap_char_dir)        ADD_STRING_CONFIG,"--secondtrapchar %d",chardetect_second_trap_char_dir);
@@ -3607,7 +3607,11 @@ int util_write_configfile(void)
   if (textspeech_get_stdout.v) ADD_STRING_CONFIG,"--textspeechgetstdout");
 
   if (chardetect_line_width_wait_space.v)     ADD_STRING_CONFIG,"--linewidthwaitspace");
+  else                                          ADD_STRING_CONFIG,"--linewidthnowaitspace");
+
   if (chardetect_line_width_wait_dot.v)     ADD_STRING_CONFIG,"--linewidthwaitdot");
+  else                                      ADD_STRING_CONFIG,"--linewidthnowaitdot");
+
   if (chardetect_second_trap_sum32.v)         ADD_STRING_CONFIG,"--secondtrapsum32");
   if (textspeech_filter_program!=NULL)        ADD_STRING_CONFIG,"--textspeechprogram \"%s\"",textspeech_filter_program);
   if (textspeech_stop_filter_program!=NULL)   ADD_STRING_CONFIG,"--textspeechstopprogram \"%s\"",textspeech_stop_filter_program);

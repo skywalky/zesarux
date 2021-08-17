@@ -94,7 +94,7 @@ pid_t proceso_hijo_speech=0;
 pid_t proceso_stop_filtro=0;
 
 //Tiempo en segundos para enviar texto aunque no se reciba salto de linea. 0=nunca
-int textspeech_timeout_no_enter=0;
+int textspeech_timeout_no_enter=3;
 
 
 int textspeech_operating_counter=0;
