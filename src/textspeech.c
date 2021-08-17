@@ -134,6 +134,17 @@ char *get_speech_windows_text_file(void)
 }
 
 
+char speech_windows_stdout_file[PATH_MAX]="";
+char *get_speech_windows_stdout_file(void)
+{
+	//Si esta vacio, hacer el sprintf la primera vez solo
+	if (speech_windows_stdout_file[0]==0) {
+		sprintf (speech_windows_stdouf_file,"%s\\zesarux_temp_speech_stdout.lock",get_tmpdir_base() );
+		debug_printf (VERBOSE_DEBUG,"Getting first time speech_windows_stdout_file: %s",speech_windows_stdout_file);
+	}
+	return speech_windows_stdout_file;
+}
+
 
 void textspeech_mete_comillas(char *origen,char *destino)
 {
@@ -611,6 +622,9 @@ P_DETACH 	the child is run in background without access to the console or keyboa
 
 		//Parametro 1 es la ruta al archivo de speech
 		//Parametro 2 es la ruta al archivo de lock
+        //Parametro 3 es la ruta al archivo de stdout. El script debe escribir ahi el texto que se quiera de vuelta para el emulador,
+        //por ejemplo texto traducido que se puede mostrar en debug console window
+        
 		//importante las comillas cuando hay rutas con espacios
 		//Al script de windows le llegan las comillas tal cual,
 		//por tanto los parametros en un .bat de windows se deben usar tal cual %1 y no "%1", sino le meteria doble comillas ""%1""
@@ -618,6 +632,7 @@ P_DETACH 	the child is run in background without access to the console or keyboa
 		char parametro_programa[PATH_MAX];
 		char parametro_uno[PATH_MAX+2];
 		char parametro_dos[PATH_MAX+2];
+        char parametro_tres[PATH_MAX+2];
 
 		//parametro programa sin comillas, porque sino, no inicia ni tan siquiera programa sin espacios
 		sprintf (parametro_programa,"%s",textspeech_filter_program);
@@ -632,11 +647,12 @@ P_DETACH 	the child is run in background without access to the console or keyboa
 		//Esto si que es necesario para poder enviar la ruta a archivos de speech y temporales cuando tienen espacios
 		textspeech_mete_comillas(get_speech_windows_text_file(),parametro_uno);
 		textspeech_mete_comillas(get_speech_windows_lock_file(),parametro_dos);
+        textspeech_mete_comillas(get_speech_windows_stdout_file(),parametro_tres);
 
 
 		//con spawnl
-		int resultado=spawnl(modo, parametro_programa, parametro_programa, parametro_uno, parametro_dos, NULL);
-		debug_printf (VERBOSE_DEBUG,"Running program %s with parameters %s and %s",parametro_programa,parametro_uno,parametro_dos);
+		int resultado=spawnl(modo, parametro_programa, parametro_programa, parametro_uno, parametro_dos, parametro_tres, NULL);
+		debug_printf (VERBOSE_DEBUG,"Running program %s with parameters %s and %s",parametro_programa,parametro_uno,parametro_dos, parametro_tres);
 
 		//printf ("Resultado spawn: %d\n",resultado);
 		if (resultado<0) {
