@@ -3034,8 +3034,27 @@ void menu_clear_footer(void)
                 }
         }
 
-        //Agregar logo en footer. siempre que tengamos border
-        if (border_enabled.v) {
+        //Agregar logo en footer. siempre que haya margen en el footer por la izquierda.
+
+        int margenx_izq;
+        int margeny_arr;
+
+        scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
+
+        //asumimos que si es mayor que 0, habra espacio
+        //0 sera el caso de border deshabilitado o tambien de Z88
+
+        int xlogo=0;
+
+        if (MACHINE_IS_Z88) {
+            //Pegado a la derecha casi, dejando espacio a la derecha del todo para el boton de switch zxdesktop
+            xlogo=zoom_x*(SCREEN_Z88_WIDTH-ZESARUX_ASCII_LOGO_ANCHO-8);
+
+            //engañamos para decir que si que dibuje el logo
+            margenx_izq=1;
+        }
+
+        if (margenx_izq>0) {
             //sacar el zoom mas pequeño
             int zoom_logo;
             if (zoom_x<zoom_y) zoom_logo=zoom_x;
@@ -3043,7 +3062,7 @@ void menu_clear_footer(void)
 
             //saltar la primera linea del logo
             //alto ocupa 26, pero footer es de 24, por tanto dibujamos solo 24 quitando la primera y ultima lineas
-            int xlogo=0;
+            
             screen_put_asciibitmap_generic(&zesarux_ascii_logo[1],NULL,xlogo,yinicial,ZESARUX_ASCII_LOGO_ANCHO,24, 0,footer_logo_putpixel,zoom_logo,0);
         }
 
