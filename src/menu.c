@@ -35219,7 +35219,15 @@ void menu_inicio(void)
             //aparte de conmutar estado, decimos tambien que los menus se abriran en zona zx desktop
             screen_ext_desktop_place_menu=1;
 
+            if (!screen_ext_desktop_enabled) {
+                //y establecemos un minimo de ancho de zxdesktop (512/zoom_x) al habilitar
+                screen_ext_desktop_width=512/zoom_x;
+            }
+                        
+
             menu_ext_desk_settings_enable(0);
+
+
             menu_set_menu_abierto(0);		
 		    return;
 
