@@ -2874,8 +2874,8 @@ void menu_put_switch_zxdesktop_footer(void)
         int yorigen=screen_get_emulated_display_height_no_zoom_bottomborder_en()/8;
         //printf("yorigen: %d\n",yorigen);
         
-        //justo 1 caracter a la izquierda del tope de la derecha
-        xorigen--;
+        //justo 2 caracter a la izquierda del tope de la derecha
+        xorigen-=2;
 
         //printf("xorigen: %d (*8=%d) yorigen: %d\n",xorigen,xorigen*8,yorigen);
 
@@ -3058,7 +3058,7 @@ void menu_clear_footer(void)
 
         if (MACHINE_IS_Z88) {
             //Pegado a la derecha casi, dejando espacio a la derecha del todo para el boton de switch zxdesktop
-            xlogo=zoom_x*(SCREEN_Z88_WIDTH-ZESARUX_ASCII_LOGO_ANCHO-8);
+            xlogo=zoom_x*(SCREEN_Z88_WIDTH-ZESARUX_ASCII_LOGO_ANCHO-8*2);
 
             //engañamos para decir que si que dibuje el logo
             margenx_izq=1;
@@ -11167,18 +11167,18 @@ int zxvision_if_mouse_in_lower_button_switch_zxdesktop(void)
 
         int x=mouse_x;
         int y=mouse_y;
-                //Quitarle el zoom
-                x=x/zoom_x;
-                y=y/zoom_y;       
+        //Quitarle el zoom
+        x=x/zoom_x;
+        y=y/zoom_y;       
 
-                //y la escala de 8
-                x /=8;
-                y /=8; 
+        //y la escala de 8
+        x /=8;
+        y /=8; 
         //printf("si pulsado en boton switch zxdesktop. mouse_x %d mouse_y %d\n",x,y);
 
         //donde esta el boton
         int yboton=screen_get_emulated_display_height_no_zoom_border_en()/8;
-        int xboton=screen_get_window_size_width_no_zoom_border_en()/8-1; //justo 1 posicion menos
+        int xboton=screen_get_window_size_width_no_zoom_border_en()/8-2; //justo 2 posicion menos
         //printf("si pulsado en boton switch zxdesktop. xboton %d yboton %d\n",xboton,yboton);
 
         if (x==xboton && y==yboton) {
