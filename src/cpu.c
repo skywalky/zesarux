@@ -1799,6 +1799,7 @@ printf (
 		"--zxdesktop-transparent-lower-buttons  Make ZX Desktop lower buttons transparent\n"
         "--zxdesktop-disable-box-upper-buttons  Disable box around ZX Desktop upper buttons\n"
         "--zxdesktop-disable-box-lower-buttons  Disable box around ZX Desktop lower buttons\n"  
+        "--zxdesktop-disable-footer-switch      Disable ZX Desktopfooter switch button\n"
 
 				
 
@@ -5532,6 +5533,9 @@ int parse_cmdline_options(void) {
 				menu_ext_desktop_disable_box_lower_icons.v=1;
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-disable-footer-switch")) {
+				zxdesktop_switch_button_enabled.v=0;
+			} 
 
 			else if (!strcmp(argv[puntero_parametro],"--watermark-position")) {
 				siguiente_parametro_argumento();

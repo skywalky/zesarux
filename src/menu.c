@@ -459,6 +459,8 @@ int direct_menus_button_pressed_which=0;
 
 z80_bit menu_zxdesktop_buttons_enabled={1};
 
+z80_bit zxdesktop_switch_button_enabled={1};
+
 
 z80_bit no_close_menu_after_smartload={0};
 
@@ -2824,7 +2826,7 @@ void new_menu_putchar_footer(int x,int y,z80_byte caracter,int tinta,int papel)
 
 int zxvision_if_lower_button_switch_zxdesktop_visible(void)
 {
-    if (si_complete_video_driver() && scr_driver_can_ext_desktop() && menu_footer) return 1;
+    if (si_complete_video_driver() && scr_driver_can_ext_desktop() && menu_footer && zxdesktop_switch_button_enabled.v) return 1;
     else return 0;
 }
 

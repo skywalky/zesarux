@@ -12032,6 +12032,11 @@ int menu_ext_desktop_cond(void)
 	return 1;
 }
 
+void menu_ext_desk_settings_switch_button(MENU_ITEM_PARAMETERS)
+{
+    zxdesktop_switch_button_enabled.v ^=1;
+}
+
 void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_ext_desktop_settings;
@@ -12120,6 +12125,8 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_transparent,NULL,"[%c] Transparent lower buttons",(menu_ext_desktop_transparent_lower_icons.v ? 'X' : ' ' ) );
                 menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_box,NULL,"[%c] Box on lower buttons",(menu_ext_desktop_disable_box_lower_icons.v ? ' ' : 'X' ) );
 			}
+
+            menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_switch_button,NULL,"[%c] Footer switch button",(zxdesktop_switch_button_enabled.v ? 'X' : ' ' ) );
 
 			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 			

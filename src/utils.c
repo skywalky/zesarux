@@ -3397,6 +3397,7 @@ int util_write_configfile(void)
 
   if (menu_ext_desktop_disable_box_lower_icons.v)   ADD_STRING_CONFIG,"--zxdesktop-disable-box-lower-buttons");
 
+  if (zxdesktop_switch_button_enabled.v==0)         ADD_STRING_CONFIG,"--zxdesktop-disable-footer-switch");
 
 
   if (autoframeskip.v==0)                     ADD_STRING_CONFIG,"--disable-autoframeskip");

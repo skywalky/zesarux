@@ -1142,6 +1142,8 @@ extern z80_bit no_close_menu_after_smartload;
 
 extern z80_bit menu_zxdesktop_buttons_enabled;
 
+extern z80_bit zxdesktop_switch_button_enabled;
+
 
 struct s_zxdesktop_lowericons_info {
 	int (*is_visible)(void);
