@@ -3064,6 +3064,14 @@ void menu_clear_footer(void)
             margenx_izq=1;
         }
 
+        if (MACHINE_IS_TSCONF) {
+            //Pegado a la derecha casi, dejando espacio a la derecha del todo para el boton de switch zxdesktop
+            xlogo=zoom_x*(TSCONF_DISPLAY_WIDTH-ZESARUX_ASCII_LOGO_ANCHO-8*2);
+
+            //engañamos para decir que si que dibuje el logo
+            margenx_izq=1;
+        }        
+
         if (margenx_izq>0) {
             //sacar el zoom mas pequeño
             int zoom_logo;
