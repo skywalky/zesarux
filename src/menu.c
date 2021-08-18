@@ -2826,7 +2826,7 @@ void new_menu_putchar_footer(int x,int y,z80_byte caracter,int tinta,int papel)
 
 int zxvision_if_lower_button_switch_zxdesktop_visible(void)
 {
-    if (si_complete_video_driver() && scr_driver_can_ext_desktop() && menu_footer && zxdesktop_switch_button_enabled.v) return 1;
+    if (si_complete_video_driver() && scr_driver_can_ext_desktop() && menu_footer && zxdesktop_switch_button_enabled.v && !ventana_fullscreen) return 1;
     else return 0;
 }
 
@@ -2861,8 +2861,7 @@ void menu_put_switch_zxdesktop_footer(void)
 
         xorigen -=margenx_izq;
 
-
-        //printf("xorigen: %d (*8=%d)\n",xorigen,xorigen*8);
+      
         z80_byte caracter;
         if (screen_ext_desktop_enabled) {
             caracter='-';
@@ -2878,7 +2877,9 @@ void menu_put_switch_zxdesktop_footer(void)
         //justo 1 caracter a la izquierda del tope de la derecha
         xorigen--;
 
-        printf("Drawing ZX Desktop switch button\n");
+        //printf("xorigen: %d (*8=%d) yorigen: %d\n",xorigen,xorigen*8,yorigen);
+
+        //printf("Drawing ZX Desktop switch button\n");
 
         scr_putchar_footer_comun_zoom(caracter,xorigen,yorigen,inverse,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
     
@@ -2890,6 +2891,11 @@ void menu_put_switch_zxdesktop_footer(void)
 
 void menu_putstring_footer(int x,int y,char *texto,int tinta,int papel)
 {
+
+    //if (y==0) {
+    //    printf("print a footer: %s\n",texto);
+    //}
+
 	while ( (*texto)!=0) {
 		new_menu_putchar_footer(x++,y,*texto,tinta,papel);
 		texto++;
@@ -2899,7 +2905,11 @@ void menu_putstring_footer(int x,int y,char *texto,int tinta,int papel)
 	redraw_footer();
 
     //Cuando escribimos en primera linea de footer, volver a escribir el boton de switch ZX Desktop
-    if (y==0) menu_put_switch_zxdesktop_footer();
+    /*if (y==0) {
+        printf("poner boton conmutar zx desktop\n");
+        menu_put_switch_zxdesktop_footer();
+    }
+    */
 }
 
 
@@ -3244,6 +3254,9 @@ void redraw_footer_continue(void)
 			
 		}
 	}
+
+    //agregar boton switch zx desktop
+    menu_put_switch_zxdesktop_footer();
 
 }
 
@@ -11169,7 +11182,7 @@ int zxvision_if_mouse_in_lower_button_switch_zxdesktop(void)
         //printf("si pulsado en boton switch zxdesktop. xboton %d yboton %d\n",xboton,yboton);
 
         if (x==xboton && y==yboton) {
-            printf("Pressed on ZX Desktop switch button\n");
+            debug_printf(VERBOSE_INFO,"Pressed on ZX Desktop switch button");
             return 1;
         }
     }
@@ -35223,7 +35236,7 @@ void menu_inicio(void)
                 //y establecemos un minimo de ancho de zxdesktop (512/zoom_x) al habilitar
                 screen_ext_desktop_width=512/zoom_x;
             }
-                        
+
 
             menu_ext_desk_settings_enable(0);
 
