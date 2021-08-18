@@ -2822,7 +2822,68 @@ void new_menu_putchar_footer(int x,int y,z80_byte caracter,int tinta,int papel)
 
 }
 
+int zxvision_if_lower_button_switch_zxdesktop_visible(void)
+{
+    if (si_complete_video_driver() && scr_driver_can_ext_desktop() && menu_footer) return 1;
+    else return 0;
+}
 
+void menu_put_switch_zxdesktop_footer(void)
+{
+
+    //si menu abierto no mostrar el boton
+    if (menu_abierto) return;
+
+
+    if (zxvision_if_lower_button_switch_zxdesktop_visible() ) {
+
+    
+        //Poner boton de +/- de zx desktop a la derecha del todo del footer
+
+
+        //ancho total del footer
+        int xancho_total_footer=screen_get_window_size_width_no_zoom_border_en()/8;
+
+        //printf("xancho_total_footer: %d\n",xancho_total_footer);
+        int xorigen=xancho_total_footer;
+
+
+        //restarle margen izquierdo. Porque al escribir el footer la posicion 0 ya tiene el margen del border sumado
+        int margenx_izq;
+        int margeny_arr;
+
+
+        scr_return_margenxy_rainbow(&margenx_izq,&margeny_arr);
+
+        margenx_izq /=8;
+
+        xorigen -=margenx_izq;
+
+
+        //printf("xorigen: %d (*8=%d)\n",xorigen,xorigen*8);
+        z80_byte caracter;
+        if (screen_ext_desktop_enabled) {
+            caracter='-';
+        }
+        else {
+            caracter='+';
+        }
+        z80_bit inverse;
+        inverse.v=0;
+        int yorigen=screen_get_emulated_display_height_no_zoom_bottomborder_en()/8;
+        //printf("yorigen: %d\n",yorigen);
+        
+        //justo 1 caracter a la izquierda del tope de la derecha
+        xorigen--;
+
+        printf("Drawing ZX Desktop switch button\n");
+
+        scr_putchar_footer_comun_zoom(caracter,xorigen,yorigen,inverse,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
+    
+
+    }
+
+}
 
 
 void menu_putstring_footer(int x,int y,char *texto,int tinta,int papel)
@@ -2834,6 +2895,9 @@ void menu_putstring_footer(int x,int y,char *texto,int tinta,int papel)
 
 	//Solo en putstring actualizamos el footer. En putchar, no
 	redraw_footer();
+
+    //Cuando escribimos en primera linea de footer, volver a escribir el boton de switch ZX Desktop
+    if (y==0) menu_put_switch_zxdesktop_footer();
 }
 
 
@@ -3026,7 +3090,6 @@ void menu_init_footer(void)
 	//y por lo tanto no se veria el texto "FLASH" al arrancar la maquina
 	//en otros drivers de video en teoria no haria falta
 	//if (MACHINE_IS_ZXUNO) zxuno_footer_print_flash_operating();
-
 
 
 }
@@ -11038,6 +11101,42 @@ void zxvision_handle_mouse_ev_switch_back_wind(zxvision_window *ventana_pulsada)
 			
 }
 
+
+int zxvision_if_mouse_in_lower_button_switch_zxdesktop(void)
+{
+	if (zxvision_if_lower_button_switch_zxdesktop_visible() && mouse_left) {
+
+
+		int mouse_pixel_x,mouse_pixel_y;
+		menu_calculate_mouse_xy_absolute_interface_pixel(&mouse_pixel_x,&mouse_pixel_y);
+
+        //printf("si pulsado en boton switch zxdesktop. x %d y %d\n",mouse_pixel_x,mouse_pixel_y);
+
+        int x=mouse_x;
+        int y=mouse_y;
+                //Quitarle el zoom
+                x=x/zoom_x;
+                y=y/zoom_y;       
+
+                //y la escala de 8
+                x /=8;
+                y /=8; 
+        //printf("si pulsado en boton switch zxdesktop. mouse_x %d mouse_y %d\n",x,y);
+
+        //donde esta el boton
+        int yboton=screen_get_emulated_display_height_no_zoom_border_en()/8;
+        int xboton=screen_get_window_size_width_no_zoom_border_en()/8-1; //justo 1 posicion menos
+        //printf("si pulsado en boton switch zxdesktop. xboton %d yboton %d\n",xboton,yboton);
+
+        if (x==xboton && y==yboton) {
+            printf("Pressed on ZX Desktop switch button\n");
+            return 1;
+        }
+    }
+
+    return 0;    
+}
+
 int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 {
 	//Ver si estamos por la zona del logo en el ext desktop o de los botones
@@ -12802,7 +12901,7 @@ z80_byte menu_da_todas_teclas(void)
 	
 	acumulado=acumulado & valor_joystick;
 
-	//printf ("acumulado 0 %d\n",acumulado);
+	//printf ("acumulado %d\n",acumulado);
 
 	//contar tambien botones mouse
 	if (si_menu_mouse_activado()) {
@@ -12816,7 +12915,8 @@ z80_byte menu_da_todas_teclas(void)
 		acumulado=acumulado & valor_botones_mouse;
 	}
 
-	//printf ("acumulado 00 %d\n",acumulado);
+    //printf("mouse left %d mouse right %d mouse_movido %d\n",mouse_left,mouse_right,mouse_movido);
+	//printf ("acumulado 0 %d\n",acumulado);
 
 	//Contar también algunas teclas solo menu:
 	z80_byte valor_teclas_menus=(menu_backspace.v|menu_tab.v)^255;
@@ -12825,7 +12925,7 @@ z80_byte menu_da_todas_teclas(void)
 
 
 
-	//printf("acumulado: %d\n",acumulado);
+	//printf("acumulado 00 %d\n",acumulado);
 
 	if ( (acumulado&MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA) {
 		//printf ("Retornamos acumulado en menu_da_todas_teclas: %d\n",acumulado);
@@ -35065,6 +35165,25 @@ void menu_inicio(void)
 			menu_draw_ext_desktop_dibujar_boton_or_lower_icon_pulsado();
 
 		}
+
+        if (zxvision_if_mouse_in_lower_button_switch_zxdesktop()) {
+            //printf("esperar no tecla\n");
+
+            //decir que mouse no se ha movido, porque si no, nos quedariamos en bucle continuamente en menu_espera_no_tecla
+            mouse_movido=0;
+            menu_espera_no_tecla();
+            //menu_inicio_reset_emulated_keys();
+            //while (mouse_left);
+            //printf("despues esperar no tecla\n");
+
+            //aparte de conmutar estado, decimos tambien que los menus se abriran en zona zx desktop
+            screen_ext_desktop_place_menu=1;
+
+            menu_ext_desk_settings_enable(0);
+            menu_set_menu_abierto(0);		
+		    return;
+
+        }
 	}
 
 				//Esto se ha puesto a 1 antes desde zxvision_if_mouse_in_zlogo_or_buttons_desktop,

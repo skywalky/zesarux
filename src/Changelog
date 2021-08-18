@@ -18,9 +18,10 @@ Added speech scripts to realtime translation from one language to another of a t
 
 Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
 Improved Audio to .mid exporter: allow changing instrument
-Improved Text Aventure Debugging: 
--Improved detection of Daad aventures
+Improved Text Aventure Features: 
+-Improved detection of Daad aventures on debugging
 -Now you can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
+-Now you can use a text speech script which can translate text from the game and show the translated text on ZEsarUX window
 
 Improved Next emulation:
 -Turbo setting: make it by default limited on NextZXOS
@@ -38,6 +39,7 @@ Improved Debugging:
 Improved ZX Vision menu interface:
 -Added setting to pause cpu emulation on menu when multitask active
 -Added Degraded ZX Desktop Fill Type
+-Added button on footer to switch ZX Desktop
 -Added Accessibility->GUI settings as a quick way to enable some GUI enhancements: high contrast style, hotkeys, etc
 -Show in file selector when a file can be expanded
 -Improved screen file previews: any file size of 6912 bytes is guessed as Spectrum screen

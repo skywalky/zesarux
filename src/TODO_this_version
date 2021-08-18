@@ -197,3 +197,4 @@ L08F7:          IN      A,(HLWPORT)
                 JP      Z,BREAKCONT
 
 
+-opcion desactivar boton switch zxdesktop
