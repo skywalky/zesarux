@@ -89,6 +89,37 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 };
 
 
+//Usado en el footer. color blanco con brillo
+char *zesarux_ascii_logo_whitebright[ZESARUX_ASCII_LOGO_ALTO]={
+    //01234567890123456789012345
+    "WWWWWWWWWWWWWWWWWWWWWWWWWW",     //0
+  	"WxxxxxxxxxxxxxxxxxxxxxxxxW",      
+	"WxxxxxxxxxxxxxxxxxxxxxxxxW",		
+	"WxxxxxxxxxxxxxxxxxxxxxxxxW",		
+	"WxxxxxxxxxxxxxxxxxxxxxxxxW",	
+	"WWWWWWWWWWWWWWWWWxxxxWWWWW",			
+	"                WxxxxW   W",			
+	"                WxxxxW  rW", 		
+	"             WWWWxxxxW rrW",		
+	"            WxxxxWWWW rrrW",		
+	"            WxxxxW   rrrrW",	//10	
+	"            WxxxxW  rrrryW",		
+	"         WWWWxxxxW rrrryyW",		
+	"        WxxxxWWWW rrrryyyW",		
+	"        WxxxxW   rrrryyyyW",		
+	"        WxxxxW  rrrryyyygW",		
+	"     WWWWxxxxW rrrryyyyggW",		
+	"    WxxxxWWWW rrrryyyygggW",		
+	"    WxxxxW   rrrryyyyggggW",		
+	"    WxxxxW  rrrryyyyggggcW",		
+	"WWWWWxxxxW rrrryyyyggggccW",    //20
+	"WxxxxxxxxxxxxxxxxxxxxxxxxW",		
+	"WxxxxxxxxxxxxxxxxxxxxxxxxW",		
+	"WxxxxxxxxxxxxxxxxxxxxxxxxW",		
+	"WxxxxxxxxxxxxxxxxxxxxxxxxW",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWW" 		//25
+};
+
 //Iconos con contenido 26x26. 
 	//Hay que dejar margen de 6 por cada lado (3 izquierdo, 3 derecho, 3 alto, 3 alto)
 	//Cada 3 pixeles de margen son: fondo-negro(rectangulo)-gris(de dentro boton)

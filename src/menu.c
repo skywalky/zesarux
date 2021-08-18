@@ -3081,7 +3081,7 @@ void menu_clear_footer(void)
             //saltar la primera linea del logo
             //alto ocupa 26, pero footer es de 24, por tanto dibujamos solo 24 quitando la primera y ultima lineas
             
-            screen_put_asciibitmap_generic(&zesarux_ascii_logo[1],NULL,xlogo,yinicial,ZESARUX_ASCII_LOGO_ANCHO,24, 0,footer_logo_putpixel,zoom_logo,0);
+            screen_put_asciibitmap_generic(&zesarux_ascii_logo_whitebright[1],NULL,xlogo,yinicial,ZESARUX_ASCII_LOGO_ANCHO,24, 0,footer_logo_putpixel,zoom_logo,0);
         }
 
 
