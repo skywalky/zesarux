@@ -89,7 +89,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 };
 
 
-//Usado en el footer. color blanco con brillo
+//Usado en el footer. color blanco con brillo para que quede bien con el tema GUI por defecto
 char *zesarux_ascii_logo_whitebright[ZESARUX_ASCII_LOGO_ALTO]={
     //01234567890123456789012345
     "WWWWWWWWWWWWWWWWWWWWWWWWWW",     //0
