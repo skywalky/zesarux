@@ -2994,6 +2994,12 @@ void menu_footer_zesarux_emulator(void)
 
 }
 
+void footer_logo_putpixel(z80_int *destino GCC_UNUSED,int x,int y,int ancho GCC_UNUSED,int color)
+{
+        scr_putpixel(x,y,color);
+}
+
+
 void menu_clear_footer(void)
 {
 	if (!menu_footer) return;
@@ -3026,6 +3032,19 @@ void menu_clear_footer(void)
                 for (x=0;x<ancho;x++) {
                         scr_putpixel(x,y,color);
                 }
+        }
+
+        //Agregar logo en footer. siempre que tengamos border
+        if (border_enabled.v) {
+            //sacar el zoom mas pequeño
+            int zoom_logo;
+            if (zoom_x<zoom_y) zoom_logo=zoom_x;
+            else zoom_logo=zoom_y;
+
+            //saltar la primera linea del logo
+            //alto ocupa 26, pero footer es de 24, por tanto dibujamos solo 24 quitando la primera y ultima lineas
+            int xlogo=0;
+            screen_put_asciibitmap_generic(&zesarux_ascii_logo[1],NULL,xlogo,yinicial,ZESARUX_ASCII_LOGO_ANCHO,24, 0,footer_logo_putpixel,zoom_logo,0);
         }
 
 
