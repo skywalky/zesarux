@@ -3001,35 +3001,35 @@ void menu_clear_footer(void)
 
 	debug_printf (VERBOSE_DEBUG,"Clearing Footer");
 
-        //Borrar footer
-        if (si_complete_video_driver() ) {
+    //Borrar footer
+    if (si_complete_video_driver() ) {
 
-                int alto=WINDOW_FOOTER_SIZE;
-                int ancho=screen_get_window_size_width_no_zoom_border_en();
+        int alto=WINDOW_FOOTER_SIZE;
+        int ancho=screen_get_window_size_width_no_zoom_border_en();
 
-                int yinicial=screen_get_window_size_height_no_zoom_border_en()-alto;
+        int yinicial=screen_get_window_size_height_no_zoom_border_en()-alto;
 
-                int x,y;
+        int x,y;
 
-                //Para no andar con problemas de putpixel en el caso de realvideo desactivado,
-                //usamos putpixel tal cual y calculamos zoom nosotros manualmente
+        //Para no andar con problemas de putpixel en el caso de realvideo desactivado,
+        //usamos putpixel tal cual y calculamos zoom nosotros manualmente
 
-                alto *=zoom_y;
-                ancho *=zoom_x;
+        alto *=zoom_y;
+        ancho *=zoom_x;
 
-                yinicial *=zoom_y;
+        yinicial *=zoom_y;
 
-                int color=WINDOW_FOOTER_PAPER;
+        int color=WINDOW_FOOTER_PAPER;
 
-                for (y=yinicial;y<yinicial+alto;y++) {
-                        //printf ("%d ",y);
-                        for (x=0;x<ancho;x++) {
-                                scr_putpixel(x,y,color);
-                        }
+        for (y=yinicial;y<yinicial+alto;y++) {
+                //printf ("%d ",y);
+                for (x=0;x<ancho;x++) {
+                        scr_putpixel(x,y,color);
                 }
-
-
         }
+
+
+    }
 
 }
 
