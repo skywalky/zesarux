@@ -38,6 +38,7 @@ Improved Debugging:
 -Added command line setting to load source code
 
 Improved ZX Vision menu interface:
+-Machine manufacturer list is now sorted by name (instead of some kind of mixed age and type)
 -Added setting to pause cpu emulation on menu when multitask active
 -Added Degraded ZX Desktop Fill Type
 -Added button on footer to switch ZX Desktop

@@ -499,46 +499,53 @@ extern void reset_poke_byte_function_writerom(void);
 
 /*
 Lista fabricantes
-Sinclair
-Timex Sinclair
-Cambridge computers
-Investronica
-Microdigital Eletronica
 Amstrad
-Júpiter cantab
-Zxuno team
-Chloe Corportation
-Jeff Braine
-Miles Gordon Tech
-Pentagon
+Ascii Corp
+Cambridge Computers
+Chloe Corporation
+Coleco Industries  
+Investronica
+Jupiter Cantab
 Mario Prato
+Microdigital Eletronica
+Miles Gordon Technology
+NedoPC
+New Horizons   
+Pentagon
+Science of Cambridge
+Sega
+Sinclair Research
+Spectravideo Intl
+Timex Sinclair
+TS Labs
+VTrucco/FB Labs
+ZXUno Team
 */
 
 #define TOTAL_FABRICANTES 21
-#define FABRICANTE_SCIENCE_OF_CAMBRIDGE 0
-#define FABRICANTE_SINCLAIR 1
-#define FABRICANTE_AMSTRAD 2
-#define FABRICANTE_TIMEX_SINCLAIR 3
-#define FABRICANTE_INVESTRONICA 4
-#define FABRICANTE_MICRODIGITAL_ELECTRONICA 5
-#define FABRICANTE_CAMBRIDGE_COMPUTERS 6
-#define FABRICANTE_MILES_GORDON 7
-#define FABRICANTE_PENTAGON 8
-#define FABRICANTE_CHLOE_CORPORATION 9
-#define FABRICANTE_MARIOPRATO 10
-#define FABRICANTE_JEFF_BRAINE 11
-#define FABRICANTE_ZXUNO_TEAM 12
 
-#define FABRICANTE_NEDOPC 13
 
-#define FABRICANTE_TSLABS 14
-#define FABRICANTE_TBBLUE 15
-#define FABRICANTE_JUPITER_CANTAB 16
-#define FABRICANTE_ASCII_CORP 17
-#define FABRICANTE_COLECO_INDUSTRIES 18
-#define FABRICANTE_SEGA 19
-#define FABRICANTE_SPECTRAVIDEO_INTERNATIONAL 20
-
+#define FABRICANTE_AMSTRAD                      0
+#define FABRICANTE_ASCII_CORP                   1
+#define FABRICANTE_CAMBRIDGE_COMPUTERS          2
+#define FABRICANTE_CHLOE_CORPORATION            3
+#define FABRICANTE_COLECO_INDUSTRIES            4
+#define FABRICANTE_INVESTRONICA                 5
+#define FABRICANTE_JUPITER_CANTAB               6
+#define FABRICANTE_MARIOPRATO                   7
+#define FABRICANTE_MICRODIGITAL_ELECTRONICA     8
+#define FABRICANTE_MILES_GORDON                 9
+#define FABRICANTE_NEDOPC                       10
+#define FABRICANTE_JEFF_BRAINE                  11
+#define FABRICANTE_PENTAGON                     12
+#define FABRICANTE_SCIENCE_OF_CAMBRIDGE         13
+#define FABRICANTE_SEGA                         14
+#define FABRICANTE_SINCLAIR                     15
+#define FABRICANTE_SPECTRAVIDEO_INTERNATIONAL   16
+#define FABRICANTE_TIMEX_SINCLAIR               17
+#define FABRICANTE_TSLABS                       18
+#define FABRICANTE_TBBLUE                       19
+#define FABRICANTE_ZXUNO_TEAM                   20
 
 
 

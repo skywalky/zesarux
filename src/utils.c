@@ -522,62 +522,33 @@ Pentagon
 
 
 */
-char *array_fabricantes[]={
-  "Science of Cambridge",
-	"Sinclair Research",
-  "Amstrad",
-	"Timex Sinclair",
-	"Investronica",
-	"Microdigital Eletronica",
-  "Cambridge Computers",
-  "Miles Gordon Technology",
-  "Pentagon",
-  "Chloe Corporation",
-  "Mario Prato",
-  "New Horizons",
-	"ZXUno Team",
-        "NedoPC",
-  "TS Labs",
-	"VTrucco/FB Labs",
-	"Jupiter Cantab",
-        "Ascii Corp",
-        "Coleco Industries",
-        "Sega",
-        "Spectravideo Intl"
-        
-};
 
 char *array_fabricantes_hotkey[]={
-        "Scie~~nce of Cambridge",
-        "~~Sinclair Research",
         "~~Amstrad",
-        "~~Timex Sinclair",
-        "~~Investronica",
-        "~~Microdigital Eletronica",
+        "Ascii C~~orp",
         "Cam~~bridge Computers",
-        "Miles ~~Gordon Technology",
-        "~~Pentagon",
         "~~Chloe Corporation",
+        "Coleco In~~dustries",  
+        "~~Investronica",
+        "J~~upiter Cantab",
         "Ma~~rio Prato",
-        "Ne~~w Horizons",
-        "~~ZXUno Team",
+        "~~Microdigital Eletronica",
+        "Miles ~~Gordon Technology",
         "N~~edoPC",
+        "Ne~~w Horizons",   
+        "~~Pentagon",
+        "Scie~~nce of Cambridge",
+        "Sega",
+        "~~Sinclair Research",
+        "Spectravideo Intl",
+        "~~Timex Sinclair",
         "TS ~~Labs",
         "~~VTrucco/FB Labs",
-        "J~~upiter Cantab",
-        "Ascii C~~orp",
-        "Coleco In~~dustries",
-        "Sega",
-        "Spectravideo Intl"
-        
-
-
+        "~~ZXUno Team"
 };
 
-//Si letra es espacio->no hay letra. TODO: Repetida d final sega, porque no hay letras libres
-//Repetida spectravideo final
-char array_fabricantes_hotkey_letra[]="nsatimbgpcrwzelvuoddd";
-
+//Si letra es espacio->no hay letra. sega y spectravideo no hay letras libres
+char array_fabricantes_hotkey_letra[]="aobcdiurmgewpn s tlvz";
 
 
 
