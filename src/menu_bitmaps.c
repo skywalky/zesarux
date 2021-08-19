@@ -89,7 +89,9 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 };
 
 
-//Usado en el footer. color blanco con brillo para que quede bien con el tema GUI por defecto
+//Usado en el footer. marco de color blanco con brillo para
+//luego modificarlo segun el color del footer
+//Y sin el marco por la derecha en la zona del arco iris
 char *zesarux_ascii_logo_whitebright[ZESARUX_ASCII_LOGO_ALTO]={
     //01234567890123456789012345
     "WWWWWWWWWWWWWWWWWWWWWWWWWW",     //0
@@ -98,21 +100,21 @@ char *zesarux_ascii_logo_whitebright[ZESARUX_ASCII_LOGO_ALTO]={
 	"WxxxxxxxxxxxxxxxxxxxxxxxxW",		
 	"WxxxxxxxxxxxxxxxxxxxxxxxxW",	
 	"WWWWWWWWWWWWWWWWWxxxxWWWWW",			
-	"                WxxxxW   W",			
-	"                WxxxxW  rW", 		
-	"             WWWWxxxxW rrW",		
-	"            WxxxxWWWW rrrW",		
-	"            WxxxxW   rrrrW",	//10	
-	"            WxxxxW  rrrryW",		
-	"         WWWWxxxxW rrrryyW",		
-	"        WxxxxWWWW rrrryyyW",		
-	"        WxxxxW   rrrryyyyW",		
-	"        WxxxxW  rrrryyyygW",		
-	"     WWWWxxxxW rrrryyyyggW",		
-	"    WxxxxWWWW rrrryyyygggW",		
-	"    WxxxxW   rrrryyyyggggW",		
-	"    WxxxxW  rrrryyyyggggcW",		
-	"WWWWWxxxxW rrrryyyyggggccW",    //20
+	"                WxxxxW    ",			
+	"                WxxxxW  r ", 		
+	"             WWWWxxxxW rr ",		
+	"            WxxxxWWWW rrr ",		
+	"            WxxxxW   rrrr ",	//10	
+	"            WxxxxW  rrrry ",		
+	"         WWWWxxxxW rrrryy ",		
+	"        WxxxxWWWW rrrryyy ",		
+	"        WxxxxW   rrrryyyy ",		
+	"        WxxxxW  rrrryyyyg ",		
+	"     WWWWxxxxW rrrryyyygg ",		
+	"    WxxxxWWWW rrrryyyyggg ",		
+	"    WxxxxW   rrrryyyygggg ",		
+	"    WxxxxW  rrrryyyyggggc ",		
+	"WWWWWxxxxW rrrryyyyggggcc ",    //20
 	"WxxxxxxxxxxxxxxxxxxxxxxxxW",		
 	"WxxxxxxxxxxxxxxxxxxxxxxxxW",		
 	"WxxxxxxxxxxxxxxxxxxxxxxxxW",		

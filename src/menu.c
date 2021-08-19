@@ -3010,6 +3010,49 @@ void footer_logo_putpixel(z80_int *destino GCC_UNUSED,int x,int y,int ancho GCC_
 }
 
 
+//Este es el logo que se mostrara en el footer, con el color de marco cambiado segun el color del footer
+//aqui el array de punteros de cada linea, necesario para renderizar el bitmap
+char *zesarux_ascii_logo_footer[ZESARUX_ASCII_LOGO_ALTO];
+//memoria asignada para contener el logo del footer
+char *zesarux_ascii_logo_footer_mem=NULL;
+
+
+//copiar logo original a destino
+//el color_marco podria ser cualquier letra de color valida, aunque en la funcion que llama
+//para escribir el footer solo le indico o bien blanco (w) o bien transparente (espacio)
+void menu_footer_logo_copy_final(char color_marco)
+{
+
+    if (zesarux_ascii_logo_footer_mem==NULL) {
+        //ancho+1 porque son strings con 0 al final de cada linea del bitmap
+        zesarux_ascii_logo_footer_mem=malloc((ZESARUX_ASCII_LOGO_ANCHO+1)*ZESARUX_ASCII_LOGO_ALTO);
+        if (zesarux_ascii_logo_footer_mem==NULL) {
+            cpu_panic("Can not allocate memory for footer logo");
+        }
+    }
+
+    int y;
+
+    for (y=0;y<ZESARUX_ASCII_LOGO_ALTO;y++) {
+        int i;
+        //poner cada puntero de lineas de logo a la memoria asignada
+        zesarux_ascii_logo_footer[y]=&zesarux_ascii_logo_footer_mem[(ZESARUX_ASCII_LOGO_ANCHO+1)*y];
+        for (i=0;zesarux_ascii_logo_whitebright[y][i];i++) {
+            
+            char c=zesarux_ascii_logo_whitebright[y][i];
+            //printf("y %d i %d c %c\n",y,i,c);
+
+            //cambiamos el color del marco (blanco brillante en el original) por el color indicado en el parametro
+            if (c=='W') c=color_marco;
+
+            //printf("(%c)\n",zesarux_ascii_logo_footer[y][i]);
+            zesarux_ascii_logo_footer[y][i]=c;
+            //printf("(%c)\n",zesarux_ascii_logo_footer[y][i]);
+        }
+        zesarux_ascii_logo_footer[y][i]=0;
+    }
+}
+
 void menu_clear_footer(void)
 {
 	if (!menu_footer) return;
@@ -3080,8 +3123,29 @@ void menu_clear_footer(void)
 
             //saltar la primera linea del logo
             //alto ocupa 26, pero footer es de 24, por tanto dibujamos solo 24 quitando la primera y ultima lineas
+
+            //Lo siguiente es una pijada pero queda bien
+            //Hacer transparente el color del marco del logo, excepto cuando el footer es negro
+            //y solo cuando color footer esta entre 1 y 15(colores normales de spectrum)
+            //Si no, poner marco del logo en Blanco 
+            //Esto hace que el logo siempre se vea bien independientemente del color del footer (que varia con el GUI style),
+            //pues no se fundira con el footer.
+            //Asi por ejemplo, footer azul, rojo ..., tendra logo sin marco, porque es mayormente negro el logo y no se confunde con el footer
+            //pero si el footer es negro o tiene un color fuera de la paleta de spectrum, el logo tendra un marco de color blanco,
+            //para que no se confunda el negro del logo con el footer
+            //Nota: al tener un color fuera de la paleta de spectrum no se exactamente si puede ser negro o parecido,
+            //es por eso que en ese caso lo trato como si fuese negro y por tanto fuerzo el marco a blanco
+            int color_footer=WINDOW_FOOTER_PAPER;
+            char color_marco='w';
+
+            if (color_footer>0 && color_footer<16) {
+                color_marco=' ';
+            }
+
+            //copiamos el logo a bitmap de destino cambiando el color del marco
+            menu_footer_logo_copy_final(color_marco);
             
-            screen_put_asciibitmap_generic(&zesarux_ascii_logo_whitebright[1],NULL,xlogo,yinicial,ZESARUX_ASCII_LOGO_ANCHO,24, 0,footer_logo_putpixel,zoom_logo,0);
+            screen_put_asciibitmap_generic(&zesarux_ascii_logo_footer[1],NULL,xlogo,yinicial,ZESARUX_ASCII_LOGO_ANCHO,24, 0,footer_logo_putpixel,zoom_logo,0);
         }
 
 
