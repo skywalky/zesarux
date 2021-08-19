@@ -24448,9 +24448,9 @@ void menu_storage_mmc_download_tbblue(void)
 
 	menu_first_aid("tbblue_download_sd_bug");
 
-	//http://www.zxspectrumnext.online/cspect/tbbluemmc-32mb.zip
+	//http://zxspectrumnext.online/cspect/tbbluemmc-32mb.zip
 
-	char *host_final="www.zxspectrumnext.online";
+	char *host_final="zxspectrumnext.online";
 
 	//char *url="/cspect/tbbluemmc-32mb.zip";
 
