@@ -3316,7 +3316,9 @@ M1-M0= mode bits:
                 int porcentaje; //=(valor_volumen*100)/15;
                 //porcentaje=((ay_3_8912_registros[chip][8]&15)*100)/15;
 
-                porcentaje=sensor_get_percentaje_value("ay_vol_chip0_chan_A");
+                char sensor_name[SENSORS_MAX_SHORT_NAME];
+                sprintf(sensor_name,"ay_vol_chip%d_chan_A",chip);
+                porcentaje=sensor_get_percentaje_value(sensor_name);
 
                 sprintf(buffer_texto_meter,"A[%d]",chip);
                 int color=ESTILO_GUI_COLOR_WAVEFORM;
@@ -3331,7 +3333,8 @@ M1-M0= mode bits:
                 xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
                 //porcentaje=((ay_3_8912_registros[chip][9]&15)*100)/15;
 
-                porcentaje=sensor_get_percentaje_value("ay_vol_chip0_chan_B");
+                sprintf(sensor_name,"ay_vol_chip%d_chan_B",chip);
+                porcentaje=sensor_get_percentaje_value(sensor_name);
 
                 sprintf(buffer_texto_meter,"B[%d]",chip);
                 color=ESTILO_GUI_COLOR_WAVEFORM;
@@ -3346,7 +3349,8 @@ M1-M0= mode bits:
                 xorigen_linea=xorigen_linea+longitud_linea*2+margen_horizontal; //A la derecha del anterior
                 //porcentaje=((ay_3_8912_registros[chip][10]&15)*100)/15;
 
-                porcentaje=sensor_get_percentaje_value("ay_vol_chip0_chan_C");
+                sprintf(sensor_name,"ay_vol_chip%d_chan_C",chip);
+                porcentaje=sensor_get_percentaje_value(sensor_name);
 
                 sprintf(buffer_texto_meter,"C[%d]",chip);
                 color=ESTILO_GUI_COLOR_WAVEFORM;
