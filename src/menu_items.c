@@ -30452,8 +30452,9 @@ void menu_textspeech(MENU_ITEM_PARAMETERS)
         	        menu_add_item_menu_ayuda(array_menu_textspeech,"Specify which program to send generated text. Text is send to the program "
 						"to its standard input on Unix versions (Linux, Mac, etc) or sent as the first parameter on "
 						"Windows (MINGW) version\n"
-						"Pressing a key on the menu (or ESC with menu closed) forces the following queded speech entries to flush, and running the "
-						"Stop Program to stop the current speech script.\n");
+                        "There are some script examples on speech_filters folder to run text-to-speech programs but also translation programs\n"
+						"Pressing a key on the menu (or ESC with menu closed) forces the following queded text entries to flush, and running the "
+						"Stop Program to stop the current text script.\n");
 
 
 			if (textspeech_filter_program!=NULL) {
