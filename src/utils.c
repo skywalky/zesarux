@@ -693,7 +693,7 @@ int *return_maquinas_fabricante(int fabricante)
 			return array_maquinas_chloe_corporation;
 		break;
 
-		case FABRICANTE_JEFF_BRAINE:
+		case FABRICANTE_NEW_HORIZONS:
 			return array_maquinas_jeff_braine;
 		break;
 
@@ -814,7 +814,7 @@ int return_fabricante_maquina(int maquina)
 		break;
 
 		case 18:
-			return FABRICANTE_JEFF_BRAINE;
+			return FABRICANTE_NEW_HORIZONS;
 		break;
 
 		case 19:

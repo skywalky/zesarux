@@ -536,7 +536,7 @@ ZXUno Team
 #define FABRICANTE_MICRODIGITAL_ELECTRONICA     8
 #define FABRICANTE_MILES_GORDON                 9
 #define FABRICANTE_NEDOPC                       10
-#define FABRICANTE_JEFF_BRAINE                  11
+#define FABRICANTE_NEW_HORIZONS                 11
 #define FABRICANTE_PENTAGON                     12
 #define FABRICANTE_SCIENCE_OF_CAMBRIDGE         13
 #define FABRICANTE_SEGA                         14
