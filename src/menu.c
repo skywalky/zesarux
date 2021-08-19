@@ -3115,6 +3115,18 @@ void menu_clear_footer(void)
             margenx_izq=1;
         }        
 
+        if (MACHINE_IS_QL) {
+            //Pegado a la derecha casi, dejando espacio a la derecha del todo para el boton de switch zxdesktop
+            xlogo=zoom_x*(QL_DISPLAY_WIDTH+(QL_LEFT_BORDER_NO_ZOOM*2)*border_enabled.v-ZESARUX_ASCII_LOGO_ANCHO-8*2);
+
+            //engañamos para decir que si que dibuje el logo
+            margenx_izq=1;
+
+
+            //return +(QL_LEFT_BORDER_NO_ZOOM*2)*border_enabled.v;
+        }
+
+        //Contemplar si hay espacio a la izquierda. Esto es por si no hay border
         if (margenx_izq>0) {
             //sacar el zoom mas pequeño
             int zoom_logo;
