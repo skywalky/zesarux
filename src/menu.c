@@ -34806,7 +34806,15 @@ void menu_inicio_bucle_main(void)
 		menu_add_item_menu_ayuda(array_menu_principal,"Some help and related files");
 
 
-		menu_add_ESC_item(array_menu_principal);
+		//menu_add_ESC_item(array_menu_principal);
+
+        char mensaje_esc_back[32];
+
+        sprintf (mensaje_esc_back,"%s Close menu",esc_key_message);
+
+        menu_add_item_menu(array_menu_principal,mensaje_esc_back,MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+        menu_add_item_menu_tooltip(array_menu_principal,string_esc_go_back);
+        menu_add_item_menu_ayuda(array_menu_principal,string_esc_go_back);
 
 		menu_add_item_menu_format(array_menu_principal,MENU_OPCION_NORMAL,menu_principal_salir_emulador,NULL,"%sExit emulator",(f_functions==1 ? "F10 ": "") );
 		menu_add_item_menu_tooltip(array_menu_principal,"Exit emulator");
