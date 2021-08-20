@@ -658,6 +658,9 @@ void timer_check_interrupt(void)
                 //}
         }
 
+        //Ocultación/activación de botón switch zx desktop
+        zxdesktop_switchdesktop_timer_event();
+
 			//Cosas que suceden cada 1 segundo
                         if (contador_segundo>=1000) {
 

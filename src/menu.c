@@ -2824,14 +2824,38 @@ void new_menu_putchar_footer(int x,int y,z80_byte caracter,int tinta,int papel)
 
 }
 
-int zxvision_if_lower_button_switch_zxdesktop_visible(void)
+int previous_switchzxdesktop_timer_event_mouse_x=0;
+int previous_switchzxdesktop_timer_event_mouse_y=0;
+//si estaba visible o no
+z80_bit switchzxdesktop_button_visible={0};
+
+//temporizador desde que empieza a no moverse
+int switchzxdesktop_button_visible_timer=0;
+
+
+int zxvision_if_lower_button_switch_zxdesktop_enabled(void)
 {
-    if (si_complete_video_driver() && scr_driver_can_ext_desktop() && menu_footer && zxdesktop_switch_button_enabled.v && !ventana_fullscreen) return 1;
+
+    //con emulacion de kempston mouse, no se dispara evento de abrir menu al pulsar con raton, por tanto,
+    //no se puede gestionar pulsaciones sobre el boton de switch
+
+    if (si_complete_video_driver() && scr_driver_can_ext_desktop() && 
+        menu_footer && zxdesktop_switch_button_enabled.v && !ventana_fullscreen && 
+        mouse_menu_disabled.v==0 && kempston_mouse_emulation.v==0) return 1;
     else return 0;
 }
 
+//Boton habilitado y ademas visible (visibilidad determinada por movimiento de raton)
+int zxvision_if_lower_button_switch_zxdesktop_visible(void)
+{
+    if (zxvision_if_lower_button_switch_zxdesktop_enabled() && switchzxdesktop_button_visible.v) return 1;
+    else return 0;
+}
+
+
 void menu_put_switch_zxdesktop_footer(void)
 {
+    //printf("Visibilidad boton: %d\n",switchzxdesktop_button_visible.v);
 
     //si menu abierto no mostrar el boton
     if (menu_abierto) return;
@@ -2841,7 +2865,7 @@ void menu_put_switch_zxdesktop_footer(void)
 
     
         //Poner boton de +/- de zx desktop a la derecha del todo del footer
-
+        //printf("Escribir boton\n");
 
         //ancho total del footer
         int xancho_total_footer=screen_get_window_size_width_no_zoom_border_en()/8;
@@ -2879,14 +2903,88 @@ void menu_put_switch_zxdesktop_footer(void)
 
         //printf("xorigen: %d (*8=%d) yorigen: %d\n",xorigen,xorigen*8,yorigen);
 
-        //printf("Drawing ZX Desktop switch button\n");
+        debug_printf(VERBOSE_PARANOID,"Drawing ZX Desktop switch button");
+
 
         scr_putchar_footer_comun_zoom(caracter,xorigen,yorigen,inverse,ESTILO_GUI_PAPEL_NORMAL,ESTILO_GUI_TINTA_NORMAL);
-    
+
+        
 
     }
 
 }
+
+//Ocultar o mostrar boton de switch zx desktop
+void zxdesktop_switchdesktop_timer_event(void)
+{
+
+    if (!zxvision_if_lower_button_switch_zxdesktop_enabled()) return;
+
+    //Condicion de menu abierto no se controla desde zxvision_if_lower_button_switch_zxdesktop_enabled
+    //pues en esa funcion interesa que no se compruebe eso pues al pulsar ese boton se abre el menu (aunque sin verse)
+    //Luego por ejemplo en menu_put_switch_zxdesktop_footer se comprueba tambien aparte que si el menu esta abierto, no escribir el boton
+    if (menu_abierto) return;
+
+    int movido=0;
+
+    if (previous_switchzxdesktop_timer_event_mouse_x!=mouse_x || previous_switchzxdesktop_timer_event_mouse_y!=mouse_y)
+    {
+        movido=1;
+    }
+
+    previous_switchzxdesktop_timer_event_mouse_x=mouse_x;
+    previous_switchzxdesktop_timer_event_mouse_y=mouse_y;
+
+    /*if (movido) {
+        printf("mouse movido\n");
+    }*/
+
+    //No estaba visible
+    if (switchzxdesktop_button_visible.v==0) {
+        if (movido) {
+            debug_printf(VERBOSE_INFO,"Make zxdesktop switch button visible");
+            switchzxdesktop_button_visible.v=1;
+
+
+            //TODO: no se porque aqui es necesario el clear_putpixe_cache, pero si lo quito,
+            //la segunda vez que debe aparecer el boton, no aparece
+            //habria que debugarlo mas, es extraño
+            //quiza el putpixel cache afecta de manera extraña al footer
+            //La putpixel cache no ha hecho que darme mas que problemas en toda la historia de ZEsarUX,
+            //se gana rendimiento teniendola pero provoca efectos muy extraños, probablemente porque 
+            //no se refresca siempre donde deberia
+            clear_putpixel_cache();
+
+            menu_init_footer();
+            redraw_footer();            
+        }
+    }
+
+    //Estaba visible
+    else {
+        if (movido) {
+            switchzxdesktop_button_visible_timer=0;
+        }
+
+        else {
+            switchzxdesktop_button_visible_timer++;
+
+            //en 2 segundos (50*2 frames) desaparece
+            if (switchzxdesktop_button_visible_timer==100) {
+                debug_printf(VERBOSE_INFO,"Make zxdesktop switch button hidden");
+                switchzxdesktop_button_visible.v=0;
+                menu_init_footer();
+                redraw_footer();
+
+                //menu_put_switch_zxdesktop_footer();
+            }
+        }
+            
+    }
+}
+
+
+
 
 
 void menu_putstring_footer(int x,int y,char *texto,int tinta,int papel)
@@ -29941,6 +30039,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		}
 
         menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_disable_menu_mouse,NULL,"[%c] ~~Use mouse on menu", (mouse_menu_disabled.v==0 ? 'X' : ' ') );
+        menu_add_item_menu_shortcut(array_menu_window_settings,'u');
 
         if (mouse_menu_disabled.v==0) {
             menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_ignore_click_open_menu,NULL,"[%c] ~~Clicking mouse opens menu", (mouse_menu_ignore_click_open.v==0 ? 'X' : ' ') );            

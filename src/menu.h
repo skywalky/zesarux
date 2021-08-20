@@ -1144,6 +1144,8 @@ extern z80_bit menu_zxdesktop_buttons_enabled;
 
 extern z80_bit zxdesktop_switch_button_enabled;
 
+extern void zxdesktop_switchdesktop_timer_event(void);
+
 
 struct s_zxdesktop_lowericons_info {
 	int (*is_visible)(void);

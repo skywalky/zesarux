@@ -12130,7 +12130,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_box,NULL,"[%c] Box on lower buttons",(menu_ext_desktop_disable_box_lower_icons.v ? ' ' : 'X' ) );
 			}
 
-            menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_switch_button,NULL,"[%c] Footer switch button",(zxdesktop_switch_button_enabled.v ? 'X' : ' ' ) );
+            
 
 			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 			
@@ -12153,6 +12153,8 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			
 
 		}
+
+        menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_switch_button,NULL,"[%c] Footer switch button",(zxdesktop_switch_button_enabled.v ? 'X' : ' ' ) );
 		
 
                 menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
