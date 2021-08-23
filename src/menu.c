@@ -3235,21 +3235,31 @@ void menu_clear_footer(void)
             //alto ocupa 26, pero footer es de 24, por tanto dibujamos solo 24 quitando la primera y ultima lineas
 
             //Lo siguiente es una pijada pero queda bien
-            //Hacer transparente el color del marco del logo, excepto cuando el footer es negro
-            //y solo cuando color footer esta entre 1 y 15(colores normales de spectrum)
+            //Hacer transparente el color del marco del logo, excepto cuando el footer es un color oscuro
             //Si no, poner marco del logo en Blanco 
             //Esto hace que el logo siempre se vea bien independientemente del color del footer (que varia con el GUI style),
             //pues no se fundira con el footer.
-            //Asi por ejemplo, footer azul, rojo ..., tendra logo sin marco, porque es mayormente negro el logo y no se confunde con el footer
-            //pero si el footer es negro o tiene un color fuera de la paleta de spectrum, el logo tendra un marco de color blanco,
+            //Asi por ejemplo, footer amarillo, rojo ..., tendra logo sin marco, porque es mayormente negro el logo y no se confunde con el footer
+            //pero si el footer es negro u oscuro (ejemplo del tema Solarized Dark), el logo tendra un marco de color blanco,
             //para que no se confunda el negro del logo con el footer
-            //Nota: al tener un color fuera de la paleta de spectrum no se exactamente si puede ser negro o parecido,
-            //es por eso que en ese caso lo trato como si fuese negro y por tanto fuerzo el marco a blanco
             int color_footer=WINDOW_FOOTER_PAPER;
-            char color_marco='w';
+            char color_marco=' '; //asumimos transparente
 
-            if (color_footer>0 && color_footer<16) {
-                color_marco=' ';
+            //ver si color se acerca a negro
+            int color_fondo=spectrum_colortable_normal[color_footer];
+            int r=(color_fondo>>16) & 0xFF;
+            int g=(color_fondo>>8 ) & 0xFF;
+            int b=(color_fondo    ) & 0xFF;
+            int gris=rgb_to_grey(r,g,b);
+
+            //printf("gris: %d\n",gris);
+
+            //valores de menos o igual de 33%, hay que poner marco
+            //nota: tema solarized dark, tiene 33%
+            int umbral_marco=33;
+            if (gris<=umbral_marco) {
+                debug_printf(VERBOSE_DEBUG,"Drawing frame around footer logo becase background colour intensity is less than %d%%",umbral_marco);
+                color_marco='w';
             }
 
             //copiamos el logo a bitmap de destino cambiando el color del marco
@@ -13465,6 +13475,31 @@ void menu_espera_tecla(void)
 
 
 	} while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA);
+
+	//Al salir del bucle, reseteamos contadores de repeticion
+	menu_reset_counters_tecla_repeticion();
+
+}
+
+void menu_espera_tecla_o_wheel(void)
+{
+
+        //Esperar a pulsar una tecla
+        z80_byte acumulado;
+
+	//Si al entrar aqui ya hay tecla pulsada, volver
+        acumulado=menu_da_todas_teclas();
+        if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA) return;
+
+
+	do {
+		menu_cpu_core_loop();
+
+
+		acumulado=menu_da_todas_teclas();
+
+
+	} while ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) ==MENU_PUERTO_TECLADO_NINGUNA && mouse_wheel_vertical==0);
 
 	//Al salir del bucle, reseteamos contadores de repeticion
 	menu_reset_counters_tecla_repeticion();

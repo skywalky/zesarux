@@ -19423,7 +19423,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
             //printf("Despues menu_da_todas_teclas en modo no step\n");
             //Si se pulsa raton en vista 1
-            if ((mouse_left || mouse_wheel_vertical) && menu_debug_registers_current_view==1) {
+            //Evitar cuando se arrastra ventana y acaba el cursor dentro al liberar boton
+            if ((mouse_left || mouse_wheel_vertical) && menu_debug_registers_current_view==1 && !mouse_is_dragging) {
                 tecla=menu_debug_cpu_handle_mouse(ventana);
                 if (tecla!=0) {
                     accion_mouse_pulsado=1;
@@ -19450,6 +19451,12 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //A cada pulsacion de tecla, mostramos la pantalla del ordenador emulado
                     menu_debug_registers_if_cls();
                     //menu_espera_no_tecla_no_cpu_loop();
+
+                    //para forzar refresco rapido de pantalla
+                    //importante para que se vea al momento acciones como mover el wheel de raton o pulsar cursores
+                    contador_segundo=0;
+                    valor_contador_segundo_anterior=1; //cualquier valor diferente de contador_segundo
+                    //printf("tecla pulsada. forzar refresco\n");                    
                 }
 
 
@@ -19714,13 +19721,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
 				menu_emulation_paused_on_menu=1;
 
-                menu_espera_tecla();
+                //menu_espera_tecla();
+                menu_espera_tecla_o_wheel();
 
                 //printf("Despues espera tecla en modo step\n");
                 int accion_mouse_pulsado=0;
 
                 //Si se pulsa raton en vista 1
-                if ((mouse_left || mouse_wheel_vertical) && menu_debug_registers_current_view==1) {
+                //Evitar cuando se arrastra ventana y acaba el cursor dentro al liberar boton
+                if ((mouse_left || mouse_wheel_vertical) && menu_debug_registers_current_view==1 && !mouse_is_dragging) {
                     tecla=menu_debug_cpu_handle_mouse(ventana);
 
                     if (tecla!=0) {
@@ -20300,8 +20309,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	util_add_window_geometry_compact(ventana);
 
 
-    //Caso especial. Pulsada tecla background o salir_todos_menus (que se ha pulsado tecla closeallmenus por ejemplo desde ventana breakpoints)
-	if (tecla==3 || salir_todos_menus) {
+    //Caso especial. Pulsada tecla background o 
+    //salir_todos_menus (que se ha pulsado tecla closeallmenus por ejemplo desde ventana breakpoints, con background permitido)
+	if (tecla==3 || (salir_todos_menus && menu_allow_background_windows) ) {
 		//En este caso, dado que no hay overlay, borramos contenido de la ventana
 		//para que el usuario no piense que se esta actualizando continuamente
 		zxvision_cls(ventana);

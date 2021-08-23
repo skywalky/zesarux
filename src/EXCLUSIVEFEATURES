@@ -30,4 +30,6 @@ The following are features exclusive to ZEsarUX and not found on any emulator of
 
 * Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can also be read by a text-to-speech program.
 
+* Translation support: Can translate text from almost any program or game using external scripts
+
 * Simulates upper RAM memory refresh on Spectrum 48Kb, losing its contents when changing R register very quickly
