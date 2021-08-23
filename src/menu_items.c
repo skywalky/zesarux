@@ -19300,6 +19300,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	menu_debug_registers_set_title(ventana);
 
+    int forzar_refresco_ventana=0;
+
 
         //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
         //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
@@ -19350,8 +19352,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			//Cuadrarlo cada 1/16 de segundo, justo lo mismo que el flash, asi
 			//el valor de flash se ve coordinado
         	        //if ( (contador_segundo%(16*20)) == 0 || menu_multitarea==0) {
-			if ( ((contador_segundo%(16*20)) == 0 && valor_contador_segundo_anterior!=contador_segundo ) || menu_multitarea==0) {
-				//printf ("Refresco pantalla. contador_segundo=%d\n",contador_segundo);
+			if ( ((contador_segundo%(16*20)) == 0 && valor_contador_segundo_anterior!=contador_segundo ) || menu_multitarea==0 || forzar_refresco_ventana) {
+				printf ("Refresco pantalla. contador_segundo=%d\n",contador_segundo);
+                forzar_refresco_ventana=0;
 				valor_contador_segundo_anterior=contador_segundo;
 
 
@@ -19454,8 +19457,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                     //para forzar refresco rapido de pantalla
                     //importante para que se vea al momento acciones como mover el wheel de raton o pulsar cursores
-                    contador_segundo=0;
-                    valor_contador_segundo_anterior=1; //cualquier valor diferente de contador_segundo
+                    forzar_refresco_ventana=1;
                     //printf("tecla pulsada. forzar refresco\n");                    
                 }
 
