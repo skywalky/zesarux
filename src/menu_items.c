@@ -17261,8 +17261,14 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 
 		//Cuarta linea
 		case 3:
-            if (debug_breakpoints_enabled.v) sprintf(s,"set~^Pc=ptr nextpc~^Brk");
-            else sprintf(s,"set~^Pc=ptr");
+            if (menu_debug_registers_current_view==8) {
+                //cadena vacia
+                s[0]=0;
+            }
+            else {
+                if (debug_breakpoints_enabled.v) sprintf(s,"set~^Pc=ptr nextpc~^Brk");
+                else sprintf(s,"set~^Pc=ptr");
+            }
         break;
 	}
 }
