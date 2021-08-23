@@ -198,3 +198,5 @@ L08F7:          IN      A,(HLWPORT)
 
 -revisar vista debug paws/daad/etc
 quiza texto de "Info parser: " empezar una linea mas abajo
+
+-pulsar wheel en vista debug 8 deja algo en bucle
