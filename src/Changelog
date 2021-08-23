@@ -29,14 +29,17 @@ Improved Next emulation:
 -ZSF snapshots include all info from port 123b (previous TBBlue .zsf snapshots are incompatible with this version, sorry!)
 -Added a splash message when changing Layer 2 modes
 
-Improved Debugging: 
--Mouse accions: click (toggle breakpoint, change registers), scrolling up/down by using the mouse wheel on Debug CPU Window
--Improve window refresh when pressing keys on non-step mode on Debug CPU Window
--Preserve step mode when assembling on Debug CPU Window
--New key to set PC=PTR on Debug CPU Window
+Improved Debug CPU Window:
+-Mouse accions: click (toggle breakpoint, change registers), scrolling up/down by using the mouse wheel
+-Improve window refresh when pressing keys on non-step mode
+-Preserve step mode when assembling
+-Added new key to set PC=PTR
+-Added new key to go to next breakpoint type PC=dir
+-Allow to define up to 100 breakpoints (same that you could define using ZRCP)
+
+Improved Debugging:
 -Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80
 -Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
--Allow to define up to 100 breakpoints from menu
 -Added command line setting to load source code
 
 Improved ZX Vision menu interface:

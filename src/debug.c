@@ -6324,6 +6324,37 @@ int debug_return_brk_pc_dir_condition(menu_z80_moto_int direccion)
 	return -1;
 }
 
+//Retorna lista de breakpoints de tipo PC=dir
+int debug_return_brk_pc_dir_list(menu_z80_moto_int *lista)
+{
+
+	if (debug_breakpoints_enabled.v==0) return 0;
+
+	char *cond;
+
+    int total_breakpoints=0;
+
+	int i;
+	for (i=0;i<MAX_BREAKPOINTS_CONDITIONS;i++) {
+			if (debug_return_brk_pc_condition(i)) {
+
+
+			//TODO: esto se podria mejorar analizando los tokens
+			char buffer_temp[MAX_BREAKPOINT_CONDITION_LENGTH];
+			exp_par_tokens_to_exp(debug_breakpoints_conditions_array_tokens[i],buffer_temp,MAX_PARSER_TOKENS_NUM);
+			cond=buffer_temp;
+			
+
+				menu_z80_moto_int valor=parse_string_to_number(&cond[3]);
+				//printf("direccion: %d\n",valor);
+                lista[total_breakpoints]=valor;
+                total_breakpoints++;
+			}
+	}
+						
+	return total_breakpoints;
+}
+
 //Retorna primera posicion en array de breakpoint libres. -1 si no hay
 int debug_find_free_breakpoint(void)
 {

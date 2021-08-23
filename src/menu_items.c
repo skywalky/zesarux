@@ -17261,7 +17261,8 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 
 		//Cuarta linea
 		case 3:
-            sprintf(s,"set~^Pc=ptr ");
+            if (debug_breakpoints_enabled.v) sprintf(s,"set~^Pc=ptr nextpc~^Brk");
+            else sprintf(s,"set~^Pc=ptr");
         break;
 	}
 }
@@ -19240,6 +19241,60 @@ void menu_debug_registers_run_cpu_opcode(void)
     cpu_core_loop();
 }
 
+int debug_cpu_next_breakpoint_pc_dir_alhpasort(menu_z80_moto_int *d1, menu_z80_moto_int *d2)
+{
+
+    return (*d1)-(*d2);
+
+}
+
+//Cambia el puntero ptr a siguiente breakpoint de tipo pc=dir
+void debug_cpu_next_breakpoint_pc_dir(void)
+{
+
+    menu_z80_moto_int lista_breakpoints[MAX_BREAKPOINTS_CONDITIONS];
+
+    int total=debug_return_brk_pc_dir_list(lista_breakpoints);
+
+    if (!total) return;
+
+    int i;
+
+    
+    //for (i=0;i<total;i++) {
+    //    printf("i: %d = %d\n",i,lista_breakpoints[i]);
+    //}
+
+    //ordenar
+	//lanzar qsort
+	int (*funcion_compar)(const void *, const void *);
+
+	funcion_compar=( int (*)(const void *, const void *)  ) debug_cpu_next_breakpoint_pc_dir_alhpasort;
+
+	qsort(lista_breakpoints,total,sizeof(menu_z80_moto_int), funcion_compar);
+
+    for (i=0;i<total;i++) {
+        debug_printf(VERBOSE_DEBUG,"Breakpoint type PC=X sorted list. Item i: %d = %XH",i,lista_breakpoints[i]);
+    }
+
+    //Y ahora establecer Puntero ptr a breakpoint que sea mayor que dicho ptr
+    menu_debug_follow_pc.v=0; //se deja de seguir pc
+
+    for (i=0;i<total;i++) {
+        if (lista_breakpoints[i]>menu_debug_memory_pointer) {
+            menu_debug_memory_pointer=lista_breakpoints[i];
+            debug_printf(VERBOSE_INFO,"Setting ptr to %XH",menu_debug_memory_pointer);
+            
+            return;
+        }
+    }
+
+    //No hay ninguno mayor. Resetear al primero
+    menu_debug_memory_pointer=lista_breakpoints[0];
+    debug_printf(VERBOSE_INFO,"Setting ptr to %XH",menu_debug_memory_pointer);
+    
+}
+
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
@@ -19594,7 +19649,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     debug_change_register(buffer_temp);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                }	                
+                }
+
+                //Lista breakpoints tipo pc=dir
+		        if (tecla=='B' && debug_breakpoints_enabled.v) {
+                    debug_cpu_next_breakpoint_pc_dir();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }                
+                	                
 
 				//Vista. Entre 1 y 6
 				if (tecla>='1' && tecla<='8') {
