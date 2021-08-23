@@ -81,11 +81,11 @@ ZEsarUX-9.0 17 August 2020
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot-ZEsarUX-9.0.png "screenshot-ZEsarUX-9.0")
 
 
-ZEsarUX-9.3 September 2021 - Default window with ZX Desktop disabled
+ZEsarUX-10.0 September 2021 - Default window with ZX Desktop disabled
 
-![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot-ZEsarUX-9.3_no_zxdesktop.png "screenshot-ZEsarUX-9.3_no_zxdesktop")
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot-ZEsarUX-10.0_no_zxdesktop.png "screenshot-ZEsarUX-10.0_no_zxdesktop")
 
 
-ZEsarUX-9.3 September 2021 - Default window with ZX Desktop enabled
+ZEsarUX-10.0 September 2021 - Default window with ZX Desktop enabled
 
-![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot-ZEsarUX-9.3_zxdesktop.png "screenshot-ZEsarUX-9.3_zxdesktop")
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot-ZEsarUX-10.0_zxdesktop.png "screenshot-ZEsarUX-10.0_zxdesktop")
