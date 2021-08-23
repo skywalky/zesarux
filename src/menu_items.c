@@ -19274,7 +19274,7 @@ void debug_cpu_next_breakpoint_pc_dir(void)
 	qsort(lista_breakpoints,total,sizeof(menu_z80_moto_int), funcion_compar);
 
     for (i=0;i<total;i++) {
-        debug_printf(VERBOSE_DEBUG,"Breakpoint type PC=X sorted list. Item i: %d = %XH",i,lista_breakpoints[i]);
+        debug_printf(VERBOSE_DEBUG,"Breakpoint type PC=X sorted list. Item %d = %XH",i,lista_breakpoints[i]);
     }
 
     //Y ahora establecer Puntero ptr a breakpoint que sea mayor que dicho ptr
@@ -19651,7 +19651,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                 }
 
-                //Lista breakpoints tipo pc=dir
+                //Siguiente breakpoint tipo pc=dir
 		        if (tecla=='B' && debug_breakpoints_enabled.v) {
                     debug_cpu_next_breakpoint_pc_dir();
                     //Decimos que no hay tecla pulsada
@@ -19659,7 +19659,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }                
                 	                
 
-				//Vista. Entre 1 y 6
+				//Vista. Entre 1 y 8
 				if (tecla>='1' && tecla<='8') {
 					menu_debug_registers_set_view(ventana,tecla-'0');
                     //Decimos que no hay tecla pulsada
@@ -20141,6 +20141,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
 
+                //Siguiente breakpoint tipo pc=dir
+		        if (tecla=='B' && debug_breakpoints_enabled.v) {
+                    debug_cpu_next_breakpoint_pc_dir();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }   
 
 
 				//Vista. Entre 1 y 8
