@@ -1,4 +1,4 @@
-Version 9.3 - xxxx edition. 25 June 2021
+Version 10.0 - xxxx edition. 23 August 2021
 
 Added Sega Master System emulation
 Added .sms file viewer
@@ -16,18 +16,6 @@ Added ZRCP command mmc-reload to reload MMC image
 Added speech scripts to realtime translation from one language to another of a text adventure game
 Added ZEsarUX logo on the window footer
 
-
-Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
-Improved Audio to .mid exporter: allow changing instrument
-Improved Text Aventure Features: 
--Improved detection of Daad aventures on debugging
--Now you can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
--Now you can use a text speech script which can translate text from the game and show the translated text on ZEsarUX window
-
-Improved Next emulation:
--Turbo setting: make it by default limited on NextZXOS
--ZSF snapshots include all info from port 123b (previous TBBlue .zsf snapshots are incompatible with this version, sorry!)
--Added a splash message when changing Layer 2 modes
 
 Improved Debug CPU Window:
 -Mouse accions: click (toggle breakpoint, change registers), scrolling up/down by using the mouse wheel
@@ -57,6 +45,20 @@ Improved ZX Vision menu interface:
 -View sprite legend now adapts to size
 -Added setting to disable boxes around lower and upper ZX Desktop Buttons
 -Added support for accentuated characters
+
+Improved Next emulation:
+-Turbo setting: make it by default limited on NextZXOS
+-ZSF snapshots include all info from port 123b (previous TBBlue .zsf snapshots are incompatible with this version, sorry!)
+-Added a splash message when changing Layer 2 modes
+
+Improved Text Aventure Features: 
+-Improved detection of Daad aventures on debugging
+-Now you can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
+-Now you can use a text speech script which can translate text from the game and show the translated text on ZEsarUX window
+
+Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
+Improved Audio to .mid exporter: allow changing instrument
+Improved configuration file: increased maximum allowed size to 256kb and 2000 parameters
 
 
 Fixed file previews on corrupted files: pzx, tap
