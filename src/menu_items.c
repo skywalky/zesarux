@@ -19353,7 +19353,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			//el valor de flash se ve coordinado
         	        //if ( (contador_segundo%(16*20)) == 0 || menu_multitarea==0) {
 			if ( ((contador_segundo%(16*20)) == 0 && valor_contador_segundo_anterior!=contador_segundo ) || menu_multitarea==0 || forzar_refresco_ventana) {
-				printf ("Refresco pantalla. contador_segundo=%d\n",contador_segundo);
+				//printf ("Refresco pantalla. contador_segundo=%d\n",contador_segundo);
                 forzar_refresco_ventana=0;
 				valor_contador_segundo_anterior=contador_segundo;
 
@@ -19413,8 +19413,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			}
 
 
-
+            //printf("Antes menu_da_todas_teclas. wheel: %d\n",mouse_wheel_vertical);
             acumulado=menu_da_todas_teclas();
+            //printf("Despues menu_da_todas_teclas\n");
 
 	    	//si no hay multitarea, esperar tecla y salir
         	if (menu_multitarea==0) {
@@ -19428,6 +19429,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
             //Si se pulsa raton en vista 1
             //Evitar cuando se arrastra ventana y acaba el cursor dentro al liberar boton
             if ((mouse_left || mouse_wheel_vertical) && menu_debug_registers_current_view==1 && !mouse_is_dragging) {
+                //printf("left: %d wheel: %d\n",mouse_left,mouse_wheel_vertical);
                 tecla=menu_debug_cpu_handle_mouse(ventana);
                 if (tecla!=0) {
                     accion_mouse_pulsado=1;
@@ -19441,7 +19443,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
 				//tecla=zxvision_common_getkey_refresh();
                 if (!accion_mouse_pulsado) {
-				    tecla=zxvision_common_getkey_refresh_noesperanotec();
+                    //TODO: al hacer scroll con wheel si se mueve raton, se puede quedar aqui 
+                    //printf("Antes zxvision_common_getkey_refresh_noesperanotec. wheel: %d\n",mouse_wheel_vertical);
+				    tecla=zxvision_common_getkey_wheel_refresh_noesperanotec();
+                    //printf("Despues zxvision_common_getkey_refresh_noesperanotec\n");
                 }
 
             	//Aqui suele llegar al mover raton-> se produce un evento pero no se pulsa tecla

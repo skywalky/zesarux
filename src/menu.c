@@ -12492,6 +12492,33 @@ z80_byte zxvision_common_getkey_refresh_noesperanotec(void)
 	return tecla;
 }
 
+
+//Igual que zxvision_common_getkey_refresh_noesperanotec pero puede volver con wheel
+z80_byte zxvision_common_getkey_wheel_refresh_noesperanotec(void)
+{
+	z80_byte tecla;
+
+	     if (!menu_multitarea) {
+			//printf ("refresca pantalla\n");
+			menu_refresca_pantalla();
+		}					
+
+		
+	            menu_cpu_core_loop();
+
+
+				menu_espera_tecla_o_wheel();
+				tecla=zxvision_read_keyboard();
+
+				//con enter no salimos. TODO: esto se hace porque el mouse esta enviando enter al pulsar boton izquierdo, y lo hace tambien al hacer dragging
+				//lo ideal seria que mouse no enviase enter al pulsar boton izquierdo y entonces podemos hacer que se salga tambien con enter
+				if (tecla==13 && mouse_left) {	
+					tecla=0;
+				}
+
+	return tecla;
+}
+
 z80_byte zxvision_common_getkey_refresh_noesperatecla(void)
 //Igual que zxvision_common_getkey_refresh pero sin esperar tecla cuando multitarea activa
 {
