@@ -19129,34 +19129,42 @@ z80_byte menu_debug_cpu_handle_mouse(zxvision_window *ventana)
         //no pulsado boton izquierdo
 
         //movida rueda
-        //TODO: en modo step to step esto no se lee a no ser que se mueva rueda y ademas se mueva raton,
-        //esto es debido a que el "menu_espera_tecla" no parece retornar cuando solo se mueve la rueda
         if (mouse_wheel_vertical) {
-            int desplazamiento=0; //+1 = abajo, -1=arriba
-            if (mouse_wheel_vertical<0) {
-                //normalmente abajo
-               
-                desplazamiento=+1;
-            }
-            if (mouse_wheel_vertical>0) {
-                //normalmente arriba
 
-                desplazamiento=-1;
-            }
+            if (menu_invert_mouse_scroll.v) mouse_wheel_vertical=-mouse_wheel_vertical;
 
-            mouse_wheel_vertical=0;
             //teclas
             //10 cursor down
-            //11 cursor up
+            //11 cursor up            
+            if (mouse_wheel_vertical<0) {
+                //abajo
 
-            if (menu_invert_mouse_scroll.v) desplazamiento=-desplazamiento;
 
-            if (desplazamiento>0) {
-                //printf("abajo\n");
-                return 10; 
+                //Desplazamos abajo tanto como diga el wheel - 1 posicion,
+                //esa posicion de mas la gestionara al volver de esta funcion con tecla de bajar cursor
+                while (mouse_wheel_vertical<-1) {
+                	//abajo
+                    menu_debug_cursor_down(ventana);
+                    mouse_wheel_vertical++;
+                }
+
+                mouse_wheel_vertical=0;
+                return 10;
+
+
             }
-            else {
-                //printf("arriba\n");
+            if (mouse_wheel_vertical>0) {
+                //arriba
+
+                //Desplazamos abajo tanto como diga el wheel - 1 posicion,
+                //esa posicion de mas la gestionara al volver de esta funcion con tecla de subir cursor
+                while (mouse_wheel_vertical>1) {
+                	//arriba
+                    menu_debug_cursor_up();
+                    mouse_wheel_vertical--;
+                }
+
+                mouse_wheel_vertical=0;
                 return 11;
             }
 
