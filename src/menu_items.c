@@ -19125,6 +19125,8 @@ z80_byte menu_debug_cpu_handle_mouse(zxvision_window *ventana)
 
     //printf("wheel vertical: %d\n",mouse_wheel_vertical);
 
+    if (!si_menu_mouse_activado()) return 0;
+
     if (!mouse_left) {
         //no pulsado boton izquierdo
 
