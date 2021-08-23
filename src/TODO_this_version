@@ -184,7 +184,7 @@ frecuencias muy altas.
 -ZSF: soporte para TS2068, Sam coupe, Chloe, Prism, Chrome, MK14
 
 -tecla en debug para ir al siguiente/anterior breakpoint en orden
--tecla para cambiar PC con direccion apuntada por Pointer
+
 
 -hilow: cargar ok. 
 quiza el punto de entrada a READ_SECTOR no es exactamente ese o bien volver con algo distinto de un RET

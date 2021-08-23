@@ -33,6 +33,7 @@ Improved Debugging:
 -Mouse accions: click (toggle breakpoint, change registers), scrolling up/down by using the mouse wheel on Debug CPU Window
 -Improve window refresh when pressing keys on non-step mode on Debug CPU Window
 -Preserve step mode when assembling on Debug CPU Window
+-New key to set PC=PTR on Debug CPU Window
 -Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80
 -Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
 -Allow to define up to 100 breakpoints from menu

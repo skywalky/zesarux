@@ -14503,8 +14503,8 @@ int get_menu_debug_num_lineas_full(zxvision_window *w)
 {
 	//return 14;
 
-	//24->14
-	int lineas=w->visible_height-10;
+	//24->13
+	int lineas=w->visible_height-11;
 
 	if (lineas<2) lineas=2;
 
@@ -17258,6 +17258,11 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 
 			}
 		break;
+
+		//Cuarta linea
+		case 3:
+            sprintf(s,"set~^Pc=ptr ");
+        break;
 	}
 }
 
@@ -17499,6 +17504,9 @@ int menu_debug_registers_print_legend(zxvision_window *w,int linea)
 
 				menu_debug_get_legend(2,buffer_mensaje,w);                                
 				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);
+
+				menu_debug_get_legend(3,buffer_mensaje,w);                                
+				zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_mensaje);                
 
       }
 
@@ -19577,6 +19585,17 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					}
                 }
 
+
+                //Establecer PC con valor de PTR
+		        if (tecla=='P') {
+                    char buffer_temp[32];
+                    sprintf(buffer_temp,"PC=%d",menu_debug_memory_pointer);
+                    //printf("%s\n",buffer_temp);
+                    debug_change_register(buffer_temp);
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                }	                
+
 				//Vista. Entre 1 y 6
 				if (tecla>='1' && tecla<='8') {
 					menu_debug_registers_set_view(ventana,tecla-'0');
@@ -20002,7 +20021,19 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                     si_ejecuta_una_instruccion=0;
-                }				
+                }			
+
+                //Establecer PC con valor de PTR
+		        if (tecla=='P') {
+                    char buffer_temp[32];
+                    sprintf(buffer_temp,"PC=%d",menu_debug_memory_pointer);
+                    //printf("%s\n",buffer_temp);
+                    debug_change_register(buffer_temp);
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;
+                }	                	
 								
 				if (tecla=='u' && menu_debug_registers_current_view==1) {
                     menu_debug_runto();
