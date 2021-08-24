@@ -3362,8 +3362,12 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
                 s[0]=0;
             }
             else {
-                if (debug_breakpoints_enabled.v) sprintf(s,"set~^Pc=ptr nextpc~^Brk");
-                else sprintf(s,"set~^Pc=ptr");
+                char string_nextpcbr[32];
+                if (debug_breakpoints_enabled.v) strcpy(string_nextpcbr," nextpc~^Brk");
+                else string_nextpcbr[0]=0;
+
+
+                sprintf(s,"set~^Pc=ptr%s cpu~^Hist",string_nextpcbr);
             }
         break;
 	}
@@ -5399,6 +5403,83 @@ void debug_cpu_next_breakpoint_pc_dir(void)
     
 }
 
+void menu_debug_cpu_history_select(MENU_ITEM_PARAMETERS)
+{
+    //Aplicar ese snapshot
+    //snapshot_in_ram_load(valor_opcion);
+
+    //menu_generic_message_splash("Load Snapshot","OK Snapshot loaded from RAM");
+}
+
+void menu_debug_cpu_history(void)
+{
+    if (cpu_history_enabled.v==0 || cpu_history_started.v==0) {
+        if (menu_confirm_yesno("Enable & start cpu history?")) {
+
+            if (cpu_history_enabled.v==0) set_cpu_core_history();
+    
+            if (cpu_history_started.v==0) cpu_history_started.v=1;
+
+        }
+    }
+
+    int total_items_menus=cpu_history_get_total_elements();
+
+    //definir un maximo a mostrar por pantalla
+    if (total_items_menus>1000) total_items_menus=1000;
+
+    menu_item *array_menu_comon;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    do {
+
+        //Inicializar el ultimo a 0 siempre
+        int menu_debug_cpu_history_opcion_seleccionada=0;
+
+        menu_add_item_menu_inicial(&array_menu_comon,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+        int total_elementos_in_history=cpu_history_get_total_elements();
+
+        int i;
+        for (i=0;i<total_items_menus;i++) {
+		
+			//Al solicitarlo, el 0 es el item mas reciente. el 1 es el anterior a este
+			int indice=total_elementos_in_history-i-1;
+
+            char string_destino[32]; 
+            cpu_history_get_pc_register_element(indice,string_destino);        
+
+            menu_z80_moto_int valor=parse_string_to_number(string_destino);    
+
+            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_debug_cpu_history_select,NULL,"PC=%XH",
+                valor);   
+            
+            menu_add_item_menu_valor_opcion(array_menu_comon,valor);
+        }
+
+
+
+
+        menu_add_item_menu(array_menu_comon,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        menu_add_ESC_item(array_menu_comon);
+
+        retorno_menu=menu_dibuja_menu(&menu_debug_cpu_history_opcion_seleccionada,&item_seleccionado,array_menu_comon,"CPU History");
+
+
+
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+
+            }
+        }
+
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);   
+}
+
 
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
@@ -5768,7 +5849,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     debug_cpu_next_breakpoint_pc_dir();
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
-                }                
+                }       
+
+
+                if (tecla=='H') {
+                    menu_debug_cpu_history();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;			
+                }                         
                 	                
 
 				//Vista. Entre 1 y 8
@@ -6270,6 +6359,25 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     si_ejecuta_una_instruccion=0;
                 }   
 
+                if (tecla=='H') {
+					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
+
+                    menu_debug_cpu_history();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+					//decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+					si_ejecuta_una_instruccion=0;
+
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
+					
+                }
 
 				//Vista. Entre 1 y 8
 				if (tecla>='1' && tecla<='8') {
