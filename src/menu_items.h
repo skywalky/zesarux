@@ -137,6 +137,8 @@ extern void menu_snapshot_rewind(MENU_ITEM_PARAMETERS);
 
 extern menu_z80_moto_int menu_debug_hexdump_direccion;
 
+extern void menu_debug_hexdump_with_ascii(char *dumpmemoria,menu_z80_moto_int dir_leida,int bytes_por_linea,z80_byte valor_xor);
+
 extern void menu_find(MENU_ITEM_PARAMETERS);
 
 extern void menu_debug_view_basic_variables(MENU_ITEM_PARAMETERS);
