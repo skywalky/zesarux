@@ -19,7 +19,7 @@ action: prints hello ; menu
 
 -cuando hay breakpoint pc en otras vistas, tambien mostrarlo
 
--Menú debug cpu extra debug con extended debug, cpu history, code coverage etc
+-Menú debug cpu extra debug con extended debug, code coverage etc
 
 -al cambiar de core reduced o no, si habia breakpoints, aparecen como activos aunque realmente el core no esta usando el debug core (se ha perdido el nested)
 

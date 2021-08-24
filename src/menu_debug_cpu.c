@@ -5451,7 +5451,7 @@ void menu_debug_cpu_history(void)
     
             if (cpu_history_started.v==0) cpu_history_started.v=1;
 
-            menu_generic_message_splash("Enable & start cpu history?","Come back later after running some cpu opcodes");
+            menu_generic_message_splash("Cpu history","Come back later after running some cpu opcodes");
             
         }
 
