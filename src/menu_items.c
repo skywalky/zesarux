@@ -14488,6 +14488,7 @@ void menu_debug_get_memory_pages(char *s)
 //5=9 lineas hexdump, otros registros internos  
 //6=14 lineas hexdump   
 //7=vista minima con ventana pequeña
+//8=vista debug quill/paws/daad
 */
 //
   
@@ -14501,7 +14502,7 @@ menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
 int get_menu_debug_num_lineas_full(zxvision_window *w)
 {
-	//return 14;
+	//return 13;
 
 	//24->13
 	int lineas=w->visible_height-11;
@@ -15578,6 +15579,7 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 
 
                 sprintf(buffer_linea,"Info Parser: %s %s",buffer_version,buffer_idioma);
+                linea++;
                 zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
 
 				
@@ -16080,7 +16082,8 @@ z80_bit menu_breakpoint_exception_pending_show={0};
 int continuous_step=0;
 
 
-
+/*
+obsoleto
 int menu_debug_registers_get_height_ventana_vista(void)
 {
 	int alto_ventana;
@@ -16099,7 +16102,10 @@ int menu_debug_registers_get_height_ventana_vista(void)
 
 	return alto_ventana;	
 }
+*/
 
+/*
+obsoleto
 void menu_debug_registers_zxvision_ventana_set_height(zxvision_window *w)
 {
 
@@ -16109,6 +16115,7 @@ void menu_debug_registers_zxvision_ventana_set_height(zxvision_window *w)
 
 	zxvision_set_visible_height(w,alto_ventana);
 }
+*/
 
 void menu_debug_registers_set_title(zxvision_window *w)
 {
@@ -16143,6 +16150,8 @@ void menu_debug_registers_set_title(zxvision_window *w)
 	strcpy(w->window_title,titulo);
 }
 
+/*
+obsoleto
 void menu_debug_registers_ventana_common(zxvision_window *ventana)
 {
 	//Cambiar el alto visible segun la vista actual
@@ -16150,13 +16159,11 @@ void menu_debug_registers_ventana_common(zxvision_window *ventana)
 
 	ventana->can_use_all_width=1; //Para poder usar la ultima columna de la derecha donde normalmente aparece linea scroll	
 }
+*/
 
 void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 {
-/*
-	
 
-	*/
 
 	int ancho_ventana;
 	int alto_ventana;
@@ -16530,11 +16537,15 @@ void menu_debug_registers_set_view(zxvision_window *ventana,int vista)
 
 	menu_debug_registers_current_view=vista;
 
-	/*
-	Dado que se cambia de vista, podemos estar en vista 7 , por ejemplo, que es pequeña, y el alto total es minimo,
-	y si se cambiara a vista 1 por ejemplo, es una vista mayor pero el alto total no variaria y no se veria mas que las primeras 3 lineas
-	Entonces, tenemos que destruir la ventana y volverla a crear
-	 */
+    //no hacer nada mas de lo de abajo, cambiar vista no quiero que recree ni redimensione ventana nunca mas
+    //esto tenia sentido hace tiempo cuando no existia ZX Vision y las ventanas eran estaticas y no redimensionables por el usuario
+    /*
+
+	
+	//Dado que se cambia de vista, podemos estar en vista 7 , por ejemplo, que es pequeña, y el alto total es minimo,
+	//y si se cambiara a vista 1 por ejemplo, es una vista mayor pero el alto total no variaria y no se veria mas que las primeras 3 lineas
+	//Entonces, tenemos que destruir la ventana y volverla a crear
+	 
 
 	
 
@@ -16558,6 +16569,8 @@ void menu_debug_registers_set_view(zxvision_window *ventana,int vista)
 	zxvision_new_window(ventana,ventana_x,ventana_y,ventana_visible_width,ventana_visible_height,ventana_visible_width,ventana_visible_height-2,"Debug CPU");	
 
 	menu_debug_registers_ventana_common(ventana);
+
+    */
 
 }
 
@@ -17528,7 +17541,7 @@ int menu_debug_registers_get_line_legend(zxvision_window *w)
 {
 
 	if (menu_debug_registers_current_view!=8) return get_menu_debug_num_lineas_full(w)+5; //19;
-	else return 11; //get_menu_debug_num_lineas_full(w)-3; //11;
+	else return 12; //get_menu_debug_num_lineas_full(w)-3; //12;
 
 
 }	
@@ -19142,6 +19155,8 @@ z80_byte menu_debug_cpu_handle_mouse(zxvision_window *ventana)
 
     if (!si_menu_mouse_activado()) return 0;
 
+    if (!si_menu_mouse_en_ventana() ) return 0;
+
     if (!mouse_left) {
         //no pulsado boton izquierdo
 
@@ -19518,6 +19533,13 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }
             }
 
+            //Cualquier otra vista, si se pulsa rueda, resetearla
+            //si no hicieramos esto, al mover rueda en una vista que no es la 1,
+            //se interpretaria continuamente que hay tecla pulsada al llamar un poco mas abajo a zxvision_common_getkey_wheel_refresh_noesperanotec
+            if (menu_debug_registers_current_view!=1 && mouse_wheel_vertical) {
+                mouse_wheel_vertical=0;
+            }
+
 			//Hay tecla pulsada
 			if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
 				//tecla=zxvision_common_getkey_refresh();
@@ -19754,6 +19776,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 			int si_ejecuta_una_instruccion=1;
 
+            //Zona central de la vista: desensamblado, registros, etc
             linea=menu_debug_registers_print_registers(ventana,linea);
 
 			//linea=19;
@@ -19841,7 +19864,14 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                         accion_mouse_pulsado=1;
                         //printf("Accion mouse en modo step\n");
                     }                    
-                }     
+                }
+
+                //Cualquier otra vista, si se pulsa rueda, resetearla
+                //si no hicieramos esto, al mover rueda en una vista que no es la 1,
+                //se interpretaria continuamente que hay tecla pulsada al llamar un poco mas abajo a zxvision_common_getkey_wheel_refresh_noesperanotec
+                if (menu_debug_registers_current_view!=1 && mouse_wheel_vertical) {
+                    mouse_wheel_vertical=0;
+                }
 
 
 				//tecla=zxvision_common_getkey_refresh();
