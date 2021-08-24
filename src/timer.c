@@ -434,355 +434,355 @@ void timer_check_interrupt(void)
 		interrupcion_timer_generada.v=1;
 	}
 
-		if (si_saltado_interrupcion ) {
+    if (si_saltado_interrupcion ) {
 
 
-			//printf ("despues timer_check_interrupt_thread. framedrop_total %d\n",framedrop_total);
+        //printf ("despues timer_check_interrupt_thread. framedrop_total %d\n",framedrop_total);
 
 
-			interrupt_finish_sound.v=0;
-			interrupcion_timer_generada.v=1;
-			interrupcion_fifty_generada.v=1;
+        interrupt_finish_sound.v=0;
+        interrupcion_timer_generada.v=1;
+        interrupcion_fifty_generada.v=1;
 
-			contador_20ms +=timer_sleep_machine;
+        contador_20ms +=timer_sleep_machine;
 
-			//printf ("contador_20ms: %d\n",contador_20ms);
+        //printf ("contador_20ms: %d\n",contador_20ms);
 
-			if (contador_20ms<20000) return;
+        if (contador_20ms<20000) return;
 
-			//Cosas que suceden cada 20 ms aproximadamente
-			/*digo aproximadamente porque:
-			En spectrum, con cpu 100%, se incrementa en intervalos de 20000, y por tanto, cada vez viene aqui
-			En Z88, con cpu 100%, se incrementa en intervalos de 5000, y aqui se entrara 1 de cada 4 veces
-			Con cpu no 100%, puede que no sea exacto, y este contador por ejemplo salte a 23000 y luego se resetee a 0,
-			"pierdiendose" esos 3000 us extra. Como lo que hay aqui debajo no tiene que ser completamente exacto,
-			no importa mucho
-			Esto afecta bastante cuando cpu speed < 100% . en ese caso, los sleeps son mayores de 20000, es cuando se
-			pierde ese extra. Entonces con cpu speed < 100%, esto se llama menos veces que cada 20 ms
-			*/
-
-
-			//printf ("20ms. contador_segundo: %d\n",contador_segundo);
-
-			contador_20ms=0;
-
-			//han pasado 20 ms
-			contador_segundo +=20;
+        //Cosas que suceden cada 20 ms aproximadamente
+        /*digo aproximadamente porque:
+        En spectrum, con cpu 100%, se incrementa en intervalos de 20000, y por tanto, cada vez viene aqui
+        En Z88, con cpu 100%, se incrementa en intervalos de 5000, y aqui se entrara 1 de cada 4 veces
+        Con cpu no 100%, puede que no sea exacto, y este contador por ejemplo salte a 23000 y luego se resetee a 0,
+        "pierdiendose" esos 3000 us extra. Como lo que hay aqui debajo no tiene que ser completamente exacto,
+        no importa mucho
+        Esto afecta bastante cuando cpu speed < 100% . en ese caso, los sleeps son mayores de 20000, es cuando se
+        pierde ese extra. Entonces con cpu speed < 100%, esto se llama menos veces que cada 20 ms
+        */
 
 
-                        //emulacion refresco memoria. Decrementar contador, de alguna manera "diciendo" que registro R funciona bien
-                        if (machine_emulate_memory_refresh) {
-                                //Si maximo es 1000, esto se resetea en 20 segundos aprox
-                                machine_emulate_memory_refresh_counter -=MAX_EMULATE_MEMORY_REFRESH_COUNTER/20/50;
-                                if (machine_emulate_memory_refresh_counter<0) machine_emulate_memory_refresh_counter=0;
+        //printf ("20ms. contador_segundo: %d\n",contador_segundo);
 
-                                //Hacer debug de esto de vez en cuando
-                                if (machine_emulate_memory_refresh_counter!=0) {
-                                        //cada segundo
-                                        if (contador_segundo>=1000) {
-                                                machine_emulate_memory_refresh_debug_counter();
-                                        }
-                                }
+        contador_20ms=0;
+
+        //han pasado 20 ms
+        contador_segundo +=20;
+
+
+        //emulacion refresco memoria. Decrementar contador, de alguna manera "diciendo" que registro R funciona bien
+        if (machine_emulate_memory_refresh) {
+                //Si maximo es 1000, esto se resetea en 20 segundos aprox
+                machine_emulate_memory_refresh_counter -=MAX_EMULATE_MEMORY_REFRESH_COUNTER/20/50;
+                if (machine_emulate_memory_refresh_counter<0) machine_emulate_memory_refresh_counter=0;
+
+                //Hacer debug de esto de vez en cuando
+                if (machine_emulate_memory_refresh_counter!=0) {
+                        //cada segundo
+                        if (contador_segundo>=1000) {
+                                machine_emulate_memory_refresh_debug_counter();
                         }
+                }
+        }
 
 
 
-			//temp forzar framedrop
-			//esperando_tiempo_final_t_estados.v=0;
+        //temp forzar framedrop
+        //esperando_tiempo_final_t_estados.v=0;
 
 
-			//if (framedrop_total>30) printf ("--------------framedrop total %d\n",framedrop_total);
+        //if (framedrop_total>30) printf ("--------------framedrop total %d\n",framedrop_total);
 
-			//if (esperando_tiempo_final_t_estados.v==0 && framedrop_total<40) {
+        //if (esperando_tiempo_final_t_estados.v==0 && framedrop_total<40) {
 
-				//Antes el 48 era 40
-			if (esperando_tiempo_final_t_estados.v==0 && framedrop_total<48) {
+            //Antes el 48 era 40
+        if (esperando_tiempo_final_t_estados.v==0 && framedrop_total<48) {
 
-				//normal
-				framescreen_saltar++;
+            //normal
+            framescreen_saltar++;
 
-				//printf ("Interrupcion con framedrop\n");
-			}
-			else {
-				framescreen_saltar=0;
-				//printf ("Interrupcion sin framedrop\n");
-			}
+            //printf ("Interrupcion con framedrop\n");
+        }
+        else {
+            framescreen_saltar=0;
+            //printf ("Interrupcion sin framedrop\n");
+        }
 
-			//On Screen keyboard
-			if (timer_on_screen_key) {
-				timer_on_screen_key--;
-				//Si llega a 0, liberar tecla
-				if (timer_on_screen_key==0) {
-					debug_printf (VERBOSE_DEBUG,"Releasing all keys so one was pressed from OSD keyboard");
-					reset_keyboard_ports();
+        //On Screen keyboard
+        if (timer_on_screen_key) {
+            timer_on_screen_key--;
+            //Si llega a 0, liberar tecla
+            if (timer_on_screen_key==0) {
+                debug_printf (VERBOSE_DEBUG,"Releasing all keys so one was pressed from OSD keyboard");
+                reset_keyboard_ports();
 
-					//Si hay que volver a menu
-					if (menu_button_osdkeyboard_return.v) {
-						menu_button_osdkeyboard_return.v=0;
-						menu_button_osdkeyboard.v=1;
-						menu_abierto=1;
-					}
-				}
-
-			}
-
-			if (timer_osd_keyboard_menu) {
-				timer_osd_keyboard_menu--;
-			}
-
-            if (cpc_pending_last_drawn_lines_black_counter) {
-                cpc_pending_last_drawn_lines_black_counter--;
+                //Si hay que volver a menu
+                if (menu_button_osdkeyboard_return.v) {
+                    menu_button_osdkeyboard_return.v=0;
+                    menu_button_osdkeyboard.v=1;
+                    menu_abierto=1;
+                }
             }
 
+        }
 
-			if (timer_on_screen_adv_key) {
-				timer_on_screen_adv_key--;
+        if (timer_osd_keyboard_menu) {
+            timer_osd_keyboard_menu--;
+        }
 
-				//Si llega a 25, es ese medio segundo sin pulsar tecla
-				if (timer_on_screen_adv_key==adventure_keyboard_key_length/2) {
-					reset_keyboard_ports();
-				}
-
-                                //Si llega a 0, volver a menu
-				if (timer_on_screen_adv_key==0) {
-					//Hay que volver a menu
-					menu_button_osd_adv_keyboard_return.v=1;
-                                        menu_abierto=1;
-				}
-			}
-
-			//joystick autofire
-			if (joystick_autofire_frequency!=0) {
-				joystick_autofire_counter++;
-				if (joystick_autofire_counter>=joystick_autofire_frequency) {
-					joystick_autofire_counter=0;
-
-					//si estamos en menu, no tocar disparador automatico
-					if (!menu_abierto) puerto_especial_joystick ^=16;
-				}
-			}
-
-			//Input file keyboard
-			if (input_file_keyboard_is_playing() ) {
-				input_file_keyboard_delay_counter++;
-				if (input_file_keyboard_delay_counter>=input_file_keyboard_delay) {
-					input_file_keyboard_delay_counter=0;
-					input_file_keyboard_pending_next.v=1;
-
-					input_file_keyboard_is_pause.v ^=1;
-
-				}
-			}
-
-			if (ql_mantenido_pulsada_tecla) {
-				if (ql_mantenido_pulsada_tecla_timer<50) ql_mantenido_pulsada_tecla_timer++;
-			}
-
-			//Temporizador de cancion ay playing
-			ay_player_playing_timer();
-
-			menu_window_splash_counter_ms +=20;
-
-			//decrementar contador pausa cinta
-			if (tape_pause!=0) tape_pause--;
-
-			//contador de doble click de raton
-			menu_mouse_left_double_click_counter++;
-
-			if (menu_contador_teclas_repeticion) {
-				menu_contador_teclas_repeticion--;
-			}
-
-			else {
-				//es 0. hay repeticion
-				if (menu_segundo_contador_teclas_repeticion) {
-	                                menu_segundo_contador_teclas_repeticion--;
-				}
-			}
-
-			//temporizador cuando se esta limitando el uso de tecla de abrir menu
-			if (menu_limit_menu_open.v) {
-				util_if_open_just_menu_counter++;
-				//Si ha pasado 2 segundos entre la primera pulsacion y ahora, resetear todo.
-				//Si no hiciera esto, y por ejemplo pulsase dos veces en un momento, sin mas,
-				//luego al pulsar 3 seguidas, no se abriria el menu, porque contaria 2 primeras fuera de tiempo (mas de un segundo) con diferencia de la primera,
-				//y luego las 2 siguientes. Por lo que en ese supuesto caso tendria que pulsar 3x2=6 veces para poder abrir el menu, y aun asi, tendria siempre dos mas
-				//fuera de secuencia que me perjudicaria
-				if (util_if_open_just_menu_times) {
-					int diferencia=util_if_open_just_menu_counter-util_if_open_just_menu_initial_counter;
-					if (diferencia>50*2) {
-						debug_printf(VERBOSE_DEBUG,"Timeout pressing menu key. Reset to 0 times");
-						util_if_open_just_menu_times=0;
-					}
-				}
-			}
+        if (cpc_pending_last_drawn_lines_black_counter) {
+            cpc_pending_last_drawn_lines_black_counter--;
+        }
 
 
-			//temporizador para movimiento de mouse en menu
-                        menu_mouse_frame_counter++;
+        if (timer_on_screen_adv_key) {
+            timer_on_screen_adv_key--;
+
+            //Si llega a 25, es ese medio segundo sin pulsar tecla
+            if (timer_on_screen_adv_key==adventure_keyboard_key_length/2) {
+                reset_keyboard_ports();
+            }
+
+                            //Si llega a 0, volver a menu
+            if (timer_on_screen_adv_key==0) {
+                //Hay que volver a menu
+                menu_button_osd_adv_keyboard_return.v=1;
+                                    menu_abierto=1;
+            }
+        }
+
+        //joystick autofire
+        if (joystick_autofire_frequency!=0) {
+            joystick_autofire_counter++;
+            if (joystick_autofire_counter>=joystick_autofire_frequency) {
+                joystick_autofire_counter=0;
+
+                //si estamos en menu, no tocar disparador automatico
+                if (!menu_abierto) puerto_especial_joystick ^=16;
+            }
+        }
+
+        //Input file keyboard
+        if (input_file_keyboard_is_playing() ) {
+            input_file_keyboard_delay_counter++;
+            if (input_file_keyboard_delay_counter>=input_file_keyboard_delay) {
+                input_file_keyboard_delay_counter=0;
+                input_file_keyboard_pending_next.v=1;
+
+                input_file_keyboard_is_pause.v ^=1;
+
+            }
+        }
+
+        if (ql_mantenido_pulsada_tecla) {
+            if (ql_mantenido_pulsada_tecla_timer<50) ql_mantenido_pulsada_tecla_timer++;
+        }
+
+        //Temporizador de cancion ay playing
+        ay_player_playing_timer();
+
+        menu_window_splash_counter_ms +=20;
+
+        //decrementar contador pausa cinta
+        if (tape_pause!=0) tape_pause--;
+
+        //contador de doble click de raton
+        menu_mouse_left_double_click_counter++;
+
+        if (menu_contador_teclas_repeticion) {
+            menu_contador_teclas_repeticion--;
+        }
+
+        else {
+            //es 0. hay repeticion
+            if (menu_segundo_contador_teclas_repeticion) {
+                                menu_segundo_contador_teclas_repeticion--;
+            }
+        }
+
+        //temporizador cuando se esta limitando el uso de tecla de abrir menu
+        if (menu_limit_menu_open.v) {
+            util_if_open_just_menu_counter++;
+            //Si ha pasado 2 segundos entre la primera pulsacion y ahora, resetear todo.
+            //Si no hiciera esto, y por ejemplo pulsase dos veces en un momento, sin mas,
+            //luego al pulsar 3 seguidas, no se abriria el menu, porque contaria 2 primeras fuera de tiempo (mas de un segundo) con diferencia de la primera,
+            //y luego las 2 siguientes. Por lo que en ese supuesto caso tendria que pulsar 3x2=6 veces para poder abrir el menu, y aun asi, tendria siempre dos mas
+            //fuera de secuencia que me perjudicaria
+            if (util_if_open_just_menu_times) {
+                int diferencia=util_if_open_just_menu_counter-util_if_open_just_menu_initial_counter;
+                if (diferencia>50*2) {
+                    debug_printf(VERBOSE_DEBUG,"Timeout pressing menu key. Reset to 0 times");
+                    util_if_open_just_menu_times=0;
+                }
+            }
+        }
+
+
+        //temporizador para movimiento de mouse en menu
+        menu_mouse_frame_counter++;
 
         //Si hay texto ahi acumulado pero no se ha recibido salto de linea, al cabo de un segundo, saltar
         if (textspeech_filter_program!=NULL) {
 	        scrtextspeech_filter_counter++;
-		//printf ("scrtextspeech_filter_counter: %d\n",scrtextspeech_filter_counter);
+            //printf ("scrtextspeech_filter_counter: %d\n",scrtextspeech_filter_counter);
 
-		//al cabo de X segundos
+            //al cabo de X segundos
 
-		if (textspeech_timeout_no_enter>0) {
+            if (textspeech_timeout_no_enter>0) {
 
-	        	if (scrtextspeech_filter_counter>=50*textspeech_timeout_no_enter && index_buffer_speech!=0) {
-		                debug_printf (VERBOSE_DEBUG,"Forcing sending filter text although there is no carriage return");
-        		        textspeech_add_speech_fifo();
-		        }
+                    if (scrtextspeech_filter_counter>=50*textspeech_timeout_no_enter && index_buffer_speech!=0) {
+                            debug_printf (VERBOSE_DEBUG,"Forcing sending filter text although there is no carriage return");
+                            textspeech_add_speech_fifo();
+                    }
 
-		}
-	}
+            }
+	    }
 
 
-	if (textspeech_filter_program!=NULL) {
+        if (textspeech_filter_program!=NULL) {
 
-	        //Si hay pendiente speech
-                //Si hay finalizado el proceso hijo
-                //printf ("esperar\n");
-                if (textspeech_finalizado_hijo_speech() ) {
+            //Si hay pendiente speech
+            //Si hay finalizado el proceso hijo
+            //printf ("esperar\n");
+            if (textspeech_finalizado_hijo_speech() ) {
 
-                    //recoger texto de salida
-                    textspeech_get_stdout_childs();
+                //recoger texto de salida
+                textspeech_get_stdout_childs();
 
-			//printf ("desde timer\n");
-                        scrtextspeech_filter_run_pending();
-                }
+                //printf ("desde timer\n");
+                scrtextspeech_filter_run_pending();
+            }
 
-                //if (textspeech_get_stdout_childs()) {
-                    //printf("processed stdout from timer\n");
-                //}
+            //if (textspeech_get_stdout_childs()) {
+                //printf("processed stdout from timer\n");
+            //}
         }
 
         //Ocultación/activación de botón switch zx desktop
         zxdesktop_switchdesktop_timer_event();
 
-			//Cosas que suceden cada 1 segundo
-                        if (contador_segundo>=1000) {
+        //Cosas que suceden cada 1 segundo
+        if (contador_segundo>=1000) {
 
-				//printf ("segundo\n");
+            //printf ("segundo\n");
 
-                                contador_segundo=0;
-
-
-				//Estadisticas de vsync por second
-				last_vsync_per_second=vsync_per_second;
-				vsync_per_second=0;
-
-				//Temporizador para tooltip
-				if (tooltip_enabled.v) menu_tooltip_counter++;
-
-				//Temporizador para ventanas splash
-				menu_window_splash_counter++;
+            contador_segundo=0;
 
 
-                                //resetear texto splash
-                                reset_welcome_message();
+            //Estadisticas de vsync por second
+            last_vsync_per_second=vsync_per_second;
+            vsync_per_second=0;
 
-			
+            //Temporizador para tooltip
+            if (tooltip_enabled.v) menu_tooltip_counter++;
 
-				//temporizador de carga de cinta para escribir texto loading en pantalla
-				/*if (tape_loading_counter) {
-					tape_loading_counter--;
-					if (tape_loading_counter==0) {
-						delete_tape_text();
-					}
-				}*/
-
-	                           
-
-			
-
-                                //temporizador de impresion para escribir generico footer en pantalla
-                                if (generic_footertext_operating_counter) {
-                                        generic_footertext_operating_counter--;
-                                        if (generic_footertext_operating_counter==0) {
-                                                delete_generic_footertext();
-                                        }
-                                }
-			//Temporizador para decir si se ha detectado real joystick
-			//dado que si no hay joystick, por defecto está habilitado el bit de joystick presente, pero luego
-			//el realjoystick_null_main lo pondrá a 0, desactivandolo
-			//si llamamos a menu_tell_if_realjoystick_detected justo al arrancar ZEsarUX, no da tiempo a ejecutar
-			//realjoystick_null_main, por tanto el joystick aun seguira presente al inicio, y se dirá erroneamente que esta presente,
-			//cuando no lo esta
-			if (menu_tell_if_realjoystick_detected_counter>0) {
-				menu_tell_if_realjoystick_detected_counter--;
-				if (menu_tell_if_realjoystick_detected_counter==0) menu_tell_if_realjoystick_detected();
-			}
-				
+            //Temporizador para ventanas splash
+            menu_window_splash_counter++;
 
 
+            //resetear texto splash
+            reset_welcome_message();
 
-				//temporizador de Tape/snap options set en pantalla, primer mensaje
-				if (tape_options_set_first_message_counter) {
-					tape_options_set_first_message_counter--;
-					if (tape_options_set_first_message_counter==0) {
-						delete_tape_options_set_first_message();
-					}
-				}
+        
 
-                                //temporizador de Tape/snap options set en pantalla, segundo mensaje
-                                if (tape_options_set_second_message_counter) {
-                                        tape_options_set_second_message_counter--;
-                                        if (tape_options_set_second_message_counter==0) {
-                                                delete_tape_options_set_second_message();
-                                        }
-                                }
+            //temporizador de carga de cinta para escribir texto loading en pantalla
+            /*if (tape_loading_counter) {
+                tape_loading_counter--;
+                if (tape_loading_counter==0) {
+                    delete_tape_text();
+                }
+            }*/
 
-                //temporizador despues de pulsar rewind. Al cabo de 5 segundos se resetea la posicion
-                snapshot_in_ram_rewind_timer();
+                            
 
+                
 
-				autosave_snapshot_at_fixed_interval();
-
-				//escritura de contenido de EPROM/FLASH de Z88 a disco
-				z88_flush_eprom_or_flash_to_disk();
-
-				//escritura de contenido de SPI Flash de zxuno a disco
-				zxuno_flush_flash_to_disk();
-
-
-				//escritura de contenido de MMC a disco
-				mmc_flush_flash_to_disk();
-
-				//escritura de contenido de IDE a disco
-				ide_flush_flash_to_disk();
-
-				//escritura de contenido de TRD a disco
-				trd_flush_contents_to_disk();
-
-				//escritura de contenido de DSK a disco
-				dskplusthree_flush_contents_to_disk();
-
-				rzx_print_footer();
-
-				realtape_print_footer();
-
-
-				//escritura de contenido de flash de superupgrade a disco
-				superupgrade_flush_flash_to_disk();
-
-
-				//salir del emulador despues de x segundos
-				if (exit_emulator_after_seconds) {
-					exit_emulator_after_seconds_counter++;
-					if (exit_emulator_after_seconds_counter>=exit_emulator_after_seconds) {
-						debug_printf(VERBOSE_INFO,"Exiting emulator after %d seconds",exit_emulator_after_seconds);
-						end_emulator();
-					}
-				}
-
-
-                        }
+            //temporizador de impresion para escribir generico footer en pantalla
+            if (generic_footertext_operating_counter) {
+                    generic_footertext_operating_counter--;
+                    if (generic_footertext_operating_counter==0) {
+                            delete_generic_footertext();
+                    }
+            }
+            //Temporizador para decir si se ha detectado real joystick
+            //dado que si no hay joystick, por defecto está habilitado el bit de joystick presente, pero luego
+            //el realjoystick_null_main lo pondrá a 0, desactivandolo
+            //si llamamos a menu_tell_if_realjoystick_detected justo al arrancar ZEsarUX, no da tiempo a ejecutar
+            //realjoystick_null_main, por tanto el joystick aun seguira presente al inicio, y se dirá erroneamente que esta presente,
+            //cuando no lo esta
+            if (menu_tell_if_realjoystick_detected_counter>0) {
+                menu_tell_if_realjoystick_detected_counter--;
+                if (menu_tell_if_realjoystick_detected_counter==0) menu_tell_if_realjoystick_detected();
+            }
+                
 
 
 
-		}
+            //temporizador de Tape/snap options set en pantalla, primer mensaje
+            if (tape_options_set_first_message_counter) {
+                tape_options_set_first_message_counter--;
+                if (tape_options_set_first_message_counter==0) {
+                    delete_tape_options_set_first_message();
+                }
+            }
+
+            //temporizador de Tape/snap options set en pantalla, segundo mensaje
+            if (tape_options_set_second_message_counter) {
+                    tape_options_set_second_message_counter--;
+                    if (tape_options_set_second_message_counter==0) {
+                            delete_tape_options_set_second_message();
+                    }
+            }
+
+            //temporizador despues de pulsar rewind. Al cabo de 5 segundos se resetea la posicion
+            snapshot_in_ram_rewind_timer();
+
+
+            autosave_snapshot_at_fixed_interval();
+
+            //escritura de contenido de EPROM/FLASH de Z88 a disco
+            z88_flush_eprom_or_flash_to_disk();
+
+            //escritura de contenido de SPI Flash de zxuno a disco
+            zxuno_flush_flash_to_disk();
+
+
+            //escritura de contenido de MMC a disco
+            mmc_flush_flash_to_disk();
+
+            //escritura de contenido de IDE a disco
+            ide_flush_flash_to_disk();
+
+            //escritura de contenido de TRD a disco
+            trd_flush_contents_to_disk();
+
+            //escritura de contenido de DSK a disco
+            dskplusthree_flush_contents_to_disk();
+
+            rzx_print_footer();
+
+            realtape_print_footer();
+
+
+            //escritura de contenido de flash de superupgrade a disco
+            superupgrade_flush_flash_to_disk();
+
+
+            //salir del emulador despues de x segundos
+            if (exit_emulator_after_seconds) {
+                exit_emulator_after_seconds_counter++;
+                if (exit_emulator_after_seconds_counter>=exit_emulator_after_seconds) {
+                    debug_printf(VERBOSE_INFO,"Exiting emulator after %d seconds",exit_emulator_after_seconds);
+                    end_emulator();
+                }
+            }
+
+
+        }
+
+
+
+    }
 
 
 }

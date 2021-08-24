@@ -195,5 +195,3 @@ parece que la grabacion peta con break debido a:
 L08F7:          IN      A,(HLWPORT)
                 BIT     3,A
                 JP      Z,BREAKCONT
-
--habilitado historial cpu desde ventana debug cpu
