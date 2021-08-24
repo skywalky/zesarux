@@ -48,6 +48,7 @@
 #include "menu.h"
 #include "menu_items.h"
 #include "menu_bitmaps.h"
+#include "menu_debug_cpu.h"
 #include "screen.h"
 #include "cpu.h"
 #include "debug.h"

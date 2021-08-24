@@ -24,5 +24,8 @@
 
 #include "cpu.h"
 
+extern void menu_debug_registers(MENU_ITEM_PARAMETERS);
+extern void menu_watches(MENU_ITEM_PARAMETERS);
+extern void menu_debug_registers_run_cpu_opcode(void);
 
 #endif

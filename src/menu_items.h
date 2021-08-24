@@ -30,7 +30,7 @@ extern void menu_poke(MENU_ITEM_PARAMETERS);
 extern void menu_settings_debug(MENU_ITEM_PARAMETERS);
 extern void menu_settings_audio(MENU_ITEM_PARAMETERS);
 extern void menu_zxvision_test(MENU_ITEM_PARAMETERS);
-extern void menu_mem_breakpoints(MENU_ITEM_PARAMETERS);
+
 extern int menu_cond_ay_chip(void);
 extern int menu_cond_ay_or_sn_chip(void);
 extern int menu_cond_i8049_chip(void);
@@ -67,10 +67,9 @@ extern void menu_cpu_transaction_log(MENU_ITEM_PARAMETERS);
 
 extern void menu_debug_view_sprites(MENU_ITEM_PARAMETERS);
 
-extern void menu_debug_registers(MENU_ITEM_PARAMETERS);
-extern void menu_debug_registers_splash_memory_zone(void);
+
 extern void menu_breakpoint_fired(char *s);
-extern void menu_watches(MENU_ITEM_PARAMETERS);
+
 
 extern void menu_ay_partitura(MENU_ITEM_PARAMETERS);
 extern void menu_record_mid(MENU_ITEM_PARAMETERS);
@@ -145,7 +144,6 @@ extern void menu_debug_view_basic_variables(MENU_ITEM_PARAMETERS);
 
 extern void menu_debug_view_sensors(MENU_ITEM_PARAMETERS);
 
-extern void menu_debug_registers_run_cpu_opcode(void);
 
 extern void menu_accessibility_settings(MENU_ITEM_PARAMETERS);
 

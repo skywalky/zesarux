@@ -34,9 +34,8 @@
 #include <unistd.h>
 
 
-
-#include "menu_debug_cpu.h"
 #include "menu.h"
+#include "menu_debug_cpu.h"
 #include "menu_items.h"
 #include "cpu.h"
 #include "debug.h"

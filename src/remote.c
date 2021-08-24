@@ -40,6 +40,7 @@
 #include "disassemble.h"
 #include "menu.h"
 #include "menu_items.h"
+#include "menu_debug_cpu.h"
 #include "audio.h"
 #include "timer.h"
 #include "screen.h"
