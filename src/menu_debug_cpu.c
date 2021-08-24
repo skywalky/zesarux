@@ -5405,10 +5405,15 @@ void debug_cpu_next_breakpoint_pc_dir(void)
 
 void menu_debug_cpu_history_select(MENU_ITEM_PARAMETERS)
 {
-    //Aplicar ese snapshot
-    //snapshot_in_ram_load(valor_opcion);
+    //menu_debug_memory_pointer=valor_opcion;
 
-    //menu_generic_message_splash("Load Snapshot","OK Snapshot loaded from RAM");
+    //menu_debug_follow_pc.v=0; //se deja de seguir pc
+
+
+    char string_destino[1024];
+    cpu_history_get_registers_element(valor_opcion,string_destino);
+
+    menu_generic_message("Registers",string_destino);
 }
 
 void menu_debug_cpu_history(void)
@@ -5420,7 +5425,11 @@ void menu_debug_cpu_history(void)
     
             if (cpu_history_started.v==0) cpu_history_started.v=1;
 
+            menu_generic_message_splash("Enable & start cpu history?","Come back later after running some cpu opcodes");
+            
         }
+
+        return;
     }
 
     int total_items_menus=cpu_history_get_total_elements();
@@ -5428,13 +5437,14 @@ void menu_debug_cpu_history(void)
     //definir un maximo a mostrar por pantalla
     if (total_items_menus>1000) total_items_menus=1000;
 
+    int menu_debug_cpu_history_opcion_seleccionada=0;    
+
     menu_item *array_menu_comon;
     menu_item item_seleccionado;
     int retorno_menu;
     do {
 
-        //Inicializar el ultimo a 0 siempre
-        int menu_debug_cpu_history_opcion_seleccionada=0;
+
 
         menu_add_item_menu_inicial(&array_menu_comon,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
@@ -5447,17 +5457,29 @@ void menu_debug_cpu_history(void)
 			int indice=total_elementos_in_history-i-1;
 
             char string_destino[32]; 
-            cpu_history_get_pc_register_element(indice,string_destino);        
+            //obtiene el historial de PC en esa posicion, en hexadecimal
+            cpu_history_get_pc_register_element(indice,string_destino);
 
-            menu_z80_moto_int valor=parse_string_to_number(string_destino);    
+            //Agregamos la H al final para parsear
+            int longitud=strlen(string_destino);
+            string_destino[longitud++]='H';
+            string_destino[longitud]=0;
 
-            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_debug_cpu_history_select,NULL,"PC=%XH",
-                valor);   
+            menu_z80_moto_int valor=parse_string_to_number(string_destino);
+
+            char string_dir[32];
+            menu_debug_print_address_memory_zone(string_dir,valor);
+
+            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_debug_cpu_history_select,NULL,"PC=%s",
+                string_destino);   
             
-            menu_add_item_menu_valor_opcion(array_menu_comon,valor);
+            //en item de menu metemos el indice a historial
+            menu_add_item_menu_valor_opcion(array_menu_comon,indice);
         }
 
-
+        if (total_items_menus==0) {
+            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,NULL,NULL,"(Empty)");
+        }
 
 
         menu_add_item_menu(array_menu_comon,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -5853,11 +5875,21 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
                 if (tecla=='H') {
+					//Detener multitarea pues interesa que no se "mueva" la cpu al sacar el historial
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
+
                     menu_debug_cpu_history();
 
                     //Decimos que no hay tecla pulsada
-                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;			
-                }                         
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
+					
+                }
                 	                
 
 				//Vista. Entre 1 y 8
