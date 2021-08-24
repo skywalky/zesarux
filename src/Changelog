@@ -24,6 +24,7 @@ Improved Debug CPU Window:
 -Added new key to set PC=PTR
 -Added new key to go to next breakpoint type PC=dir
 -Allow to define up to 100 breakpoints (same that you could define using ZRCP)
+-Added cpu history menu to see registers in the past(same as you already had on ZRCP)
 
 Improved Debugging:
 -Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80

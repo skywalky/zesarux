@@ -3366,8 +3366,12 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
                 if (debug_breakpoints_enabled.v) strcpy(string_nextpcbr," nextpc~^Brk");
                 else string_nextpcbr[0]=0;
 
+                char string_history[32];
+                if (CPU_IS_Z80) strcpy(string_history," cpu~^Hist");
+                else string_history[0]=0;
 
-                sprintf(s,"set~^Pc=ptr%s cpu~^Hist",string_nextpcbr);
+
+                sprintf(s,"set~^Pc=ptr%s%s",string_nextpcbr,string_history);
             }
         break;
 	}
@@ -5410,10 +5414,32 @@ void menu_debug_cpu_history_select(MENU_ITEM_PARAMETERS)
     //menu_debug_follow_pc.v=0; //se deja de seguir pc
 
 
-    char string_destino[1024];
-    cpu_history_get_registers_element(valor_opcion,string_destino);
+    char string_destino_registros[1024];
+    cpu_history_get_registers_element(valor_opcion,string_destino_registros);
 
-    menu_generic_message("Registers",string_destino);
+
+    char string_destino_pc[64];
+    //obtiene el historial de PC en esa posicion, en hexadecimal
+    cpu_history_get_pc_register_element(valor_opcion,string_destino_pc);
+
+    //Agregamos la H al final para parsear
+    int longitud=strlen(string_destino_pc);
+    string_destino_pc[longitud++]='H';
+    string_destino_pc[longitud]=0;
+
+    menu_z80_moto_int valor_pc=parse_string_to_number(string_destino_pc);
+
+
+    char string_disassemble[64];
+
+
+    size_t longitud_op;
+    debugger_disassemble(string_disassemble,32,&longitud_op,valor_pc);
+
+    char string_mensaje[2048];
+    sprintf(string_mensaje,"%s\n\n%s",string_destino_registros,string_disassemble);
+
+    menu_generic_message("Registers",string_mensaje);
 }
 
 void menu_debug_cpu_history(void)
@@ -5470,8 +5496,17 @@ void menu_debug_cpu_history(void)
             char string_dir[32];
             menu_debug_print_address_memory_zone(string_dir,valor);
 
-            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_debug_cpu_history_select,NULL,"PC=%s",
-                string_destino);   
+            //Obtener el opcode de esa direccion y ponerla en el item de menu
+
+            char string_disassemble[64];
+            size_t longitud_op;
+            debugger_disassemble(string_disassemble,32,&longitud_op,valor);            
+
+            menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_debug_cpu_history_select,NULL,"%s %s",
+                string_destino,string_disassemble);
+
+            menu_add_item_menu_ayuda(array_menu_comon,"The element at the top is the most recent opcode ran");
+            
             
             //en item de menu metemos el indice a historial
             menu_add_item_menu_valor_opcion(array_menu_comon,indice);
@@ -5874,7 +5909,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }       
 
 
-                if (tecla=='H') {
+                if (tecla=='H' && CPU_IS_Z80) {
 					//Detener multitarea pues interesa que no se "mueva" la cpu al sacar el historial
 					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
 					menu_emulation_paused_on_menu=1;
@@ -6018,6 +6053,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					else {
 						zxvision_print_string_defaults_fillspc(ventana,1,linea++,"                         ");
 					}
+
+                    //borrar la linea de abajo de leyenda
+                    zxvision_print_string_defaults_fillspc(ventana,1,linea++,"");
 
 				}
 
@@ -6391,7 +6429,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     si_ejecuta_una_instruccion=0;
                 }   
 
-                if (tecla=='H') {
+                if (tecla=='H' && CPU_IS_Z80) {
 					//Detener multitarea, porque si no, se input ejecutara opcodes de la cpu, al tener que leer el teclado
 					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
 					menu_emulation_paused_on_menu=1;
