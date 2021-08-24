@@ -5460,7 +5460,8 @@ void menu_debug_cpu_history(void)
 
     int total_items_menus=cpu_history_get_total_elements();
 
-    //definir un maximo a mostrar por pantalla
+    //definir un maximo de 1000 a mostrar por pantalla
+    //por ZRCP hay permitidos muchos mas
     if (total_items_menus>1000) total_items_menus=1000;
 
     int menu_debug_cpu_history_opcion_seleccionada=0;    
@@ -5482,16 +5483,16 @@ void menu_debug_cpu_history(void)
 			//Al solicitarlo, el 0 es el item mas reciente. el 1 es el anterior a este
 			int indice=total_elementos_in_history-i-1;
 
-            char string_destino[32]; 
+            char string_pc[32]; 
             //obtiene el historial de PC en esa posicion, en hexadecimal
-            cpu_history_get_pc_register_element(indice,string_destino);
+            cpu_history_get_pc_register_element(indice,string_pc);
 
-            //Agregamos la H al final para parsear
-            int longitud=strlen(string_destino);
-            string_destino[longitud++]='H';
-            string_destino[longitud]=0;
+            //Agregamos la H al final solo para parsear
+            int longitud=strlen(string_pc);
+            string_pc[longitud++]='H';
+            string_pc[longitud]=0;
 
-            menu_z80_moto_int valor=parse_string_to_number(string_destino);
+            menu_z80_moto_int valor=parse_string_to_number(string_pc);
 
             char string_dir[32];
             menu_debug_print_address_memory_zone(string_dir,valor);
@@ -5502,8 +5503,11 @@ void menu_debug_cpu_history(void)
             size_t longitud_op;
             debugger_disassemble(string_disassemble,32,&longitud_op,valor);            
 
+            //quitamos la H de la string para no mostrarla, queda redundante
+            string_pc[longitud-1]=0;
+
             menu_add_item_menu_format(array_menu_comon,MENU_OPCION_NORMAL,menu_debug_cpu_history_select,NULL,"%s %s",
-                string_destino,string_disassemble);
+                string_pc,string_disassemble);
 
             menu_add_item_menu_ayuda(array_menu_comon,"The element at the top is the most recent opcode ran");
             
