@@ -2789,6 +2789,24 @@ void cpu_history_regs_to_bin(z80_byte *p)
 
         break;
 
+        case 227: //EX (SP),HL
+
+            puntero=reg_sp;
+            value1=peek_byte_no_time_no_change_mra(puntero);
+            value2=peek_byte_no_time_no_change_mra(puntero+1);
+            p[50]=2;
+            p[51]=value_16_to_8l(puntero);
+            p[52]=value_16_to_8h(puntero);
+            p[53]=value1;
+            p[54]=value_16_to_8l(puntero+1);
+            p[55]=value_16_to_8h(puntero+1);
+            p[56]=value2;           
+
+            printf("Storing on history %XH with value %02X%02XH coming from opcode %d type EX (SP),HL\n",
+                puntero,value2,value1,opcode);          
+        break;
+
+
 
         //Funciones CALL con condicion, si la condicion no se cumple, no se llamara a la funcion y por tanto
         //no se modificaria stack. Pero lo guardamos igualmente, da igual, si no se modifica, al hacer backwards, se dejara tal cual ya estaba
