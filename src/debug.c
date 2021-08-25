@@ -2718,7 +2718,9 @@ void cpu_history_regs_to_bin(z80_byte *p)
 
 
 	z80_byte *pref203_registro;
-	z80_byte pref203_numerobit;    
+	z80_byte pref203_numerobit;   
+
+    z80_int *cual_registro_ixiy; 
 
     //Esto se podria hacer con una tabla pero dado que solo lo utilizo aqui, lo hago con switch
     switch (opcode) {
@@ -2870,7 +2872,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                 case 99: //LD (NN),HL
                 case 115: //LD (NN),SP
 
-                    puntero=value_8_to_16(peek_byte_no_time_no_change_mra(reg_pc+2),peek_byte_no_time_no_change_mra(reg_pc+1));
+                    puntero=value_8_to_16(peek_byte_no_time_no_change_mra(reg_pc+3),peek_byte_no_time_no_change_mra(reg_pc+2));
                     value1=peek_byte_no_time_no_change_mra(puntero);
                     value2=peek_byte_no_time_no_change_mra(puntero+1);
                     p[50]=2;
@@ -2993,7 +2995,36 @@ void cpu_history_regs_to_bin(z80_byte *p)
             }
                 
      
-        break;       
+        break;      
+
+        //Prefijo 221, 253
+        case 221:
+        case 253:
+            if (opcode==221) cual_registro_ixiy=&reg_ix;
+            else cual_registro_ixiy=&reg_iy;
+
+            switch (opcode1) {
+                case 34: //LD (NN),IX
+                    puntero=value_8_to_16(peek_byte_no_time_no_change_mra(reg_pc+3),peek_byte_no_time_no_change_mra(reg_pc+2));
+                    value1=peek_byte_no_time_no_change_mra(puntero);
+                    value2=peek_byte_no_time_no_change_mra(puntero+1);
+                    p[50]=2;
+                    p[51]=value_16_to_8l(puntero);
+                    p[52]=value_16_to_8h(puntero);
+                    p[53]=value1;
+                    p[54]=value_16_to_8l(puntero+1);
+                    p[55]=value_16_to_8h(puntero+1);
+                    p[56]=value2;            
+                    printf("Storing on history %XH with value %02X%02XH coming from opcode ED%02XH modifying 16 bits (NN)\n",
+                        puntero,value2,value1,opcode1);    
+
+                break; 
+            }
+
+
+
+        break;    
+        
     }
  
 }
