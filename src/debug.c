@@ -2572,6 +2572,8 @@ void cpu_history_regs_bin_to_string(z80_byte *p,char *destino)
   );
 }
 
+
+
 //Dado un puntero z80_byte, con contenido de registros en binario, retorna valor registro PC
 //Registros 16 bits guardados en little endian
 void cpu_history_reg_pc_bin_to_string(z80_byte *p,char *destino)
@@ -2816,6 +2818,93 @@ void cpu_history_get_pc_register_element(int indice,char *string_destino)
 	cpu_history_reg_pc_bin_to_string(&cpu_history_memory_buffer[offset_memoria],string_destino);
 }
 
+//Dado un puntero z80_byte, con contenido de registros en binario, restaura los registros
+//Registros 16 bits guardados en little endian
+//El indice 0 es el elemento mas antiguo
+void cpu_history_regs_bin_restore(int indice)
+{
+
+	if (indice<0) {
+		//strcpy(string_destino,"ERROR: index out of range");
+		return;
+	}
+
+	if (indice>=cpu_history_total_elementos) {
+		//sprintf(string_destino,"ERROR: index beyond total elements (%d)",cpu_history_total_elementos);
+		return;
+	}
+
+	
+
+	int posicion=cpu_history_get_array_pos_element(indice);
+
+	long int offset_memoria=cpu_history_get_offset_index(posicion);
+
+
+    z80_byte *p;
+
+    p=&cpu_history_memory_buffer[offset_memoria];
+
+
+
+	//Nota: funcion print_registers escribe antes BC que AF. Aqui ponemos AF antes, que es mas lógico
+  /*sprintf (destino,"PC=%02x%02x SP=%02x%02x AF=%02x%02x BC=%02x%02x HL=%02x%02x DE=%02x%02x IX=%02x%02x IY=%02x%02x "
+  				   "AF'=%02x%02x BC'=%02x%02x HL'=%02x%02x DE'=%02x%02x "
+				   "I=%02x R=%02x IM%d IFF%c%c (PC)=%02x%02x%02x%02x (SP)=%02x%02x "
+				   "MMU=%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",*/
+
+  reg_pc=value_8_to_16(p[1],p[0]);  	//pc
+  reg_sp=value_8_to_16(p[3],p[2]), 	//sp
+
+  reg_a=p[5]; //af
+  Z80_FLAGS=p[4]; 	
+
+  reg_bc=value_8_to_16(p[7],p[6]); 	//bc
+  reg_hl=value_8_to_16(p[9],p[8]); 	//hl
+  reg_de=value_8_to_16(p[11],p[10]); 	//de
+  reg_ix=value_8_to_16(p[13],p[12]); 	//ix
+  reg_iy=value_8_to_16(p[15],p[14]); 	//iy
+
+  reg_a_shadow=p[17]; //af'
+  Z80_FLAGS_SHADOW=p[16]; 	
+
+  reg_b_shadow=p[19]; //bc'
+  reg_c_shadow=p[18]; 	
+
+  reg_h_shadow=p[21]; //hl'
+  reg_l_shadow=p[20];
+
+
+  reg_d_shadow=p[23]; //de'
+  reg_e_shadow=p[22]; 	
+
+  reg_i=p[24]; 		//I
+  reg_r=p[25]; 		//R
+  reg_r_bit7=reg_r&128;
+
+  im_mode=p[26]; 	//IM
+
+  iff1.v=p[27]&1;
+  iff2.v=(p[27]>>1)&1;
+  
+
+  /*
+
+  //contenido (pc) 4 bytes
+  p[28],p[29],p[30],p[31],
+  */
+  //contenido (sp) 2 bytes
+  poke_byte_no_time(reg_sp,p[32]);
+  poke_byte_no_time(reg_sp+1,p[33]);
+
+  /*
+  //MMU. Las paginas de debug_paginas_memoria_mapeadas, son valores de 16 bits escritas en Little Endian
+  p[35],p[34], p[37],p[36], p[39],p[38], p[41],p[40],
+  p[43],p[42], p[45],p[44], p[47],p[46], p[49],p[48]
+  */
+
+  
+}
 
 
 int cpu_history_get_total_elements(void)

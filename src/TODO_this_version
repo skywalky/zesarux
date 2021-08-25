@@ -195,3 +195,13 @@ parece que la grabacion peta con break debido a:
 L08F7:          IN      A,(HLWPORT)
                 BIT     3,A
                 JP      Z,BREAKCONT
+
+
+-backstep: agregar posiciones de memoria en historial que se modificaran, por ejemplo en opcodes:
+LD (NN),A
+LD (NN),HL
+LD (HL),E    (here of course I will add the contents of memory pointed to HL in the history)
+PUSH HL
+LD (NN),IX
+
+-quiza linea cursor en debug cpu ubicar en el centro

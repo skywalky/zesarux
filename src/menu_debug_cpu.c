@@ -62,6 +62,9 @@ int menu_watches_opcion_seleccionada=0;
 int daad_tipo_mensaje_opcion_seleccionada=0;
 
 
+//Indice a donde apunta el run backwards. El 0 sera el mas reciente
+int indice_debug_cpu_backwards_history=0; 
+
 void menu_mem_breakpoints_edit(MENU_ITEM_PARAMETERS)
 {
 
@@ -1741,6 +1744,9 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 					if (tiene_pc) {
                         buffer_linea[0]='>';
 
+                        //Si estamos en backwards, otro cursor
+                        if (indice_debug_cpu_backwards_history && cpu_step_mode.v) buffer_linea[0]='^';
+
                         //Meteremos texto, si conviene, de si se cumple condición o no
                         //prueba
                         z80_byte opcode_fires;
@@ -2213,22 +2219,25 @@ void menu_debug_registers_set_title(zxvision_window *w)
         //menu_debug_registers_current_view
 
         //Por defecto
-                                   //0123456789012345678901
-        sprintf (titulo,"Debug CPU             V");
+        //0123456789012345678901
+        sprintf (titulo,"Debug CPU            V%d",menu_debug_registers_current_view);
 
         if (menu_breakpoint_exception_pending_show.v==1 || menu_breakpoint_exception.v) {
-                                           //0123456789012345678901
-                sprintf (titulo,"Debug CPU (brk cond)  V");
+                //0123456789012345678901
+                sprintf (titulo,"Debug CPU (brk cond) V%d",menu_debug_registers_current_view);
                 //printf ("breakpoint pending show\n");
         }
         else {
                                                                                         //0123456789012345678901
-                if (cpu_step_mode.v) sprintf (titulo,"Debug CPU (step)      V");
+                if (cpu_step_mode.v) {
+                    if (indice_debug_cpu_backwards_history) sprintf (titulo,"Debug CPU (backstep) V%d",menu_debug_registers_current_view);
+                    else sprintf (titulo,"Debug CPU (step)     V%d",menu_debug_registers_current_view);
+                }
                 //printf ("no breakpoint pending show\n");
         }
 
         //Poner numero de vista siempre en posicion 23
-        sprintf (&titulo[23],"%d",menu_debug_registers_current_view);
+        //sprintf (&titulo[23],"%d",menu_debug_registers_current_view);
 
 	strcpy(w->window_title,titulo);
 }
@@ -3363,15 +3372,46 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
             }
             else {
                 char string_nextpcbr[32];
+                char string_backwards[32];
+
                 if (debug_breakpoints_enabled.v) strcpy(string_nextpcbr," nextpc~^Brk");
                 else string_nextpcbr[0]=0;
+
+
+                if (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v) {
+                    strcpy(string_backwards," back~^Step");
+                    //printf("hay backstep\n");
+                }
+
+                else {
+                    //printf("NO hay backstep\n");
+                    string_backwards[0]=0;
+                }                
 
                 char string_history[32];
                 if (CPU_IS_Z80) strcpy(string_history," cpu~^Hist");
                 else string_history[0]=0;
 
 
-                sprintf(s,"set~^Pc=ptr%s%s",string_nextpcbr,string_history);
+                sprintf(s,"set~^Pc=ptr%s%s%s",string_nextpcbr,string_history,string_backwards);
+
+                sprintf (buffer_intermedio_short,"set~^Pcptr%s%s%s",
+                    ( debug_breakpoints_enabled.v ? " nxtpc~^Brk" : "" ),
+                    (CPU_IS_Z80 ? " cpu~^Hst" : ""),
+                    (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " bck~^Stp" : "")
+                    
+                );                
+
+
+                sprintf (buffer_intermedio_long,"set~^Pc=ptr%s%s%s",
+                    ( debug_breakpoints_enabled.v ? " nextpc~^Brk" : "" ),
+                    (CPU_IS_Z80 ? " cpu~^Hist" : ""),
+                    (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " back~^Step" : "")
+                    
+                );
+
+
+                menu_debug_get_legend_short_long(s,ancho_visible,buffer_intermedio_short,buffer_intermedio_long);
             }
         break;
 	}
@@ -5407,6 +5447,23 @@ void debug_cpu_next_breakpoint_pc_dir(void)
     
 }
 
+
+
+void menu_debug_cpu_backwards_history(void)
+{
+
+
+    int total_elementos_in_history=cpu_history_get_total_elements();
+
+
+    int indice=total_elementos_in_history-indice_debug_cpu_backwards_history-1;
+
+    
+    cpu_history_regs_bin_restore(indice);
+
+    indice_debug_cpu_backwards_history++;    
+}
+
 void menu_debug_cpu_history_select(MENU_ITEM_PARAMETERS)
 {
     //menu_debug_memory_pointer=valor_opcion;
@@ -5714,6 +5771,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 
 	        }
+
+            //Resetear posicion de backwards
+            indice_debug_cpu_backwards_history=0;            
 
         	menu_cpu_core_loop();
 
@@ -6453,6 +6513,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					
                 }
 
+                //backstep
+                if (tecla=='S' && cpu_history_enabled.v && cpu_history_started.v) {
+                    menu_debug_cpu_backwards_history();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;                    
+                }
+
 				//Vista. Entre 1 y 8
 				if (tecla>='1' && tecla<='8') {
                 	menu_debug_registers_set_view(ventana,tecla-'0');
@@ -6659,6 +6728,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 				debug_core_lanzado_inter.v=0;
 
 				screen_force_refresh=1; //Para que no haga frameskip y almacene los pixeles/atributos en buffer rainbow
+
+                //Resetear posicion de backwards
+                indice_debug_cpu_backwards_history=0;
 
 
 				//Si vista daad (8)
