@@ -2679,6 +2679,35 @@ void cpu_history_regs_to_bin(z80_byte *p)
 
     //por defecto , no modifica direcciones dicho opcode
     p[50]=0;
+
+    z80_byte opcode=peek_byte_no_time_no_change_mra(reg_pc);
+
+    z80_byte value1,value2;
+
+    //Esto se podria hacer con una tabla pero dado que solo lo utilizo aqui, lo hago con switch
+    switch (opcode) {
+
+        case 52: //INC (HL)
+        case 53: //DEC (HL)
+        case 54: //LD (HL),N
+        case 112: //LD (HL),B
+        case 113: //LD (HL),C
+        case 114: //LD (HL),D
+        case 115: //LD (HL),E
+        case 116: //LD (HL),H
+        case 117: //LD (HL),L
+        case 119: //LD (HL),A
+            
+            value1=peek_byte_no_time_no_change_mra(HL);
+            p[50]=1;
+            p[51]=reg_l;
+            p[52]=reg_h;
+            p[53]=value1;
+            printf("Storing on history %XH with value %XH coming from opcode %d modifying (HL)\n",
+                HL,value1,opcode);
+
+        break;
+    }
  
 }
 
@@ -2926,13 +2955,14 @@ void cpu_history_regs_bin_restore(int indice)
   //53: valor antes de modificar primera direccion 
   //54-55: segunda direccion modificada
   //56: valor antes de modificar segunda direccion
-  int flags_direcciones=p[50] & 2;
+  int flags_direcciones=p[50] & 3;
 
   //1 o mas direcciones modificadas
   if (flags_direcciones>=1) {
       z80_int direccion=value_8_to_16(p[52],p[51]);
       z80_byte valor=p[53];
       poke_byte_no_time(direccion,valor);
+      printf("modifying first address %X value %X\n",direccion,valor);
   }
 
   //2 direcciones modificadas
@@ -2940,6 +2970,7 @@ void cpu_history_regs_bin_restore(int indice)
       z80_int direccion=value_8_to_16(p[55],p[54]);
       z80_byte valor=p[56];
       poke_byte_no_time(direccion,valor);
+      printf("modifying second address %X value %X\n",direccion,valor);
   }   
 
   
