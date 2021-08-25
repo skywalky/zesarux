@@ -2684,8 +2684,61 @@ void cpu_history_regs_to_bin(z80_byte *p)
 
     z80_byte value1,value2;
 
+    z80_int puntero;
+
     //Esto se podria hacer con una tabla pero dado que solo lo utilizo aqui, lo hago con switch
     switch (opcode) {
+
+        case 2: //LD (BC),A
+            value1=peek_byte_no_time_no_change_mra(BC);
+            p[50]=1;
+            p[51]=reg_c;
+            p[52]=reg_b;
+            p[53]=value1;
+            printf("Storing on history %XH with value %XH coming from opcode %d modifying (BC)\n",
+                HL,value1,opcode);
+
+        break;
+
+
+        case 18: //LD (DE),A
+            value1=peek_byte_no_time_no_change_mra(DE);
+            p[50]=1;
+            p[51]=reg_e;
+            p[52]=reg_d;
+            p[53]=value1;
+            printf("Storing on history %XH with value %XH coming from opcode %d modifying (DE)\n",
+                HL,value1,opcode);
+
+        break; 
+
+        case 34: //LD (NN),HL
+            puntero=value_8_to_16(peek_byte_no_time_no_change_mra(reg_pc+2),peek_byte_no_time_no_change_mra(reg_pc+1));
+            value1=peek_byte_no_time_no_change_mra(puntero);
+            value2=peek_byte_no_time_no_change_mra(puntero+1);
+            p[50]=2;
+            p[51]=value_16_to_8l(puntero);
+            p[52]=value_16_to_8h(puntero);
+            p[53]=value1;
+            p[54]=value_16_to_8l(puntero+1);
+            p[55]=value_16_to_8h(puntero+1);
+            p[56]=value2;            
+            printf("Storing on history %XH with value %02X%02XH coming from opcode %d modifying 16 bits (NN)\n",
+                puntero,value1,value2,opcode);        
+        break;
+
+        case 50: //LD (NN),A 
+            puntero=value_8_to_16(peek_byte_no_time_no_change_mra(reg_pc+2),peek_byte_no_time_no_change_mra(reg_pc+1));
+            value1=peek_byte_no_time_no_change_mra(puntero);
+            p[50]=1;
+            p[51]=value_16_to_8l(puntero);
+            p[52]=value_16_to_8h(puntero);
+            p[53]=value1;
+          
+            printf("Storing on history %XH with value %02XH coming from opcode %d modifying 8 bits (NN)\n",
+                puntero,value1,opcode);    
+        break;
+         
 
         case 52: //INC (HL)
         case 53: //DEC (HL)
