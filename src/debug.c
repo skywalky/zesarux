@@ -2541,11 +2541,38 @@ void reset_extended_stack(void)
 void cpu_history_regs_bin_to_string(z80_byte *p,char *destino)
 {
 
+    //para memoria modificada
+    char buffer_temp_memoria[100];
+    //por defecto vacio
+    buffer_temp_memoria[0]=0;
+
+
+    z80_int direccion1=value_8_to_16(p[52],p[51]);
+    z80_byte valor1=p[53];
+    char buffer_addr_1[32];
+    sprintf(buffer_addr_1,"(%04X)=%X",direccion1,valor1);
+    
+    z80_int direccion2=value_8_to_16(p[55],p[54]);
+    z80_byte valor2=p[56];
+    char buffer_addr_2[32];
+    sprintf(buffer_addr_2,"(%04X)=%X",direccion2,valor2);
+
+
+    int flags_direcciones=p[50] & 3;
+
+    if (flags_direcciones>0) {
+        sprintf(buffer_temp_memoria,"%s %s",
+        (flags_direcciones>=1 ? buffer_addr_1 : ""),
+        (flags_direcciones>=2 ? buffer_addr_2 : "")
+        );
+    }
+
+
 	//Nota: funcion print_registers escribe antes BC que AF. Aqui ponemos AF antes, que es mas lógico
   sprintf (destino,"PC=%02x%02x SP=%02x%02x AF=%02x%02x BC=%02x%02x HL=%02x%02x DE=%02x%02x IX=%02x%02x IY=%02x%02x "
   				   "AF'=%02x%02x BC'=%02x%02x HL'=%02x%02x DE'=%02x%02x "
 				   "I=%02x R=%02x IM%d IFF%c%c (PC)=%02x%02x%02x%02x (SP)=%02x%02x "
-				   "MMU=%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+				   "MMU=%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x %s",
   p[1],p[0], 	//pc
   p[3],p[2], 	//sp
   p[5],p[4], 	//af
@@ -2568,7 +2595,8 @@ void cpu_history_regs_bin_to_string(z80_byte *p,char *destino)
   p[33],p[32],
   //MMU. Las paginas de debug_paginas_memoria_mapeadas, son valores de 16 bits escritas en Little Endian
   p[35],p[34], p[37],p[36], p[39],p[38], p[41],p[40],
-  p[43],p[42], p[45],p[44], p[47],p[46], p[49],p[48]
+  p[43],p[42], p[45],p[44], p[47],p[46], p[49],p[48],
+  buffer_temp_memoria
   );
 
   //50: flags
