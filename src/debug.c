@@ -2710,6 +2710,8 @@ void cpu_history_regs_to_bin(z80_byte *p)
 
     z80_byte opcode=peek_byte_no_time_no_change_mra(reg_pc);
 
+    z80_byte opcode1=peek_byte_no_time_no_change_mra(reg_pc+1);
+
     z80_byte value1,value2;
 
     z80_int puntero;
@@ -2736,7 +2738,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
             p[52]=reg_d;
             p[53]=value1;
             printf("Storing on history %XH with value %XH coming from opcode %d modifying (DE)\n",
-                HL,value1,opcode);
+                DE,value1,opcode);
 
         break; 
 
@@ -2852,6 +2854,68 @@ void cpu_history_regs_to_bin(z80_byte *p)
 
             printf("Storing on history %XH with value %02X%02XH coming from opcode %d type PUSH/CALL/RST\n",
                 puntero,value2,value1,opcode);          
+        break;
+
+
+        //Prefijo ED
+        case 237:
+            switch (opcode1) {
+
+                case 67: //LD (NN),BC
+                case 83: //LD (NN),DE
+                case 99: //LD (NN),HL
+                case 115: //LD (NN),SP
+
+                    puntero=value_8_to_16(peek_byte_no_time_no_change_mra(reg_pc+2),peek_byte_no_time_no_change_mra(reg_pc+1));
+                    value1=peek_byte_no_time_no_change_mra(puntero);
+                    value2=peek_byte_no_time_no_change_mra(puntero+1);
+                    p[50]=2;
+                    p[51]=value_16_to_8l(puntero);
+                    p[52]=value_16_to_8h(puntero);
+                    p[53]=value1;
+                    p[54]=value_16_to_8l(puntero+1);
+                    p[55]=value_16_to_8h(puntero+1);
+                    p[56]=value2;            
+                    printf("Storing on history %XH with value %02X%02XH coming from opcode %d modifying 16 bits (NN)\n",
+                        puntero,value2,value1,opcode);        
+                break;
+
+
+
+                case 160: //LDI
+                case 168: //LDD
+                case 176: //LDIR
+                case 184: //LDDR
+
+                value1=peek_byte_no_time_no_change_mra(DE);
+                p[50]=1;
+                p[51]=reg_e;
+                p[52]=reg_d;
+                p[53]=value1;
+                printf("Storing on history %XH with value %XH coming from opcode %d type LDI/LDD\n",
+                    DE,value1,opcode);
+                
+                break;
+                
+                case 162: //INI
+                case 170: //IND
+                case 178: //INIR
+                case 186: //INDR
+
+                value1=peek_byte_no_time_no_change_mra(HL);
+                p[50]=1;
+                p[51]=reg_l;
+                p[52]=reg_h;
+                p[53]=value1;
+                printf("Storing on history %XH with value %XH coming from opcode %d type INI/IND\n",
+                    HL,value1,opcode);
+                                
+                break;
+
+            }
+
+
+            
         break;
     }
  
