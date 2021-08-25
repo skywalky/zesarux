@@ -205,3 +205,5 @@ PUSH HL
 LD (NN),IX
 
 -quiza linea cursor en debug cpu ubicar en el centro
+
+-completar tabla de reverse debug para IX/IY
