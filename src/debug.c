@@ -3015,7 +3015,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                     p[54]=value_16_to_8l(puntero+1);
                     p[55]=value_16_to_8h(puntero+1);
                     p[56]=value2;            
-                    printf("Storing on history %XH with value %02X%02XH coming from opcode ED%02XH modifying 16 bits (NN)\n",
+                    printf("Storing on history %XH with value %02X%02XH coming from opcode DD/FD%02XH modifying 16 bits (NN)\n",
                         puntero,value2,value1,opcode1);    
 
                 break; 
