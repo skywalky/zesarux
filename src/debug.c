@@ -2937,7 +2937,10 @@ void cpu_history_regs_to_bin(z80_byte *p)
         //Prefijo 203
         case 203:
             switch (opcode1 & 192) {
-   
+
+                case 64:
+                        //Nada
+                break;
 
                 case 128: //RES
                 case 192: //SET
@@ -2952,11 +2955,41 @@ void cpu_history_regs_to_bin(z80_byte *p)
                         p[51]=reg_l;
                         p[52]=reg_h;
                         p[53]=value1;
-                        printf("Storing on history %XH with value %XH coming from opcode CB%XH type SET/RES/ROTATION (HL)\n",
+                        printf("Storing on history %XH with value %XH coming from opcode CB%XH type SET/RES (HL)\n",
                             HL,value1,opcode1);                        
                     }
-                    res_bit_cb_reg(pref203_numerobit,pref203_registro);
+                    
                 break;
+
+                default:
+				switch(opcode1 & 56) {
+
+					case 0:
+                    case 8:
+                    case 16:
+                    case 24:
+                    case 32:
+                    case 40:
+                    case 48:
+                    case 56:
+                        pref203_registro=devuelve_reg_offset(opcode1 & 7);
+
+                        //registro ficticio 0 indica (HL)
+                        if (pref203_registro==0) {
+                            value1=peek_byte_no_time_no_change_mra(HL);
+                            p[50]=1;
+                            p[51]=reg_l;
+                            p[52]=reg_h;
+                            p[53]=value1;
+                            printf("Storing on history %XH with value %XH coming from opcode CB%XH type ROTATION (HL)\n",
+                                HL,value1,opcode1);                        
+                        }                        
+
+					break;
+
+					
+				}
+			break;                
             }
                 
      
