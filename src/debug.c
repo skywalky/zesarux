@@ -2752,7 +2752,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
             p[55]=value_16_to_8h(puntero+1);
             p[56]=value2;            
             printf("Storing on history %XH with value %02X%02XH coming from opcode %d modifying 16 bits (NN)\n",
-                puntero,value1,value2,opcode);        
+                puntero,value2,value1,opcode);        
         break;
 
         case 50: //LD (NN),A 
@@ -2787,6 +2787,53 @@ void cpu_history_regs_to_bin(z80_byte *p)
             printf("Storing on history %XH with value %XH coming from opcode %d modifying (HL)\n",
                 HL,value1,opcode);
 
+        break;
+
+
+        //Funciones CALL con condicion, si la condicion no se cumple, no se llamara a la funcion y por tanto
+        //no se modificaria stack. Pero lo guardamos igualmente, da igual, si no se modifica, al hacer backwards, se dejara tal cual ya estaba
+        case 196: //CALL NZ,NN
+        case 197: //PUSH BC  
+        case 199: //RST 0
+
+        case 204: //CALL Z,NN
+        case 205: //CALL NN
+        case 207: //RST 8
+
+        case 212: //CALL NC,NN
+        case 213: //PUSH DE
+        case 215: //RST 16
+
+        case 220: //CALL C,NN
+        case 223: //RST 24
+
+        case 228: //CALL PO,NN
+        case 229: //PUSH HL
+        case 231: //RST 32
+
+        case 236: //CALL PE,NN
+        case 239: //RST 40
+
+        case 244: //CALL P,NN
+        case 245: //PUSH AF
+        case 247: //RST 48
+
+        case 252: //CALL M,NN
+        case 255: //RST 56      
+
+            puntero=reg_sp-2;
+            value1=peek_byte_no_time_no_change_mra(puntero);
+            value2=peek_byte_no_time_no_change_mra(puntero+1);
+            p[50]=2;
+            p[51]=value_16_to_8l(puntero);
+            p[52]=value_16_to_8h(puntero);
+            p[53]=value1;
+            p[54]=value_16_to_8l(puntero+1);
+            p[55]=value_16_to_8h(puntero+1);
+            p[56]=value2;           
+
+            printf("Storing on history %XH with value %02X%02XH coming from opcode %d type PUSH/CALL/RST\n",
+                puntero,value2,value1,opcode);          
         break;
     }
  
