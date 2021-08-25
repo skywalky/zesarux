@@ -2534,7 +2534,7 @@ void reset_extended_stack(void)
 //IMPORTANTE: Aqui se define el tamaño del los registros en binario en la estructura
 //Si se modifica dicho tamaño, actualizar este valor
 
-#define CPU_HISTORY_REGISTERS_SIZE 50
+#define CPU_HISTORY_REGISTERS_SIZE 57
 
 //Dado un puntero z80_byte, con contenido de registros en binario, retorna valores registros
 //Registros 16 bits guardados en little endian
@@ -2570,6 +2570,14 @@ void cpu_history_regs_bin_to_string(z80_byte *p,char *destino)
   p[35],p[34], p[37],p[36], p[39],p[38], p[41],p[40],
   p[43],p[42], p[45],p[44], p[47],p[46], p[49],p[48]
   );
+
+  //50: flags
+  //Bits 0-1: sobre direcciones modificadas: 0, ninguna, 1: una direccion, 2: dos direcciones
+  //51-52: primera direccion modificada
+  //53: valor antes de modificar primera direccion 
+  //54-55: segunda direccion modificada
+  //56: valor antes de modificar segunda direccion
+
 }
 
 
@@ -2662,6 +2670,15 @@ void cpu_history_regs_to_bin(z80_byte *p)
 		p[34+i*2+1]=value_16_to_8h(debug_paginas_memoria_mapeadas[i]);		
 	}	
 
+  //50: flags
+  //Bits 0-1: sobre direcciones modificadas: 0, ninguna, 1: una direccion, 2: dos direcciones
+  //51-52: primera direccion modificada
+  //53: valor antes de modificar primera direccion 
+  //54-55: segunda direccion modificada
+  //56: valor antes de modificar segunda direccion
+
+    //por defecto , no modifica direcciones dicho opcode
+    p[50]=0;
  
 }
 
@@ -2902,6 +2919,28 @@ void cpu_history_regs_bin_restore(int indice)
   p[35],p[34], p[37],p[36], p[39],p[38], p[41],p[40],
   p[43],p[42], p[45],p[44], p[47],p[46], p[49],p[48]
   */
+
+  //50: flags
+  //Bits 0-1: sobre direcciones modificadas: 0, ninguna, 1: una direccion, 2: dos direcciones
+  //51-52: primera direccion modificada
+  //53: valor antes de modificar primera direccion 
+  //54-55: segunda direccion modificada
+  //56: valor antes de modificar segunda direccion
+  int flags_direcciones=p[50] & 2;
+
+  //1 o mas direcciones modificadas
+  if (flags_direcciones>=1) {
+      z80_int direccion=value_8_to_16(p[52],p[51]);
+      z80_byte valor=p[53];
+      poke_byte_no_time(direccion,valor);
+  }
+
+  //2 direcciones modificadas
+  if (flags_direcciones>=2) {
+      z80_int direccion=value_8_to_16(p[55],p[54]);
+      z80_byte valor=p[56];
+      poke_byte_no_time(direccion,valor);
+  }   
 
   
 }

@@ -18,6 +18,7 @@ Added ZEsarUX logo on the window footer
 
 
 Improved Debug CPU Window:
+-Added backwards debugging
 -Mouse accions: click (toggle breakpoint, change registers), scrolling up/down by using the mouse wheel
 -Improve window refresh when pressing keys on non-step mode
 -Preserve step mode when assembling
