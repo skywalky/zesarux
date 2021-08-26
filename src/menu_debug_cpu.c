@@ -5479,11 +5479,7 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
         //Volver si se cumple breakpoint
         if (menu_breakpoint_exception.v) return;
 
-        //volver si pulsada tecla
-        if (menu_si_tecla_pulsada() ) {
-            menu_espera_no_tecla();
-            return;
-        }
+
 
         int total_elementos_in_history=cpu_history_get_total_elements();
 
@@ -5495,6 +5491,19 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
             //quede un efecto mas chulo
             //De todas maneras, la velocidad al ir hacia atras va a depender de la velocidad de la cpu de cada uno
             if ((indice % 10000)==0) {
+
+                //leer teclado. Tener en cuenta que no hay nadie leyendo el teclado aqui pues estamos en un bucle cerrado
+                //Nota: en driver cocoa de Mac si que se lee el teclado pues se disparan eventos al pulsar teclas
+                //en cambio en resto de drivers: xwindows, sdl, etc, no se disparan eventos y se debe llamar especificamente a scr_actualiza_tablas_teclado
+                scr_actualiza_tablas_teclado();
+
+                realjoystick_main();
+
+                //volver si pulsada tecla
+                if (menu_si_tecla_pulsada() ) {
+                    menu_espera_no_tecla();
+                    return;
+                }
 
 
                 menu_debug_registers_print_main_step(ventana);
