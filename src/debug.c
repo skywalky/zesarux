@@ -2652,8 +2652,7 @@ void cpu_history_regs_to_bin_aux_exsp(z80_byte *p)
     p[55]=value_16_to_8h(puntero+1);
     p[56]=value2;           
 
-            printf("Storing on history %XH with value %02X%02XH coming from opcode type EX (SP),HL/IX/IY\n",
-                puntero,value2,value1); 
+    //printf("Storing on history %XH with value %02X%02XH coming from opcode type EX (SP),HL/IX/IY\n",puntero,value2,value1); 
 
 }
 
