@@ -5515,12 +5515,13 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
                 //scr_refresca_pantalla();
                 //printf("going back index %d\n",indice);
 
-                //pausa de 5 milisegundos para cada "frame"
+                //pausa de 10 milisegundos para cada "frame"
                 //suponiendo que todas las rutinas de arriba: recuperar history, refrescar pantalla etc, no durasen nada,
                 //estariamos lanzando unos 10000 opcodes (algo asi como aproximado los opcodes de un frame), a cada frame,
-                //con pausa de 5 milisegundos. En cambio cada frame de pantalla son 20 milisegundos, por tanto, asumiendo
-                //coste 0 de todo lo anterior, cada frame de pantalla iria 4x veces mas rapido
-                usleep(5000);
+                //con pausa de 10 milisegundos. En cambio cada frame de pantalla son 20 milisegundos, por tanto, asumiendo
+                //coste 0 de todo lo anterior, cada frame de pantalla iria 2x veces mas rapido
+                //esto es probable que suceda asi (aprox el doble de rapido) en un PC (mucho) mas rapido que el mio
+                usleep(10000);
             }
 
             menu_debug_cpu_backwards_history();
