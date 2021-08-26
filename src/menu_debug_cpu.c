@@ -54,6 +54,7 @@
 #include "audio.h"
 #include "disassemble.h"
 #include "ay38912.h"
+#include "realjoystick.h"
 
 //Opciones seleccionadas de menus
 int mem_breakpoints_opcion_seleccionada=0;
