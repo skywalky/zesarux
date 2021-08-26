@@ -490,6 +490,8 @@ extern void cpu_history_init_buffer(void);
 extern void cpu_history_get_pc_register_element(int indice,char *string_destino);
 extern void cpu_history_regs_bin_restore(int indice);
 
+extern int cpu_history_max_elements;
+
 extern int remote_tamanyo_archivo_raw_source_code;
 extern int *remote_parsed_source_code_indexes_pointer;
 extern char *remote_raw_source_code_pointer;

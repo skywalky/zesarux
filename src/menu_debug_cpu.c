@@ -3398,7 +3398,7 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
                 sprintf (buffer_intermedio_short,"set~^Pcptr%s%s%s",
                     ( debug_breakpoints_enabled.v ? " nxtpc~^Brk" : "" ),
                     (CPU_IS_Z80 ? " cpu~^Hst" : ""),
-                    (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " bck~^Stp" : "")
+                    (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " bck~^Stp bckru~^N" : "")
                     
                 );                
 
@@ -3406,7 +3406,7 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
                 sprintf (buffer_intermedio_long,"set~^Pc=ptr%s%s%s",
                     ( debug_breakpoints_enabled.v ? " nextpc~^Brk" : "" ),
                     (CPU_IS_Z80 ? " cpu~^Hist" : ""),
-                    (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " back~^Step" : "")
+                    (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " back~^Step backru~^N" : "")
                     
                 );
 
@@ -5464,6 +5464,37 @@ void menu_debug_cpu_backwards_history(void)
     indice_debug_cpu_backwards_history++;    
 }
 
+void menu_debug_cpu_backwards_history_run(void)
+{
+
+    int indice;
+
+    do {
+
+        //evaluar breakpoints
+        cpu_core_loop_debug_check_breakpoints();
+        if (menu_breakpoint_exception.v) return;
+
+        int total_elementos_in_history=cpu_history_get_total_elements();
+
+        indice=total_elementos_in_history-indice_debug_cpu_backwards_history-1;
+
+        if (indice>=0) {
+            //cada 5000 opcodes, refrescar pantalla
+            //esto no es real, habria que contar realmente cuando pasa un frame de pantalla, pero bueno, lo hago porque
+            //quede un efecto mas chulo
+            if ((indice % 10000)==0) {
+                scr_refresca_pantalla();
+                printf("going back index %d\n",indice);
+            }
+
+            menu_debug_cpu_backwards_history();
+        }
+    } while (indice>=0);
+
+
+}
+
 void menu_debug_cpu_history_select(MENU_ITEM_PARAMETERS)
 {
     //menu_debug_memory_pointer=valor_opcion;
@@ -6521,6 +6552,15 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
                     si_ejecuta_una_instruccion=0;                    
                 }
+
+                //backrun
+                if (tecla=='N' && cpu_history_enabled.v && cpu_history_started.v) {
+                    menu_debug_cpu_backwards_history_run();
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;                    
+                }                
 
 				//Vista. Entre 1 y 8
 				if (tecla>='1' && tecla<='8') {
