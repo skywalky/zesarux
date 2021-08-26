@@ -289,6 +289,8 @@ extern debug_nested_function_element *debug_nested_find_function_name(debug_nest
 extern void poke_byte_nested_handler(z80_int dir,z80_byte value);
 extern void cpu_core_loop_nested_handler(void);
 
+extern void cpu_core_loop_debug_check_breakpoints(void);
+
 extern debug_nested_function_element *nested_list_poke_byte;
 extern debug_nested_function_element *nested_list_core;
 

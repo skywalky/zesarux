@@ -65,6 +65,9 @@ int daad_tipo_mensaje_opcion_seleccionada=0;
 //Indice a donde apunta el run backwards. El 0 sera el mas reciente
 int indice_debug_cpu_backwards_history=0; 
 
+
+int menu_debug_registers_print_main_step(zxvision_window *ventana);
+
 void menu_mem_breakpoints_edit(MENU_ITEM_PARAMETERS)
 {
 
@@ -5464,7 +5467,7 @@ void menu_debug_cpu_backwards_history(void)
     indice_debug_cpu_backwards_history++;    
 }
 
-void menu_debug_cpu_backwards_history_run(void)
+void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
 {
 
     int indice;
@@ -5477,7 +5480,10 @@ void menu_debug_cpu_backwards_history_run(void)
         if (menu_breakpoint_exception.v) return;
 
         //volver si pulsada tecla
-        if (menu_si_tecla_pulsada() ) return;
+        if (menu_si_tecla_pulsada() ) {
+            menu_espera_no_tecla();
+            return;
+        }
 
         int total_elementos_in_history=cpu_history_get_total_elements();
 
@@ -5487,9 +5493,21 @@ void menu_debug_cpu_backwards_history_run(void)
             //cada 5000 opcodes, refrescar pantalla
             //esto no es real, habria que contar realmente cuando pasa un frame de pantalla, pero bueno, lo hago porque
             //quede un efecto mas chulo
+            //De todas maneras, la velocidad al ir hacia atras va a depender de la velocidad de la cpu de cada uno
             if ((indice % 10000)==0) {
-                scr_refresca_pantalla();
+
+
+                menu_debug_registers_print_main_step(ventana);
+                zxvision_draw_window_contents(ventana);
+
+                menu_refresca_pantalla();
+
+
+                //scr_refresca_pantalla();
                 printf("going back index %d\n",indice);
+
+                //pausa de 5 milisegundos para cada "frame"
+                usleep(5000);
             }
 
             menu_debug_cpu_backwards_history();
@@ -5631,6 +5649,38 @@ void menu_debug_cpu_history(void)
         }
 
     } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);   
+}
+
+int menu_debug_registers_print_main_step(zxvision_window *ventana)
+{
+
+    int linea;
+
+    menu_debug_registers_set_title(ventana);
+    zxvision_draw_window(ventana);
+
+    menu_breakpoint_exception_pending_show.v=0;
+
+    menu_debug_registers_adjust_ptr_on_follow();
+
+    linea=0;
+    linea=menu_debug_registers_show_ptr_text(ventana,linea);
+
+    linea++;
+
+
+    //Zona central de la vista: desensamblado, registros, etc
+    linea=menu_debug_registers_print_registers(ventana,linea);
+
+    //linea=19;
+    linea=menu_debug_registers_get_line_legend(ventana);
+
+    //Forzar a mostrar atajos
+    z80_bit antes_menu_writing_inverse_color;
+    antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+    menu_writing_inverse_color.v=1;   
+
+    return linea; 
 }
 
 
@@ -6100,6 +6150,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		//
 		else {
 
+            linea=menu_debug_registers_print_main_step(ventana);
+
+            
+            /*
 			menu_debug_registers_set_title(ventana);
 			zxvision_draw_window(ventana);
 
@@ -6111,9 +6165,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	        linea=menu_debug_registers_show_ptr_text(ventana,linea);
 
         	linea++;
-
-
-			int si_ejecuta_una_instruccion=1;
+		
 
             //Zona central de la vista: desensamblado, registros, etc
             linea=menu_debug_registers_print_registers(ventana,linea);
@@ -6126,6 +6178,11 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	        antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
         	menu_writing_inverse_color.v=1;
 
+            */
+
+            int si_ejecuta_una_instruccion=1;
+            z80_bit antes_menu_writing_inverse_color;
+            
 
 
 			if (continuous_step==0) {
@@ -6559,7 +6616,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                 //backrun
                 if (tecla=='N' && cpu_history_enabled.v && cpu_history_started.v) {
-                    menu_debug_cpu_backwards_history_run();
+                    menu_debug_cpu_backwards_history_run(ventana);
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion

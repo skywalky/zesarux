@@ -257,7 +257,7 @@ char *cpu_core_loop_name=NULL;
 //si se hace debug en el core (para breakpoints, y otras condiciones)
 //z80_bit debug_cpu_core_loop={0};
 
-void cpu_core_loop_debug_check_breakpoints(void);
+
 
 void debug_dump_nested_print(char *string_inicial, char *string_to_print);
 
