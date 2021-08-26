@@ -2634,6 +2634,29 @@ z80_byte peek_byte_no_time_no_change_mra(z80_int dir)
 
 }
 
+void cpu_history_regs_to_bin_aux_exsp(z80_byte *p)
+{
+    //EX (SP),HL  , EX(SP),IX/IY
+    z80_byte value1,value2;
+
+    z80_int puntero;    
+
+    puntero=reg_sp;
+    value1=peek_byte_no_time_no_change_mra(puntero);
+    value2=peek_byte_no_time_no_change_mra(puntero+1);
+    p[50]=2;
+    p[51]=value_16_to_8l(puntero);
+    p[52]=value_16_to_8h(puntero);
+    p[53]=value1;
+    p[54]=value_16_to_8l(puntero+1);
+    p[55]=value_16_to_8h(puntero+1);
+    p[56]=value2;           
+
+            printf("Storing on history %XH with value %02X%02XH coming from opcode type EX (SP),HL/IX/IY\n",
+                puntero,value2,value1); 
+
+}
+
 //Guarda en puntero z80_byte en con contenido de registros en binario
 //Registros 16 bits guardados en little endian
 void cpu_history_regs_to_bin(z80_byte *p)
@@ -2712,6 +2735,8 @@ void cpu_history_regs_to_bin(z80_byte *p)
 
     z80_byte opcode1=peek_byte_no_time_no_change_mra(reg_pc+1);
 
+    z80_byte opcode2;
+
     z80_byte value1,value2;
 
     z80_int puntero;
@@ -2721,6 +2746,9 @@ void cpu_history_regs_to_bin(z80_byte *p)
 	z80_byte pref203_numerobit;   
 
     z80_int *cual_registro_ixiy; 
+
+    z80_int desp16;
+    z80_byte desp;
 
     //Esto se podria hacer con una tabla pero dado que solo lo utilizo aqui, lo hago con switch
     switch (opcode) {
@@ -2799,19 +2827,9 @@ void cpu_history_regs_to_bin(z80_byte *p)
 
         case 227: //EX (SP),HL
 
-            puntero=reg_sp;
-            value1=peek_byte_no_time_no_change_mra(puntero);
-            value2=peek_byte_no_time_no_change_mra(puntero+1);
-            p[50]=2;
-            p[51]=value_16_to_8l(puntero);
-            p[52]=value_16_to_8h(puntero);
-            p[53]=value1;
-            p[54]=value_16_to_8l(puntero+1);
-            p[55]=value_16_to_8h(puntero+1);
-            p[56]=value2;           
+            cpu_history_regs_to_bin_aux_exsp(p);
+        
 
-            printf("Storing on history %XH with value %02X%02XH coming from opcode %XH type EX (SP),HL\n",
-                puntero,value2,value1,opcode);          
         break;
 
 
@@ -3019,6 +3037,66 @@ void cpu_history_regs_to_bin(z80_byte *p)
                         puntero,value2,value1,opcode1);    
 
                 break; 
+
+                case 52: //INC (IX+d)
+                case 53: //DEC (IX+d)
+                case 54: //LD (IX+d),N
+                case 112: //LD (IX+d),B
+                case 113: //LD (IX+d),C
+                case 114: //LD (IX+d),D
+                case 115: //LD (IX+d),E
+                case 116: //LD (IX+d),H
+                case 117: //LD (IX+d),L
+                case 119: //LD (IX+d),A               
+
+                    desp=peek_byte_no_time_no_change_mra(reg_pc+2);
+
+                    desp16=desp8_to_16(desp);
+                    puntero=*cual_registro_ixiy + desp16;
+
+                    value1=peek_byte_no_time_no_change_mra(puntero);
+
+                    p[50]=1;
+                    p[51]=value_16_to_8l(puntero);
+                    p[52]=value_16_to_8h(puntero);
+                    p[53]=value1;
+
+                    printf("Storing on history %XH with value %02XH coming from opcode DD/FD%02XH modifying 8 bits (IX+d)\n",
+                        puntero,value1,opcode1);
+
+
+                break;
+
+                case 227: //EX (SP),IX
+
+                    cpu_history_regs_to_bin_aux_exsp(p);
+                                 
+
+                break;
+
+                case 203:
+                    //SET, RES, ROTACIONES... USANDO (IX/IY+d)
+                    //Excepto instrucciones bit (del opcode 64 al 127), todas modifican (IX/IY+d)
+                    //Formato DD/FB + CB + d + Opcode
+                    
+                    opcode2=peek_byte_no_time_no_change_mra(reg_pc+3);
+                    if (opcode2<64 || opcode2>127) {
+
+                        desp=peek_byte_no_time_no_change_mra(reg_pc+2);
+                        desp16=desp8_to_16(desp);
+                        puntero=*cual_registro_ixiy + desp16;
+
+                        value1=peek_byte_no_time_no_change_mra(puntero);      
+
+                        p[50]=1;
+                        p[51]=value_16_to_8l(puntero);
+                        p[52]=value_16_to_8h(puntero);
+                        p[53]=value1;
+
+                        printf("Storing on history %XH with value %02XH coming from opcode DD/FD CB %02XH modifying 8 bits (IX+d)\n",
+                            puntero,value1,opcode2);                                  
+                        }
+                break;
             }
 
 
