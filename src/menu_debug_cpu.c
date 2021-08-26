@@ -5504,7 +5504,7 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
 
 
                 //scr_refresca_pantalla();
-                printf("going back index %d\n",indice);
+                //printf("going back index %d\n",indice);
 
                 //pausa de 5 milisegundos para cada "frame"
                 usleep(5000);
