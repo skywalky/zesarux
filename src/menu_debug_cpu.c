@@ -5487,10 +5487,9 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
         indice=total_elementos_in_history-indice_debug_cpu_backwards_history-1;
 
         if (indice>=0) {
-            //cada 5000 opcodes, refrescar pantalla
-            //esto no es real, habria que contar realmente cuando pasa un frame de pantalla, pero bueno, lo hago porque
-            //quede un efecto mas chulo
-            //De todas maneras, la velocidad al ir hacia atras va a depender de la velocidad de la cpu de cada uno
+            //cada 10000 opcodes, refrescar pantalla
+            //esto no es real, habria que contar realmente cuando pasa un frame de pantalla, contando testados
+            //pero bueno, lo hago para que quede un efecto mas chulo
             if ((indice % 10000)==0) {
 
                 //leer teclado. Tener en cuenta que no hay nadie leyendo el teclado aqui pues estamos en un bucle cerrado
@@ -5517,6 +5516,10 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
                 //printf("going back index %d\n",indice);
 
                 //pausa de 5 milisegundos para cada "frame"
+                //suponiendo que todas las rutinas de arriba: recuperar history, refrescar pantalla etc, no durasen nada,
+                //estariamos lanzando unos 10000 opcodes (algo asi como aproximado los opcodes de un frame), a cada frame,
+                //con pausa de 5 milisegundos. En cambio cada frame de pantalla son 20 milisegundos, por tanto, asumiendo
+                //coste 0 de todo lo anterior, cada frame de pantalla iria 4x veces mas rapido
                 usleep(5000);
             }
 
