@@ -206,4 +206,4 @@ LD (NN),IX
 
 -quiza linea cursor en debug cpu ubicar en el centro
 
--completar tabla de reverse debug para IX/IY
+-a veces al pulsar backwards run no hace caso y hay que hacer step y luego ya si

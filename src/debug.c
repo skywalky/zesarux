@@ -2759,8 +2759,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
             p[51]=reg_c;
             p[52]=reg_b;
             p[53]=value1;
-            printf("Storing on history %XH with value %XH coming from opcode %XH modifying (BC)\n",
-                HL,value1,opcode);
+            //printf("Storing on history %XH with value %XH coming from opcode %XH modifying (BC)\n",HL,value1,opcode);
 
         break;
 
@@ -2771,8 +2770,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
             p[51]=reg_e;
             p[52]=reg_d;
             p[53]=value1;
-            printf("Storing on history %XH with value %XH coming from opcode %XH modifying (DE)\n",
-                DE,value1,opcode);
+            //printf("Storing on history %XH with value %XH coming from opcode %XH modifying (DE)\n",DE,value1,opcode);
 
         break; 
 
@@ -2787,8 +2785,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
             p[54]=value_16_to_8l(puntero+1);
             p[55]=value_16_to_8h(puntero+1);
             p[56]=value2;            
-            printf("Storing on history %XH with value %02X%02XH coming from opcode %XH modifying 16 bits (NN)\n",
-                puntero,value2,value1,opcode);        
+            //printf("Storing on history %XH with value %02X%02XH coming from opcode %XH modifying 16 bits (NN)\n",puntero,value2,value1,opcode);        
         break;
 
         case 50: //LD (NN),A 
@@ -2799,8 +2796,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
             p[52]=value_16_to_8h(puntero);
             p[53]=value1;
           
-            printf("Storing on history %XH with value %02XH coming from opcode %XH modifying 8 bits (NN)\n",
-                puntero,value1,opcode);    
+            //printf("Storing on history %XH with value %02XH coming from opcode %XH modifying 8 bits (NN)\n",puntero,value1,opcode);    
         break;
          
 
@@ -2820,8 +2816,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
             p[51]=reg_l;
             p[52]=reg_h;
             p[53]=value1;
-            printf("Storing on history %XH with value %XH coming from opcode %XH modifying (HL)\n",
-                HL,value1,opcode);
+            //printf("Storing on history %XH with value %XH coming from opcode %XH modifying (HL)\n",HL,value1,opcode);
 
         break;
 
@@ -2876,8 +2871,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
             p[55]=value_16_to_8h(puntero+1);
             p[56]=value2;           
 
-            printf("Storing on history %XH with value %02X%02XH coming from opcode %XH type PUSH/CALL/RST\n",
-                puntero,value2,value1,opcode);          
+            //printf("Storing on history %XH with value %02X%02XH coming from opcode %XH type PUSH/CALL/RST\n",puntero,value2,value1,opcode);          
         break;
 
 
@@ -2900,8 +2894,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                     p[54]=value_16_to_8l(puntero+1);
                     p[55]=value_16_to_8h(puntero+1);
                     p[56]=value2;            
-                    printf("Storing on history %XH with value %02X%02XH coming from opcode ED%XH modifying 16 bits (NN)\n",
-                        puntero,value2,value1,opcode1);        
+                    //printf("Storing on history %XH with value %02X%02XH coming from opcode ED%XH modifying 16 bits (NN)\n",puntero,value2,value1,opcode1);        
                 break;
 
 
@@ -2912,8 +2905,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                     p[51]=reg_l;
                     p[52]=reg_h;
                     p[53]=value1;
-                    printf("Storing on history %XH with value %XH coming from opcode ED%XH type RRD/RLD\n",
-                        HL,value1,opcode1);                
+                    //printf("Storing on history %XH with value %XH coming from opcode ED%XH type RRD/RLD\n",HL,value1,opcode1);                
 
                 break;
 
@@ -2928,8 +2920,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                     p[51]=reg_e;
                     p[52]=reg_d;
                     p[53]=value1;
-                    printf("Storing on history %XH with value %XH coming from opcode ED%XH type LDI/LDD\n",
-                        DE,value1,opcode1);
+                    //printf("Storing on history %XH with value %XH coming from opcode ED%XH type LDI/LDD\n",DE,value1,opcode1);
                 
                 break;
                 
@@ -2943,8 +2934,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                     p[51]=reg_l;
                     p[52]=reg_h;
                     p[53]=value1;
-                    printf("Storing on history %XH with value %XH coming from opcode ED%XH type INI/IND\n",
-                        HL,value1,opcode1);
+                    //printf("Storing on history %XH with value %XH coming from opcode ED%XH type INI/IND\n",HL,value1,opcode1);
                                 
                 break;
 
@@ -2975,8 +2965,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                         p[51]=reg_l;
                         p[52]=reg_h;
                         p[53]=value1;
-                        printf("Storing on history %XH with value %XH coming from opcode CB%XH type SET/RES (HL)\n",
-                            HL,value1,opcode1);                        
+                        //printf("Storing on history %XH with value %XH coming from opcode CB%XH type SET/RES (HL)\n",HL,value1,opcode1);                        
                     }
                     
                 break;
@@ -3001,8 +2990,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                             p[51]=reg_l;
                             p[52]=reg_h;
                             p[53]=value1;
-                            printf("Storing on history %XH with value %XH coming from opcode CB%XH type ROTATION (HL)\n",
-                                HL,value1,opcode1);                        
+                            //printf("Storing on history %XH with value %XH coming from opcode CB%XH type ROTATION (HL)\n",HL,value1,opcode1);                        
                         }                        
 
 					break;
@@ -3033,8 +3021,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                     p[54]=value_16_to_8l(puntero+1);
                     p[55]=value_16_to_8h(puntero+1);
                     p[56]=value2;            
-                    printf("Storing on history %XH with value %02X%02XH coming from opcode DD/FD%02XH modifying 16 bits (NN)\n",
-                        puntero,value2,value1,opcode1);    
+                    //printf("Storing on history %XH with value %02X%02XH coming from opcode DD/FD%02XH modifying 16 bits (NN)\n",puntero,value2,value1,opcode1);    
 
                 break; 
 
@@ -3061,8 +3048,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                     p[52]=value_16_to_8h(puntero);
                     p[53]=value1;
 
-                    printf("Storing on history %XH with value %02XH coming from opcode DD/FD%02XH modifying 8 bits (IX+d)\n",
-                        puntero,value1,opcode1);
+                    //printf("Storing on history %XH with value %02XH coming from opcode DD/FD%02XH modifying 8 bits (IX+d)\n",puntero,value1,opcode1);
 
 
                 break;
@@ -3093,8 +3079,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                         p[52]=value_16_to_8h(puntero);
                         p[53]=value1;
 
-                        printf("Storing on history %XH with value %02XH coming from opcode DD/FD CB %02XH modifying 8 bits (IX+d)\n",
-                            puntero,value1,opcode2);                                  
+                        //printf("Storing on history %XH with value %02XH coming from opcode DD/FD CB %02XH modifying 8 bits (IX+d)\n",puntero,value1,opcode2);                                  
                         }
                 break;
             }
@@ -3358,7 +3343,7 @@ void cpu_history_regs_bin_restore(int indice)
       z80_int direccion=value_8_to_16(p[52],p[51]);
       z80_byte valor=p[53];
       poke_byte_no_time(direccion,valor);
-      printf("modifying first address %X value %X\n",direccion,valor);
+      //printf("modifying first address %X value %X\n",direccion,valor);
   }
 
   //2 direcciones modificadas
@@ -3366,7 +3351,7 @@ void cpu_history_regs_bin_restore(int indice)
       z80_int direccion=value_8_to_16(p[55],p[54]);
       z80_byte valor=p[56];
       poke_byte_no_time(direccion,valor);
-      printf("modifying second address %X value %X\n",direccion,valor);
+      //printf("modifying second address %X value %X\n",direccion,valor);
   }   
 
   
