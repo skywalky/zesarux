@@ -739,6 +739,7 @@ extern void reset_welcome_message(void);
 extern z80_bit menu_splash_text_active;
 extern int menu_splash_segundos;
 extern z80_byte menu_da_todas_teclas(void);
+extern int menu_si_tecla_pulsada(void);
 extern void menu_espera_tecla_o_joystick(void);
 extern void menu_espera_no_tecla(void);
 extern void menu_get_dir(char *ruta,char *directorio);

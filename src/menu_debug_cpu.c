@@ -5473,7 +5473,11 @@ void menu_debug_cpu_backwards_history_run(void)
 
         //evaluar breakpoints
         cpu_core_loop_debug_check_breakpoints();
+        //Volver si se cumple breakpoint
         if (menu_breakpoint_exception.v) return;
+
+        //volver si pulsada tecla
+        if (menu_si_tecla_pulsada() ) return;
 
         int total_elementos_in_history=cpu_history_get_total_elements();
 

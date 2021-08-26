@@ -13212,6 +13212,12 @@ z80_byte menu_da_todas_teclas(void)
 
 }
 
+int menu_si_tecla_pulsada(void)
+{
+    z80_byte acumulado=menu_da_todas_teclas();
+    if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) != MENU_PUERTO_TECLADO_NINGUNA) return 1;
+    else return 0;
+}
 
 //Para forzar desde remote command a salir de la funcion, sin haber pulsado tecla realmente
 //z80_bit menu_espera_tecla_no_cpu_loop_flag_salir={0};
