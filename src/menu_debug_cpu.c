@@ -6643,6 +6643,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
                 //backrun
                 if (tecla=='N' && cpu_history_enabled.v && cpu_history_started.v) {
+					//Detener multitarea pues interesa que no se "mueva" la cpu si sale el aviso de first aid
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
+
                     menu_debug_cpu_backwards_history_run(ventana);
                     if (rainbow_enabled.v) {
                         menu_first_aid("back_run_rainbow");
@@ -6650,7 +6654,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
-                    si_ejecuta_una_instruccion=0;                    
+                    si_ejecuta_una_instruccion=0;    
+
+                    //Restaurar estado multitarea 
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;                                    
                 }                
 
 				//Vista. Entre 1 y 8
