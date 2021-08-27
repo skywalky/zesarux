@@ -5473,6 +5473,8 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
 
     int indice;
 
+    //printf("indice_debug_cpu_backwards_history %d\n",indice_debug_cpu_backwards_history);
+
     do {
 
         if (debug_breakpoints_enabled.v) {
