@@ -3399,10 +3399,10 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 
                 sprintf(s,"set~^Pc=ptr%s%s%s",string_nextpcbr,string_history,string_backwards);
 
-                sprintf (buffer_intermedio_short,"set~^Pcptr%s%s%s",
-                    ( debug_breakpoints_enabled.v ? " nxtpc~^Brk" : "" ),
+                sprintf (buffer_intermedio_short,"~^Pc=ptr%s%s%s",
+                    ( debug_breakpoints_enabled.v ? " nxtpc~^Br" : "" ),
                     (CPU_IS_Z80 ? " cpu~^Hst" : ""),
-                    (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " bck~^Stp bckru~^N" : "")
+                    (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " b~^Stp bru~^N" : "")
                     
                 );                
 
@@ -5475,10 +5475,12 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
 
     do {
 
-        //evaluar breakpoints
-        cpu_core_loop_debug_check_breakpoints();
-        //Volver si se cumple breakpoint
-        if (menu_breakpoint_exception.v) return;
+        if (debug_breakpoints_enabled.v) {
+            //evaluar breakpoints
+            cpu_core_loop_debug_check_breakpoints();
+            //Volver si se cumple breakpoint
+            if (menu_breakpoint_exception.v) return;
+        }
 
 
 
@@ -5509,7 +5511,18 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
                 menu_debug_registers_print_main_step(ventana);
                 zxvision_draw_window_contents(ventana);
 
+                //Si real video esta activado, este refresca pantalla no mostraria actualizaciones de pantalla,
+                //dado que para eso necesitaria hacer el paso de pantalla a buffer rainbow
+                //por tanto, desactivamos temporalmente real video
+                //TODO: el efecto inesperado de esto es que yendo hacia atras, si tienes real video, aqui se ira refrescando bien,
+                //pero cuando acabe de restaurar todo el historial, te refrescara la pantalla con rainbow y por tanto aparecera
+                //el estado inicial, hasta que salgas del menu y se vea bien el estado actual
+                //En este caso lo solvento con un mensaje tipo first aid
+                int antes_rainbow=rainbow_enabled.v;
+
+                rainbow_enabled.v=0;
                 menu_refresca_pantalla();
+                rainbow_enabled.v=antes_rainbow;
 
 
                 //scr_refresca_pantalla();
@@ -6631,6 +6644,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 //backrun
                 if (tecla=='N' && cpu_history_enabled.v && cpu_history_started.v) {
                     menu_debug_cpu_backwards_history_run(ventana);
+                    if (rainbow_enabled.v) {
+                        menu_first_aid("back_run_rainbow");
+                    }
                     //Decimos que no hay tecla pulsada
                     acumulado=MENU_PUERTO_TECLADO_NINGUNA;
                     //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion

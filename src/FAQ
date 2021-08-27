@@ -628,15 +628,15 @@ A: Be sure you haven't enabled divmmc or divide paging, it's incompatible with s
 ----------------------------------------------------------------------------
 
 
-CPC 464
--------
+CPC
+---
 
 
 Q: Why many games don't load, or hang on menu, or shows corrupted display?
-A: CPC emulation is currently experimental. Many features don't work well:
-* No full CRTC support
-* No joystick support
-* No hardware scroll full support
+A: CPC emulation is currently experimental. Many features don't work well or may fail
+
+Q: What is CPC 4128?
+A: Is a fictional model with tape and 128kb RAM. I created it to be able to test some games which need 128kb but can load from tape (and not from disk, which I don't emulate on CPC)
 
 
 ----------------------------------------------------------------------------

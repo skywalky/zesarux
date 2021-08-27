@@ -38853,6 +38853,9 @@ char *first_aid_string_debug_variables="Browsing the floating point numeric vari
 int first_aid_no_debug_console=0;
 char *first_aid_string_debug_console="First messages appear at the bottom of the window";
 
+int first_aid_no_back_run_rainbow=0;
+char *first_aid_string_back_run_rainbow="As you have real video enabled, you may see the machine display now drawn as the initial state, but it's not the actual state, it's a temporary frame that will disappear after you close the menu";
+
 
 //Items que se disparan en startup
 
@@ -38953,6 +38956,8 @@ void menu_first_aid_init(void)
     menu_first_aid_add("search_zxinfo",&first_aid_no_search_zxinfo,first_aid_string_search_zxinfo,0);
     menu_first_aid_add("debug_variables",&first_aid_no_debug_variables,first_aid_string_debug_variables,0);
     menu_first_aid_add("debug_console",&first_aid_no_debug_console,first_aid_string_debug_console,0);
+    menu_first_aid_add("back_run_rainbow",&first_aid_no_back_run_rainbow,first_aid_string_back_run_rainbow,0);
+    
 
 
 	//Items que se disparan en startup
