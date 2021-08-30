@@ -3858,7 +3858,34 @@ void menu_draw_ext_desktop_one_lower_icon_background(int contador_boton,int puls
 }
 
 
-	
+char **menu_get_extdesktop_button_bitmap(int numero_boton)
+{
+    char **puntero_bitmap;
+
+    //por defecto
+    puntero_bitmap=zxdesktop_buttons_bitmaps[numero_boton];
+
+    int boton_id=numero_boton-1;
+
+    //El 0 no esta permitido
+    if (boton_id>=0 && boton_id<MAX_USERDEF_BUTTONS) {
+
+        enum defined_f_function_ids accion;
+
+        accion=defined_buttons_functions_array[boton_id];
+
+
+        if (accion!=F_FUNCION_DEFAULT) {
+            puntero_bitmap=defined_f_functions_array[accion].bitmap_button;
+        }
+
+    }
+
+
+    
+
+    return puntero_bitmap;
+}
 
 
 //Dibujar un boton con su bitmap, con efecto pulsado si/no
@@ -3964,7 +3991,8 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 
 		char **puntero_bitmap;
 
-		puntero_bitmap=zxdesktop_buttons_bitmaps[numero_boton];
+		//puntero_bitmap=zxdesktop_buttons_bitmaps[numero_boton];
+        puntero_bitmap=menu_get_extdesktop_button_bitmap(numero_boton);
 
 
 		if (pulsado) {
