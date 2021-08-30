@@ -196,7 +196,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"NMI",F_FUNCION_NMI,bitmap_button_ext_desktop_userdefined}, 
 	{"OpenMenu",F_FUNCION_OPENMENU,bitmap_button_ext_desktop_userdefined}, 
 	{"OCR",F_FUNCION_OCR,bitmap_button_ext_desktop_userdefined}, 
-	{"SmartLoad",F_FUNCION_SMARTLOAD,bitmap_button_ext_desktop_userdefined}, 
+	{"SmartLoad",F_FUNCION_SMARTLOAD,bitmap_button_ext_desktop_smartload}, 
 	{"Quickload",F_FUNCION_QUICKLOAD,bitmap_button_ext_desktop_userdefined}, 
 	{"Quicksave",F_FUNCION_QUICKSAVE,bitmap_button_ext_desktop_userdefined}, 
     {"SnapInRAMRewind",F_FUNCION_REWIND,bitmap_button_ext_desktop_userdefined}, 
@@ -214,7 +214,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"DebugCPU",F_FUNCION_DEBUGCPU,bitmap_button_ext_desktop_userdefined}, 
 	{"Pause",F_FUNCION_PAUSE,bitmap_button_ext_desktop_userdefined}, 
 	{"TopSpeed",F_FUNCION_TOPSPEED,bitmap_button_ext_desktop_userdefined}, 
-	{"ExitEmulator",F_FUNCION_EXITEMULATOR,bitmap_button_ext_desktop_userdefined}, 
+	{"ExitEmulator",F_FUNCION_EXITEMULATOR,bitmap_button_ext_desktop_exit}, 
 	{"BackgroundWindow",F_FUNCION_BACKGROUND_WINDOW,bitmap_button_ext_desktop_userdefined}, 
 
 	//Para el usuario, mejor esta descripcion
