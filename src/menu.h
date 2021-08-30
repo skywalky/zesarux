@@ -459,10 +459,12 @@ enum defined_f_function_ids {
 //Nota: F_FUNCION_BACKGROUND_WINDOW no se llama de la misma manera que las otras funciones F
 //solo esta aqui para evitar que una misma tecla F se asigne a una funcion F normal y tambien a background window
 
-//Define teclas F que se pueden mapear a acciones
+//Define teclas F que se pueden mapear a acciones y botones
 struct s_defined_f_function {
 	char texto_funcion[30]; 
 	enum defined_f_function_ids id_funcion;
+
+    char **bitmap_button;
 };
 
 typedef struct s_defined_f_function defined_f_function;
