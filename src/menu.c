@@ -191,7 +191,7 @@ int menu_last_cpu_use=0;
 defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"Default",F_FUNCION_DEFAULT,bitmap_button_ext_desktop_userdefined},  
 	{"Nothing",F_FUNCION_NOTHING,bitmap_button_ext_desktop_userdefined}, 
-	{"Reset",F_FUNCION_RESET,bitmap_button_ext_desktop_userdefined}, 
+	{"Reset",F_FUNCION_RESET,bitmap_button_ext_desktop_reset}, 
 	{"HardReset",F_FUNCION_HARDRESET,bitmap_button_ext_desktop_userdefined}, 
 	{"NMI",F_FUNCION_NMI,bitmap_button_ext_desktop_userdefined}, 
 	{"OpenMenu",F_FUNCION_OPENMENU,bitmap_button_ext_desktop_userdefined}, 
@@ -203,6 +203,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
     {"SnapInRAMFFW",F_FUNCION_FFW,bitmap_button_ext_desktop_userdefined}, 
 	{"LoadBinary",F_FUNCION_LOADBINARY,bitmap_button_ext_desktop_userdefined}, 
 	{"SaveBinary",F_FUNCION_SAVEBINARY,bitmap_button_ext_desktop_userdefined}, 
+    {"Waveform",F_FUNCION_WAVEFORM,bitmap_button_ext_desktop_waveform},
 	{"ZengMessage",F_FUNCION_ZENG_SENDMESSAGE,bitmap_button_ext_desktop_userdefined}, 
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD,bitmap_button_ext_desktop_userdefined}, 
 	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD,bitmap_button_ext_desktop_userdefined}, 
@@ -35445,6 +35446,10 @@ void menu_process_f_functions_by_action(int accion)
 		case F_FUNCION_SAVEBINARY:
 			menu_debug_save_binary(0);
 		break;
+
+		case F_FUNCION_WAVEFORM:
+			menu_audio_new_waveform(0);
+		break;        
 
 		case F_FUNCION_ZENG_SENDMESSAGE:
 			if (menu_zeng_send_message_cond()) menu_zeng_send_message(0);

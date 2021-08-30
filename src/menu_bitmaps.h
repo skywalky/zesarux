@@ -44,6 +44,8 @@ extern char *bitmap_button_ext_desktop_exit[];
 
 extern char *bitmap_button_ext_desktop_userdefined[];
 extern char *bitmap_button_ext_desktop_fullscreen[];
+extern char *bitmap_button_ext_desktop_waveform[];
+extern char *bitmap_button_ext_desktop_reset[];
 
 extern char **zxdesktop_buttons_bitmaps[];
 
