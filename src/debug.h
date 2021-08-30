@@ -477,6 +477,10 @@ extern z80_bit cpu_code_coverage_enabled;
 extern z80_bit cpu_history_enabled;
 extern z80_bit cpu_history_started;
 
+//IMPORTANTE: Aqui se define el tamaño del los registros en binario en la estructura
+//Si se modifica dicho tamaño, actualizar este valor
+
+#define CPU_HISTORY_REGISTERS_SIZE 57
 
 #define CPU_HISTORY_MAX_ALLOWED_ELEMENTS 10000000
 //10 millones

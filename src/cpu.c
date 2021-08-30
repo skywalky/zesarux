@@ -1511,8 +1511,14 @@ void cpu_help_expert(void)
 
 	    "--show-invalid-opcode      If running invalid cpu opcodes will generate a warning message\n"
 
-
 );
+
+        printf(
+
+        "--cpu-history-max-items n  Maximum items allowed on cpu history feature. Each item uses %d bytes of memory\n",
+                                    CPU_HISTORY_REGISTERS_SIZE);
+
+
 
 printf(
 		"--set-breakpoint n s       Set breakpoint with string s at position n. n must be between 1 and %d. string s must be written in \"\" if has spaces. Used normally with --enable-breakpoints\n",MAX_BREAKPOINTS_CONDITIONS
@@ -7854,6 +7860,21 @@ int parse_cmdline_options(void) {
 		else if (!strcmp(argv[puntero_parametro],"--show-invalid-opcode")) {
 	  				debug_shows_invalid_opcode.v=1;
 		}
+
+        else if (!strcmp(argv[puntero_parametro],"--cpu-history-max-items")) {
+            siguiente_parametro_argumento();
+
+            int max_items=parse_string_to_number(argv[puntero_parametro]);
+
+
+            if (max_items<1 || max_items>CPU_HISTORY_MAX_ALLOWED_ELEMENTS) {
+                printf("Value for max history elements out of range\n");
+                exit(1);
+            }
+
+            cpu_history_max_elements=max_items;
+        }
+
 
 		else if (!strcmp(argv[puntero_parametro],"--brkp-always")) {
 	  				debug_breakpoints_cond_behaviour.v=0;

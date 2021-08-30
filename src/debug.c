@@ -2531,10 +2531,7 @@ void reset_extended_stack(void)
 
 
 
-//IMPORTANTE: Aqui se define el tamaño del los registros en binario en la estructura
-//Si se modifica dicho tamaño, actualizar este valor
 
-#define CPU_HISTORY_REGISTERS_SIZE 57
 
 //Dado un puntero z80_byte, con contenido de registros en binario, retorna valores registros
 //Registros 16 bits guardados en little endian

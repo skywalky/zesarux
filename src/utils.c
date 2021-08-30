@@ -3693,7 +3693,8 @@ int util_write_configfile(void)
 
 
   if (menu_debug_registers_if_showscan.v)     ADD_STRING_CONFIG,"--show-electron-debug");
- 
+
+                                              ADD_STRING_CONFIG,"--cpu-history-max-items %d",cpu_history_max_elements); 
 
   if (remote_tamanyo_archivo_raw_source_code) ADD_STRING_CONFIG,"--load-source-code %s",last_source_code_file);
 

@@ -692,10 +692,11 @@ void menu_debug_settings_max_history(MENU_ITEM_PARAMETERS)
 
     int max_items=cpu_history_get_max_size();
 
-    menu_ventana_scanf_numero_enhanced("Maximum items",&max_items,9,+100000,1,CPU_HISTORY_MAX_ALLOWED_ELEMENTS,0);
+    int ret=menu_ventana_scanf_numero_enhanced("Maximum items",&max_items,9,+100000,1,CPU_HISTORY_MAX_ALLOWED_ELEMENTS,0);
 
-    if (max_items<1 || max_items>CPU_HISTORY_MAX_ALLOWED_ELEMENTS) {
-        debug_printf(VERBOSE_ERR,"Value out of range");
+    //Si pulsado ESC no cambiar nada
+    if (ret<0) {
+        //printf("Pulsado ESC\n");
         return;
     }
 
@@ -709,10 +710,6 @@ void menu_debug_settings_max_history(MENU_ITEM_PARAMETERS)
     }
 }
 
-int menu_debug_settings_max_history_cond(void)
-{
-    return cpu_history_enabled.v;
-}
 
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
@@ -771,8 +768,14 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
 
+
+        char ayuda_leyenda[32*10]; // para 10 lineas de ayuda, mas que suficiente
+        sprintf(ayuda_leyenda,"Maximum items allowed on cpu history feature. Each item uses %d bytes of memory",CPU_HISTORY_REGISTERS_SIZE);
+
         menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_max_history,NULL,"[%d] Max history items",
             cpu_history_get_max_size() );
+        menu_add_item_menu_tooltip(array_menu_settings_debug,ayuda_leyenda);
+        menu_add_item_menu_ayuda(array_menu_settings_debug,ayuda_leyenda);
 
 
 		if (si_complete_video_driver() ) {

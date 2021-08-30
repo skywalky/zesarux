@@ -1,5 +1,17 @@
 Version 10.0 - Carrier Command edition. 23 August 2021
 
+There are lots of changes in this version, but some of them are remarkable:
+
+- New machine emulated: Sega Master System
+- "Time machine" features: Automatic Snapshots to RAM + Rewind feature, backwards debugging, backwards run
+- Realtime translation of text adventure games in a ZEsarUX window
+- Can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
+- Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80
+- Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
+
+
+The full changelog for this version 10.0 is:
+
 Added Sega Master System emulation
 Added .sms file viewer
 Added midi output and .mid support for QL and SN audio chips (Master System, SG1000, etc)
@@ -13,7 +25,6 @@ Added Fuzix ide image on the zesarux-extras package
 Added ZSF snapshot support for Jupiter Ace, Z88
 Added --slotcard-num setting to insert a Z88 card in a numbered slot (1, 2 or 3)
 Added ZRCP command mmc-reload to reload MMC image
-Added speech scripts to realtime translation from one language to another of a text adventure game
 Added ZEsarUX logo on the window footer
 
 

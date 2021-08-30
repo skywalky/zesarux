@@ -33174,7 +33174,8 @@ int menu_ventana_scanf_numero(char *titulo,char *texto,int max_length,int increm
 
 //Similar a menu_ventana_scanf_numero pero evita tener que crear el buffer de char temporal
 //Y ademas muestra error si limites se exceden
-void menu_ventana_scanf_numero_enhanced(char *titulo,int *variable,int max_length,int incremento,int minimo,int maximo,int circular)
+//Retorna -1 si pulsado ESC
+int menu_ventana_scanf_numero_enhanced(char *titulo,int *variable,int max_length,int incremento,int minimo,int maximo,int circular)
 {
 
 	//Asignar memoria para el buffer
@@ -33186,6 +33187,7 @@ void menu_ventana_scanf_numero_enhanced(char *titulo,int *variable,int max_lengt
 	sprintf(buf_texto,"%d",*variable);
 
 	int ret=menu_ventana_scanf_numero(titulo,buf_texto,max_length,incremento,minimo,maximo,circular);
+    //Si no pulsado ESC
 	if (ret>=0) {
 
 		int numero=parse_string_to_number(buf_texto);
@@ -33200,6 +33202,9 @@ void menu_ventana_scanf_numero_enhanced(char *titulo,int *variable,int max_lengt
 
 	//printf("liberando memoria\n");
 	free(buf_texto);
+
+    if (ret>=0) return 0;
+    else return -1;
 	
 }
 
