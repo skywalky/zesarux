@@ -242,6 +242,22 @@ enum defined_f_function_ids defined_f_functions_keys_array[MAX_F_FUNCTIONS_KEYS]
 	F_FUNCION_DEFAULT //F15
 };
 
+
+//Botones a teclas F mapeadas. 11 botones. Desde smartload hasta help
+enum defined_f_function_ids defined_buttons_functions_array[MAX_USERDEF_BUTTONS]={
+	F_FUNCION_DEFAULT,
+	F_FUNCION_DEFAULT,
+	F_FUNCION_DEFAULT,
+	F_FUNCION_DEFAULT,
+	F_FUNCION_DEFAULT, //F5
+	F_FUNCION_DEFAULT,
+	F_FUNCION_DEFAULT,
+	F_FUNCION_DEFAULT,
+	F_FUNCION_DEFAULT,
+	F_FUNCION_DEFAULT, //F10
+	F_FUNCION_DEFAULT
+};
+
 //Si el abrir menu (tipica F5 o tecla joystick) esta limitado. De tal manera que para poderlo abrir habra que pulsar 3 veces seguidas en menos de 1 segundo
 z80_bit menu_limit_menu_open={0};
 
@@ -505,6 +521,8 @@ void menu_file_viewer_read_text_file(char *title,char *file_name);
 void menu_file_dsk_browser_show(char *filename);
 
 int menu_filesel_file_can_be_expanded(char *archivo);
+
+void menu_process_f_functions_by_action(int accion);
 
 //si hay recuadro activo, y cuales son sus coordenadas y color
 
@@ -34779,6 +34797,30 @@ void menu_inicio_handle_lower_icon_presses(void)
 
 
 }
+
+//Mira si el boton pulsado esta redefinido por el usuario y lanza accion si conviene
+int menu_inicio_handle_button_presses_userdef(int boton)
+{
+    boton--; 
+
+    //El 0 no esta permitido
+    if (boton<0 || boton>=MAX_USERDEF_BUTTONS) return 0;
+
+    enum defined_f_function_ids accion;
+    
+    accion=defined_buttons_functions_array[boton];
+
+
+    if (accion!=F_FUNCION_DEFAULT) {
+        menu_process_f_functions_by_action(accion);
+        return 1;
+    }
+
+    return 0;
+
+}
+
+
 void menu_inicio_handle_button_presses(void)
 {
 
@@ -34792,69 +34834,73 @@ void menu_inicio_handle_button_presses(void)
 
 
 	//Para que no vuelva a saltar
-	menu_pressed_zxdesktop_button_which=-1; 	
+	menu_pressed_zxdesktop_button_which=-1;
 
-	switch (pulsado_boton) {
-		case 0:
-			//Nada. Solo abrir el menu
-		break;
+    if (menu_inicio_handle_button_presses_userdef(pulsado_boton)==0) {
 
-		case 1:
-			//printf("antes smartload\n");
-			menu_smartload(0);
-			//printf("despues smartload\n");
-		break;
+        switch (pulsado_boton) {
+            case 0:
+                //Nada. Solo abrir el menu
+            break;
 
-		case 2:
-			menu_snapshot(0);
-		break;
+            case 1:
+                //printf("antes smartload\n");
+                menu_smartload(0);
+                //printf("despues smartload\n");
+            break;
 
-		case 3:
-			menu_machine_selection(0);
-		break;
+            case 2:
+                menu_snapshot(0);
+            break;
 
-		case 4:
-			menu_audio_settings(0);
-		break;
+            case 3:
+                menu_machine_selection(0);
+            break;
 
-		case 5:
-			menu_display_settings(0);
-		break;
+            case 4:
+                menu_audio_settings(0);
+            break;
 
-		case 6:
-			menu_storage_settings(0);
-		break;
+            case 5:
+                menu_display_settings(0);
+            break;
 
-		case 7:
-			menu_debug_settings(0);
-		break;	
+            case 6:
+                menu_storage_settings(0);
+            break;
 
-		case 8:
-			menu_network(0);
-		break;
+            case 7:
+                menu_debug_settings(0);
+            break;	
 
-		case 9:
-			menu_windows(0);
-		break;
+            case 8:
+                menu_network(0);
+            break;
 
-		case 10:
-			menu_settings(0);
-		break;
+            case 9:
+                menu_windows(0);
+            break;
 
-		case 11:
-			menu_about(0);
-		break;
+            case 10:
+                menu_settings(0);
+            break;
 
-        case 12:
-            //printf("pulsado en boton de cerrar todos menus\n");
-            menu_pressed_close_all_menus.v=1;
-            menu_pressed_open_menu_while_in_menu.v=1;   
-        break;        
+            case 11:
+                menu_about(0);
+            break;
 
-		case 13:
-			menu_principal_salir_emulador(0);
-		break;																			
-	}
+            case 12:
+                //printf("pulsado en boton de cerrar todos menus\n");
+                menu_pressed_close_all_menus.v=1;
+                menu_pressed_open_menu_while_in_menu.v=1;   
+            break;        
+
+            case 13:
+                menu_principal_salir_emulador(0);
+            break;																			
+        }
+
+    }
 
 	salir_todos_menus=1;
 

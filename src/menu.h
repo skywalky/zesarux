@@ -472,8 +472,11 @@ typedef struct s_defined_f_function defined_f_function;
 
 extern defined_f_function defined_f_functions_array[];
 
-
+//Maximo de teclas F posibles a mapear
 #define MAX_F_FUNCTIONS_KEYS 15
+
+//Maximo de botones posibles a mapear
+#define MAX_USERDEF_BUTTONS 11
 
 //Array de teclas F mapeadas
 extern enum defined_f_function_ids defined_f_functions_keys_array[];
