@@ -7,6 +7,7 @@ There are lots of changes in this version, but some of them are remarkable:
 - Realtime translation of text adventure games in a ZEsarUX window
 - Can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
 - Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80
+- Allow customize upper buttons to actions
 - Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
 
 
@@ -45,6 +46,7 @@ Improved Debugging:
 
 Improved ZX Vision menu interface:
 -Machine manufacturer list is now sorted by name (instead of some kind of mixed age and type)
+-Allow customize upper buttons to actions
 -Added setting to pause cpu emulation on menu when multitask active
 -Added Degraded ZX Desktop Fill Type
 -Added button on footer to switch ZX Desktop
