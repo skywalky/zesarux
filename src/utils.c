@@ -3989,6 +3989,13 @@ int util_write_configfile(void)
     }
   }
 
+  for (i=0;i<MAX_USERDEF_BUTTONS;i++) {
+    enum defined_f_function_ids accion=defined_buttons_functions_array[i];
+    if (accion!=F_FUNCION_DEFAULT) {
+                                              ADD_STRING_CONFIG,"--def-button-function %d \"%s\"",i,defined_f_functions_array[accion].texto_funcion);
+    }
+  }
+
 
   if (input_file_keyboard_name!=NULL && input_file_keyboard_inserted.v)         ADD_STRING_CONFIG,"--keyboardspoolfile \"%s\"",input_file_keyboard_name);
 

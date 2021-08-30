@@ -317,6 +317,28 @@ int menu_define_key_function(int tecla,char *funcion)
 	return 1;
 }
 
+//Definir una boton a una funcion
+//Entrada: buton 0...   funcion: string correspondiente a defined_f_functions_array
+//Devuelve 0 si ok
+int menu_define_button_function(int tecla,char *funcion)
+{
+	if (tecla<0 || tecla>MAX_USERDEF_BUTTONS) return 1;
+
+	//Buscar en todos los strings de funciones cual es
+
+	int i;
+
+	for (i=0;i<MAX_F_FUNCTIONS;i++) {
+		if (!strcasecmp(funcion,defined_f_functions_array[i].texto_funcion)) {
+			enum defined_f_function_ids id=defined_f_functions_array[i].id_funcion;
+			defined_buttons_functions_array[tecla]=id;
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
 //funcion activa de overlay
 void (*menu_overlay_function)(void);
 

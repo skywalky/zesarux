@@ -483,8 +483,9 @@ extern enum defined_f_function_ids defined_f_functions_keys_array[];
 
 extern enum defined_f_function_ids defined_buttons_functions_array[];
 
-extern int menu_define_key_function(int tecla,char *funcion);
 
+extern int menu_define_key_function(int tecla,char *funcion);
+extern int menu_define_button_function(int tecla,char *funcion);
 
 extern overlay_screen overlay_screen_array[];
 //extern overlay_screen second_overlay_screen_array[];

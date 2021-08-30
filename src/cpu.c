@@ -6355,6 +6355,27 @@ int parse_cmdline_options(void) {
 
 			}
 
+			else if (!strcmp(argv[puntero_parametro],"--def-button-function")) {
+				siguiente_parametro_argumento();
+	
+
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+
+				if (valor<0 || valor>MAX_USERDEF_BUTTONS) {
+					printf ("Invalid button\n");
+					exit(1);
+				}
+
+				siguiente_parametro_argumento();
+
+				if (menu_define_button_function(valor,argv[puntero_parametro])) {
+					printf ("Invalid button action: %s\n",argv[puntero_parametro]);
+					exit(1);
+				}
+
+
+			}            
+
 
 			else if (!strcmp(argv[puntero_parametro],"--autoloadsnap")) {
                         	autoload_snapshot_on_start.v=1;
