@@ -43,6 +43,7 @@ extern char *bitmap_button_ext_desktop_close_all_menus[];
 extern char *bitmap_button_ext_desktop_exit[];
 
 extern char *bitmap_button_ext_desktop_userdefined[];
+extern char *bitmap_button_ext_desktop_fullscreen[];
 
 extern char **zxdesktop_buttons_bitmaps[];
 

@@ -1487,29 +1487,59 @@ char *bitmap_button_ext_desktop_xxxxx[EXT_DESKTOP_BUTTONS_ANCHO]={
 char *bitmap_button_ext_desktop_userdefined[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
     "                          ",     //0
+	"                          ",    
+	"                          ",   
+	"                          ", 
+	"                          ",    
+	"                          ",	        
   	" x  x  xxxx xxxx xxx      ",      
 	" x  x  x    x    x  x     ",		
 	" x  x  xxxx xxxx xxx      ",		
 	" x  x     x x    x  x     ",	
-	" xxxx  xxxx xxxx x   x    ",			
+	" xxxx  xxxx xxxx x   x    ",	//10		
 	"                          ",
 	"                          ",
   	"                          ",
 	" xx    xxxx xxxx          ",		
-	" x x   x    x             ",	//10	
+	" x x   x    x             ",		
 	" x  x  xxxx xxx           ",		
 	" x x   x    x             ",		
 	" xx    xxxx x             ",		
 	"                          ",	
-	"                          ",
-	"                          ",	
-	"                          ",
-	"                          ",
-	"                          ",
 	"                          ",    //20
 	"                          ",		
 	"                          ",		
 	"                          ",		
+	"                          ",
+	"                          " 	 //25
+};
+
+char *bitmap_button_ext_desktop_fullscreen[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+	" xxx                  xxx ",    
+	" xx                    xx ",   
+	" x x                  x x ", 
+	"    x                x    ",    
+	"     x              x     ",	        
+  	"                          ",      
+	"     xxxxxxxxxxxxxxxx     ",		
+	"     x              x     ",		
+	"     x              x     ",	
+	"     x              x     ",	//10		
+	"     x              x     ",
+    "     x              x     ",
+    "     x              x     ",
+    "     x              x     ",
+	"     x              x     ",
+  	"     x              x     ",
+	"     xxxxxxxxxxxxxxxx     ",		
+	"                          ",		
+	"     x              x     ",		
+	"    x                x    ",	 //20	
+	" x x                  x x ",    		
+	" xx                    xx ",	
+	" xxx                  xxx ",    				
 	"                          ",
 	"                          " 	 //25
 };

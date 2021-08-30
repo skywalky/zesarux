@@ -207,7 +207,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD,bitmap_button_ext_desktop_userdefined}, 
 	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD,bitmap_button_ext_desktop_userdefined}, 
 	{"SwitchBorder",F_FUNCION_SWITCHBORDER,bitmap_button_ext_desktop_userdefined}, 
-	{"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN,bitmap_button_ext_desktop_userdefined}, 
+	{"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN,bitmap_button_ext_desktop_fullscreen}, 
 	{"ReloadMMC",F_FUNCION_RELOADMMC,bitmap_button_ext_desktop_userdefined}, 
 	{"ReinsertTape",F_FUNCION_REINSERTTAPE,bitmap_button_ext_desktop_userdefined}, 
 	{"PauseUnpauseTape",F_FUNCION_PAUSEUNPAUSETAPE,bitmap_button_ext_desktop_userdefined}, 
@@ -219,7 +219,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 
 	//Para el usuario, mejor esta descripcion
 	{"ShowBackgroundWindows",F_FUNCION_OVERLAY_WINDOWS,bitmap_button_ext_desktop_userdefined}, 
-    {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS,bitmap_button_ext_desktop_userdefined}, 
+    {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS,bitmap_button_ext_desktop_close_all_menus}, 
     {"ZXUnoPrismSwitch",F_FUNCION_ZXUNO_PRISM,bitmap_button_ext_desktop_userdefined}
 };
 
