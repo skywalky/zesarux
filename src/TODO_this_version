@@ -197,31 +197,7 @@ L08F7:          IN      A,(HLWPORT)
                 JP      Z,BREAKCONT
 
 
--backstep: agregar posiciones de memoria en historial que se modificaran, por ejemplo en opcodes:
-LD (NN),A
-LD (NN),HL
-LD (HL),E    (here of course I will add the contents of memory pointed to HL in the history)
-PUSH HL
-LD (NN),IX
-
 -quiza linea cursor en debug cpu ubicar en el centro
-
--a veces al pulsar backwards run no hace caso y hay que hacer step y luego ya si
-
--Comando ZRCP  restaurar registros de historial 
-
--bug: activo history. con multitask. dejo pasar un rato y hago backrun. Al inicio:
-indice_debug_cpu_backwards_history 0
-
-si vuelvo a pulsar backrun, no hace nada y
-indice_debug_cpu_backwards_history 1000000
-
-pero si hago un solo step, ya puedo hacer backrun de nuevo, desde el principio:
-indice_debug_cpu_backwards_history 0
-
-
-Esto es porque reseteo indice_debug_cpu_backwards_history. Habria que gestionar mejor como se resetea dicha posicion, si solo
-al hacer un step o cuando....
 
 
 -Consola ZRCP desde menú. Cómo gestionar comandos de cpu step que bloquean el menú?
