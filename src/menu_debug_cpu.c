@@ -5459,8 +5459,19 @@ void menu_debug_cpu_backwards_history(void)
 
     int total_elementos_in_history=cpu_history_get_total_elements();
 
+    if (total_elementos_in_history==0) {
+        menu_warn_message("History is empty");
+        return;
+    }    
+
 
     int indice=total_elementos_in_history-indice_debug_cpu_backwards_history-1;
+
+    //Ver si no estamos ya en el ultimo item
+    if (indice<0) {
+        menu_warn_message("You are at the oldest item");
+        return;
+    }    
 
     
     cpu_history_regs_bin_restore(indice);
@@ -5470,8 +5481,20 @@ void menu_debug_cpu_backwards_history(void)
 
 void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
 {
+    int total_elementos_in_history=cpu_history_get_total_elements();
 
-    int indice;
+    if (total_elementos_in_history==0) {
+        menu_warn_message("History is empty");
+        return;
+    }
+
+    int indice=total_elementos_in_history-indice_debug_cpu_backwards_history-1;
+
+    //Ver si no estamos ya en el ultimo item
+    if (total_elementos_in_history-indice_debug_cpu_backwards_history-1<0) {
+        menu_warn_message("You are at the oldest item");
+        return;
+    }    
 
     //printf("indice_debug_cpu_backwards_history %d\n",indice_debug_cpu_backwards_history);
 
@@ -5486,7 +5509,7 @@ void menu_debug_cpu_backwards_history_run(zxvision_window *ventana)
 
 
 
-        int total_elementos_in_history=cpu_history_get_total_elements();
+        total_elementos_in_history=cpu_history_get_total_elements();
 
         indice=total_elementos_in_history-indice_debug_cpu_backwards_history-1;
 
@@ -5757,6 +5780,9 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 	//Inicializar info de tamanyo zona
 	menu_debug_set_memory_zone_attr();
 
+    //Resetear posicion de backwards siempre al entrar de nuevo en esta ventana
+    indice_debug_cpu_backwards_history=0;        
+
 
 	//Ver si hemos entrado desde un breakpoint
 	if (menu_breakpoint_exception.v) menu_debug_registers_gestiona_breakpoint();
@@ -5886,8 +5912,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	        }
 
-            //Resetear posicion de backwards
-            indice_debug_cpu_backwards_history=0;            
+        
 
         	menu_cpu_core_loop();
 
