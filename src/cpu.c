@@ -1806,7 +1806,20 @@ printf (
         "--zxdesktop-disable-box-upper-buttons  Disable box around ZX Desktop upper buttons\n"
         "--zxdesktop-disable-box-lower-buttons  Disable box around ZX Desktop lower buttons\n"  
         "--zxdesktop-disable-footer-switch      Disable ZX Desktopfooter switch button\n"
+        );
 
+
+printf (
+	  "--def-button-function button action  Define Button to do an action. action can be: ");
+
+        int i;
+			for (i=0;i<MAX_F_FUNCTIONS;i++) {
+				printf ("%s ",defined_f_functions_array[i].texto_funcion);
+			}
+
+
+
+        printf("\n"
 				
 
 		"--menucharwidth n          Character size width for menus valid values: 8,7,6 or 5\n"
@@ -1847,7 +1860,7 @@ printf (
 	printf (
 		"--menu-mix-method s         How to mix menu and the layer below. s should be one of:");
 
-		int i;
+		
 		for (i=0;i<MAX_MENU_MIX_METHODS;i++) {
 			printf ("%s ",screen_menu_mix_methods_strings[i]);
 		}
