@@ -641,6 +641,7 @@ struct s_items_ayuda items_ayuda[]={
 	"ignrepldxr    yes|no:      Ignore repeated opcode LDIR or LDDR. Disabled by default\n"
 	"is-enabled                 Tells if the cpu history is enabled or not\n"
 	"is-started                 Tells if the cpu history is started or not\n"
+    "restore       index:       Restore registers from position, being 0 the most recent item\n"
 	"started       yes|no:      Start recording cpu history. Requires it to be enabled first\n"
 	"set-max-size  number:      Sets maximum allowed elements in history\n"
 	},
@@ -1578,6 +1579,24 @@ void remote_cpu_history(int misocket,char *parameter,char *value,char *value2)
 			escribir_socket(misocket,string_destino);
 		}
 	}	
+
+	else if (!strcasecmp(parameter,"restore")) {
+		if (cpu_history_enabled.v==0) escribir_socket(misocket,"Error. It's not enabled\n");
+		else {
+			int indice=parse_string_to_number(value);
+			int total_elementos=cpu_history_get_total_elements();
+
+			//Al solicitarlo, el 0 es el item mas reciente. el 1 es el anterior a este
+			//en cpu_history_get_registers_element se pide como: 0 es el mas antiguo
+			//Ejemplo: 10 elementos totales. Se pide por el 3.
+			//indice_final=10-3-1=7
+			//Ejemplo: 10 elementos totales. Se pide por el 9 (que sera el mas antiguo)
+			//indice_final=10-9-1=0
+			int indice_final=total_elementos-indice-1;
+
+			cpu_history_regs_bin_restore(indice_final);
+		}
+	}	    
 
 
 	else if (!strcasecmp(parameter,"get-size")) {
