@@ -232,7 +232,7 @@ int accessibility_settings_opcion_seleccionada=0;
 int chardetection_settings_opcion_seleccionada=0;
 int textspeech_opcion_seleccionada=0;
 int accessibility_menu_opcion_seleccionada=0;
-
+int zxdesktop_set_userdef_buttons_functions_opcion_seleccionada=0;
 
 
 //Fin opciones seleccionadas para cada menu
@@ -12011,6 +12011,9 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_transparent,NULL,"[%c] Transparent lower buttons",(menu_ext_desktop_transparent_lower_icons.v ? 'X' : ' ' ) );
                 menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_box,NULL,"[%c] Box on lower buttons",(menu_ext_desktop_disable_box_lower_icons.v ? ' ' : 'X' ) );
+
+
+                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_set_userdef_buttons_functions,NULL,"    Customize buttons");
 			}
 
             
@@ -24718,3 +24721,106 @@ void menu_accessibility_settings(MENU_ITEM_PARAMETERS)
     } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
+
+
+
+
+void menu_zxdesktop_set_userdef_button_func_action(MENU_ITEM_PARAMETERS)
+{
+        int opcion_seleccionada=defined_buttons_functions_array[valor_opcion];
+
+
+        menu_item *array_menu_zxdesktop_set_userdef_button_func_action;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        //do {
+
+                char buffer_texto[40];
+
+                int i;
+                for (i=0;i<MAX_F_FUNCTIONS;i++) {
+
+                  //enum defined_f_function_ids accion=defined_buttons_functions_array[i];
+
+                  sprintf (buffer_texto,"%s",defined_f_functions_array[i].texto_funcion);
+
+
+                        if (i==0) menu_add_item_menu_inicial_format(&array_menu_zxdesktop_set_userdef_button_func_action,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto);
+                        else menu_add_item_menu_format(array_menu_zxdesktop_set_userdef_button_func_action,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto);
+
+												}
+
+
+                menu_add_item_menu(array_menu_zxdesktop_set_userdef_button_func_action,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_zxdesktop_set_userdef_button_func_action,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_zxdesktop_set_userdef_button_func_action);
+
+                retorno_menu=menu_dibuja_menu(&opcion_seleccionada,&item_seleccionado,array_menu_zxdesktop_set_userdef_button_func_action,"Set Action" );
+
+                
+
+
+								if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+
+												//Si se pulsa Enter
+												int indice=opcion_seleccionada;
+												defined_buttons_functions_array[valor_opcion]=indice;
+
+												
+                }
+
+}
+
+
+
+void menu_zxdesktop_set_userdef_buttons_functions(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_zxdesktop_set_userdef_buttons_functions;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+                char buffer_texto[40];
+
+                int i;
+                for (i=0;i<MAX_USERDEF_BUTTONS;i++) {
+
+                  enum defined_f_function_ids accion=defined_buttons_functions_array[i];
+
+					//tabulado todo a misma columna, agregamos un espacio con F entre 1 y 9
+                  sprintf (buffer_texto,"Button %d %s[%s]",i+1,(i+1<=9 ? " " : ""),defined_f_functions_array[accion].texto_funcion);
+
+
+
+
+                        if (i==0) menu_add_item_menu_inicial_format(&array_menu_zxdesktop_set_userdef_buttons_functions,MENU_OPCION_NORMAL,menu_zxdesktop_set_userdef_button_func_action,NULL,buffer_texto);
+                        else menu_add_item_menu_format(array_menu_zxdesktop_set_userdef_buttons_functions,MENU_OPCION_NORMAL,menu_zxdesktop_set_userdef_button_func_action,NULL,buffer_texto);
+
+												menu_add_item_menu_valor_opcion(array_menu_zxdesktop_set_userdef_buttons_functions,i);
+
+              
+												}
+
+
+
+                menu_add_item_menu(array_menu_zxdesktop_set_userdef_buttons_functions,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_zxdesktop_set_userdef_buttons_functions,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+                menu_add_ESC_item(array_menu_zxdesktop_set_userdef_buttons_functions);
+
+                retorno_menu=menu_dibuja_menu(&zxdesktop_set_userdef_buttons_functions_opcion_seleccionada,&item_seleccionado,array_menu_zxdesktop_set_userdef_buttons_functions,"Set Buttons" );
+
+                
+
+
+								if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+}
+
