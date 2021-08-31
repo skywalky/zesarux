@@ -195,7 +195,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"HardReset",F_FUNCION_HARDRESET,bitmap_button_ext_desktop_hardreset}, 
 	{"NMI",F_FUNCION_NMI,bitmap_button_ext_desktop_userdefined}, 
 	{"OpenMenu",F_FUNCION_OPENMENU,zesarux_ascii_logo}, 
-	{"OCR",F_FUNCION_OCR,bitmap_button_ext_desktop_userdefined}, 
+	{"OCR",F_FUNCION_OCR,bitmap_button_ext_desktop_ocr}, 
 	{"SmartLoad",F_FUNCION_SMARTLOAD,bitmap_button_ext_desktop_smartload}, 
 	{"Quickload",F_FUNCION_QUICKLOAD,bitmap_button_ext_desktop_userdefined}, 
 	{"Quicksave",F_FUNCION_QUICKSAVE,bitmap_button_ext_desktop_userdefined}, 
@@ -207,11 +207,11 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"ZengMessage",F_FUNCION_ZENG_SENDMESSAGE,bitmap_button_ext_desktop_userdefined}, 
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD,bitmap_button_ext_desktop_userdefined}, 
 	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD,bitmap_button_ext_desktop_userdefined}, 
-	{"SwitchBorder",F_FUNCION_SWITCHBORDER,bitmap_button_ext_desktop_userdefined}, 
+	{"SwitchBorder",F_FUNCION_SWITCHBORDER,bitmap_button_ext_desktop_switchborder}, 
 	{"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN,bitmap_button_ext_desktop_fullscreen}, 
 	{"ReloadMMC",F_FUNCION_RELOADMMC,bitmap_button_ext_desktop_reloadmmc}, 
-	{"ReinsertStdTape",F_FUNCION_REINSERTTAPE,bitmap_button_ext_desktop_reinserttape}, //standard tape
-	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSETAPE,bitmap_button_ext_desktop_pauseunpausetape},  //real tape
+	{"ReinsertStdTape",F_FUNCION_REINSERTTAPE,bitmap_button_ext_desktop_reinserttape}, 
+	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSETAPE,bitmap_button_ext_desktop_pauseunpausetape},  
 	{"DebugCPU",F_FUNCION_DEBUGCPU,bitmap_button_ext_desktop_debugcpu}, 
 	{"Pause",F_FUNCION_PAUSE,bitmap_button_ext_desktop_pause}, 
 	{"TopSpeed",F_FUNCION_TOPSPEED,bitmap_button_ext_desktop_userdefined}, 

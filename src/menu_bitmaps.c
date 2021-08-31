@@ -1947,3 +1947,68 @@ char *bitmap_button_ext_desktop_reinserttape[EXT_DESKTOP_BUTTONS_ANCHO]={
 	
 
 };
+
+
+
+char *bitmap_button_ext_desktop_ocr[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",      
+	"xxxx                  xxxx",		
+	"x                        x",		
+	"x                        x",	
+	"x                        x",			
+	"                          ",			
+	"                          ", 		
+	"                          ",		
+	"    bbbb   bbbb bbbbb     ",		
+	"   b    b b     b    b    ",	//10	
+	"   b    b b     b    b    ",
+	"   b    b b     bbbbb     ",			
+	"   b    b b     b    b    ",
+	"    bbbb   bbbb b    b    ",
+    "                          ",		
+	"                          ",		
+	"                          ",		
+	"x                        x",		
+	"x                        x",		
+	"x                        x",    //20
+	"xxxx                  xxxx",		
+	"                          ",		
+	"                          ",		
+	"                          ",
+	"                          " 	 //25
+};
+
+
+
+
+char *bitmap_button_ext_desktop_switchborder[EXT_DESKTOP_BUTTONS_ANCHO]={
+   //01234567890123456789012345
+    "           RRRRR          ",     //0
+  	"         RR     RR        ",    
+	"        R       R R       ",	   
+	"       R       R   R      ",
+	"       R      R    R      ",		
+	"      R      R      R     ",		
+	"      R     R       R     ",	
+	"      R    R        R     ",			
+	"       R  R        R      ",			
+	"       R R         R      ", 		
+	"        R         R       ",	//10	
+	"         RR     RR        ",		
+	"           RRRRR          ",		
+	"                          ",		
+	"  bbbbbbbbbbbbbbbbbbbbbb  ",		
+	"  bbbbbbbbbbbbbbbbbbbbbb  ",		
+	"  bbbbbbbbbbbbbbbbbbbbbb  ",		
+	"  bbb                bbb  ",		
+	"  bbb                bbb  ",		
+	"  bbb                bbb  ",		
+	"  bbb                bbb  ",    //20
+	"  bbb                bbb  ",		
+	"  bbb                bbb  ",		
+	"  bbbbbbbbbbbbbbbbbbbbbb  ",		
+	"  bbbbbbbbbbbbbbbbbbbbbb  ",
+	"  bbbbbbbbbbbbbbbbbbbbbb  " 	 //25
+};

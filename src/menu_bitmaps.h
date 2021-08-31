@@ -56,6 +56,8 @@ extern char *bitmap_button_ext_desktop_pause[];
 extern char *bitmap_button_ext_desktop_debugcpu[];
 extern char *bitmap_button_ext_desktop_pauseunpausetape[];
 extern char *bitmap_button_ext_desktop_reinserttape[];
+extern char *bitmap_button_ext_desktop_ocr[];
+extern char *bitmap_button_ext_desktop_switchborder[];
 
 extern char **zxdesktop_buttons_bitmaps[];
 
