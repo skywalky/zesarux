@@ -39045,7 +39045,7 @@ char *first_aid_string_zxdesktop="Have you enabled ZX Desktop? It allows you to 
 				"zxvision windows, menus or other widgets. Go to Settings-> GUI-> ZX Desktop settings to enable it";
 
 int first_aid_no_zxdesktop_custombuttons=0;
-char *first_aid_string_zxdesktop_custombuttons="You can now customize upper ZX Desktop buttons to different actions. "
+char *first_aid_string_zxdesktop_custombuttons="You can customize upper ZX Desktop buttons to different actions. "
 				"Go to Settings-> GUI-> ZX Desktop-> Customize buttons";
 
 
