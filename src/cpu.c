@@ -6374,7 +6374,7 @@ int parse_cmdline_options(void) {
 
 				int valor=parse_string_to_number(argv[puntero_parametro]);
 
-				if (valor<0 || valor>MAX_USERDEF_BUTTONS) {
+				if (valor<0 || valor>=MAX_USERDEF_BUTTONS) {
 					printf ("Invalid button\n");
 					exit(1);
 				}

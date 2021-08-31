@@ -323,7 +323,7 @@ int menu_define_key_function(int tecla,char *funcion)
 //Devuelve 0 si ok
 int menu_define_button_function(int tecla,char *funcion)
 {
-	if (tecla<0 || tecla>MAX_USERDEF_BUTTONS) return 1;
+	if (tecla<0 || tecla>=MAX_USERDEF_BUTTONS) return 1;
 
 	//Buscar en todos los strings de funciones cual es
 
