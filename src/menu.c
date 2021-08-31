@@ -39044,6 +39044,10 @@ int first_aid_no_zxdesktop=0;
 char *first_aid_string_zxdesktop="Have you enabled ZX Desktop? It allows you to have a space on the right to place "
 				"zxvision windows, menus or other widgets. Go to Settings-> GUI-> ZX Desktop settings to enable it";
 
+int first_aid_no_zxdesktop_custombuttons=0;
+char *first_aid_string_zxdesktop_custombuttons="You can now customize upper ZX Desktop buttons to different actions. "
+				"Go to Settings-> GUI-> ZX Desktop-> Customize buttons";
+
 
 void menu_first_aid_init(void)
 {
@@ -39083,6 +39087,7 @@ void menu_first_aid_init(void)
 	menu_first_aid_add("spaceexpand",&first_aid_no_spaceexpand,first_aid_string_spaceexpand,1);
 	menu_first_aid_add("backgroundwindows",&first_aid_no_backgroundwindows,first_aid_string_backgroundwindows,1);
     menu_first_aid_add("zxdesktop",&first_aid_no_zxdesktop,first_aid_string_zxdesktop,1);
+    menu_first_aid_add("zxdesktopcustombuttons",&first_aid_no_zxdesktop_custombuttons,first_aid_string_zxdesktop_custombuttons,1);
 
 }
 
