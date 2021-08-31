@@ -34953,7 +34953,8 @@ void menu_inicio_handle_button_presses(void)
 
     }
 
-	salir_todos_menus=1;
+    //si ha generado error, no salir
+    if (!if_pending_error_message) salir_todos_menus=1;
 
 	//Y decir que el siguiente menu ya no se abre desde boton y por tanto no se posiciona debajo del boton
 	//Antes se quitaba el flag tambien en menu_dibuja_menu, pero ya no. Asi conseguimos que todos los menus
