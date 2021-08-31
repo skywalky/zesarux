@@ -301,7 +301,10 @@ int snapshot_in_ram_load(int posicion)
 void snapshot_in_ram_rewind(void)
 {
 
-    if (snapshot_in_ram_enabled.v==0) return;
+    if (snapshot_in_ram_enabled.v==0) {
+        debug_printf(VERBOSE_ERR,"Snapshots in RAM are not enabled. Go to menu Snapshot->Snapshots to RAM and enable it");
+        return;
+    }
 
     if (!snapshot_in_ram_rewind_initialized) {
         //printf("We don't have a initial rewind position. Generating it\n");
@@ -386,7 +389,10 @@ void snapshot_in_ram_ffw(void)
     //TODO: al pulsar la primera vez FFW, restaura el mismo snapshot ultimo que se habia recuperado con rewind,
     //esto es una pijada, se podria corregir, pero tampoco afecta mucho
 
-    if (snapshot_in_ram_enabled.v==0) return;
+    if (snapshot_in_ram_enabled.v==0) {
+        debug_printf(VERBOSE_ERR,"Snapshots in RAM are not enabled. Go to menu Snapshot->Snapshots to RAM and enable it");
+        return;
+    }
 
     if (!snapshot_in_ram_rewind_initialized) {
         debug_printf(VERBOSE_INFO,"We don't have a initial rewind position. Returning");
