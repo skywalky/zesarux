@@ -1819,3 +1819,65 @@ char *bitmap_button_ext_desktop_snapinramffw[EXT_DESKTOP_BUTTONS_ANCHO]={
 	" xxxxxxxxxxxxxxxxxxxxxxxx ",
 	"  xxxxxxxxxxxxxxxxxxxxxx  "  //25
 };
+
+
+char *bitmap_button_ext_desktop_pause[EXT_DESKTOP_BUTTONS_ANCHO]={
+   //01234567890123456789012345
+    "                          ",     //0
+  	"         bbb   bbb        ",      
+	"         bbb   bbb        ",		
+	"         bbb   bbb        ",		
+	"         bbb   bbb        ",	
+	"         bbb   bbb        ",			
+	"         bbb   bbb        ",			
+	"         bbb   bbb        ", 		
+	"         bbb   bbb        ",		
+	"                          ",		
+	"                          ",	//10	
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxwwxwxwwxwwxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxwwxwwxwwxwwxwwxwwxwwwxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxwwxwwxwwxwwxwwxwwxwwxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxwxxr",    //20
+	"xxxxwwxwwxwwxwwxwwxwwxwxry",		
+	"xxxxxxxxxxxxxxxxxxxxxxxryg",		
+	"xxxxxxwwxwwwwwwwwxwwxxrygb",		
+	"xxxxxxxxxxxxxxxxxxxxxrygbx",
+	" xxxxxxxxxxxxxxxxxxxrygbx " 	 //25
+};
+
+
+char *bitmap_button_ext_desktop_debugcpu[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "             RR           ",     //0
+  	"      RRRRRRR             ",      
+	"     RRRRRRRRR            ",		
+	"     RRRRRRRRR            ",		
+	"      RRRRRRRR            ",	
+	"     RR      R            ",			
+	"    RRRR   R  R           ",			
+	"    RRRRRRRR   R          ", 		
+	"     RR                   ",		
+	"    R  R                  ",	
+    "   R    R                 ",  //10
+    "                          ",        	
+	"  x   x   x   x   x   x   ",	
+	"  x   x   x   x   x   x   ",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"x                        x",		
+	"x         xxxx  xx   xx  x",		
+	"xx           x x  x x  x x",		
+	"x x         x   xx  x  x x",		
+	"xx         x   x  x x  x x",		
+	"x         xxxx  xx   xx  x",	//20	
+	"x                        x",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",    
+	"  x   x   x   x   x   x   ",		
+	"  x   x   x   x   x   x   ",		
+	"                          " 	 //25
+};
