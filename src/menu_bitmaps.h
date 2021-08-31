@@ -50,6 +50,8 @@ extern char *bitmap_button_ext_desktop_hardreset[];
 extern char *bitmap_button_ext_desktop_reloadmmc[];
 extern char *bitmap_button_ext_desktop_loadbinary[];
 extern char *bitmap_button_ext_desktop_savebinary[];
+extern char *bitmap_button_ext_desktop_snapinramrewind[];
+extern char *bitmap_button_ext_desktop_snapinramffw[];
 
 extern char **zxdesktop_buttons_bitmaps[];
 

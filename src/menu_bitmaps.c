@@ -1758,3 +1758,64 @@ char *bitmap_button_ext_desktop_savebinary[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"                          ",
 	"                          " 	 //25
 };
+
+char *bitmap_button_ext_desktop_snapinramrewind[EXT_DESKTOP_BUTTONS_ANCHO]={
+   //01234567890123456789012345
+    "  xxxxxxxxxxxxxxxxxxxxxx  ", //0
+  	" xxxxxxxxxxxxxxxxxxxxxxxx ",
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxCCCCCCCCCCCCCCCCCCCCxxx",		
+	"xxxCCCCCCCCCCCCCCCCCCCCxxx",
+	"xxxCCCCRRRCCCCCCRRRCCCCxxx",		
+	"xxxCCCRCCRRCCCCRRCCRCCCxxx",		
+	"xxxCCRCCCCRCCCCRCCCCRCCxxx",
+	"xxxCCRCCCCRCCCCRCCCCRCCxxx",		
+	"xxxCCCRCCRRRCCRRRCCRCCCxxx",	
+	"xxxCCCCRRRRRRRRRRRRCCCCxxx",	//10	
+	"xxxCCCCCCCRRRRRRCCCCCCCxxx",	
+	"xxxCCCCCCCCRRRRCCCCCCCCxxx",	
+	"xxxCCCCCCCCCRRCCCCCCCCCxxx",		
+	"xxxCCCCCCCCCRRCCCCCCCCCxxx",		
+	"xxxCCCCCCCCRRRRCCCCCCCCxxx",		
+	"xxxCCCCBCCRRCCRRCCCCCCCxxx",		
+	"xxxCCCBBCCRCCCCRCCCCCCCxxx",		
+	"xxxCCBBBCCRCCCCRCCCCCCCxxx",		
+	"xxxCBBBBCCCRCCRCCCCCCCCxxx",		
+	"xxxCCBBBCCCCRRCCCCCCCCCxxx", //20
+	"xxxCCCBBCCCCCCCCCCCCCCCxxx",	
+	"xxxCCCCBCCCCCCCCCCCCCCCxxx",	
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	" xxxxxxxxxxxxxxxxxxxxxxxx ",
+	"  xxxxxxxxxxxxxxxxxxxxxx  "  //25
+};
+
+
+char *bitmap_button_ext_desktop_snapinramffw[EXT_DESKTOP_BUTTONS_ANCHO]={
+   //01234567890123456789012345
+    "  xxxxxxxxxxxxxxxxxxxxxx  ", //0
+  	" xxxxxxxxxxxxxxxxxxxxxxxx ",
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxCCCCCCCCCCCCCCCCCCCCxxx",		
+	"xxxCCCCCCCCCCCCCCCCCCCCxxx",
+	"xxxCCCCRRRCCCCCCRRRCCCCxxx",		
+	"xxxCCCRCCRRCCCCRRCCRCCCxxx",		
+	"xxxCCRCCCCRCCCCRCCCCRCCxxx",
+	"xxxCCRCCCCRCCCCRCCCCRCCxxx",		
+	"xxxCCCRCCRRRCCRRRCCRCCCxxx",	
+	"xxxCCCCRRRRRRRRRRRRCCCCxxx",	//10	
+	"xxxCCCCCCCRRRRRRCCCCCCCxxx",	
+	"xxxCCCCCCCCRRRRCCCCCCCCxxx",	
+	"xxxCCCCCCCCCRRCCCCCCCCCxxx",		
+	"xxxCCCCCCCCCRRCCCCCCCCCxxx",		
+	"xxxCCCCCCCCRRRRCCCCCCCCxxx",		
+	"xxxCBCCCCCRRCCRRCCCCCCCxxx",		
+	"xxxCBBCCCCRCCCCRCCCCCCCxxx",		
+	"xxxCBBBCCCRCCCCRCCCCCCCxxx",		
+	"xxxCBBBBCCCRCCRCCCCCCCCxxx",		
+	"xxxCBBBCCCCCRRCCCCCCCCCxxx", //20
+	"xxxCBBCCCCCCCCCCCCCCCCCxxx",	
+	"xxxCBCCCCCCCCCCCCCCCCCCxxx",	
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	" xxxxxxxxxxxxxxxxxxxxxxxx ",
+	"  xxxxxxxxxxxxxxxxxxxxxx  "  //25
+};
