@@ -1881,3 +1881,69 @@ char *bitmap_button_ext_desktop_debugcpu[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"  x   x   x   x   x   x   ",		
 	"  x   x   x   x   x   x   " 	 //25
 };
+
+
+char *bitmap_button_ext_desktop_pauseunpausetape[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+  	"         bbb   bbb        ",   //0    
+	"         bbb   bbb        ",		
+	"         bbb   bbb        ",		
+	"         bbb   bbb        ",	
+	"         bbb   bbb        ",			
+	"         bbb   bbb        ",			
+	"         bbb   bbb        ", 		
+	"         bbb   bbb        ",		
+	"                          ",    
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	//10
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxgggxxxggggggggggxxxgggxw",			
+	"wxggxx xxg      gxx xxggxw",		
+	"wxggx   xg      gx   xggxw",		
+	"wxggxx xxg      gxx xxggxw",		
+	"wxgggxxxggggggggggxxxgggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",	//20	
+	"wxgggggxxxxxxxxxxxxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxgggxggggggggggggxgggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww "	//25	
+	
+
+};
+
+
+char *bitmap_button_ext_desktop_reinserttape[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+  	"           RRRRRRR        ",    //0
+	"          R       R       ",	   
+	"         R         R      ",
+	"        R          R      ",		
+	"        R           R     ",		
+	"       R            R     ",			
+	"     RRRRR         R      ",			
+	"      RRR          R      ", 		
+	"       R                  ",	
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	//10
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxgggxxxggggggggggxxxgggxw",			
+	"wxggxx xxg      gxx xxggxw",		
+	"wxggx   xg      gx   xggxw",		
+	"wxggxx xxg      gxx xxggxw",		
+	"wxgggxxxggggggggggxxxgggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",	//20	
+	"wxgggggxxxxxxxxxxxxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxgggxggggggggggggxgggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww "	//25	
+	
+
+};

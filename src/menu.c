@@ -210,8 +210,8 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"SwitchBorder",F_FUNCION_SWITCHBORDER,bitmap_button_ext_desktop_userdefined}, 
 	{"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN,bitmap_button_ext_desktop_fullscreen}, 
 	{"ReloadMMC",F_FUNCION_RELOADMMC,bitmap_button_ext_desktop_reloadmmc}, 
-	{"ReinsertTape",F_FUNCION_REINSERTTAPE,bitmap_button_ext_desktop_userdefined}, 
-	{"PauseUnpauseTape",F_FUNCION_PAUSEUNPAUSETAPE,bitmap_button_ext_desktop_userdefined}, 
+	{"ReinsertStdTape",F_FUNCION_REINSERTTAPE,bitmap_button_ext_desktop_reinserttape}, //standard tape
+	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSETAPE,bitmap_button_ext_desktop_pauseunpausetape},  //real tape
 	{"DebugCPU",F_FUNCION_DEBUGCPU,bitmap_button_ext_desktop_debugcpu}, 
 	{"Pause",F_FUNCION_PAUSE,bitmap_button_ext_desktop_pause}, 
 	{"TopSpeed",F_FUNCION_TOPSPEED,bitmap_button_ext_desktop_userdefined}, 

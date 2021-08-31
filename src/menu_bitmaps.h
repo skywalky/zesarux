@@ -54,6 +54,8 @@ extern char *bitmap_button_ext_desktop_snapinramrewind[];
 extern char *bitmap_button_ext_desktop_snapinramffw[];
 extern char *bitmap_button_ext_desktop_pause[];
 extern char *bitmap_button_ext_desktop_debugcpu[];
+extern char *bitmap_button_ext_desktop_pauseunpausetape[];
+extern char *bitmap_button_ext_desktop_reinserttape[];
 
 extern char **zxdesktop_buttons_bitmaps[];
 
