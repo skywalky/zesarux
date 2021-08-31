@@ -202,3 +202,4 @@ L08F7:          IN      A,(HLWPORT)
 
 -Consola ZRCP desde menú. Cómo gestionar comandos de cpu step que bloquean el menú?
 
+-con menu cerrado, si pulso alguna ventana en background abre el menu principal. pero deberia saltar a la ventana pulsada
