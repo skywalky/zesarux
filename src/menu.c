@@ -214,7 +214,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSETAPE,bitmap_button_ext_desktop_pauseunpausetape},  
 	{"DebugCPU",F_FUNCION_DEBUGCPU,bitmap_button_ext_desktop_debugcpu}, 
 	{"Pause",F_FUNCION_PAUSE,bitmap_button_ext_desktop_pause}, 
-	{"TopSpeed",F_FUNCION_TOPSPEED,bitmap_button_ext_desktop_userdefined}, 
+	{"TopSpeed",F_FUNCION_TOPSPEED,bitmap_button_ext_desktop_topspeed}, 
 	{"ExitEmulator",F_FUNCION_EXITEMULATOR,bitmap_button_ext_desktop_exit}, 
 	{"BackgroundWindow",F_FUNCION_BACKGROUND_WINDOW,bitmap_button_ext_desktop_userdefined}, 
 
