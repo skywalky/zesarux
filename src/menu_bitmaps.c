@@ -1854,30 +1854,30 @@ char *bitmap_button_ext_desktop_pause[EXT_DESKTOP_BUTTONS_ANCHO]={
 
 char *bitmap_button_ext_desktop_debugcpu[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
-    "             RR           ",     //0
+    "              R           ",  //0
+    "             R            ",     
   	"      RRRRRRR             ",      
 	"     RRRRRRRRR            ",		
 	"     RRRRRRRRR            ",		
 	"      RRRRRRRR            ",	
 	"     RR      R            ",			
 	"    RRRR   R  R           ",			
-	"    RRRRRRRR   R          ", 		
+	"    RRRRRRRR  R           ", 		
 	"     RR                   ",		
-	"    R  R                  ",	
-    "   R    R                 ",  //10
+	"    R  R                  ",	//10
+    "   R    R                 ",  
     "                          ",        	
 	"  x   x   x   x   x   x   ",	
 	"  x   x   x   x   x   x   ",		
 	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
-	"x                        x",		
-	"x         xxxx  xx   xx  x",		
-	"xx           x x  x x  x x",		
-	"x x         x   xx  x  x x",		
-	"xx         x   x  x x  x x",		
-	"x         xxxx  xx   xx  x",	//20	
-	"x                        x",		
-	"xxxxxxxxxxxxxxxxxxxxxxxxxx",    
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxwwwwxxwwxxxwwxxx",		
+	"xwxxxxxxxxxxxwxwxxwxwxxwxx",		
+	"xwwxxxxxxxxxwxxxwwxxwxxwxx",		
+	"xwxxxxxxxxxwxxxwxxwxwxxwxx",	//20	
+	"xxxxxxxxxxwwwwxxwwxxxwwxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx", 
 	"  x   x   x   x   x   x   ",		
-	"  x   x   x   x   x   x   ",		
-	"                          " 	 //25
+	"  x   x   x   x   x   x   " 	 //25
 };
