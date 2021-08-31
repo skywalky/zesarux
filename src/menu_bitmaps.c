@@ -1986,17 +1986,17 @@ char *bitmap_button_ext_desktop_ocr[EXT_DESKTOP_BUTTONS_ANCHO]={
 char *bitmap_button_ext_desktop_switchborder[EXT_DESKTOP_BUTTONS_ANCHO]={
    //01234567890123456789012345
     "           RRRRR          ",     //0
-  	"         RR     RR        ",    
-	"        R       R R       ",	   
-	"       R       R   R      ",
-	"       R      R    R      ",		
-	"      R      R      R     ",		
-	"      R     R       R     ",	
-	"      R    R        R     ",			
-	"       R  R        R      ",			
-	"       R R         R      ", 		
-	"        R         R       ",	//10	
-	"         RR     RR        ",		
+  	"         RRRRRRRRR        ",    
+	"        RR      RRR       ",	   
+	"       RR      RR RR      ",
+	"       RR     RR  RR      ",		
+	"      RR     RR    RR     ",		
+	"      RR    RR     RR     ",	
+	"      RR   RR      RR     ",			
+	"       RR RR      RR      ",			
+	"       RRRR       RR      ", 		
+	"        RR       RR       ",	//10	
+	"         RRRRRRRRR        ",		
 	"           RRRRR          ",		
 	"                          ",		
 	"  bbbbbbbbbbbbbbbbbbbbbb  ",		
