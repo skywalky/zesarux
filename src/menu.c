@@ -193,20 +193,20 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	{"Nothing",F_FUNCION_NOTHING,bitmap_button_ext_desktop_userdefined}, 
 	{"Reset",F_FUNCION_RESET,bitmap_button_ext_desktop_reset}, 
 	{"HardReset",F_FUNCION_HARDRESET,bitmap_button_ext_desktop_hardreset}, 
-	{"NMI",F_FUNCION_NMI,bitmap_button_ext_desktop_userdefined}, 
+	{"NMI",F_FUNCION_NMI,bitmap_button_ext_desktop_nmi}, 
 	{"OpenMenu",F_FUNCION_OPENMENU,zesarux_ascii_logo}, 
 	{"OCR",F_FUNCION_OCR,bitmap_button_ext_desktop_ocr}, 
 	{"SmartLoad",F_FUNCION_SMARTLOAD,bitmap_button_ext_desktop_smartload}, 
-	{"Quickload",F_FUNCION_QUICKLOAD,bitmap_button_ext_desktop_userdefined}, 
-	{"Quicksave",F_FUNCION_QUICKSAVE,bitmap_button_ext_desktop_userdefined}, 
+	{"Quickload",F_FUNCION_QUICKLOAD,bitmap_button_ext_desktop_quickload}, 
+	{"Quicksave",F_FUNCION_QUICKSAVE,bitmap_button_ext_desktop_quicksave}, 
     {"SnapInRAMRewind",F_FUNCION_REWIND,bitmap_button_ext_desktop_snapinramrewind}, 
     {"SnapInRAMFFW",F_FUNCION_FFW,bitmap_button_ext_desktop_snapinramffw}, 
 	{"LoadBinary",F_FUNCION_LOADBINARY,bitmap_button_ext_desktop_loadbinary}, 
 	{"SaveBinary",F_FUNCION_SAVEBINARY,bitmap_button_ext_desktop_savebinary}, 
     {"Waveform",F_FUNCION_WAVEFORM,bitmap_button_ext_desktop_waveform},
 	{"ZengMessage",F_FUNCION_ZENG_SENDMESSAGE,bitmap_button_ext_desktop_userdefined}, 
-	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD,bitmap_button_ext_desktop_userdefined}, 
-	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD,bitmap_button_ext_desktop_userdefined}, 
+	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD,bitmap_button_ext_desktop_osdkeyboard}, 
+	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD,bitmap_button_ext_desktop_osdadvkeyboard}, 
 	{"SwitchBorder",F_FUNCION_SWITCHBORDER,bitmap_button_ext_desktop_switchborder}, 
 	{"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN,bitmap_button_ext_desktop_fullscreen}, 
 	{"ReloadMMC",F_FUNCION_RELOADMMC,bitmap_button_ext_desktop_reloadmmc}, 
@@ -39045,7 +39045,7 @@ char *first_aid_string_zxdesktop="Have you enabled ZX Desktop? It allows you to 
 				"zxvision windows, menus or other widgets. Go to Settings-> GUI-> ZX Desktop settings to enable it";
 
 int first_aid_no_zxdesktop_custombuttons=0;
-char *first_aid_string_zxdesktop_custombuttons="You can customize upper ZX Desktop buttons to different actions. "
+char *first_aid_string_zxdesktop_custombuttons="You can customize upper ZX Desktop buttons to trigger different actions. "
 				"Go to Settings-> GUI-> ZX Desktop-> Customize buttons";
 
 
