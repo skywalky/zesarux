@@ -2238,4 +2238,4 @@ char *bitmap_button_ext_desktop_zxunoprismswitch[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"xWxxxxxxxxxxxxxxxxxxxxxWxx",
 	"WWWWWWWWWWWWWWWWWWWWWWWWWx"    //25
 };
-//rygc
+

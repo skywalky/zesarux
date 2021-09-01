@@ -70,6 +70,10 @@ Para poner como enabled en todos los iconos lower meter en compileoptions.h:
 #define FORCE_ENABLED_ALL_LOWER_ICONS
 
 
+Para forzar ver todos los iconos posibles de botones upper meter en compileoptions.h:
+
+#define FORCE_VISIBLE_ALL_UPPER_ICONS
+
 --------------
 
 Icono para windows:

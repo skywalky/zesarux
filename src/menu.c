@@ -3912,7 +3912,7 @@ char **menu_get_extdesktop_button_bitmap(int numero_boton)
 
 
 //Dibujar un boton con su bitmap, con efecto pulsado si/no
-void menu_draw_ext_desktop_one_button_bitmap(int numero_boton,int pulsado)
+void menu_draw_ext_desktop_one_button_bitmap(int numero_boton,int pulsado,int yinicio)
 {
 
     if (!menu_si_dibujar_boton(numero_boton)) return;
@@ -3967,7 +3967,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	int alto_boton;
 
 		int xinicio=screen_get_ext_desktop_start_x();
-		int yinicio=0;
+		//int yinicio=0;
 
 		//int ancho=screen_get_ext_desktop_width_zoom();
 		//int alto=screen_get_emulated_display_height_zoom_border_en();		
@@ -4598,7 +4598,7 @@ void menu_draw_ext_desktop_lower_icons(void)
 void menu_draw_ext_desktop_dibujar_boton_pulsado(int boton)
 {
 	menu_draw_ext_desktop_one_button_background(boton,1);
-	menu_draw_ext_desktop_one_button_bitmap(boton,1);
+	menu_draw_ext_desktop_one_button_bitmap(boton,1,0);
 }
 
 void menu_draw_ext_desktop_dibujar_boton_or_lower_icon_pulsado(void)
@@ -4702,13 +4702,92 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 	int numero_boton;
 	for (numero_boton=0;numero_boton<total_botones;numero_boton++) {
 
-		menu_draw_ext_desktop_one_button_bitmap(numero_boton,0); 
+		menu_draw_ext_desktop_one_button_bitmap(numero_boton,0,0); 
 		
 
 	}
 
 	//Dibujar iconos activos de la parte inferior
 	menu_draw_ext_desktop_lower_icons();
+
+
+    //mostrar todos los iconos de la parte superior, pero solo para modo debug
+#ifdef FORCE_VISIBLE_ALL_UPPER_ICONS
+
+	for (numero_boton=0;numero_boton<MAX_F_FUNCTIONS;numero_boton++) {
+
+        //int yinicio;
+
+
+        int total_en_fila=12;
+
+        //saltar cada 12 iconos
+        int yinicio=((numero_boton/12)*70)+70;
+
+
+        int pulsado=0;
+
+
+
+
+
+        int ancho_boton;
+        int alto_boton;
+
+        int xinicio=screen_get_ext_desktop_start_x();
+
+
+        int xfinal;
+
+        menu_ext_desktop_buttons_get_geometry(&ancho_boton,&alto_boton,&total_botones,NULL,&xfinal);
+
+
+
+
+        int nivel_zoom=1;
+
+        //Si hay espacio para meter iconos con zoom 2
+        //6 pixeles de margen
+        if (ancho_boton>=(6+EXT_DESKTOP_BUTTONS_ANCHO*2)) nivel_zoom=2;
+
+
+
+	//for (numero_boton=0;numero_boton<total_botones;numero_boton++) {
+		
+
+		int medio_boton_x=ancho_boton/2;
+		int medio_boton_y=alto_boton/2;
+
+		int destino_x=xinicio+ancho_boton*(numero_boton % total_en_fila);
+		destino_x +=medio_boton_x-(EXT_DESKTOP_BUTTONS_ANCHO*nivel_zoom)/2;
+
+		int destino_y=yinicio;
+		destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
+
+		
+
+		char **puntero_bitmap;
+
+		//puntero_bitmap=zxdesktop_buttons_bitmaps[numero_boton];
+        //puntero_bitmap=menu_get_extdesktop_button_bitmap(numero_boton);
+
+        //forzamos siempre custom buttons
+        puntero_bitmap=defined_f_functions_array[numero_boton].bitmap_button;
+
+
+
+		screen_put_asciibitmap_generic(puntero_bitmap,NULL,destino_x,destino_y,ZESARUX_ASCII_LOGO_ANCHO,ZESARUX_ASCII_LOGO_ALTO, 0,menu_draw_ext_desktop_putpixel_bitmap,nivel_zoom,0);
+
+
+
+
+		
+
+	}
+
+#endif  
+
+
 }
 
 
