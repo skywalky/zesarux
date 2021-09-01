@@ -2211,31 +2211,31 @@ char *bitmap_button_ext_desktop_nmi[EXT_DESKTOP_BUTTONS_ANCHO]={
  
 char *bitmap_button_ext_desktop_zxunoprismswitch[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
-    "                          ",     //0
-  	"bbbb b   b b  b b   b bbbb",      
-	"  b   b b  b  b bb  b b  b",		
-	" b     b   b  b b b b b  b",		
-	"b     b b  b  b b  bb b  b",	
-	"bbbb b   b bbbb b   b bbbb",			
-	"                          ",			
-	"                          ", 		
-	"            W             ",		
-	"           W W            ",		
-	"          W   W           ",	//10	
-	"          W   W           ",		
-	"         W     W          ",		
-	"        WWWWWWWWWrrrrrrrrr",		
-	"       WWWWWWWWWWrrrrrrrrr",		
-	"     WWWWWWWWWWWWWyyyyyyyy",		
-	"   WW W   WWWWWWWWWyyyyyyy",		
-	" WW   W     WWWWWWWggggggg",		
-	"W    W        WWWWWWgggggg",		
-	"    W           WWWWWccccc",		
-	"    W             WWWccccc",    //20
-	"   W                 W    ",		
-	"  W                   W   ",		
-	"  W                   W   ",		
-	" W                     W  ",
-	"WWWWWWWWWWWWWWWWWWWWWWWWW " 	 //25
+    "xxxxxxxxxxxxxxxxxxxxxxxxxx",   //0
+    "ggggxgxxxgxgxxgxgxxxgxgggg",
+	"xxgxxxgxgxxgxxgxggxxgxgxxg",		
+	"xgxxxxxgxxxgxxgxgxgxgxgxxg",		
+	"gxxxxxgxgxxgxxgxgxxggxgxxg",	
+	"ggggxgxxxgxggggxgxxxgxgggg",			
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",			
+	"xxxxxxxxxxxxxxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxxWxxxxxxxxxxxxx",		
+	"xxxxxxxxxxxWxWxxxxxxxxxxxx",		
+	"xxxxxxxxxxWxxxWxxxxxxxxxxx",	//10	
+	"xxxxxxxxxxWxxxWxxxxxxxxxxx",		
+	"xxxxxxxxxWxxxxxWxxxxxxxxxx",		
+	"xxxxxxxxWWWWWWWWWrrrrrrrrr",		
+	"xxxxxxxWWWWWWWWWWrrrrrrrrr",		
+	"xxxxxWWWWWWWWWWWWWyyyyyyyy",		
+	"xxxWWxWxxxWWWWWWWWWyyyyyyy",		
+	"xWWxxxWxxxxxWWWWWWWggggggg",		
+	"WxxxxWxxxxxxxxWWWWWWgggggg",		
+	"xxxxWxxxxxxxxxxxWWWWWccccc",		
+	"xxxxWxxxxxxxxxxxxxWWWccccc",   //20
+	"xxxWxxxxxxxxxxxxxxxxxWxxxx",		
+	"xxWxxxxxxxxxxxxxxxxxxxWxxx",		
+	"xxWxxxxxxxxxxxxxxxxxxxWxxx",		
+	"xWxxxxxxxxxxxxxxxxxxxxxWxx",
+	"WWWWWWWWWWWWWWWWWWWWWWWWWx"    //25
 };
 //rygc
