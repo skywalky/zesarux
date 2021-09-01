@@ -4764,6 +4764,33 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
 		int destino_y=yinicio;
 		destino_y +=medio_boton_y-(EXT_DESKTOP_BUTTONS_ALTO*nivel_zoom)/2;
 
+
+
+
+//fondo
+	int color_recuadro=0;
+	int color_relleno=7;
+
+	if (pulsado) color_recuadro=7;
+
+    if (menu_ext_desktop_disable_box_upper_icons.v==0) {
+        menu_draw_ext_desktop_recuadro_button(destino_x-6,destino_y-6,ancho_boton,alto_boton,color_recuadro);
+    }
+
+
+
+	//Se rellena solo cuando se pulsa el botón o cuando no hay transparencia
+    int y;
+	if (pulsado || menu_ext_desktop_transparent_upper_icons.v==0) {
+		for (y=destino_y-4;y<destino_y+alto_boton-8;y++) {	
+			for (x=destino_x-4;x<destino_x+ancho_boton-8;x++) {
+				scr_putpixel(x,y,color_relleno);	
+			}
+		}
+	}
+
+
+
 		
 
 		char **puntero_bitmap;
