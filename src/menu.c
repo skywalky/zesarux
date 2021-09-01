@@ -221,7 +221,7 @@ defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
 	//Para el usuario, mejor esta descripcion
 	{"ShowBackgroundWindows",F_FUNCION_OVERLAY_WINDOWS,bitmap_button_ext_desktop_userdefined}, 
     {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS,bitmap_button_ext_desktop_close_all_menus}, 
-    {"ZXUnoPrismSwitch",F_FUNCION_ZXUNO_PRISM,bitmap_button_ext_desktop_userdefined}
+    {"ZXUnoPrismSwitch",F_FUNCION_ZXUNO_PRISM,bitmap_button_ext_desktop_zxunoprismswitch}
 };
 
 //Funciones de teclas F mapeadas. Desde F1 hasta F15

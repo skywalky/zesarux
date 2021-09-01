@@ -64,6 +64,7 @@ extern char *bitmap_button_ext_desktop_osdadvkeyboard[];
 extern char *bitmap_button_ext_desktop_quickload[];
 extern char *bitmap_button_ext_desktop_quicksave[];
 extern char *bitmap_button_ext_desktop_nmi[];
+extern char *bitmap_button_ext_desktop_zxunoprismswitch[];
 
 extern char **zxdesktop_buttons_bitmaps[];
 

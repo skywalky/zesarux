@@ -2206,3 +2206,36 @@ char *bitmap_button_ext_desktop_nmi[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"x   xx x   x x     Y      ",	
     "x    x x   x x            ",   //25 
 };
+
+
+ 
+char *bitmap_button_ext_desktop_zxunoprismswitch[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"bbbb b   b b  b b   b bbbb",      
+	"  b   b b  b  b bb  b b  b",		
+	" b     b   b  b b b b b  b",		
+	"b     b b  b  b b  bb b  b",	
+	"bbbb b   b bbbb b   b bbbb",			
+	"                          ",			
+	"                          ", 		
+	"            W             ",		
+	"           W W            ",		
+	"          W   W           ",	//10	
+	"          W   W           ",		
+	"         W     W          ",		
+	"        WWWWWWWWWrrrrrrrrr",		
+	"       WWWWWWWWWWrrrrrrrrr",		
+	"     WWWWWWWWWWWWWyyyyyyyy",		
+	"   WW W   WWWWWWWWWyyyyyyy",		
+	" WW   W     WWWWWWWggggggg",		
+	"W    W        WWWWWWgggggg",		
+	"    W           WWWWWccccc",		
+	"    W             WWWccccc",    //20
+	"   W                 W    ",		
+	"  W                   W   ",		
+	"  W                   W   ",		
+	" W                     W  ",
+	"WWWWWWWWWWWWWWWWWWWWWWWWW " 	 //25
+};
+//rygc
