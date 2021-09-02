@@ -1868,18 +1868,18 @@ char *bitmap_button_ext_desktop_debugcpu[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"  x   x   x   x   x   x   ",		
 	"  x   x   x   x   x   x   ",
     "                          ", 
-    "               R          ",  
-    "              R           ",     
-  	"        RRRRRR            ",      
-	"       RRRRRRRR           ",		
-	"       RRRRRRRR           ",		
-	"        RRRRRRR           ",	
-	"       RR      R          ",	//20		
-	"      RRRR  R   R         ",			
-	"      RRRRRRR   R         ", 		
-	"       RR                 ",		
-	"      R  R                ",	
-    "     R    R               "   //25 
+    "                 R        ",  
+    "                R         ",     
+  	"          RRRRRR          ",      
+	"         RRRRRRRR         ",		
+	"         RRRRRRRR         ",		
+	"          RRRRRRR         ",	
+	"         RR      R        ",	//20		
+	"        RRRR  R   R       ",			
+	"        RRRRRRR   R       ", 		
+	"         RR               ",		
+	"        R  R              ",	
+    "       R    R             "   //25 
 };
 
 
@@ -2290,13 +2290,13 @@ char *bitmap_button_ext_desktop_zengmessage[EXT_DESKTOP_BUTTONS_ANCHO]={
 	" x                      x ",		
 	" x                      x ",	//10	
 	" x                      x ",		
-	"  xxxxxxxxxxxxxx    xxxx  ",		
-	"               x    x     ",		
-	"               x   x      ",		
-	"               x  x       ",		
-	"               x x        ",		
-	"               xx         ",		
-	"               x          ",		
+	"  xxxxxxxxxxxxx     xxxx  ",		
+	"              x    x      ",		
+	"              x   x       ",		
+	"              x  x        ",		
+	"              x x         ",		
+	"              xx          ",		
+	"              x           ",		
 	"                          ",		
 	"xxxxx xxxxx x    x  xxxxx ",    //20
 	"    x x     xx   x x      ",		
