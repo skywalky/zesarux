@@ -234,7 +234,7 @@ defined_f_function defined_direct_functions_array[MAX_F_FUNCTIONS]={
 	{"ShowBackgroundWindows",F_FUNCION_OVERLAY_WINDOWS,bitmap_button_ext_desktop_userdefined}, 
     
     //Misc
-    {"ZengMessage",F_FUNCION_ZENG_SENDMESSAGE,bitmap_button_ext_desktop_userdefined}, 
+    {"ZengMessage",F_FUNCION_ZENG_SENDMESSAGE,bitmap_button_ext_desktop_zengmessage}, 
     {"OCR",F_FUNCION_OCR,bitmap_button_ext_desktop_ocr}, 
     {"ZXUnoPrismSwitch",F_FUNCION_ZXUNO_PRISM,bitmap_button_ext_desktop_zxunoprismswitch}
 };

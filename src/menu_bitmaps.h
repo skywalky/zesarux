@@ -66,6 +66,7 @@ extern char *bitmap_button_ext_desktop_quicksave[];
 extern char *bitmap_button_ext_desktop_nmi[];
 extern char *bitmap_button_ext_desktop_zxunoprismswitch[];
 extern char *bitmap_button_ext_desktop_nothing[];
+extern char *bitmap_button_ext_desktop_zengmessage[];
 
 extern char **zxdesktop_buttons_bitmaps[];
 

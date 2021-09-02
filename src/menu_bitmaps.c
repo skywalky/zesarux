@@ -2271,3 +2271,37 @@ char *bitmap_button_ext_desktop_nothing[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"                          " 	 //25
 };
 
+
+
+
+
+
+char *bitmap_button_ext_desktop_zengmessage[EXT_DESKTOP_BUTTONS_ANCHO]={
+   //01234567890123456789012345
+    "                          ",     //0
+  	"  xxxxxxxxxxxxxxxxxxxxxx  ",      
+	" x                      x ",		
+	" x                      x ",		
+	" x  bbbbbbbbbbbbbbbbbb  x ",	
+	" x                      x ",			
+	" x                      x ",			
+	" x  bbbbbbbbbbbbb       x ", 		
+	" x                      x ",		
+	" x                      x ",		
+	" x                      x ",	//10	
+	" x                      x ",		
+	"  xxxxxxxxxxxxxx    xxxx  ",		
+	"               x    x     ",		
+	"               x   x      ",		
+	"               x  x       ",		
+	"               x x        ",		
+	"               xx         ",		
+	"               x          ",		
+	"                          ",		
+	"xxxxx xxxxx x    x  xxxxx ",    //20
+	"    x x     xx   x x      ",		
+	"   x  xxxxx x x  x x      ",		
+	"  x   x     x  x x x  xxx ",		
+	" x    x     x   xx x    x ",
+	"xxxxx xxxxx x    x  xxxx   " 	 //25
+};
