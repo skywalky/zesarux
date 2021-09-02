@@ -21508,7 +21508,7 @@ void menu_hardware_set_f_func_action(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_hardware_set_f_func_action,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
                 menu_add_ESC_item(array_menu_hardware_set_f_func_action);
 
-                retorno_menu=menu_dibuja_menu(&hardware_set_f_func_action_opcion_seleccionada,&item_seleccionado,array_menu_hardware_set_f_func_action,"Set F keys" );
+                retorno_menu=menu_dibuja_menu(&hardware_set_f_func_action_opcion_seleccionada,&item_seleccionado,array_menu_hardware_set_f_func_action,"Set Action" );
 
                 
 
@@ -21562,7 +21562,7 @@ void menu_hardware_set_f_functions(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_hardware_set_f_functions,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
                 menu_add_ESC_item(array_menu_hardware_set_f_functions);
 
-                retorno_menu=menu_dibuja_menu(&hardware_set_f_functions_opcion_seleccionada,&item_seleccionado,array_menu_hardware_set_f_functions,"Set F keys" );
+                retorno_menu=menu_dibuja_menu(&hardware_set_f_functions_opcion_seleccionada,&item_seleccionado,array_menu_hardware_set_f_functions,"Set Function keys");
 
                 
 
@@ -30645,8 +30645,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable tooltips");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable tooltips");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_first_aid,NULL,"[%c] ~~First aid help",(menu_disable_first_aid.v==0 ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'f');	
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_first_aid,NULL,"[%c] First aid help",(menu_disable_first_aid.v==0 ? 'X' : ' ') );	
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable First Aid help");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable First Aid help");		
 
@@ -30766,9 +30765,10 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 		//Set F keys functions
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"Set F keys functions");
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"~~Function keys");
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Assign actions to F keys");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Assign actions to F keys");
+        menu_add_item_menu_shortcut(array_menu_interface_settings,'f');
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"~~Colour settings");
