@@ -1868,18 +1868,18 @@ char *bitmap_button_ext_desktop_debugcpu[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"  x   x   x   x   x   x   ",		
 	"  x   x   x   x   x   x   ",
     "                          ", 
-    "              R           ",  
-    "             R            ",     
-  	"      RRRRRRR             ",      
-	"     RRRRRRRRR            ",		
-	"     RRRRRRRRR            ",		
-	"      RRRRRRRR            ",	
-	"     RR      R            ",	//20		
-	"    RRRR   R  R           ",			
-	"    RRRRRRRR  R           ", 		
-	"     RR                   ",		
-	"    R  R                  ",	
-    "   R    R                 "   //25 
+    "               R          ",  
+    "              R           ",     
+  	"        RRRRRR            ",      
+	"       RRRRRRRR           ",		
+	"       RRRRRRRR           ",		
+	"        RRRRRRR           ",	
+	"       RR      R          ",	//20		
+	"      RRRR  R   R         ",			
+	"      RRRRRRR   R         ", 		
+	"       RR                 ",		
+	"      R  R                ",	
+    "     R    R               "   //25 
 };
 
 
