@@ -24742,7 +24742,7 @@ void menu_zxdesktop_set_userdef_button_func_action(MENU_ITEM_PARAMETERS)
 
                   //enum defined_f_function_ids accion=defined_buttons_functions_array[i];
 
-                  sprintf (buffer_texto,"%s",defined_f_functions_array[i].texto_funcion);
+                  sprintf (buffer_texto,"%s",defined_direct_functions_array[i].texto_funcion);
 
 
                         if (i==0) menu_add_item_menu_inicial_format(&array_menu_zxdesktop_set_userdef_button_func_action,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto);
@@ -24785,10 +24785,10 @@ void menu_zxdesktop_set_userdef_buttons_functions(MENU_ITEM_PARAMETERS)
                 int i;
                 for (i=0;i<MAX_USERDEF_BUTTONS;i++) {
 
-                  enum defined_f_function_ids accion=defined_buttons_functions_array[i];
+                  int indice_tabla=defined_buttons_functions_array[i];
 
 					//tabulado todo a misma columna, agregamos un espacio con F entre 1 y 9
-                  sprintf (buffer_texto,"Button %d %s[%s]",i+1,(i+1<=9 ? " " : ""),defined_f_functions_array[accion].texto_funcion);
+                  sprintf (buffer_texto,"Button %d %s[%s]",i+1,(i+1<=9 ? " " : ""),defined_direct_functions_array[indice_tabla].texto_funcion);
 
 
 

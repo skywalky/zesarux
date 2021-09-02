@@ -2052,11 +2052,11 @@ char *bitmap_button_ext_desktop_topspeed[EXT_DESKTOP_BUTTONS_ANCHO]={
 char *bitmap_button_ext_desktop_osdkeyboard[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
     "xxxxxxxxxxxxxxxxxxxxxxxxxx", //0
-    "x xxxx xxx x  x    rryyggx", 
+    "x  xx  xxx x  x    rryyggx", 
     "x x  x x   x x    rryyggcx",    
   	"x x  x xxx xx    rryyggccx",      
 	"x x  x   x x x  rryyggcc x",		
-	"x xxxx xxx x  xrryyggcc  x",		
+	"x  xx  xxx x  xrryyggcc  x",		
 	"xxxxxxxxxxxxxxxxxxxxxxxxxx",							
 	"x                        x", 		
 	"x                        x", 		
@@ -2083,11 +2083,11 @@ char *bitmap_button_ext_desktop_osdkeyboard[EXT_DESKTOP_BUTTONS_ANCHO]={
 char *bitmap_button_ext_desktop_osdadvkeyboard[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
     "xxxxxxxxxxxxxxxxxxxxxxxxxx", //0
-    "x xxxx xxx  xx     rryyggx", 
+    "x  xx  xxx  xx     rryyggx", 
     "x x  x x   x  x   rryyggcx",    
   	"x x  x xxx xxxx  rryyggccx",      
 	"x x  x   x x  x rryyggcc x",		
-	"x xxxx xxx x  xrryyggcc  x",		
+	"x  xx  xxx x  xrryyggcc  x",		
 	"xxxxxxxxxxxxxxxxxxxxxxxxxx",							
 	"x                        x", 		
 	"x                        x", 		
@@ -2237,5 +2237,37 @@ char *bitmap_button_ext_desktop_zxunoprismswitch[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"xxWxxxxxxxxxxxxxxxxxxxWxxx",		
 	"xWxxxxxxxxxxxxxxxxxxxxxWxx",
 	"WWWWWWWWWWWWWWWWWWWWWWWWWx"    //25
+};
+
+
+
+char *bitmap_button_ext_desktop_nothing[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",      
+	"                          ",		
+	"                          ",		
+	"                          ",	
+	"                          ",			
+	"                          ",			
+	"                          ", 		
+	"                          ",		
+	"      x    x x x          ",			
+	"      xx   x x x          ",	//10		
+	"      x x  x x x          ", 		
+	"      x  x x x x          ",		
+	"      x   xx x x          ",	
+    "      x    x x xxxxx      ",    		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",    //20
+	"                          ",		
+	"                          ",		
+	"                          ",		
+	"                          ",
+	"                          " 	 //25
 };
 

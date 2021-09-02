@@ -188,75 +188,98 @@ int menu_char_width=8;
 
 int menu_last_cpu_use=0;
 
-defined_f_function defined_f_functions_array[MAX_F_FUNCTIONS]={
-	{"Default",F_FUNCION_DEFAULT,bitmap_button_ext_desktop_userdefined},  
-	{"Nothing",F_FUNCION_NOTHING,bitmap_button_ext_desktop_userdefined}, 
+defined_f_function defined_direct_functions_array[MAX_F_FUNCTIONS]={
+	{"Default",F_FUNCION_DEFAULT,bitmap_button_ext_desktop_userdefined},  //no mover nunca de sitio el default para que sea siempre la posicion 0
+	{"Nothing",F_FUNCION_NOTHING,bitmap_button_ext_desktop_nothing},
+    {"OpenMenu",F_FUNCION_OPENMENU,zesarux_ascii_logo}, 
+
+    //Actuar sobre la cpu y velocidad del emulador
 	{"Reset",F_FUNCION_RESET,bitmap_button_ext_desktop_reset}, 
 	{"HardReset",F_FUNCION_HARDRESET,bitmap_button_ext_desktop_hardreset}, 
-	{"NMI",F_FUNCION_NMI,bitmap_button_ext_desktop_nmi}, 
-	{"OpenMenu",F_FUNCION_OPENMENU,zesarux_ascii_logo}, 
-	{"OCR",F_FUNCION_OCR,bitmap_button_ext_desktop_ocr}, 
+	{"NMI",F_FUNCION_NMI,bitmap_button_ext_desktop_nmi},
+	{"DebugCPU",F_FUNCION_DEBUGCPU,bitmap_button_ext_desktop_debugcpu},
+	{"Pause",F_FUNCION_PAUSE,bitmap_button_ext_desktop_pause}, 
+	{"TopSpeed",F_FUNCION_TOPSPEED,bitmap_button_ext_desktop_topspeed},     
+
+    //Snaps
 	{"SmartLoad",F_FUNCION_SMARTLOAD,bitmap_button_ext_desktop_smartload}, 
 	{"Quickload",F_FUNCION_QUICKLOAD,bitmap_button_ext_desktop_quickload}, 
 	{"Quicksave",F_FUNCION_QUICKSAVE,bitmap_button_ext_desktop_quicksave}, 
     {"SnapInRAMRewind",F_FUNCION_REWIND,bitmap_button_ext_desktop_snapinramrewind}, 
     {"SnapInRAMFFW",F_FUNCION_FFW,bitmap_button_ext_desktop_snapinramffw}, 
+
+    //ventanas directas a menus
 	{"LoadBinary",F_FUNCION_LOADBINARY,bitmap_button_ext_desktop_loadbinary}, 
 	{"SaveBinary",F_FUNCION_SAVEBINARY,bitmap_button_ext_desktop_savebinary}, 
     {"Waveform",F_FUNCION_WAVEFORM,bitmap_button_ext_desktop_waveform},
-	{"ZengMessage",F_FUNCION_ZENG_SENDMESSAGE,bitmap_button_ext_desktop_userdefined}, 
+
+    //teclados
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD,bitmap_button_ext_desktop_osdkeyboard}, 
 	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD,bitmap_button_ext_desktop_osdadvkeyboard}, 
+
+    //Switch de cosas
 	{"SwitchBorder",F_FUNCION_SWITCHBORDER,bitmap_button_ext_desktop_switchborder}, 
 	{"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN,bitmap_button_ext_desktop_fullscreen}, 
+
+    //Actuar sobre storage
 	{"ReloadMMC",F_FUNCION_RELOADMMC,bitmap_button_ext_desktop_reloadmmc}, 
 	{"ReinsertStdTape",F_FUNCION_REINSERTTAPE,bitmap_button_ext_desktop_reinserttape}, 
-	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSETAPE,bitmap_button_ext_desktop_pauseunpausetape},  
-	{"DebugCPU",F_FUNCION_DEBUGCPU,bitmap_button_ext_desktop_debugcpu}, 
-	{"Pause",F_FUNCION_PAUSE,bitmap_button_ext_desktop_pause}, 
-	{"TopSpeed",F_FUNCION_TOPSPEED,bitmap_button_ext_desktop_topspeed}, 
+	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSETAPE,bitmap_button_ext_desktop_pauseunpausetape},   
+
+    //Actuar sobre menus y ventanas
+    {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS,bitmap_button_ext_desktop_close_all_menus}, 
 	{"ExitEmulator",F_FUNCION_EXITEMULATOR,bitmap_button_ext_desktop_exit}, 
 	{"BackgroundWindow",F_FUNCION_BACKGROUND_WINDOW,bitmap_button_ext_desktop_userdefined}, 
-
-	//Para el usuario, mejor esta descripcion
+	//Para el usuario, mejor esta descripcion de ShowBackgroundWindows en vez de overlay_windows
 	{"ShowBackgroundWindows",F_FUNCION_OVERLAY_WINDOWS,bitmap_button_ext_desktop_userdefined}, 
-    {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS,bitmap_button_ext_desktop_close_all_menus}, 
+    
+    //Misc
+    {"ZengMessage",F_FUNCION_ZENG_SENDMESSAGE,bitmap_button_ext_desktop_userdefined}, 
+    {"OCR",F_FUNCION_OCR,bitmap_button_ext_desktop_ocr}, 
     {"ZXUnoPrismSwitch",F_FUNCION_ZXUNO_PRISM,bitmap_button_ext_desktop_zxunoprismswitch}
 };
 
+//Retorna accion asociada a una posicion dentro de defined_direct_functions_array
+enum defined_f_function_ids menu_da_accion_direct_functions_indice(int indice)
+{
+    return defined_direct_functions_array[indice].id_funcion;
+}
+
 //Funciones de teclas F mapeadas. Desde F1 hasta F15
-enum defined_f_function_ids defined_f_functions_keys_array[MAX_F_FUNCTIONS_KEYS]={
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT, //F5
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT, //F10
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT //F15
+//apuntan a indices sobre la tabla defined_direct_functions_array
+int defined_f_functions_keys_array[MAX_F_FUNCTIONS_KEYS]={
+	0,
+	0,
+	0,
+	0,
+	0, //F5
+	0,
+	0,
+	0,
+	0,
+	0, //F10
+	0,
+	0,
+	0,
+	0,
+	0 //F15
 };
 
 
 //Botones a teclas F mapeadas. 11 botones. Desde smartload hasta help
-enum defined_f_function_ids defined_buttons_functions_array[MAX_USERDEF_BUTTONS]={
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT, //F5
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT,
-	F_FUNCION_DEFAULT, //F10
-	F_FUNCION_DEFAULT
+//apuntan a indices sobre la tabla defined_direct_functions_array
+int defined_buttons_functions_array[MAX_USERDEF_BUTTONS]={
+	0,
+	0,
+	0,
+	0,
+	0, //F5
+	0,
+	0,
+	0,
+	0,
+	0, //F10
+	0
 };
 
 //Si el abrir menu (tipica F5 o tecla joystick) esta limitado. De tal manera que para poderlo abrir habra que pulsar 3 veces seguidas en menos de 1 segundo
@@ -308,9 +331,9 @@ int menu_define_key_function(int tecla,char *funcion)
 	int i;
 
 	for (i=0;i<MAX_F_FUNCTIONS;i++) {
-		if (!strcasecmp(funcion,defined_f_functions_array[i].texto_funcion)) {
-			enum defined_f_function_ids id=defined_f_functions_array[i].id_funcion;
-			defined_f_functions_keys_array[tecla-1]=id;
+		if (!strcasecmp(funcion,defined_direct_functions_array[i].texto_funcion)) {
+			//enum defined_f_function_ids id=defined_direct_functions_array[i].id_funcion;
+			defined_f_functions_keys_array[tecla-1]=i;
 			return 0;
 		}
 	}
@@ -321,18 +344,18 @@ int menu_define_key_function(int tecla,char *funcion)
 //Definir una boton a una funcion
 //Entrada: buton 0...   funcion: string correspondiente a defined_f_functions_array
 //Devuelve 0 si ok
-int menu_define_button_function(int tecla,char *funcion)
+int menu_define_button_function(int boton,char *funcion)
 {
-	if (tecla<0 || tecla>=MAX_USERDEF_BUTTONS) return 1;
+	if (boton<0 || boton>=MAX_USERDEF_BUTTONS) return 1;
 
 	//Buscar en todos los strings de funciones cual es
 
 	int i;
 
 	for (i=0;i<MAX_F_FUNCTIONS;i++) {
-		if (!strcasecmp(funcion,defined_f_functions_array[i].texto_funcion)) {
-			enum defined_f_function_ids id=defined_f_functions_array[i].id_funcion;
-			defined_buttons_functions_array[tecla]=id;
+		if (!strcasecmp(funcion,defined_direct_functions_array[i].texto_funcion)) {
+			//enum defined_f_function_ids id=defined_direct_functions_array[i].id_funcion;
+			defined_buttons_functions_array[boton]=i;
 			return 0;
 		}
 	}
@@ -1831,22 +1854,7 @@ int menu_get_mask_puerto_especial(int tecla_f)
 
 
 
-int menu_get_defined_f_key_background(void)
-{
-	int tecla_f_definida=6; //F6 por defecto
 
-
-	//Buscar en el array de defined_f_functions_keys_array a ver si encontramos alguna definida como F_FUNCION_BACKGROUND_WINDOW
-	int i;
-
-  for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {
-    enum defined_f_function_ids accion=defined_f_functions_keys_array[i];
-    if (accion==F_FUNCION_BACKGROUND_WINDOW) return i+1; //posicion 0 es F1
-  }	
-
-  return tecla_f_definida;
-	
-}
 
 z80_byte menu_get_port_value_background_key(void)
 {
@@ -1890,7 +1898,8 @@ int menu_if_pressed_background_button(void)
 		int indice=menu_button_f_function_index;
 
 		//Si accion es backgroundwindow
-		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+        int indice_tabla=defined_f_functions_keys_array[indice];
+		enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice_tabla);
 		if (accion==F_FUNCION_BACKGROUND_WINDOW) {
 			//liberamos indicador de tecla de funcion
 			menu_button_f_function.v=0;
@@ -1925,7 +1934,8 @@ int menu_if_pressed_background_button(void)
 
 		//Ver si funcion F6 no esta asignada 
 		int indice=6-1;
-		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+		int indice_tabla=defined_f_functions_keys_array[indice];
+        enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice_tabla);
 
 		if (accion==F_FUNCION_DEFAULT) {
 				//liberamos indicador de tecla de funcion
@@ -1955,7 +1965,8 @@ int menu_if_pressed_menu_button(void)
 		int indice=menu_button_f_function_index;
 
 		//Si accion es openmenu
-		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+		int indice_tabla=defined_f_functions_keys_array[indice];
+        enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice_tabla);
 		if (accion==F_FUNCION_OPENMENU) {
 			//liberamos esa tecla
 			menu_button_f_function.v=0;
@@ -1995,7 +2006,8 @@ int menu_if_pressed_close_all_menus_button(void)
 		int indice=menu_button_f_function_index;
 
 		//Si accion es openmenu
-		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+		int indice_tabla=defined_f_functions_keys_array[indice];
+        enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice_tabla);
 		if (accion==F_FUNCION_CLOSE_ALL_MENUS) {
 			//liberamos esa tecla
 			menu_button_f_function.v=0;
@@ -2585,7 +2597,8 @@ int menu_si_pulsada_tecla_osd(void)
 		
 
 		int indice=8-1; //tecla F8
-		enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+		int indice_tabla=defined_f_functions_keys_array[indice];
+        enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice_tabla);
 		if (accion!=F_FUNCION_OSDKEYBOARD && accion!=F_FUNCION_DEFAULT) {
 
 			//probablemente aqui solo entra cuando F8 se asigna a backgroundwindow, pues esa funcion no abre el menu
@@ -2605,7 +2618,8 @@ int menu_si_pulsada_tecla_osd(void)
 	//Tecla F pulsada, ver si es la asignada a osd
         int indice=menu_button_f_function_index;
 
-        enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+        int indice_tabla=defined_f_functions_keys_array[indice];
+        enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice_tabla);
 	if (accion==F_FUNCION_OSDKEYBOARD) {
 		//debug_printf(VERBOSE_DEBUG,"Pressed F key mapped to OSD");
 		return 1;
@@ -3895,11 +3909,12 @@ char **menu_get_extdesktop_button_bitmap(int numero_boton)
 
         enum defined_f_function_ids accion;
 
-        accion=defined_buttons_functions_array[boton_id];
+        int indice_tabla=defined_buttons_functions_array[boton_id];
+        accion=menu_da_accion_direct_functions_indice(indice_tabla);
 
 
         if (accion!=F_FUNCION_DEFAULT) {
-            puntero_bitmap=defined_f_functions_array[accion].bitmap_button;
+            puntero_bitmap=defined_direct_functions_array[indice_tabla].bitmap_button;
         }
 
     }
@@ -4799,7 +4814,7 @@ char *zesarux_ascii_logo[ZESARUX_ASCII_LOGO_ALTO]={
         //puntero_bitmap=menu_get_extdesktop_button_bitmap(numero_boton);
 
         //forzamos siempre custom buttons
-        puntero_bitmap=defined_f_functions_array[numero_boton].bitmap_button;
+        puntero_bitmap=defined_direct_functions_array[numero_boton].bitmap_button;
 
 
 
@@ -21480,7 +21495,7 @@ void menu_hardware_set_f_func_action(MENU_ITEM_PARAMETERS)
 
                   //enum defined_f_function_ids accion=defined_f_functions_keys_array[i];
 
-                  sprintf (buffer_texto,"%s",defined_f_functions_array[i].texto_funcion);
+                  sprintf (buffer_texto,"%s",defined_direct_functions_array[i].texto_funcion);
 
 
                         if (i==0) menu_add_item_menu_inicial_format(&array_menu_hardware_set_f_func_action,MENU_OPCION_NORMAL,NULL,NULL,buffer_texto);
@@ -21523,10 +21538,10 @@ void menu_hardware_set_f_functions(MENU_ITEM_PARAMETERS)
                 int i;
                 for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {
 
-                  enum defined_f_function_ids accion=defined_f_functions_keys_array[i];
+                  int indice_tabla=defined_f_functions_keys_array[i];
 
 					//tabulado todo a misma columna, agregamos un espacio con F entre 1 y 9
-                  sprintf (buffer_texto,"Key F%d %s[%s]",i+1,(i+1<=9 ? " " : ""),defined_f_functions_array[accion].texto_funcion);
+                  sprintf (buffer_texto,"Key F%d %s[%s]",i+1,(i+1<=9 ? " " : ""),defined_direct_functions_array[indice_tabla].texto_funcion);
 
 
 
@@ -21685,11 +21700,7 @@ void menu_keyboard_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Redefine one key to another");
 
 
-		//Set F keys functions
-		menu_add_item_menu_format(array_menu_keyboard_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"Set ~~F keys functions");
-		menu_add_item_menu_shortcut(array_menu_keyboard_settings,'f');
-		menu_add_item_menu_tooltip(array_menu_keyboard_settings,"Assign actions to F keys");
-		menu_add_item_menu_ayuda(array_menu_keyboard_settings,"Assign actions to F keys");
+
 
 
 
@@ -30754,7 +30765,10 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-
+		//Set F keys functions
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"Set F keys functions");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Assign actions to F keys");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Assign actions to F keys");
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"~~Colour settings");
@@ -31839,8 +31853,7 @@ void menu_machine_selection_manufacturer(MENU_ITEM_PARAMETERS)
                         menu_add_item_menu_tooltip(array_menu_machine_selection,"Change machine type without resetting");
                         menu_add_item_menu_ayuda(array_menu_machine_selection,"Change machine type without resetting.");
 
-                        menu_add_item_menu(array_menu_machine_selection,"Cust~~om machine",MENU_OPCION_NORMAL,menu_custom_machine,NULL);
-                        menu_add_item_menu_shortcut(array_menu_machine_selection,'o');
+                        menu_add_item_menu(array_menu_machine_selection,"Custom machine",MENU_OPCION_NORMAL,menu_custom_machine,NULL);
                         menu_add_item_menu_tooltip(array_menu_machine_selection,"Specify custom machine type & ROM");
                         menu_add_item_menu_ayuda(array_menu_machine_selection,"Specify custom machine type & ROM");
 
@@ -34965,11 +34978,12 @@ int menu_inicio_handle_button_presses_userdef(int boton)
 
     enum defined_f_function_ids accion;
     
-    accion=defined_buttons_functions_array[boton];
+    int indice_tabla=defined_buttons_functions_array[boton];
+    accion=menu_da_accion_direct_functions_indice(indice_tabla);
 
 
     if (accion!=F_FUNCION_DEFAULT) {
-        menu_process_f_functions_by_action(accion);
+        menu_process_f_functions_by_action(indice_tabla);
         return 1;
     }
 
@@ -35489,13 +35503,16 @@ void menu_process_f_function_topspeed(void)
 	}
 }
 
-void menu_process_f_functions_by_action(int accion)
+void menu_process_f_functions_by_action(int indice)
 {
 
+    int id_funcion=menu_da_accion_direct_functions_indice(indice);
+
+    //printf("id indice: %d, enum: %d\n",indice,id_funcion);
 
 	char final_name[PATH_MAX];
 
-	switch (accion)
+	switch (id_funcion)
 	{
 		case F_FUNCION_DEFAULT:
 		break;
@@ -35646,11 +35663,11 @@ void menu_process_f_functions(void)
 
 	int indice=menu_button_f_function_index;
 
-	enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+	int indice_tabla=defined_f_functions_keys_array[indice];
 
-	//printf ("Menu process Tecla: F%d Accion: %s\n",indice+1,defined_f_functions_array[accion].texto_funcion);
+	//printf ("Menu process Tecla: F%d Accion: %s\n",indice+1,defined_direct_functions_array[indice_tabla].texto_funcion);
 
-	menu_process_f_functions_by_action(accion);
+	menu_process_f_functions_by_action(indice_tabla);
 
 }
 

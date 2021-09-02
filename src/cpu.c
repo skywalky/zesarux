@@ -1814,7 +1814,7 @@ printf (
 
         int i;
 			for (i=0;i<MAX_F_FUNCTIONS;i++) {
-				printf ("%s ",defined_f_functions_array[i].texto_funcion);
+				printf ("%s ",defined_direct_functions_array[i].texto_funcion);
 			}
 
 
@@ -1951,7 +1951,7 @@ printf (
 
 
 			for (i=0;i<MAX_F_FUNCTIONS;i++) {
-				printf ("%s ",defined_f_functions_array[i].texto_funcion);
+				printf ("%s ",defined_direct_functions_array[i].texto_funcion);
 			}
 
 

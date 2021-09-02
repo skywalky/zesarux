@@ -471,7 +471,7 @@ struct s_defined_f_function {
 typedef struct s_defined_f_function defined_f_function;
 
 
-extern defined_f_function defined_f_functions_array[];
+extern defined_f_function defined_direct_functions_array[];
 
 //Maximo de teclas F posibles a mapear
 #define MAX_F_FUNCTIONS_KEYS 15
@@ -480,13 +480,15 @@ extern defined_f_function defined_f_functions_array[];
 #define MAX_USERDEF_BUTTONS 11
 
 //Array de teclas F mapeadas
-extern enum defined_f_function_ids defined_f_functions_keys_array[];
+extern int defined_f_functions_keys_array[];
 
-extern enum defined_f_function_ids defined_buttons_functions_array[];
+extern int defined_buttons_functions_array[];
 
 
 extern int menu_define_key_function(int tecla,char *funcion);
 extern int menu_define_button_function(int tecla,char *funcion);
+
+extern enum defined_f_function_ids menu_da_accion_direct_functions_indice(int indice);
 
 extern overlay_screen overlay_screen_array[];
 //extern overlay_screen second_overlay_screen_array[];

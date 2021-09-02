@@ -533,12 +533,12 @@ char *array_fabricantes_hotkey[]={
         "J~~upiter Cantab",
         "Ma~~rio Prato",
         "~~Microdigital Eletronica",
-        "Miles ~~Gordon Technology",
+        "Miles Gordon Technolog~~y",
         "N~~edoPC",
         "Ne~~w Horizons",   
         "~~Pentagon",
         "Scie~~nce of Cambridge",
-        "Sega",
+        "Se~~ga",
         "~~Sinclair Research",
         "Spectravideo Intl",
         "~~Timex Sinclair",
@@ -547,8 +547,8 @@ char *array_fabricantes_hotkey[]={
         "~~ZXUno Team"
 };
 
-//Si letra es espacio->no hay letra. sega y spectravideo no hay letras libres
-char array_fabricantes_hotkey_letra[]="aobcdiurmgewpn s tlvz";
+//Si letra es espacio->no hay letra. spectravideo no hay letras libres
+char array_fabricantes_hotkey_letra[]="aobcdiurmyewpngs tlvz";
 
 
 
@@ -3983,16 +3983,18 @@ int util_write_configfile(void)
     }
 
   for (i=0;i<MAX_F_FUNCTIONS_KEYS;i++) {
-    enum defined_f_function_ids accion=defined_f_functions_keys_array[i];
+    int indice=defined_f_functions_keys_array[i];
+    enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice);
     if (accion!=F_FUNCION_DEFAULT) {
-                                              ADD_STRING_CONFIG,"--def-f-function F%d \"%s\"",i+1,defined_f_functions_array[accion].texto_funcion);
+                                              ADD_STRING_CONFIG,"--def-f-function F%d \"%s\"",i+1,defined_direct_functions_array[indice].texto_funcion);
     }
   }
 
   for (i=0;i<MAX_USERDEF_BUTTONS;i++) {
-    enum defined_f_function_ids accion=defined_buttons_functions_array[i];
+    int indice=defined_buttons_functions_array[i];
+    enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice);
     if (accion!=F_FUNCION_DEFAULT) {
-                                              ADD_STRING_CONFIG,"--def-button-function %d \"%s\"",i,defined_f_functions_array[accion].texto_funcion);
+                                              ADD_STRING_CONFIG,"--def-button-function %d \"%s\"",i,defined_direct_functions_array[indice].texto_funcion);
     }
   }
 
@@ -6648,9 +6650,10 @@ int util_set_reset_key_continue_f_functions(enum util_teclas tecla,int pressrele
     break;
   }
 
-  enum defined_f_function_ids accion=defined_f_functions_keys_array[indice];
+  int indice_tabla=defined_f_functions_keys_array[indice];
+  enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice_tabla);
 
-  debug_printf (VERBOSE_DEBUG,"Key: F%d Action: %s",indice+1,defined_f_functions_array[accion].texto_funcion);
+  debug_printf (VERBOSE_DEBUG,"Key: F%d Action: %s",indice+1,defined_direct_functions_array[accion].texto_funcion);
 
   //Abrir menu si funcion no es defecto y no es background window
   //if (accion!=F_FUNCION_DEFAULT && accion!=F_FUNCION_BACKGROUND_WINDOW) {
