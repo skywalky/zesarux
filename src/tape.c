@@ -1433,6 +1433,7 @@ void gestionar_autoload_spectrum(void)
 			case 3:
 			case 4:
 			case 5:
+            case MACHINE_ID_SPECTRUM_48_SPA:
 				//Ver para maquinas 48k
 				gestionar_autoload_spectrum_48kmode();
 				break;
