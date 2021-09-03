@@ -30595,9 +30595,12 @@ void menu_special_fx_settings(MENU_ITEM_PARAMETERS)
 			}
 
 			if (screen_menu_mix_method==0 || screen_menu_mix_method==1) {
+                //Lo desactivo. Esto da problemas con footer
+                /*
 				menu_add_item_menu_format(array_menu_special_fx_settings,MENU_OPCION_NORMAL,menu_interface_reduce_bright_menu,NULL,"[%c] Darken when menu",(screen_menu_reduce_bright_machine.v ? 'X' : ' ' ) );
 				menu_add_item_menu_tooltip(array_menu_special_fx_settings,"Darken layer below menu when menu open");
 				menu_add_item_menu_ayuda(array_menu_special_fx_settings,"Darken layer below menu when menu open");
+                */
 			}
 		
 
@@ -30665,17 +30668,21 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable First Aid help");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable First Aid help");		
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_restore_first_aid,NULL,"    Restore all 1st aid mess.");
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all First Aid help messages");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all First Aid help messages");
+        if (menu_disable_first_aid.v==0) {
+
+            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_restore_first_aid,NULL,"    Restore all 1st aid mess.");
+            menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all First Aid help messages");
+            menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all First Aid help messages");
+
+        }
 
 
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_select_machine_by_name,NULL,"[%c] Select machine by name",
 			(setting_machine_selection_by_name.v ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Select machine by name instead of manufacturer");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Select machine by name instead of manufacturer");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Select machine by name instead of manufacturer on menu Machine");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Select machine by name instead of manufacturer on menu Machine");
 
 
 
@@ -30721,13 +30728,15 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-		if (!strcmp(scr_new_driver_name,"xwindows")  || !strcmp(scr_new_driver_name,"sdl") || !strcmp(scr_new_driver_name,"cocoa") ) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"[%c] Mouse pointer", (mouse_pointer_shown.v==1 ? 'X' : ' ') );
-			//menu_add_item_menu_shortcut(array_menu_interface_settings,'m');
-		}
-
         menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_disable_menu_mouse,NULL,"[%c] Use mouse on menu", (mouse_menu_disabled.v==0 ? 'X' : ' ') );
         //menu_add_item_menu_shortcut(array_menu_interface_settings,'u');      
+
+        if (mouse_menu_disabled.v==0) {
+            if (!strcmp(scr_new_driver_name,"xwindows")  || !strcmp(scr_new_driver_name,"sdl") || !strcmp(scr_new_driver_name,"cocoa") ) {
+                menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"[%c] Mouse pointer", (mouse_pointer_shown.v==1 ? 'X' : ' ') );
+                //menu_add_item_menu_shortcut(array_menu_interface_settings,'m');
+            }
+        }
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_tooltip,NULL,"[%c] ~~Tooltips",(tooltip_enabled.v ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'t');	

@@ -2676,6 +2676,9 @@ z80_byte scrcocoa_lee_puerto(z80_byte puerto_h,z80_byte puerto_l)
 void scrcocoa_actualiza_tablas_teclado(void)
 {
 
+    //realmente las tablas de teclado se actualizan al pulsar una tecla, generando eventos, a diferencia de otros drivers de video,
+    //como xwindows
+
 	if (cocoa_enviar_caps_contador) {
 		cocoa_enviar_caps_contador--;
 		if (cocoa_enviar_caps_contador==0) {

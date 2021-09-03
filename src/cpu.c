@@ -1874,7 +1874,7 @@ printf (
 printf (
 
 		"--menu-transparency-perc n Transparency percentage to apply to menu\n"
-		"--menu-darken-when-open    Darken layer below menu when menu open\n"
+		//"--menu-darken-when-open    Darken layer below menu when menu open\n"
 		"--menu-bw-multitask        Grayscale layer below menu when menu opened and multitask is disabled\n"		
 
 
@@ -7279,7 +7279,9 @@ int parse_cmdline_options(void) {
 
 
 			else if (!strcmp(argv[puntero_parametro],"--menu-darken-when-open")) {
-				screen_menu_reduce_bright_machine.v=1;
+                //Lo desactivo. Esto da problemas con footer
+                //mantengo opcion por compatibilidad
+				//screen_menu_reduce_bright_machine.v=1;
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--menu-bw-multitask")) {

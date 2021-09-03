@@ -3773,7 +3773,9 @@ int util_write_configfile(void)
 
 	
 
-  if (screen_menu_reduce_bright_machine.v)   ADD_STRING_CONFIG,"--menu-darken-when-open");
+  //lo desactivo. Esto da problemas con footer
+  //if (screen_menu_reduce_bright_machine.v)   ADD_STRING_CONFIG,"--menu-darken-when-open");
+
   if (screen_machine_bw_no_multitask.v)      ADD_STRING_CONFIG,"--menu-bw-multitask");
 
 
