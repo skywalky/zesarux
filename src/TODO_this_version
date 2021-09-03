@@ -204,4 +204,4 @@ L08F7:          IN      A,(HLWPORT)
 
 -con menu cerrado, si pulso alguna ventana en background abre el menu principal. pero deberia saltar a la ventana pulsada
 
--revisar referencias a menu GUI y Windows, cambiarlos. en menus y FAQ
+-revisar referencias a menu GUI y Windows, cambiarlos. en menus y FAQ. agregar hotkeys de esos menus
