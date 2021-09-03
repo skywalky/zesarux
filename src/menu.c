@@ -29973,7 +29973,7 @@ void menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
 
         menu_add_ESC_item(array_menu_common);
 
-        retorno_menu=menu_dibuja_menu(&common_opcion_seleccionada,&item_seleccionado,array_menu_common,"GUI style" );
+        retorno_menu=menu_dibuja_menu(&common_opcion_seleccionada,&item_seleccionado,array_menu_common,"Style" );
 
         if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
             //llamamos por valor de funcion
@@ -30649,7 +30649,118 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		//hotkeys usados:
 		//ocewsruitfalqhp
 
-		menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"[%c] M~~ultitask menu", (menu_multitarea==1 ? 'X' : ' '));
+		
+
+		//menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
+
+
+		menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"[%d] Menu char w~~idth",menu_char_width);
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'i');	
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. You can reduce it so allowing more text columns in a window");
+
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_first_aid,NULL,"[%c] First aid help",(menu_disable_first_aid.v==0 ? 'X' : ' ') );	
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable First Aid help");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable First Aid help");		
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_restore_first_aid,NULL,"    Restore all 1st aid mess.");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all First Aid help messages");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all First Aid help messages");
+
+
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_select_machine_by_name,NULL,"[%c] Select machine by name",
+			(setting_machine_selection_by_name.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Select machine by name instead of manufacturer");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Select machine by name instead of manufacturer");
+
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_quickexit,NULL,"[%c] ~~Quick exit",
+			(quickexit.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'q');	
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");			
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");
+
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"    ~~Style [%s]",
+						definiciones_estilos_gui[estilo_gui_activo].nombre_estilo);
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'s');
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Change GUI Style");
+                menu_add_item_menu_ayuda(array_menu_interface_settings,"You can switch between:\n"
+					"- ZEsarUX: default style\n"
+                    "- ZEsarUX matte: same as default but less shiny\n"
+					"- ZXSpectr: my first emulator created on 1996, that worked on MS-DOS and Windows\n"
+                    "- ManSoftware: style using my own font I created when I was a child ;)\n"
+					"- ZX80/81: ZX80&81 style\n"
+                    "- QL: Sinclair QL style\n"
+					"- Z88: Z88 style\n"
+                    "- Sam: Sam Coupe style\n"
+					"- CPC: Amstrad CPC style\n"
+					"- MSX: MSX style\n"
+					"- RetroMac: MacOS classic style\n"
+                    "- BeOS: BeOS operating system style\n"
+					"- Borland: Borland MS-DOS programs style\n"
+                    "- Turbovision: Borland Turbovision GUI style\n"
+                    "- Ocean: Blue style\n"
+                    "- Bloody: Red style\n"
+                    "- Panther: Pink style\n"
+                    "- Grass: Green style\n"
+                    "- Sky: Cyan style\n"
+                    "- Sunny: Yellow style\n"
+					"- Clean: Simple style with black & white menus\n"
+					"- CleanInverse: Same style as previous but using inverted colours\n"
+                    "- Solarized Dark/Light: Solarized styles\n"
+					"\nNote: Some styles (like Solarized) need a full video driver, can't be set on curses or aalib for example"
+					
+					);
+        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+		if (!strcmp(scr_new_driver_name,"xwindows")  || !strcmp(scr_new_driver_name,"sdl") || !strcmp(scr_new_driver_name,"cocoa") ) {
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"[%c] Mouse pointer", (mouse_pointer_shown.v==1 ? 'X' : ' ') );
+			//menu_add_item_menu_shortcut(array_menu_interface_settings,'m');
+		}
+
+        menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_disable_menu_mouse,NULL,"[%c] Use mouse on menu", (mouse_menu_disabled.v==0 ? 'X' : ' ') );
+        //menu_add_item_menu_shortcut(array_menu_interface_settings,'u');      
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_tooltip,NULL,"[%c] ~~Tooltips",(tooltip_enabled.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'t');	
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable tooltips");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable tooltips");          
+        
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_confirm_yes,NULL,"[%c] Force confirm yes",(force_confirm_yes.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
+
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'p');
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"[%c] Minimize button",(menu_hide_minimize_button.v ? ' ' : 'X') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'i');
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"[%c] Close button",(menu_hide_close_button.v ? ' ' : 'X') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'l');
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] Invert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'n');
+
+        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+        menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"[%c] M~~ultitask menu", (menu_multitarea==1 ? 'X' : ' '));
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'u');
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"When multitask is disabled, both emulation, background windows and other menu features are stopped when opening the menu");
         menu_add_item_menu_ayuda(array_menu_interface_settings,"When multitask is disabled, both emulation, background windows and other menu features are stopped when opening the menu");
@@ -30663,14 +30774,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_ayuda(array_menu_interface_settings,"When multitask is enabled, you can disable emulation when opening the menu");
         }
 
-		/*
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_bw_no_multitask,NULL,"B&W when no multitask: %s",
-			(screen_bw_no_multitask_menu.v ? "Yes" : "No") );
-
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Emulated machine display will change to black & white colours when menu open and multitask is off");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Emulated machine display will change to black & white colours when menu open and multitask is off");
-
-		*/
 
 
        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -30712,120 +30815,8 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
 
-        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-		//menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"[%d] Menu char w~~idth",menu_char_width);
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'i');	
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Menu character width. You can reduce it so allowing more text columns in a window");
-
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_tooltip,NULL,"[%c] ~~Tooltips",(tooltip_enabled.v ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'t');	
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable tooltips");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable tooltips");
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_first_aid,NULL,"[%c] First aid help",(menu_disable_first_aid.v==0 ? 'X' : ' ') );	
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable First Aid help");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable First Aid help");		
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_restore_first_aid,NULL,"    Restore all 1st aid mess.");
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all First Aid help messages");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all First Aid help messages");
-
-
-
-
-
-
-
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_select_machine_by_name,NULL,"[%c] Select machine by name",
-			(setting_machine_selection_by_name.v ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Select machine by name instead of manufacturer");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Select machine by name instead of manufacturer");
-
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_quickexit,NULL,"[%c] ~~Quick exit",
-			(quickexit.v ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'q');	
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");			
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Exit emulator quickly: no yes/no confirmation and no fadeout");
-
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_change_gui_style,NULL,"    GUI ~~style [%s]",
-						definiciones_estilos_gui[estilo_gui_activo].nombre_estilo);
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'s');
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Change GUI Style");
-                menu_add_item_menu_ayuda(array_menu_interface_settings,"You can switch between:\n"
-					"- ZEsarUX: default style\n"
-                    "- ZEsarUX matte: same as default but less shiny\n"
-					"- ZXSpectr: my first emulator created on 1996, that worked on MS-DOS and Windows\n"
-                    "- ManSoftware: style using my own font I created when I was a child ;)\n"
-					"- ZX80/81: ZX80&81 style\n"
-                    "- QL: Sinclair QL style\n"
-					"- Z88: Z88 style\n"
-                    "- Sam: Sam Coupe style\n"
-					"- CPC: Amstrad CPC style\n"
-					"- MSX: MSX style\n"
-					"- RetroMac: MacOS classic style\n"
-                    "- BeOS: BeOS operating system style\n"
-					"- Borland: Borland MS-DOS programs style\n"
-                    "- Turbovision: Borland Turbovision GUI style\n"
-                    "- Ocean: Blue style\n"
-                    "- Bloody: Red style\n"
-                    "- Panther: Pink style\n"
-                    "- Grass: Green style\n"
-                    "- Sky: Cyan style\n"
-                    "- Sunny: Yellow style\n"
-					"- Clean: Simple style with black & white menus\n"
-					"- CleanInverse: Same style as previous but using inverted colours\n"
-                    "- Solarized Dark/Light: Solarized styles\n"
-					"\nNote: Some styles (like Solarized) need a full video driver, can't be set on curses or aalib for example"
-					
-					);
-        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-		if (!strcmp(scr_new_driver_name,"xwindows")  || !strcmp(scr_new_driver_name,"sdl") || !strcmp(scr_new_driver_name,"cocoa") ) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"[%c] Mouse pointer", (mouse_pointer_shown.v==1 ? 'X' : ' ') );
-			//menu_add_item_menu_shortcut(array_menu_interface_settings,'m');
-		}
-
-        menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_disable_menu_mouse,NULL,"[%c] Use mouse on menu", (mouse_menu_disabled.v==0 ? 'X' : ' ') );
-        //menu_add_item_menu_shortcut(array_menu_interface_settings,'u');        
         
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_confirm_yes,NULL,"[%c] Force confirm yes",(force_confirm_yes.v ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
-
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
-		//menu_add_item_menu_shortcut(array_menu_interface_settings,'p');
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"[%c] Minimize button",(menu_hide_minimize_button.v ? ' ' : 'X') );
-		//menu_add_item_menu_shortcut(array_menu_interface_settings,'i');
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"[%c] Close button",(menu_hide_close_button.v ? ' ' : 'X') );
-		//menu_add_item_menu_shortcut(array_menu_interface_settings,'l');
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] Invert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
-		//menu_add_item_menu_shortcut(array_menu_interface_settings,'n');
-
- 
 
 
         menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -30861,7 +30852,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
                 //menu_add_item_menu(array_menu_interface_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_interface_settings);
 
-                retorno_menu=menu_dibuja_menu(&interface_settings_opcion_seleccionada,&item_seleccionado,array_menu_interface_settings,"GUI Settings" );
+                retorno_menu=menu_dibuja_menu(&interface_settings_opcion_seleccionada,&item_seleccionado,array_menu_interface_settings,"ZX Vision Settings" );
 
                 
 
@@ -34863,11 +34854,6 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings,"Settings for the File browser");
 		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the File Browser");        
 
-		menu_add_item_menu(array_menu_settings,"~~GUI",MENU_OPCION_NORMAL,menu_interface_settings,NULL);
-		menu_add_item_menu_shortcut(array_menu_settings,'g');
-		menu_add_item_menu_tooltip(array_menu_settings,"Settings for the GUI");
-		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the GUI interface");
-
 		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_hardware_settings,NULL,"~~Hardware");
 		menu_add_item_menu_shortcut(array_menu_settings,'h');
 		menu_add_item_menu_tooltip(array_menu_settings,"Other hardware settings for the running machine (not CPU or ULA)");
@@ -34906,8 +34892,13 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"ZEsarUX ~~Window");
 		menu_add_item_menu_shortcut(array_menu_settings,'w');
+		menu_add_item_menu_tooltip(array_menu_settings,"These settings are related to the ZEsarUX Window");
+		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the ZEsarUX Window");       
 
-
+		menu_add_item_menu(array_menu_settings,"ZX ~~Vision",MENU_OPCION_NORMAL,menu_interface_settings,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'v');
+		menu_add_item_menu_tooltip(array_menu_settings,"These settings are related to the GUI interface: ZX Vision");
+		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the GUI interface: ZX Vision");
 
 
   menu_add_item_menu(array_menu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);

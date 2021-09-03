@@ -47,7 +47,7 @@ Improved Debugging:
 
 Improved ZX Vision menu interface:
 -Machine manufacturer list is now sorted by name (instead of some kind of mixed age and type)
--Reorganized GUI Settings and Window Settings menu
+-Reorganized GUI Settings and Window Settings menu: "GUI Settings" menu is now called "ZX Vision Settings", "Window Settings" menu is now called "ZEsarUX Window settings"
 -Allow customize upper buttons to actions
 -Added setting to pause cpu emulation on menu when multitask active
 -Added Degraded ZX Desktop Fill Type
