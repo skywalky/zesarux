@@ -1310,7 +1310,7 @@ int plusthreedisk_opcion_seleccionada=0;
 
 int window_settings_opcion_seleccionada=0;
 int osd_settings_opcion_seleccionada=0;
-
+int special_fx_settings_opcion_seleccionada=0;
 
 
 
@@ -30369,6 +30369,29 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_window_settings,'b');
 		}
 
+		int fps;
+		int divisor=frameskip+1;
+		if (divisor==0) {
+			fps=50; //Esto no deberia suceder nunca. Pero lo hacemos por una posible division por 0 (si frameskip fuera -1)
+		}
+		else {
+			fps=50/divisor;
+		}
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_frameskip,NULL,"[%d] Frameskip (%d FPS)",frameskip,fps);
+		//menu_add_item_menu_shortcut(array_menu_window_settings,'r');
+			menu_add_item_menu_tooltip(array_menu_window_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
+			menu_add_item_menu_ayuda(array_menu_window_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
+
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_autoframeskip,NULL,"[%c] Auto Frameskip",
+				(autoframeskip.v ? 'X' : ' '));
+				//menu_add_item_menu_shortcut(array_menu_window_settings,'a');	
+			menu_add_item_menu_tooltip(array_menu_window_settings,"Let ZEsarUX decide when to skip frames");
+			menu_add_item_menu_ayuda(array_menu_window_settings,"ZEsarUX skips frames when the host cpu use is too high. Then skiping frames the cpu use decreases");
+
+
+
 
         if (mouse_menu_disabled.v==0) {
             menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_ignore_click_open_menu,NULL,"[%c] ~~Clicking mouse opens menu", (mouse_menu_ignore_click_open.v==0 ? 'X' : ' ') );            
@@ -30526,6 +30549,87 @@ void menu_interface_menu_emulation_paused(MENU_ITEM_PARAMETERS)
     timer_reset();
 }
 
+void menu_special_fx_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_special_fx_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+
+		menu_add_item_menu_inicial_format(&array_menu_special_fx_settings,MENU_OPCION_NORMAL,menu_interface_multitask,NULL,"[%c] M~~ultitask menu", (menu_multitarea==1 ? 'X' : ' '));
+	
+
+
+
+/*
+
+0=Menu por encima de maquina, si no es transparente
+1=Menu por encima de maquina, si no es transparente. Y Color Blanco con brillo es transparente
+2=Mix de los dos colores, con control de transparecnai
+
+
+
+*/
+
+
+
+			menu_add_item_menu_inicial_format(&array_menu_special_fx_settings,MENU_OPCION_NORMAL,menu_interface_mix_menu,NULL,"[%s] Menu Mix Method",screen_menu_mix_methods_strings[screen_menu_mix_method] );
+			menu_add_item_menu_tooltip(array_menu_special_fx_settings,"How to mix menu and the layer below");
+			menu_add_item_menu_ayuda(array_menu_special_fx_settings,"How to mix menu and the layer below");
+
+			if (screen_menu_mix_method==2) {
+				menu_add_item_menu_format(array_menu_special_fx_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%d%%] Transparency",screen_menu_mix_transparency );
+				menu_add_item_menu_tooltip(array_menu_special_fx_settings,"Transparency percentage to apply to menu");
+				menu_add_item_menu_ayuda(array_menu_special_fx_settings,"Transparency percentage to apply to menu");
+			}
+
+			if (screen_menu_mix_method==0 || screen_menu_mix_method==1) {
+				menu_add_item_menu_format(array_menu_special_fx_settings,MENU_OPCION_NORMAL,menu_interface_reduce_bright_menu,NULL,"[%c] Darken when menu",(screen_menu_reduce_bright_machine.v ? 'X' : ' ' ) );
+				menu_add_item_menu_tooltip(array_menu_special_fx_settings,"Darken layer below menu when menu open");
+				menu_add_item_menu_ayuda(array_menu_special_fx_settings,"Darken layer below menu when menu open");
+			}
+		
+
+
+				menu_add_item_menu_format(array_menu_special_fx_settings,MENU_OPCION_NORMAL,menu_interface_bw_no_multitask,NULL,"[%c] B&W on menu+no multitask",(screen_machine_bw_no_multitask.v ? 'X' : ' ' ) );
+				menu_add_item_menu_tooltip(array_menu_special_fx_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
+				menu_add_item_menu_ayuda(array_menu_special_fx_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
+
+
+
+
+
+   
+
+						
+
+                menu_add_item_menu(array_menu_special_fx_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_special_fx_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_special_fx_settings);
+
+                retorno_menu=menu_dibuja_menu(&special_fx_settings_opcion_seleccionada,&item_seleccionado,array_menu_special_fx_settings,"Special FX Settings" );
+
+                
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
+
+
+
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_interface_settings;
@@ -30596,27 +30700,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
 
-
-		int fps;
-		int divisor=frameskip+1;
-		if (divisor==0) {
-			fps=50; //Esto no deberia suceder nunca. Pero lo hacemos por una posible division por 0 (si frameskip fuera -1)
-		}
-		else {
-			fps=50/divisor;
-		}
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_frameskip,NULL,"[%d] F~~rameskip (%d FPS)",frameskip,fps);
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'r');
-			menu_add_item_menu_tooltip(array_menu_interface_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
-			menu_add_item_menu_ayuda(array_menu_interface_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_autoframeskip,NULL,"[%c] ~~Auto Frameskip",
-				(autoframeskip.v ? 'X' : ' '));
-				menu_add_item_menu_shortcut(array_menu_interface_settings,'a');	
-			menu_add_item_menu_tooltip(array_menu_interface_settings,"Let ZEsarUX decide when to skip frames");
-			menu_add_item_menu_ayuda(array_menu_interface_settings,"ZEsarUX skips frames when the host cpu use is too high. Then skiping frames the cpu use decreases");
 
 
 
@@ -30736,49 +30819,17 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
 
-/*
 
-0=Menu por encima de maquina, si no es transparente
-1=Menu por encima de maquina, si no es transparente. Y Color Blanco con brillo es transparente
-2=Mix de los dos colores, con control de transparecnai
-
-
-
-*/
+        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
 		if (si_complete_video_driver() ) {
-
-			menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-			menu_add_item_menu(array_menu_interface_settings,"--Special FX--",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_mix_menu,NULL,"[%s] Menu Mix Method",screen_menu_mix_methods_strings[screen_menu_mix_method] );
-			menu_add_item_menu_tooltip(array_menu_interface_settings,"How to mix menu and the layer below");
-			menu_add_item_menu_ayuda(array_menu_interface_settings,"How to mix menu and the layer below");
-
-			if (screen_menu_mix_method==2) {
-				menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%d%%] Transparency",screen_menu_mix_transparency );
-				menu_add_item_menu_tooltip(array_menu_interface_settings,"Transparency percentage to apply to menu");
-				menu_add_item_menu_ayuda(array_menu_interface_settings,"Transparency percentage to apply to menu");
-			}
-
-			if (screen_menu_mix_method==0 || screen_menu_mix_method==1) {
-				menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_reduce_bright_menu,NULL,"[%c] Darken when menu",(screen_menu_reduce_bright_machine.v ? 'X' : ' ' ) );
-				menu_add_item_menu_tooltip(array_menu_interface_settings,"Darken layer below menu when menu open");
-				menu_add_item_menu_ayuda(array_menu_interface_settings,"Darken layer below menu when menu open");
-			}
-		}
-
-
-				menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_bw_no_multitask,NULL,"[%c] B&W on menu+no multitask",(screen_machine_bw_no_multitask.v ? 'X' : ' ' ) );
-				menu_add_item_menu_tooltip(array_menu_interface_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
-				menu_add_item_menu_ayuda(array_menu_interface_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
+			menu_add_item_menu(array_menu_interface_settings,"Special FX",MENU_OPCION_NORMAL,menu_special_fx_settings,NULL);
+        }
 
 
 
-
-
-        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+        
 
 		//Con driver cocoa, no permitimos cambiar a otro driver
 		if (strcmp(scr_new_driver_name,"cocoa")) {
