@@ -12061,24 +12061,24 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
  
 
-                menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_ext_desktop_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+        menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
 		menu_add_ESC_item(array_menu_ext_desktop_settings);
 
-                retorno_menu=menu_dibuja_menu(&ext_desktop_settings_opcion_seleccionada,&item_seleccionado,array_menu_ext_desktop_settings,"ZX Desktop Settings");
+        retorno_menu=menu_dibuja_menu(&ext_desktop_settings_opcion_seleccionada,&item_seleccionado,array_menu_ext_desktop_settings,"ZX Desktop Settings");
 
                 
 
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                    
+            }
+        }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
 
