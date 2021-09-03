@@ -1427,12 +1427,12 @@ void gestionar_autoload_spectrum(void)
 
 		switch (current_machine_type) {
 
-			case 0:
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-			case 5:
+			case MACHINE_ID_SPECTRUM_16:
+			case MACHINE_ID_SPECTRUM_48:
+			case MACHINE_ID_INVES:
+			case MACHINE_ID_MICRODIGITAL_TK90X:
+			case MACHINE_ID_MICRODIGITAL_TK90X_SPA:
+			case MACHINE_ID_MICRODIGITAL_TK95:
             case MACHINE_ID_SPECTRUM_48_SPA:
 				//Ver para maquinas 48k
 				gestionar_autoload_spectrum_48kmode();
