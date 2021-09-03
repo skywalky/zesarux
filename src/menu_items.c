@@ -11952,7 +11952,43 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_custom_width,menu_ext_desktop_cond,"Custom Width");
 
-			char fill_type_name[32];
+			
+
+
+			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			
+
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_placemenu,NULL,"[%c] Open Menu on ZX Desktop",(screen_ext_desktop_place_menu ? 'X' : ' ' ) );
+			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
+			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
+
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_direct_buttons,NULL,"[%c] Direct access buttons",(menu_zxdesktop_buttons_enabled.v ? 'X' : ' ' ) );
+
+			if (menu_zxdesktop_buttons_enabled.v) {
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_upper_transparent,NULL,"[%c] Transparent upper buttons",(menu_ext_desktop_transparent_upper_icons.v ? 'X' : ' ' ) );
+                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_upper_box,NULL,"[%c] Box on upper buttons",(menu_ext_desktop_disable_box_upper_icons.v ? ' ' : 'X' ) );
+
+				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_transparent,NULL,"[%c] Transparent lower buttons",(menu_ext_desktop_transparent_lower_icons.v ? 'X' : ' ' ) );
+                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_box,NULL,"[%c] Box on lower buttons",(menu_ext_desktop_disable_box_lower_icons.v ? ' ' : 'X' ) );
+
+
+                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_set_userdef_buttons_functions,NULL,"    Customize ~~buttons");
+                menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'b');
+			}
+        }
+
+        menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_switch_button,NULL,"[%c] Footer switch button",(zxdesktop_switch_button_enabled.v ? 'X' : ' ' ) );
+        menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Enable a button on footer to switch ZX Desktop (visible when menu closed)");
+        menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Enable a button on footer to switch ZX Desktop (visible when menu closed)");
+
+        if (screen_ext_desktop_enabled) {   
+
+			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_SEPARADOR,NULL,NULL,"--Background--");
+			
+
+            char fill_type_name[32];
 			int seleccion_primary=0;
 			int seleccion_secondary=0;
 			switch (menu_ext_desktop_fill) {
@@ -12004,34 +12040,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 			}
 
-
-			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-			
-
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_placemenu,NULL,"[%c] Open Menu on ZX Desktop",(screen_ext_desktop_place_menu ? 'X' : ' ' ) );
-			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
-			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
-
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_direct_buttons,NULL,"[%c] Direct access buttons",(menu_zxdesktop_buttons_enabled.v ? 'X' : ' ' ) );
-
-			if (menu_zxdesktop_buttons_enabled.v) {
-				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_upper_transparent,NULL,"[%c] Transparent upper buttons",(menu_ext_desktop_transparent_upper_icons.v ? 'X' : ' ' ) );
-                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_upper_box,NULL,"[%c] Box on upper buttons",(menu_ext_desktop_disable_box_upper_icons.v ? ' ' : 'X' ) );
-
-				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_transparent,NULL,"[%c] Transparent lower buttons",(menu_ext_desktop_transparent_lower_icons.v ? 'X' : ' ' ) );
-                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_lower_box,NULL,"[%c] Box on lower buttons",(menu_ext_desktop_disable_box_lower_icons.v ? ' ' : 'X' ) );
-
-
-                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_set_userdef_buttons_functions,NULL,"    Customize ~~buttons");
-                menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'b');
-			}
-
-            
-
-			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-			
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_SEPARADOR,NULL,NULL,"--Background--");
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%s] Fill type",fill_type_name);
+            menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%s] Fill type",fill_type_name);
 			
 			if (seleccion_primary) {
                 //en tipo degraded, no tiene sentido mostrar los colores bright
@@ -12050,8 +12059,7 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 		}
 
-        menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_switch_button,NULL,"[%c] Footer switch button",(zxdesktop_switch_button_enabled.v ? 'X' : ' ' ) );
-		
+ 
 
                 menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_ext_desktop_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
