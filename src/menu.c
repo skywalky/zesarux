@@ -30350,6 +30350,11 @@ void menu_osd_settings(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_setting_limit_menu_open(MENU_ITEM_PARAMETERS)
+{
+	menu_limit_menu_open.v ^=1;
+}
+
 
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
@@ -30399,6 +30404,13 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_ayuda(array_menu_window_settings,"Disabling this will make mouse be ignored when clicking on "
                 "the window to open menu or pressing ZX Desktop buttons. The mouse can still be used when the menu is open");
         }
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"[%c] Limit menu opening",
+			(menu_limit_menu_open.v ? 'X' : ' ') );
+		//menu_add_item_menu_shortcut(array_menu_window_settings,'l');	
+		menu_add_item_menu_tooltip(array_menu_window_settings,"Limit the action to open menu (F5 by default, joystick button)");			
+		menu_add_item_menu_ayuda(array_menu_window_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
+
 
 
                 if (si_complete_video_driver() ) {
@@ -30508,10 +30520,7 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 }
 
 
-void menu_setting_limit_menu_open(MENU_ITEM_PARAMETERS)
-{
-	menu_limit_menu_open.v ^=1;
-}
+
 
 
 
@@ -30664,8 +30673,46 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		*/
 
 
+       menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] Background windows",(menu_allow_background_windows ? 'X' : ' ') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'a');
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Allow some menu windows to be put on the background");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"You can allow some menu windows to be put on the background.\n"
 
+			"When a window is on the background, its contents are updated continuosly.\n"
+
+			"Windows that can be put on background have an exclamation mark (!) "
+			"on the right of its title. When the window is on background, the exclamation mark will blink.\n"
+            "But that exclamation mark will become a '/' if the menu is closed and the window is still on the background, "
+            "to warn you to open the menu before you can interact with the windows. "
+            "\n"
+            "\n"
+
+			"Press left button mouse on the exclamation mark, or press F6, or just select another window to put that window on the background. "
+			"Some examples of these windows are AY Registers, Audio Waveform, or AY Sheet.\n"
+            "\n"
+
+			"Windows on the background can be moved, resized or closed directly using your mouse. \n"
+            "You can also rearrange all windows, resize, or move some to the top, for example, on menu Windows. "
+	
+		);
+
+        if (menu_allow_background_windows && menu_multitarea) {
+           menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows_always_force,NULL,"[%c]  Even with menu closed",(always_force_overlay_visible_when_menu_closed ? 'X' : ' ') ); 
+           menu_add_item_menu_tooltip(array_menu_interface_settings,"Shows background window even with menu closed");
+           menu_add_item_menu_ayuda(array_menu_interface_settings,"Shows background window even with menu closed");
+        }
+
+		if (menu_allow_background_windows && menu_multitarea && save_configuration_file_on_exit.v) {
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_reopen_background_windows_on_start,NULL,"[%c] Reopen windows on start",(menu_reopen_background_windows_on_start.v ? 'X' : ' ') );
+		}
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
+
+        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		//menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
 
@@ -30692,23 +30739,10 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_confirm_yes,NULL,"[%c] Force confirm yes",(force_confirm_yes.v ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
 
 
 
 
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"[%c] ~~Limit menu opening",
-			(menu_limit_menu_open.v ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'l');	
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button)");			
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_select_machine_by_name,NULL,"[%c] Select machine by name",
@@ -30767,6 +30801,15 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
         menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_disable_menu_mouse,NULL,"[%c] Use mouse on menu", (mouse_menu_disabled.v==0 ? 'X' : ' ') );
         //menu_add_item_menu_shortcut(array_menu_interface_settings,'u');        
+        
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_confirm_yes,NULL,"[%c] Force confirm yes",(force_confirm_yes.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force confirmation dialogs yes/no always to yes");
+
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
@@ -30782,42 +30825,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] Invert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
 		//menu_add_item_menu_shortcut(array_menu_interface_settings,'n');
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] Background windows",(menu_allow_background_windows ? 'X' : ' ') );
-		//menu_add_item_menu_shortcut(array_menu_interface_settings,'a');
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Allow some menu windows to be put on the background");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"You can allow some menu windows to be put on the background.\n"
-
-			"When a window is on the background, its contents are updated continuosly.\n"
-
-			"Windows that can be put on background have an exclamation mark (!) "
-			"on the right of its title. When the window is on background, the exclamation mark will blink.\n"
-            "But that exclamation mark will become a '/' if the menu is closed and the window is still on the background, "
-            "to warn you to open the menu before you can interact with the windows. "
-            "\n"
-            "\n"
-
-			"Press left button mouse on the exclamation mark, or press F6, or just select another window to put that window on the background. "
-			"Some examples of these windows are AY Registers, Audio Waveform, or AY Sheet.\n"
-            "\n"
-
-			"Windows on the background can be moved, resized or closed directly using your mouse. \n"
-            "You can also rearrange all windows, resize, or move some to the top, for example, on menu Windows. "
-	
-		);
-
-        if (menu_allow_background_windows && menu_multitarea) {
-           menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows_always_force,NULL,"[%c]  Even with menu closed",(always_force_overlay_visible_when_menu_closed ? 'X' : ' ') ); 
-           menu_add_item_menu_tooltip(array_menu_interface_settings,"Shows background window even with menu closed");
-           menu_add_item_menu_ayuda(array_menu_interface_settings,"Shows background window even with menu closed");
-        }
-
-		if (menu_allow_background_windows && menu_multitarea && save_configuration_file_on_exit.v) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_reopen_background_windows_on_start,NULL,"[%c] Reopen windows on start",(menu_reopen_background_windows_on_start.v ? 'X' : ' ') );
-		}
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
+ 
 
 
         menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
