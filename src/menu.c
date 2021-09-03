@@ -32091,7 +32091,17 @@ void menu_machine_selection_by_name(MENU_ITEM_PARAMETERS)
 
 		}	
 			
-		
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        //Hotswap de Z88 o Jupiter Ace o CHLOE no existe
+        menu_add_item_menu(array_menu_common,"~~Hotswap machine",MENU_OPCION_NORMAL,menu_hotswap_machine,menu_hotswap_machine_cond);
+        menu_add_item_menu_shortcut(array_menu_common,'h');
+        menu_add_item_menu_tooltip(array_menu_common,"Change machine type without resetting");
+        menu_add_item_menu_ayuda(array_menu_common,"Change machine type without resetting.");
+
+        menu_add_item_menu(array_menu_common,"Custom machine",MENU_OPCION_NORMAL,menu_custom_machine,NULL);
+        menu_add_item_menu_tooltip(array_menu_common,"Specify custom machine type & ROM");
+        menu_add_item_menu_ayuda(array_menu_common,"Specify custom machine type & ROM");		
 					
 		menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
