@@ -10219,6 +10219,7 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_ZXUNO) {
+            menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_zxuno_deny_turbo_bios_boot,NULL,"[%c] ~~Deny turbo on boot",
 							(zxuno_deny_turbo_bios_boot.v ? 'X' : ' ') );
 					menu_add_item_menu_shortcut(array_menu_cpu_settings,'d');
@@ -10227,6 +10228,7 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 	  }
 
 		if (MACHINE_IS_TBBLUE) {
+            menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom,NULL,"[%c] Limit turbo on ROM",
 							(tbblue_deny_turbo_rom.v ? 'X' : ' ') );
 					//menu_add_item_menu_shortcut(array_menu_cpu_settings,'d');
@@ -10251,6 +10253,8 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 		}	  
 
 		if (CPU_IS_Z80) {
+            menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
 			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_cpu_type,NULL,"Z80 CPU Type [%s]",z80_cpu_types_strings[z80_cpu_current_type]);
 			menu_add_item_menu_tooltip(array_menu_cpu_settings,"Chooses the cpu type");
 			menu_add_item_menu_ayuda(array_menu_cpu_settings,"CPU type modifies the way the CPU fires an IM0 interrupt, or the behaviour of opcode OUT (C),0, for example");
@@ -10262,6 +10266,8 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 		}		
 
 		if (MACHINE_IS_SPECTRUM) {
+            menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
 			menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_spectrum_core_reduced,NULL,"Spectrum ~~core [%s]",
 			(core_spectrum_uses_reduced.v ? "Reduced" : "Normal") );
 			menu_add_item_menu_shortcut(array_menu_cpu_settings,'c');

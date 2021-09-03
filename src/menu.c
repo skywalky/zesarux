@@ -29082,7 +29082,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
         menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-        menu_add_item_menu(array_menu_debug_settings,"View sensors",MENU_OPCION_NORMAL,menu_debug_view_sensors,NULL);
+        
 
 
 		menu_add_item_menu(array_menu_debug_settings,"He~~xadecimal Editor",MENU_OPCION_NORMAL,menu_debug_hexdump,NULL);
@@ -29120,6 +29120,9 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 	                menu_add_item_menu_ayuda(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");			
 			//}
 #endif
+
+    menu_add_item_menu(array_menu_debug_settings,"View sensors",MENU_OPCION_NORMAL,menu_debug_view_sensors,NULL);
+
 
 
     menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -30277,6 +30280,77 @@ void menu_interface_ignore_click_open_menu(MENU_ITEM_PARAMETERS)
     mouse_menu_ignore_click_open.v ^=1;    
 }
 
+
+void menu_osd_settings_watermark(MENU_ITEM_PARAMETERS)
+{
+	if (screen_watermark_enabled.v==0) {
+		//Ya se permite watermark con o sin realvideo
+		//enable_rainbow();
+		screen_watermark_enabled.v=1;
+	}
+
+	else screen_watermark_enabled.v=0;
+}
+
+void menu_osd_settings_watermark_position(MENU_ITEM_PARAMETERS)
+{
+	screen_watermark_position++;
+	if (screen_watermark_position>3) screen_watermark_position=0;
+}
+
+
+void menu_osd_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_osd_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+
+		menu_add_item_menu_inicial_format(&array_menu_osd_settings,MENU_OPCION_NORMAL,menu_interface_show_splash_texts,NULL,"[%c] ~~Show splash texts",(screen_show_splash_texts.v ? 'X' : ' ' ) );
+		menu_add_item_menu_tooltip(array_menu_osd_settings,"Show on display some splash texts, like display mode change or watches");
+		menu_add_item_menu_ayuda(array_menu_osd_settings,"Show on display some splash texts, like display mode change or watches");
+		menu_add_item_menu_shortcut(array_menu_osd_settings,'s');
+
+
+
+
+
+
+
+		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark,NULL,"[%c] ~~Watermark",(screen_watermark_enabled.v ? 'X' : ' ' ) );
+		menu_add_item_menu_tooltip(array_menu_osd_settings,"Adds a watermark to the display");
+		menu_add_item_menu_ayuda(array_menu_osd_settings,"Adds a watermark to the display. May produce flickering if not enabled realvideo. If using reduce window setting, it will be forced enabled");
+		menu_add_item_menu_shortcut(array_menu_osd_settings,'w');
+
+		//Esta posicion afecta tanto al watermark normal como al forzado de 0.75
+		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark_position,NULL,"[%d] Watermark ~~position",screen_watermark_position);
+		menu_add_item_menu_shortcut(array_menu_osd_settings,'p');
+		
+
+                menu_add_item_menu(array_menu_osd_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+                //menu_add_item_menu(array_menu_osd_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+		menu_add_ESC_item(array_menu_osd_settings);
+
+                retorno_menu=menu_dibuja_menu(&osd_settings_opcion_seleccionada,&item_seleccionado,array_menu_osd_settings,"OSD Settings");
+
+                
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
+
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_window_settings;
@@ -30295,13 +30369,6 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_shortcut(array_menu_window_settings,'b');
 		}
 
-		if (!strcmp(scr_new_driver_name,"xwindows")  || !strcmp(scr_new_driver_name,"sdl") || !strcmp(scr_new_driver_name,"cocoa") ) {
-			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"[%c] ~~Mouse pointer", (mouse_pointer_shown.v==1 ? 'X' : ' ') );
-			menu_add_item_menu_shortcut(array_menu_window_settings,'m');
-		}
-
-        menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_disable_menu_mouse,NULL,"[%c] ~~Use mouse on menu", (mouse_menu_disabled.v==0 ? 'X' : ' ') );
-        menu_add_item_menu_shortcut(array_menu_window_settings,'u');
 
         if (mouse_menu_disabled.v==0) {
             menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_ignore_click_open_menu,NULL,"[%c] ~~Clicking mouse opens menu", (mouse_menu_ignore_click_open.v==0 ? 'X' : ' ') );            
@@ -30377,171 +30444,30 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		}
 #endif
 
+        menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"OSD settings");
+		//menu_add_item_menu_shortcut(array_menu_window_settings,'o');	
+
+		//Set F keys functions
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"Function keys");
+		menu_add_item_menu_tooltip(array_menu_window_settings,"Assign actions to F keys");
+		menu_add_item_menu_ayuda(array_menu_window_settings,"Assign actions to F keys");
+        //menu_add_item_menu_shortcut(array_menu_window_settings,'f');
+
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");
+		//menu_add_item_menu_shortcut(array_menu_window_settings,'c');			
+
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"External tools paths");	
+		//menu_add_item_menu_shortcut(array_menu_window_settings,'e');		
 
 	
-
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] ~~Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_window_settings,'p');
-		menu_add_item_menu_tooltip(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
-		menu_add_item_menu_ayuda(array_menu_window_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
-
-
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"[%c] M~~inimize button",(menu_hide_minimize_button.v ? ' ' : 'X') );
-		menu_add_item_menu_shortcut(array_menu_window_settings,'i');
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"[%c] C~~lose button",(menu_hide_close_button.v ? ' ' : 'X') );
-		menu_add_item_menu_shortcut(array_menu_window_settings,'l');
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] I~~nvert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_window_settings,'n');
-
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] B~~ackground windows",(menu_allow_background_windows ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_window_settings,'a');
-		menu_add_item_menu_tooltip(array_menu_window_settings,"Allow some menu windows to be put on the background");
-		menu_add_item_menu_ayuda(array_menu_window_settings,"You can allow some menu windows to be put on the background.\n"
-
-			"When a window is on the background, its contents are updated continuosly.\n"
-
-			"Windows that can be put on background have an exclamation mark (!) "
-			"on the right of its title. When the window is on background, the exclamation mark will blink.\n"
-            "But that exclamation mark will become a '/' if the menu is closed and the window is still on the background, "
-            "to warn you to open the menu before you can interact with the windows. "
-            "\n"
-            "\n"
-
-			"Press left button mouse on the exclamation mark, or press F6, or just select another window to put that window on the background. "
-			"Some examples of these windows are AY Registers, Audio Waveform, or AY Sheet.\n"
-            "\n"
-
-			"Windows on the background can be moved, resized or closed directly using your mouse. \n"
-            "You can also rearrange all windows, resize, or move some to the top, for example, on menu Windows. "
-	
-		);
-
-        if (menu_allow_background_windows && menu_multitarea) {
-           menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows_always_force,NULL,"[%c]  Even with menu closed",(always_force_overlay_visible_when_menu_closed ? 'X' : ' ') ); 
-           menu_add_item_menu_tooltip(array_menu_window_settings,"Shows background window even with menu closed");
-           menu_add_item_menu_ayuda(array_menu_window_settings,"Shows background window even with menu closed");
-        }
-
-		if (menu_allow_background_windows && menu_multitarea && save_configuration_file_on_exit.v) {
-			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_reopen_background_windows_on_start,NULL,"[%c] Reopen windows on start",(menu_reopen_background_windows_on_start.v ? 'X' : ' ') );
-		}
-
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
-		menu_add_item_menu_tooltip(array_menu_window_settings,"Restore all windows positions and sizes to their default values");
-		menu_add_item_menu_ayuda(array_menu_window_settings,"Restore all windows positions and sizes to their default values");
-
-/*
-
-0=Menu por encima de maquina, si no es transparente
-1=Menu por encima de maquina, si no es transparente. Y Color Blanco con brillo es transparente
-2=Mix de los dos colores, con control de transparecnai
-
-
-
-*/
-
-
-		if (si_complete_video_driver() ) {
-
-			menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-			menu_add_item_menu(array_menu_window_settings,"--Special FX--",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_menu,NULL,"[%s] Menu Mix Method",screen_menu_mix_methods_strings[screen_menu_mix_method] );
-			menu_add_item_menu_tooltip(array_menu_window_settings,"How to mix menu and the layer below");
-			menu_add_item_menu_ayuda(array_menu_window_settings,"How to mix menu and the layer below");
-
-			if (screen_menu_mix_method==2) {
-				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%d%%] Transparency",screen_menu_mix_transparency );
-				menu_add_item_menu_tooltip(array_menu_window_settings,"Transparency percentage to apply to menu");
-				menu_add_item_menu_ayuda(array_menu_window_settings,"Transparency percentage to apply to menu");
-			}
-
-			if (screen_menu_mix_method==0 || screen_menu_mix_method==1) {
-				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_reduce_bright_menu,NULL,"[%c] Darken when menu",(screen_menu_reduce_bright_machine.v ? 'X' : ' ' ) );
-				menu_add_item_menu_tooltip(array_menu_window_settings,"Darken layer below menu when menu open");
-				menu_add_item_menu_ayuda(array_menu_window_settings,"Darken layer below menu when menu open");
-			}
-		}
-
-
-				menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_bw_no_multitask,NULL,"[%c] B&W on menu+no multitask",(screen_machine_bw_no_multitask.v ? 'X' : ' ' ) );
-				menu_add_item_menu_tooltip(array_menu_window_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
-				menu_add_item_menu_ayuda(array_menu_window_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
-
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_window_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_window_settings);
 
-                retorno_menu=menu_dibuja_menu(&window_settings_opcion_seleccionada,&item_seleccionado,array_menu_window_settings,"Window Settings" );
-
-                
-
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-}
-
-void menu_osd_settings_watermark(MENU_ITEM_PARAMETERS)
-{
-	if (screen_watermark_enabled.v==0) {
-		//Ya se permite watermark con o sin realvideo
-		//enable_rainbow();
-		screen_watermark_enabled.v=1;
-	}
-
-	else screen_watermark_enabled.v=0;
-}
-
-void menu_osd_settings_watermark_position(MENU_ITEM_PARAMETERS)
-{
-	screen_watermark_position++;
-	if (screen_watermark_position>3) screen_watermark_position=0;
-}
-
-
-void menu_osd_settings(MENU_ITEM_PARAMETERS)
-{
-        menu_item *array_menu_osd_settings;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
-
-
-
-		menu_add_item_menu_inicial_format(&array_menu_osd_settings,MENU_OPCION_NORMAL,menu_interface_show_splash_texts,NULL,"[%c] ~~Show splash texts",(screen_show_splash_texts.v ? 'X' : ' ' ) );
-		menu_add_item_menu_tooltip(array_menu_osd_settings,"Show on display some splash texts, like display mode change or watches");
-		menu_add_item_menu_ayuda(array_menu_osd_settings,"Show on display some splash texts, like display mode change or watches");
-		menu_add_item_menu_shortcut(array_menu_osd_settings,'s');
-
-
-
-
-
-
-
-		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark,NULL,"[%c] ~~Watermark",(screen_watermark_enabled.v ? 'X' : ' ' ) );
-		menu_add_item_menu_tooltip(array_menu_osd_settings,"Adds a watermark to the display");
-		menu_add_item_menu_ayuda(array_menu_osd_settings,"Adds a watermark to the display. May produce flickering if not enabled realvideo. If using reduce window setting, it will be forced enabled");
-		menu_add_item_menu_shortcut(array_menu_osd_settings,'w');
-
-		//Esta posicion afecta tanto al watermark normal como al forzado de 0.75
-		menu_add_item_menu_format(array_menu_osd_settings,MENU_OPCION_NORMAL,menu_osd_settings_watermark_position,NULL,"[%d] Watermark ~~position",screen_watermark_position);
-		menu_add_item_menu_shortcut(array_menu_osd_settings,'p');
-		
-
-                menu_add_item_menu(array_menu_osd_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_osd_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-		menu_add_ESC_item(array_menu_osd_settings);
-
-                retorno_menu=menu_dibuja_menu(&osd_settings_opcion_seleccionada,&item_seleccionado,array_menu_osd_settings,"OSD Settings");
+                retorno_menu=menu_dibuja_menu(&window_settings_opcion_seleccionada,&item_seleccionado,array_menu_window_settings,"ZEsarUX Window Settings" );
 
                 
 
@@ -30750,8 +30676,109 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					);
         menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"~~Window settings");
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'w');
+
+		if (!strcmp(scr_new_driver_name,"xwindows")  || !strcmp(scr_new_driver_name,"sdl") || !strcmp(scr_new_driver_name,"cocoa") ) {
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hidemouse,NULL,"[%c] Mouse pointer", (mouse_pointer_shown.v==1 ? 'X' : ' ') );
+			//menu_add_item_menu_shortcut(array_menu_interface_settings,'m');
+		}
+
+        menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_disable_menu_mouse,NULL,"[%c] Use mouse on menu", (mouse_menu_disabled.v==0 ? 'X' : ' ') );
+        //menu_add_item_menu_shortcut(array_menu_interface_settings,'u');        
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'p');
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
+
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"[%c] Minimize button",(menu_hide_minimize_button.v ? ' ' : 'X') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'i');
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_close_button,NULL,"[%c] Close button",(menu_hide_close_button.v ? ' ' : 'X') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'l');
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_invert_mouse_scroll,NULL,"[%c] Invert mouse scroll",(menu_invert_mouse_scroll.v ? 'X' : ' ') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'n');
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] Background windows",(menu_allow_background_windows ? 'X' : ' ') );
+		//menu_add_item_menu_shortcut(array_menu_interface_settings,'a');
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Allow some menu windows to be put on the background");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"You can allow some menu windows to be put on the background.\n"
+
+			"When a window is on the background, its contents are updated continuosly.\n"
+
+			"Windows that can be put on background have an exclamation mark (!) "
+			"on the right of its title. When the window is on background, the exclamation mark will blink.\n"
+            "But that exclamation mark will become a '/' if the menu is closed and the window is still on the background, "
+            "to warn you to open the menu before you can interact with the windows. "
+            "\n"
+            "\n"
+
+			"Press left button mouse on the exclamation mark, or press F6, or just select another window to put that window on the background. "
+			"Some examples of these windows are AY Registers, Audio Waveform, or AY Sheet.\n"
+            "\n"
+
+			"Windows on the background can be moved, resized or closed directly using your mouse. \n"
+            "You can also rearrange all windows, resize, or move some to the top, for example, on menu Windows. "
+	
+		);
+
+        if (menu_allow_background_windows && menu_multitarea) {
+           menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows_always_force,NULL,"[%c]  Even with menu closed",(always_force_overlay_visible_when_menu_closed ? 'X' : ' ') ); 
+           menu_add_item_menu_tooltip(array_menu_interface_settings,"Shows background window even with menu closed");
+           menu_add_item_menu_ayuda(array_menu_interface_settings,"Shows background window even with menu closed");
+        }
+
+		if (menu_allow_background_windows && menu_multitarea && save_configuration_file_on_exit.v) {
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_reopen_background_windows_on_start,NULL,"[%c] Reopen windows on start",(menu_reopen_background_windows_on_start.v ? 'X' : ' ') );
+		}
+
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_restore_windows_geometry,NULL,"    Restore windows geometry");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all windows positions and sizes to their default values");
+
+/*
+
+0=Menu por encima de maquina, si no es transparente
+1=Menu por encima de maquina, si no es transparente. Y Color Blanco con brillo es transparente
+2=Mix de los dos colores, con control de transparecnai
+
+
+
+*/
+
+
+		if (si_complete_video_driver() ) {
+
+			menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+			menu_add_item_menu(array_menu_interface_settings,"--Special FX--",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_mix_menu,NULL,"[%s] Menu Mix Method",screen_menu_mix_methods_strings[screen_menu_mix_method] );
+			menu_add_item_menu_tooltip(array_menu_interface_settings,"How to mix menu and the layer below");
+			menu_add_item_menu_ayuda(array_menu_interface_settings,"How to mix menu and the layer below");
+
+			if (screen_menu_mix_method==2) {
+				menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_mix_tranparency,NULL,"[%d%%] Transparency",screen_menu_mix_transparency );
+				menu_add_item_menu_tooltip(array_menu_interface_settings,"Transparency percentage to apply to menu");
+				menu_add_item_menu_ayuda(array_menu_interface_settings,"Transparency percentage to apply to menu");
+			}
+
+			if (screen_menu_mix_method==0 || screen_menu_mix_method==1) {
+				menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_reduce_bright_menu,NULL,"[%c] Darken when menu",(screen_menu_reduce_bright_machine.v ? 'X' : ' ' ) );
+				menu_add_item_menu_tooltip(array_menu_interface_settings,"Darken layer below menu when menu open");
+				menu_add_item_menu_ayuda(array_menu_interface_settings,"Darken layer below menu when menu open");
+			}
+		}
+
+
+				menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_bw_no_multitask,NULL,"[%c] B&W on menu+no multitask",(screen_machine_bw_no_multitask.v ? 'X' : ' ' ) );
+				menu_add_item_menu_tooltip(array_menu_interface_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
+				menu_add_item_menu_ayuda(array_menu_interface_settings,"Grayscale layer below menu when menu opened and multitask is disabled");
+
+
+
+
+
+        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		//Con driver cocoa, no permitimos cambiar a otro driver
 		if (strcmp(scr_new_driver_name,"cocoa")) {
@@ -30759,8 +30786,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"~~OSD settings");
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'o');		
+	
 
 		if (scr_driver_can_ext_desktop() ) {
 			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"Z~~X Desktop settings");
@@ -30770,19 +30796,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 				"zxvision windows, menus or other widgets");
 		}
 
-
-		//Set F keys functions
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"~~Function keys");
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Assign actions to F keys");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Assign actions to F keys");
-        menu_add_item_menu_shortcut(array_menu_interface_settings,'f');
-
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"~~Colour settings");
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'c');			
-
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"~~External tools paths");	
-		menu_add_item_menu_shortcut(array_menu_interface_settings,'e');								
+						
 
                 menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_interface_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -34831,6 +34845,8 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 
 		}	
 
+		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"ZEsarUX ~~Window");
+		menu_add_item_menu_shortcut(array_menu_settings,'w');
 
 
 
