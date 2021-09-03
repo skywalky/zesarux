@@ -28996,6 +28996,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 					);
 
+        menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);                    
+
         menu_add_item_menu(array_menu_debug_settings,"Load Source Code",MENU_OPCION_NORMAL,menu_debug_load_source_code,NULL);    
         menu_add_item_menu_tooltip(array_menu_debug_settings,"Load source code");                
         menu_add_item_menu_ayuda(array_menu_debug_settings,"Load source code. It is shown on the Debug CPU window. "
@@ -29078,6 +29080,8 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
         menu_add_item_menu(array_menu_debug_settings,"Debug console",MENU_OPCION_NORMAL,menu_debug_unnamed_console,NULL);
 
+        menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
         menu_add_item_menu(array_menu_debug_settings,"View sensors",MENU_OPCION_NORMAL,menu_debug_view_sensors,NULL);
 
 
@@ -29116,6 +29120,9 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 	                menu_add_item_menu_ayuda(array_menu_debug_settings,"Show which memory zones are changed or which memory address with opcodes have been executed");			
 			//}
 #endif
+
+
+    menu_add_item_menu(array_menu_debug_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
     menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_find,NULL,"~~Find");
 		menu_add_item_menu_shortcut(array_menu_debug_settings,'f');
@@ -35210,7 +35217,7 @@ void menu_inicio_bucle_main(void)
 		menu_add_item_menu_ayuda(array_menu_principal,"General Settings");
 
 			
-		menu_add_item_menu(array_menu_principal,"He~~lp...",MENU_OPCION_NORMAL,menu_about,NULL);
+		menu_add_item_menu(array_menu_principal,"He~~lp",MENU_OPCION_NORMAL,menu_about,NULL);
 		menu_add_item_menu_shortcut(array_menu_principal,'l');
 		menu_add_item_menu_tooltip(array_menu_principal,"Help menu");
 		menu_add_item_menu_ayuda(array_menu_principal,"Some help and related files");
