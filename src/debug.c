@@ -4801,7 +4801,7 @@ void debug_add_breakpoint_ifnot_exists(char *breakpoint_add)
 
 //tipo: tipo maquina: 0: spectrum. 1: zx80. 2: zx81
 void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,char **dir_tokens,
-int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo )
+int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo, int show_address )
 {
 
 	  	z80_int dir;
@@ -4831,6 +4831,13 @@ int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo )
   		dir=dir_inicio_linea;
   		//obtener numero linea. orden inverso
   		//numero_linea=(peek_byte_no_time(dir++))*256 + peek_byte_no_time(dir++);
+
+        //agregar direccion si hay el setting habilitado para esto
+        if (show_address) {
+  		    sprintf (&results_buffer[index_buffer],";%5d\n",dir);
+  		    index_buffer +=7;
+        }
+
   		numero_linea=(lee_byte_function(dir++))*256;
   		numero_linea +=lee_byte_function(dir++);
 
@@ -5181,7 +5188,7 @@ void debug_view_basic(char *results_buffer)
     }
 
 
-	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,final_basic,dir_tokens,inicio_tokens,peek_byte_no_time,tipo);
+	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,final_basic,dir_tokens,inicio_tokens,peek_byte_no_time,tipo,debug_view_basic_show_address.v);
 
 }
 

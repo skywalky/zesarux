@@ -710,6 +710,10 @@ void menu_debug_settings_max_history(MENU_ITEM_PARAMETERS)
     }
 }
 
+void menu_debug_settings_show_address_basic(MENU_ITEM_PARAMETERS)
+{
+    debug_view_basic_show_address.v ^=1;
+}
 
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
@@ -763,10 +767,15 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_tooltip(array_menu_settings_debug,"Skip columns when searching for label from the beginning of line");
         menu_add_item_menu_ayuda(array_menu_settings_debug,"Skip columns when searching for label from the beginning of line");    
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"[%c] Shows electron on debug",
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"[%c] Show electron on debug",
 			( menu_debug_registers_if_showscan.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_address_basic,NULL,"[%c] Show address on View Basic",
+			( debug_view_basic_show_address.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows location address of every basic line on menu View Basic");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows location address of every basic line on menu View Basic");
 
 
         char ayuda_leyenda[32*10]; // para 10 lineas de ayuda, mas que suficiente

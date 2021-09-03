@@ -1508,6 +1508,8 @@ void cpu_help_expert(void)
 
 		"--show-electron-debug      Shows TV electron position when debugging, using a coloured line\n"
 
+        "--show-basic-address       Shows location address of every basic line on menu View Basic\n"
+
 
 	    "--show-invalid-opcode      If running invalid cpu opcodes will generate a warning message\n"
 
@@ -7924,7 +7926,9 @@ int parse_cmdline_options(void) {
 	  				menu_debug_registers_if_showscan.v=1;
 		}
 
-
+        else if (!strcmp(argv[puntero_parametro],"--show-basic-address")) {
+	  				debug_view_basic_show_address.v=1;
+        }
 
 
 		 else if (!strcmp(argv[puntero_parametro],"--hardware-debug-ports")) {

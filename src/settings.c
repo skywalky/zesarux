@@ -159,6 +159,8 @@ char zesarux_zxi_hardware_debug_file[PATH_MAX]="";
 //Si se muestra visualmem grafico en drivers grafico. Si no, muestra visualmem de texto en drivers graficos
 z80_bit setting_mostrar_visualmem_grafico={1}; 
 
+//Si se muestra direccion en cada linea en View Basic
+z80_bit debug_view_basic_show_address={0};
 
 //
 // Snapshot Settings

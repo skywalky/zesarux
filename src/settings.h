@@ -101,5 +101,7 @@ extern z80_bit ql_flp1_follow_mdv1;
 
 extern z80_bit menu_file_viewer_always_hex;
 
+z80_bit debug_view_basic_show_address;
+
 #endif
 
