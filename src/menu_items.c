@@ -233,7 +233,7 @@ int chardetection_settings_opcion_seleccionada=0;
 int textspeech_opcion_seleccionada=0;
 int accessibility_menu_opcion_seleccionada=0;
 int zxdesktop_set_userdef_buttons_functions_opcion_seleccionada=0;
-
+int colour_settings_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -11158,6 +11158,100 @@ void menu_display_sms_wonderboy_scroll_hack(MENU_ITEM_PARAMETERS)
     sms_wonderboy_scroll_hack.v ^=1;
 }
 
+void menu_interface_rgb_inverse_common(void)
+{
+	modificado_border.v=1;
+	screen_init_colour_table();
+
+        //Dado que se han cambiado la paleta de colores, hay que vaciar la putpixel cache
+        clear_putpixel_cache();
+
+	menu_init_footer();
+}
+
+void menu_interface_red(MENU_ITEM_PARAMETERS)
+{
+	screen_gray_mode ^= 4;
+	menu_interface_rgb_inverse_common();
+}
+
+void menu_interface_green(MENU_ITEM_PARAMETERS)
+{
+        screen_gray_mode ^= 2;
+	menu_interface_rgb_inverse_common();
+}
+
+void menu_interface_blue(MENU_ITEM_PARAMETERS)
+{
+        screen_gray_mode ^= 1;
+	menu_interface_rgb_inverse_common();
+}
+
+void menu_interface_inverse_video(MENU_ITEM_PARAMETERS)
+{
+        inverse_video.v ^= 1;
+	menu_interface_rgb_inverse_common();
+}
+
+void menu_interface_real_1648_palette(MENU_ITEM_PARAMETERS)
+{
+	spectrum_1648_use_real_palette.v ^=1;
+	//screen_set_spectrum_palette_offset();
+	menu_interface_rgb_inverse_common();
+}
+
+void menu_colour_settings(MENU_ITEM_PARAMETERS)
+{
+        menu_item *array_menu_colour_settings;
+        menu_item item_seleccionado;
+        int retorno_menu;
+        do {
+
+
+
+		menu_add_item_menu_inicial_format(&array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_red,NULL,"[%c] ~~Red display",(screen_gray_mode & 4 ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_colour_settings,'r');
+
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_green,NULL,"[%c] ~~Green display",(screen_gray_mode & 2 ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_colour_settings,'g');
+		
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_blue,NULL,"[%c] ~~Blue display",(screen_gray_mode & 1 ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_colour_settings,'b');
+
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"[%c] ~~Inverse video",(inverse_video.v==1 ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_colour_settings,'i');
+		menu_add_item_menu_tooltip(array_menu_colour_settings,"Inverse Color Palette");
+		menu_add_item_menu_ayuda(array_menu_colour_settings,"Inverses all the colours used on the emulator, including menu");
+
+
+		if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
+			menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_real_1648_palette,NULL,"[%c] R~~eal palette",(spectrum_1648_use_real_palette.v ? 'X' : ' ') );
+			menu_add_item_menu_shortcut(array_menu_colour_settings,'e');
+			menu_add_item_menu_tooltip(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette");
+			menu_add_item_menu_ayuda(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette. "
+				"In fact, this palette is the same as a Spectrum issue 3, and almost the same as issue 1 and 2");
+		}
+
+        menu_add_item_menu(array_menu_colour_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		menu_add_ESC_item(array_menu_colour_settings);
+
+                retorno_menu=menu_dibuja_menu(&colour_settings_opcion_seleccionada,&item_seleccionado,array_menu_colour_settings,"Colour Settings" );
+
+                
+
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                        //llamamos por valor de funcion
+                        if (item_seleccionado.menu_funcion!=NULL) {
+                                //printf ("actuamos por funcion\n");
+                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                                
+                        }
+                }
+
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+
+}
+
 //menu display settings
 void menu_settings_display(MENU_ITEM_PARAMETERS)
 {
@@ -11624,6 +11718,11 @@ void menu_settings_display(MENU_ITEM_PARAMETERS)
 		}
 
 		
+        menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
+		menu_add_item_menu_format(array_menu_settings_display,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");
+		//menu_add_item_menu_shortcut(array_menu_settings_display,'c');		
 
 
 		menu_add_item_menu(array_menu_settings_display,"",MENU_OPCION_SEPARADOR,NULL,NULL);

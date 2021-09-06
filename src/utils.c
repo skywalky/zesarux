@@ -6655,9 +6655,11 @@ int util_set_reset_key_continue_f_functions(enum util_teclas tecla,int pressrele
   }
 
   int indice_tabla=defined_f_functions_keys_array[indice];
+  debug_printf (VERBOSE_DEBUG,"Key: F%d Action: %s",indice+1,defined_direct_functions_array[indice_tabla].texto_funcion);
+
   enum defined_f_function_ids accion=menu_da_accion_direct_functions_indice(indice_tabla);
 
-  debug_printf (VERBOSE_DEBUG,"Key: F%d Action: %s",indice+1,defined_direct_functions_array[accion].texto_funcion);
+  //printf ("Key: F%d Action: %s indice_tabla: %d accion: %d\n",indice+1,defined_direct_functions_array[indice_tabla].texto_funcion,indice_tabla,accion);
 
   //Abrir menu si funcion no es defecto y no es background window
   //if (accion!=F_FUNCION_DEFAULT && accion!=F_FUNCION_BACKGROUND_WINDOW) {

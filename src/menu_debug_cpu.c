@@ -5739,6 +5739,8 @@ int menu_debug_registers_print_main_step(zxvision_window *ventana)
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
 
+    //printf("inicio debug registers\n");
+
 	//Si se habia lanzado un runtoparse de daad
 	if (debug_daad_breakpoint_runtoparse_fired.v) {
 		debug_printf (VERBOSE_DEBUG,"Going back from a daad breakpoint runtoparse. Adding a step to step condact breakpoint and exiting window");
@@ -5789,6 +5791,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	else menu_espera_no_tecla();
 
+    //printf("despues de menu_espera_no_tecla\n");
 
 	char buffer_mensaje[64];
 
@@ -5817,7 +5820,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 	menu_debug_registers_set_title(ventana);
 
-    int forzar_refresco_ventana=0;
+    //Decir que la primera vez siempre muestra ventana
+    int forzar_refresco_ventana=1;
 
 
         //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
@@ -5865,6 +5869,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 		//
 		if (cpu_step_mode.v==0) {
 
+            //printf("antes de ver contador\n");
 
 			//Cuadrarlo cada 1/16 de segundo, justo lo mismo que el flash, asi
 			//el valor de flash se ve coordinado
@@ -5877,6 +5882,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
 				menu_debug_registers_set_title(ventana);
 				zxvision_draw_window(ventana);
+                //printf("despues de draw window\n");
 
 				menu_debug_registers_adjust_ptr_on_follow();
 
@@ -5934,7 +5940,22 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
             //printf("Antes menu_da_todas_teclas. wheel: %d\n",mouse_wheel_vertical);
             acumulado=menu_da_todas_teclas();
-            //printf("Despues menu_da_todas_teclas\n");
+            //printf("Despues menu_da_todas_teclas. acumulado=%d\n",acumulado);
+
+            //Si se ha movido mouse, al volver de menu_da_todas_teclas dira que ha habido alguna tecla "pulsada" y se quedara
+            //esperando un poco mas abajo al llamar a zxvision_common_getkey_wheel_refresh_noesperanotec
+            //Eliminar dicha "pulsacion"
+            //Esto es un poco chapuza, no me acaba de gustar. Quiza lo de mouse_movido, cuando se lee a menu_da_todas_teclas,
+            //no deberia considerarse, pero bueno alguna razon habrá para lo de mouse_movido ahí
+            //TODO: esto puede que pase lo mismo en otras ventanas: donde al llamar a menu_da_todas_teclas, para saber si hay tecla pulsada,
+            //y al mover raton, se cree que es tecla pulsada y llama a otra funcion de esperar pulsar tecla
+            //Efecto parecido aunque no afecta igual: En Hexadecimal Editor, se queda esperando tecla. Si se mueve raton,
+            //no leera tecla lógicamente pero la vista hexadecimal se refresca, se puede apreciar apuntando a alguna direccion
+            //que esté variando (stack o pantalla por ejemplo) y se verá como refresca los datos al mover ratón
+            if (mouse_movido) {
+                //printf("mouse movido. decir no tecla\n");
+                acumulado |=1;
+            }
 
 	    	//si no hay multitarea, esperar tecla y salir
         	if (menu_multitarea==0) {
@@ -5958,6 +5979,8 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                 }
             }
 
+            //printf("despues de varios eventos tecla\n");
+
             //Cualquier otra vista, si se pulsa rueda, resetearla
             //si no hicieramos esto, al mover rueda en una vista que no es la 1,
             //se interpretaria continuamente que hay tecla pulsada al llamar un poco mas abajo a zxvision_common_getkey_wheel_refresh_noesperanotec
@@ -5968,10 +5991,12 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			//Hay tecla pulsada
 			if ( (acumulado & MENU_PUERTO_TECLADO_NINGUNA) !=MENU_PUERTO_TECLADO_NINGUNA ) {
 				//tecla=zxvision_common_getkey_refresh();
-                if (!accion_mouse_pulsado) {
-                    //TODO: al hacer scroll con wheel si se mueve raton, se puede quedar aqui 
-                    //printf("Antes zxvision_common_getkey_refresh_noesperanotec. wheel: %d\n",mouse_wheel_vertical);
+                if (!accion_mouse_pulsado) { 
+                    //printf("Antes zxvision_common_getkey_refresh_noesperanotec. wheel: %d acumulado: %d movido: %d\n",
+                    //    mouse_wheel_vertical,acumulado,mouse_movido);
+
 				    tecla=zxvision_common_getkey_wheel_refresh_noesperanotec();
+
                     //printf("Despues zxvision_common_getkey_refresh_noesperanotec\n");
                 }
 
@@ -5992,7 +6017,7 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
                     //printf("tecla pulsada. forzar refresco\n");                    
                 }
 
-
+                //printf("despues de tecla\n");
 
 
                 if (tecla=='s') {

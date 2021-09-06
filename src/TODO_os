@@ -26,6 +26,8 @@ Ouch, thank you for the response – this will require some hard studying to fig
 
 "
 
+-cocoa: visibilidad raton en pantalla completa. Se puede corregir eliminando funciones grabMouse/ungrabMouse pero luego
+la posición del ratón no la lee correctamente, seguramente por culpa del factor de zoom
 
 -Joystick en Mac
 Parece que en Mac es complicado

@@ -421,11 +421,11 @@ extern void menu_first_aid_init(void);
 extern void menu_first_aid_random_startup(void);
 extern int menu_first_aid_title(char *key_setting,char *title);
 
-#define MAX_F_FUNCTIONS 31
+#define MAX_F_FUNCTIONS 32
 
 enum defined_f_function_ids {
 	//reset, hard-reset, nmi, open menu, ocr, smartload, osd keyboard, exitemulator.
-	F_FUNCION_DEFAULT,   //1
+	F_FUNCION_DEFAULT=100,    //Empiezo a 100 por asegurarme de un cambio de codigo que todo vaya bien, temporalmente, en version 10.0. Luego se puede quitar
 	F_FUNCION_NOTHING,
 	F_FUNCION_RESET,
 	F_FUNCION_HARDRESET,
@@ -446,13 +446,14 @@ enum defined_f_function_ids {
     F_FUNCION_SWITCHBORDER,
 	F_FUNCION_SWITCHFULLSCREEN, //20
 	F_FUNCION_RELOADMMC, 
-	F_FUNCION_REINSERTTAPE, 
-	F_FUNCION_PAUSEUNPAUSETAPE,
-	F_FUNCION_DEBUGCPU,   //24
+	F_FUNCION_REINSERTSTDTAPE, 
+	F_FUNCION_PAUSEUNPAUSEREALTAPE,
+    F_FUNCION_REINSERTREALTAPE,
+	F_FUNCION_DEBUGCPU,   //25
 	F_FUNCION_PAUSE,    
 	F_FUNCION_TOPSPEED,  
  	F_FUNCION_EXITEMULATOR, 
-	F_FUNCION_BACKGROUND_WINDOW,  //28
+	F_FUNCION_BACKGROUND_WINDOW,  //29
 	F_FUNCION_OVERLAY_WINDOWS,
     F_FUNCION_CLOSE_ALL_MENUS,
     F_FUNCION_ZXUNO_PRISM
@@ -776,6 +777,8 @@ extern z80_bit tooltip_enabled;
 
 extern z80_bit mouse_menu_disabled;
 extern z80_bit mouse_menu_ignore_click_open;
+
+extern int mouse_movido;
 
 extern char *quickfile;
 extern char quickload_file[];

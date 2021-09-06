@@ -223,8 +223,9 @@ defined_f_function defined_direct_functions_array[MAX_F_FUNCTIONS]={
 
     //Actuar sobre storage
 	{"ReloadMMC",F_FUNCION_RELOADMMC,bitmap_button_ext_desktop_reloadmmc}, 
-	{"ReinsertStdTape",F_FUNCION_REINSERTTAPE,bitmap_button_ext_desktop_reinserttape}, 
-	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSETAPE,bitmap_button_ext_desktop_pauseunpausetape},   
+	{"ReinsertStdTape",F_FUNCION_REINSERTSTDTAPE,bitmap_button_ext_desktop_reinserttape}, 
+	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSEREALTAPE,bitmap_button_ext_desktop_pauseunpausetape},
+    {"ReinsertRealTape",F_FUNCION_REINSERTREALTAPE,bitmap_button_ext_desktop_reinserttape},    
 
     //Actuar sobre menus y ventanas
     {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS,bitmap_button_ext_desktop_close_all_menus}, 
@@ -1298,7 +1299,7 @@ int settings_config_file_opcion_seleccionada=0;
 int ay_player_opcion_seleccionada=0;
 int esxdos_traps_opcion_seleccionada=0;
 
-int colour_settings_opcion_seleccionada=0;
+
 int zxuno_spi_flash_opcion_seleccionada=0;
 
 int menu_recent_files_opcion_seleccionada=0;
@@ -13300,9 +13301,13 @@ int timer_osd_keyboard_menu=0;
 z80_byte menu_da_todas_teclas(void)
 {
 
+    //if (mouse_movido) printf("mouse movido en menu_da_todas_teclas 1: %d\n",mouse_movido);
+
 	//Ver tambien eventos de mouse de zxvision
     //int pulsado_boton_cerrar=
 	zxvision_handle_mouse_events(zxvision_current_window);
+
+    //if (mouse_movido) printf("mouse movido en menu_da_todas_teclas 2: %d\n",mouse_movido);
 
     //On screen keyboard desde el propio menu. Necesita multitask
     if (menu_si_pulsada_tecla_osd() && !osd_kb_no_mostrar_desde_menu && !timer_osd_keyboard_menu && menu_multitarea) {
@@ -22151,7 +22156,7 @@ void menu_tape_input_insert(MENU_ITEM_PARAMETERS)
 }
 
 //Esto de momento solo se llama desde una tecla F. Lo pongo aqui para que este cerca de las condiciones y acciones de insert
-void menu_reinsert_tape(void)
+void menu_reinsert_std_tape(void)
 {
 
 	debug_printf(VERBOSE_DEBUG,"Running reinsert tape");
@@ -23453,6 +23458,28 @@ void menu_realtape_pause_unpause(MENU_ITEM_PARAMETERS)
 	if (!menu_realtape_inserted_cond()) return;
 
 	realtape_pause_unpause();
+}
+
+//Esto de momento solo se llama desde una tecla F. Lo pongo aqui para que este cerca de las condiciones y acciones de insert
+void menu_reinsert_real_tape(void)
+{
+
+	debug_printf(VERBOSE_DEBUG,"Running reinsert real tape");
+
+	if (!menu_realtape_cond() ) {
+		debug_printf(VERBOSE_DEBUG,"No real inserted to reinsert");
+		return;
+	}
+
+	//Si esta insertada, expulsar
+	if (realtape_inserted.v) {
+		debug_printf(VERBOSE_DEBUG,"Ejecting tape");
+		realtape_eject();
+	}
+
+	//E insertar
+	debug_printf(VERBOSE_DEBUG,"Inserting tape");
+	realtape_insert();
 }
 
 void menu_realtape_volumen(MENU_ITEM_PARAMETERS)
@@ -29282,41 +29309,10 @@ void menu_interface_fullscreen(MENU_ITEM_PARAMETERS)
 
 }
 
-void menu_interface_rgb_inverse_common(void)
-{
-	modificado_border.v=1;
-	screen_init_colour_table();
-
-        //Dado que se han cambiado la paleta de colores, hay que vaciar la putpixel cache
-        clear_putpixel_cache();
-
-	menu_init_footer();
-}
 
 
-void menu_interface_red(MENU_ITEM_PARAMETERS)
-{
-	screen_gray_mode ^= 4;
-	menu_interface_rgb_inverse_common();
-}
 
-void menu_interface_green(MENU_ITEM_PARAMETERS)
-{
-        screen_gray_mode ^= 2;
-	menu_interface_rgb_inverse_common();
-}
 
-void menu_interface_blue(MENU_ITEM_PARAMETERS)
-{
-        screen_gray_mode ^= 1;
-	menu_interface_rgb_inverse_common();
-}
-
-void menu_interface_inverse_video(MENU_ITEM_PARAMETERS)
-{
-        inverse_video.v ^= 1;
-	menu_interface_rgb_inverse_common();
-}
 
 void menu_interface_border(MENU_ITEM_PARAMETERS)
 {
@@ -30065,64 +30061,9 @@ void menu_interface_show_cpu_temp(MENU_ITEM_PARAMETERS)
 	if (!screen_show_cpu_temp.v) menu_init_footer();
 }
 
-void menu_interface_real_1648_palette(MENU_ITEM_PARAMETERS)
-{
-	spectrum_1648_use_real_palette.v ^=1;
-	//screen_set_spectrum_palette_offset();
-	menu_interface_rgb_inverse_common();
-}
-
-void menu_colour_settings(MENU_ITEM_PARAMETERS)
-{
-        menu_item *array_menu_colour_settings;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
 
 
 
-		menu_add_item_menu_inicial_format(&array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_red,NULL,"[%c] ~~Red display",(screen_gray_mode & 4 ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_colour_settings,'r');
-
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_green,NULL,"[%c] ~~Green display",(screen_gray_mode & 2 ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_colour_settings,'g');
-		
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_blue,NULL,"[%c] ~~Blue display",(screen_gray_mode & 1 ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_colour_settings,'b');
-
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"[%c] ~~Inverse video",(inverse_video.v==1 ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_colour_settings,'i');
-		menu_add_item_menu_tooltip(array_menu_colour_settings,"Inverse Color Palette");
-		menu_add_item_menu_ayuda(array_menu_colour_settings,"Inverses all the colours used on the emulator, including menu");
-
-
-		if (MACHINE_IS_SPECTRUM_16 || MACHINE_IS_SPECTRUM_48) {
-			menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_real_1648_palette,NULL,"[%c] R~~eal palette",(spectrum_1648_use_real_palette.v ? 'X' : ' ') );
-			menu_add_item_menu_shortcut(array_menu_colour_settings,'e');
-			menu_add_item_menu_tooltip(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette");
-			menu_add_item_menu_ayuda(array_menu_colour_settings,"Use real Spectrum 16/48/+ colour palette. "
-				"In fact, this palette is the same as a Spectrum issue 3, and almost the same as issue 1 and 2");
-		}
-
-        menu_add_item_menu(array_menu_colour_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-		menu_add_ESC_item(array_menu_colour_settings);
-
-                retorno_menu=menu_dibuja_menu(&colour_settings_opcion_seleccionada,&item_seleccionado,array_menu_colour_settings,"Colour Settings" );
-
-                
-
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
-
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
-
-}
 
 void menu_interface_charwidth_after_width_change(void)
 {
@@ -30479,30 +30420,15 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		}
 #endif
 
-        menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"OSD settings");
-		//menu_add_item_menu_shortcut(array_menu_window_settings,'o');	
-
-		//Set F keys functions
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"Function keys");
-		menu_add_item_menu_tooltip(array_menu_window_settings,"Assign actions to F keys");
-		menu_add_item_menu_ayuda(array_menu_window_settings,"Assign actions to F keys");
-        //menu_add_item_menu_shortcut(array_menu_window_settings,'f');
-
-
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_colour_settings,NULL,"Colour settings");
-		//menu_add_item_menu_shortcut(array_menu_window_settings,'c');			
-
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"External tools paths");	
-		//menu_add_item_menu_shortcut(array_menu_window_settings,'e');		
+       	
 
 	
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_window_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_window_settings);
 
-                retorno_menu=menu_dibuja_menu(&window_settings_opcion_seleccionada,&item_seleccionado,array_menu_window_settings,"ZEsarUX Window Settings" );
+                //retorno_menu=menu_dibuja_menu(&window_settings_opcion_seleccionada,&item_seleccionado,array_menu_window_settings,"ZEsarUX Window Settings" );
+                retorno_menu=menu_dibuja_menu(&window_settings_opcion_seleccionada,&item_seleccionado,array_menu_window_settings,"General Settings" );
 
                 
 
@@ -34848,8 +34774,8 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings,"Audio settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Audio settings");
 
-		menu_add_item_menu(array_menu_settings,"C~~onfiguration file",MENU_OPCION_NORMAL,menu_settings_config_file,NULL);
-		menu_add_item_menu_shortcut(array_menu_settings,'o');
+		menu_add_item_menu(array_menu_settings,"Configu~~ration file",MENU_OPCION_NORMAL,menu_settings_config_file,NULL);
+		menu_add_item_menu_shortcut(array_menu_settings,'r');
 		menu_add_item_menu_tooltip(array_menu_settings,"Configuration file");
 		menu_add_item_menu_ayuda(array_menu_settings,"Configuration file");
 
@@ -34868,15 +34794,36 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings,"Display settings");
 		menu_add_item_menu_ayuda(array_menu_settings,"Display settings");
 
+		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_external_tools_config,NULL,"E~~xternal tools paths");
+		menu_add_item_menu_shortcut(array_menu_settings,'x');
+        menu_add_item_menu_tooltip(array_menu_settings,"External tools paths settings");
+        menu_add_item_menu_ayuda(array_menu_settings,"External tools paths settings");
+
 		menu_add_item_menu(array_menu_settings,"~~File Browser",MENU_OPCION_NORMAL,menu_fileselector_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_settings,'f');
 		menu_add_item_menu_tooltip(array_menu_settings,"Settings for the File browser");
-		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the File Browser");        
+		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the File Browser");   
+
+		//Set F keys functions
+		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_hardware_set_f_functions,NULL,"Fu~~nction keys");
+		menu_add_item_menu_tooltip(array_menu_settings,"Assign actions to F keys");
+		menu_add_item_menu_ayuda(array_menu_settings,"Assign actions to F keys");
+        menu_add_item_menu_shortcut(array_menu_settings,'n');        
+
+		//menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"ZEsarUX ~~Window");
+        menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"~~General");
+		menu_add_item_menu_shortcut(array_menu_settings,'g');
+		menu_add_item_menu_tooltip(array_menu_settings,"These settings are related to the ZEsarUX Window");
+		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the ZEsarUX Window");       
+
 
 		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_hardware_settings,NULL,"~~Hardware");
 		menu_add_item_menu_shortcut(array_menu_settings,'h');
 		menu_add_item_menu_tooltip(array_menu_settings,"Other hardware settings for the running machine (not CPU or ULA)");
 		menu_add_item_menu_ayuda(array_menu_settings,"Select different settings for the machine and change its behaviour (not CPU or ULA)");
+
+		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_osd_settings,NULL,"~~OSD");
+		menu_add_item_menu_shortcut(array_menu_settings,'o');	        
 
 		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_settings_snapshot,NULL,"~~Snapshot");
 		menu_add_item_menu_shortcut(array_menu_settings,'s');
@@ -34909,10 +34856,6 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 
 		}	
 
-		menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_window_settings,NULL,"ZEsarUX ~~Window");
-		menu_add_item_menu_shortcut(array_menu_settings,'w');
-		menu_add_item_menu_tooltip(array_menu_settings,"These settings are related to the ZEsarUX Window");
-		menu_add_item_menu_ayuda(array_menu_settings,"These settings are related to the ZEsarUX Window");       
 
 		menu_add_item_menu(array_menu_settings,"ZX ~~Vision",MENU_OPCION_NORMAL,menu_interface_settings,NULL);
 		menu_add_item_menu_shortcut(array_menu_settings,'v');
@@ -35691,13 +35634,17 @@ void menu_process_f_functions_by_action(int indice)
 			mmc_read_file_to_memory();
 		break;
 
-		case F_FUNCION_REINSERTTAPE:
-			menu_reinsert_tape();
+		case F_FUNCION_REINSERTSTDTAPE:
+			menu_reinsert_std_tape();
 		break;
 
-		case F_FUNCION_PAUSEUNPAUSETAPE:
+		case F_FUNCION_PAUSEUNPAUSEREALTAPE:
 			menu_realtape_pause_unpause(0);
-		break;		
+		break;
+
+		case F_FUNCION_REINSERTREALTAPE:
+			menu_reinsert_real_tape();
+		break;        	
 
 		case F_FUNCION_DEBUGCPU:
 			menu_debug_registers(0);

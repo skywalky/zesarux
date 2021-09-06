@@ -1886,7 +1886,7 @@ int scrcocoa_antespulsadoctrl_l=0,scrcocoa_antespulsadoctrl_r=0,scrcocoa_antespu
 	//printf ("grabMouse\n");
 
     if (!ventana_fullscreen) {
-            [normalWindow setTitle:@"ZEsarUX - (Press ctrl + alt to release Mouse)"];
+            [normalWindow setTitle:@"ZEsarUX - fullscreen"];
     }
     [NSCursor hide];
     CGAssociateMouseAndMouseCursorPosition(FALSE);
