@@ -1891,6 +1891,52 @@ void realtape_print_footer(void)
         draw_tape_icon_activity();        
 }
 
+//rebobina 5%
+void realtape_rewind_five(void)
+{
+    if (realtape_inserted.v==0) return;
+    
+    long int total=realtape_file_size;
+    long int transcurrido=realtape_file_size_counter;
+
+    //tenemos precisamente lo transcurrido asi que no hay que obtener la posicion con fget
+    //cuanto es 5% del total
+    long int offset=(total*5)/100;
+
+    transcurrido -=offset;
+
+    if (transcurrido<0) transcurrido=0;
+
+    realtape_file_size_counter=transcurrido;
+
+    fseek(ptr_realtape, transcurrido, SEEK_SET);
+
+}
+
+//avanza 5%
+void realtape_ffwd_five(void)
+{
+    if (realtape_inserted.v==0) return;
+    
+    long int total=realtape_file_size;
+    long int transcurrido=realtape_file_size_counter;
+
+    //tenemos precisamente lo transcurrido asi que no hay que obtener la posicion con fget
+    //cuanto es 5% del total
+    long int offset=(total*5)/100;
+
+    transcurrido +=offset;
+
+    if (transcurrido>=total) transcurrido=total;
+
+    realtape_file_size_counter=transcurrido;
+
+    fseek(ptr_realtape, transcurrido, SEEK_SET);
+
+}
+
+
+
 void realtape_delete_footer(void)
 {
                            //01234567890123456789012345678901

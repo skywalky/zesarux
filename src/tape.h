@@ -99,6 +99,9 @@ extern z80_bit realtape_inserted;
 extern z80_bit realtape_playing;
 extern z80_bit realtape_loading_sound;
 
+extern void realtape_rewind_five(void);
+extern void realtape_ffwd_five(void);
+
 extern char *realtape_name;
 
 extern char realtape_volumen;

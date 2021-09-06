@@ -421,7 +421,7 @@ extern void menu_first_aid_init(void);
 extern void menu_first_aid_random_startup(void);
 extern int menu_first_aid_title(char *key_setting,char *title);
 
-#define MAX_F_FUNCTIONS 32
+#define MAX_F_FUNCTIONS 34
 
 enum defined_f_function_ids {
 	//reset, hard-reset, nmi, open menu, ocr, smartload, osd keyboard, exitemulator.
@@ -449,11 +449,13 @@ enum defined_f_function_ids {
 	F_FUNCION_REINSERTSTDTAPE, 
 	F_FUNCION_PAUSEUNPAUSEREALTAPE,
     F_FUNCION_REINSERTREALTAPE,
-	F_FUNCION_DEBUGCPU,   //25
+    F_FUNCION_REWINDREALTAPE, //25
+    F_FUNCION_FFWDREALTAPE, 
+	F_FUNCION_DEBUGCPU,   
 	F_FUNCION_PAUSE,    
 	F_FUNCION_TOPSPEED,  
- 	F_FUNCION_EXITEMULATOR, 
-	F_FUNCION_BACKGROUND_WINDOW,  //29
+ 	F_FUNCION_EXITEMULATOR,   //30
+	F_FUNCION_BACKGROUND_WINDOW,  
 	F_FUNCION_OVERLAY_WINDOWS,
     F_FUNCION_CLOSE_ALL_MENUS,
     F_FUNCION_ZXUNO_PRISM

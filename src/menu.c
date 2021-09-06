@@ -226,6 +226,8 @@ defined_f_function defined_direct_functions_array[MAX_F_FUNCTIONS]={
 	{"ReinsertStdTape",F_FUNCION_REINSERTSTDTAPE,bitmap_button_ext_desktop_reinserttape}, 
 	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSEREALTAPE,bitmap_button_ext_desktop_pauseunpausetape},
     {"ReinsertRealTape",F_FUNCION_REINSERTREALTAPE,bitmap_button_ext_desktop_reinserttape},    
+    {"RewindRealTape",F_FUNCION_REWINDREALTAPE,bitmap_button_ext_desktop_userdefined},    
+    {"FFWDRealTape",F_FUNCION_FFWDREALTAPE,bitmap_button_ext_desktop_userdefined}, 
 
     //Actuar sobre menus y ventanas
     {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS,bitmap_button_ext_desktop_close_all_menus}, 
@@ -35644,7 +35646,15 @@ void menu_process_f_functions_by_action(int indice)
 
 		case F_FUNCION_REINSERTREALTAPE:
 			menu_reinsert_real_tape();
-		break;        	
+		break;     
+
+		case F_FUNCION_REWINDREALTAPE:
+			realtape_rewind_five();
+		break;    
+
+		case F_FUNCION_FFWDREALTAPE:
+			realtape_ffwd_five();
+		break;                   	
 
 		case F_FUNCION_DEBUGCPU:
 			menu_debug_registers(0);
