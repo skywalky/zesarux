@@ -208,7 +208,4 @@ L08F7:          IN      A,(HLWPORT)
 
 - En ZX desktop a veces al iniciar o activar sale primero en negro
 
-ok - Al entrar en debug cpu forzar la primera vez refresco de ventana. Si no, le cuesta unas décimas de segundo en aparecer 
-
-- Tecla F/botón conmutar  border que no se active si está en full screen. Ver otros similares 
 
