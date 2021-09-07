@@ -27198,11 +27198,18 @@ void menu_file_realtape_browser_show(char *filename)
 
     char texto_browser[MAX_TEXTO_BROWSER];
 
+    //iniciar con cadena vacia pues lo que hace es concatenar strings
+    texto_browser[0]=0;
+
     main_spec_rwaatap_pointer_print=texto_browser;
 
 
     main_spec_rwaatap_pointer_print_max=MAX_TEXTO_BROWSER;
 
+    //Hay que deducir el nombre del archivo
+    //si es rwa, archivo tal cual
+
+    //realmente no abro el archivo que podria venir como parametro sino el que se ha convertido al final como rwa
     ptr_mycinta_smp=fopen(realtape_name_rwa,"rb");
 
     if (ptr_mycinta_smp==NULL) {
@@ -27283,7 +27290,9 @@ void menu_tape_browser_show(char *filename)
 	}		
 
     //wav, rwa, etc
-	if (!util_compare_file_extension(filename,"wav") 
+	if (!util_compare_file_extension(filename,"wav") ||
+        !util_compare_file_extension(filename,"smp") ||
+        !util_compare_file_extension(filename,"rwa")
 		) {
 		menu_file_realtape_browser_show(filename);
 		return;

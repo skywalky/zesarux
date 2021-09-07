@@ -948,7 +948,7 @@ void spec_debug_cabecera(int indice,int leidos)
 
 
         if (main_spec_rwaatap_pointer_print!=NULL) {
-		    sprintf (buffer_string,"Read tape block. %s:%d . Length: %d\n",
+		    sprintf (buffer_string,"Tape block. %s:%d . Length: %d\n",
 			      spec_tipos_fichero[4],spec_smp_memory[indice],  ( leidos>2 ? leidos-2 : leidos  )  );            
             int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,buffer_string,main_spec_rwaatap_pointer_print_max);
             if (nocabe) return;
@@ -967,7 +967,7 @@ void spec_debug_cabecera(int indice,int leidos)
 
 
     if (main_spec_rwaatap_pointer_print!=NULL) {
-        sprintf (buffer_string,"Read tape block. Standard Header - %s:%s\n",spec_tipos_fichero[tipo],buffer_nombre);       
+        sprintf (buffer_string,"Tape block. Standard Header - %s:%s\n",spec_tipos_fichero[tipo],buffer_nombre);       
         int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,buffer_string,main_spec_rwaatap_pointer_print_max);
         if (nocabe) return;
     }    
