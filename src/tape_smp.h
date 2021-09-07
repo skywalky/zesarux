@@ -35,7 +35,7 @@ extern void main_leezx81(void);
 extern z80_byte *spec_smp_memory;
 extern int tape_guessing_parameters;
 
-
+extern int main_spec_rwaatap(void);
 extern int spec_smp_read_index_tap;
 extern int spec_smp_write_index_tap;
 extern int spec_smp_total_read;

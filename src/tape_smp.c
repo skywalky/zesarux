@@ -59,7 +59,7 @@ int spec_smp_total_read;
 z80_byte *spec_smp_memory;
 
 //int main_spec_smpatap(void);
-int main_spec_rwaatap(void);
+
 
 //solo para decir que color de texto en oscuro o no
 //int tape_guessing_parameters=0;

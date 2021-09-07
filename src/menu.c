@@ -27220,12 +27220,23 @@ void menu_file_realtape_browser_show(char *filename)
         strcpy(file_to_open,filename);
     }
 
-    //si es smp, wav:
-    if (!util_compare_file_extension(filename,"smp") ||
-        !util_compare_file_extension(filename,"wav")
-    ) {
-        sprintf (file_to_open,"%s/tmp_%s.rwa",get_tmpdir_base(),nombre_origen);    
-    }    
+    //convertir
+    if (!util_compare_file_extension(filename,"smp")) {
+        if (convert_smp_to_rwa_tmpdir(filename,file_to_open)) {
+			debug_printf(VERBOSE_ERR,"Error converting input file");
+			return;
+		}
+    }   
+
+    //convertir
+    if (!util_compare_file_extension(filename,"wav")) {
+        if (convert_wav_to_rwa_tmpdir(filename,file_to_open)) {
+			debug_printf(VERBOSE_ERR,"Error converting input file");
+			return;
+		}
+    }   
+
+  
 
     if (file_to_open[0]==0) {
         debug_printf(VERBOSE_ERR,"Do not know how to browse this file");
@@ -27244,8 +27255,6 @@ void menu_file_realtape_browser_show(char *filename)
         //avisar que no se ha abierto aun el archivo. Esto se hace porque en la rutina de Autodetectar,
         //cada vez se abre el archivo de nuevo, y evitar que se tenga que convertir (por ejemplo de wav) una y otra vez
         lee_smp_ya_convertido=0;
-
-        
 
         main_spec_rwaatap();
 
@@ -27277,6 +27286,10 @@ void menu_file_realtape_browser_show(char *filename)
     ptr_mycinta_smp=antes_ptr_mycinta_smp;
 
     lee_smp_ya_convertido=antes_lee_smp_ya_convertido;
+
+    if (texto_browser[0]==0) {
+        strcpy(texto_browser,"Tape empty or unknown audio data");
+    }
 
 
     zxvision_generic_message_tooltip("Realtape file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
@@ -28946,6 +28959,12 @@ void menu_file_viewer_read_file(char *title,char *file_name)
         else if (!util_compare_file_extension(file_name,"pzx")) menu_file_pzx_browser_show(file_name);
 
         else if (!util_compare_file_extension(file_name,"cdt")) menu_file_tzx_browser_show(file_name);
+
+        else if (!util_compare_file_extension(file_name,"rwa")) menu_file_realtape_browser_show(file_name);
+
+        else if (!util_compare_file_extension(file_name,"smp")) menu_file_realtape_browser_show(file_name);
+
+        else if (!util_compare_file_extension(file_name,"wav")) menu_file_realtape_browser_show(file_name);
 
         //TODO .flash viewer no soportado cuando el archivo .mmc esta dentro de una imagen fatfs (o sea no soporta zvfs)
         else if (!util_compare_file_extension(file_name,"flash")) menu_file_flash_browser_show(file_name);
