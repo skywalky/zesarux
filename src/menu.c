@@ -27172,53 +27172,58 @@ void menu_file_pzx_browser_show(char *filename)
 void menu_file_realtape_browser_show(char *filename)
 {
 
-
-    int antes_spec_smp_read_index_tap=spec_smp_read_index_tap;
+    /*
+    Este codigo es un poco chapuza porque para llamar a la rutina que convierte audio en datos de cinta,
+    hay variables que se modifican de manera global, y hay que preservarlas, pues dichas variables
+    contienen datos de una posible cinta convertida de wav/rwa/smp a tap en memoria, desde Standard tape
+    */
 
 
     //Preservar valores anteriores
-
-    //puntero de escritura de archivo generado en memoria
+    int antes_spec_smp_read_index_tap=spec_smp_read_index_tap;
     int antes_spec_smp_write_index_tap=spec_smp_write_index_tap;
-
-    //total de bytes de archivo generado en memoria
     int antes_spec_smp_total_read=spec_smp_total_read;
 
-    //donde se guarda el archivo generado en memoria
     z80_byte *antes_spec_smp_memory=spec_smp_memory;
-
-
     FILE *antes_ptr_mycinta_smp=ptr_mycinta_smp;
+    int antes_lee_smp_ya_convertido=lee_smp_ya_convertido;
 
 
 
     
-
-        spec_smp_memory=NULL;
-
-
-
-        char buffer[32768];
-
-        main_spec_rwaatap_pointer_print=buffer;
-
-
-        main_spec_rwaatap_pointer_print_max=1024;
-
-        ptr_mycinta_smp=fopen(realtape_name_rwa,"rb");
-
-
-		//avisar que no se ha abierto aun el archivo. Esto se hace porque en la rutina de Autodetectar,
-		//cada vez se abre el archivo de nuevo, y evitar que se tenga que convertir (por ejemplo de wav) una y otra vez
-		lee_smp_ya_convertido=0;
-
-		
-
-		main_spec_rwaatap();
+    //Para que lo asigne la rutina main_spec_rwaatap
+    spec_smp_memory=NULL;
 
 
 
-    free(spec_smp_memory);
+    char texto_browser[MAX_TEXTO_BROWSER];
+
+    main_spec_rwaatap_pointer_print=texto_browser;
+
+
+    main_spec_rwaatap_pointer_print_max=MAX_TEXTO_BROWSER;
+
+    ptr_mycinta_smp=fopen(realtape_name_rwa,"rb");
+
+    if (ptr_mycinta_smp==NULL) {
+        debug_printf(VERBOSE_ERR,"Error opening file");
+    }
+
+    else {
+
+
+        //avisar que no se ha abierto aun el archivo. Esto se hace porque en la rutina de Autodetectar,
+        //cada vez se abre el archivo de nuevo, y evitar que se tenga que convertir (por ejemplo de wav) una y otra vez
+        lee_smp_ya_convertido=0;
+
+        
+
+        main_spec_rwaatap();
+
+
+        //Este lo ha asignado la rutina main_spec_rwaatap
+        free(spec_smp_memory);
+    }
 
 
     main_spec_rwaatap_pointer_print=NULL;
@@ -27241,6 +27246,11 @@ void menu_file_realtape_browser_show(char *filename)
 
 
     ptr_mycinta_smp=antes_ptr_mycinta_smp;
+
+    lee_smp_ya_convertido=antes_lee_smp_ya_convertido;
+
+
+    zxvision_generic_message_tooltip("Realtape file browser" , 0 , 0, 0, 1, NULL, 1, "%s", texto_browser);
 
 
 }
