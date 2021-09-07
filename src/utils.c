@@ -129,6 +129,7 @@
 #include "snap_ram.h"
 #include "menu_items.h"
 #include "hilow.h"
+#include "tape_smp.h"
 
 //Archivo usado para entrada de teclas
 FILE *ptr_input_file_keyboard;
@@ -21210,4 +21211,128 @@ int util_compare_bytes_address(menu_z80_moto_int dir,int *lista,int total_items)
     }
 
     return 1;
+}
+
+//Convierte una cinta real (wav, rwa, smp) a texto indicando los bloques que tiene de cinta,
+//convirtiendo sonido a bits de Spectrum
+void util_realtape_browser(char *filename, char *texto_browser,int maxima_longitud_texto)
+{
+
+    /*
+    Este codigo es un poco chapuza porque para llamar a la rutina que convierte audio en datos de cinta,
+    hay variables que se modifican de manera global, y hay que preservarlas, pues dichas variables
+    contienen datos de una posible cinta convertida de wav/rwa/smp a tap en memoria, desde Standard tape
+    */
+
+
+    //Preservar valores anteriores
+    int antes_spec_smp_read_index_tap=spec_smp_read_index_tap;
+    int antes_spec_smp_write_index_tap=spec_smp_write_index_tap;
+    int antes_spec_smp_total_read=spec_smp_total_read;
+
+    z80_byte *antes_spec_smp_memory=spec_smp_memory;
+    FILE *antes_ptr_mycinta_smp=ptr_mycinta_smp;
+    int antes_lee_smp_ya_convertido=lee_smp_ya_convertido;
+
+
+
+    
+    //Para que lo asigne la rutina main_spec_rwaatap
+    spec_smp_memory=NULL;
+
+
+
+    
+
+    //iniciar con cadena vacia pues lo que hace es concatenar strings
+    texto_browser[0]=0;
+
+    main_spec_rwaatap_pointer_print=texto_browser;
+
+
+    main_spec_rwaatap_pointer_print_max=maxima_longitud_texto;
+
+    //Hay que convertir el nombre del archivo (si no es rwa)
+    char nombre_origen[NAME_MAX];
+    util_get_file_no_directory(filename,nombre_origen);
+
+    
+
+    char file_to_open[PATH_MAX];
+    file_to_open[0]=0; //de momento
+
+    //si es rwa, archivo tal cual
+    if (!util_compare_file_extension(filename,"rwa")) {
+        strcpy(file_to_open,filename);
+    }
+
+    //convertir
+    if (!util_compare_file_extension(filename,"smp")) {
+        if (convert_smp_to_rwa_tmpdir(filename,file_to_open)) {
+			debug_printf(VERBOSE_ERR,"Error converting input file");
+			return;
+		}
+    }   
+
+    //convertir
+    if (!util_compare_file_extension(filename,"wav")) {
+        if (convert_wav_to_rwa_tmpdir(filename,file_to_open)) {
+			debug_printf(VERBOSE_ERR,"Error converting input file");
+			return;
+		}
+    }   
+
+  
+
+    if (file_to_open[0]==0) {
+        debug_printf(VERBOSE_ERR,"Do not know how to browse this file");
+        return;
+    }
+
+    ptr_mycinta_smp=fopen(file_to_open,"rb");
+
+    if (ptr_mycinta_smp==NULL) {
+        debug_printf(VERBOSE_ERR,"Error opening file");
+    }
+
+    else {
+
+
+        //avisar que no se ha abierto aun el archivo. Esto se hace porque en la rutina de Autodetectar,
+        //cada vez se abre el archivo de nuevo, y evitar que se tenga que convertir (por ejemplo de wav) una y otra vez
+        lee_smp_ya_convertido=0;
+
+        main_spec_rwaatap();
+
+
+        //Este lo ha asignado la rutina main_spec_rwaatap
+        free(spec_smp_memory);
+    }
+
+
+    main_spec_rwaatap_pointer_print=NULL;
+
+    //restaurar
+
+    spec_smp_read_index_tap=antes_spec_smp_read_index_tap;
+
+
+    //Preservar valores anteriores
+
+    //puntero de escritura de archivo generado en memoria
+    spec_smp_write_index_tap=antes_spec_smp_write_index_tap;
+
+    //total de bytes de archivo generado en memoria
+    spec_smp_total_read=antes_spec_smp_total_read;
+
+    //donde se guarda el archivo generado en memoria
+    spec_smp_memory=antes_spec_smp_memory;
+
+
+    ptr_mycinta_smp=antes_ptr_mycinta_smp;
+
+    lee_smp_ya_convertido=antes_lee_smp_ya_convertido;
+
+
+
 }

@@ -934,6 +934,8 @@ extern void util_normalize_query_http(char *orig,char *dest);
 extern int util_extract_scl(char *sclname, char *dest_dir);
 extern int util_extract_zip(char *zipname, char *dest_dir);
 
+extern void util_realtape_browser(char *filename, char *texto_browser,int maxima_longitud_texto);
+
 extern void util_get_host_url(char *url, char *host);
 extern void util_get_url_no_host(char *url, char *url_no_host);
 extern int util_url_is_https(char *url);
