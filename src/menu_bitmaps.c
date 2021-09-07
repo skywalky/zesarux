@@ -580,8 +580,8 @@ char *bitmap_button_ext_desktop_machine[EXT_DESKTOP_BUTTONS_ANCHO]={
 
 //Para lower icons
 
-char *bitmap_lowericon_ext_desktop_cassette_active[EXT_DESKTOP_BUTTONS_ANCHO]={
-    //01234567890123456789012345
+char *bitmap_lowericon_ext_desktop_cassette_std_active[EXT_DESKTOP_BUTTONS_ANCHO]={
+   //01234567890123456789012345
     "                          ",//0
   	"                          ",
 	"                          ",	
@@ -611,8 +611,7 @@ char *bitmap_lowericon_ext_desktop_cassette_active[EXT_DESKTOP_BUTTONS_ANCHO]={
 
 };
 
-
-char *bitmap_lowericon_ext_desktop_cassette_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
+char *bitmap_lowericon_ext_desktop_cassette_std_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
    //01234567890123456789012345
     "                          ",     //0
   	"                          ",    
@@ -627,6 +626,232 @@ char *bitmap_lowericon_ext_desktop_cassette_inactive[EXT_DESKTOP_BUTTONS_ANCHO]=
 	"wx  x   x        x   x  xw",	//10	
 	"wx  xx xx        xx xx  xw",		
 	"wx   xxx          xxx   xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx                      xw",		
+	"wx     xxxxxxxxxxxx     xw",		
+	"wx    x            x    xw",		
+	"wxx   x            x   xxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww ",	//20	
+	"                          ",		
+	"                          ",    
+	"                          ",		
+	"                          ",		
+	"                          "  //25		
+
+};
+
+char *bitmap_lowericon_ext_desktop_cassette_active[EXT_DESKTOP_BUTTONS_ANCHO]={
+   //01234567890123456789012345
+    "                          ",//0
+  	"                          ",
+	"                          ",	
+	"                          ",
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	
+
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxggggBggggggggggggBggggxw",			
+	"wxggggBggg      gggBggggxw",		
+	"wxggBBBBBg      gBBBBBggxw",	//10	
+	"wxggggBggg      gggBggggxw",		
+	"wxggggBggggggggggggBggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",	
+
+	"wxggggggggggggggggggggggxw",		
+	"wxgggggxxxxxxxxxxxxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxgggxggggggggggggxgggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww ",	//20	
+	"                          ",		
+	"                          ",
+	"                          ",		
+	"                          ",		
+	"                          "//25		
+
+};
+
+
+char *bitmap_lowericon_ext_desktop_cassette_active_frametwo[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",//0
+  	"                          ",
+	"                          ",	
+	"                          ",
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	
+
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxgggBggggggggggggBgggggxw",			
+	"wxgggBgBBg      ggBgBBggxw",		
+	"wxggggBggg      gggBggggxw",	//10	
+	"wxggBBgBgg      gBBgBgggxw",		
+	"wxgggggBggggggggggggBgggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",
+
+	"wxggggggggggggggggggggggxw",		
+	"wxgggggxxxxxxxxxxxxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxgggxggggggggggggxgggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww ",	//20	
+	"                          ",		
+	"                          ",
+	"                          ",		
+	"                          ",		
+	"                          "//25		
+
+};
+
+char *bitmap_lowericon_ext_desktop_cassette_active_framethree[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",//0
+  	"                          ",
+	"                          ",	
+	"                          ",
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	
+
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxggBgggBggggggggBgggBggxw",			
+	"wxgggBgBgg      ggBgBgggxw",		
+	"wxggggBggg      gggBggggxw",	//10	
+	"wxgggBgBgg      ggBgBgggxw",		
+	"wxggBgggBggggggggBgggBggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",	
+
+	"wxggggggggggggggggggggggxw",		
+	"wxgggggxxxxxxxxxxxxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxgggxggggggggggggxgggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww ",	//20	
+	"                          ",		
+	"                          ",
+	"                          ",		
+	"                          ",		
+	"                          "//25		
+
+};
+
+char *bitmap_lowericon_ext_desktop_cassette_active_framefour[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+    "                          ",//0
+  	"                          ",
+	"                          ",	
+	"                          ",
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	
+
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxgggggBggggggggggggBgggxw",			
+	"wxggBBgBgg      gBBgBgggxw",		
+	"wxggggBggg      gggBggggxw",	//10	
+	"wxgggBgBBg      ggBgBBggxw",		
+	"wxgggBggggggggggggBgggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",	
+
+	"wxggggggggggggggggggggggxw",		
+	"wxgggggxxxxxxxxxxxxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxgggxggggggggggggxgggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww ",	//20	
+	"                          ",		
+	"                          ",
+	"                          ",		
+	"                          ",		
+	"                          "//25		
+
+};
+/*
+	"wx   xxx          xxx   xw",			
+	"wx  xx xx        xx xx  xw", 		
+	"wx  x   x        x   x  xw",	//10	
+	"wx  xx xx        xx xx  xw",		
+	"wx   xxx          xxx   xw",	
+
+
+
+	"wxggggggggggggggggggggggxw",			
+	"wxgggxxxggggggggggxxxgggxw",			
+	"wxggx x xg      gx x xggxw",		
+	"wxggxx xxg      gxx xxggxw",	//10	
+	"wxggx x xg      gx x xggxw",		
+	"wxgggxxxggggggggggxxxgggxw",		
+	"wxggggggggggggggggggggggxw",	
+
+
+	"wxx                    xxw",	
+	"wx                      xw",			
+	"wx   xxx          xxx   xw",			
+	"wx  xx xx        xx xx  xw",		
+	"wx  x   x        x   x  xw",	//10	
+	"wx  xx xx        xx xx  xw",		
+	"wx   xxx          xxx   xw",		
+	"wx                      xw",		
+	"wx                      xw",	
+
+
+	"wxx                    xxw",	
+	"wx                      xw",			
+	"wx   xBx          xBx   xw",			
+	"wx  xxBxx        xxBxx  xw",		
+	"wx  BBBBB        BBBBB  xw",	//10	
+	"wx  xxBxx        xxBxx  xw",		
+	"wx   xBx          xBx   xw",		
+	"wx                      xw",		
+	"wx                      xw",	
+
+	"wxx                    xxw",	
+	"wx                      xw",			
+	"wx   xx B         Bxx   xw",			
+	"wx  BB Bx        xB BB  xw",		
+	"wx  x B x        x B x  xw",	//10	
+	"wx  xB BB        BB Bx  xw",		
+	"wx  B xx          xxB   xw",		
+	"wx                      xw",		
+	"wx                      xw",
+
+
+	"wxx                    xxw",	
+	"wx                      xw",			
+	"wx   Bxx          xx    xw",			
+	"wx  xB BB        BB  x  xw",		
+	"wx  x B x        x B x  xw",	//10	
+	"wx  BB Bx        xB BB  xw",		
+	"wx   xxB         B xx   xw",		
+	"wx                      xw",		
+	"wx                      xw",
+
+
+*/
+
+char *bitmap_lowericon_ext_desktop_cassette_inactive[EXT_DESKTOP_BUTTONS_ANCHO]={
+   //01234567890123456789012345
+    "                          ",     //0
+  	"                          ",    
+	"                          ",	   
+	"                          ",
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	"wxx                    xxw",	
+	"wx                      xw",			
+	"wx    x            x    xw",			
+	"wx    x            x    xw", 		
+	"wx  xxxxx        xxxxx  xw",	//10	
+	"wx    x            x    xw",		
+	"wx    x            x    xw",		
 	"wx                      xw",		
 	"wx                      xw",		
 	"wx                      xw",		
@@ -1898,11 +2123,11 @@ char *bitmap_button_ext_desktop_pauseunpausetape[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"wwxxxxxxxxxxxxxxxxxxxxxxww",	//10
 	"wxxggggggggggggggggggggxxw",	
 	"wxggggggggggggggggggggggxw",			
-	"wxgggxxxggggggggggxxxgggxw",			
-	"wxggxx xxg      gxx xxggxw",		
-	"wxggx   xg      gx   xggxw",		
-	"wxggxx xxg      gxx xxggxw",		
-	"wxgggxxxggggggggggxxxgggxw",		
+	"wxggggBggggggggggggBggggxw",			
+	"wxggggBggg      gggBggggxw",		
+	"wxggBBBBBg      gBBBBBggxw",		
+	"wxggggBggg      gggBggggxw",		
+	"wxggggBggggggggggggBggggxw",		
 	"wxggggggggggggggggggggggxw",		
 	"wxggggggggggggggggggggggxw",		
 	"wxggggggggggggggggggggggxw",	//20	
@@ -1948,6 +2173,37 @@ char *bitmap_button_ext_desktop_reinserttape[EXT_DESKTOP_BUTTONS_ANCHO]={
 
 };
 
+char *bitmap_button_ext_desktop_reinsertrealtape[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+  	"           RRRRRRR        ",    //0
+	"          R       R       ",	   
+	"         R         R      ",
+	"        R          R      ",		
+	"        R           R     ",		
+	"       R            R     ",			
+	"     RRRRR         R      ",			
+	"      RRR          R      ", 		
+	"       R                  ",	
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	//10
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxggggxggggggggggggxggggxw",			
+	"wxggggxggg      gggxggggxw",		
+	"wxggxxxxxg      gxxxxxggxw",		
+	"wxggggxggg      gggxggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",	//20	
+	"wxgggggxxxxxxxxxxxxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxgggxggggggggggggxgggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww "	//25	
+	
+
+};
 
 
 char *bitmap_button_ext_desktop_ocr[EXT_DESKTOP_BUTTONS_ANCHO]={
@@ -2304,4 +2560,70 @@ char *bitmap_button_ext_desktop_zengmessage[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"  x   x     x  x x x  xxx ",		
 	" x    x     x   xx x    x ",
 	"xxxxx xxxxx x    x  xxxx   " 	 //25
+};
+
+
+
+char *bitmap_button_ext_desktop_rewindtape[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+  	"                          ",   //0    
+	"           b     b        ",		
+	"          bb    bb        ",		
+	"         bbb   bbb        ",	
+	"        bbbb  bbbb        ",			
+	"         bbb   bbb        ",			
+	"          bb    bb        ", 		
+	"           b     b        ",		
+	"                          ",    
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	//10
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxggggBggggggggggggBggggxw",			
+	"wxggggBggg      gggBggggxw",		
+	"wxggBBBBBg      gBBBBBggxw",		
+	"wxggggBggg      gggBggggxw",		
+	"wxggggBggggggggggggBggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",	//20	
+	"wxgggggxxxxxxxxxxxxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxgggxggggggggggggxgggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww "	//25	
+	
+
+};
+
+char *bitmap_button_ext_desktop_ffwdtape[EXT_DESKTOP_BUTTONS_ANCHO]={
+    //01234567890123456789012345
+  	"                          ",   //0    
+	"           b     b        ",		
+	"           bb    bb       ",		
+	"           bbb   bbb      ",	
+	"           bbbb  bbbb     ",			
+	"           bbb   bbb      ",			
+	"           bb    bb       ", 		
+	"           b     b        ",		
+	"                          ",    
+	" wwwwwwwwwwwwwwwwwwwwwwww ",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",	//10
+	"wxxggggggggggggggggggggxxw",	
+	"wxggggggggggggggggggggggxw",			
+	"wxggggBggggggggggggBggggxw",			
+	"wxggggBggg      gggBggggxw",		
+	"wxggBBBBBg      gBBBBBggxw",		
+	"wxggggBggg      gggBggggxw",		
+	"wxggggBggggggggggggBggggxw",		
+	"wxggggggggggggggggggggggxw",		
+	"wxggggggggggggggggggggggxw",			
+	"wxggggggggggggggggggggggxw",	//20	
+	"wxgggggxxxxxxxxxxxxgggggxw",		
+	"wxggggxggggggggggggxggggxw",		
+	"wxxgggxggggggggggggxgggxxw",		
+	"wwxxxxxxxxxxxxxxxxxxxxxxww",		
+	" wwwwwwwwwwwwwwwwwwwwwwww "	//25	
+	
+
 };

@@ -225,9 +225,9 @@ defined_f_function defined_direct_functions_array[MAX_F_FUNCTIONS]={
 	{"ReloadMMC",F_FUNCION_RELOADMMC,bitmap_button_ext_desktop_reloadmmc}, 
 	{"ReinsertStdTape",F_FUNCION_REINSERTSTDTAPE,bitmap_button_ext_desktop_reinserttape}, 
 	{"PauseUnpauseRealTape",F_FUNCION_PAUSEUNPAUSEREALTAPE,bitmap_button_ext_desktop_pauseunpausetape},
-    {"ReinsertRealTape",F_FUNCION_REINSERTREALTAPE,bitmap_button_ext_desktop_reinserttape},    
-    {"RewindRealTape",F_FUNCION_REWINDREALTAPE,bitmap_button_ext_desktop_userdefined},    
-    {"FFWDRealTape",F_FUNCION_FFWDREALTAPE,bitmap_button_ext_desktop_userdefined}, 
+    {"ReinsertRealTape",F_FUNCION_REINSERTREALTAPE,bitmap_button_ext_desktop_reinsertrealtape},    
+    {"RewindRealTape",F_FUNCION_REWINDREALTAPE,bitmap_button_ext_desktop_rewindtape},    
+    {"FFWDRealTape",F_FUNCION_FFWDREALTAPE,bitmap_button_ext_desktop_ffwdtape}, 
 
     //Actuar sobre menus y ventanas
     {"CloseAllMenus",F_FUNCION_CLOSE_ALL_MENUS,bitmap_button_ext_desktop_close_all_menus}, 
@@ -4060,7 +4060,12 @@ int zxdesktop_lowericon_cassete_is_visible(void)
 int zxdesktop_lowericon_cassete_is_active(void)
 {
 	if ((tape_loadsave_inserted & TAPE_LOAD_INSERTED)!=0) return 1;
-	else if (realtape_inserted.v) return 1;
+	else return 0;
+}
+
+int zxdesktop_lowericon_cassete_real_is_active(void)
+{
+	if (realtape_inserted.v) return 1;
 	else return 0;
 }
 
@@ -4357,6 +4362,8 @@ int zxdesktop_common_icon_no_inverse=0;
 
 //Variables que indican actividad de ese icono (se dibujan en color inverso)
 int zxdesktop_icon_tape_inverse=0;
+int zxdesktop_icon_tape_real_inverse=0;
+
 int zxdesktop_icon_mmc_inverse=0;
 int zxdesktop_icon_plus3_inverse=0;
 int zxdesktop_icon_betadisk_inverse=0;
@@ -4366,9 +4373,13 @@ int zxdesktop_icon_mdv_flp_inverse=0;
 int zxdesktop_icon_dandanator_inverse=0;
 
 struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[TOTAL_ZXDESKTOP_MAX_LOWER_ICONS]={
-	//cinta
+	//cinta standard
 	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_is_active,zxdesktop_lowericon_cassete_accion,
-		bitmap_lowericon_ext_desktop_cassette_active,bitmap_lowericon_ext_desktop_cassette_inactive,&zxdesktop_icon_tape_inverse},
+		bitmap_lowericon_ext_desktop_cassette_std_active,bitmap_lowericon_ext_desktop_cassette_std_inactive,&zxdesktop_icon_tape_inverse},
+
+	//cinta real
+	{ zxdesktop_lowericon_cassete_is_visible, zxdesktop_lowericon_cassete_real_is_active,zxdesktop_lowericon_cassete_accion,
+		bitmap_lowericon_ext_desktop_cassette_active,bitmap_lowericon_ext_desktop_cassette_inactive,&zxdesktop_icon_tape_real_inverse},
 
 	//floppy +3
 	{ zxdesktop_lowericon_plus3_flp_is_visible, zxdesktop_lowericon_plus3_flp_is_active,zxdesktop_lowericon_plus3_flp_accion,
@@ -4475,6 +4486,7 @@ int zxdesktop_lowericon_find_index(int icono)
 
 }
 
+int lowericon_realtape_frame=0;
 
 void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 {
@@ -4582,7 +4594,21 @@ void menu_ext_desktop_draw_lower_icon(int numero_boton,int pulsado)
 	}		
 
 
+    //Caso especial para realtape moviendose
+    //printf("tape 00\n");
+    if (puntero_bitmap==bitmap_lowericon_ext_desktop_cassette_active/* && inverso*/) {
+        //printf("tape 0\n");
+        if (realtape_inserted.v) {
+            
+            //printf("tape\n");
 
+            if (lowericon_realtape_frame==1) puntero_bitmap=bitmap_lowericon_ext_desktop_cassette_active_frametwo;
+            if (lowericon_realtape_frame==2) puntero_bitmap=bitmap_lowericon_ext_desktop_cassette_active_framethree;
+            if (lowericon_realtape_frame==3) puntero_bitmap=bitmap_lowericon_ext_desktop_cassette_active_framefour;
+
+            inverso=0;
+        }
+    }
 
 
 	if (pulsado) {

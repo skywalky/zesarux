@@ -14273,6 +14273,7 @@ void delete_generic_footertext(void)
 	//Redibujar zxdesktop para redibujar iconos, para poner a normal los que se hayan puesto en inverso (con actividad)
 	//Poner iconos en normal, sin inverso
 	zxdesktop_icon_tape_inverse=0;
+    zxdesktop_icon_tape_real_inverse=0;
 	zxdesktop_icon_mmc_inverse=0;
 	zxdesktop_icon_plus3_inverse=0;
 	zxdesktop_icon_betadisk_inverse=0;

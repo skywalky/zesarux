@@ -56,6 +56,7 @@ extern char *bitmap_button_ext_desktop_pause[];
 extern char *bitmap_button_ext_desktop_debugcpu[];
 extern char *bitmap_button_ext_desktop_pauseunpausetape[];
 extern char *bitmap_button_ext_desktop_reinserttape[];
+extern char *bitmap_button_ext_desktop_reinsertrealtape[];
 extern char *bitmap_button_ext_desktop_ocr[];
 extern char *bitmap_button_ext_desktop_switchborder[];
 extern char *bitmap_button_ext_desktop_topspeed[];
@@ -67,12 +68,21 @@ extern char *bitmap_button_ext_desktop_nmi[];
 extern char *bitmap_button_ext_desktop_zxunoprismswitch[];
 extern char *bitmap_button_ext_desktop_nothing[];
 extern char *bitmap_button_ext_desktop_zengmessage[];
+extern char *bitmap_button_ext_desktop_rewindtape[];
+extern char *bitmap_button_ext_desktop_ffwdtape[];
 
 extern char **zxdesktop_buttons_bitmaps[];
 
 
 extern char *bitmap_lowericon_ext_desktop_cassette_active[];
+extern char *bitmap_lowericon_ext_desktop_cassette_active_frametwo[];
+extern char *bitmap_lowericon_ext_desktop_cassette_active_framethree[];
+extern char *bitmap_lowericon_ext_desktop_cassette_active_framefour[];
 extern char *bitmap_lowericon_ext_desktop_cassette_inactive[];
+
+extern char *bitmap_lowericon_ext_desktop_cassette_std_active[];
+extern char *bitmap_lowericon_ext_desktop_cassette_std_inactive[];
+
 extern char *bitmap_lowericon_ext_desktop_mmc_active[];
 extern char *bitmap_lowericon_ext_desktop_mmc_inactive[];
 extern char *bitmap_lowericon_ext_desktop_z88_active[];

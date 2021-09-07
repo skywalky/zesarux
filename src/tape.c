@@ -141,12 +141,21 @@ void draw_tape_icon_activity(void)
         if (!zxdesktop_icon_tape_inverse) {
                 zxdesktop_icon_tape_inverse=1;
                 menu_draw_ext_desktop();
-        }      
+        }
+}
+
+void draw_realtape_icon_activity(void)
+{
+    //printf("Cinta\n");
+    lowericon_realtape_frame++;
+    if (lowericon_realtape_frame==4) lowericon_realtape_frame=0;
+
+    if (realtape_playing.v) menu_draw_ext_desktop();      
 }
 
 void draw_tape_text(void)
 {
-
+//printf("draw_tape_text\n");
 		//tape_loading_counter=2;
 
 		//color inverso
@@ -159,6 +168,25 @@ void draw_tape_text(void)
 
                         //Y poner icono de cinta en inverso
                         draw_tape_icon_activity();
+		}
+
+}
+
+void draw_realtape_text(void)
+{
+//printf("draw_realtape_text\n");
+		//tape_loading_counter=2;
+
+		//color inverso
+		if (top_speed_timer.v) {
+			draw_tape_text_top_speed();
+		}
+		else {
+            //menu_footer_activity("TAPE");
+            generic_footertext_print_operating("TAPE");
+
+            //Y poner icono de cinta en inverso
+            draw_realtape_icon_activity();
 		}
 
 }
@@ -1758,85 +1786,27 @@ void realtape_get_byte_rwa(void)
 
 	if (feof(ptr_realtape)) {
 		realtape_eject();
-                return;
-        }
+        return;
+    }
 
 
-        silence_detection_counter=0;
-        //beeper_silence_detection_counter=0;
+    silence_detection_counter=0;
+    //beeper_silence_detection_counter=0;
 	unsigned char valor_leido_audio;
 
 	fread(&valor_leido_audio, 1,1 , ptr_realtape);
 	realtape_last_value=realtape_adjust_offset_sign(valor_leido_audio);
-        realtape_file_size_counter++;
+    realtape_file_size_counter++;
 }
 
 void realtape_get_byte_cont(void)
 {
 
-	if (realtape_tipo==0) {
-		//RWA
-		if (feof(ptr_realtape)) {
-			realtape_eject();
-			return;
-		}
-
-		silence_detection_counter=0;
-		//beeper_silence_detection_counter=0;
-
-		unsigned char valor_leido_audio;
-
-		fread(&valor_leido_audio, 1,1 , ptr_realtape);
-		realtape_last_value=realtape_adjust_offset_sign(valor_leido_audio);
-
-		//printf ("%d ",realtape_last_value);
-                realtape_file_size_counter++;
-
-		return;
-	}
-
-	if (realtape_tipo==1) {
-		//SMP
+    //RWA, SMP, WAV, TZX, P, O, TAP, PZX
+	if (realtape_tipo>=0 || realtape_tipo<=7) {
 		realtape_get_byte_rwa();
 		return;
 	}
-
-        if (realtape_tipo==2) {
-                //WAV
-                realtape_get_byte_rwa();
-                return;
-        }
-
-        if (realtape_tipo==3) {
-                //TZX
-                realtape_get_byte_rwa();
-                return;
-        }
-
-        if (realtape_tipo==4) {
-                //P
-                realtape_get_byte_rwa();
-                return;
-        }
-
-        if (realtape_tipo==5) {
-                //O
-                realtape_get_byte_rwa();
-                return;
-        }
-
-        if (realtape_tipo==6) {
-                //TAP
-                realtape_get_byte_rwa();
-                return;
-        }
-
-        if (realtape_tipo==7) {
-                //PZX
-                realtape_get_byte_rwa();
-                return;
-        }        
-
 
 }
 
@@ -1845,94 +1815,94 @@ int realtape_print_footer_last_char=0;
 
 void realtape_print_footer(void)
 {
-        if (realtape_inserted.v==0 || realtape_playing.v==0) return;
-        
-        long int total=realtape_file_size;
-        long int transcurrido=realtape_file_size_counter;
+    if (realtape_inserted.v==0 || realtape_playing.v==0) return;
+    
+    long int total=realtape_file_size;
+    long int transcurrido=realtape_file_size_counter;
 
-        int progreso;
+    int progreso;
 
-        if (total==0) progreso=100;
-        else progreso=(transcurrido*100)/total;
+    if (total==0) progreso=100;
+    else progreso=(transcurrido*100)/total;
 
-        if (progreso>100) progreso=100;
+    if (progreso>100) progreso=100;
 
-        debug_printf (VERBOSE_DEBUG,"RealTape loading progress: %d %%",progreso);
+    debug_printf (VERBOSE_DEBUG,"RealTape loading progress: %d %%",progreso);
 
-        char buffer_texto_playing[33];
-        char buffer_texto_progreso[33];
-        char buffer_texto[33];
+    char buffer_texto_playing[33];
+    char buffer_texto_progreso[33];
+    char buffer_texto[33];
 
-                                     //01234567890123456789012345678901
-        sprintf (buffer_texto_playing,"RealTape Playing %3d%%",progreso);
-        //Con indicador de progreso. 10 posiciones
-        int posicion_progreso=progreso%10;
+                                    //01234567890123456789012345678901
+    sprintf (buffer_texto_playing,"RealTape Playing %3d%%",progreso);
+    //Con indicador de progreso. 10 posiciones
+    int posicion_progreso=progreso%10;
 
-        char loading_character;
+    char loading_character;
 
-        if (realtape_print_footer_last_char==0) loading_character='o';
-        else loading_character='O';
+    if (realtape_print_footer_last_char==0) loading_character='o';
+    else loading_character='O';
 
-        realtape_print_footer_last_char ^=1;
+    realtape_print_footer_last_char ^=1;
 
-        int i;
-        for (i=0;i<10;i++) {
-               buffer_texto_progreso[i]='.';
-               if (i==posicion_progreso) buffer_texto_progreso[i]=loading_character;
-        }
-        buffer_texto_progreso[i]=0;
+    int i;
+    for (i=0;i<10;i++) {
+            buffer_texto_progreso[i]='.';
+            if (i==posicion_progreso) buffer_texto_progreso[i]=loading_character;
+    }
+    buffer_texto_progreso[i]=0;
 
-        sprintf (buffer_texto,"%s %s",buffer_texto_playing,buffer_texto_progreso);
+    sprintf (buffer_texto,"%s %s",buffer_texto_playing,buffer_texto_progreso);
 
 	//color inverso
 	menu_putstring_footer(0,2,buffer_texto,WINDOW_FOOTER_PAPER,WINDOW_FOOTER_INK);
 
-        //Y poner icono de cinta en inverso
-        draw_tape_icon_activity();        
+    //Y poner icono de cinta en inverso
+    draw_realtape_icon_activity();        
+}
+
+//comun para ambos. si accion=1, es avanzar
+void realtape_rewind_ffwd_five(int accion)
+{
+    if (realtape_inserted.v==0) {
+        debug_printf(VERBOSE_ERR,"No real tape inserted");
+        return;
+    }
+    
+    long int total=realtape_file_size;
+    long int transcurrido=realtape_file_size_counter;
+
+    //tenemos precisamente lo transcurrido asi que no hay que obtener la posicion con fget
+    //cuanto es 5% del total
+    long int offset=(total*5)/100;
+
+    if (accion) {
+        //avanzar
+        transcurrido +=offset;
+    }
+    else {
+        //rebobinar
+        transcurrido -=offset;        
+    }
+
+    if (transcurrido>=total) transcurrido=total-1;
+    if (transcurrido<0) transcurrido=0;
+
+    realtape_file_size_counter=transcurrido;
+
+    fseek(ptr_realtape, transcurrido, SEEK_SET);    
 }
 
 //rebobina 5%
 void realtape_rewind_five(void)
 {
-    if (realtape_inserted.v==0) return;
-    
-    long int total=realtape_file_size;
-    long int transcurrido=realtape_file_size_counter;
-
-    //tenemos precisamente lo transcurrido asi que no hay que obtener la posicion con fget
-    //cuanto es 5% del total
-    long int offset=(total*5)/100;
-
-    transcurrido -=offset;
-
-    if (transcurrido<0) transcurrido=0;
-
-    realtape_file_size_counter=transcurrido;
-
-    fseek(ptr_realtape, transcurrido, SEEK_SET);
-
+    realtape_rewind_ffwd_five(0);
 }
 
 //avanza 5%
 void realtape_ffwd_five(void)
 {
-    if (realtape_inserted.v==0) return;
-    
-    long int total=realtape_file_size;
-    long int transcurrido=realtape_file_size_counter;
-
-    //tenemos precisamente lo transcurrido asi que no hay que obtener la posicion con fget
-    //cuanto es 5% del total
-    long int offset=(total*5)/100;
-
-    transcurrido +=offset;
-
-    if (transcurrido>=total) transcurrido=total;
-
-    realtape_file_size_counter=transcurrido;
-
-    fseek(ptr_realtape, transcurrido, SEEK_SET);
-
+    realtape_rewind_ffwd_five(1);
 }
 
 
@@ -1951,24 +1921,8 @@ void realtape_delete_footer(void)
 void realtape_get_byte(void)
 {
 
-        //Mostrar porcentaje de progreso de lectura
-        //realtape_show_progress_counter();
-
 	realtape_get_byte_cont();
-	return;
 
-
-
-
-	//intento de ajustar esto a la velocidad de la cpu. de momento solo controlar cuando mas rapido (100,200, 300 % cpu)
-
-	/*int i;
-	int limite=porcentaje_velocidad_emulador/100;
-	if (limite<1) limite=1;
-
-	for (i=0;i<limite;i++) {
-		realtape_get_byte_cont();
-	}*/
 }
 
 
@@ -2181,7 +2135,7 @@ void realtape_start_playing(void)
 {
 	if (realtape_playing.v==0) {
 		realtape_playing.v=1;
-		draw_tape_text();
+		draw_realtape_text();
 		//no quitar texto de TAPE
 		tape_loading_counter=9999999;
 	}

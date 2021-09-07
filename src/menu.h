@@ -950,6 +950,8 @@ extern z80_bit menu_ext_desktop_transparent_upper_icons;
 extern z80_bit menu_ext_desktop_disable_box_upper_icons;
 extern z80_bit menu_ext_desktop_disable_box_lower_icons;
 
+extern int lowericon_realtape_frame;
+
 
 #define ESTILO_GUI_PAPEL_NORMAL (definiciones_estilos_gui[estilo_gui_activo].papel_normal)
 #define ESTILO_GUI_TINTA_NORMAL (definiciones_estilos_gui[estilo_gui_activo].tinta_normal)
@@ -1176,6 +1178,7 @@ struct s_zxdesktop_lowericons_info {
 };
 
 extern int zxdesktop_icon_tape_inverse;
+extern int zxdesktop_icon_tape_real_inverse;
 extern int zxdesktop_icon_mmc_inverse;
 extern int zxdesktop_icon_plus3_inverse;
 extern int zxdesktop_icon_betadisk_inverse;
@@ -1184,7 +1187,7 @@ extern int zxdesktop_icon_zxpand_inverse;
 extern int zxdesktop_icon_mdv_flp_inverse;
 extern int zxdesktop_icon_dandanator_inverse;
 
-#define TOTAL_ZXDESKTOP_MAX_LOWER_ICONS 17
+#define TOTAL_ZXDESKTOP_MAX_LOWER_ICONS 18
 
 extern struct s_zxdesktop_lowericons_info zdesktop_lowericons_array[];
 

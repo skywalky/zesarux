@@ -47,6 +47,8 @@ Improved Debugging:
 
 Improved ZX Vision menu interface:
 -Machine manufacturer list is now sorted by name (instead of some kind of mixed age and type)
+-Real tape icon now is animated when playing tape
+-Added actions for reinsert, rewind, ffwd real tape
 -Reorganized GUI Settings and Window Settings menu: "GUI Settings" menu is now called "ZX Vision Settings", "Window Settings" menu is now called "General settings"
 -Allow customize upper buttons to actions
 -Added setting to pause cpu emulation on menu when multitask active
@@ -85,6 +87,7 @@ Fixed Next tbblue port 123b behaviour: 48kb ram paging, shadow display, 3bit off
 Fixed cpu-step behaviour the first time it's executed
 Fixed cursor keys up/down on Jupiter Ace
 Fixed --help and --experthelp settings: do not parse configuration file when showing help
+Fixed autoload on spectrum 48k+ spanish
 
 
 Some other minor bugfixes and improvements
