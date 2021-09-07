@@ -36,4 +36,15 @@ extern z80_byte *spec_smp_memory;
 extern int tape_guessing_parameters;
 
 
+extern int spec_smp_read_index_tap;
+extern int spec_smp_write_index_tap;
+extern int spec_smp_total_read;
+extern int lee_smp_ya_convertido;
+
+extern FILE *ptr_mycinta_smp;
+
+extern char *main_spec_rwaatap_pointer_print;
+extern int main_spec_rwaatap_pointer_print_max;
+
+
 #endif

@@ -88,6 +88,8 @@ extern int autoload_spectrum_loadpp_mode;
 
 extern FILE *ptr_realtape;
 
+extern char realtape_name_rwa[];
+
 extern void realtape_get_byte(void);
 
 extern char realtape_last_value;

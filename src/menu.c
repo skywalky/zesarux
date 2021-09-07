@@ -127,6 +127,7 @@
 #include "zvfs.h"
 #include "snap_ram.h"
 #include "sensors.h"
+#include "tape_smp.h"
 
 #if defined(__APPLE__)
 	#include <sys/syslimits.h>
@@ -4362,6 +4363,8 @@ int zxdesktop_common_icon_no_inverse=0;
 
 //Variables que indican actividad de ese icono (se dibujan en color inverso)
 int zxdesktop_icon_tape_inverse=0;
+
+//este no se usa, se deja por requisitos de la estructura zdesktop_lowericons_array
 int zxdesktop_icon_tape_real_inverse=0;
 
 int zxdesktop_icon_mmc_inverse=0;
@@ -27166,7 +27169,81 @@ void menu_file_pzx_browser_show(char *filename)
 
 }
 
+void menu_file_realtape_browser_show(char *filename)
+{
 
+
+    int antes_spec_smp_read_index_tap=spec_smp_read_index_tap;
+
+
+    //Preservar valores anteriores
+
+    //puntero de escritura de archivo generado en memoria
+    int antes_spec_smp_write_index_tap=spec_smp_write_index_tap;
+
+    //total de bytes de archivo generado en memoria
+    int antes_spec_smp_total_read=spec_smp_total_read;
+
+    //donde se guarda el archivo generado en memoria
+    z80_byte *antes_spec_smp_memory=spec_smp_memory;
+
+
+    FILE *antes_ptr_mycinta_smp=ptr_mycinta_smp;
+
+
+
+    
+
+        spec_smp_memory=NULL;
+
+
+
+        char buffer[32768];
+
+        main_spec_rwaatap_pointer_print=buffer;
+
+
+        main_spec_rwaatap_pointer_print_max=1024;
+
+        ptr_mycinta_smp=fopen(realtape_name_rwa,"rb");
+
+
+		//avisar que no se ha abierto aun el archivo. Esto se hace porque en la rutina de Autodetectar,
+		//cada vez se abre el archivo de nuevo, y evitar que se tenga que convertir (por ejemplo de wav) una y otra vez
+		lee_smp_ya_convertido=0;
+
+		
+
+		main_spec_rwaatap();
+
+
+
+    free(spec_smp_memory);
+
+
+    main_spec_rwaatap_pointer_print=NULL;
+
+    //restaurar
+
+    spec_smp_read_index_tap=antes_spec_smp_read_index_tap;
+
+
+    //Preservar valores anteriores
+
+    //puntero de escritura de archivo generado en memoria
+    spec_smp_write_index_tap=antes_spec_smp_write_index_tap;
+
+    //total de bytes de archivo generado en memoria
+    spec_smp_total_read=antes_spec_smp_total_read;
+
+    //donde se guarda el archivo generado en memoria
+    spec_smp_memory=antes_spec_smp_memory;
+
+
+    ptr_mycinta_smp=antes_ptr_mycinta_smp;
+
+
+}
 
 
 
@@ -27194,6 +27271,13 @@ void menu_tape_browser_show(char *filename)
 		menu_file_cas_browser_show(filename);
 		return;
 	}		
+
+    //wav, rwa, etc
+	if (!util_compare_file_extension(filename,"wav") 
+		) {
+		menu_file_realtape_browser_show(filename);
+		return;
+	}	    
 
 	//tapefile
 	if (util_compare_file_extension(filename,"tap")!=0) {

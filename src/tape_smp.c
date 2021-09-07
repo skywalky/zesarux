@@ -928,6 +928,9 @@ int spec_lee_8_bits(void)
 	return byte;
 }
 
+char *main_spec_rwaatap_pointer_print=NULL;
+int main_spec_rwaatap_pointer_print_max=0;
+
 void spec_debug_cabecera(int indice,int leidos)
 //Escribe tipo de fichero
 {
@@ -937,9 +940,19 @@ void spec_debug_cabecera(int indice,int leidos)
 
 	char buffer_nombre[11];
 
+    char buffer_string[1024];
+
 	if (leidos!=19) {
 		debug_printf (VERBOSE_INFO,"Read tape block. %s:%d . Length: %d",
 			      spec_tipos_fichero[4],spec_smp_memory[indice],  ( leidos>2 ? leidos-2 : leidos  )  );
+
+
+        if (main_spec_rwaatap_pointer_print!=NULL) {
+		    sprintf (buffer_string,"Read tape block. %s:%d . Length: %d",
+			      spec_tipos_fichero[4],spec_smp_memory[indice],  ( leidos>2 ? leidos-2 : leidos  )  );            
+            int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,buffer_string,main_spec_rwaatap_pointer_print_max);
+            if (nocabe) return;
+        }
 
 		//if (leidos>2) printf ("%u+2\n",leidos-2);
 		//else printf ("%u\n",leidos);
@@ -951,6 +964,13 @@ void spec_debug_cabecera(int indice,int leidos)
 	for (n=0;n<10;n++) buffer_nombre[n]=spec_da_ascii(spec_smp_memory[indice+2+n]);
 	buffer_nombre[10]=0;
 	debug_printf (VERBOSE_INFO,"Read tape block. Standard Header - %s:%s",spec_tipos_fichero[tipo],buffer_nombre);
+
+
+        if (main_spec_rwaatap_pointer_print!=NULL) {
+		    sprintf (buffer_string,"Read tape block. Standard Header - %s:%s",spec_tipos_fichero[tipo],buffer_nombre);       
+            int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,buffer_string,main_spec_rwaatap_pointer_print_max);
+            if (nocabe) return;
+        }    
 
 	len=value_8_to_16(spec_smp_memory[indice+13],spec_smp_memory[indice+12]);
 	parm1=value_8_to_16(spec_smp_memory[indice+15],spec_smp_memory[indice+14]);
