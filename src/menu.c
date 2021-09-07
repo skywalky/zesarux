@@ -27207,10 +27207,32 @@ void menu_file_realtape_browser_show(char *filename)
     main_spec_rwaatap_pointer_print_max=MAX_TEXTO_BROWSER;
 
     //Hay que deducir el nombre del archivo
-    //si es rwa, archivo tal cual
+    char nombre_origen[NAME_MAX];
+    util_get_file_no_directory(filename,nombre_origen);
 
-    //realmente no abro el archivo que podria venir como parametro sino el que se ha convertido al final como rwa
-    ptr_mycinta_smp=fopen(realtape_name_rwa,"rb");
+    
+
+    char file_to_open[PATH_MAX];
+    file_to_open[0]=0; //de momento
+
+    //si es rwa, archivo tal cual
+    if (!util_compare_file_extension(filename,"rwa")) {
+        strcpy(file_to_open,filename);
+    }
+
+    //si es smp, wav:
+    if (!util_compare_file_extension(filename,"smp") ||
+        !util_compare_file_extension(filename,"wav")
+    ) {
+        sprintf (file_to_open,"%s/tmp_%s.rwa",get_tmpdir_base(),nombre_origen);    
+    }    
+
+    if (file_to_open[0]==0) {
+        debug_printf(VERBOSE_ERR,"Do not know how to browse this file");
+        return;
+    }
+
+    ptr_mycinta_smp=fopen(file_to_open,"rb");
 
     if (ptr_mycinta_smp==NULL) {
         debug_printf(VERBOSE_ERR,"Error opening file");
