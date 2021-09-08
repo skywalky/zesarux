@@ -214,4 +214,4 @@ L08F7:          IN      A,(HLWPORT)
 
 - Improved algorithm quizá renombrar a “alternate” algorithm 
 
-- Convert rwa/smp/wav to tap
+- Convert rwa/smp/wav to P/O de zx80 y zx81

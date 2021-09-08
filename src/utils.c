@@ -21215,7 +21215,11 @@ int util_compare_bytes_address(menu_z80_moto_int dir,int *lista,int total_items)
 
 //Convierte una cinta real (wav, rwa, smp) a texto indicando los bloques que tiene de cinta,
 //convirtiendo sonido a bits de Spectrum
-void util_realtape_browser(char *filename, char *texto_browser,int maxima_longitud_texto)
+//O también genera un tap de salida
+
+//Si texto_browser!=NULL, genera el texto de browser
+//Si tap_output!=NULL, genera el tap de salida
+void util_realtape_browser(char *filename, char *texto_browser,int maxima_longitud_texto,char *tap_output)
 {
 
     /*
@@ -21243,11 +21247,12 @@ void util_realtape_browser(char *filename, char *texto_browser,int maxima_longit
 
 
     
+    if (texto_browser!=NULL) {
+        //iniciar con cadena vacia pues lo que hace es concatenar strings
+        texto_browser[0]=0;
 
-    //iniciar con cadena vacia pues lo que hace es concatenar strings
-    texto_browser[0]=0;
-
-    main_spec_rwaatap_pointer_print=texto_browser;
+        main_spec_rwaatap_pointer_print=texto_browser;
+    }
 
 
     main_spec_rwaatap_pointer_print_max=maxima_longitud_texto;
@@ -21304,6 +21309,10 @@ void util_realtape_browser(char *filename, char *texto_browser,int maxima_longit
 
         main_spec_rwaatap();
 
+        //generar el tap de salida si conviene
+        if (tap_output!=NULL) {
+            util_save_file(spec_smp_memory,spec_smp_total_read,tap_output);
+        }
 
         //Este lo ha asignado la rutina main_spec_rwaatap
         free(spec_smp_memory);
@@ -21334,5 +21343,90 @@ void util_realtape_browser(char *filename, char *texto_browser,int maxima_longit
     lee_smp_ya_convertido=antes_lee_smp_ya_convertido;
 
 
+
+}
+
+
+
+//Convierte una cinta real (wav, rwa, smp) a zx80/81 P/O
+void convert_realtape_to_po(char *filename, char *archivo_destino)
+{
+
+    /*
+    Este codigo es un poco chapuza porque para llamar a la rutina que convierte audio en datos de cinta,
+    hay variables que se modifican de manera global, y hay que preservarlas, pues dichas variables
+    contienen datos de una posible cinta convertida de wav/rwa/smp a tap en memoria, desde Standard tape
+    */
+
+
+    //Preservar valores anteriores
+    int antes_lee_smp_ya_convertido=lee_smp_ya_convertido;
+    FILE *antes_ptr_mycinta_smp=ptr_mycinta_smp;
+    char *antes_tapefile=tapefile;
+
+
+    //Hay que convertir el nombre del archivo (si no es rwa)
+    char nombre_origen[NAME_MAX];
+    util_get_file_no_directory(filename,nombre_origen);
+
+    
+
+    char file_to_open[PATH_MAX];
+    file_to_open[0]=0; //de momento
+
+    //si es rwa, archivo tal cual
+    if (!util_compare_file_extension(filename,"rwa")) {
+        strcpy(file_to_open,filename);
+    }
+
+    //convertir
+    if (!util_compare_file_extension(filename,"smp")) {
+        if (convert_smp_to_rwa_tmpdir(filename,file_to_open)) {
+			debug_printf(VERBOSE_ERR,"Error converting input file");
+			return;
+		}
+    }   
+
+    //convertir
+    if (!util_compare_file_extension(filename,"wav")) {
+        if (convert_wav_to_rwa_tmpdir(filename,file_to_open)) {
+			debug_printf(VERBOSE_ERR,"Error converting input file");
+			return;
+		}
+    }   
+
+  
+
+    if (file_to_open[0]==0) {
+        debug_printf(VERBOSE_ERR,"Do not know how to browse this file");
+        return;
+    }
+
+    //ptr_mycinta_smp=fopen(file_to_open,"rb");
+
+    //if (ptr_mycinta_smp==NULL) {
+    //    debug_printf(VERBOSE_ERR,"Error opening file");
+    //}
+
+    //else {
+
+
+        tapefile=file_to_open;
+
+        main_leezx81(archivo_destino);
+
+
+
+    //}
+
+
+    //restaurar
+
+
+    tapefile=antes_tapefile;
+
+    ptr_mycinta_smp=antes_ptr_mycinta_smp;
+
+    lee_smp_ya_convertido=antes_lee_smp_ya_convertido;
 
 }

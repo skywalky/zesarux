@@ -27177,7 +27177,7 @@ void menu_file_realtape_browser_show(char *filename)
 
     
 
-    util_realtape_browser(filename, texto_browser, MAX_TEXTO_BROWSER);
+    util_realtape_browser(filename, texto_browser, MAX_TEXTO_BROWSER,NULL);
 
 
     if (texto_browser[0]==0) {
@@ -37403,7 +37403,10 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
         else if (!util_compare_file_extension(archivo,"smp")) {
                 char *opciones[]={
                         "SMP to RWA",
-			"SMP to WAV",
+			            "SMP to WAV",
+                        "SMP to TAP",
+                        "WAV to P",
+                        "WAV to O",                        
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
@@ -37422,12 +37425,30 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                                 convert_any_to_wav(fullpath,archivo_destino);
                         break;
 
+                        case 2:
+                                sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
+                                util_realtape_browser(fullpath, NULL,0,archivo_destino);
+                        break;    
+
+                        case 3:
+                                sprintf(archivo_destino,"%s/%s.p",directorio,archivo);
+                                convert_realtape_to_po(fullpath, archivo_destino);
+                        break;
+
+                        case 4:
+                                sprintf(archivo_destino,"%s/%s.o",directorio,archivo);
+                                convert_realtape_to_po(fullpath, archivo_destino);
+                        break;                                              
+
                 }
         }
 
         else if (!util_compare_file_extension(archivo,"wav")) {
                 char *opciones[]={
                         "WAV to RWA",
+                        "WAV to TAP",
+                        "WAV to P",
+                        "WAV to O",                        
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
@@ -37441,8 +37462,60 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                                 convert_wav_to_rwa(fullpath,archivo_destino);
                         break;
 
+                        case 1:
+                                sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
+                                util_realtape_browser(fullpath, NULL,0,archivo_destino);
+                        break;    
+
+                        case 2:
+                                sprintf(archivo_destino,"%s/%s.p",directorio,archivo);
+                                convert_realtape_to_po(fullpath, archivo_destino);
+                        break;
+
+                        case 3:
+                                sprintf(archivo_destino,"%s/%s.o",directorio,archivo);
+                                convert_realtape_to_po(fullpath, archivo_destino);
+                        break;                                                  
+
                 }
         }
+
+        else if (!util_compare_file_extension(archivo,"rwa")) {
+                char *opciones[]={
+                        "RWA to WAV",
+                        "RWA to TAP",
+                        "RWA to P",
+                        "RWA to O",
+                        NULL};
+
+                int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
+		if (opcion<0) {
+			//Salido con ESC
+			return;
+		}				
+                switch (opcion) {
+                        case 0:
+                                sprintf(archivo_destino,"%s/%s.wav",directorio,archivo);
+                                convert_rwa_to_wav(fullpath,archivo_destino);
+                        break;
+
+                        case 1:
+                                sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
+                                util_realtape_browser(fullpath, NULL,0,archivo_destino);
+                        break;       
+
+                        case 2:
+                                sprintf(archivo_destino,"%s/%s.p",directorio,archivo);
+                                convert_realtape_to_po(fullpath, archivo_destino);
+                        break;
+
+                        case 3:
+                                sprintf(archivo_destino,"%s/%s.o",directorio,archivo);
+                                convert_realtape_to_po(fullpath, archivo_destino);
+                        break;                        
+
+                }
+        }        
 
         else if (!util_compare_file_extension(archivo,"o")) {
                 char *opciones[]={

@@ -73,7 +73,7 @@ char inputfile_name_rwa[PATH_MAX];
 
 //si archivo es rwa. lo abre tal cual
 //si es smp u otros, lo convierte
-void open_input_file(void)
+void tape_smp_open_input_file(void)
 {
 
 	//Inicializar siempre esto. Si no se confunde si ha habido una conversion anterior
@@ -139,7 +139,7 @@ int tape_block_smp_open(void)
 		//cada vez se abre el archivo de nuevo, y evitar que se tenga que convertir (por ejemplo de wav) una y otra vez
 		lee_smp_ya_convertido=0;
 
-		open_input_file();
+		tape_smp_open_input_file();
 
 		if (!ptr_mycinta_smp)
 		{
@@ -220,7 +220,7 @@ int tape_block_smp_seek(int longitud,int direccion)
 //Cargar en RAM datos obtenidos del audio de SMP
 void snap_load_zx80_zx81_load_smp(void)
 {
-	main_leezx81();
+	main_leezx81(NULL);
 }
 
 
@@ -506,7 +506,7 @@ int zx8081_lee_todos_bytes(unsigned char *m)
 
 
 
-	open_input_file();
+	tape_smp_open_input_file();
 
 	if (!ptr_mycinta_smp)
 	{
@@ -543,7 +543,10 @@ int zx8081_lee_todos_bytes(unsigned char *m)
 }
 
 
-void main_leezx81(void)
+//Si archivo_destino==NULL, lo carga en memoria de la maquina
+//Si no, escribe archivo en cinta
+//Quien llama debe indicar si quiere extension P u O, aunque el contenido final es el mismo, solo cambia la extension
+void main_leezx81(char *archivo_destino)
 //int main_leezx81(int argc,char *argv[])
 {
 
@@ -570,6 +573,10 @@ void main_leezx81(void)
 	auto_parametros=1;
 
 
+    debug_printf (VERBOSE_INFO,"Reading SMP audio data and converting to ZX80/ZX81 file in memory");
+
+    debug_printf (VERBOSE_INFO,"Routine based on original program LEEZX81 V1.1. (c) Cesar Hernandez Bano (10/09/1998), (02/09/2013)");
+
 
 	//Mensaje de aviso que se esta procesando
 
@@ -583,10 +590,12 @@ void main_leezx81(void)
 
 	//si no hay este cpuloop, no se refresca la pantalla en xwindows
 	int conta;
-	for (conta=0;conta<20000;conta++) {
-		new_snap_load_zx8081_simulate_cpuloop();
-	}
-	scr_refresca_pantalla();
+    if (archivo_destino==NULL) {
+	    for (conta=0;conta<20000;conta++) {
+    		new_snap_load_zx8081_simulate_cpuloop();
+    	}
+    	scr_refresca_pantalla();
+    }
 
 
 
@@ -680,23 +689,25 @@ void main_leezx81(void)
 
 		}
 
+        if (archivo_destino==NULL) {
+            if (MACHINE_IS_ZX81) {
+                //Si carga en memoria, saltar cabecera con el nombre
 
-		if (MACHINE_IS_ZX81) {
-
-			z80_byte buffer_nombre[257];
-			int longitud_nombre=zx8081_escribe_nombre_to_string(buffer_memoria,buffer_nombre,bytes_leidos);
-			debug_printf (VERBOSE_INFO,"Total bytes read: %d Program name length: %d Program name: %s",bytes_leidos,longitud_nombre,buffer_nombre);
+                z80_byte buffer_nombre[257];
+                int longitud_nombre=zx8081_escribe_nombre_to_string(buffer_memoria,buffer_nombre,bytes_leidos);
+                debug_printf (VERBOSE_INFO,"Total bytes read: %d Program name length: %d Program name: %s",bytes_leidos,longitud_nombre,buffer_nombre);
 
 
-			//Descartar nombre
-			bytes_leidos -=longitud_nombre;
-			buffer_memoria +=longitud_nombre;
+                //Descartar nombre
+                bytes_leidos -=longitud_nombre;
+                buffer_memoria +=longitud_nombre;
 
-		}
+            }
 
-		else {
-			debug_printf (VERBOSE_INFO,"Total bytes read: %d",bytes_leidos);
-		}
+            else {
+                debug_printf (VERBOSE_INFO,"Total bytes read: %d",bytes_leidos);
+            }
+        }
 
 		debug_printf (VERBOSE_INFO,"Sound Bytes read: %u Program length (without the name):%u ",
 			      zx8081_fic_leido,bytes_leidos);
@@ -717,15 +728,21 @@ void main_leezx81(void)
 
 
 
-			if (tape_loading_simulate.v==1) {
+			if (tape_loading_simulate.v==1 && archivo_destino==NULL) {
 				new_snap_load_zx80_zx81_simulate_loading(memoria_spectrum+offset_destino,buffer_memoria,bytes_leidos);
 			}
 
 			//Igualmente lo leemos, aunque traspase ramtop
-			memcpy(memoria_spectrum+offset_destino,buffer_memoria,bytes_leidos);
+            if (archivo_destino==NULL) {
+			    memcpy(memoria_spectrum+offset_destino,buffer_memoria,bytes_leidos);
+            }
 		}
 	}
 	if (!bytes_leidos) debug_printf (VERBOSE_ERR,"Error: Program length is zero");
+
+    if (archivo_destino!=NULL) {
+        util_save_file(buffer_memoria_orig,bytes_leidos,archivo_destino);
+    }
 
 	free(buffer_memoria_orig);
 
@@ -963,11 +980,11 @@ void spec_debug_cabecera(int indice,int leidos)
 
 	for (n=0;n<10;n++) buffer_nombre[n]=spec_da_ascii(spec_smp_memory[indice+2+n]);
 	buffer_nombre[10]=0;
-	debug_printf (VERBOSE_INFO,"Read tape block. Standard Header - %s:%s",spec_tipos_fichero[tipo],buffer_nombre);
+	debug_printf (VERBOSE_INFO,"Read tape block. Standard Header - %s: %s",spec_tipos_fichero[tipo],buffer_nombre);
 
 
     if (main_spec_rwaatap_pointer_print!=NULL) {
-        sprintf (buffer_string,"Tape block. Standard Header - %s:%s\n",spec_tipos_fichero[tipo],buffer_nombre);       
+        sprintf (buffer_string,"Tape block. Standard Header - %s: %s\n",spec_tipos_fichero[tipo],buffer_nombre);       
         int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,buffer_string,main_spec_rwaatap_pointer_print_max);
         if (nocabe) return;
     }    
@@ -976,7 +993,7 @@ void spec_debug_cabecera(int indice,int leidos)
 	parm1=value_8_to_16(spec_smp_memory[indice+15],spec_smp_memory[indice+14]);
 	parm2=value_8_to_16(spec_smp_memory[indice+17],spec_smp_memory[indice+16]);
 
-	debug_printf (VERBOSE_INFO,"- Length:%u Parm1: %u Parm2: %u",len,parm1,parm2);
+	debug_printf (VERBOSE_INFO,"- Length: %u Parm1: %u Parm2: %u",len,parm1,parm2);
 
     if (main_spec_rwaatap_pointer_print!=NULL) {
         sprintf (buffer_string,"- Length:%u Parm1: %u Parm2: %u\n",len,parm1,parm2);
@@ -989,10 +1006,10 @@ void spec_debug_cabecera(int indice,int leidos)
 	if (variables<0) variables=0;
 
 	if (tipo==3) {
-		debug_printf (VERBOSE_INFO,"- Start:%u",parm1);
+		debug_printf (VERBOSE_INFO,"- Start: %u",parm1);
 
         if (main_spec_rwaatap_pointer_print!=NULL) {
-		    sprintf (buffer_string,"- Start:%u\n",parm1);
+		    sprintf (buffer_string,"- Start: %u\n",parm1);
             int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,buffer_string,main_spec_rwaatap_pointer_print_max);
             if (nocabe) return;
         }              
@@ -1000,10 +1017,10 @@ void spec_debug_cabecera(int indice,int leidos)
 
 	if (!tipo) {
 		if (parm1<=32767) {
-            debug_printf (VERBOSE_INFO,"- Variables:%u . Autorun: %d",variables,parm1);
+            debug_printf (VERBOSE_INFO,"- Variables: %u . Autorun: %d",variables,parm1);
 
             if (main_spec_rwaatap_pointer_print!=NULL) {
-                sprintf (buffer_string,"- Variables:%u . Autorun: %d\n",variables,parm1);
+                sprintf (buffer_string,"- Variables: %u . Autorun: %d\n",variables,parm1);
 
                 int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,buffer_string,main_spec_rwaatap_pointer_print_max);
                 if (nocabe) return;
@@ -1049,6 +1066,8 @@ int main_spec_rwaatap(void)
 	int spec_smp_write_index_tap_start;
 
 	debug_printf (VERBOSE_INFO,"Reading SMP audio data and converting to TAP file in memory");
+
+    debug_printf (VERBOSE_INFO,"Routine based on original program SMPATAP V1.1. (c) Cesar Hernandez Bano (10/09/1998), (31/03/2014)");
 
 
 	spec_smp_write_index_tap_start=spec_smp_write_index_tap;

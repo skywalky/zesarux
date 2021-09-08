@@ -417,6 +417,8 @@ extern int convert_smp_to_rwa_tmpdir(char *origen, char *destino);
 extern int convert_wav_to_rwa(char *origen, char *destino);
 extern int convert_wav_to_rwa_tmpdir(char *origen, char *destino);
 
+extern int convert_rwa_to_wav(char *origen, char *destino);
+
 extern int convert_tzx_to_rwa(char *origen, char *destino);
 extern int convert_tzx_to_rwa_tmpdir(char *origen, char *destino);
 //extern int convert_tzx_to_wav(char *origen, char *destino);
@@ -934,7 +936,7 @@ extern void util_normalize_query_http(char *orig,char *dest);
 extern int util_extract_scl(char *sclname, char *dest_dir);
 extern int util_extract_zip(char *zipname, char *dest_dir);
 
-extern void util_realtape_browser(char *filename, char *texto_browser,int maxima_longitud_texto);
+extern void util_realtape_browser(char *filename, char *texto_browser,int maxima_longitud_texto,char *tap_output);
 
 extern void util_get_host_url(char *url, char *host);
 extern void util_get_url_no_host(char *url, char *url_no_host);
