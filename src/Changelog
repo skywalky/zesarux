@@ -90,6 +90,7 @@ Fixed cpu-step behaviour the first time it's executed
 Fixed cursor keys up/down on Jupiter Ace
 Fixed --help and --experthelp settings: do not parse configuration file when showing help
 Fixed autoload on spectrum 48k+ spanish
+Fixed loading ZX80/81 Snapshots/Tapes when filename has more than one extension
 
 
 Some other minor bugfixes and improvements

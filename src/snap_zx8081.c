@@ -80,8 +80,10 @@ void new_tape_load_zx80(void)
 
     //Si es SMP
 
-    if (strstr(tapefile,".rwa")!=NULL || strstr(tapefile,".RWA")!=NULL || strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL
-    || strstr(tapefile,".wav")!=NULL || strstr(tapefile,".WAV")!=NULL
+
+    if (!util_compare_file_extension(tapefile,".rwa") || 
+        !util_compare_file_extension(tapefile,".smp") || 
+        !util_compare_file_extension(tapefile,".wav")
 
     ) {
         debug_printf (VERBOSE_INFO,"Tape is raw audio");
@@ -89,7 +91,7 @@ void new_tape_load_zx80(void)
     }
 
 
-    else if (strstr(tapefile,".z81")!=NULL || strstr(tapefile,".Z81")!=NULL) {
+    else if (!util_compare_file_extension(tapefile,".z81")) {
 
         debug_printf (VERBOSE_INFO,"Assume z81 snapshot is ZX81. We will hotswap later to ZX80 if needed");
         current_machine_type=121;
@@ -131,17 +133,17 @@ void new_tape_load_zx81(void)
 
 
     debug_printf (VERBOSE_INFO,"Loading tape %s. RAMTOP=%d",tapefile,variable_ramtop);
-    //if (strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL) {
-    //        debug_printf (VERBOSE_INFO,"Tape is smp - raw audio");
-    if (strstr(tapefile,".rwa")!=NULL || strstr(tapefile,".RWA")!=NULL || strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL
-    || strstr(tapefile,".wav")!=NULL || strstr(tapefile,".WAV")!=NULL
+
+
+    if (!util_compare_file_extension(tapefile,".rwa") || 
+        !util_compare_file_extension(tapefile,".smp") || 
+        !util_compare_file_extension(tapefile,".wav")
     ) {
         debug_printf (VERBOSE_INFO,"Tape is raw audio");
         new_snap_load_zx81_smp(tapefile);
     }
 
-    else if (strstr(tapefile,".z81")!=NULL || strstr(tapefile,".Z81")!=NULL) {
-
+    else if (!util_compare_file_extension(tapefile,".z81")) {
         debug_printf (VERBOSE_INFO,"Assume z81 snapshot is ZX81. We will hotswap later to ZX80 if needed");
         snap_load_zx80_zx81_load_z81_file(tapefile);
         //los registros ya nos vienen indicados en el snapshot .z81
