@@ -736,7 +736,7 @@ void main_leezx81(char *archivo_destino, char *texto_info_output,int si_load)
 			if (MACHINE_IS_ZX81) offset_destino=0x4009;
 			if (MACHINE_IS_ZX80) offset_destino=0x4000;
 
-			if (offset_destino==0) cpu_panic ("Destination dir is zero");
+			if (offset_destino==0 && si_load) cpu_panic ("Destination dir is zero");
 
 
 			if (offset_destino+bytes_leidos>ramtop_zx8081) debug_printf (VERBOSE_ERR,"Read bytes (%d) over ramtop (%d)",bytes_leidos,ramtop_zx8081);
