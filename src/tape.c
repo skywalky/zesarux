@@ -1975,10 +1975,25 @@ void realtape_load_visuals(char *filename)
 
             //por si acaso controlar maximo
             if (posicion_visual<REALTAPE_VISUAL_MAX_SIZE) {
-                printf("Writing position %d value min %d max %d\n",posicion_visual,minimo,maximo);
+                printf("Writing position %4d value min %3d max %3d ",posicion_visual,minimo,maximo);
                 realtape_visual_data[posicion_visual][0]=minimo;
                 realtape_visual_data[posicion_visual][1]=maximo;
 
+                //temporal efecto grafico
+                //Dividir todo entre 3
+                int xmin=minimo/6;
+                int xmax=maximo/6;
+                int i;
+
+                for (i=0;i<xmin;i++) {
+                    printf(" ");
+                }
+
+                for (;i<xmax;i++) {
+                    printf("#");
+                }
+
+                printf("\n");
                 posicion_visual++;
             }
             else {
