@@ -218,3 +218,5 @@ Esto permitiria ventana de hasta 4096 pixeles con definicion de onda
 - Improved algorithm quizá renombrar a “alternate” algorithm 
 
 
+-revisar otros posibles cpu_panic de tape_smp cuando se usa el browser o conversor de cinta
+
