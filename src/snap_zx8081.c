@@ -76,44 +76,43 @@ int new_tap_save_detect_zx8081(void)
 void new_tape_load_zx80(void)
 {
 
-                debug_printf (VERBOSE_INFO,"Loading tape %s",tapefile);
+    debug_printf (VERBOSE_INFO,"Loading tape %s",tapefile);
 
-		//Si es SMP
-                //if (strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL) {
-                //        debug_printf (VERBOSE_INFO,"Tape is smp - raw audio");
-                if (strstr(tapefile,".rwa")!=NULL || strstr(tapefile,".RWA")!=NULL || strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL
-		|| strstr(tapefile,".wav")!=NULL || strstr(tapefile,".WAV")!=NULL
-	
-			) {
-                        debug_printf (VERBOSE_INFO,"Tape is raw audio");
-                        new_snap_load_zx80_smp(tapefile);
-                }
+    //Si es SMP
 
+    if (strstr(tapefile,".rwa")!=NULL || strstr(tapefile,".RWA")!=NULL || strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL
+    || strstr(tapefile,".wav")!=NULL || strstr(tapefile,".WAV")!=NULL
 
-                else if (strstr(tapefile,".z81")!=NULL || strstr(tapefile,".Z81")!=NULL) {
-
-                        debug_printf (VERBOSE_INFO,"Assume z81 snapshot is ZX81. We will hotswap later to ZX80 if needed");
-                        current_machine_type=121;
-
-                        set_machine(NULL);
-                        reset_cpu();
-
-                        snap_load_zx80_zx81_load_z81_file(tapefile);
-                }
+    ) {
+        debug_printf (VERBOSE_INFO,"Tape is raw audio");
+        new_snap_load_zx80_smp(tapefile);
+    }
 
 
+    else if (strstr(tapefile,".z81")!=NULL || strstr(tapefile,".Z81")!=NULL) {
 
-		//Si es .O
-                else {
+        debug_printf (VERBOSE_INFO,"Assume z81 snapshot is ZX81. We will hotswap later to ZX80 if needed");
+        current_machine_type=121;
 
-			debug_printf (VERBOSE_INFO,"Assume format is .o/.80");
+        set_machine(NULL);
+        reset_cpu();
 
-			//Cargamos archivo en memoria
-                        new_load_zx80_o_snapshot_in_mem(tapefile);
+        snap_load_zx80_zx81_load_z81_file(tapefile);
+    }
 
-			//Y volvemos control al BASIC
-                        new_set_return_saveload_zx80();
-                }
+
+
+    //Si es .O
+    else {
+
+        debug_printf (VERBOSE_INFO,"Assume format is .o/.80");
+
+        //Cargamos archivo en memoria
+        new_load_zx80_o_snapshot_in_mem(tapefile);
+
+        //Y volvemos control al BASIC
+        new_set_return_saveload_zx80();
+    }
 
 
 }
@@ -122,47 +121,47 @@ void new_tape_load_zx80(void)
 //Funcion de carga de cinta entrando desde ROM para ZX81
 void new_tape_load_zx81(void)
 {
-        z80_int variable_ramtop;
+    z80_int variable_ramtop;
 
 
-	//ajusta variable ramtop del sistema si hay algun pack activo
-        set_ramtop_with_rampacks();
+    //ajusta variable ramtop del sistema si hay algun pack activo
+    set_ramtop_with_rampacks();
 
-        variable_ramtop=value_8_to_16(memoria_spectrum[0x4005],memoria_spectrum[0x4004]);
+    variable_ramtop=value_8_to_16(memoria_spectrum[0x4005],memoria_spectrum[0x4004]);
 
 
-                debug_printf (VERBOSE_INFO,"Loading tape %s. RAMTOP=%d",tapefile,variable_ramtop);
-                //if (strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL) {
-                //        debug_printf (VERBOSE_INFO,"Tape is smp - raw audio");
-                if (strstr(tapefile,".rwa")!=NULL || strstr(tapefile,".RWA")!=NULL || strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL
-			|| strstr(tapefile,".wav")!=NULL || strstr(tapefile,".WAV")!=NULL
-		) {
-                        debug_printf (VERBOSE_INFO,"Tape is raw audio");
-                        new_snap_load_zx81_smp(tapefile);
-                }
+    debug_printf (VERBOSE_INFO,"Loading tape %s. RAMTOP=%d",tapefile,variable_ramtop);
+    //if (strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL) {
+    //        debug_printf (VERBOSE_INFO,"Tape is smp - raw audio");
+    if (strstr(tapefile,".rwa")!=NULL || strstr(tapefile,".RWA")!=NULL || strstr(tapefile,".smp")!=NULL || strstr(tapefile,".SMP")!=NULL
+    || strstr(tapefile,".wav")!=NULL || strstr(tapefile,".WAV")!=NULL
+    ) {
+        debug_printf (VERBOSE_INFO,"Tape is raw audio");
+        new_snap_load_zx81_smp(tapefile);
+    }
 
-                else if (strstr(tapefile,".z81")!=NULL || strstr(tapefile,".Z81")!=NULL) {
+    else if (strstr(tapefile,".z81")!=NULL || strstr(tapefile,".Z81")!=NULL) {
 
-                        debug_printf (VERBOSE_INFO,"Assume z81 snapshot is ZX81. We will hotswap later to ZX80 if needed");
-                        snap_load_zx80_zx81_load_z81_file(tapefile);
-                        //los registros ya nos vienen indicados en el snapshot .z81
-                        //volver sin ejecutar el snap_load_save_zx80_zx81_setregisters_ramtop del final
-                        return;
-                }
+        debug_printf (VERBOSE_INFO,"Assume z81 snapshot is ZX81. We will hotswap later to ZX80 if needed");
+        snap_load_zx80_zx81_load_z81_file(tapefile);
+        //los registros ya nos vienen indicados en el snapshot .z81
+        //volver sin ejecutar el snap_load_save_zx80_zx81_setregisters_ramtop del final
+        return;
+    }
 
-                else {
-			debug_printf (VERBOSE_INFO,"Assume format is .p/.81");
-                        //Cargamos archivo en memoria
-                        new_load_zx81_p_snapshot_in_mem(tapefile);
-                }
+    else {
+        debug_printf (VERBOSE_INFO,"Assume format is .p/.81");
+        //Cargamos archivo en memoria
+        new_load_zx81_p_snapshot_in_mem(tapefile);
+    }
 
-        //Hacemos EX DE,HL
-        z80_int reg;
-        reg=HL;
-        HL=DE;
-        DE=reg;
+    //Hacemos EX DE,HL
+    z80_int reg;
+    reg=HL;
+    HL=DE;
+    DE=reg;
 
-        new_set_return_saveload_zx81();
+    new_set_return_saveload_zx81();
 
 
 

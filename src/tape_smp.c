@@ -689,25 +689,36 @@ void main_leezx81(char *archivo_destino)
 
 		}
 
+        int es_zx81=0;
+
         if (archivo_destino==NULL) {
-            if (MACHINE_IS_ZX81) {
-                //Si carga en memoria, saltar cabecera con el nombre
-
-                z80_byte buffer_nombre[257];
-                int longitud_nombre=zx8081_escribe_nombre_to_string(buffer_memoria,buffer_nombre,bytes_leidos);
-                debug_printf (VERBOSE_INFO,"Total bytes read: %d Program name length: %d Program name: %s",bytes_leidos,longitud_nombre,buffer_nombre);
-
-
-                //Descartar nombre
-                bytes_leidos -=longitud_nombre;
-                buffer_memoria +=longitud_nombre;
-
-            }
-
-            else {
-                debug_printf (VERBOSE_INFO,"Total bytes read: %d",bytes_leidos);
+            if (MACHINE_IS_ZX81) es_zx81=1;
+        }
+        else {
+            //Si indicamos .p, asumimos que sera zx81
+            if (!util_compare_file_extension(archivo_destino,"p")) {
+                es_zx81=1;
             }
         }
+
+        if (es_zx81) {
+            //Si carga en memoria, saltar cabecera con el nombre
+
+            z80_byte buffer_nombre[257];
+            int longitud_nombre=zx8081_escribe_nombre_to_string(buffer_memoria,buffer_nombre,bytes_leidos);
+            debug_printf (VERBOSE_INFO,"Total bytes read: %d Program name length: %d Program name: %s",bytes_leidos,longitud_nombre,buffer_nombre);
+
+
+            //Descartar nombre
+            bytes_leidos -=longitud_nombre;
+            buffer_memoria +=longitud_nombre;
+
+        }
+
+        else {
+            debug_printf (VERBOSE_INFO,"Total bytes read: %d",bytes_leidos);
+        }
+
 
 		debug_printf (VERBOSE_INFO,"Sound Bytes read: %u Program length (without the name):%u ",
 			      zx8081_fic_leido,bytes_leidos);
@@ -741,7 +752,7 @@ void main_leezx81(char *archivo_destino)
 	if (!bytes_leidos) debug_printf (VERBOSE_ERR,"Error: Program length is zero");
 
     if (archivo_destino!=NULL) {
-        util_save_file(buffer_memoria_orig,bytes_leidos,archivo_destino);
+        util_save_file(buffer_memoria,bytes_leidos,archivo_destino);
     }
 
 	free(buffer_memoria_orig);
