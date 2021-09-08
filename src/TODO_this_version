@@ -208,10 +208,10 @@ L08F7:          IN      A,(HLWPORT)
 
 - En ZX desktop a veces al iniciar o activar sale primero en negro
 
-- Browser visual cinta. Con resumen en texto de lo que se ha auto leído desde mi rutina de audio a cinta: Esto para tape browser en real tape y si es spectrum. 
+- Browser visual cinta. Con resumen en texto de lo que se ha auto leído desde mi rutina de audio a cinta: Esto para tape browser en real tape y si es spectrum. Para zx80/81 tambien?
 
 - realtape browser que pille el setting de improved algorithm yes/no
 
 - Improved algorithm quizá renombrar a “alternate” algorithm 
 
-- Convert rwa/smp/wav to P/O de zx80 y zx81
+

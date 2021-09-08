@@ -37405,8 +37405,8 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
                         "SMP to RWA",
 			            "SMP to WAV",
                         "SMP to TAP",
-                        "WAV to P",
-                        "WAV to O",                        
+                        "SMP to P",
+                        "SMP to O",                        
                         NULL};
 
                 int opcion=menu_ask_list_texto("File converter","Select conversion",opciones);
