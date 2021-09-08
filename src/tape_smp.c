@@ -220,7 +220,7 @@ int tape_block_smp_seek(int longitud,int direccion)
 //Cargar en RAM datos obtenidos del audio de SMP
 void snap_load_zx80_zx81_load_smp(void)
 {
-	main_leezx81(NULL);
+	main_leezx81(NULL,NULL,1);
 }
 
 
@@ -546,7 +546,9 @@ int zx8081_lee_todos_bytes(unsigned char *m)
 //Si archivo_destino==NULL, lo carga en memoria de la maquina
 //Si no, escribe archivo en cinta
 //Quien llama debe indicar si quiere extension P u O, aunque el contenido final es el mismo, solo cambia la extension
-void main_leezx81(char *archivo_destino)
+//texto_info_output es para obtener la descripcion de la cinta, NULL si no se obtiene
+//si_load: si es 0, indica que no hay que cargar nada en la memoria del zx80/81
+void main_leezx81(char *archivo_destino, char *texto_info_output,int si_load)
 //int main_leezx81(int argc,char *argv[])
 {
 
@@ -708,6 +710,7 @@ void main_leezx81(char *archivo_destino)
             int longitud_nombre=zx8081_escribe_nombre_to_string(buffer_memoria,buffer_nombre,bytes_leidos);
             debug_printf (VERBOSE_INFO,"Total bytes read: %d Program name length: %d Program name: %s",bytes_leidos,longitud_nombre,buffer_nombre);
 
+            if (texto_info_output!=NULL) sprintf(texto_info_output,"Total bytes read: %d Program name length: %d Program name: %s\n",bytes_leidos,longitud_nombre,buffer_nombre);
 
             //Descartar nombre
             bytes_leidos -=longitud_nombre;
@@ -717,6 +720,8 @@ void main_leezx81(char *archivo_destino)
 
         else {
             debug_printf (VERBOSE_INFO,"Total bytes read: %d",bytes_leidos);
+
+            if (texto_info_output!=NULL) sprintf(texto_info_output,"Total bytes read: %d\n",bytes_leidos);
         }
 
 
@@ -739,12 +744,12 @@ void main_leezx81(char *archivo_destino)
 
 
 
-			if (tape_loading_simulate.v==1 && archivo_destino==NULL) {
+			if (tape_loading_simulate.v==1 && archivo_destino==NULL && si_load) {
 				new_snap_load_zx80_zx81_simulate_loading(memoria_spectrum+offset_destino,buffer_memoria,bytes_leidos);
 			}
 
 			//Igualmente lo leemos, aunque traspase ramtop
-            if (archivo_destino==NULL) {
+            if (archivo_destino==NULL && si_load) {
 			    memcpy(memoria_spectrum+offset_destino,buffer_memoria,bytes_leidos);
             }
 		}

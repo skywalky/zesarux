@@ -21413,7 +21413,7 @@ void convert_realtape_to_po(char *filename, char *archivo_destino)
 
         tapefile=file_to_open;
 
-        main_leezx81(archivo_destino);
+        main_leezx81(archivo_destino,NULL,0);
 
 
 
