@@ -1925,7 +1925,77 @@ void realtape_get_byte(void)
 
 }
 
+#define REALTAPE_VISUAL_MAX_SIZE 4096
 
+//almacenar los datos que se veran en la ventana de visual real tape. Valores maximo y minimo ([0] minimo, [1] maximo)
+z80_byte realtape_visual_data[REALTAPE_VISUAL_MAX_SIZE][2];
+
+
+void realtape_load_visuals(char *filename)
+{
+    long int total_archivo=get_file_size(filename);
+
+    //Hacer trocitos de total_archivo/REALTAPE_VISUAL_MAX_SIZE de maximo
+    //4096: trozos de 1 samples
+    //8192: trozos de 2 samples
+
+    int tamanyo_trozo=total_archivo/REALTAPE_VISUAL_MAX_SIZE;
+
+    FILE *ptr_visual;
+    ptr_visual=fopen(filename,"rb");
+
+
+    if (!ptr_visual) {
+        debug_printf(VERBOSE_ERR,"Unable to open realtape file %s",filename);
+        return;
+    }
+
+    //-r 15600 -b 8 -e unsigned -c 1
+
+    int minimo,maximo;
+    int leidos=0;
+    int posicion_visual=0;
+
+    minimo=maximo=128;
+
+    while (total_archivo>0) {
+        z80_byte byte_leido;
+        fread(&byte_leido,1,1,ptr_visual);
+
+        //acumulado=acumulado+byte_leido;
+        if (byte_leido<minimo) minimo=byte_leido;
+        if (byte_leido>maximo) maximo=byte_leido;
+
+        total_archivo--;
+        leidos++;
+
+        if ((leidos%tamanyo_trozo)==0) {
+            //siguiente trozo
+            //acumulado /=tamanyo_trozo;
+
+            //por si acaso controlar maximo
+            if (posicion_visual<REALTAPE_VISUAL_MAX_SIZE) {
+                printf("Writing position %d value min %d max %d\n",posicion_visual,minimo,maximo);
+                realtape_visual_data[posicion_visual][0]=minimo;
+                realtape_visual_data[posicion_visual][1]=maximo;
+
+                posicion_visual++;
+            }
+            else {
+                debug_printf(VERBOSE_ERR,"Trying to write beyond realtape visual: %d",posicion_visual);
+                return;
+            }
+
+            minimo=maximo=128;
+
+        }
+    }
+
+    
+
+    fclose(ptr_visual);
+    
+}
 
 void realtape_insert(void)
 {
@@ -2078,6 +2148,8 @@ void realtape_insert(void)
 
 	realtape_stop_playing();
 	realtape_inserted.v=1;
+
+    realtape_load_visuals(realtape_name_rwa);
 
 
 	//Activamos realvideo para que:
