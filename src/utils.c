@@ -21349,7 +21349,8 @@ void util_realtape_browser(char *filename, char *texto_browser,int maxima_longit
 
 
 //Convierte una cinta real (wav, rwa, smp) a zx80/81 P/O
-void convert_realtape_to_po(char *filename, char *archivo_destino)
+//tambien tape browser
+void convert_realtape_to_po(char *filename, char *archivo_destino, char *texto_info_output,int si_load)
 {
 
     /*
@@ -21413,7 +21414,7 @@ void convert_realtape_to_po(char *filename, char *archivo_destino)
 
         tapefile=file_to_open;
 
-        main_leezx81(archivo_destino,NULL,0);
+        main_leezx81(archivo_destino,texto_info_output,si_load);
 
 
 

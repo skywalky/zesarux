@@ -592,7 +592,7 @@ void main_leezx81(char *archivo_destino, char *texto_info_output,int si_load)
 
 	//si no hay este cpuloop, no se refresca la pantalla en xwindows
 	int conta;
-    if (archivo_destino==NULL) {
+    if (archivo_destino==NULL && si_load) {
 	    for (conta=0;conta<20000;conta++) {
     		new_snap_load_zx8081_simulate_cpuloop();
     	}
@@ -710,7 +710,7 @@ void main_leezx81(char *archivo_destino, char *texto_info_output,int si_load)
             int longitud_nombre=zx8081_escribe_nombre_to_string(buffer_memoria,buffer_nombre,bytes_leidos);
             debug_printf (VERBOSE_INFO,"Total bytes read: %d Program name length: %d Program name: %s",bytes_leidos,longitud_nombre,buffer_nombre);
 
-            if (texto_info_output!=NULL) sprintf(texto_info_output,"Total bytes read: %d Program name length: %d Program name: %s\n",bytes_leidos,longitud_nombre,buffer_nombre);
+            if (texto_info_output!=NULL) sprintf(texto_info_output,"ZX81 Tape\nTotal bytes read: %d Program name length: %d Program name: %s\n",bytes_leidos,longitud_nombre,buffer_nombre);
 
             //Descartar nombre
             bytes_leidos -=longitud_nombre;
@@ -721,7 +721,7 @@ void main_leezx81(char *archivo_destino, char *texto_info_output,int si_load)
         else {
             debug_printf (VERBOSE_INFO,"Total bytes read: %d",bytes_leidos);
 
-            if (texto_info_output!=NULL) sprintf(texto_info_output,"Total bytes read: %d\n",bytes_leidos);
+            if (texto_info_output!=NULL) sprintf(texto_info_output,"ZX80 Tape\nTotal bytes read: %d\n",bytes_leidos);
         }
 
 
@@ -1091,6 +1091,8 @@ int main_spec_rwaatap(void)
 	//dejamos espacio para los 2 bytes que indican longitud
 	spec_smp_write_index_tap +=2;
 
+    //cuando hay browse, dice que ya se ha agregado el texto de "ZX Spectrum tape"
+    int agregado_info_inicio=0;
 
 
 	//Asignar memoria. 1 MB maximo
@@ -1174,6 +1176,15 @@ int main_spec_rwaatap(void)
 
 
 		if (spec_bytes_leidos) {
+
+            if (!agregado_info_inicio) {
+                agregado_info_inicio=1;
+
+                if (main_spec_rwaatap_pointer_print!=NULL) {          
+                    int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,"ZX Spectrum Tape\n",main_spec_rwaatap_pointer_print_max);
+                    if (nocabe) return 0;
+                }                
+            }
 
 			spec_debug_cabecera(spec_smp_write_index_tap_start+2,spec_bytes_leidos);
 

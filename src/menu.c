@@ -27181,7 +27181,14 @@ void menu_file_realtape_browser_show(char *filename)
 
 
     if (texto_browser[0]==0) {
-        strcpy(texto_browser,"Tape empty or unknown audio data");
+        //Intentamos con conversión ZX80/81
+
+        //TODO: no autodetectara cintas de ZX80, hay que seleccionar maquina ZX80 como actual para que el conversor asuma ZX80 
+        convert_realtape_to_po(filename, NULL, texto_browser,0);
+    }
+
+    if (texto_browser[0]==0) {
+        strcpy(texto_browser,"Tape empty or unknown audio data");    
     }
 
 
@@ -37432,12 +37439,12 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                         case 3:
                                 sprintf(archivo_destino,"%s/%s.p",directorio,archivo);
-                                convert_realtape_to_po(fullpath, archivo_destino);
+                                convert_realtape_to_po(fullpath, archivo_destino,NULL,0);
                         break;
 
                         case 4:
                                 sprintf(archivo_destino,"%s/%s.o",directorio,archivo);
-                                convert_realtape_to_po(fullpath, archivo_destino);
+                                convert_realtape_to_po(fullpath, archivo_destino,NULL,0);
                         break;                                              
 
                 }
@@ -37469,12 +37476,12 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                         case 2:
                                 sprintf(archivo_destino,"%s/%s.p",directorio,archivo);
-                                convert_realtape_to_po(fullpath, archivo_destino);
+                                convert_realtape_to_po(fullpath, archivo_destino,NULL,0);
                         break;
 
                         case 3:
                                 sprintf(archivo_destino,"%s/%s.o",directorio,archivo);
-                                convert_realtape_to_po(fullpath, archivo_destino);
+                                convert_realtape_to_po(fullpath, archivo_destino,NULL,0);
                         break;                                                  
 
                 }
@@ -37506,12 +37513,12 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                         case 2:
                                 sprintf(archivo_destino,"%s/%s.p",directorio,archivo);
-                                convert_realtape_to_po(fullpath, archivo_destino);
+                                convert_realtape_to_po(fullpath, archivo_destino,NULL,0);
                         break;
 
                         case 3:
                                 sprintf(archivo_destino,"%s/%s.o",directorio,archivo);
-                                convert_realtape_to_po(fullpath, archivo_destino);
+                                convert_realtape_to_po(fullpath, archivo_destino,NULL,0);
                         break;                        
 
                 }
