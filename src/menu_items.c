@@ -25023,7 +25023,7 @@ void menu_visual_realtape_overlay(void)
 	}
 
 
-
+//printf("refrescando\n");
 	//Ancho variable segun el tamanyo de ventana
 	int ancho=menu_audio_visual_realtape_window->visible_width-2;
 
