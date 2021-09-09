@@ -24992,6 +24992,20 @@ void menu_visual_realtape_overlay(void)
 
         //menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
+        //borrar lo que haya
+        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,0,"");
+        if (realtape_name!=NULL) {
+            char nombre[PATH_MAX];
+            util_get_file_no_directory(realtape_name,nombre);
+
+            char string_realtape_shown[23];
+            menu_tape_settings_trunc_name(nombre,string_realtape_shown,23);
+
+            char buffer_linea[40];
+            sprintf(buffer_linea,"Name: %s",string_realtape_shown);
+            zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,0,buffer_linea);
+        }
+
         //Average, min, max
         int elapsed_seconds=realtape_get_elapsed_seconds();
         int total_seconds=realtape_get_total_seconds();
@@ -25006,7 +25020,6 @@ void menu_visual_realtape_overlay(void)
 
         zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,buffer_texto_medio);
 
-
 	}
 
 
@@ -25019,7 +25032,7 @@ void menu_visual_realtape_overlay(void)
 
 	int alto;
 
-	int lineas_cabecera=3;
+	int lineas_cabecera=4;
 
 	alto=menu_audio_visual_realtape_window->visible_height-lineas_cabecera-2;
 
@@ -25220,7 +25233,7 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_rewind,NULL,"~~Rew");
             menu_add_item_menu_shortcut(array_menu_common,'r');
-            menu_add_item_menu_tabulado(array_menu_common,1,0);
+            menu_add_item_menu_tabulado(array_menu_common,1,2);
 
 
             char string_playpause[32];
@@ -25228,17 +25241,17 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
             else strcpy(string_playpause,"~~Play ");
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_realtape_pause_unpause,NULL,string_playpause);
             menu_add_item_menu_shortcut(array_menu_common,'p');
-            menu_add_item_menu_tabulado(array_menu_common,5,0);
+            menu_add_item_menu_tabulado(array_menu_common,5,2);
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_ffwd,NULL,"~~FF");
             menu_add_item_menu_shortcut(array_menu_common,'f');
-            menu_add_item_menu_tabulado(array_menu_common,11,0);
+            menu_add_item_menu_tabulado(array_menu_common,11,2);
 
         }
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_reinsert,NULL,"Re~~insert");
 		menu_add_item_menu_shortcut(array_menu_common,'i');
-		menu_add_item_menu_tabulado(array_menu_common,14,0);
+		menu_add_item_menu_tabulado(array_menu_common,14,2);
 
 
 
