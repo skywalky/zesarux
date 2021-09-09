@@ -208,11 +208,6 @@ L08F7:          IN      A,(HLWPORT)
 
 - En ZX desktop a veces al iniciar o activar sale primero en negro
 
-- Browser visual cinta. Que se vea la onda de sonido y un cursor por donde esta ubicado
-Habria que precargar el audio y generar esas ondas (de lo que ocupa la ventana) con la apariencia de la onda
-Con un maximo de, por ejemplo, 4096 bytes en ancho.
-Esto permitiria ventana de hasta 4096 pixeles con definicion de onda
-
 - realtape browser que pille el setting de improved algorithm yes/no
 
 - Improved algorithm quizá renombrar a “alternate” algorithm 

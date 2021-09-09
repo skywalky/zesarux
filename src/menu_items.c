@@ -5160,7 +5160,7 @@ int menu_waveform_previous_volume=0;
 #define MAX_ALTO_WAVEFORM_PIXEL_ARRAY 512
 #define MAX_ANCHO_WAVEFORM_PIXEL_ARRAY 1024
 
-
+//usado para el tipo 2 que hace scroll
 int *menu_waveform_pixel_array=NULL;
 
 zxvision_window *menu_audio_draw_sound_wave_window;
