@@ -1958,8 +1958,21 @@ z80_byte realtape_visual_data[REALTAPE_VISUAL_MAX_SIZE*2][2];
 
 int realtape_visual_total_used=REALTAPE_VISUAL_MAX_SIZE;
 
+void init_visual_real_tape(void)
+{
+    //Ponerlo todo a onda plana
+    int i;
+    for (i=0;i<REALTAPE_VISUAL_MAX_SIZE*2;i++) {
+        realtape_visual_data[i][0]=realtape_visual_data[i][1]=128;
+    }    
+}
+
 void realtape_load_visuals(char *filename)
 {
+
+    //vaciar de nuevo por si al cargar es un archivo menor que REALTAPE_VISUAL_MAX_SIZE (cosa rara) y quedan "restos" de lo anterior
+    init_visual_real_tape();
+
     long int total_archivo=get_file_size(filename);
 
     //Hacer trocitos de total_archivo/REALTAPE_VISUAL_MAX_SIZE de maximo
@@ -1967,6 +1980,9 @@ void realtape_load_visuals(char *filename)
     //8192: trozos de 2 samples
 
     int tamanyo_trozo=total_archivo/REALTAPE_VISUAL_MAX_SIZE;
+
+    //si muy pequeño
+    if (tamanyo_trozo==0) tamanyo_trozo=1;
 
     //Definimos el total usado real remultiplicando el resultado
     int realtape_visual_total_used=tamanyo_trozo*REALTAPE_VISUAL_MAX_SIZE;

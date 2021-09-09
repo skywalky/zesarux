@@ -8841,6 +8841,7 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 	screen_init_colour_table();
 
     screen_init_ext_desktop();
+    init_visual_real_tape();
 	init_screen_addr_table();
 
 	init_cpc_line_display_table();

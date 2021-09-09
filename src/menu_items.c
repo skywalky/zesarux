@@ -25096,7 +25096,8 @@ void menu_visual_realtape_overlay(void)
                     zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,y+yorigen,ESTILO_GUI_PAPEL_NORMAL);
                 }
 
-                for (;y<ymax;y++) {
+                //condicion <= porque hay que llegar hasta el valor maximo
+                for (;y<=ymax;y++) {
                     zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,y+yorigen,ESTILO_GUI_COLOR_WAVEFORM);
                 }
 
