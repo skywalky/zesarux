@@ -25249,9 +25249,13 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 
         }
 
-		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_reinsert,NULL,"Re~~insert");
-		menu_add_item_menu_shortcut(array_menu_common,'i');
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_reinsert,NULL,"R~~einsert");
+		menu_add_item_menu_shortcut(array_menu_common,'e');
 		menu_add_item_menu_tabulado(array_menu_common,14,2);
+
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_realtape_open,NULL,"~~Insert");
+		menu_add_item_menu_shortcut(array_menu_common,'i');
+		menu_add_item_menu_tabulado(array_menu_common,23,2);
 
 
 

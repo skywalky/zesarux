@@ -1067,6 +1067,7 @@ extern void menu_interface_allow_background_windows_delete_windows(void);
 extern void menu_realtape_pause_unpause(MENU_ITEM_PARAMETERS);
 extern void menu_reinsert_real_tape(void);
 extern int menu_realtape_cond(void);
+extern void menu_realtape_open(MENU_ITEM_PARAMETERS);
 
 extern int timer_osd_keyboard_menu;
 
