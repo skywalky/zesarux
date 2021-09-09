@@ -150,6 +150,8 @@ extern void menu_accessibility_settings(MENU_ITEM_PARAMETERS);
 
 extern void menu_ext_desk_settings_enable(MENU_ITEM_PARAMETERS);
 
+extern void menu_visual_realtape(MENU_ITEM_PARAMETERS);
+
 struct s_menu_debug_view_sensors_list {
     char short_name[SENSORS_MAX_SHORT_NAME];
     int fila;

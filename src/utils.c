@@ -21431,3 +21431,20 @@ void convert_realtape_to_po(char *filename, char *archivo_destino, char *texto_i
     lee_smp_ya_convertido=antes_lee_smp_ya_convertido;
 
 }
+
+//Escribe en string de destino texto tipo MM:SS segun segundos de entrada
+void util_print_minutes_seconds(int segundos_totales, char *texto)
+{
+    int minutos=segundos_totales/60;
+
+    int segundos=segundos_totales % 60;
+
+    //Si son menos de 60 minutos, formato MM:SS. Si no, MMM:SS
+
+    if (minutos<60) {
+        sprintf(texto,"%02d:%02d",minutos,segundos);
+    }
+    else {
+        sprintf(texto,"%d:%02d",minutos,segundos);
+    }
+}

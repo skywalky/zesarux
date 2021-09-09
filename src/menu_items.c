@@ -234,6 +234,7 @@ int textspeech_opcion_seleccionada=0;
 int accessibility_menu_opcion_seleccionada=0;
 int zxdesktop_set_userdef_buttons_functions_opcion_seleccionada=0;
 int colour_settings_opcion_seleccionada=0;
+int audio_visual_realtape_opcion_seleccionada=0;
 
 //Fin opciones seleccionadas para cada menu
 
@@ -24947,3 +24948,331 @@ void menu_zxdesktop_set_userdef_buttons_functions(MENU_ITEM_PARAMETERS)
         } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 }
 
+
+
+#define VISUALREALTAPE_X (menu_origin_x()+1)
+#define VISUALREALTAPE_Y 3
+#define VISUALREALTAPE_ANCHO 30
+#define VISUALREALTAPE_ALTO 15
+
+
+
+
+
+//Usado dentro del overlay de waveform, para mostrar dos veces por segundo el texto que average, etc
+int menu_visual_realtape_valor_contador_segundo_anterior;
+
+
+zxvision_window *menu_audio_visual_realtape_window;
+
+
+
+void menu_visual_realtape_overlay(void)
+{
+
+	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
+
+	char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
+
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+
+	//esto hara ejecutar esto 2 veces por segundo
+	if ( ((contador_segundo%500) == 0 && menu_visual_realtape_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+        menu_visual_realtape_valor_contador_segundo_anterior=contador_segundo;
+        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+
+        //menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
+
+        //Average, min, max
+        int elapsed_seconds=realtape_get_elapsed_seconds();
+        int total_seconds=realtape_get_total_seconds();
+
+        char buffer_elapsed[10];
+        char buffer_total[10];
+
+        util_print_minutes_seconds(elapsed_seconds,buffer_elapsed);
+        util_print_minutes_seconds(total_seconds,buffer_total);
+
+        sprintf (buffer_texto_medio,"Elapsed: %s Total: %s",buffer_elapsed,buffer_total);
+
+        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,buffer_texto_medio);
+
+
+	}
+
+
+
+	//Ancho variable segun el tamanyo de ventana
+	int ancho=menu_audio_visual_realtape_window->visible_width-2;
+
+	//Por si acaso, no vayamos a provocar alguna division por cero
+	if (ancho<1) ancho=1;
+
+	int alto;
+
+	int lineas_cabecera=3;
+
+	alto=menu_audio_visual_realtape_window->visible_height-lineas_cabecera-2;
+
+	//Por si acaso, no vayamos a provocar alguna division por cero
+	if (alto<1) alto=1;
+
+
+
+	int xorigen=1;
+	int yorigen;
+
+
+
+	yorigen=lineas_cabecera;
+
+
+	if (si_complete_video_driver() ) {
+        ancho *=menu_char_width;
+        alto *=8;
+        xorigen *=menu_char_width;
+        yorigen *=8;
+	}
+
+
+
+    int tamanyo_trozo=realtape_visual_total_used/ancho;
+
+    //compensar. Para que quepa toda la forma de onda en ventana. Si no, seguramente siempre habria un trozo al final que no se veria
+    int tamanyo_trozo_compensado=tamanyo_trozo+1;
+
+    //posicion en la cinta real tape
+    long int total=realtape_file_size;
+    long int transcurrido=realtape_file_size_counter;
+
+    int maximo_x_dibujar=realtape_visual_total_used/tamanyo_trozo_compensado;
+
+
+    //evitar divisiones por cero
+    if (total==0) total=1;
+    long int posicion_cinta_x=(transcurrido*maximo_x_dibujar)/total;
+
+    int x=0;
+
+    int minimo,maximo;
+
+    minimo=maximo=128;
+
+    int indice;
+
+    for (indice=0;indice<realtape_visual_total_used;indice++) {
+
+        z80_byte valor_leido_maximo,valor_leido_minimo;
+
+        valor_leido_minimo=realtape_visual_data[indice][0];
+        valor_leido_maximo=realtape_visual_data[indice][1];
+
+        //acumulado=acumulado+byte_leido;
+        if (valor_leido_minimo<minimo) minimo=valor_leido_minimo;
+        if (valor_leido_maximo>maximo) maximo=valor_leido_maximo;
+
+
+        if ((indice%tamanyo_trozo_compensado)==0) {
+            //siguiente trozo
+
+            //por si acaso controlar maximo
+            if (x<ancho) {
+                //escalar el alto total a lo que corresponda
+                int ymin=(minimo*alto)/256;
+                int ymax=(maximo*alto)/256;
+
+                int y;
+
+                for (y=0;y<ymin;y++) {
+                    zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,y+yorigen,ESTILO_GUI_PAPEL_NORMAL);
+                }
+
+                for (;y<ymax;y++) {
+                    zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,y+yorigen,ESTILO_GUI_COLOR_WAVEFORM);
+                }
+
+                for (;y<alto;y++) {
+                    zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,y+yorigen,ESTILO_GUI_PAPEL_NORMAL);
+                }
+
+                //Si esta el cursor de cinta aqui, dibujar linea vertical
+                if (x==posicion_cinta_x) {
+                    for (y=0;y<alto;y++) {
+                        zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,y+yorigen,ESTILO_GUI_COLOR_AVISO);
+                    }
+                }
+
+                x++;
+            }
+            else {
+                //printf("Trying to write pixel beyond realtape visual: %d\n",x);
+                return;
+            }
+
+            minimo=maximo=128;
+
+        }
+    }
+
+
+	zxvision_draw_window_contents(menu_audio_visual_realtape_window);
+
+}
+
+
+
+
+
+
+zxvision_window zxvision_window_visual_realtape;
+
+void menu_visual_realtape_rewind(MENU_ITEM_PARAMETERS)
+{
+    realtape_rewind_five();
+}
+
+void menu_visual_realtape_ffwd(MENU_ITEM_PARAMETERS)
+{
+    realtape_ffwd_five();
+}
+
+void menu_visual_realtape_reinsert(MENU_ITEM_PARAMETERS)
+{
+    if (!menu_realtape_cond() ) {
+        debug_printf(VERBOSE_ERR,"There is no real tape selected");
+        return;
+    }
+    menu_reinsert_real_tape();
+}
+
+
+void menu_visual_realtape(MENU_ITEM_PARAMETERS)
+{
+
+    menu_espera_no_tecla();
+    menu_reset_counters_tecla_repeticion();
+
+
+    zxvision_window *ventana;
+    ventana=&zxvision_window_visual_realtape;
+
+
+	//IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
+	//si no se hiciera, se crearia la misma ventana, y en la lista de ventanas activas , al redibujarse,
+	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
+	zxvision_delete_window_if_exists(ventana);
+
+	int x,y,ancho,alto;
+
+	if (!util_find_window_geometry("visualrealtape",&x,&y,&ancho,&alto)) {
+        x=VISUALREALTAPE_X;
+        y=VISUALREALTAPE_Y-2;
+        ancho=VISUALREALTAPE_ANCHO;
+        alto=VISUALREALTAPE_ALTO+4;
+	}
+
+
+	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho-1,alto-2,"Visual Real Tape");
+
+
+	ventana->can_be_backgrounded=1;
+	//indicar nombre del grabado de geometria
+	strcpy(ventana->geometry_name,"visualrealtape");
+
+	//printf("despues zxvision_new_window_nocheck_staticsize\n");
+	zxvision_draw_window(ventana);
+
+
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de audio waveform
+	set_menu_overlay_function(menu_visual_realtape_overlay);
+
+	menu_audio_visual_realtape_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+
+	//Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+	//Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+	if (zxvision_currently_restoring_windows_on_start) {
+		//printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+		return;
+	}
+
+	menu_item *array_menu_common;
+	menu_item item_seleccionado;
+	int retorno_menu;
+	do {
+
+        //borrar primera linea, por si antes hay visible opcion de view stereo/mono
+        //zxvision_print_string_defaults_fillspc(ventana,1,0,"");
+
+        menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
+
+        if (realtape_inserted.v) {
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_rewind,NULL,"~~Rew");
+            menu_add_item_menu_shortcut(array_menu_common,'r');
+            menu_add_item_menu_tabulado(array_menu_common,1,0);
+
+
+            char string_playpause[32];
+            if (realtape_playing.v) strcpy(string_playpause,"~~Pause");
+            else strcpy(string_playpause,"~~Play ");
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_realtape_pause_unpause,NULL,string_playpause);
+            menu_add_item_menu_shortcut(array_menu_common,'p');
+            menu_add_item_menu_tabulado(array_menu_common,5,0);
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_ffwd,NULL,"~~FF");
+            menu_add_item_menu_shortcut(array_menu_common,'f');
+            menu_add_item_menu_tabulado(array_menu_common,11,0);
+
+        }
+
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_reinsert,NULL,"Re~~insert");
+		menu_add_item_menu_shortcut(array_menu_common,'i');
+		menu_add_item_menu_tabulado(array_menu_common,14,0);
+
+
+
+		//Nombre de ventana solo aparece en el caso de stdout
+		retorno_menu=menu_dibuja_menu(&audio_visual_realtape_opcion_seleccionada,&item_seleccionado,array_menu_common,"Visual Real Tape" );
+
+		if (retorno_menu!=MENU_RETORNO_BACKGROUND) {
+
+			//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+			cls_menu_overlay();
+			if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+				//llamamos por valor de funcion
+				if (item_seleccionado.menu_funcion!=NULL) {
+					//printf ("actuamos por funcion\n");
+					item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+					//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+				}
+			}
+		}
+
+	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);
+
+    //Antes de restaurar funcion overlay, guardarla en estructura ventana, por si nos vamos a background
+    zxvision_set_window_overlay_from_current(ventana);
+
+    //restauramos modo normal de texto de menu
+    set_menu_overlay_function(normal_overlay_texto_menu);
+
+    //En caso de menus tabulados, suele ser necesario esto. Si no, la ventana se quedaria visible
+    cls_menu_overlay();
+
+    //Grabar geometria ventana
+    util_add_window_geometry_compact(ventana);
+
+
+    if (retorno_menu==MENU_RETORNO_BACKGROUND) {
+        zxvision_message_put_window_background();
+    }
+
+    else {
+        //En caso de menus tabulados, es responsabilidad de este de liberar ventana
+        zxvision_destroy_window(ventana);
+    }
+
+}

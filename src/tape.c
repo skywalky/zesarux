@@ -1813,10 +1813,8 @@ void realtape_get_byte_cont(void)
 //Para animar el caracter que se mueve
 int realtape_print_footer_last_char=0;
 
-void realtape_print_footer(void)
+int realtape_get_elapsed_percentage(void)
 {
-    if (realtape_inserted.v==0 || realtape_playing.v==0) return;
-    
     long int total=realtape_file_size;
     long int transcurrido=realtape_file_size_counter;
 
@@ -1826,6 +1824,34 @@ void realtape_print_footer(void)
     else progreso=(transcurrido*100)/total;
 
     if (progreso>100) progreso=100;
+
+    return progreso;
+}
+
+//Convierte una cantidad de bytes leidos en cuanto tiempo representa
+int realtape_get_seconds_numbytes(long int numero)
+{
+    //15600 hz, 8 bit
+    return numero/15600;
+}
+
+int realtape_get_elapsed_seconds(void)
+{
+    return realtape_get_seconds_numbytes(realtape_file_size_counter);
+
+}
+
+int realtape_get_total_seconds(void)
+{
+    return realtape_get_seconds_numbytes(realtape_file_size);
+
+}
+
+void realtape_print_footer(void)
+{
+    if (realtape_inserted.v==0 || realtape_playing.v==0) return;
+
+    int progreso=realtape_get_elapsed_percentage();
 
     debug_printf (VERBOSE_DEBUG,"RealTape loading progress: %d %%",progreso);
 
@@ -1925,11 +1951,12 @@ void realtape_get_byte(void)
 
 }
 
-#define REALTAPE_VISUAL_MAX_SIZE 4096
 
 //almacenar los datos que se veran en la ventana de visual real tape. Valores maximo y minimo ([0] minimo, [1] maximo)
-z80_byte realtape_visual_data[REALTAPE_VISUAL_MAX_SIZE][2];
+//Un minimo de REALTAPE_VISUAL_MAX_SIZE y maximo REALTAPE_VISUAL_MAX_SIZE*2
+z80_byte realtape_visual_data[REALTAPE_VISUAL_MAX_SIZE*2][2];
 
+int realtape_visual_total_used=REALTAPE_VISUAL_MAX_SIZE;
 
 void realtape_load_visuals(char *filename)
 {
@@ -1940,6 +1967,9 @@ void realtape_load_visuals(char *filename)
     //8192: trozos de 2 samples
 
     int tamanyo_trozo=total_archivo/REALTAPE_VISUAL_MAX_SIZE;
+
+    //Definimos el total usado real remultiplicando el resultado
+    int realtape_visual_total_used=tamanyo_trozo*REALTAPE_VISUAL_MAX_SIZE;
 
     FILE *ptr_visual;
     ptr_visual=fopen(filename,"rb");
@@ -1974,30 +2004,15 @@ void realtape_load_visuals(char *filename)
             //acumulado /=tamanyo_trozo;
 
             //por si acaso controlar maximo
-            if (posicion_visual<REALTAPE_VISUAL_MAX_SIZE) {
-                printf("Writing position %4d value min %3d max %3d ",posicion_visual,minimo,maximo);
+            if (posicion_visual<realtape_visual_total_used) {
+                //printf("Writing position %4d value min %3d max %3d\n",posicion_visual,minimo,maximo);
                 realtape_visual_data[posicion_visual][0]=minimo;
                 realtape_visual_data[posicion_visual][1]=maximo;
 
-                //temporal efecto grafico
-                //Dividir todo entre 3
-                int xmin=minimo/6;
-                int xmax=maximo/6;
-                int i;
-
-                for (i=0;i<xmin;i++) {
-                    printf(" ");
-                }
-
-                for (;i<xmax;i++) {
-                    printf("#");
-                }
-
-                printf("\n");
                 posicion_visual++;
             }
             else {
-                debug_printf(VERBOSE_ERR,"Trying to write beyond realtape visual: %d",posicion_visual);
+                //printf("Trying to write beyond realtape visual: %d\n",posicion_visual);
                 return;
             }
 

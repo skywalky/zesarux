@@ -140,6 +140,9 @@ extern void draw_tape_text_top_speed(void);
 
 extern void realtape_print_footer(void);
 
+extern long int realtape_file_size;
+extern long int realtape_file_size_counter;
+
 extern int tape_out_block_pzx_open(void);
 extern int tape_out_block_pzx_close(void);
 extern int tape_block_pzx_save(void *dir,int longitud);
@@ -148,5 +151,15 @@ extern void realtape_pause_unpause(void);
 extern int realtape_get_current_bit_playing(void);
 extern int realtape_algorithm_new_noise_reduction;
 
+#define REALTAPE_VISUAL_MAX_SIZE 4096
+
+//almacenar los datos que se veran en la ventana de visual real tape. Valores maximo y minimo ([0] minimo, [1] maximo)
+extern z80_byte realtape_visual_data[REALTAPE_VISUAL_MAX_SIZE*2][2];
+
+extern int realtape_visual_total_used;
+
+extern int realtape_get_seconds_numbytes(long int numero);
+extern int realtape_get_elapsed_seconds(void);
+extern int realtape_get_total_seconds(void);
 
 #endif
