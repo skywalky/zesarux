@@ -2179,7 +2179,8 @@ void realtape_insert(void)
 	realtape_stop_playing();
 	realtape_inserted.v=1;
 
-    realtape_load_visuals(realtape_name_rwa);
+    if (realtape_tipo==0) realtape_load_visuals(realtape_name);
+    else realtape_load_visuals(realtape_name_rwa);
 
 
 	//Activamos realvideo para que:
