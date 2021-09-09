@@ -5334,19 +5334,26 @@ void menu_audio_draw_sound_wave(void)
 	
 
 	
-		//Meter valor para array waveform, siempre que no salga de rango
-		int ydestino=(menu_audio_draw_sound_wave_valor_medio*alto)/256;
-		//ydestino=menu_audio_draw_sound_wave_ycentro-ydestino;
-		//ydestino=alto/2-ydestino;
 
-		ydestino=alto/2-(audiostats.medio*alto)/256;
-		//printf ("y destino: %d\n",ydestino);
 
-		//Siempre que estemos en el rango
-		if (ydestino>=0 && ydestino<MAX_ALTO_WAVEFORM_PIXEL_ARRAY && ancho>=0 && ancho<MAX_ANCHO_WAVEFORM_PIXEL_ARRAY) {
-			int offset_destino=ydestino*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+ancho-1;
-			menu_waveform_pixel_array[offset_destino]=ESTILO_GUI_COLOR_WAVEFORM;
-		}
+        //Indicar con linea vertical, el maximo y minimo
+        int ydestino_min=alto/2-(menu_audio_draw_sound_wave_valor_min*alto)/256;
+        int ydestino_max=alto/2-(menu_audio_draw_sound_wave_valor_max*alto)/256;
+
+
+        int ydestino;
+
+        //El valor minimo esta "mas abajo" en la pantalla, por eso en pixeles, es valor mas alto
+        //El valor maximo esta mas arriba, es valor mas bajo (Y=0 esta arriba del todo)
+        for (ydestino=ydestino_max;ydestino<=ydestino_min;ydestino++) {
+
+            //Siempre que estemos en el rango
+            if (ydestino>=0 && ydestino<MAX_ALTO_WAVEFORM_PIXEL_ARRAY && ancho>=0 && ancho<MAX_ANCHO_WAVEFORM_PIXEL_ARRAY) {
+                int offset_destino=ydestino*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY+ancho-1;
+                menu_waveform_pixel_array[offset_destino]=ESTILO_GUI_COLOR_WAVEFORM;
+            }
+
+        }
 	}
 
 
