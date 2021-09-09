@@ -25227,6 +25227,9 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
         //borrar primera linea, por si antes hay visible opcion de view stereo/mono
         //zxvision_print_string_defaults_fillspc(ventana,1,0,"");
 
+        //temp. quiza reestablecer overlay por que al llamar a menu_realtape_open, en el filesel, se resetea funcion overlay
+        //set_menu_overlay_function(menu_visual_realtape_overlay);
+
         menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
         if (realtape_inserted.v) {
