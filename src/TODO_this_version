@@ -211,11 +211,3 @@ L08F7:          IN      A,(HLWPORT)
 - realtape browser que pille el setting de improved algorithm yes/no
 
 - Improved algorithm quizá renombrar a “alternate” algorithm 
-
-
--revisar otros posibles cpu_panic de tape_smp cuando se usa el browser o conversor de cinta
-
-
--probar visual tape blocks cuando solo hay un bloque (probar por ejemplo con zzzprueba1solobloque2.tap)
-
--con cintas zx81 en tape browser, no indica bien final de bloque (no deberia indicar ninguno realmente?)

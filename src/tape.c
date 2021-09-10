@@ -2237,6 +2237,20 @@ void realtape_insert(void)
         debug_printf(VERBOSE_INFO,"Error trying to convert audio to Spectrum Tape Blocks. Probably invalid carry in some blocks");
         //de momento no tratamos el error
     }
+
+    if (visual_realtape_textbrowse[0]==0) {
+        //Intentamos con conversión ZX80/81
+
+        //TODO: no autodetectara cintas de ZX80, hay que seleccionar maquina ZX80 como actual para que el conversor asuma ZX80 
+        convert_realtape_to_po(name_to_use, NULL, visual_realtape_textbrowse,0);
+        //printf("texto: %s\n",visual_realtape_textbrowse);
+        //array de posiciones con un solo bloque
+        visual_realtape_array_positions[0]=0;
+        visual_realtape_array_positions[1]=-1;
+
+    }
+
+
     
 
 

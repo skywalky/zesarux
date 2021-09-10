@@ -710,7 +710,7 @@ void main_leezx81(char *archivo_destino, char *texto_info_output,int si_load)
             int longitud_nombre=zx8081_escribe_nombre_to_string(buffer_memoria,buffer_nombre,bytes_leidos);
             debug_printf (VERBOSE_INFO,"Total bytes read: %d Program name length: %d Program name: %s",bytes_leidos,longitud_nombre,buffer_nombre);
 
-            if (texto_info_output!=NULL) sprintf(texto_info_output,"ZX81 Tape\nTotal bytes read: %d Program name length: %d Program name: %s\n",bytes_leidos,longitud_nombre,buffer_nombre);
+            if (texto_info_output!=NULL) sprintf(texto_info_output,"ZX81 Tape\n\nTotal bytes read: %d Program name length: %d Program name: %s\n",bytes_leidos,longitud_nombre,buffer_nombre);
 
             //Descartar nombre
             bytes_leidos -=longitud_nombre;
