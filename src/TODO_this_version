@@ -212,5 +212,3 @@ L08F7:          IN      A,(HLWPORT)
 
 - Improved algorithm quizá renombrar a “alternate” algorithm 
 
-
--nombre cinta en visual real tape que tenga mayor longitud. probar con breakout... etc

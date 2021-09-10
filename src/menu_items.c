@@ -25000,10 +25000,10 @@ void menu_visual_realtape_overlay(void)
             char nombre[PATH_MAX];
             util_get_file_no_directory(realtape_name,nombre);
 
-            char string_realtape_shown[23];
-            menu_tape_settings_trunc_name(nombre,string_realtape_shown,23);
+            char string_realtape_shown[50];
+            menu_tape_settings_trunc_name(nombre,string_realtape_shown,50);
 
-            char buffer_linea[40];
+            char buffer_linea[100];
             sprintf(buffer_linea,"Name: %s",string_realtape_shown);
             zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,0,buffer_linea);
         }
