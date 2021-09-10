@@ -127,6 +127,7 @@
 #include "zvfs.h"
 #include "snap_ram.h"
 #include "sensors.h"
+#include "snap_zx8081.h"
 
 #if defined(__APPLE__)
 	#include <sys/syslimits.h>
@@ -34284,6 +34285,13 @@ void menu_realtape_algorithm_new_noise_reduction(MENU_ITEM_PARAMETERS)
     menu_ventana_scanf_numero_enhanced("Noise reduction",&realtape_algorithm_new_noise_reduction,4,+1,0,127,0);  
 }
 
+
+void menu_tape_zx8081_disable_tape_traps(MENU_ITEM_PARAMETERS)
+{
+    zx8081_disable_tape_traps.v ^=1;
+}
+
+
 //menu tape settings
 void menu_settings_tape(MENU_ITEM_PARAMETERS)
 {
@@ -34328,6 +34336,12 @@ void menu_settings_tape(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_tzx_suppress_pause,NULL,"[%c] TZX delete pause", (tzx_suppress_pause.v==1 ? 'X' : ' '));
                         menu_add_item_menu_tooltip(array_menu_settings_tape,"Do not follow pauses on TZX tapes");
                         menu_add_item_menu_ayuda(array_menu_settings_tape,"Do not follow pauses on TZX tapes");
+
+            if (MACHINE_IS_ZX8081) {
+			    menu_add_item_menu_format(array_menu_settings_tape,MENU_OPCION_NORMAL,menu_tape_zx8081_disable_tape_traps,NULL,"[%c] Tape traps", (zx8081_disable_tape_traps.v==1 ? ' ' : 'X'));
+                menu_add_item_menu_tooltip(array_menu_settings_tape,"Enable tape traps on ZX80/81");
+                menu_add_item_menu_ayuda(array_menu_settings_tape,"Enable tape traps on ZX80/81");
+            }
 
 
 

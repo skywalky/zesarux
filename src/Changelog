@@ -28,6 +28,7 @@ Added ZSF snapshot support for Jupiter Ace, Z88
 Added --slotcard-num setting to insert a Z88 card in a numbered slot (1, 2 or 3)
 Added ZRCP command mmc-reload to reload MMC image
 Added ZEsarUX logo on the window footer
+Added setting to disable ZX80/81 tape traps
 Added wav/rwa/smp tape audio browser, to view Spectrum/ZX80/ZX81 tape blocks from audio file
 Added Visual Real Tape. Now you can have an audio render of your tape, see tape blocks and rewind or move forward the cassette player 
 

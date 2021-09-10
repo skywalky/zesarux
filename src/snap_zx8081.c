@@ -52,6 +52,8 @@ FILE *ptr_zx8081file;
 char nombre_cinta_load_nombre_81[PATH_MAX];
 
 
+//Si desactivamos tape traps del zx80/81
+z80_bit zx8081_disable_tape_traps={0};
 
 /* Inicio funciones principales */
 
@@ -355,6 +357,9 @@ int new_tap_save_detect_zx80(void)
 
 int new_tap_load_detect_zx81(void)
 {
+    
+    if (zx8081_disable_tape_traps.v) return 0;
+    
         if (reg_pc!=0x0347) return 0;
         //if (reg_pc!=0x0340) return 0;
 
@@ -487,6 +492,8 @@ int new_tap_load_detect_zx81(void)
 
 int new_tap_load_detect_zx80(void)
 {
+    if (zx8081_disable_tape_traps.v) return 0;
+    
         if (reg_pc!=0x0206) return 0;
         if (tapefile==0) return 0;
         //if (tape_load_inserted.v==0) return 0;

@@ -49,5 +49,6 @@ extern void new_load_zx81_set_common_registers(z80_int ramtopvalue);
 extern void new_snap_load_zx80_smp(char *archivo);
 extern void new_snap_load_zx81_smp(char *archivo);
 
+extern z80_bit zx8081_disable_tape_traps;
 
 #endif
