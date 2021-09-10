@@ -1973,9 +1973,10 @@ char visual_realtape_textbrowse[MAX_TEXTO_BROWSER];
 #define VISUAL_REALTAPE_MAX_POSITIONS 256
 long visual_realtape_array_positions[VISUAL_REALTAPE_MAX_POSITIONS];
 
-//0= spectrum
-//1= zx81
+//0=unknown
+//1= spectrum
 //2= zx80
+//3= zx81
 int realtape_visual_detected_tape_type=0;
 
 void init_visual_real_tape(void)
@@ -2232,6 +2233,7 @@ void realtape_insert(void)
 
 
     //precargar posiciones de cada bloque en cinta para luego mostrar en Visual Real Tape
+    realtape_visual_detected_tape_type=0; //de momento tipo desconocido
     int codigo_retorno;
     util_realtape_browser(name_to_use, visual_realtape_textbrowse,MAX_TEXTO_BROWSER,NULL, 
         visual_realtape_array_positions, VISUAL_REALTAPE_MAX_POSITIONS,&codigo_retorno);
@@ -2251,10 +2253,8 @@ void realtape_insert(void)
         visual_realtape_array_positions[0]=0;
         visual_realtape_array_positions[1]=-1;
 
-        //por defecto asumimos zx81
-        realtape_visual_detected_tape_type=1;
 
-        //pero si el texto empieza con "ZX80 Tape", es ZX80
+        //si el texto empieza con "ZX80 Tape", es ZX80
         if (visual_realtape_textbrowse[0]=='Z' &&
             visual_realtape_textbrowse[1]=='X' &&
             visual_realtape_textbrowse[2]=='8' &&
@@ -2263,11 +2263,20 @@ void realtape_insert(void)
             realtape_visual_detected_tape_type=2;
         }
 
+        //si el texto empieza con "ZX81 Tape", es ZX81
+        if (visual_realtape_textbrowse[0]=='Z' &&
+            visual_realtape_textbrowse[1]=='X' &&
+            visual_realtape_textbrowse[2]=='8' &&
+            visual_realtape_textbrowse[3]=='1') {
+             
+            realtape_visual_detected_tape_type=3;
+        }        
+
     }
 
     else {
         //cinta spectrum
-        realtape_visual_detected_tape_type=0;
+        realtape_visual_detected_tape_type=1;
     }
 
 

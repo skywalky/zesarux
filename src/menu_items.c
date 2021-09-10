@@ -25008,22 +25008,22 @@ void menu_visual_realtape_overlay(void)
             zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,0,buffer_linea);
         }
 
-        //Tipo cinta
-        switch (realtape_visual_detected_tape_type) {
-            case 1:
-                zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,"Type: ZX81");
-            break;
+        char *tipos_cinta[]={
+            "Type: Unknown",
+            "Type: ZX Spectrum",
+            "Type: ZX80",
+            "Type: ZX81"
+        };
 
-            case 2:
-                zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,"Type: ZX80");
-            break;
-
-            default:
-                zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,"Type: ZX Spectrum or unknown");
-            break;
-
-
+        //por si acaso
+        if (realtape_visual_detected_tape_type>3) {
+            zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,"Error geting file type");
         }
+
+        else {
+            zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,tipos_cinta[realtape_visual_detected_tape_type]);
+        }
+
 
         //Average, min, max
         int elapsed_seconds=realtape_get_elapsed_seconds();

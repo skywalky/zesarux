@@ -211,3 +211,6 @@ L08F7:          IN      A,(HLWPORT)
 - realtape browser que pille el setting de improved algorithm yes/no
 
 - Improved algorithm quizá renombrar a “alternate” algorithm 
+
+
+-nombre cinta en visual real tape que tenga mayor longitud. probar con breakout... etc
