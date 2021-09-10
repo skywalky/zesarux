@@ -691,16 +691,27 @@ void main_leezx81(char *archivo_destino, char *texto_info_output,int si_load)
 
 		}
 
-        int es_zx81=0;
+        //asumimos zx81
+        int es_zx81=1;
 
+        //las detecciones de abajo un tanto redundantes, por defecto es zx81, pero las dejo por si cambio el de defecto
+        //en el caso de tape browser, depende exclusivamente de la maquina que tengamos seleccionada,
+        //dado que no indicamos extension destino y por tanto:
+        //Si el usuario tiene seleccionada maquina zx80, hara browse suponiendo que es zx80
+        //Si el usuario tiene seleccionada cualquier otra maquina, hara browse suponiendo que es zx81
         if (archivo_destino==NULL) {
             if (MACHINE_IS_ZX81) es_zx81=1;
+            if (MACHINE_IS_ZX80) es_zx81=0;
         }
         else {
             //Si indicamos .p, asumimos que sera zx81
             if (!util_compare_file_extension(archivo_destino,"p")) {
                 es_zx81=1;
             }
+
+            if (!util_compare_file_extension(archivo_destino,"o")) {
+                es_zx81=0;
+            }            
         }
 
         if (es_zx81) {

@@ -106,7 +106,7 @@ extern void realtape_ffwd_five(void);
 extern void realtape_rewind_one(void);
 extern void realtape_ffwd_one(void);
 
-
+extern int realtape_visual_detected_tape_type;
 extern char *realtape_name;
 
 extern char realtape_volumen;

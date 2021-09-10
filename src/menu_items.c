@@ -25008,6 +25008,23 @@ void menu_visual_realtape_overlay(void)
             zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,0,buffer_linea);
         }
 
+        //Tipo cinta
+        switch (realtape_visual_detected_tape_type) {
+            case 1:
+                zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,"Type: ZX81");
+            break;
+
+            case 2:
+                zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,"Type: ZX80");
+            break;
+
+            default:
+                zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,"Type: ZX Spectrum or unknown");
+            break;
+
+
+        }
+
         //Average, min, max
         int elapsed_seconds=realtape_get_elapsed_seconds();
         int total_seconds=realtape_get_total_seconds();
@@ -25020,13 +25037,13 @@ void menu_visual_realtape_overlay(void)
 
         sprintf (buffer_texto_medio,"Elapsed: %s Total: %s",buffer_elapsed,buffer_total);
 
-        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,buffer_texto_medio);
+        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,2,buffer_texto_medio);
 
 
         //de momento borrar esas lineas
-        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,2,"");
         zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,3,"");
         zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,4,"");
+        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,5,"");
 
         //Ver el bloque que corresponde a esta posicion
 
@@ -25087,7 +25104,7 @@ void menu_visual_realtape_overlay(void)
                     buffer_linea[indice_destino]=buf_texto_bloque[i];
                     if (buf_texto_bloque[i]=='\n') {
                         buffer_linea[indice_destino]=0;
-                        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,2+linea,buffer_linea);
+                        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,3+linea,buffer_linea);
 
                         indice_destino=0;
 
@@ -25115,7 +25132,8 @@ void menu_visual_realtape_overlay(void)
 
 	int alto;
 
-	int lineas_cabecera=7;
+    //lineas de separacion por encima de la onda de audio
+	int lineas_cabecera=8;
 
 	alto=menu_audio_visual_realtape_window->visible_height-lineas_cabecera-2;
 
@@ -25381,10 +25399,10 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_rewind,NULL,"~~Rew");
             menu_add_item_menu_shortcut(array_menu_common,'r');
-            menu_add_item_menu_tabulado(array_menu_common,1,5);
+            menu_add_item_menu_tabulado(array_menu_common,1,6);
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_rewind_one,NULL,"Rew 1%%");
-            menu_add_item_menu_tabulado(array_menu_common,5,5);
+            menu_add_item_menu_tabulado(array_menu_common,5,6);
 
 
             char string_playpause[32];
@@ -25392,14 +25410,14 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
             else strcpy(string_playpause,"~~Play ");
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_realtape_pause_unpause,NULL,string_playpause);
             menu_add_item_menu_shortcut(array_menu_common,'p');
-            menu_add_item_menu_tabulado(array_menu_common,12,5);
+            menu_add_item_menu_tabulado(array_menu_common,12,6);
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_ffwd_one,NULL,"FF 1%%");
-            menu_add_item_menu_tabulado(array_menu_common,18,5);
+            menu_add_item_menu_tabulado(array_menu_common,18,6);
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_ffwd,NULL,"~~FF");
             menu_add_item_menu_shortcut(array_menu_common,'f');
-            menu_add_item_menu_tabulado(array_menu_common,24,5);
+            menu_add_item_menu_tabulado(array_menu_common,24,6);
 
          
 
@@ -25407,11 +25425,11 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_reinsert,NULL,"R~~einsert");
 		menu_add_item_menu_shortcut(array_menu_common,'e');
-		menu_add_item_menu_tabulado(array_menu_common,27,5);
+		menu_add_item_menu_tabulado(array_menu_common,27,6);
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_insert,NULL,"~~Insert");
 		menu_add_item_menu_shortcut(array_menu_common,'i');
-		menu_add_item_menu_tabulado(array_menu_common,36,5);
+		menu_add_item_menu_tabulado(array_menu_common,36,6);
 
 
 
