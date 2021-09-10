@@ -882,6 +882,8 @@ struct s_estilos_gui {
         int color_waveform;  //Color para forma de onda en view waveform
         int color_unused_visualmem; //Color para zona no usada en visualmem
 
+        int color_block_visualtape; //Color para el bloque marcado en Visual Real Tape
+
 
 	int papel_opcion_marcada; //Color para opcion marcada, de momento solo usado en osd keyboard
 	int tinta_opcion_marcada; 
@@ -976,6 +978,8 @@ extern int lowericon_realtape_frame;
 
 #define ESTILO_GUI_COLOR_WAVEFORM (definiciones_estilos_gui[estilo_gui_activo].color_waveform)
 #define ESTILO_GUI_COLOR_UNUSED_VISUALMEM (definiciones_estilos_gui[estilo_gui_activo].color_unused_visualmem)
+
+#define ESTILO_GUI_COLOR_BLOCK_VISUALTAPE (definiciones_estilos_gui[estilo_gui_activo].color_block_visualtape)
 
 #define ESTILO_GUI_MUESTRA_CURSOR (definiciones_estilos_gui[estilo_gui_activo].muestra_cursor)
 #define ESTILO_GUI_MUESTRA_RECUADRO (definiciones_estilos_gui[estilo_gui_activo].muestra_recuadro)
@@ -1132,6 +1136,13 @@ extern void menu_copy_clipboard(char *texto);
 extern int menu_change_memory_zone_list_title(char *titulo);
 extern void menu_set_memzone(int valor_opcion);
 extern void menu_network_error(int error);
+
+
+//Tamanyo del array de char asignado para el browser de file utils
+//#define MAX_TEXTO_BROWSER 65536
+//Debe ser algo menor que MAX_TEXTO_GENERIC_MESSAGE
+#define MAX_TEXTO_BROWSER (MAX_TEXTO_GENERIC_MESSAGE-1024)
+
 
 #define MAX_LAST_FILESUSED 18
 

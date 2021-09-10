@@ -103,6 +103,9 @@ extern z80_bit realtape_loading_sound;
 
 extern void realtape_rewind_five(void);
 extern void realtape_ffwd_five(void);
+extern void realtape_rewind_one(void);
+extern void realtape_ffwd_one(void);
+
 
 extern char *realtape_name;
 
@@ -162,5 +165,8 @@ extern int realtape_get_seconds_numbytes(long int numero);
 extern int realtape_get_elapsed_seconds(void);
 extern int realtape_get_total_seconds(void);
 extern void init_visual_real_tape(void);
+
+extern char visual_realtape_textbrowse[];
+extern long visual_realtape_array_positions[];
 
 #endif

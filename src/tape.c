@@ -1888,7 +1888,7 @@ void realtape_print_footer(void)
 }
 
 //comun para ambos. si accion=1, es avanzar
-void realtape_rewind_ffwd_five(int accion)
+void realtape_rewind_ffwd_common(int accion,int porcentaje)
 {
     if (realtape_inserted.v==0) {
         debug_printf(VERBOSE_ERR,"No real tape inserted");
@@ -1900,7 +1900,7 @@ void realtape_rewind_ffwd_five(int accion)
 
     //tenemos precisamente lo transcurrido asi que no hay que obtener la posicion con fget
     //cuanto es 5% del total
-    long int offset=(total*5)/100;
+    long int offset=(total*porcentaje)/100;
 
     if (accion) {
         //avanzar
@@ -1922,16 +1922,26 @@ void realtape_rewind_ffwd_five(int accion)
 //rebobina 5%
 void realtape_rewind_five(void)
 {
-    realtape_rewind_ffwd_five(0);
+    realtape_rewind_ffwd_common(0,5);
 }
 
 //avanza 5%
 void realtape_ffwd_five(void)
 {
-    realtape_rewind_ffwd_five(1);
+    realtape_rewind_ffwd_common(1,5);
 }
 
+//rebobina 1%
+void realtape_rewind_one(void)
+{
+    realtape_rewind_ffwd_common(0,1);
+}
 
+//avanza 1%
+void realtape_ffwd_one(void)
+{
+    realtape_rewind_ffwd_common(1,1);
+}
 
 void realtape_delete_footer(void)
 {
@@ -1958,6 +1968,13 @@ z80_byte realtape_visual_data[REALTAPE_VISUAL_MAX_SIZE*2][2];
 
 int realtape_visual_total_used=REALTAPE_VISUAL_MAX_SIZE;
 
+char visual_realtape_textbrowse[MAX_TEXTO_BROWSER];
+
+#define VISUAL_REALTAPE_MAX_POSITIONS 256
+long visual_realtape_array_positions[VISUAL_REALTAPE_MAX_POSITIONS];
+
+
+
 void init_visual_real_tape(void)
 {
     //Ponerlo todo a onda plana
@@ -1965,6 +1982,9 @@ void init_visual_real_tape(void)
     for (i=0;i<REALTAPE_VISUAL_MAX_SIZE*2;i++) {
         realtape_visual_data[i][0]=realtape_visual_data[i][1]=128;
     }    
+
+    //Inicializar array de posiciones
+    visual_realtape_array_positions[0]=-1;
 }
 
 void realtape_load_visuals(char *filename)
@@ -2195,8 +2215,22 @@ void realtape_insert(void)
 	realtape_stop_playing();
 	realtape_inserted.v=1;
 
-    if (realtape_tipo==0) realtape_load_visuals(realtape_name);
-    else realtape_load_visuals(realtape_name_rwa);
+    char *name_to_use;
+
+    if (realtape_tipo==0) {
+        name_to_use=realtape_name;
+    }
+    else {
+        name_to_use=realtape_name_rwa;
+    }
+
+    realtape_load_visuals(name_to_use);
+
+
+
+    //precargar posiciones de cada bloque en cinta para luego mostrar en Visual Real Tape
+    util_realtape_browser(name_to_use, visual_realtape_textbrowse,MAX_TEXTO_BROWSER,NULL, visual_realtape_array_positions, VISUAL_REALTAPE_MAX_POSITIONS);
+    
 
 
 	//Activamos realvideo para que:

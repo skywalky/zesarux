@@ -24972,7 +24972,9 @@ int menu_visual_realtape_valor_contador_segundo_anterior;
 
 zxvision_window *menu_audio_visual_realtape_window;
 
-
+//offsets donde empieza y acaba bloque actual
+long int menu_visual_realtape_bloque_posicion_inicio=-1;
+long int menu_visual_realtape_bloque_posicion_final=-1;
 
 void menu_visual_realtape_overlay(void)
 {
@@ -24984,8 +24986,8 @@ void menu_visual_realtape_overlay(void)
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
-	//esto hara ejecutar esto 2 veces por segundo
-	if ( ((contador_segundo%500) == 0 && menu_visual_realtape_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+	//esto hara ejecutar esto 5 veces por segundo
+	if ( ((contador_segundo%200) == 0 && menu_visual_realtape_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
 
         menu_visual_realtape_valor_contador_segundo_anterior=contador_segundo;
         //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
@@ -25020,6 +25022,95 @@ void menu_visual_realtape_overlay(void)
 
         zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,1,buffer_texto_medio);
 
+
+        //de momento borrar esas lineas
+        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,2,"");
+        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,3,"");
+        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,4,"");
+
+        //Ver el bloque que corresponde a esta posicion
+
+        int i;
+
+        for (i=0;visual_realtape_array_positions[i]!=-1;i++) {
+
+            //en cuanto nuestra posicion es menor que la leida del array, retornamos la anterior 
+            //printf("posicion actual: %ld array: %ld\n",realtape_file_size_counter,visual_realtape_array_positions[i]);
+
+            if (visual_realtape_array_positions[i]>realtape_file_size_counter || visual_realtape_array_positions[i]==-1) break;
+        }
+
+        //printf("posicion real tape: %d\n",i);
+
+
+        if (i>0) {
+            i--;
+   
+            int posicion_buscar=i;
+            //printf("Bloque %i position marker: %ld\n",posicion_buscar,visual_realtape_array_positions[posicion_buscar]);
+
+            menu_visual_realtape_bloque_posicion_inicio=visual_realtape_array_positions[posicion_buscar];
+            menu_visual_realtape_bloque_posicion_final=visual_realtape_array_positions[posicion_buscar+1];
+
+            //Ahora localizar ese bloque dentro del texto. Cada texto empieza con dos saltos de linea seguidos
+            int conteo_bloque=-1;
+            int encontrado=0;
+            for (i=0;visual_realtape_textbrowse[i] && !encontrado;i++) {
+                if (visual_realtape_textbrowse[i]=='\n' && visual_realtape_textbrowse[i+1]=='\n') {
+                    conteo_bloque++;
+                    if (conteo_bloque==posicion_buscar) encontrado=1;
+                }
+            }
+            if (encontrado) {
+                //ahora pasar ese texto a otro string
+                char buf_texto_bloque[1024];
+                int indice_destino=0;
+                int encontrado_final=0;
+                //saltar primer salto de linea
+                i++;
+                for (;visual_realtape_textbrowse[i] && !encontrado_final;i++) {
+                    buf_texto_bloque[indice_destino++]=visual_realtape_textbrowse[i];
+                    if (visual_realtape_textbrowse[i]=='\n' && visual_realtape_textbrowse[i+1]=='\n') {
+                        encontrado_final=1;
+                    }
+                }
+
+                buf_texto_bloque[indice_destino]=0;
+
+                //Y escribirlo. Al menos en dos lineas
+                char buffer_linea[1024];
+                int linea=0;
+                int i;
+                indice_destino=0;
+                for (i=0;buf_texto_bloque[i];i++) {
+
+                    buffer_linea[indice_destino]=buf_texto_bloque[i];
+                    if (buf_texto_bloque[i]=='\n') {
+                        buffer_linea[indice_destino]=0;
+                        zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,2+linea,buffer_linea);
+
+                        //temp
+                        int j;
+                        printf("--\n");
+                        for (j=0;buffer_linea[j];j++) {
+                            printf("%d ",buffer_linea[j]);
+                        }
+                        printf("\n");
+
+                        indice_destino=0;
+
+                        linea++;
+                        if (linea==3) break;
+                    }
+                    else {
+                        indice_destino++;
+                    }
+                }
+                
+            }
+     
+        }
+
 	}
 
 
@@ -25032,7 +25123,7 @@ void menu_visual_realtape_overlay(void)
 
 	int alto;
 
-	int lineas_cabecera=4;
+	int lineas_cabecera=7;
 
 	alto=menu_audio_visual_realtape_window->visible_height-lineas_cabecera-2;
 
@@ -25082,6 +25173,11 @@ void menu_visual_realtape_overlay(void)
 
     int indice;
 
+    //printf("bloque posicion inicio %ld final %ld\n",menu_visual_realtape_bloque_posicion_inicio,menu_visual_realtape_bloque_posicion_final);
+    //printf("ajustado bloque posicion inicio %ld final %ld\n",
+    //    (menu_visual_realtape_bloque_posicion_inicio*maximo_x_dibujar)/total,
+    //    (menu_visual_realtape_bloque_posicion_final*maximo_x_dibujar)/total);
+
     for (indice=0;indice<realtape_visual_total_used;indice++) {
 
         z80_byte valor_leido_maximo,valor_leido_minimo;
@@ -25103,19 +25199,59 @@ void menu_visual_realtape_overlay(void)
                 int ymin=(minimo*alto)/256;
                 int ymax=(maximo*alto)/256;
 
+                int color_fondo=ESTILO_GUI_PAPEL_NORMAL;
+
+                //Ver si estamos dibujando zona que esta entre los margenes del bloque actual
+                //menu_visual_realtape_bloque_posicion_inicio, menu_visual_realtape_bloque_posicion_final
+                //Convertir umbrales a posicion x
+
+                //importante que sean long it igual que menu_visual_realtape_bloque_posicion_inicio,
+                //sino, luego al multiplicar mas abajo podemos salirnos de rango facilmente
+                long int umbral_min=menu_visual_realtape_bloque_posicion_inicio;
+                long int umbral_max=menu_visual_realtape_bloque_posicion_final;
+
+                if (umbral_min!=-1) {
+                    umbral_min=(umbral_min*maximo_x_dibujar)/total;
+                }
+
+                if (umbral_max!=-1) {
+                    umbral_max=(umbral_max*maximo_x_dibujar)/total;
+                }
+
+
+                //printf("cursor %d umbrales %d %d\n",x,umbral_min,umbral_max);
+                //printf("xxx %ld\n",realtape_visual_total_used*tamanyo_trozo_compensado);
+
+                if (umbral_min!=-1) {
+                    if (x>=umbral_min) {
+                        if (umbral_max==-1 ||  //Esto indica que no hay siguiente bloque
+                                x < umbral_max) {
+
+                            //printf("cambio color x: %d min %ld max %ld\n",x,umbral_min,umbral_max);
+
+                            color_fondo=ESTILO_GUI_COLOR_BLOCK_VISUALTAPE;
+                        }
+                    }
+                }
+                
+
                 int y;
 
+                //0,0 es arriba del todo
+                //dado que empezamos dibujando hasta ymin y luego hasta ymax, queremos que nuestro ymin se vea abajo del todo
+                //por eso restamos siempre alto-
+
                 for (y=0;y<ymin;y++) {
-                    zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,y+yorigen,ESTILO_GUI_PAPEL_NORMAL);
+                    zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,(alto-1-y)+yorigen,color_fondo);
                 }
 
                 //condicion <= porque hay que llegar hasta el valor maximo
                 for (;y<=ymax;y++) {
-                    zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,y+yorigen,ESTILO_GUI_COLOR_WAVEFORM);
+                    zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,(alto-1-y)+yorigen,ESTILO_GUI_COLOR_WAVEFORM);
                 }
 
                 for (;y<alto;y++) {
-                    zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,y+yorigen,ESTILO_GUI_PAPEL_NORMAL);
+                    zxvision_putpixel(menu_audio_visual_realtape_window,x+xorigen,(alto-1-y)+yorigen,color_fondo);
                 }
 
                 //Si esta el cursor de cinta aqui, dibujar linea vertical
@@ -25157,6 +25293,16 @@ void menu_visual_realtape_rewind(MENU_ITEM_PARAMETERS)
 void menu_visual_realtape_ffwd(MENU_ITEM_PARAMETERS)
 {
     realtape_ffwd_five();
+}
+
+void menu_visual_realtape_rewind_one(MENU_ITEM_PARAMETERS)
+{
+    realtape_rewind_one();
+}
+
+void menu_visual_realtape_ffwd_one(MENU_ITEM_PARAMETERS)
+{
+    realtape_ffwd_one();
 }
 
 void menu_visual_realtape_reinsert(MENU_ITEM_PARAMETERS)
@@ -25236,7 +25382,10 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_rewind,NULL,"~~Rew");
             menu_add_item_menu_shortcut(array_menu_common,'r');
-            menu_add_item_menu_tabulado(array_menu_common,1,2);
+            menu_add_item_menu_tabulado(array_menu_common,1,5);
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_rewind_one,NULL,"Rew 1%%");
+            menu_add_item_menu_tabulado(array_menu_common,5,5);
 
 
             char string_playpause[32];
@@ -25244,21 +25393,26 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
             else strcpy(string_playpause,"~~Play ");
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_realtape_pause_unpause,NULL,string_playpause);
             menu_add_item_menu_shortcut(array_menu_common,'p');
-            menu_add_item_menu_tabulado(array_menu_common,5,2);
+            menu_add_item_menu_tabulado(array_menu_common,12,5);
+
+            menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_ffwd_one,NULL,"FF 1%%");
+            menu_add_item_menu_tabulado(array_menu_common,18,5);
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_ffwd,NULL,"~~FF");
             menu_add_item_menu_shortcut(array_menu_common,'f');
-            menu_add_item_menu_tabulado(array_menu_common,11,2);
+            menu_add_item_menu_tabulado(array_menu_common,24,5);
+
+         
 
         }
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_reinsert,NULL,"R~~einsert");
 		menu_add_item_menu_shortcut(array_menu_common,'e');
-		menu_add_item_menu_tabulado(array_menu_common,14,2);
+		menu_add_item_menu_tabulado(array_menu_common,27,5);
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_realtape_open,NULL,"~~Insert");
 		menu_add_item_menu_shortcut(array_menu_common,'i');
-		menu_add_item_menu_tabulado(array_menu_common,23,2);
+		menu_add_item_menu_tabulado(array_menu_common,36,5);
 
 
 

@@ -6,6 +6,7 @@ There are lots of changes in this version, but some of them are remarkable:
 - "Time machine" features: Automatic Snapshots to RAM + Rewind feature, backwards debugging, backwards run
 - Realtime translation of text adventure games in a ZEsarUX window
 - Can render any image from a Speccy Text Adventure (supported parsers: Quill, Paws, Daad, Gac)
+- Added Visual Real Tape. Now you can have an audio render of your tape, see tape blocks and rewind or move forward the cassette player 
 - Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80
 - Allow customize upper buttons to actions
 - Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
@@ -28,7 +29,7 @@ Added --slotcard-num setting to insert a Z88 card in a numbered slot (1, 2 or 3)
 Added ZRCP command mmc-reload to reload MMC image
 Added ZEsarUX logo on the window footer
 Added wav/rwa/smp tape audio browser, to view Spectrum/ZX80/ZX81 tape blocks from audio file
-Added Visual Real Tape to see loading "wave"
+Added Visual Real Tape. Now you can have an audio render of your tape, see tape blocks and rewind or move forward the cassette player 
 
 Added file converters: 
 - wav/rwa/smp to tap

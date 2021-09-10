@@ -150,7 +150,7 @@ int tape_block_smp_open(void)
 
 
 
-		main_spec_rwaatap();
+		main_spec_rwaatap(NULL,0);
 
 
 		return 0;
@@ -964,6 +964,19 @@ int spec_lee_8_bits(void)
 char *main_spec_rwaatap_pointer_print=NULL;
 int main_spec_rwaatap_pointer_print_max=0;
 
+//posicion anterior al leer el bloque
+long spec_last_file_position;
+
+//puntero a array de enteros donde se almacenaran las posiciones de cada bloque. Finaliza con 0
+//indicar NULL si no se quiere
+long *spec_array_block_positions;
+
+//maximo posible a indicar de arrays
+int spec_max_array_block_positions;
+
+//conteo actual de posiciones escritas
+int spec_current_block_positions;
+
 void spec_debug_cabecera(int indice,int leidos)
 //Escribe tipo de fichero
 {
@@ -974,6 +987,14 @@ void spec_debug_cabecera(int indice,int leidos)
 	char buffer_nombre[11];
 
     char buffer_string[1024];
+
+    //Indicar posicion del archivo en array. Contar que haya que poner el del final, de ahi a comparar  -1
+    if (spec_array_block_positions!=NULL) {
+        if (spec_current_block_positions<spec_max_array_block_positions-1) {
+            //printf("Previous position in file: %ld\n",spec_last_file_position);
+            spec_array_block_positions[spec_current_block_positions++]=spec_last_file_position;
+        }
+    }
 
 	if (leidos!=19) {
 		debug_printf (VERBOSE_INFO,"Read tape block. %s:%d . Length: %d",
@@ -1063,13 +1084,20 @@ void spec_debug_cabecera(int indice,int leidos)
 
 }
 
-int main_spec_rwaatap(void)
+int main_spec_rwaatap(long *array_block_positions,int max_array_block_positions)
 {
+
+    spec_array_block_positions=array_block_positions;
+    spec_max_array_block_positions=max_array_block_positions;
 
 	spec_smp_write_index_tap=0;
 	spec_smp_read_index_tap=0;
 
 	spec_smp_total_read=0;
+
+    spec_last_file_position=0;
+
+    spec_current_block_positions=0;
 
 
 
@@ -1181,12 +1209,15 @@ int main_spec_rwaatap(void)
                 agregado_info_inicio=1;
 
                 if (main_spec_rwaatap_pointer_print!=NULL) {          
-                    int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,"ZX Spectrum Tape\n",main_spec_rwaatap_pointer_print_max);
+                    int nocabe=util_concat_string(main_spec_rwaatap_pointer_print,"ZX Spectrum Tape\n\n",main_spec_rwaatap_pointer_print_max);
                     if (nocabe) return 0;
                 }                
             }
 
 			spec_debug_cabecera(spec_smp_write_index_tap_start+2,spec_bytes_leidos);
+
+            //leer posicion dentro del archivo
+            spec_last_file_position=ftell(ptr_mycinta_smp);
 
 			n=spec_bytes_leidos;
 
@@ -1243,7 +1274,10 @@ int main_spec_rwaatap(void)
 		debug_printf(VERBOSE_INFO,"Converted Zero bytes of data from SMP file. May be a corrupted file or unsupported format");
 	}
 
-
+    //Indicar -1 al final del array de posiciones
+    if (spec_array_block_positions!=NULL) {
+        spec_array_block_positions[spec_current_block_positions]=-1;
+    }    
 
 
 	return 0;

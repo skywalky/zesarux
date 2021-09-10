@@ -177,10 +177,6 @@ int menu_overlay_activo=0;
 //indica si el menu hace zoom. valores validos: 1 en adelante
 int menu_gui_zoom=1;
 
-//Tamanyo del array de char asignado para el browser de file utils
-//#define MAX_TEXTO_BROWSER 65536
-//Debe ser algo menor que MAX_TEXTO_GENERIC_MESSAGE
-#define MAX_TEXTO_BROWSER (MAX_TEXTO_GENERIC_MESSAGE-1024)
 
 
 //Ancho de caracter de menu
@@ -636,6 +632,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
@@ -657,6 +654,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		1,		//Color waveform
 		4,		//Color para zona no usada en visualmem
+        4,      //color block visualtape
 		2,7,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
@@ -678,6 +676,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		4,		//Color waveform
 		7,               //Color para zona no usada en visualmem
+        7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
@@ -698,6 +697,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
         1,		//Color waveform
         7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
         3,7+8,		//Color para opcion marcada
         '#',
 		3+8, //color de aviso, en este tema, magenta con brillo
@@ -718,6 +718,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
         4,              //Color waveform
         7,               //Color para zona no usada en visualmem
+        7,      //color block visualtape
         7,0,		//Color para opcion marcada
 		'.',
 		2, //color de aviso
@@ -738,6 +739,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
         4,		//Color waveform
         7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
         2,7+8,		//Color para opcion marcada
         '*',
 		2, //color de aviso
@@ -759,6 +761,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
         4,              //Color waveform
         4,               //Color para zona no usada en visualmem
+        6,      //color block visualtape
         2,7+8,		//Color para opcion marcada
         '*',
         2, //color de aviso
@@ -779,6 +782,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
         1,              //Color waveform
         7,               //Color para zona no usada en visualmem
+        7,      //color block visualtape
         2,7+8,		//Color para opcion marcada
 		'#',
 		2, //color de aviso
@@ -799,6 +803,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
         4,              //Color waveform
         7,               //Color para zona no usada en visualmem
+        7,      //color block visualtape
         2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
@@ -820,6 +825,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
         VDP_9918_INDEX_FIRST_COLOR+2,              //Color waveform
         7,               //Color para zona no usada en visualmem
+        7,      //color block visualtape
         VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
         '.',
         2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
@@ -840,6 +846,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		4,		//Color waveform
 		5+8,		//Color para zona no usada en visualmem
+        5+8,      //color block visualtape
 		2,7,		//Color para opcion marcada
 		141,
 		2, //color de aviso
@@ -860,6 +867,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		139, //boton cerrar especial
 		2, //color de aviso
@@ -880,6 +888,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		4,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso
@@ -900,6 +909,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		TURBOVISION_COLOUR_blue,		//Color waveform
 		TURBOVISION_COLOUR_cyan,		//Color para zona no usada en visualmem
+        TURBOVISION_COLOUR_cyan,       //color block visualtape
 		TURBOVISION_COLOUR_red,TURBOVISION_COLOUR_lightwhite,		//Color para opcion marcada
 		140,
         2, //color de aviso. Seria TURBOVISION_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
@@ -920,6 +930,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		4,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		1,7+8,		//Color para opcion marcada
 		'*',
 		6, //color de aviso
@@ -940,6 +951,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
 		6, //color de aviso
@@ -960,6 +972,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		3,7+8,		//Color para opcion marcada
 		'*',
 		6, //color de aviso
@@ -980,6 +993,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		4,7+8,		//Color para opcion marcada
 		'*',
 		6, //color de aviso
@@ -1000,6 +1014,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		5,7+8,		//Color para opcion marcada
 		'*',
 		1, //color de aviso
@@ -1020,6 +1035,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		4,		//Color waveform
 		5,		//Color para zona no usada en visualmem
+        5,      //color block visualtape
 		6,7+8,		//Color para opcion marcada
 		'*',
 		1, //color de aviso
@@ -1040,6 +1056,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
         1,              //Color waveform
         7+8,               //Color para zona no usada en visualmem
+        7+8,      //color block visualtape
         7+8,0,		//Color para opcion marcada
 		'X',
 		2, //color de aviso
@@ -1060,6 +1077,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
         5,              //Color waveform
         7,               //Color para zona no usada en visualmem
+        7,      //color block visualtape
         0,7+8,		//Color para opcion marcada
 		'X',
 		2, //color de aviso
@@ -1082,6 +1100,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		SOLARIZED_COLOUR_blue,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
@@ -1104,6 +1123,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 		SOLARIZED_COLOUR_blue,		//Color waveform
 		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
@@ -27178,7 +27198,7 @@ void menu_file_realtape_browser_show(char *filename)
 
     
 
-    util_realtape_browser(filename, texto_browser, MAX_TEXTO_BROWSER,NULL);
+    util_realtape_browser(filename, texto_browser, MAX_TEXTO_BROWSER,NULL,NULL,0);
 
 
     if (texto_browser[0]==0) {
@@ -29897,7 +29917,7 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
 
 
     int ancho=32;
-    int alto=22;
+    int alto=23;
     int x=menu_center_x()-ancho/2;
     int y=menu_center_y()-alto/2;
 
@@ -29957,6 +29977,9 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     }
 
     zxvision_print_string(&ventana,1,linea++,tinta_visualmem_text,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,0,"Unused visualmem (this paper)");
+
+    //En visual tape se deben poder distinguir ESTILO_GUI_COLOR_WAVEFORM de ESTILO_GUI_COLOR_BLOCK_VISUALTAPE
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_COLOR_BLOCK_VISUALTAPE,0,"Block visual tape (this paper)");
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Ascii table:");
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"!\"#$%&\'()*+,-./0123456789:;<=>");
@@ -37435,7 +37458,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                         case 2:
                                 sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
-                                util_realtape_browser(fullpath, NULL,0,archivo_destino);
+                                util_realtape_browser(fullpath, NULL,0,archivo_destino,NULL,0);
                         break;    
 
                         case 3:
@@ -37472,7 +37495,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                         case 1:
                                 sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
-                                util_realtape_browser(fullpath, NULL,0,archivo_destino);
+                                util_realtape_browser(fullpath, NULL,0,archivo_destino,NULL,0);
                         break;    
 
                         case 2:
@@ -37509,7 +37532,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                         case 1:
                                 sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
-                                util_realtape_browser(fullpath, NULL,0,archivo_destino);
+                                util_realtape_browser(fullpath, NULL,0,archivo_destino,NULL,0);
                         break;       
 
                         case 2:
