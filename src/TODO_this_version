@@ -218,7 +218,4 @@ L08F7:          IN      A,(HLWPORT)
 
 -probar visual tape blocks cuando solo hay un bloque (probar por ejemplo con zzzprueba1solobloque2.tap)
 
--si hay error al cargar , que no salga ventana de error al insertarlo en realtape
-gestionar igualmente que si que salga error en otros casos (browse, insert raw como standard tape)
-
 -con cintas zx81 en tape browser, no indica bien final de bloque (no deberia indicar ninguno realmente?)

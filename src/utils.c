@@ -21224,7 +21224,8 @@ int util_compare_bytes_address(menu_z80_moto_int dir,int *lista,int total_items)
 //segundo bloque: posicion XXX
 //etc...
 //Si no se quiere usar, indicar array_block_positions a NULL. Indice finaliza con -1
-void util_realtape_browser(char *filename, char *texto_browser,int maxima_longitud_texto,char *tap_output, long *array_block_positions,int max_array_block_positions)
+void util_realtape_browser(char *filename, char *texto_browser,int maxima_longitud_texto,char *tap_output, 
+                        long *array_block_positions,int max_array_block_positions,int *codigo_retorno)
 {
 
     /*
@@ -21312,7 +21313,7 @@ void util_realtape_browser(char *filename, char *texto_browser,int maxima_longit
         //cada vez se abre el archivo de nuevo, y evitar que se tenga que convertir (por ejemplo de wav) una y otra vez
         lee_smp_ya_convertido=0;
 
-        main_spec_rwaatap(array_block_positions,max_array_block_positions);
+        main_spec_rwaatap(array_block_positions,max_array_block_positions,codigo_retorno);
 
         //generar el tap de salida si conviene
         if (tap_output!=NULL) {

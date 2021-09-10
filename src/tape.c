@@ -2229,7 +2229,14 @@ void realtape_insert(void)
 
 
     //precargar posiciones de cada bloque en cinta para luego mostrar en Visual Real Tape
-    util_realtape_browser(name_to_use, visual_realtape_textbrowse,MAX_TEXTO_BROWSER,NULL, visual_realtape_array_positions, VISUAL_REALTAPE_MAX_POSITIONS);
+    int codigo_retorno;
+    util_realtape_browser(name_to_use, visual_realtape_textbrowse,MAX_TEXTO_BROWSER,NULL, 
+        visual_realtape_array_positions, VISUAL_REALTAPE_MAX_POSITIONS,&codigo_retorno);
+
+    if (codigo_retorno) {
+        debug_printf(VERBOSE_INFO,"Error trying to convert audio to Spectrum Tape Blocks. Probably invalid carry in some blocks");
+        //de momento no tratamos el error
+    }
     
 
 

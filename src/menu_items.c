@@ -25089,14 +25089,6 @@ void menu_visual_realtape_overlay(void)
                         buffer_linea[indice_destino]=0;
                         zxvision_print_string_defaults_fillspc(menu_audio_visual_realtape_window,1,2+linea,buffer_linea);
 
-                        //temp
-                        int j;
-                        printf("--\n");
-                        for (j=0;buffer_linea[j];j++) {
-                            printf("%d ",buffer_linea[j]);
-                        }
-                        printf("\n");
-
                         indice_destino=0;
 
                         linea++;
@@ -25319,7 +25311,7 @@ void menu_visual_realtape_insert(MENU_ITEM_PARAMETERS)
     menu_realtape_open(0);
 
     //reestablecer overlay por que al llamar a menu_realtape_open, en el filesel, se resetea funcion overlay
-    set_menu_overlay_function(menu_visual_realtape_overlay);    
+    set_menu_overlay_function(menu_visual_realtape_overlay);
 }
 
 

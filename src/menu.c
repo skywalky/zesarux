@@ -27198,7 +27198,7 @@ void menu_file_realtape_browser_show(char *filename)
 
     
 
-    util_realtape_browser(filename, texto_browser, MAX_TEXTO_BROWSER,NULL,NULL,0);
+    util_realtape_browser(filename, texto_browser, MAX_TEXTO_BROWSER,NULL,NULL,0,NULL);
 
 
     if (texto_browser[0]==0) {
@@ -37458,7 +37458,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                         case 2:
                                 sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
-                                util_realtape_browser(fullpath, NULL,0,archivo_destino,NULL,0);
+                                util_realtape_browser(fullpath, NULL,0,archivo_destino,NULL,0,NULL);
                         break;    
 
                         case 3:
@@ -37495,7 +37495,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                         case 1:
                                 sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
-                                util_realtape_browser(fullpath, NULL,0,archivo_destino,NULL,0);
+                                util_realtape_browser(fullpath, NULL,0,archivo_destino,NULL,0,NULL);
                         break;    
 
                         case 2:
@@ -37532,7 +37532,7 @@ extern int convert_p_to_rwa_tmpdir(char *origen, char *destino);
 
                         case 1:
                                 sprintf(archivo_destino,"%s/%s.tap",directorio,archivo);
-                                util_realtape_browser(fullpath, NULL,0,archivo_destino,NULL,0);
+                                util_realtape_browser(fullpath, NULL,0,archivo_destino,NULL,0,NULL);
                         break;       
 
                         case 2:

@@ -150,7 +150,7 @@ int tape_block_smp_open(void)
 
 
 
-		main_spec_rwaatap(NULL,0);
+		main_spec_rwaatap(NULL,0,NULL);
 
 
 		return 0;
@@ -1084,7 +1084,10 @@ void spec_debug_cabecera(int indice,int leidos)
 
 }
 
-int main_spec_rwaatap(long *array_block_positions,int max_array_block_positions)
+//array_block_positions, max_array_block_positions usados para guardar las posiciones de los bloques
+//codigo_retorno: si es NULL, si hay error de carga se genera mensaje de error por VERBOSE_ERR
+//si no es NULL, no hay mensaje por VERBOSE_ERR y se almacena en codigo retorno: 0: ok, 1: error
+int main_spec_rwaatap(long *array_block_positions,int max_array_block_positions,int *codigo_retorno)
 {
 
     spec_array_block_positions=array_block_positions;
@@ -1104,6 +1107,8 @@ int main_spec_rwaatap(long *array_block_positions,int max_array_block_positions)
 	unsigned char amplitud,longitud;
 	int byte,byte2;
 	unsigned int n;
+
+    if (codigo_retorno!=NULL) *codigo_retorno=0; //asumimos ok carga
 
 
 	//apunta al principio de cada bloque TAP
@@ -1224,8 +1229,11 @@ int main_spec_rwaatap(long *array_block_positions,int max_array_block_positions)
 
 		}
 
+        //En convertir cinta, o en browser cinta, interesa tener en el error con VERBOSE_ERR
+        //En Visual Tape Browser, no queremos esto. Lo tendremos en cuenta en la funcion de salida
 		if (spec_carry) {
-			debug_printf (VERBOSE_ERR,"Loading Error. Invalid end carry");
+            if (codigo_retorno!=NULL) *codigo_retorno=1; //error de carga
+			else debug_printf (VERBOSE_ERR,"Error converting audio block to tape. Invalid end carry");
 		}
 
 
