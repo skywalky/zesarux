@@ -277,6 +277,8 @@ opcion tambien para bajar bit 7 final
 
 -lectura de nombre de archivo en fileselector para stdout no admite espacios
 
+-al llamar a filesel, se resetea funcion overlay y se deja normal, perdiendose overlay que hubiera en la ventana (como en Visual Real Tape)
+
 -sin multitask, no va repeticion de teclas. esto es porque no se ejecuta timer_check_interrupt
 quiza estas funciones de contadores deberian venir con el thread del timer? aunque luego en version
 no-thread no funcionara tampoco

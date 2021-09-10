@@ -215,7 +215,6 @@ L08F7:          IN      A,(HLWPORT)
 
 -revisar otros posibles cpu_panic de tape_smp cuando se usa el browser o conversor de cinta
 
--si inserto cinta desde visual real tape, no se ve al principio. quiza se pierde funcion overlay??. quiza mejor, Al salir de filesel restaurar overlay a lo que había antes 
 
 -probar visual tape blocks cuando solo hay un bloque (probar por ejemplo con zzzprueba1solobloque2.tap)
 

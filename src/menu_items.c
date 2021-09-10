@@ -25314,6 +25314,14 @@ void menu_visual_realtape_reinsert(MENU_ITEM_PARAMETERS)
     menu_reinsert_real_tape();
 }
 
+void menu_visual_realtape_insert(MENU_ITEM_PARAMETERS)
+{
+    menu_realtape_open(0);
+
+    //reestablecer overlay por que al llamar a menu_realtape_open, en el filesel, se resetea funcion overlay
+    set_menu_overlay_function(menu_visual_realtape_overlay);    
+}
+
 
 void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 {
@@ -25373,8 +25381,7 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
         //borrar primera linea, por si antes hay visible opcion de view stereo/mono
         //zxvision_print_string_defaults_fillspc(ventana,1,0,"");
 
-        //temp. quiza reestablecer overlay por que al llamar a menu_realtape_open, en el filesel, se resetea funcion overlay
-        //set_menu_overlay_function(menu_visual_realtape_overlay);
+
 
         menu_add_item_menu_inicial(&array_menu_common,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
@@ -25410,7 +25417,7 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_shortcut(array_menu_common,'e');
 		menu_add_item_menu_tabulado(array_menu_common,27,5);
 
-		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_realtape_open,NULL,"~~Insert");
+		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_insert,NULL,"~~Insert");
 		menu_add_item_menu_shortcut(array_menu_common,'i');
 		menu_add_item_menu_tabulado(array_menu_common,36,5);
 
