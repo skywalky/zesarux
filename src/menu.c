@@ -35901,20 +35901,7 @@ void menu_inicio(void)
 			//Vamos a ver en que ventana se ha pulsado, si tenemos background activado
 			zxvision_window *ventana_pulsada;
 
-			ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);			
-
-
-			if (ventana_pulsada!=NULL) {
-				printf("abierto menu y pulsado en ventana en background: %s\n",ventana_pulsada->window_title);
-
-				zxvision_handle_mouse_ev_switch_back_wind(ventana_pulsada);
-
-                //printf("despues de conmutar ventana\n");
-                pulsado_alguna_ventana_con_menu_cerrado=1;
-			
-			}
-
-            //O si pulsamos en la ventana que esta arriba
+            //Si pulsamos en la ventana que esta arriba
 			if (zxvision_coords_in_front_window(absolute_mouse_x,absolute_mouse_y)) {
 				printf("abierto menu y pulsado en ventana en foreground: %s\n",zxvision_current_window->window_title);
 
@@ -35923,7 +35910,26 @@ void menu_inicio(void)
                 //printf("despues de conmutar ventana\n");
                 pulsado_alguna_ventana_con_menu_cerrado=1;
 			
-			}            
+			}   
+
+            //O en alguna de background
+            else {
+
+                ventana_pulsada=zxvision_coords_in_below_windows(zxvision_current_window,absolute_mouse_x,absolute_mouse_y);			
+
+
+                if (ventana_pulsada!=NULL) {
+                    printf("abierto menu y pulsado en ventana en background: %s\n",ventana_pulsada->window_title);
+
+                    zxvision_handle_mouse_ev_switch_back_wind(ventana_pulsada);
+
+                    //printf("despues de conmutar ventana\n");
+                    pulsado_alguna_ventana_con_menu_cerrado=1;
+                
+                }
+            }
+
+         
 
         }
 

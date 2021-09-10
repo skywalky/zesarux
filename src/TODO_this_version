@@ -214,6 +214,6 @@ L08F7:          IN      A,(HLWPORT)
 
 -comprobar bien pulsado de ventana con menu cerrado:
 
-* sin ventanas background, abrir y cerrar menu pulsando y con F5
-* con ventanas background, abrir y cerrar menu pulsando y con F5
-* con ventanas background + even with menu closed,  abrir y cerrar menu pulsando y con F5
+* sin ventanas background, abrir y cerrar menu pulsando y con F5 y botones
+* con ventanas background, abrir y cerrar menu pulsando y con F5 y botones -> al pulsar en una , se va a esa al cerrar menu -> esto ya pasaba antes
+* con ventanas background + even with menu closed,  abrir y cerrar menu pulsando y con F5 y botones y ventanas
