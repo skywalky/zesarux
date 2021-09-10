@@ -68,6 +68,7 @@ Improved ZX Vision menu interface:
 -Show in file selector when a file can be expanded
 -Improved screen file previews: any file size of 6912 bytes is guessed as Spectrum screen
 -Maximizing windows now take care of size of ZX Desktop, when setting "Open menu on ZX Desktop" is enabled
+-Handle when pressing a window when menu closed
 -Added item to reduce+rearrange windows
 -Added some graphical meters on AY Registers, Core Statistics
 -Colour palette window now shows all colours that fit in the window

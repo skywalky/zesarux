@@ -212,3 +212,8 @@ L08F7:          IN      A,(HLWPORT)
 
 - Improved algorithm quizá renombrar a “alternate” algorithm 
 
+-comprobar bien pulsado de ventana con menu cerrado:
+
+* sin ventanas background, abrir y cerrar menu pulsando y con F5
+* con ventanas background, abrir y cerrar menu pulsando y con F5
+* con ventanas background + even with menu closed,  abrir y cerrar menu pulsando y con F5
