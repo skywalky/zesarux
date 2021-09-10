@@ -768,6 +768,10 @@ Quizá demo raster zxuno falla porque la interrupción tarda demasiado...
 
 --- Fallos especificos de zx80/81: ---
 
+- si quiero cargar de wav en real tape por ejemplo, si hago LOAD "" va bien
+Pero si hago LOAD "nombre", me inserta siempre un standart tape nombre.p, por tanto 
+no puedo cargar de real tape cuando uso load "nombre"
+Deberia haber alguna opcion para evitar esos traps de cinta
 
 -timings de display seguramente incorrectos. Esta suponiendo inicio scanline en zona izquierda. es normal? aplica a funciones de repintado y 
 tambien a screen_get_x_coordinate_tstates

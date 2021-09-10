@@ -8485,15 +8485,30 @@ Each pulse is split into a 150us High period, and 150us Low period. The duration
         unsigned char leido;
 
 
-	//Si ZX81, metemos nombre al principio. Nombre es inventado, solo "A"
+	//Si ZX81, metemos nombre al principio. 
+    //En los P no hay el nombre al principio. En el audio si lo hay
 	if (si_p) {
 
-	//Metemos nombre
-	//unsigned char nombre='A';
-	unsigned char nombre=38; //38 = A en ZX81
-	nombre |=128;
 
-		convert_o_p_to_rwa_write_byte(ptr_destino,nombre);
+        //obtenemos nombre archivo y directorio por separado
+        char nombre[NAME_MAX];
+        char nombre_sin_ext[NAME_MAX];
+
+        util_get_file_no_directory(origen,nombre);
+        util_get_file_without_extension(nombre,nombre_sin_ext);
+
+        int i;
+        int longitud=strlen(nombre_sin_ext);
+
+        for (i=0;i<longitud;i++) {
+
+            //Metemos nombre
+            //unsigned char nombre='A';
+            unsigned char letra=ascii_to_zx81(nombre_sin_ext[i]); //38; //38 = A en ZX81
+            if (i==longitud-1) letra |=128; //caracter del final
+
+            convert_o_p_to_rwa_write_byte(ptr_destino,letra);
+        }
 	}
 
 
