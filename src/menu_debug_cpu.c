@@ -3399,7 +3399,7 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
 
                 sprintf(s,"set~^Pc=ptr%s%s%s",string_nextpcbr,string_history,string_backwards);
 
-                sprintf (buffer_intermedio_short,"~^Pc=ptr%s%s%s",
+                sprintf (buffer_intermedio_short,"~^Pc=ptr%s%s%s ~~F~~1:help",
                     ( debug_breakpoints_enabled.v ? " nxtpc~^Br" : "" ),
                     (CPU_IS_Z80 ? " cpu~^Hst" : ""),
                     (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " b~^Stp bru~^N" : "")
@@ -3407,7 +3407,7 @@ void menu_debug_get_legend(int linea,char *s,zxvision_window *w)
                 );                
 
 
-                sprintf (buffer_intermedio_long,"set~^Pc=ptr%s%s%s",
+                sprintf (buffer_intermedio_long,"set~^Pc=ptr%s%s%s ~~F~~1:help",
                     ( debug_breakpoints_enabled.v ? " nextpc~^Brk" : "" ),
                     (CPU_IS_Z80 ? " cpu~^Hist" : ""),
                     (cpu_step_mode.v && cpu_history_enabled.v && cpu_history_started.v ? " back~^Step backru~^N" : "")
@@ -5803,6 +5803,8 @@ void menu_debug_help(void)
         "\n"
         "P: Modificar el registro PC con el valor del puntero\n"
         "\n"
+        "B: Buscar el siguiente breakpoint asignado de tipo PC=XXXX. Requiere activar breakpoints\n"
+        "\n"
         "H: Habilitar y visualizar el historial de ejecución de la cpu\n"
         "\n"
         "S: Permite ejecutar instrucciones hacia atrás. Requiere tener el historial de la cpu habilitado y sólo está disponible en modo paso a paso\n"
@@ -5896,6 +5898,8 @@ void menu_debug_help(void)
         "For example, you can access to the 128kb RAM memory of a Spectrum 128k, or to the divide eprom memory\n"
         "\n"
         "P: Set PC register with the pointer value\n"
+        "\n"
+        "B: Look for the next breakpoint set of type PC=XXXX. Requires enabling breakpoints\n"
         "\n"
         "H: Enable and view the cpu execution history\n"
         "\n"

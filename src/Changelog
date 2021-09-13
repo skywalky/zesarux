@@ -31,7 +31,7 @@ Added ZEsarUX logo on the window footer
 Added setting to disable ZX80/81 tape traps
 Added wav/rwa/smp tape audio browser, to view Spectrum/ZX80/ZX81 tape blocks from audio file
 Added Visual Real Tape. Now you can have an audio render of your tape, see tape blocks and rewind or move forward the cassette player
-Added menu language selection between default (English) and Spanish. Only some texts are translated
+Added menu language selection between default (English) and Spanish. Only some texts are translated to Spanish
 
 Added file converters: 
 - wav/rwa/smp to tap

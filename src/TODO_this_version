@@ -219,5 +219,3 @@ L08F7:          IN      A,(HLWPORT)
 * con ventanas background + even with menu closed,  abrir y cerrar menu pulsando y con F5 y botones y ventanas
 
 ->primera vez al iniciar, si esta even closed, deberian verse las ventanas
-
--si hay una ventana que tapa parte de un boton, si en menu cerrado pulsamos a esa ventana y detras hay un boton, actua sobre ese boton

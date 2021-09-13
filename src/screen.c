@@ -2658,7 +2658,14 @@ int if_zxdesktop_enabled_and_driver_allows(void)
 
 //Gestion de extension de desktop a ventana. Antes se llamaba extended desktop. Ahora es ZX Desktop
 int screen_ext_desktop_enabled=0;
+
+
 int screen_ext_desktop_width=256; //se multiplicara por zoom
+
+//valor anterior si el usuario lo ha ocultado con el boton del footer
+int screen_ext_desktop_width_before_disabling=-1;
+
+
 int screen_ext_desktop_place_menu=0; //Si abrimos siempre ventanas en la zona de desktop por defecto
 
 int screen_get_ext_desktop_width_no_zoom(void)

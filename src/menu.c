@@ -36005,8 +36005,23 @@ void menu_inicio(void)
                 screen_ext_desktop_place_menu=1;
 
                 if (!screen_ext_desktop_enabled) {
-                    //y establecemos un minimo de ancho de zxdesktop (512/zoom_x) al habilitar
-                    screen_ext_desktop_width=512/zoom_x;
+
+                    //Si el usuario ha ocultado con el boton, al pulsar de nuevo, recuperar valor
+                    if (screen_ext_desktop_width_before_disabling!=-1) {
+                        screen_ext_desktop_width=screen_ext_desktop_width_before_disabling;
+                        //printf("Recuperando valor anterior\n");
+                    }
+                    else {
+                        //establecemos un minimo de ancho de zxdesktop (512/zoom_x) al habilitar
+                        screen_ext_desktop_width=512/zoom_x;
+                        //printf("Generando valor nuevo\n");
+                    }
+
+                }
+                else {
+                    //lo va a ocultar. Preservar valor anterior
+                    screen_ext_desktop_width_before_disabling=screen_ext_desktop_width;
+                    //printf("Conservando valor anterior\n");
                 }
 
 
