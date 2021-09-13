@@ -30820,8 +30820,8 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_vertical_perc_bar,NULL,"[%c] Percentage bar",(menu_hide_vertical_percentaje_bar.v==0 ? 'X' : ' ') );
 		//menu_add_item_menu_shortcut(array_menu_interface_settings,'p');
-		menu_add_item_menu_tooltip(array_menu_interface_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
-		menu_add_item_menu_ayuda(array_menu_interface_settings,"Shows vertical percentaje bar on the right of text windows and file browser");
+		menu_add_item_menu_tooltip(array_menu_interface_settings,"Shows vertical percentage bar on the right of text windows and file browser");
+		menu_add_item_menu_ayuda(array_menu_interface_settings,"Shows vertical percentage bar on the right of text windows and file browser");
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_hide_minimize_button,NULL,"[%c] Minimize button",(menu_hide_minimize_button.v ? ' ' : 'X') );
