@@ -30555,7 +30555,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
         strcpy(idioma,"Default");
         if (gui_language==GUI_LANGUAGE_SPANISH) strcpy(idioma,"Español");
 
-       	menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_language,NULL,"[%s] Language",idioma);
+       	menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_language,NULL,"[%s] ~~Language",idioma);
+        menu_add_item_menu_shortcut(array_menu_window_settings,'l');
 
 	
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -33602,7 +33603,7 @@ void menu_about_history(MENU_ITEM_PARAMETERS)
 void menu_about_features(MENU_ITEM_PARAMETERS)
 {
     if (gui_language==GUI_LANGUAGE_SPANISH) {
-        menu_about_read_file("Características","FEATURES_es",1);
+        menu_about_read_file("Caracteristicas","FEATURES_es",1);
     }
     else menu_about_read_file("Features","FEATURES",1);
 }
