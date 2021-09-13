@@ -216,7 +216,7 @@ Debugging
 Q: What is ZEsarUX remote command protocol?
 A: ZEsarUX remote command protocol (or ZRCP) is a kind of API you can connect to ZEsarUX using a network tcp port. You can connect to it using
 a telnet client, or maybe you can create a external frontend (maybe an IDE) that connects remotely to ZEsarUX and interacts with it.
-It's disabled by default, you may enable it from Settings->Debug or from command line with --enable-remoteprotocol. The default port is 10000.
+It's disabled by default, you may enable it from Settings-> Debug or from command line with --enable-remoteprotocol. The default port is 10000.
 It's supported on all emulator versions, but on Windows it's only supported on the ZEsarUX-pthreads version
 
 There are two good examples which use ZRCP:
@@ -330,7 +330,7 @@ the display will show "trash", also the "Real Video" setting is auto-enabled.
 sponzy rom file, set address to 0, and set length to 0 (to load the whole file). The emulator will load the whole file, but addresses 0000-1fffh are
 write protected, but it is not a problem so these addresses are already loaded since pass 2. Addresses 2000h-3fffh will be written (so we enabled RAM here) with the rest of the Sponzy ROM
 4) Go to menu debugging->Reset
-5) The rom is working now but you will probably see only a white display. So, Sponzy rom uses WRX display mode. You must enable it on menu Display Settings->WRX
+5) The rom is working now but you will probably see only a white display. So, Sponzy rom uses WRX display mode. You must enable it on menu Settings-> Display-> WRX
 
 
 ----------------------------------------------------------------------------
@@ -370,7 +370,7 @@ So, you can not change the emulation core, you can not, for example, upload a FP
 
 Q: Why ZX-Uno boot and bios seem to use a lot of physical CPU and reduces FPS?
 A: On ZX-Uno boot process and entering its bios, the Z80 Turbo mode is set to 8X, so the emulator uses eight times the cpu power more than on normal 1X mode. This is why it uses more physical CPU and FPS are reduced. It should not happen if your computer is very fast.
-You may change a the setting "Deny turbo on boot" on menu Settings->Hardware so it denies changing turbo mode on these 2 cases
+You may change a the setting "Deny turbo on boot" on menu Settings-> Hardware so it denies changing turbo mode on these 2 cases
 
 
 ----------------------------------------------------------------------------
@@ -600,15 +600,15 @@ A: Please think that emulation has a cost, mostly cpu use. Also, the NextOS runs
 comparing with a normal Speccy, it's 8 times faster. So, it will need, at least, 8 times more real cpu than emulating a real speccy (and I'm not considering here all the extra video modes, Sprites, copper etc). So you can't compare a Spectrum emulator with ZEsarUX emulating the Spectrum Next. Emulating all the Next core needs a lot of cpu power.
 However, there are some settings that you can tune to reduce the cpu needed.
 You can change the following settings:
--Settings->CPU. Set the setting "deny turbo on ROM". And set the cpu speed to x1. That will set maximum cpu speed to x1 but only on the NexZXOS,
+-Settings-> CPU. Set the setting "deny turbo on ROM". And set the cpu speed to x1. That will set maximum cpu speed to x1 but only on the NexZXOS,
 games and programs out of NextZXOS can change the cpu speed.
--Settings->Display. Disable real video. This will disable viewing of sprites, layer 2, etc (anything that extends the Next).
+-Settings-> Display. Disable real video. This will disable viewing of sprites, layer 2, etc (anything that extends the Next).
 
 The first setting will make the nextos less laggy. The second one will also improve performance, but you should enable it when running Next games.
 
 
 Q: On NextZXOS everything seems to run slower than the real machine
-A: Verify setting Settings->CPU->Limit turbo on ROM. Starting from ZEsarUX 9.3, that setting is enabled by default and limits the maximum turbo speed the NextZXOS can set (does not apply to games/programs out of NextZXOS). That's enabled by default to limit the total amount of real cpu that needs NextZXOS (at least 8 times more than a regular emulated Spectrum), and could notice a performance problem in some machines. If your machine is fast enough, disable that setting (or increase the setting Settings->CPU->Max turbo allowed) to try to run at real Next speed.
+A: Verify setting Settings-> CPU-> Limit turbo on ROM. Starting from ZEsarUX 9.3, that setting is enabled by default and limits the maximum turbo speed the NextZXOS can set (does not apply to games/programs out of NextZXOS). That's enabled by default to limit the total amount of real cpu that needs NextZXOS (at least 8 times more than a regular emulated Spectrum), and could notice a performance problem in some machines. If your machine is fast enough, disable that setting (or increase the setting Settings-> CPU-> Max turbo allowed) to try to run at real Next speed.
 
 
 ----------------------------------------------------------------------------
@@ -833,7 +833,7 @@ You can even try to delete all the unnecessary files and the emulator will also 
 
 Q: When I enable video out to file setting, or "Reduce to 0.75" a big "Z" letter is added to the display. Can I erase it?
 A: No, you can't. Because I want that final video has that watermark, so anyone that sees it knows which emulator is used to record it ;)
-However, you can move the letter, go to Settings-> OSD ->Watermark position
+However, you can move the letter, go to Settings-> OSD-> Watermark position
 
 
 Q: Why the emulator doesn't use more beautiful menus, like the usual menus on Windows/Mac/GNU/Linux etc? / Why are you limiting the GUI interface to these simple menus? / Why don't you have a better file selector?
@@ -890,7 +890,7 @@ A raw and fast explanation about this is that "if" sentences, on the spectrum em
 if you have Speculative Execution (like Intel cpu), but do really impact on the cpu use on cpu which does not have Speculative Execution (like Raspberry)
 
 So, you can recompile with the "--spectrum-reduced-core" setting on the configure script, to have it always enabled by default, but also you can switch it on by using 
-the command line setting "--spectrum-reduced-core" when running ZEsarUX, and even more, you can switch it on from the menu, Settings->Hardware settings
+the command line setting "--spectrum-reduced-core" when running ZEsarUX, and even more, you can switch it on from the menu, Settings-> Hardware settings
 
 
 
