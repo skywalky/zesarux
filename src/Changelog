@@ -10,6 +10,7 @@ There are lots of changes in this version, but some of them are remarkable:
 - Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80
 - Allow customize upper buttons to actions
 - Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
+- Added menu language selection between default (English) and Spanish. Only some texts are translated to Spanish
 
 
 The full changelog for this version 10.0 is:

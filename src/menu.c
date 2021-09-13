@@ -27488,7 +27488,10 @@ void menu_tape_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_tape_settings,"Browse Real tape");
 		menu_add_item_menu_ayuda(array_menu_tape_settings,"Browse Real tape");				
 
-        menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_visual_realtape,NULL,"Visual Real Tape");
+        menu_add_item_menu_format(array_menu_tape_settings,MENU_OPCION_NORMAL,menu_visual_realtape,NULL,"~~Visual Real Tape");
+        menu_add_item_menu_shortcut(array_menu_tape_settings,'v');
+        menu_add_item_menu_tooltip(array_menu_tape_settings,"See an audio render of your tape, see tape blocks and rewind or move forward the cassette player");
+        menu_add_item_menu_ayuda(array_menu_tape_settings,"See an audio render of your tape, see tape blocks and rewind or move forward the cassette player");
 
                 menu_add_item_menu(array_menu_tape_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 

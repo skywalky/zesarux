@@ -24957,10 +24957,10 @@ void menu_zxdesktop_set_userdef_buttons_functions(MENU_ITEM_PARAMETERS)
 
 
 
-#define VISUALREALTAPE_X (menu_origin_x()+1)
-#define VISUALREALTAPE_Y 3
-#define VISUALREALTAPE_ANCHO 30
-#define VISUALREALTAPE_ALTO 15
+#define VISUALREALTAPE_X (menu_origin_x())
+#define VISUALREALTAPE_Y 2
+#define VISUALREALTAPE_ANCHO 32
+#define VISUALREALTAPE_ALTO 20
 
 
 
@@ -24981,7 +24981,7 @@ void menu_visual_realtape_overlay(void)
 
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
-	char buffer_texto_medio[40]; //32+3+margen de posible color rojo del maximo
+	char buffer_texto_medio[40]; 
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
@@ -25133,7 +25133,7 @@ void menu_visual_realtape_overlay(void)
 	int alto;
 
     //lineas de separacion por encima de la onda de audio
-	int lineas_cabecera=8;
+	int lineas_cabecera=9;
 
 	alto=menu_audio_visual_realtape_window->visible_height-lineas_cabecera-2;
 
@@ -25388,8 +25388,9 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 	int retorno_menu;
 	do {
 
-        //borrar primera linea, por si antes hay visible opcion de view stereo/mono
-        //zxvision_print_string_defaults_fillspc(ventana,1,0,"");
+        //borrar linea de menu por si hay restos de insertar
+        zxvision_print_string_defaults_fillspc(ventana,1,6,"");
+        zxvision_print_string_defaults_fillspc(ventana,1,7,"");
 
 
 
@@ -25423,13 +25424,15 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 
         }
 
-		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_reinsert,NULL,"R~~einsert");
-		menu_add_item_menu_shortcut(array_menu_common,'e');
-		menu_add_item_menu_tabulado(array_menu_common,27,6);
+        if (menu_realtape_cond() ) {
+		    menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_reinsert,NULL,"R~~einsert");
+		    menu_add_item_menu_shortcut(array_menu_common,'e');
+		    menu_add_item_menu_tabulado(array_menu_common,1,7);
+        }
 
 		menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_visual_realtape_insert,NULL,"~~Insert");
 		menu_add_item_menu_shortcut(array_menu_common,'i');
-		menu_add_item_menu_tabulado(array_menu_common,36,6);
+		menu_add_item_menu_tabulado(array_menu_common,10,7);
 
 
 
