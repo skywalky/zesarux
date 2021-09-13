@@ -36791,6 +36791,25 @@ void menu_tell_if_realjoystick_detected(void)
 			}				
 }
 
+//Mostrar las ventanas que hay en background que se han restaurado al arrancar
+void show_all_windows_startup(void)
+{
+    if (menu_allow_background_windows && menu_multitarea && menu_reopen_background_windows_on_start.v && always_force_overlay_visible_when_menu_closed) {
+        menu_overlay_activo=1;
+
+        //Y redibujamos las ventanas, para que se vean los titulos sobretodo (pues los overlay en background no redibujan los titulos)
+        //decir que ventana principal no esta activa, para indicar que están todas en background
+        ventana_tipo_activa=0;
+
+        //generic_footertext_print_operating("BKWIND");
+
+        zxvision_redraw_all_windows();
+        
+        overlay_visible_when_menu_closed=1;
+        //menu_draw_background_windows_overlay_after_normal();
+    }    
+}
+
 void reset_welcome_message(void)
 {
 	if (menu_splash_text_active.v==1) {
@@ -36819,7 +36838,8 @@ void reset_welcome_message(void)
 			if (menu_first_aid_startup) menu_first_aid_random_startup();
 
 
-
+            //mostrar ventanas en background
+            show_all_windows_startup();
 		}
 
 		else {

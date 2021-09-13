@@ -9040,7 +9040,9 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 
 	else {
 		//Cuando hay splash, la propia funcion set_welcome_message llama a cls_menu_overlay y esta llama a menu_draw_ext_desktop
+        //y luego a show_all_windows_startup
 		menu_draw_ext_desktop();
+        show_all_windows_startup();
 	}
 
 

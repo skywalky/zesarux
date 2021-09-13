@@ -218,4 +218,3 @@ L08F7:          IN      A,(HLWPORT)
 * con ventanas background, abrir y cerrar menu pulsando y con F5 y botones -> al pulsar en una , se va a esa al cerrar menu -> esto ya pasaba antes
 * con ventanas background + even with menu closed,  abrir y cerrar menu pulsando y con F5 y botones y ventanas
 
-->primera vez al iniciar, si esta even closed, deberian verse las ventanas
