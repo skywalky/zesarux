@@ -35276,8 +35276,8 @@ int pulsado_alguna_ventana_con_menu_cerrado=0;
 
 void menu_inicio_bucle_main(void)
 {
-    printf("menu_inicio_bucle_main: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
-                menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
+    //printf("menu_inicio_bucle_main: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
+    //            menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
 
 
     //Primera ayuda siempre que no se haya pulsado en botones de menu diferentes del menu principal o dispositivos
@@ -35305,10 +35305,11 @@ void menu_inicio_bucle_main(void)
 
 	do {
 
-        printf("antes del if\n");
+        //printf("antes del if\n");
 		if (menu_pressed_zxdesktop_button_which>=0 || menu_pressed_zxdesktop_lower_icon_which>=0 || pulsado_alguna_ventana_con_menu_cerrado) {
-            printf("se cumple if: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
-                menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
+            //printf("se cumple if: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
+            //    menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
+
 			cls_menu_overlay();
 		//Si se habia pulsado boton de zx desktop y boton no es el 0
 		//con boton 0 lo que hacemos es abrir el menu solamente			
@@ -35327,14 +35328,14 @@ void menu_inicio_bucle_main(void)
 			//printf ("despues menu_inicio_handle_button_presses\n");
 
             else if (pulsado_alguna_ventana_con_menu_cerrado) {
-                printf("menu_inicio_bucle_main. pulsado en alguna ventana con menu cerrado\n");
+                //printf("menu_inicio_bucle_main. pulsado en alguna ventana con menu cerrado\n");
                 pulsado_alguna_ventana_con_menu_cerrado=0;
                 salir_menu=1;
             }
 		}
 
 		else {		
-            printf("else if\n");
+            //printf("else if\n");
 
 		if (strcmp(scr_new_driver_name,"xwindows")==0 || strcmp(scr_new_driver_name,"sdl")==0 || strcmp(scr_new_driver_name,"caca")==0 || strcmp(scr_new_driver_name,"fbdev")==0 || strcmp(scr_new_driver_name,"cocoa")==0 || strcmp(scr_new_driver_name,"curses")==0) f_functions=1;
 		else f_functions=0;
@@ -35485,8 +35486,8 @@ void menu_inicio_bucle_main(void)
 void menu_inicio_bucle(void)
 {
 
-    printf("menu_inicio_bucle: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
-                menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
+    //printf("menu_inicio_bucle: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
+    //            menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
 
 	//printf ("inicio de menu_inicio_bucle\n");
 
@@ -35500,7 +35501,7 @@ void menu_inicio_bucle(void)
 
 	}
 
-    printf("salir todos menus en menu_inicio_bucle: %d\n",salir_todos_menus);
+    //printf("salir todos menus en menu_inicio_bucle: %d\n",salir_todos_menus);
 
     //A partir de aqui ya se debe mostrar boton de cerrar todos menus
     menu_mostrar_boton_close_all_menus.v=1;
@@ -35517,9 +35518,9 @@ void menu_inicio_bucle(void)
 			//printf ("Reabrimos menu para boton pulsado %d lower icon %d\n",menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which);
 		}
 
-        printf("antes menu_inicio_bucle_main\n");
+        //printf("antes menu_inicio_bucle_main\n");
 		menu_inicio_bucle_main();
-        printf("despues menu_inicio_bucle_main\n");
+        //printf("despues menu_inicio_bucle_main\n");
 
 		//Se reabre el menu tambien si pulsada tecla F5 en cualquiera de los menus
 		if (menu_pressed_open_menu_while_in_menu.v) {
@@ -35939,7 +35940,7 @@ void menu_inicio(void)
 
             //Si pulsamos en la ventana que esta arriba
 			if (zxvision_coords_in_front_window(absolute_mouse_x,absolute_mouse_y)) {
-				printf("abierto menu y pulsado en ventana en foreground: %s\n",zxvision_current_window->window_title);
+				//printf("abierto menu y pulsado en ventana en foreground: %s\n",zxvision_current_window->window_title);
 
 				zxvision_handle_mouse_ev_switch_back_wind(zxvision_current_window);
 
@@ -35955,7 +35956,7 @@ void menu_inicio(void)
 
 
                 if (ventana_pulsada!=NULL) {
-                    printf("abierto menu y pulsado en ventana en background: %s\n",ventana_pulsada->window_title);
+                    //printf("abierto menu y pulsado en ventana en background: %s\n",ventana_pulsada->window_title);
 
                     zxvision_handle_mouse_ev_switch_back_wind(ventana_pulsada);
 
@@ -35975,7 +35976,7 @@ void menu_inicio(void)
         //hace alterar el valor de menu_pressed_zxdesktop_button_which y por tanto estariamos diciendo que se ha pulsado en boton
         if (!pulsado_alguna_ventana_con_menu_cerrado) {
             if (zxvision_if_mouse_in_zlogo_or_buttons_desktop()) {
-                printf("Pulsado en un boton desde menu_inicio\n");
+                //printf("Pulsado en un boton desde menu_inicio\n");
 
                 //Dibujamos de otro color ese boton
                 //que boton=menu_pressed_zxdesktop_button_which
@@ -35991,7 +35992,7 @@ void menu_inicio(void)
         if (!pulsado_alguna_ventana_con_menu_cerrado) {
             if (zxvision_if_mouse_in_lower_button_switch_zxdesktop()) {
                 //printf("esperar no tecla\n");
-                printf("Pulsado en un boton lower desde menu_inicio\n");
+                //printf("Pulsado en un boton lower desde menu_inicio\n");
 
                 //decir que mouse no se ha movido, porque si no, nos quedariamos en bucle continuamente en menu_espera_no_tecla
                 mouse_movido=0;
@@ -36019,8 +36020,8 @@ void menu_inicio(void)
         }
 
 
-        printf("menu_inicio: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
-            menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
+        //printf("menu_inicio: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
+        //    menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
 
 	}
 
@@ -36140,7 +36141,7 @@ void menu_inicio(void)
     //no alterar variable de salir si hemos pulsado en alguna ventana, para que cierre el menu y vaya a esa ventana
 	salir_todos_menus=0;
 
-	printf ("inicio menu_inicio2 salir todos menus: %d\n",salir_todos_menus);
+	//printf ("inicio menu_inicio2 salir todos menus: %d\n",salir_todos_menus);
 
 
 	//Si first aid al inicio
@@ -36381,7 +36382,7 @@ void menu_inicio(void)
                     
                     mouse_movido=0;	
 
-                    printf("Se ha pulsado en zona botones con menu cerrado\n");
+                    //printf("Se ha pulsado en zona botones con menu cerrado\n");
                 }
                 else {
                     //printf ("No pulsado en zona botones con menu cerrado\n");
