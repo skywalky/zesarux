@@ -19192,7 +19192,7 @@ void menu_windows(MENU_ITEM_PARAMETERS)
 {
 
 	if (!menu_allow_background_windows) {
-		menu_warn_message("Background windows setting is not enabled. You can enable it on Settings-> GUI-> Windows-> Background windows");
+		menu_warn_message("Background windows setting is not enabled. You can enable it on Settings-> ZX Vision-> Background windows");
 		return;
 	}
 
@@ -24745,36 +24745,36 @@ void menu_accessibility_menu(MENU_ITEM_PARAMETERS)
 
         menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_high_contrast,NULL,"Set high ~~contrast style");
         menu_add_item_menu_shortcut(array_menu_common,'c');
-        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
-        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision menu");
+        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision menu");
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_big_font,NULL,"Set big ~~font");
         menu_add_item_menu_shortcut(array_menu_common,'f');
-        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
-        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision menu");
+        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision menu");
 
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_hotkeys,NULL,"Force ~~hotkeys");
         menu_add_item_menu_shortcut(array_menu_common,'h');
-        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
-        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision menu");
+        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision menu");
 
 
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_disable_back,NULL,"Disable background ~~windows");
         menu_add_item_menu_shortcut(array_menu_common,'w');
-        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
-        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");        
+        menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision menu");
+        menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision menu"); 
 
         if (screen_ext_desktop_enabled) {
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_zxdesktop_clean,NULL,"ZX Desktop c~~lean fill");
             menu_add_item_menu_shortcut(array_menu_common,'l');
-            menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
-            menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+            menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision-> ZX Desktop menu");
+            menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision-> ZX Desktop menu");
 
             menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_menu_zxdesktop_button_boxes,NULL,"ZX Desktop ~~buttons visibility");
             menu_add_item_menu_shortcut(array_menu_common,'b');
-            menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
-            menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings->GUI menu");
+            menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision-> ZX Desktop menu");
+            menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision-> ZX Desktop menu");
         }
  
         menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);

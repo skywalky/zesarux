@@ -34060,7 +34060,7 @@ void menu_help_background_windows(MENU_ITEM_PARAMETERS)
 
 	
 		menu_generic_message("Background Windows Help",
-			"When you enable Background Windows (from Settings-> GUI Settings-> Windows Settings), "
+			"When you enable Background Windows (from Settings-> ZX Vision), "
 			"some features are added to the ZX Desktop and some behaviour is modified. \n"
 			"\n"
 			"First, we will refer to 'menu' to all the menu windows and all the windows in background. "
@@ -34094,11 +34094,11 @@ void menu_help_background_windows(MENU_ITEM_PARAMETERS)
 			"Pressing ESC on the main menu, makes disappear all windows. But pressing F5 again will restore all windows. \n"
 			"Keep in mind that F-keys are only read when menu is closed (except F4, F5 and F6, which are also read with menu open). "
 			"\n"
-			"You can enable a setting to restore windows when ZEsarUX is opened (from Settings-> GUI Settings-> Windows Settings-> "
+			"You can enable a setting to restore windows when ZEsarUX is opened (from Settings-> ZX Vision-> "
 			"Reopen windows on start). \n"
 			"\n"
             "You can enable a setting to view windows in background even with menu closed (but you can't interact with them), "
-            "from Settings-> GUI Settings-> Windows Settings-> Bakcground Windows-Even with menu closed\n"
+            "from Settings-> ZX Vision-> Background Windows-Even with menu closed\n"
 			"You can have background windows enabled but multitasking disabled (not recommended, but allowed). "
 
 			
@@ -35852,7 +35852,7 @@ void menu_process_f_functions_by_action(int indice)
 		case F_FUNCION_OVERLAY_WINDOWS:
 			//Solo permitido si esta el setting de background windows
 			if (!menu_allow_background_windows) {
-                menu_error_message("Background windows setting is not enabled. You can enable it on Settings-> GUI-> Windows-> Background windows");
+                menu_error_message("Background windows setting is not enabled. You can enable it on Settings-> ZX Vision-> Background windows");
         	}
 			else { 
 				//Solo si opcion esta desactivada
@@ -39495,7 +39495,7 @@ char *first_aid_string_language="Warning: not all messages are translated. Aviso
 int first_aid_no_startup_aid=0;
 char *first_aid_string_startup_aid="This is a first aid help message. You will be shown some of these at the emulator startup, but also "
 	"when opening some menus. All of them are suggestions, advices and pieces of help of ZEsarUX. You can entirely disable them by going to Settings-> "
-	"GUI Settings-> First aid help";
+	"ZX Vision-> First aid help";
 
 int first_aid_no_multiplattform=0;
 char *first_aid_string_multiplattform="Do you know that ZEsarUX is multiplattform? There are main versions for Linux, Mac, Windows and Raspberry pi. "
@@ -39561,15 +39561,15 @@ char *first_aid_string_spaceexpand="Do you know you can navigate inside files, l
 
 int first_aid_no_backgroundwindows=0;
 char *first_aid_string_backgroundwindows="You can enable background windows and put some windows on the background. "
-		"Go to Settings-> GUI-> Windows settings-> Background windows to enable it";
+		"Go to Settings-> ZX Vision settings-> Background windows to enable it";
 
 int first_aid_no_zxdesktop=0;
 char *first_aid_string_zxdesktop="Have you enabled ZX Desktop? It allows you to have a space on the right to place "
-				"zxvision windows, menus or other widgets. Go to Settings-> GUI-> ZX Desktop settings to enable it";
+				"zxvision windows, menus or other widgets. Go to Settings-> ZX Vision-> ZX Desktop settings to enable it";
 
 int first_aid_no_zxdesktop_custombuttons=0;
 char *first_aid_string_zxdesktop_custombuttons="You can customize upper ZX Desktop buttons to trigger different actions. "
-				"Go to Settings-> GUI-> ZX Desktop-> Customize buttons";
+				"Go to Settings-> ZX Vision-> ZX Desktop-> Customize buttons";
 
 
 void menu_first_aid_init(void)

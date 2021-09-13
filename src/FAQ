@@ -833,7 +833,7 @@ You can even try to delete all the unnecessary files and the emulator will also 
 
 Q: When I enable video out to file setting, or "Reduce to 0.75" a big "Z" letter is added to the display. Can I erase it?
 A: No, you can't. Because I want that final video has that watermark, so anyone that sees it knows which emulator is used to record it ;)
-However, you can move the letter, go to Settings->GUI->OSD->Watermark position
+However, you can move the letter, go to Settings-> OSD ->Watermark position
 
 
 Q: Why the emulator doesn't use more beautiful menus, like the usual menus on Windows/Mac/GNU/Linux etc? / Why are you limiting the GUI interface to these simple menus? / Why don't you have a better file selector?
