@@ -5735,6 +5735,106 @@ int menu_debug_registers_print_main_step(zxvision_window *ventana)
     return linea; 
 }
 
+void menu_debug_help(void)
+{
+    if (gui_language==GUI_LANGUAGE_SPANISH) {
+        menu_generic_message("Ayuda",
+        "En esta ventana de Debug CPU se pueden tener diferentes vistas (seleccionables con las teclas 1-8), cada una mostrando diferente información:\n"
+        "1 - Vista por defecto. Se muestra una zona superior con desensamblado de instrucciones y registros. Esta zona se puede cambiar mediante tecla m, "
+        "la cual conmuta en vista de desensamblado, vista hexadecimal, vista ascii, y vista de desensamblado sin registros. En esta vista 1, "
+        "se puede mover el cursor mediante teclado o ratón: al pulsar con ratón en una linea de desensamblado, se asigna un breakpoint. \n"
+        "\n"
+        "2 - Vista de una línea de desensamblado, registros y diferentes puertos hardware\n"
+        "\n"
+        "3 - Vista de 9 líneas de desensamblado y diferentes puertos hardware\n"
+        "\n"
+        "4 - Vista de 19 líneas de desensamblado\n"
+        "\n"
+        "5 - Vista de 9 líneas de hexadecimal y ascii y diferentes puertos hardware\n"
+        "\n"
+        "6 - Vista de 19 líneas de hexadecimal y ascii\n"
+        "\n"
+        "7 - Vista de una línea de desensamblado y el contador de t-estados y scanline actual\n"   
+        "\n"
+        "8 - Vista de depuración de aventura conversacional, sólo disponible si se carga una aventura hecha con Quill, Paws, o Daad\n"
+        "\n"
+        "En la mayoría de las vistas, hay diferentes teclas que realizan acciones. Hay que tener en cuenta que se distingue mayúsculas "
+        "de minúsculas, por tanto, las teclas en mayúsculas hay que accionarlas junto con la tecla Caps shift:\n"
+        "\n"
+        "t: cambiar el puntero donde estamos visualizando el listado\n"
+        "\n"
+        "f: habilita/deshabilita el seguimiento del puntero con la posición del registro PC de la cpu\n"
+        "\n"
+        "s: modo paso a paso: Habilita/deshabilita el modo paso a paso. En el modo paso a paso se puede entrar manualmente con dicha tecla \n"
+        "o también se entra de manera automática siempre que se tenga deshabilitado el Multitask menu o se tenga habilitada opción de Stop emulation on menu.\n"
+        "Cuando no se está en modo paso a paso, la emulación de la máquina sigue ejecutándose. En cambio, en modo paso a paso,\n"
+        "la emulación está detenida, y se ejecuta una instrucción a cada pulsación de la tecla Enter\n"
+        "\n"
+        "d: desensamblar: Se tiene una ventana adicional de desensamblado y exportación del listado a archivo de texto\n"
+        "\n"
+        "a: ensamblar: Se puede ensamblar codigo máquina, linea a linea\n"
+        "\n"
+        "Enter: ejecutar siguiente instrucción cuando se está en modo paso a paso\n"
+        "\n"
+        "o: Ejecutar hasta volver de la siguiente instrucción, útil por ejemplo para volver justo después de un CALL\n"
+        "\n"
+        "m: Cambiar entre los diferentes modos de la vista 1\n"
+        "\n"
+        "r: Modificar registros\n"
+        "\n"
+        "b: Ir a la ventana de breakpoints\n"
+        "\n"
+        "w: Ir a la ventana de watches\n"
+        "\n"
+        "l: Poner/Quitar breakpoint en la posición indicada por el puntero\n"
+        "\n"
+        "n: Salir de la vista de Debug CPU y seguir ejecutando\n"
+        "\n"
+        "u: Ejecutar hasta que se llegue a la posición indicada por el puntero\n"
+        "\n"
+        "e: Ejecutar la instrucción RET, que provocará alterar registros PC y SP\n"
+        "\n"
+        "p: Resetear contador de t-estados parcial. Dicho contador se encuentra visible en las vistas 2,3 y 5\n"
+        "\n"
+        "i: Escribir un valor en una dirección de memoria\n"
+        "\n"
+        "z: Seleccionar zona de memoria. Las diferentes zonas de memoria permiten acceder a bloques de memoria mas allá del direccionamiento "
+        "habitual de la cpu. Por ejemplo, podemos acceder a los 128kb de memoria RAM de un Spectrum 128kb, o a la memoria eprom de un divide\n"
+        "\n"
+        "P: Modificar el registro PC con el valor del puntero\n"
+        "\n"
+        "H: Habilitar y visualizar el historial de ejecución de la cpu\n"
+        "\n"
+        "S: Permite ejecutar una instrucción hacia atrás. Requiere tener el historial de la cpu habilitado y sólo está disponible en modo paso a paso\n"
+        "\n"
+        "N: Permite ejecutar continuamente hacia atrás. Requiere tener el historial de la cpu habilitado y sólo está disponible en modo paso a paso. "
+        "Lógicamente esta ejecución hacia atrás tiene un límite, determinado en el menu Settings-> Debug ->Max history items\n"
+        "\n"
+        "g: Ver los gráficos de una aventura hecha con GAC\n"
+        "\n"
+        "Teclas sólo para la vista 8, de debug de aventura conversacional:\n"
+        "\n"
+        "Enter: Ejecutar hasta el siguiente condacto\n"
+        "\n"
+        "k: Establecer un punto de paro hasta la ejecución de un condacto especial en Daad\n"
+        "\n"
+        "p: Seguir la ejecución hasta el siguiente comando de Parse de Daad\n"
+        "\n"
+        "w: Modificar los watches, que permiten visualizar un listado de 7 objetos/flags\n"
+        "\n"
+        "i: Modificar el valor de un flag u objeto\n"
+        "\n"
+        "e: Listar los diferente mensajes de la aventura: Objetos, Mensajes de usuario, Localizaciones, etc\n"
+        "\n"
+        "v: Listar el vocabulario de la aventura\n"
+        "\n"
+        "g: Ver los gráficos de la aventura\n"
+        );
+    }
+    else {
+        menu_generic_message("Help","English");
+    }
+}
 
 void menu_debug_registers(MENU_ITEM_PARAMETERS)
 {
@@ -6153,6 +6253,16 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 					
                 }
+
+                //ayuda
+                if (tecla==MENU_TECLA_AYUDA) {
+
+                    menu_debug_help();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+					
+                }                
                 	                
 
 				//Vista. Entre 1 y 8
@@ -6683,6 +6793,27 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
 					
                 }
+
+
+                //ayuda
+                if (tecla==MENU_TECLA_AYUDA) {
+					//Detener multitarea pues interesa que no se "mueva" la cpu al abrir la ventana
+					int antes_menu_emulation_paused_on_menu=menu_emulation_paused_on_menu;
+					menu_emulation_paused_on_menu=1;
+
+                    menu_debug_help();
+
+                    //Decimos que no hay tecla pulsada
+                    acumulado=MENU_PUERTO_TECLADO_NINGUNA;
+
+                    //decirle que despues de pulsar esta tecla no tiene que ejecutar siguiente instruccion
+                    si_ejecuta_una_instruccion=0;                        
+
+                    //Restaurar estado multitarea despues de menu_debug_registers_ventana, pues si hay algun error derivado
+                    //de cambiar registros, se mostraria ventana de error, y se ejecutaria opcodes de la cpu, al tener que leer el teclado
+					menu_emulation_paused_on_menu=antes_menu_emulation_paused_on_menu;
+					
+                }                  
 
                 //backstep
                 if (tecla=='S' && cpu_history_enabled.v && cpu_history_started.v) {

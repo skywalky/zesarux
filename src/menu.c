@@ -1828,6 +1828,7 @@ valores de teclas especiales:
 12 Delete o joystick left
 13 Enter o joystick fire
 15 SYM+MAY(TAB)
+21 F1
 24 PgUp
 25 PgDn
 
@@ -2150,6 +2151,9 @@ las condiciones de "ventana activa se puede enviar a background o no" son comune
 
 	//PgDn
 	if ((puerto_especial1&4)==0) return 25;
+
+    //F1
+    if ((puerto_especial2&1)==0) return MENU_TECLA_AYUDA;
 
 
 
@@ -11641,6 +11645,12 @@ int zxvision_if_mouse_in_lower_button_switch_zxdesktop(void)
 
 int zxvision_if_mouse_in_zlogo_or_buttons_desktop(void)
 {
+
+    //printf("zxvision_if_mouse_in_zlogo_or_buttons_desktop. traza: \n");
+    //debug_exec_show_backtrace();
+    //printf("zxvision_if_mouse_in_zlogo_or_buttons_desktop. fin traza\n");
+
+
 	//Ver si estamos por la zona del logo en el ext desktop o de los botones
 	if (screen_ext_desktop_enabled && scr_driver_can_ext_desktop() ) {
 
@@ -30408,6 +30418,16 @@ void menu_setting_limit_menu_open(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_interface_language(MENU_ITEM_PARAMETERS)
+{
+    gui_language++;
+
+    if (gui_language>GUI_LANGUAGE_SPANISH) gui_language=0;
+
+    menu_first_aid("language");
+}
+
+
 void menu_window_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_window_settings;
@@ -30531,7 +30551,11 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 		}
 #endif
 
-       	
+        char idioma[32];
+        strcpy(idioma,"Default");
+        if (gui_language==GUI_LANGUAGE_SPANISH) strcpy(idioma,"Español");
+
+       	menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_language,NULL,"[%s] Language",idioma);
 
 	
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
@@ -33577,7 +33601,10 @@ void menu_about_history(MENU_ITEM_PARAMETERS)
 
 void menu_about_features(MENU_ITEM_PARAMETERS)
 {
-        menu_about_read_file("Features","FEATURES",1);
+    if (gui_language==GUI_LANGUAGE_SPANISH) {
+        menu_about_read_file("Características","FEATURES_es",1);
+    }
+    else menu_about_read_file("Features","FEATURES",1);
 }
 
 void menu_about_exclusivefeatures(MENU_ITEM_PARAMETERS)
@@ -35248,6 +35275,10 @@ int pulsado_alguna_ventana_con_menu_cerrado=0;
 
 void menu_inicio_bucle_main(void)
 {
+    printf("menu_inicio_bucle_main: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
+                menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
+
+
     //Primera ayuda siempre que no se haya pulsado en botones de menu diferentes del menu principal o dispositivos
     int mostrar_first_aid_menu=1;
     if (menu_pressed_zxdesktop_lower_icon_which>=0) mostrar_first_aid_menu=0;
@@ -35275,7 +35306,8 @@ void menu_inicio_bucle_main(void)
 
         printf("antes del if\n");
 		if (menu_pressed_zxdesktop_button_which>=0 || menu_pressed_zxdesktop_lower_icon_which>=0 || pulsado_alguna_ventana_con_menu_cerrado) {
-            printf("se cumple if\n");
+            printf("se cumple if: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
+                menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
 			cls_menu_overlay();
 		//Si se habia pulsado boton de zx desktop y boton no es el 0
 		//con boton 0 lo que hacemos es abrir el menu solamente			
@@ -35451,6 +35483,9 @@ void menu_inicio_bucle_main(void)
 
 void menu_inicio_bucle(void)
 {
+
+    printf("menu_inicio_bucle: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
+                menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
 
 	//printf ("inicio de menu_inicio_bucle\n");
 
@@ -35933,43 +35968,59 @@ void menu_inicio(void)
 
         }
 
-		if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
-			//printf("Pulsado en un boton desde menu_inicio. menu_abierto: %d\n",menu_abierto);
+        //Si pulsado en boton pero no pulsado en ventanas (ventanas siempre estan por encima y por tanto tienen prioridad)
+        //Hay que ver antes pulsado_alguna_ventana_con_menu_cerrado; si metemos en un solo if las dos condiciones 
+        //!pulsado_alguna_ventana_con_menu_cerrado y zxvision_if_mouse_in_zlogo_or_buttons_desktop(), la segunda
+        //hace alterar el valor de menu_pressed_zxdesktop_button_which y por tanto estariamos diciendo que se ha pulsado en boton
+        if (!pulsado_alguna_ventana_con_menu_cerrado) {
+            if (zxvision_if_mouse_in_zlogo_or_buttons_desktop()) {
+                printf("Pulsado en un boton desde menu_inicio\n");
 
-			//Dibujamos de otro color ese boton
-			//que boton=menu_pressed_zxdesktop_button_which
+                //Dibujamos de otro color ese boton
+                //que boton=menu_pressed_zxdesktop_button_which
 
-			//menu_draw_ext_desktop_dibujar_boton_pulsado(menu_pressed_zxdesktop_button_which);
-			menu_draw_ext_desktop_dibujar_boton_or_lower_icon_pulsado();
+                //menu_draw_ext_desktop_dibujar_boton_pulsado(menu_pressed_zxdesktop_button_which);
+                menu_draw_ext_desktop_dibujar_boton_or_lower_icon_pulsado();
 
-		}
-
-        if (zxvision_if_mouse_in_lower_button_switch_zxdesktop()) {
-            //printf("esperar no tecla\n");
-
-            //decir que mouse no se ha movido, porque si no, nos quedariamos en bucle continuamente en menu_espera_no_tecla
-            mouse_movido=0;
-            menu_espera_no_tecla();
-            //menu_inicio_reset_emulated_keys();
-            //while (mouse_left);
-            //printf("despues esperar no tecla\n");
-
-            //aparte de conmutar estado, decimos tambien que los menus se abriran en zona zx desktop
-            screen_ext_desktop_place_menu=1;
-
-            if (!screen_ext_desktop_enabled) {
-                //y establecemos un minimo de ancho de zxdesktop (512/zoom_x) al habilitar
-                screen_ext_desktop_width=512/zoom_x;
             }
-
-
-            menu_ext_desk_settings_enable(0);
-
-
-            menu_set_menu_abierto(0);		
-		    return;
-
         }
+
+        //Si pulsado en boton pero no pulsado en ventanas (ventanas siempre estan por encima y por tanto tienen prioridad)
+        //Hay que ver antes pulsado_alguna_ventana_con_menu_cerrado por la misma razon que la explicada anterior con zxvision_if_mouse_in_zlogo_or_buttons_desktop
+        if (!pulsado_alguna_ventana_con_menu_cerrado) {
+            if (zxvision_if_mouse_in_lower_button_switch_zxdesktop()) {
+                //printf("esperar no tecla\n");
+                printf("Pulsado en un boton lower desde menu_inicio\n");
+
+                //decir que mouse no se ha movido, porque si no, nos quedariamos en bucle continuamente en menu_espera_no_tecla
+                mouse_movido=0;
+                menu_espera_no_tecla();
+                //menu_inicio_reset_emulated_keys();
+                //while (mouse_left);
+                //printf("despues esperar no tecla\n");
+
+                //aparte de conmutar estado, decimos tambien que los menus se abriran en zona zx desktop
+                screen_ext_desktop_place_menu=1;
+
+                if (!screen_ext_desktop_enabled) {
+                    //y establecemos un minimo de ancho de zxdesktop (512/zoom_x) al habilitar
+                    screen_ext_desktop_width=512/zoom_x;
+                }
+
+
+                menu_ext_desk_settings_enable(0);
+
+
+                menu_set_menu_abierto(0);		
+                return;
+
+            }
+        }
+
+
+        printf("menu_inicio: menu_pressed_zxdesktop_button_which %d menu_pressed_zxdesktop_lower_icon_which %d pulsado_alguna_ventana_con_menu_cerrado %d\n",
+            menu_pressed_zxdesktop_button_which,menu_pressed_zxdesktop_lower_icon_which,pulsado_alguna_ventana_con_menu_cerrado);
+
 	}
 
 				//Esto se ha puesto a 1 antes desde zxvision_if_mouse_in_zlogo_or_buttons_desktop,
@@ -36314,24 +36365,27 @@ void menu_inicio(void)
 		if (menu_was_open_by_left_mouse_button.v) {
 			menu_was_open_by_left_mouse_button.v=0;
 
-			if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
-				//necesario para que no se piense que se está moviendo el raton
-				//Esto es un poco puñetero porque si no lo pongo aqui a 0,
-				//al lanzar por ejemplo smartload se queda al principio esperando que se 
-				//libere el "movimiento" desde menu_espera_no_tecla desde menu_filesel
-				//como no se llama a eventos handle_mouse pues no se pone a 0
+            if (!pulsado_alguna_ventana_con_menu_cerrado) {
 
-				
-				//Esto se ha puesto a 1 antes desde zxvision_if_mouse_in_zlogo_or_buttons_desktop,
-				//indirectamente cuando llama a menu_calculate_mouse_xy_absolute_interface_pixel
-				
-				mouse_movido=0;	
+                if (zxvision_if_mouse_in_zlogo_or_buttons_desktop() ) {
+                    //necesario para que no se piense que se está moviendo el raton
+                    //Esto es un poco puñetero porque si no lo pongo aqui a 0,
+                    //al lanzar por ejemplo smartload se queda al principio esperando que se 
+                    //libere el "movimiento" desde menu_espera_no_tecla desde menu_filesel
+                    //como no se llama a eventos handle_mouse pues no se pone a 0
 
-				//printf("Se ha pulsado en zona botones con menu cerrado\n");
-			}
-			else {
-				//printf ("No pulsado en zona botones con menu cerrado\n");
-			}
+                    
+                    //Esto se ha puesto a 1 antes desde zxvision_if_mouse_in_zlogo_or_buttons_desktop,
+                    //indirectamente cuando llama a menu_calculate_mouse_xy_absolute_interface_pixel
+                    
+                    mouse_movido=0;	
+
+                    printf("Se ha pulsado en zona botones con menu cerrado\n");
+                }
+                else {
+                    //printf ("No pulsado en zona botones con menu cerrado\n");
+                }
+            }
 		}
 
 		
@@ -39389,6 +39443,9 @@ char *first_aid_string_debug_console="First messages appear at the bottom of the
 int first_aid_no_back_run_rainbow=0;
 char *first_aid_string_back_run_rainbow="As you have real video enabled, you may see the machine display now drawn as the initial state, but it's not the actual state, it's a temporary frame that will disappear after you close the menu";
 
+int first_aid_no_language=0;
+char *first_aid_string_language="Warning: not all messages are translated. Aviso: No todos los mensajes están traducidos";
+
 
 //Items que se disparan en startup
 
@@ -39494,6 +39551,7 @@ void menu_first_aid_init(void)
     menu_first_aid_add("debug_variables",&first_aid_no_debug_variables,first_aid_string_debug_variables,0);
     menu_first_aid_add("debug_console",&first_aid_no_debug_console,first_aid_string_debug_console,0);
     menu_first_aid_add("back_run_rainbow",&first_aid_no_back_run_rainbow,first_aid_string_back_run_rainbow,0);
+    menu_first_aid_add("language",&first_aid_no_language,first_aid_string_language,0);
     
 
 

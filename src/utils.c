@@ -3761,6 +3761,9 @@ int util_write_configfile(void)
   if (menu_hide_close_button.v)              ADD_STRING_CONFIG,"--hide-menu-close-button");
 
 
+  if (gui_language==GUI_LANGUAGE_SPANISH)   ADD_STRING_CONFIG,"--language es");
+  
+
   if (menu_invert_mouse_scroll.v)             ADD_STRING_CONFIG,"--invert-menu-mouse-scroll");
 
   if (menu_allow_background_windows)          ADD_STRING_CONFIG,"--allow-background-windows");

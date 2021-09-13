@@ -47,6 +47,12 @@ struct s_overlay_screen {
 
 typedef struct s_overlay_screen overlay_screen;
 
+//Idiomas de la interfaz
+#define GUI_LANGUAGE_DEFAULT 0
+#define GUI_LANGUAGE_SPANISH 1
+
+//tecla F1
+#define MENU_TECLA_AYUDA 21
 
 //Para el guardado de la geometria de ventanas
 

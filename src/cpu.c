@@ -1855,6 +1855,7 @@ printf (
 		"--hide-menu-minimize-button Hides minimize button on the title window\n"
 		"--hide-menu-close-button    Hides close button on the title window\n"
 		"--invert-menu-mouse-scroll  Inverts mouse scroll movement\n"
+        "--language language         Select alternate language for menu. Available languages: es\n"
 		"--allow-background-windows  Allow putting windows in background\n"
         "--allow-background-windows-closed-menu  Allow these background windows even with menu closed\n"
 		);
@@ -7240,6 +7241,18 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--hide-menu-minimize-button")) {
                                 menu_hide_minimize_button.v=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--language")) {
+				siguiente_parametro_argumento();
+
+                if (!strcasecmp(argv[puntero_parametro],"es")) {
+                    gui_language=GUI_LANGUAGE_SPANISH;
+                }
+                else {
+                    printf("Invalid language\n");
+                    exit(1);
+                }
 			}
 
 			else if (!strcmp(argv[puntero_parametro],"--menu-mix-method")) {

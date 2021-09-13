@@ -280,3 +280,11 @@ z80_bit setting_machine_selection_by_name={0};
 
 //Si el visor de archivos siempre muestra en hexadecimal
 z80_bit menu_file_viewer_always_hex={0};
+
+
+
+//
+// General Settings
+//
+
+int gui_language=GUI_LANGUAGE_DEFAULT;

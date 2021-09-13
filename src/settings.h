@@ -103,5 +103,7 @@ extern z80_bit menu_file_viewer_always_hex;
 
 z80_bit debug_view_basic_show_address;
 
+extern int gui_language;
+
 #endif
 
