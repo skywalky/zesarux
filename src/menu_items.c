@@ -12059,11 +12059,13 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (screen_ext_desktop_enabled) {
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,menu_ext_desktop_cond,"[%4d] Width",screen_ext_desktop_width);
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_width,menu_ext_desktop_cond,"[%4d] ~~Width",screen_ext_desktop_width);
+            menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'w');
 			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Tells the width of the ZX Desktop space");
 			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Final width is this value in pixels X current horizontal zoom");
 
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_custom_width,menu_ext_desktop_cond,"Custom Width");
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_custom_width,menu_ext_desktop_cond,"~~Custom Width");
+            menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'c');
 
 			
 
@@ -12075,7 +12077,8 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
 			menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Try to place new menu items on the ZX Desktop space");
 
-			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_direct_buttons,NULL,"[%c] Direct access buttons",(menu_zxdesktop_buttons_enabled.v ? 'X' : ' ' ) );
+			menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_direct_buttons,NULL,"[%c] ~~Direct access buttons",(menu_zxdesktop_buttons_enabled.v ? 'X' : ' ' ) );
+            menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'d');
 
 			if (menu_zxdesktop_buttons_enabled.v) {
 				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_upper_transparent,NULL,"[%c] Transparent upper buttons",(menu_ext_desktop_transparent_upper_icons.v ? 'X' : ' ' ) );
@@ -12153,7 +12156,8 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
 			}
 
-            menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%s] Fill type",fill_type_name);
+            menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_filltype,NULL,"[%s] ~~Fill type",fill_type_name);
+            menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'f');
 			
 			if (seleccion_primary) {
                 //en tipo degraded, no tiene sentido mostrar los colores bright
