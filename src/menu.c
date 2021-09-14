@@ -30458,15 +30458,15 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 			fps=50/divisor;
 		}
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_frameskip,NULL,"[%d] Frameskip (%d FPS)",frameskip,fps);
-		//menu_add_item_menu_shortcut(array_menu_window_settings,'r');
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_frameskip,NULL,"[%d] F~~rameskip (%d FPS)",frameskip,fps);
+		menu_add_item_menu_shortcut(array_menu_window_settings,'r');
 			menu_add_item_menu_tooltip(array_menu_window_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
 			menu_add_item_menu_ayuda(array_menu_window_settings,"Sets the number of frames to skip every time the screen needs to be refreshed");
 
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_autoframeskip,NULL,"[%c] Auto Frameskip",
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_autoframeskip,NULL,"[%c] ~~Auto Frameskip",
 				(autoframeskip.v ? 'X' : ' '));
-				//menu_add_item_menu_shortcut(array_menu_window_settings,'a');	
+				menu_add_item_menu_shortcut(array_menu_window_settings,'a');	
 			menu_add_item_menu_tooltip(array_menu_window_settings,"Let ZEsarUX decide when to skip frames");
 			menu_add_item_menu_ayuda(array_menu_window_settings,"ZEsarUX skips frames when the host cpu use is too high. Then skiping frames the cpu use decreases");
 
@@ -30474,15 +30474,16 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
 
         if (mouse_menu_disabled.v==0) {
-            menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_ignore_click_open_menu,NULL,"[%c] ~~Clicking mouse opens menu", (mouse_menu_ignore_click_open.v==0 ? 'X' : ' ') );            
+            menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_ignore_click_open_menu,NULL,"[%c] Cl~~icking mouse opens menu", (mouse_menu_ignore_click_open.v==0 ? 'X' : ' ') );            
             menu_add_item_menu_tooltip(array_menu_window_settings,"Ignore mouse clicking to open menu or ZX Desktop buttons");
+            menu_add_item_menu_shortcut(array_menu_window_settings,'i');
             menu_add_item_menu_ayuda(array_menu_window_settings,"Disabling this will make mouse be ignored when clicking on "
                 "the window to open menu or pressing ZX Desktop buttons. The mouse can still be used when the menu is open");
         }
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"[%c] Limit menu opening",
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_setting_limit_menu_open,NULL,"[%c] Li~~mit menu opening",
 			(menu_limit_menu_open.v ? 'X' : ' ') );
-		//menu_add_item_menu_shortcut(array_menu_window_settings,'l');	
+		menu_add_item_menu_shortcut(array_menu_window_settings,'m');	
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Limit the action to open menu (F5 by default, joystick button)");			
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Limit the action to open menu (F5 by default, joystick button). To open it, you must press the key 3 times in one second");
 
@@ -30496,8 +30497,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
                 }
 
 
-		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075,NULL,"[%c] ~~Reduce to 0.75",(screen_reduce_075.v ? 'X' : ' ') );
-		menu_add_item_menu_shortcut(array_menu_window_settings,'r');
+		menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_window_settings_reduce_075,NULL,"[%c] R~~educe to 0.75",(screen_reduce_075.v ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_window_settings,'e');
 		menu_add_item_menu_tooltip(array_menu_window_settings,"Reduce machine display output by 0.75. Enables realvideo and forces watermark");
 		menu_add_item_menu_ayuda(array_menu_window_settings,"Reduce machine display output by 0.75. Enables realvideo and forces watermark. This feature has been used on a large bulb display for the RunZX 2018 event");
 
@@ -30524,8 +30525,8 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (menu_footer) {
-			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_fps,NULL,"[%c] Show FPS",(screen_show_fps.v ? 'X' : ' ') );
-			//menu_add_item_menu_shortcut(array_menu_window_settings,'c');
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_show_fps,NULL,"[%c] Show F~~PS",(screen_show_fps.v ? 'X' : ' ') );
+			menu_add_item_menu_shortcut(array_menu_window_settings,'p');
 			menu_add_item_menu_tooltip(array_menu_window_settings,"Show FPS on footer");
 			menu_add_item_menu_ayuda(array_menu_window_settings,"It tells the current FPS");
 												
