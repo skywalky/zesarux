@@ -75,99 +75,99 @@
 
 * Soporta carga de cinta real mediante formatos de archivos: RWA, SMP, WAV, TZX, PZX, CDT, TAP, P, O. Soporta carga turbo de cintas o cualquier otro tipo de carga de cintas para rutinas de carga estándar/no estándar
 
-* Handles binary tape format files (TAP, TZX, O, P, CDT, CAS) on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace, MSX, Spectravideo
+* Soporta archivos de cinta de formato binario (TAP, TZX, O, P, CDT, CAS) en rutinas de ROM estándar para ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace, MSX, Spectravideo
 
-* Handles real audio loading (RWA, SMP, WAV) on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace
+* Soporta carga de cinta real mediante archivos de formatos (RWA, SMP, WAV) en rutinas ROM estándar para ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace
 
-* Simulates real tape loading on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81
+* Simula carga de cinta real en rutinas ROM estándar para ZX Spectrum, ZX80, ZX81
 
-* Handles snapshot formats: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, O, Z81, ACE
+* Soporta formatos de snapshot: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, O, Z81, ACE
 
-* Handles cartridge formats: DCK, ROM, COL, SG
+* Soporta formatos de cartucho: DCK, ROM, COL, SG
 
-* Handles RZX playback 
+* Soporta reproducción RZX
 
 * Emula Multiface One, 128 y Three
 
 * Emula Datagear/MB02 DMA, ZX-Uno DMA
 
-* Emula +3 Disk
+* Emula Disco +3
 
-* Emula Betadisk/TR-DOS. Direct support for .trd files. scl files can be converted from file selector pressing space
+* Emula Betadisk/TR-DOS. Soporte directo para archivos .trd. scl files pueden convertirse desde el selector de archivos pulsando espacio
 
-* Emula ZX Spectrum MMC Interfaces: ZXMMC, DivMMC. Support for raw (.mmc) files y hdf files
+* Emula ZX Spectrum MMC Interfaces: ZXMMC, DivMMC. Soporte para raw (.mmc) archivos y hdf
 
 * Emula ZX Spectrum IDE Interface: DivIDE, 8-bit simple
 
-* Emula ZX Spectrum ESXDOS file access using files from your computer
+* Emula ZX Spectrum ESXDOS acceso de archivos usando archivos de tu ordenador
 
 * Emula Sam Coupe IDE Interface: Atom Lite
 
-* Emula ZXPand MMC Interface on ZX80 y ZX81
+* Emula ZXPand MMC Interface en ZX80 y ZX81
 
 * Emula ZX Dandanator! Mini, CPC Dandanator! Mini
 
 * Emula Speccy Superupgrade
 
-* Emula Kartusho, iFrom interfaces by Antonio Villena
+* Emula Kartusho, iFrom interfaces de Antonio Villena
 
-* Emula SamRam interface by Gerton Lunter (author of famous Z80 emulator)
+* Emula SamRam interface de Gerton Lunter (autor del famoso Z80 emulator)
 
 * Emula DataDrive HiLow (beta)
 
-* Handles RAM, EPROM, Intel Flash y Hybrid (RAM+EPROM) cards on Z88
+* Soporta tarjetas RAM, EPROM, Intel Flash y Hybrid (RAM+EPROM) en Z88
 
-* Handles QL microdrive/floppy file access using files from your computer. Allows reading Q-emuLator file headers. Allows EXECuting files without headers
+* Soporta QL microdrive/floppy acceso de archivos usando archivos de tu ordenador. Permite leer cabeceras tipo Q-emuLator. Permite EXECutar archivos sin cabeceras
 
-* Handles compressed formats zip (with internal decompressor), y tar, rar, gz through external utilities
+* Soporta formatos comprimidos zip (con decompresor interno), y tar, rar, gz a través de utilidades externas
 
-* Emula AY Audio Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, different DAC: Specdrum, Covox, ACB/ABC/BAC/CBA Stereo 
+* Emula AY Audio Chip, Turbosound (2 AY Channels), 3 AY Channels, MIDI channels, diferentes DAC: Specdrum, Covox, ACB/ABC/BAC/CBA Stereo 
 
 * Emula General Sound
 
 * Emula SN76489AN Audio Chip
 
-* Emula Quicksilva, ZON-X81, y VSYNC-based sound on ZX80/81
+* Emula Quicksilva, ZON-X81, y VSYNC-based sound en ZX80/81
 
-* Emula Speaker y Soundbox sound on Jupiter Ace
+* Emula Speaker y Soundbox sound en Jupiter Ace
 
-* Experimental simulation of the Sam Coupe Audio Chip (SAA1099)
+* Experimental simulation del Chip de Audio del Sam Coupe
 
 * Emula i8049 QL sound
 
-* Supports RAM size up to 1024 KB on Spectrum y Pentagon
+* Soporta tamaño RAM hasta 1024 KB en Spectrum y Pentagon
 
-* Supports RAM packs on ZX80/81 up to 56 KB
+* Soporta RAM packs en ZX80/81 hasta 56 KB
 
-* Supports RAM packs on Jupiter Ace up to 51 KB
+* Soporta RAM packs en Jupiter Ace hasta 51 KB
 
-* Joystick emulation with real joystick (on GNU/Linux y Windows) y keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors. Autofire function too
+* Emulación Joystick con with real joystick (en GNU/Linux y Windows) y cursores de teclado: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors. Función autodisparo también
 
-* On Screen keyboard useful when playing with joystick, two types: one with keyboard letters, y another with words, useful for playing Text Adventures. Also a tool to extract words from text adventures (Daad, Paws, Quill y Gac) y configure this on screen text keyboard
+* Teclado en pantalla útil para jugar con joystick, dos tipos: uno con letras de teclado, y otras con palabtas, útil para jugar a Aventuras Conversacionales. También una utilidad para extraer palabras de aventuras conversacionales (Daad, Paws, Quill y Gac)
 
-* Emula Spectrum keyboard ghosting error feature
+* Emula característica de teclado de Spectrum "ghosting error"
 
-* ZX Spectrum Recreated keyboard support
+* Soporta teclado ZX Spectrum Recreated
 
-* Emula native turbo modes on ZX-Uno, Chloe, Prism y ZX Spectrum Next, y manual for other machines
+* Emula modos nativos turbo en ZX-Uno, Chloe, Prism y ZX Spectrum Next, y manual para otras máquinas
 
-* ZX Printer emulation
+* Emulación de ZX Printer
 
-* Lightgun emulation: Almost perfect emulation of Gunstick from MHT Ingenieros S.L y experimental emulation of Magnum Light Phaser
+* Emulación de Lightgun: Casi perfecta emulación de Gunstick de MHT Ingenieros S.L y experimental emulación de Magnum Light Phaser
 
-* Kempston mouse emulation
+* Emulación Kempston mouse
 
-* Supports Network gaming using its own protocol (ZEsarUX Network Gaming protocol - ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, located each one on any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
+* Soporta Network gaming using its own protocol (ZEsarUX Network Gaming protocol - ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, located each one en any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
 
-* Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, on GNU/Linux only (Windows, Mac can simulate it)
+* Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, en GNU/Linux only (Windows, Mac can simulate it)
 
 * Can browse online ZX81 games
 
 * Can browse online Spectrum games
 
-* Supports Input spool text file to simulate keyboard press
+* Soporta Input spool text file to simulate keyboard press
 
-* Supports reading Pokes from .POK files
+* Soporta reading Pokes from .POK files
 
 * Audio Chip Tools: For the 3 emulated audio chips (AY-3-8912, SN76489AN, QL i8049): Sheet, Piano, Registers, export music to midi (.mid) files
 
@@ -179,25 +179,25 @@
 
 * Visual Real Tape: tienes una vista del audio de tu cinta, ver bloques de cinta y rebobinar o avanzar el reproductor de cintas
 
-* Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog) or just by using a telnet client.
+* Soporta ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging en ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog) or just by using a telnet client.
 
-* Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
+* Can use a reduced Spectrum core, with some features disabled, useful en slow devices, like Raspberry Pi 1/Zero
 
 * Can generate Automatic Snapshots to RAM y also do a Rewind operation
 
-* Powerful debug features: Reverse Debugging, CPU History, Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, View BASIC variables, verbose messages on console
+* Powerful debug features: Reverse Debugging, CPU History, Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, View BASIC variables, verbose messages en console
 
 * Text adventure debugger: On a Quill/Paws/Daad text adventure you can Step to Step condact, watch flags/objects, list messages (objects, user/system messages, locations, compressed tokens, vocabulary). Can also view graphics from a Quill, Paws, Daad or Gac aventure.
 
 * File utilities menu: Allowing to view, expand y convert some common file formats: tap, tzx, trd, dsk, mdv, hdf, etc. Can also browse inside file system images (.mmc, .img, etc)
 
-* Accessibility support: Print char traps allows to capture generated text from almost any program or game, using standard ROM calls (RST 10H) or even non standard print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can also be read by a text-to-speech program.
+* Accessibility support: Print char traps allows to capture generated text from almost any program or game, using estándar ROM calls (RST 10H) or even non estándar print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can also be read by a text-to-speech program.
 
 * Translation support: Can translate text from almost any program or game using external scripts
 
-* Simulates upper RAM memory refresh on Spectrum 48Kb, losing its contents when changing R register very quickly
+* Simulates upper RAM memory refresh en Spectrum 48Kb, losing its contents when changing R register very quickly
 
-* Supports command line settings, configuration file settings y per-game configuration settings
+* Soporta command line settings, configuration file settings y per-game configuration settings
 
 * Other features: Visualmem menu, CPU Statistics
 
