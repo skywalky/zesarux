@@ -171,7 +171,7 @@
 
 * Audio Chip Tools: For the 3 emulated audio chips (AY-3-8912, SN76489AN, QL i8049): Sheet, Piano, Registers, export music to midi (.mid) files
 
-* Real time playback from Audio Chip Sound (AY-3-8912, SN76489AN, QL i8049) to external MIDI device
+* Real Time playback from Audio Chip Sound (AY-3-8912, SN76489AN, QL i8049) to external MIDI device
 
 * AY Player: allowing to play music from .AY files
 
@@ -179,13 +179,13 @@
 
 * Visual Real Tape: you have an audio render of your tape, see tape blocks and rewind or move forward the cassette player 
 
-* Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog) or just by using a telnet client.
+* Supports ZEsarUX remote command protocol (ZRCP). This is a powerful communications protocol between a client and ZEsarUX, using a simple telnet client. One of the things you can do it is enhanced debugging on ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog)
 
 * Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
 
 * Can generate Automatic Snapshots to RAM and also do a Rewind operation
 
-* Powerful debug features: Reverse Debugging, CPU History, Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, View BASIC variables, verbose messages on console
+* Powerful debug features: Reverse Debugging, CPU History, Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, View Tiles, Find bytes, Infinite lives finder, CPU Transaction log, View BASIC, View BASIC variables, verbose messages on console
 
 * Text adventure debugger: On a Quill/Paws/Daad text adventure you can Step to Step condact, watch flags/objects, list messages (objects, user/system messages, locations, compressed tokens, vocabulary). Can also view graphics from a Quill, Paws, Daad or Gac aventure.
 
@@ -201,5 +201,5 @@
 
 * Other features: Visualmem menu, CPU Statistics
 
-* Includes four easter eggs. Can you find them? :)
+* Includes five easter eggs. Can you find them? :)
 

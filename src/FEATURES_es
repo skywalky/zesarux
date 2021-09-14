@@ -157,49 +157,49 @@
 
 * Emulación Kempston mouse
 
-* Soporta Network gaming using its own protocol (ZEsarUX Network Gaming protocol - ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, located each one en any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
+* Soporta juego en Red mediante su propio protocolo (ZEsarUX Network Gaming protocol - ZENG), que te permite jugar a cualquier juego emulado, mediante dos instancias de ZEsarUX, localizadas cada una un cualquier parte del mundo o en una red local. Los juegos no necesitan ser modificados, puedes jugar a cualquier juego existente
 
 * Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, en GNU/Linux only (Windows, Mac can simulate it)
 
-* Can browse online ZX81 games
+* Puede buscar online juegos de ZX81
 
-* Can browse online Spectrum games
+* Puede buscar online juegos de Spectrum
 
-* Soporta Input spool text file to simulate keyboard press
+* Soporta Input spool text file para simular pulsaciones de teclado
 
-* Soporta reading Pokes from .POK files
+* Soporta leer Pokes de archivos .POK
 
-* Audio Chip Tools: For the 3 emulated audio chips (AY-3-8912, SN76489AN, QL i8049): Sheet, Piano, Registers, export music to midi (.mid) files
+* Utilidades de Chip de Audio Chip: Para los 3 chips emulados (AY-3-8912, SN76489AN, QL i8049): Partitura, Piano, Registros, exportar música a archivos midi (.mid)
 
-* Real time playback from Audio Chip Sound (AY-3-8912, SN76489AN, QL i8049) to external MIDI device
+* Reproducción en Tiempo Real del Sonido del Chip de Audio (AY-3-8912, SN76489AN, QL i8049) a un dispositivo externo MIDI
 
-* AY Player: allowing to play music from .AY files
+* AY Player: permite reproducir música de archivos .AY
 
 * AY Mixer
 
 * Visual Real Tape: tienes una vista del audio de tu cinta, ver bloques de cinta y rebobinar o avanzar el reproductor de cintas
 
-* Soporta ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging en ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog) or just by using a telnet client.
+* Soporta ZEsarUX remote command protocol (ZRCP). Este es un potente protocolo de comunicaciones entre un cliente y ZEsarUX, utilizando un simple cliente telnet. Una de las cosas que puedes hacer es debugging mejorado en ZEsarUX desde Visual Studio Code (ver https://github.com/maziac/DeZog)
 
-* Can use a reduced Spectrum core, with some features disabled, useful en slow devices, like Raspberry Pi 1/Zero
+* Puede usar un core de Spectrum reducido, con algunas características desactivadas, útil en dispositivos lentos como Raspberry Pi 1/Zero
 
-* Can generate Automatic Snapshots to RAM y also do a Rewind operation
+* Puede generar Snapshots Automáticos en RAM y también realizar operación de Rebobinado
 
-* Powerful debug features: Reverse Debugging, CPU History, Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, View BASIC variables, verbose messages en console
+* Potentes características de debug: Debugging hacia atrás, Historial de CPU, Ensamblador, Registros, Desensamblador, Breakpoints Condicionales usando expresiones de texto, Watches, Paso-a-paso, Paso-por-encima, EjecutarHasta, Ver posición del electrón de TV, Cargar código fuente, Editor Hexadecimal, Ver Sprites, Ver Tiles, Buscar bytes, Buscador de vidas infinitas, registro de transacciones de CPU, Ver BASIC, Ver variables BASIC, mensajes de debug en consola
 
-* Text adventure debugger: On a Quill/Paws/Daad text adventure you can Step to Step condact, watch flags/objects, list messages (objects, user/system messages, locations, compressed tokens, vocabulary). Can also view graphics from a Quill, Paws, Daad or Gac aventure.
+* Debugger de Aventuras Conversacionales: En un aventura conversacional de Quill/Paws/Daad puedes ejecutar un condacto Paso a Paso, ver flags/objetos, listar mensajes (objetos, mensajes usuario/sistema, localizaciones, tokens de compresión, vocabulario). Puedes también ver gráficos de aventuras hechas con Quill, Paws, Daad or Gac.
 
-* File utilities menu: Allowing to view, expand y convert some common file formats: tap, tzx, trd, dsk, mdv, hdf, etc. Can also browse inside file system images (.mmc, .img, etc)
+* Menú de utilidades de Archivos: Permite ver, expandir y convertir diferentes formatos de archivos comunes: tap, tzx, trd, dsk, mdv, hdf, etc. También puede navegar dentro de imágenes de sistemas de archivos (.mmc, .img, etc)
 
-* Accessibility support: Print char traps allows to capture generated text from almost any program or game, using estándar ROM calls (RST 10H) or even non estándar print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can also be read by a text-to-speech program.
+* Accesibilidad: Print char traps allows to capture generated text from almost any program or game, using estándar ROM calls (RST 10H) or even non estándar print character routines. Can send generated text from a game to a text-to-speech program. It's ready for text to speech support for blind or visually impaired people. Menu emulator can also be read by a text-to-speech program.
 
-* Translation support: Can translate text from almost any program or game using external scripts
+* Soporta Traducción: Puede traducir texto de prácticamente cualquier programa o juego utilizando scripts externos
 
-* Simulates upper RAM memory refresh en Spectrum 48Kb, losing its contents when changing R register very quickly
+* Simulaa refresco de memoria RAM alta en Spectrum 48Kb, perdiendo su contenido cuando se cambia el registro R muy rápidamente
 
-* Soporta command line settings, configuration file settings y per-game configuration settings
+* Soporta opciones en línea de comandos, opciones en archivo de configuración, y opciones personalizadas para cada juego
 
-* Other features: Visualmem menu, CPU Statistics
+* Otras características: Visualmem menu, CPU Statistics
 
-* Includes four easter eggs. Can you find them? :)
+* Incluye cinco huevos de pascua. Puedes encontrarlos? :)
 
