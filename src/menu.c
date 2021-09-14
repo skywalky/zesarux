@@ -30718,16 +30718,13 @@ void menu_special_fx_settings(MENU_ITEM_PARAMETERS)
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_interface_settings;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
+    menu_item *array_menu_interface_settings;
+    menu_item item_seleccionado;
+    int retorno_menu;
+
+    do {
 
 	
-
-		//menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
-
-
 		menu_add_item_menu_inicial_format(&array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charwidth,NULL,"[%d] Menu char w~~idth",menu_char_width);
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'i');	
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Menu character width");
@@ -30746,8 +30743,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_ayuda(array_menu_interface_settings,"Restore all First Aid help messages");
 
         }
-
-
 
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_setting_select_machine_by_name,NULL,"[%c] Select machine by name",
@@ -30857,7 +30852,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 
-       menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] ~~Background windows",(menu_allow_background_windows ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_interface_settings,'b');
@@ -30898,8 +30893,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
         
 
-
-
         menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
@@ -30909,13 +30902,6 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
         }
 
 
-
-        
-
-
-
-
-	
 
 		if (scr_driver_can_ext_desktop() ) {
 			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"~~ZX Desktop settings");
@@ -30927,24 +30913,24 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 						
 
-                menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_interface_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+        //menu_add_item_menu(array_menu_interface_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_interface_settings);
 
-                retorno_menu=menu_dibuja_menu(&interface_settings_opcion_seleccionada,&item_seleccionado,array_menu_interface_settings,"ZX Vision Settings" );
+        retorno_menu=menu_dibuja_menu(&interface_settings_opcion_seleccionada,&item_seleccionado,array_menu_interface_settings,"ZX Vision Settings" );
 
                 
 
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                //llamamos por valor de funcion
+                if (item_seleccionado.menu_funcion!=NULL) {
+                        //printf ("actuamos por funcion\n");
+                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                        
                 }
+        }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 }
 
