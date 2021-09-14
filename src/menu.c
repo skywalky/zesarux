@@ -30562,6 +30562,14 @@ void menu_window_settings(MENU_ITEM_PARAMETERS)
        	menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_interface_language,NULL,"[%s] ~~Language",idioma);
         menu_add_item_menu_shortcut(array_menu_window_settings,'l');
 
+        
+        //Con driver cocoa, no permitimos cambiar a otro driver
+		if (strcmp(scr_new_driver_name,"cocoa")) {
+            menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+			menu_add_item_menu_format(array_menu_window_settings,MENU_OPCION_NORMAL,menu_change_video_driver,menu_change_video_driver_cond,"Change Video Driver");
+		}
+
 	
                 menu_add_item_menu(array_menu_window_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_window_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
@@ -30715,10 +30723,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
         int retorno_menu;
         do {
 
-		//hotkeys usados:
-		//ocewsruitfalqhp
-
-		
+	
 
 		//menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_osd_adventure_keyboard,NULL,"On Screen Adventure KB");
 
@@ -30809,7 +30814,8 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Enable or disable tooltips");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Enable or disable tooltips");          
         
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_force_atajo,NULL,"[%c] Force visible ~~hotkeys",(menu_force_writing_inverse_color.v ? 'X' : ' ') );
+        menu_add_item_menu_shortcut(array_menu_interface_settings,'h');
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Force always show hotkeys");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"Force always show hotkeys. By default it will only be shown after a timeout or wrong key pressed");
 
@@ -30853,8 +30859,8 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
        menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] Background windows",(menu_allow_background_windows ? 'X' : ' ') );
-		//menu_add_item_menu_shortcut(array_menu_interface_settings,'a');
+		menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_allow_background_windows,NULL,"[%c] ~~Background windows",(menu_allow_background_windows ? 'X' : ' ') );
+		menu_add_item_menu_shortcut(array_menu_interface_settings,'b');
 		menu_add_item_menu_tooltip(array_menu_interface_settings,"Allow some menu windows to be put on the background");
 		menu_add_item_menu_ayuda(array_menu_interface_settings,"You can allow some menu windows to be put on the background.\n"
 
@@ -30898,17 +30904,15 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (si_complete_video_driver() ) {
-			menu_add_item_menu(array_menu_interface_settings,"Special FX",MENU_OPCION_NORMAL,menu_special_fx_settings,NULL);
+			menu_add_item_menu(array_menu_interface_settings,"Special ~~FX",MENU_OPCION_NORMAL,menu_special_fx_settings,NULL);
+            menu_add_item_menu_shortcut(array_menu_interface_settings,'f');	
         }
 
 
 
         
 
-		//Con driver cocoa, no permitimos cambiar a otro driver
-		if (strcmp(scr_new_driver_name,"cocoa")) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_change_video_driver,menu_change_video_driver_cond,"Change Video Driver");
-		}
+
 
 
 	
