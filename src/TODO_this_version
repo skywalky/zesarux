@@ -1,4 +1,4 @@
-Para esta version 9.3:
+Para esta version 10.0:
 
 
 -Meter file browser zxuno en imagen zxuno mmc
@@ -199,12 +199,8 @@ L08F7:          IN      A,(HLWPORT)
 
 -quiza linea cursor en debug cpu ubicar en el centro
 
-
 -Consola ZRCP desde menú. Cómo gestionar comandos de cpu step que bloquean el menú?
 
--con menu cerrado, si pulso alguna ventana en background abre el menu principal. pero deberia saltar a la ventana pulsada
-
--agregar hotkeys de menus ZX Vision y General
 
 - En ZX desktop a veces al iniciar o activar sale primero en negro
 
