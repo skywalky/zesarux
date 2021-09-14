@@ -8379,7 +8379,7 @@ void print_funny_message(void)
 	//printf ("random: %d\n",randomize_noise[0]);
 
 	//mensajes random de broma
-	#define MAX_RANDOM_FUNNY_MESSAGES 22
+	#define MAX_RANDOM_FUNNY_MESSAGES 23
 	char *random_funny_messajes[MAX_RANDOM_FUNNY_MESSAGES]={
 		"Detected SoundBlaster at A220 I5 D1 T2",
 		"DOS/4GW Protected Mode Run-time  Version 1.97",		//2
@@ -8402,7 +8402,8 @@ void print_funny_message(void)
 		"Your System ate a SPARC! Gah!",
 		"CMOS checksum error. The default values has been loaded",
         "Proudly Made on Earth",
-        "Made From 100% Recycled Pixels"
+        "Made From 100% Recycled Pixels",
+        "You have died of dysentery"
       
 	};
 
