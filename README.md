@@ -167,11 +167,11 @@ __FEATURES__
 
 * Supports real tape loading of file formats: RWA, SMP, WAV, TZX, PZX, CDT, TAP, P, O. It handles loading of turbo load tapes or any type of tape loading for standard/non standard loading routines
 
-* Handles binary tape format files (TAP, TZX, O, P, CDT, CAS) on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace, MSX, Spectravideo
+* Handles binary tape format files (TAP, TZX, O, P, CDT, CAS) on standard ROM routines for ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace, MSX, Spectravideo
 
-* Handles real audio loading (RWA, SMP, WAV) on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace
+* Handles real audio loading (RWA, SMP, WAV) on standard ROM routines for ZX Spectrum, ZX80, ZX81, Amstrad CPC, Jupiter Ace
 
-* Simulates real tape loading on standard BASIC ROM routines for ZX Spectrum, ZX80, ZX81
+* Simulates real tape loading on standard ROM routines for ZX Spectrum, ZX80, ZX81
 
 * Handles snapshot formats: ZSF, ZX, Z80, SP, SPG, NEX, SNA, P, O, Z81, ACE
 
@@ -235,7 +235,7 @@ __FEATURES__
 
 * Joystick emulation with real joystick (on GNU/Linux and Windows) and keyboard cursors: Kempston, Sinclair 1&2, Cursor Joystick, Cursor & Shift, OPQA, Fuller, Zebra, Mikro-Gen, ZXPand, SAM Coupe Cursors. Autofire function too
 
-* On Screen keyboard useful when playing with joystick, two types: one with keyboard letters, and another with words, useful for playing Text Adventures. Also a tool to extract words from text adventures (Daad, Paws, Quill and Gac) and configure this on screen text keyboard
+* On Screen keyboard useful when playing with joystick, two types: one with keyboard letters, and another with words, useful for playing Text Adventures. Also a tool to extract words from text adventures (Daad, Paws, Quill and Gac)
 
 * Emulates Spectrum keyboard ghosting error feature
 
@@ -251,7 +251,7 @@ __FEATURES__
 
 * Supports Network gaming using its own protocol (ZEsarUX Network Gaming protocol - ZENG), which allows you to play to any emulated game, using two ZEsarUX instances, located each one on any part of the world or in a local network. Games doesn't have to be modified, you can use any existing game
 
-* Uart bridge emulation: allows you to use a real uart-wifi connected to your computer, on GNU/Linux only (Windows, Mac can simulate it)
+* Uart bridge emulation: allows you to use a real uart-wifi device connected to your computer, on GNU/Linux only (Windows, Mac can simulate it)
 
 * Can browse online ZX81 games
 
@@ -263,19 +263,21 @@ __FEATURES__
 
 * Audio Chip Tools: For the 3 emulated audio chips (AY-3-8912, SN76489AN, QL i8049): Sheet, Piano, Registers, export music to midi (.mid) files
 
-* Real time playback from Audio Chip Sound (AY-3-8912, SN76489AN, QL i8049) to external MIDI device
+* Real Time playback from Audio Chip Sound (AY-3-8912, SN76489AN, QL i8049) to external MIDI device
 
 * AY Player: allowing to play music from .AY files
 
 * AY Mixer
 
-* Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog) or just by using a telnet client.
+* Visual Real Tape: you have an audio render of your tape, see tape blocks and rewind or move forward the cassette player 
+
+* Supports ZEsarUX remote command protocol (ZRCP). This is a powerful communications protocol between a client and ZEsarUX, using a simple telnet client. One of the things you can do it is enhanced debugging on ZEsarUX from Visual Studio Code (see https://github.com/maziac/DeZog)
 
 * Can use a reduced Spectrum core, with some features disabled, useful on slow devices, like Raspberry Pi 1/Zero
 
 * Can generate Automatic Snapshots to RAM and also do a Rewind operation
 
-* Powerful debug features: Reverse Debugging, CPU History, Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, Find byte (useful to find POKEs), CPU Transaction log, View BASIC, View BASIC variables, verbose messages on console
+* Powerful debug features: Reverse Debugging, CPU History, Assembler, Registers, Dissassemble, Conditional Breakpoints using text expressions, Watches, Step-to-step, Step-over, Runto, Show TV electron position, Load source code, Hexadecimal Editor, View Sprites, View Tiles, Find bytes, Infinite lives finder, CPU Transaction log, View BASIC, View BASIC variables, verbose messages on console
 
 * Text adventure debugger: On a Quill/Paws/Daad text adventure you can Step to Step condact, watch flags/objects, list messages (objects, user/system messages, locations, compressed tokens, vocabulary). Can also view graphics from a Quill, Paws, Daad or Gac aventure.
 
@@ -291,7 +293,7 @@ __FEATURES__
 
 * Other features: Visualmem menu, CPU Statistics
 
-* Includes four easter eggs. Can you find them? :)
+* Includes five easter eggs. Can you find them? :)
 
 
 
