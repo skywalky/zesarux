@@ -4832,6 +4832,7 @@ int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo, int show
         if (MACHINE_IS_ZX8081) {
             if (MACHINE_IS_ZX80) ppc=peek_word_no_time(16386);
 
+            //ZX81
             else ppc=peek_word_no_time(16391);
 
             sprintf (&results_buffer[index_buffer],"Current line: %5d\n",ppc);
@@ -4839,6 +4840,7 @@ int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo, int show
         }
 
         else {
+            //Spectrum
             ppc=peek_word_no_time(23621);
             subppc=peek_byte_no_time(23623);
 
