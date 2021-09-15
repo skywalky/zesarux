@@ -4668,7 +4668,9 @@ void tbblue_set_value_port_position(z80_byte index_position,z80_byte value)
 
 		case 45:
 
-		if (audiodac_enabled.v) audiodac_send_sample_value(value);
+		if (audiodac_enabled.v) {
+            audiodac_send_sample_value(value);
+        }
 
 		break;
 
