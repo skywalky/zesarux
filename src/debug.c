@@ -4801,7 +4801,7 @@ void debug_add_breakpoint_ifnot_exists(char *breakpoint_add)
 
 //tipo: tipo maquina: 0: spectrum. 1: zx80. 2: zx81
 void debug_view_basic_from_memory(char *results_buffer,int dir_inicio_linea,int final_basic,char **dir_tokens,
-int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo, int show_address )
+int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo, int show_address, int show_current_line )
 {
 
 	  	z80_int dir;
@@ -4824,6 +4824,28 @@ int inicio_tokens,z80_byte (*lee_byte_function)(z80_int dir), int tipo, int show
   	z80_int byte_leido;
 
   	int lo_ultimo_es_un_token;
+
+    if (show_current_line) {
+        //Indicar linea actual y sentencia
+        z80_int ppc,subppc;
+
+        if (MACHINE_IS_ZX8081) {
+            if (MACHINE_IS_ZX80) ppc=peek_word_no_time(16386);
+
+            else ppc=peek_word_no_time(16391);
+
+            sprintf (&results_buffer[index_buffer],"Current line: %5d\n",ppc);
+            index_buffer +=20;
+        }
+
+        else {
+            ppc=peek_word_no_time(23621);
+            subppc=peek_byte_no_time(23623);
+
+            sprintf (&results_buffer[index_buffer],"Current line: %5d:%3d\n",ppc,subppc);
+            index_buffer +=24;
+        }
+    }
 
 
   	while (dir_inicio_linea<final_basic && salir==0) {
@@ -5188,7 +5210,7 @@ void debug_view_basic(char *results_buffer)
     }
 
 
-	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,final_basic,dir_tokens,inicio_tokens,peek_byte_no_time,tipo,debug_view_basic_show_address.v);
+	debug_view_basic_from_memory(results_buffer,dir_inicio_linea,final_basic,dir_tokens,inicio_tokens,peek_byte_no_time,tipo,debug_view_basic_show_address.v,1);
 
 }
 

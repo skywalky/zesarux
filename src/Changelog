@@ -53,7 +53,7 @@ Improved Debug CPU Window:
 
 Improved Debugging:
 -Can now browse Basic variables on ZX Spectrum, ZX81 and ZX80
--Added setting to show location address of every basic line on menu View Basic
+-Added setting to show location address of every basic line and current line on menu View Basic
 -Added Window View Sensors to graph internal emulation sensors, performance, statistics, etc
 -Added command line setting to load source code
 
