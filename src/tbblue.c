@@ -989,6 +989,8 @@ z80_bit tbblue_force_disable_layer_tilemap={0};
 z80_bit tbblue_force_disable_layer_sprites={0};
 z80_bit tbblue_force_disable_layer_layer_two={0};
 
+//Forzar a desactivar cooper
+z80_bit tbblue_force_disable_cooper={0};
 
 //Damos la paleta que se esta leyendo o escribiendo en una operacion de I/O
 //Para ello mirar bits 6-4  de reg 0x43

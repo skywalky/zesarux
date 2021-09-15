@@ -288,7 +288,7 @@ void core_spectrum_fin_frame_pantalla(void)
 
 
 				if (MACHINE_IS_TBBLUE) {
-					tbblue_copper_handle_vsync();			
+					if (tbblue_force_disable_cooper.v==0) tbblue_copper_handle_vsync();
 				}
 
 
@@ -856,7 +856,7 @@ void core_spectrum_ciclo_fetch(void)
 				//Soporte TBBlue copper y otras...
 				if (MACHINE_IS_TBBLUE) {
 					//Si esta activo copper
-					tbblue_copper_handle_next_opcode();
+					if (tbblue_force_disable_cooper.v==0) tbblue_copper_handle_next_opcode();
 
 
 					if (tbblue_use_rtc_traps) {

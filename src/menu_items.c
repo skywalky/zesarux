@@ -20700,6 +20700,11 @@ void menu_debug_sprite_mangement_disable(MENU_ITEM_PARAMETERS)
 
 }
 
+void menu_debug_tsconf_tbblue_msx_copper(MENU_ITEM_PARAMETERS)
+{
+    tbblue_force_disable_cooper.v ^=1;
+}
+
 
 void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 {
@@ -20741,6 +20746,12 @@ void menu_debug_tsconf_tbblue_msx(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_tilenav,NULL,"~~Tile navigator");
 			menu_add_item_menu_shortcut(array_menu_debug_tsconf_tbblue_msx,'t');
 		}
+
+        if (MACHINE_IS_TBBLUE) {
+            menu_add_item_menu(array_menu_debug_tsconf_tbblue_msx,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+            menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_tsconf_tbblue_msx_copper,NULL,"[%c] Copper enabled",
+                            (tbblue_force_disable_cooper.v ? ' ' : 'X' ));
+        }
 
 		if (MACHINE_IS_MSX || MACHINE_IS_SVI) {
 			menu_add_item_menu_format(array_menu_debug_tsconf_tbblue_msx,MENU_OPCION_NORMAL,menu_debug_msx_svi_memory_info,NULL,"~~Memory Info");
