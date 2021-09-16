@@ -20690,67 +20690,12 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}		
 
 
-			/*
-		if (MACHINE_IS_ZX8081) {
-			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_storage_zxpand_enable,NULL,"ZX~~pand emulation: %s",(zxpand_enabled.v ? "Yes" : "No"));
-                        menu_add_item_menu_shortcut(array_menu_storage_settings,'p');
-			menu_add_item_menu_tooltip(array_menu_storage_settings,"Enable ZXpand emulation");
-			menu_add_item_menu_ayuda(array_menu_storage_settings,"Enable ZXpand emulation");
-
-
-			if (zxpand_enabled.v) {
-				char string_zxpand_root_folder_shown[20];
-				menu_tape_settings_trunc_name(zxpand_root_dir,string_zxpand_root_folder_shown,20);
-				menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_storage_zxpand_root_dir,NULL,"~~Root dir: %s",string_zxpand_root_folder_shown);
-                        	menu_add_item_menu_shortcut(array_menu_storage_settings,'r');
-				menu_add_item_menu_tooltip(array_menu_storage_settings,"Sets the root directory for ZXpand filesystem");
-				menu_add_item_menu_ayuda(array_menu_storage_settings,"Sets the root directory for ZXpand filesystem. "
-					"Only file and folder names valid for zxpand will be shown:\n"
-					"-Maximum 8 characters for name and 3 for extension\n"
-					"-Files and folders will be shown always in uppercase. Folders which are not uppercase, are shown but can not be accessed\n"
-					);
-
-			}
-		}
-		*/
-		if (MACHINE_IS_ZX8081) {
-			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_zxpand,NULL,"ZX~~pand emulation");
-                        menu_add_item_menu_shortcut(array_menu_storage_settings,'p');
-			menu_add_item_menu_tooltip(array_menu_storage_settings,"ZXpand emulation");
-			menu_add_item_menu_ayuda(array_menu_storage_settings,"ZXpand emulation");
-
-		}
-
-		if (MACHINE_IS_SPECTRUM) {
-			//menu_tape_settings_trunc_name(mmc_file_name,string_mmc_file_shown,13);
-			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_mmc_divmmc,NULL,"~~MMC");
-			menu_add_item_menu_shortcut(array_menu_storage_settings,'m');
-			menu_add_item_menu_tooltip(array_menu_storage_settings,"MMC, DivMMC and ZXMMC settings");
-			menu_add_item_menu_ayuda(array_menu_storage_settings,"MMC, DivMMC and ZXMMC settings");
-		}
-
-
-
-		if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) {
-
-                        menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ide_divide,NULL,"~~IDE");
-                        menu_add_item_menu_shortcut(array_menu_storage_settings,'i');
-                        menu_add_item_menu_tooltip(array_menu_storage_settings,"IDE, DivIDE and 8-bit simple settings");
-                        menu_add_item_menu_ayuda(array_menu_storage_settings,"IDE, DivIDE and 8-bit simple settings");
-
-
-		}
-
-
-
-
 		if (MACHINE_IS_SPECTRUM) {
                         menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_betadisk,NULL,"~~Betadisk");
                         menu_add_item_menu_shortcut(array_menu_storage_settings,'b');
                         menu_add_item_menu_tooltip(array_menu_storage_settings,"Betadisk settings");
                         menu_add_item_menu_ayuda(array_menu_storage_settings,"Betadisk settings");
 		}
-
 
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_esxdos_traps,NULL,"~~ESXDOS Handler");
@@ -20770,25 +20715,65 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 
 
 			);
+		}        
+
+		if (MACHINE_IS_SPECTRUM) {
+                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_hilow,NULL,"~~HiLow");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'h');
+                        menu_add_item_menu_tooltip(array_menu_storage_settings,"HiLow settings");
+                        menu_add_item_menu_ayuda(array_menu_storage_settings,"HiLow settings");
+		} 
+        
+
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_SAM) {
+
+                        menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ide_divide,NULL,"~~IDE");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'i');
+                        menu_add_item_menu_tooltip(array_menu_storage_settings,"IDE, DivIDE and 8-bit simple settings");
+                        menu_add_item_menu_ayuda(array_menu_storage_settings,"IDE, DivIDE and 8-bit simple settings");
+
+
+		}
+
+  
+
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
+                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ifrom,NULL,"i~~From");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'f');
+                        menu_add_item_menu_tooltip(array_menu_storage_settings,"iFrom settings");
+                        menu_add_item_menu_ayuda(array_menu_storage_settings,"iFrom settings");
+		}        
+
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
+                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_kartusho,NULL,"~~Kartusho");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'k');
+                        menu_add_item_menu_tooltip(array_menu_storage_settings,"Kartusho settings");
+                        menu_add_item_menu_ayuda(array_menu_storage_settings,"Kartusho settings");
+		}        
+
+
+
+		if (MACHINE_IS_SPECTRUM) {
+			//menu_tape_settings_trunc_name(mmc_file_name,string_mmc_file_shown,13);
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_mmc_divmmc,NULL,"~~MMC");
+			menu_add_item_menu_shortcut(array_menu_storage_settings,'m');
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"MMC, DivMMC and ZXMMC settings");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"MMC, DivMMC and ZXMMC settings");
 		}
 
 
-		if (MACHINE_IS_ZXUNO) {
-			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_zxuno_spi_flash,NULL,"~~ZX-Uno Flash");
-			menu_add_item_menu_shortcut(array_menu_storage_settings,'z');
-		}
-							
+	    if (MACHINE_IS_SPECTRUM_48) {
+                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_samram,NULL,"~~Samram");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'s');
 
+                        menu_add_item_menu_tooltip(array_menu_storage_settings,"Samram settings");
+                        menu_add_item_menu_ayuda(array_menu_storage_settings,"Settings for Gerton Lunter Samram emulation.\n"
+                                "It's a device that Gerton Lunter created and also was emulated in his own emulator\n"
+                                "The original interface has a 32kb of static RAM and also uses 32 kb of the extra shadow unused faulty "
+                                "ram of all Spectrum 48kb; in ZEsarUX I emulate it as a 64kb interface"
+                                );                       
+        }
 
-     		if ( (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) && !MACHINE_IS_ZXUNO) {
-
-	                    menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_dandanator,NULL,
-							"%s D~~andanator",(MACHINE_IS_SPECTRUM ? "ZX" : "CPC")  );
-                        menu_add_item_menu_shortcut(array_menu_storage_settings,'a');
-                        menu_add_item_menu_tooltip(array_menu_storage_settings,"Dandanator settings");
-                        menu_add_item_menu_ayuda(array_menu_storage_settings,"Dandanator settings");
-
-                }
 
 		if (superupgrade_supported_machine() ) {
 			    menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_superupgrade,NULL,"Speccy Superup~~grade");
@@ -20799,59 +20784,54 @@ void menu_storage_settings(MENU_ITEM_PARAMETERS)
 		}
 
 
-		if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
-                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_kartusho,NULL,"~~Kartusho");
-                        menu_add_item_menu_shortcut(array_menu_storage_settings,'k');
-                        menu_add_item_menu_tooltip(array_menu_storage_settings,"Kartusho settings");
-                        menu_add_item_menu_ayuda(array_menu_storage_settings,"Kartusho settings");
-		}
-		
-		if (MACHINE_IS_SPECTRUM_48) {
-                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_samram,NULL,"~~Samram");
-                        menu_add_item_menu_shortcut(array_menu_storage_settings,'s');
-
-                        menu_add_item_menu_tooltip(array_menu_storage_settings,"Samram settings");
-                        menu_add_item_menu_ayuda(array_menu_storage_settings,"Settings for Gerton Lunter Samram emulation.\n"
-                                "It's a device that Gerton Lunter created and also was emulated in his own emulator\n"
-                                "The original interface has a 32kb of static RAM and also uses 32 kb of the extra shadow unused faulty "
-                                "ram of all Spectrum 48kb; in ZEsarUX I emulate it as a 64kb interface"
-                                );                       
-                        }
 
 
-		if (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) {
-                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_ifrom,NULL,"i~~From");
-                        menu_add_item_menu_shortcut(array_menu_storage_settings,'f');
-                        menu_add_item_menu_tooltip(array_menu_storage_settings,"iFrom settings");
-                        menu_add_item_menu_ayuda(array_menu_storage_settings,"iFrom settings");
+        if ( (MACHINE_IS_SPECTRUM || MACHINE_IS_CPC) && !MACHINE_IS_ZXUNO) {
+
+                    menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_dandanator,NULL,
+                        "%s D~~andanator",(MACHINE_IS_SPECTRUM ? "ZX" : "CPC")  );
+                    menu_add_item_menu_shortcut(array_menu_storage_settings,'a');
+                    menu_add_item_menu_tooltip(array_menu_storage_settings,"Dandanator settings");
+                    menu_add_item_menu_ayuda(array_menu_storage_settings,"Dandanator settings");
+
+        }
+
+
+
+
+		if (MACHINE_IS_ZX8081) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_zxpand,NULL,"ZX~~pand emulation");
+                        menu_add_item_menu_shortcut(array_menu_storage_settings,'p');
+			menu_add_item_menu_tooltip(array_menu_storage_settings,"ZXpand emulation");
+			menu_add_item_menu_ayuda(array_menu_storage_settings,"ZXpand emulation");
+
 		}
 
-		if (MACHINE_IS_SPECTRUM) {
-                       menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_hilow,NULL,"~~HiLow");
-                        menu_add_item_menu_shortcut(array_menu_storage_settings,'h');
-                        menu_add_item_menu_tooltip(array_menu_storage_settings,"HiLow settings");
-                        menu_add_item_menu_ayuda(array_menu_storage_settings,"HiLow settings");
-		}              
+
+		if (MACHINE_IS_ZXUNO) {
+			menu_add_item_menu_format(array_menu_storage_settings,MENU_OPCION_NORMAL,menu_zxuno_spi_flash,NULL,"~~ZX-Uno Flash");
+			menu_add_item_menu_shortcut(array_menu_storage_settings,'z');
+		}                  
 
 
 
-                menu_add_item_menu(array_menu_storage_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-                //menu_add_item_menu(array_menu_storage_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
-                menu_add_ESC_item(array_menu_storage_settings);
+        menu_add_item_menu(array_menu_storage_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+        //menu_add_item_menu(array_menu_storage_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
+        menu_add_ESC_item(array_menu_storage_settings);
 
-                retorno_menu=menu_dibuja_menu(&storage_settings_opcion_seleccionada,&item_seleccionado,array_menu_storage_settings,"Storage" );
+        retorno_menu=menu_dibuja_menu(&storage_settings_opcion_seleccionada,&item_seleccionado,array_menu_storage_settings,"Storage" );
 
-                
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
+        
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                //llamamos por valor de funcion
+                if (item_seleccionado.menu_funcion!=NULL) {
+                        //printf ("actuamos por funcion\n");
+                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                        
                 }
+        }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 
@@ -29244,17 +29224,21 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_shortcut(array_menu_debug_settings,'l');
         }
 
-		if (si_complete_video_driver() ) {
-			menu_add_item_menu(array_menu_debug_settings,"View ~~Sprites",MENU_OPCION_NORMAL,menu_debug_view_sprites,NULL);
-			menu_add_item_menu_shortcut(array_menu_debug_settings,'s');
-		}
-
 #ifdef EMULATE_CPU_STATS
 		if (CPU_IS_Z80) {
 			menu_add_item_menu_format(array_menu_debug_settings,MENU_OPCION_NORMAL,menu_debug_cpu_stats,NULL,"View CPU Statistics");
 		}
 
-#endif
+#endif        
+
+        menu_add_item_menu(array_menu_debug_settings,"View Sensors",MENU_OPCION_NORMAL,menu_debug_view_sensors,NULL);
+
+		if (si_complete_video_driver() ) {
+			menu_add_item_menu(array_menu_debug_settings,"View ~~Sprites",MENU_OPCION_NORMAL,menu_debug_view_sprites,NULL);
+			menu_add_item_menu_shortcut(array_menu_debug_settings,'s');
+		}
+
+
 
 #ifdef EMULATE_VISUALMEM
 			//if (!CPU_IS_MOTOROLA) {
@@ -29269,7 +29253,7 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 			//}
 #endif
 
-    menu_add_item_menu(array_menu_debug_settings,"View sensors",MENU_OPCION_NORMAL,menu_debug_view_sensors,NULL);
+    
 
 
 
