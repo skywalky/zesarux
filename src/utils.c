@@ -13259,8 +13259,8 @@ void util_copy_file(char *source_file, char *destination_file)
 int si_existe_editionnamegame(char *nombre_final)
 {
     //Dependiendo del que queramos para esa edicion, es un tzx o un tap
-	//return find_sharedfile("editionnamegame.tap",nombre_final);
-    return find_sharedfile("editionnamegame.tzx",nombre_final);
+	return find_sharedfile("editionnamegame.tap",nombre_final);
+    //return find_sharedfile("editionnamegame.tzx",nombre_final);
 }
 
 //Carga el juego designado como edition name game. Devuelve 0 si no encontrado (en caso por ejemplo que el juego
