@@ -48,9 +48,9 @@ Examples
 //#define EMULATOR_VERSION "10.0"
 #define SNAPSHOT_VERSION
 
-#define EMULATOR_DATE "23 August 2021"
-#define EMULATOR_SHORT_DATE "23/08/2021"
-#define EMULATOR_GAME_EDITION "Carrier Command"
+#define EMULATOR_DATE "16 September 2021"
+#define EMULATOR_SHORT_DATE "16/09/2021"
+#define EMULATOR_GAME_EDITION "Clive Sinclair"
 #define EMULATOR_EDITION_NAME EMULATOR_GAME_EDITION " edition"
 #define ZESARUX_EXTRAS_HOST "github.com" 
 
