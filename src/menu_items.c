@@ -741,23 +741,6 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
 
 
-       
-
-
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_configuration_stepover,NULL,"[%c] Step ~~over interrupt",(remote_debug_settings&32 ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
-		menu_add_item_menu_ayuda(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
-		menu_add_item_menu_shortcut(array_menu_settings_debug,'o');
-
-
-
-
-
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_screen,NULL,"[%c] Show display on debug",
-			( debug_settings_show_screen.v ? 'X' : ' ') );
-		menu_add_item_menu_tooltip(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
-		menu_add_item_menu_ayuda(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
-
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_sourcecode_lprefix,NULL,"[%c] Source code L Prefix",
 			( remote_debug_settings & 4 ? ' ' : 'X') );
         menu_add_item_menu_tooltip(array_menu_settings_debug,"Consider a L preffix when searching source code labels");
@@ -766,26 +749,52 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_sourcecode_skipcols,NULL,"[%d] Source code skip Cols",
 			debug_load_source_code_skip_columns);
         menu_add_item_menu_tooltip(array_menu_settings_debug,"Skip columns when searching for label from the beginning of line");
-        menu_add_item_menu_ayuda(array_menu_settings_debug,"Skip columns when searching for label from the beginning of line");    
+        menu_add_item_menu_ayuda(array_menu_settings_debug,"Skip columns when searching for label from the beginning of line");   
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_configuration_stepover,NULL,"[%c] Step ~~over interrupt",(remote_debug_settings&32 ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Avoid step to step or continuous execution of nmi or maskable interrupt routines on debug cpu menu");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'o');         
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_screen,NULL,"[%c] Show display on debug",
+			( debug_settings_show_screen.v ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"If shows emulated screen on every key action on debug registers menu");	        
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_scanline,NULL,"[%c] Show electron on debug",
 			( menu_debug_registers_if_showscan.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows TV electron position when debugging, using a coloured line. Requires real video");
 
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_breakpoints_condition_behaviour,NULL,"~~Breakp. behaviour [%s]",(debug_breakpoints_cond_behaviour.v ? "On Change" : "Always") );
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'b');
+
+
+		char show_fired_breakpoint_type[30];
+		if (debug_show_fired_breakpoints_type==0) strcpy(show_fired_breakpoint_type,"Always");
+		else if (debug_show_fired_breakpoints_type==1) strcpy(show_fired_breakpoint_type,"NoPC");
+		else strcpy(show_fired_breakpoint_type,"Never");																	//						   OnlyNonPC
+																															//  01234567890123456789012345678901
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_fired_breakpoint,NULL,"Show fired breakpoint [%s]",show_fired_breakpoint_type);
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired. "
+								"Possible values:\n"
+								"Always: always shows the condition\n"
+								"NoPC: only shows conditions that are not like PC=XXXX\n"
+								"Never: never shows conditions\n" );	
+
+
+        menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_address_basic,NULL,"[%c] Show address on View Basic",
 			( debug_view_basic_show_address.v ? 'X' : ' ') );
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Shows location address of every basic line on menu View Basic");
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Shows location address of every basic line on menu View Basic");
 
-
-        char ayuda_leyenda[32*10]; // para 10 lineas de ayuda, mas que suficiente
-        sprintf(ayuda_leyenda,"Maximum items allowed on cpu history feature. Each item uses %d bytes of memory",CPU_HISTORY_REGISTERS_SIZE);
-
-        menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_max_history,NULL,"[%d] Max history items",
-            cpu_history_get_max_size() );
-        menu_add_item_menu_tooltip(array_menu_settings_debug,ayuda_leyenda);
-        menu_add_item_menu_ayuda(array_menu_settings_debug,ayuda_leyenda);
 
 
 		if (si_complete_video_driver() ) {
@@ -797,6 +806,7 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
 		}
 
+        menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_verbose,NULL,"[%d] Verbose ~~level",verbose_level);
 		menu_add_item_menu_shortcut(array_menu_settings_debug,'l');	
@@ -822,6 +832,13 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Dump .zsf snapshot when a cpu panic is fired");	
 
 
+        char ayuda_leyenda[32*10]; // para 10 lineas de ayuda, mas que suficiente
+        sprintf(ayuda_leyenda,"Maximum items allowed on cpu history feature. Each item uses %d bytes of memory",CPU_HISTORY_REGISTERS_SIZE);
+
+        menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_max_history,NULL,"[%d] Max history items",
+            cpu_history_get_max_size() );
+        menu_add_item_menu_tooltip(array_menu_settings_debug,ayuda_leyenda);
+        menu_add_item_menu_ayuda(array_menu_settings_debug,ayuda_leyenda);
 
 
 		menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);		
@@ -859,28 +876,11 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		}
 
 
-		menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+		
 
 		
 
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_breakpoints_condition_behaviour,NULL,"~~Breakp. behaviour [%s]",(debug_breakpoints_cond_behaviour.v ? "On Change" : "Always") );
-		menu_add_item_menu_tooltip(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
-		menu_add_item_menu_ayuda(array_menu_settings_debug,"Indicates whether breakpoints are fired always or only on change from false to true");
-		menu_add_item_menu_shortcut(array_menu_settings_debug,'b');
-
-
-		char show_fired_breakpoint_type[30];
-		if (debug_show_fired_breakpoints_type==0) strcpy(show_fired_breakpoint_type,"Always");
-		else if (debug_show_fired_breakpoints_type==1) strcpy(show_fired_breakpoint_type,"NoPC");
-		else strcpy(show_fired_breakpoint_type,"Never");																	//						   OnlyNonPC
-																															//  01234567890123456789012345678901
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_show_fired_breakpoint,NULL,"Show fired breakpoint [%s]",show_fired_breakpoint_type);
-		menu_add_item_menu_tooltip(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired");
-		menu_add_item_menu_ayuda(array_menu_settings_debug,"Tells to show the breakpoint condition when it is fired. "
-								"Possible values:\n"
-								"Always: always shows the condition\n"
-								"NoPC: only shows conditions that are not like PC=XXXX\n"
-								"Never: never shows conditions\n" );			
+		
 
 
                 menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
