@@ -16103,99 +16103,93 @@ void menu_hardware_allow_write_rom(MENU_ITEM_PARAMETERS)
 //menu audio settings
 void menu_audio_settings(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_audio_settings;
-	menu_item item_seleccionado;
-	int retorno_menu;
+    menu_item *array_menu_audio_settings;
+    menu_item item_seleccionado;
+    int retorno_menu;
 
-        do {
+    do {
 
 				
 
-					menu_add_item_menu_inicial(&array_menu_audio_settings,"Audio Chip Registers",MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_or_sn_chip);
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'r');
+        menu_add_item_menu_inicial(&array_menu_audio_settings,"Audio Chip Registers",MENU_OPCION_NORMAL,menu_ay_registers,menu_cond_ay_or_sn_chip);
+        menu_add_item_menu_shortcut(array_menu_audio_settings,'r');
 
 
-
-
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_or_sn_chip,"Audio Chip Piano");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'i');
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
-                	menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
+        menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_pianokeyboard,menu_cond_ay_or_sn_chip,"Audio Chip Piano");
+        menu_add_item_menu_shortcut(array_menu_audio_settings,'i');
+        menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
+        menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the notes being played on the AY Chip");
 
 
 		if (si_complete_video_driver() ) {
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_partitura,menu_cond_ay_or_sn_chip,"Audio Chip Sheet");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'s');
-
+                menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_partitura,menu_cond_ay_or_sn_chip,"Audio Chip Sheet");
+                menu_add_item_menu_shortcut(array_menu_audio_settings,'s');
 		}
 
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_chip_info,menu_cond_ay_or_sn_chip,"Audio Chip Info");
+        menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_chip_info,menu_cond_ay_or_sn_chip,"Audio Chip Info");
 
-                    if (MACHINE_IS_SPECTRUM && gs_enabled.v) {
-                        menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_general_sound,NULL,"General Sound Info");
-                    }
-					
-                    if (MACHINE_IS_QL) {
-					    menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_i8049_mixer,menu_cond_i8049_chip,"i8049 Mi~~xer");
-					    menu_add_item_menu_shortcut(array_menu_audio_settings,'x');		
-                    }
-                    else {
-					    menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY Mi~~xer");
-					    menu_add_item_menu_shortcut(array_menu_audio_settings,'x');					
-                    }
-
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_ayplayer,NULL,"AY ~~Player");
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Opens the .ay file player menu");
-					menu_add_item_menu_ayuda(array_menu_audio_settings,"Opens the .ay file player menu");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'p');
-
-
-					
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_record_mid,menu_cond_ay_or_sn_chip,"Audio Chip to .~~mid");
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Saves music from the AY Chip to a .mid file");
-					menu_add_item_menu_ayuda(array_menu_audio_settings,"Saves music from the AY Chip to a .mid file");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'m');
-
-	
-
-
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"W~~ave Piano");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'a');		
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the note being played through the output speakers");
-                	menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the note being played through the output speakers. "
-						"In case you don't have AY sound or DAC audio, that note is the one that is played through the beeper. "
-						"It can be inaccurate with short notes");
-
-
+        if (MACHINE_IS_SPECTRUM && gs_enabled.v) {
+            menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_general_sound,NULL,"General Sound Info");
+        }
 					
 
-					menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_waveform,NULL,"~~Waveform");
-					menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
-					menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
-					menu_add_item_menu_shortcut(array_menu_audio_settings,'w');
+
+
+        menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_beeper_pianokeyboard,NULL,"W~~ave Piano");
+        menu_add_item_menu_shortcut(array_menu_audio_settings,'a');		
+        menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows a piano keyboard with the note being played through the output speakers");
+        menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows a piano keyboard with the note being played through the output speakers. "
+            "In case you don't have AY sound or DAC audio, that note is the one that is played through the beeper. "
+            "It can be inaccurate with short notes");
+
+
+        
+
+        menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_waveform,NULL,"~~Waveform");
+        menu_add_item_menu_tooltip(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
+        menu_add_item_menu_ayuda(array_menu_audio_settings,"Shows the waveform being played through the output speakers");
+        menu_add_item_menu_shortcut(array_menu_audio_settings,'w');
+
+        menu_add_item_menu(array_menu_audio_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        if (MACHINE_IS_QL) {
+            menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_i8049_mixer,menu_cond_i8049_chip,"i8049 Mi~~xer");
+            menu_add_item_menu_shortcut(array_menu_audio_settings,'x');		
+        }
+        else {
+            menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_ay_mixer,menu_cond_ay_chip,"AY Mi~~xer");
+            menu_add_item_menu_shortcut(array_menu_audio_settings,'x');					
+        }
+
+        menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_audio_new_ayplayer,NULL,"AY ~~Player");
+        menu_add_item_menu_tooltip(array_menu_audio_settings,"Opens the .ay file player menu");
+        menu_add_item_menu_ayuda(array_menu_audio_settings,"Opens the .ay file player menu");
+        menu_add_item_menu_shortcut(array_menu_audio_settings,'p');                    
+
+
+        menu_add_item_menu_format(array_menu_audio_settings,MENU_OPCION_NORMAL,menu_record_mid,menu_cond_ay_or_sn_chip,"Audio Chip to .~~mid");
+        menu_add_item_menu_tooltip(array_menu_audio_settings,"Saves music from the AY Chip to a .mid file");
+        menu_add_item_menu_ayuda(array_menu_audio_settings,"Saves music from the AY Chip to a .mid file");
+        menu_add_item_menu_shortcut(array_menu_audio_settings,'m');
 
 
 
+        menu_add_item_menu(array_menu_audio_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
-
-                menu_add_item_menu(array_menu_audio_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
-
-
-                //menu_add_item_menu(array_menu_audio_settings,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_audio_settings);
 
-                retorno_menu=menu_dibuja_menu(&audio_settings_opcion_seleccionada,&item_seleccionado,array_menu_audio_settings,"Audio" );
+        retorno_menu=menu_dibuja_menu(&audio_settings_opcion_seleccionada,&item_seleccionado,array_menu_audio_settings,"Audio" );
 
                 
 
 		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-	                //llamamos por valor de funcion
-        	        if (item_seleccionado.menu_funcion!=NULL) {
-                	        //printf ("actuamos por funcion\n");
-	                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-							
-        	        }
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                //printf ("actuamos por funcion\n");
+                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                    
+            }
 		}
 
 	} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
@@ -27978,15 +27972,15 @@ void menu_snapshot(MENU_ITEM_PARAMETERS)
 					}
 
 
-					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_quicksave,NULL,"Quicks~~ave");
-					menu_add_item_menu_shortcut(array_menu_snapshot,'a');
-					menu_add_item_menu_tooltip(array_menu_snapshot,"Save a snapshot quickly");
-					menu_add_item_menu_ayuda(array_menu_snapshot,"Save a snapshot quickly. Name prefix and directory to save are configured on settings->Snapshot");
-
 					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_quickload,NULL,"~~Quickl~~oad");
 					menu_add_item_menu_shortcut(array_menu_snapshot,'o');
 					menu_add_item_menu_tooltip(array_menu_snapshot,"Load a snapshot quickly");
 					menu_add_item_menu_ayuda(array_menu_snapshot,"Browses on the quicksave directory");
+
+					menu_add_item_menu_format(array_menu_snapshot,MENU_OPCION_NORMAL,menu_snapshot_quicksave,NULL,"Quicks~~ave");
+					menu_add_item_menu_shortcut(array_menu_snapshot,'a');
+					menu_add_item_menu_tooltip(array_menu_snapshot,"Save a snapshot quickly");
+					menu_add_item_menu_ayuda(array_menu_snapshot,"Save a snapshot quickly. Name prefix and directory to save are configured on settings->Snapshot");
 
                     menu_add_item_menu(array_menu_snapshot,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
