@@ -19200,47 +19200,45 @@ void menu_windows(MENU_ITEM_PARAMETERS)
 		return;
 	}
 
-        //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
-        menu_item *array_menu_common;
-        menu_item item_seleccionado;
-        int retorno_menu;
-        do {
+    //Dado que es una variable local, siempre podemos usar este nombre array_menu_common
+    menu_item *array_menu_common;
+    menu_item item_seleccionado;
+    int retorno_menu;
+    do {
 
                 
-				menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_display_window_list,NULL,"Window management");
+        menu_add_item_menu_inicial_format(&array_menu_common,MENU_OPCION_NORMAL,menu_display_window_list,NULL,"Window management");
 
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all,NULL,"Reduce windows");
+        menu_add_item_menu_tooltip(array_menu_common,"Reduce windows to maximum size 20x10");
+        menu_add_item_menu_ayuda(array_menu_common,"Reduce windows to maximum size 20x10");
 
-				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_close_all,NULL,"Close all windows");
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_rearrange,NULL,"Rearrange windows");
 
-				menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all,NULL,"Reduce windows");
-				menu_add_item_menu_tooltip(array_menu_common,"Reduce windows to maximum size 20x10");
-				menu_add_item_menu_ayuda(array_menu_common,"Reduce windows to maximum size 20x10");
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all_rearrange,NULL,"Reduce+rearrange windows");
+                    
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_minimize_all,NULL,"Minimize all windows");
 
-                menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_rearrange,NULL,"Rearrange windows");
-
-                menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all_rearrange,NULL,"Reduce+rearrange windows");
-			
-
-                menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_minimize_all,NULL,"Minimize all windows");
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_close_all,NULL,"Close all windows");
 
 						
-			menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
-            menu_add_ESC_item(array_menu_common);
+        menu_add_ESC_item(array_menu_common);
 
-            retorno_menu=menu_dibuja_menu(&windows_opcion_seleccionada,&item_seleccionado,array_menu_common,"Windows" );
+        retorno_menu=menu_dibuja_menu(&windows_opcion_seleccionada,&item_seleccionado,array_menu_common,"Windows" );
 
                 
-                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                        //llamamos por valor de funcion
-                        if (item_seleccionado.menu_funcion!=NULL) {
-                                //printf ("actuamos por funcion\n");
-                                item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                                
-                        }
-                }
+        if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+            //llamamos por valor de funcion
+            if (item_seleccionado.menu_funcion!=NULL) {
+                    //printf ("actuamos por funcion\n");
+                    item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                    
+            }
+        }
 
-        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
+    } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus);
 
 
 
