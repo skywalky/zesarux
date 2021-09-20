@@ -21513,7 +21513,7 @@ void menu_multiface(MENU_ITEM_PARAMETERS)
 
                 menu_add_ESC_item(array_menu_multiface);
 
-                retorno_menu=menu_dibuja_menu(&multiface_opcion_seleccionada,&item_seleccionado,array_menu_multiface,"Multiface settings" );
+                retorno_menu=menu_dibuja_menu(&multiface_opcion_seleccionada,&item_seleccionado,array_menu_multiface,"Multiface emulation");
 
                 
                 if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
