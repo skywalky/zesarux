@@ -719,26 +719,15 @@ void menu_debug_settings_show_address_basic(MENU_ITEM_PARAMETERS)
 //menu debug settings
 void menu_settings_debug(MENU_ITEM_PARAMETERS)
 {
-        menu_item *array_menu_settings_debug;
-        menu_item item_seleccionado;
-	int retorno_menu;
+    menu_item *array_menu_settings_debug;
+    menu_item item_seleccionado;
+    int retorno_menu;
         do {
 
 
       char string_zesarux_zxi_hardware_debug_file_shown[18];
       
-
-
-		menu_add_item_menu_inicial_format(&array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"[%c] Show r~~egisters in console",(debug_registers==1 ? 'X' : ' '));
-		menu_add_item_menu_shortcut(array_menu_settings_debug,'e');
-
-		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_shows_invalid_opcode,NULL,"[%c] Show ~~invalid opcode",
-			(debug_shows_invalid_opcode.v ? 'X' : ' ') ); 
-		menu_add_item_menu_shortcut(array_menu_settings_debug,'i');
-		menu_add_item_menu_tooltip(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes)");
-		menu_add_item_menu_ayuda(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes). "
-								"A message will be shown on console, when verbose level is 2 or higher");
-
+        menu_add_item_menu_inicial(&array_menu_settings_debug,"",MENU_OPCION_UNASSIGNED,NULL,NULL);
 
 
 		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL, menu_debug_settings_sourcecode_lprefix,NULL,"[%c] Source code L Prefix",
@@ -831,6 +820,17 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_tooltip(array_menu_settings_debug,"Dump .zsf snapshot when a cpu panic is fired");	
 		menu_add_item_menu_ayuda(array_menu_settings_debug,"Dump .zsf snapshot when a cpu panic is fired");	
 
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_registers_console,NULL,"[%c] Show r~~egisters in console",(debug_registers==1 ? 'X' : ' '));
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'e');
+
+		menu_add_item_menu_format(array_menu_settings_debug,MENU_OPCION_NORMAL,menu_debug_shows_invalid_opcode,NULL,"[%c] Show ~~invalid opcode",
+			(debug_shows_invalid_opcode.v ? 'X' : ' ') ); 
+		menu_add_item_menu_shortcut(array_menu_settings_debug,'i');
+		menu_add_item_menu_tooltip(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes)");
+		menu_add_item_menu_ayuda(array_menu_settings_debug,"Show which opcodes are invalid (considering ED, DD, FD prefixes). "
+								"A message will be shown on console, when verbose level is 2 or higher");
+
+
 
         char ayuda_leyenda[32*10]; // para 10 lineas de ayuda, mas que suficiente
         sprintf(ayuda_leyenda,"Maximum items allowed on cpu history feature. Each item uses %d bytes of memory",CPU_HISTORY_REGISTERS_SIZE);
@@ -877,12 +877,6 @@ void menu_settings_debug(MENU_ITEM_PARAMETERS)
 
 
 		
-
-		
-
-		
-
-
                 menu_add_item_menu(array_menu_settings_debug,"",MENU_OPCION_SEPARADOR,NULL,NULL);
                 //menu_add_item_menu(array_menu_settings_debug,"ESC Back",MENU_OPCION_NORMAL|MENU_OPCION_ESC,NULL,NULL);
 		menu_add_ESC_item(array_menu_settings_debug);
