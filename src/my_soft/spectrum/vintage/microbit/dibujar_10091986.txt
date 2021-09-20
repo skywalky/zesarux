@@ -38,6 +38,6 @@ U
 
 X
 
-V: Desplazar x pixeles
+V: Desplazar x pixeles. Volver con tecla D
 
 5678: mover cursor
