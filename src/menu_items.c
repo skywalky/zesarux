@@ -19211,15 +19211,15 @@ void menu_windows(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_tooltip(array_menu_common,"Move to top or close individual windows");
         menu_add_item_menu_ayuda(array_menu_common,"Move to top or close individual windows");
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all,NULL,"Reduce windows");
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all,NULL,"Reduce all windows");
         menu_add_item_menu_tooltip(array_menu_common,"Reduce windows to maximum size 20x10");
         menu_add_item_menu_ayuda(array_menu_common,"Reduce windows to maximum size 20x10");
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_rearrange,NULL,"Rearrange windows");
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_rearrange,NULL,"Rearrange all windows");
         menu_add_item_menu_tooltip(array_menu_common,"Rearrange all windows on the ZX Desktop");
         menu_add_item_menu_ayuda(array_menu_common,"Rearrange all windows on the ZX Desktop");
 
-        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all_rearrange,NULL,"Reduce+rearrange windows");
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_reduce_all_rearrange,NULL,"Reduce+rearrange all windows");
                     
         menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_display_window_minimize_all,NULL,"Minimize all windows");
 

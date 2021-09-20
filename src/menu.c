@@ -29986,7 +29986,7 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     zxvision_print_string(&ventana,1,linea++,tinta_visualmem_text,ESTILO_GUI_COLOR_UNUSED_VISUALMEM,0,"Unused visualmem (this paper)");
 
     //En visual tape se deben poder distinguir ESTILO_GUI_COLOR_WAVEFORM de ESTILO_GUI_COLOR_BLOCK_VISUALTAPE
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_COLOR_BLOCK_VISUALTAPE,0,"Block visual tape (this paper)");
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_COLOR_WAVEFORM,ESTILO_GUI_COLOR_BLOCK_VISUALTAPE,0,"Visual tape block (this paper)");
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"Ascii table:");
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,0,"!\"#$%&\'()*+,-./0123456789:;<=>");
