@@ -940,7 +940,7 @@ extern int estilo_gui_activo;
 
 extern estilos_gui definiciones_estilos_gui[];
 
-extern void set_charset(void);
+extern void set_charset_from_gui(void);
 
 extern void menu_draw_ext_desktop(void);
 
@@ -1009,7 +1009,7 @@ extern int lowericon_realtape_frame;
 
 #define ESTILO_GUI_NO_RELLENAR_TITULO (definiciones_estilos_gui[estilo_gui_activo].no_rellenar_titulo)
 
-#define ESTILO_GUI_CHARSET (definiciones_estilos_gui[estilo_gui_activo].style_char_set)
+//#define ESTILO_GUI_CHARSET (definiciones_estilos_gui[estilo_gui_activo].style_char_set)
 
 
 #define MENU_ANCHO_FRANJAS_TITULO 5

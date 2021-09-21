@@ -7769,7 +7769,7 @@ int parse_cmdline_options(void) {
 				}
 
                 estilo_gui_activo=indice;
-                set_charset();                
+                set_charset_from_gui();                
 
                 /*
 
@@ -7777,7 +7777,7 @@ int parse_cmdline_options(void) {
 				for (i=0;i<ESTILOS_GUI;i++) {
 					if (!strcasecmp(argv[puntero_parametro],definiciones_estilos_gui[i].nombre_estilo)) {
 						estilo_gui_activo=i;
-						set_charset();
+						set_charset_from_gui();
 						break;
 					}
 				}

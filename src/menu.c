@@ -29912,7 +29912,7 @@ void menu_interface_change_gui_style_apply(MENU_ITEM_PARAMETERS)
     //Si se pulsa Enter
     estilo_gui_activo=valor_opcion;
 
-    set_charset();
+    set_charset_from_gui();
 
     menu_init_footer();
 
@@ -30123,7 +30123,7 @@ void old_delete_menu_interface_change_gui_style(MENU_ITEM_PARAMETERS)
 	} while (!salir);
 
 
-	set_charset();
+	set_charset_from_gui();
 
 	menu_init_footer();
 }
@@ -38942,22 +38942,11 @@ void estilo_gui_retorna_nombres(void)
 	}
 }
 
-void set_charset(void)
+void set_charset_from_gui(void)
 {
 
-	//if (estilo_gui_activo==ESTILO_GUI_CPC) char_set=char_set_cpc;
-	//else if (estilo_gui_activo==ESTILO_GUI_MSX) char_set=char_set_msx;
-	//else if (estilo_gui_activo==ESTILO_GUI_Z88) char_set=char_set_z88;
-	//else if (estilo_gui_activo==ESTILO_GUI_SAM) char_set=char_set_sam;
-	//else if (estilo_gui_activo==ESTILO_GUI_MANSOFTWARE) char_set=char_set_mansoftware;
-	//else if (estilo_gui_activo==ESTILO_GUI_QL) char_set=char_set_ql;
-	//else if (estilo_gui_activo==ESTILO_GUI_RETROMAC) char_set=char_set_retromac;
-    //else if (estilo_gui_activo==ESTILO_GUI_TURBOVISION) char_set=char_set_retromac;
-    //else if (estilo_gui_activo==ESTILO_GUI_BEOS) char_set=char_set_beos;
-	//else char_set=char_set_spectrum;
 
-
-    char_set=ESTILO_GUI_CHARSET;
+    char_set=definiciones_estilos_gui[estilo_gui_activo].style_char_set;
 }
 
 void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
