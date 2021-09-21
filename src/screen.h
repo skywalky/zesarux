@@ -912,7 +912,7 @@ extern int sem_screen_refresh_reallocate_layers;
 
 extern void screen_end_pantalla_save_overlay(void (**previous_function)(void),int *menu_antes );
 extern void screen_restart_pantalla_restore_overlay(void (*previous_function)(void),int menu_antes);
-extern void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_ignore,int follow_zoom,int ancho_mostrar);
+extern void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_ignore,int follow_zoom,int ancho_mostrar,int indice_color_transparente,int color_final_transparente);
 
 extern void screen_render_menu_overlay_if_active(void);
 

@@ -14892,7 +14892,11 @@ el marco forma parte de la zona transparente y por tanto se verá transparente d
 //parametro de follow_zoom hace seguir al zoom de la interfaz, usado al visualizar el logo de la salamandra,
 //pero no al visualizar el help keyboard
 //si ancho_mostrar=0, no hacemos caso
-void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_ignore,int follow_zoom,int ancho_mostrar)
+
+//indice_color_transparente: indica que numero de color se tratara como transparente. Indicar a -1 para no hacer transparencia
+//color_final_transparente: color que se mostrara en el caso de transparente
+void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_ignore,int follow_zoom,
+    int ancho_mostrar,int indice_color_transparente,int color_final_transparente)
 {
 
 						//putpixel del archivo bmp
@@ -14960,7 +14964,13 @@ DataOffset	4 bytes	000Ah	Offset from beginning of file to the beginning of the b
 
 								//printf ("offset_final_ %d\n",offset_final);
 								z80_byte byte_leido=mem[offset_final];
-								z80_int color_final=indice_paleta_color+byte_leido;
+                                //printf("byte leido: %d\n",byte_leido);
+                                //if (byte_leido==255) byte_leido=0;
+								z80_int color_final;
+
+                                if (indice_color_transparente>=0 && byte_leido==indice_color_transparente) color_final=color_final_transparente;
+                                else color_final=indice_paleta_color+byte_leido;
+
 								//zxvision_putpixel(ventana,x,y,color_final);
 
                                 if (!follow_zoom) {

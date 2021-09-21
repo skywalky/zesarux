@@ -20824,7 +20824,7 @@ void menu_help_keyboard_overlay(void)
 				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
                         //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
-						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,0,0);
+						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0);
                         
 	
 
@@ -22171,7 +22171,7 @@ void menu_new_about_window_overlay(void)
 
     //mostrarla solo si hay archivo cargado. podria ser que alguien borrase el bmp
 	if (new_about_window_bmp_file_mem!=NULL) {
-        screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1,new_about_window_ancho_mostrar);
+        screen_render_bmpfile(new_about_window_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,1,1,new_about_window_ancho_mostrar,255,ESTILO_GUI_PAPEL_NORMAL);
     }
 
 
