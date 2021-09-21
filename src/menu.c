@@ -30781,11 +30781,11 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					);
         
         if (user_charset>=0) {
-            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charset,NULL,"[%s] Custom charset",
+            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charset,NULL,"Custom charset [%s]",
                 charset_list[user_charset].nombre);
         }
         else {
-            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charset,NULL,"[None] Custom charset");
+            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charset,NULL,"Custom charset [None]");
         }
         menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
