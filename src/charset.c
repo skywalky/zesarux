@@ -19,8 +19,30 @@
 
 */
 
+//Para poder usar NULL
+#include <stdio.h>
+
 #include "charset.h"
 
+
+struct s_charset_list charset_list[]={
+    {"ZX Spectrum",char_set_spectrum},
+    {"CPC",char_set_cpc},
+    {"Z88",char_set_z88},
+    {"Sam Coupe",char_set_sam},
+    {"Man Software",char_set_mansoftware},
+    {"QL",char_set_ql},
+    {"RetroMac",char_set_retromac},
+    {"MSX",char_set_msx},
+    {"BeOS",char_set_beos},
+    {"",NULL}
+};
+
+
+unsigned char *char_set=char_set_spectrum; //por defecto
+
+//charset alterado por el usuario
+int user_charset=-1;
 
 //Se puede obtener volcado con:
 //hexdump -C archivo.bin |cut -d ' ' -f2-|cut -d '|' -f1|sed 's/  / /g'|cut -d ' ' -f2-|sed 's/ $/,/'|sed 's/ /,0x/g'|sed 's/^/0x/'
@@ -1038,7 +1060,7 @@ unsigned char char_set_cpc[TOTAL_ASCII_CHARSET_ELEMENTS]={
 
 
 };
-unsigned char *char_set=char_set_spectrum; //por defecto
+
 
 unsigned char char_set_z88[TOTAL_ASCII_CHARSET_ELEMENTS]={
 

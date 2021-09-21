@@ -62,6 +62,7 @@ Improved ZX Vision menu interface:
 -Real tape icon now is animated when playing tape
 -Added actions for reinsert, rewind, ffwd real tape
 -Reorganized GUI Settings and Window Settings menu: "GUI Settings" menu is now called "ZX Vision Settings", "Window Settings" menu is now called "General settings"
+-Menu charset can be modified
 -Allow customize upper buttons to actions
 -Added setting to pause cpu emulation on menu when multitask active
 -Added Degraded ZX Desktop Fill Type

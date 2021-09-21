@@ -30693,7 +30693,18 @@ void menu_special_fx_settings(MENU_ITEM_PARAMETERS)
 }
 
 
+void menu_interface_charset(MENU_ITEM_PARAMETERS)
+{
+    //if (user_charset<0) user_charset=0;
+    //else {
+        user_charset++;
+        if (charset_list[user_charset].puntero==NULL) user_charset=-1;
+    //}
 
+    if (user_charset>=0) {
+        char_set=charset_list[user_charset].puntero;
+    }
+}
 
 
 void menu_interface_settings(MENU_ITEM_PARAMETERS)
@@ -30771,6 +30782,14 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					"\nNote: Some styles (like Solarized) need a full video driver, can't be set on curses or aalib for example"
 					
 					);
+        
+        if (user_charset>=0) {
+            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charset,NULL,"[%s] Custom charset",
+                charset_list[user_charset].nombre);
+        }
+        else {
+            menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_interface_charset,NULL,"[None] Custom charset");
+        }
         menu_add_item_menu(array_menu_interface_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 
 
@@ -38947,6 +38966,9 @@ void set_charset_from_gui(void)
 
 
     char_set=definiciones_estilos_gui[estilo_gui_activo].style_char_set;
+
+    //User charset a ninguno
+    user_charset=-1;
 }
 
 void zxvision_menu_print_dir(int inicial,zxvision_window *ventana)
