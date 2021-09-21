@@ -21,8 +21,10 @@
 
 //Para poder usar NULL
 #include <stdio.h>
+#include <string.h>
 
 #include "charset.h"
+#include "menu.h"
 
 
 struct s_charset_list charset_list[]={
@@ -43,6 +45,47 @@ unsigned char *char_set=char_set_spectrum; //por defecto
 
 //charset alterado por el usuario
 int user_charset=-1;
+
+void charset_retorna_nombres(void)
+{
+	int i;
+
+	for (i=0;charset_list[i].puntero!=NULL;i++) {
+		printf ("%s",charset_list[i].nombre);
+        //coma si no es el ultimo item
+        if (charset_list[i+1].puntero!=NULL) printf(",");
+
+        printf(" ");
+	}
+}
+
+//Retorna -1 si no encontrado
+int get_charset_id_by_name(char *nombre)
+{
+    int i;
+
+	for (i=0;charset_list[i].puntero!=NULL;i++) {
+        if (!strcasecmp(charset_list[i].nombre,nombre)) {
+            return i;
+        }
+
+	}
+
+    return -1;
+
+}
+
+void set_user_charset(void)
+{
+
+    if (user_charset>=0) {
+        char_set=charset_list[user_charset].puntero;
+    }
+    else {
+        set_charset_from_gui();
+    }
+}
+
 
 //Se puede obtener volcado con:
 //hexdump -C archivo.bin |cut -d ' ' -f2-|cut -d '|' -f1|sed 's/  / /g'|cut -d ' ' -f2-|sed 's/ $/,/'|sed 's/ /,0x/g'|sed 's/^/0x/'

@@ -134,6 +134,7 @@
 #include "samram.h"
 #include "snap_ram.h"
 #include "menu_items.h"
+#include "charset.h"
 
 #ifdef COMPILE_STDOUT
 #include "scrstdout.h"
@@ -1899,6 +1900,13 @@ printf (
 
 printf (
 		"\n"
+        "--charset s                Set Charset. This setting must be after --gui-style (if used). Available: ");
+
+        charset_retorna_nombres();
+
+printf (
+		"\n"
+
 		"--filebrowser-hide-dirs            Do not show directories on file selector menus\n"
         "--filebrowser-hide-size            Do not show file sizes on file selector menus\n"
         "--filebrowser-allow-folder-delete  Allows deleting folders on the file utilities browser. Enable it AT YOUR OWN RISK\n"
@@ -7788,6 +7796,20 @@ int parse_cmdline_options(void) {
 
                 */
             }
+
+            else if (!strcmp(argv[puntero_parametro],"--charset")) {
+				siguiente_parametro_argumento();
+                int indice=get_charset_id_by_name(argv[puntero_parametro]);
+                if (indice<0) {
+					printf ("Invalid charset: %s\n",argv[puntero_parametro]);
+					exit(1);
+				}
+
+                user_charset=indice;
+                set_user_charset();
+               
+            }
+
 
 
 			else if (!strcmp(argv[puntero_parametro],"--keyboardspoolfile")) {

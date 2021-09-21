@@ -30695,15 +30695,12 @@ void menu_special_fx_settings(MENU_ITEM_PARAMETERS)
 
 void menu_interface_charset(MENU_ITEM_PARAMETERS)
 {
-    //if (user_charset<0) user_charset=0;
-    //else {
-        user_charset++;
-        if (charset_list[user_charset].puntero==NULL) user_charset=-1;
-    //}
 
-    if (user_charset>=0) {
-        char_set=charset_list[user_charset].puntero;
-    }
+    user_charset++;
+    if (charset_list[user_charset].puntero==NULL) user_charset=-1;
+
+    set_user_charset();
+
 }
 
 

@@ -43,6 +43,12 @@ struct s_charset_list {
 extern struct s_charset_list charset_list[];
 extern int user_charset;
 
+extern void charset_retorna_nombres(void);
+
+extern int get_charset_id_by_name(char *nombre);
+
+extern void set_user_charset(void);
+
 #define MAX_CHARSET_GRAPHIC 147
 
 //Tamanyo de cada array para charset en menu, asi podemos saber si por error he metido mas elementos
