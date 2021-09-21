@@ -21984,22 +21984,13 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 
 
 
-	if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_SAM || MACHINE_IS_CPC) {
-	
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_realjoystick,menu_hardware_realjoystick_cond,"~~Real joystick support");
-			menu_add_item_menu_shortcut(array_menu_hardware_settings,'r');
-			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Settings for the real joystick");
-			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Settings for the real joystick");
-
-		}
 
 
 
+		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_memory_settings,NULL,"~~Memory Settings");
+		menu_add_item_menu_shortcut(array_menu_hardware_settings,'m');
 
-		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX81) {
-			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_printers,NULL,"~~Printing emulation");
-			menu_add_item_menu_shortcut(array_menu_hardware_settings,'p');
-		}
+
 
 		if (MACHINE_IS_SPECTRUM) {
 			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_multiface,NULL,"M~~ultiface emulation"  );
@@ -22009,11 +22000,22 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
 		
 
 
-		menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_memory_settings,NULL,"~~Memory Settings");
-		menu_add_item_menu_shortcut(array_menu_hardware_settings,'m');
 
 
 
+		if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX81) {
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_printers,NULL,"~~Printing emulation");
+			menu_add_item_menu_shortcut(array_menu_hardware_settings,'p');
+		}
+
+	    if (MACHINE_IS_SPECTRUM || MACHINE_IS_ZX8081 || MACHINE_IS_SAM || MACHINE_IS_CPC) {
+	
+			menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_realjoystick,menu_hardware_realjoystick_cond,"~~Real joystick support");
+			menu_add_item_menu_shortcut(array_menu_hardware_settings,'r');
+			menu_add_item_menu_tooltip(array_menu_hardware_settings,"Settings for the real joystick");
+			menu_add_item_menu_ayuda(array_menu_hardware_settings,"Settings for the real joystick");
+
+		}
 
 		// De momento esto desactivado
         /*
