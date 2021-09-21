@@ -202,7 +202,7 @@ L08F7:          IN      A,(HLWPORT)
 -Consola ZRCP desde menú. Cómo gestionar comandos de cpu step que bloquean el menú?
 
 
-- En ZX desktop a veces al iniciar o activar sale primero en negro
+- En ZX desktop a veces al iniciar o activar sale primero en negro. Al redimensionar ventana tambien por ejemplo
 
 - realtape browser que pille el setting de improved algorithm yes/no
 
