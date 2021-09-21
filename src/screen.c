@@ -14895,6 +14895,8 @@ el marco forma parte de la zona transparente y por tanto se verá transparente d
 
 //indice_color_transparente: indica que numero de color se tratara como transparente. Indicar a -1 para no hacer transparencia
 //color_final_transparente: color que se mostrara en el caso de transparente
+//Realmente no es transparencia, sino indicar que determinado color se mostrara con un color concreto y no de la paleta
+//pero se usa para simular transparencia, desde el menu about, para indicar color igual al del papel de fondo
 void screen_render_bmpfile(z80_byte *mem,int indice_paleta_color,zxvision_window *ventana,int x_ignore,int follow_zoom,
     int ancho_mostrar,int indice_color_transparente,int color_final_transparente)
 {
