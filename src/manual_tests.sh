@@ -35,7 +35,7 @@ sleep 4
 
 
 
-echo "Probar spool file"
+echo "Probar spool file, con modo turbo y sin"
 sleep 4
 TEMPFILE=`mktemp`
 
@@ -43,20 +43,26 @@ TEMPFILE=`mktemp`
 #-probar spool file: en spectrum 48k, 128k, zx80, zx81, z88, con modo turbo y sin. usar script txt_to_basic_lines.sh
 #tipo puede ser: 1: 48k, zx81. 2: zx80. 3: 128k, z88, o cualquier otro sistema que use 'REM' con caracteres y no tokens
 
+echo "Probar spool file 48k"
 ./txt_to_basic_lines.sh README 1 si si si > $TEMPFILE
 ./zesarux --noconfigfile --machine 48k --keyboardspoolfile $TEMPFILE 
 
+echo "Probar spool file zx81"
 ./txt_to_basic_lines.sh README 1 si si si > $TEMPFILE
 ./zesarux --noconfigfile --machine zx81 --keyboardspoolfile $TEMPFILE 
 
+echo "Probar spool file zx80"
 ./txt_to_basic_lines.sh README 2 si si si > $TEMPFILE
 ./zesarux --noconfigfile --machine zx80 --keyboardspoolfile $TEMPFILE 
 
+echo "Probar spool file 128k"
 ./txt_to_basic_lines.sh README 3 si si si > $TEMPFILE
 ./zesarux --noconfigfile --machine 128k --keyboardspoolfile $TEMPFILE 
 
+echo "Probar spool file z88"
 ./txt_to_basic_lines.sh README 3 si si no > $TEMPFILE
 ./zesarux --noconfigfile --machine z88 --keyboardspoolfile $TEMPFILE 
 
+echo "Probar spool file cpc464"
 ./txt_to_basic_lines.sh README 3 si si no > $TEMPFILE
 ./zesarux --noconfigfile --machine cpc464 --zoom 1 --keyboardspoolfile $TEMPFILE 
