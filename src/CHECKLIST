@@ -22,6 +22,8 @@ echo "Porcentaje=$PERCCOMPLETADO %"
 
 -ejecutar ./machines_test.sh
 
+-ejecutar ./test_games.sh
+
 Drivers video:
 -probar drivers video xwindows, sdl, fbdev, curses, aa, caca, stdout, simpletext, null. desde dentro de xwindows y desde consola de texto real
 *por cada driver (incluido null) y con y sin pthreads:
