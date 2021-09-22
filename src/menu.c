@@ -36003,6 +36003,7 @@ void menu_inicio(void)
                     }
                     else {
                         //establecemos un minimo de ancho de zxdesktop (512/zoom_x) al habilitar
+                        //ideal para maquinas que usualmente usan zoom 1, como tbblue o ql
                         screen_ext_desktop_width=512/zoom_x;
                         //printf("Generando valor nuevo\n");
                     }
