@@ -1,4 +1,4 @@
-Version 10.0 - Clive Sinclair edition. 16 September 2021
+Version 10.0 - Clive Sinclair edition. 22 September 2021
 
 There are lots of changes in this version, but some of them are remarkable:
 
@@ -26,18 +26,21 @@ Added Jupiter Ace 51 KB RAM emulation
 Added Fuzix ide image on the zesarux-extras package
 Added ZSF snapshot support for Jupiter Ace, Z88
 Added --slotcard-num setting to insert a Z88 card in a numbered slot (1, 2 or 3)
-Added ZRCP command mmc-reload to reload MMC image
 Added ZEsarUX logo on the window footer
 Added setting to disable ZX80/81 tape traps
 Added wav/rwa/smp tape audio browser, to view Spectrum/ZX80/ZX81 tape blocks from audio file
 Added Visual Real Tape. Now you can have an audio render of your tape, see tape blocks and rewind or move forward the cassette player
 Added menu language selection between default (English) and Spanish. Only some texts are translated to Spanish
+Added ZRCP commands:
+-mmc-reload: reload MMC image
+-snapshot-inram-get-index: Returns index to a RAM snapshot position
+-snapshot-inram-load: Loads the RAM snapshot from position
 
 Added file converters: 
-- wav/rwa/smp to tap
-- wav/rwa/smp to p
-- wav/rwa/smp to o
-- rwa to wav
+-wav/rwa/smp to tap
+-wav/rwa/smp to p
+-wav/rwa/smp to o
+-rwa to wav
 
 
 Improved Debug CPU Window:

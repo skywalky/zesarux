@@ -208,4 +208,4 @@ L08F7:          IN      A,(HLWPORT)
 
 - Improved algorithm quizá renombrar a “alternate” algorithm 
 
- 
+- Al salir cualquier mensaje splash luego no deberían desaparecer las ventanas
