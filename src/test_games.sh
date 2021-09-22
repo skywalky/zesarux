@@ -28,3 +28,6 @@ echo "Test ZX81"
 
 echo "Test TSConf"
 ./zesarux $OPTIONS --machine cpc464 --zoom 1 --zxdesktop-width 512 extras/media/spectrum/tsconf/fast.spg
+
+echo "Test Inves"
+./zesarux $OPTIONS --machine inves ../../aux_zesarux/LEMMIN48.TAP
