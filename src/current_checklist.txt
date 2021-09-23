@@ -106,7 +106,6 @@ Probar delete, rename, etc y resto de acciones con CMDR, con archivos en minuscu
 -probar superupgrade. Básico, programa de modificación de rom. Programa en basic extras/media/spectrum/tests/superupgrade-test.tap y usando 512kb de rom que sean siempre la misma rom de spectrum 48k. Probar con rman.tap
 -probar kartusho
 -probar ifrom
--probar betadisk
 
 -probar spectra. Test modos. Comparar con ZXSP. X128 NO es correcto del todo, falla la implementacion del flash
 Comparar test 128 pantalla con tabla docs/spectra/SPECTRA 128 Test.txt
@@ -246,11 +245,6 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 -Probar Amstrad cpc. Todas teclas
 -Probar Sam Coupe. Todas teclas. Probar atomlite
 -probar ZX-Uno. diferentes maquinas (48k, 128k, +2a), juegos rom. Probar spi flash file, default y custom. En 48k, 128k, +2a: probar carga tap y grabacion tap, y autosend LOAD"". Probar rutina carga de cinta desde la BIOS. Probar DMA
--Probar demos Pentagon. Nota: confusio.tap requiere usr0
--Probar TSConf
--Probar Baseconf
--Probar Chrome
--Probar MK14
 
 -Pruebas interfaz menu:
 * habilitar zx desktop
