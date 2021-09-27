@@ -896,9 +896,17 @@ void scrcurses_refresca_pantalla_zx8081_rainbow(void)
 					caracter=compare_char_tabla_rainbow(caracter_sprite,&inverse,&memoria_spectrum[direccion]);
 					//if (caracter) debug_printf (VERBOSE_ERR,"xx: %d spritelin: %d caracter: %d ",xx,spritelin,caracter);
 				}
+				
+int going_to_use_cursesw=0;
+#ifdef COMPILE_CURSESW
+	//Solo usarlo si esta compilado y el setting esta activo
+								if (use_scrcursesw.v) going_to_use_cursesw=1;
+#endif				
+				
+				
 				//temp  forzar si caracter es udg, pasar a artistico
-				//todo  solo hacer esto si habilitado uft
-				if (caracter<16) caracter=255;
+				// solo si usamos uft blocky
+				if (going_to_use_cursesw && caracter<16) caracter=255;
 			
 
                         if (caracter!=255) {
@@ -941,11 +949,7 @@ void scrcurses_refresca_pantalla_zx8081_rainbow(void)
                                 
                                 
                                 
-                                int going_to_use_cursesw=0;
-#ifdef COMPILE_CURSESW
-	//Solo usarlo si esta compilado y el setting esta activo
-								if (use_scrcursesw.v) going_to_use_cursesw=1;
-#endif
+                                
 
 
 								if (going_to_use_cursesw) {
