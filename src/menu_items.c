@@ -10994,8 +10994,8 @@ void menu_textdrivers_settings(MENU_ITEM_PARAMETERS)
 
 #ifdef COMPILE_CURSESW
 						menu_add_item_menu_format(array_menu_textdrivers_settings,MENU_OPCION_NORMAL,menu_display_cursesw_ext,NULL,"[%c]   Extended utf blocky", (use_scrcursesw.v ? 'X' : ' ') );
-                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Use extended utf characters to have 64x48 display, only on Spectrum and curses drivers");
-						menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Use extended utf characters to have 64x48 display, only on Spectrum and curses drivers");
+                        menu_add_item_menu_tooltip(array_menu_textdrivers_settings,"Use extended utf characters to have 64x48 display, only for curses driver and machines: Spectrum (realvideo enabled or not) and ZX80/81 (only for realvideo enabled)");
+						menu_add_item_menu_ayuda(array_menu_textdrivers_settings,"Use extended utf characters to have 64x48 display, only for curses driver and machines: Spectrum (realvideo enabled or not) and ZX80/81 (only for realvideo enabled)");
 #endif
 								
 
