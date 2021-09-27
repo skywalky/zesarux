@@ -896,6 +896,9 @@ void scrcurses_refresca_pantalla_zx8081_rainbow(void)
 					caracter=compare_char_tabla_rainbow(caracter_sprite,&inverse,&memoria_spectrum[direccion]);
 					//if (caracter) debug_printf (VERBOSE_ERR,"xx: %d spritelin: %d caracter: %d ",xx,spritelin,caracter);
 				}
+				//temp  forzar si caracter es udg, pasar a artistico
+				//todo  solo hacer esto si habilitado uft
+				if (caracter<16) caracter=255;
 			
 
                         if (caracter!=255) {
