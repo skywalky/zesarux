@@ -95,6 +95,7 @@ Improved Text Aventure Features:
 Improved Find menu: now can find several bytes and open Hexadecimal Editor on the results list
 Improved Audio to .mid exporter: allow changing instrument
 Improved configuration file: increased maximum allowed size to 256kb and 2000 parameters
+Improved curses driver on ZX80/81: now realvideo mode can use extended utf-8 blocky characters
 
 
 Fixed file previews on corrupted files: pzx, tap
