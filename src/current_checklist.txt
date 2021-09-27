@@ -61,10 +61,6 @@ ok coreaudio
 
 
 
--Funciones de Red:
---Windows: Probar ZENG, Speccy browser, ZX81 browser, Download TBBLUE SD
---Mac: Probar ZENG, Speccy browser, ZX81 browser, Download TBBLUE SD
---Linux: Probar ZENG, Speccy browser, ZX81 browser, Download TBBLUE SD 
 
 -probar aofile raw y wav
 -probar con --disable-sndfile

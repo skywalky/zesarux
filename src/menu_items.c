@@ -10221,7 +10221,7 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 
 
 		if (MACHINE_IS_ZXUNO) {
-            menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+            //menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_zxuno_deny_turbo_bios_boot,NULL,"[%c] ~~Deny turbo on boot",
 							(zxuno_deny_turbo_bios_boot.v ? 'X' : ' ') );
 					menu_add_item_menu_shortcut(array_menu_cpu_settings,'d');
@@ -10230,7 +10230,7 @@ void menu_cpu_settings(MENU_ITEM_PARAMETERS)
 	  }
 
 		if (MACHINE_IS_TBBLUE) {
-            menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+            //menu_add_item_menu(array_menu_cpu_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 					menu_add_item_menu_format(array_menu_cpu_settings,MENU_OPCION_NORMAL,menu_tbblue_deny_turbo_rom,NULL,"[%c] Limit turbo on ROM",
 							(tbblue_deny_turbo_rom.v ? 'X' : ' ') );
 					//menu_add_item_menu_shortcut(array_menu_cpu_settings,'d');
