@@ -935,10 +935,29 @@ void scrcurses_refresca_pantalla_zx8081_rainbow(void)
 
                                 //move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
                                 move(yencurses,xencurses);
+                                
+                                
+                                
+                                int going_to_use_cursesw=0;
+#ifdef COMPILE_CURSESW
+	//Solo usarlo si esta compilado y el setting esta activo
+								if (use_scrcursesw.v) going_to_use_cursesw=1;
+#endif
+
+
+								if (going_to_use_cursesw) {
+#ifdef COMPILE_CURSESW									
+									cursesw_ext_print_pixel(valor_get_pixel);
+#endif
+								}
+
+								else {
 
 				addch(caracter);
 
                         }
+                        
+                    }
 
                 }
 
