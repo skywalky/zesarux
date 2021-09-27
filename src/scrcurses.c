@@ -514,6 +514,79 @@ void scrcurses_putchar_zx8081(int x,int y, z80_byte caracter)
 
 }
 
+
+/*
+Prueba de como deberia hacerse la funcion de putchar zx81(usada al repintar pantalla) sin rainbow, 
+para que use caracteres utf blocky
+pendiente:
+-caracteres 8,9,10 que hacer con ellos
+-funciona bien realmente? caracteres 0-7 creo que no utilizan misma distribucion de "puntos" que la funcion cursesw_ext_print_pixel
+-funcion esta scrcurses_putchar_zx8081 se usa en mas sitios que aqui? porque si es aqui, puede provocar que otros sitios se vean mal
+-zx80: casi igual pero tener en cuenta que caracter 1 es "
+
+void prueba_scrcurses_putchar_zx8081(int x,int y, z80_byte caracter)
+{
+
+
+	z80_bit inverse;
+
+	//Caso especial para Jupiter ACE
+	if (MACHINE_IS_ACE) {
+		if (caracter>=128) {
+			inverse.v=0;
+			caracter -=128;
+		}
+		else inverse.v=1;
+
+                if (!inverse.v) attron(COLOR_PAIR(0+7*8+1));
+                else attron(COLOR_PAIR(7+0*8+1));
+
+
+	}
+
+
+	else {
+
+		//Para ZX80/81
+        int going_to_use_cursesw=0;
+#ifdef COMPILE_CURSESW
+	//Solo usarlo si esta compilado y el setting esta activo
+        if (use_scrcursesw.v) going_to_use_cursesw=1;
+#endif        
+
+
+    if (MACHINE_IS_ZX81 && texto_artistico.v && going_to_use_cursesw && caracter<8) {
+        move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
+#ifdef COMPILE_CURSESW        
+        cursesw_ext_print_pixel(caracter);
+#endif
+        return;
+    }
+
+		caracter=da_codigo81(caracter,&inverse);
+		if (!inverse.v) attron(COLOR_PAIR(0+7*8+1));
+		else attron(COLOR_PAIR(7+0*8+1));
+
+
+		//simular modo fast
+		if (video_fast_mode_emulation.v==1 && video_fast_mode_next_frame_black==LIMIT_FAST_FRAME_BLACK) {
+			attron(COLOR_PAIR(1));
+			move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
+			addch(' ');
+			return;
+		}
+
+	}
+
+
+	move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
+
+    addch(caracter);
+
+
+}
+*/
+
 void scrcurses_refresca_pantalla_zx81(void)
 {
 

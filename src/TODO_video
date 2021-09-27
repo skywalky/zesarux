@@ -154,6 +154,7 @@ Por drivers:
 -Utf blocky : A veces salen interrogantes. Probado en linux y no sale. Quiza es el cliente ssh contra remoto el que falla con esto a veces
 
 -zx80/81: permitir caracteres utf blocky tambien cuando no se usa rainbow. actualmente solo usa uft block con rainbow activo
+Ver funcion prueba_scrcurses_putchar_zx8081
 
 --stdout--
 
