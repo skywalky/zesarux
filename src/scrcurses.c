@@ -904,9 +904,13 @@ void scrcurses_refresca_pantalla_zx8081_rainbow(void)
     #endif				
                     
                     
-            //  forzar si caracter es udg, pasar a artistico
+            //  forzar si caracter es de bloque, pasar a artistico
             // solo si usamos uft blocky
-            if (texto_artistico.v && going_to_use_cursesw && caracter<11) caracter=255;
+            // Los primeros 11 caracteres del zx81 son de bloque
+            if (MACHINE_IS_ZX81 && texto_artistico.v && going_to_use_cursesw && caracter<11) caracter=255;
+
+            //En ZX80, caracter 1 es "
+            if (MACHINE_IS_ZX80 && texto_artistico.v && going_to_use_cursesw && caracter<12 && caracter!=1) caracter=255;
                 
 
             if (caracter!=255) {
