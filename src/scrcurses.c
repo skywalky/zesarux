@@ -1290,68 +1290,66 @@ void scrcurses_refresca_pantalla(void)
 	//int valor_get_pixel;
 
 
-        if (sem_screen_refresh_reallocate_layers) {
-                //printf ("--Screen layers are being reallocated. return\n");
-                //debug_exec_show_backtrace();
-                return;
-        }
+    if (sem_screen_refresh_reallocate_layers) {
+        //printf ("--Screen layers are being reallocated. return\n");
+        //debug_exec_show_backtrace();
+        return;
+    }
 
-        sem_screen_refresh_reallocate_layers=1;
+    sem_screen_refresh_reallocate_layers=1;
         
-     //si todo de pixel a ascii art
-     if (rainbow_enabled.v && screen_text_all_refresh_pixel.v) {
+    //si todo de pixel a ascii art
+    if (rainbow_enabled.v && screen_text_all_refresh_pixel.v) {
      
-     scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,screen_text_all_refresh_pixel_scale);  //23 seria 720x576 -> 31x25
+        scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,screen_text_all_refresh_pixel_scale);  //23 seria 720x576 -> 31x25
      
-     }
+    }
 
 
 	else if (MACHINE_IS_ZX8081) {
 
-                if (rainbow_enabled.v==0) {
+        if (rainbow_enabled.v==0) {
 			//modo clasico. sin rainbow
 			scrcurses_refresca_pantalla_zx81();
 		}
 
-                else {
-                        //modo rainbow - real video. De momento hacemos igual que sin realvideo
-			//scrcurses_refresca_pantalla_zx81();
-
+        else {
+            //modo rainbow - real video. 
 			scrcurses_refresca_pantalla_zx8081_rainbow();
 		}
 	}
 
 	else if (MACHINE_IS_TSCONF) {
-                   //Si es modo texto, hacer este refresh:
-                    z80_byte modo_video=tsconf_get_video_mode_display();
-                    if (modo_video==3) {
-                                        scr_refresca_pantalla_tsconf_text_textmode(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);
+        //Si es modo texto, hacer este refresh:
+        z80_byte modo_video=tsconf_get_video_mode_display();
+        if (modo_video==3) {
+            scr_refresca_pantalla_tsconf_text_textmode(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,23);
+        }
+
+        else {
+
+            //con rainbow
+            if (rainbow_enabled.v) {
+                scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,19);  //23 seria 720x576 -> 31x25
+            }
+
+            else {
+
+            //sin rainbow, refresh como spectrum
+                if (border_enabled.v) {
+                    //ver si hay que refrescar border
+                    if (modificado_border.v)
+                    {
+                        scrcurses_refresca_border();
+                        modificado_border.v=0;
                     }
 
-		    else {
+                }
 
-	                //con rainbow
-			if (rainbow_enabled.v) {
-	                        scr_refresca_pantalla_tsconf_text(scrcurses_refresca_pantalla_common_fun_color,scrcurses_refresca_pantalla_common_fun_caracter,scrcurses_refresca_pantalla_common_fun_saltolinea,19);  //23 seria 720x576 -> 31x25
-			}
+                scrcurses_refresca_pantalla_no_rainbow();
 
-			else {
-
-			//sin rainbow, refresh como spectrum
-                        if (border_enabled.v) {
-                                //ver si hay que refrescar border
-                                if (modificado_border.v)
-                                {
-                                        scrcurses_refresca_border();
-                                        modificado_border.v=0;
-                                }
-
-                        }
-
-                        scrcurses_refresca_pantalla_no_rainbow();
-
-			}
-		  }
+            }
+        }
 
 
 	}
@@ -1392,28 +1390,23 @@ void scrcurses_refresca_pantalla(void)
 
 
 
-
-
-                        //modo rainbow - real video. De momento hacemos igual que sin realvideo
-                        //scrcurses_refresca_pantalla_rainbow();
-
 			if (border_enabled.v) {
-                                //ver si hay que refrescar border
-                                if (modificado_border.v)
-                                {
-                                        scrcurses_refresca_border();
-                                        modificado_border.v=0;
-                                }
+                //ver si hay que refrescar border
+                if (modificado_border.v)
+                {
+                        scrcurses_refresca_border();
+                        modificado_border.v=0;
+                }
 
-                        }
+            }
 
-                        scrcurses_refresca_pantalla_no_rainbow();
+            scrcurses_refresca_pantalla_no_rainbow();
 
-			}
+        }
 
  
 
-          }
+    }
 
 
 
@@ -1474,8 +1467,8 @@ void scrcurses_refresca_pantalla(void)
 	screen_render_menu_overlay_if_active();
 
 
-        //Escribir footer
-        draw_middle_footer();
+    //Escribir footer
+    draw_middle_footer();
 
 
 	refresh();
