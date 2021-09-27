@@ -906,7 +906,7 @@ int going_to_use_cursesw=0;
 				
 				//  forzar si caracter es udg, pasar a artistico
 				// solo si usamos uft blocky
-				if (texto_artistico.v && going_to_use_cursesw && caracter<16) caracter=255;
+				if (texto_artistico.v && going_to_use_cursesw && caracter<11) caracter=255;
 			
 
                         if (caracter!=255) {
