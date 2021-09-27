@@ -843,20 +843,20 @@ void scrcurses_refresca_pantalla_sam(void)
 //Refrescar pantalla en zx80/81 con real video
 void scrcurses_refresca_pantalla_zx8081_rainbow(void)
 {
-        z80_byte caracter;
-        int x,y;
-        //unsigned char inv;
+    z80_byte caracter;
+    int x,y;
+    //unsigned char inv;
 
-        int valor_get_pixel;
+    int valor_get_pixel;
 
-        //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
+    //char caracteres_artisticos[]=" ''\".|/r.\\|7_LJ#";
 
 
 	z80_int direccion;
 
 	//Tabla de caracteres para ZX80,81
-        if (MACHINE_IS_ZX80) direccion=0x0E00;
-        else direccion=0x1E00;
+    if (MACHINE_IS_ZX80) direccion=0x0E00;
+    else direccion=0x1E00;
 
 	z80_byte inverse;
 
@@ -885,91 +885,91 @@ void scrcurses_refresca_pantalla_zx8081_rainbow(void)
 	int xencurses,yencurses;
 
 	for (y=yinicial,yencurses=0;y<yinicial+alto;y++,yencurses++) {
-                for (x=xinicial,xencurses=0;x<xinicial+ancho;x++,xencurses++) {
+        for (x=xinicial,xencurses=0;x<xinicial+ancho;x++,xencurses++) {
                 
-			int spritelin;
-			caracter=255;
+            int spritelin;
+            caracter=255;
 
-			//Buscar caracteres en posicion y...y+7
-				for (spritelin=0;spritelin<8 && caracter==255;spritelin++) {
-					screen_get_sprite_char(x*8,y*8+spritelin,caracter_sprite);
-					caracter=compare_char_tabla_rainbow(caracter_sprite,&inverse,&memoria_spectrum[direccion]);
-					//if (caracter) debug_printf (VERBOSE_ERR,"xx: %d spritelin: %d caracter: %d ",xx,spritelin,caracter);
-				}
-				
-int going_to_use_cursesw=0;
-#ifdef COMPILE_CURSESW
-	//Solo usarlo si esta compilado y el setting esta activo
-								if (use_scrcursesw.v) going_to_use_cursesw=1;
-#endif				
-				
-				
-				//  forzar si caracter es udg, pasar a artistico
-				// solo si usamos uft blocky
-				if (texto_artistico.v && going_to_use_cursesw && caracter<11) caracter=255;
-			
+            //Buscar caracteres en posicion y...y+7
+            for (spritelin=0;spritelin<8 && caracter==255;spritelin++) {
+                screen_get_sprite_char(x*8,y*8+spritelin,caracter_sprite);
+                caracter=compare_char_tabla_rainbow(caracter_sprite,&inverse,&memoria_spectrum[direccion]);
+                //if (caracter) debug_printf (VERBOSE_ERR,"xx: %d spritelin: %d caracter: %d ",xx,spritelin,caracter);
+            }
+                    
+            int going_to_use_cursesw=0;
+    #ifdef COMPILE_CURSESW
+            //Solo usarlo si esta compilado y el setting esta activo
+            if (use_scrcursesw.v) going_to_use_cursesw=1;
+    #endif				
+                    
+                    
+            //  forzar si caracter es udg, pasar a artistico
+            // solo si usamos uft blocky
+            if (texto_artistico.v && going_to_use_cursesw && caracter<11) caracter=255;
+                
 
-                        if (caracter!=255) {
+            if (caracter!=255) {
 
-				//printf ("hay caracter :%d ",caracter);
-				z80_bit inv;
-				if (inverse) caracter+=128;
-				caracter=da_codigo81(caracter,&inv);
-				attron(COLOR_PAIR(0+7*8+1));
-
-
-                                //move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
-                                move(yencurses,xencurses);
-				if (inv.v) addch(caracter | WA_REVERSE  );
-				else addch(caracter);
+                //printf ("hay caracter :%d ",caracter);
+                z80_bit inv;
+                if (inverse) caracter+=128;
+                caracter=da_codigo81(caracter,&inv);
+                attron(COLOR_PAIR(0+7*8+1));
 
 
-                        }
-
-                        else {
-
-                                if (texto_artistico.v==1) {
-                                        //si caracter desconocido, hacerlo un poco mas artistico
-                                        valor_get_pixel=0;
-                                        if (scr_get_4pixel_rainbow(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
-                                        if (scr_get_4pixel_rainbow(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
-                                        if (scr_get_4pixel_rainbow(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
-                                        if (scr_get_4pixel_rainbow(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
-
-                                        caracter=screen_common_caracteres_artisticos[valor_get_pixel];
-
-					attron(COLOR_PAIR(0+7*8+1));
-                                 }
-
-                                else caracter='?';
+                //move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
+                move(yencurses,xencurses);
+                if (inv.v) addch(caracter | WA_REVERSE  );
+                else addch(caracter);
 
 
-                                //move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
-                                move(yencurses,xencurses);
-                                
-                                
-                                
-                                
+            }
 
+            else {
 
-								if (going_to_use_cursesw) {
-#ifdef COMPILE_CURSESW									
-									cursesw_ext_print_pixel(valor_get_pixel);
-#endif
-								}
+                if (texto_artistico.v==1) {
+                        //si caracter desconocido, hacerlo un poco mas artistico
+                        valor_get_pixel=0;
+                        if (scr_get_4pixel_rainbow(x*8,y*8)>=umbral_arttext) valor_get_pixel+=1;
+                        if (scr_get_4pixel_rainbow(x*8+4,y*8)>=umbral_arttext) valor_get_pixel+=2;
+                        if (scr_get_4pixel_rainbow(x*8,y*8+4)>=umbral_arttext) valor_get_pixel+=4;
+                        if (scr_get_4pixel_rainbow(x*8+4,y*8+4)>=umbral_arttext) valor_get_pixel+=8;
 
-								else {
+                        caracter=screen_common_caracteres_artisticos[valor_get_pixel];
 
-				addch(caracter);
-
-                        }
-                        
-                    }
-
+                        attron(COLOR_PAIR(0+7*8+1));
                 }
 
+                else caracter='?';
 
-          }
+
+                //move(y+CURSES_TOP_BORDER*border_enabled.v,x+CURSES_IZQ_BORDER*border_enabled.v);
+                move(yencurses,xencurses);
+                                    
+                                    
+                                    
+                                    
+
+
+                if (going_to_use_cursesw) {
+    #ifdef COMPILE_CURSESW									
+                    cursesw_ext_print_pixel(valor_get_pixel);
+    #endif
+                }
+
+                else {
+
+                    addch(caracter);
+
+                }
+                            
+            }
+
+        }
+
+
+    }
 
 
 }
