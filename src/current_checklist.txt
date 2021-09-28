@@ -128,7 +128,6 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar desactivando contended memory en compilacion
 
 
--probar desactivando memptr i pasar z80tests.tap de spectrum. probar activando memptr i pasar z80tests.tap
 -probar z80flags.tap. con memptr y --enable-undoc-scfccf son 6 de 152: fallan bit n,a ; bit n,[r,(hl)], ldi, ldd, ldir, lddr
 -probar cpustats
 -probar visualmem, tambien en drivers no graficos como curses, aa, etc
@@ -139,14 +138,8 @@ Modo 6 512x192 real/simulado a 256x192 con timmy.tap y testtimexmode6.tap y test
 -probar paleta gris, roja, verde, azul, inverso, real, etc. tambien con modos ulaplus, gigascreen, scanlines, spectra, timex, prism, sam
 -ver paletas de colores
 -probar expansiones de ram de zx80/81
--probar a generar algun error y que aparezca en menu
--probar first aid
 -probar a sobreescribir algun archivo y que pida confirmacion en menu
--probar tooltip y ayuda de opciones en menu
--probar menus ayudas. probar cargar juego edition name desde about->seleccionar linea 1(activando cursor con f/n) y enter (segundo easter egg)
--probar shortcuts en menu
 -probar GUI styles: opcion normal, seleccionada, no disponible, no disponible seleccionada, pixel (audio waveform, visual mem, view sprites) en: driver grafico, en caca y en curses
--probar opcion desactivar contended memory en menu
 -probar fuller audio box emulation
 -probar advanced timing settings 
 -probar menu de stdout
@@ -159,20 +152,14 @@ nota: curses, lightgun no va muy fino en los juegos debido al tiempo de retencio
 nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar fire (y no al mover)
 -probar buscador vidas infinitas. tambien con cpu top speed
 -probar debug i/o ports: spectrum zx80/81, z88, zx-uno, etc
--probar debugger, step over interrupt, electron position, cursores, toggle, runto, etc
 -probar breakpoint condicionales (=,<,> y con registros indirectos (hl), con and or xor) , operadores bitwise &|^ en variables
 -probar desactivar breakpoints con espacio
 -probar exportar disassemble a archivo texto
--probar assembler, desde menu y ZRCP
--probar watches
--probar remote command protocol ZRCP, en linux, mac y windows
 -probar zxi ports con extras/media/spectrum/tests/zesarux-zxi-ports.tap , extras/media/spectrum/tests/hardwaredebugport.tap
 -probar rzx files con extras/media/spectrum/rzx
 -probar quicksave, autosave at interval
 -probar todas opciones de menu en general, menus con mas opciones verticalmente de las visibles -> audio settings
 -probar fallback de drivers graficos y de sonido
--probar impresora: en zx spectrum, zx81
--probar COPY to printer
 -probar --verbose 0 y que no aparezca ningun mensaje por consola...
 -probar footer y cpu uso, temperatura, cinta carga, printing, etc. en xwindows, sdl, fbdev, cocoa, curses. con y sin border. en spectrum, zx80/81 y z88
 -probar custom configuration file, con snap_tests/test_autoconfig.tap  (y hay snap_tests/test_autoconfig.tap.config) y snap_tests/test_autoconfig.p (y hay snap_tests/test_autoconfig.p.config)
@@ -188,14 +175,8 @@ nota: cacalib, curses  en consola texto (no X) el mouse solo notifica al pulsar 
 ** primer y segundo mensaje se desplazan, como voyage of peril
 ** FSCAPES.P, que no da tiempo a mostrar todo el segundo mensaje porque carga partes
 * Con y sin border enabled
--probar smartload. probar deteccion de tipo tzx (standard o turbo) en quickload
--probar recent files, drive
--probar autoload & autosave
 -probar diferentes joysticks: kempston (inves y no-inves), cursor, fuller, etc. autofire
 -probar on screen keyboard, con F8 y con joystick
--probar on screen adventure keyboard 
--probar asignar teclas f a funciones
--probar --limitopenmenu
 -probar idle bus. con Arkanoid por ejemplo
 -probar realjoystick. probar opciones linea comandos: --joystickkeyev, --joystickkeybt, --joystickevent. Probar menu test joystick. Probar joystick sdl, joystick nativo linux, joystick simulator, disable joystick. En todos casos probar quitar y poner border (porque reinicializa drivers)
 -probar cambio driver audio desde menu

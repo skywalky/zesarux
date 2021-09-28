@@ -333,6 +333,11 @@ ZX Spectrum Sir Fred running on curses (text) driver
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_sirfred_curses.png "Sirfred curses")
 
 
+ZX81 Mazogs on curses (text) driver + utf8 extensions
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_mazogs_curses.png "Mazogs curses")
+
+
 ZX-Uno
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_zxuno.png "ZX-Uno")
