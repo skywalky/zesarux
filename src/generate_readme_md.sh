@@ -80,7 +80,12 @@ ZX Spectrum Sir Fred running on curses (text) driver
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_sirfred_curses.png "Sirfred curses")
 
 
-ZX81 Mazogs on curses (text) driver + utf8 extensions
+ZX Spectrum The Great Escape running on curses (text) driver + utf8 extensions
+
+![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_greatescape_curses.png "The Great Escape curses")
+
+
+ZX81 Mazogs running on curses (text) driver + utf8 extensions
 
 ![alt text](https://github.com/chernandezba/zesarux/raw/master/screenshots/screenshot_mazogs_curses.png "Mazogs curses")
 
