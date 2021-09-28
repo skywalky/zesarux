@@ -8820,6 +8820,25 @@ void zxvision_generic_message_tooltip(char *titulo, int return_after_print_text,
 		menu_espera_no_tecla();
 		menu_espera_tecla();
 
+        if (retorno!=NULL) {
+            int linea_final;
+
+            //en stdout no podemos seleccionar lineas y por tanto decimos siempre primera linea 0
+            linea_final=0;
+
+            //realmente no sabemos el texto de esa linea pues aun no hemos troceado a buffer_lineas. Ponemos ""
+            //esto actualmente solo se usa en copy from eprom, por tanto esto no funcionaria,
+            //aunque como le decimos que volvemos con ESC, no hemos seleccionado realmente ninguna linea
+            strcpy(retorno->texto_seleccionado,"");
+
+            retorno->linea_seleccionada=linea_final;
+
+            // Retorna 1 si sale con enter. Retorna 0 si sale con ESC
+            retorno->estado_retorno=0;
+
+
+        }
+
 		return;
     }
 
