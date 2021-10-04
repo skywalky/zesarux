@@ -1,4 +1,4 @@
-Version 10.0 - Clive Sinclair edition. 22 September 2021
+Version 10.0 - Clive Sinclair edition. 4 October 2021
 
 There are lots of changes in this version, but some of them are remarkable:
 
@@ -24,6 +24,7 @@ Added setting to disable TZX pauses
 Added zsf to scr support for Next, ZX-Uno and TSConf snapshots
 Added Jupiter Ace 51 KB RAM emulation
 Added Fuzix ide image on the zesarux-extras package
+Added TK90X v3 roms by Rodolfo Guerra on the zesarux-extras package
 Added ZSF snapshot support for Jupiter Ace, Z88
 Added --slotcard-num setting to insert a Z88 card in a numbered slot (1, 2 or 3)
 Added ZEsarUX logo on the window footer
