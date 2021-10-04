@@ -210,3 +210,5 @@ L08F7:          IN      A,(HLWPORT)
 
 - Al salir cualquier mensaje splash luego no deberían desaparecer las ventanas: parece que desaparece la decoracion de ventanas 
 momentaneamente pero al irse el splash, se recargan
+
+-freebsd: make bintargz necesita bash "generate_install.sh". configure tambien con bash?
