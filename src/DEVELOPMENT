@@ -597,3 +597,12 @@ Mas notas devel: TODO: apuntarlas en otro sitio
 -activar background windows + even with menu closed, implica que incluso con menu cerrado, las funciones de putpixel están haciendo siempre
 mix de la maquina emulada con los pixeles del menu (llamando a screen_putpixel_mix_layers). 
 No implica mucho mas uso de cpu (si hay poca ventana abierta) pero hay que tener en cuenta que por el hecho de tener esa opcion activada, incluso con todas las ventanas cerradas, ya consume algo mas de cpu
+
+----  
+
+
+notas para cygwin : arrancar xorg con : Xwin.exe -engine 1
+(1= shadow GDI
+4= Shadow directdraw4 non-locking)
+
+Parece que con 4 , por defecto, da problemas en funciones blt de directdraw y no dibuja nada
