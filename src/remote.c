@@ -4664,7 +4664,7 @@ void interpreta_comando(char *comando,int misocket)
 	else if (!strcmp(comando_sin_parametros,"put-snapshot") ) {
 		/*
 		Se puede enviar un snapshot por script asi:
-		#!/bin/bash
+		#!/usr/bin/env bash
 
 		( sleep 1 ; echo -n "put-snapshot " ; cat pruebasnap.txt ; sleep 1 ) | telnet localhost 10000
 		//Teniendo en cuenta que pruebasnap.txt contiene el volcado que se ha generado con get-snapshot

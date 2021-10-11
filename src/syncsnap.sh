@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #simple test to show snapshot copy from one instance of ZEsarUX to another
 #the second instance has ZRCP port 10010
 #this functionality is now done using ZENG menus,

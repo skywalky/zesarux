@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #probar a comprimir y descomprimir en memoria unos cuantos diferentes tipos de archivos, a ver si la rutina de ZSF funciona bien
 mkdir /tmp/pruebas

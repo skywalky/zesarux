@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 OPTIONS="--noconfigfile --quickexit --nowelcomemessage --enable-zxdesktop"
 
