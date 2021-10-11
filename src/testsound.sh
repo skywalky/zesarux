@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 for DRIVER in pulse alsa sdl dsp null; do 

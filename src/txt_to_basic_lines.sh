@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #tipos: 
 #1. for 48k and zx81, rem written as token (key e)

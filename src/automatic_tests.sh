@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #tool to run some different tests to ZEsarUX
 #tests are Speccy programs, in tap format, which should return text "RESULT: OK" or "RESULT: ERROR", and then exit the emulator by doing a exit emulator action,

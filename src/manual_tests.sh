@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "z80 tests. errores de flags normalmente en: BIT n,(HL). errores de memptr en ninguno"
 sleep 4

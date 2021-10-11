@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ./zesarux --noconfigfile --machine tbblue --realvideo --enable-watermark --enabletimexvideo --tbblue-fast-boot-mode 
 

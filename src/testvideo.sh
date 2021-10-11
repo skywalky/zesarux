@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 for DRIVER in stdout simpletext curses cursesw aa caca cocoa xwindows sdl fbdev null; do 

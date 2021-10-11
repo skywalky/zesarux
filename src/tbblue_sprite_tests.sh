@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 for program in SprDelay.sna SpritRel.sna SprBig4b.sna SpritBig.sna; do
 

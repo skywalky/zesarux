@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 SNAPTESTDIR=extras/snap_tests/
 
