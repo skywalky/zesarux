@@ -212,3 +212,5 @@ L08F7:          IN      A,(HLWPORT)
 momentaneamente pero al irse el splash, se recargan
 
 -freebsd: make bintargz necesita bash "generate_install.sh". configure tambien con bash?
+
+-pausar con boton pausa. luego F5. panic (con ninguna ventana de menu abierta)
