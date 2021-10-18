@@ -12,15 +12,17 @@ The following are features exclusive to ZEsarUX and not found on any emulator of
 
 * Emulates DataDrive HiLow (beta)
 
-* Real time playback from AY Chip sound to external MIDI device 
+* Real time playback from sound chips AY, SN76489AN, i8049 to external MIDI device 
 
 * On Screen keyboard with words, useful for playing Text Adventures. Also a tool to extract words from text adventures (Daad, Paws, Quill and Gac) and configure this on screen text keyboard
 
 * Emulates Spectrum keyboard ghosting error feature
 
-* AY Chip Tools: AY Player, AY Sheet, AY Piano, export AY music to midi (.mid) files
+* AY Player
 
-* Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging on ZEsarUX by using a telnet client.
+* Sound Chip Tools: Sheet, Piano, export chip music to midi (.mid) files
+
+* Supports ZEsarUX remote command protocol (ZRCP). You can do enhanced debugging and remote control on ZEsarUX by using a telnet client.
 
 * Supports ZEsarUX Network Gaming protocol (ZENG) which allows you to play to any emulated game, using two ZEsarUX instances
 
