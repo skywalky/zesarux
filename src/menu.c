@@ -2056,7 +2056,7 @@ z80_byte menu_get_pressed_key_no_modifier(void)
 {
 	z80_byte tecla;
 
-	
+
 
 
 	//ESC significa Shift+Space en ZX-Uno y tambien ESC puerto_especial para menu.
@@ -2107,6 +2107,7 @@ las condiciones de "ventana activa se puede enviar a background o no" son comune
 		}
 
 		else {
+            if (zxvision_current_window!=NULL) {
 			                                //Si la ventana activa permite ir a background, mandarla a background
                                 if (zxvision_current_window->can_be_backgrounded) {
                                         return 3; //Tecla background F6
@@ -2116,6 +2117,7 @@ las condiciones de "ventana activa se puede enviar a background o no" son comune
                                 else {
                                         return 2; //Escape
                                 }
+            }
 		}
 	}
 
