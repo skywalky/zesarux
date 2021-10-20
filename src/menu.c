@@ -35692,6 +35692,8 @@ menu_init_footer hace falta pues el layer de menu se borra y se queda negro en l
 void menu_process_f_function_pause(void)
 {
 
+    //TODO: pulsando teclas F, como F5, no se sale de la pausa, pues dicha tecla no se interpreta como tecla en menu_get_pressed_key
+
 	int antes_multitarea;
 
 	//Guardar valor anterior multitarea

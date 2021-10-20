@@ -1,6 +1,7 @@
 Version 10.1 - xxxx edition . xx October 2021
 
 Improve portability of shell scripts. Thanks to AndersonTorres
+Fixed segfault pressing F5 after pressing pause key
 
 Version 10.0 - Clive Sinclair edition. 4 October 2021
 
