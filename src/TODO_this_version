@@ -211,9 +211,10 @@ L08F7:          IN      A,(HLWPORT)
 - Al salir cualquier mensaje splash luego no deberían desaparecer las ventanas: parece que desaparece la decoracion de ventanas 
 momentaneamente pero al irse el splash, se recargan
 
--freebsd: make bintargz necesita bash "generate_install.sh". configure tambien con bash?
-
 
 -mostrar de alguna manera nombre de microdrive (mdv qlay format) al expandirlo. en consola lo muestra el extractor:
 
 Medium name: "....      "
+
+
+-en visual real tape, con top speed, que actualice cada cierto tiempo la zona azul del bloque activo. sino, al estar top speed, no siempre al refrescar coincide con el dibujado de zona azul
