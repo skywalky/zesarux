@@ -5387,7 +5387,7 @@ int quickload(char *nombre) {
     //Si estaba modo debug cpu, reactivar
     //Asegurarme que no este ya habilitado debug_breakpoints_enabled.v, no deberia suceder, al llegar aqui
     //se ha desactivado breakpoints, pero por si acaso
-    if (antes_debug_breakpoints_enabled.v && debug_breakpoints_enabled.v) {
+    if (antes_debug_breakpoints_enabled.v && debug_breakpoints_enabled.v==0) {
         debug_printf(VERBOSE_DEBUG,"Re-enabling breakpoints because they were enabled before quickload");
         breakpoints_enable();
     }
