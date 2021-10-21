@@ -5367,17 +5367,17 @@ int quickload(char *nombre) {
 		if ((tbblue_registers[6]&16)==0) antes_divmmc_diviface_enabled.v=0;
 	}
 
-       if (antes_divmmc_diviface_enabled.v)  {
-		debug_printf (VERBOSE_DEBUG,"Reenabling divmmc as it was enabled before quickload");
-		divmmc_diviface_disable();
-                divmmc_diviface_enable();
-        }
+    if (antes_divmmc_diviface_enabled.v)  {
+        debug_printf (VERBOSE_DEBUG,"Reenabling divmmc as it was enabled before quickload");
+        divmmc_diviface_disable();
+        divmmc_diviface_enable();
+    }
 
-       if (antes_divide_diviface_enabled.v)  {
-		debug_printf (VERBOSE_DEBUG,"Reenabling divide as it was enabled before quickload");
-		divide_diviface_disable();
-                divide_diviface_enable();
-        }
+    if (antes_divide_diviface_enabled.v)  {
+        debug_printf (VERBOSE_DEBUG,"Reenabling divide as it was enabled before quickload");
+        divide_diviface_disable();
+        divide_diviface_enable();
+    }
 
 	if (antes_superupgrade_enabled.v && superupgrade_enabled.v==0) {
 		debug_printf (VERBOSE_DEBUG,"Reenabling superupgrade as it was enabled before quickload");
@@ -5385,8 +5385,10 @@ int quickload(char *nombre) {
 	}
 
     //Si estaba modo debug cpu, reactivar
-    //Asegurarme que no este ya habilitado debug_breakpoints_enabled.v, no deberia suceder, al llegar aqui
-    //se ha desactivado breakpoints, pero por si acaso
+    //Asegurarme que no este ya habilitado debug_breakpoints_enabled.v, puede suceder simplemente
+    //si hacemos smartload y no tenemos habilitado el autoload medium, con lo que no resetea la maquina y no se desactivan los breakpoints
+    //y entonces se habilitaria breakpoints con los breakpoints y activados con lo que genera segfault
+    //porque las rutinas de core breakpoints se llaman a si mismas en bucle
     if (antes_debug_breakpoints_enabled.v && debug_breakpoints_enabled.v==0) {
         debug_printf(VERBOSE_DEBUG,"Re-enabling breakpoints because they were enabled before quickload");
         breakpoints_enable();
