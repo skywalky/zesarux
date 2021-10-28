@@ -42,15 +42,15 @@ Examples
 */
 
 
-//#define EMULATOR_VERSION "10.0-SN"
-//#define EMULATOR_VERSION "10.0-B1"
-//#define EMULATOR_VERSION "10.0-RC"
-#define EMULATOR_VERSION "10.0"
-//#define SNAPSHOT_VERSION
+#define EMULATOR_VERSION "10.1-SN"
+//#define EMULATOR_VERSION "10.1-B1"
+//#define EMULATOR_VERSION "10.1-RC"
+//#define EMULATOR_VERSION "10.1"
+#define SNAPSHOT_VERSION
 
-#define EMULATOR_DATE "4 October 2021"
-#define EMULATOR_SHORT_DATE "04/10/2021"
-#define EMULATOR_GAME_EDITION "Clive Sinclair"
+#define EMULATOR_DATE "28 October 2021"
+#define EMULATOR_SHORT_DATE "28/10/2021"
+#define EMULATOR_GAME_EDITION "Carrier Command"
 #define EMULATOR_EDITION_NAME EMULATOR_GAME_EDITION " edition"
 #define ZESARUX_EXTRAS_HOST "github.com" 
 
