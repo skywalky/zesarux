@@ -795,7 +795,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 z80_int puntero_int;
 z80_byte dir_l,dir_h;
 
-							temp_i=reg_i*256+255;
+							temp_i=reg_i*256+ula_databus_value;
 							dir_l=peek_byte_no_time(temp_i++);
 							dir_h=peek_byte_no_time(temp_i);
 							puntero_int=value_8_to_16(dir_h,dir_l);

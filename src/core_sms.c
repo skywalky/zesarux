@@ -478,7 +478,7 @@ void core_sms_handle_interrupts(void)
 
             
 
-            temp_i=reg_i*256+255;
+            temp_i=reg_i*256+ula_databus_value;
             dir_l=peek_byte(temp_i++);
             dir_h=peek_byte(temp_i);
             reg_pc=value_8_to_16(dir_h,dir_l);

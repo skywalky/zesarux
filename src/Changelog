@@ -1,8 +1,13 @@
 Version 10.1 - Carrier Command edition. 28 October 2021
 
+Added setting to change ULA Data bus value
 Improve portability of shell scripts. Thanks to AndersonTorres
 Fixed segfault pressing F5 after pressing pause key
 Fixed preserve breakpoints state when doing smartload
+
+Some other minor bugfixes and improvements
+
+
 
 Version 10.0 - Clive Sinclair edition. 4 October 2021
 

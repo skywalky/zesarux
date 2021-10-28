@@ -5926,7 +5926,7 @@ z80_byte idle_bus_port_atribute(void)
 	floating bus, so we can't simply forget about it; notable examples are Arkanoid (first edition), Cobra, Sidewize, Duet and DigiSynth.
 	*/
 	int t_estados_en_linea=(t_estados % screen_testados_linea);
-	if (t_estados_en_linea>=128) return 255;
+	if (t_estados_en_linea>=128) return ula_databus_value;
 
 	switch( t_estados_en_linea % 8 ) {
 		/* Attribute bytes */
@@ -5944,7 +5944,7 @@ z80_byte idle_bus_port_atribute(void)
 
 		default:
 		/* Idle bus */
-			return 0xff;
+			return ula_databus_value;
 		break;
 
 	}

@@ -20864,7 +20864,13 @@ void menu_ula_disable_ram_paging(MENU_ITEM_PARAMETERS)
 }
 
 
-
+void menu_ula_databus_value(MENU_ITEM_PARAMETERS)
+{
+    int valor=ula_databus_value;
+    if (menu_ventana_scanf_numero_enhanced("ULA Databus value",&valor,4,+1,0,255,1)>=0) {
+        ula_databus_value=valor;
+    }
+}
 
 //menu ula settings
 void menu_ula_settings(MENU_ITEM_PARAMETERS)
@@ -20924,6 +20930,11 @@ void menu_ula_settings(MENU_ITEM_PARAMETERS)
 			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_disable_rom_paging,NULL,"[%c] ROM Paging",(ula_disabled_rom_paging.v==0 ? 'X' : ' '));
 			menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_disable_ram_paging,NULL,"[%c] RAM Paging",(ula_disabled_ram_paging.v==0 ? 'X' : ' '));
 		}
+
+        if (CPU_IS_Z80) {
+            menu_add_item_menu_format(array_menu_ula_settings,MENU_OPCION_NORMAL,menu_ula_databus_value,NULL,"[%d] ~~ULA Databus value",ula_databus_value);
+            menu_add_item_menu_shortcut(array_menu_ula_settings,'a');
+        }
 
                 menu_add_item_menu(array_menu_ula_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 

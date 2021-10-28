@@ -274,8 +274,8 @@ tiempo de proceso en 10 segundos: user	0m1.239s
 
 					//Para el bus idle le decimos que estamos en zona de border superior o inferior y por tanto retornamos 255
 					else {
-						last_ula_attribute=255;
-						last_ula_pixel=255;
+						last_ula_attribute=ula_databus_value;
+						last_ula_pixel=ula_databus_value;
 					}
 				}
 }
@@ -691,7 +691,7 @@ void core_spectrum_handle_interrupts(void)
 
 							if (MACHINE_IS_TSCONF) temp_i=reg_i*256+tsconf_vector_fired_interrupt;
 
-                            else temp_i=reg_i*256+255;
+                            else temp_i=reg_i*256+ula_databus_value;
 							dir_l=peek_byte(temp_i++);
 							dir_h=peek_byte(temp_i);
 							reg_pc=value_8_to_16(dir_h,dir_l);

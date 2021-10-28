@@ -29,6 +29,8 @@ extern z80_byte out_254_original_value;
 extern z80_byte out_254;
 extern z80_bit keyboard_issue2;
 
+extern z80_byte ula_databus_value;
+
 extern z80_byte last_ula_attribute;
 extern z80_byte last_ula_pixel;
 
