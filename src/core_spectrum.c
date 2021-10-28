@@ -691,7 +691,7 @@ void core_spectrum_handle_interrupts(void)
 
 							if (MACHINE_IS_TSCONF) temp_i=reg_i*256+tsconf_vector_fired_interrupt;
 
-                            else temp_i=reg_i*256+ula_databus_value;
+                            else temp_i=get_im2_interrupt_vector();
 							dir_l=peek_byte(temp_i++);
 							dir_h=peek_byte(temp_i);
 							reg_pc=value_8_to_16(dir_h,dir_l);

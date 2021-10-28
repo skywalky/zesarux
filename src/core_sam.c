@@ -446,7 +446,7 @@ void cpu_core_loop_sam(void)
 
 							z80_int temp_i;
 							z80_byte dir_l,dir_h;   
-							temp_i=reg_i*256+ula_databus_value;
+							temp_i=get_im2_interrupt_vector();
 							dir_l=peek_byte(temp_i++);
 							dir_h=peek_byte(temp_i);
 							reg_pc=value_8_to_16(dir_h,dir_l);
