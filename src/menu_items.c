@@ -24995,9 +24995,23 @@ void menu_visual_realtape_overlay(void)
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
+    //printf ("contador_segundo=%d\n",contador_segundo);
 
-	//esto hara ejecutar esto 5 veces por segundo
-	if ( ((contador_segundo%200) == 0 && menu_visual_realtape_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+
+    int dibujar=0;
+
+    //esto hara ejecutar esto 5 veces por segundo
+    if ( ((contador_segundo%200) == 0 && menu_visual_realtape_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+        dibujar=1;
+    }
+
+    //Con top speed, solo se dibuja 1 frame por segundo. En ese caso, hacemos que siempre dibuje cuando hay ese frame
+    if (timer_condicion_top_speed()) {
+        //printf("top speed\n");
+        dibujar=1;
+    }
+	
+	if (dibujar) {
 
         menu_visual_realtape_valor_contador_segundo_anterior=contador_segundo;
         //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
