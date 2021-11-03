@@ -212,11 +212,6 @@ L08F7:          IN      A,(HLWPORT)
 momentaneamente pero al irse el splash, se recargan
 
 
--mostrar de alguna manera nombre de microdrive (mdv qlay format) al expandirlo. en consola lo muestra el extractor:
-
-Medium name: "....      "
-
-
 
 -ula settings visible en otras maquinas no-spectrum?
 
