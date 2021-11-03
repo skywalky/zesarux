@@ -5924,6 +5924,21 @@ z80_byte idle_bus_port_atribute(void)
 	otherwise we are perfectly able to predict whether it is reading a bitmap byte, an attribute or again it's idle.
 	This "nice" effect goes under the name of floating bus. Unfortunately some programs do rely on the exact behaviour of the
 	floating bus, so we can't simply forget about it; notable examples are Arkanoid (first edition), Cobra, Sidewize, Duet and DigiSynth.
+
+    https://web.archive.org/web/20080509193736/http://www.ramsoft.bbk.org/floatingbus.html
+
+    The ULA reads a whole row of pixels and attributes using 16 x 8T cycles, the first of which starts at 14368 
+    on the 128K and 14347 on the 48K. The screen bytes are fetched during the first 4T of each cycle 
+    (order: bitmap, attribute, bitmap+1, attribute+1), while in the last 4T the bus is idle (0xFF). 
+    After that 128T, the ULA is busy drawing the border and it does not read the video memory, 
+    so it leaves the bus idle for the remaining 228-128 = 100T (or 224-128 = 96T on the 48K). 
+    Then, the second row of pixels is started to be read at 14368+228 = 14596T (or 14347+224 = 14571T on the 48K) 
+    with the same scheme, and so on until the 192th row is finished.
+
+
+    However, the timings used are based on the first byte being
+    returned at 14338 (48K) and 14364 (128K) respectively, not
+    14347 and 14368 as used by Ramsoft.
 	*/
 	int t_estados_en_linea=(t_estados % screen_testados_linea);
 	if (t_estados_en_linea>=128) return ula_databus_value;

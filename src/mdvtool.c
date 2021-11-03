@@ -41,6 +41,7 @@
 #endif
 
 #include "mdvtool.h"
+#include "debug.h"
 #include "utils.h"
 #include "ay38912.h"
 
@@ -159,7 +160,41 @@ void mdvtool_file_dump_chain(int f) {
   printf("\n");
 }
 
-int mdv_load(char *name) {
+void mdvtool_create_label(char *medium_name,char *dest_dir)
+{
+    //printf("medium name: %s dest_dir: %s\n",medium_name,dest_dir);
+
+    char buffer_nombre[PATH_MAX];
+    /*
+    Evitar caracteres tipo / o \
+    */
+
+   int i;
+
+   for (i=0;medium_name[i];i++) {
+       char c=medium_name[i];
+
+       if (c=='/' || c=='\\') c='.';
+
+       buffer_nombre[i]=c;
+   }
+
+   buffer_nombre[i]=0;
+
+   char nombre_final[PATH_MAX];
+
+   sprintf(nombre_final,"%s/LABEL-%s",dest_dir,buffer_nombre);
+
+   debug_printf(VERBOSE_INFO,"Creating label file %s",nombre_final);
+
+   char *buffer_contenido="Dummy file just to generate a file label";
+
+   util_save_file((z80_byte *)buffer_contenido,strlen(buffer_contenido),nombre_final);
+    
+
+}
+
+int mdv_load(char *name,char *dest_dir) {
 
   printf("Loading %s ...\n", name);
   
@@ -273,6 +308,8 @@ int mdv_load(char *name) {
   }
 
   printf("Medium name: \"%.10s\"\n", mdvtool_medium_name);
+  //crear archivo con nombre igual que el label
+  mdvtool_create_label(mdvtool_medium_name,dest_dir);
 
   // check if we are having gaps in the sector list
   for(i=0;i<MDVTOOL_MAX_SECTORS;i++) {
@@ -791,7 +828,8 @@ int main_mdvtool(int argc, char **argv) {
   assert(sizeof(sector_t) == 658);
   assert(sizeof(file_t) == 64);
 
-  if(mdv_load(argv[1]) < 0) {
+    //enviamos tambien directorio destino
+  if(mdv_load(argv[1],argv[3]) < 0) {
     mdv_close();
     return -1;
   }
