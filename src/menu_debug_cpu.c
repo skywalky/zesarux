@@ -753,10 +753,47 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 	sprintf (destino,"%d.%c%03d %d",num_linea+1,letra_mostrar,indice,valor);
 }
 
-                                         //Muestra el registro que le corresponde para esta linea
-void menu_debug_show_register_line(int linea,char *textoregistros)
+#define MOD_REG_A 1
+#define MOD_REG_F 2
+#define MOD_REG_AF 4
+
+z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
+{
+    direccion=adjust_address_memory_size(direccion);
+    z80_byte opcode=menu_debug_get_mapped_byte(direccion);
+
+    //prueba rapida
+    if (opcode==62) return MOD_REG_A;
+
+    return 0;
+
+}
+
+//Muestra el registro que le corresponde para esta linea
+//Tambien indica el registro que se modifica, de la siguiente manera:
+//Se indican las columnas que se alteran, de tal manera que se muestre en otro color las columnas afectadas
+//El numero de columna sera un valor entre 0 y 14, por tanto, permitimos cambiar hasta 3 columnas, codificando asi:
+//(columna1+1)+(columna2+1)*16+(columna3+1)*256
+
+//0123456789012
+//HL 0000'0000
+void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_modificadas)
 {
 	char buffer_flags[32];
+
+    //de momento
+    *columnas_modificadas=0;
+
+    //Retornar que registros se modifican
+    //Bits:
+    //0=SP
+    //1=A
+    //2=F
+    //3=AF'
+    z80_long_int registros_modificados=menu_debug_get_modified_registers(menu_debug_memory_pointer);
+
+    //temp
+    //*columnas_modificadas=(1)+16*3+256*6;
 
 	//char textopaginasmem[100];
 
@@ -817,6 +854,9 @@ void menu_debug_show_register_line(int linea,char *textoregistros)
 
             case 2:
                 sprintf (textoregistros,"AF %02X%02X'%02X%02X",reg_a,Z80_FLAGS,reg_a_shadow,Z80_FLAGS_SHADOW);
+                if (registros_modificados & MOD_REG_A)  *columnas_modificadas |=1;      //columna 1 registro A
+                if (registros_modificados & MOD_REG_F)  *columnas_modificadas |=(2<<4); //columna 2 registro F
+                if (registros_modificados & MOD_REG_AF) *columnas_modificadas |=(8<<8); //columna 8 registro AF'
             break;
 
             case 3:
@@ -1169,7 +1209,7 @@ void menu_debug_registers_adjust_ptr_on_follow(void)
 }
 
 
-void menu_debug_registros_parte_derecha(int linea,char *buffer_linea,int columna_registros,int mostrar_separador)
+void menu_debug_registros_parte_derecha(int linea,char *buffer_linea,int columna_registros,int mostrar_separador,int *columnas_modificadas)
 {
 
     char buffer_registros[33];
@@ -1180,7 +1220,7 @@ void menu_debug_registros_parte_derecha(int linea,char *buffer_linea,int columna
             buffer_linea[longitud]=32;
 
             //Muestra el registro que le corresponde para esta linea
-            menu_debug_show_register_line(linea,buffer_registros);
+            menu_debug_show_register_line(linea,buffer_registros,columnas_modificadas);
 
 
             //En QL se pega siempre el opcode con los registros. meter espacio
@@ -1289,6 +1329,28 @@ int menu_debug_get_condicion_satisfy(z80_byte opcode,char *buffer)
     return 0;
 }
 
+void menu_debug_registros_colorea_columnas_modificadas(zxvision_window *w,int linea,int xinicial,int columnas_modificadas)
+{
+    int columna1=columnas_modificadas & 0xF;
+    int columna2=(columnas_modificadas>>4) & 0xF;
+    int columna3=(columnas_modificadas>>8) & 0xF;
+
+    if (columna1) {
+        columna1--;
+        zxvision_set_attr(w,xinicial+columna1,linea,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0);
+    }
+
+    if (columna2) {
+        columna2--;
+        zxvision_set_attr(w,xinicial+columna2,linea,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0);
+    }
+
+    if (columna3) {
+        columna3--;
+        zxvision_set_attr(w,xinicial+columna3,linea,ESTILO_GUI_TINTA_OPCION_MARCADA,ESTILO_GUI_PAPEL_OPCION_MARCADA,0);
+    }        
+}
+
 int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 {
 	//printf("linea: %d\n",linea);
@@ -1306,6 +1368,8 @@ int menu_debug_registers_print_registers(zxvision_window *w,int linea)
 	menu_z80_moto_int menu_debug_memory_pointer_copia;
 
 	//menu_debug_registers_adjust_ptr_on_follow();
+
+    int columnas_modificadas;
 
 
 	//Conservamos valor original y usamos uno de copia
@@ -1643,13 +1707,18 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 						
 
 
-						//printf ("primero menu_debug_registros_parte_derecha. columna_registros=%d\n",columna_registros);
-						menu_debug_registros_parte_derecha(i,buffer_linea,columna_watches,0);
-						//printf ("despues\n");
+						
+						menu_debug_registros_parte_derecha(i,buffer_linea,columna_watches,0,&columnas_modificadas);
+						
 
 						//printf ("linea: %s\n",buffer_linea);
 
-						zxvision_print_string_defaults_fillspc(w,1,linea++,buffer_linea);
+						zxvision_print_string_defaults_fillspc(w,1,linea,buffer_linea);
+
+                        //esto no se usa en vista paws
+                        //menu_debug_registros_colorea_columnas_modificadas(w,linea,columnas_modificadas);
+
+                        linea++;
 
 
 						direccion_desensamblar +=longitud_op;
@@ -1849,9 +1918,9 @@ int menu_debug_registers_subview_type=0;
                     }                   
                     if (guessed_next_pos_source>=0) guessed_next_pos_source++;
 
-					//printf ("segundo menu_debug_registros_parte_derecha. i=%d columna=%d buffer_linea: [%s]\n",i,columna_registros,buffer_linea);
-					menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,1);
-					//printf ("despues\n");
+					
+					menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,1,&columnas_modificadas);
+					
 
 					//printf ("buffer_linea: [%s]\n",buffer_linea);
 
@@ -1862,6 +1931,8 @@ int menu_debug_registers_subview_type=0;
 					//solo se usa en menus y aqui: para poder mostrar linea activada o en rojo
 
 					menu_escribe_linea_opcion_zxvision(w,linea,opcion_actual,opcion_activada,buffer_linea);
+
+                    menu_debug_registros_colorea_columnas_modificadas(w,linea,columna_registros,columnas_modificadas);
 
 					//menu_escribe_linea_opcion_zxvision(w,linea,opcion_actual,opcion_activada,"0123456789001234567890012345678900123456789001234567890");
 
@@ -1887,9 +1958,9 @@ int menu_debug_registers_subview_type=0;
 				for (j=0;j<MAX_ESCR_LINEA_OPCION_ZXVISION_LENGTH;j++) buffer_linea[j]=32;
 
 
-				//printf ("tercero menu_debug_registros_parte_derecha\n");
-				menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,1);
-				//printf ("despues\n");
+				
+				menu_debug_registros_parte_derecha(i,buffer_linea,columna_registros,1,&columnas_modificadas);
+				
 
 				//primero borramos esa linea, por si cambiamos de subvista con M y hay "restos" ahi
 				zxvision_print_string_defaults_fillspc(w,1,linea,"");
@@ -1907,6 +1978,8 @@ int menu_debug_registers_subview_type=0;
 
 
 				}
+
+                menu_debug_registros_colorea_columnas_modificadas(w,linea,columna_registros,columnas_modificadas);
 
 				linea++;
 
