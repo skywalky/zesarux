@@ -755,7 +755,7 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 
 #define MOD_REG_A 1
 #define MOD_REG_F 2
-#define MOD_REG_AF 4
+#define MOD_REG_AF_SHADOW 4
 
 z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
 {
@@ -854,9 +854,9 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
 
             case 2:
                 sprintf (textoregistros,"AF %02X%02X'%02X%02X",reg_a,Z80_FLAGS,reg_a_shadow,Z80_FLAGS_SHADOW);
-                if (registros_modificados & MOD_REG_A)  *columnas_modificadas |=1;      //columna 1 registro A
-                if (registros_modificados & MOD_REG_F)  *columnas_modificadas |=(2<<4); //columna 2 registro F
-                if (registros_modificados & MOD_REG_AF) *columnas_modificadas |=(8<<8); //columna 8 registro AF'
+                if (registros_modificados & MOD_REG_A)          *columnas_modificadas |=1;      //columna 1 registro A
+                if (registros_modificados & MOD_REG_F)          *columnas_modificadas |=(2<<4); //columna 2 registro F
+                if (registros_modificados & MOD_REG_AF_SHADOW)  *columnas_modificadas |=(8<<8); //columna 8 registro AF'
             break;
 
             case 3:
