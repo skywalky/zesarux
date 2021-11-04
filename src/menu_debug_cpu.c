@@ -754,8 +754,71 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 }
 
 #define MOD_REG_A 1
-#define MOD_REG_F 2
-#define MOD_REG_AF_SHADOW 4
+#define MOD_REG_F           (1<<1)
+#define MOD_REG_AF          (MOD_REG_A|MOD_REG_F)
+#define MOD_REG_AF_SHADOW   (1<<2)
+#define MOD_REG_B           (1<<3)
+#define MOD_REG_C           (1<<4)
+#define MOD_REG_BC          (MOD_REG_B|MOD_REG_C)
+#define MOD_REG_BC_SHADOW   (1<<5)
+#define MOD_REG_H           (1<<6)
+#define MOD_REG_L           (1<<7)
+#define MOD_REG_HL          (MOD_REG_H|MOD_REG_L)
+#define MOD_REG_HL_SHADOW   (1<<8)
+
+
+
+//Tabla de los registros modificados en los 256 opcodes sin prefijo
+z80_long_int debug_modified_registers_list[256]={
+    //0 NOP
+    0,MOD_REG_B|MOD_REG_C,0,MOD_REG_BC,MOD_REG_B,MOD_REG_B,MOD_REG_B,MOD_REG_A,
+    MOD_REG_AF|MOD_REG_AF_SHADOW,MOD_REG_HL,MOD_REG_A,MOD_REG_BC,MOD_REG_C,MOD_REG_C,MOD_REG_C,MOD_REG_A,
+    //16
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //32
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //48
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,MOD_REG_A,0,
+    //64
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //80
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //96
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //112
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //128
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //144
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //160
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //176
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //192
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //208
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //224
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //240
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0
+};
 
 z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
 {
@@ -763,9 +826,11 @@ z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
     z80_byte opcode=menu_debug_get_mapped_byte(direccion);
 
     //prueba rapida
-    if (opcode==62) return MOD_REG_A;
+    //if (opcode==62) return MOD_REG_A;
 
-    return 0;
+    z80_long_int modificados=debug_modified_registers_list[opcode];
+
+    return modificados;
 
 }
 
@@ -865,6 +930,9 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
 
             case 4:
                 sprintf (textoregistros,"HL %04X'%02X%02X",HL,reg_h_shadow,reg_l_shadow);
+                if (registros_modificados & MOD_REG_H)          *columnas_modificadas |=1;      //columna 1 registro H
+                if (registros_modificados & MOD_REG_L)          *columnas_modificadas |=(2<<4); //columna 2 registro L
+                if (registros_modificados & MOD_REG_HL_SHADOW)  *columnas_modificadas |=(8<<8); //columna 8 registro HL'
             break;
 
             case 5:
@@ -873,6 +941,9 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
 
             case 6:
                 sprintf (textoregistros,"BC %04X'%02X%02X",BC,reg_b_shadow,reg_c_shadow);
+                if (registros_modificados & MOD_REG_B)          *columnas_modificadas |=1;      //columna 1 registro B
+                if (registros_modificados & MOD_REG_C)          *columnas_modificadas |=(2<<4); //columna 2 registro C
+                if (registros_modificados & MOD_REG_BC_SHADOW)  *columnas_modificadas |=(8<<8); //columna 8 registro BC'
             break;
 
             case 7:
