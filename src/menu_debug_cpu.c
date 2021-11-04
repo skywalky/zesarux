@@ -757,31 +757,39 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 #define MOD_REG_F           (1<<1)
 #define MOD_REG_AF          (MOD_REG_A|MOD_REG_F)
 #define MOD_REG_AF_SHADOW   (1<<2)
+
 #define MOD_REG_B           (1<<3)
 #define MOD_REG_C           (1<<4)
 #define MOD_REG_BC          (MOD_REG_B|MOD_REG_C)
 #define MOD_REG_BC_SHADOW   (1<<5)
+
 #define MOD_REG_H           (1<<6)
 #define MOD_REG_L           (1<<7)
 #define MOD_REG_HL          (MOD_REG_H|MOD_REG_L)
 #define MOD_REG_HL_SHADOW   (1<<8)
 
+#define MOD_REG_D           (1<<9)
+#define MOD_REG_E           (1<<10)
+#define MOD_REG_DE          (MOD_REG_D|MOD_REG_E)
+#define MOD_REG_DE_SHADOW   (1<<11)
+
+#define MOD_REG_SP          (1<<12)
 
 
 //Tabla de los registros modificados en los 256 opcodes sin prefijo
 z80_long_int debug_modified_registers_list[256]={
     //0 NOP
-    0,MOD_REG_B|MOD_REG_C,0,MOD_REG_BC,MOD_REG_B,MOD_REG_B,MOD_REG_B,MOD_REG_A,
-    MOD_REG_AF|MOD_REG_AF_SHADOW,MOD_REG_HL,MOD_REG_A,MOD_REG_BC,MOD_REG_C,MOD_REG_C,MOD_REG_C,MOD_REG_A,
-    //16
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
-    //32
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
-    //48
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,MOD_REG_A,0,
+    0,MOD_REG_B|MOD_REG_C,0,        MOD_REG_BC,MOD_REG_B,MOD_REG_B,MOD_REG_B,MOD_REG_A,
+    MOD_REG_AF|MOD_REG_AF_SHADOW,   MOD_REG_HL,MOD_REG_A,MOD_REG_BC,MOD_REG_C,MOD_REG_C,MOD_REG_C,MOD_REG_A,
+    //16 DJNZ dis
+    MOD_REG_B,MOD_REG_DE,0,MOD_REG_DE,MOD_REG_D,MOD_REG_D,MOD_REG_D,MOD_REG_A,
+    0,MOD_REG_HL,MOD_REG_A,MOD_REG_DE,MOD_REG_E,MOD_REG_E,MOD_REG_E,MOD_REG_A,
+    //32 JR NZ,DIS
+    0,MOD_REG_HL,0,MOD_REG_HL,MOD_REG_H,MOD_REG_H,MOD_REG_H,MOD_REG_A,
+    0,MOD_REG_HL,MOD_REG_HL,MOD_REG_HL,MOD_REG_L,MOD_REG_L,MOD_REG_L,MOD_REG_A,
+    //48 JR NC,DIS
+    0,MOD_REG_SP,0,MOD_REG_SP,0,0,0,MOD_REG_F,
+    0,MOD_REG_HL,MOD_REG_A,MOD_REG_SP,MOD_REG_A,MOD_REG_A,MOD_REG_A,MOD_REG_F,
     //64
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
@@ -915,6 +923,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
 
             case 1:
                 sprintf (textoregistros,"SP %04X",reg_sp);
+                if (registros_modificados & MOD_REG_SP)         *columnas_modificadas |=(1|(2<<4));      //columna 1,2 registro SP
             break;
 
             case 2:
@@ -937,6 +946,9 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
 
             case 5:
                 sprintf (textoregistros,"DE %04X'%02X%02X",DE,reg_d_shadow,reg_e_shadow);
+                if (registros_modificados & MOD_REG_D)          *columnas_modificadas |=1;      //columna 1 registro D
+                if (registros_modificados & MOD_REG_E)          *columnas_modificadas |=(2<<4); //columna 2 registro E
+                if (registros_modificados & MOD_REG_DE_SHADOW)  *columnas_modificadas |=(8<<8); //columna 8 registro DE'                
             break;
 
             case 6:
