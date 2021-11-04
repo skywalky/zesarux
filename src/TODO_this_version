@@ -216,3 +216,7 @@ momentaneamente pero al irse el splash, se recargan
 -ula settings visible en otras maquinas no-spectrum?
 
 -setting autorebobinado de cintas standard y real tape?
+
+-tabla de registros modificados. pendientes:
+*sin prefijo, agregar flags
+*prefijos 221,253, 203, 237

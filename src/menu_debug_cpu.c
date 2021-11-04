@@ -774,6 +774,7 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 #define MOD_REG_DE_SHADOW   (1<<11)
 
 #define MOD_REG_SP          (1<<12)
+#define MOD_REG_IFF         (1<<13)
 
 
 //Tabla de los registros modificados en los 256 opcodes sin prefijo
@@ -823,9 +824,9 @@ z80_long_int debug_modified_registers_list[256]={
     //224 RET PO
     MOD_REG_SP,MOD_REG_SP|MOD_REG_HL,0,MOD_REG_HL,MOD_REG_SP,MOD_REG_SP,MOD_REG_A,MOD_REG_SP,
     MOD_REG_SP,0,0,MOD_REG_DE|MOD_REG_HL,MOD_REG_SP,0,MOD_REG_A,MOD_REG_SP,
-    //240
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0
+    //240 RET P
+    MOD_REG_SP,MOD_REG_SP|MOD_REG_AF,0,MOD_REG_IFF,MOD_REG_SP,MOD_REG_SP,MOD_REG_A,MOD_REG_SP,
+    MOD_REG_SP,MOD_REG_SP,0,MOD_REG_IFF,MOD_REG_SP,0,MOD_REG_F,MOD_REG_SP
 };
 
 z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
@@ -972,6 +973,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
 
             case 10:
                 sprintf (textoregistros,"IM%d IFF%c%c",im_mode,DEBUG_STRING_IFF12 );
+                if (registros_modificados & MOD_REG_IFF)          *columnas_modificadas |=5|(6<<4)|(7<<8);      //columna 5,6,7 registro IFF
             break;
 
             /*case 12:
