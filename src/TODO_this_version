@@ -220,3 +220,16 @@ momentaneamente pero al irse el splash, se recargan
 -tabla de registros modificados. pendientes:
 *sin prefijo, agregar flags
 *prefijos 221,253, 203, 237
+
+
+-Abrir menú debug cpu con tecla F
+
+Luego pulsar botón salir emulador
+Y cierra menus pero no sale
+
+
+-Abrir menú debug cpu con tecla F
+No habilita boton de cerrar todas las ventanas
+
+
+-boton "cerrar todas las ventanas" deberia ser mejor: "salir del menu". Y icono acorde a eso?
