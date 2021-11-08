@@ -218,8 +218,8 @@ momentaneamente pero al irse el splash, se recargan
 -setting autorebobinado de cintas standard y real tape?
 
 -tabla de registros modificados. pendientes:
-*sin prefijo, agregar flags
-*prefijos 221,253, 203, 237
+*prefijos 221,253, 237 (parcial)
+instrucciones IM0/1/2 tambien que indiquen modo im modificado
 
 
 -Abrir menú debug cpu con tecla F
