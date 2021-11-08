@@ -776,6 +776,7 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 #define MOD_REG_SP          (1<<12)
 #define MOD_REG_IFF         (1<<13)
 #define MOD_REG_I           (1<<14)
+#define MOD_REG_R           (1<<15)
 
 
 //Tabla de los registros modificados en los 256 opcodes sin prefijo
@@ -898,7 +899,7 @@ z80_long_int debug_modified_registers_ed_list[256]={
     0,0,0,0,0,0,0,0,
     //64 IN B,(C)
     MOD_REG_B|MOD_REG_F,0,MOD_REG_HL|MOD_REG_F,0,MOD_REG_AF,MOD_REG_SP|MOD_REG_IFF,0,MOD_REG_I,
-    0,0,0,0,0,0,0,0,
+    MOD_REG_C|MOD_REG_F,0,MOD_REG_HL|MOD_REG_F,MOD_REG_BC,0,MOD_REG_SP,0,MOD_REG_R,
     //TODO
     //80
     0,0,0,0,0,0,0,0,
@@ -912,25 +913,25 @@ z80_long_int debug_modified_registers_ed_list[256]={
     //128
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    //128
+    //144
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    //128
+    //160
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    //128
+    //176
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    //128
+    //192
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    //128
+    //208
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    //128
+    //224
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    //128
+    //240
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0
 };
@@ -1092,6 +1093,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
             case 9:
                 sprintf (textoregistros,"IR %02X%02X%s",reg_i,(reg_r&127)|(reg_r_bit7&128) , string_vector_int);
                 if (registros_modificados & MOD_REG_I)          *columnas_modificadas |=1;      //columna 1 registro I
+                if (registros_modificados & MOD_REG_R)          *columnas_modificadas |=(2<<4); //columna 2 registro R
             break;
 
             case 10:
