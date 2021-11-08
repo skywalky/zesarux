@@ -775,6 +775,7 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 
 #define MOD_REG_SP          (1<<12)
 #define MOD_REG_IFF         (1<<13)
+#define MOD_REG_I           (1<<14)
 
 
 //Tabla de los registros modificados en los 256 opcodes sin prefijo
@@ -880,7 +881,59 @@ z80_long_int debug_modified_registers_cb_list[256]={
     MOD_REG_B,MOD_REG_C,MOD_REG_D,MOD_REG_E,MOD_REG_H,MOD_REG_L,0,MOD_REG_A,
     MOD_REG_B,MOD_REG_C,MOD_REG_D,MOD_REG_E,MOD_REG_H,MOD_REG_L,0,MOD_REG_A
 };
-    
+
+//Tabla de los registros modificados para opcodes con prefijo ED
+z80_long_int debug_modified_registers_ed_list[256]={
+    //0 NOPD
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //16 NOPD
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //32 NOPD
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //48 NOPD
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //64 IN B,(C)
+    MOD_REG_B|MOD_REG_F,0,MOD_REG_HL|MOD_REG_F,0,MOD_REG_AF,MOD_REG_SP|MOD_REG_IFF,0,MOD_REG_I,
+    0,0,0,0,0,0,0,0,
+    //TODO
+    //80
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //96
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //112
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //128
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //128
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //128
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //128
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //128
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //128
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //128
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    //128
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0
+};
 
 z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
 {
@@ -889,13 +942,21 @@ z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
 
     //Para opcodes con CB
     if (opcode==0xCB) {
-        //Entre 0 y 127 son rotaciones y bit. modifica flags
         direccion++;
         direccion=adjust_address_memory_size(direccion);
         opcode=menu_debug_get_mapped_byte(direccion);
         z80_long_int modificados=debug_modified_registers_cb_list[opcode];
         return modificados;
     }
+
+    //Para opcodes con ED
+    if (opcode==0xED) {
+        direccion++;
+        direccion=adjust_address_memory_size(direccion);
+        opcode=menu_debug_get_mapped_byte(direccion);
+        z80_long_int modificados=debug_modified_registers_ed_list[opcode];
+        return modificados;
+    }    
 
 
     z80_long_int modificados=debug_modified_registers_list[opcode];
@@ -1030,6 +1091,7 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
 
             case 9:
                 sprintf (textoregistros,"IR %02X%02X%s",reg_i,(reg_r&127)|(reg_r_bit7&128) , string_vector_int);
+                if (registros_modificados & MOD_REG_I)          *columnas_modificadas |=1;      //columna 1 registro I
             break;
 
             case 10:
