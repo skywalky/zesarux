@@ -780,8 +780,8 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 //Tabla de los registros modificados en los 256 opcodes sin prefijo
 z80_long_int debug_modified_registers_list[256]={
     //0 NOP
-    0,MOD_REG_B|MOD_REG_C,0,        MOD_REG_BC,MOD_REG_B,MOD_REG_B,MOD_REG_B,MOD_REG_A,
-    MOD_REG_AF|MOD_REG_AF_SHADOW,   MOD_REG_HL,MOD_REG_A,MOD_REG_BC,MOD_REG_C,MOD_REG_C,MOD_REG_C,MOD_REG_A,
+    0,MOD_REG_B|MOD_REG_C,0,        MOD_REG_BC,MOD_REG_B|MOD_REG_F,MOD_REG_B|MOD_REG_F,MOD_REG_B,MOD_REG_A|MOD_REG_F,
+    MOD_REG_AF|MOD_REG_AF_SHADOW,   MOD_REG_HL|MOD_REG_F,MOD_REG_A,MOD_REG_BC,MOD_REG_C|MOD_REG_F,MOD_REG_C|MOD_REG_F,MOD_REG_C,MOD_REG_A|MOD_REG_F,
     //16 DJNZ dis
     MOD_REG_B,MOD_REG_DE,0,MOD_REG_DE,MOD_REG_D,MOD_REG_D,MOD_REG_D,MOD_REG_A,
     0,MOD_REG_HL,MOD_REG_A,MOD_REG_DE,MOD_REG_E,MOD_REG_E,MOD_REG_E,MOD_REG_A,
