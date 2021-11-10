@@ -949,40 +949,40 @@ z80_long_int debug_modified_registers_ed_list[256]={
 z80_long_int debug_modified_registers_dd_fd_list[256]={
     //0 NOPD
     0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,MOD_REG_IX|MOD_REG_F,0,0,0,0,0,0,
     //16 NOPD
     0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,MOD_REG_IX|MOD_REG_F,0,0,0,0,0,0,
     //32 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,MOD_REG_IX,0,         MOD_REG_IX,MOD_REG_IX_H,MOD_REG_IX_H,MOD_REG_IX_H,0,
+    0,MOD_REG_IX,MOD_REG_IX,MOD_REG_IX,MOD_REG_IX_L,MOD_REG_IX_L,MOD_REG_IX_L,0,
     //48 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,0,0,0,MOD_REG_F,MOD_REG_F,0,0,
+    0,MOD_REG_IX,0,0,0,0,0,0,
     //64 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,0,0,0,MOD_REG_B,MOD_REG_B,MOD_REG_B,0,
+    0,0,0,0,MOD_REG_C,MOD_REG_C,MOD_REG_C,0,
     //80 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
-    //96 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,0,0,0,MOD_REG_D,MOD_REG_D,MOD_REG_D,0,
+    0,0,0,0,MOD_REG_E,MOD_REG_E,MOD_REG_E,0,
+    //96 LD IXh,B
+    MOD_REG_IX_H,MOD_REG_IX_H,MOD_REG_IX_H,MOD_REG_IX_H,0,MOD_REG_IX_H,MOD_REG_H,MOD_REG_IX_H,
+    MOD_REG_IX_L,MOD_REG_IX_L,MOD_REG_IX_L,MOD_REG_IX_L,MOD_REG_IX_L,0,MOD_REG_L,MOD_REG_IX_L,
     //112 NOPD
     0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,0,0,0,MOD_REG_A,MOD_REG_A,MOD_REG_A,0,
     //128 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,0,0,0,MOD_REG_AF,MOD_REG_AF,MOD_REG_AF,0,
+    0,0,0,0,MOD_REG_AF,MOD_REG_AF,MOD_REG_AF,0,
     //144 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,0,0,0,MOD_REG_AF,MOD_REG_AF,MOD_REG_AF,0,
+    0,0,0,0,MOD_REG_AF,MOD_REG_AF,MOD_REG_AF,0,
     //160 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,0,0,0,MOD_REG_AF,MOD_REG_AF,MOD_REG_AF,0,
+    0,0,0,0,MOD_REG_AF,MOD_REG_AF,MOD_REG_AF,0,
     //176 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,0,0,0,MOD_REG_AF,MOD_REG_AF,MOD_REG_AF,0,
+    0,0,0,0,MOD_REG_AF,MOD_REG_AF,MOD_REG_AF,0,
     //192 NOPD
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
@@ -990,11 +990,11 @@ z80_long_int debug_modified_registers_dd_fd_list[256]={
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
     //224 NOPD
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,MOD_REG_IX|MOD_REG_SP,0,MOD_REG_IX,0,MOD_REG_SP,0,0,
+    0,0,0,MOD_REG_IX|MOD_REG_DE,0,0,0,0,
     //240 NOPD
     0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
+    0,MOD_REG_SP,0,0,0,0,0,0,
 };
 
 z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
@@ -1024,11 +1024,12 @@ z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
     if (opcode==0xDD || opcode==0xFD) {
         direccion++;
         direccion=adjust_address_memory_size(direccion);
+        z80_byte opcode_orig=opcode;
         opcode=menu_debug_get_mapped_byte(direccion);
         z80_long_int modificados=debug_modified_registers_dd_fd_list[opcode];
 
         //Si era FD, modificar
-        if (opcode==0xFD) {
+        if (opcode_orig==0xFD) {
             if (modificados & MOD_REG_IX_L) {
                 //Cambiar ese por IY_L
                 //Xor porque sabemos que ese bit esta a 1 y queremos quitarlo
