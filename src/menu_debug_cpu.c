@@ -777,6 +777,7 @@ void menu_debug_daad_string_flagobject(z80_byte num_linea,char *destino)
 #define MOD_REG_IFF         (1<<13)
 #define MOD_REG_I           (1<<14)
 #define MOD_REG_R           (1<<15)
+#define MOD_REG_IM_MODE     (1<<16)
 
 
 //Tabla de los registros modificados en los 256 opcodes sin prefijo
@@ -898,11 +899,10 @@ z80_long_int debug_modified_registers_ed_list[256]={
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
     //64 IN B,(C)
-    MOD_REG_B|MOD_REG_F,0,MOD_REG_HL|MOD_REG_F,0,MOD_REG_AF,MOD_REG_SP|MOD_REG_IFF,0,MOD_REG_I,
+    MOD_REG_B|MOD_REG_F,0,MOD_REG_HL|MOD_REG_F,0,MOD_REG_AF,MOD_REG_SP|MOD_REG_IFF,MOD_REG_IM_MODE,MOD_REG_I,
     MOD_REG_C|MOD_REG_F,0,MOD_REG_HL|MOD_REG_F,MOD_REG_BC,0,MOD_REG_SP,0,MOD_REG_R,
-    //TODO
-    //80
-    0,0,0,0,0,0,0,0,
+    //80 IN D,(C)
+    MOD_REG_D|MOD_REG_F,0,MOD_REG_HL|MOD_REG_F,0,0,0,MOD_REG_IM_MODE,MOD_REG_AF,
     0,0,0,0,0,0,0,0,
     //96
     0,0,0,0,0,0,0,0,
@@ -1099,6 +1099,8 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
             case 10:
                 sprintf (textoregistros,"IM%d IFF%c%c",im_mode,DEBUG_STRING_IFF12 );
                 if (registros_modificados & MOD_REG_IFF)          *columnas_modificadas |=5|(6<<4)|(7<<8);      //columna 5,6,7 registro IFF
+                //nunca se va a dar junto el cambio de IFF y IM
+                if (registros_modificados & MOD_REG_IM_MODE)      *columnas_modificadas |=1|(2<<4);      //columna 1,2 registro IM
             break;
 
             /*case 12:
