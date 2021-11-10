@@ -764,7 +764,7 @@ void instruccion_ed_75 ()
 
 void instruccion_ed_76 ()
 {
-//NEG
+//NEG*
 
 	neg();
 }
@@ -863,11 +863,13 @@ void instruccion_ed_83 ()
 
 void instruccion_ed_84 ()
 {
+//NEG*
 	neg();
 }
 
 void instruccion_ed_85 ()
 {
+//RETN*
 	iff1.v=iff2.v;
 	reg_pc=pop_valor();
 
@@ -959,11 +961,13 @@ void instruccion_ed_91 ()
 
 void instruccion_ed_92 ()
 {
+//NEG*
 	neg();
 }
 
 void instruccion_ed_93 ()
 {
+//RETN*
 	iff1.v=iff2.v;
 	reg_pc=pop_valor();
 
@@ -1052,11 +1056,13 @@ void instruccion_ed_99 ()
 
 void instruccion_ed_100 ()
 {
+//NEG*
 	neg();
 }
 
 void instruccion_ed_101 ()
 {
+//RETN*
 	iff1.v=iff2.v;
 	reg_pc=pop_valor();
 
@@ -1170,12 +1176,13 @@ void instruccion_ed_107 ()
 
 void instruccion_ed_108 ()
 {
-//NEG
+//NEG*
 	neg();
 }
 
 void instruccion_ed_109 ()
 {
+//RETN*
 	iff1.v=iff2.v;
 	reg_pc=pop_valor();
 
@@ -1306,12 +1313,13 @@ void instruccion_ed_115 ()
 
 void instruccion_ed_116 ()
 {
-//NEG
+//NEG*
 	neg();
 }
 
 void instruccion_ed_117 ()
 {
+//RETN
 	iff1.v=iff2.v;
 	reg_pc=pop_valor();
 
@@ -1390,12 +1398,13 @@ void instruccion_ed_123 ()
 
 void instruccion_ed_124 ()
 {
-//NEG
+//NEG*
 	neg();
 }
 
 void instruccion_ed_125 ()
 {
+//RETN*
 	iff1.v=iff2.v;
 	reg_pc=pop_valor();
 
