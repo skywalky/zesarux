@@ -840,7 +840,7 @@ z80_long_int debug_modified_registers_list[256]={
     MOD_REG_SP,MOD_REG_SP,0,MOD_REG_IFF,MOD_REG_SP,0,MOD_REG_F,MOD_REG_SP
 };
 
-//Tabla de los registros modificados para opcodes con prefijo CB
+//Tabla de los registros modificados para opcodes con prefijo CB y tambien para DD/FD + CB
 z80_long_int debug_modified_registers_cb_list[256]={
     //0 RLC B
     MOD_REG_B|MOD_REG_F,MOD_REG_C|MOD_REG_F,MOD_REG_D|MOD_REG_F,MOD_REG_E|MOD_REG_F,MOD_REG_H|MOD_REG_F,MOD_REG_L|MOD_REG_F,MOD_REG_F,MOD_REG_AF,
@@ -1026,7 +1026,22 @@ z80_long_int menu_debug_get_modified_registers(menu_z80_moto_int direccion)
         direccion=adjust_address_memory_size(direccion);
         z80_byte opcode_orig=opcode;
         opcode=menu_debug_get_mapped_byte(direccion);
-        z80_long_int modificados=debug_modified_registers_dd_fd_list[opcode];
+
+        z80_long_int modificados;
+
+        //SI CB
+        if (opcode==0xCB) {
+            //saltar desplazamiento y sacar opcode
+            direccion++;
+            direccion++;
+            direccion=adjust_address_memory_size(direccion);
+            opcode=menu_debug_get_mapped_byte(direccion);
+            modificados=debug_modified_registers_cb_list[opcode];
+        }
+
+        else {
+            modificados=debug_modified_registers_dd_fd_list[opcode];
+        }
 
         //Si era FD, modificar
         if (opcode_orig==0xFD) {
