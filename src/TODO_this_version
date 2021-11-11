@@ -142,10 +142,6 @@ Activando el maximo turbo permitido, tambien hace una franja negra en el border,
 -paws Dump toda tabla procesos 
 
 
--en debug resaltar registros que se vayan a cambiar . en rojo?. Por ejemplo, si hay un "INC C" resaltar registro C
-
-
-
 -En debug cpu, quizá al mover rueda de ratón tiene que volver de menú espera tecla. Si no, 
 es lo que hace que al moverse con la rueda por vista debug cpu, haya que hacer movimiento de raton para que funcione
 El problema es que mouse_wheel_vertical se lee y luego siempre se debe poner a 0
