@@ -232,3 +232,6 @@ No habilita boton de cerrar todas las ventanas
 
 
 -boton "cerrar todas las ventanas" deberia ser mejor: "salir del menu". Y icono acorde a eso?
+
+-revisar en menu_debug_change_registers(void),
+//Si lanzo con debug_print ERR, y estamos en modo step, se habilita multitarea, por que?

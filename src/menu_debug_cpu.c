@@ -655,8 +655,10 @@ void menu_debug_change_registers(void)
 	sprintf (string_registervalue,"%s=%s",menu_debug_change_registers_last_reg,menu_debug_change_registers_last_val);
 
 	if (debug_change_register(string_registervalue)) {
-		debug_printf(VERBOSE_ERR,"Error changing register");
-        }
+        //Si lanzo con debug_print ERR, y estamos en modo step, se habilita multitarea, por que?
+		//debug_printf(VERBOSE_ERR,"Error changing register");
+        menu_error_message("Error changing register");
+    }
 }
 
 
