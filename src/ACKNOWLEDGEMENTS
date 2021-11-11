@@ -84,6 +84,7 @@ I want to thank the help and the collaboration of the following people (date sor
 -Simon Berry, reporting some ZRCP bugs
 -Gerton Lunter, for information with his SamRam interface and granting permission to include the roms
 -Aled Griffiths, for the Mac retina display support
+-Anderson Torres, for fixing shebangs on shell scripts
 
 
 -Everyone at several forums about Spectrum, ZX80, ZX81, Z88, Raspberry Pi, etc for all the suggestions to my emulator
