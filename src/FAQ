@@ -815,20 +815,26 @@ Q: What is ZX Desktop?
 A: ZX Desktop enables you to have a space on the right to place zxvision windows or other widgets. This is a work in progress, so expect improvements in the next versions
 
 
-Q: What are the files required to run the emulator? I see lots of files, even the Extras packages have a lot more
-A: The emulator is really very small. The extras packages is not needed to run it, as it includes:
--Documentation. docs folder. 37 MB
--Examples. media folder: 62 MB. snap_tests folder: 34 MB
--Some .ide, .mmc, .flash image files: 229 MB
-
-The emulator only really needs the following files to run (included in the main package):
+Q: What are the files required to run ZEsarUX? I see lots of files, even the Extras package have a lot more
+A: ZEsarUX is really very small. It only needs the following files to run (included in the main package):
 -The executable file: "zesarux" or "zesarux.exe" which is 2 MB size aproximately
--rom files: 5 MB
 -Some dll files on Windows version
+-rom files: Needed for all the emulated machines. You can delete specific rom files for machines you are not going to use.
+
+Also, if you want to run ZX-Uno or Next:
 -zxuno.flash if running ZX-Uno machine
 -tbblue.mmc if running ZX Spectrum Next machine
-These three types of files doesn't use more than 10 MB.
-You can even try to delete all the unnecessary files and the emulator will also work. 
+
+
+Q: I am planning to distribute ZEsarUX by myself. Which are the minimum files that need to be included?
+A: First, you need to know which files are required to run the emulator, so read the previous question "Q: What are the files required to run the emulator?".
+Also, there are other files that you MUST include:
+- Files README, LICENSE, LICENSES_info.
+- Folder: licenses
+
+The following are not obligatory, but you should include: Files ACKNOWLEDGEMENTS, Changelog, DONATE, FAQ, FEATURES, editionnamegame.*, zesarux.ico, zesarux.mp3, zesarux.odt, zesarux.pdf, zesarux.xcf, zesarux_16.png, zesarux_256.png, zesarux_32.png, zesarux_48.png. Folder my_soft
+
+The rest of the files are completely optional to include them or not.
 
 
 Q: When I enable video out to file setting, or "Reduce to 0.75" a big "Z" letter is added to the display. Can I erase it?
