@@ -217,17 +217,17 @@ momentaneamente pero al irse el splash, se recargan
 
 -setting autorebobinado de cintas standard y real tape?
 
--tabla de registros modificados. pendientes:
-*prefijos 221,253 + 203
 
+-Mostrar T estados en vista 1
 
--Abrir menú debug cpu con tecla F
+-Opción no marcar registros a modificar 
 
+-Error: Abrir menú debug cpu con tecla F
 Luego pulsar botón salir emulador
 Y cierra menus pero no sale
 
 
--Abrir menú debug cpu con tecla F
+-Error: Abrir menú debug cpu con tecla F
 No habilita boton de cerrar todas las ventanas
 
 

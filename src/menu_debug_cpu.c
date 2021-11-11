@@ -6119,10 +6119,6 @@ int menu_debug_registers_print_main_step(zxvision_window *ventana)
     //linea=19;
     linea=menu_debug_registers_get_line_legend(ventana);
 
-    //Forzar a mostrar atajos
-    z80_bit antes_menu_writing_inverse_color;
-    antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
-    menu_writing_inverse_color.v=1;   
 
     return linea; 
 }
@@ -6857,7 +6853,10 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
             */
 
             int si_ejecuta_una_instruccion=1;
+            //Forzar a mostrar atajos
             z80_bit antes_menu_writing_inverse_color;
+	        antes_menu_writing_inverse_color.v=menu_writing_inverse_color.v;
+            menu_writing_inverse_color.v=1;
             
 
 
