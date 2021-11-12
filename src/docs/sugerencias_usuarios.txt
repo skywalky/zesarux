@@ -21,7 +21,6 @@ Supongo que aplicar filtros requiere mucha ram. No se podría clonar estos perif
 Según he leído en http://bogost.com/games/a_television_simulator/
 El emulador Stella (http://stella.sourceforge.net) tiene código que simula crt. Ver en los creditos del proyecto otro codigo parecido para ntsc
 
-Otra caracteristica original podría ser conversión de tzx a otros formatos. El emulador cargaría uno por uno una serie de ficheros dentro de una carpeta, detectaria automaticamente cuando termina la carga de cada juego y en ese momento lo guardaria en el formato indicado por el usuario
 
 
 
@@ -45,9 +44,6 @@ Cuando lo consigas, tendrás el mejor emulador del Mundo, incluso no siendo perf
 
 
 
-Sería interesante el que se pudiera hacer un breakpoint automático al terminar de cargar el TAP para poder hacer snapshots perfectos...
-
-Enviado desde mi D6603 mediante Tapatalk
 
 sd1:
 Es el cacharrito antipiratería que sacaron para la primera edición en estuche del Camelot warriors. Conmuta a masa uno de los pins del bus de expansión... yo mismo siguiendo el artículo de Robert Perelegre (por cierto, gracias!) me hice uno en plan cutre.. y funciona!!
