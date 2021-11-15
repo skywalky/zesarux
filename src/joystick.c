@@ -200,6 +200,8 @@ void joystick_clear_leftright(void)
     if (joystick_autoleftright_enabled) {
         joystick_autoleftright_enabled=0;
         puerto_especial_joystick &=(255-3); //quitar left y right
+        //quitar linea de footer LEFT/RIGHT
+        delete_generic_footertext();
     }
 }
 
