@@ -45,6 +45,11 @@ extern int joystick_emulation;
 extern int joystick_autofire_frequency;
 extern int joystick_autofire_counter;
 
+extern int joystick_autoleftright_enabled;
+extern int joystick_autoleftright_frequency;
+extern int joystick_autoleftright_counter;
+extern int joystick_autoleftright_status;
+
 
 extern char *joystick_texto[];
 

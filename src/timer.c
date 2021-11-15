@@ -562,6 +562,30 @@ void timer_check_interrupt(void)
             }
         }
 
+        //joystick auto left right
+        if (joystick_autoleftright_enabled) {
+            joystick_autoleftright_counter++;
+            if (joystick_autoleftright_counter>=joystick_autoleftright_frequency) {
+                joystick_autoleftright_counter=0;
+
+                joystick_autoleftright_status++;
+                if (joystick_autoleftright_status>1) joystick_autoleftright_status=0;
+
+                //si estamos en menu, no tocar estado joystick
+                if (!menu_abierto) {
+                    if (joystick_autoleftright_status==0) {
+                        puerto_especial_joystick=1;
+                        menu_footer_activity("LEFT ");
+                    }
+                    if (joystick_autoleftright_status==1) {
+                        puerto_especial_joystick=2;
+                        menu_footer_activity("RIGHT");
+                    }
+                }
+            }
+        }
+     
+
         //Input file keyboard
         if (input_file_keyboard_is_playing() ) {
             input_file_keyboard_delay_counter++;

@@ -427,7 +427,7 @@ extern void menu_first_aid_init(void);
 extern void menu_first_aid_random_startup(void);
 extern int menu_first_aid_title(char *key_setting,char *title);
 
-#define MAX_F_FUNCTIONS 34
+#define MAX_F_FUNCTIONS 35
 
 enum defined_f_function_ids {
 	//reset, hard-reset, nmi, open menu, ocr, smartload, osd keyboard, exitemulator.
@@ -464,7 +464,8 @@ enum defined_f_function_ids {
 	F_FUNCION_BACKGROUND_WINDOW,  
 	F_FUNCION_OVERLAY_WINDOWS,
     F_FUNCION_CLOSE_ALL_MENUS,
-    F_FUNCION_ZXUNO_PRISM
+    F_FUNCION_ZXUNO_PRISM,
+    F_FUNCION_LEFTRIGHT_JOY
 };
 //Nota: F_FUNCION_BACKGROUND_WINDOW no se llama de la misma manera que las otras funciones F
 //solo esta aqui para evitar que una misma tecla F se asigne a una funcion F normal y tambien a background window

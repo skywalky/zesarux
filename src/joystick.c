@@ -39,6 +39,14 @@ int joystick_emulation=JOYSTICK_CURSOR_WITH_SHIFT;
 int joystick_autofire_frequency=0;
 int joystick_autofire_counter=0;
 
+//auto left right
+int joystick_autoleftright_enabled=0;
+int joystick_autoleftright_frequency=1;
+int joystick_autoleftright_counter=0;
+
+//0=left, 1=right
+int joystick_autoleftright_status=0;
+
 //Que tecla actua como el Fire del joystick. Por defecto, Home
 //#define JOYSTICK_KEY_FIRE_IS_HOME 0
 //#define JOYSTICK_KEY_FIRE_IS_RIGHTALT 1
@@ -186,11 +194,20 @@ void joystick_cycle_next_type(void)
         }
 }
 
-
+//Liberar auto left right si conviene, y quitar direccion actual
+void joystick_clear_leftright(void)
+{
+    if (joystick_autoleftright_enabled) {
+        joystick_autoleftright_enabled=0;
+        puerto_especial_joystick &=(255-3); //quitar left y right
+    }
+}
 
 
 void joystick_set_right(int si_enviar_zeng_event)
 {
+    joystick_clear_leftright();
+
         //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
         puerto_especial_joystick |=1;
 	debug_printf(VERBOSE_DEBUG,"joystick_set_right");
@@ -209,6 +226,8 @@ void joystick_release_right(int si_enviar_zeng_event)
 
 void joystick_set_left(int si_enviar_zeng_event)
 {
+    joystick_clear_leftright();
+
         //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
         puerto_especial_joystick |=2;
 	debug_printf(VERBOSE_DEBUG,"joystick_set_left");
@@ -228,6 +247,8 @@ void joystick_release_left(int si_enviar_zeng_event)
 
 void joystick_set_down(int si_enviar_zeng_event)
 {
+    joystick_clear_leftright();
+
         //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
         puerto_especial_joystick |=4;
 	debug_printf(VERBOSE_DEBUG,"joystick_set_down");
@@ -245,6 +266,8 @@ void joystick_release_down(int si_enviar_zeng_event)
 
 void joystick_set_up(int si_enviar_zeng_event)
 {
+    joystick_clear_leftright();
+
         //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
         puerto_especial_joystick |=8;
 	debug_printf(VERBOSE_DEBUG,"joystick_set_up");
@@ -262,6 +285,8 @@ void joystick_release_up(int si_enviar_zeng_event)
 
 void joystick_set_fire(int si_enviar_zeng_event)
 {
+    joystick_clear_leftright();
+
         //z80_byte puerto_especial_joystick=0; //Fire Up Down Left Right
         puerto_especial_joystick |=16;
 	debug_printf(VERBOSE_DEBUG,"joystick_set_fire");

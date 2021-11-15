@@ -214,6 +214,9 @@ defined_f_function defined_direct_functions_array[MAX_F_FUNCTIONS]={
 	{"OSDKeyboard",F_FUNCION_OSDKEYBOARD,bitmap_button_ext_desktop_osdkeyboard}, 
 	{"OSDTextKeyboard",F_FUNCION_OSDTEXTKEYBOARD,bitmap_button_ext_desktop_osdadvkeyboard}, 
 
+    //joystick
+    {"JoyLeftRight",F_FUNCION_LEFTRIGHT_JOY,bitmap_button_ext_desktop_joyleftright},
+
     //Switch de cosas
 	{"SwitchBorder",F_FUNCION_SWITCHBORDER,bitmap_button_ext_desktop_switchborder}, 
 	{"SwitchFullScr",F_FUNCION_SWITCHFULLSCREEN,bitmap_button_ext_desktop_fullscreen}, 
@@ -18759,6 +18762,17 @@ void menu_hardware_autofire(MENU_ITEM_PARAMETERS)
 	else joystick_autofire_frequency=0;
 }
 
+void menu_hardware_autoleftright(MENU_ITEM_PARAMETERS)
+{
+	if (joystick_autoleftright_frequency==1) joystick_autoleftright_frequency=2;
+	else if (joystick_autoleftright_frequency==2) joystick_autoleftright_frequency=5;
+	else if (joystick_autoleftright_frequency==5) joystick_autoleftright_frequency=10;
+	else if (joystick_autoleftright_frequency==10) joystick_autoleftright_frequency=25;
+	else if (joystick_autoleftright_frequency==25) joystick_autoleftright_frequency=50;
+
+	else joystick_autoleftright_frequency=1;    
+}
+
 void menu_hardware_kempston_mouse(MENU_ITEM_PARAMETERS)
 {
 	kempston_mouse_emulation.v ^=1;
@@ -21930,7 +21944,11 @@ void menu_hardware_settings(MENU_ITEM_PARAMETERS)
                                         "Autofire can only be enabled on Kempston, Fuller, Zebra and Mikrogen; Sinclair, Cursor, and OPQA can not have "
                                         "autofire because this function can interfiere with the menu (it might think a key is pressed)");
 
+            menu_add_item_menu_format(array_menu_hardware_settings,MENU_OPCION_NORMAL,menu_hardware_autoleftright,NULL,"[%d Hz] ~~AutoLeftRight",50/joystick_autoleftright_frequency);
 
+
+            menu_add_item_menu_tooltip(array_menu_hardware_settings,"You have to define a F-key or a button to trigger the action: JoyLeftRight");
+            menu_add_item_menu_ayuda(array_menu_hardware_settings,"You have to define a F-key or a button to trigger the action: JoyLeftRight");
 		
 		}
 
@@ -35821,6 +35839,10 @@ void menu_process_f_functions_by_action(int indice)
 		case F_FUNCION_OSDTEXTKEYBOARD:
 			menu_osd_adventure_keyboard(0);
 		break;
+
+        case F_FUNCION_LEFTRIGHT_JOY:
+            joystick_autoleftright_enabled ^=1;
+        break;
 
 		case F_FUNCION_SWITCHBORDER:
 			if (menu_interface_border_cond() ) menu_interface_border(0);
