@@ -231,6 +231,3 @@ No habilita boton de cerrar todas las ventanas
 
 -revisar en menu_debug_change_registers(void),
 //Si lanzo con debug_print ERR, y estamos en modo step, se habilita multitarea, por que?
-
--Auto fire left-right-left-right for decatlon type games.
-como activarlo/desactivarlo? Tecla F?
