@@ -353,8 +353,17 @@ echo Initial LDFLAGS=$INITIALLDFLAGS >>$LOGFILE
 #LDFLAGS="$LDFLAGS -lm"
 
 #en raspberry, char por defecto es unsigned, no signed
+CFLAGS="$CFLAGS -fsigned-char"
 
-CFLAGS="$CFLAGS -Wall -Wextra -fsigned-char"
+# Si version snapshot, activar tambien warnings extra
+# TODO: esto solo vale si el define esta justo al principio de linea
+cat cpu.h|grep "^#define SNAPSHOT_VERSION" > /dev/null
+if [ $? == 0 ]; then
+    echo "Enabling all compiler warnings on snapshot version"
+    CFLAGS="$CFLAGS -Wall -Wextra"
+fi
+
+
 #CFLAGS="$CFLAGS -Wunused-but-set-parameter -Wunused-but-set-variable -Wundef -Wuninitialized -Wunknown-pragmas -Wno-pragmas -Wunreachable-code -Wunused -Wunused-function -Wunused-label -Wunused-parameter -Wunused-value -Wunused-variable -Wunused-but-set-parameter -Wunused-but-set-variable"
 #CFLAGS="$CFLAGS -Wall -Wunused -Wunused-parameter "
 # -Wno-format-overflow para que no muestre avisos en Linux tipo: note: ‘sprintf’ output 3 or more bytes (assuming 8193) into a destination of size 4096
