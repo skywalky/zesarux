@@ -82,9 +82,6 @@ A mi como me gustan los Didaktik puestos a emular me gustaría poder grabar leer
 
 Los microdrives que yo recuerde se emulan en Warajevo y fuse, también creo que había uno español que emulaba la LEC memory y leia ficheros mdr
 
-Y ya puestos.... emular el Melodik de Didaktik....
-
-
 
 
 ----------------
@@ -117,8 +114,6 @@ https://www.worldofspectrum.org/forums/discussion/comment/881490/#Comment_881490
 
 An option that let choose a random game file from a certain directory.
 
-
-Auto fire left-right-left-right for decatlon type games. (I've only seen this in the otherwise unremarkable Hyperspeed Emulator on the retrospect website. http://retrospec.sgn.net/game/hyperspeed)
 
 
 The ability to have a config file with the same name as a TZX you are loading, which specifies memory ranges where the CPU is accelerated to a certain percentage. So for some 3D games (like Freescape ones) the frame rate can be increased without affecting the rest of the playability.

@@ -45,8 +45,6 @@ Aunque lo que son ventanas no de menú debería cerrar la actual y no todas? Ade
 
 -First aid de f keys. Cuando se pulse una f por primera vez
 
--redraws de zxdesktop en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro
-
 -acabar de migrar todas menu_dibuja_ventana a zxvision. queda alguna?? las de definir evento joystick 
 
 -Cuando se hace resize de ventana y desaparecen barras desplazamientos, habría que mover offset a 0?
@@ -132,8 +130,6 @@ en la ventana del teclado ya se actualiza con la máquina actual
 
 
 -Mostrar info en menu network de descargas, commits etc. Solo si hay ssl (porque github solo esta con https)
-
--Al pulsar en footer cuando está con real tape, que se ponga cinta en pausa
 
 -Info video mode Pentagon 16c ventana. Que diga modo activo en ventana vídeo info. Problema: en maquina no tsconf o tbblue no hay ventana de video info
 
@@ -224,23 +220,9 @@ Hacer captura. Luego hacer captura de la derecha, etc
 -agregar un handler especial para esas teclas. Pero entonces como se mueve uno por los ítems? Con tecla tab?
 Que uso se le da a tab? En file utils, si se tabula, cambia de sección. En menú tabular, el tab sale?
 
--F1 ayuda extensa en debug cpu, dentro de ventana y antes en el ítem de menú 
-
 -ventana debug cpu: si se estaba en vista 8, y luego cargamos un juego que no sea de paws/daad/quill,
 la vista 1 sera ventana grande pero con alto total reducido. Parecido a lo que sucedia al cambiar de vista
 
--debug cpu vista 7 deberia redimensionar pantalla. Ver si pasa lo mismo con vista 8 paws etc
-
--quiza hacer que si ventana debug cpu es suficientemente grande, en vez de mostrar en registros:
-
-AF 0000'0000
-
-mostrar:
-
-AF 0000 AF' 00000
-
-Aunque esto obliga revisar las funciones que escriben esos registros, los maximos de los buffers, y enviar el ancho de ventana
-a la función que lo escribe. Por otra parte puede provocar confusión al usuario...
 
 -menus tabulados:
 TAB conmutar a zona de acciones? Quiza nueva funcion para seleccion acciones, que permita:
@@ -258,9 +240,6 @@ Info de tamaño ventana. Y tamaño ventana sin zoom
 
 -mejorar deteccion frecuencia sonido en audio wave form
 
-
--Poder buscar cadenas de texto en find byte. Al estilo de strings de linux, es decir, indicarle un minimo de caracteres juntos y saque todas las cadenas de texto
-opcion tambien para bajar bit 7 final
 
 -Mostrar juego cargado en titulo ventana. Desaparece al hacer reset 
 
@@ -286,7 +265,7 @@ no-thread no funcionara tampoco
 
 -Mostrar consumo de cpu solo del proceso del emulador?
 
--Browser cintas que permita alterar la posición de la cinta
+-Browser cintas standard que permita alterar la posición de la cinta
 
 
 -descomprimir rar,gz, etc con espacio en nombres a veces falla. el comando system le envia las "" pero el propio comando

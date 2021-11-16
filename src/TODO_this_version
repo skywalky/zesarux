@@ -231,3 +231,6 @@ No habilita boton de cerrar todas las ventanas
 
 -revisar en menu_debug_change_registers(void),
 //Si lanzo con debug_print ERR, y estamos en modo step, se habilita multitarea, por que?
+
+
+-redraws de zxdesktop en determinados cambios (redimensionado/cierre ventana?) donde se queda a veces en negro

@@ -42,12 +42,6 @@ Si al final es saber por donde se ha estado ejecutando un programa, se puede usa
 
 -Borrar enterrom y exitrom como debug breakpoint, que ya no tienen sentido
  
--Opción de transaction log adicional que permita ir hacia atrás en el tiempo:
-*apuntar en cada momento valores registros
-*si hay modificación de memoria, apuntarse valor anterior a la escritura 
-*que pasara con valores enviados a puertos. Esto es difícil de controlar
-*operaciones realizadas por el usuario, como un reset, quedan fuera del alcance
-
 -simulacion de carga spectrum hace un efecto raro en primera columna de pixeles. quiza se "contagia" el color del border?
 
 -Establecer turbo desde línea comandos  
