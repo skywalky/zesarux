@@ -2640,11 +2640,11 @@ char *bitmap_button_ext_desktop_joyleftright[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"         rrrrrrrr         ",			
 	"          rrrrrr          ", 		
 	"           rrrr           ",		
-	"     x      xx      x     ",		
-	"  xxxxx     xx     xxxxx  ",	//10	
+	"    x       xx       x    ",		
+	"   xxxxx    xx    xxxxx   ",	//10	
 	"  xxxxxx    xx    xxxxxx  ",		
-	"  xxxxx     xx     xxxxx  ",		
-	"     x      xx      x     ",		
+	"   xxxxx    xx    xxxxx   ",		
+	"    x       xx       x    ",		
 	"            xx            ",		
 	"      bbbbbbbbbbbbbb      ",		
 	"     bbbbbbbbbbbbbbbx     ",		
