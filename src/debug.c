@@ -2739,7 +2739,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
 
 
 	z80_byte *pref203_registro;
-	z80_byte pref203_numerobit;   
+	//z80_byte pref203_numerobit;   
 
     z80_int *cual_registro_ixiy; 
 
@@ -2952,7 +2952,7 @@ void cpu_history_regs_to_bin(z80_byte *p)
                 case 192: //SET
                     
                     pref203_registro=devuelve_reg_offset(opcode1 & 7);
-                    pref203_numerobit=(opcode1 >> 3) & 7;
+                    //pref203_numerobit=(opcode1 >> 3) & 7;
                     
                     //registro ficticio 0 indica (HL)
                     if (pref203_registro==0) {

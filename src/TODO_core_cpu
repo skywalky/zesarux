@@ -31,8 +31,6 @@ el problema reside en que si hay una zona de código que no llegamos a ejecutar 
 desensamblará el código. Por lo que su uso va a ser muy minoritario....
 Si al final es saber por donde se ha estado ejecutando un programa, se puede usar el transaction log.
 
--funcion strcasestr da warning al compilar en linux
-
 -poder configurar lightgun por linea de comandos
 
 -It would be interesting if an emulator could provide FIFOs or shared memory that the host operating system could

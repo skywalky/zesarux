@@ -23,6 +23,8 @@
    Several utilities functions
 */
 
+//para strcasestr
+#define _GNU_SOURCE
 
 #include <stdlib.h>
 #include <stdio.h>
