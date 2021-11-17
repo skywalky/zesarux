@@ -4,7 +4,9 @@ Added setting to change ULA Data bus value
 Added showing microdrive label when expanding qlay mdv files of size 174930 bytes
 Added action to trigger left-right movement on joystick, to play Decathlon-like games
 Improved portability of shell scripts
-Improved Debugging: now it highlights which registers will be modified by the opcode at the cursor position
+Improved Debug CPU: 
+-now it highlights which registers will be modified by the opcode at the cursor position
+-added t-states counter on default view
 
 Fixed segfault pressing F5 after pressing pause key
 Fixed preserve breakpoints state when doing smartload

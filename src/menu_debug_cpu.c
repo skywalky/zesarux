@@ -592,10 +592,10 @@ menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
 int get_menu_debug_num_lineas_full(zxvision_window *w)
 {
-	//return 13;
+	//return 14;
 
-	//24->13
-	int lineas=w->visible_height-11;
+	//24->14
+	int lineas=w->visible_height-10;
 
 	if (lineas<2) lineas=2;
 
@@ -1221,9 +1221,13 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
             break;*/
 
             case 11:
+                sprintf (textoregistros,"TSTATE %d",t_estados);
+            break;
+
             case 12:
             case 13:
             case 14:
+            case 15:
                 //Por defecto, cad
                 //Mostrar en una linea, dos bloques de memoria mapeadas
                 offset_bloque=linea-11;
