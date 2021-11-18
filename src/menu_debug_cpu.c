@@ -590,12 +590,14 @@ menu_z80_moto_int menu_debug_disassemble_last_ptr=0;
 
 //const int menu_debug_num_lineas_full=14;
 
+//Retorna total de lineas de debug de desensamblado
 int get_menu_debug_num_lineas_full(zxvision_window *w)
 {
-	//return 14;
+	//return 13;
 
-	//24->14
-	int lineas=w->visible_height-10;
+	//24->13
+    //Para una altura por defecto de 24, devolvera 13 lineas de desensamblado
+	int lineas=w->visible_height-11;
 
 	if (lineas<2) lineas=2;
 
@@ -1230,7 +1232,8 @@ void menu_debug_show_register_line(int linea,char *textoregistros,int *columnas_
             case 15:
                 //Por defecto, cad
                 //Mostrar en una linea, dos bloques de memoria mapeadas
-                offset_bloque=linea-11;
+                offset_bloque=linea-12;  //este 12 debe coincidir con el primer case de este bloque
+                                        //para que la primera linea de este bloque sea offset_bloque=0
                 
                 offset_bloque *=2; //2 bloques por cada linea
                 //primer bloque
