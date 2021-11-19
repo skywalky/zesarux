@@ -2632,6 +2632,8 @@ char *bitmap_button_ext_desktop_ffwdtape[EXT_DESKTOP_BUTTONS_ANCHO]={
 char *bitmap_button_ext_desktop_joyleftright[EXT_DESKTOP_BUTTONS_ANCHO]={
     //01234567890123456789012345
     "                          ",     //0
+    "                          ",
+    "                          ",
   	"           rrrr           ",      
 	"          rrrrrr          ",		
 	"         rrrrrrrr         ",		
@@ -2639,9 +2641,9 @@ char *bitmap_button_ext_desktop_joyleftright[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"         rrrrrrrr         ",			
 	"         rrrrrrrr         ",			
 	"          rrrrrr          ", 		
-	"           rrrr           ",		
-	"    x       xx       x    ",		
-	"   xxxxx    xx    xxxxx   ",	//10	
+	"           rrrr           ",  //10
+	"    x       xx       x    ",
+	"   xxxxx    xx    xxxxx   ",
 	"  xxxxxx    xx    xxxxxx  ",		
 	"   xxxxx    xx    xxxxx   ",		
 	"    x       xx       x    ",		
@@ -2649,12 +2651,10 @@ char *bitmap_button_ext_desktop_joyleftright[EXT_DESKTOP_BUTTONS_ANCHO]={
 	"      bbbbbbbbbbbbbb      ",		
 	"     bbbbbbbbbbbbbbbx     ",		
 	"    bbbbbbbbbbbbbbbbbb    ",		
-	"   bbbrrbbbbbbbbbbbbbbb   ",		
-	"  bbbrrrrbbbbbbbbbbbbbbb  ",		
-	" bbbbrrrrbbbbbbbbbbbbbbbb ",    //20
-	" bbbbbrrbbbbbbbbbbbbbbbbb ",		
+	"   bbbrrbbbbbbbbbbbbbbb   ",	//20
+	"  bbbrrrrbbbbbbbbbbbbbbb  ",
+	" bbbbrrrrbbbbbbbbbbbbbbbb ",
+	" bbbbbrrbbbbbbbbbbbbbbbbb ",
 	" bbbbbbbbbbbbbbbbbbbbbbbb ",		
-	" bbbbbbbbbbbbbbbbbbbbbbbb ",		
-	"                          ",
-	"                          " 	 //25
+	" bbbbbbbbbbbbbbbbbbbbbbbb ",	//25
 };
