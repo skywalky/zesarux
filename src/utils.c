@@ -13898,6 +13898,51 @@ void util_convert_scr_sprite(z80_byte *origen,z80_byte *destino)
 	}
 }
 
+//Dado una zona de memoria con formato scr, devuelve el color del pixel en posicion x,y
+int util_get_pixel_color_scr(z80_byte *scrfile,int x,int y)
+{
+
+    //comprobar margenes antes
+    if (x<0 || x>255 || y<0 || y>191) return 0;
+
+    int byte_x=x/8;
+
+    int pixel_in_byte=x % 8;
+
+    int offset_origen=(screen_addr_table[y*32] & 8191) +byte_x;
+
+    z80_byte byte_leido=scrfile[offset_origen];
+
+    //Sacar el pixel indicado
+    for (;pixel_in_byte>0;pixel_in_byte--) {
+        byte_leido=byte_leido<<1;
+    }
+
+    int pixel_on=(byte_leido & 128 ? 1 : 0);
+
+    //falta atributo
+    int byte_y=y/8;
+
+    int offset_attribute=6144+(byte_y*32)+byte_x;
+    z80_byte atributo=scrfile[offset_attribute];
+    z80_byte tinta=atributo &7;
+    z80_byte papel=(atributo>>3)&7;
+    z80_byte brillo=atributo & 64;
+    z80_byte parpadeo=atributo & 128;
+
+    if (parpadeo) {
+        if (estado_parpadeo.v) pixel_on ^=1;
+    }
+
+    int color_pixel=(pixel_on ? tinta : papel);
+
+    if (brillo) color_pixel +=8;
+
+    return color_pixel;
+
+    
+}
+
 //Devolver valor sin signo
 int util_get_absolute(int valor)
 {

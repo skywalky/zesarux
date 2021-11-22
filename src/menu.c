@@ -5357,6 +5357,9 @@ void menu_draw_ext_desktop(void)
                 //Degraded
                 case 7:
                     scr_putpixel(x,y,color);
+
+                    //color=util_get_pixel_color_scr(&memoria_spectrum[16384],x-xinicio,y-yinicio);
+                    //prueba mostrar pantalla
                 break;
             }
         }
