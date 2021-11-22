@@ -237,3 +237,5 @@ No habilita boton de cerrar todas las ventanas
 
 --Posibles efectos para fondo ZX Desktop:
 ---Imagen. SCR. Quiza combinado con cualquier otro efecto de fondo: por ejemplo en el centro del zx desktop el scr, y alrededores un degradado de color
+->pendiente settings de command line
+->quiza establecer escala o autoscale (como hace ahora)
