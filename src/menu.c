@@ -5209,6 +5209,48 @@ void old_menu_draw_ext_desktop(void)
 
 
 
+int zxdesktop_draw_scrfile_enabled=1;
+
+z80_byte *zxdesktop_draw_scrfile_pointer=NULL;
+char zxdesktop_draw_scrfile_name[PATH_MAX]="";
+
+
+//cargar archivo scr en pantalla si es que esta habilitado el scrfile en fondo
+void zxdesktop_draw_scrfile_load(void)
+{
+
+    if (!if_zxdesktop_enabled_and_driver_allows() ) return;
+
+    if (!zxdesktop_draw_scrfile_enabled) return;
+
+    printf("Loading scr file %s\n",zxdesktop_draw_scrfile_name);
+
+    //asignar memoria si conviene
+    if (zxdesktop_draw_scrfile_pointer==NULL) {
+        zxdesktop_draw_scrfile_pointer=malloc(6912);
+        if (zxdesktop_draw_scrfile_pointer==NULL) cpu_panic("Can not allocate memory for scrfile on zxdesktop");
+    }
+
+    lee_archivo(zxdesktop_draw_scrfile_name,(char *)zxdesktop_draw_scrfile_pointer,6912);
+
+}
+
+//si conviene dibujar el background de un scr file
+//retorna -1 si no
+//o el color si hay que mostrarlo
+int menu_draw_ext_desktop_si_scrfile(int x,int y)
+{
+    if (!zxdesktop_draw_scrfile_enabled) return -1;
+
+    if (x<0 || x>255 || y<0 || y>191) return -1;
+
+    //Por si acaso
+    if (zxdesktop_draw_scrfile_pointer==NULL) return -1;
+
+    return util_get_pixel_color_scr(zxdesktop_draw_scrfile_pointer,x,y);
+}
+
+
 void menu_draw_ext_desktop(void)
 {
 
@@ -5298,70 +5340,84 @@ void menu_draw_ext_desktop(void)
         contador_color_rainbow=y; //Para dar un aspecto de rayado en tipos rainbow
 
         for (x=xinicio;x<xinicio+ancho;x++) {
-            switch (menu_ext_desktop_fill) {
-                //Color solido
-                case 0:
-                    scr_putpixel(x,y,menu_ext_desktop_fill_first_color);
-                break;
 
-                //Rayas diagonales de colores, fijas o movibles
-                case 1:
-                case 2:
-					indice_color=((contador_color_rainbow/grueso_lineas_rainbow)+menu_ext_desktop_fill_rainbow_counter) % total_colores_rainbow;
-					color=screen_colores_rainbow_nobrillo[indice_color];
-					scr_putpixel(x,y,color);
+            //Si mostrar en esa posicion un scrfile
+            int xrelative=x-xinicio;
+            int yrelative=y-yinicio;
+            int color_scrfile=menu_draw_ext_desktop_si_scrfile(xrelative,yrelative);
 
-					contador_color_rainbow++;
-                break;
-
-                //Punteado
-                case 3:
-					suma=x+y;
-					color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
-
-					scr_putpixel(x,y,color);
-                break;
-
-                //Ajedrez
-                case 4:
-					//Tamaño de 32x32 cada cuadrado
-					suma=(x/32)+(y/32);
-
-					//Blanco 7 para que no sea tan brillante
-					color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
-
-					scr_putpixel(x,y,color);
-                break;
-
-                //Grid
-                case 5:
-					//Tamaño de 32x32 cada cuadrado
-					suma=(x/32)*(y/32);
-
-					//Blanco 7 para que no sea tan brillante
-					color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
-
-					scr_putpixel(x,y,color);
-                break;
-
-                //Random
-                case 6:
-					ay_randomize(0);
-
-					//randomize_noise es valor de 16 bits. sacar uno de 8 bits
-					color=value_16_to_8h(randomize_noise[0]) % EMULATOR_TOTAL_PALETTE_COLOURS;
-
-					scr_putpixel(x,y,color);
-                break;
-
-                //Degraded
-                case 7:
-                    scr_putpixel(x,y,color);
-
-                    //color=util_get_pixel_color_scr(&memoria_spectrum[16384],x-xinicio,y-yinicio);
-                    //prueba mostrar pantalla
-                break;
+            if (color_scrfile>=0) {
+                scr_putpixel(x,y,color_scrfile);
             }
+
+            else {
+
+                switch (menu_ext_desktop_fill) {
+                    //Color solido
+                    case 0:
+                        scr_putpixel(x,y,menu_ext_desktop_fill_first_color);
+                    break;
+
+                    //Rayas diagonales de colores, fijas o movibles
+                    case 1:
+                    case 2:
+                        indice_color=((contador_color_rainbow/grueso_lineas_rainbow)+menu_ext_desktop_fill_rainbow_counter) % total_colores_rainbow;
+                        color=screen_colores_rainbow_nobrillo[indice_color];
+                        scr_putpixel(x,y,color);
+
+
+                    break;
+
+                    //Punteado
+                    case 3:
+                        suma=x+y;
+                        color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
+
+                        scr_putpixel(x,y,color);
+                    break;
+
+                    //Ajedrez
+                    case 4:
+                        //Tamaño de 32x32 cada cuadrado
+                        suma=(x/32)+(y/32);
+
+                        //Blanco 7 para que no sea tan brillante
+                        color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
+
+                        scr_putpixel(x,y,color);
+                    break;
+
+                    //Grid
+                    case 5:
+                        //Tamaño de 32x32 cada cuadrado
+                        suma=(x/32)*(y/32);
+
+                        //Blanco 7 para que no sea tan brillante
+                        color=(suma & 1 ? menu_ext_desktop_fill_first_color : menu_ext_desktop_fill_second_color);
+
+                        scr_putpixel(x,y,color);
+                    break;
+
+                    //Random
+                    case 6:
+                        ay_randomize(0);
+
+                        //randomize_noise es valor de 16 bits. sacar uno de 8 bits
+                        color=value_16_to_8h(randomize_noise[0]) % EMULATOR_TOTAL_PALETTE_COLOURS;
+
+                        scr_putpixel(x,y,color);
+                    break;
+
+                    //Degraded
+                    case 7:
+                        scr_putpixel(x,y,color);
+                    break;
+                }
+
+            }
+
+            //para los tipos 1 y 2
+            contador_color_rainbow++;
         }
     }
 

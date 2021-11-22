@@ -8967,6 +8967,8 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
     set_putpixel_zoom();
 	menu_init_footer();
 
+    zxdesktop_draw_scrfile_load();
+
 
 	//Despues de inicializar video, llamar a esta funcion, por si hay que cambiar frameskip (especialmente en cocoa)
 	screen_set_parameters_slow_machines();
