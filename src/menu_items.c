@@ -12040,6 +12040,64 @@ void menu_ext_desk_settings_switch_button(MENU_ITEM_PARAMETERS)
     zxdesktop_switch_button_enabled.v ^=1;
 }
 
+void menu_zxdesktop_scrfile(MENU_ITEM_PARAMETERS)
+{
+    char *filtros[2];
+
+    filtros[0]="scr";
+    filtros[1]=0;
+
+    //guardamos directorio actual
+    char directorio_actual[PATH_MAX];
+    getcwd(directorio_actual,PATH_MAX);
+
+    //Obtenemos directorio de cinta
+    //si no hay directorio, vamos a rutas predefinidas
+    if (zxdesktop_draw_scrfile_name[0]==0) menu_chdir_sharedfiles();
+
+    else {
+        char directorio[PATH_MAX];
+        util_get_dir(zxdesktop_draw_scrfile_name,directorio);
+        //printf ("strlen directorio: %d directorio: %s\n",strlen(directorio),directorio);
+
+        //cambiamos a ese directorio, siempre que no sea nulo
+        if (directorio[0]!=0) {
+            debug_printf (VERBOSE_INFO,"Changing to last directory: %s",directorio);
+            zvfs_chdir(directorio);
+        }
+    }
+
+
+
+    int ret;
+
+    ret=menu_filesel("Select SCR file",filtros,zxdesktop_draw_scrfile_name);
+    //volvemos a directorio inicial
+    zvfs_chdir(directorio_actual);
+
+    //Si esta activo, lo cargamos
+    if (zxdesktop_draw_scrfile_enabled) zxdesktop_draw_scrfile_load();
+
+ 
+}
+
+void menu_zxdesktop_scrfile_enable(MENU_ITEM_PARAMETERS)
+{
+    zxdesktop_draw_scrfile_enabled ^=1;
+
+    if (zxdesktop_draw_scrfile_enabled) zxdesktop_draw_scrfile_load();
+}
+
+void menu_zxdesktop_scrfile_centered(MENU_ITEM_PARAMETERS)
+{
+    zxdesktop_draw_scrfile_centered ^=1;
+}
+
+void menu_zxdesktop_scrfile_fillscale(MENU_ITEM_PARAMETERS)
+{
+    zxdesktop_draw_scrfile_fill_scale ^=1;
+}
+
 void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_ext_desktop_settings;
@@ -12165,7 +12223,24 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 				menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_fillcolor_second,NULL,"[%s] Secondary Fill Color",spectrum_colour_names[menu_ext_desktop_fill_second_color]);
 			}
 
-			
+
+            char string_back_scr_shown[20];
+            menu_tape_settings_trunc_name(zxdesktop_draw_scrfile_name,string_back_scr_shown,20);
+            menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile,NULL,"Background ~~SCR [%s]",string_back_scr_shown);
+            menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'s');         
+          
+			if (zxdesktop_draw_scrfile_name[0]!=0) {
+                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_enable,NULL,
+                    "[%c] Background SCR active",(zxdesktop_draw_scrfile_enabled ? 'X' : ' ' ));
+
+                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_centered,NULL,
+                    "[%c] Background SCR centered",(zxdesktop_draw_scrfile_centered ? 'X' : ' ' ));
+
+                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_fillscale,NULL,
+                    "[%c] Background SCR scale",(zxdesktop_draw_scrfile_fill_scale ? 'X' : ' ' ));
+
+                
+            }
 
 		}
 

@@ -1191,6 +1191,13 @@ extern z80_bit zxdesktop_switch_button_enabled;
 extern void zxdesktop_switchdesktop_timer_event(void);
 
 
+extern void zxdesktop_draw_scrfile_load(void);
+extern char zxdesktop_draw_scrfile_name[PATH_MAX];
+extern int zxdesktop_draw_scrfile_enabled;
+extern int zxdesktop_draw_scrfile_centered;
+extern int zxdesktop_draw_scrfile_fill_scale;
+
+
 struct s_zxdesktop_lowericons_info {
 	int (*is_visible)(void);
 	int (*is_active)(void);

@@ -5209,7 +5209,9 @@ void old_menu_draw_ext_desktop(void)
 
 
 
-int zxdesktop_draw_scrfile_enabled=1;
+int zxdesktop_draw_scrfile_enabled=0;
+int zxdesktop_draw_scrfile_centered=0;
+int zxdesktop_draw_scrfile_fill_scale=0;
 
 z80_byte *zxdesktop_draw_scrfile_pointer=NULL;
 char zxdesktop_draw_scrfile_name[PATH_MAX]="";
@@ -5238,16 +5240,50 @@ void zxdesktop_draw_scrfile_load(void)
 //si conviene dibujar el background de un scr file
 //retorna -1 si no
 //o el color si hay que mostrarlo
-int menu_draw_ext_desktop_si_scrfile(int x,int y)
+int menu_draw_ext_desktop_si_scrfile(int x,int y,int ancho,int alto)
 {
     if (!zxdesktop_draw_scrfile_enabled) return -1;
 
-    if (x<0 || x>255 || y<0 || y>191) return -1;
+    int scale_x=1;
+    int scale_y=1;
+
+
+    if (zxdesktop_draw_scrfile_fill_scale) {
+        scale_x=ancho/256;
+        scale_y=alto/192;
+
+        //Y evitar escala 0 cuando zx desktop es menos ancho que 256
+        if (scale_x==0) scale_x=1;
+        if (scale_y==0) scale_y=1;
+
+        //quedarnos con la escala mas pequeña
+        if (scale_x>scale_y) scale_x=scale_y;
+        else scale_y=scale_x;
+
+    }
+
+    int total_size_x=256*scale_x;
+    int total_size_y=192*scale_y;
+
+    int margen_min_x=0;
+    int margen_max_x=total_size_x-1;
+
+    int margen_min_y=0;
+    int margen_max_y=total_size_y-1;
+
+    if (zxdesktop_draw_scrfile_centered) {
+        margen_min_x=(ancho-total_size_x)/2;
+        margen_min_y=(alto-total_size_y)/2;
+        margen_max_x=margen_min_x+total_size_x-1;
+        margen_max_y=margen_min_y+total_size_y-1;
+    }
+
+    if (x<margen_min_x || x>margen_max_x || y<margen_min_y || y>margen_max_y) return -1;
 
     //Por si acaso
     if (zxdesktop_draw_scrfile_pointer==NULL) return -1;
 
-    return util_get_pixel_color_scr(zxdesktop_draw_scrfile_pointer,x,y);
+    return util_get_pixel_color_scr(zxdesktop_draw_scrfile_pointer,(x-margen_min_x)/scale_x,(y-margen_min_y)/scale_y);
 }
 
 
@@ -5344,7 +5380,7 @@ void menu_draw_ext_desktop(void)
             //Si mostrar en esa posicion un scrfile
             int xrelative=x-xinicio;
             int yrelative=y-yinicio;
-            int color_scrfile=menu_draw_ext_desktop_si_scrfile(xrelative,yrelative);
+            int color_scrfile=menu_draw_ext_desktop_si_scrfile(xrelative,yrelative,ancho,alto);
 
             if (color_scrfile>=0) {
                 scr_putpixel(x,y,color_scrfile);

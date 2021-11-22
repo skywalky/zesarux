@@ -8,6 +8,8 @@ Improved Debug CPU:
 -now it highlights which registers will be modified by the opcode at the cursor position
 -added t-states counter on default view
 
+Improved ZX Desktop: allow to set a background SCR file
+
 Fixed segfault pressing F5 after pressing pause key
 Fixed preserve breakpoints state when doing smartload
 Fixed refreshing Visual Real Tape window when Top Speed condition
