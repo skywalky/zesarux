@@ -5242,6 +5242,11 @@ void zxdesktop_draw_scrfile_load(void)
         if (zxdesktop_draw_scrfile_pointer==NULL) cpu_panic("Can not allocate memory for scrfile on zxdesktop");
     }
 
+    if (!si_existe_archivo(zxdesktop_draw_scrfile_name)) {
+        debug_printf(VERBOSE_ERR,"Can not load ZX Desktop background SCR file %s",zxdesktop_draw_scrfile_name);
+        return;
+    }
+
     lee_archivo(zxdesktop_draw_scrfile_name,(char *)zxdesktop_draw_scrfile_pointer,6912);
 
 }

@@ -3,7 +3,6 @@
 --Posibles efectos para fondo ZX Desktop:
 ---Imagen. BMP?
 ---Miniatura de pantalla spectrum
----Imagen. SCR
 ---Anaglifo usando segunda pantalla o extensión Desktop. Requeriria update continuo de zxdesktop... o no? que solo redibuje al abrir menu?
 --Fbdev debe permitir ZX Desktop?
 --sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
