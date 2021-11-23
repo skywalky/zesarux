@@ -5260,20 +5260,20 @@ int menu_draw_ext_desktop_si_scrfile(int x,int y,int ancho,int alto)
     if (zxdesktop_draw_scrfile_fill_scale) {
         scale_x=ancho/256;
         scale_y=alto/192;
-
-        //Y evitar escala 0 cuando zx desktop es menos ancho que 256
-        if (scale_x==0) scale_x=1;
-        if (scale_y==0) scale_y=1;
-
-        //quedarnos con la escala mas pequeña
-        if (scale_x>scale_y) scale_x=scale_y;
-        else scale_y=scale_x;
-
     }
 
     else {
         scale_x=scale_y=zxdesktop_draw_scrfile_scale_factor;
     }
+
+    //Y evitar escala 0 cuando zx desktop es menos ancho que 256
+    if (scale_x==0) scale_x=1;
+    if (scale_y==0) scale_y=1;
+
+    //quedarnos con la escala mas pequeña
+    if (scale_x>scale_y) scale_x=scale_y;
+    else scale_y=scale_x;
+
 
     int total_size_x=256*scale_x;
     int total_size_y=192*scale_y;

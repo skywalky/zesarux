@@ -3360,20 +3360,31 @@ int util_write_configfile(void)
 
 
                           
-  if (screen_ext_desktop_place_menu)          ADD_STRING_CONFIG,"--zxdesktop-new-items");                   
+    if (screen_ext_desktop_place_menu)          ADD_STRING_CONFIG,"--zxdesktop-new-items");                   
 
-  if (menu_zxdesktop_buttons_enabled.v==0)    ADD_STRING_CONFIG,"--zxdesktop-disable-buttons");   
+    if (menu_zxdesktop_buttons_enabled.v==0)    ADD_STRING_CONFIG,"--zxdesktop-disable-buttons");   
 
 
-  if (menu_ext_desktop_transparent_upper_icons.v)   ADD_STRING_CONFIG,"--zxdesktop-transparent-upper-buttons");
+    if (menu_ext_desktop_transparent_upper_icons.v)   ADD_STRING_CONFIG,"--zxdesktop-transparent-upper-buttons");
 
-  if (menu_ext_desktop_transparent_lower_icons.v)   ADD_STRING_CONFIG,"--zxdesktop-transparent-lower-buttons");
+    if (menu_ext_desktop_transparent_lower_icons.v)   ADD_STRING_CONFIG,"--zxdesktop-transparent-lower-buttons");
 
-  if (menu_ext_desktop_disable_box_upper_icons.v)   ADD_STRING_CONFIG,"--zxdesktop-disable-box-upper-buttons");
+    if (menu_ext_desktop_disable_box_upper_icons.v)   ADD_STRING_CONFIG,"--zxdesktop-disable-box-upper-buttons");
 
-  if (menu_ext_desktop_disable_box_lower_icons.v)   ADD_STRING_CONFIG,"--zxdesktop-disable-box-lower-buttons");
+    if (menu_ext_desktop_disable_box_lower_icons.v)   ADD_STRING_CONFIG,"--zxdesktop-disable-box-lower-buttons");
 
-  if (zxdesktop_switch_button_enabled.v==0)         ADD_STRING_CONFIG,"--zxdesktop-disable-footer-switch");
+    if (zxdesktop_switch_button_enabled.v==0)         ADD_STRING_CONFIG,"--zxdesktop-disable-footer-switch");
+
+
+    if (zxdesktop_draw_scrfile_enabled)                 ADD_STRING_CONFIG,"--zxdesktop-scr-enable");
+
+    if (zxdesktop_draw_scrfile_name[0]!=0)              ADD_STRING_CONFIG,"--zxdesktop-scr-file \"%s\"",zxdesktop_draw_scrfile_name);
+
+    if (zxdesktop_draw_scrfile_centered)                ADD_STRING_CONFIG,"--zxdesktop-scr-centered");
+
+    if (zxdesktop_draw_scrfile_fill_scale)              ADD_STRING_CONFIG,"--zxdesktop-scr-fillscale");
+
+                                                        ADD_STRING_CONFIG,"--zxdesktop-scr-scalefactor %d",zxdesktop_draw_scrfile_scale_factor);
 
 
   if (autoframeskip.v==0)                     ADD_STRING_CONFIG,"--disable-autoframeskip");
