@@ -1813,7 +1813,12 @@ printf (
 		"--zxdesktop-transparent-lower-buttons  Make ZX Desktop lower buttons transparent\n"
         "--zxdesktop-disable-box-upper-buttons  Disable box around ZX Desktop upper buttons\n"
         "--zxdesktop-disable-box-lower-buttons  Disable box around ZX Desktop lower buttons\n"  
-        "--zxdesktop-disable-footer-switch      Disable ZX Desktopfooter switch button\n"
+        "--zxdesktop-disable-footer-switch      Disable ZX Desktop footer switch button\n"
+        "--zxdesktop-scr-file f                 Set ZX Desktop SCR background file\n"
+        "--zxdesktop-scr-enable                 Enable ZX Desktop SCR background file\n"
+        "--zxdesktop-scr-centered               Center ZX Desktop SCR background\n"
+        "--zxdesktop-scr-fillscale              Scale automatic for ZX Desktop SCR background\n"
+        "--zxdesktop-scr-scalefactor n          Scale manually for ZX Desktop SCR background\n"
         );
 
 
@@ -5571,6 +5576,38 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-disable-footer-switch")) {
 				zxdesktop_switch_button_enabled.v=0;
 			} 
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-scr-enable")) {
+				zxdesktop_draw_scrfile_enabled=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-scr-file")) {
+				siguiente_parametro_argumento();
+                strcpy(zxdesktop_draw_scrfile_name,argv[puntero_parametro]);
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-scr-centered")) {
+				zxdesktop_draw_scrfile_centered=1;
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-scr-fillscale")) {
+				zxdesktop_draw_scrfile_fill_scale=1;
+			}
+
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-scr-scalefactor")) {
+                siguiente_parametro_argumento();
+
+				int valor=parse_string_to_number(argv[puntero_parametro]);
+
+				if (valor<1 || valor>5) {
+					printf ("Invalid value for ZX Desktop SCR scale factor\n");
+					exit(1);
+				}
+				zxdesktop_draw_scrfile_scale_factor=valor;
+			}
+
+
 
 			else if (!strcmp(argv[puntero_parametro],"--watermark-position")) {
 				siguiente_parametro_argumento();
