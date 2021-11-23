@@ -1196,6 +1196,7 @@ extern char zxdesktop_draw_scrfile_name[PATH_MAX];
 extern int zxdesktop_draw_scrfile_enabled;
 extern int zxdesktop_draw_scrfile_centered;
 extern int zxdesktop_draw_scrfile_fill_scale;
+extern int zxdesktop_draw_scrfile_scale_factor;
 
 
 struct s_zxdesktop_lowericons_info {

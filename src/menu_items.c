@@ -12098,6 +12098,11 @@ void menu_zxdesktop_scrfile_fillscale(MENU_ITEM_PARAMETERS)
     zxdesktop_draw_scrfile_fill_scale ^=1;
 }
 
+void menu_zxdesktop_scrfile_scalefactor(MENU_ITEM_PARAMETERS)
+{
+    menu_ventana_scanf_numero_enhanced("Scale factor",&zxdesktop_draw_scrfile_scale_factor,2,+1,1,5,0);
+}
+
 void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_ext_desktop_settings;
@@ -12233,11 +12238,21 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
                 menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_enable,NULL,
                     "[%c] Background SCR active",(zxdesktop_draw_scrfile_enabled ? 'X' : ' ' ));
 
-                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_centered,NULL,
-                    "[%c] Background SCR centered",(zxdesktop_draw_scrfile_centered ? 'X' : ' ' ));
+                if (zxdesktop_draw_scrfile_enabled) {
 
-                menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_fillscale,NULL,
-                    "[%c] Background SCR scale",(zxdesktop_draw_scrfile_fill_scale ? 'X' : ' ' ));
+                    menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_centered,NULL,
+                        "[%c] Background SCR centered",(zxdesktop_draw_scrfile_centered ? 'X' : ' ' ));
+
+                    menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_fillscale,NULL,
+                        "[%c] Background SCR autoscale",(zxdesktop_draw_scrfile_fill_scale ? 'X' : ' ' ));
+
+
+                    if (!zxdesktop_draw_scrfile_fill_scale) {
+                        menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_scalefactor,NULL,
+                            "[%d] Background SCR scale factor",zxdesktop_draw_scrfile_scale_factor);
+                    }
+
+                }
 
                 
             }

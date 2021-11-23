@@ -5208,13 +5208,22 @@ void old_menu_draw_ext_desktop(void)
 
 
 
-
+//si habilitado fondo scr
 int zxdesktop_draw_scrfile_enabled=0;
+
+//nombre del archivo SCR
+char zxdesktop_draw_scrfile_name[PATH_MAX]="";
+
+//si centrado
 int zxdesktop_draw_scrfile_centered=0;
+//si escala el maximo que quepa
 int zxdesktop_draw_scrfile_fill_scale=0;
 
+//factor de escalado si no esta zxdesktop_draw_scrfile_fill_scale activado
+int zxdesktop_draw_scrfile_scale_factor=1;
+
 z80_byte *zxdesktop_draw_scrfile_pointer=NULL;
-char zxdesktop_draw_scrfile_name[PATH_MAX]="";
+
 
 
 //cargar archivo scr en pantalla si es que esta habilitado el scrfile en fondo
@@ -5225,7 +5234,7 @@ void zxdesktop_draw_scrfile_load(void)
 
     if (!zxdesktop_draw_scrfile_enabled) return;
 
-    printf("Loading scr file %s\n",zxdesktop_draw_scrfile_name);
+    debug_printf(VERBOSE_DEBUG,"Loading ZX Desktop background SCR file %s",zxdesktop_draw_scrfile_name);
 
     //asignar memoria si conviene
     if (zxdesktop_draw_scrfile_pointer==NULL) {
@@ -5260,6 +5269,10 @@ int menu_draw_ext_desktop_si_scrfile(int x,int y,int ancho,int alto)
         if (scale_x>scale_y) scale_x=scale_y;
         else scale_y=scale_x;
 
+    }
+
+    else {
+        scale_x=scale_y=zxdesktop_draw_scrfile_scale_factor;
     }
 
     int total_size_x=256*scale_x;
