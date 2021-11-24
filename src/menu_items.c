@@ -12231,25 +12231,25 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 
             char string_back_scr_shown[20];
             menu_tape_settings_trunc_name(zxdesktop_draw_scrfile_name,string_back_scr_shown,20);
-            menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile,NULL,"Background ~~SCR [%s]",string_back_scr_shown);
+            menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile,NULL,"~~SCR file [%s]",string_back_scr_shown);
             menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'s');         
           
 			if (zxdesktop_draw_scrfile_name[0]!=0) {
                 menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_enable,NULL,
-                    "[%c] Background SCR active",(zxdesktop_draw_scrfile_enabled ? 'X' : ' ' ));
+                    "[%c] SCR active",(zxdesktop_draw_scrfile_enabled ? 'X' : ' ' ));
 
                 if (zxdesktop_draw_scrfile_enabled) {
 
                     menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_centered,NULL,
-                        "[%c] Background SCR centered",(zxdesktop_draw_scrfile_centered ? 'X' : ' ' ));
+                        "[%c] SCR centered",(zxdesktop_draw_scrfile_centered ? 'X' : ' ' ));
 
                     menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_fillscale,NULL,
-                        "[%c] Background SCR autoscale",(zxdesktop_draw_scrfile_fill_scale ? 'X' : ' ' ));
+                        "[%c] SCR autoscale",(zxdesktop_draw_scrfile_fill_scale ? 'X' : ' ' ));
 
 
                     if (!zxdesktop_draw_scrfile_fill_scale) {
                         menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_scalefactor,NULL,
-                            "[%d] Background SCR scale factor",zxdesktop_draw_scrfile_scale_factor);
+                            "[%d] SCR scale factor",zxdesktop_draw_scrfile_scale_factor);
                     }
 
                 }
