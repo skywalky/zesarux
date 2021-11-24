@@ -14144,15 +14144,19 @@ int util_extract_tap(char *filename,char *tempdir,char *tzxfile)
                                                 strcpy(extension_agregar,".bas");
                                         }
 
-                                        if (previo_tipo_bloque==3 && longitud_final==6912) {
-                                                //Screen
-                                                strcpy(extension_agregar,".scr");
 
-                                                
-                                        }
                                 }
 
-                                if (longitud_final==6912) era_pantalla=1;
+                                //Consideramos que es pantalla siempre que tenga longitud 6912,
+                                //sin tener en cuenta que haya cabecera antes o no
+                                if (longitud_final==6912) {
+                                    //archivo a expandir es pantalla scr
+                                    strcpy(extension_agregar,".scr");
+                                    //y ademas decimos que ese es el achivo de pantalla usado en los previews
+                                    era_pantalla=1;
+                                }
+
+
 
                                 if (tzxfile==NULL) {
                                         sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdir,filenumber,longitud_final,extension_agregar);
@@ -14447,15 +14451,18 @@ int util_extract_tzx(char *filename,char *tempdirectory,char *tapfile)
 					strcpy(extension_agregar,".bas");
 				}
 
-				if (previo_tipo_bloque==3 && longitud_final==6912) {
-					//Screen
-                                        strcpy(extension_agregar,".scr");
 
-
-                                }
 			}
 
-                        if (longitud_final==6912) era_pantalla=1;
+            //Consideramos que es pantalla siempre que tenga longitud 6912,
+            //sin tener en cuenta que haya cabecera antes o no
+            if (longitud_final==6912) {
+                //archivo a expandir es pantalla scr
+                strcpy(extension_agregar,".scr");
+                //y ademas decimos que ese es el achivo de pantalla usado en los previews
+                era_pantalla=1;
+            }
+
 
 			if (tapfile==NULL) {
                                 sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
@@ -14906,13 +14913,18 @@ int util_extract_pzx(char *filename,char *tempdirectory,char *tapfile)
                                 strcpy(extension_agregar,".bas");
                             }
 
-                            if (previo_tipo_bloque==3 && longitud_final==6912) {
-                                //Screen
-                                strcpy(extension_agregar,".scr");
-                            }
+
                         }
 
-                        if (longitud_final==6912) era_pantalla=1;
+                        //Consideramos que es pantalla siempre que tenga longitud 6912,
+                        //sin tener en cuenta que haya cabecera antes o no
+                        if (longitud_final==6912) {
+                            //archivo a expandir tiene pantalla scr
+                            strcpy(extension_agregar,".scr");
+                            //y ademas decimos que ese es el achivo de pantalla usado en los previews
+                            era_pantalla=1;
+                        }
+
 
                         if (tapfile==NULL) {
                             sprintf (buffer_temp_file,"%s/%02d-data-%d%s",tempdirectory,filenumber,longitud_final,extension_agregar);
