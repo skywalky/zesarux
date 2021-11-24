@@ -22741,48 +22741,40 @@ int menu_file_filter(const char *name,char *filtros[])
 		if (!strcasecmp(extension,f)) return 1;
 	}
 
-	//Si es zip, tambien lo soportamos
+    //Otros archivos que siempre cumplen el filtro
+	//Aqui agregamos todas las extensiones que en principio pueden generar muchos diferentes tipos de archivos,
+	//ya sea porque son archivos comprimidos (p.ej. zip) o porque son archivos que se pueden expandir (p.j. tap)
+	//Hay algunos que se pueden expandir y directamente los excluyo (como .P o .O) por ser su uso muy limitado 
+	//(solo generan .baszx80 y .baszx81 en este caso)
+
 	if (!strcasecmp(extension,"zip")) return 1;
 
-	//Si es gz, tambien lo soportamos
 	if (!strcasecmp(extension,"gz")) return 1;
 
-	//Si es tar, tambien lo soportamos
 	if (!strcasecmp(extension,"tar")) return 1;
 
-	//Si es rar, tambien lo soportamos
 	if (!strcasecmp(extension,"rar")) return 1;
 
-	//Si es mdv, tambien lo soportamos
 	if (!strcasecmp(extension,"mdv")) return 1;
 
-	//Si es hdf, tambien lo soportamos
 	if (!strcasecmp(extension,"hdf")) return 1;
 
-	//Si es dsk, tambien lo soportamos
 	if (!strcasecmp(extension,"dsk")) return 1;
 
-	//Si es tap, tambien lo soportamos
 	if (!strcasecmp(extension,"tap")) return 1;	
 
-	//Si es tzx, tambien lo soportamos
 	if (!strcasecmp(extension,"tzx")) return 1;	
 
-	//Si es trd, tambien lo soportamos
+	if (!strcasecmp(extension,"pzx")) return 1;
+
 	if (!strcasecmp(extension,"trd")) return 1;		
 
-	//Si es scl, tambien lo soportamos
 	if (!strcasecmp(extension,"scl")) return 1;			
 
-	//Si es epr, eprom o flash, tambien lo soportamos
 	if (!strcasecmp(extension,"epr")) return 1;
 	if (!strcasecmp(extension,"eprom")) return 1;
 	if (!strcasecmp(extension,"flash")) return 1;		
 
-	//NOTA: Aqui agregamos todas las extensiones que en principio pueden generar muchos diferentes tipos de archivos,
-	//ya sea porque son archivos comprimidos (p.ej. zip) o porque son archivos que se pueden expandir (p.j. tap)
-	//Hay algunos que se pueden expandir y directamente los excluyo (como .P o .O) por ser su uso muy limitado 
-	//(solo generan .baszx80 y .baszx81 en este caso)
 
 	return 0;
 
