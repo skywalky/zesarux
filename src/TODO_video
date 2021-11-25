@@ -62,6 +62,8 @@ upara lightgun la mayoria de puertos son teclado o kempston, en que ya se contro
 
 -Si modo interlaced activo, al redimensionar ventana con raton y hacerla zoom=1, se deberia desactivar opcion interlaced (y scanlines)
 
+-interlaced y scanlines en maquinas no spectrum no lo hace bien
+
 -Quizá función putpixel z88 debería estar inicializada desde el principio con algo, por si acaso
 
 -cacalib, en X windows pero haciendo export DISPLAY=, colores normales tienen parpadeo

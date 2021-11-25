@@ -29718,16 +29718,31 @@ void menu_debug_settings(MENU_ITEM_PARAMETERS)
 
 }
 
+int zxdesktop_estado_antes_fullscreen=0;
 
 void menu_interface_fullscreen(MENU_ITEM_PARAMETERS)
 {
 
 	if (ventana_fullscreen==0) {
+        //Desactivar ZX Desktop al pasar a full screen
+        zxdesktop_estado_antes_fullscreen=screen_ext_desktop_enabled;
+        if (zxdesktop_disable_on_full_screen) {
+            if (screen_ext_desktop_enabled) {
+                menu_ext_desk_settings_enable(0);
+            }
+        }
+
 		scr_set_fullscreen();
 	}
 
 	else {
 		scr_reset_fullscreen();
+
+        //Retornar ZX Desktop estado al volver de full screen
+        if (zxdesktop_disable_on_full_screen && zxdesktop_estado_antes_fullscreen) {
+            if (!screen_ext_desktop_enabled) menu_ext_desk_settings_enable(0);
+        }
+
 	}
 
 	clear_putpixel_cache();

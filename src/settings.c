@@ -282,6 +282,13 @@ z80_bit setting_machine_selection_by_name={0};
 z80_bit menu_file_viewer_always_hex={0};
 
 
+//
+// ZX Desktop Settings
+//
+
+//Desactivar zx desktop al pasar a full screen
+int zxdesktop_disable_on_full_screen=0;
+
 
 //
 // General Settings

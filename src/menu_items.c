@@ -12103,6 +12103,11 @@ void menu_zxdesktop_scrfile_scalefactor(MENU_ITEM_PARAMETERS)
     menu_ventana_scanf_numero_enhanced("Scale factor",&zxdesktop_draw_scrfile_scale_factor,2,+1,1,5,0);
 }
 
+void menu_ext_desk_settings_disable_on_fullscreen(MENU_ITEM_PARAMETERS)
+{
+    zxdesktop_disable_on_full_screen ^=1;
+}
+
 void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
 {
         menu_item *array_menu_ext_desktop_settings;
@@ -12152,6 +12157,13 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_switch_button,NULL,"[%c] Footer switch button",(zxdesktop_switch_button_enabled.v ? 'X' : ' ' ) );
         menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Enable a button on footer to switch ZX Desktop (visible when menu closed)");
         menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Enable a button on footer to switch ZX Desktop (visible when menu closed)");
+
+
+        menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_disable_on_fullscreen,NULL,
+            "[%c] Disable on Full Screen",(zxdesktop_disable_on_full_screen ? 'X' : ' ' ));
+        menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Disable ZX Desktop when going to full screen");
+        menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Disable ZX Desktop when going to full screen. It will be enabled again going back from full screen");
+
 
         if (screen_ext_desktop_enabled) {   
 
