@@ -643,66 +643,30 @@ void scr_refresca_pantalla_y_border_svi_no_rainbow(void)
 void scr_refresca_pantalla_y_border_svi_rainbow(void)
 {
 
-
-	//aqui no tiene sentido (o si?) el modo simular video zx80/81 en spectrum
 	int ancho,alto;
 
 	ancho=get_total_ancho_rainbow();
 	alto=get_total_alto_rainbow();
 
-	int x,y,bit;
+	int x,y;
 
-	//margenes de zona interior de pantalla. Para overlay menu
-	int margenx_izq=screen_total_borde_izquierdo*border_enabled.v;
-	int margenx_der=screen_total_borde_izquierdo*border_enabled.v+256;
-	int margeny_arr=screen_borde_superior*border_enabled.v;
-	int margeny_aba=screen_borde_superior*border_enabled.v+192;
-
-
-
-	//para overlay menu tambien
-	//int fila;
-	//int columna;
 
 	z80_int color_pixel;
 	z80_int *puntero;
 
 	puntero=rainbow_buffer;
-	int dibujar;
-
 
 
 	for (y=0;y<alto;y++) {
-
-
-		//int altoborder=screen_borde_superior;
-
 		
-		for (x=0;x<ancho;x+=8) {
-			dibujar=1;
+		for (x=0;x<ancho;x++) {
 
-			//Ver si esa zona esta ocupada por texto de menu u overlay
-
-			if (y>=margeny_arr && y<margeny_aba && x>=margenx_izq && x<margenx_der) {
-				if (!scr_ver_si_refrescar_por_menu_activo( (x-margenx_izq)/8, (y-margeny_arr)/8) )
-					dibujar=0;
-			}
-
-
-			if (dibujar==1) {
-					for (bit=0;bit<8;bit++) {
-						color_pixel=*puntero++;
-						scr_putpixel_zoom_rainbow(x+bit,y,color_pixel);
-					}
-			}
-			else puntero+=8;
+            color_pixel=*puntero++;
+            scr_putpixel_zoom_rainbow(x,y,color_pixel);
 
 		}
 		
 	}
-
-
-
 
 }
 
