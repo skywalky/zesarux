@@ -505,19 +505,10 @@ void scr_refresca_pantalla_y_border_msx_no_rainbow(void)
 }
 
 
-//Refresco pantalla con rainbow
-void scr_refresca_pantalla_y_border_msx_rainbow(void)
-{
-
-	vdp_9918a_scr_refresca_pantalla_y_border_rainbow();
-
-}
-
-
 void scr_refresca_pantalla_y_border_msx(void)
 {
     if (rainbow_enabled.v) {
-        scr_refresca_pantalla_y_border_msx_rainbow();
+        vdp_9918a_scr_refresca_pantalla_y_border_rainbow();
     }
     else {
         scr_refresca_pantalla_y_border_msx_no_rainbow();
