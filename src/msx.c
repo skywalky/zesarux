@@ -537,7 +537,7 @@ void scr_refresca_pantalla_y_border_msx_rainbow(void)
 
 	puntero=rainbow_buffer;
 
-    if (border_enabled.v==0) puntero+=screen_total_borde_izquierdo;
+    //if (border_enabled.v==0) puntero+=screen_total_borde_izquierdo;
 
 	//int dibujar;
 

@@ -2011,6 +2011,8 @@ void screen_store_scanline_rainbow_vdp_9918a_border_and_display(z80_int *scanlin
     z80_int *origen_scanline_buffer;
     origen_scanline_buffer=scanline_buffer;
 
+    if (border_enabled.v==0) origen_scanline_buffer +=screen_total_borde_izquierdo;
+
     int i;
 
 
