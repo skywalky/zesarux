@@ -3376,6 +3376,8 @@ int util_write_configfile(void)
     if (zxdesktop_switch_button_enabled.v==0)         ADD_STRING_CONFIG,"--zxdesktop-disable-footer-switch");
 
 
+	if (zxdesktop_disable_on_full_screen)               ADD_STRING_CONFIG,"--zxdesktop-disable-on-fullscreen");
+
     if (zxdesktop_draw_scrfile_enabled)                 ADD_STRING_CONFIG,"--zxdesktop-scr-enable");
 
     if (zxdesktop_draw_scrfile_name[0]!=0)              ADD_STRING_CONFIG,"--zxdesktop-scr-file \"%s\"",zxdesktop_draw_scrfile_name);

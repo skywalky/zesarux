@@ -1814,6 +1814,7 @@ printf (
         "--zxdesktop-disable-box-upper-buttons  Disable box around ZX Desktop upper buttons\n"
         "--zxdesktop-disable-box-lower-buttons  Disable box around ZX Desktop lower buttons\n"  
         "--zxdesktop-disable-footer-switch      Disable ZX Desktop footer switch button\n"
+		"--zxdesktop-disable-on-fullscreen      Disable ZX Desktop when going to full screen\n"
         "--zxdesktop-scr-file f                 Set ZX Desktop SCR background file\n"
         "--zxdesktop-scr-enable                 Enable ZX Desktop SCR background file\n"
         "--zxdesktop-scr-centered               Center ZX Desktop SCR background\n"
@@ -5575,7 +5576,11 @@ int parse_cmdline_options(void) {
 
 			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-disable-footer-switch")) {
 				zxdesktop_switch_button_enabled.v=0;
-			} 
+			}
+
+			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-disable-on-fullscreen")) {
+				zxdesktop_disable_on_full_screen=1;
+			}
 
 			else if (!strcmp(argv[puntero_parametro],"--zxdesktop-scr-enable")) {
 				zxdesktop_draw_scrfile_enabled=1;
