@@ -102,6 +102,8 @@ extern z80_bit vdp_9918a_reveal_layer_sprites;
 
 extern z80_int vdp_9918a_buffer_render_sprites[];
 
+extern void vdp_9918a_scr_refresca_pantalla_y_border_rainbow(void);
+
 
 #define VDP_9918A_LEFT_BORDER_NO_ZOOM 48
 #define VDP_9918A_RIGHT_BORDER_NO_ZOOM 48
