@@ -516,13 +516,15 @@ void scr_refresca_pantalla_y_border_msx_rainbow(void)
 	ancho=get_total_ancho_rainbow();
 	alto=get_total_alto_rainbow();
 
-	int x,y,bit;
+	int x,y;
+    
+    //int bit;
 
 	//margenes de zona interior de pantalla. Para overlay menu
-	int margenx_izq=screen_total_borde_izquierdo*border_enabled.v;
-	int margenx_der=screen_total_borde_izquierdo*border_enabled.v+256;
-	int margeny_arr=screen_borde_superior*border_enabled.v;
-	int margeny_aba=screen_borde_superior*border_enabled.v+192;
+	//int margenx_izq=screen_total_borde_izquierdo*border_enabled.v;
+	//int margenx_der=screen_total_borde_izquierdo*border_enabled.v+256;
+	//int margeny_arr=screen_borde_superior*border_enabled.v;
+	//int margeny_aba=screen_borde_superior*border_enabled.v+192;
 
 
 
@@ -534,8 +536,10 @@ void scr_refresca_pantalla_y_border_msx_rainbow(void)
 	z80_int *puntero;
 
 	puntero=rainbow_buffer;
-	int dibujar;
 
+    if (border_enabled.v==0) puntero+=screen_total_borde_izquierdo;
+
+	//int dibujar;
 
 
 	for (y=0;y<alto;y++) {
@@ -543,25 +547,24 @@ void scr_refresca_pantalla_y_border_msx_rainbow(void)
 
 		//int altoborder=screen_borde_superior;
 
-		
-		for (x=0;x<ancho;x+=8) {
-			dibujar=1;
+		for (x=0;x<ancho;x++) {
+			//dibujar=1;
 
 			//Ver si esa zona esta ocupada por texto de menu u overlay
 
-			if (y>=margeny_arr && y<margeny_aba && x>=margenx_izq && x<margenx_der) {
-				if (!scr_ver_si_refrescar_por_menu_activo( (x-margenx_izq)/8, (y-margeny_arr)/8) )
-					dibujar=0;
-			}
+			//if (y>=margeny_arr && y<margeny_aba && x>=margenx_izq && x<margenx_der) {
+				//if (!scr_ver_si_refrescar_por_menu_activo( (x-margenx_izq)/8, (y-margeny_arr)/8) )
+					//dibujar=0;
+			//}
 
 
-			if (dibujar==1) {
-					for (bit=0;bit<8;bit++) {
+			//if (dibujar==1) {
+					//for (bit=0;bit<8;bit++) {
 						color_pixel=*puntero++;
-						scr_putpixel_zoom_rainbow(x+bit,y,color_pixel);
-					}
-			}
-			else puntero+=8;
+						scr_putpixel_zoom_rainbow(x,y,color_pixel);
+					//}
+			//}
+			//else puntero+=8;
 
 		}
 		
