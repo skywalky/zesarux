@@ -7583,8 +7583,8 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 
     z80_byte caracter_espacio_titulo=menu_retorna_caracter_espacio_titulo();
 
-    //si ventana es background, caracter fondo titulo es siempre espacio
-    if (ventana_es_background) caracter_espacio_titulo=' ';
+    //si ventana es background o no es ventana activa, caracter fondo titulo es siempre espacio
+    if (ventana_es_background || !ventana_tipo_activa) caracter_espacio_titulo=' ';
 
         //titulo
         //primero franja toda negra normalmente en estilo ZEsarUX
@@ -7602,7 +7602,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 
         
 
-		if (menu_hide_close_button.v || ventana_es_background ) {
+		if (menu_hide_close_button.v || ventana_es_background || !ventana_tipo_activa) {
             //strcpy(titulo_mostrar,titulo);
             //Ancho del titulo sera igual, aun sin el boton de cerrar
             sprintf (titulo_mostrar," %c%s",caracter_espacio_titulo,titulo);

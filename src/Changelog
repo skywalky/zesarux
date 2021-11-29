@@ -18,6 +18,7 @@ Fixed disabling border when realvideo enabled on machines: Colecovision, Master 
 Fixed segfault pressing F5 after pressing pause key
 Fixed preserve breakpoints state when doing smartload
 Fixed refreshing Visual Real Tape window when Top Speed condition
+Fixed drawing close button on background windows
 
 Some other minor bugfixes and improvements
 
