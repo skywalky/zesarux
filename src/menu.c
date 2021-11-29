@@ -7581,12 +7581,16 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 		color_papel_titulo=ESTILO_GUI_PAPEL_TITULO_INACTIVA;		
 	}
 
+    z80_byte caracter_espacio_titulo=menu_retorna_caracter_espacio_titulo();
+
+    //si ventana es background, caracter fondo titulo es siempre espacio
+    if (ventana_es_background) caracter_espacio_titulo=' ';
 
         //titulo
         //primero franja toda negra normalmente en estilo ZEsarUX
         if (!ESTILO_GUI_NO_RELLENAR_TITULO) {
             for (i=0;i<ancho;i++) {
-			    putchar_menu_overlay(x+i,y,menu_retorna_caracter_espacio_titulo(),color_tinta_titulo,color_papel_titulo);
+			    putchar_menu_overlay(x+i,y,caracter_espacio_titulo,color_tinta_titulo,color_papel_titulo);
 		    }
         }
 
@@ -7596,13 +7600,15 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 		char titulo_mostrar[ZXVISION_MAX_WINDOW_TITLE];
 		z80_byte caracter_cerrar=menu_retorna_caracter_cerrar();
 
+        
+
 		if (menu_hide_close_button.v || ventana_es_background ) {
             //strcpy(titulo_mostrar,titulo);
             //Ancho del titulo sera igual, aun sin el boton de cerrar
-            sprintf (titulo_mostrar," %c%s",menu_retorna_caracter_espacio_titulo(),titulo);
+            sprintf (titulo_mostrar," %c%s",caracter_espacio_titulo,titulo);
         }
 		else {
-            sprintf (titulo_mostrar,"%c%c%s",caracter_cerrar,menu_retorna_caracter_espacio_titulo(),titulo);
+            sprintf (titulo_mostrar,"%c%c%s",caracter_cerrar,caracter_espacio_titulo,titulo);
         }
 
 
