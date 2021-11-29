@@ -12,6 +12,7 @@ Improved ZX Vision:
 -ZX Desktop: allow to set a background SCR file
 -ZX Desktop: added setting to disable ZX Desktop when going to full screen 
 -Better detection of any file size of 6912 bytes is guessed as Spectrum screen
+-Improve RetroMac GUI style: striped title bar
 
 Fixed disabling border when realvideo enabled on machines: Colecovision, Master System, MSX, SG1000, SpectraVideo
 Fixed segfault pressing F5 after pressing pause key

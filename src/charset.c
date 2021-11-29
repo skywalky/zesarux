@@ -978,7 +978,7 @@ unsigned char char_set_spectrum[TOTAL_ASCII_CHARSET_ELEMENTS]={		0
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,0,255,0,255,0,255,0
+0,255,0,255,0,255,0,0
 
 };
 
@@ -1104,7 +1104,7 @@ unsigned char char_set_cpc[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,0,255,0,255,0,255,0
+0,255,0,255,0,255,0,0
 
 };
 
@@ -1236,7 +1236,7 @@ unsigned char char_set_z88[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,0,255,0,255,0,255,0
+0,255,0,255,0,255,0,0
 
 };
 
@@ -1373,7 +1373,7 @@ unsigned char char_set_sam[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,0,255,0,255,0,255,0
+0,255,0,255,0,255,0,0
 
 };
 
@@ -1519,7 +1519,7 @@ unsigned char char_set_mansoftware[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,0,255,0,255,0,255,0
+0,255,0,255,0,255,0,0
 
 };
 
@@ -1655,7 +1655,7 @@ unsigned char char_set_ql[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,0,255,0,255,0,255,0
+0,255,0,255,0,255,0,0
 
 };
 
@@ -1831,7 +1831,7 @@ unsigned char char_set_retromac[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,0,255,0,255,0,255,0
+0,255,0,255,0,255,0,0
 
 };
 
@@ -2005,7 +2005,7 @@ unsigned char char_set_msx[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,0,255,0,255,0,255,0
+0,255,0,255,0,255,0,0
 
 };
 
@@ -2185,6 +2185,6 @@ unsigned char char_set_beos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,0,255,0,255,0,255,0
+0,255,0,255,0,255,0,0
 
 };

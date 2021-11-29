@@ -7599,10 +7599,10 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 		if (menu_hide_close_button.v || ventana_es_background ) {
             //strcpy(titulo_mostrar,titulo);
             //Ancho del titulo sera igual, aun sin el boton de cerrar
-            sprintf (titulo_mostrar,"  %s",titulo);
+            sprintf (titulo_mostrar," %c%s",menu_retorna_caracter_espacio_titulo(),titulo);
         }
 		else {
-            sprintf (titulo_mostrar,"%c %s",caracter_cerrar,titulo);
+            sprintf (titulo_mostrar,"%c%c%s",caracter_cerrar,menu_retorna_caracter_espacio_titulo(),titulo);
         }
 
 
