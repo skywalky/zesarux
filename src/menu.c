@@ -639,6 +639,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -661,6 +662,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         4,      //color block visualtape
 		2,7,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		//colores de franjas invertidas, por defecto la oscura
         colores_franja_speccy_oscuro,colores_franja_speccy_brillo,
@@ -683,6 +685,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -704,6 +707,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         3,7+8,		//Color para opcion marcada
         '#',
+        ' ', //caracter de fondo de titulo
 		3+8, //color de aviso, en este tema, magenta con brillo
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -725,6 +729,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         7,0,		//Color para opcion marcada
 		'.',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -746,6 +751,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         2,7+8,		//Color para opcion marcada
         '*',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -768,6 +774,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         6,      //color block visualtape
         2,7+8,		//Color para opcion marcada
         '*',
+        ' ', //caracter de fondo de titulo
         2, //color de aviso
         colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -789,6 +796,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         2,7+8,		//Color para opcion marcada
 		'#',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -810,6 +818,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         2,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -832,6 +841,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
         '.',
+        ' ', //caracter de fondo de titulo
         2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
         colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -853,6 +863,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         5+8,      //color block visualtape
 		2,7,		//Color para opcion marcada
 		141,
+        148, //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         5+8, //si texto inverso solo cambia color tinta
@@ -874,6 +885,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		139, //boton cerrar especial
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         BEOS_COLOUR_blue_hotkey, //si texto inverso solo cambia color tinta
@@ -895,6 +907,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         2+8, //si texto inverso solo cambia color tinta
@@ -916,6 +929,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         TURBOVISION_COLOUR_cyan,       //color block visualtape
 		TURBOVISION_COLOUR_red,TURBOVISION_COLOUR_lightwhite,		//Color para opcion marcada
 		140,
+        ' ', //caracter de fondo de titulo
         2, //color de aviso. Seria TURBOVISION_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         TURBOVISION_COLOUR_red, //si texto inverso solo cambia color tinta
@@ -937,6 +951,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		1,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		6, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -958,6 +973,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		6, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -979,6 +995,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		3,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		6, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -1000,6 +1017,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		4,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		6, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -1021,6 +1039,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		5,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		1, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -1042,6 +1061,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         5,      //color block visualtape
 		6,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		1, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -1063,6 +1083,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7+8,      //color block visualtape
         7+8,0,		//Color para opcion marcada
 		'X',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -1084,6 +1105,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         0,7+8,		//Color para opcion marcada
 		'X',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -1107,6 +1129,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -1130,6 +1153,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        ' ', //caracter de fondo de titulo
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
@@ -7471,6 +7495,19 @@ z80_byte menu_retorna_caracter_cerrar(void)
     else return caracter;
 }
 
+
+//Retorna caracter de espacio de titulo
+z80_byte menu_retorna_caracter_espacio_titulo(void)
+{
+
+    z80_byte caracter=ESTILO_GUI_CARACTER_ESPACIO_TITULO;
+
+    //Si caracter es un udg especial y no es driver video completo, retornar por defecto
+    if (caracter>126 && !si_complete_video_driver()) return ' ';
+
+    else return caracter;
+}
+
 //dibuja ventana de menu, con:
 //titulo
 //contenido blanco
@@ -7549,7 +7586,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
         //primero franja toda negra normalmente en estilo ZEsarUX
         if (!ESTILO_GUI_NO_RELLENAR_TITULO) {
             for (i=0;i<ancho;i++) {
-			    putchar_menu_overlay(x+i,y,' ',color_tinta_titulo,color_papel_titulo);
+			    putchar_menu_overlay(x+i,y,menu_retorna_caracter_espacio_titulo(),color_tinta_titulo,color_papel_titulo);
 		    }
         }
 

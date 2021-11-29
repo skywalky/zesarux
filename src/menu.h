@@ -898,6 +898,8 @@ struct s_estilos_gui {
 
 	z80_byte boton_cerrar; //caracter de cerrado de ventana
 
+    z80_byte caracter_espacio_titulo; //caracter de fondo de titulo de ventana
+
 	int color_aviso; //caracter de aviso de volumen alto, cpu alto, etc. normalmente rojo
 
 	//franjas de color normales con brillo
@@ -995,6 +997,8 @@ extern int lowericon_realtape_frame;
 #define ESTILO_GUI_SOLO_MAYUSCULAS (definiciones_estilos_gui[estilo_gui_activo].solo_mayusculas)
 
 #define ESTILO_GUI_BOTON_CERRAR (definiciones_estilos_gui[estilo_gui_activo].boton_cerrar)
+
+#define ESTILO_GUI_CARACTER_ESPACIO_TITULO (definiciones_estilos_gui[estilo_gui_activo].caracter_espacio_titulo)
 
 #define ESTILO_GUI_COLOR_AVISO (definiciones_estilos_gui[estilo_gui_activo].color_aviso)
 
