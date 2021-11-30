@@ -859,7 +859,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		RETROMAC_COLOUR_paper,RETROMAC_COLOUR_unavailable_ink,    	//Colores para el titulo ventana inactiva
 
 		4,		//Color waveform
-		5+8,		//Color para zona no usada en visualmem
+		5,		//Color para zona no usada en visualmem
         5+8,      //color block visualtape
 		2,7,		//Color para opcion marcada
 		141, //boton cerrar
