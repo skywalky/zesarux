@@ -465,8 +465,9 @@ const int beos_colortable_original[BEOS_TOTAL_PALETTE_COLOURS]={
 const int retromac_colortable_original[RETROMAC_TOTAL_PALETTE_COLOURS]={
     0xcccccc, //Titulo ventana
     0xdddddd, //Titulo ventana inactiva, papel
-    0x322e9c,  //Texto seleccionado
-    0x777777  //Tinta opcion no disponible
+    0x322e9c, //Texto seleccionado
+    0x777777, //Tinta opcion no disponible
+    0x999999  //Color para el marco ventana
 };
 
 //Tabla con los colores extra del Spectra.

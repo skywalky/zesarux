@@ -618,12 +618,13 @@ extern void screen_switch_rainbow_buffer(void);
 
 
 #define RETROMAC_INDEX_FIRST_COLOR (BEOS_INDEX_FIRST_COLOR+BEOS_TOTAL_PALETTE_COLOURS)
-#define RETROMAC_TOTAL_PALETTE_COLOURS 4
+#define RETROMAC_TOTAL_PALETTE_COLOURS 5
 
 #define RETROMAC_COLOUR_active_title (RETROMAC_INDEX_FIRST_COLOR+0)
 #define RETROMAC_COLOUR_paper (RETROMAC_INDEX_FIRST_COLOR+1)
 #define RETROMAC_COLOUR_selected_paper (RETROMAC_INDEX_FIRST_COLOR+2)
 #define RETROMAC_COLOUR_unavailable_ink (RETROMAC_INDEX_FIRST_COLOR+3)
+#define RETROMAC_COLOUR_window_box (RETROMAC_INDEX_FIRST_COLOR+4)
 
 //16 colores normales spectrum, 16 grises de modo scanline, 256 de gigascreen, 4 de z88, 16 de spectrum 17/48/+ real, 256 de ulaplus, 64 de spectra, 32 de CPC, 4096 de Prism, 128 de SAM, 256 de RGB8, 32768 de TSCONF, 16 de solarized
 //actualizar aqui y tambien estructura de total_palette_colours_array y #define TOTAL_PALETAS_COLORES 
