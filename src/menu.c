@@ -849,24 +849,24 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         char_set_msx
     },
 
-	{0,"RetroMac",7,0,
+	{1,"RetroMac",RETROMAC_COLOUR_paper,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-		1+8,7+8, 		//Colores para opcion seleccionada
-		7,2,1+8,2, 	//Colores para opcion no disponible
+		RETROMAC_COLOUR_selected_paper,7+8, 		//Colores para opcion seleccionada
+		RETROMAC_COLOUR_paper,RETROMAC_COLOUR_unavailable_ink,RETROMAC_COLOUR_selected_paper,RETROMAC_COLOUR_unavailable_ink, 	//Colores para opcion no disponible
 
-		7+8,0,        	//Colores para el titulo ventana
-        7+8,              //Color recuadro
-		7,0,    	//Colores para el titulo ventana inactiva
+		RETROMAC_COLOUR_active_title,0,        	//Colores para el titulo ventana
+        RETROMAC_COLOUR_active_title,              //Color recuadro
+		RETROMAC_COLOUR_paper,RETROMAC_COLOUR_unavailable_ink,    	//Colores para el titulo ventana inactiva
 
 		4,		//Color waveform
 		5+8,		//Color para zona no usada en visualmem
         5+8,      //color block visualtape
 		2,7,		//Color para opcion marcada
-		141,
+		141, //boton cerrar
         148, //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        5+8, //si texto inverso solo cambia color tinta
+        5, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_retromac
     },

@@ -462,6 +462,13 @@ const int beos_colortable_original[BEOS_TOTAL_PALETTE_COLOURS]={
 
 };
 
+const int retromac_colortable_original[RETROMAC_TOTAL_PALETTE_COLOURS]={
+    0xcccccc, //Titulo ventana
+    0xdddddd, //Titulo ventana inactiva, papel
+    0x322e9c,  //Texto seleccionado
+    0x777777  //Tinta opcion no disponible
+};
+
 //Tabla con los colores extra del Spectra.
 //Valores para intensidades de color:
 /*
@@ -8816,6 +8823,12 @@ G  G   R   R   B   B
 					screen_set_colour_normal(BEOS_INDEX_FIRST_COLOR+i,beos_colortable_original[i]);
 				}	                             
 
+				//Colores Retromac. No los pasamos a grises estos
+				for (i=0;i<RETROMAC_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(RETROMAC_INDEX_FIRST_COLOR+i,retromac_colortable_original[i]);
+				}	                             
+
+
 		}
 
 		else {
@@ -9035,7 +9048,12 @@ Bit 6 GRN1 most  significant bit of green.
 				//Colores BeOS
 				for (i=0;i<BEOS_TOTAL_PALETTE_COLOURS;i++) {
 					screen_set_colour_normal(BEOS_INDEX_FIRST_COLOR+i,beos_colortable_original[i]);
-				}                                                   
+				}       
+
+				//Colores Retromac
+				for (i=0;i<RETROMAC_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(RETROMAC_INDEX_FIRST_COLOR+i,retromac_colortable_original[i]);
+				}                                                            
 
 
 		}
