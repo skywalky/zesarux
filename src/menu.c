@@ -7691,7 +7691,7 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 		}
 
         //Indicar posicion del boton minimizar
-        current_win_minimize_button_position=i;
+        current_win_minimize_button_position=i+1;
 
         if (current_win_minimize_button_position>=ancho) current_win_minimize_button_position=ancho-1;
 
