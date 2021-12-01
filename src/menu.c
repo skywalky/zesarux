@@ -7462,7 +7462,7 @@ int zxvision_return_minimize_button_position(int ancho)
     //Para beos
     if (ESTILO_GUI_NO_RELLENAR_TITULO) {
         
-        int position=current_win_minimize_button_position;
+        int position=current_win_minimize_button_position-1;
 
         //si dejar espacio para boton de background
         if (zxvision_current_window!=NULL) {   //por si acaso comprobar NULL
@@ -7478,7 +7478,7 @@ int zxvision_return_minimize_button_position(int ancho)
 int zxvision_return_background_button_position(int ancho)
 {
     //Para beos
-    if (ESTILO_GUI_NO_RELLENAR_TITULO) return current_win_minimize_button_position;
+    if (ESTILO_GUI_NO_RELLENAR_TITULO) return current_win_minimize_button_position-1;
 
     else return ancho-2;    
 }
