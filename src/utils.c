@@ -10302,9 +10302,9 @@ void customconfig_help(void)
 		"So, if you load for example: game.tap, it will be searched a file game.tap.config\n"
 		"This config file is a text file you can edit; the format is like the " DEFAULT_ZESARUX_CONFIG_FILE " main configuration file,\n"
 		"but not every command line parameter allowed on main configuration file is allowed on a custom config file.\n"
-		"There are some .config files included in this emulator, you can view them to have some examples."
+		"There are some .config files included in the ZEsarUX extras package, you can view them to have some examples."
 		"\n"
-		"The following are the allowed parameters on a custom config file, we don't describe the parameters that are the same as on command line:\n"
+		"The following are the allowed parameters on a custom config file, I don't describe the parameters that are the same as on command line:\n"
 		"\n"
 
 	"--machine id \n"
