@@ -1168,7 +1168,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 
 //valores de la ventana mostrada
  
-int current_win_x,current_win_y,current_win_ancho,current_win_alto;
+int current_win_x,current_win_y,current_win_ancho,current_win_alto,current_win_minimize_button_position;
 
 //tipo ventana. normalmente activa. se pone tipo inactiva desde zxvision al pulsar fuera de la ventana
 int ventana_tipo_activa=1;
@@ -7483,8 +7483,13 @@ void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window 
 
 int zxvision_return_minimize_button_position(int ancho)
 {
-    return ancho-1;    
+    //Para beos
+    if (ESTILO_GUI_NO_RELLENAR_TITULO) return current_win_minimize_button_position;
+
+    else return ancho-1;    
 }
+
+
 
 void menu_dibuja_ventana_botones(void)
 {
@@ -7666,6 +7671,11 @@ void menu_dibuja_ventana(int x,int y,int ancho,int alto,char *titulo_original)
 			
 			putchar_menu_overlay(x+i,y,caracter_mostrar,color_tinta_titulo,color_papel_titulo);
 		}
+
+        //Indicar posicion del boton minimizar
+        current_win_minimize_button_position=i;
+
+        if (current_win_minimize_button_position>=ancho) current_win_minimize_button_position=ancho-1;
 
 
 

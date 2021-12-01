@@ -912,6 +912,7 @@ struct s_estilos_gui {
     int inverse_tinta;
 
     //si no se rellena con espacios todo el titulo de la ventana. BeOS por ejemplo hace esto
+    //ademas boton de minimizar esta a la derecha del titulo
     int no_rellenar_titulo;
 
     //charset usado
