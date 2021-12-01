@@ -7484,7 +7484,7 @@ void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window 
 int zxvision_return_minimize_button_position(int ancho)
 {
     //Para beos
-    if (ESTILO_GUI_NO_RELLENAR_TITULO) return current_win_minimize_button_position;
+    if (ESTILO_GUI_NO_RELLENAR_TITULO) return current_win_minimize_button_position+1;
 
     else return ancho-1;    
 }
@@ -7492,7 +7492,7 @@ int zxvision_return_minimize_button_position(int ancho)
 int zxvision_return_background_button_position(int ancho)
 {
     //Para beos
-    if (ESTILO_GUI_NO_RELLENAR_TITULO) return current_win_minimize_button_position-1;
+    if (ESTILO_GUI_NO_RELLENAR_TITULO) return current_win_minimize_button_position;
 
     else return ancho-2;    
 }
