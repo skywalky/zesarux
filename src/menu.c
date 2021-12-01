@@ -7465,7 +7465,7 @@ void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window 
 			if (zxvision_window_can_be_backgrounded(w)) {
 				if (ventana_tipo_activa) {
 					//Boton de background, con ventana activa
-					putchar_menu_overlay(x+ancho-2,y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+					putchar_menu_overlay(x+zxvision_return_background_button_position(ancho),y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 				}
 
 				else {
@@ -7474,7 +7474,7 @@ void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window 
 					if (w->overlay_function!=NULL) {
 						//printf ("boton background\n");
 						//zxvision_print_char_simple(zxvision_current_window,ancho-2,0,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO,1,'!');
-						putchar_menu_overlay_parpadeo(x+ancho-2,y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,1);
+						putchar_menu_overlay_parpadeo(x+zxvision_return_background_button_position(ancho),y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,1);
 					}
 				}
 				
@@ -7489,7 +7489,13 @@ int zxvision_return_minimize_button_position(int ancho)
     else return ancho-1;    
 }
 
+int zxvision_return_background_button_position(int ancho)
+{
+    //Para beos
+    if (ESTILO_GUI_NO_RELLENAR_TITULO) return current_win_minimize_button_position-1;
 
+    else return ancho-2;    
+}
 
 void menu_dibuja_ventana_botones(void)
 {
@@ -12532,10 +12538,10 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 					}
 
 					//Si pulsa zona background  window
-					if (last_x_mouse_clicked==w->visible_width-2 && w->can_be_backgrounded && menu_allow_background_windows) {
+					if (last_x_mouse_clicked==zxvision_return_background_button_position(w->visible_width) && w->can_be_backgrounded && menu_allow_background_windows) {
 						mouse_pressed_background_window=1;
 						//Mostrar boton background pulsado
-						putchar_menu_overlay(w->x+w->visible_width-2,w->y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);						
+						putchar_menu_overlay(w->x+zxvision_return_background_button_position(w->visible_width),w->y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 					}			
 
 
