@@ -7481,6 +7481,11 @@ void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window 
 			}
 }
 
+int zxvision_return_minimize_button_position(int ancho)
+{
+    return ancho-1;    
+}
+
 void menu_dibuja_ventana_botones(void)
 {
 
@@ -7501,7 +7506,7 @@ void menu_dibuja_ventana_botones(void)
 					//se veria el texto de titulo en caso de que ancho de ventana la hagamos pequeña
 
 					//if (zxvision_current_window->is_minimized) caracter_mostrar='+';
-					putchar_menu_overlay(x+ancho-1,y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+					putchar_menu_overlay(x+zxvision_return_minimize_button_position(ancho),y,caracter_mostrar,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
 				}
 
 
@@ -12525,8 +12530,8 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 
 					//Si se pulsa en boton minimizar, indicar que se esta pulsando
-					if (last_x_mouse_clicked==w->visible_width-1 && menu_hide_minimize_button.v==0 && w->can_be_resized) {
-						putchar_menu_overlay(w->x+w->visible_width-1,w->y,menu_retorna_caracter_minimizar(w),ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
+					if (last_x_mouse_clicked==zxvision_return_minimize_button_position(w->visible_width) && menu_hide_minimize_button.v==0 && w->can_be_resized) {
+						putchar_menu_overlay(w->x+zxvision_return_minimize_button_position(w->visible_width),w->y,menu_retorna_caracter_minimizar(w),ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO);
 					}
 
 				}
@@ -12636,7 +12641,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 				else {
 					//Simple click
 					//Si pulsa zona minimizar
-					if (last_x_mouse_clicked==w->visible_width-1 && menu_hide_minimize_button.v==0) {
+					if (last_x_mouse_clicked==zxvision_return_minimize_button_position(w->visible_width) && menu_hide_minimize_button.v==0) {
 						//Mostrar boton minimizar pulsado
 						//printf ("minimizar\n");
 						//putchar_menu_overlay(w->x+w->visible_width-2,w->y,'X',ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
