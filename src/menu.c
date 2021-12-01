@@ -7457,30 +7457,6 @@ char zxvision_get_character_backgrounded_window(void)
     else return '!';
 }
 
-void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window *w)
-{
-
-
-			//Boton de background
-			if (zxvision_window_can_be_backgrounded(w)) {
-				if (ventana_tipo_activa) {
-					//Boton de background, con ventana activa
-					putchar_menu_overlay(x+zxvision_return_background_button_position(ancho),y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
-				}
-
-				else {
-					//ventana inactiva. mostrar "!" con parpadeo
-					//printf ("ventana inactiva\n");
-					if (w->overlay_function!=NULL) {
-						//printf ("boton background\n");
-						//zxvision_print_char_simple(zxvision_current_window,ancho-2,0,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO,1,'!');
-						putchar_menu_overlay_parpadeo(x+zxvision_return_background_button_position(ancho),y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,1);
-					}
-				}
-				
-			}
-}
-
 int zxvision_return_minimize_button_position(int ancho)
 {
     //Para beos
@@ -7506,6 +7482,32 @@ int zxvision_return_background_button_position(int ancho)
 
     else return ancho-2;    
 }
+
+void menu_dibuja_ventana_boton_background(int x,int y,int ancho,zxvision_window *w)
+{
+
+
+			//Boton de background
+			if (zxvision_window_can_be_backgrounded(w)) {
+				if (ventana_tipo_activa) {
+					//Boton de background, con ventana activa
+					putchar_menu_overlay(x+zxvision_return_background_button_position(ancho),y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO);
+				}
+
+				else {
+					//ventana inactiva. mostrar "!" con parpadeo
+					//printf ("ventana inactiva\n");
+					if (w->overlay_function!=NULL) {
+						//printf ("boton background\n");
+						//zxvision_print_char_simple(zxvision_current_window,ancho-2,0,ESTILO_GUI_PAPEL_TITULO,ESTILO_GUI_TINTA_TITULO,1,'!');
+						putchar_menu_overlay_parpadeo(x+zxvision_return_background_button_position(ancho),y,zxvision_get_character_backgrounded_window(),ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,1);
+					}
+				}
+				
+			}
+}
+
+
 
 void menu_dibuja_ventana_botones(void)
 {
