@@ -1531,6 +1531,34 @@ void codetests_cosine_table(void)
     }    
 }
 
+
+z80_byte buffer_get_pixel[6912];
+void codetests_get_pixel_color_scr(void)
+{
+
+    init_screen_addr_table();
+    memset(buffer_get_pixel,0,6912);
+    estado_parpadeo.v=0;
+
+    int x,y;
+
+    int pasos;
+
+    //Con rutina sin optimizar: 12.5 segundos
+    //Con rutina optimizada: 5.7 segundos
+    for (pasos=0;pasos<10000;pasos++) {
+
+        for (x=0;x<256;x++) {
+            for (y=0;y<192;y++) {
+                //printf("%d %d\n",x,y);
+                int color=util_get_pixel_color_scr(buffer_get_pixel,x,y);
+            }
+        }
+
+    }
+
+}
+
 void codetests_main(int main_argc,char *main_argv[])
 {
 
@@ -1556,10 +1584,10 @@ void codetests_main(int main_argc,char *main_argv[])
 	//printf ("lineas: %d\n",lineas);
 
 
-	/*printf ("Note: %d\n",get_mid_number_note("C0"));
-	printf ("Note: %d\n",get_mid_number_note("G9"));
-	printf ("Note: %d\n",get_mid_number_note("KK"));
-	printf ("Note: %d\n",get_mid_number_note(""));*/
+	//printf ("Note: %d\n",get_mid_number_note("C0"));
+	//printf ("Note: %d\n",get_mid_number_note("G9"));
+	//printf ("Note: %d\n",get_mid_number_note("KK"));
+	//printf ("Note: %d\n",get_mid_number_note(""));
 
 	printf ("\nRunning assembler tests\n");
 	codetests_assembler();
@@ -1619,6 +1647,11 @@ void codetests_main(int main_argc,char *main_argv[])
 
     printf("\nRunnign cosine table tests\n");
     codetests_cosine_table();
+
+
+    //Este es solo un test para probar velocidad, no valida realmente que funcione
+    //printf("\nRunning int util_get_pixel_color_scr time tests\n");
+    //codetests_get_pixel_color_scr();
 
     //printf("\nRunning get note table ql test\n");
     //codetests_get_note_table_ql();

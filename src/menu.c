@@ -5249,6 +5249,7 @@ int zxdesktop_draw_scrfile_scale_factor=1;
 z80_byte *zxdesktop_draw_scrfile_pointer=NULL;
 
 
+z80_byte *zxdesktop_cache_scrfile=NULL;
 
 //cargar archivo scr en pantalla si es que esta habilitado el scrfile en fondo
 void zxdesktop_draw_scrfile_load(void)
@@ -5273,7 +5274,31 @@ void zxdesktop_draw_scrfile_load(void)
 
     lee_archivo(zxdesktop_draw_scrfile_name,(char *)zxdesktop_draw_scrfile_pointer,6912);
 
+    //Y generamos la cache de x,y a colores para no tener que recalcular cada pixel cada vez
+    if (zxdesktop_cache_scrfile==NULL) {
+        //Posiciones x,y retorna color
+        int total_cache=256*192*sizeof(int);
+
+        zxdesktop_cache_scrfile=malloc(total_cache);
+        if (zxdesktop_cache_scrfile==NULL) cpu_panic("Can not allocate cache memory for scr file");
+    }
+
+    int x,y;
+
+    int offset_cache=0;
+
+    for (y=0;y<192;y++) {
+        for (x=0;x<256;x++) {
+            int color_final=util_get_pixel_color_scr(zxdesktop_draw_scrfile_pointer,x,y);
+            //Guardar en cache
+            zxdesktop_cache_scrfile[offset_cache++]=color_final;
+        }
+    }
+
 }
+
+
+
 
 //si conviene dibujar el background de un scr file
 //retorna -1 si no
@@ -5325,7 +5350,19 @@ int menu_draw_ext_desktop_si_scrfile(int x,int y,int ancho,int alto)
     //Por si acaso
     if (zxdesktop_draw_scrfile_pointer==NULL) return -1;
 
-    return util_get_pixel_color_scr(zxdesktop_draw_scrfile_pointer,(x-margen_min_x)/scale_x,(y-margen_min_y)/scale_y);
+    //return util_get_pixel_color_scr(zxdesktop_draw_scrfile_pointer,(x-margen_min_x)/scale_x,(y-margen_min_y)/scale_y);
+
+    int xfinal=(x-margen_min_x)/scale_x;
+    int yfinal=(y-margen_min_y)/scale_y;
+
+    //Por si acaso
+    if (xfinal<0 || xfinal>255 || yfinal<0 || yfinal>191) return 0;
+
+    //Retornamos el color de pixel de lo que tenemos en cache
+    int offset_cache=(yfinal*256)+xfinal;
+
+    return zxdesktop_cache_scrfile[offset_cache];
+
 }
 
 

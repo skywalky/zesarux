@@ -13912,44 +13912,77 @@ void util_convert_scr_sprite(z80_byte *origen,z80_byte *destino)
 }
 
 //Dado una zona de memoria con formato scr, devuelve el color del pixel en posicion x,y
+//Utilizar codigo optimizado para que sea lo mas rapido posible
 int util_get_pixel_color_scr(z80_byte *scrfile,int x,int y)
 {
 
     //comprobar margenes antes
     if (x<0 || x>255 || y<0 || y>191) return 0;
 
-    int byte_x=x/8;
+    int byte_x=x>>3;  // Divide entre 8
 
-    int pixel_in_byte=x % 8;
-
-    int offset_origen=(screen_addr_table[y*32] & 8191) +byte_x;
+    int offset_origen=(screen_addr_table[y*32] & 8191)+byte_x;
 
     z80_byte byte_leido=scrfile[offset_origen];
 
-    //Sacar el pixel indicado
-    for (;pixel_in_byte>0;pixel_in_byte--) {
-        byte_leido=byte_leido<<1;
+    //Sacar el pixel indicado. Evitar bucles para que sea mas rapido
+    int pixel_on;
+    switch (x & 7) {
+        case 0:
+            pixel_on=(byte_leido & 128 ? 1 : 0);
+        break;
+
+        case 1:
+            pixel_on=(byte_leido & 64  ? 1 : 0);
+        break;
+
+        case 2:
+            pixel_on=(byte_leido & 32  ? 1 : 0);
+        break;
+
+        case 3:
+            pixel_on=(byte_leido & 16  ? 1 : 0);
+        break;
+
+        case 4:
+            pixel_on=(byte_leido & 8   ? 1 : 0);
+        break;
+
+        case 5:
+            pixel_on=(byte_leido & 4   ? 1 : 0);
+        break;
+
+        case 6:
+            pixel_on=(byte_leido & 2   ? 1 : 0);
+        break;
+
+        case 7:
+            pixel_on=(byte_leido & 1   ? 1 : 0);
+        break;
+
+
     }
 
-    int pixel_on=(byte_leido & 128 ? 1 : 0);
-
     //falta atributo
-    int byte_y=y/8;
+    
+    /*int byte_y=y>>3; //Divide entre 8
+    //luego multiplica por 32
+    int offset_y=byte_y*32;*/
 
-    int offset_attribute=6144+(byte_y*32)+byte_x;
+    //Es lo mismo que multiplicar por 4 quitando los 3 bits inferiores
+    int offset_y=(y & (255-7))<<2;
+
+    int offset_attribute=6144+offset_y+byte_x;
     z80_byte atributo=scrfile[offset_attribute];
-    z80_byte tinta=atributo &7;
-    z80_byte papel=(atributo>>3)&7;
-    z80_byte brillo=atributo & 64;
-    z80_byte parpadeo=atributo & 128;
 
-    if (parpadeo) {
+    //Invertir si parpadeo y estado parpadeo activo
+    if (atributo & 128) {
         if (estado_parpadeo.v) pixel_on ^=1;
     }
 
-    int color_pixel=(pixel_on ? tinta : papel);
+    int color_pixel=(pixel_on ? atributo &7 : (atributo>>3)&7); //Retornar tinta o papel
 
-    if (brillo) color_pixel +=8;
+    if (atributo & 64) color_pixel +=8; //Sumar brillo
 
     return color_pixel;
 
