@@ -886,7 +886,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		AMIGAOS_COLOUR_red,7+8,		//Color para opcion marcada
 		141, //boton cerrar
         148, //caracter de fondo de titulo
-		2, //color de aviso
+		2+8, //color de aviso. Seria AMIGAOS_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color entre 0-15
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
