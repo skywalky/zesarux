@@ -470,6 +470,11 @@ const int retromac_colortable_original[RETROMAC_TOTAL_PALETTE_COLOURS]={
     0x999999  //Color para el marco ventana
 };
 
+const int amigaos_colortable_original[AMIGAOS_TOTAL_PALETTE_COLOURS]={
+    0x0055aa //Tinta Titulo ventana
+
+};
+
 //Tabla con los colores extra del Spectra.
 //Valores para intensidades de color:
 /*
@@ -8827,7 +8832,12 @@ G  G   R   R   B   B
 				//Colores Retromac. No los pasamos a grises estos
 				for (i=0;i<RETROMAC_TOTAL_PALETTE_COLOURS;i++) {
 					screen_set_colour_normal(RETROMAC_INDEX_FIRST_COLOR+i,retromac_colortable_original[i]);
-				}	                             
+                }
+
+				//Colores AmigaOS. No los pasamos a grises estos
+				for (i=0;i<AMIGAOS_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(AMIGAOS_INDEX_FIRST_COLOR+i,amigaos_colortable_original[i]);
+				}	                                     
 
 
 		}
@@ -9054,7 +9064,12 @@ Bit 6 GRN1 most  significant bit of green.
 				//Colores Retromac
 				for (i=0;i<RETROMAC_TOTAL_PALETTE_COLOURS;i++) {
 					screen_set_colour_normal(RETROMAC_INDEX_FIRST_COLOR+i,retromac_colortable_original[i]);
-				}                                                            
+				}
+
+				//Colores AmigaOS
+				for (i=0;i<AMIGAOS_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(AMIGAOS_INDEX_FIRST_COLOR+i,amigaos_colortable_original[i]);
+				}                                                                            
 
 
 		}

@@ -235,3 +235,7 @@ No habilita boton de cerrar todas las ventanas
 -conviene ocultar Wall y Wextra en version estable? puede salir algun warning util solo en version estable? no deberia, son warnings muy especificos
 
 -con menu ay piano de fondo, redimensionar ventana debug cpu y va un poco loco
+
+-Botones personalizados minimizar, maximizar y background
+
+-Consola zrcp en menu
