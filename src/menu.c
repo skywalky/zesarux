@@ -874,16 +874,16 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 	{1,"AmigaOS",AMIGAOS_COLOUR_blue,7+8,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow
 		0,AMIGAOS_COLOUR_orange, 		//Colores para opcion seleccionada
-		7+8,2,7,2, 	//Colores para opcion no disponible
+		AMIGAOS_COLOUR_blue,AMIGAOS_COLOUR_red,0,AMIGAOS_COLOUR_red, 	//Colores para opcion no disponible
 
 		7+8,AMIGAOS_COLOUR_blue,        	//Colores para el titulo ventana
         7+8,              //Color recuadro
 		7+8,AMIGAOS_COLOUR_inactive_title_ink,        	//Colores para el titulo ventana inactiva
 
-		1,		//Color waveform
+		AMIGAOS_COLOUR_orange,		//Color waveform
 		7,		//Color para zona no usada en visualmem
         7,      //color block visualtape
-		2,7+8,		//Color para opcion marcada
+		AMIGAOS_COLOUR_red,7+8,		//Color para opcion marcada
 		141, //boton cerrar
         148, //caracter de fondo de titulo
 		2, //color de aviso

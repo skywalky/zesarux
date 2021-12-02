@@ -239,3 +239,6 @@ No habilita boton de cerrar todas las ventanas
 -Botones personalizados minimizar, maximizar y background
 
 -Consola zrcp en menu
+
+
+-Parece que color de aviso no puede ser mayor que 0-9, pues al usar los $$ de caracter, no permite otros valores. Ver test style Warning text

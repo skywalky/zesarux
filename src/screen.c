@@ -473,7 +473,8 @@ const int retromac_colortable_original[RETROMAC_TOTAL_PALETTE_COLOURS]={
 const int amigaos_colortable_original[AMIGAOS_TOTAL_PALETTE_COLOURS]={
     0x0055aa, //Tinta Titulo ventana
     0x416b94, //Tinta Titulo ventana inactiva
-    0xff8a00  //Naranja
+    0xff8a00, //Naranja
+    0xe84c44  //Rojo alterado. Original: 0xdf2020  
 
 };
 
