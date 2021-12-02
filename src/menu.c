@@ -871,26 +871,26 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         char_set_retromac
     },
 
-	{0,"AmigaOS",7+8,0,
-		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-		5+8,0, 		//Colores para opcion seleccionada
+	{1,"AmigaOS",AMIGAOS_COLOUR_blue,7+8,
+		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow
+		0,AMIGAOS_COLOUR_orange, 		//Colores para opcion seleccionada
 		7+8,2,7,2, 	//Colores para opcion no disponible
 
-		7+8,AMIGAOS_COLOUR_title_ink,        	//Colores para el titulo ventana
-        0,              //Color recuadro
-		7+8,0,        	//Colores para el titulo ventana inactiva
+		7+8,AMIGAOS_COLOUR_blue,        	//Colores para el titulo ventana
+        7+8,              //Color recuadro
+		7+8,AMIGAOS_COLOUR_inactive_title_ink,        	//Colores para el titulo ventana inactiva
 
 		1,		//Color waveform
 		7,		//Color para zona no usada en visualmem
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
-		'*',
-        ' ', //caracter de fondo de titulo
+		141, //boton cerrar
+        148, //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
-        char_set_spectrum
+        char_set_amigaos
     },    
 
 	{1,"BeOS",BEOS_COLOUR_grey_menu,0,
