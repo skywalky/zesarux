@@ -12,6 +12,7 @@ Improved ZX Vision:
 -ZX Desktop: allow to set a background SCR file
 -ZX Desktop: added setting to disable ZX Desktop when going to full screen 
 -Better detection of any file size of 6912 bytes is guessed as Spectrum screen
+-Added AmigaOS GUI style
 -Improve RetroMac GUI style: striped title bar
 -Improve BeOS GUI style: buttons positions right after the title
 
