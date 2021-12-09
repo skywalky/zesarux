@@ -1576,6 +1576,7 @@ printf (
 		"--noautoload               No autoload tape file on Spectrum, ZX80 or ZX81\n"
 		"--fastautoload             Do the autoload process at top speed\n"
 		"--noautoselectfileopt      Do not autoselect emulation options for known snap and tape files\n"
+        "--no-fallbacktorealtape    Disable fallback to real tape setting\n"
         "--anyflagloading           Enables tape load routine to load without knowing block flag\n"
 		"--simulaterealload         Simulate real tape loading\n"
 		"--simulaterealloadfast     Enable fast simulate real tape loading\n"
@@ -7740,6 +7741,10 @@ int parse_cmdline_options(void) {
 			else if (!strcmp(argv[puntero_parametro],"--sdlrawkeyboard")) {
 					sdl_raw_keyboard_read.v=1;
 			}
+
+            else if (!strcmp(argv[puntero_parametro],"--no-fallbacktorealtape")) {
+                standard_to_real_tape_fallback.v=0;
+            }
 
 			else if (!strcmp(argv[puntero_parametro],"--anyflagloading")) {
                                 tape_any_flag_loading.v=1;

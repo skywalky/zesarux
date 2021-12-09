@@ -979,7 +979,17 @@ unsigned char char_set_spectrum[TOTAL_ASCII_CHARSET_ELEMENTS]={		0
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0
+0,255,0,255,0,255,0,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+0,255,145,163,197,137,255,0,
+
+//Caracter minimizar - 150
+255,129,129,255,129,129,255,0,
+
+//Caracter restaurar - 151
+255,129,255,129,255,129,255,0
+
 
 };
 
@@ -1105,7 +1115,16 @@ unsigned char char_set_cpc[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0
+0,255,0,255,0,255,0,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+0,255,145,163,197,137,255,0,
+
+//Caracter minimizar - 150
+255,129,129,255,129,129,255,0,
+
+//Caracter restaurar - 151
+255,129,255,129,255,129,255,0
 
 };
 
@@ -1237,7 +1256,16 @@ unsigned char char_set_z88[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0
+0,255,0,255,0,255,0,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+0,255,145,163,197,137,255,0,
+
+//Caracter minimizar - 150
+255,129,129,255,129,129,255,0,
+
+//Caracter restaurar - 151
+255,129,255,129,255,129,255,0
 
 };
 
@@ -1374,7 +1402,16 @@ unsigned char char_set_sam[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0
+0,255,0,255,0,255,0,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+0,255,145,163,197,137,255,0,
+
+//Caracter minimizar - 150
+255,129,129,255,129,129,255,0,
+
+//Caracter restaurar - 151
+255,129,255,129,255,129,255,0
 
 };
 
@@ -1520,7 +1557,16 @@ unsigned char char_set_mansoftware[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0
+0,255,0,255,0,255,0,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+0,255,145,163,197,137,255,0,
+
+//Caracter minimizar - 150
+255,129,129,255,129,129,255,0,
+
+//Caracter restaurar - 151
+255,129,255,129,255,129,255,0
 
 };
 
@@ -1656,7 +1702,16 @@ unsigned char char_set_ql[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0
+0,255,0,255,0,255,0,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+0,255,145,163,197,137,255,0,
+
+//Caracter minimizar - 150
+255,129,129,255,129,129,255,0,
+
+//Caracter restaurar - 151
+255,129,255,129,255,129,255,0
 
 };
 
@@ -1832,7 +1887,16 @@ unsigned char char_set_retromac[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0
+0,255,0,255,0,255,0,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+255,137,145,163,197,137,255,0,
+
+//Caracter minimizar - 150
+255,129,129,255,129,129,255,0,
+
+//Caracter restaurar - 151
+255,129,189,129,189,129,255,0
 
 };
 
@@ -2006,7 +2070,16 @@ unsigned char char_set_amigaos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo AmigaOS - 148. Este 148 se uso por primera vez en RetroMac
-0,255,255,0,0,255,255,0
+0,255,255,0,0,255,255,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+0,126,66,95,95,127,31,0,
+
+//Caracter minimizar - 150
+255,129,129,255,129,129,255,0,
+
+//Caracter restaurar - 151
+255,129,255,129,255,129,255,0
 
 };
 
@@ -2182,7 +2255,16 @@ unsigned char char_set_msx[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0
+0,255,0,255,0,255,0,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+0,255,145,163,197,137,255,0,
+
+//Caracter minimizar - 150
+255,129,129,255,129,129,255,0,
+
+//Caracter restaurar - 151
+255,129,255,129,255,129,255,0
 
 };
 
@@ -2335,7 +2417,7 @@ unsigned char char_set_beos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x3c,0x42,0x42,0x7e,0x42,0x42,0x3c,0x00,
 
 //Caracter boton cierre BeOS - 139
-0,62,34,34,34,62,0,0,
+0,126,66,66,66,66,126,0,
 
 //Caracter boton cierre Turbovision - 140
 0,63,63,63,63,63,63,0,
@@ -2362,6 +2444,15 @@ unsigned char char_set_beos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
 //Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0
+0,255,0,255,0,255,0,0,
+
+//Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
+255,137,145,163,197,137,145,255,
+
+//Caracter minimizar - 150
+255,129,129,255,255,129,129,255,
+
+//Caracter restaurar - 151
+255,129,189,129,129,189,129,255
 
 };

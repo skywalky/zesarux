@@ -573,6 +573,8 @@ int menu_filesel_file_can_be_expanded(char *archivo);
 
 void menu_process_f_functions_by_action(int accion);
 
+z80_byte menu_retorna_caracter_background(void);
+
 //si hay recuadro activo, y cuales son sus coordenadas y color
 
 int cuadrado_activo=0;
@@ -639,6 +641,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -662,6 +667,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         4,      //color block visualtape
 		2,7,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		//colores de franjas invertidas, por defecto la oscura
@@ -685,6 +693,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -707,6 +718,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         3,7+8,		//Color para opcion marcada
         '#',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		3+8, //color de aviso, en este tema, magenta con brillo
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -729,6 +743,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         7,0,		//Color para opcion marcada
 		'.',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -751,6 +768,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         2,7+8,		//Color para opcion marcada
         '*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -774,6 +794,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         6,      //color block visualtape
         2,7+8,		//Color para opcion marcada
         '*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
         2, //color de aviso
         colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -796,6 +819,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         2,7+8,		//Color para opcion marcada
 		'#',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -818,6 +844,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         2,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_cpc_brillo,colores_franja_cpc_oscuro,
@@ -841,6 +870,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         VDP_9918_INDEX_FIRST_COLOR+6,VDP_9918_INDEX_FIRST_COLOR+15,		//Color para opcion marcada
         '.',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
         2, //color de aviso. Seria VDP_9918_INDEX_FIRST_COLOR+8 pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
         colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -863,6 +895,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         5+8,      //color block visualtape
 		2,7,		//Color para opcion marcada
 		141, //boton cerrar
+        150, //caracter de minimizar ventana
+        151, //caracter de restaurar ventana
+        149, //caracter de background ventana
         148, //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -885,6 +920,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		AMIGAOS_COLOUR_red,7+8,		//Color para opcion marcada
 		141, //boton cerrar
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        149, //caracter de background ventana
         148, //caracter de fondo de titulo
 		2+8, //color de aviso. Seria AMIGAOS_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color entre 0-15
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -907,6 +945,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		139, //boton cerrar especial
+        150, //caracter de minimizar ventana
+        151, //caracter de restaurar ventana
+        149, //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -929,6 +970,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -951,6 +995,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         TURBOVISION_COLOUR_cyan,       //color block visualtape
 		TURBOVISION_COLOUR_red,TURBOVISION_COLOUR_lightwhite,		//Color para opcion marcada
 		140,
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
         2, //color de aviso. Seria TURBOVISION_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -973,6 +1020,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		1,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		6, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -995,6 +1045,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		6, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -1017,6 +1070,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		3,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		6, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -1039,6 +1095,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		4,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		6, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -1061,6 +1120,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		5,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		1, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -1083,6 +1145,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         5,      //color block visualtape
 		6,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		1, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -1105,6 +1170,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7+8,      //color block visualtape
         7+8,0,		//Color para opcion marcada
 		'X',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -1127,6 +1195,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
         0,7+8,		//Color para opcion marcada
 		'X',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -1151,6 +1222,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -1175,6 +1249,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         7,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso. Seria SOLARIZED_COLOUR_red pero las franjas de volumen usan un formato $$ que solo permite color de 1 digito
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
@@ -7455,8 +7532,19 @@ int menu_dibuja_ventana_ret_ancho_titulo(int ancho,char *titulo)
 
 z80_byte menu_retorna_caracter_minimizar(zxvision_window *w)
 {
-	z80_byte caracter_mostrar='-';
-	if (w->is_minimized) caracter_mostrar='=';
+
+    z80_byte caracter_mostrar=ESTILO_GUI_BOTON_MINIMIZAR;
+
+    //Si caracter es un udg especial y no es driver video completo, retornar por defecto
+    if (caracter_mostrar>126 && !si_complete_video_driver()) caracter_mostrar='-';
+   
+
+	if (w->is_minimized) {
+        caracter_mostrar=ESTILO_GUI_BOTON_RESTAURAR;
+
+        //Si caracter es un udg especial y no es driver video completo, retornar por defecto
+        if (caracter_mostrar>126 && !si_complete_video_driver()) caracter_mostrar='=';
+    }
 
 	return caracter_mostrar;
 }
@@ -7476,7 +7564,7 @@ char zxvision_get_character_backgrounded_window(void)
     //Si estamos redibujando con menu cerrado, para indicar que no se interactua directamente con esa ventana
     if (overlay_visible_when_menu_closed) return '/';
 
-    else return '!';
+    else return menu_retorna_caracter_background();
 }
 
 int zxvision_return_minimize_button_position(int ancho)
@@ -7594,6 +7682,20 @@ z80_byte menu_retorna_caracter_espacio_titulo(void)
 
     else return caracter;
 }
+
+//Retorna caracter background
+z80_byte menu_retorna_caracter_background(void)
+{
+
+    z80_byte caracter=ESTILO_GUI_BOTON_BACKGROUND;
+
+    //Si caracter es un udg especial y no es driver video completo, retornar por defecto
+    if (caracter>126 && !si_complete_video_driver()) return '!';
+
+    else return caracter;
+}
+
+
 
 //dibuja ventana de menu, con:
 //titulo

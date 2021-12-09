@@ -898,6 +898,12 @@ struct s_estilos_gui {
 
 	z80_byte boton_cerrar; //caracter de cerrado de ventana
 
+    z80_byte boton_minimizar; //caracter de minimizado de ventana
+
+    z80_byte boton_restaurar; //caracter de restaurado de ventana
+
+    z80_byte boton_background; //caracter de background de ventana
+
     z80_byte caracter_espacio_titulo; //caracter de fondo de titulo de ventana
 
 	int color_aviso; //caracter de aviso de volumen alto, cpu alto, etc. normalmente rojo
@@ -988,6 +994,12 @@ extern int lowericon_realtape_frame;
 #define ESTILO_GUI_SOLO_MAYUSCULAS (definiciones_estilos_gui[estilo_gui_activo].solo_mayusculas)
 
 #define ESTILO_GUI_BOTON_CERRAR (definiciones_estilos_gui[estilo_gui_activo].boton_cerrar)
+
+#define ESTILO_GUI_BOTON_MINIMIZAR (definiciones_estilos_gui[estilo_gui_activo].boton_minimizar)
+
+#define ESTILO_GUI_BOTON_RESTAURAR (definiciones_estilos_gui[estilo_gui_activo].boton_restaurar)
+
+#define ESTILO_GUI_BOTON_BACKGROUND (definiciones_estilos_gui[estilo_gui_activo].boton_background)
 
 #define ESTILO_GUI_CARACTER_ESPACIO_TITULO (definiciones_estilos_gui[estilo_gui_activo].caracter_espacio_titulo)
 
