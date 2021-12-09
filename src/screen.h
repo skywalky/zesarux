@@ -635,9 +635,10 @@ extern void screen_switch_rainbow_buffer(void);
 #define AMIGAOS_COLOUR_red (AMIGAOS_INDEX_FIRST_COLOR+3)
 
 #define ATARITOS_INDEX_FIRST_COLOR (AMIGAOS_INDEX_FIRST_COLOR+AMIGAOS_TOTAL_PALETTE_COLOURS)
-#define ATARITOS_TOTAL_PALETTE_COLOURS 1
+#define ATARITOS_TOTAL_PALETTE_COLOURS 2
 
 #define ATARITOS_COLOUR_green (ATARITOS_INDEX_FIRST_COLOR+0)
+#define ATARITOS_COLOUR_white (ATARITOS_INDEX_FIRST_COLOR+1)
 
 //16 colores normales spectrum, 16 grises de modo scanline, 256 de gigascreen, 4 de z88, 16 de spectrum 17/48/+ real, 256 de ulaplus, 64 de spectra, 32 de CPC, 4096 de Prism, 128 de SAM, 256 de RGB8, 32768 de TSCONF, 16 de solarized
 //actualizar aqui y tambien estructura de total_palette_colours_array y #define TOTAL_PALETAS_COLORES 

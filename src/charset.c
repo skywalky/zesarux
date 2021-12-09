@@ -2182,8 +2182,8 @@ unsigned char char_set_ataritos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 //Caracter boton cierre BeOS - 139
 0,62,34,34,34,62,0,0,
 
-//Caracter boton cierre Turbovision - 140
-0,63,63,63,63,63,63,0,
+//Caracter boton cierre  - 140
+0,60,90,102,102,90,60,0,
 
 //Caracter logo apple - 141
 0x08,0x10,0x78,0xFC,0xF8,0xFC,0x78,0x00,
@@ -2206,8 +2206,8 @@ unsigned char char_set_ataritos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 //Ñ enye mayuscula - 147
 0x7C,0x00,0x44,0x64,0x54,0x4C,0x44,0x00,
 
-//Caracter fondo titulo RetroMac - 148
-0,255,0,255,0,255,0,0,
+//Caracter fondo titulo - 148
+0,85,0,85,0,85,0,0,
 
 //Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
 0,255,145,163,197,137,255,0,

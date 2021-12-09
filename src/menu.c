@@ -931,24 +931,24 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         char_set_amigaos
     },  
 
-	{1,"AtariTOS",ATARITOS_COLOUR_green,0,
+	{1,"AtariTOS",ATARITOS_COLOUR_white,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow
-		5+8,0, 		//Colores para opcion seleccionada
-		7+8,2,7,2, 	//Colores para opcion no disponible
+		0,ATARITOS_COLOUR_white, 		//Colores para opcion seleccionada
+		ATARITOS_COLOUR_white,2,0,2, 	//Colores para opcion no disponible
 
-		0,7+8,        	//Colores para el titulo ventana
+		ATARITOS_COLOUR_white,0,        	//Colores para el titulo ventana
         0,              //Color recuadro
-		7+8,0,        	//Colores para el titulo ventana inactiva
+		ATARITOS_COLOUR_white,0,        	//Colores para el titulo ventana inactiva
 
-		1,		//Color waveform
-		7,		//Color para zona no usada en visualmem
+		ATARITOS_COLOUR_green,		//Color waveform
+		ATARITOS_COLOUR_green,		//Color para zona no usada en visualmem
         7,      //color block visualtape
-		2,7+8,		//Color para opcion marcada
-		'*',
+		2,ATARITOS_COLOUR_white,		//Color para opcion marcada
+		140, //boton cerrar
         '-', //caracter de minimizar ventana
         '=', //caracter de restaurar ventana
         '!', //caracter de background ventana
-        ' ', //caracter de fondo de titulo
+        148, //caracter de fondo de titulo
 		2, //color de aviso
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta

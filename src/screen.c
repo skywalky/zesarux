@@ -479,8 +479,8 @@ const int amigaos_colortable_original[AMIGAOS_TOTAL_PALETTE_COLOURS]={
 };
 
 const int ataritos_colortable_original[ATARITOS_TOTAL_PALETTE_COLOURS]={
-    0x00de00  //Verde
-
+    0x00de00,  //Verde
+    0xdedede   //Blanco
 };
 
 //Tabla con los colores extra del Spectra.
