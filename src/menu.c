@@ -929,7 +929,32 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_amigaos
-    },    
+    },  
+
+	{1,"AtariTOS",ATARITOS_COLOUR_green,0,
+		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow
+		5+8,0, 		//Colores para opcion seleccionada
+		7+8,2,7,2, 	//Colores para opcion no disponible
+
+		0,7+8,        	//Colores para el titulo ventana
+        0,              //Color recuadro
+		7+8,0,        	//Colores para el titulo ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
+		2,7+8,		//Color para opcion marcada
+		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
+        ' ', //caracter de fondo de titulo
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_ataritos
+    },      
 
 	{1,"BeOS",BEOS_COLOUR_grey_menu,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow,no mayusculas
@@ -31342,6 +31367,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 					"- MSX: MSX style\n"
 					"- RetroMac: MacOS classic style\n"
                     "- AmigaOS: AmigaOS 1.3 style\n"
+                    "- AtariTOS: Atari TOS style\n"
                     "- BeOS: BeOS operating system style\n"
 					"- Borland: Borland MS-DOS programs style\n"
                     "- Turbovision: Borland Turbovision GUI style\n"

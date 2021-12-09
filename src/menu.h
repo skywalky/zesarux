@@ -929,7 +929,7 @@ struct s_estilos_gui {
 typedef struct s_estilos_gui estilos_gui;
 
 
-#define ESTILOS_GUI 25
+#define ESTILOS_GUI 26
 
 
 

@@ -478,6 +478,11 @@ const int amigaos_colortable_original[AMIGAOS_TOTAL_PALETTE_COLOURS]={
 
 };
 
+const int ataritos_colortable_original[ATARITOS_TOTAL_PALETTE_COLOURS]={
+    0x00de00  //Verde
+
+};
+
 //Tabla con los colores extra del Spectra.
 //Valores para intensidades de color:
 /*
@@ -8840,7 +8845,12 @@ G  G   R   R   B   B
 				//Colores AmigaOS. No los pasamos a grises estos
 				for (i=0;i<AMIGAOS_TOTAL_PALETTE_COLOURS;i++) {
 					screen_set_colour_normal(AMIGAOS_INDEX_FIRST_COLOR+i,amigaos_colortable_original[i]);
-				}	                                     
+				}	 
+
+				//Colores AtariTOS. No los pasamos a grises estos
+				for (i=0;i<ATARITOS_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(ATARITOS_INDEX_FIRST_COLOR+i,ataritos_colortable_original[i]);
+				}	                                                    
 
 
 		}
@@ -9072,7 +9082,12 @@ Bit 6 GRN1 most  significant bit of green.
 				//Colores AmigaOS
 				for (i=0;i<AMIGAOS_TOTAL_PALETTE_COLOURS;i++) {
 					screen_set_colour_normal(AMIGAOS_INDEX_FIRST_COLOR+i,amigaos_colortable_original[i]);
-				}                                                                            
+				} 
+
+				//Colores AtariTOS
+				for (i=0;i<ATARITOS_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(ATARITOS_INDEX_FIRST_COLOR+i,ataritos_colortable_original[i]);
+				}                                                                                           
 
 
 		}
