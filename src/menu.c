@@ -30568,7 +30568,10 @@ void menu_interface_change_gui_style_test(MENU_ITEM_PARAMETERS)
     //El parpadeo es igual en todos los temas (de momento) pero también lo mostramos
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,1,"Flashing Text");
 
-    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO,0,"Title Text");
+    z80_byte caracter_titulo=menu_retorna_caracter_espacio_titulo();
+    char buffer_title_text[32];
+    sprintf(buffer_title_text,"Title text %c%c%c",caracter_titulo,caracter_titulo,caracter_titulo);
+    zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO,ESTILO_GUI_PAPEL_TITULO,0,buffer_title_text);
 
     zxvision_print_string(&ventana,1,linea++,ESTILO_GUI_TINTA_TITULO_INACTIVA,ESTILO_GUI_PAPEL_TITULO_INACTIVA,0,"Inactive Title Text");
 
