@@ -24813,6 +24813,9 @@ void menu_accessibility_menu_zxdesktop_clean(MENU_ITEM_PARAMETERS)
     menu_ext_desktop_fill=0;
     //y color blanco
     menu_ext_desktop_fill_first_color=7;
+    //y sin fondo scr
+    zxdesktop_draw_scrfile_enabled=0;
+
 
     menu_generic_message_splash("ZX Desktop clean fill","OK. Clean ZX Desktop applied");
 }
