@@ -8663,15 +8663,14 @@ G  G   R   R   B   B
 		}
 
 
+/*
+Viejo metodo para tener paleta con componentes de grises / r, g o b
+Con el nuevo metodo en cambio se crea la paleta normal, y luego se modifica para los componentes grises / r,g o b e inverso
+
 		if (screen_gray_mode!=0) {
 
 
-//Modo de grises activo
-//0: colores normales
-//1: componente Blue
-//2: componente Green
-//4: componente Red
-//Se pueden sumar para diferentes valores
+
 
 #define GRAY_MODE_CONST 30
 #define GRAY_MODE_CONST_BRILLO 20
@@ -8706,22 +8705,7 @@ G  G   R   R   B   B
 			screen_set_colour_normal(Z88_PXCOLSCROFF,spectrum_colortable_normal[15]);
 
 
-			//trama de grises para spectrum 16/48/+ real
-			/*
-			for (i=0;i<16;i++) {
-                                valorgris=(i&7)*GRAY_MODE_CONST;
 
-                                if (i>=8) valorgris +=GRAY_MODE_CONST_BRILLO;
-
-                                VALOR_GRIS_A_R_G_B
-
-                                screen_set_colour_normal(SPECCY_1648_REAL_PALETTE_FIRST_COLOR+i,(r<<16)|(g<<8)|b);
-
-                        }
-
-			//El color 8 es negro, con brillo 1. Pero negro igual
-                        screen_set_colour_normal(SPECCY_1648_REAL_PALETTE_FIRST_COLOR+8,0);
-			*/
 
 			//trama de grises para ulaplus
 			//z80_byte color;
@@ -8844,7 +8828,7 @@ G  G   R   R   B   B
 
 				//Colores AmigaOS. No los pasamos a grises estos
 				for (i=0;i<AMIGAOS_TOTAL_PALETTE_COLOURS;i++) {
-					screen_set_colour_normal(AMIGAOS_INDEX_FIRST_COLOR+i,amigaos_colortable_original[i]);
+                    screen_set_colour_normal(AMIGAOS_INDEX_FIRST_COLOR+i,amigaos_colortable_original[i]);
 				}	 
 
 				//Colores AtariTOS. No los pasamos a grises estos
@@ -8854,12 +8838,13 @@ G  G   R   R   B   B
 
 
 		}
+        */
 
-		else {
+		//else {
 
-			//si no gris
+			//Crear primero paleta de colores normales. Posteriormente si conviene se hacen grises / r, g o b e inverso
 			//spectrum_colortable_normal=(int *)spectrum_colortable_original;
-			int i;
+			//int i;
 			int color32;
 			int *paleta;
 			paleta=screen_return_spectrum_palette();
@@ -8943,7 +8928,7 @@ G  G   R   R   B   B
                         }
 
 			//Colores sam coupe
-        for (i=0;i<128;i++) {
+            for (i=0;i<128;i++) {
 				/*
 
 Bit 0 BLU0 least significant bit of blue.
@@ -8972,7 +8957,7 @@ Bit 6 GRN1 most  significant bit of green.
                                         r,g,b);
 
                                 screen_set_colour_normal(SAM_INDEX_FIRST_COLOR+i, color32);
-        }
+                }
 
 
 				//Colores RGB9
@@ -9090,7 +9075,7 @@ Bit 6 GRN1 most  significant bit of green.
 				}                                                                                           
 
 
-		}
+		//}
 
 		//Colores para interlaced scanlines. Linea impar mas oscura
 		//copiamos del color generado del spectrum al color scanline (indice + 16)
@@ -9138,17 +9123,32 @@ Bit 6 GRN1 most  significant bit of green.
 
 
 
+		//Si video inverso o grises
+        //Modo de grises activo en screen_gray_mode
+        //0: colores normales
+        //1: componente Blue
+        //2: componente Green
+        //4: componente Red
+        //Se pueden sumar para diferentes valores
 
-		//Si video inverso
-		if (inverse_video.v==1) {
+		if (inverse_video.v==1 || screen_gray_mode!=0) {
         	        for (i=0;i<EMULATOR_TOTAL_PALETTE_COLOURS;i++) {
                 	        b=spectrum_colortable_normal[i] & 0xFF;
                         	g=(spectrum_colortable_normal[i] >> 8 ) & 0xFF;
 	                        r=(spectrum_colortable_normal[i] >> 16 ) & 0xFF;
 
-        	                r=r^255;
-                	        g=g^255;
-                        	b=b^255;
+                            //Tipos de grises
+                            if (screen_gray_mode!=0) {
+                                valorgris=rgb_to_grey(r,g,b);
+                                VALOR_GRIS_A_R_G_B
+                            }
+
+                            //Inverso
+                            if (inverse_video.v==1) {
+        	                    r=r^255;
+                	            g=g^255;
+                        	    b=b^255;
+                            }
 
 				screen_set_colour_normal(i,(r<<16)|(g<<8)|b);
 			}
@@ -14345,6 +14345,9 @@ void delete_generic_footertext(void)
 }
 
 
+//Devolver color en rango de 0 a 255
+//Entrada: R, G, B cada componente en 8 bit
+//Salida: valor de 0 a 255
 int rgb_to_grey(int r,int g,int b)
 {
 /* luminosity method

@@ -11220,7 +11220,7 @@ void menu_colour_settings(MENU_ITEM_PARAMETERS)
 		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_blue,NULL,"[%c] ~~Blue display",(screen_gray_mode & 1 ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_colour_settings,'b');
 
-		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"[%c] ~~Inverse video",(inverse_video.v==1 ? 'X' : ' ') );
+		menu_add_item_menu_format(array_menu_colour_settings,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"[%c] ~~Inverse colours",(inverse_video.v==1 ? 'X' : ' ') );
 		menu_add_item_menu_shortcut(array_menu_colour_settings,'i');
 		menu_add_item_menu_tooltip(array_menu_colour_settings,"Inverse Color Palette");
 		menu_add_item_menu_ayuda(array_menu_colour_settings,"Inverses all the colours used on the emulator, including menu");
@@ -24849,6 +24849,14 @@ void menu_accessibility_menu_disable_back(MENU_ITEM_PARAMETERS)
     menu_generic_message_splash("Disable background windows","OK. Disabled background windows");
 }
 
+void menu_accessibility_gray_scale(MENU_ITEM_PARAMETERS)
+{
+    if (screen_gray_mode) screen_gray_mode=0;
+    else screen_gray_mode=7;
+
+	menu_interface_rgb_inverse_common();    
+}
+
 void menu_accessibility_menu(MENU_ITEM_PARAMETERS)
 {
 
@@ -24891,6 +24899,19 @@ void menu_accessibility_menu(MENU_ITEM_PARAMETERS)
             menu_add_item_menu_tooltip(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision-> ZX Desktop menu");
             menu_add_item_menu_ayuda(array_menu_common,"This setting can be also be enabled/disabled from Settings-> ZX Vision-> ZX Desktop menu");
         }
+
+        menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_interface_inverse_video,NULL,"[%c] Inverse colours",(inverse_video.v==1 ? 'X' : ' ') );
+		menu_add_item_menu_tooltip(array_menu_common,"Inverse Color Palette");
+		menu_add_item_menu_ayuda(array_menu_common,"Inverses all the colours used on the emulator, including menu");    
+
+        menu_add_item_menu_format(array_menu_common,MENU_OPCION_NORMAL,menu_accessibility_gray_scale,NULL,"[%c] Gray mode",(screen_gray_mode ? 'X' : ' ' ));
+		menu_add_item_menu_tooltip(array_menu_common,"Set Gray Palette");
+		menu_add_item_menu_ayuda(array_menu_common,"Set Gray Palette to all the colours used on the emulator, including menu");    
+
+
+ 
  
         menu_add_item_menu(array_menu_common,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 

@@ -17,6 +17,10 @@ Improved ZX Vision:
 -Improve RetroMac GUI style: striped title bar
 -Improve BeOS GUI style: buttons positions right after the title
 
+Improved Accessibility: added direct settings for inverse colours and gray mode
+
+Improved handling of individual colour palettes modifications (Red, Green, Blue)
+
 Fixed disabling border when realvideo enabled on machines: Colecovision, Master System, MSX, SG1000, SpectraVideo
 Fixed segfault pressing F5 after pressing pause key
 Fixed preserve breakpoints state when doing smartload

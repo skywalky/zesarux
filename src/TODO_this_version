@@ -241,3 +241,7 @@ No habilita boton de cerrar todas las ventanas
 
 
 -Parece que color de aviso no puede ser mayor que 0-15, pues al usar los $$ de caracter, no permite otros valores. Ver test style Warning text
+
+-mejoras accesibilidad: 
+* https://www.w3.org/TR/low-vision-needs/
+* eventos en menu con sonidos. metiendo sonido raw directamente en buffer de sonido?
