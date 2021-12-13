@@ -5420,6 +5420,17 @@ void zxdesktop_draw_scrfile_load(void)
         if (zxdesktop_draw_scrfile_pointer==NULL) cpu_panic("Can not allocate memory for scrfile on zxdesktop");
     }
 
+    //Y generamos la cache de x,y a colores para no tener que recalcular cada pixel cada vez
+    //Importante hacer esto antes que el return que viene despues, por si el archivo no existe,
+    //se intentará igualmente renderizar desde esta cache de scr vacía
+    if (zxdesktop_cache_scrfile==NULL) {
+        //Posiciones x,y retorna color
+        int total_cache=256*192*sizeof(int);
+
+        zxdesktop_cache_scrfile=malloc(total_cache);
+        if (zxdesktop_cache_scrfile==NULL) cpu_panic("Can not allocate cache memory for scr file");
+    }    
+
     if (!si_existe_archivo(zxdesktop_draw_scrfile_name)) {
         debug_printf(VERBOSE_ERR,"Can not load ZX Desktop background SCR file %s",zxdesktop_draw_scrfile_name);
         return;
@@ -5427,14 +5438,7 @@ void zxdesktop_draw_scrfile_load(void)
 
     lee_archivo(zxdesktop_draw_scrfile_name,(char *)zxdesktop_draw_scrfile_pointer,6912);
 
-    //Y generamos la cache de x,y a colores para no tener que recalcular cada pixel cada vez
-    if (zxdesktop_cache_scrfile==NULL) {
-        //Posiciones x,y retorna color
-        int total_cache=256*192*sizeof(int);
 
-        zxdesktop_cache_scrfile=malloc(total_cache);
-        if (zxdesktop_cache_scrfile==NULL) cpu_panic("Can not allocate cache memory for scr file");
-    }
 
     int x,y;
 
