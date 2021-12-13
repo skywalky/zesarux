@@ -9040,6 +9040,7 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
     set_putpixel_zoom();
 	menu_init_footer();
 
+    //Muy al principio cargar scr file de fondo, para que al entrar ya se vea
     zxdesktop_draw_scrfile_load();
 
 
