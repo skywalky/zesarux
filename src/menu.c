@@ -5432,10 +5432,7 @@ void zxdesktop_draw_scrfile_load(void)
     }    
 
     if (!si_existe_archivo(zxdesktop_draw_scrfile_name)) {
-        //Dado que esta funcion se carga al iniciar muy al principio, si generamos un VERBOSE_ERR, este error provocara
-        //que no se inicialice correctamente la ventana del emulador (TODO: por que sucede esto?)
-        //Por eso no genero VERBOSE_ERR aqui 
-        debug_printf(VERBOSE_DEBUG,"Can not load ZX Desktop background SCR file %s",zxdesktop_draw_scrfile_name);
+        debug_printf(VERBOSE_ERR,"Can not load ZX Desktop background SCR file %s",zxdesktop_draw_scrfile_name);
         return;
     }
 
@@ -7988,6 +7985,13 @@ void zxvision_restore_windows_on_startup(void)
 	//y se quejen con "This window needs multitask enabled", y ese mensaje no se ve el error, y espera una tecla
 	if (!menu_multitarea) return;
 
+    //Si se ha generado algun error antes de llamar aqui, limpiar ese flag de error y restaurarlo hacia el final
+    //si no hicieramos esto, cuando hay un error previo, al restaurar ventanas provoca que no se restauren y ademas
+    //no se habilita zxdesktop (esto probablemente es debido a la funcion start que falla si hay error pendiente)
+    int antes_if_pending_error_message=if_pending_error_message;
+
+    if_pending_error_message=0;
+
 	//indicar que estamos restaurando ventanas y por tanto las funciones que las crean tienen que volver nada mas entrar
 	zxvision_currently_restoring_windows_on_start=1;
 
@@ -8041,6 +8045,9 @@ void zxvision_restore_windows_on_startup(void)
 	}
 
 	zxvision_currently_restoring_windows_on_start=0;
+
+
+    if_pending_error_message=antes_if_pending_error_message;
 
 	if (error_restoring_window) {
 		debug_printf (VERBOSE_ERR,"Unknown window to restore: %s",restore_window_array[error_restoring_window_index]);
