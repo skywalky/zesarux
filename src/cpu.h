@@ -42,24 +42,24 @@ Examples
 */
 
 
-#define EMULATOR_VERSION "10.1-SN"
-//#define EMULATOR_VERSION "10.1-B1"
+//#define EMULATOR_VERSION "10.1-SN"
+#define EMULATOR_VERSION "10.1-B1"
 //#define EMULATOR_VERSION "10.1-RC"
 //#define EMULATOR_VERSION "10.1"
 #define SNAPSHOT_VERSION
 
-#define EMULATOR_DATE "28 October 2021"
-#define EMULATOR_SHORT_DATE "28/10/2021"
+#define EMULATOR_DATE "13 December 2021"
+#define EMULATOR_SHORT_DATE "13/12/2021"
 #define EMULATOR_GAME_EDITION "Carrier Command"
 #define EMULATOR_EDITION_NAME EMULATOR_GAME_EDITION " edition"
 #define ZESARUX_EXTRAS_HOST "github.com" 
 
 
 //testeo o para forzar una versión en develop
-//#define ZESARUX_EXTRAS_URL "https://github.com/chernandezba/zesarux/releases/download/9.2/ZEsarUX_extras-9.2.zip"
+#define ZESARUX_EXTRAS_URL "https://github.com/chernandezba/zesarux/releases/download/10.0/ZEsarUX_extras-10.0.zip"
 
 //final
-#define ZESARUX_EXTRAS_URL "/chernandezba/zesarux/releases/download/" EMULATOR_VERSION "/ZEsarUX_extras-" EMULATOR_VERSION ".zip"
+//#define ZESARUX_EXTRAS_URL "/chernandezba/zesarux/releases/download/" EMULATOR_VERSION "/ZEsarUX_extras-" EMULATOR_VERSION ".zip"
 
 
 //8 bits

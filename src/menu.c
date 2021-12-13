@@ -530,6 +530,9 @@ z80_bit zxdesktop_switch_button_enabled={1};
 
 z80_bit no_close_menu_after_smartload={0};
 
+//Modo navidad: cambios en los colores del logo (tanto footer como splash), mensaje bienvenida, copos de nieve en logo del footer
+z80_bit christmas_mode={0};
+
 
 void menu_dibuja_cuadrado(int x1,int y1,int x2,int y2,int color);
 void menu_desactiva_cuadrado(void);
@@ -3355,6 +3358,7 @@ char *zesarux_ascii_logo_footer_mem=NULL;
 //copiar logo original a destino
 //el color_marco podria ser cualquier letra de color valida, aunque en la funcion que llama
 //para escribir el footer solo le indico o bien blanco (w) o bien transparente (espacio)
+//tambien cambiamos los colores si estamos en modo navidad
 void menu_footer_logo_copy_final(char color_marco)
 {
 
@@ -3379,6 +3383,31 @@ void menu_footer_logo_copy_final(char color_marco)
 
             //cambiamos el color del marco (blanco brillante en el original) por el color indicado en el parametro
             if (c=='W') c=color_marco;
+
+            else {
+                if (christmas_mode.v) {
+                    switch (c) {
+                        case 'x':
+                        case 'r':
+                        case 'g':
+                            c='R';
+                        break;
+
+
+                        case 'y':
+                        case 'c':
+                            c='G';
+                        break;
+                    }
+                }
+            }
+
+            //Y algunos puntos blancos, simulando copos de nieve, en varias posiciones
+            if (christmas_mode.v) {
+                if (y==3 && i==5) c='W';
+                if (y==2 && i==20) c='W';
+                if (y==24 && i==13) c='W';
+            }
 
             //printf("(%c)\n",zesarux_ascii_logo_footer[y][i]);
             zesarux_ascii_logo_footer[y][i]=c;
@@ -37036,10 +37065,15 @@ void menu_inicio(void)
 //Escribe bloque de cuadrado de color negro  
 void set_splash_zesarux_logo_put_space(int x,int y)
 {
+
+    int color_negro=0;
+
+    if (christmas_mode.v) color_negro=2+8;
+
 	if (!strcmp(scr_new_driver_name,"aa")) {
 		putchar_menu_overlay(x,y,'X',7,0);
 	}
-	else putchar_menu_overlay(x,y,' ',7,0);
+	else putchar_menu_overlay(x,y,' ',7,color_negro);
 }
 
 
@@ -37109,11 +37143,25 @@ void set_splash_zesarux_logo_paso(int paso)
 
 	debug_printf(VERBOSE_DEBUG,"Drawing ZEsarUX splash logo, step %d",paso);
 
+    int color_fondo=7;
+    int color_rojo=2;
+    int color_amarillo=6;
+    int color_verde=4;
+    int color_cyan=5;
+
+    if (christmas_mode.v) {
+        color_fondo=15;
+        color_rojo=2+8;
+        color_amarillo=4+8;
+        color_verde=2+8;
+        color_cyan=4+8;
+    }
+
 
 	//Primero todo texto en gris. Envolvemos un poco mas
 	for (y=y_inicial-1;y<y_inicial+ancho_z*2+1;y++) {
 		for (x=x_inicial-1;x<x_inicial+ancho_z*2+1;x++) {
-			putchar_menu_overlay_parpadeo(x,y,' ',0,7,0);
+			putchar_menu_overlay_parpadeo(x,y,' ',0,color_fondo,0);
 
 
 		}
@@ -37189,52 +37237,52 @@ RRRYYY
 	int j;
 
 
-	set_splash_zesarux_franja_color_repetido(x_inicial+5,y_inicial+9,7, 2, 7);
+	set_splash_zesarux_franja_color_repetido(x_inicial+5,y_inicial+9,7, color_rojo, color_fondo);
 
 	for (j=0;j<6;j++) {
-		set_splash_zesarux_cuadrado_color(x_inicial+6+j,y_inicial+9-j,2);
+		set_splash_zesarux_cuadrado_color(x_inicial+6+j,y_inicial+9-j,color_rojo);
 	}
 
 	//Lo que queda a la derecha de esa franja - el udg diagonal con el color de papel igual que tinta anterior, y papel blanco
 	if (paso==1) {
 		if (si_complete_video_driver() ) {
-			set_splash_zesarux_franja_color_repetido(x_inicial+7,y_inicial+9,5, 7, 2);
+			set_splash_zesarux_franja_color_repetido(x_inicial+7,y_inicial+9,5, color_fondo, color_rojo);
 		}
 		return;
 	}
 
 
-	set_splash_zesarux_franja_color_repetido(x_inicial+7,y_inicial+9,5, 6, 2);
+	set_splash_zesarux_franja_color_repetido(x_inicial+7,y_inicial+9,5, color_amarillo, color_rojo);
 
 	for (j=0;j<4;j++) {
-		set_splash_zesarux_cuadrado_color(x_inicial+8+j,y_inicial+9-j,6);
+		set_splash_zesarux_cuadrado_color(x_inicial+8+j,y_inicial+9-j,color_amarillo);
 	}
 
 	//Lo que queda a la derecha de esa franja - el udg diagonal con el color de papel igual que tinta anterior, y papel blanco
 	if (paso==2) {
 		if (si_complete_video_driver() ) {
-			set_splash_zesarux_franja_color_repetido(x_inicial+9,y_inicial+9,3, 7, 6);
+			set_splash_zesarux_franja_color_repetido(x_inicial+9,y_inicial+9,3, color_fondo, color_amarillo);
 		}
 		return;
 	}
 
 
 
-	set_splash_zesarux_franja_color_repetido(x_inicial+9,y_inicial+9,3, 4, 6);
+	set_splash_zesarux_franja_color_repetido(x_inicial+9,y_inicial+9,3, color_verde, color_amarillo);
 
 	for (j=0;j<2;j++) {
-		set_splash_zesarux_cuadrado_color(x_inicial+10+j,y_inicial+9-j,4);
+		set_splash_zesarux_cuadrado_color(x_inicial+10+j,y_inicial+9-j,color_verde);
 	}
 
 	//Lo que queda a la derecha de esa franja - el udg diagonal con el color de papel igual que tinta anterior, y papel blanco
 	if (paso==3) {
 		if (si_complete_video_driver() ) {
-			set_splash_zesarux_franja_color(x_inicial+ancho_z*2-1,y_inicial+ancho_z*2-3,7,4);
+			set_splash_zesarux_franja_color(x_inicial+ancho_z*2-1,y_inicial+ancho_z*2-3,color_fondo,color_verde);
 		}
 		return;
 	}
 
-	set_splash_zesarux_franja_color(x_inicial+ancho_z*2-1,y_inicial+ancho_z*2-3,5,4);
+	set_splash_zesarux_franja_color(x_inicial+ancho_z*2-1,y_inicial+ancho_z*2-3,color_cyan,color_verde);
 
 }
 
@@ -37354,6 +37402,15 @@ void set_welcome_message(void)
         x=menu_center_x()-longitud_texto/2;
         if (x<0) x=0;	
 	menu_escribe_texto(x,yinicial++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,texto_esc_menu);
+
+    if (christmas_mode.v) {
+        char *christmas_text="Merry Christmas!";
+	    longitud_texto=strlen(christmas_text);
+        x=menu_center_x()-longitud_texto/2;
+        if (x<0) x=0;	
+
+        menu_escribe_texto(x,yinicial++,ESTILO_GUI_TINTA_NORMAL,ESTILO_GUI_PAPEL_NORMAL,christmas_text);
+    }
 
 	set_menu_overlay_function(normal_overlay_texto_menu);
 	menu_splash_text_active.v=1;

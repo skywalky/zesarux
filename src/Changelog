@@ -1,8 +1,10 @@
-Version 10.1 - Carrier Command edition. 28 October 2021
+Version 10.1-Beta1 - Carrier Command edition. 13 December 2021
 
 Added setting to change ULA Data bus value
 Added showing microdrive label when expanding qlay mdv files of size 174930 bytes
 Added action to trigger left-right movement on joystick, to play Decathlon-like games
+Added another easter egg ;)
+
 Improved portability of shell scripts
 Improved Debug CPU: 
 -now it highlights which registers will be modified by the opcode at the cursor position
@@ -18,7 +20,6 @@ Improved ZX Vision:
 -Improve BeOS GUI style: buttons positions right after the title
 
 Improved Accessibility: added direct settings for inverse colours and gray mode
-
 Improved handling of individual colour palettes modifications (Red, Green, Blue)
 
 Fixed disabling border when realvideo enabled on machines: Colecovision, Master System, MSX, SG1000, SpectraVideo

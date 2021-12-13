@@ -8334,6 +8334,11 @@ int parse_cmdline_options(void) {
 				audio_tone_generator=valor;
 			}
 
+            //Opcion oculta para probar modo navidad
+            else if (!strcmp(argv[puntero_parametro],"--enable-christmas-mode")) {
+                christmas_mode.v=1;
+            }
+
             //sensor-set position type
 			else if (!strcmp(argv[puntero_parametro],"--sensor-set")) {
 				siguiente_parametro_argumento();
@@ -8474,7 +8479,7 @@ void print_funny_message(void)
 		"Invalid MSX-DOS call",
 		"B Integer out of range, 0:1",
 		"Your System ate a SPARC! Gah!",
-		"CMOS checksum error. The default values has been loaded",
+		"CMOS checksum error - Defaults loaded",
         "Proudly Made on Earth",
         "Made From 100% Recycled Pixels",
         "You have died of dysentery"
@@ -8491,6 +8496,27 @@ void print_funny_message(void)
 							*/
 }
 
+
+void check_christmas_mode(void)
+{
+    time_t tiempo = time(NULL);
+    struct tm tm = *localtime(&tiempo);
+
+    //printf("now: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+    int dia=tm.tm_mday;
+    int mes=tm.tm_mon+1; 
+
+    //printf("Mes: %d Dia: %d\n",mes,dia);
+
+
+    //Activarlo si mes 12 y dia > 19, o si mes 1 y dia < 9
+    //O sea, del 20 de Diciembre hasta el 8 de Enero
+    if ((mes==12 && dia>19) || (mes==1 && dia<9)) {
+        debug_printf(VERBOSE_DEBUG,"Enabling christmas mode");
+        christmas_mode.v=1;
+    }
+}
 
 
 char macos_path_to_executable[PATH_MAX];
@@ -9109,6 +9135,9 @@ Also, you should keep the following copyright message, beginning with "Begin Cop
 
 	esperando_tiempo_final_t_estados.v=0;
 	framescreen_saltar=0;
+
+    //Si modo navidad
+    check_christmas_mode();
 
 
 	if (opcion_no_welcome_message.v==0) {

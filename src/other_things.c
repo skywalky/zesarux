@@ -25,7 +25,7 @@
 Hi there! This is not really a source code file, this is an easter egg! 
 Congratulations!
 
-Actually this is a file which I list all the easter eggs in ZEsarUX, 
+Actually this is a file where I list all the easter eggs in ZEsarUX, 
 so you can easily try them. 
 
 Please, keep the list secret and don't tell anyone,
@@ -44,12 +44,14 @@ The answer for that change, in the FAQ
 
 5. This one can be fired having ZX Desktop enabled or not:
 
-- ZX Enabled: Go to the about menu, double click on the image (you need multitasking
+- ZX Desktop Enabled: Go to the about menu, double click on the image (you need multitasking
 for the double click to be detected)
 
-- ZX Disabled: Go to the about menu, press F key (used to find text). 
+- ZX Desktop Disabled: Go to the about menu, press f key (used to find text). 
 Just press enter with no text to find. You'll see a cursor in the window,
 select the second line and press Enter...
+
+6. Christmas mode. From December 20 until January 8, there are some changes in the logo and in the welcome message...
 
 */
 

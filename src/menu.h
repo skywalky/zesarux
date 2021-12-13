@@ -220,6 +220,8 @@ extern void menu_footer_z88(void);
 extern int mouse_is_dragging;
 extern int menu_mouse_left_double_click_counter;
 
+extern z80_bit christmas_mode;
+
 
 
 struct s_generic_message_tooltip_return {
