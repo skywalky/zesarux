@@ -9347,7 +9347,7 @@ void scr_fadeout(void)
                 scrcurses_fade_color(color_curses++);
             }
         }
-    #endif
+#endif
 
 		clear_putpixel_cache();
 		modificado_border.v=1;
