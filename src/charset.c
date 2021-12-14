@@ -2786,8 +2786,8 @@ unsigned char char_set_osdos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 //Caracter boton cierre BeOS - 139
 0,62,34,34,34,62,0,0,
 
-//Caracter boton cierre Turbovision - 140
-0,63,63,63,63,63,63,0,
+//Caracter boton cierre  - 140
+0,60,90,102,102,90,60,0,
 
 //Caracter cerrar ventana - 141 - Este 141 se uso por primera vez en RetroMac
 0,126,66,90,90,66,126,0,
@@ -2814,7 +2814,7 @@ unsigned char char_set_osdos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 0,255,255,0,0,255,255,0,
 
 //Caracter background titulo - 149. Este 149 se uso por primera vez en AmigaOS
-0,126,66,95,95,127,31,0,
+255,137,145,163,197,137,145,255,
 
 //Caracter minimizar - 150
 0,0,4+8+16+32,4+32,4+32,4+8+16+32,0,0,
