@@ -9255,7 +9255,7 @@ void screen_init_colour_table(void)
 
 void scr_fadeout(void)
 {
-        int color,i,r,g,b,j;
+    int color,i,r,g,b,j;
 
 	//Si quickexit, no hacer fadeout
 	if (quickexit.v) return;
@@ -9305,12 +9305,12 @@ void scr_fadeout(void)
 
 		//printf ("%p\n",spectrum_colortable);
 
-                for (i=0;i<EMULATOR_TOTAL_PALETTE_COLOURS;i++) {
+        for (i=0;i<EMULATOR_TOTAL_PALETTE_COLOURS;i++) {
 
 			color=spectrum_colortable_normal[i];
-                        b=color & 0xFF;
-                        g=(color >> 8 ) & 0xFF;
-                        r=(color >> 16 ) & 0xFF;
+            b=color & 0xFF;
+            g=(color >> 8 ) & 0xFF;
+            r=(color >> 16 ) & 0xFF;
 
 			r=r-j;
 			g=g-j;
@@ -9330,24 +9330,24 @@ void scr_fadeout(void)
 
 			//en el caso de aalib usa una paleta diferente
 #ifdef COMPILE_AA
-                //Si driver aa, reinicializar paleta
-                if (!strcmp(scr_new_driver_name,"aa")) scraa_inicializa_colores();
-		//scraa_setpalette (i, r,g,b);
+            //Si driver aa, reinicializar paleta
+            if (!strcmp(scr_new_driver_name,"aa")) scraa_inicializa_colores();
+            //scraa_setpalette (i, r,g,b);
 #endif
 
 
 
 
-                }
+        }
 
 #ifdef COMPILE_CURSES
-		if (!strcmp(scr_new_driver_name,"curses")) {
-			int bucle_curses;
-			for (bucle_curses=0;bucle_curses<incremento_color_curses;bucle_curses++) {
-				scrcurses_fade_color(color_curses++);
-			}
-		}
-#endif
+        if (!strcmp(scr_new_driver_name,"curses")) {
+            int bucle_curses;
+            for (bucle_curses=0;bucle_curses<incremento_color_curses;bucle_curses++) {
+                scrcurses_fade_color(color_curses++);
+            }
+        }
+    #endif
 
 		clear_putpixel_cache();
 		modificado_border.v=1;
