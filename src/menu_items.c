@@ -12159,13 +12159,13 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
         menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Enable a button on footer to switch ZX Desktop (visible when menu closed)");
 
 
-        menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_disable_on_fullscreen,NULL,
-            "[%c] Disable on Full Screen",(zxdesktop_disable_on_full_screen ? 'X' : ' ' ));
-        menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Disable ZX Desktop when going to full screen");
-        menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Disable ZX Desktop when going to full screen. It will be enabled again going back from full screen");
+        if (screen_ext_desktop_enabled) {
 
+            menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_ext_desk_settings_disable_on_fullscreen,NULL,
+                "[%c] Disable on Full Screen",(zxdesktop_disable_on_full_screen ? 'X' : ' ' ));
+            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Disable ZX Desktop when going to full screen");
+            menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Disable ZX Desktop when going to full screen. It will be enabled again going back from full screen");
 
-        if (screen_ext_desktop_enabled) {   
 
 			menu_add_item_menu(array_menu_ext_desktop_settings,"",MENU_OPCION_SEPARADOR,NULL,NULL);
 			
@@ -12245,6 +12245,8 @@ void menu_ext_desktop_settings(MENU_ITEM_PARAMETERS)
             menu_tape_settings_trunc_name(zxdesktop_draw_scrfile_name,string_back_scr_shown,20);
             menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile,NULL,"~~SCR file [%s]",string_back_scr_shown);
             menu_add_item_menu_shortcut(array_menu_ext_desktop_settings,'s');         
+            menu_add_item_menu_tooltip(array_menu_ext_desktop_settings,"Sets a SCR file for ZX Desktop background. Flash attributes are not used");
+            menu_add_item_menu_ayuda(array_menu_ext_desktop_settings,"Sets a SCR file for ZX Desktop background. Flash attributes are not used");
           
 			if (zxdesktop_draw_scrfile_name[0]!=0) {
                 menu_add_item_menu_format(array_menu_ext_desktop_settings,MENU_OPCION_NORMAL,menu_zxdesktop_scrfile_enable,NULL,

@@ -2815,6 +2815,28 @@ int scr_putchar_menu_comun_zoom_reduce_charwidth(int bit)
         saltar_pixeles_size5[2]=7;
     }
 
+    if (char_set==char_set_amigaos) {
+        saltar_pixeles_size7=7;
+
+        saltar_pixeles_size6[0]=0;
+        saltar_pixeles_size6[1]=7;
+        
+        saltar_pixeles_size5[0]=0;
+        saltar_pixeles_size5[1]=6;
+        saltar_pixeles_size5[2]=7;
+    }
+
+    if (char_set==char_set_ataritos) {
+        saltar_pixeles_size7=7;
+
+        saltar_pixeles_size6[0]=0;
+        saltar_pixeles_size6[1]=7;
+        
+        saltar_pixeles_size5[0]=0;
+        saltar_pixeles_size5[1]=6;
+        saltar_pixeles_size5[2]=7;
+    }    
+
 
 	//Los demas se ajustan bien al escalado por defecto
 

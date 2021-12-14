@@ -5418,6 +5418,12 @@ void zxdesktop_draw_scrfile_load(void)
     if (zxdesktop_draw_scrfile_pointer==NULL) {
         zxdesktop_draw_scrfile_pointer=malloc(6912);
         if (zxdesktop_draw_scrfile_pointer==NULL) cpu_panic("Can not allocate memory for scrfile on zxdesktop");
+
+        //Inicializar este espacio con 0, por si el archivo no existe, que aparezca en negro
+        int i;
+        for (i=0;i<6912;i++) {
+            zxdesktop_draw_scrfile_pointer[i]=0;
+        }
     }
 
     //Y generamos la cache de x,y a colores para no tener que recalcular cada pixel cada vez
@@ -5433,12 +5439,23 @@ void zxdesktop_draw_scrfile_load(void)
 
     if (!si_existe_archivo(zxdesktop_draw_scrfile_name)) {
         debug_printf(VERBOSE_ERR,"Can not load ZX Desktop background SCR file %s",zxdesktop_draw_scrfile_name);
-        return;
+        //Aunque el archivo no exista, igualmente leer a cache (aun con datos random de zxdesktop_draw_scrfile_pointer),
+        //asi la cache estará inicializada con datos de colores dentro de rango
+        //Si no, correriamos el riesgo de tener en cache valores de colores fuera de rango y generar un segfault
     }
 
-    lee_archivo(zxdesktop_draw_scrfile_name,(char *)zxdesktop_draw_scrfile_pointer,6912);
+    else {
+        lee_archivo(zxdesktop_draw_scrfile_name,(char *)zxdesktop_draw_scrfile_pointer,6912);
+    }
 
+    //Quitar parpadeo del archivo SCR. Dado que con la cache de zxdesktop_cache_scrfile, el parpadeo no lo implementa
+    //y por tanto el estado de parpadeo seria el que tenga ese momento la ula. Mejor se quita y así los colores son sin posible cambio de parpadeo
+    //al cargar
 
+    int i;
+    for (i=0;i<768;i++) {
+        zxdesktop_draw_scrfile_pointer[6144+i] &=(255-128);
+    }
 
     int x,y;
 
@@ -31541,13 +31558,7 @@ void menu_interface_settings(MENU_ITEM_PARAMETERS)
 
 
 
-		if (scr_driver_can_ext_desktop() ) {
-			menu_add_item_menu_format(array_menu_interface_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"~~ZX Desktop settings");
-			menu_add_item_menu_shortcut(array_menu_interface_settings,'z');	
-			menu_add_item_menu_tooltip(array_menu_interface_settings,"Expand the program window having a ZX Desktop space to the right");
-			menu_add_item_menu_ayuda(array_menu_interface_settings,"ZX Desktop enables you to have a space on the right to place "
-				"zxvision windows, menus or other widgets");
-		}
+
 
 						
 
@@ -35639,6 +35650,14 @@ void menu_settings(MENU_ITEM_PARAMETERS)
 
 
 		}	
+
+		if (scr_driver_can_ext_desktop() ) {
+			menu_add_item_menu_format(array_menu_settings,MENU_OPCION_NORMAL,menu_ext_desktop_settings,NULL,"ZX Des~~ktop");
+			menu_add_item_menu_shortcut(array_menu_settings,'k');
+			menu_add_item_menu_tooltip(array_menu_settings,"Expand the program window having a ZX Desktop space to the right");
+			menu_add_item_menu_ayuda(array_menu_settings,"ZX Desktop enables you to have a space on the right to place "
+				"zxvision windows, menus or other widgets");
+		}
 
 
 		menu_add_item_menu(array_menu_settings,"ZX ~~Vision",MENU_OPCION_NORMAL,menu_interface_settings,NULL);
