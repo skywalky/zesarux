@@ -982,7 +982,32 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         BEOS_COLOUR_blue_hotkey, //si texto inverso solo cambia color tinta
         1, //NO rellenar titulo
         char_set_beos
-    },         
+    },      
+
+	{1,"OS/2",OSDOS_COLOUR_GRAY,0,
+		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow
+		OSDOS_COLOUR_GRAY_SELECTED_PAPER,7+8, 		//Colores para opcion seleccionada
+		OSDOS_COLOUR_GRAY,2,OSDOS_COLOUR_GRAY_SELECTED_PAPER,2, 	//Colores para opcion no disponible
+
+		OSDOS_COLOUR_BLUE_PAPER_TITLE,7+8,        	//Colores para el titulo ventana
+        0,              //Color recuadro
+		OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,OSDOS_COLOUR_GRAY,        	//Colores para el titulo ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
+		2,7+8,		//Color para opcion marcada
+		'*',
+        150, //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
+        ' ', //caracter de fondo de titulo
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_osdos
+    },       
 
     {0,"Borland",1,7+8,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow

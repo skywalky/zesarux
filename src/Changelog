@@ -16,6 +16,7 @@ Improved ZX Vision:
 -Better detection of any file size of 6912 bytes is guessed as Spectrum screen
 -Added AmigaOS GUI style
 -Added Atari TOS GUI style
+-Added OS/2 GUI style
 -Improve RetroMac GUI style: striped title bar
 -Improve BeOS GUI style: buttons positions right after the title
 
@@ -27,6 +28,7 @@ Fixed segfault pressing F5 after pressing pause key
 Fixed preserve breakpoints state when doing smartload
 Fixed refreshing Visual Real Tape window when Top Speed condition
 Fixed drawing close button on background windows
+Fixed redrawing footer when fade out
 Fixed bug restoring windows on startup when a previous error was generated
 
 Some other minor bugfixes and improvements

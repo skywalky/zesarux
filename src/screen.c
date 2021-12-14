@@ -483,6 +483,13 @@ const int ataritos_colortable_original[ATARITOS_TOTAL_PALETTE_COLOURS]={
     0xdedede   //Blanco
 };
 
+const int osdos_colortable_original[OSDOS_TOTAL_PALETTE_COLOURS]={
+    0x2800aa,  //Azul titulo ventana papel
+    0x828282, //Gris ventana inactiva papel
+    0xcfcfcf, //Tinta gris ventana inactiva, papel
+    0x0000aa //Papel seleccion
+};
+
 //Tabla con los colores extra del Spectra.
 //Valores para intensidades de color:
 /*
@@ -9094,7 +9101,12 @@ Bit 6 GRN1 most  significant bit of green.
 				//Colores AtariTOS
 				for (i=0;i<ATARITOS_TOTAL_PALETTE_COLOURS;i++) {
 					screen_set_colour_normal(ATARITOS_INDEX_FIRST_COLOR+i,ataritos_colortable_original[i]);
-				}                                                                                           
+				}   
+
+				//Colores OS/2
+				for (i=0;i<OSDOS_TOTAL_PALETTE_COLOURS;i++) {
+					screen_set_colour_normal(OSDOS_INDEX_FIRST_COLOR+i,osdos_colortable_original[i]);
+				}                                                                                                            
 
 
 		//}
