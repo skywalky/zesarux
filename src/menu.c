@@ -999,7 +999,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		2,7+8,		//Color para opcion marcada
 		'*',
         150, //caracter de minimizar ventana
-        '=', //caracter de restaurar ventana
+        151, //caracter de restaurar ventana
         '!', //caracter de background ventana
         ' ', //caracter de fondo de titulo
 		2, //color de aviso
