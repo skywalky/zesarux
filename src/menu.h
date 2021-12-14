@@ -216,6 +216,7 @@ extern void enable_footer(void);
 extern void disable_footer(void);
 extern void menu_init_footer(void);
 extern void menu_footer_z88(void);
+extern void menu_clear_footer(void);
 
 extern int mouse_is_dragging;
 extern int menu_mouse_left_double_click_counter;

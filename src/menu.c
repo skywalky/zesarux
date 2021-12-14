@@ -6203,7 +6203,7 @@ void menu_draw_fps(void)
                 return;
         }
 
-
+        //printf("draw fps\n");
 
         //cada 1 segundo
         draw_fps=50*1;

@@ -9355,7 +9355,7 @@ void scr_fadeout(void)
 
         menu_clear_footer();
         redraw_footer();
-        
+
 		menu_draw_ext_desktop();
 		all_interlace_scr_refresca_pantalla();
 
