@@ -9535,7 +9535,7 @@ void end_emulator_saveornot_config(int saveconfig)
 	//printf ("footer: %d\n",menu_footer);
 
 	//Desactivo footer para que no se actualice, sino a veces aparece el footer (cpu, fps, etc) en color grisaceo mientras hace el fade
-	menu_footer=0;
+	//menu_footer=0;
 
 	//Parece ser que el fadeout y en particular el refresco de pantalla no sienta muy bien
 	//cuando se ejecuta desde remote protocol y con el driver cocoa gl. No se muy bien porque,
