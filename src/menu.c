@@ -1059,31 +1059,6 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         char_set_dos
     },    
 
-	{0,"Ocean",1,7,
-		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-		4,0, 		//Colores para opcion seleccionada
-		1,6,4,6, 	//Colores para opcion no disponible
-
-		1+8,7+8,        	//Colores para el titulo ventana
-        1+8,              //Color recuadro
-		1,0,        	//Colores para el titulo ventana inactiva
-
-		4,		//Color waveform
-		7,		//Color para zona no usada en visualmem
-        7,      //color block visualtape
-		1,7+8,		//Color para opcion marcada
-		'*',
-        '-', //caracter de minimizar ventana
-        '=', //caracter de restaurar ventana
-        '!', //caracter de background ventana
-        ' ', //caracter de fondo de titulo
-		6, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0, //rellenar titulo
-        char_set_spectrum
-    },        
-
 	{0,"Bloody",2,7,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
 		1,7, 		//Colores para opcion seleccionada
@@ -1107,7 +1082,57 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
         char_set_spectrum
-    },        
+    },  
+
+	{0,"Grass",4,0,
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		1,7, 		//Colores para opcion seleccionada
+		4,6,1,6, 	//Colores para opcion no disponible
+
+		4+8,0,        	//Colores para el titulo ventana
+        4+8,              //Color recuadro
+		4,7,        	//Colores para el titulo ventana inactiva
+
+		1,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
+		4,7+8,		//Color para opcion marcada
+		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
+        ' ', //caracter de fondo de titulo
+		6, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+    },     
+
+	{0,"Ocean",1,7,
+		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		4,0, 		//Colores para opcion seleccionada
+		1,6,4,6, 	//Colores para opcion no disponible
+
+		1+8,7+8,        	//Colores para el titulo ventana
+        1+8,              //Color recuadro
+		1,0,        	//Colores para el titulo ventana inactiva
+
+		4,		//Color waveform
+		7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
+		1,7+8,		//Color para opcion marcada
+		'*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
+        ' ', //caracter de fondo de titulo
+		6, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+    },           
 
 	{0,"Panther",3,7,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
@@ -1133,31 +1158,6 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         0, //rellenar titulo
         char_set_spectrum
     },     
-
-	{0,"Grass",4,0,
-		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-		1,7, 		//Colores para opcion seleccionada
-		4,6,1,6, 	//Colores para opcion no disponible
-
-		4+8,0,        	//Colores para el titulo ventana
-        4+8,              //Color recuadro
-		4,7,        	//Colores para el titulo ventana inactiva
-
-		1,		//Color waveform
-		7,		//Color para zona no usada en visualmem
-        7,      //color block visualtape
-		4,7+8,		//Color para opcion marcada
-		'*',
-        '-', //caracter de minimizar ventana
-        '=', //caracter de restaurar ventana
-        '!', //caracter de background ventana
-        ' ', //caracter de fondo de titulo
-		6, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0, //rellenar titulo
-        char_set_spectrum
-    },    
 
 	{0,"Sky",5,0,
 		0,5,5,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
