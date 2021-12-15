@@ -732,107 +732,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         char_set_mansoftware
     },        
 
-    {0,"ZX80/81",7+8,0,
-        1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow, solo mayusculas
-        0,7+8,          //Colores para opcion seleccionada
-        7+8,0,0,7+8,      //Colores para opcion no disponible
-
-        0,7+8,          //Colores para el titulo ventana
-        0,              //Color recuadro
-        7+8,0,          //Colores para el titulo ventana inactiva
-
-        4,              //Color waveform
-        7,               //Color para zona no usada en visualmem
-        7,      //color block visualtape
-        7,0,		//Color para opcion marcada
-		'.',
-        '-', //caracter de minimizar ventana
-        '=', //caracter de restaurar ventana
-        '!', //caracter de background ventana
-        ' ', //caracter de fondo de titulo
-		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0, //rellenar titulo
-        char_set_spectrum
-    },
-
-    {0,"QL",7+8,0,
-        0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-        4+8,0, 		//Colores para opcion seleccionada
-        7+8,2,7,2, 	//Colores para opcion no disponible
-
-        2,7+8,        	//Colores para el titulo ventana
-        2,              //Color recuadro
-        7+8,2,        	//Colores para el titulo ventana inactiva
-
-        4,		//Color waveform
-        7,		//Color para zona no usada en visualmem
-        7,      //color block visualtape
-        2,7+8,		//Color para opcion marcada
-        '*',
-        '-', //caracter de minimizar ventana
-        '=', //caracter de restaurar ventana
-        '!', //caracter de background ventana
-        ' ', //caracter de fondo de titulo
-		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0, //rellenar titulo
-        char_set_ql
-    },        
-
-
-    {1,"Z88",Z88_PXCOLOFF,Z88_PXCOLON,
-        0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
-        Z88_PXCOLON,Z88_PXCOLOFF,          //Colores para opcion seleccionada
-        Z88_PXCOLOFF,Z88_PXCOLGREY,Z88_PXCOLON,Z88_PXCOLGREY,      //Colores para opcion no disponible
-
-        Z88_PXCOLON,Z88_PXCOLOFF,          //Colores para el titulo ventana
-        Z88_PXCOLON,              //Color recuadro
-        Z88_PXCOLGREY,Z88_PXCOLOFF,          //Colores para el titulo ventana inactiva
-
-        4,              //Color waveform
-        4,               //Color para zona no usada en visualmem
-        6,      //color block visualtape
-        2,7+8,		//Color para opcion marcada
-        '*',
-        '-', //caracter de minimizar ventana
-        '=', //caracter de restaurar ventana
-        '!', //caracter de background ventana
-        ' ', //caracter de fondo de titulo
-        2, //color de aviso
-        colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0, //rellenar titulo
-        char_set_z88
-    },
-
-    {0,"Sam",7+8,0,
-        0,1,1,0,                //No mostrar cursor,mostrar recuadro,mostrar rainbow
-        5+8,0,          //Colores para opcion seleccionada
-        7+8,2,7,2,      //Colores para opcion no disponible
-
-        0,7+8,          //Colores para el titulo ventana
-        0,              //Color recuadro
-        7+8,0,          //Colores para el titulo ventana inactiva
-
-        1,              //Color waveform
-        7,               //Color para zona no usada en visualmem
-        7,      //color block visualtape
-        2,7+8,		//Color para opcion marcada
-		'#',
-        '-', //caracter de minimizar ventana
-        '=', //caracter de restaurar ventana
-        '!', //caracter de background ventana
-        ' ', //caracter de fondo de titulo
-		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        -1, //si texto inverso solo cambia color tinta
-        0, //rellenar titulo
-        char_set_sam
-    },                
-
+             
     {0,"CPC",1,6+8,
         0,1,1,0,          //No mostrar cursor,mostrar recuadro,mostrar rainbow
         6+8,1,            //Colores para opcion seleccionada
@@ -883,6 +783,106 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         0, //rellenar titulo
         char_set_msx
     },
+
+    {0,"QL",7+8,0,
+        0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+        4+8,0, 		//Colores para opcion seleccionada
+        7+8,2,7,2, 	//Colores para opcion no disponible
+
+        2,7+8,        	//Colores para el titulo ventana
+        2,              //Color recuadro
+        7+8,2,        	//Colores para el titulo ventana inactiva
+
+        4,		//Color waveform
+        7,		//Color para zona no usada en visualmem
+        7,      //color block visualtape
+        2,7+8,		//Color para opcion marcada
+        '*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
+        ' ', //caracter de fondo de titulo
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_ql
+    },     
+
+    {0,"Sam",7+8,0,
+        0,1,1,0,                //No mostrar cursor,mostrar recuadro,mostrar rainbow
+        5+8,0,          //Colores para opcion seleccionada
+        7+8,2,7,2,      //Colores para opcion no disponible
+
+        0,7+8,          //Colores para el titulo ventana
+        0,              //Color recuadro
+        7+8,0,          //Colores para el titulo ventana inactiva
+
+        1,              //Color waveform
+        7,               //Color para zona no usada en visualmem
+        7,      //color block visualtape
+        2,7+8,		//Color para opcion marcada
+		'#',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
+        ' ', //caracter de fondo de titulo
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_sam
+    },    
+
+    {1,"Z88",Z88_PXCOLOFF,Z88_PXCOLON,
+        0,1,0,0,                //No mostrar cursor,mostrar recuadro,no mostrar rainbow
+        Z88_PXCOLON,Z88_PXCOLOFF,          //Colores para opcion seleccionada
+        Z88_PXCOLOFF,Z88_PXCOLGREY,Z88_PXCOLON,Z88_PXCOLGREY,      //Colores para opcion no disponible
+
+        Z88_PXCOLON,Z88_PXCOLOFF,          //Colores para el titulo ventana
+        Z88_PXCOLON,              //Color recuadro
+        Z88_PXCOLGREY,Z88_PXCOLOFF,          //Colores para el titulo ventana inactiva
+
+        4,              //Color waveform
+        4,               //Color para zona no usada en visualmem
+        6,      //color block visualtape
+        2,7+8,		//Color para opcion marcada
+        '*',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
+        ' ', //caracter de fondo de titulo
+        2, //color de aviso
+        colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_z88
+    },   
+
+    {0,"ZX80/81",7+8,0,
+        1,1,0,1,          //Mostrar cursor >, mostrar recuadro, no mostrar rainbow, solo mayusculas
+        0,7+8,          //Colores para opcion seleccionada
+        7+8,0,0,7+8,      //Colores para opcion no disponible
+
+        0,7+8,          //Colores para el titulo ventana
+        0,              //Color recuadro
+        7+8,0,          //Colores para el titulo ventana inactiva
+
+        4,              //Color waveform
+        7,               //Color para zona no usada en visualmem
+        7,      //color block visualtape
+        7,0,		//Color para opcion marcada
+		'.',
+        '-', //caracter de minimizar ventana
+        '=', //caracter de restaurar ventana
+        '!', //caracter de background ventana
+        ' ', //caracter de fondo de titulo
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        -1, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_spectrum
+    },       
 
 	{1,"AmigaOS",AMIGAOS_COLOUR_blue,7+8,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow
