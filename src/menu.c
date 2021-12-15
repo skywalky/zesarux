@@ -40273,11 +40273,11 @@ char *first_aid_string_backgroundwindows="You can enable background windows and 
 
 int first_aid_no_zxdesktop=0;
 char *first_aid_string_zxdesktop="Have you enabled ZX Desktop? It allows you to have a space on the right to place "
-				"zxvision windows, menus or other widgets. Go to Settings-> ZX Vision-> ZX Desktop settings to enable it";
+				"zxvision windows, menus or other widgets. Go to Settings-> ZX Desktop settings to enable it";
 
 int first_aid_no_zxdesktop_custombuttons=0;
 char *first_aid_string_zxdesktop_custombuttons="You can customize upper ZX Desktop buttons to trigger different actions. "
-				"Go to Settings-> ZX Vision-> ZX Desktop-> Customize buttons";
+				"Go to Settings-> ZX Desktop-> Customize buttons";
 
 
 void menu_first_aid_init(void)
