@@ -34359,6 +34359,11 @@ void menu_about_license_atomlite(MENU_ITEM_PARAMETERS)
         menu_about_read_file("SimCoupe License","licenses/LICENSE_simcoupe",1);
 }
 
+void menu_about_license_dosfont(MENU_ITEM_PARAMETERS)
+{
+        menu_about_read_file("DOS font License","licenses/LICENSE_DOS_font",1);
+}
+
 void menu_about_license_unrealspeccy(MENU_ITEM_PARAMETERS)
 {
         menu_about_read_file("UnrealSpeccy License","licenses/LICENSE_unrealspeccy",1);
@@ -34788,6 +34793,9 @@ void menu_licenses(MENU_ITEM_PARAMETERS)
 
 			menu_add_item_menu(array_menu_common,"~~Atomlite (from simcoupe)",MENU_OPCION_NORMAL,menu_about_license_atomlite,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'a');	
+
+			menu_add_item_menu(array_menu_common,"D~~OS font",MENU_OPCION_NORMAL,menu_about_license_dosfont,NULL);
+			menu_add_item_menu_shortcut(array_menu_common,'o');
 
 			menu_add_item_menu(array_menu_common,"Fa~~tFs",MENU_OPCION_NORMAL,menu_about_license_fatfs,NULL);
 			menu_add_item_menu_shortcut(array_menu_common,'t');	

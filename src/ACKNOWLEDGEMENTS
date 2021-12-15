@@ -68,7 +68,7 @@ I want to thank the help and the collaboration of the following people (date sor
 -Gari Biasillo, for reporting bugs in the esxdos handler
 -Thomas Busse, for bug reporting and the fast debug parser proposal
 -Jose Luis Rodriguez Godoy, testing Inves features and reporting bugs
--Damien Guard, for the ZX Chicago font
+-Damien Guard, for the ZX Chicago font, used in RetroMac GUI style
 -Peter Ped Helcmanovsky, for lots of TBBlue code contributions and bug reporting
 -Derek Bolli, testing the ZEsarUX Network Gaming feature
 -desUBIKado, testing the ZEsarUX Network Gaming feature
@@ -85,6 +85,7 @@ I want to thank the help and the collaboration of the following people (date sor
 -Gerton Lunter, for information with his SamRam interface and granting permission to include the roms
 -Aled Griffiths, for the Mac retina display support
 -Anderson Torres, for fixing shebangs on shell scripts
+-Neil Roy, for the DOS font, used on OS/2 GUI style
 
 
 -Everyone at several forums about Spectrum, ZX80, ZX81, Z88, Raspberry Pi, etc for all the suggestions to my emulator
