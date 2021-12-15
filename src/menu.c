@@ -1031,7 +1031,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         2+8, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
-        char_set_spectrum
+        char_set_dos
     },
 
     {1,"TurboVision",TURBOVISION_COLOUR_white,TURBOVISION_COLOUR_black,
@@ -1047,7 +1047,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		TURBOVISION_COLOUR_cyan,		//Color para zona no usada en visualmem
         TURBOVISION_COLOUR_cyan,       //color block visualtape
 		TURBOVISION_COLOUR_red,TURBOVISION_COLOUR_lightwhite,		//Color para opcion marcada
-		140,
+		141,
         '-', //caracter de minimizar ventana
         '=', //caracter de restaurar ventana
         '!', //caracter de background ventana
@@ -1056,7 +1056,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         TURBOVISION_COLOUR_red, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
-        char_set_retromac
+        char_set_dos
     },    
 
 	{0,"Ocean",1,7,

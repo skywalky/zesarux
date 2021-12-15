@@ -2792,8 +2792,8 @@ unsigned char char_set_dos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 //Caracter boton cierre  - 140
 0,60,90,102,102,90,60,0,
 
-//Caracter cerrar ventana - 141 - Este 141 se uso por primera vez en RetroMac
-0,126,66,90,90,66,126,0,
+//Caracter boton cierre Turbovision - 141
+0,63,63,63,63,63,63,0,
 
 //á a acentuada - 142
 0x08,0x10,0x38,0x04,0x3C,0x44,0x3C,0x00,
