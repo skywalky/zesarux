@@ -28,18 +28,19 @@
 
 
 struct s_charset_list charset_list[]={
-    {"ZX Spectrum",char_set_spectrum},
-    {"CPC",char_set_cpc},
-    {"Z88",char_set_z88},
-    {"Sam Coupe",char_set_sam},
-    {"Man Software",char_set_mansoftware},
-    {"QL",char_set_ql},
-    {"RetroMac",char_set_retromac},
     {"AmigaOS",char_set_amigaos},
     {"AtariTOS",char_set_ataritos},
-    {"MSX",char_set_msx},
     {"BeOS",char_set_beos},
+    {"CPC",char_set_cpc},
     {"DOS",char_set_dos},
+    {"Man Software",char_set_mansoftware},
+    {"MSX",char_set_msx},
+    {"QL",char_set_ql},
+    {"RetroMac",char_set_retromac},
+    {"Sam Coupe",char_set_sam},
+    {"Z88",char_set_z88},
+    {"ZX Spectrum",char_set_spectrum},
+    
     {"",NULL}
 };
 
