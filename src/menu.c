@@ -968,9 +968,9 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,              //Color recuadro
 		OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,OSDOS_COLOUR_GRAY,        	//Colores para el titulo ventana inactiva
 
-		1,		//Color waveform
-		7,		//Color para zona no usada en visualmem
-        7,      //color block visualtape
+		OSDOS_COLOUR_GRAY_SELECTED_PAPER,		//Color waveform
+		OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,		//Color para zona no usada en visualmem
+        OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		140, //caracter de cerrar ventana
         150, //caracter de minimizar ventana
