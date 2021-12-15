@@ -39,7 +39,7 @@ struct s_charset_list charset_list[]={
     {"AtariTOS",char_set_ataritos},
     {"MSX",char_set_msx},
     {"BeOS",char_set_beos},
-    {"OS/2",char_set_osdos},
+    {"DOS",char_set_dos},
     {"",NULL}
 };
 
@@ -2643,7 +2643,8 @@ unsigned char char_set_beos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 //DOS 8x8 bitmap by Neil Roy
 //Portado de su version png a crudo 8x8
 //generado con sample_convert_gimp_c_image.c
-unsigned char char_set_osdos[TOTAL_ASCII_CHARSET_ELEMENTS]={ 
+//Usado en OS/2 y otros estilos
+unsigned char char_set_dos[TOTAL_ASCII_CHARSET_ELEMENTS]={ 
 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 0x30,0x78,0x78,0x30,0x30,0x00,0x30,0x00,
 0x6c,0x6c,0x6c,0x00,0x00,0x00,0x00,0x00,

@@ -2844,7 +2844,7 @@ int scr_putchar_menu_comun_zoom_reduce_charwidth(int bit)
         saltar_pixeles_size5[2]=7;
     }    
 
-    if (char_set==char_set_osdos) {
+    if (char_set==char_set_dos) {
         saltar_pixeles_size7=7;
 
         saltar_pixeles_size6[0]=0;

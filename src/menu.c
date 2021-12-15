@@ -884,31 +884,6 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
         char_set_msx
     },
 
-	{1,"RetroMac",RETROMAC_COLOUR_paper,0,
-		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
-		RETROMAC_COLOUR_selected_paper,7+8, 		//Colores para opcion seleccionada
-		RETROMAC_COLOUR_paper,RETROMAC_COLOUR_unavailable_ink,RETROMAC_COLOUR_selected_paper,RETROMAC_COLOUR_unavailable_ink, 	//Colores para opcion no disponible
-
-		RETROMAC_COLOUR_active_title,0,        	//Colores para el titulo ventana
-        RETROMAC_COLOUR_window_box,              //Color recuadro
-		RETROMAC_COLOUR_paper,RETROMAC_COLOUR_unavailable_ink,    	//Colores para el titulo ventana inactiva
-
-		4,		//Color waveform
-		5,		//Color para zona no usada en visualmem
-        5+8,      //color block visualtape
-		2,7,		//Color para opcion marcada
-		141, //boton cerrar
-        150, //caracter de minimizar ventana
-        151, //caracter de restaurar ventana
-        149, //caracter de background ventana
-        148, //caracter de fondo de titulo
-		2, //color de aviso
-		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
-        5, //si texto inverso solo cambia color tinta
-        0, //rellenar titulo
-        char_set_retromac
-    },
-
 	{1,"AmigaOS",AMIGAOS_COLOUR_blue,7+8,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow
 		0,AMIGAOS_COLOUR_orange, 		//Colores para opcion seleccionada
@@ -1006,8 +981,33 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
         -1, //si texto inverso solo cambia color tinta
         0, //rellenar titulo
-        char_set_osdos
-    },       
+        char_set_dos
+    },
+
+	{1,"RetroMac",RETROMAC_COLOUR_paper,0,
+		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow
+		RETROMAC_COLOUR_selected_paper,7+8, 		//Colores para opcion seleccionada
+		RETROMAC_COLOUR_paper,RETROMAC_COLOUR_unavailable_ink,RETROMAC_COLOUR_selected_paper,RETROMAC_COLOUR_unavailable_ink, 	//Colores para opcion no disponible
+
+		RETROMAC_COLOUR_active_title,0,        	//Colores para el titulo ventana
+        RETROMAC_COLOUR_window_box,              //Color recuadro
+		RETROMAC_COLOUR_paper,RETROMAC_COLOUR_unavailable_ink,    	//Colores para el titulo ventana inactiva
+
+		4,		//Color waveform
+		5,		//Color para zona no usada en visualmem
+        5+8,      //color block visualtape
+		2,7,		//Color para opcion marcada
+		141, //boton cerrar
+        150, //caracter de minimizar ventana
+        151, //caracter de restaurar ventana
+        149, //caracter de background ventana
+        148, //caracter de fondo de titulo
+		2, //color de aviso
+		colores_franja_speccy_brillo,colores_franja_speccy_oscuro,
+        5, //si texto inverso solo cambia color tinta
+        0, //rellenar titulo
+        char_set_retromac
+    },           
 
     {0,"Borland",1,7+8,
 		0,1,1,0, 		//No mostrar cursor,mostrar recuadro,mostrar rainbow

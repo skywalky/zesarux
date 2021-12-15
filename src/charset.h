@@ -36,7 +36,7 @@ extern unsigned char char_set_amigaos[];
 extern unsigned char char_set_ataritos[];
 extern unsigned char char_set_msx[];
 extern unsigned char char_set_beos[];
-extern unsigned char char_set_osdos[];
+extern unsigned char char_set_dos[];
 
 struct s_charset_list {
     char nombre[32];
