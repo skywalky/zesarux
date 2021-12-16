@@ -487,7 +487,8 @@ const int osdos_colortable_original[OSDOS_TOTAL_PALETTE_COLOURS]={
     0x2800aa,  //Azul titulo ventana papel
     0x828282, //Gris ventana inactiva papel
     0xcfcfcf, //Tinta gris ventana inactiva, papel
-    0x0000aa //Papel seleccion
+    0x0000aa, //Papel seleccion
+    0x808080 //Tinta opcion no disponible
 };
 
 //Tabla con los colores extra del Spectra.

@@ -962,7 +962,7 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 	{1,"OS/2",OSDOS_COLOUR_GRAY,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow
 		OSDOS_COLOUR_GRAY_SELECTED_PAPER,7+8, 		//Colores para opcion seleccionada
-		OSDOS_COLOUR_GRAY,2,OSDOS_COLOUR_GRAY_SELECTED_PAPER,2, 	//Colores para opcion no disponible
+		OSDOS_COLOUR_GRAY,OSDOS_COLOUR_GRAY_UNAVAILABE_ITEM,OSDOS_COLOUR_GRAY_SELECTED_PAPER,OSDOS_COLOUR_GRAY_UNAVAILABE_ITEM, 	//Colores para opcion no disponible
 
 		OSDOS_COLOUR_BLUE_PAPER_TITLE,7+8,        	//Colores para el titulo ventana
         OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,              //Color recuadro
