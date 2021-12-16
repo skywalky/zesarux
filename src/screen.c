@@ -485,9 +485,8 @@ const int ataritos_colortable_original[ATARITOS_TOTAL_PALETTE_COLOURS]={
 
 const int osdos_colortable_original[OSDOS_TOTAL_PALETTE_COLOURS]={
     0x0000a3,  //Azul titulo ventana papel, texto seleccionado
-    0x828282, //Gris ventana inactiva papel
-    0xcfcfcf, //Tinta gris ventana inactiva, papel
-    0x808080 //Tinta opcion no disponible
+    0xd7d7d7, //Tinta gris ventana inactiva, papel
+    0x808080 //Tinta opcion no disponible, titulo ventana inactiva
 };
 
 //Tabla con los colores extra del Spectra.

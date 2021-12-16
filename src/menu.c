@@ -963,15 +963,15 @@ estilos_gui definiciones_estilos_gui[ESTILOS_GUI]={
 	{1,"OS/2",OSDOS_COLOUR_GRAY,0,
 		0,1,0,0, 		//No mostrar cursor,mostrar recuadro,no mostrar rainbow
 		OSDOS_COLOUR_BLUE,7+8, 		//Colores para opcion seleccionada
-		OSDOS_COLOUR_GRAY,OSDOS_COLOUR_GRAY_UNAVAILABE_ITEM,OSDOS_COLOUR_BLUE,OSDOS_COLOUR_GRAY_UNAVAILABE_ITEM, 	//Colores para opcion no disponible
+		OSDOS_COLOUR_GRAY,OSDOS_COLOUR_GRAY_INACTIVE,OSDOS_COLOUR_BLUE,OSDOS_COLOUR_GRAY_INACTIVE, 	//Colores para opcion no disponible
 
 		OSDOS_COLOUR_BLUE,7+8,        	//Colores para el titulo ventana
-        OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,              //Color recuadro
-		OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,OSDOS_COLOUR_GRAY,        	//Colores para el titulo ventana inactiva
+        OSDOS_COLOUR_GRAY_INACTIVE,              //Color recuadro
+		OSDOS_COLOUR_GRAY_INACTIVE,OSDOS_COLOUR_GRAY,        	//Colores para el titulo ventana inactiva
 
 		OSDOS_COLOUR_BLUE,		//Color waveform
-		OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,		//Color para zona no usada en visualmem
-        OSDOS_COLOUR_GRAY_INACTIVE_PAPER_TITLE,      //color block visualtape
+		OSDOS_COLOUR_GRAY_INACTIVE,		//Color para zona no usada en visualmem
+        OSDOS_COLOUR_GRAY_INACTIVE,      //color block visualtape
 		2,7+8,		//Color para opcion marcada
 		140, //caracter de cerrar ventana
         150, //caracter de minimizar ventana
