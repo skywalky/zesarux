@@ -2789,8 +2789,8 @@ unsigned char char_set_dos[TOTAL_ASCII_CHARSET_ELEMENTS]={
 //Caracter boton cierre BeOS - 139
 0,62,34,34,34,62,0,0,
 
-//Caracter boton cierre  - 140
-0,60,90,102,102,90,60,0,
+//Caracter boton cierre OS/2 - 140
+255,131,133,137,145,161,193,255,
 
 //Caracter boton cierre Turbovision - 141
 0,63,63,63,63,63,63,0,
