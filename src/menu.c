@@ -13158,7 +13158,10 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 					window_is_being_resized=1;
 					window_mouse_x_before_move=menu_mouse_x;
-					window_mouse_y_before_move=menu_mouse_y;					
+					window_mouse_y_before_move=menu_mouse_y;
+
+                    //printf("Ventana deja de estar minimizada\n");
+                    w->is_minimized=0;
 				}				
 			}
 
@@ -13184,7 +13187,7 @@ void zxvision_handle_mouse_events(zxvision_window *w)
 
 				//printf ("Handle resized window\n");
 				zxvision_handle_mouse_resize_aux(w);
-				
+
 
 				window_is_being_resized=0;
 			}
@@ -13314,19 +13317,35 @@ void zxvision_handle_cursors_pgupdn(zxvision_window *ventana,z80_byte tecla)
 						//Redimensionar ventana
 						//Mover ventana 
 						case 'W':
-							if (ventana->visible_height-1>1 && ventana->can_be_resized) zxvision_set_visible_height(ventana,ventana->visible_height-1);
+							if (ventana->visible_height-1>1 && ventana->can_be_resized) {
+                                zxvision_set_visible_height(ventana,ventana->visible_height-1);
+                                //printf("Ventana deja de estar minimizada\n");
+                                ventana->is_minimized=0;
+                            }
 						break;		
 
 						case 'S':
-							if (ventana->can_be_resized) zxvision_set_visible_height(ventana,ventana->visible_height+1);
+							if (ventana->can_be_resized) {
+                                zxvision_set_visible_height(ventana,ventana->visible_height+1);
+                                //printf("Ventana deja de estar minimizada\n");
+                                ventana->is_minimized=0;
+                            }
 						break;	
 
 						case 'K':
-							if (ventana->visible_width-1>5 && ventana->can_be_resized) zxvision_set_visible_width(ventana,ventana->visible_width-1);
+							if (ventana->visible_width-1>5 && ventana->can_be_resized) {
+                                zxvision_set_visible_width(ventana,ventana->visible_width-1);
+                                //printf("Ventana deja de estar minimizada\n");
+                                ventana->is_minimized=0;
+                            }
 						break;									
 
 						case 'L':
-							if (ventana->can_be_resized) zxvision_set_visible_width(ventana,ventana->visible_width+1);
+							if (ventana->can_be_resized) {
+                                zxvision_set_visible_width(ventana,ventana->visible_width+1);
+                                //printf("Ventana deja de estar minimizada\n");
+                                ventana->is_minimized=0;
+                            }
 						break;											
 					
 						default:
