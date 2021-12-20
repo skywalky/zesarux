@@ -473,8 +473,7 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 //Si se muestra ram baja de Inves
 //z80_bit menu_debug_hex_shows_inves_low_ram={0};
 
-//Vuelca contenido hexa de memoria de spectrum en cadena de texto, finalizando con 0 la cadena de texto
-void menu_debug_registers_dump_hex(char *texto,menu_z80_moto_int direccion,int longitud)
+void menu_debug_registers_dump_hex_decimal(char *texto,menu_z80_moto_int direccion,int longitud,int decimal)
 {
 
 	z80_byte byte_leido;
@@ -491,13 +490,32 @@ void menu_debug_registers_dump_hex(char *texto,menu_z80_moto_int direccion,int l
 			direccion++;
 		//}
 
-		sprintf (&texto[puntero],"%02X",byte_leido);
+        if (decimal) {
+            sprintf (&texto[puntero],"%03d ",byte_leido);
+            puntero+=4;
+        }
+		else {
+            sprintf (&texto[puntero],"%02X",byte_leido);
 
-		puntero+=2;
+		    puntero+=2;
+        }
 
 	}
 }
 
+//Vuelca contenido hexa de memoria de spectrum en cadena de texto, finalizando con 0 la cadena de texto
+void menu_debug_registers_dump_hex(char *texto,menu_z80_moto_int direccion,int longitud)
+{
+
+    menu_debug_registers_dump_hex_decimal(texto,direccion,longitud,0);
+}
+
+//Vuelca contenido hexa de memoria de spectrum en cadena de texto, finalizando con 0 la cadena de texto
+void menu_debug_registers_dump_decimal(char *texto,menu_z80_moto_int direccion,int longitud)
+{
+
+	menu_debug_registers_dump_hex_decimal(texto,direccion,longitud,1);
+}
 
 //Vuelca contenido ascii de memoria de spectrum en cadena de texto
 //modoascii: 0: normal. 1:zx80. 2:zx81
@@ -1511,7 +1529,9 @@ menu_z80_moto_int menu_debug_hexdump_adjusta_en_negativo(menu_z80_moto_int dir,i
 //Si desensamblado en menu view registers muestra:
 //0: lo normal. opcodes
 //1: hexa
-//2: ascii
+//2: decimal
+//3: ascii
+//4: disassemble sin nada a la derecha
 int menu_debug_registers_subview_type=0;
 
 //Modo ascii. 0 spectrum , 1 zx80, 2 zx81
@@ -1521,7 +1541,7 @@ void menu_debug_next_dis_show_hexa(void)
 {
 	menu_debug_registers_subview_type++;
 
-	if (menu_debug_registers_subview_type==4) menu_debug_registers_subview_type=0;
+	if (menu_debug_registers_subview_type==5) menu_debug_registers_subview_type=0;
 }
 
 void menu_debug_registers_adjust_ptr_on_follow(void)
@@ -1541,7 +1561,7 @@ void menu_debug_registros_parte_derecha(int linea,char *buffer_linea,int columna
 {
 
     char buffer_registros[33];
-    if (menu_debug_registers_subview_type!=3) {
+    if (menu_debug_registers_subview_type!=4) {
 
             //Quitar el 0 del final
             int longitud=strlen(buffer_linea);
@@ -2174,8 +2194,9 @@ Solo tienes que buscar en esa tabla el número de palabra de flag 33, que sea de
 //Si desensamblado en menu view registers muestra:
 //0: lo normal. opcodes
 //1: hexa
-//2: ascii
-//3: lo normal pero sin mostrar registros a la derecha
+//2: decimal
+//3: ascii
+//4: lo normal pero sin mostrar registros a la derecha
 int menu_debug_registers_subview_type=0;
 
 */
@@ -2184,7 +2205,8 @@ int menu_debug_registers_subview_type=0;
 
 					//Si mostramos en vez de desensamblado, volcado hexa o ascii
 					if (menu_debug_registers_subview_type==1)	menu_debug_registers_dump_hex(dumpassembler,puntero_dir,longitud_op);
-					if (menu_debug_registers_subview_type==2)  menu_debug_registers_dump_ascii(dumpassembler,puntero_dir,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii,0);
+                    if (menu_debug_registers_subview_type==2)	menu_debug_registers_dump_decimal(dumpassembler,puntero_dir,longitud_op);
+					if (menu_debug_registers_subview_type==3)  menu_debug_registers_dump_ascii(dumpassembler,puntero_dir,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii,0);
 					//4 para direccion, fijo
 					
 

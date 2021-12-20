@@ -9,6 +9,7 @@ Improved portability of shell scripts
 Improved Debug CPU: 
 -now it highlights which registers will be modified by the opcode at the cursor position
 -added t-states counter on default view
+-allow to have a decimal view of opcode decoding using key m (mode)
 
 Improved ZX Vision:
 -ZX Desktop: allow to set a background SCR file
