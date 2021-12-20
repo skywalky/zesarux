@@ -3968,7 +3968,7 @@ int util_write_configfile(void)
        ADD_STRING_CONFIG,"--windowgeometry-ext %s %d %d %d %d %d", saved_config_window_geometry_array[i].nombre,
        saved_config_window_geometry_array[i].x,saved_config_window_geometry_array[i].y,
         saved_config_window_geometry_array[i].ancho,saved_config_window_geometry_array[i].alto,
-        saved_config_window_geometry_array[i].is_minimized);q
+        saved_config_window_geometry_array[i].is_minimized);
   }
 
   if (menu_reopen_background_windows_on_start.v) ADD_STRING_CONFIG,"--enable-restore-windows");
