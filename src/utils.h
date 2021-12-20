@@ -587,15 +587,18 @@ typedef struct s_subzone_info subzone_info;
 struct s_saved_config_window_geometry 
 {
 	char nombre[MAX_NAME_WINDOW_GEOMETRY];
-	int x,y,ancho,alto;
+	int x,y,ancho,alto,is_minimized;
 };
 
 typedef struct s_saved_config_window_geometry saved_config_window_geometry;
 
 extern int total_config_window_geometry;
 
-extern int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto);
-extern int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto);
+extern int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto,int *is_minimized);
+extern int legacy_util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto);
+
+
+extern int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto,int is_minimized);
 
 extern void util_add_window_geometry_compact(zxvision_window *ventana);
 

@@ -7,6 +7,8 @@
 --Fbdev debe permitir ZX Desktop?
 --sdl2: si se pone width de ZX desktop que no cabe en pantalla, se queda reabriendo continuamente la ventana
 
+-al indicar un scr con parpadeo en background, no hace parpadeo. esto es debido a la cache de scr... mejor así, que tiene mejor rendimiento
+la alternativa seria no usar cache, pero entonces iria mas lento al redibujar
 
 --- FIN ZX Desktop
 

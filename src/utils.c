@@ -3968,6 +3968,9 @@ int util_write_configfile(void)
        ADD_STRING_CONFIG,"--windowgeometry %s %d %d %d %d", saved_config_window_geometry_array[i].nombre,
        saved_config_window_geometry_array[i].x,saved_config_window_geometry_array[i].y,
         saved_config_window_geometry_array[i].ancho,saved_config_window_geometry_array[i].alto);
+
+        //temporal
+        saved_config_window_geometry_array[i].is_minimized=0;
   }
 
   if (menu_reopen_background_windows_on_start.v) ADD_STRING_CONFIG,"--enable-restore-windows");
@@ -20106,7 +20109,7 @@ void util_daad_get_condact_message(char *buffer)
 }
 
 //Retorna 0 si no encontrado
-int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
+int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto,int *is_minimized)
 {
         int i;
 
@@ -20116,6 +20119,7 @@ int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
                         *y=saved_config_window_geometry_array[i].y;
                         *ancho=saved_config_window_geometry_array[i].ancho;
                         *alto=saved_config_window_geometry_array[i].alto;
+                        *is_minimized=saved_config_window_geometry_array[i].is_minimized;
                         debug_printf (VERBOSE_DEBUG,"Returning window geometry %s from index %d, %d,%d %dX%d",
                         nombre,i,*y,*y,*ancho,*alto);
                         return 1;
@@ -20127,8 +20131,22 @@ int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
         *y=0;
         *ancho=ZXVISION_MAX_ANCHO_VENTANA;
         *alto=ZXVISION_MAX_ALTO_VENTANA;
+        *is_minimized=0;
         debug_printf (VERBOSE_DEBUG,"Returning default window geometry for %s",nombre);
         return 0;
+}
+
+//Retorna 0 si no encontrado
+//Funcion antigua (legacy) que no retorna estado minimizado ventana
+//usar la nueva util_find_window_geometry
+
+int legacy_util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
+{
+
+    int is_minimized;
+
+    return util_find_window_geometry(nombre,x,y,ancho,alto,&is_minimized);				
+
 }
 
 //Retorna 0 si error. Lo agrega si no existe. Si existe, lo modifica
@@ -20137,7 +20155,7 @@ Hay que tener en cuenta que puede agregar cualquier nombre, exista o no dicha ve
 Esto permite que si en el futuro se borra alguna ventana por código, pero el usuario la estaba guardando por configuración,
 con --windowgeometry, no dará error si es de una ventana que ya no existe
 */
-int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto)
+int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto,int is_minimized)
 {
 
         int destino=total_config_window_geometry;
@@ -20169,6 +20187,7 @@ int util_add_window_geometry(char *nombre,int x,int y,int ancho,int alto)
         saved_config_window_geometry_array[destino].y=y;
         saved_config_window_geometry_array[destino].ancho=ancho;
         saved_config_window_geometry_array[destino].alto=alto;
+        saved_config_window_geometry_array[destino].is_minimized=is_minimized;
 
         if (!sustituir) total_config_window_geometry++;
 
@@ -20189,7 +20208,7 @@ void util_add_window_geometry_compact(zxvision_window *ventana)
                 return;
         }
 
-        util_add_window_geometry(nombre,ventana->x,ventana->y,ventana->visible_width,ventana->visible_height);        
+        util_add_window_geometry(nombre,ventana->x,ventana->y,ventana->visible_width,ventana->visible_height,ventana->is_minimized);
 }
 
 void util_clear_all_windows_geometry(void)

@@ -1974,7 +1974,7 @@ void menu_debug_cpu_resumen_stats(MENU_ITEM_PARAMETERS)
 		
 	int x,y,ancho,alto;
 
-	if (!util_find_window_geometry("cpucompactstatistics",&x,&y,&ancho,&alto)) {
+	if (!legacy_util_find_window_geometry("cpucompactstatistics",&x,&y,&ancho,&alto)) {
 		x=menu_origin_x();
 		y=1;
 		ancho=32;
@@ -2751,7 +2751,7 @@ void menu_about_core_statistics(MENU_ITEM_PARAMETERS)
     int x_ventana,y_ventana,ancho_ventana,alto_ventana;
 
     //Recuperar geometria
-    if (!util_find_window_geometry("corestatistics",&x_ventana,&y_ventana,&ancho_ventana,&alto_ventana)) {
+    if (!legacy_util_find_window_geometry("corestatistics",&x_ventana,&y_ventana,&ancho_ventana,&alto_ventana)) {
         alto_ventana=14;
         ancho_ventana=32;
 
@@ -3322,7 +3322,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		int xventana,yventana;
 		int ancho_ventana,alto_ventana;
 
-		if (!util_find_window_geometry("ayregisters",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+		if (!legacy_util_find_window_geometry("ayregisters",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 
         	if (total_chips==1) {
 				yventana=5;
@@ -3741,7 +3741,7 @@ void menu_debug_tsconf_tbblue_msx_videoregisters(MENU_ITEM_PARAMETERS)
 	int xventana,yventana;
 	int ancho_ventana,alto_ventana;
 
-	if (!util_find_window_geometry("videoinfo",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {	
+	if (!legacy_util_find_window_geometry("videoinfo",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {	
 
 		ancho_ventana=32;
 		xventana=menu_center_x()-ancho_ventana/2;
@@ -4262,7 +4262,7 @@ void menu_debug_spritenav_new_window(zxvision_window *ventana)
 {
 int xventana,yventana,ancho_ventana,alto_ventana;
 
-	if (!util_find_window_geometry("tsconftbbluespritenav",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+	if (!legacy_util_find_window_geometry("tsconftbbluespritenav",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 		xventana=TSCONF_SPRITENAV_WINDOW_X;
 		yventana=TSCONF_SPRITENAV_WINDOW_Y;
 		ancho_ventana=TSCONF_SPRITENAV_WINDOW_ANCHO;
@@ -4977,7 +4977,7 @@ void menu_debug_tsconf_tbblue_msx_tilenav_new_window(zxvision_window *ventana)
 
 		int xventana,yventana,ancho_ventana,alto_ventana;
 
-		if (!util_find_window_geometry("tsconftbbluetilenav",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+		if (!legacy_util_find_window_geometry("tsconftbbluetilenav",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 			xventana=TSCONF_TILENAV_WINDOW_X;
 			yventana=TSCONF_TILENAV_WINDOW_Y;
 			ancho_ventana=TSCONF_TILENAV_WINDOW_ANCHO;
@@ -5579,7 +5579,7 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 
 	int x,y,ancho,alto;
 
-	if (!util_find_window_geometry("waveform",&x,&y,&ancho,&alto)) {
+	if (!legacy_util_find_window_geometry("waveform",&x,&y,&ancho,&alto)) {
 		x=SOUND_WAVE_X;
 		y=SOUND_WAVE_Y-2;
 		ancho=SOUND_WAVE_ANCHO;
@@ -6210,7 +6210,7 @@ void menu_debug_new_visualmem(MENU_ITEM_PARAMETERS)
 	int x,y,ancho,alto;
 
 
-	if (!util_find_window_geometry("visualmem",&x,&y,&ancho,&alto)) {
+	if (!legacy_util_find_window_geometry("visualmem",&x,&y,&ancho,&alto)) {
 		x=VISUALMEM_DEFAULT_X;
 		y=visualmem_y_variable;
 		ancho=VISUALMEM_DEFAULT_WINDOW_ANCHO;
@@ -6792,7 +6792,7 @@ void menu_audio_new_ayplayer(MENU_ITEM_PARAMETERS)
 	int xventana,yventana,ancho_ventana,alto_ventana;
 
 
-	if (!util_find_window_geometry("ayplayer",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+	if (!legacy_util_find_window_geometry("ayplayer",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 		ancho_ventana=32;
 		alto_ventana=20;	 
 
@@ -7401,7 +7401,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	int xventana,yventana,ancho_ventana,alto_ventana;
 	
-	if (!util_find_window_geometry("hexeditor",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+	if (!legacy_util_find_window_geometry("hexeditor",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 		xventana=DEBUG_HEXDUMP_WINDOW_X;
 		yventana=DEBUG_HEXDUMP_WINDOW_Y;
 		ancho_ventana=DEBUG_HEXDUMP_WINDOW_ANCHO;
@@ -9475,7 +9475,7 @@ void menu_display_total_palette(MENU_ITEM_PARAMETERS)
 
 	int xventana,yventana,ancho_ventana,alto_ventana;
 
-	if (!util_find_window_geometry("displaypalettes",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+	if (!legacy_util_find_window_geometry("displaypalettes",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 		xventana=TOTAL_PALETTE_WINDOW_X;
 		yventana=TOTAL_PALETTE_WINDOW_Y;
 		ancho_ventana=TOTAL_PALETTE_WINDOW_ANCHO;
@@ -13989,7 +13989,7 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 	int x,y,ancho,alto;
 
 	
-    if (!util_find_window_geometry("sprites",&x,&y,&ancho,&alto)) {
+    if (!legacy_util_find_window_geometry("sprites",&x,&y,&ancho,&alto)) {
         x=SPRITES_X;
         y=SPRITES_Y;
         ancho=SPRITES_ANCHO;
@@ -15175,7 +15175,7 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 		char *titulo_ventana="Au. Chip Sheet (60 BPM)";
 
 
-		if (!util_find_window_geometry("aysheet",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
+		if (!legacy_util_find_window_geometry("aysheet",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
 						
 						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
 						yventana=PIANO_PARTITURA_GRAPHIC_BASE_Y;
@@ -20037,7 +20037,7 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		char *titulo_ventana="Audio Chip Piano";
 
-		if (!util_find_window_geometry("aypiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
+		if (!legacy_util_find_window_geometry("aypiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
 
 				if (!si_mostrar_ay_piano_grafico()) {
 
@@ -20359,7 +20359,7 @@ void menu_beeper_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 	int xventana,yventana,ancho_ventana,alto_ventana;
 	char *titulo_ventana="Wave Piano";
-	if (!util_find_window_geometry("wavepiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+	if (!legacy_util_find_window_geometry("wavepiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 			if (!si_mostrar_ay_piano_grafico()) {
 
 				xventana=7;
@@ -20972,7 +20972,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		
 	int x,y,ancho,alto;
 
-	if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
+	if (!legacy_util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
 		//x=menu_origin_x();
 		x=0;
 		y=0;
@@ -21576,7 +21576,7 @@ void menu_debug_unnamed_console(MENU_ITEM_PARAMETERS)
 
     int x,y,ancho,alto;
 
-    if (!util_find_window_geometry("debugconsole",&x,&y,&ancho,&alto)) {
+    if (!legacy_util_find_window_geometry("debugconsole",&x,&y,&ancho,&alto)) {
         x=menu_origin_x();
         y=0;
         ancho=32;
@@ -21950,7 +21950,7 @@ void menu_audio_general_sound(MENU_ITEM_PARAMETERS)
 
     int x,y,ancho,alto;
 
-    if (!util_find_window_geometry("audiogensound",&x,&y,&ancho,&alto)) {
+    if (!legacy_util_find_window_geometry("audiogensound",&x,&y,&ancho,&alto)) {
         x=menu_origin_x();
         y=1;
         ancho=33;
@@ -22140,7 +22140,7 @@ void menu_debug_ioports(MENU_ITEM_PARAMETERS)
 
     int x,y,ancho,alto;
 
-    if (!util_find_window_geometry("debugioports",&x,&y,&ancho,&alto)) {
+    if (!legacy_util_find_window_geometry("debugioports",&x,&y,&ancho,&alto)) {
         x=menu_origin_x();
         y=1;
         ancho=33;
@@ -23911,7 +23911,7 @@ void menu_debug_view_sensors(MENU_ITEM_PARAMETERS)
     int x_ventana,y_ventana,ancho_ventana,alto_ventana;
 
     //Recuperar geometria
-    if (!util_find_window_geometry("viewsensors",&x_ventana,&y_ventana,&ancho_ventana,&alto_ventana)) {
+    if (!legacy_util_find_window_geometry("viewsensors",&x_ventana,&y_ventana,&ancho_ventana,&alto_ventana)) {
         alto_ventana=MENU_VIEW_SENSORS_TOTAL_ROWS*MENU_SENSORS_SEPARACION_ENTRE_FILAS+MENU_VIEW_SENSORS_START_Y;
         ancho_ventana=MENU_VIEW_SENSORS_TOTAL_COLUMNS*MENU_SENSORS_SEPARACION_ENTRE_COLUMNAS+MENU_VIEW_SENSORS_START_X+1;
         
@@ -25503,7 +25503,7 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 
 	int x,y,ancho,alto;
 
-	if (!util_find_window_geometry("visualrealtape",&x,&y,&ancho,&alto)) {
+	if (!legacy_util_find_window_geometry("visualrealtape",&x,&y,&ancho,&alto)) {
         x=VISUALREALTAPE_X;
         y=VISUALREALTAPE_Y-2;
         ancho=VISUALREALTAPE_ANCHO;

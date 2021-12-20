@@ -2681,7 +2681,7 @@ void menu_debug_registers_zxvision_ventana(zxvision_window *ventana)
 	int xorigin,yorigin;
 
 
-	if (!util_find_window_geometry("debugcpu",&xorigin,&yorigin,&ancho_ventana,&alto_ventana)) {
+	if (!legacy_util_find_window_geometry("debugcpu",&xorigin,&yorigin,&ancho_ventana,&alto_ventana)) {
 		xorigin=menu_origin_x();
 		yorigin=0;
 		ancho_ventana=32;
@@ -2890,7 +2890,7 @@ void menu_watches(MENU_ITEM_PARAMETERS)
     int xventana,yventana;
     int ancho_ventana,alto_ventana;	
 
-	if (!util_find_window_geometry("watches",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+	if (!legacy_util_find_window_geometry("watches",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
 
 	 xventana=menu_origin_x();
 	 yventana=1;
@@ -5437,7 +5437,7 @@ void menu_debug_daad_view_graphics(void)
 
 
 
-    if (!util_find_window_geometry("textadvgraphics",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+    if (!legacy_util_find_window_geometry("textadvgraphics",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
         int ancho_minimo_deseado=41+RENDER_PAWS_START_X_DRAW;
 
         ancho_ventana=(256/menu_char_width)+7+RENDER_PAWS_START_X_DRAW; //para hacer 32+7=39 en una ventana de char width = 8
@@ -6449,7 +6449,6 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 			debug_printf (VERBOSE_DEBUG,"Debug CPU window size has changed. Recreate it again");
 
 			//Guardamos la geometria actual
-			//util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
 			util_add_window_geometry_compact(ventana);
 
 			zxvision_destroy_window(ventana);
@@ -7629,7 +7628,6 @@ void menu_debug_registers(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-	//util_add_window_geometry("debugcpu",ventana.x,ventana.y,ventana.visible_width,ventana.visible_height);
 	util_add_window_geometry_compact(ventana);
 
 

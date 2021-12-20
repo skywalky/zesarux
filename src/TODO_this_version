@@ -246,8 +246,7 @@ No habilita boton de cerrar todas las ventanas
 * https://www.w3.org/TR/low-vision-needs/
 * eventos en menu con sonidos. metiendo sonido raw directamente en buffer de sonido?
 
--al indicar un scr con parpadeo en background, no hace parpadeo. esto es debido a la cache de scr... mejor así, que tiene mejor rendimiento
-la alternativa seria no usar cache, pero entonces iria mas lento al redibujar
+
 
 -Ventana minimizada que no se le llame overlay al redibujar todas
 Pero para eso hacer que el flag de minimizado se quite siempre que se modifique tamaño: si no, si hay ventana minimizada y se modifica ampliando, seguiria pensando que esta minimizada->ya se quita ese flag

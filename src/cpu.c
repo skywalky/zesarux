@@ -8303,7 +8303,7 @@ int parse_cmdline_options(void) {
 					exit(1);
 				}
 
-				util_add_window_geometry(nombre,x,y,ancho,alto);
+				util_add_window_geometry(nombre,x,y,ancho,alto,0);  //temporal minimizado=0
 
 			}	
 
