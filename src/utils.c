@@ -20137,7 +20137,6 @@ int util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto,in
 //Retorna 0 si no encontrado
 //Funcion antigua (legacy) que no retorna estado minimizado ventana
 //usar la nueva util_find_window_geometry
-
 int legacy_util_find_window_geometry(char *nombre,int *x,int *y,int *ancho,int *alto)
 {
 

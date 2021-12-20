@@ -13148,6 +13148,8 @@ z80_byte menu_debug_draw_sprites_get_byte(menu_z80_moto_int puntero)
 	return byte_leido;
 }
 
+//int temp_zzzz;
+
 void menu_debug_draw_sprites(void)
 {
 
@@ -13155,6 +13157,12 @@ void menu_debug_draw_sprites(void)
 
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech	
+
+
+    //si ventana minimizada, no ejecutar todo el codigo de overlay
+    if (menu_debug_draw_sprites_window->is_minimized) return;
+
+    //printf("Overlay sprites %d\n",temp_zzzz++); 
 
 
 	//int sx=SPRITES_X+1;
@@ -13986,10 +13994,10 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 
 	if (!MACHINE_IS_ZX8081) view_sprites_zx81_pseudohires.v=0;
 
-	int x,y,ancho,alto;
+	int x,y,ancho,alto,is_minimized;
 
 	
-    if (!legacy_util_find_window_geometry("sprites",&x,&y,&ancho,&alto)) {
+    if (!util_find_window_geometry("sprites",&x,&y,&ancho,&alto,&is_minimized)) {
         x=SPRITES_X;
         y=SPRITES_Y;
         ancho=SPRITES_ANCHO;
@@ -14001,6 +14009,8 @@ void menu_debug_view_sprites(MENU_ITEM_PARAMETERS)
 	ventana->can_be_backgrounded=1;
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"sprites");
+    //restaurar estado minimizado de ventana
+    ventana->is_minimized=is_minimized;    
 
 	//Permitir hotkeys desde raton
 	ventana->can_mouse_send_hotkeys=1;

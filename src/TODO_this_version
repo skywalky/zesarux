@@ -252,3 +252,12 @@ No habilita boton de cerrar todas las ventanas
 Pero para eso hacer que el flag de minimizado se quite siempre que se modifique tamaño: si no, si hay ventana minimizada y se modifica ampliando, seguiria pensando que esta minimizada->ya se quita ese flag
 
 Problema->que en background , al recuperar una ventana tiene el flag minimized desactivado. creo que es porque se recrean desde cero, al recuperar la geometrica. creo que en ese caso, la geometria deberia decir que la ventana esta minimizada o no
+->convertir estas legacy_util_find_window_geometry
+
+->Problema2: al minimizar, y cambiar de ventana, al volver a esa, restaurar de minimizado no sabe tamaño anterior
+Se deberia guardar en algun sitio el tamaño de antes de minimizar...
+Se deberia guardar en el array de guardado de geometria los valores de:
+	int height_before_max_min_imize;
+	int width_before_max_min_imize;
+	int x_before_max_min_imize;
+	int y_before_max_min_imize;

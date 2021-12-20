@@ -510,9 +510,8 @@ index 9e32a67e..16a8f772 100644
 +	zxvision_delete_window_if_exists(ventana);
 +
 +
-+	int x,y,ancho,alto;
++	int x,y,ancho,alto,is_minimized;
 +
-+   int is_minimized;
 +
 +	if (!util_find_window_geometry("displaypalettes",&x,&y,&ancho,&alto,&is_minimized)) {
 +		x=TOTAL_PALETTE_WINDOW_X;
