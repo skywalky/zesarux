@@ -2194,11 +2194,11 @@ int menu_debug_registers_subview_type=0;
 //menu_debug_memory_pointer=adjust_address_memory_size(menu_debug_memory_pointer);
 
 
-					//Si mostramos en vez de desensamblado, volcado hexa o ascii
+					//Si mostramos en vez de desensamblado, volcado hexa, decimal o ascii
 					if (menu_debug_registers_subview_type==1)	menu_debug_registers_dump_hex(dumpassembler,puntero_dir,longitud_op);
                     if (menu_debug_registers_subview_type==2)	menu_debug_registers_dump_decimal(dumpassembler,puntero_dir,longitud_op);
 					if (menu_debug_registers_subview_type==3)  menu_debug_registers_dump_ascii(dumpassembler,puntero_dir,longitud_op,menu_debug_hexdump_with_ascii_modo_ascii,0);
-					//4 para direccion, fijo
+					
 					
 
                     //char buffer_desensamblado[200];
