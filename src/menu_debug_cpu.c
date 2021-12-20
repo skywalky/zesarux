@@ -466,13 +466,7 @@ void menu_breakpoints(MENU_ITEM_PARAMETERS)
 
 
 
-//Retorna la pagina mapeada para el segmento
-
-
-
-//Si se muestra ram baja de Inves
-//z80_bit menu_debug_hex_shows_inves_low_ram={0};
-
+//Vuelca contenido hexa o decimal de memoria de spectrum en cadena de texto, finalizando con 0 la cadena de texto
 void menu_debug_registers_dump_hex_decimal(char *texto,menu_z80_moto_int direccion,int longitud,int decimal)
 {
 
@@ -481,14 +475,13 @@ void menu_debug_registers_dump_hex_decimal(char *texto,menu_z80_moto_int direcci
 	int puntero=0;
 
 	for (;longitud>0;longitud--) {
-		//direccion=adjust_address_space_cpu(direccion);
+		
 		direccion=adjust_address_memory_size(direccion);
 
-			//byte_leido=peek_byte_z80_moto(direccion);
-			byte_leido=menu_debug_get_mapped_byte(direccion);
-			//printf ("dump hex: %X\n",direccion);
-			direccion++;
-		//}
+        byte_leido=menu_debug_get_mapped_byte(direccion);
+
+        direccion++;
+
 
         if (decimal) {
             sprintf (&texto[puntero],"%03d ",byte_leido);
@@ -506,14 +499,12 @@ void menu_debug_registers_dump_hex_decimal(char *texto,menu_z80_moto_int direcci
 //Vuelca contenido hexa de memoria de spectrum en cadena de texto, finalizando con 0 la cadena de texto
 void menu_debug_registers_dump_hex(char *texto,menu_z80_moto_int direccion,int longitud)
 {
-
     menu_debug_registers_dump_hex_decimal(texto,direccion,longitud,0);
 }
 
-//Vuelca contenido hexa de memoria de spectrum en cadena de texto, finalizando con 0 la cadena de texto
+//Vuelca contenido decimal de memoria de spectrum en cadena de texto, finalizando con 0 la cadena de texto
 void menu_debug_registers_dump_decimal(char *texto,menu_z80_moto_int direccion,int longitud)
 {
-
 	menu_debug_registers_dump_hex_decimal(texto,direccion,longitud,1);
 }
 
