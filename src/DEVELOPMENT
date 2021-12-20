@@ -506,7 +506,9 @@ index 9e32a67e..16a8f772 100644
 +
 +	int x,y,ancho,alto;
 +
-+	if (!util_find_window_geometry("displaypalettes",&x,&y,&ancho,&alto)) {
++   int is_minimized;
++
++	if (!util_find_window_geometry("displaypalettes",&x,&y,&ancho,&alto,&is_minimized)) {
 +		x=TOTAL_PALETTE_WINDOW_X;
 +		y=TOTAL_PALETTE_WINDOW_Y;
 +		ancho=TOTAL_PALETTE_WINDOW_ANCHO;
@@ -520,6 +522,8 @@ index 9e32a67e..16a8f772 100644
 +	ventana->can_be_backgrounded=1;
 +	//indicar nombre del grabado de geometria
 +	strcpy(ventana->geometry_name,"displaypalettes");
++   //restaurar estado minimizado de ventana
++   ventana->is_minimized=is_minimized;
 +
 +	zxvision_draw_window(ventana);
 
