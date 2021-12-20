@@ -3965,12 +3965,10 @@ int util_write_configfile(void)
   if (parameter_disablebetawarning[0])        ADD_STRING_CONFIG,"--disablebetawarning \"%s\"",parameter_disablebetawarning);
 
   for (i=0;i<total_config_window_geometry;i++) {
-       ADD_STRING_CONFIG,"--windowgeometry %s %d %d %d %d", saved_config_window_geometry_array[i].nombre,
+       ADD_STRING_CONFIG,"--windowgeometry-ext %s %d %d %d %d %d", saved_config_window_geometry_array[i].nombre,
        saved_config_window_geometry_array[i].x,saved_config_window_geometry_array[i].y,
-        saved_config_window_geometry_array[i].ancho,saved_config_window_geometry_array[i].alto);
-
-        //temporal
-        saved_config_window_geometry_array[i].is_minimized=0;
+        saved_config_window_geometry_array[i].ancho,saved_config_window_geometry_array[i].alto,
+        saved_config_window_geometry_array[i].is_minimized);q
   }
 
   if (menu_reopen_background_windows_on_start.v) ADD_STRING_CONFIG,"--enable-restore-windows");

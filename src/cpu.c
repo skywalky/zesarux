@@ -1944,10 +1944,11 @@ printf (
 		"--text-keyboard-finalspc   Sends a space after every word on the Adventure Text OSD Keyboard\n"
 		//"--text-keyboard-clear      Clear all entries of the Adventure Text Keyboard\n"
 
-		"--windowgeometry s x y w h Set window geometry. Parameters: window name (s), x coord, y coord, width (w), height (h)\n"
-		"--enable-restore-windows   Allow restore windows on start\n"
-        "--restorewindow s          Restore window s on start\n"
-		"--clear-all-windowgeometry Clear all windows geometry thay may be loaded from the configuration file\n"
+		//"--windowgeometry s x y w h Set window geometry. Parameters: window name (s), x coord, y coord, width (w), height (h)\n"
+        "--windowgeometry-ext s x y w h m Set window geometry, extended version (old version only kept for compatibility). Parameters: window name (s), x coord, y coord, width (w), height (h), is minimized (m)\n"
+		"--enable-restore-windows         Allow restore windows on start\n"
+        "--restorewindow s                Restore window s on start\n"
+		"--clear-all-windowgeometry       Clear all windows geometry thay may be loaded from the configuration file\n"
 
 		"\n"
 		"\n"
@@ -8279,6 +8280,7 @@ int parse_cmdline_options(void) {
 				strcpy(parameter_disablebetawarning,argv[puntero_parametro]);
 			}	
 
+            //Mantenido por compatibilidad con versiones antiguas
 			else if (!strcmp(argv[puntero_parametro],"--windowgeometry")) {
 				siguiente_parametro_argumento();
 				char *nombre;
@@ -8303,9 +8305,41 @@ int parse_cmdline_options(void) {
 					exit(1);
 				}
 
-				util_add_window_geometry(nombre,x,y,ancho,alto,0);  //temporal minimizado=0
+				util_add_window_geometry(nombre,x,y,ancho,alto,0);  //mantenido por compatibilidad minimizado=0
 
 			}	
+
+
+			else if (!strcmp(argv[puntero_parametro],"--windowgeometry-ext")) {
+				siguiente_parametro_argumento();
+				char *nombre;
+				int x,y,ancho,alto,is_minimized;
+
+				nombre=argv[puntero_parametro];
+
+				siguiente_parametro_argumento();
+				x=parse_string_to_number(argv[puntero_parametro]);
+
+				siguiente_parametro_argumento();
+				y=parse_string_to_number(argv[puntero_parametro]);
+
+				siguiente_parametro_argumento();
+				ancho=parse_string_to_number(argv[puntero_parametro]);
+
+				siguiente_parametro_argumento();
+				alto=parse_string_to_number(argv[puntero_parametro]);
+
+				if (x<0 || y<0 || ancho<0 || alto<0) {
+					printf ("Invalid window geometry\n");
+					exit(1);
+				}
+
+				siguiente_parametro_argumento();
+				is_minimized=parse_string_to_number(argv[puntero_parametro]);
+
+				util_add_window_geometry(nombre,x,y,ancho,alto,is_minimized);
+
+			}
 
 
 			else if (!strcmp(argv[puntero_parametro],"--clear-all-windowgeometry")) {
