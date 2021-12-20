@@ -388,6 +388,9 @@ Para poder enviar una ventana a background:
 if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 de tal manera que solo llame a normal_overlay de texto cuando no estan en background
 
+//si ventana minimizada, no ejecutar todo el codigo de overlay
+if (xxxx_overlay_window->is_minimized) return; //sustituir xxxx_overlay_window por lo que convenga
+
 
 -tienen que referenciar a la ventana activa teniendo la estructura fuera de la funcion,
 al estilo por ejemplo de: "zxvision_window zxvision_window_view_sprites;". Luego usar variable "ventana" como puntero a ahí, ejemplo:
@@ -473,6 +476,9 @@ index 9e32a67e..16a8f772 100644
  				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
 -				normal_overlay_texto_menu();
 +				if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
++               //si ventana minimizada, no ejecutar todo el codigo de overlay
++               if (xxxx_overlay_window->is_minimized) return; //Sustituir xxxx_overlay_window por lo que convenga
+
 
  				if (si_complete_video_driver()) {
  					//Mostrar colores
