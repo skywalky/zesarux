@@ -19892,11 +19892,11 @@ void menu_ay_pianokeyboard_draw_piano(zxvision_window *w,int linea,int canal,cha
 
 zxvision_window *menu_ay_pianokeyboard_overlay_window;
 
+//int temp_zzzz;
 
 void menu_ay_pianokeyboard_overlay(void)
 {
 
-	//printf ("overlay de menu_ay_pianokeyboard_overlay\n");
 
     if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
@@ -19906,6 +19906,10 @@ void menu_ay_pianokeyboard_overlay(void)
 
 	//char volumen[16],textovolumen[32],textotono[32];
 
+    //si ventana minimizada, no ejecutar todo el codigo de overlay
+    if (menu_ay_pianokeyboard_overlay_window->is_minimized) return;
+
+    //printf ("overlay de menu_ay_pianokeyboard_overlay %d\n",temp_zzzz++);
 
 
     int total_chips=audio_get_total_chips();
@@ -20037,7 +20041,9 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 
 		char *titulo_ventana="Audio Chip Piano";
 
-		if (!legacy_util_find_window_geometry("aypiano",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
+        int is_minimized;
+
+		if (!util_find_window_geometry("aypiano",&xventana,&yventana,&ancho_ventana,&alto_ventana,&is_minimized)) {
 
 				if (!si_mostrar_ay_piano_grafico()) {
 
@@ -20141,6 +20147,8 @@ void menu_ay_pianokeyboard(MENU_ITEM_PARAMETERS)
 		ventana->can_be_backgrounded=1;	
 		//indicar nombre del grabado de geometria
 		strcpy(ventana->geometry_name,"aypiano");
+        //restaurar estado minimizado de ventana
+        ventana->is_minimized=is_minimized;
 
 		zxvision_draw_window(ventana);						
 
