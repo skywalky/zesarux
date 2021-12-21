@@ -20935,7 +20935,7 @@ void menu_help_keyboard_overlay(void)
 	if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
 
-				if (!si_complete_video_driver() ) return;
+    if (!si_complete_video_driver() ) return;
 
 
 	//Si no hay archivo bmp cargado
@@ -20943,31 +20943,33 @@ void menu_help_keyboard_overlay(void)
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
+    //si ventana minimizada, no ejecutar todo el codigo de overlay
+    if (menu_help_keyboard_overlay_window->is_minimized) return;
+
+    //printf("Overlay help heyboard %d\n",contador_segundo);
+
 
 	zxvision_window *ventana;
 
 	ventana=menu_help_keyboard_overlay_window;
 
 
-     
-     
+    //esto hara ejecutar esto 5 veces por segundo (lo habitual en muchos de estos que no actualizan siempre es 2 veces por segundo)
+    if ( ((contador_segundo%200) == 0 && help_keyboard_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
+                                    help_keyboard_valor_contador_segundo_anterior=contador_segundo;
+        //printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
 
-			//esto hara ejecutar esto 5 veces por segundo (lo habitual en muchos de estos que no actualizan siempre es 2 veces por segundo)
-			if ( ((contador_segundo%200) == 0 && help_keyboard_valor_contador_segundo_anterior!=contador_segundo) || menu_multitarea==0) {
-											help_keyboard_valor_contador_segundo_anterior=contador_segundo;
-				//printf ("Refrescando. contador_segundo=%d\n",contador_segundo);
+        //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
+        screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0);
+                
 
-                        //zoom_x de offset para evitar parpadeo con la linea del recuadro por la izquierda
-						screen_render_bmpfile(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR,ventana,zoom_x,0,0,-1,0);
-                        
-	
 
-                }
+    }
 
-			//Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
-			//y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
-			//En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
-			zxvision_draw_window_contents(ventana);
+    //Siempre hará el dibujado de contenido para evitar que cuando esta en background, otra ventana por debajo escriba algo,
+    //y entonces como esta no redibuja siempre, al no escribir encima, se sobreescribe este contenido con el de otra ventana
+    //En ventanas que no escriben siempre su contenido, siempre deberia estar zxvision_draw_window_contents que lo haga siempre
+    zxvision_draw_window_contents(ventana);
 
 
 
@@ -21001,9 +21003,9 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
     zxvision_delete_window_if_exists(ventana);
 
 		
-	int x,y,ancho,alto;
+	int x,y,ancho,alto,is_minimized;
 
-	if (!legacy_util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto)) {
+	if (!util_find_window_geometry("helpshowkeyboard",&x,&y,&ancho,&alto,&is_minimized)) {
 		//x=menu_origin_x();
 		x=0;
 		y=0;
@@ -21024,119 +21026,99 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 
 
 	ventana->can_be_backgrounded=1;	
-	zxvision_draw_window(ventana);
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"helpshowkeyboard");
+    //restaurar estado minimizado de ventana
+    ventana->is_minimized=is_minimized;    
+
+    zxvision_draw_window(ventana);
 
 	
-		//Cargar el archivo bmp
-		/*
-		Deben ser, idealmente: 540x201.  (puede ser otro tamaño)
-		bmp. 256 colour (indexed).  grabar con no-codificación run lenght,  y no sobreescribir la información de espacio de colores
-		*/
+    //Cargar el archivo bmp
+    /*
+    Deben ser, idealmente: 540x201.  (puede ser otro tamaño)
+    bmp. 256 colour (indexed).  grabar con no-codificación run lenght,  y no sobreescribir la información de espacio de colores
+    */
 
-		char nombrebmp[PATH_MAX];
-
-
-		if (MACHINE_IS_CHLOE) strcpy(nombrebmp,"keyboard_chloe.bmp");
-		else if (MACHINE_IS_COLECO) strcpy(nombrebmp,"keyboard_coleco.bmp");
-		else if (MACHINE_IS_CPC) strcpy(nombrebmp,"keyboard_cpc.bmp");
-		else if (MACHINE_IS_INVES) strcpy(nombrebmp,"keyboard_inves.bmp");
-		else if (MACHINE_IS_ACE) strcpy(nombrebmp,"keyboard_ace.bmp");
-		else if (MACHINE_IS_MICRODIGITAL_TK90X || MACHINE_IS_MICRODIGITAL_TK90X_SPA) strcpy(nombrebmp,"keyboard_tk90x.bmp");
-		else if (MACHINE_IS_MICRODIGITAL_TK95) strcpy(nombrebmp,"keyboard_tk95.bmp");
-		else if (MACHINE_IS_MK14) strcpy(nombrebmp,"keyboard_mk14.bmp");
-		else if (MACHINE_IS_MSX) strcpy(nombrebmp,"keyboard_msx.bmp");
-		else if (MACHINE_IS_PENTAGON) strcpy(nombrebmp,"keyboard_pentagon.bmp");
-		else if (MACHINE_IS_QL) strcpy(nombrebmp,"keyboard_ql.bmp");
-		else if (MACHINE_IS_SAM) strcpy(nombrebmp,"keyboard_sam.bmp");
-		else if (MACHINE_IS_SG1000) strcpy(nombrebmp,"keyboard_sg1000.bmp");
-        else if (MACHINE_IS_SMS) strcpy(nombrebmp,"keyboard_sms.bmp");
-		else if (MACHINE_IS_SVI) strcpy(nombrebmp,"keyboard_svi.bmp");
-		else if (MACHINE_IS_TBBLUE) strcpy(nombrebmp,"keyboard_next.bmp");
-		else if (MACHINE_IS_TIMEX_TS2068) strcpy(nombrebmp,"keyboard_ts2068.bmp");
-		else if (MACHINE_IS_Z88) strcpy(nombrebmp,"keyboard_z88.bmp");
-		else if (MACHINE_IS_SPECTRUM_P2) strcpy(nombrebmp,"keyboard_p2.bmp");
-		else if (MACHINE_IS_SPECTRUM_P2A_P3) strcpy(nombrebmp,"keyboard_p3.bmp");
-		else if (MACHINE_IS_SPECTRUM_16) strcpy(nombrebmp,"keyboard_16.bmp");
-		else if (MACHINE_IS_SPECTRUM_48_SPA) strcpy(nombrebmp,"keyboard_48s.bmp");
-		else if (MACHINE_IS_SPECTRUM_128) strcpy(nombrebmp,"keyboard_128.bmp");
-		else if (MACHINE_IS_SPECTRUM_128_SPA) strcpy(nombrebmp,"keyboard_128s.bmp");		
-		else if (MACHINE_IS_ZX80) strcpy(nombrebmp,"keyboard_zx80.bmp");
-		else if (MACHINE_IS_ZX81) strcpy(nombrebmp,"keyboard_zx81.bmp");
-		else if (MACHINE_IS_ZXEVO) strcpy(nombrebmp,"keyboard_zxevo.bmp");
-		else if (MACHINE_IS_ZXUNO) strcpy(nombrebmp,"keyboard_zxuno.bmp");
-		else strcpy(nombrebmp,"keyboard_48.bmp");
-
-		//localizarlo
-        char buffer_nombre[PATH_MAX];
-
-		int existe=find_sharedfile(nombrebmp,buffer_nombre);
-		if (!existe)  {
-				debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp);
-                return;
-        }
-
-        help_keyboard_bmp_file_mem=util_load_bmp_file(buffer_nombre);
-
-/*
-		//Asignar memoria
-		int tamanyo=get_file_size(buffer_nombre);
-		help_keyboard_bmp_file_mem=malloc(tamanyo);
-
-		if (help_keyboard_bmp_file_mem==NULL) cpu_panic("Can not allocate memory for bmp file");
-
-		//cargarlo en memoria
-        FILE *ptr_bmpfile;
-        ptr_bmpfile=fopen(buffer_nombre,"rb");
-
-        if (!ptr_bmpfile) {
-                debug_printf(VERBOSE_ERR,"Unable to open bmp file %s",buffer_nombre);
-                return;
-        }
-
-        fread(help_keyboard_bmp_file_mem,1,tamanyo,ptr_bmpfile);
-        fclose(ptr_bmpfile);		
+    char nombrebmp[PATH_MAX];
 
 
-		//Cargar la paleta bmp. 
-		util_bmp_load_palette(help_keyboard_bmp_file_mem,BMP_INDEX_FIRST_COLOR);
+    if (MACHINE_IS_CHLOE) strcpy(nombrebmp,"keyboard_chloe.bmp");
+    else if (MACHINE_IS_COLECO) strcpy(nombrebmp,"keyboard_coleco.bmp");
+    else if (MACHINE_IS_CPC) strcpy(nombrebmp,"keyboard_cpc.bmp");
+    else if (MACHINE_IS_INVES) strcpy(nombrebmp,"keyboard_inves.bmp");
+    else if (MACHINE_IS_ACE) strcpy(nombrebmp,"keyboard_ace.bmp");
+    else if (MACHINE_IS_MICRODIGITAL_TK90X || MACHINE_IS_MICRODIGITAL_TK90X_SPA) strcpy(nombrebmp,"keyboard_tk90x.bmp");
+    else if (MACHINE_IS_MICRODIGITAL_TK95) strcpy(nombrebmp,"keyboard_tk95.bmp");
+    else if (MACHINE_IS_MK14) strcpy(nombrebmp,"keyboard_mk14.bmp");
+    else if (MACHINE_IS_MSX) strcpy(nombrebmp,"keyboard_msx.bmp");
+    else if (MACHINE_IS_PENTAGON) strcpy(nombrebmp,"keyboard_pentagon.bmp");
+    else if (MACHINE_IS_QL) strcpy(nombrebmp,"keyboard_ql.bmp");
+    else if (MACHINE_IS_SAM) strcpy(nombrebmp,"keyboard_sam.bmp");
+    else if (MACHINE_IS_SG1000) strcpy(nombrebmp,"keyboard_sg1000.bmp");
+    else if (MACHINE_IS_SMS) strcpy(nombrebmp,"keyboard_sms.bmp");
+    else if (MACHINE_IS_SVI) strcpy(nombrebmp,"keyboard_svi.bmp");
+    else if (MACHINE_IS_TBBLUE) strcpy(nombrebmp,"keyboard_next.bmp");
+    else if (MACHINE_IS_TIMEX_TS2068) strcpy(nombrebmp,"keyboard_ts2068.bmp");
+    else if (MACHINE_IS_Z88) strcpy(nombrebmp,"keyboard_z88.bmp");
+    else if (MACHINE_IS_SPECTRUM_P2) strcpy(nombrebmp,"keyboard_p2.bmp");
+    else if (MACHINE_IS_SPECTRUM_P2A_P3) strcpy(nombrebmp,"keyboard_p3.bmp");
+    else if (MACHINE_IS_SPECTRUM_16) strcpy(nombrebmp,"keyboard_16.bmp");
+    else if (MACHINE_IS_SPECTRUM_48_SPA) strcpy(nombrebmp,"keyboard_48s.bmp");
+    else if (MACHINE_IS_SPECTRUM_128) strcpy(nombrebmp,"keyboard_128.bmp");
+    else if (MACHINE_IS_SPECTRUM_128_SPA) strcpy(nombrebmp,"keyboard_128s.bmp");		
+    else if (MACHINE_IS_ZX80) strcpy(nombrebmp,"keyboard_zx80.bmp");
+    else if (MACHINE_IS_ZX81) strcpy(nombrebmp,"keyboard_zx81.bmp");
+    else if (MACHINE_IS_ZXEVO) strcpy(nombrebmp,"keyboard_zxevo.bmp");
+    else if (MACHINE_IS_ZXUNO) strcpy(nombrebmp,"keyboard_zxuno.bmp");
+    else strcpy(nombrebmp,"keyboard_48.bmp");
 
-*/	
-        if (help_keyboard_bmp_file_mem==NULL) return;
+    //localizarlo
+    char buffer_nombre[PATH_MAX];
+
+    int existe=find_sharedfile(nombrebmp,buffer_nombre);
+    if (!existe)  {
+            debug_printf(VERBOSE_ERR,"Unable to find bmp file %s",nombrebmp);
+            return;
+    }
+
+    help_keyboard_bmp_file_mem=util_load_bmp_file(buffer_nombre);
 
 
-		//Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
-		//en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
-		//Al meter caracter transparente, el normal_overlay lo ignora y no dibuja ese caracter
-		zxvision_fill_window_transparent(ventana);
+    if (help_keyboard_bmp_file_mem==NULL) return;
+
+
+    //Metemos todo el contenido de la ventana con caracter transparente, para que no haya parpadeo
+    //en caso de drivers xwindows por ejemplo, pues continuamente redibuja el texto (espacios) y encima el overlay
+    //Al meter caracter transparente, el normal_overlay lo ignora y no dibuja ese caracter
+    zxvision_fill_window_transparent(ventana);
 		
 
 
-		menu_help_keyboard_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
+    menu_help_keyboard_overlay_window=ventana; //Decimos que el overlay lo hace sobre la ventana que tenemos aqui
 
 
-        help_keyboard_valor_contador_segundo_anterior=contador_segundo;
+    help_keyboard_valor_contador_segundo_anterior=contador_segundo;
 
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de onda + texto
-        set_menu_overlay_function(menu_help_keyboard_overlay);
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de onda + texto
+    set_menu_overlay_function(menu_help_keyboard_overlay);
 
-       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
-       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
-       if (zxvision_currently_restoring_windows_on_start) {
-               //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
-               return;
-       }	
+    //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+    //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+    if (zxvision_currently_restoring_windows_on_start) {
+        //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+        return;
+    }	
 
 	
 
 	z80_byte tecla;
 
 	do {
-		tecla=zxvision_common_getkey_refresh();		
-		zxvision_handle_cursors_pgupdn(ventana,tecla);
-		//printf ("tecla: %d\n",tecla);
+        tecla=zxvision_common_getkey_refresh();		
+        zxvision_handle_cursors_pgupdn(ventana,tecla);
+        //printf ("tecla: %d\n",tecla);
 	} while (tecla!=2 && tecla!=3);				
 
 	//Gestionar salir con tecla background
@@ -21148,7 +21130,7 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 	zxvision_set_window_overlay_from_current(ventana);	
 
     //restauramos modo normal de texto de menu
-     set_menu_overlay_function(normal_overlay_texto_menu);
+    set_menu_overlay_function(normal_overlay_texto_menu);
 
 
     cls_menu_overlay();	
@@ -21165,8 +21147,6 @@ void menu_help_show_keyboard(MENU_ITEM_PARAMETERS)
 		zxvision_destroy_window(ventana);	
 		free(help_keyboard_bmp_file_mem);	
  	}
-
-
 
 
 }
