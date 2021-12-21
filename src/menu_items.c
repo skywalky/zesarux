@@ -14939,88 +14939,47 @@ void menu_ay_partitura_overlay(void)
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech, en el caso que se habilite piano de tipo texto
 
 
-	//int chip=menu_ay_partitura_chip;
+    //si ventana minimizada, no ejecutar todo el codigo de overlay
+    if (menu_ay_partitura_overlay_window->is_minimized) return;
+
+    //printf("Overlay ay sheet %d\n",contador_segundo);
 
 
-			char nota_a[4];
-			char nota_b[4];
-			char nota_c[4];
+
+    char nota_a[4];
+    char nota_b[4];
+    char nota_c[4];
 
 
-			int freq_a,freq_b,freq_c;
+    int freq_a,freq_b,freq_c;
 
-            freq_a=audio_retorna_frecuencia_canal(0,menu_ay_partitura_chip);
-            freq_b=audio_retorna_frecuencia_canal(1,menu_ay_partitura_chip);
-            freq_c=audio_retorna_frecuencia_canal(2,menu_ay_partitura_chip);        
-
-            /*    
-
-			if (sn_chip_present.v) {
-				freq_a=sn_retorna_frecuencia(0);
-				freq_b=sn_retorna_frecuencia(1);
-				freq_c=sn_retorna_frecuencia(2);
-			}
-
-			else if (i8049_chip_present) {
-				freq_a=ql_ipc_get_frecuency_sound_current_pitch();
-				freq_b=0;
-				freq_c=0;
-			}            
-
-			else {
-
-				freq_a=ay_retorna_frecuencia(0,menu_ay_partitura_chip);
-				freq_b=ay_retorna_frecuencia(1,menu_ay_partitura_chip);
-				freq_c=ay_retorna_frecuencia(2,menu_ay_partitura_chip);
-			}
-            */
+    freq_a=audio_retorna_frecuencia_canal(0,menu_ay_partitura_chip);
+    freq_b=audio_retorna_frecuencia_canal(1,menu_ay_partitura_chip);
+    freq_c=audio_retorna_frecuencia_canal(2,menu_ay_partitura_chip);        
 
 
-			sprintf(nota_a,"%s",get_note_name(freq_a) );
 
-			
-			sprintf(nota_b,"%s",get_note_name(freq_b) );
 
-			
-			sprintf(nota_c,"%s",get_note_name(freq_c) );
+    sprintf(nota_a,"%s",get_note_name(freq_a) );
 
-			//Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
-            if (!audio_si_canal_tono(menu_ay_partitura_chip,0)) {
-                nota_a[0]=0;
-            }
-            if (!audio_si_canal_tono(menu_ay_partitura_chip,1)) {
-                nota_b[0]=0;
-            }
-            if (!audio_si_canal_tono(menu_ay_partitura_chip,2)) {
-                nota_c[0]=0;
-            }
+    
+    sprintf(nota_b,"%s",get_note_name(freq_b) );
 
-            /*
-			if (sn_chip_present.v) {
-				if ((sn_chip_registers[6] & 15)==15) nota_a[0]=0;
-				if ((sn_chip_registers[7] & 15)==15) nota_b[0]=0;
-				if ((sn_chip_registers[8] & 15)==15) nota_c[0]=0;
+    
+    sprintf(nota_c,"%s",get_note_name(freq_c) );
 
-			}
+    //Si canales no suenan como tono, o volumen 0 meter cadena vacia en nota
+    if (!audio_si_canal_tono(menu_ay_partitura_chip,0)) {
+        nota_a[0]=0;
+    }
+    if (!audio_si_canal_tono(menu_ay_partitura_chip,1)) {
+        nota_b[0]=0;
+    }
+    if (!audio_si_canal_tono(menu_ay_partitura_chip,2)) {
+        nota_c[0]=0;
+    }
 
-			else if (i8049_chip_present) {
-                if (!ql_audio_playing) {
-                    nota_a[0]=0;
 
-                }
-
-                //Los otros dos canales, nada
-                nota_b[0]=0;
-                nota_c[0]=0;                
-			}
-
-			else {
-				if (ay_3_8912_registros[menu_ay_partitura_chip][7]&1 || ay_3_8912_registros[menu_ay_partitura_chip][8]==0) nota_a[0]=0;
-				if (ay_3_8912_registros[menu_ay_partitura_chip][7]&2 || ay_3_8912_registros[menu_ay_partitura_chip][9]==0) nota_b[0]=0;
-				if (ay_3_8912_registros[menu_ay_partitura_chip][7]&4 || ay_3_8912_registros[menu_ay_partitura_chip][10]==0) nota_c[0]=0;
-			}
-
-            */
 	
 
 
@@ -15127,23 +15086,23 @@ void menu_ay_partitura_init_state(void)
 {
 			
 
-		//Inicializar estado con string "" y duraciones 0
+    //Inicializar estado con string "" y duraciones 0
 
-		
+    
 
-		int chip;
-		for (chip=0;chip<MAX_AY_CHIPS;chip++) {
-			int canal;
-			for (canal=0;canal<3;canal++) {
-				int col;
+    int chip;
+    for (chip=0;chip<MAX_AY_CHIPS;chip++) {
+        int canal;
+        for (canal=0;canal<3;canal++) {
+            int col;
 
-				for (col=0;col<MENU_AY_PARTITURA_MAX_COLUMNS;col++) {
-					menu_ay_partitura_current_state[chip][canal][col][0]=0;
-					menu_ay_partitura_current_state_duraciones[chip][canal][col]=0;
+            for (col=0;col<MENU_AY_PARTITURA_MAX_COLUMNS;col++) {
+                menu_ay_partitura_current_state[chip][canal][col][0]=0;
+                menu_ay_partitura_current_state_duraciones[chip][canal][col]=0;
 
-				}
-			}
-		}
+            }
+        }
+    }
 
 
 }
@@ -15151,10 +15110,10 @@ void menu_ay_partitura_init_state(void)
 void menu_ay_partitura_init_state_last_column(void)
 {
 			
-		//printf ("ultima col %d\n",menu_ay_partitura_total_columns());
-		menu_ay_partitura_ultima_columna[0]=menu_ay_partitura_total_columns()-1;
-		menu_ay_partitura_ultima_columna[1]=menu_ay_partitura_total_columns()-1;
-		menu_ay_partitura_ultima_columna[2]=menu_ay_partitura_total_columns()-1;
+    //printf ("ultima col %d\n",menu_ay_partitura_total_columns());
+    menu_ay_partitura_ultima_columna[0]=menu_ay_partitura_total_columns()-1;
+    menu_ay_partitura_ultima_columna[1]=menu_ay_partitura_total_columns()-1;
+    menu_ay_partitura_ultima_columna[2]=menu_ay_partitura_total_columns()-1;
 }
 
 void menu_aysheet_change_chip(MENU_ITEM_PARAMETERS)
@@ -15171,15 +15130,15 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
 
 
-        menu_espera_no_tecla();
+    menu_espera_no_tecla();
 
-		if (!menu_multitarea) {
-			menu_warn_message("This window needs multitask enabled");
-			return;
-		}		
+    if (!menu_multitarea) {
+        menu_warn_message("This window needs multitask enabled");
+        return;
+    }		
 
-		zxvision_window *ventana;
-		ventana=&zxvision_window_ay_partitura;
+    zxvision_window *ventana;
+    ventana=&zxvision_window_ay_partitura;
 
 
     //IMPORTANTE! no crear ventana si ya existe. Esto hay que hacerlo en todas las ventanas que permiten background.
@@ -15188,133 +15147,135 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 	zxvision_delete_window_if_exists(ventana);
 
 
-		int xventana,yventana,ancho_ventana,alto_ventana;
+    int xventana,yventana,ancho_ventana,alto_ventana,is_minimized;
 
 
 
-		//Inicializar array de estado
-		menu_ay_partitura_init_state();
+    //Inicializar array de estado
+    menu_ay_partitura_init_state();
 
-		char *titulo_ventana="Au. Chip Sheet (60 BPM)";
+    char *titulo_ventana="Au. Chip Sheet (60 BPM)";
 
 
-		if (!legacy_util_find_window_geometry("aysheet",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {				
-						
-						xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
-						yventana=PIANO_PARTITURA_GRAPHIC_BASE_Y;
-						ancho_ventana=PIANO_PARTITURA_ANCHO_VENTANA;
-						alto_ventana=PIANO_PARTITURA_ALTO_VENTANA;	
+    if (!util_find_window_geometry("aysheet",&xventana,&yventana,&ancho_ventana,&alto_ventana,&is_minimized)) {
+                    
+        xventana=PIANO_PARTITURA_GRAPHIC_BASE_X;
+        yventana=PIANO_PARTITURA_GRAPHIC_BASE_Y;
+        ancho_ventana=PIANO_PARTITURA_ANCHO_VENTANA;
+        alto_ventana=PIANO_PARTITURA_ALTO_VENTANA;	
 
-			int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+        int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
-			//Para que se lea el titulo de la ventana en tamaño por defecto
-			if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;											
+        //Para que se lea el titulo de la ventana en tamaño por defecto
+        if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;											
 
-		}
+    }
 				
 
 
 		
-		//int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
+    //int ancho_titulo=menu_da_ancho_titulo(titulo_ventana);
 
-		//Para que siempre se lea el titulo de la ventana
-		//No alteramos el ancho, que sea el que tenga por geometria
-		//if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
+    //Para que siempre se lea el titulo de la ventana
+    //No alteramos el ancho, que sea el que tenga por geometria
+    //if (ancho_ventana<ancho_titulo) ancho_ventana=ancho_titulo;
 
-		//printf ("ancho %d\n",ancho_ventana);
+    //printf ("ancho %d\n",ancho_ventana);
 
 
 
-		zxvision_new_window_nocheck_staticsize(ventana,xventana,yventana,ancho_ventana,alto_ventana,
-							ancho_ventana-1,alto_ventana-2,titulo_ventana);
-		ventana->can_be_backgrounded=1;	
-		//indicar nombre del grabado de geometria
-		strcpy(ventana->geometry_name,"aysheet");
+    zxvision_new_window_nocheck_staticsize(ventana,xventana,yventana,ancho_ventana,alto_ventana,
+                        ancho_ventana-1,alto_ventana-2,titulo_ventana);
+    ventana->can_be_backgrounded=1;	
+    //indicar nombre del grabado de geometria
+    strcpy(ventana->geometry_name,"aysheet");
+    //restaurar estado minimizado de ventana
+    ventana->is_minimized=is_minimized;        
 
-		zxvision_draw_window(ventana);	
+    zxvision_draw_window(ventana);	
 
 
 		
-		//Comprobacion inicial de que el chip seleccionado no es mayor que los disponibles
-		if (menu_ay_partitura_chip>=total_ay_chips) menu_ay_partitura_chip=0;
+    //Comprobacion inicial de que el chip seleccionado no es mayor que los disponibles
+    if (menu_ay_partitura_chip>=total_ay_chips) menu_ay_partitura_chip=0;
 
 
-		//printf ("ancho creada %d\n",ventana->visible_width);	
+    //printf ("ancho creada %d\n",ventana->visible_width);	
 
-		menu_ay_partitura_overlay_window=ventana;	
+    menu_ay_partitura_overlay_window=ventana;	
 
-		menu_ay_partitura_init_state_last_column();	
-
-
-        //Cambiamos funcion overlay de texto de menu
-        //Se establece a la de funcion de piano + texto
-        set_menu_overlay_function(menu_ay_partitura_overlay);
+    menu_ay_partitura_init_state_last_column();	
 
 
-       //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
-       //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
-       if (zxvision_currently_restoring_windows_on_start) {
-              //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
-              return;
-       }		
+    //Cambiamos funcion overlay de texto de menu
+    //Se establece a la de funcion de piano + texto
+    set_menu_overlay_function(menu_ay_partitura_overlay);
+
+
+    //Toda ventana que este listada en zxvision_known_window_names_array debe permitir poder salir desde aqui
+    //Se sale despues de haber inicializado overlay y de cualquier otra variable que necesite el overlay
+    if (zxvision_currently_restoring_windows_on_start) {
+        //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+        return;
+    }		
 
 	
-		int retorno_menu=MENU_RETORNO_NORMAL; 
-		//Inicializado aqui a MENU_RETORNO_NORMAL en particular pues si solo hay 1 chip, no muestra selector de chip
-		//y por tanto esta variable tiene que tener algo diferente de MENU_RETORNO_BACKGROUND
+    int retorno_menu=MENU_RETORNO_NORMAL; 
+    //Inicializado aqui a MENU_RETORNO_NORMAL en particular pues si solo hay 1 chip, no muestra selector de chip
+    //y por tanto esta variable tiene que tener algo diferente de MENU_RETORNO_BACKGROUND
 
-		
-		//Si solo hay 1 chip, no mostrar selector de chip
-		if (total_ay_chips==1) {
-			int tecla=zxvision_wait_until_esc(ventana);
-			if (tecla==3) {
-				//Truco para decir que nos vamos a background
-				retorno_menu=MENU_RETORNO_BACKGROUND;
-			}
-		}
+    
+    //Si solo hay 1 chip, no mostrar selector de chip
+    if (total_ay_chips==1) {
+        int tecla=zxvision_wait_until_esc(ventana);
+        if (tecla==3) {
+            //Truco para decir que nos vamos a background
+            retorno_menu=MENU_RETORNO_BACKGROUND;
+        }
+    }
 
-		else {
+    else {
+    
+        //Los array de menu_item no tienen porque cambiar el nombre en cada sitio que se usen
+        menu_item *array_menu_nonamed;
+        menu_item item_seleccionado;
+
+        int nonamed_opcion_seleccionada=0; //Solo 1 item de menu, no tiene sentido guardar posicion
+    
         
-        	//Los array de menu_item no tienen porque cambiar el nombre en cada sitio que se usen
-        	menu_item *array_menu_nonamed;
-        	menu_item item_seleccionado;
+        do {
 
-        	int nonamed_opcion_seleccionada=0; //Solo 1 item de menu, no tiene sentido guardar posicion
         
-        	
-        	do {
+            menu_add_item_menu_inicial_format(&array_menu_nonamed,MENU_OPCION_NORMAL,menu_aysheet_change_chip,NULL,"[%d] Selected ~~Chip",menu_ay_partitura_chip+1);
+            menu_add_item_menu_shortcut(array_menu_nonamed,'c');
 
-			
-            	menu_add_item_menu_inicial_format(&array_menu_nonamed,MENU_OPCION_NORMAL,menu_aysheet_change_chip,NULL,"[%d] Selected ~~Chip",menu_ay_partitura_chip+1);
-	        	menu_add_item_menu_shortcut(array_menu_nonamed,'c');
-
-        		//Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
-        		//menu_add_item_menu_tooltip(array_menu_nonamed,"Change wave Shape");
-        		menu_add_item_menu_ayuda(array_menu_nonamed,"Change selected chip");
-            	menu_add_item_menu_tabulado(array_menu_nonamed,1,0);
-			
+            //Evito tooltips en los menus tabulados que tienen overlay porque al salir el tooltip detiene el overlay
+            //menu_add_item_menu_tooltip(array_menu_nonamed,"Change wave Shape");
+            menu_add_item_menu_ayuda(array_menu_nonamed,"Change selected chip");
+            menu_add_item_menu_tabulado(array_menu_nonamed,1,0);
+        
 
 
-            	//Nombre de ventana solo aparece en el caso de stdout
-        		retorno_menu=menu_dibuja_menu(&nonamed_opcion_seleccionada,&item_seleccionado,array_menu_nonamed,"Audio Chip Sheet (60 BPM)" );
+            //Nombre de ventana solo aparece en el caso de stdout
+            retorno_menu=menu_dibuja_menu(&nonamed_opcion_seleccionada,&item_seleccionado,array_menu_nonamed,"Audio Chip Sheet (60 BPM)" );
 
 
-				if (retorno_menu!=MENU_RETORNO_BACKGROUND) {
+            if (retorno_menu!=MENU_RETORNO_BACKGROUND) {
 
-            	//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
-            	cls_menu_overlay();
-        		if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
-                	//llamamos por valor de funcion
-            		if (item_seleccionado.menu_funcion!=NULL) {
-                		//printf ("actuamos por funcion\n");
-                		item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
-                		//En caso de menus tabulados, es responsabilidad de este de borrar la ventana
-	            	}
-    	    	}
-				}
+                //En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+                cls_menu_overlay();
+                if ((item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu>=0) {
+                    //llamamos por valor de funcion
+                    if (item_seleccionado.menu_funcion!=NULL) {
+                        //printf ("actuamos por funcion\n");
+                        item_seleccionado.menu_funcion(item_seleccionado.valor_opcion);
+                        //En caso de menus tabulados, es responsabilidad de este de borrar la ventana
+                    }
+                }
+            }
 
-    		} while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);		
-		}
+        } while ( (item_seleccionado.tipo_opcion&MENU_OPCION_ESC)==0 && retorno_menu!=MENU_RETORNO_ESC && !salir_todos_menus && retorno_menu!=MENU_RETORNO_BACKGROUND);		
+    }
 
 
 
@@ -15327,16 +15288,14 @@ void menu_ay_partitura(MENU_ITEM_PARAMETERS)
 
     cls_menu_overlay();
 
-		util_add_window_geometry_compact(ventana);	
+    util_add_window_geometry_compact(ventana);	
 
 
 	if (retorno_menu==MENU_RETORNO_BACKGROUND) {
-                zxvision_message_put_window_background();
+        zxvision_message_put_window_background();
 	}
 
 	else {
-
-
 		zxvision_destroy_window(ventana);			
 	}
 	
