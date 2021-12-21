@@ -7284,7 +7284,7 @@ void menu_debug_hexdump_info_subzones(void)
 
 }
 
-void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int ancho,int alto)
+void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int ancho,int alto,int is_minimized)
 {
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
 	zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
@@ -7295,6 +7295,9 @@ void menu_debug_hexdump_crea_ventana(zxvision_window *ventana,int x,int y,int an
 
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"hexeditor");
+
+    //restaurar estado minimizado de ventana
+    ventana->is_minimized=is_minimized;    
 
 	//Permitir hotkeys desde raton
 	ventana->can_mouse_send_hotkeys=1;	
@@ -7387,6 +7390,11 @@ void menu_debug_hexdump_overlay(void)
 
     menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
+    //si ventana minimizada, no ejecutar todo el codigo de overlay
+    if (menu_debug_hexdump_overlay_window->is_minimized) return;
+
+    //printf("Overlay hexdump %d\n",contador_segundo);
+
     zxvision_window *ventana;
 
     ventana=menu_debug_hexdump_overlay_window;    
@@ -7415,9 +7423,9 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
     //la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
     zxvision_delete_window_if_exists(ventana);    
 
-	int xventana,yventana,ancho_ventana,alto_ventana;
+	int xventana,yventana,ancho_ventana,alto_ventana,is_minimized;
 	
-	if (!legacy_util_find_window_geometry("hexeditor",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+	if (!util_find_window_geometry("hexeditor",&xventana,&yventana,&ancho_ventana,&alto_ventana,&is_minimized)) {
 		xventana=DEBUG_HEXDUMP_WINDOW_X;
 		yventana=DEBUG_HEXDUMP_WINDOW_Y;
 		ancho_ventana=DEBUG_HEXDUMP_WINDOW_ANCHO;
@@ -7427,7 +7435,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 	//asignamos mismo ancho visible que ancho total para poder usar la ultima columna de la derecha, donde se suele poner scroll vertical
 	//zxvision_new_window_nocheck_staticsize(ventana,x,y,ancho,alto,ancho,alto-2,"Hexadecimal Editor");
-	menu_debug_hexdump_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+	menu_debug_hexdump_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana,is_minimized);
 
 
     //Esto es un poco diferente que otras ventanas, ya que solo hay overlay cuando la ventana esta en segundo plano
@@ -7438,8 +7446,8 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
     //elija la ventana del hex editor y ya indique que direccion quiere ir
     
     if (zxvision_currently_restoring_windows_on_start) {
-            //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
-            return;
+        //printf ("Saliendo de ventana ya que la estamos restaurando en startup\n");
+        return;
     }
 
     //Mas info: al entrar en esta ventana por segunda vez, despues de tenerla en background, alguien podria pensar que 
@@ -7535,39 +7543,7 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 
 
         //Inicio Render
-        /*
-        int lineas_hex;
-        char dumpmemoria[33];
-
-		//Hacer que texto ventana empiece pegado a la izquierda
-		menu_escribe_linea_startx=0;        
-
-		//No mostrar caracteres especiales
-		menu_disable_special_chars.v=1;        
-
-		for (lineas_hex=0;lineas_hex<menu_hexdump_lineas_total;lineas_hex++,linea++) {
-
-			menu_z80_moto_int dir_leida=menu_debug_hexdump_direccion+lineas_hex*menu_hexdump_bytes_por_linea;
-			menu_debug_hexdump_direccion=adjust_address_memory_size(menu_debug_hexdump_direccion);
-
-			menu_debug_hexdump_with_ascii(dumpmemoria,dir_leida,menu_hexdump_bytes_por_linea,menu_hexdump_valor_xor);
-
-			zxvision_print_string_defaults_fillspc(ventana,0,linea,dumpmemoria);
-
-			//Meter el nibble_char si corresponde
-			if (lineas_hex==menu_hexdump_edit_position_y) {
-				menu_hexdump_nibble_char_cursor=dumpmemoria[7+menu_hexdump_edit_position_x];
-				if (!menu_hexdump_editando_en_zona_ascii) menu_hexdump_nibble_char=dumpmemoria[7+menu_hexdump_edit_position_x_nibble];
-			}
-		}
-
-		menu_escribe_linea_startx=1;
-
-		//Volver a mostrar caracteres especiales
-		menu_disable_special_chars.v=0;		
-        */
-        
-
+    
         linea=menu_hexdump_print_hexa_ascii(ventana,linea);
 
         //Fin Render
@@ -7953,9 +7929,10 @@ void menu_debug_hexdump(MENU_ITEM_PARAMETERS)
 			menu_hexdump_edit_mode=0;
 			menu_hexdump_edit_position_x=0;
 			menu_hexdump_edit_position_y=0;
+            int is_minimized=ventana->is_minimized;
 
 			zxvision_destroy_window(ventana);
-			menu_debug_hexdump_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+			menu_debug_hexdump_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana,is_minimized);
 			alto_anterior=alto_ventana;
 			ancho_anterior=ancho_ventana;
 		}
