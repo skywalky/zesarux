@@ -5183,6 +5183,9 @@ void menu_audio_draw_sound_wave(void)
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 
+    //si ventana minimizada, no ejecutar todo el codigo de overlay
+    if (menu_audio_draw_sound_wave_window->is_minimized) return;
+
 	//Inicializar array waveform
 	if (menu_waveform_pixel_array==NULL) {
 		menu_waveform_pixel_array=malloc(sizeof(int)*MAX_ANCHO_WAVEFORM_PIXEL_ARRAY*MAX_ALTO_WAVEFORM_PIXEL_ARRAY);
@@ -5588,9 +5591,9 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
 	zxvision_delete_window_if_exists(ventana);
 
-	int x,y,ancho,alto;
+	int x,y,ancho,alto,is_minimized;
 
-	if (!legacy_util_find_window_geometry("waveform",&x,&y,&ancho,&alto)) {
+	if (!util_find_window_geometry("waveform",&x,&y,&ancho,&alto,&is_minimized)) {
 		x=SOUND_WAVE_X;
 		y=SOUND_WAVE_Y-2;
 		ancho=SOUND_WAVE_ANCHO;
@@ -5606,6 +5609,8 @@ void menu_audio_new_waveform(MENU_ITEM_PARAMETERS)
 	ventana->can_be_backgrounded=1;	
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"waveform");
+    //restaurar estado minimizado de ventana
+    ventana->is_minimized=is_minimized;    
 
 	//printf("despues zxvision_new_window_nocheck_staticsize\n");
 	zxvision_draw_window(ventana);		
@@ -13159,7 +13164,6 @@ z80_byte menu_debug_draw_sprites_get_byte(menu_z80_moto_int puntero)
 	return byte_leido;
 }
 
-//int temp_zzzz;
 
 void menu_debug_draw_sprites(void)
 {
@@ -13172,8 +13176,6 @@ void menu_debug_draw_sprites(void)
 
     //si ventana minimizada, no ejecutar todo el codigo de overlay
     if (menu_debug_draw_sprites_window->is_minimized) return;
-
-    //printf("Overlay sprites %d\n",temp_zzzz++); 
 
 
 	//int sx=SPRITES_X+1;
