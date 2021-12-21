@@ -476,6 +476,7 @@ index 9e32a67e..16a8f772 100644
  				//Si estuviese antes, al mover el cursor hacia abajo dejándolo pulsado, el texto no se vería hasta que no se soltase la tecla
 -				normal_overlay_texto_menu();
 +				if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
++               menu_speech_tecla_pulsada=1; //Habitualmente esto, cuando hay texto. Si no, envia continuamente todo ese texto a speech   
 +               //si ventana minimizada, no ejecutar todo el codigo de overlay
 +               if (xxxx_overlay_window->is_minimized) return; //Sustituir xxxx_overlay_window por lo que convenga
 

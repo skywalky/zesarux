@@ -25154,6 +25154,9 @@ void menu_visual_realtape_overlay(void)
 
 	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
+    //si ventana minimizada, no ejecutar todo el codigo de overlay
+    if (menu_audio_visual_realtape_window->is_minimized) return; 
+
     //printf ("contador_segundo=%d\n",contador_segundo);
 
 
@@ -25532,9 +25535,9 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 	//la primera ventana repetida apuntaria a la segunda, que es el mismo puntero, y redibujaria la misma, y se quedaria en bucle colgado
 	zxvision_delete_window_if_exists(ventana);
 
-	int x,y,ancho,alto;
+	int x,y,ancho,alto,is_minimized;
 
-	if (!legacy_util_find_window_geometry("visualrealtape",&x,&y,&ancho,&alto)) {
+	if (!util_find_window_geometry("visualrealtape",&x,&y,&ancho,&alto,&is_minimized)) {
         x=VISUALREALTAPE_X;
         y=VISUALREALTAPE_Y-2;
         ancho=VISUALREALTAPE_ANCHO;
@@ -25548,6 +25551,8 @@ void menu_visual_realtape(MENU_ITEM_PARAMETERS)
 	ventana->can_be_backgrounded=1;
 	//indicar nombre del grabado de geometria
 	strcpy(ventana->geometry_name,"visualrealtape");
+    //restaurar estado minimizado de ventana
+    ventana->is_minimized=is_minimized;    
 
 	//printf("despues zxvision_new_window_nocheck_staticsize\n");
 	zxvision_draw_window(ventana);
