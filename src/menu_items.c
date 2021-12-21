@@ -2832,6 +2832,15 @@ void menu_ay_registers_overlay(void)
 
     if (!zxvision_drawing_in_background) normal_overlay_texto_menu();
 
+
+	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech    
+
+
+    //si ventana minimizada, no ejecutar todo el codigo de overlay
+    if (menu_ay_registers_overlay_window->is_minimized) return;    
+
+
+
 	char volumen[32],textotono[32];
 	char textovolumen[35]; //32+3 de posible color rojo del maximo
 
@@ -2845,7 +2854,6 @@ void menu_ay_registers_overlay(void)
 
 	int linea=0;
 
-	menu_speech_tecla_pulsada=1; //Si no, envia continuamente todo ese texto a speech
 
 	int vol_A[MAX_AY_CHIPS],vol_B[MAX_AY_CHIPS],vol_C[MAX_AY_CHIPS],vol_noise;
 
@@ -3289,12 +3297,14 @@ M1-M0= mode bits:
 zxvision_window zxvision_ay_registers_overlay;
 
 
-void menu_ay_registers_crea_ventana(zxvision_window *ventana,int xventana,int yventana,int ancho_ventana,int alto_ventana)
+void menu_ay_registers_crea_ventana(zxvision_window *ventana,int xventana,int yventana,int ancho_ventana,int alto_ventana,int is_minimized)
 {
 		zxvision_new_window(ventana,xventana,yventana,ancho_ventana,alto_ventana,ancho_ventana-1,alto_ventana-2,"Audio Chip Registers");
 		ventana->can_be_backgrounded=1;	
 		//indicar nombre del grabado de geometria
 		strcpy(ventana->geometry_name,"ayregisters");
+        //restaurar estado minimizado de ventana
+        ventana->is_minimized=is_minimized;
 }
 
 void menu_ay_registers(MENU_ITEM_PARAMETERS)
@@ -3320,9 +3330,9 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		if (total_chips>3) total_chips=3;
 
 		int xventana,yventana;
-		int ancho_ventana,alto_ventana;
+		int ancho_ventana,alto_ventana,is_minimized;
 
-		if (!legacy_util_find_window_geometry("ayregisters",&xventana,&yventana,&ancho_ventana,&alto_ventana)) {
+		if (!util_find_window_geometry("ayregisters",&xventana,&yventana,&ancho_ventana,&alto_ventana,&is_minimized)) {
 
         	if (total_chips==1) {
 				yventana=5;
@@ -3363,7 +3373,7 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 
 		int alto_anterior;
 		int ancho_anterior;		
-		menu_ay_registers_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+		menu_ay_registers_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana,is_minimized);
 
 		zxvision_window_save_size(ventana,&ancho_anterior,&alto_anterior);
 
@@ -3400,11 +3410,12 @@ void menu_ay_registers(MENU_ITEM_PARAMETERS)
 		if (alto_ventana!=alto_anterior || ancho_ventana!=ancho_anterior) {
 			//printf ("recrear ventana\n");
 			//Recrear ventana
+            int is_minimized=ventana->is_minimized;
 
 			zxvision_destroy_window(ventana);
 			//alto_anterior=alto_ventana;
 			//ancho_anterior=ancho_ventana;
-			menu_ay_registers_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana);
+			menu_ay_registers_crea_ventana(ventana,xventana,yventana,ancho_ventana,alto_ventana,is_minimized);
 			zxvision_window_save_size(ventana,&ancho_anterior,&alto_anterior);
 		}
 
